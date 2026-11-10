@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-27",
+  "sentences": [
+   "The bill would expand Commonwealth indemnity scheme eligibility for claims against privately practising midwives, including employed midwives and those without prescribing endorsements on their registration.",
+   "Endorsed midwives could access the dedicated midwife schemes regardless of employment arrangements, while registered midwives without prescribing endorsements would qualify through the allied health schemes.",
+   "The dedicated schemes would exclude public hospital public-patient work, government-indemnified practice and overseas practice, and the proposed intrapartum insurance coverage would exclude homebirths."
+  ],
+  "changes": [
+   "A single corporate insurance policy could cover several eligible midwives.",
+   "Midwives already insured through the dedicated scheme would be excluded from allied health scheme coverage for those claims.",
+   "Transitional provisions would preserve qualifying insurer and medical defence organisation support for earlier claims.",
+   "The dedicated midwife scheme amendments would begin on 1 July 2021."
+  ],
+  "affected": "Privately practising midwives, their patients, indemnity insurers, medical defence organisations and Aboriginal Community Controlled Health Services employing midwives are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:35.765520+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -113,7 +113,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-24",
+  "sentences": [
+   "The bill would update four parliamentary department appropriation Acts to support the transition to the Public Governance, Performance and Accountability Act from 1 July 2014.",
+   "It would replace references to older financial management legislation with equivalent provisions in the new framework, covering appropriations for 2012-2013 through to 2014-2015.",
+   "Most amendments would start immediately after the new framework's main provisions, while those affecting the 2014-2015 appropriation would also depend on that Act commencing."
+  ],
+  "changes": [
+   "Agency definitions would recognise non-corporate Commonwealth entities and specified bodies becoming corporate Commonwealth entities.",
+   "Chief Executive references in earlier appropriations would mean the agency's accountable authority under the new framework.",
+   "Special Account definitions would refer to the new financial legislation.",
+   "Notes requiring drawing rights to access appropriations would be removed.",
+   "Notes would explain the continuing effect of transitional provisions from the older legislation."
+  ],
+  "affected": "Parliamentary departments and their accountable authorities would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:22.662972+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3268",

@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-29",
+  "sentences": [
+   "The bill would amend the Public Governance, Performance and Accountability Act to clarify responsibilities for public resources, governance, reporting and the making of supporting instruments.",
+   "Annual reports would be due to ministers by the fifteenth day of the fourth month after reporting periods, and accountable authorities could issue financial instructions.",
+   "The substantive amendments would commence immediately after section 6 of the principal Act, alongside separate consequential and transitional legislation supporting the broader financial framework."
+  ],
+  "changes": [
+   "Non-corporate entities' accountable authorities would gain express power to approve commitments of public money.",
+   "Entities would have to prepare corporate plans at least annually.",
+   "Termination powers would expressly apply to accountable authorities or their members, including specified ex officio appointments.",
+   "The Finance Minister could make non-disallowable instruments concerning procurement, grants and specified security or law enforcement agencies."
+  ],
+  "affected": "Commonwealth entities and companies, accountable authorities, public officials and responsible ministers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:16.305364+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

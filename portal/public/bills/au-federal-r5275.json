@@ -107,7 +107,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-04",
+  "sentences": [
+   "The bill would restrict when eight-week suspensions of income support could be waived for job seekers refusing suitable employment or repeatedly breaching participation obligations.",
+   "Refusing suitable work without good reason would require the full penalty, while persistent non-compliance penalties could be waived only once per continuous payment period.",
+   "The changes would commence on 15 September 2014, while existing reasonable-excuse safeguards and rights to challenge serious failure decisions would remain available."
+  ],
+  "changes": [
+   "The hardship assessment preventing a refusal-of-work penalty from starting would no longer apply.",
+   "Promising to comply with a serious failure requirement would no longer restore payments during a refusal-of-work penalty.",
+   "Specified interruptions, including compliance penalties, would count towards continuous receipt of participation payments under the new waiver limit.",
+   "Refusals occurring before commencement would remain subject to the earlier rules."
+  ],
+  "affected": "Recipients of newstart allowance and relevant youth allowance, parenting payment or special benefit payments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:03.261457+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3353",

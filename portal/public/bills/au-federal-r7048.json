@@ -155,7 +155,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 11,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-14",
+  "sentences": [
+   "The bill would create offences involving prohibited Nazi and Islamic State symbols and violent extremist material, and broaden the existing offence of advocating terrorism.",
+   "It would criminalise specified public displays, trade in symbol-bearing goods and telecommunications dealings with violent extremist material, while extending advocacy offences to certain instructions and praise.",
+   "The symbol offences would include legitimate-purpose exceptions and defences, including religious uses, while terrorist organisation listings would continue without the existing three-year automatic expiry."
+  ],
+  "changes": [
+   "The maximum prison term for advocating terrorism would rise from five years to seven years.",
+   "Possession or control of violent extremist material accessed through a carriage service would become an offence.",
+   "Praise would be covered where there is a substantial risk of leading someone to a terrorist act."
+  ],
+  "affected": "People displaying or trading prohibited symbols, users of violent extremist material, law enforcement agencies and listed organisations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:32.281995+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8541",

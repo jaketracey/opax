@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-03-23",
+  "sentences": [
+   "The bill would add funding for ordinary Commonwealth services delivering the coronavirus response, including health care, employment support, aviation assistance and payment administration.",
+   "It would allocate money through departmental, administered and corporate entity appropriations, with an additional ministerial advance of up to $800 million for urgent shortfalls.",
+   "It would commence on royal assent and accompany a separate appropriation bill for services outside ordinary annual government operations in the coronavirus package."
+  ],
+  "changes": [
+   "Respiratory clinics for diagnosing and managing coronavirus and other respiratory illnesses would receive $113.5 million.",
+   "The bill would allocate $250.0 million towards waiving Airservices Australia charges for domestic airlines.",
+   "Services Australia would receive $221.0 million for stimulus payments and additional Medicare processing linked to coronavirus pathology testing."
+  ],
+  "affected": "Commonwealth agencies, health and aged care providers, airlines and employers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:32.376620+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

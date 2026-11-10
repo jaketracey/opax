@@ -119,13 +119,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4980_ems_ac25e6a7-0b33-468b-8d60-9f4475e35f96%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4980%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00076",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would overhaul residential and home aged care funding, fees and accommodation payments, and introduce new supplements and arrangements for pricing oversight.",
+   "For new entrants from 1 July 2014, residential fees would use combined income and assets testing, with annual and lifetime limits on means tested care fees.",
+   "Existing recipients would generally retain their arrangements unless specified circumstances applied, and full rate pensioners would be exempt from the new home care income tested fee."
+  ],
+  "changes": [
+   "Home care would replace community care and specified flexible care programs from 1 July 2013.",
+   "The distinction between low and high level permanent residential care approvals would be removed.",
+   "Residents could choose lump sum, periodic or combined accommodation payments.",
+   "An Aged Care Pricing Commissioner would decide specified pricing matters.",
+   "Additional dementia, veterans’ mental health and workforce supplements would be available to eligible providers."
+  ],
+  "affected": "Residential and home care recipients, approved providers, aged care workers and carers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:18.057328+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1089",

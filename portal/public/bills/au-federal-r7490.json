@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-27",
+  "sentences": [
+   "The bill would formalise tariff proposals removing selected import duties and extending special duty arrangements for Russia, Belarus and Ukraine, alongside technical changes for Peruvian goods.",
+   "General customs duty would become zero for approximately 500 tariff headings and subheadings from 1 July 2026, with corresponding preferential tariff adjustments.",
+   "The bill would retain existing concession exceptions for Russian and Belarusian goods and reduced rather than zero rates for specified Ukrainian excise-equivalent goods."
+  ],
+  "changes": [
+   "The additional 35 per cent duty on covered Russian and Belarusian goods would continue until 24 October 2027.",
+   "Duty relief for eligible Ukrainian goods would be extended until 3 July 2028.",
+   "Affected Regional Comprehensive Economic Partnership preferential rates would fall to zero from 1 July 2026.",
+   "Obsolete tariff phase-down entries for Peruvian goods would be removed from 1 January 2027."
+  ],
+  "affected": "Importers and businesses trading in the affected goods are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:55.613470+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10731",

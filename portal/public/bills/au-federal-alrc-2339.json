@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4975_ems_a2cbbf6d-b15a-4967-a233-8e4bfa33b553%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4975%22",
+   "document_date": "2013-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00070",
    "document_date": "2013-06-27",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-13",
+  "sentences": [
+   "The bill would reduce the baby bonus for many later children, extend selected family payment eligibility periods and make changes to related payment administration.",
+   "From 1 July 2013, later children would generally attract $3,000, while first children and each child in multiple births, adoptions or care placements would attract $5,000.",
+   "Family tax benefit eligibility would extend through the calendar year to children completing secondary study in November as well as December, with corresponding changes to double orphan pension."
+  ],
+  "changes": [
+   "Double orphan pension age eligibility would be aligned with family tax benefit from 1 January 2013.",
+   "Children under 16 unable to participate in school for special circumstances would gain another route to schoolkids bonus eligibility.",
+   "Recipients ending quarterly supplement payments could receive arrears without waiting for the quarter to finish.",
+   "Baby bonus claim wording would clarify the 52-week period beginning with birth or placement for adoption."
+  ],
+  "affected": "Parents, adoptive and foster carers, secondary students, double orphan pension carers and affected supplement recipients are covered.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:46.216494+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

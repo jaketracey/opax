@@ -95,13 +95,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5020_ems_2c823cf3-f1d7-489d-a60b-f49a8c0da65c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5020%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00066",
    "document_date": "2013-06-27",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would increase targeted Indigenous education appropriations to fund Northern Territory school nutrition and additional teachers, and support an Indigenous education tutoring project.",
+   "It would add $79,000 and $3,176,000 to two specified appropriation periods, including new funding for the Achieving Results Through Indigenous Education project.",
+   "The legislation would begin on Royal Assent, with Northern Territory partnership education funding administered under this Act until 31 December 2013 before shifting to Treasury."
+  ],
+  "changes": [
+   "The appropriation for 1 January 2012 to 30 June 2013 would increase from $132,607,000 to $132,686,000.",
+   "The appropriation for 1 January 2013 to 30 June 2014 would rise from $137,699,000 to $140,875,000.",
+   "The education project would receive funding through the Sporting Chance program."
+  ],
+  "affected": "Indigenous students, participating remote Northern Territory schools and the named education programs are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:51.698972+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

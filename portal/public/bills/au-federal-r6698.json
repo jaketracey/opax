@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-24",
+  "sentences": [
+   "The bill would create federal family violence protection orders enforceable through criminal offences, allowing specified family law courts to issue them within existing proceedings.",
+   "Courts could restrict behaviour, contact and access to places, with breaches carrying up to two years' imprisonment, 120 penalty units, or both under federal law.",
+   "Orders could protect children, parents, certain carers and parties to a marriage, while state and territory police could enforce breaches through the national protection-order scheme."
+  ],
+  "changes": [
+   "Protected people could not be charged with aiding or abetting a breach merely because their actions invited it.",
+   "Self-induced intoxication could not support claims of accidental conduct or mistaken belief about facts.",
+   "State and territory courts could suspend or revoke federal orders in specified circumstances when making or varying local orders.",
+   "Registrars conducting relevant family law or child support conferences would receive judicial protection and immunity."
+  ],
+  "affected": "Protected family members, people subject to orders, listed courts, registrars and state and territory police are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:45.127612+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

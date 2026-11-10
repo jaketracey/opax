@@ -83,7 +83,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-10",
+  "sentences": [
+   "The bill would impose an annual levy on higher education providers to recover the costs of the National Student Ombudsman, which handles student complaints.",
+   "Regulations would set the levy amount or calculation method, with the minister required to ensure recovery would not exceed the costs of the ombudsman's functions.",
+   "A companion bill would provide collection arrangements and registration conditions, while this bill would establish providers' liability and allow exemptions to be made through regulations."
+  ],
+  "changes": [
+   "A provider registered at any time during a relevant calendar year would be liable even if its registration was cancelled.",
+   "The Australian National University's existing tax exemption would not prevent the levy applying.",
+   "Regulations could index the amounts used for the levy.",
+   "State and territory Crown providers would be covered, subject to constitutional protection for state property."
+  ],
+  "affected": "Higher education providers are affected by the proposed cost recovery levy.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:05:19.557991+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

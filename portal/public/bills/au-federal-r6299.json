@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-18",
+  "sentences": [
+   "The bill would prohibit exports of cotton grown anywhere in Australia after a transition period, by amending the existing export control framework for prescribed goods.",
+   "It would treat Australian-grown cotton as prescribed goods and deem an absolute export prohibition to apply after the stated three-year lead-in under the new section.",
+   "The legislation would commence the day after royal assent, while cotton production for use within Australia would remain outside the proposed export ban."
+  ],
+  "changes": [
+   "Australian-grown cotton would enter the prescribed-goods category under export control law.",
+   "The export ban would apply nationally, rather than only to cotton grown in the Murray-Darling Basin.",
+   "Prohibited exports would fall under the existing offence carrying a maximum of five years’ imprisonment."
+  ],
+  "affected": "Australian cotton growers and cotton exporters are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:39.049645+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

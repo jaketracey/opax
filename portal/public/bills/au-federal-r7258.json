@@ -131,7 +131,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-10-10",
+  "sentences": [
+   "The bill would amend the Ombudsman Act 1976 and the Inspector-General of Taxation Act 2003 to carry out the government's response to recommendations 21.1 and 21.2 of the Royal Commission into the Robodebt Scheme.",
+   "It would impose a duty on agency heads and officers to use their best endeavours to assist the Commonwealth Ombudsman and the Inspector-General of Taxation and Taxation Ombudsman (IGTO), and give both bodies power to access agency records remotely.",
+   "The new powers would apply to investigations already under way at commencement, extend to the Ombudsman's other statutory offices, and include contingent amendments tied to the National Student Ombudsman bill."
+  ],
+  "changes": [
+   "New section 32 would require principal officers to ensure their department or authority uses its best endeavours to assist the Ombudsman, and officers to do the same personally.",
+   "New section 14A would let authorised persons access, inspect, extract and copy electronic records of departments, prescribed authorities and contracted Commonwealth service providers by remote means.",
+   "Failing to provide reasonable facilities and assistance for the entry or remote access powers would be an offence with a maximum penalty of 10 penalty units.",
+   "Authorised persons entering premises would have to produce a written authority signed by the Ombudsman if the agency asks for one.",
+   "The Inspector-General of Intelligence and Security would be entitled to all reasonable facilities and assistance when making preliminary inquiries of an intelligence agency head."
+  ],
+  "affected": "Commonwealth departments, prescribed authorities and their officers, contracted Commonwealth service providers, the Commonwealth Ombudsman, the IGTO, the Inspector-General of Intelligence and Security and intelligence agency heads are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:12:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-9585",

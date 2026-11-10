@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-04",
+  "sentences": [
+   "The bill would allow reviews of parliamentary workplace support, staff employment and business resources legislation to be combined within a broader review of parliamentary frameworks.",
+   "It would align the next review dates and place future reviews of workplace support and business resources legislation on matching five-year cycles, rather than separate timetables.",
+   "The amendments would begin the day after Royal Assent, allowing combined reviews while retaining the option to conduct future workplace support and resources reviews separately."
+  ],
+  "changes": [
+   "The staff employment law review could start from 23 March 2026, replacing restrictions tied to October 2026 and October 2028.",
+   "The next business resources law review would move forward from after 2 August 2027 to after 22 March 2026.",
+   "Workplace support legislation would be reviewed periodically rather than during every parliamentary term."
+  ],
+  "affected": "Parliamentarians, their employees and ministers responsible for statutory reviews of parliamentary employment, workplace support and resources frameworks are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:04:41.362451+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

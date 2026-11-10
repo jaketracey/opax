@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-11-26",
+  "sentences": [
+   "The bill would change membership and functions of Parliament House's Security Management Board by adding federal police representation and expressly covering the operation of security measures.",
+   "The Australian Federal Police Commissioner could serve on the board, or the presiding officers could nominate a deputy commissioner or senior executive employee instead.",
+   "The amendments would begin the day after royal assent and operate through two changes to the board's existing provisions in the Parliamentary Service Act."
+  ],
+  "changes": [
+   "The board's membership provisions would expressly include the federal police commissioner.",
+   "Presiding officers could select a senior federal police representative as an alternative to the commissioner.",
+   "The board's statutory remit would expand to cover operational security measures."
+  ],
+  "affected": "The Security Management Board, Australian Federal Police leadership and the presiding officers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:56.330331+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

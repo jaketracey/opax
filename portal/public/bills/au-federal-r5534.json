@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-17",
+  "sentences": [
+   "The bill would rename the national electronic health record system My Health Record and change participation, governance, privacy enforcement and healthcare identifier arrangements.",
+   "It would authorise trials in which eligible individuals receive records unless they opt out, retaining patient controls and leaving the existing registration system elsewhere.",
+   "The legislation would also allow a national opt-out approach if the trials succeed and the government decides to extend that model across Australia."
+  ],
+  "changes": [
+   "The existing jurisdictional advisory committee and independent advisory council would be abolished.",
+   "New civil and criminal penalties, enforceable undertakings and injunctions would be available for breaches involving records or healthcare identifiers.",
+   "Mandatory data breach notification rules would extend to registered healthcare provider organisations and contracted service operators.",
+   "Health-related disability, palliative care and aged care services would expressly fall within the definition of health services."
+  ],
+  "affected": "Patients, healthcare providers, health record system operators and organisations using healthcare identifiers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:16.696935+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

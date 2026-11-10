@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-12",
+  "sentences": [
+   "The bill would update veterans’ legislation by clarifying treatment travel payments, changing how special assistance is authorised and extending the reach of debt recovery provisions.",
+   "It would allow the Repatriation Commission to approve treatment travel before or after the journey and use legislative instruments to prescribe special assistance arrangements.",
+   "It would also update military compensation and social security references, remove redundant maintenance income rules and rename legislation protecting use of the word Anzac."
+  ],
+  "changes": [
+   "Eligible service on the Australian naval ship Canberra during Operation DAMASK VI would be included for Defence Service Homes benefits.",
+   "Outdated telephone and pharmaceutical allowance references would be replaced by references to the military compensation supplement.",
+   "Debt recovery would expressly cover failures involving legislative instruments made under veterans’ entitlements legislation."
+  ],
+  "affected": "Veterans, Defence Force members, eligible nuclear test participants and their attendants would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:22.824492+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

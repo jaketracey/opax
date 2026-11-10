@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-03",
+  "sentences": [
+   "The bill would introduce an optional tax system for eligible managed investment trusts, allowing income and tax attributes to be allocated according to members’ interests.",
+   "Trustees choosing the system would use attribution rules, with mechanisms to correct allocation differences and adjust investors’ cost bases to address potential double taxation.",
+   "The main rules would apply for income years starting on or after 1 July 2016, with eligible trusts able to choose earlier application."
+  ],
+  "changes": [
+   "Qualifying trusts would be treated as fixed trusts for income tax purposes.",
+   "Allocation differences could be reconciled in the year they are discovered through an unders and overs mechanism.",
+   "The corporate unit trust tax rules would be repealed.",
+   "Trustees would face tax liabilities in specified circumstances under the attribution regime."
+  ],
+  "affected": "Managed investment trust trustees and their investors, including custodians, would be affected by the new tax arrangements.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:16.447403+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

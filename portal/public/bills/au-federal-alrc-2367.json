@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5015_ems_98d103f6-031f-432c-bd18-9d59e6acc834%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5015%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00128",
    "document_date": "2013-07-01",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would establish a security framework for federal courts and specified tribunals, with powers for appointed officers, court security offences and safeguards.",
+   "It would give officers powers to request screening and searches, control entry and remove people, with detention available only in specified circumstances.",
+   "The framework would extend to the Administrative Appeals Tribunal and the Family Court of Western Australia, as well as federal courts and other prescribed tribunals."
+  ],
+  "changes": [
+   "Security officers could detain suspected offenders to prevent violence or serious property damage and deliver them promptly to police.",
+   "Unauthorised recording or transmission of proceedings and related events would become an offence, subject to exceptions.",
+   "Courts exercising family law jurisdiction could make protective orders, which would have to allow access for legitimate court business.",
+   "Appointed officers would face qualification and identification requirements, with complaints and oversight arrangements for their conduct."
+  ],
+  "affected": "Court users, court staff, judicial officers, security officers and authorised court officers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:27.723044+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

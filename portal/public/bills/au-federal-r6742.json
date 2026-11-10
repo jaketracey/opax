@@ -125,7 +125,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-24",
+  "sentences": [
+   "The bill would revise screen production tax incentives, integrate small business insolvency reforms into other Commonwealth laws and make technical corrections across Treasury legislation.",
+   "The producer offset for films outside the qualifying cinema feature category would rise from 20 to 30 per cent of eligible Australian production spending.",
+   "Screen offset changes would apply to productions starting principal photography, or relevant post-production activity, on or after 1 July 2021, depending on the offset."
+  ],
+  "changes": [
+   "Minimum eligible spending for feature-length producer offset claims and post, digital and visual effects offset claims would rise to $1 million.",
+   "The 65 commercial hour limit on drama series expenditure eligible for the producer offset would be removed.",
+   "General business overheads and overseas expenditure would cease to qualify for screen offsets.",
+   "Prudentially regulated entities would be excluded from small business debt restructuring and simplified liquidation.",
+   "Restructuring practitioners and people dealing with them would gain protections aligned with voluntary administration."
+  ],
+  "affected": "Screen production companies, incorporated small businesses, creditors, restructuring practitioners and prudentially regulated financial institutions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:10.024057+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

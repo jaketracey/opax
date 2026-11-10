@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "The bill would change digital radio licensing rules, including arrangements for starting regional services, allocating new commercial licences and licensing national broadcasters’ transmission infrastructure.",
+   "It would give the Australian Communications and Media Authority (ACMA) direct responsibility for regional start dates and remove the six-year restriction on new commercial licences.",
+   "The amendments would begin the day after Royal Assent and would also allow national broadcasters’ category 3 transmitter licences to be issued earlier and renewed."
+  ],
+  "changes": [
+   "The unused restricted datacasting licence category would be abolished.",
+   "The minister would no longer determine digital radio start-up days for regional licence areas.",
+   "Restrictions on who could hold shares in multiplex transmitter licensees during the moratorium would be removed."
+  ],
+  "affected": "Commercial and national radio broadcasters, digital radio transmission licensees and ACMA would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:44.726583+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

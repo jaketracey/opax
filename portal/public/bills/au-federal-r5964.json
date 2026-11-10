@@ -89,7 +89,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-13",
+  "sentences": [
+   "The bill would create and expand Commonwealth child sexual abuse offences, raise selected penalties and change rules for bail, sentencing, witnesses and release from prison.",
+   "It would introduce mandatory minimum sentences for specified serious offences and repeat offending, alongside presumptions favouring cumulative sentences and actual imprisonment for Commonwealth child sex offenders.",
+   "Mandatory minimums would exclude offences committed by people aged under 18, while some witness protections and parole changes would extend beyond child sexual abuse cases."
+  ],
+  "changes": [
+   "New offences would cover grooming third parties to obtain access to a child for sexual activity.",
+   "Providing an electronic service facilitating dealings in child abuse material would become an offence.",
+   "Aggravated offences would cover abuse involving cruel treatment or a child's death.",
+   "Children and other vulnerable witnesses could not be cross-examined during committal proceedings.",
+   "Courts would have to consider rehabilitation and treatment when sentencing Commonwealth child sex offenders."
+  ],
+  "affected": "Children, vulnerable witnesses, accused people, federal offenders, courts, prosecutors and the Attorney-General as federal parole decision-maker would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:14.869203+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

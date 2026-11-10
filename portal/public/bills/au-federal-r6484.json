@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-24",
+  "sentences": [
+   "The bill would let the Australian Capital Territory Legislative Assembly legislate for integrity and corruption investigations concerning federal police services provided in the territory.",
+   "It would add a specific exception to the existing restriction preventing the Assembly from making laws about the Australian Federal Police's local policing services.",
+   "The change would enable territory legislation extending integrity oversight to local policing, within the limited subject matter of integrity and corruption investigations of those services."
+  ],
+  "changes": [
+   "The self-government law would gain an exception to its exclusion of policing matters from the Assembly's powers.",
+   "The Assembly could legislate for integrity investigations involving federal police services delivered in the territory.",
+   "The new legislative power would also cover corruption investigations concerning those policing services."
+  ],
+  "affected": "The territory Legislative Assembly, its Integrity Commission and federal police providing local services are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:29.456459+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

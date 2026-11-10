@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-31",
+  "sentences": [
+   "The bill would extend Family Tax Benefit eligibility to families of Indigenous secondary boarding students receiving ABSTUDY, the education assistance scheme for Indigenous students, who must live away from home for school.",
+   "It would make the benefit payable after students turn 16, alongside ABSTUDY payments covering their boarding and school fees.",
+   "The extension would cover students aged 16 to 19 through year 12, beginning on 1 January 2020 if royal assent occurs during 2019."
+  ],
+  "changes": [
+   "An exception would remove the ABSTUDY-related exclusion for eligible older boarding students.",
+   "Approved care organisations could receive the benefit for students meeting the specified boarding and study conditions.",
+   "Corresponding claim rules would be amended for claims made from commencement."
+  ],
+  "affected": "Families of eligible Indigenous boarding students, approved care organisations and the students aged 16 to 19 are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:51.150936+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5860",

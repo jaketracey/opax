@@ -77,7 +77,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-02",
+  "sentences": [
+   "The bill would require the Department of Finance to publish aggregate information about Commonwealth debt waivers and act of grace payments in its annual reports.",
+   "A new statutory reporting provision would cover decisions made under the Finance Minister's existing powers to forgive debts or make payments because of special circumstances.",
+   "Reporting would apply to periods beginning on or after 1 July 2019, without requiring publication of personal details, and commence the day after royal assent."
+  ],
+  "changes": [
+   "Annual reports would disclose the number of debt waiver authorisations issued during the reporting period.",
+   "They would also disclose the total value of debts forgiven under those authorisations.",
+   "Reports would give both the number of act of grace payments and their combined dollar value."
+  ],
+  "affected": "The Department of Finance would face additional annual reporting requirements.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:26.642676+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7372",

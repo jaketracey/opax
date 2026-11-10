@@ -21,8 +21,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4949_ems_a744291c-1f69-44b7-a19d-91141528b292%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4949%22",
+   "document_date": "2013-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-11",
+  "sentences": [
+   "The bill would limit mining royalty credits against the Minerals Resource Rent Tax by disregarding royalty increases introduced after the specified 1 July 2011 benchmark.",
+   "Credits would be calculated without later royalty increases, and the tax’s explanatory provision would refer to Commonwealth, state and territory royalty amounts at that benchmark.",
+   "The changes would apply to assessments from 2012-13, the tax’s first year, and the amending legislation would commence on the day of Royal Assent."
+  ],
+  "changes": [
+   "Royalty credit calculations would exclude increases occurring after 1 July 2011.",
+   "The Act’s overview would specify royalty amounts in force on the benchmark date.",
+   "Application would extend back to the first year of Minerals Resource Rent Tax assessments."
+  ],
+  "affected": "Mining companies subject to the Minerals Resource Rent Tax are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:30.327103+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

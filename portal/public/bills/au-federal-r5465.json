@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-28",
+  "sentences": [
+   "The bill would reduce the company tax rate for qualifying small businesses from 30 per cent to 28.5 per cent through amendments to tax legislation.",
+   "The lower rate would apply to small business entities with aggregated turnover below $2 million, covering the company's taxable income rather than only income below that threshold.",
+   "It would apply from the first income year starting on or after 1 July 2015, while the maximum dividend franking rate would remain 30 per cent."
+  ],
+  "changes": [
+   "Qualifying corporate unit trusts and public trading trusts would also receive the lower rate.",
+   "The income level at which full company taxation applies to qualifying non-profit companies would fall from $915 to $863.",
+   "The special rate limiting tax for qualifying medium credit unions would fall from 45 per cent to 42.75 per cent."
+  ],
+  "affected": "Small business companies, qualifying corporate trusts, non-profit companies, medium credit unions and shareholders receiving franked dividends are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:55.304188+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3791",

@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "The bill would stop higher education providers imposing compulsory student services and amenities fees, while allowing them to request voluntary contributions for those services.",
+   "It would repeal the government loan assistance used to finance those fees and remove related provisions governing fee amounts, indexation, spending and administrative requirements.",
+   "The substantive amendments would commence on 31 May 2019, with the Minister able to make transitional rules addressing matters including debts incurred under the repealed scheme."
+  ],
+  "changes": [
+   "Statutory guidelines controlling how providers spend services and amenities fees would be removed.",
+   "Commonwealth-funded providers would lose the requirement to comply with services, amenities, representation and advocacy guidelines.",
+   "Tax file number requirements specific to the repealed fee-loan assistance would be removed.",
+   "The Minister's authority to make the associated student services and advocacy guidelines would be repealed."
+  ],
+  "affected": "Higher education students, people seeking enrolment, higher education providers and borrowers under the services and amenities loan scheme are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:33.623378+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

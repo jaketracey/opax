@@ -125,7 +125,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-19",
+  "sentences": [
+   "The bill would establish an accountability regime for authorised deposit-taking institutions and their senior leaders, covering responsibilities, conduct, registration and the deferral of variable pay.",
+   "Institutions would provide responsibility maps and individual statements to the Australian Prudential Regulation Authority, which would gain enforcement powers and could disqualify accountable people.",
+   "The regime would apply from 1 July 2018, with foreign institutions covered for Australian branch operations and the minister able to exempt institutions or classes."
+  ],
+  "changes": [
+   "Accountable people would generally have to be registered before starting their roles.",
+   "A specified share of variable pay would generally be deferred for four years, subject to exemptions and approved shorter periods.",
+   "Institutions would have to reduce deferred pay proportionately when an accountable person breaches their obligations.",
+   "Institutions could face court-imposed civil penalties for breaches of the regime.",
+   "Insurance against financial consequences of breaches would be prohibited for institutions and accountable people, with an exception for insurance covering legal costs."
+  ],
+  "affected": "Authorised deposit-taking institutions, their subsidiaries and senior directors and executives would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:53.750355+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5095",

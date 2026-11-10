@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-04",
+  "sentences": [
+   "The bill would end the statutory cleaner fuels grant scheme and change customs, excise and fuel tax credit rules supporting new domestic biofuel duty rates.",
+   "Grants for biodiesel and renewable diesel would cease for new entitlements from 1 July 2015, while transitional arrangements would preserve earlier provisional entitlements.",
+   "It would accompany separate excise tariff changes for locally manufactured ethanol and biodiesel, while preventing customs duty liabilities from being extinguished when imported biofuels are blended in Australia."
+  ],
+  "changes": [
+   "Customs duty on imported biofuels could no longer be extinguished through specified excise manufacturing arrangements.",
+   "Specified biofuels and higher biofuel blends would receive fuel tax credits calculated using domestic excise rates.",
+   "Restrictions on blending duty-paid biofuels would be relaxed, including where rates differed through the scheduled phase-in.",
+   "Claims for preserved grant entitlements would face a deadline of the earlier of three years from the claim period's start and 1 July 2016."
+  ],
+  "affected": "Biofuel manufacturers, importers, blenders and businesses claiming cleaner fuel grants or fuel tax credits are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:28.476371+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

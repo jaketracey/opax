@@ -113,7 +113,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-25",
+  "sentences": [
+   "The bill would change the Environment Protection and Biodiversity Conservation Act 1999 (EPBC Act) so the Minister could no longer revoke certain past decisions that an action does not need assessment and approval under that Act.",
+   "New subsection 78(3A) would apply where the original decision found the action was not a controlled action if taken in a particular manner including a State or Territory management arrangement, and the action has been ongoing or recurring for at least 5 years.",
+   "The exemption would apply to decisions made before or after commencement, and the bill would commence the day after Royal Assent with no financial impact on the Australian government."
+  ],
+  "changes": [
+   "Inserts new subsection 78(3A) into the EPBC Act, preventing the Minister from revoking a not-controlled-action decision when four criteria are met.",
+   "Requires, as one criterion, that the particular manner included following a management arrangement that a State or self-governing Territory government made, approved or administers.",
+   "Measures the 5-year period backwards from a subsection 78A(1) reconsideration request (not available to State or Territory Ministers), and otherwise from when the action became ongoing or recurring.",
+   "Inserts new subsection 78C(1A) so the Minister must not revoke a decision when deciding a reconsideration request if subsection 78(3) or 78(3A) applies.",
+   "Applies to first decisions made before or after commencement, except where the Minister already decided a reconsideration request before commencement."
+  ],
+  "affected": "The Minister for the Environment, proponents of long-running actions covered by not-controlled-action decisions, State and Territory governments, and people who request reconsideration under the EPBC Act are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:12:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9323",

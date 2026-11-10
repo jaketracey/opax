@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would maintain Australia’s existing wine trade arrangements with the United Kingdom during any agreed transition following its departure from the European Union.",
+   "It would extend the wine legislation’s definition of a European Community country to include the United Kingdom while agreed transitional trade arrangements remain in force.",
+   "The amendment would operate from the day after Royal Assent, with the special treatment tied to a transition period rather than a fixed calendar date."
+  ],
+  "changes": [
+   "The amendments would commence on the day after Royal Assent.",
+   "A new definition would specify when a United Kingdom withdrawal transition period applies.",
+   "The statutory country definition would expressly include the United Kingdom for that period."
+  ],
+  "affected": "Australia and the United Kingdom are affected in their bilateral trade in wine.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:29.597029+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

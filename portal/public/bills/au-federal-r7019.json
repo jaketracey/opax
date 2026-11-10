@@ -167,7 +167,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-30",
+  "sentences": [
+   "The proposal would establish an Aboriginal and Torres Strait Islander Voice in the Constitution, recognising Aboriginal and Torres Strait Islander peoples as the First Peoples.",
+   "The Voice could advise federal Parliament and the executive government on matters relating to those peoples, with no constitutional power to veto their decisions.",
+   "The alteration would require referendum approval by a national majority and majorities in a majority of states before being presented for Royal Assent."
+  ],
+  "changes": [
+   "A new constitutional chapter would contain section 129 establishing the Voice.",
+   "Parliament could legislate for membership, selection methods, eligibility and terms.",
+   "Parliament could confer additional functions, including advice to state and territory governments."
+  ],
+  "affected": "Aboriginal and Torres Strait Islander peoples, federal Parliament and the executive government are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:37.843160+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8128",

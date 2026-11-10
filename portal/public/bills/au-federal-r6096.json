@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would repeal the Historic Shipwrecks Act 1976 and provide transitional arrangements supporting its replacement by the companion Underwater Cultural Heritage Bill 2018.",
+   "It would carry existing protections, permits, notices and the shipwreck register into the new framework, while updating related heritage and maritime legislation to match.",
+   "Its substantive schedules would begin with section 3 of the companion legislation and would not start at all if that provision did not commence."
+  ],
+  "changes": [
+   "References in the Australian Heritage Council legislation would shift from historic shipwrecks to underwater cultural heritage.",
+   "Pending permit applications under the old law would be deemed refused, allowing applicants to apply under the new framework.",
+   "Existing exploration or recovery permits would be treated as permits granted under the replacement law.",
+   "Evidentiary certificates issued under the old legislation would remain valid after its repeal."
+  ],
+  "affected": "Existing permit holders, pending permit applicants and people possessing or controlling protected shipwreck articles would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:30.390419+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

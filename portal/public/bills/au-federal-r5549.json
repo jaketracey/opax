@@ -149,7 +149,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "The bill would introduce a multinational tax avoidance rule, increase penalties for certain large entities and require country-by-country reporting of multinational tax information.",
+   "Its shared significant global entity definition would generally cover a parent with annual global income of AU$1 billion or more and members of its consolidated group.",
+   "The anti-avoidance rule would apply from 1 January 2016, including existing schemes, while excluding tax benefits derived before that date under the stated application provisions."
+  ],
+  "changes": [
+   "The Commissioner of Taxation could assess targeted arrangements as though supplies were made through an Australian permanent establishment.",
+   "The new avoidance test would consider a principal tax benefit purpose, rather than requiring that purpose to be sole or dominant.",
+   "Scheme penalties for significant global entities would double, except where the taxpayer’s position is reasonably arguable.",
+   "Country-by-country reporting requirements would apply to income years beginning on or after 1 January 2016."
+  ],
+  "affected": "Large multinational groups, their Australian operations and the Australian Taxation Office would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:34.684586+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3973",

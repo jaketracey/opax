@@ -101,13 +101,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4963_ems_f3c34350-d22e-4f0a-9741-e84ad95a1b8c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4963%22",
+   "document_date": "2013-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00055",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-13",
+  "sentences": [
+   "The bill would change the supervisory levy for self managed superannuation funds, raising the statutory ceiling and allowing collection during the income year it covers.",
+   "The maximum annual levy would increase from $200 to $300, while regulations would continue to set the actual amount charged and specify payment dates.",
+   "The revised arrangements would apply for 2013-14 and later income years, with transitional regulations able to split the first year’s payments across different dates."
+  ],
+  "changes": [
+   "Trustees would be liable for a year in which their fund was self managed at any time.",
+   "Multiple trustees would be jointly and severally liable for the levy.",
+   "Regulations could separate the 2013-14 levy into amounts payable on different specified days."
+  ],
+  "affected": "Trustees of self managed superannuation funds are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:56.055311+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

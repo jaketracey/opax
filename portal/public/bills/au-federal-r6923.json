@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-28",
+  "sentences": [
+   "The bill would increase penalties for specified competition and consumer law breaches and make unfair terms in covered standard form contracts subject to civil penalties.",
+   "For many corporate breaches, the maximum would be the greatest of $50 million, triple the benefit obtained, or, where unquantifiable, 30% of relevant adjusted turnover.",
+   "The unfair contract reforms would begin after a 12-month transition and cover more small business contracts, while introducing specified financial market and insurance exclusions."
+  ],
+  "changes": [
+   "Relevant maximum penalties for individuals would increase from $500,000 to $2.5 million.",
+   "Proposing, using or relying on unfair terms in covered consumer and small business contracts would be prohibited.",
+   "Consumer law protections would cover small business contracts involving a party with fewer than 100 employees or annual turnover below $10,000,000.",
+   "Turnover-based penalties would use the breach period, with a minimum calculation period of 12 months."
+  ],
+  "affected": "Consumers, small businesses and companies using standard contracts would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

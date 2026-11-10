@@ -167,7 +167,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-27",
+  "sentences": [
+   "The bill would overhaul federal workplace relations rules covering enterprise bargaining, employment protections, pay equity and the institutions responsible for regulating workplaces and registered organisations.",
+   "It would expand bargaining across employers, restrict fixed term contracts, prohibit pay secrecy clauses, and change how the Fair Work Commission handles agreements and disputes.",
+   "The construction industry regulator would be abolished, with enforcement moving to the Fair Work Ombudsman, while registered organisations oversight would transfer to the commission’s General Manager."
+  ],
+  "changes": [
+   "A new prohibition would cover sexual harassment connected with work.",
+   "Breastfeeding, gender identity and intersex status would become expressly protected attributes.",
+   "The small claims cap for recovering workplace entitlements would rise from $20,000 to $100,000.",
+   "The commission could arbitrate disputes over refused or unanswered flexible work requests."
+  ],
+  "affected": "Employees, employers, unions, employer organisations and certain firefighters covered by Commonwealth compensation law would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7811",

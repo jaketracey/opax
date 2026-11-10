@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would postpone substantive parts of the new road vehicle standards framework, allowing more time for governments and the vehicle industry to prepare.",
+   "It would replace fixed commencement arrangements with proclamation dates, with 1 July 2021 as the latest start date and flexibility to commence provisions separately.",
+   "The amendments would begin the day after royal assent, while the existing motor vehicle standards framework would continue during the extended transition period."
+  ],
+  "changes": [
+   "Commencement of the approved vehicle register entry provisions would be deferred.",
+   "New import and first-supply offence provisions would have revised commencement dates.",
+   "Recall arrangements would also move to the revised commencement timetable.",
+   "Transitional national standards would operate until the day before the register provisions commence."
+  ],
+  "affected": "Vehicle manufacturers, importers and suppliers preparing for the new framework are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:37.714441+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5841",

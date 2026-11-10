@@ -69,8 +69,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5059_ems_96334aed-bdfb-4d27-809d-8c6085ac7f40%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5059%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would require entities covered by privacy legislation to notify the Australian Information Commissioner and affected individuals about serious breaches of personal information.",
+   "Notification would generally be triggered by a real risk of serious harm, with notices required as soon as practicable after reasonable grounds for belief arise.",
+   "It would start alongside the 12 March 2014 privacy reforms, retaining existing exemptions and allowing exceptions for law enforcement prejudice and public interest reasons."
+  ],
+  "changes": [
+   "Notices would describe the breach and affected information and recommend protective steps individuals could take.",
+   "The Commissioner could direct an entity to issue a breach notification.",
+   "Failure to comply would count as an interference with privacy, engaging existing enforcement powers.",
+   "Refused exemptions and notification directions could be reviewed by the Administrative Appeals Tribunal."
+  ],
+  "affected": "Regulated agencies and organisations, credit reporting bodies, credit providers, tax file number recipients and individuals whose information is compromised are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:11.397731+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

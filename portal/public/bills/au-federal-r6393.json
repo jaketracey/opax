@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "The bill would lower Pharmaceutical Benefits Scheme safety net thresholds, changing the annual medicine spending levels at which general and concessional patients receive additional assistance.",
+   "It would reduce the concessional threshold’s prescription multiplier and set a lower general threshold, allowing eligible patients to reach cheaper or free medicines sooner.",
+   "The changes would begin on 1 January 2020, with different threshold calculations for concessional beneficiaries and general patients and a special general-threshold indexation rule."
+  ],
+  "changes": [
+   "The concessional threshold would fall from 60 co-payments to 48 co-payments.",
+   "The general patient threshold would be set at $1,486.80.",
+   "The general threshold would skip indexation in 2020 and resume annual indexation on 1 January 2021."
+  ],
+  "affected": "General and concessional patients buying subsidised medicines are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:19.201083+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

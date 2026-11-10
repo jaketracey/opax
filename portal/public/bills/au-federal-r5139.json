@@ -149,7 +149,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "The bill would temporarily exempt qualifying bulk synthetic greenhouse gas imports from the carbon component of the import levy before the proposed carbon tax repeal.",
+   "The exemption would cover the quarter beginning 1 April 2014 where imported gas entered licensed customs storage and was not released for home consumption before 1 July 2014.",
+   "Its operative provisions would depend on the companion import levy repeal legislation, and would allow refunds of levy overpayments caused by the transitional exemption."
+  ],
+  "changes": [
+   "Importers claiming the concession would have to report the quantity and type of gas covered.",
+   "Removing stored gas for home consumption before 1 July 2014 would prevent the exemption applying.",
+   "Refunds would be limited to overpayments wholly attributable to the new exemption."
+  ],
+  "affected": "Controlled Substance Licence holders importing bulk synthetic greenhouse gases and importers claiming the exemption are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:37.308981+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -131,7 +131,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-29",
+  "sentences": [
+   "The bill would amend the Payment Times Reporting Act 2020 to give effect to the 2023 statutory review, simplifying reporting by large businesses and increasing pressure on slow payers of small businesses.",
+   "It would set the reporting threshold at consolidated revenue above $100 million, let a controlling entity report for its group, and let the Minister direct a slow small business payer to publish that status after two consecutive slow cycles, or a slow cycle next to a missed report.",
+   "Schedule 1 would commence 60 days after Royal Assent, with an independent review of the Act and Rules due within two years of the third anniversary of commencement."
+  ],
+  "changes": [
+   "A slow small business payer would be an entity in the slowest 20 per cent for a reporting cycle, unless its report shows a qualifying payment time of 30 days or less.",
+   "The Payment Times Reporting Regulator would gain functions to publish research on payment practices and give Register users data and tools.",
+   "Entities could apply to become a reporting nominee, a subsidiary reporting entity or an exempt entity, with exemptions capped at two years.",
+   "The Regulator could issue notices to produce documents or information and accept enforceable undertakings for civil penalty provisions.",
+   "Report content requirements would move from the Act into the Rules, and entities could publish reports on the Register automatically.",
+   "The Regulator could charge cost-recovery fees for certain applications, except applications to become a volunteering entity."
+  ],
+  "affected": "Large businesses with consolidated revenue above $100 million, their small business suppliers, volunteering entities, the Regulator and the Minister are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:14:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

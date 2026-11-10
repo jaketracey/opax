@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-13",
+  "sentences": [
+   "The bill would stop the proposed cattle grazing trial in Victoria's Alpine National Park by treating it as clearly unacceptable under Commonwealth environmental law.",
+   "It would deem the environment minister to have received Victoria's referral and decided the grazing action would significantly affect listed species and ecological communities.",
+   "The amendments would commence the day after Royal Assent, requiring notice of the deemed decision and its reasons to be given to Victoria as soon as practicable."
+  ],
+  "changes": [
+   "A new section would treat the fire prevention or control grazing proposal as referred for Commonwealth assessment.",
+   "The statutory decision would treat impacts on listed species and communities as outweighing the trial's benefits.",
+   "The Alpine Sphagnum Bogs and Associated Fens community would be expressly deemed significantly affected."
+  ],
+  "affected": "The Victorian Government, the Commonwealth environment minister and people involved in cattle grazing trials in Alpine National Park would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:19.642369+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

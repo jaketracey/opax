@@ -93,8 +93,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5071_ems_3e8793e9-1a41-48fb-93d7-45d9768d16bc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5071%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The proposed constitutional alteration would expressly allow the Commonwealth to give financial assistance directly to local government bodies established under state law.",
+   "It would amend section 96 so Parliament could make those grants on conditions it chooses, while councils could decline the funding and its conditions.",
+   "The alteration would preserve state control over councils and existing grants through states, without separately referring to territory bodies already covered by another constitutional power."
+  ],
+  "changes": [
+   "The section 96 heading would be expanded to mention local government bodies.",
+   "Eligible recipients would include bodies formed under primary, delegated or subordinate state legislation.",
+   "The proposed alteration would take effect on Royal Assent."
+  ],
+  "affected": "Local government bodies formed under state law, state governments and the Commonwealth Parliament are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:50.223583+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1111",

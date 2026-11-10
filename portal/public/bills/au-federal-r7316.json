@@ -107,7 +107,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-05",
+  "sentences": [
+   "The bill would replace the Child Care Subsidy activity test with a three day guarantee giving every eligible family at least 72 hours of subsidised early childhood education and care a fortnight.",
+   "Under amendments to the A New Tax System (Family Assistance) Act 1999, a family's subsidised hours would be the higher of the 72 hour guarantee or any other result that applies to them.",
+   "Families caring for an Aboriginal or Torres Strait Islander child would get 100 hours, and the bill would commence on 1 January 2026 or the day after Royal Assent if later."
+  ],
+  "changes": [
+   "The activity test would be removed from the Family Assistance Act, along with entitlements below 72 hours and the 24 hour low income result.",
+   "A new subclause 11(1A) would define the three day guarantee as 72 subsidised hours per fortnight for all individuals eligible for the Child Care Subsidy.",
+   "A new subclause 12(1) would give an increased hours result of 100 where more than 48 hours of a recognised participation type is undertaken in the fortnight.",
+   "The guaranteed hours for a family caring for an Aboriginal or Torres Strait Islander child would rise from 36 to 100 per fortnight.",
+   "Terms such as activity test result would be replaced with subsidised hours and participation type, and the Minister could make transitional rules."
+  ],
+  "affected": "Families receiving the Child Care Subsidy or Additional Child Care Subsidy, families caring for Aboriginal or Torres Strait Islander children, and early childhood education and care providers would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:06:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-9521",

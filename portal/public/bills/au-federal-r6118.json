@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-24",
+  "sentences": [
+   "The bill would extend the expanded small business depreciation rules for another year, keeping the immediate deduction threshold at $20,000 until 30 June 2019.",
+   "Eligible assets costing less than $20,000 would need to be first used or installed ready for use by that date to receive an immediate deduction.",
+   "The measure would apply from 1 July 2018, with a $1,000 threshold resuming for income years that ended from 1 July 2019 onwards."
+  ],
+  "changes": [
+   "The higher threshold for eligible subsequent costs of previously written-off assets would also continue for the additional year.",
+   "Eligible general small business pool balances below $20,000 could continue to be deducted in full.",
+   "The suspension of the five-year exclusion for businesses that previously opted out would be extended through 30 June 2019."
+  ],
+  "affected": "Small business entities with aggregated annual turnover below $10 million, including those previously opting out of accelerated depreciation, would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:26.526254+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5408",

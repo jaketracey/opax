@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-23",
+  "sentences": [
+   "The bill would impose reconciliation fees on developers selling near-new dwellings to foreign purchasers under exemption certificates, alongside a companion housing bill governing collection.",
+   "The fee framework would apply from 1 July 2017, covering dwellings whose earlier sale contracts failed to settle and which were subsequently sold under those certificates.",
+   "Developers holding certificates before enactment would receive a transitional first payment period ending at the first reporting date at least 30 days after commencement."
+  ],
+  "changes": [
+   "The fees imposition law would gain provisions imposing the amount payable for near-new dwelling sales.",
+   "Its fee section heading and explanatory references would be updated to accommodate the new charging category.",
+   "A fee would cover each relevant sale within the transitional reconciliation period."
+  ],
+  "affected": "Property developers selling homes under near-new dwelling exemption certificates would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:51.398139+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

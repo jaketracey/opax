@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "The bill would expand and clarify compulsory questioning powers held by Australian Crime Commission examiners and the Integrity Commissioner, including questioning after criminal charges.",
+   "It would expressly permit questions about pending charges and the use of compelled material to discover further evidence, while regulating disclosure and courtroom use.",
+   "The powers would remain tied to special crime operations or law enforcement corruption investigations, with additional rules for confiscation proceedings and protection against unfair trials."
+  ],
+  "changes": [
+   "Giving compelled material to a person's prosecutors after charges are laid or imminent would generally require a court order.",
+   "Officials would have to prevent disclosure where the statutory conditions concerning prejudice to a fair trial are met.",
+   "Crime Commission notices requiring documents or things would be separated from the examination provisions.",
+   "Courts' powers to protect trial fairness despite prosecution access to compelled material would be expressly preserved."
+  ],
+  "affected": "People compelled to give evidence, crime and corruption investigators, prosecutors and courts conducting related proceedings are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:29.119049+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

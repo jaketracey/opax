@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would amend intellectual property laws covering trade marks, patents, designs and plant breeders' rights, including changes to enforcement, importation and administrative procedures.",
+   "It would clarify protection for genuine parallel imports and allow derived plant varieties to be assessed even when their breeders had not sought protection.",
+   "Some measures would begin the day after Royal Assent, while others would start by proclamation or six months after assent to allow administrative changes."
+  ],
+  "changes": [
+   "The period before newly registered trade marks could face non-use challenges would be shortened.",
+   "Pharmaceutical patent holders would no longer have to provide specified data to the Health Department following a patent term extension.",
+   "Intellectual property officials could use computer programs for statutory decisions and substitute decisions they considered incorrect.",
+   "Courts could award additional damages for infringement of plant breeders' rights, and exclusive licensees could bring infringement proceedings."
+  ],
+  "affected": "Intellectual property owners and applicants, parallel importers, plant breeders, exclusive licensees, registered patent and trade marks attorneys and intellectual property officials would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:55.919115+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

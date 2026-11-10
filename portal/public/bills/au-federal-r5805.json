@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-09",
+  "sentences": [
+   "The bill would establish diverted profits tax rules for large multinational groups, increase their administrative tax penalties and update Australia’s transfer pricing guidance.",
+   "The rules would target certain tax avoidance schemes involving foreign associates, with assessments payable within 21 days and a companion bill setting a 40 per cent rate.",
+   "The tax would concern income years starting from 1 July 2017, with exclusions based on income, sufficient foreign tax and economic substance, and specified entity types."
+  ],
+  "changes": [
+   "Certain statement and missing-document base penalties for significant global entities would double.",
+   "Late lodgement penalties would use a multiplier of 500 for significant global entities.",
+   "Transfer pricing rules would incorporate the 2016 changes to Organisation for Economic Cooperation and Development guidelines.",
+   "Taxpayers would generally have a 12-month review period before appealing diverted profits assessments to the Federal Court."
+  ],
+  "affected": "Significant global entities, businesses with related-party cross-border dealings and the Commissioner of Taxation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:33.732627+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

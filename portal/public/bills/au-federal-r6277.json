@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would extend lower excise rates for Australian draught beer to smaller kegs and containers meeting commercial dispensing requirements, including those used by craft brewers.",
+   "Containers holding 8 to 48 litres would qualify if designed for a pressurised gas or pump dispensing system, or another system prescribed by regulations.",
+   "The changes would apply to beer entered for home consumption from 1 July 2019, alongside separate legislation updating safeguards against repackaging beer into non-qualifying containers."
+  ],
+  "changes": [
+   "The lower draught beer duty categories would extend to qualifying containers below the previous large-keg threshold.",
+   "Containers under 8 litres would remain in the non-concessional tariff categories.",
+   "Regulations could recognise additional dispensing systems when determining eligibility for the lower rates."
+  ],
+  "affected": "Australian draught beer manufacturers, including craft brewers supplying smaller commercial kegs, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:57.859116+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

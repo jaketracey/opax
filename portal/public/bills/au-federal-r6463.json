@@ -101,7 +101,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-05",
+  "sentences": [
+   "The bill would authorise Commonwealth investment in an Australian Business Growth Fund providing longer-term equity finance to small and medium enterprises alongside other investors.",
+   "It would appropriate $100 million for investment costs and obligations, allowing the minister to form a company, acquire shares or take up debentures.",
+   "The powers would relate to one company, which could not become Commonwealth-controlled, and the legislation would begin on the day after royal assent."
+  ],
+  "changes": [
+   "The appropriation would expire if no money were drawn within two years of commencement.",
+   "The department would have to report annually on the legislation's operation.",
+   "The minister would have to arrange an operational review after three years and table its report in Parliament."
+  ],
+  "affected": "Small and medium enterprises, participating financial institutions, the Australian Business Growth Fund, the Commonwealth and the Minister exercising the Commonwealth's investment powers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:18.674317+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6176",

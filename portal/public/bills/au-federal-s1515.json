@@ -41,7 +41,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-15",
+  "sentences": [
+   "The bill would protect specified allied health treatment and compensation entitlements for veterans and dependants from spending caps and reviews triggered by expenditure thresholds.",
+   "It would prohibit required gap payments and restrictions imposed solely or substantially because aggregate treatment costs approach or exceed a set amount, while preserving clinical controls.",
+   "The protections would apply from the day after Royal Assent to treatment and compensation entitlements arising before or after commencement, without reopening earlier final amounts."
+  ],
+  "changes": [
+   "An inclusive definition of allied health professionals would allow regulations to add professions without removing those expressly covered.",
+   "The Treatment Principles could not use spending thresholds as the sole or substantial reason to interrupt allied health care.",
+   "Compensation pathways would be protected from aggregate caps, while a new provision would allow reimbursement to be limited to actual treatment costs.",
+   "Regulations could extend protection to additional statutory treatment and compensation pathways."
+  ],
+  "affected": "Eligible veterans, dependants, allied health practitioners and the Military Rehabilitation and Compensation Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:04:20.326335+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

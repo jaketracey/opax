@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would give an international tax convention legal force in Australia, enabling changes to bilateral tax treaties addressing avoidance and resolving cross-border tax disputes.",
+   "It would modify agreements nominated by Australia and the relevant treaty partner after ratification, with the changes depending on their respective choices and reservations.",
+   "Different commencement rules would govern withholding taxes, other taxes and dispute procedures, so the convention's practical effect would vary between treaties and tax categories."
+  ],
+  "changes": [
+   "Covered treaties could deny benefits where obtaining them was a principal purpose and granting them conflicted with the treaty's object and purpose.",
+   "Taxpayers could present eligible treaty disputes to either jurisdiction's competent authority where the relevant convention provision applied.",
+   "Eligible unresolved disputes could proceed to binding arbitration where the arbitration provisions were adopted, subject to reservations limiting the cases covered."
+  ],
+  "affected": "Taxpayers using covered bilateral tax agreements and the tax authorities responsible for those agreements would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:21.604870+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

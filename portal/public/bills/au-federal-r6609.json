@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-07",
+  "sentences": [
+   "The bill would authorise a new category of Commonwealth payments to support employment and workforce participation, providing the legislative basis for the JobMaker Hiring Credit.",
+   "The Treasurer would set scheme details through rules, including eligible employers and employees, payment amounts, payment timing and obligations for recipients of the credit.",
+   "The payment period would cover 7 October 2020 to 6 October 2022, while the existing time limit applying to JobKeeper would remain unchanged."
+  ],
+  "changes": [
+   "The Act's objects would be expanded to cover the new payment purpose.",
+   "A separate relevant-period definition would limit the new payment authority.",
+   "The amendments would commence on the day after royal assent."
+  ],
+  "affected": "Employers hiring additional staff, prospective employees and the Treasurer would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:00.544256+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-6691",

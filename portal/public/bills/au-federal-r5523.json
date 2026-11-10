@@ -107,7 +107,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-10",
+  "sentences": [
+   "The bill would change payment suspensions and financial penalties for job seekers who fail to meet requirements involving employment plans, appointments, activities, job searches or suitable work.",
+   "It would allow suspensions until specified requirements are met and additional payment deductions for certain failures without reasonable excuses, including refusing to enter an employment plan.",
+   "The compliance amendments would begin on 1 July 2016 and apply to participation payment recipients, retaining reasonable excuse assessments, vulnerability protections and rights of appeal."
+  ],
+  "changes": [
+   "Payments suspended for inadequate job searches would be fully back-paid after adequate efforts are demonstrated or a good reason is accepted.",
+   "The eight-week non-payment penalty for refusing suitable work could no longer be waived through additional activities or the specified hardship arrangements.",
+   "Activity failure penalties could be deducted from the next fortnightly payment.",
+   "Short-term penalty categories would be consolidated under no show no pay terminology."
+  ],
+  "affected": "Job seekers receiving participation payments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:46.328176+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3950",

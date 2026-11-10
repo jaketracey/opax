@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-28",
+  "sentences": [
+   "The bill would establish a financial services compensation scheme of last resort and amend existing laws to support the separate Financial Accountability Regime.",
+   "Eligible consumers with unpaid Australian Financial Complaints Authority determinations could apply for compensation of up to $150,000 after recovery steps had failed.",
+   "The scheme would cover specified credit activities, personal financial advice and securities dealings, supported by companion bills imposing and collecting industry levies."
+  ],
+  "changes": [
+   "A minister-authorised company limited by guarantee would operate the scheme on a not-for-profit basis.",
+   "Applicants could not be charged fees for seeking compensation.",
+   "The operator would acquire a compensated consumer's recovery rights against a firm in external administration to the extent of the payment.",
+   "The Banking Executive Accountability Regime would be repealed as its replacement began applying to banking."
+  ],
+  "affected": "Eligible financial services consumers, financial firms, the scheme operator and financial regulators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:01.377254+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

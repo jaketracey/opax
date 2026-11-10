@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-24",
+  "sentences": [
+   "The bill would prohibit online betting on greyhound racing by changing how racing wagering services are treated under the Commonwealth's interactive gambling legislation.",
+   "It would remove greyhound races from the racing wagering exclusion and adjust the wording governing the remaining listed racing services in the same provision.",
+   "The sponsor proposed a two-year delay after Royal Assent to allow the industry time to address the welfare of dogs affected by reduced revenue."
+  ],
+  "changes": [
+   "Greyhound racing would cease to qualify for the racing wagering exclusion in subsection 8A(1).",
+   "The exclusion's wording would clarify that it covers either or both of the remaining listed racing services.",
+   "The amendments would take effect two years following Royal Assent."
+  ],
+  "affected": "Online wagering businesses, people betting online on greyhound races and the greyhound racing industry are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:08.505827+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-08",
+  "sentences": [
+   "The bill would apply the labour mobility program tax imposition framework to eligible earnings of foreign resident workers participating in the Pacific Australia Labour Mobility scheme.",
+   "A final tax rate of 15 per cent would cover qualifying employment payments, with the tax changes intended to apply from 1 July 2022.",
+   "It would accompany Treasury amendments setting eligibility and withholding arrangements, while workers who qualify as Australian tax residents would remain subject to ordinary resident rates."
+  ],
+  "changes": [
+   "The existing seasonal labour tax approach would extend to the consolidated Pacific labour mobility scheme.",
+   "The imposition provision would specify a 15 per cent rate for amounts covered by the tax.",
+   "Commencement would be set retrospectively at 1 July 2022."
+  ],
+  "affected": "Eligible foreign resident workers in the covered labour mobility schemes would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:04.477905+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

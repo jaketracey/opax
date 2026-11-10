@@ -107,13 +107,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5079_ems_58457f15-1663-4191-b060-a7b37de50152%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5079%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00089",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would provide tax relief for mandatory transfers to MySuper products and adjust defence superannuation benefits when money is released to meet tax liabilities.",
+   "Eligible funds and associated investment entities could transfer losses or defer tax on assets when default balances moved between 1 July 2013 and 1 July 2017.",
+   "Defence scheme changes would depend on companion tax legislation, allowing lump sums for affected high-income members while reducing benefits to reflect those payments."
+  ],
+  "changes": [
+   "Transferred members could give contribution deduction notices and variations to their new fund.",
+   "Asset rollover relief could cover capital gains, depreciating assets and revenue assets.",
+   "Defence scheme reductions could also affect a surviving spouse's pension.",
+   "Release authority lump sums could not reduce specified defence scheme benefits below zero."
+  ],
+  "affected": "Default superannuation members, complying funds, relevant life insurers and pooled superannuation trusts, and affected defence scheme members and surviving spouses are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:24.797597+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

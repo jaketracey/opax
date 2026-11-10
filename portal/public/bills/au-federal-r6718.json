@@ -125,7 +125,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-27",
+  "sentences": [
+   "The bill would consolidate job seekers' participation rules, enable online management of employment plans and change payment commencement and administration for employment programs and compliance.",
+   "One set of employment plan rules would cover JobSeeker Payment, relevant Youth Allowance and Parenting Payment recipients, and nominated visa holders receiving Special Benefit.",
+   "The bill would require access to human delegates and review for people using online plans, with requirements assessed for suitability to their circumstances before a plan is approved."
+  ],
+  "changes": [
+   "From 1 July 2022, new digital-service claimants would generally start payments when agreeing to their plan, subject to exemptions and existing protections.",
+   "Exemptions could be backdated, but ending an exemption could not operate retrospectively.",
+   "Payment sanctions could be forgone where they would not advance the compliance framework's objectives.",
+   "Employment program spending would gain authority in social security legislation while remaining funded through annual appropriations.",
+   "The Employment Secretary could exclude employment program payments and benefits from social security income assessments."
+  ],
+  "affected": "Job seekers receiving participation payments and people participating in Commonwealth employment programs are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:50.567141+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7681",

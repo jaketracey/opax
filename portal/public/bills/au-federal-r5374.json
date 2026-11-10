@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-11-24",
+  "sentences": [
+   "The bill would bring forward public reporting of selected tax information for large corporate entities, applying the disclosure requirement from the 2012 to 2013 year.",
+   "It would apply to corporate entities whose total income is at least $100 million, with publication of the relevant information undertaken by the tax commissioner.",
+   "The change would amend the earlier tax transparency legislation and begin the day after royal assent, with the sponsor identifying greater transparency as its purpose."
+  ],
+  "changes": [
+   "The first income year covered by the publication requirement would move back to 2012 to 2013.",
+   "The amendment would alter the Tax Laws Amendment (2013 Measures No. 2) Act 2013.",
+   "The amending Act would commence on the day following royal assent."
+  ],
+  "affected": "Corporate entities meeting the $100 million total income threshold and the tax commissioner are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:56.330720+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

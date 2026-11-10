@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-18",
+  "sentences": [
+   "The bill would stop new seismic testing permits for offshore oil and gas exploration by preventing the grant or renewal of petroleum special prospecting authorities after 31 December 2024.",
+   "It would amend the Offshore Petroleum and Greenhouse Gas Storage Act 2006 to direct the Titles Administrator not to consider, grant or renew such authorities after that date.",
+   "The sponsor said the purpose is to protect marine life from seismic testing, and the Act would commence the day after an appropriation is made for its purposes."
+  ],
+  "changes": [
+   "The Titles Administrator could not consider, or keep considering, any application for such an authority lodged after 31 December 2024.",
+   "No petroleum special prospecting authority could be granted after 31 December 2024.",
+   "No existing petroleum special prospecting authority could be renewed after 31 December 2024.",
+   "Commencement would be tied to the day after Parliament appropriates money to the administering department for the purposes of the Act."
+  ],
+  "affected": "Exploration companies seeking or holding special prospecting authorities, the Titles Administrator under the Offshore Petroleum and Greenhouse Gas Storage Act 2006, and marine species in areas open to seismic testing are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:20:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-24",
+  "sentences": [
+   "The bill would update the cost calculation rules for higher education regulatory charges by removing references to overseas student registration charges being repealed through companion legislation.",
+   "When considering regulatory costs, the Minister would exclude costs covered by fees set by the Tertiary Education Quality and Standards Agency (TEQSA).",
+   "The amendment would operate only after both the TEQSA charges legislation and the overseas student registration charges amendment legislation had commenced, and immediately once both had begun."
+  ],
+  "changes": [
+   "The Minister's cost assessment would cease excluding costs offset by the annual overseas student registration charge.",
+   "The corresponding exclusion for costs offset by the entry to market charge would also be removed.",
+   "The divided cost-exclusion provision would be replaced with a single provision referring to fees determined by TEQSA."
+  ],
+  "affected": "The Minister responsible for assessing regulatory costs is affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:31.281753+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

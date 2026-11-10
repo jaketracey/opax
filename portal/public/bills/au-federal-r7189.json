@@ -131,7 +131,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-14",
+  "sentences": [
+   "The bill would appropriate money from the Consolidated Revenue Fund for the 2024-25 spending of the parliamentary departments, as one of three Budget bills alongside Appropriation Bills (No. 1) and (No. 2) 2024-2025.",
+   "It would fund the departmental, administered, administered assets and liabilities, and equity injection amounts listed in Schedule 1, with the Portfolio Budget Statements declared relevant documents for interpreting those amounts.",
+   "The bill would commence on the later of 1 July 2024 or Royal Assent, and the Act would be repealed at the start of 1 July 2027, in line with the three-year life of annual appropriation Acts."
+  ],
+  "changes": [
+   "A responsible Presiding Officer could add money to an item for urgent, unforeseen expenditure, capped at $300,000 each for the Senate, the House of Representatives and the Parliamentary Budget Office and $1 million for the Department of Parliamentary Services.",
+   "Notional transactions between non-corporate Commonwealth entities would be treated as real payments that debit an appropriation.",
+   "Amounts could be debited from an item and credited to a special account that shares the item's purpose.",
+   "Appropriations could be adjusted under sections 74 to 75 of the Public Governance, Performance and Accountability Act 2013, including for recoverable goods and services tax and transfers of functions.",
+   "Determinations allocating an advance would be legislative instruments that must be tabled but would not be subject to disallowance or sunsetting."
+  ],
+  "affected": "The Department of the Senate, the Department of the House of Representatives, the Department of Parliamentary Services, the Parliamentary Budget Office and their Presiding Officers are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:22:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

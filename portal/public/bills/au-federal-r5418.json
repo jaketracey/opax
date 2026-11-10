@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-02",
+  "sentences": [
+   "The bill would require imported food to carry a prescribed warning about Australian health and hygiene standards and possible harm to consumers from the food.",
+   "It would create separate labelling offences for packaged imports and retail displays of unpackaged or minimally packaged food, each carrying a penalty of $500,000.",
+   "The warning requirements and related offences would start six months after royal assent, while the other provisions would start the day after royal assent."
+  ],
+  "changes": [
+   "Imported packaged food would have to carry the prescribed warning when brought into Australia.",
+   "Retailers could place warnings on unpackaged items or display them prominently beside the food.",
+   "For minimally packaged food, warnings could appear on individual items, retail units or adjacent displays.",
+   "The minister could prescribe label size and other display requirements."
+  ],
+  "affected": "Food importers, operators of regulated retail food businesses and consumers buying imported food are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:20.701420+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -47,7 +47,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-18",
+  "sentences": [
+   "The bill would require corporations building large-scale wind or solar projects on private land to hold bonds covering the cost of rehabilitating the land or sea at the end of the project's life.",
+   "A proponent would submit a draft rehabilitation plan to the Minister 30 days before starting, then a liability assessment within 30 days of approval or any longer time the Minister prescribes, after which the Minister could direct it to enter a bond.",
+   "The bill would apply prospectively from 1 July 2025 to constitutional corporations and non-government land, excluding household and industrial roof-top solar, and would let states and territories impose similar obligations."
+  ],
+  "changes": [
+   "The Minister would prescribe the format of rehabilitation plans and the consultation steps proponents must take with affected communities and landholders.",
+   "A provider could not pass rehabilitation costs on to landholders or lessees of the land under any circumstances.",
+   "Penalties would apply to providers that fail to enter into a required rehabilitation bond.",
+   "The bond would be discharged once an auditor's certificate satisfies the Minister that rehabilitation is complete, and the Minister could carry out the works where unsatisfied.",
+   "Ministerial decisions under the Act would be reviewable by the Administrative Appeals Tribunal."
+  ],
+  "affected": "Corporate proponents of large wind and solar projects, landholders and lessees hosting them, affected communities, and the responsible Minister are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:20:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

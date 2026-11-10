@@ -113,7 +113,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-12",
+  "sentences": [
+   "The bill would correct drafting and clerical errors, update terminology and remove spent provisions across Commonwealth legislation without changing the substance of the law.",
+   "It would repair references and numbering, modernise offence and indexation wording, and expressly identify the territorial Crowns bound by the child support collection law.",
+   "Most corrections, terminology updates and repeals would begin 28 days after Royal Assent, while corrections to misdescribed amendments would follow the original amendments’ timing."
+  ],
+  "changes": [
+   "A duplicate subparagraph number in the Aged Care Act would be corrected.",
+   "The child support collection legislation would expressly bind the Crown for the Australian Capital Territory and Northern Territory.",
+   "Offence provisions using guilty wording would be recast to say a person commits an offence.",
+   "Indexation provisions would use the term index reference period in place of reference base.",
+   "Completed statutory review requirements in the Do Not Call Register and Spam Acts would be repealed."
+  ],
+  "affected": "People applying or consulting the amended Commonwealth laws and publishers of consolidated legislation would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:01.871996+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

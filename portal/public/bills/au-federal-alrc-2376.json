@@ -113,13 +113,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5010_ems_1e5fe2e5-950c-4af4-abba-640fac82ca18%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5010%22",
+   "document_date": "2013-03-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00093",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-21",
+  "sentences": [
+   "The bill would enable Aboriginal land grants around Jabiru and at Patta, while changing leasing and town planning rules within Commonwealth reserves.",
+   "It would add Jabiru and two adjacent land portions for grant to the Kakadu Aboriginal Land Trust, subject to arrangements for leasing them back.",
+   "The Jabiru land would remain within a Commonwealth reserve, and environmental amendments would address protection of Kakadu's world heritage, natural and cultural values."
+  ],
+  "changes": [
+   "A further Patta land parcel would become eligible for grant to the relevant Aboriginal Land Trust.",
+   "The Minister could establish Aboriginal Land Trusts to hold land beyond Crown land.",
+   "The Minister would have to consult the Northern Territory Government and relevant Land Council before specifying Jabiru town land.",
+   "The legislation would take effect on the day after Royal Assent."
+  ],
+  "affected": "The Kakadu Aboriginal Land Trust, the Aboriginal Land Trust receiving the Patta parcel, Land Councils, the Northern Territory and the Director of National Parks are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:28.690111+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

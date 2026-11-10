@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-24",
+  "sentences": [
+   "The bill would place the enrolment definition used for the Tuition Protection Service levy directly in the levy law as overseas student charging arrangements change.",
+   "It would count students who both enrol and undertake a course during the year, retaining the existing weighting based on the length of their courses.",
+   "The amendments would start alongside the overseas student registration charges amendments on 1 January 2022, and would not start if that companion legislation did not commence."
+  ],
+  "changes": [
+   "A new section would define total enrolments within the levy Act.",
+   "Students withdrawing before their course begins would be excluded from enrolment totals.",
+   "Students deferring for the whole year would also be excluded.",
+   "Notes for the levy components would point to the new enrolment definition."
+  ],
+  "affected": "Registered education providers liable for the tuition protection levy are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:31.282048+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

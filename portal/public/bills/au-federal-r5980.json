@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-23",
+  "sentences": [
+   "The bill would prohibit Commonwealth financial and other support for building or refurbishing coal-fired power stations and for purchasing them or transferring their ownership.",
+   "The prohibition would cover Commonwealth entities, companies and other defined authorities, including companies controlled by the Commonwealth or specified public bodies, from the day after Royal Assent.",
+   "Exceptions would allow support for workers affected by retirement and purchases or ownership transfers intended to help manage a coal-fired power station's closure."
+  ],
+  "changes": [
+   "The prohibition would override other Commonwealth laws unless they expressly provide otherwise.",
+   "The restriction would not operate where it would acquire property without constitutionally required just terms.",
+   "The Crown would be bound in all its capacities."
+  ],
+  "affected": "Commonwealth agencies, publicly controlled companies, coal-fired power station owners and workers affected by retirement would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:04.832574+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

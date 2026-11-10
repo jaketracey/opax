@@ -59,7 +59,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-07",
+  "sentences": [
+   "The bill would repeal the requirement in the Criminal Code that the Attorney-General consent in writing before proceedings for genocide, crimes against humanity, war crimes and related offences can begin.",
+   "It would repeal sections 268.121 and 268.122 of the Criminal Code, removing both the consent requirement and the rule that the Attorney-General's decision is final apart from High Court judicial review.",
+   "The repeal of the consent requirement would apply to proceedings commenced after the Act starts, whenever the alleged offence occurred, and past consent decisions would become open to review."
+  ],
+  "changes": [
+   "Section 268.121, which requires the Attorney-General's written consent and prosecution in the Attorney-General's name for Division 268 offences, would be repealed.",
+   "Section 268.122, which makes a consent decision final except for High Court judicial review under section 75(v) of the Constitution, would be repealed.",
+   "The repeal of section 268.121 would apply to proceedings commenced on or after commencement, whether or not the alleged offence happened before that date.",
+   "The repeal of section 268.122 would apply to consent decisions made before commencement, so earlier refusals could be reviewed.",
+   "The Act would commence on the day after it receives Royal Assent."
+  ],
+  "affected": "The Attorney-General, people seeking to commence proceedings for genocide, crimes against humanity, war crimes and offences against the administration of justice of the International Criminal Court, and persons charged with those offences are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:16:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-9332",

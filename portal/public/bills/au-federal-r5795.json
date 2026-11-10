@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-09",
+  "sentences": [
+   "The bill would make donations to the 2017 Bourke Street Fund Trust Account tax deductible by specifically listing the fund in income tax legislation.",
+   "Eligible gifts of $2 or more made after 20 January 2017 and before 21 January 2022 would qualify, subject to existing income tax requirements.",
+   "The fund supports victims of the Melbourne incident and their immediate families, and the amendments would commence at the next quarter after Royal Assent."
+  ],
+  "changes": [
+   "The fund would be added by name to the statutory deductible gift recipient list.",
+   "A time-limited eligibility period would govern which gifts receive tax deductions.",
+   "The income tax law’s gift recipient index would be updated to include the fund."
+  ],
+  "affected": "Donors to the Bourke Street Fund and the fund supporting victims and their immediate families are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:28.843066+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

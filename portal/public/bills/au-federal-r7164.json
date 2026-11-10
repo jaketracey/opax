@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-20",
+  "sentences": [
+   "The bill would amend the National Health Act 1953 and the Health Insurance Act 1973 so eligible nurse practitioners and eligible midwives no longer need a collaborative arrangement with a medical practitioner.",
+   "It would do this by removing the collaborative arrangement requirement from the definitions of participating midwife, participating nurse practitioner, authorised midwife and authorised nurse practitioner, which govern Medicare services and Pharmaceutical Benefits Scheme (PBS) prescribing.",
+   "The government says the change would remove barriers to primary care, particularly in rural and remote areas, and that professional standards set by the Nursing and Midwifery Board of Australia would continue to apply."
+  ],
+  "changes": [
+   "The definition of participating midwife in the Health Insurance Act 1973 would lose the words requiring a collaborative arrangement, so a participating midwife could deliver Medicare services without one.",
+   "The same change would apply to the definition of participating nurse practitioner, removing the requirement for an arrangement of a kind specified in regulations before delivering Medicare services.",
+   "In the National Health Act 1953, the definitions of authorised midwife and authorised nurse practitioner would be cut back so both could prescribe PBS medicines without a collaborative arrangement.",
+   "Schedule 1 would commence on 1 November 2024, or the day after Royal Assent if that is later."
+  ],
+  "affected": "Eligible nurse practitioners and eligible midwives, medical practitioners, and patients using Medicare and the PBS, particularly in rural and remote areas, are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:18:32Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-8935",

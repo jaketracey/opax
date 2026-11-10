@@ -95,7 +95,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-25",
+  "sentences": [
+   "The bill would change the administration of agricultural and veterinary chemical regulation, including annual reporting, applications to vary approvals and enforcement for misleading information.",
+   "The Australian Pesticides and Veterinary Medicines Authority could address application errors during preliminary assessment and approve part of an application to vary a registration or approval.",
+   "Suspended label approvals could be varied where the change addresses the suspension grounds, while expiry dates would specify when products must no longer be used."
+  ],
+  "changes": [
+   "Annual quantity returns would focus on chemical products supplied through disposals subject to levy.",
+   "Regulations could exempt specified products or quantities from the new annual return requirements.",
+   "False or misleading information provisions would gain civil penalty options.",
+   "Notification timeframes between the chemicals regulator and Food Standards Australia New Zealand could be agreed flexibly."
+  ],
+  "affected": "Applicants, holders of agvet chemical approvals and registrations, the agvet chemical industry and the Australian Pesticides and Veterinary Medicines Authority would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:04.832349+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5114",

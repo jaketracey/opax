@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-25",
+  "sentences": [
+   "The bill would let private health insurers extend family policy coverage to older dependants and create a separate category for dependent people with disability.",
+   "The maximum dependant age would rise from 24 to 31 for students and non-students, while people with disability could qualify as dependants regardless of age.",
+   "Insurers could choose whether to offer the expanded cover, and the legislation would provide for retrospective commencement of the amendments from 1 April 2021."
+  ],
+  "changes": [
+   "Dependants with disability could have a partner, unlike the other dependent categories.",
+   "Insurers could set different premiums for policies covering dependent people with disability.",
+   "Family hospital cover for a dependent person with disability would count towards Lifetime Health Cover history.",
+   "The age discrimination exception for private health insurance would be expanded to accommodate older dependants."
+  ],
+  "affected": "Private health insurers, dependent students and non-students, people with disability and their insured families are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:56.714032+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7285",

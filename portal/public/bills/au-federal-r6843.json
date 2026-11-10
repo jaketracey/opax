@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-09",
+  "sentences": [
+   "The bill would impose the withholding tax supporting revised tax arrangements for foreign resident workers taking part in specified Australian labour mobility programs.",
+   "It would set the tax rate for covered employment payments, working with companion amendments that define the programs, payment categories and administration of the tax.",
+   "The bill would accompany the Treasury tax integrity and business investment bill, with its imposition provisions commencing the day after royal assent."
+  ],
+  "changes": [
+   "The withholding tax would be set at 15 per cent of amounts subject to it.",
+   "With companion amendments, the tax would cover eligible Pacific Australia Labour Mobility scheme income paid from 1 March 2022.",
+   "The combined measures would also cover Australian Agriculture Worker Program payments from 1 March 2022 until 30 June 2022."
+  ],
+  "affected": "Foreign resident workers in covered labour mobility programs would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:29.575606+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

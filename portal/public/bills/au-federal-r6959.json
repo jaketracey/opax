@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-12-01",
+  "sentences": [
+   "The bill would update terminology in the national joint replacement register levy legislation to match proposed changes to private health insurance rules for medical devices.",
+   "It would replace references to joint replacement prostheses with device terminology, update related definitions and correct a mistaken reference to a ministerial determination.",
+   "Its operation would depend on the relevant part of the companion medical device legislation commencing, with commencement no earlier than its own royal assent."
+  ],
+  "changes": [
+   "Sponsor provisions would refer to devices instead of prostheses.",
+   "Rules allowing classes of joint replacements to be included or excluded would use medical device terminology.",
+   "The supplementary levy day definition would point to section 8A rather than section 6."
+  ],
+  "affected": "Sponsors of joint replacement devices subject to the national joint replacement register levy would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

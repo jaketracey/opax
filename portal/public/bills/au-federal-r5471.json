@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-01",
+  "sentences": [
+   "The bill would establish a judicial commission to investigate iron ore supply and demand, including production increases, effects on competitors and Australian tax revenue.",
+   "The commission would examine production decisions and possible measures to reduce output, using powers to summon witnesses, obtain evidence, hold hearings and seek search warrants.",
+   "It would report to Parliament within three months, commence the day after Royal Assent and be funded through appropriations for ordinary government services."
+  ],
+  "changes": [
+   "New offences would cover misleading evidence, document destruction, witness interference and contempt.",
+   "Legal or financial assistance could be provided to people appearing before the commission.",
+   "Witness expenses could be reimbursed.",
+   "Suspected offences identified during the inquiry could be referred to the relevant enforcement authority."
+  ],
+  "affected": "Iron ore producing companies whose production increases the inquiry would examine, people summoned as witnesses, and the Commissioner and staff of the Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:06.310189+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

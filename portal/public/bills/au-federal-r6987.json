@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-09",
+  "sentences": [
+   "The bill would extend powers to suspend or revoke Pharmaceutical Benefits Scheme (PBS) approvals to pharmacist corporations when a director faces relevant prosecution outcomes.",
+   "The department secretary could suspend approval after a director is charged, while the health minister could suspend or revoke approval following a conviction.",
+   "These powers would remain discretionary, operate from the day after Royal Assent and apply to relevant offences connected with supplying benefits under the scheme."
+  ],
+  "changes": [
+   "A proved charge followed by discharge without conviction would also support action against the corporation.",
+   "Corporations would be treated as acquitted when no director remains ineligible following acquittal, withdrawal or disposal of relevant charges.",
+   "The provisions would cover current and former directors and relevant prosecution outcomes occurring before commencement."
+  ],
+  "affected": "Approved pharmacist corporations, their directors, the health department secretary, health minister and people relying on PBS medicines are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:39.340346+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

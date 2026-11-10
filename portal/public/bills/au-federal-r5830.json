@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-22",
+  "sentences": [
+   "The bill would give the Special Broadcasting Service (SBS) more flexibility to schedule advertising and sponsorship announcements, and expressly permit revenue from product placement.",
+   "It would raise the hourly advertising and sponsorship limit from five to 10 minutes while adding a cap of 120 minutes in any 24 hours.",
+   "The changes would start the day after Royal Assent, with existing rules on advertising around programs and during natural breaks continuing to apply."
+  ],
+  "changes": [
+   "SBS would be expressly authorised to earn money from paid product placement.",
+   "The board would have to develop and publish guidelines governing product placement.",
+   "Annual reports would disclose product placement revenue and identify paying advertisers or sponsors."
+  ],
+  "affected": "SBS and its board, and viewers who may see more advertising per hour at some times and less at others, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:38.437210+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

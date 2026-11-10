@@ -101,7 +101,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-04",
+  "sentences": [
+   "The bill would revise tax file number and information-management rules for the Aboriginal Study Assistance Scheme (ABSTUDY) and Assistance for Isolated Children, aligning administration with social security arrangements.",
+   "The Secretary could request tax file numbers, with ongoing recipients generally losing payability after 28 days without compliance, unless the Secretary grants an exemption.",
+   "The amendments would also confirm that social security law includes subordinate legislation and would commence on the day after Royal Assent, including for existing instruments."
+  ],
+  "changes": [
+   "Claimants could supply their number orally or use a declaration and authorisation for communication with the tax Commissioner.",
+   "The Secretary could obtain relevant third-party tax file number information for checking eligibility and payment accuracy.",
+   "Information collected under the new power could not be used to raise debts for payments made before commencement.",
+   "Existing tax file numbers supplied under the old provision would carry over into the new regime."
+  ],
+  "affected": "ABSTUDY and Assistance for Isolated Children claimants and recipients, relevant third parties, the Secretary and tax Commissioner are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:15.312542+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7099",

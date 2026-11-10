@@ -173,7 +173,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-09",
+  "sentences": [
+   "The bill would authorise funding for ordinary annual Commonwealth services in 2023-24, including new budget measures and the continuation of existing government programs.",
+   "It would provide scheduled departmental, administered and corporate entity appropriations, with a $400 million advance available for urgent expenditure meeting the stated conditions.",
+   "The legislation would commence on 1 July 2023 or Royal Assent, whichever is later, alongside separate funding bills for other services and parliamentary departments."
+  ],
+  "changes": [
+   "Advance determinations would be tabled in Parliament but exempt from disallowance.",
+   "Departmental appropriations would support entity functions, including staffing and operational expenditure.",
+   "Funding could be credited to special accounts when their purposes match the appropriation.",
+   "The appropriation legislation would repeal at the beginning of 1 July 2026."
+  ],
+  "affected": "Commonwealth departments and funded public entities and companies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:24.171651+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

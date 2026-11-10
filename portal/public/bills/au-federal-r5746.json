@@ -137,7 +137,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-13",
+  "sentences": [
+   "The bill would wind down the existing vocational education and training loan scheme and provide transitional arrangements for students and providers under the replacement student loans legislation.",
+   "Old-scheme assistance would generally stop for units with census dates from 1 January 2017, while eligible continuing students could retain access for census dates before 1 January 2018.",
+   "Listed universities and publicly owned training organisations would transition automatically, while other existing providers would need suitability approval for an initial six-month transition period."
+  ],
+  "changes": [
+   "New student loans would become debts administered through the Higher Education Loans Program.",
+   "Loan debts would generally include a 20 per cent administration fee, with rules able to set a lower percentage.",
+   "Training provider registration would require compliance with the relevant student loan laws.",
+   "Student identifiers could be collected, used and disclosed to administer the new loans.",
+   "Students approved for a new loan could not also receive old-scheme assistance for the same course units."
+  ],
+  "affected": "Students using vocational education loans, existing approved training providers, listed universities and the Australian Skills Quality Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:12.963750+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-4462",

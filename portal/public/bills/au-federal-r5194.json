@@ -89,7 +89,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-20",
+  "sentences": [
+   "The bill would abolish the Clean Energy Finance Corporation and transfer its investment portfolio, other assets and liabilities to the Commonwealth for continued administration.",
+   "Treasury would manage the transferred holdings, with a temporary special account funding obligations and expenses associated with managing or disposing of those assets.",
+   "Abolition and most transitional arrangements would begin 28 days after Royal Assent, while quarterly investment reporting provisions would start earlier, on Royal Assent."
+  ],
+  "changes": [
+   "Future annual appropriations to the corporation would lapse.",
+   "The Commonwealth would replace the corporation in pending court proceedings.",
+   "Board members, employees and consultants would not automatically transfer to Commonwealth positions.",
+   "Confidentiality duties over transferred commercial information would continue.",
+   "The transitional special account would be repealed the day after its balance reached nil."
+  ],
+  "affected": "The corporation's board, employees, contractors and investment partners, Treasury and the Commonwealth would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:19.757436+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3194",

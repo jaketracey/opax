@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "The bill would support the proposed payment times reporting scheme by authorising tax information sharing and making contingent changes to references to federal courts.",
+   "The Commissioner of Taxation could disclose information about whether an entity must report, helping the Payment Times Reporting Regulator identify businesses covered by the scheme.",
+   "The disclosure changes would commence with the main reporting legislation, while court-reference amendments would depend on commencement of the relevant federal court restructuring legislation."
+  ],
+  "changes": [
+   "Tax secrecy rules would permit the specified disclosures to the reporting regulator.",
+   "The permission would cover information obtained before commencement as well as later information.",
+   "Definitions of the relevant court and issuing officer would be updated following court restructuring."
+  ],
+  "affected": "Reporting entities, the Commissioner of Taxation and the payment times regulator would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:38.608185+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6360",

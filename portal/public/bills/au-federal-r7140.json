@@ -149,7 +149,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-06",
+  "sentences": [
+   "The bill would amend the Income Tax Rates Act 1986 to change individual income tax rates and thresholds from 2024-25, which the explanatory memorandum says would cut tax for all taxpayers.",
+   "For residents the 19 per cent rate would drop to 16 per cent, the 30 per cent band would stop at $135,000, 37 per cent would apply to $190,000 and 45 per cent above.",
+   "Foreign residents and working holiday makers would get matching threshold changes, the $18,200 tax-free threshold would stay, and the bill is paired with the companion Medicare Levy Bill."
+  ],
+  "changes": [
+   "The rate on resident taxable income between $18,200 and $45,000 would fall from 19 per cent to 16 per cent.",
+   "The 30 per cent rate would apply to resident income between $45,000 and $135,000, instead of up to $200,000.",
+   "A 37 per cent rate would apply between $135,000 and $190,000, with 45 per cent starting at $190,000 rather than $200,000.",
+   "Foreign residents would pay 30 per cent to $135,000, 37 per cent to $190,000 and 45 per cent above.",
+   "Working holiday makers would keep 15 per cent to $45,000, then 30 per cent to $135,000, 37 per cent to $190,000 and 45 per cent above.",
+   "Schedule 1 would commence on the next 1 January, 1 April, 1 July or 1 October after Royal Assent and apply from the 2024-25 income year."
+  ],
+  "affected": "Australian resident individual taxpayers, foreign resident individual taxpayers and working holiday makers are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:28:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8683",

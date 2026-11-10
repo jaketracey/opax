@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-03-23",
+  "sentences": [
+   "The bill would establish a special appropriation to fund assistance for communities, regions and industries particularly affected by the economic effects of coronavirus.",
+   "It would make $1 billion available, with funding governed by written agreements requiring recipients to comply with the terms agreed with the Commonwealth.",
+   "The legislation would begin the day after royal assent and limit the funding to short-term assistance, with a spending deadline in June 2021."
+  ],
+  "changes": [
+   "Payments could be made to states and territories to deliver assistance to affected communities and industries.",
+   "Ministerial rules could allocate funding for specified purposes and allow other ministers to administer it.",
+   "The power to enter funding agreements could be delegated to senior executives in non-corporate Commonwealth entities."
+  ],
+  "affected": "Affected regions, communities, industry sectors and funding recipients would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:29.457065+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

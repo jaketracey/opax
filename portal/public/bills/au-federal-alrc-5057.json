@@ -27,8 +27,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s919_ems_b57fe9e8-1bb8-4f3e-a8de-964bf7749b98%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s919%22",
+   "document_date": "2013-05-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-16",
+  "sentences": [
+   "The bill would expand online gambling regulation to cover games where players gamble using virtual items that have been bought with real money.",
+   "It would change the Interactive Gambling Act 2001 definition of gambling service so items of value expressly included virtual items purchased in or connected with games.",
+   "The new definition would take effect 28 days after Royal Assent and address gambling activities involving virtual purchases made using real currency."
+  ],
+  "changes": [
+   "The statutory gambling service definition would be amended.",
+   "Virtual purchases made within a game or in relation to it would fall within the specified items of value.",
+   "The new definition would apply after the 28-day commencement period."
+  ],
+  "affected": "Players gambling with purchased virtual items and providers of games offering those activities are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:22.723050+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

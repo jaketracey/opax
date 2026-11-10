@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-08",
+  "sentences": [
+   "The bill would update the statutory ceiling and indexation references for foreign investment application fees, aligning the legislation with indexation already incorporated into fee arrangements.",
+   "It would record the indexed fee cap as $1,045,000 and reset the references used to calculate future annual increases from 1 July 2023.",
+   "The changes would commence after royal assent and sit alongside separate Treasury amendments increasing residential land penalties, while the cap itself would reflect accumulated indexation."
+  ],
+  "changes": [
+   "The legislative fee ceiling would change from $1 million to the current indexed amount.",
+   "The indexation provision would identify 1 July 2023 as its updated starting date.",
+   "The indexation factor’s denominator would refer to the period ending 31 March 2022."
+  ],
+  "affected": "Foreign investment applicants paying application fees would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

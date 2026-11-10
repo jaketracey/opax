@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would create two offences for using telecommunications to distribute material intended to incite trespass, property damage, destruction or theft on agricultural land.",
+   "Inciting trespass would carry up to 12 months’ imprisonment where recklessness about business detriment is shown, while inciting property offences could attract five years.",
+   "The offences would begin the day after royal assent, with exemptions for qualifying public-interest journalism and disclosures protected from liability under other laws."
+  ],
+  "changes": [
+   "Agricultural land would include land used for specified primary production businesses, including abattoirs and livestock saleyards.",
+   "Mixed residential or other business uses would not remove otherwise qualifying land from coverage.",
+   "Incited trespass would not have to occur for the offence to be established.",
+   "The existing rebuttable presumption about use of a telecommunications service would apply to the new offences."
+  ],
+  "affected": "Primary producers, people distributing inciting material, journalists and protected whistleblowers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:09.880620+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5880",

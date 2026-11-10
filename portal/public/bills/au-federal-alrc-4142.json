@@ -63,8 +63,42 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4967_ems_eeaa42cc-8879-40c4-a9b2-898d4194757e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4967%22",
+   "document_date": "2013-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-13",
+  "sentences": [
+   "The bill would revise export market development grants by increasing the usual grant limit while restricting support for established markets and changing eligibility and administration rules.",
+   "Eligible applicants could receive up to eight grants, with sixth to eighth grants excluding promotion expenses for sales to the United States, Canada and European Union.",
+   "Approved bodies would retain different limits and market access, while existing approved joint ventures could continue receiving grants until their approvals expired under transitional arrangements."
+  ],
+  "changes": [
+   "New joint venture approvals would stop after 30 June 2013.",
+   "Event promotion would cease to be an eligible product category, while principals promoting their own events could remain eligible.",
+   "Applicants would have to pay claimed expenses themselves, directly or by credit card.",
+   "Claims prepared by consultants assessed as unfit would be treated as unmade, allowing applicants to submit fresh claims.",
+   "The minister could set the administration spending limit through a disallowable determination."
+  ],
+  "affected": "Export grant applicants, approved bodies, joint ventures, event promoters and export grant consultants are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:28.357741+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-2",

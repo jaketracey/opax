@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "The bill would integrate the Australian Government Solicitor into the Attorney-General's Department, replacing its separate statutory corporation structure with a departmental legal service.",
+   "The Solicitor would become a departmental employee and legal practitioner, while provisions establishing the corporation's governance, chief executive position and financial arrangements would be repealed.",
+   "Transitional arrangements would move assets, liabilities, contracts and records to the Commonwealth, preserve ongoing legal work and protect specified employee entitlements during the consolidation."
+  ],
+  "changes": [
+   "Fees charged to external clients would become recoverable Commonwealth debts.",
+   "The freedom of information exemption for the legal service's activities would continue within the department.",
+   "The existing enterprise agreement would apply to relevant staff until a new departmental agreement begins.",
+   "The Minister could make transitional rules only within 12 months of commencement."
+  ],
+  "affected": "Government legal service staff, client agencies, external clients and parties to continuing legal proceedings are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:32.139659+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

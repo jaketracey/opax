@@ -125,7 +125,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-25",
+  "sentences": [
+   "The bill would give Commonwealth entities express legislative authority to charge and collect a payment surcharge whenever they already have authority under law to collect the underlying payment.",
+   "It would also let the Minister set Commonwealth surcharging policies by legislative instrument, which entities must take all reasonable steps to follow when charging, collecting or refunding surcharges.",
+   "The bill would commence the day after Royal Assent and sits with an Imposition Bill and a Consequential Provisions Bill that apply the authority back to 1 January 2003."
+  ],
+  "changes": [
+   "A Commonwealth entity with the power to collect a payment under Commonwealth, state or territory law could charge a surcharge on that payment.",
+   "No surcharge could be charged under the bill where the payment is already surchargeable under another law.",
+   "Surcharges must not amount to a tax and would be charged on a cost recovery basis to offset the entity's banking costs for the payment method used.",
+   "The Minister could make Commonwealth surcharging policies by legislative instrument, subject to sunsetting and disallowance.",
+   "An entity could refund a surcharge in whole or in part at its discretion, and failing to follow a policy would not invalidate a surcharge decision.",
+   "Decisions to charge, collect or refund a surcharge would not be subject to merits review."
+  ],
+  "affected": "Commonwealth entities as defined in the Public Governance, Performance and Accountability Act 2013, the Minister who sets surcharging policy, and people who pay surcharges to those entities are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:04:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

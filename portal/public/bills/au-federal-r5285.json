@@ -77,7 +77,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-19",
+  "sentences": [
+   "The bill would restore indexation of excise on domestically produced fuels, including gaseous fuels, as part of a wider package supporting road infrastructure funding.",
+   "Excise rates would follow the Consumer Price Index from 1 August 2014, with subsequent adjustments scheduled for 1 February and 1 August each year.",
+   "Aviation fuel would remain outside indexation, while companion bills would cover imported fuel duties, fuel tax credit calculations and a dedicated road funding account."
+  ],
+  "changes": [
+   "Indexed fuel excise rates would be rounded to one decimal place of a cent.",
+   "Fuel blend calculations would use the indexed rates applying when duty on the blend becomes payable.",
+   "Production duties on stabilised crude oil and condensate would remain outside indexation.",
+   "The scheduled gaseous fuel excise increase on 1 July 2015 would be indexed and rounded."
+  ],
+  "affected": "Fuel manufacturers and consumers of petrol and diesel would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:24.095144+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

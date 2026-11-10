@@ -21,8 +21,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4961_ems_94c5f2a1-de6a-42da-a74f-e0f3fb469f3c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4961%22",
+   "document_date": "2013-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-11",
+  "sentences": [
+   "The bill would establish Australian ownership and operating criteria for airlines seeking access to domestic routes, covering equity ownership, aircraft maintenance and crew domicile.",
+   "An airline would need 51 per cent ownership by Australian citizens or residents, at least 80 per cent of aircraft maintenance performed in Australia and crews domiciled here.",
+   "Companies with access to Australian routes would bear the onus of showing that they satisfy the proposed definition, including its ownership and operational criteria."
+  ],
+  "changes": [
+   "The ownership test would recognise holdings by Australian citizens or residents, including share ownership.",
+   "The maintenance criterion would require at least 80 per cent of an airline’s aircraft maintenance to occur domestically.",
+   "The crew criterion would require airline crews to be domiciled in Australia."
+  ],
+  "affected": "Airlines accessing Australian domestic routes, their Australian citizen or resident owners and their crews are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:56.236017+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

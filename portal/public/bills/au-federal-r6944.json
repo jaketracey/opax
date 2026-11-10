@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-10",
+  "sentences": [
+   "The bill would extend existing higher education fee protections to more honours students and provide education debt relief for eligible health practitioners working in rural, remote or very remote areas.",
+   "Students who began a related bachelor course before 1 January 2021 could qualify for protected contribution rates when progressing to honours, regardless of their completion date.",
+   "Health debt relief would depend on eligible work in rural, remote or very remote areas, with detailed participation and location requirements set through guidelines."
+  ],
+  "changes": [
+   "Providers would have to refund excess upfront payments or re-credit loan balances for affected students covered retrospectively.",
+   "Students forced to transfer because their provider discontinued a course would expressly retain grandfathered status.",
+   "Eligible health practitioners could receive waivers of debt indexation during qualifying work."
+  ],
+  "affected": "Affected honours students, higher education providers and eligible rural and remote health practitioners would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7887",

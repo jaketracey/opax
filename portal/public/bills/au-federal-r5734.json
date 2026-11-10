@@ -167,7 +167,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-13",
+  "sentences": [
+   "The bill would support Youth Jobs Prepare, Trial, Hire by excluding internship incentives from income tests and allowing income support suspension when young people enter eligible subsidised jobs.",
+   "Internship incentives, initially $200 a fortnight, would be paid alongside existing support without reducing participants’ social security payments or veterans’ entitlements.",
+   "Eligible workers under 25 could resume otherwise payable support without a new claim or waiting period if they lose the job without fault within 26 weeks."
+  ],
+  "changes": [
+   "Internship incentive payments would be excluded from social security income calculations.",
+   "An equivalent exclusion would apply when calculating veterans’ entitlements.",
+   "A continuous suspension would normally end in cancellation after 26 weeks if the person remains ineligible or payment remains unavailable.",
+   "Earlier cancellation could follow job loss caused by misconduct or an unreasonable voluntary act."
+  ],
+  "affected": "Eligible young jobseekers undertaking internships or subsidised employment would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:12.963750+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4420",

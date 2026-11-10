@@ -83,7 +83,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-10",
+  "sentences": [
+   "The bill would make payment of the National Student Ombudsman levy and late payment charges a registration condition for higher education providers, enabling regulatory enforcement.",
+   "The education department secretary would issue notices stating the levy year, amount and payment deadline, allowing at least 30 days after notice is given.",
+   "It would operate alongside the separate bill imposing the levy, and would commence only if and when that companion legislation begins to operate."
+  ],
+  "changes": [
+   "Ministerial rules could set administrative penalties for late levy payments.",
+   "Rules could provide payment extensions, refunds, remissions, waivers and review of collection decisions.",
+   "Failure to issue a notice would not extinguish liability to pay.",
+   "The registration condition would cover providers registered before commencement as well as those registered afterwards."
+  ],
+  "affected": "Registered higher education providers and the Secretary of the Department of Education are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:05:19.557828+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

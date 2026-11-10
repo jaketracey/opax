@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-18",
+  "sentences": [
+   "The bill would restrict public access to documents from the Sex Discrimination Commissioner's independent review of parliamentary workplaces, through changes to archives and freedom of information laws.",
+   "Review records would enter the archives open access period on 1 January, 99 years after the calendar year in which each record was created.",
+   "The restrictions would cover documents supplied to or produced by the review, while allowing the review itself to publish information it considers appropriate."
+  ],
+  "changes": [
+   "Review documents would be excluded from access under the Freedom of Information Act.",
+   "The usual power to authorise accelerated open or special archival access would be disapplied.",
+   "The amendments would commence the day after Royal Assent."
+  ],
+  "affected": "People providing information to the review, third parties named in it and people seeking its records are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:02.491705+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

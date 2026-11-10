@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-04-08",
+  "sentences": [
+   "The bill would establish a framework for Commonwealth coronavirus support payments administered by the Commissioner of Taxation, including the proposed JobKeeper scheme for affected businesses.",
+   "Treasurer-made rules would set eligibility, amounts, payment timing and recipient obligations, with authorised payments covering the period from 1 March 2020 to 31 December 2020.",
+   "Payments could begin only after commencement, and the framework would operate alongside a separate omnibus bill changing workplace rules and related tax and welfare provisions."
+  ],
+  "changes": [
+   "The commissioner would receive general responsibility for administering the payments.",
+   "Overpayment rules would provide for recovery and applicable interest.",
+   "Payment decisions would be subject to a review process.",
+   "Recipients would have record-keeping obligations under the payment framework."
+  ],
+  "affected": "Eligible businesses, self-employed people, employees and the Treasurer would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:26.080943+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6315",

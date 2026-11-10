@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-28",
+  "sentences": [
+   "The bill would impose an annual levy on covered domestic commercial vessels to fund national maritime safety services, with charging intended to begin from 1 July 2019.",
+   "The Minister would set levy rates through rules after seeking and considering advice from the Australian Maritime Safety Authority (AMSA) about costs to recover.",
+   "Owners and relevant survey certificate holders would be liable, jointly and severally where responsibility was shared, with exemptions available for vessel classes specified by ministerial rules."
+  ],
+  "changes": [
+   "Vessels becoming liable partway through a financial year would pay a proportional levy.",
+   "The levy would apply to covered vessels in Australia, external territories or overseas.",
+   "Costs recovered through individual service fees would be excluded from levy calculations.",
+   "Rules setting levy amounts would wait until both Houses had 15 sitting days to consider disallowance."
+  ],
+  "affected": "Owners and relevant survey certificate holders of covered domestic commercial vessels, including responsible partnerships, associations and trustees, and AMSA would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:04.952804+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

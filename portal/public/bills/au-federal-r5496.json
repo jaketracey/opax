@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-25",
+  "sentences": [
+   "The bill would change veterans’ vocational rehabilitation support, create a single military compensation appeal pathway and expand regulation-making powers for specified service dependants’ graves.",
+   "Compensation claimants would seek review through the Veterans’ Review Board, followed by the Administrative Appeals Tribunal, instead of choosing direct reconsideration by the compensation commission.",
+   "The appeal changes would apply to original determinations from 1 January 2016, while rehabilitation amendments would begin on 20 March 2016 under separate application rules."
+  ],
+  "changes": [
+   "The rehabilitation scheme could provide medical management and psychosocial services.",
+   "Periods without paid work lasting at least six months would pause specified periods used to calculate income exclusions for invalidity service pension recipients.",
+   "Regulations could cover graves of service dependants buried at Terendak Military Cemetery in Malaysia, enabling arrangements for repatriating their remains.",
+   "The single appeal pathway would remove the costs award option associated with commission reconsideration, while eligible applicants could access legal aid."
+  ],
+  "affected": "Veterans in rehabilitation, military compensation claimants and families of service dependants buried at Terendak would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:50.117311+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

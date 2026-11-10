@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-25",
+  "sentences": [
+   "The bill would create two refundable tax offsets, a Hydrogen Production Tax Incentive and a Critical Minerals Production Tax Incentive, and widen Indigenous Business Australia's power to borrow.",
+   "Eligible companies would receive $2 for each kilogram of eligible renewable hydrogen and 10 per cent of eligible critical minerals processing expenditure, for up to 10 income years between 1 July 2027 and 30 June 2040.",
+   "The hydrogen offset would not commence unless the Future Made in Australia (Guarantee of Origin) Act 2024 does, and the offsets are estimated to cost $6.7 billion over ten years from 2024-25 and $7.0 billion over eleven years from 2023-24."
+  ],
+  "changes": [
+   "Hydrogen claimants would have to be constitutional corporations subject to Australian tax, hold the facility's Guarantee of Origin production profile and comply with community benefit rules made by the Treasurer.",
+   "Eligible hydrogen would need a facility with capacity equivalent to at least a 10 MW electrolyser, a final investment decision before 1 July 2030 and emissions of no more than 0.6 kg of carbon dioxide per kilogram.",
+   "The critical minerals offset would cover processing that substantially transforms a feedstock into a purer and chemically distinct form of the critical mineral, but not mining or beneficiation.",
+   "Indigenous Business Australia could borrow money in connection with its functions where authorised under the Public Governance, Performance and Accountability Act 2013 or by rules agreed to by the Minister for Finance."
+  ],
+  "affected": "Renewable hydrogen producers, critical minerals processors, the Australian Taxation Office, the Clean Energy Regulator, the industry department and Indigenous Business Australia are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:34:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9281",

@@ -149,7 +149,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-21",
+  "sentences": [
+   "The bill would establish the Independent Parliamentary Standards Commission (IPSC) within the Parliamentary Workplace Support Service (PWSS) to investigate misconduct in Commonwealth parliamentary workplaces and enforce the Behaviour Codes.",
+   "Seven to nine part-time Commissioners, at least four of them women, would investigate complaints, make findings on the balance of probabilities and impose, recommend or refer sanctions.",
+   "Schedule 1 Part 1 would commence the day after Royal Assent and Part 2 on proclamation or within six months, with $3.8 million committed in 2024-25 to establish the IPSC."
+  ],
+  "changes": [
+   "The IPSC would replace the PWSS's interim review function and could investigate conduct both before and after the Behaviour Codes commence.",
+   "Investigations would need the complainant's consent unless a serious work health and safety risk arose, possible assault or sexual assault would always need the affected person's consent, and anonymous complaints could not be investigated.",
+   "For parliamentarians, a three-Commissioner panel could impose reprimands, training or behaviour agreements, and refer serious breach findings to a Privileges Committee, which could recommend fines over 2 and under 5 per cent of base salary, or suspension.",
+   "For staff employed under the Members of Parliament (Staff) Act 1984, a Commissioner could recommend sanctions to the employing parliamentarian, including fines of up to 2 per cent of salary and termination.",
+   "Causing or threatening detriment to a person for making a protected disclosure would be an offence, and confidentiality notices would be enforceable as offences."
+  ],
+  "affected": "Parliamentarians, their staff, Parliamentary Service and public service employees, police officers, volunteers and others working in Commonwealth parliamentary workplaces, and the PWSS are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:32:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9113",

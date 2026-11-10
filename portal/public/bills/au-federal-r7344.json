@@ -143,7 +143,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-24",
+  "sentences": [
+   "The bill would make technical amendments to the Aged Care (Accommodation Payment Security) Levy Act 2006 that follow from the passage of the Aged Care Act 2024.",
+   "It would repeal the definition of approved provider, insert a definition of registered provider and replace the term approved providers with registered providers in the affected provisions.",
+   "The whole Act would commence at the same time as the Aged Care Act 2024, with no change to policy intent or application and no financial impact."
+  ],
+  "changes": [
+   "The definition of approved provider in section 5 of the Levy Act would be repealed because the term is not used in the Aged Care Act 2024.",
+   "A definition of registered provider, described as the functional equivalent of the repealed term, would be inserted into section 5.",
+   "Subsections 6(1) and 6(2) and section 9, including its heading, would substitute registered providers for approved providers wherever the term occurs."
+  ],
+  "affected": "Registered aged care providers that pay the accommodation payment security levy and residents whose lump sums are recovered through the Accommodation Payment Guarantee Scheme are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T10:14:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-9769",

@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "The bill would expand the Consumer Data Right beyond data sharing so consumers could authorise accredited businesses to initiate actions on their behalf.",
+   "Actions could include payments, account changes or switching providers, using instructions sent by an accredited intermediary to a participating business that performs the action.",
+   "Rights and obligations for each action type would depend on ministerial declarations and rules, while existing laws governing performance of the action would continue."
+  ],
+  "changes": [
+   "Accredited action initiators would have to act efficiently, honestly and fairly.",
+   "Providers could charge for processing instructions only where rules permitted it.",
+   "Privacy safeguards would extend to data exchanged through action instructions."
+  ],
+  "affected": "Individual and business consumers, accredited action initiators and action service providers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

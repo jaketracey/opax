@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-29",
+  "sentences": [
+   "The bill would increase import duties on specified oils and greases to help fund the Product Stewardship for Oil Scheme, which supports reuse and recycling.",
+   "The excise-equivalent customs rate would rise from 5.449 cents to 8.5 cents per litre or kilogram, applying to relevant goods from 1 July 2014.",
+   "The proposal would operate alongside a separate excise bill covering domestic production, with both new and recycled petroleum products and synthetic equivalents within scope."
+  ],
+  "changes": [
+   "Rates in Schedules 3 to 9 of the Customs Tariff Act would be amended.",
+   "Relevant goods imported on or after 1 July 2014 would attract the higher duty.",
+   "Earlier imports that had not yet been subject to the duty would also be covered."
+  ],
+  "affected": "Importers of the covered petroleum-based and synthetic oils and greases would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:38.055873+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

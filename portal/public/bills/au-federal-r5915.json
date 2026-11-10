@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-04",
+  "sentences": [
+   "The bill would extend annual increases in the large scale Renewable Energy Target beyond 2020, changing the statutory requirements for renewable electricity through to 2030.",
+   "It would replace the fixed requirement of 33,000 gigawatt hours for each year from 2021 to 2030 with a list of progressively higher annual requirements.",
+   "The proposed amendments would operate within the existing Renewable Energy (Electricity) Act 2000 and would begin on the day the bill receives Royal Assent."
+  ],
+  "changes": [
+   "Section 40 would be amended to give effect to the new target schedule.",
+   "A rising annual list would replace the existing flat requirements for the specified decade.",
+   "The target's period of annual increases would be extended to 2030."
+  ],
+  "affected": "Renewable electricity generators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:59.562114+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-09",
+  "sentences": [
+   "The bill would impose a separate tax on diverted profits when the accompanying multinational tax avoidance amendments make a taxpayer liable under the new rules.",
+   "It would set the tax rate at 40 per cent of the diverted profit amount, with the companion legislation supplying the assessment and review framework.",
+   "It would sit within a package targeting certain profit-shifting schemes by large multinational groups, with exclusions based on income, foreign tax, economic substance and entity type."
+  ],
+  "changes": [
+   "The bill would establish the legal imposition of diverted profits tax.",
+   "The applicable tax rate would be fixed at 40 per cent.",
+   "The tax would be charged on the amount of diverted profit identified under the companion rules."
+  ],
+  "affected": "Large multinational entities falling within the diverted profits tax rules are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:33.732627+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

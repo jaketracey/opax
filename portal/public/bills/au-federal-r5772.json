@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-24",
+  "sentences": [
+   "The bill would change Pharmaceutical Benefits Scheme administration by allowing automated decisions, temporary pharmacy relocation after disasters and concessional medicine entitlements on the day of death.",
+   "Approved pharmacists could seek permission to supply subsidised medicines from alternative premises in substantially the same locality when disaster or exceptional circumstances prevent normal operation.",
+   "The bill would commence the day after Royal Assent, while the death-related entitlement correction would apply retrospectively to medicines supplied from 1 April 2015."
+  ],
+  "changes": [
+   "Responsible officials could replace incorrect computer decisions without requiring a formal appeal.",
+   "Relocation applications would generally be required within 14 days of starting supply from alternative premises.",
+   "Temporary permissions could last up to six months, with extensions available.",
+   "Claims from permitted alternative premises would be paid at the full rate instead of 90 per cent."
+  ],
+  "affected": "Approved pharmacists, prescribers, concessional medicine beneficiaries and their dependants, and responsible health and Medicare officials are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:49.497965+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-23",
+  "sentences": [
+   "The bill would create a temporary income test concession for eligible jobseekers taking seasonal horticultural work, allowing them to receive more of their welfare payment.",
+   "Participants could earn up to $5,000 from qualifying work without income test assessment, with access available in each of the 2017-18 and 2018-19 financial years.",
+   "The two year trial would begin on 1 July 2017 for Newstart Allowance and Youth Allowance jobseekers who had received payments continuously for at least three months."
+  ],
+  "changes": [
+   "Full-time seasonal work could count as satisfying Youth Allowance activity requirements while the income exemption applied.",
+   "Exempt seasonal earnings would also be disregarded when assessing a participant's partner.",
+   "The seasonal living away and travel allowance would be excluded from income tests.",
+   "The concession would not extend to Farm Household Allowance."
+  ],
+  "affected": "Eligible jobseekers, their partners and employment service providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:38.436623+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-4831",

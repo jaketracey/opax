@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-10",
+  "sentences": [
+   "The bill would let eligible age pensioners and veterans' payment recipients suspend their payments, rather than lose them through cancellation, when employment income prevents payment.",
+   "It would generally allow suspension for two years and extend pensioner concession card eligibility for working pensioners and eligible pensioner partners for up to two years.",
+   "The measures would also cover qualifying partners of disability support pensioners, with commencement on the first quarterly starting date following royal assent."
+  ],
+  "changes": [
+   "Eligible recipients could restart pension payments during suspension by updating their details rather than lodging a fresh claim.",
+   "Age pension suspension would require employment performed in Australia and Australian residence when the suspension decision was made.",
+   "Some late notification cases could receive a suspension period of two years and 14 days.",
+   "The bill would provide suspension protection for partners after separation or the death of the other member of the couple."
+  ],
+  "affected": "Working pensioners and qualifying pensioner partners would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:15.616130+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

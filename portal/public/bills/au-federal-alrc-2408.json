@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5065_ems_cbbc2aaa-f4ce-4ad3-a1b7-ae4719821c51%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5065%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00121",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would increase earnings allowed before specified income support payments are reduced and extend education assistance and concession card eligibility for some single parents.",
+   "The fortnightly income free area would rise from $62 to $100 on 20 March 2014, with annual consumer price indexation beginning on 1 July 2015.",
+   "From 1 January 2014, eligible single principal carers receiving Newstart could access the Pensioner Education Supplement, and certain parents leaving Parenting Payment would receive 12 extra weeks of concession-card eligibility."
+  ],
+  "changes": [
+   "Covered allowances would include Newstart, Widow, Partner and Sickness Allowances and partnered Parenting Payment.",
+   "The point where the higher income reduction taper begins would remain $250 per fortnight.",
+   "The card extension would last 12 weeks where the youngest child turned eight and employment earnings prevented eligibility for another support payment.",
+   "A technical age reference would change from 21 to 22."
+  ],
+  "affected": "Recipients of the specified allowances and Parenting Payment, including single principal carer parents undertaking approved study or leaving income support, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:47.768329+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2434",

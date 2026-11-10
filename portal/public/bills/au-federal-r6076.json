@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would extend well investigation, annual well and well activity levies to greenhouse gas wells, and update existing offshore petroleum levy arrangements.",
+   "It would recover regulatory costs as greenhouse gas well oversight moved to the National Offshore Petroleum Safety and Environmental Management Authority (NOPSEMA) under companion legislation.",
+   "The new greenhouse gas levies would begin alongside the companion bill's transfer of oversight, with corresponding state and territory levies subject to specified regulatory arrangements."
+  ],
+  "changes": [
+   "A well activity levy would apply when five-yearly revisions of well operations management plans were submitted.",
+   "The levy on applications for approval to commence Commonwealth well activities would be removed.",
+   "Safety and well investigation levy provisions would be updated to refer to compliance investigations under the regulatory powers legislation.",
+   "For annual levy purposes, covered well abandonment would require the relevant notification from NOPSEMA confirming compliance with the management plan."
+  ],
+  "affected": "Offshore petroleum and greenhouse gas titleholders subject to the levy provisions would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:40:27.125083+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

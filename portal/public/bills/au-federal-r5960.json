@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-07",
+  "sentences": [
+   "The bill would let eligible first home buyers withdraw voluntary superannuation savings and allow people aged 65 or older to contribute qualifying home sale proceeds.",
+   "First home contributions counted for release would be capped at $15,000 per financial year and $30,000 overall, while downsizer contributions could reach $300,000.",
+   "Eligible savings could include contributions from 1 July 2017, with withdrawals from 1 July 2018 and downsizer rules covering sale contracts exchanged from that date."
+  ],
+  "changes": [
+   "Released concessional contributions and associated earnings would attract a 30 per cent tax offset.",
+   "Applicants for first home determinations would generally need to be at least 18 and never have held specified Australian property interests.",
+   "Downsizer contributions would require a qualifying home owned by the individual or their spouse for at least 10 years.",
+   "Downsizer payments would generally have to be made within 90 days of disposal, with extensions available."
+  ],
+  "affected": "Eligible first home savers, older homeowners, superannuation providers and the Commissioner of Taxation would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:23.676461+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4828",

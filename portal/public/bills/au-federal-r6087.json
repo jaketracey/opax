@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would require the Australian Securities and Investments Commission (ASIC) to consider competition when exercising its powers and change how the regulator employs staff.",
+   "From 1 July 2019, ASIC would employ staff directly under its own legislation through written agreements, replacing employment under the Public Service Act 1999.",
+   "The competition requirement would begin the day after Royal Assent, while transitional arrangements would preserve existing staff terms, accrued entitlements and continuity of service."
+  ],
+  "changes": [
+   "The Chairperson would have to establish an ASIC Code of Conduct and written ASIC Values for staff.",
+   "Powers specific to the Chairperson or a Deputy Chairperson could be delegated only to another commission member or designated senior staff.",
+   "The Chairperson would be required to ensure adequate staff interest disclosures to minimise conflicts of interest."
+  ],
+  "affected": "ASIC, its Chairperson, Deputy Chairpersons, commission members and staff would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:21.605196+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5425",

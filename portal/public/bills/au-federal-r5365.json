@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-22",
+  "sentences": [
+   "The bill would correct drafting errors, modernise terminology and remove obsolete Commonwealth legislation, while improving the organisation of definitions in the Veterans' Entitlements Act.",
+   "It would replace references to servants with employees, remove gender-specific language and repeal three spent Acts, with most changes starting 28 days after royal assent.",
+   "Corrections to misdescribed amendments would follow the commencement of the earlier amending provisions, and the technical corrections would leave the substance of the law unchanged."
+  ],
+  "changes": [
+   "A dictionary would signpost definitions used across multiple parts of veterans' entitlements legislation.",
+   "Expired television captioning targets for earlier financial years would be repealed.",
+   "The obsolete Immigration (Education) Charge Act would be removed.",
+   "The spent law establishing the former Snowy Mountains Engineering Corporation would be repealed."
+  ],
+  "affected": "Publishers of consolidated Commonwealth legislation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:15.498765+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

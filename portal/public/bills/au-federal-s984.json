@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-11-27",
+  "sentences": [
+   "The bill would add local production and broadcasting duties to the Australian Broadcasting Corporation's charter, requiring a recognisable presence in every state and territory.",
+   "It would require a weekly half-hour current affairs program and internal television production units in at least four jurisdictions outside New South Wales and Victoria.",
+   "Each production unit would receive 0.5 per cent of the corporation's annual budget, including support for existing South Australian facilities, with commencement on royal assent."
+  ],
+  "changes": [
+   "The corporation's local presence would have to extend across every platform on which it distributes content.",
+   "State and territory output would include investigative journalism and regional reporting.",
+   "Funded production units would need capacity to make programs beyond news and current affairs."
+  ],
+  "affected": "The Australian Broadcasting Corporation, which would have new duties to fund television production units outside New South Wales and Victoria, is affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:49.088385+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

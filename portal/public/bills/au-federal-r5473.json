@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-03",
+  "sentences": [
+   "The bill would establish the Australian Small Business and Family Enterprise Ombudsman to advocate on relevant laws and practices and assist businesses with disputes.",
+   "Eligible businesses would generally have fewer than 100 employees or revenue below $5 million in the preceding financial year, with family enterprises meeting the same definition.",
+   "The office would work within Commonwealth constitutional limits and cooperate with other agencies, referring matters better handled elsewhere and recommending external dispute resolution where appropriate."
+  ],
+  "changes": [
+   "The Ombudsman could gather information and hold hearings for inquiries directed by the Minister.",
+   "Refusal to participate in recommended dispute resolution, or withdrawal from it, could be publicised.",
+   "The Ombudsman and staff would be prohibited from personally conducting alternative dispute resolution processes.",
+   "The Governor-General would appoint the Ombudsman full-time for a term of up to five years."
+  ],
+  "affected": "Small businesses, qualifying family enterprises, businesses in disputes with them and relevant government agencies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:34.999645+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

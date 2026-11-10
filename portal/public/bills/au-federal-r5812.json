@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-16",
+  "sentences": [
+   "The bill would link entry to the Disability Employment Services Disability Management Service to pension age, replacing the fixed upper age limit of 65.",
+   "It would use pension age as defined in social security law, allowing otherwise eligible people aged 65 or older to enter before reaching that age.",
+   "Existing participants could remain beyond pension age, but could not re-enter after leaving, and the amendment would begin no earlier than 1 July 2017."
+  ],
+  "changes": [
+   "The Disability Services Act would gain a pension age definition drawn from the Social Security Act.",
+   "The statutory target group would use pension age instead of 65 years.",
+   "The new entry limit would follow legislated increases in pension age rather than remain fixed."
+  ],
+  "affected": "Eligible jobseekers with disability, injury or a health condition seeking disability employment assistance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:38.081286+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

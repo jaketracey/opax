@@ -119,7 +119,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-06",
+  "sentences": [
+   "The bill would make minor amendments to the Navigation Act 2012 to give effect to a 2022 change to the International Convention for the Safety of Life at Sea (SOLAS) on ships carrying industrial personnel.",
+   "It would add definitions of industrial personnel and industrial personnel vessel, and exclude those workers from the Act's definitions of passenger and seafarer while they are on such a vessel.",
+   "The whole Act would commence the day after Royal Assent, is expected to have nil financial impact, and the explanatory memorandum expects negligible practical effect because vessels in the sector are understood to already comply."
+  ],
+  "changes": [
+   "Section 14 would gain a definition of industrial personnel that takes its meaning from SOLAS, so later changes to the convention are picked up automatically.",
+   "The definition of industrial personnel vessel would be set by regulation or Marine Order under section 342, to allow updates as international conventions change.",
+   "The definitions of passenger and seafarer would be amended so they exclude industrial personnel who are on board an industrial personnel vessel.",
+   "Notes under sections 124, 129, 146, 175 and 180 referring to section 12 would be removed, and an incorrect cross-reference in paragraph 315(1)(b) would be fixed.",
+   "The general regulation-making power in paragraph 339(2)(j) would be amended to make clear that regulations may provide for industrial personnel vessels."
+  ],
+  "affected": "Offshore support vessels that carry industrial personnel, the industrial personnel transferred to offshore platforms, and ships regulated under the Navigation Act 2012 are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:06:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

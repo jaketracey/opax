@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-21",
+  "sentences": [
+   "The bill would prohibit domestic COVID vaccine passports and discrimination based on COVID vaccination status across government services, employment, businesses, education, accommodation and voluntary organisations.",
+   "Requesting or requiring a vaccine passport would itself count as discrimination, and the rules would cover access to goods, services, premises and voluntary activities.",
+   "Exceptions would permit compliance with foreign laws and disclosure of vaccination information to courts, hospitals or medical practitioners, with a separate exception concerning state officers and employees."
+  ],
+  "changes": [
+   "Employers would be prohibited from discriminating against workers because of COVID vaccination status.",
+   "The Commonwealth and territories could not fund, license or contract with specified entities reasonably likely to discriminate on that basis.",
+   "The prohibitions would override conflicting Commonwealth, state and territory laws.",
+   "The legislation would extend to Australia's external territories."
+  ],
+  "affected": "Governments, employers, businesses, voluntary bodies and people whose COVID vaccination status affects their treatment are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:27.482888+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

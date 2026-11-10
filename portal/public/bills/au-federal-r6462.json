@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-02",
+  "sentences": [
+   "The bill would prohibit exports of live animals for slaughter from 1 July 2022 and impose animal welfare conditions on exports during the transition.",
+   "Export licences would cease authorising those shipments, while interim approvals would require satisfactory treatment overseas or a transitional exemption relating to certain existing contracts.",
+   "The legislation would begin on royal assent, with the interim framework operating before the permanent prohibition and allowing the secretary to consider overseas obligations and export history."
+  ],
+  "changes": [
+   "Exporters would have to take reasonable steps to ensure satisfactory treatment of animals in the destination country.",
+   "Licence holders would have to notify the secretary within 14 days if satisfactory treatment had not occurred.",
+   "Satisfactory treatment would require specified holding, transport and slaughter standards, including stunning before slaughter."
+  ],
+  "affected": "Live-stock exporters and the Secretary are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:26.642948+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

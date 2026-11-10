@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-12",
+  "sentences": [
+   "The bill would authorise spending from the Consolidated Revenue Fund for parliamentary departments in 2026-27, with separate allocations for departmental operations and other parliamentary expenditure.",
+   "Funding would cover operating expenses, administered payments, assets and liabilities, and equity injections, while presiding officers could allocate limited advances for urgent unforeseen or omitted expenditure.",
+   "The spending authority would begin on the later of 1 July 2026 and Royal Assent, with the legislation repealed at the start of 1 July 2029."
+  ],
+  "changes": [
+   "Advance limits would be $300,000 each for the Senate department, House of Representatives department and Parliamentary Budget Office.",
+   "The Department of Parliamentary Services could receive advances totalling up to $1 million.",
+   "Advance determinations would require parliamentary tabling but would not be subject to disallowance.",
+   "Scheduled funds could be transferred to special accounts serving the same purposes."
+  ],
+  "affected": "The parliamentary departments and Parliamentary Budget Office funded through these appropriations, and the presiding officers who can allocate advances, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:13.186387+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10648",

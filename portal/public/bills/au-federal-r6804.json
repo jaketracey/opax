@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-28",
+  "sentences": [
+   "The bill would impose industry levies to finance the financial services compensation scheme of last resort, covering compensation, unpaid complaint fees, administration and reserves.",
+   "Annual and additional levies would fund relevant industry sub-sectors, with a $250 million overall cap per levy period and a normally $10 million sub-sector cap.",
+   "A one-off levy would cover accumulated eligible claims, while the Commonwealth would fund establishment and first-year operations under the companion legislation's broader scheme."
+  ],
+  "changes": [
+   "Regulations would prescribe which industry sub-sectors paid annual levies and how individual firms' liabilities were calculated.",
+   "Further levies could meet revised funding estimates within the relevant sub-sector cap.",
+   "Special levies could exceed a sub-sector cap following a ministerial determination, while remaining within the overall scheme cap.",
+   "The one-off levy would fall on specified large banking and insurance entities, excluding private health insurers and superannuation trustees."
+  ],
+  "affected": "Financial firms in prescribed sub-sectors and specified large financial groups would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:01.327276+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

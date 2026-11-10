@@ -53,7 +53,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-05",
+  "sentences": [
+   "The bill would lift the superannuation guarantee rate for firefighters and paramedics by an extra 4.4 per cent to match the base rate paid to Australian Defence Force personnel.",
+   "It would amend the Superannuation Guarantee (Administration) Act 1992 so that an employer's charge percentage for a firefighter or paramedic employee includes an additional 4.4, taking the rate to 16.4 per cent.",
+   "The higher rate would apply to quarters starting on or after 1 July 2025, directly covering the Commonwealth except Norfolk Island, the Northern Territory, the Australian Capital Territory and the non-government sector, with no immediate effect in Victoria, Norfolk Island and some other state schemes."
+  ],
+  "changes": [
+   "A new paragraph 19(1)(aa) would add 4.4 to the charge percentage used to work out an employer's superannuation guarantee shortfall for a firefighter or paramedic employee.",
+   "New definitions of firefighting duties, paramedic duties, firefighter employee and paramedic employee would be inserted into subsection 6(1) of the Act.",
+   "A new section 15AA would set out who counts as a firefighter employee and who counts as a paramedic employee.",
+   "The bill would commence the day after Royal Assent but would have no practical effect until 1 July 2025."
+  ],
+  "affected": "Firefighters, paramedics and their employers covered by the superannuation guarantee are affected, including those in the Commonwealth other than Norfolk Island, the Northern Territory, the Australian Capital Territory and the non-government sector.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:05:00Z"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -113,7 +113,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-07",
+  "sentences": [
+   "The bill would make consequential amendments to 110 Commonwealth Acts so they work with the new Administrative Review Tribunal, completing a package that abolishes the Administrative Appeals Tribunal (AAT).",
+   "It would swap AAT references for references to the Tribunal and the Administrative Review Tribunal Act 2024, and repeal special procedures where possible so the Tribunal's standard rules apply.",
+   "It would cover Acts requiring state and territory consultation, remove merits review of preventative detention order decisions, and add Tribunal review of refusals to give evidence of Australian citizenship."
+  ],
+  "changes": [
+   "Subsections 105.51(5) to (9) of the Criminal Code, which let the AAT review, void and award compensation for preventative detention orders, would be repealed, leaving review to the courts.",
+   "The Tribunal could review decisions under section 37 of the Australian Citizenship Act 2007 refusing a person a notice as evidence of citizenship.",
+   "Schedule 15 would amend 14 Acts subject to state and territory consultation requirements, including the Fair Work Act 2009, the Gene Technology Act 2000 and the Criminal Code Act 1995.",
+   "Schedule 16 would strip preventative detention order references from the Administrative Review Tribunal Act 2024 to match the Criminal Code change.",
+   "Shorter timeframes in Acts such as the Fisheries Management Act 1991, which allows 14 days to apply for review, would be repealed in favour of the Administrative Review Tribunal Bill's 28-day minimum."
+  ],
+  "affected": "The Administrative Review Tribunal, people seeking review of decisions under the 110 amended Acts, people subject to preventative detention orders and applicants refused evidence of citizenship are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:36:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

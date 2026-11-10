@@ -161,7 +161,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 11,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-18",
+  "sentences": [
+   "The bill would amend or repeal Commonwealth laws across seven portfolios, including changes to compensation paperwork, government data use and redundant statutory bodies.",
+   "It would remove statutory declaration requirements for compensation recipients and permit protected welfare information to be processed into aggregated data that does not identify individuals.",
+   "Its repeals would sit alongside separate statute law revision and amending Acts repeal bills, with different commencement arrangements applying to particular schedules and items."
+  ],
+  "changes": [
+   "Only the compensation payer would need to sign a notice of judgment or settlement.",
+   "The Australian Landcare Council and Natural Heritage Trust Advisory Committee would be abolished.",
+   "The Biological Diversity Advisory Committee would be abolished.",
+   "Obsolete meat export charging legislation would be repealed."
+  ],
+  "affected": "Compensation recipients and payers, government administrators, researchers and agricultural and environmental advisory bodies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:17.544251+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

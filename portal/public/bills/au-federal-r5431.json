@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-24",
+  "sentences": [
+   "The bill would add regional Australia statements to Commonwealth fiscal reporting, providing information for assessing how major government policy decisions affect areas outside metropolitan centres.",
+   "The Treasurer would publish and table a statement with each Budget economic and fiscal outlook and each mid-year economic and fiscal outlook report.",
+   "The reporting framework would begin the day after Royal Assent and sit within the Charter of Budget Honesty alongside existing obligations for government fiscal reporting."
+  ],
+  "changes": [
+   "Statements would address likely economic, social, cultural and environmental effects of key government initiatives on regional Australia.",
+   "The Treasurer could request supporting information from Commonwealth bodies.",
+   "Those bodies would have to supply requested information in time for it to inform preparation of the statements."
+  ],
+  "affected": "The Treasurer and Commonwealth bodies required to provide information for regional Australia statements are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:29.663862+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

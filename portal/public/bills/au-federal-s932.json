@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "The bill would remove time limits from targeted Indigenous education funding agreements so the Minister could contract with education providers for 2014 and later years.",
+   "It would broaden the definition of a funding year and remove old special appropriations as payments outside ABSTUDY, an Indigenous study assistance program, shifted to annual parliamentary appropriations.",
+   "The standing appropriation for ABSTUDY would remain, while obsolete provisions for earlier funding periods and the separation of appropriation provisions would be removed."
+  ],
+  "changes": [
+   "The agreement provision would no longer refer only to payments during the 2001 to 2014 calendar years.",
+   "A funding year would mean 2001 or any later calendar year.",
+   "A statutory note would identify annual Appropriation Acts as the funding source for other education payments."
+  ],
+  "affected": "Indigenous students, education service providers and other bodies or people entering funding agreements with the Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:07.463524+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

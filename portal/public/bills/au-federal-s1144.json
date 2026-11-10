@@ -77,7 +77,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-10",
+  "sentences": [
+   "The bill would increase specified income support payments by $150 per fortnight for eligible recipients and change indexation arrangements for certain pensions and allowances.",
+   "A new supplement would cover eligible Newstart, Sickness and Widow Allowance recipients, while selected Youth Allowance and Austudy maximum rates would also rise.",
+   "The main changes would commence on 1 January 2019, but payments would require a parliamentary appropriation and the proposed ABSTUDY increase would need separate government action."
+  ],
+  "changes": [
+   "Specified payments would use whichever is higher: consumer price indexation or pensioner and beneficiary living cost indexation.",
+   "Special Benefit and Crisis Payment maximums would reflect increases in the payments used to calculate them.",
+   "A contingent amendment would extend the supplement to Jobseeker Payment when the relevant welfare reform provisions commence."
+  ],
+  "affected": "Eligible allowance and student payment recipients, and pensioners covered by the changed indexation rules, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:21.138275+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

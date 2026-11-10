@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-07",
+  "sentences": [
+   "The bill would impose the vacancy fee payable by covered foreign owners of residential property, providing the charging provisions for the companion housing tax legislation.",
+   "The fee would generally match the foreign investment application fee for the acquisition, with separate calculation rules for dwellings acquired under exemption certificates or waived fees.",
+   "The joint package would cover specified applications from 7:30PM Australian Eastern Standard Time on 9 May 2017, with an exception for certain earlier developer certificates."
+  ],
+  "changes": [
+   "For developer certificate purchases, the calculation would use the fee payable had the buyer applied individually.",
+   "Where the original application fee was waived, the vacancy fee would use the lowest applicable residential land fee.",
+   "An owner's vacancy fee would not be indexed, although future changes to fee structures could apply."
+  ],
+  "affected": "Covered foreign residential property owners would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:23.676931+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

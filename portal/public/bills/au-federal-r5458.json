@@ -119,7 +119,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "The bill would make legislative and transitional changes supporting transfer of private health insurer prudential supervision from the Private Health Insurance Administration Council to the Australian Prudential Regulation Authority.",
+   "It would remove the Council's statutory framework, adapt data collection and levy legislation, and arrange the transfer of staff, assets, liabilities and records to the new regulator.",
+   "Existing registrations, legal actions and other processes would continue under the companion supervision framework, with different provisions commencing on Royal Assent or alongside that legislation."
+  ],
+  "changes": [
+   "Information about private health insurers would become subject to the new regulator's statutory secrecy protections.",
+   "A dedicated collapsed insurer special account would be created.",
+   "Financial sector data collection powers would extend to private health insurers.",
+   "The Commonwealth Ombudsman's legislation would allow information sharing with the prudential regulator.",
+   "The existing Council administration levy legislation would be repealed."
+  ],
+  "affected": "Private health insurers, Council staff, the prudential regulator and authorities exchanging insurer information are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:45.964198+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

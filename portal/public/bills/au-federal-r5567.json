@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-12",
+  "sentences": [
+   "The bill would allow donors to claim income tax deductions for eligible gifts to two additional organisations named in the tax law.",
+   "It would specifically list International Jewish Relief Limited and the National Apology Foundation Ltd as deductible gift recipients, covering gifts of $2 or more.",
+   "The new listings would apply to gifts made on or after 1 January 2015, including donations made before the bill was introduced."
+  ],
+  "changes": [
+   "International Jewish Relief Limited would be added to the relevant recipient table in the income tax legislation.",
+   "The National Apology Foundation Ltd would receive its own listing in the deductible gift recipient provisions.",
+   "The statutory index of deductible gift recipients would be updated to include both organisations."
+  ],
+  "affected": "Taxpayers donating to the two organisations and the organisations receiving those gifts would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:26.015107+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

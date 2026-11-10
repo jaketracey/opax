@@ -71,7 +71,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would bring forward independent scrutiny of telecommunications assistance laws and extend industry assistance powers to specified Commonwealth and state crime and anti-corruption agencies.",
+   "The Independent National Security Legislation Monitor would have to review the assistance laws before the 18-month period starting on 8 December 2018 ends.",
+   "The additional agencies would gain access to assistance requests and notices under the existing framework, which would continue to require underlying warrants or authorisations where applicable."
+  ],
+  "changes": [
+   "The Australian Commission for Law Enforcement Integrity would be added to the interception-agency definition.",
+   "Specified crime and corruption bodies in five states would also be included.",
+   "Agency-specific provisions would identify chief officers and staff eligible to receive delegated powers.",
+   "The amendments would start the day after Royal Assent."
+  ],
+  "affected": "The Independent National Security Legislation Monitor, the specified investigative agencies and designated communications providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:29.597029+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5681",

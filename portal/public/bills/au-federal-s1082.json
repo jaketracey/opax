@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-04",
+  "sentences": [
+   "The bill would establish a High Speed Rail Planning Authority to plan and develop an east coast rail system and reserve land for its corridor.",
+   "Its 11 part-time members would include ministerial appointees and nominees from relevant state and territory governments, local government and the rail industry, serving three-year terms.",
+   "Commencement would depend on an appropriation for the authority, with the Act starting the day after the Consolidated Revenue Fund is appropriated for its payment."
+  ],
+  "changes": [
+   "The authority's functions would include land use planning and measures to reduce environmental impacts.",
+   "It would have a duty to consult interested organisations and the public about high speed rail matters.",
+   "The minister could request reports and information about the authority's work."
+  ],
+  "affected": "Interested organisations and members of the public consulted on high speed rail matters would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:59.561649+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-10-12",
+  "sentences": [
+   "The bill would create three offences addressing non-consensual sharing of private sexual material, threats involving that material and preparation for those offences for commercial purposes or benefit.",
+   "The sharing and threat offences would carry maximum prison terms of three years, while the commercial or benefit-related preparatory offence would carry five years.",
+   "The changes would begin the day after Royal Assent, and prosecution of a person under 18 would require the Attorney-General’s consent under the proposed safeguards."
+  ],
+  "changes": [
+   "The threat offence could apply even where the sexual material does not exist or the recipient does not actually fear the threat.",
+   "Sending the material to its subject would be excluded from the sharing offence.",
+   "Specified media activities would have a conditional defence to the sharing and preparatory offences, including a reasonable belief that the conduct serves the public interest."
+  ],
+  "affected": "People depicted in private sexual material, people sharing or threatening to share it and journalists would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:39.462748+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

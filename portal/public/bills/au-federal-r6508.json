@@ -119,7 +119,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-15",
+  "sentences": [
+   "The bill would remove the presumption of equal shared parental responsibility and associated requirements for courts to consider particular care-time arrangements when making parenting orders.",
+   "Courts would continue deciding parental responsibility according to the child's best interests, without the presumption or the linked equal-time and substantial-time consideration requirements.",
+   "The amendments would apply to parenting orders made after commencement, including in proceedings already underway, and the bill would commence on royal assent."
+  ],
+  "changes": [
+   "Section 61DA's equal shared parental responsibility presumption would be repealed.",
+   "The rule about disregarding interim shared-responsibility orders when making final orders would be removed.",
+   "Cross-references to the repealed presumption in parenting order powers would be deleted."
+  ],
+  "affected": "Parents, children and courts determining parenting arrangements would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:09.637404+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

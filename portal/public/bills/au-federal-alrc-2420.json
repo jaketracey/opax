@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5061_ems_e0caa016-cd5c-43da-b7ed-13b56fab153f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5061%22",
+   "document_date": "2013-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00057",
    "document_date": "2013-06-21",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-30",
+  "sentences": [
+   "The bill would let the Immigration and Citizenship Minister apply alternative residence requirements to certain citizenship applicants whose activities or overseas-travel work benefit Australia.",
+   "Eligible applicants would need to promise ongoing ordinary residence in Australia for two years after citizenship, including at least 180 days physically present.",
+   "The Minister could revoke citizenship for failure to meet that undertaking, but could not do so if revocation would leave the person stateless."
+  ],
+  "changes": [
+   "The special residence powers would be exercised personally by the Minister and could not be delegated.",
+   "The Minister would have no duty to consider requests to use these discretionary powers.",
+   "If an applicant became a citizen under the discretion, a parliamentary statement would have to explain the reasons without naming the applicant.",
+   "Applicants would still need to meet other citizenship requirements, including character and identity checks."
+  ],
+  "affected": "Citizenship applicants needing citizenship for beneficial activities or regularly travelling abroad for specified work are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:38.804691+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

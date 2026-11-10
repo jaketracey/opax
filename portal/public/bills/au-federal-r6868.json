@@ -113,7 +113,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-03-30",
+  "sentences": [
+   "The bill would provide cost of living payments and tax changes, reduce medicine safety net thresholds and amend rules for employee share schemes and charitable gifts.",
+   "It would provide a $250 payment to eligible recipients and increase the 2021-22 low and middle income tax offset by $420, alongside other targeted measures.",
+   "Eligibility for the payment would depend on circumstances on 29 March 2022, while the bill would accompany separate legislation temporarily reducing fuel duties."
+  ],
+  "changes": [
+   "Medicare levy and related low-income thresholds would rise for the 2021-22 income year.",
+   "Qualifying work-related COVID-19 testing costs incurred from 1 July 2021 would become tax deductible.",
+   "Six named organisations would be added to the list of deductible gift recipients.",
+   "Employee share schemes meeting specified conditions would receive regulatory relief.",
+   "The adjustment factor for certain tax instalments in 2022-23 would be reduced to 2 per cent.",
+   "Pharmaceutical Benefits Scheme safety net thresholds would be lowered from 1 July 2022."
+  ],
+  "affected": "Eligible welfare and veterans’ recipients, taxpayers, medicine users, employers, employees and the listed charitable organisations would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7680",

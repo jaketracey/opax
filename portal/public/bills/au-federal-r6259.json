@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would require certain pension recipients aged 80 or older who have been continuously overseas for at least two years to provide proof-of-life certificates.",
+   "Recipients would have 13 weeks to respond to a notice, with certificates checked in person by authorised certifiers and notices issued at least biennially.",
+   "Failure to comply could suspend and then cancel payments, while returning to Australia within the initial response period would remove the certificate requirement."
+  ],
+  "changes": [
+   "New certificate requirements would begin on 1 July 2019.",
+   "Compliant evidence could permit payment to resume, including arrears under the applicable review rules.",
+   "Wife Pension and Widow B Pension provisions would be removed from 20 March 2020 to reflect those payments’ scheduled closure."
+  ],
+  "affected": "Eligible overseas recipients of Age Pension, Disability Support Pension, Carer Payment, Wife Pension and Widow B Pension are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:34.785140+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

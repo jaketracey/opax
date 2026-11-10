@@ -107,7 +107,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-29",
+  "sentences": [
+   "The bill would increase Medicare levy family thresholds, protect certain tax positions based on abandoned announcements, and restrict duplicate franking benefits from dividend washing.",
+   "The family threshold would rise from $33,693 to $34,367, with the additional amount for each dependent child or student increasing from $3,094 to $3,156.",
+   "The threshold increases would apply from 2013-14, while the dividend washing rule would cover distributions made on or after 1 July 2013."
+  ],
+  "changes": [
+   "The Commissioner could not make less favourable assessment changes where specified good-faith reliance conditions were met.",
+   "Taxpayers could elect to have eligible positions excluded from that protection.",
+   "Certain overpayments based on protected assessments would be treated as amounts the taxpayer was entitled to receive.",
+   "A new integrity rule would restrict multiple franking benefits arising from selling and repurchasing equivalent interests.",
+   "Technical amendments would clarify the family threshold and dependant definitions."
+  ],
+  "affected": "Families liable for Medicare levy, taxpayers who relied on listed abandoned tax proposals, share investors and the Commissioner of Taxation would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:03.270353+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

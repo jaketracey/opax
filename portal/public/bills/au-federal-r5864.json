@@ -155,7 +155,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-09",
+  "sentences": [
+   "The bill would authorise Commonwealth spending for purposes outside ordinary annual government services, including capital funding, new administered activities and payments to other governments.",
+   "It would provide appropriations through Schedule 2 and let the Finance Minister allocate up to $380 million more for qualifying urgent, unforeseen or understated expenditure.",
+   "It would commence on the later of 1 July 2017 and Royal Assent, alongside separate budget bills funding ordinary services and parliamentary departments."
+  ],
+  "changes": [
+   "Responsible ministers could set conditions, amounts and timing for payments to states, territories and local governments.",
+   "Annual debit limits would be set for the Education Investment Fund and specified intergovernmental payments.",
+   "Appropriated amounts could be credited to special accounts with matching purposes.",
+   "The legislation would repeal at the start of 1 July 2020."
+  ],
+  "affected": "Commonwealth entities, the Finance Minister and state, territory and local governments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:06.334253+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

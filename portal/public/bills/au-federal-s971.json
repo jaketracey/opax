@@ -77,7 +77,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-08-27",
+  "sentences": [
+   "The bill would remove fuel tax credits and several accelerated tax deductions available to mining businesses, including concessions for exploration and resource industry assets.",
+   "It would apply 1 January 2015 cut-offs to specified exploration deductions and depreciation concessions, including special asset lives used by oil and gas businesses.",
+   "The proposal would target resource companies while leaving equivalent agricultural concessions unchanged, and the Act itself would commence the day after Royal Assent."
+  ],
+  "changes": [
+   "Mining and quarrying businesses would lose eligibility to claim fuel tax credits.",
+   "Assets first used for exploration or prospecting on or after 1 January 2015 would no longer qualify for immediate deduction.",
+   "Selected aircraft and vehicles used in mining would lose capped depreciation lives when the relevant asset time falls on or after 1 January 2015.",
+   "Exploration or prospecting expenditure incurred from 1 January 2015 would cease to qualify for the specified company tax deduction."
+  ],
+  "affected": "Mining and quarrying businesses, oil and gas extraction companies and resource companies claiming exploration deductions would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:24.438402+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

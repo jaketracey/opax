@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-28",
+  "sentences": [
+   "The bill would tighten fuel quality and light vehicle pollution standards by introducing Euro 6d requirements and linking Australian standards to later European improvements.",
+   "It would regulate petrol quality and require compliant light vehicles, with a mechanism to adopt higher European standards within six months of their introduction.",
+   "Diesel vehicle requirements would apply from royal assent, while the petrol requirements would operate under separate provisions covering fuel standards and light vehicle standards."
+  ],
+  "changes": [
+   "A new petrol fuel standard would be added to the fuel quality framework.",
+   "Civil penalties for altering fuel would extend to the new standard.",
+   "A new national road vehicle standard would apply alongside Australian Design Rule 79/04."
+  ],
+  "affected": "Petrol fuel and light vehicles powered by petrol or diesel would be covered by the new standards.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

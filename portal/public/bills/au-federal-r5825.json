@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-20",
+  "sentences": [
+   "The bill would prevent modern award penalty rates being reduced below their level on 1 January 2017 by imposing a statutory floor on award variations.",
+   "It would make Fair Work Commission determinations ineffective where they cut a modern award's penalty rates beneath that benchmark, including the February 2017 decision.",
+   "The amendments would begin on Royal Assent and apply to commission determinations varying modern award penalty rates made on or after 22 January 2017."
+  ],
+  "changes": [
+   "A new section would prohibit award variations that reduced penalty rates below the benchmark.",
+   "Determinations breaching the protected rate would have no legal effect.",
+   "The application rule would cover determinations already made since the specified January date."
+  ],
+  "affected": "Employees and employers covered by modern awards containing penalty rates, and the Fair Work Commission, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:58.962869+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

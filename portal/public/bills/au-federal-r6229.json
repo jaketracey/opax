@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-03",
+  "sentences": [
+   "The bill would require a defined Commonwealth area of the Great Australian Bight to be placed permanently on Australia’s National Heritage List under federal environmental legislation.",
+   "The minister would list the area and its actual or possible heritage values, after consulting affected communities in South Australia and Western Australia about those values.",
+   "The amendments would begin on Royal Assent and cover the specified Southern Ocean area within Australia’s continental shelf, excluding areas associated with external territories."
+  ],
+  "changes": [
+   "A dedicated statutory process would require the minister to add the Bight heritage area to the list.",
+   "The minister would have to consult affected communities before recording heritage values.",
+   "The listed area could not later be removed from the National Heritage List."
+  ],
+  "affected": "The environment minister and communities in South Australia and Western Australia likely to be affected by listing are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:29.455468+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-17",
+  "sentences": [
+   "The bill would require more deductible gift recipients to meet charity-registration conditions and end preferential tax arrangements and new entry for offshore banking units.",
+   "Covered funds and institutions would need to be registered charities, Australian government agencies, or operated by one, with transitional time for existing recipients and applicants.",
+   "Offshore banking income would lose its concessional treatment from 2023-24, and the interest withholding tax exemption would end for payments from 1 January 2024."
+  ],
+  "changes": [
+   "The new endorsement requirement would extend to 11 remaining general deductible gift recipient categories.",
+   "Ancillary funds and recipients individually listed by name would be excluded from these endorsement changes.",
+   "Existing recipients and applicants would generally receive an extra 12 months to comply, with longer extensions available on application.",
+   "The Minister's offshore banking approval power would end after Royal Assent, preventing approval of outstanding applications."
+  ],
+  "affected": "Affected deductible gift recipients and applicants, offshore banking units and entities seeking offshore banking approval are covered.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:17.835787+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7401",

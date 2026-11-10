@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-12-04",
+  "sentences": [
+   "The bill would move private health insurance complaint-handling functions into the Commonwealth Ombudsman's office and remove unintended remnants of an earlier rebate calculation method.",
+   "The Commonwealth Ombudsman would also hold the separate Private Health Insurance Ombudsman office, with procedures aligned and remaining base-premium amendments treated as never made.",
+   "The transfer would start on 1 July 2015 if assent occurs earlier, otherwise by proclamation, with automatic commencement after six months if needed."
+  ],
+  "changes": [
+   "The ombudsman could obtain relevant personal information without the consent restrictions imposed by the existing health insurance legislation.",
+   "Express rights to seek extra time to respond to certain notices, and related tribunal review rights, would be removed.",
+   "Existing complaint categories, mediation and investigations would continue within the new legislative framework."
+  ],
+  "affected": "Private health insurance policyholders, prospective customers, insurers, brokers, health care providers and both ombudsman offices are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:24.795079+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

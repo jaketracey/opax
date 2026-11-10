@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-27",
+  "sentences": [
+   "The bill would remove or narrow several restrictions on publications, films, games, subscription television and online content, and repeal the election advertising blackout.",
+   "It would allow specified adult material through restricted access systems and remove morality-based refusal criteria, while retaining restrictions on child sexual material and criminal instruction.",
+   "Most provisions would begin the day after Royal Assent, with National Classification Code amendments taking effect six months later to allow state and territory consideration."
+  ],
+  "changes": [
+   "The separate requirement to refuse classification to material advocating terrorism would be repealed.",
+   "Area-specific prohibitions on certain material in the Northern Territory and associated seizure powers would be removed.",
+   "The Classification Board would retain discretion over advertisements, with narrower grounds requiring refusal.",
+   "Guidance about community suitability standards in datacasting codes would be limited to services without access controls."
+  ],
+  "affected": "Subscription television broadcasters, online content services, datacasting licensees, the Classification Board and people in designated Northern Territory areas would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:51.266129+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

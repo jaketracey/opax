@@ -27,8 +27,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s908_ems_c8016d54-424c-4c73-abe9-edc10534c50b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s908%22",
+   "document_date": "2013-03-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-12",
+  "sentences": [
+   "The bill would extend regional television local content rules to regional South Australia by adding it to the areas covered under federal broadcasting legislation.",
+   "Broadcasters covered by the change would have to meet conditions for local programming and material of local significance set by the Australian Communications and Media Authority.",
+   "The proposal would use the existing framework for regional aggregated commercial television licences, with the amendment taking effect the day after Royal Assent."
+  ],
+  "changes": [
+   "Regional South Australia would be added to the statutory list of covered areas.",
+   "Affected broadcasters would come within the regulator’s existing local content conditions.",
+   "The geographic extension would begin on the day following Royal Assent."
+  ],
+  "affected": "Regional South Australian commercial television broadcasters and their local audiences are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:43.529389+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

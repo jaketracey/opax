@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s910_ems_c79e7b4f-3906-4ab4-bd20-6852c619ecce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s910%22",
+   "document_date": "2013-02-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-28",
+  "sentences": [
+   "The bill would restrict pharmaceutical company payments and benefits to doctors and require public reporting identifying practitioners who receive specified payments or other benefits.",
+   "Companies would face limits on overseas educational events, attendance costs and hospitality, alongside annual reporting of payment amounts, recipients, dates and reasons.",
+   "The inducement offences would apply from 1 January 2014, with exceptions for company representatives’ attendance costs and specified employees’ remuneration under the reporting rules."
+  ],
+  "changes": [
+   "Companies could not sponsor overseas educational events aimed primarily at Australian doctors.",
+   "Catering and entertainment at covered events would be limited to $100 per person unless regulations prescribed a higher amount.",
+   "Public reports would include gifts worth more than $25 and individually name the receiving doctors.",
+   "Failure to provide the required report would attract a penalty of 3,000 penalty units."
+  ],
+  "affected": "Pharmaceutical companies and registered medical practitioners receiving covered payments, gifts or hospitality are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:13.079454+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

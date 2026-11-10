@@ -191,7 +191,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-07-03",
+  "sentences": [
+   "The bill would establish a National Interest Framework to guide government decisions on significant public investment meant to unlock private investment at scale in the national interest, under the Future Made in Australia agenda.",
+   "The Framework would have a net zero transformation stream and an economic resilience and security stream, and the Minister could direct the Treasury Secretary to assess sectors against it, with reports tabled within 30 sitting days.",
+   "The bill would also set community benefit principles for decision makers providing Future Made in Australia support, allow Future Made in Australia Plans to be required, and commence the day after Royal Assent, alongside a companion Omnibus Bill."
+  ],
+  "changes": [
+   "The Minister could direct the Secretary by notifiable instrument, not subject to disallowance, to assess a sector, but could not direct or seek to influence its findings.",
+   "Future Made in Australia support would include the Innovation Fund administered by the Australian Renewable Energy Agency, certain National Interest Account transactions referred by Export Finance Australia, and support identified in other laws or rules.",
+   "The five community benefit principles cover safe and secure well-paid jobs, skilled and inclusive workforces, positive outcomes for local communities including First Nations communities, domestic industrial capabilities and tax transparency.",
+   "The Minister could make rules on how support is provided and on when a Future Made in Australia Plan is required and what it must contain."
+  ],
+  "affected": "Treasury and its Secretary, Commonwealth decision makers providing Future Made in Australia support, Export Finance Australia, the Australian Renewable Energy Agency and businesses seeking that support are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:36:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9346",

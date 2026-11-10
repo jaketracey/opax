@@ -101,7 +101,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-26",
+  "sentences": [
+   "The bill would deliver new personal income tax cuts from 1 July 2026 and raise the Medicare levy low-income thresholds so lower-income Australians keep paying no levy or a reduced levy.",
+   "Schedule 1 would reduce the 16 per cent marginal rate for resident individuals to 15 per cent for the 2026-27 income year and 14 per cent from 2027-28, at an estimated cost of $17.1 billion over the forward estimates.",
+   "Schedule 2 would lift the levy thresholds and the surcharge low-income threshold in line with the consumer price index for the 2024-25 income year onwards, with both schedules commencing the day after Royal Assent."
+  ],
+  "changes": [
+   "Cuts the 16 per cent income tax rate on resident taxable income between $18,200 and $45,000 to 15 per cent for 2026-27.",
+   "Reduces that rate again, to 14 per cent, for 2027-28 and later income years.",
+   "Raises the Medicare levy low-income threshold for individuals from $26,000 to $27,222 and the family threshold from $43,846 to $45,907 for 2024-25.",
+   "Raises the thresholds for people eligible for the Senior Australian and Pensioner Tax Offset to $43,020 for individuals and $59,886 for families.",
+   "Increases the Medicare levy surcharge low-income threshold from $26,000 to $27,222, at an estimated cost of $648 million over the forward estimates for Schedule 2."
+  ],
+  "affected": "Australian resident individual taxpayers, low-income individuals and families, and seniors and pensioners eligible for the Senior Australian and Pensioner Tax Offset are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:12:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9328",

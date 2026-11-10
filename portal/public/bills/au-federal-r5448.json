@@ -197,7 +197,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-12",
+  "sentences": [
+   "The bill would authorise funding for the Commonwealth's ordinary annual services through appropriations from the Consolidated Revenue Fund as part of the 2015-2016 Budget.",
+   "Scheduled amounts would support departmental operations, administered programs and corporate entities, with administered spending tied to specified outcomes and departmental funding available across entity functions.",
+   "It would commence on Royal Assent and be repealed at the start of 1 July 2018, with other annual services funded through companion bills."
+  ],
+  "changes": [
+   "The Finance Minister could allocate up to $295 million in advances for urgent expenditure.",
+   "Advance determinations would be tabled in Parliament but exempt from disallowance and sunsetting.",
+   "Notional transactions within the Commonwealth would debit appropriations as though they were actual payments.",
+   "Money could be credited to special accounts where the relevant spending purposes align."
+  ],
+  "affected": "Commonwealth departments, agencies, corporate entities and the Finance Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:19.039720+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

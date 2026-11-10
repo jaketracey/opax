@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-17",
+  "sentences": [
+   "The bill would stop Australia Post delivering unaddressed political material to premises displaying specified signs rejecting unaddressed mail or political material, or accepting addressed mail only.",
+   "It would make specified delivery preferences binding by adding a restriction to the Australian Postal Corporation Act that applies when Australia Post supplies unaddressed mail.",
+   "The restriction would apply through Australia Post’s unaddressed mail service and cover material from or about registered parties, federal election candidates, House members and senators."
+  ],
+  "changes": [
+   "Specified signs or stickers would trigger a prohibition on unaddressed political deliveries.",
+   "The restriction would not apply where it infringes constitutional political communication protections or acquires property without just terms.",
+   "The substantive postal amendment would begin on 1 July 2017."
+  ],
+  "affected": "Australia Post, people displaying the specified signs, registered political parties, federal candidates, House members and senators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:12.963750+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

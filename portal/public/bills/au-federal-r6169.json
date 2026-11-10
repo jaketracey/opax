@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-22",
+  "sentences": [
+   "The bill would tighten government access to My Health Record information and require permanent deletion of health records held in the national repository when registration is cancelled.",
+   "Law enforcement and government agencies would generally need the person’s consent or a judicial order, with orders subject to necessity and privacy safeguards.",
+   "The amendments would begin the day after Royal Assent, while specified oversight bodies would retain access powers and deletion could be delayed for relevant legal matters."
+  ],
+  "changes": [
+   "Deletion requirements would also reach earlier cancellations unless the person had re-registered before commencement.",
+   "The operator would be authorised to store limited identifying and administrative details after deleting health information.",
+   "Other state and territory laws could no longer independently authorise disclosure of My Health Record health information.",
+   "Agencies seeking a judicial disclosure order would have to show they cannot obtain the requested information elsewhere."
+  ],
+  "affected": "People with My Health Records, the System Operator, healthcare providers and agencies seeking access to records are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:40:03.340537+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5433",

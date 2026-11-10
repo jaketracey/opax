@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5064_ems_f8e306b5-e10e-4e19-9a36-d6438f5ca796%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5064%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00086",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would amend existing financial legislation to support the DisabilityCare Australia Fund's operation, including state reimbursements and management by the Future Fund Board of Guardians.",
+   "It would enable reimbursements through the existing reform fund for state and territory grants and allow transfers between funds to apportion shared expenses.",
+   "The substantive amendments would start no earlier than 1 July 2014 and would depend on commencement of the companion Medicare levy increase legislation."
+  ],
+  "changes": [
+   "The same investment manager could be engaged under the Future Fund, Nation Building Funds and disability fund arrangements.",
+   "The National Disability Insurance Minister would receive copies of relevant investment reports.",
+   "The Future Fund Board could delegate specified powers under the disability fund legislation.",
+   "Payments relating exclusively to the disability fund could not be debited from the Building Australia Fund."
+  ],
+  "affected": "State and territory governments, the Future Fund Board of Guardians and investment managers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:59.975394+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

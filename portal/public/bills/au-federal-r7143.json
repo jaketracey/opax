@@ -119,7 +119,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-07",
+  "sentences": [
+   "The bill would appropriate money from the Consolidated Revenue Fund for the ordinary annual services of the government, adding to the 2023-24 Budget appropriations for decisions taken since the Budget.",
+   "It would fund departmental items, administered items and corporate entity items for Commonwealth entities in the amounts listed in Schedule 1, with the detail in the Portfolio Additional Estimates Statements.",
+   "It is one of three Additional Estimates Bills alongside Appropriation Bill (No. 4) and the Appropriation (Parliamentary Departments) Bill (No. 2) 2023-2024, would commence on Royal Assent and be repealed on 1 July 2026."
+  ],
+  "changes": [
+   "The Advance to the Finance Minister under Appropriation Act (No. 1) 2023-2024 would be restored to its original $400 million limit after commencement.",
+   "Where the Finance Minister has already advanced money for the same expenditure before commencement, the bill's appropriation for it would be reduced by that amount, but not below nil.",
+   "Payments to corporate entities would be made from the fund by the relevant department and must be used for the purposes of those entities.",
+   "Amounts for an item whose purpose matches a special account could be debited from the appropriation and credited to the special account.",
+   "Notional transactions between non-corporate entities would be treated as real transactions that debit an appropriation.",
+   "The Act would be repealed at the start of 1 July 2026."
+  ],
+  "affected": "Non-corporate Commonwealth entities, corporate Commonwealth entities and Commonwealth companies that receive appropriations, and the Finance Minister are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:22:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

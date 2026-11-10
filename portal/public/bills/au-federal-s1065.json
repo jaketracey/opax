@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-28",
+  "sentences": [
+   "The bill would establish Renew Australia as a public authority to plan the electricity system's transition to renewable energy and support affected workers and communities.",
+   "The authority could build, finance, own or operate renewable energy projects, run reverse auctions for private projects and plan the closure of coal-fired power stations.",
+   "Its substantive provisions would begin on proclamation or, if no date were set, after six months, with project decisions required to serve the public interest."
+  ],
+  "changes": [
+   "A board and chief executive would be established to govern the authority.",
+   "Law reform recommendations, accompanied by draft legislation, would be due within 12 months of commencement.",
+   "Borrowing from outside the Commonwealth would require the Treasurer's written approval.",
+   "The Treasurer could guarantee the authority's external borrowings."
+  ],
+  "affected": "Fossil fuel power stations being phased out, clean energy companies building renewable energy plants, and workers and communities affected by the phase out are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:44.405982+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

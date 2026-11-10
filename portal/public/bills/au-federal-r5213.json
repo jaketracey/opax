@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-27",
+  "sentences": [
+   "The bill would allow Western Australia to repay the Commonwealth's outstanding railway loan early and then repeal the legislation governing the railway agreement.",
+   "Western Australia could pay the entire outstanding amount in one lump sum, triggering repeal of the principal Act on the twenty-eighth day after payment.",
+   "The amendments would commence the day after Royal Assent and concern a loan with an outstanding balance of $1.6 million at 30 June 2013."
+  ],
+  "changes": [
+   "The repayment power would expressly permit payment of the total outstanding balance as a single amount.",
+   "Full repayment would discharge Western Australia from further liability under the amended agreement.",
+   "The minister would have to publish the repeal date in the Gazette before that date arrived."
+  ],
+  "affected": "The Western Australian Government and the Commonwealth would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:40.377499+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

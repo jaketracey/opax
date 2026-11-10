@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-08-03",
+  "sentences": [
+   "The bill would retrospectively exclude the value of rent-free housing from default superannuation salary calculations for affected Commonwealth employees, subject to a limited contribution-based exception.",
+   "It would repeal the relevant salary regulation from 1 July 1986, replacing the later prospective repeal and affecting linked Commonwealth and other fund arrangements.",
+   "The bill would add an exception for cases where housing was understood to form part of superannuation salary and contributions had actually been made on that basis."
+  ],
+  "changes": [
+   "The repeal would override the regulation’s existing repeal date of 1 March 2022.",
+   "Consequential salary effects would extend to Public Sector Superannuation Scheme members and certain accumulation and choice fund members.",
+   "The exemption would require a contribution calculated on the basis that the housing allowance provision applied."
+  ],
+  "affected": "Current and former Commonwealth employees receiving rent-free housing, their employers and superannuation fund administrators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7716",

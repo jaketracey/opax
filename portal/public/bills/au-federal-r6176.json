@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-13",
+  "sentences": [
+   "The bill would allow primary producers to deduct eligible fodder storage costs immediately, replacing deductions spread over three years for assets such as silos and hay sheds.",
+   "The deduction would equal qualifying capital expenditure incurred during the income year, covering construction, manufacture, installation or acquisition of assets principally used to store livestock feed.",
+   "It would apply to assets first used or ready for use from 19 August 2018, while existing eligibility conditions for Australian primary production businesses would remain."
+  ],
+  "changes": [
+   "The annual deduction calculation would move from one-third of expenditure to the full eligible amount.",
+   "The new treatment would reach qualifying assets brought into use from the announcement date.",
+   "A related explanatory note would be updated to point to the relevant asset deduction provisions."
+  ],
+  "affected": "Primary producers investing in fodder storage assets for their livestock businesses on Australian land are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:21.138275+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5432",

@@ -95,7 +95,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-20",
+  "sentences": [
+   "The bill would establish tax administration and deduction rules for the companion levy recovering Commonwealth costs of decommissioning the Laminaria and Corallina oilfields and infrastructure.",
+   "Licence holders would lodge annual production returns within six months after each levy year, with assessed levy payable 21 days after an assessment notice.",
+   "The amendments would commence with the companion levy legislation and apply to financial years starting on or after 1 July 2021."
+  ],
+  "changes": [
+   "Levy payments would not be deductible for income tax purposes.",
+   "Levy payments would be excluded expenditure when calculating petroleum resource rent tax.",
+   "The time for objections and assessment review would be limited to 60 days after the assessment was issued.",
+   "Outstanding levy payments would attract the general interest charge and ordinary tax collection and recovery arrangements."
+  ],
+  "affected": "Registered holders of offshore petroleum production licences, who must pay the levy and lodge annual returns, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:30.430881+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

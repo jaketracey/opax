@@ -77,7 +77,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-19",
+  "sentences": [
+   "The bill would create offences for making or accepting cash payments of $10,000 or more, including related instalments that together reach the proposed limit.",
+   "It would establish strict liability offences for payment circumstances and more serious offences for deliberate or reckless breaches, with specified exemptions available through Treasurer-made rules.",
+   "The proposed limit would apply to payments from 1 January 2020, while holding cash itself would remain permitted and rules could exempt particular transactions."
+  ],
+  "changes": [
+   "Payments for one supply or a single gift would be aggregated when assessing the limit.",
+   "Separate periodic supplies, such as each month's rent, would be assessed separately.",
+   "The strict liability offences would carry maximum fines of 60 penalty units for individuals.",
+   "Individuals committing deliberate or reckless offences would face maximum penalties of 120 penalty units, two years' imprisonment or both."
+  ],
+  "affected": "Individuals, businesses, partnerships and trusts making or accepting covered cash payments are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:05.179094+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5952",

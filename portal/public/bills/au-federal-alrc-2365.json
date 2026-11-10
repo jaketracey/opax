@@ -101,13 +101,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5013_ems_586d5bdc-1d04-4d0a-aa0e-c5d46f4618ce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5013%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00085",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would make tax and superannuation changes covering film production, disaster payments, business reporting, deductible gifts, retirement savings and support for dependants.",
+   "It would define documentary eligibility, exempt specified disaster assistance, adjust instalment reporting and require covered superannuation funds to address duplicate member accounts.",
+   "It would also reduce superannuation co-contributions, consolidate dependency offsets and clarify financial arrangement taxation, with application dates varying between the individual measures."
+  ],
+  "changes": [
+   "Game shows would be expressly excluded from the film tax offsets.",
+   "Six named organisations would be added as deductible gift recipients, subject to their specified gift periods.",
+   "Businesses moving into a net goods and services tax refund position would gain an exception allowing them to stay in the instalment system, with zero quarterly instalments.",
+   "The co-contribution matching rate would fall from 100 per cent to 50 per cent and the maximum payment from $1,000 to $500.",
+   "The consolidated dependency offset would cover specified dependants unable to work through invalidity or caring obligations, while preserving existing offsets for eligible zone and overseas-service taxpayers."
+  ],
+  "affected": "Film producers, specified disaster payment recipients, businesses, listed gift recipients and donors, superannuation members and trustees, and taxpayers supporting eligible dependants are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:00.864806+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2970",

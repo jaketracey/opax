@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-13",
+  "sentences": [
+   "The bill would enable Australia’s membership of the Asian Infrastructure Investment Bank by authorising payments and appropriating money for its shareholding in the institution.",
+   "Australia’s US$3.7 billion shareholding would include US$738.3 million paid in through five equal annual instalments, with the remainder payable if called by the bank.",
+   "The standing appropriation would cover payments required by the bank’s Articles of Agreement, with discretionary special fund contributions requiring separate funding through the budget process."
+  ],
+  "changes": [
+   "The Treasurer could issue non-negotiable, non-interest-bearing promissory notes payable to the bank on demand.",
+   "The Consolidated Revenue Fund would be appropriated to purchase shares and redeem authorised promissory notes.",
+   "Regulations could provide privileges and immunities required under the Articles for the bank and its covered officials, employees, experts and consultants."
+  ],
+  "affected": "The Commonwealth government, the bank and its officials and other personnel receiving privileges under the proposed regulations would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:11.703681+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3928",

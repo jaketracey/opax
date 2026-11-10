@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-11-27",
+  "sentences": [
+   "The bill would authorise the Commonwealth to lend the Australian Capital Territory up to $1 billion for an asbestos remediation program and related purposes.",
+   "It would appropriate $750 million from the Consolidated Revenue Fund, while requiring the loan's terms, total amount and payment arrangements to be agreed in writing.",
+   "The legislation would begin the day after royal assent, with any payments beyond $750 million requiring funding authority under a later appropriation Act."
+  ],
+  "changes": [
+   "The responsible Commonwealth minister would gain authority to enter the loan agreement on the Commonwealth's behalf.",
+   "The agreement could provide for the loan to be paid in a single instalment or several payments.",
+   "A statutory ceiling would prevent the agreement setting a loan amount above $1 billion."
+  ],
+  "affected": "The Australian Capital Territory Government and the Commonwealth entering the asbestos remediation loan agreement are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:13.056479+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

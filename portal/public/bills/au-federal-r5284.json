@@ -77,7 +77,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-19",
+  "sentences": [
+   "The bill would adjust fuel tax credit calculations and related rules to support the reintroduction of fuel duty indexation through separate customs and excise bills.",
+   "Credits would generally use the duty rate applying when fuel was acquired or imported, or when locally manufactured fuel entered home consumption.",
+   "The fuel credit amendments would commence on 31 July 2014 and apply to tax periods starting, and relevant returns lodged, from 1 July 2014."
+  ],
+  "changes": [
+   "The separate duty-rate rule for unregistered fuel credit claimants would be removed.",
+   "The road user charge would be rounded from 26.14 cents to 26.1 cents from 1 August 2014.",
+   "Future road user charges would also be rounded to one decimal place of a cent.",
+   "Fuel would not attract blend duties solely because indexation caused different duty rates on its components.",
+   "Cleaner fuel rebates would use the biodiesel rate applying when the fuel entered home consumption."
+  ],
+  "affected": "Fuel tax credit claimants, heavy vehicle operators and cleaner fuel producers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:37.401712+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

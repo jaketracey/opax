@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "The bill would deny deductions for certain payments with unmet withholding obligations, expand contractor payment reporting and move domestic tobacco excise liability to manufacture.",
+   "Businesses in road freight, information technology, security, investigation and surveillance would report payments for subcontracted services, while deduction restrictions would target complete withholding or notification failures.",
+   "The measures would generally apply from 1 July 2019, with a companion tariff bill addressing duty already paid on tobacco used in further manufacture."
+  ],
+  "changes": [
+   "Voluntary disclosure before an audit or other compliance activity could qualify for an exception to deduction denial.",
+   "Licensed tobacco manufacturers would lodge returns and pay duty after each seven-day excise period.",
+   "Failure to provide required security could lead to refusal, suspension or cancellation of a tobacco manufacturing licence."
+  ],
+  "affected": "Employers, businesses engaging contractors in the specified services and licensed tobacco manufacturers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:17.930470+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

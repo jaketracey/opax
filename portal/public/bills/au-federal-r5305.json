@@ -107,7 +107,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-07-16",
+  "sentences": [
+   "The bill would amend national domestic commercial vessel safety law to give the regulator more discretion over certificates and clarify administrative and review arrangements.",
+   "The Australian Maritime Safety Authority would gain explicit vessel survey functions, while state and Northern Territory delegates could pass powers to additional agency staff.",
+   "The amendments would commence on Royal Assent and align vessel definitions with other marine safety legislation, alongside corrections to provisions governing reviewable decisions."
+  ],
+  "changes": [
+   "The regulator could choose whether to vary, suspend or revoke survey and operation certificates in specified circumstances.",
+   "A government vessel definition would be added using the meaning in the Navigation Act.",
+   "Specified decisions by marine safety inspectors would be expressly identified as reviewable.",
+   "Marine safety inspectors making reviewable decisions would have to notify the person concerned.",
+   "Regulations could govern how vessel surveys are conducted."
+  ],
+  "affected": "Domestic commercial vessel operators, certificate holders, accredited surveyors, marine safety inspectors and Commonwealth, state and Northern Territory regulators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:52.707093+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

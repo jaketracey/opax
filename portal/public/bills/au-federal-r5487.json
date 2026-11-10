@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-04",
+  "sentences": [
+   "The bill would replace full excise rates on Australian-made fuel ethanol and biodiesel with zero duty for one year, followed by progressively increasing concessional rates.",
+   "From 1 July 2016, annual steps would raise ethanol to 32.77 per cent of petrol excise and biodiesel to 50 per cent of diesel excise by 1 July 2020.",
+   "Its rate changes would start on 1 July 2015 only alongside repeal of the cleaner fuels grant scheme under the companion energy grants bill."
+  ],
+  "changes": [
+   "New statutory formulas would calculate ethanol and biodiesel excise as proportions of the petrol and diesel rates.",
+   "Calculated biofuel duty would be rounded to three decimal places of a dollar.",
+   "A new biodiesel definition would cover fuel derived from new, used or recycled animal or vegetable fats or oils.",
+   "Application rules would include unpaid-duty goods held at licensed premises when the changes begin."
+  ],
+  "affected": "Australian fuel ethanol and biodiesel manufacturers, and businesses claiming fuel tax credits for those fuels, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:28.476037+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

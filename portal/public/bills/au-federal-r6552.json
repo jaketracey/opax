@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "The bill would raise the statutory upper limit used for specified supervisory levy amounts payable by general insurers, as part of prudential regulator funding reforms.",
+   "The limit would be $10 million for the financial year beginning 1 July 2020, with later limits indexed using the latest published Consumer Price Index figures.",
+   "It would commence the day after royal assent and apply to levy determinations made from commencement, alongside separate bills covering other regulated sectors."
+  ],
+  "changes": [
+   "The statutory limit definition and related levy restrictions would be clarified.",
+   "Indexation would compare the latest quarter with the same quarter a year earlier, then add 0.030.",
+   "Only index numbers published by the Australian Statistician would be used."
+  ],
+  "affected": "General insurance entities liable for supervisory levies would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:48.013654+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

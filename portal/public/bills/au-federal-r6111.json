@@ -143,7 +143,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-09",
+  "sentences": [
+   "The bill would introduce new personal income tax offsets and progressively raise tax thresholds, with changes scheduled across the 2018-19, 2022-23 and 2024-25 income years.",
+   "A temporary offset worth up to $530 would apply for eligible resident taxpayers from 2018-19 through 2021-22, alongside the existing low income offset.",
+   "From 2022-23, both offsets would be replaced by a new low income offset worth up to $645, with entitlement and amounts depending on income."
+  ],
+  "changes": [
+   "The threshold for the 37 per cent rate would rise from $87,000 to $90,000 in 2018-19.",
+   "In 2022-23, the 19 per cent bracket would extend to $41,000 and the 32.5 per cent bracket to $120,000 for residents.",
+   "In 2024-25, the 37 per cent rate would be removed and the threshold for the 45 per cent rate would rise to $200,000."
+  ],
+  "affected": "Australian resident taxpayers, foreign residents, working holiday-makers and certain trustees taxed on behalf of resident beneficiaries would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:20.496280+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5213",

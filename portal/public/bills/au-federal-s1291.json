@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-25",
+  "sentences": [
+   "The bill would keep the temporary chartering framework for special recreational vessels, commonly called superyachts, available in Australia for a further two years.",
+   "It would preserve their ability to opt into the coastal trading system and obtain temporary licences to operate charters in Australian waters under that framework.",
+   "The extension would continue the existing arrangements while longer-term reforms are developed, following delays to consultation that the memorandum attributes to the COVID-19 pandemic."
+  ],
+  "changes": [
+   "The scheduled repeal date would move from 30 June 2021 to 30 June 2023.",
+   "Superyachts could continue using temporary coastal trading licences for charter operations.",
+   "The amendment would commence on the day of Royal Assent."
+  ],
+  "affected": "Special recreational vessel operators seeking to conduct charters in Australia are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:46.140286+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7193",

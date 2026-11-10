@@ -131,7 +131,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-24",
+  "sentences": [
+   "The bill would amend the Defence Housing Australia Act 1987 to expand the classes of people to whom Defence Housing Australia (DHA) can provide housing and housing-related services.",
+   "It would add foreign military members, foreign government officials and employees, their contractors and subcontractors, accredited representatives of registered charities, and any further class the Minister determines by legislative instrument.",
+   "All housing would still have to meet the operational needs of the Australian Defence Force and Department of Defence requirements, and the Act would commence the day after Royal Assent."
+  ],
+  "changes": [
+   "Paragraphs 5(1)(c) and (d) would change from contracted to provide to who provide, so DHA could house anyone supplying goods or services to Defence whether or not a legally binding contract is in place.",
+   "New paragraph 5(1)(e) would cover people, and their families, where housing them would help them take part in activities with or for the Australian Defence Force.",
+   "New paragraphs 5(1)(f) to (h) would cover members of a foreign military organisation, officials and employees of a foreign government body, and certain contractors and subcontractors, plus families.",
+   "New paragraph 5(1)(i) would cover accredited representatives of registered charities such as the Salvation Army and the Australian Red Cross, and their families.",
+   "New subsection 5(3) would let the Minister determine additional classes of persons by legislative instrument for the purposes of new paragraph 5(1)(j)."
+  ],
+  "affected": "DHA, foreign military and government personnel including those arriving for Submarine Rotational Force-West, Defence suppliers, registered charities assisting Defence and their families are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T10:24:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9654",

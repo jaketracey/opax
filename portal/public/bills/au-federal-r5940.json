@@ -89,7 +89,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-17",
+  "sentences": [
+   "The bill would close the Building Australia Fund and Education Investment Fund by repealing their governing Act, with transitional arrangements for remaining obligations and reporting.",
+   "It would also amend five related Acts, with uncommitted balances intended for the National Disability Insurance Scheme Savings Fund Special Account when that account is established.",
+   "The substantive changes would commence on proclamation or six months after Royal Assent if no proclamation occurs, while transitional provisions would preserve specified existing agreements."
+  ],
+  "changes": [
+   "The Future Fund Board of Guardians would retain reporting duties for the closed funds.",
+   "Remaining education project payments could be made under higher education legislation.",
+   "Residual miscellaneous receipts would go to the Consolidated Revenue Fund rather than the Future Fund Special Account.",
+   "The finance minister could make rules addressing transitional matters.",
+   "Obsolete provisions for transfers from the Future Fund to the closed funds would be repealed."
+  ],
+  "affected": "The Future Fund Board of Guardians, responsible ministers and parties to existing funding agreements would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:02.980712+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4963",

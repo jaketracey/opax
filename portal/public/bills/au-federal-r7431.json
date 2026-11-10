@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-09",
+  "sentences": [
+   "The bill would criminalise deliberately destroying, burning or seriously dishonouring either the Australian National Flag or the Australian Red Ensign in specified public circumstances.",
+   "Conduct would need to be publicly expressed, including through shared images, and involve recklessness about risks of hatred, violence, public disorder or disturbance.",
+   "Exceptions would cover lawful disposal, ordinary use, flag-change processes and genuine scientific, educational, artistic, journalistic or public interest activities, with defendants bearing an evidential burden."
+  ],
+  "changes": [
+   "A first offence would carry up to 50 penalty units or imprisonment for up to 12 months.",
+   "A subsequent offence would attract a minimum prison term of 12 months.",
+   "The Australian Criminal Intelligence Commission would have to notify the department administering migration law when a non-citizen is convicted."
+  ],
+  "affected": "People handling or publicly depicting the Australian National Flag or Australian Red Ensign and non-citizens convicted under the proposal are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:05:32.424456+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

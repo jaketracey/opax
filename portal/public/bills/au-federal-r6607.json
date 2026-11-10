@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-19",
+  "sentences": [
+   "The bill would require residential aged care providers to disclose facility-level finances publicly and require larger Commonwealth-funded providers to use more detailed accounting standards.",
+   "Providers would submit reports for every facility within six months of each financial year's end, detailing income and spending on care, staffing and administration.",
+   "The requirements would apply to financial years starting on or after commencement, with the legislation commencing on the day after it received royal assent."
+  ],
+  "changes": [
+   "The commissioner would have to make the reports publicly available.",
+   "Salary and wage costs would be broken down by staff category.",
+   "Providers receiving over $10 million in Commonwealth funding would have to meet Tier 1 accounting standards."
+  ],
+  "affected": "Residential aged care providers required to report, and the families of people in their care, stakeholders and the public who would see the reports, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:00.543190+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

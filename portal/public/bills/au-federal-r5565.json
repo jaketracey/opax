@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-12",
+  "sentences": [
+   "The bill would remove spent amending and repeal Acts from the Commonwealth statute book, covering legislation enacted during the period from 1990 to 1999.",
+   "It would repeal the standalone Acts after their amendments or repeals have taken effect, while preserving those changes and any continuing transitional provisions.",
+   "The proposal would leave the substance of existing law unchanged and exclude Acts enacted after 1999, which the source identifies for separate future repeal."
+  ],
+  "changes": [
+   "More than 870 spent Acts would be repealed.",
+   "The repeals would take effect 28 days after Royal Assent.",
+   "Application, saving and transitional provisions in the repealed Acts would retain any continuing operation."
+  ],
+  "affected": "People and businesses consulting Commonwealth legislation, and public and private publishers preparing consolidated Acts, would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:49.738776+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

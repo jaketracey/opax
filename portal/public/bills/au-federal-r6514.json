@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-14",
+  "sentences": [
+   "The bill would narrow eligibility for oil recycling benefits by replacing the definition of oils in the Product Stewardship for Oil Scheme after a Federal Court decision.",
+   "It would limit covered products to specified petroleum-based oils and synthetic equivalents, expressly excluding diesel, diesel blends and goods ordinarily used as fuels.",
+   "The change would apply to relevant sales or consumption from introduction, while preserving claims determined before commencement and existing declarations of gazetted oils and uses."
+  ],
+  "changes": [
+   "A replacement statutory definition would list the oil types covered.",
+   "Regulations could add further kinds of covered oils.",
+   "Regulations could specify additional excluded goods."
+  ],
+  "affected": "Oil recyclers and businesses claiming oil-use benefits would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:48.012794+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6475",

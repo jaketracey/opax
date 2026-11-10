@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "The bill would make it an offence for adults to use telecommunications to prepare or plan harm or sexual activity involving a child under 16.",
+   "The offence would carry a maximum of 10 years imprisonment and cover preparatory acts even where no particular child had been identified or contacted.",
+   "It would apply from Royal Assent to offenders aged at least 18, with existing child witness protections and telecommunications interception powers extended to the offence."
+  ],
+  "changes": [
+   "The offence would cover plans to cause physical or mental harm, including conduct without a sexual purpose.",
+   "It would apply to preparatory conduct involving a fictitious child used by investigators.",
+   "The new offence would be included in the Commonwealth child sex offence definition for forfeiture purposes."
+  ],
+  "affected": "Children under 16, adults who use a carriage service to prepare or plan to harm or engage in sexual activity with them, and child complainants giving evidence are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:59.705191+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -113,7 +113,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "The bill would change Pharmaceutical Benefits Scheme medicine pricing, patient charges and safety net arrangements, while revising advisory committee membership and pharmacy regulation.",
+   "From 1 January 2016, pharmacists could offer prescription co-payment discounts of up to one dollar, with only the amount actually paid accumulating towards the safety net.",
+   "The bill would exclude early-supply prescriptions from the new discounts, and the pharmacy location rules and Australian Community Pharmacy Authority framework would be extended until 30 June 2020."
+  ],
+  "changes": [
+   "Qualifying single-brand drugs would receive a one-off five per cent price cut after five years, on reduction days from 1 April 2016 to 1 April 2020.",
+   "Price disclosure calculations could exclude originator brands once a medicine has spent three years on the multiple-brand formulary, subject to safeguards.",
+   "Component drug price reductions would flow through to qualifying combination medicines with multiple brands.",
+   "The advisory committee's maximum membership would increase by three and a Deputy Chairperson role would be created.",
+   "Early-supply rules would no longer be restricted to a fixed 20-day interval.",
+   "Pricing reimbursement deeds with pharmaceutical companies would receive express legislative recognition."
+  ],
+  "affected": "Patients, pharmacists, pharmaceutical suppliers and members of the Pharmaceutical Benefits Advisory Committee are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:20.328140+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3830",

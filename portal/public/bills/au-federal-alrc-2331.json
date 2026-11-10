@@ -113,13 +113,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4957_ems_4103db0d-7d71-4eec-bd47-d19a5887959f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4957%22",
+   "document_date": "2013-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00022",
    "document_date": "2013-03-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-07",
+  "sentences": [
+   "The bill would provide additional Commonwealth funding for 2012-2013 for capital, intergovernmental and other spending outside the government’s ordinary annual services through scheduled appropriations.",
+   "It would fund listed outcomes, assets and liabilities, departmental equity and loans, payments to states, territories and councils, and specified Commonwealth authorities and companies.",
+   "The bill would commence on Royal Assent and accompany Appropriation Bill No. 3, which proposes additional funding for the government’s ordinary annual services."
+  ],
+  "changes": [
+   "The Finance Minister’s available advance would be restored to $380 million.",
+   "An appropriation would be reduced where an advance had already funded the same expenditure.",
+   "Specified ministers could determine conditions, amounts and timing for intergovernmental financial assistance payments.",
+   "Matching appropriation amounts could be credited to special accounts with the same purpose."
+  ],
+  "affected": "Commonwealth agencies, funded Commonwealth authorities and companies, and state, territory and local governments are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:50.779724+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

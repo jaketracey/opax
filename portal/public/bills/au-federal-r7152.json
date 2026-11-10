@@ -125,7 +125,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-15",
+  "sentences": [
+   "The bill would amend the Social Security Act 1991 and the Veterans' Entitlements Act 1986 so that certain military invalidity pensions have a clear footing in the income support means test.",
+   "It would create a new military invalidity pension income stream category, assessed by subtracting a special reduction amount from the gross annual payment and exempt from the assets test.",
+   "The new rules would apply from the day after Royal Assent, whenever the income stream began, and earlier assessments made on the pre-Douglas understanding of the law would be validated."
+  ],
+  "changes": [
+   "The new definition would cover invalidity pay under the Defence Force Retirement and Death Benefits Act 1973 and invalidity pensions under the Military Superannuation and Benefits Act 1991.",
+   "It would let the Secretary, and the Commission under the Veterans' Entitlements Act, add further income streams to the definition by legislative instrument.",
+   "Military invalidity pension income streams would be treated as fully asset-test exempt under both Acts, not as partially asset-test exempt income streams.",
+   "Non-military income streams added by instrument would have the special reduction amount capped at 10% of the annual payment under the Social Security Act only.",
+   "Past assessments of ordinary income from the affected payments for days before commencement would be taken to have always been valid.",
+   "The departmental cost is put at $11.9 million over the forward estimates from 2023-24 to 2027-28."
+  ],
+  "affected": "Veterans and their partners receiving income support alongside invalidity pensions from the Military Superannuation and Benefits Scheme or the Defence Force Retirement and Death Benefits Scheme are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:16:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

@@ -113,7 +113,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-24",
+  "sentences": [
+   "The bill would repeal the Health Insurance (Pathology) (Fees) Act 1991 and remove the application fees charged to the pathology sector for approval as an approved pathology practitioner, approved pathology authority or accredited pathology laboratory.",
+   "It would make consequential amendments to the Health Insurance Act 1973 to delete the acceptance and accreditation fee requirements, while keeping the Minister's approval and accreditation requirements for Medicare pathology providers unchanged.",
+   "Fees would stop applying to undertakings and approvals taking effect on or after 1 July 2025, and fees already paid for that period would be refunded in full."
+  ],
+  "changes": [
+   "The Health Insurance (Pathology) (Fees) Act 1991 and the Health Insurance (Pathology) (Fees) Amendment (Norfolk Island) Act 2015 would be repealed in full.",
+   "Practitioners and authorities would no longer have to pay an acceptance fee within 14 days of their undertaking being accepted, and the Minister could no longer revoke acceptance for non-payment.",
+   "The in-principle approval step for accredited pathology laboratories would be removed, leaving a single written approval or refusal by the Minister.",
+   "The Commonwealth would refund fees paid before commencement where the undertaking or approval has an enforcement date on or after 1 July 2025.",
+   "Fee revenue would fall by about $824,000 a year, or $2.5 million over three years to 2027-28, for a total cost of $5.458 million including Services Australia's administrative changes."
+  ],
+  "affected": "Pathology practitioners, pathology authorities and laboratories seeking approval to claim Medicare benefits, and the Commonwealth as the body required to refund fees, would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T10:24:00Z"
+ },
  "divisions": [],
  "speeches": [
   {

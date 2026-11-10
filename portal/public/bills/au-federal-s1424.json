@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-15",
+  "sentences": [
+   "The bill would amend the Aboriginal Land Rights (Northern Territory) Act 1976 to list a parcel of land known as Wakaya Alyawarre in Schedule 1, so it can be granted as Aboriginal land.",
+   "It would do this by inserting a reference to Northern Territory Portions 8009 and 8383, an area of approximately 484,000 hectares near the Canteen Creek community, into Part 4 of Schedule 1.",
+   "The land is described in the Canteen Creek Area Indigenous Land Use Agreement, the amendment would commence the day after Royal Assent, and the explanatory memorandum says the financial impact is nil or negligible."
+  ],
+  "changes": [
+   "A new entry for Wakaya Alyawarre would be inserted in Part 4 of Schedule 1 to the Land Rights Act, after the Wave Hill Locality item.",
+   "Listing the land in Schedule 1 would allow it to be granted to an Aboriginal Land Trust under sections 10 and 12 of the Act.",
+   "The parcel would be defined by Survey Plans S2022/073A and S2022/073B lodged with the Surveyor-General in Darwin.",
+   "The new Act would commence on the day after it receives Royal Assent."
+  ],
+  "affected": "Aboriginal people with traditional connections to the Wakaya Alyawarre land near Canteen Creek and the Aboriginal Land Trust that would receive the grant are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:05:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

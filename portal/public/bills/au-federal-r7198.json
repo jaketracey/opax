@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-05",
+  "sentences": [
+   "The bill would impose a build to rent (BTR) development misuse tax on entities that claim the new BTR tax concessions for a development that fails the eligibility criteria during the 15-year compliance period.",
+   "The tax would be calculated on an entity's BTR misuse amount, being its BTR capital works deduction amounts plus 10 times its BTR withholding amounts, at a rate the explanatory memorandum gives as 1.5 per cent.",
+   "It sits with Schedule 1 of its companion bill, Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill, which cannot commence unless this bill commences on the first quarterly date after Royal Assent."
+  ],
+  "changes": [
+   "The tax would only be payable where an entity has a BTR misuse amount, which arises only if the development is non-compliant with the active BTR development criteria.",
+   "The explanatory memorandum says the total tax roughly matches the benefit gained plus 8 per cent, representing interest and costs on the tax shortfall.",
+   "The tax would not apply to non-compliance after the 15-year compliance period, which would instead be handled through amended assessments.",
+   "Under the companion bill, the tax would be due 21 days after the Commissioner of Taxation gives notice of assessment, would attract the general interest charge if unpaid and would not be deductible."
+  ],
+  "affected": "Entities that own BTR developments and claim the accelerated capital works deduction or the concessional managed investment trust withholding rate would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:50:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8995",

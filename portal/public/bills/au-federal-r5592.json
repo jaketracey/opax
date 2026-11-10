@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-03",
+  "sentences": [
+   "The bill would impose tax on attribution managed investment trust trustees in specified cases involving excessive tax offsets allocated to members or carried forward incorrectly.",
+   "The tax would equal 100 per cent of the relevant excess or shortfall, matching the amount of the tax offset discrepancy identified under companion legislation.",
+   "It would form part of the new managed investment trust taxation package, with the main bill providing the rules that establish trustee liability."
+  ],
+  "changes": [
+   "Tax would be imposed when the tax offset attributed to a member exceeds the amount that should have been allocated.",
+   "Tax would also cover a shortfall arising from an offset overstatement that is not properly carried forward.",
+   "The tax rate for these offset discrepancies would be fixed at 100 per cent."
+  ],
+  "affected": "Trustees of attribution managed investment trusts would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:48.958412+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

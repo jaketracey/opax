@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-25",
+  "sentences": [
+   "The bill would establish an independent Australian Federal Integrity Commission to prevent corruption and assess, investigate and report on serious or systemic corruption affecting Commonwealth administration.",
+   "Anyone could refer a corruption issue, while public hearings would require a public interest assessment considering seriousness, confidentiality, reputational harm and other relevant factors.",
+   "Historical conduct could be investigated subject to additional prevention-related requirements, with the laws and standards applicable when the conduct occurred governing its assessment."
+  ],
+  "changes": [
+   "A Whistleblower Protection Commissioner would provide advice, practical support and assistance with proceedings concerning protected disclosures.",
+   "Commonwealth agencies would prepare integrity plans every two years covering at least the following four years.",
+   "A parliamentary committee and Parliamentary Inspector would oversee the commission.",
+   "People exonerated of a critical view tested at a public hearing would be entitled to a standalone report recording that finding."
+  ],
+  "affected": "Commonwealth agencies and public officials, whistleblowers, witnesses, people investigated and parliamentary oversight bodies would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:19.656539+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

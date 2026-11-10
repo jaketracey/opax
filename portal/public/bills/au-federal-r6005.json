@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-25",
+  "sentences": [
+   "The bill would replace existing Commonwealth housing service payments with a framework for funding housing and homelessness programs through agreements with states and territories.",
+   "Funding under primary agreements would depend on published housing and homelessness strategies, matching homelessness funding, supplying required information and entering supplementary agreements with the Commonwealth.",
+   "The arrangements would apply to payments from 1 July 2018, while the repeal of existing housing service payments would preserve obligations relating to earlier years."
+  ],
+  "changes": [
+   "Supplementary agreements with individual states or territories could run for no more than five financial years.",
+   "Housing strategies would have to identify expected supply needs and measures to meet them.",
+   "Separate designated housing agreements could provide funding under their own conditions.",
+   "Ministerial payment determinations would be legislative instruments exempt from disallowance."
+  ],
+  "affected": "Commonwealth, state and territory governments, housing and homelessness service providers and people needing housing assistance would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:04.832060+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

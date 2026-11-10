@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-29",
+  "sentences": [
+   "The bill would retrospectively validate specified handling of students' tax file numbers (TFNs) by approved vocational education loan providers and relevant government officers administering student loans.",
+   "Authorisation would cover dealings from 1 January 2017 until immediately before 1 October 2025, limited to administering or facilitating student loan applications and loans.",
+   "The measure would cover past conduct within that scope, excluding other purposes and misuse, while preserving proceedings or privacy complaints already finalised before commencement."
+  ],
+  "changes": [
+   "The student loans legislation would be treated as taxation law for specified TFN handling provisions.",
+   "The validation would apply when deciding relevant proceedings and privacy complaints still pending or brought after commencement.",
+   "Reasonable Commonwealth compensation would be available if the validation acquired property without just terms, including by extinguishing an accrued cause of action."
+  ],
+  "affected": "Vocational education loan students, approved providers and their officers, relevant Commonwealth officers and the Commissioner of Taxation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:28.513493+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

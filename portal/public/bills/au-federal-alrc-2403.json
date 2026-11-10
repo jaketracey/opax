@@ -89,13 +89,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5054_ems_3702ad76-bfdc-44d9-a976-6fc554ae1762%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5054%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00044",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would refine National Disability Insurance Scheme rules, agency governance and participant safeguards, and make related changes to appeals, taxation and income support laws.",
+   "Scheme payments for funded supports would be exempt from income tax and excluded from social security and veterans' income and assets tests.",
+   "Before taking over or pursuing a participant's compensation claim, the chief executive would need to consider specified personal circumstances and give 28 days written notice."
+  ],
+  "changes": [
+   "A dedicated scheme division would be established within the Administrative Appeals Tribunal.",
+   "An impairment affecting either social or economic participation could meet the relevant disability requirement.",
+   "Plan nominees who were insolvents under administration could remain appointed but could not manage plan funding.",
+   "The chief executive could appoint more than one plan nominee for a participant.",
+   "Mobility allowance would not be payable where a participant's scheme plan specified funded reasonable and necessary supports."
+  ],
+  "affected": "Scheme participants and prospective participants, nominees and support providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:06.710128+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-18",
+  "sentences": [
+   "The bill would change eligibility for the lower company tax rate by replacing the requirement to carry on a business with a passive income test.",
+   "From 2017-18, eligible corporate tax entities would need passive income of no more than 80 per cent of assessable income and turnover below the applicable threshold.",
+   "Passive income would include specified dividends, interest, rent, royalties and capital gains, with exclusions and tracing rules for amounts received through trusts and partnerships."
+  ],
+  "changes": [
+   "Non-portfolio dividends would be excluded from the passive income definition.",
+   "The new passive income test would classify trust distributions by their underlying income character.",
+   "Franking calculations would generally use the previous year's turnover, passive income and assessable income.",
+   "A newly created entity would use the lower 27.5 per cent tax rate for imputation purposes."
+  ],
+  "affected": "Corporate tax entities, shareholders, and companies receiving trust or partnership distributions would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:35.518271+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5106",

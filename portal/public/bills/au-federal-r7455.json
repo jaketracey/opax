@@ -41,7 +41,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-25",
+  "sentences": [
+   "The bill would provide a replacement legal basis for the Australian Criminal Intelligence Commission to charge taxes on applications for nationally coordinated criminal history checks.",
+   "The minister would set charge amounts and covered services through legislative instruments, considering recommendations from the National Policing Information Committee when determining amounts.",
+   "The bill would operate with the Australian Criminal Intelligence Commission Bill 2026, commencing only when that companion bill commences and extending to external territories."
+  ],
+  "changes": [
+   "Applications for prescribed criminal history checking services would attract a charge imposed as a tax.",
+   "The minister could set different rates for service types and applicant groups, including zero charges.",
+   "State property would be protected from taxation under the charging provisions."
+  ],
+  "affected": "Criminal history check applicants and accredited checking organisations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:02:31.796401+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

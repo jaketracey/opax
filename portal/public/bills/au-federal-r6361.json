@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would let the Home Affairs Minister temporarily prevent certain Australian citizens overseas from returning, using exclusion orders and permits governing their return.",
+   "Orders could last up to two years for citizens aged at least 14, where specified terrorism-prevention grounds or a qualifying security assessment apply.",
+   "The scheme would commence on royal assent, require review of each exclusion decision and require return permits when requested or for deportation or extradition."
+  ],
+  "changes": [
+   "Entering Australia while an exclusion order remained in force would carry up to two years’ imprisonment.",
+   "Knowingly conveying an excluded person to Australia would be an offence, with exceptions for deportation and extradition.",
+   "Issuing a return permit would revoke the exclusion order.",
+   "For people aged 14 to 17, the Minister would have to consider their best interests."
+  ],
+  "affected": "Australian citizens overseas meeting the scheme’s criteria, their families, transport operators, the Home Affairs Minister and reviewing authorities are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:09.880393+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5763",

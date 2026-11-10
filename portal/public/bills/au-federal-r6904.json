@@ -149,7 +149,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-08",
+  "sentences": [
+   "The bill would establish a High Speed Rail Authority to plan, develop and advise on high speed and faster rail networks across Australian jurisdictions.",
+   "A five-member board would govern the authority, which could develop business cases, coordinate standards and undertake construction with the relevant state or territory’s consent.",
+   "The authority would take on existing faster rail functions, with its legislation commencing by proclamation or automatically after six months following royal assent."
+  ],
+  "changes": [
+   "The authority would have corporate powers to own property, enter contracts and raise money for its functions.",
+   "The minister could give general directions but could not dictate the content of the authority’s advice.",
+   "The legislation and rules would have to be reviewed at least every ten years."
+  ],
+  "affected": "The High Speed Rail Authority to be established, and the state and territory governments, stakeholders and public it must consult on high speed rail corridors, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7803",

@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-26",
+  "sentences": [
+   "The bill would change several tax concessions, including retraining benefits, minerals exploration and granny flat arrangements, and clarify financial product intervention powers and sportspeople's tax treatment.",
+   "The low and middle income tax offset would remain available for the 2021-22 income year, while the junior minerals exploration incentive would continue through 2024-25.",
+   "The retraining exemption would cover benefits provided from 2 October 2020 to help redundant or soon-to-be redundant employees gain employment, subject to specified exclusions."
+  ],
+  "changes": [
+   "Salary-packaged benefits, specified student contributions and school education would be excluded from the retraining fringe benefits tax exemption.",
+   "Eligible written granny flat arrangements for older people or people with disability would avoid capital gains tax events when created, varied or ended.",
+   "The Australian Securities and Investments Commission could make product intervention orders containing conditions about client fees or charges.",
+   "Specified COVID-19-related days in Australia would be disregarded when assessing Australian tax on New Zealand teams' cross-border competition income."
+  ],
+  "affected": "Affected taxpayers, retraining employers and employees, minerals exploration companies and investors, granny flat parties, and New Zealand sporting professionals and support staff are covered.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:13.328541+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

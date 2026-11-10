@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-22",
+  "sentences": [
+   "The bill would extend temporary reductions in excise and equivalent customs duties on petrol, diesel and other eligible fuels beyond the previous June 2026 expiry.",
+   "From 1 July 2026, eligible duty rates would be 30.4 per cent below their earlier full levels, setting petrol and diesel duty at $0.366 per litre.",
+   "The reduction would end immediately before the August 2026 indexation adjustment, when full indexed rates would resume as though the temporary reduction had not occurred."
+  ],
+  "changes": [
+   "Reduced duty calculations would be rounded to three decimal places.",
+   "The Treasurer's instrument-making power for the earlier April reduction would be repealed.",
+   "Specified fuel stocks produced before July could receive reduced excise where duty had not yet been paid."
+  ],
+  "affected": "Manufacturers, producers, importers and users of fuels, including petrol and diesel, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:14.915174+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-10279",

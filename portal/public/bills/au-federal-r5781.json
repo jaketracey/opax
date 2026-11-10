@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-12-01",
+  "sentences": [
+   "The bill would remove obsolete provisions about certificates stating a buyer’s intention to export honey from two Acts governing levies on honey sales in Australia.",
+   "It would repeal the certificate provisions in both the primary industries and national residue survey levy laws, without changing amounts collected in levies or customs charges.",
+   "The changes would begin the day after Royal Assent and accompany the Agriculture and Water Resources Legislation Amendment Bill 2016 as part of the same package."
+  ],
+  "changes": [
+   "The export-intention certificate provision in the National Residue Survey levy legislation would be repealed.",
+   "The corresponding certificate provision in the Primary Industries levy legislation would also be repealed.",
+   "Connecting words in both exemption lists would be adjusted following those repeals."
+  ],
+  "affected": "Buyers and sellers of honey intended for export are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:16.071765+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-19",
+  "sentences": [
+   "The bill would update Commonwealth investigative powers and information access for two state anti-corruption bodies and clarify how unlawfully funded assets are treated under proceeds of crime laws.",
+   "New South Wales’ Law Enforcement Conduct Commission and Victoria’s Independent Broad-based Anti-corruption Commission would gain specified access to Commonwealth information and investigative tools.",
+   "The property changes would cover assets acquired before or after commencement, treating assets financed through debts repaid with unlawful funds as not lawfully acquired."
+  ],
+  "changes": [
+   "The New South Wales commission could become an interception agency if statutory recordkeeping, oversight and expense requirements are met.",
+   "Victoria’s commission could apply for Commonwealth surveillance device warrants.",
+   "Victoria’s commission could receive investigation information from current and former Australia Post employees.",
+   "The New South Wales inspector could receive intercepted information to perform oversight functions."
+  ],
+  "affected": "The two commissions, the New South Wales inspector, Australia Post employees and people whose property is subject to proceeds of crime orders are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:40:53.189873+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

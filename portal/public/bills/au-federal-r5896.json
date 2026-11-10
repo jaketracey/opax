@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-30",
+  "sentences": [
+   "The bill would impose a quarterly levy on authorised deposit-taking institutions with total liabilities above $100 billion, using a defined measure of their liabilities.",
+   "The rate would be 0.015 per cent each quarter, applied after subtracting specified capital, protected deposits, derivative amounts and central bank settlement balances.",
+   "The levy would apply from 1 July 2017 alongside a companion bill covering collection, reporting, anti-avoidance rules and indexation of the liability threshold."
+  ],
+  "changes": [
+   "Additional Tier 1 capital would be excluded from the levy base.",
+   "Deposits protected by the Financial Claims Scheme would be subtracted when calculating taxable liabilities.",
+   "Specified debt liabilities and exchange settlement balances would be measured using daily amounts averaged over the quarter."
+  ],
+  "affected": "Authorised deposit-taking institutions above the liability threshold would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:28.582122+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4712",

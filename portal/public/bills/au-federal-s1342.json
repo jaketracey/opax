@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "The bill would clarify how Self-Employment Assistance payments are treated under family law, social security and veterans’ legislation, aligning them with existing self-employment support payments.",
+   "It would update program definitions and references so established maintenance, child support and benefit calculation rules continue to apply to participants receiving these payments.",
+   "The main changes would begin on royal assent, with technical social security corrections starting the following day and future program renaming handled through public notice."
+  ],
+  "changes": [
+   "Family law regulations would expressly list Self-Employment Assistance payments as an income-tested pension, allowance or benefit.",
+   "Social security law would use a self-employment program definition covering both the new program and the New Enterprise Incentive Scheme.",
+   "The Employment Secretary would have to notify any change to the program’s name by notifiable instrument."
+  ],
+  "affected": "Self-Employment Assistance participants, and parents and other parties whose entitlements are considered in family law maintenance and child support matters, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

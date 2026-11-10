@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s913_ems_ccbee43d-b03e-4144-8bd5-0329fd1dec1a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s913%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00056",
    "document_date": "2013-06-13",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would prevent Commonwealth agreements with not-for-profit organisations from restricting their advocacy about federal laws, policies or actions, and invalidate clauses imposing such restrictions.",
+   "Commonwealth agencies would be barred from including prohibited terms, and affected clauses in existing agreements would become void when the proposed law begins to operate.",
+   "The protection would cover releasing information that is not confidential, while excluding personal and confidential information, and would start the day after Royal Assent."
+  ],
+  "changes": [
+   "Agencies would be prohibited from putting advocacy restrictions into Commonwealth agreements with covered organisations.",
+   "Invalidation would apply to agreements made before commencement as well as later agreements.",
+   "Rights and liabilities acquired under prohibited terms before commencement would remain enforceable.",
+   "Reasonable compensation would be available for any acquisition of property that otherwise lacked just terms."
+  ],
+  "affected": "Not-for-profit organisations entering Commonwealth agreements and Commonwealth agencies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:00.040859+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

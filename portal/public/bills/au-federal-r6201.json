@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-10-15",
+  "sentences": [
+   "The bill would constrain the contents of future Australian trade agreements and require independent assessments and broader consultation before agreements are signed.",
+   "It would prohibit labour market testing waivers, investor-state dispute settlement clauses and terms requiring public service privatisation or undermining pharmaceutical benefits and anti-dumping laws.",
+   "The rules would begin the day after Royal Assent and include protections for public welfare regulation and specified preferences in Commonwealth procurement arrangements."
+  ],
+  "changes": [
+   "An independent national interest assessment would be commissioned and tabled before a proposed agreement is signed.",
+   "Bilateral agreements would need a labour chapter containing internationally recognised labour principles.",
+   "An accredited trade advisers program would provide consultation with unions, civil society and industry."
+  ],
+  "affected": "The Australian Government, employers seeking overseas workers, and union, civil society and industry trade advisers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:21.358516+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

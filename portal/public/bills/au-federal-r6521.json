@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-03-23",
+  "sentences": [
+   "The bill would implement coronavirus response measures across taxation, income support, superannuation, business regulation and child care, alongside other bills providing payments and funding.",
+   "It would temporarily lift the instant asset write-off threshold from $30,000 to $150,000 and extend access from businesses with aggregated turnover below $50 million to those below $500 million.",
+   "The bill would also create temporary household and business relief, with separate commencement dates and eligibility conditions applying across its various schedules of amendments."
+  ],
+  "changes": [
+   "Eligible income support recipients would receive a fortnightly coronavirus supplement initially set at $550.",
+   "Eligible people affected by coronavirus could access superannuation early through up to two releases of $10,000 each.",
+   "Minimum payments for account-based pensions and equivalent annuities would be halved for 2019-20 and 2020-21.",
+   "The environmental management charge in the Great Barrier Reef Marine Park would be waived from 1 April 2020 to 31 December 2020."
+  ],
+  "affected": "Businesses, income support recipients, superannuation members, retirees, child care services and families are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:29.474642+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6310",

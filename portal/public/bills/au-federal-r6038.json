@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-08",
+  "sentences": [
+   "The bill would provide additional Commonwealth funding for services outside ordinary annual government operations in 2017-18, supplementing appropriations already authorised for that financial year.",
+   "It would allocate money for new administered outcomes, assets and liabilities, departmental capital, corporate entities and financial assistance to states, territories and local governments.",
+   "The legislation would begin on Royal Assent and be repealed on 1 July 2020, alongside a companion bill funding ordinary annual government services."
+  ],
+  "changes": [
+   "The Finance Minister's available advance for urgent expenditure would be restored to $380 million regardless of earlier allocations.",
+   "Scheduled appropriations would be reduced where an advance had already funded the same expenditure, preventing duplicate funding.",
+   "Fifteen redundant annual appropriation Acts from 2012-13 and 2013-14 would be repealed.",
+   "Designated ministers could set conditions, amounts and timing for scheduled state, territory and local government payments."
+  ],
+  "affected": "Commonwealth entities and companies, state and territory governments, local governments and ministers administering the appropriations would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:43:38.761146+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5153",

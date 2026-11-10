@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-09",
+  "sentences": [
+   "The bill would retrospectively validate certain review fees charged by the Australian Securities and Investments Commission (ASIC), addressing a technical error in the indexation rules.",
+   "It would deem historical fees to have been calculated under the specified indexation method, covering the period between the 2011 fee changes and corrective regulations in 2025.",
+   "The measure would cover relevant annual fees, upfront fees and late fees, with the validating provisions starting on the day following Royal Assent."
+  ],
+  "changes": [
+   "The specified indexation calculation would apply from 1 July 2011 for the affected historical fees.",
+   "For the 2011-12 calculation, the previous indexable amount would use the applicable indexed amount for 2010-11.",
+   "Validation would also cover relevant review dates in the financial year beginning 1 July 2024 before the corrective regulations commenced."
+  ],
+  "affected": "Companies and other registered entities charged the affected review fees, including special purpose companies paying annual review fees, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:08.188138+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

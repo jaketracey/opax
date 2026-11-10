@@ -167,7 +167,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-07",
+  "sentences": [
+   "The bill would rename and repurpose the Emergency Response Fund as the Disaster Ready Fund, directing ongoing funding towards disaster resilience and reducing future natural disaster risks.",
+   "From 2023-24, up to $200 million a year could be drawn for these purposes, with ministers able to adjust the limit through a disallowable instrument.",
+   "Existing recovery and mitigation commitments for 2022-23 would be preserved, while responsibility for expenditure would transfer to the National Emergency Management Agency."
+  ],
+  "changes": [
+   "The annual withdrawal limit would have to be reviewed at least every five years.",
+   "Ministers would seek Future Fund Board advice before adjusting the annual limit.",
+   "The Emergency Management Minister would request transfers to the fund used to channel grants to states and territories."
+  ],
+  "affected": "Communities at risk of future natural disasters, the National Emergency Management Agency and the responsible Ministers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7804",

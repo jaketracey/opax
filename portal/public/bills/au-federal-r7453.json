@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-25",
+  "sentences": [
+   "The bill would let eligible child abuse survivors seek payment of outstanding court compensation from certain superannuation contributions made for the offender's benefit.",
+   "Survivors would first obtain information from the Commissioner of Taxation, then seek a court release order where compensation remains unpaid for at least 12 months.",
+   "The framework would cover specified offences involving a conviction or finding of guilt, while excluding mandated employer contributions, defined benefit contributions and contributions before 1 July 2002."
+  ],
+  "changes": [
+   "Compensation debts covered by the bill would be recoverable after an offender's bankruptcy.",
+   "Courts would be prohibited from publishing survivors' names in release proceedings and related appeals.",
+   "The Commissioner would have to notify offenders when their superannuation information is disclosed, without naming the applicant or survivor."
+  ],
+  "affected": "Eligible child abuse survivors, offenders owing compensation, superannuation providers, the Commissioner of Taxation and courts are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:02:52.606898+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

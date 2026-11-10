@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-31",
+  "sentences": [
+   "The bill would temporarily reduce excise and equivalent customs duties on eligible fuels and expand ministers' powers to adjust fuel duty and road user charges.",
+   "Eligible petrol, diesel and similar fuel duty rates would be halved from 1 April 2026 through 30 June 2026, with scope for an additional ministerial reduction.",
+   "Under the proposal, full fuel duty rates would resume from 1 July 2026, while temporary flexibility over road user charge determinations would apply until 30 June 2027."
+  ],
+  "changes": [
+   "The Treasurer could determine fuel duty percentages below the default half-rate during the reduction period.",
+   "The Transport Minister could make relevant road user charge determinations without the usual public consultation process.",
+   "The temporary road user charge powers would permit multiple determinations for a fuel class within a financial year.",
+   "The restriction on applying an indexation method to those road user charges would be temporarily lifted."
+  ],
+  "affected": "Manufacturers, producers, importers and users of fuels, including petrol and diesel, and heavy vehicle operators who pay the road user charge, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:10.665921+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-10152",

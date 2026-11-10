@@ -59,7 +59,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-08",
+  "sentences": [
+   "The bill would prohibit full face coverings in public places within Commonwealth jurisdiction during specified terrorism threat declarations, and criminalise forcing others to wear them.",
+   "The minister would have to declare the prohibition when the national terrorism threat level is above Possible, covering Commonwealth places and Australian territories.",
+   "Exceptions would allow coverings for lawful work, entertainment, recreation, sport, genuine artistic purposes and protection, with the amendments starting the day after Royal Assent."
+  ],
+  "changes": [
+   "Wearing a full face covering during an operative declaration would become an offence in covered public places.",
+   "Compelling an adult to wear an identity-concealing garment would become a separate offence.",
+   "Compelling a child to wear such a garment would also become an offence.",
+   "Ministerial threat declarations would not be subject to parliamentary disallowance."
+  ],
+  "affected": "People wearing face coverings in covered public places and adults or children compelled to wear them are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:17.215450+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

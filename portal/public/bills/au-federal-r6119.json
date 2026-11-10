@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-24",
+  "sentences": [
+   "The bill would allow regulations to impose review fees on notified foreign passport funds, supporting the broader Asia Region Funds Passport framework for cross-border funds.",
+   "It would align the fee legislation with annual review dates for those funds and make each fund's operator responsible for paying any prescribed fee.",
+   "The changes would start after both Royal Assent and the relevant companion legislation commenced, while preserving existing regulations governing review fees for other entities."
+  ],
+  "changes": [
+   "The statutory review-date definition would be updated to match the definition introduced through the funds passport legislation.",
+   "Notified foreign passport funds would join the categories of entities liable for prescribed review fees.",
+   "Fee regulations already in force immediately before commencement would continue to operate."
+  ],
+  "affected": "Notified foreign passport funds offering interests in Australia and their operators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:26.525990+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

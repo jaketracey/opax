@@ -107,13 +107,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5026_ems_1fcd9245-33ff-4b3a-81b9-7fdc7eb91b9b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5026%22",
+   "document_date": "2013-03-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00098",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-21",
+  "sentences": [
+   "The bill would add federal discrimination protections for sexual orientation, gender identity and intersex status, and extend relationship protections to same-sex de facto couples.",
+   "It would apply the new grounds across areas already covered by the Sex Discrimination Act, with complaints handled through existing human rights processes.",
+   "The proposal would also extend or introduce exemptions, including for religious institutions, compliance with marriage and prescribed laws, and certain sex or gender records."
+  ],
+  "changes": [
+   "The Australian Human Rights Commission's functions would expand to cover the new grounds.",
+   "Definitions of man and woman would be removed so those terms take their ordinary meaning.",
+   "Religious education exemptions would extend to sexual orientation and gender identity, but would not be extended to intersex status.",
+   "The legislation would replace marital status with marital or relationship status as a protected ground."
+  ],
+  "affected": "People protected by the new discrimination grounds, same-sex de facto couples, covered employers and service providers, religious institutions and the Australian Human Rights Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:28.650084+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2410",

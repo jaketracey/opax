@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-13",
+  "sentences": [
+   "The bill would require Infrastructure Australia to give greater consideration to social and community benefits when auditing infrastructure, assessing proposals and preparing national infrastructure priorities.",
+   "It would add rural and regional social needs to assessments, require consultation with affected communities, and include current and future users’ needs in advice.",
+   "The requirements would apply to activities begun from commencement, the day after Royal Assent, while work already underway would not have to meet them."
+  ],
+  "changes": [
+   "Infrastructure plans would consider social benefits and complementary infrastructure needed to maximise those benefits.",
+   "Advice on infrastructure matters would have to consider social issues.",
+   "Preparing or changing corporate plans would require community consultation."
+  ],
+  "affected": "Infrastructure Australia, affected rural and regional communities and infrastructure users are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:38.081286+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

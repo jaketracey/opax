@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s922_ems_e7f89ece-1f56-4355-b2c4-6e319ce79406%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s922%22",
+   "document_date": "2013-05-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-16",
+  "sentences": [
+   "The bill would create country of origin labelling rules for packaged and unpackaged food sold at retail, with specified Australian origin and processing claims.",
+   "Manufactured in Australia claims would require substantial transformation and at least 50 per cent of transformation costs incurred locally, replacing Made in Australia claims.",
+   "The rules would begin after a 12-month transition following Royal Assent, with penalty exemptions for food supplied for immediate consumption by specified institutions."
+  ],
+  "changes": [
+   "Product of Australia claims would require all significant ingredients and all processing to be Australian.",
+   "Packaged food with minimal Australian processing but no substantial transformation in Australia would use the Packaged in Australia label.",
+   "Country of origin labelling breaches would attract new civil and criminal penalties.",
+   "Courts could disqualify people from managing corporations for involvement in labelling contraventions."
+  ],
+  "affected": "Food businesses supplying packaged or unpackaged retail food and consumers reading country of origin labels are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:22.678824+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

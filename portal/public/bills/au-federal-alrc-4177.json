@@ -21,8 +21,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5104_ems_a84d4455-f7bf-4778-9b59-a9c143de6033%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5104%22",
+   "document_date": "2013-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-24",
+  "sentences": [
+   "The bill would establish a renewable fuel content scheme for motor vehicle fuel supplied in Australia, supported by an administrator, reporting requirements and enforceable supply rules.",
+   "Regulations would require renewable fuel content of at least 5 per cent from 1 July 2017 and 10 per cent from 1 July 2020.",
+   "The main scheme would begin on proclamation, with exceptions for emergency-law supplies and fuel reasonably expected to undergo further processing to meet the regulations."
+  ],
+  "changes": [
+   "Refineries, blenders and importers could earn transferable credits for renewable content above required levels.",
+   "Suppliers dealing with parties other than end users would have to provide compliance documentation.",
+   "Covered suppliers would have to retain records of fuel supplied.",
+   "Producers and importers would have to submit annual statements in the administrator’s required form."
+  ],
+  "affected": "Fuel producers, processors, refineries, blenders, importers, covered suppliers and the Renewable Fuel Program Administrator are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:33.770248+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

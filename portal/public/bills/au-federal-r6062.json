@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-28",
+  "sentences": [
+   "The bill would establish collection arrangements for a domestic commercial vessel levy administered by the Australian Maritime Safety Authority (AMSA), including deadlines and late payment penalties.",
+   "The annual levy would be due at the end of 28 July, while a proportional levy would be payable 28 days after a vessel became liable.",
+   "Its main provisions would commence with the companion levy legislation, alongside separate consequential amendments supporting enforcement and payment arrangements under existing maritime safety laws."
+  ],
+  "changes": [
+   "The Minister could allow quarterly instalments through rules instead of requiring a single annual payment.",
+   "Late payment penalties could be set by rules up to 20 per cent annually on unpaid amounts, with remission and review safeguards.",
+   "AMSA would have to refund excess levy payments, instalments and late payment penalties.",
+   "Levy liabilities and late payment penalties would be Commonwealth debts recoverable through the courts."
+  ],
+  "affected": "People liable for the domestic commercial vessel levy and AMSA would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:04.952574+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

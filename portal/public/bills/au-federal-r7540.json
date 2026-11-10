@@ -47,7 +47,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-10",
+  "sentences": [
+   "The bill would create additional illicit tobacco offences, change customs enforcement and licensing arrangements, and amend powers for investigating and recovering proceeds of crime.",
+   "New offences would address tobacco imports, possession and movement involving reasonable suspicion of unlawful importation or revenue fraud, alongside offences concerning missing import permissions or breached conditions.",
+   "Most measures would begin the day after Royal Assent, with licensing changes starting by proclamation or automatically after the prescribed 12-month period expires."
+  ],
+  "changes": [
+   "Customs control would extend over duty-refunded tobacco until export, sale or specified refund application outcomes.",
+   "The process for claiming return of seized illicit tobacco would be removed.",
+   "Production orders could be sought after proceedings start and reach documents located in or accessible from Australia.",
+   "Unexplained wealth calculations would avoid counting property traced to one source multiple times.",
+   "Pecuniary penalty order reductions would reflect amounts actually paid rather than amounts merely payable."
+  ],
+  "affected": "Tobacco importers, carriers, freight forwarders, customs brokers, retailers and operators of depots and warehouses, and people liable under pecuniary penalty orders, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:05:52.633346+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

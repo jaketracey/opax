@@ -41,7 +41,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-23",
+  "sentences": [
+   "The bill would require prime agricultural land to be used for agriculture and override Commonwealth, state or territory laws to the extent they allow other uses.",
+   "People possessing the land could neither use it for other purposes nor permit others to do so, and purchasers would have corresponding obligations.",
+   "Existing partial non-agricultural uses could not expand, and land would return to agricultural use when those activities ceased, with commencement the day after Royal Assent."
+  ],
+  "changes": [
+   "Conflicting laws permitting non-agricultural use of prime agricultural land would lose effect to that extent.",
+   "Purchasers would be required to ensure their prime agricultural land is used only for agriculture.",
+   "People possessing land already partly used for other purposes would be prohibited from extending those uses."
+  ],
+  "affected": "People and corporations possessing or purchasing prime agricultural land, including state governments, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:03:29.098374+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

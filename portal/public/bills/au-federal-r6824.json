@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-12-02",
+  "sentences": [
+   "The bill would add a protection against negative equity to the Pension Loans Scheme and let participants receive part of their loan payments upfront.",
+   "Advances would be capped at 50 per cent of the maximum annual pension rate, with up to two payments allowed in any 26-fortnight period.",
+   "The changes would start on 1 July 2022, with the equity protection covering existing debts, subject to exceptions involving fraud, misrepresentation or certain additional property charges."
+  ],
+  "changes": [
+   "Any advance would reduce the maximum fortnightly loan payments available over the following 26 fortnights.",
+   "The government could not generally recover more than the adjusted value of the property securing the loan.",
+   "Valuation methods would be set by legislative instrument and could account for existing mortgages or other encumbrances.",
+   "The requirement to lodge specified scheme requests at a departmental office would be removed."
+  ],
+  "affected": "Eligible older Australians and their partners and participants' estates would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:30.681874+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7682",

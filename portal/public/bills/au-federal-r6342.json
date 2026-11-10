@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would replace two military compensation treatment pathways with one based on a Department of Veterans’ Affairs health card, while adding discretionary reimbursement in special circumstances.",
+   "It would move eligible reimbursement clients to card-based treatment, paying providers directly rather than generally requiring veterans to pay first and later claim reimbursement.",
+   "The amendments would begin on royal assent, regularise earlier pathway transfers and add discretion for clinically necessary treatment outside the usual treatment principles."
+  ],
+  "changes": [
+   "The commission’s requirement to choose between two treatment pathways would be repealed.",
+   "A new discretionary reimbursement provision would cover accepted service conditions where special circumstances exist.",
+   "Outstanding reimbursement claims would transfer to corresponding replacement provisions.",
+   "Certain earlier provider payments would be validated without creating another payment entitlement."
+  ],
+  "affected": "Veterans covered by military rehabilitation and compensation legislation, treatment providers and the Military Rehabilitation and Compensation Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:49.362907+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

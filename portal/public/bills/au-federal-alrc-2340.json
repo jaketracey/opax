@@ -95,13 +95,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4970_ems_86867a2c-6d11-41d4-8e75-7fc639365fbf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4970%22",
+   "document_date": "2013-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00023",
    "document_date": "2013-03-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-14",
+  "sentences": [
+   "The bill would revise oversight of higher education and vocational student loan providers, including approval revocation, compliance notices, information sharing and administrative procedures.",
+   "Providers losing registration or subject to winding-up orders could have approvals automatically revoked, and the minister could issue notices requiring action over actual or possible non-compliance.",
+   "It would also update repayment threshold indexation to reflect twice-yearly earnings statistics and revise qualification definitions to align with the Australian Qualifications Framework."
+  ],
+  "changes": [
+   "Automatic revocation notices in the specified high risk circumstances would not be subject to parliamentary disallowance.",
+   "Providers could change their business entity names without revocation followed by retrospective reapproval.",
+   "The minister could seek regulator information to administer the law and enforce provider compliance.",
+   "Providers would be expressly required to comply with notices given under the new process."
+  ],
+  "affected": "Approved higher education and vocational education providers, their students and loan borrowers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:15.548666+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

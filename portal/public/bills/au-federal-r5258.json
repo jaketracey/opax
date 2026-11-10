@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-29",
+  "sentences": [
+   "The bill would restrict immediate tax deductions for mining rights and information first used in exploration, replacing that treatment with depreciation except in specified cases.",
+   "Costs losing immediate deductibility would generally be deducted over the shorter of the asset's effective life or 15 years from its first use.",
+   "Immediate deductions would remain for qualifying government acquisitions, newly generated information and specified geological or geophysical data packages, subject to the existing eligibility requirements."
+  ],
+  "changes": [
+   "The measure would apply after 7.30 pm Australian Eastern Standard Time on 14 May 2013.",
+   "Acquisitions under qualifying arrangements continuously in place before that announcement would be protected.",
+   "Taxpayers ceasing exploration could elect to deduct remaining value if planned spending did not exceed the minimum needed to retain the tenement.",
+   "Resumed activity could trigger an assessable clawback based on the value the asset would otherwise have retained."
+  ],
+  "affected": "Mining, quarrying and petroleum explorers and holders of mining rights and information would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:15.754462+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

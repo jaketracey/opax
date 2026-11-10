@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-25",
+  "sentences": [
+   "The bill would introduce refundable loss carry back offsets, permanently extend the small business instant asset write-off, and exempt specified Papua New Guinea (PNG) rugby employment income.",
+   "Eligible corporate tax entities, excluding significant global entities, could offset revenue losses against tax paid in either or both of the two preceding income years.",
+   "From 1 July 2026, businesses with aggregated annual turnover below $10 million could immediately deduct eligible assets costing less than $20,000 when first used or installed."
+  ],
+  "changes": [
+   "The loss carry back measure would apply to income years beginning on or after 1 July 2026.",
+   "Offsets would be limited by earlier tax liabilities and generally by the entity's available franking balance.",
+   "Capital losses would be ineligible for carry back.",
+   "The PNG Chiefs Limited employment income exemption would cover the 2025-26 income year and the following nine income years."
+  ],
+  "affected": "Eligible corporate tax entities, small businesses and people deriving income from PNG Chiefs Limited employment are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:30.001648+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

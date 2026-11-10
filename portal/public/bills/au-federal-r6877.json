@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "The bill would raise the income limits for the Commonwealth Seniors Health Card, allowing more eligible older people to qualify for pharmaceutical and health concessions.",
+   "The annual limit would become $90,000 for singles and $144,000 for couples combined, applying through both social security and veterans’ entitlement income tests.",
+   "The revised limits would apply when assessing qualification from 20 September 2022, replacing that year’s indexation, with annual indexation of the new amounts resuming in 2023."
+  ],
+  "changes": [
+   "The single-person income threshold would be substituted in both relevant statutory calculators.",
+   "Each ordinary couple member’s statutory income threshold would become $72,000 a year.",
+   "The new thresholds would first be indexed on 20 September 2023."
+  ],
+  "affected": "Older Australians seeking the card and eligible veterans would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7774",

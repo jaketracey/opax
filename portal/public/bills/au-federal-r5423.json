@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-01",
+  "sentences": [
+   "The bill would criminalise certain disclosures by current or former public officials that result in someone facing investigation, prosecution, trial or punishment for a foreign death-penalty offence.",
+   "A conviction for the disclosure offence would carry a mandatory minimum prison term of one year, while courts would retain discretion over the minimum non-parole period.",
+   "The offence would exclude foreign cases involving terrorism or violence causing death or endangering life, and the legislation would begin the day after Royal Assent."
+  ],
+  "changes": [
+   "The legislation would apply to conduct occurring beyond Australia.",
+   "Its geographic coverage would include every Australian external territory.",
+   "The Crown would be bound by the legislation but could not itself be prosecuted."
+  ],
+  "affected": "Current and former public officials and people exposed to foreign death-penalty proceedings through their disclosures are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:06.310882+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

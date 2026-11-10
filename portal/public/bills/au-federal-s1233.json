@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-19",
+  "sentences": [
+   "The bill would broaden access to the Defence Service Homes Insurance Scheme for current and former defence personnel, peacekeepers and their surviving spouses under new eligibility provisions.",
+   "A consolidated eligible-recipient category would replace existing insurance categories, with new provisions covering homes and retirement village residence rights held by people within that category.",
+   "The changes would apply to insurance undertaken from commencement, beginning on 1 January 2020 or the day after royal assent, whichever date occurred later."
+  ],
+  "changes": [
+   "Separate insurance provisions tied to particular subsidised housing loan schemes would be repealed.",
+   "An eligible person's death would not automatically end home or retirement residence insurance.",
+   "Where termination followed a death, the secretary would generally have to give interested people reasonable notice.",
+   "A termination notice based on death could not be issued if the eligible person left a widow or widower."
+  ],
+  "affected": "Defence personnel, veterans, eligible peacekeepers, widows and widowers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:05.178046+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6019",

@@ -113,7 +113,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-24",
+  "sentences": [
+   "The bill would change veterans' compensation, rehabilitation, education and mental health support, including a suicide prevention pilot and additional ways to claim compensation.",
+   "Eligible former defence members studying full time under approved rehabilitation plans would be entitled to incapacity payments equal to 100% of normal weekly earnings after 45 weeks.",
+   "The study payment changes would sunset on 1 July 2022; other measures would cover dependent partners, eligible Vietnam veterans' grandchildren and qualifying submariners."
+  ],
+  "changes": [
+   "A pilot program would authorise coordinated mental health and support services for eligible veterans at risk of suicide.",
+   "Wholly dependent partners would have two years instead of six months to choose between weekly death compensation and a lump sum.",
+   "Eligible grandchildren of veterans with operational service in Vietnam could apply for the Long Tan Bursary.",
+   "Qualifying special-operation submariners would have all submarine service between 1 January 1978 and 31 December 1992 deemed operational service.",
+   "An oral request during a needs assessment call could count as a compensation claim."
+  ],
+  "affected": "Eligible veterans and former defence members, wholly dependent partners, qualifying submariners and eligible grandchildren of Vietnam veterans would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:21.841289+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5221",

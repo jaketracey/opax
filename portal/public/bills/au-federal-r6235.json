@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-03",
+  "sentences": [
+   "The bill would prohibit live animal exports for slaughter from 1 July 2021 and impose interim welfare requirements on livestock exporters before that date.",
+   "Exporters would need to take reasonable steps to ensure satisfactory treatment overseas, including specified holding, transport and slaughter standards and stunning before slaughter.",
+   "The legislation would begin on Royal Assent, with transitional exemptions available in certain cases involving contracts made before commencement and the permanent ban starting later."
+  ],
+  "changes": [
+   "Export licences would cease to authorise livestock exports for slaughter from 1 July 2021.",
+   "Exporters would have to notify the Secretary within 14 days if satisfactory overseas treatment had not occurred.",
+   "Interim export approvals would require the Secretary to be satisfied about welfare treatment or an applicable transitional exemption."
+  ],
+  "affected": "Livestock export licence holders and live animals exported for slaughter are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:29.455468+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

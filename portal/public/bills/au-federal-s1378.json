@@ -41,7 +41,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "text",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2023-05-11",
+  "sentences": [
+   "The bill would introduce rules for interpreting specified references to Aboriginal people and descendants of Indigenous inhabitants of Australia and the Torres Strait in Commonwealth Acts.",
+   "It would use membership of a registered native title body corporate holding rights over land or waters as the test for those references.",
+   "The proposed section would distinguish bodies holding native title in the Torres Strait from those holding rights elsewhere, according to the reference being interpreted."
+  ],
+  "changes": [
+   "Aboriginal race and Indigenous Australian descendant references would use membership of bodies holding native title outside the Torres Strait.",
+   "Torres Strait descendant references would use membership of bodies holding native title within the Torres Strait.",
+   "The bill would commence on the day after six months had elapsed from Royal Assent."
+  ],
+  "affected": "People covered by the specified Aboriginal and Torres Strait descendant references in Commonwealth Acts are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:28.691834+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-8105",

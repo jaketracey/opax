@@ -89,7 +89,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-24",
+  "sentences": [
+   "The bill would introduce a one-off 12-month superannuation guarantee amnesty for employers disclosing historical underpayments, alongside changes to contributions, fund income and borrowing rules.",
+   "Eligible employees with multiple employers could seek an exemption from one employer's compulsory contributions, allowing them to negotiate alternative remuneration and avoid exceeding contribution caps.",
+   "It would also extend non-arm's length income rules to expenses and adjust members' total superannuation balances for certain limited recourse borrowing arrangements from 1 July 2018."
+  ],
+  "changes": [
+   "Qualifying amnesty payments of superannuation guarantee charges or offsetting contributions made during the amnesty would become tax deductible.",
+   "Administration components and specified penalties would be removed for newly disclosed amounts qualifying for the amnesty.",
+   "Employers already told their compliance for a quarter was being examined would be excluded for that quarter.",
+   "The Commissioner of Taxation could withdraw amnesty benefits for failure to pay or comply with a payment arrangement."
+  ],
+  "affected": "Employers with historical superannuation shortfalls, employees with multiple employers, superannuation funds, their members and the Commissioner of Taxation would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:26.525672+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5234",

@@ -119,7 +119,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-16",
+  "sentences": [
+   "The bill would amend the Excise Act 1901 and the Customs Act 1901 to simplify licensing for businesses that make or store fuel and alcohol under excise or excise-equivalent warehouse licences.",
+   "Affected licences would run until cancelled instead of needing renewal, licence fees would go, one licence could cover several premises, and blanket permission to move goods between licensed sites would apply by default for multi-premises licences and on application for single-premises ones.",
+   "The changes would exclude tobacco, would commence on 1 July 2024 or the day after Royal Assent, whichever is later, and are expected to cost $3.3 million over four years from 2023-24."
+  ],
+  "changes": [
+   "These excise and excise-equivalent warehouse licences would stay in force until cancelled, replacing three-yearly and annual renewals.",
+   "Fees for applying for, obtaining or varying an excise-equivalent warehouse licence would be abolished, along with the power to prescribe excise manufacturer licence fees.",
+   "A single licence could cover more than one premises or warehouse, and the regulator could suspend or vary it for particular sites.",
+   "A licence could be suspended or cancelled after three years without licensed activity at its premises.",
+   "The Australian Taxation Office would publish a register of current licences showing each holder's name, Australian Business Number and governing Act.",
+   "Onshore producers of crude oil and condensate would not need a licence until a field's cumulative production passed 4767.3 megalitres, equal to 30 million barrels."
+  ],
+  "affected": "Fuel and alcohol manufacturers and storers, customs warehouses holding excise-equivalent goods, onshore oil and condensate producers, the Australian Taxation Office and the Australian Border Force are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:22:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

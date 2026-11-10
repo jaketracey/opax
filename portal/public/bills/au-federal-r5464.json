@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "The bill would raise the Commonwealth penalty unit from $170 to $180, increasing monetary penalties expressed in those units across federal criminal legislation.",
+   "The increase would apply to offences committed from 31 July 2015, followed by automatic adjustment using the consumer price index every three years from 1 July 2018.",
+   "The framework would cover Commonwealth laws and territory ordinances using penalty units, with each indexed increase applying only to offences committed from its indexation day."
+  ],
+  "changes": [
+   "The existing requirement for periodic ministerial reviews of the penalty unit would be repealed.",
+   "The Minister would have to publish each indexed amount through a notifiable instrument.",
+   "Indexed amounts would be rounded to the nearest dollar, with 50 cents rounded upwards."
+  ],
+  "affected": "People and companies facing relevant monetary penalties would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:04.787643+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

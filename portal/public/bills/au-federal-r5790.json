@@ -143,7 +143,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-28",
+  "sentences": [
+   "The bill would introduce a separate income tax scale for working holiday makers, applying a 15 per cent rate to their first $37,000 of taxable income.",
+   "The scale would apply to Australian-source income after related deductions from 1 January 2017, with ordinary marginal rates applying above the first income bracket.",
+   "It would cover subclass 417 and 462 visa holders and specified bridging visa holders, applying only during periods when a person qualifies as a working holiday maker."
+  ],
+  "changes": [
+   "A statutory definition would identify working holiday makers and their qualifying visas.",
+   "Australian-source income beyond employment earnings would also enter the working holiday maker tax calculation.",
+   "Resident and non-resident rate schedules would account for people earning both working holiday maker income and other taxable income."
+  ],
+  "affected": "Working holiday makers holding the specified visas, including eligible bridging visa holders, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:00.735216+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4443",

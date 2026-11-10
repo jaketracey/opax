@@ -113,7 +113,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-28",
+  "sentences": [
+   "The bill would change income support eligibility and waiting periods for younger job seekers, end the low income supplement and freeze several means-test thresholds.",
+   "From 1 July 2016, Newstart and sickness allowance eligibility would generally begin at 25, with younger claimants directed to youth allowance and some existing recipients protected.",
+   "A separate four-week income support wait would apply to specified job-ready claimants under 25, subject to exemptions, while other schedules would change ordinary waiting periods."
+  ],
+  "changes": [
+   "Parenting payment and non-student youth allowance claimants would generally face a one-week ordinary wait.",
+   "The financial hardship exemption would also require a qualifying personal financial crisis.",
+   "The low income supplement would end from 1 July 2017.",
+   "Indexation of specified working-age and student means-test thresholds would pause for three years.",
+   "Youth disability supplement eligibility within youth allowance would extend to recipients under 25."
+  ],
+  "affected": "Young job seekers, parenting payment recipients, students and low income supplement recipients would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:26.041866+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3843",

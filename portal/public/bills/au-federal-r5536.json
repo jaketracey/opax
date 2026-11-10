@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-10-15",
+  "sentences": [
+   "The bill would change deductions for work-related car expenses, restrict the Zone Tax Offset, limit salary packaged entertainment concessions and introduce third-party tax reporting.",
+   "It would retain the logbook and cents-per-kilometre deduction methods, set the initial rate at 66 cents per kilometre, and base zone eligibility on usual residence.",
+   "Car deduction and zone changes would apply from the 2015-16 income year, with entertainment changes and transaction reporting starting later under separate application rules."
+  ],
+  "changes": [
+   "The 12 per cent of original value and one-third of actual car expenses deduction methods would be repealed.",
+   "Salary packaged entertainment benefits would become reportable and lose access to elective valuation rules.",
+   "Certain employees’ concessionally taxed or exempt salary packaged entertainment benefits would be capped.",
+   "Third parties would report specified grants, government service payments, property and investment transfers, and payment system business transactions to the Commissioner of Taxation."
+  ],
+  "affected": "Taxpayers claiming car deductions or zone offsets, employers offering entertainment packages and organisations reporting transactions would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:51.226738+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

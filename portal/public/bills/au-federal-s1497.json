@@ -41,7 +41,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 14,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-24",
+  "sentences": [
+   "The bill would change Fair Work Commission procedures, supported bargaining, road transport contractor protections and administration of construction industry bodies under federal workplace laws.",
+   "The commission could conciliate certain dismissal disputes without first deciding whether a dismissal occurred, and decide specified contested cases without a hearing when parties consent.",
+   "A separate income threshold for regulated road transport contractors would be set by regulation, governing access to unfair termination and unfair contract protections."
+  ],
+  "changes": [
+   "Unfair deactivation and termination claims could be dismissed for being frivolous or vexatious, or having no reasonable chance of success.",
+   "A Full Bench could require permission for specified further applications following certain dismissals.",
+   "Repeat supported bargaining authorisations would use a streamlined pathway for substantially the same employers and employees.",
+   "Road Transport Advisory Group members would become eligible for travel allowances.",
+   "The National Construction Industry Forum would include the minister responsible for skills and vocational education."
+  ],
+  "affected": "Workers, employers, regulated road transport contractors, bargaining organisations, commission staff and industry advisory body members are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:14.914663+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

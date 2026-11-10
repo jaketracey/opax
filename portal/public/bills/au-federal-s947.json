@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-27",
+  "sentences": [
+   "The bill would ban exports of live livestock intended for slaughter overseas by inserting a new prohibition mechanism into Australia's existing export control legislation.",
+   "It would cover cattle, calves, sheep, lambs, goats and other prescribed animals where they were intended to be exported and slaughtered outside Australia.",
+   "The substantive provisions would commence on the day after Royal Assent, with the export ban operating through deemed regulations under the Export Control Act."
+  ],
+  "changes": [
+   "A statutory definition would identify the livestock intended for overseas slaughter covered by the new section.",
+   "Regulations would be treated as declaring that livestock to be prescribed goods.",
+   "Regulations would also be treated as imposing an absolute prohibition on exporting that livestock."
+  ],
+  "affected": "Exporters of live livestock for slaughter overseas would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:40.377031+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-09",
+  "sentences": [
+   "The bill would strengthen regulation of international education, change oversight of offshore higher education and introduce separate measures affecting First Nations medical students and childcare administration.",
+   "Education regulators would gain controls over providers and courses, while offshore course delivery would require authorisation and eligible First Nations medical places would be uncapped.",
+   "Separate childcare measures would expand financial information collection and data sharing, and retrospectively validate certain subsidy reconciliation decisions while waiving debts arising from timing discrepancies."
+  ],
+  "changes": [
+   "Education providers would have to report commissions paid to education agents.",
+   "The internal review period for overseas education regulatory decisions would increase from 90 days to 120 days.",
+   "Demand-driven Commonwealth supported medical places for eligible First Nations students would begin from 2026.",
+   "The education department secretary could compel childcare providers that are constitutional corporations to supply financial, cost and pricing information for a delivery prices project."
+  ],
+  "affected": "International students, education providers and agents, eligible First Nations medical students, childcare providers and families receiving subsidies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:50.210543+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

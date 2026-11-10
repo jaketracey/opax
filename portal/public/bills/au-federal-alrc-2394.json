@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5045_ems_47b5043f-d79a-4df0-8a2a-629b55b93c6c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5045%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00038",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would increase family trust distribution tax to reflect the higher Medicare levy proposed in the wider package of DisabilityCare Australia tax amendments.",
+   "It would raise the rate from 46.5 per cent to 47 per cent for the income or capital amounts subject to this tax.",
+   "The timing rules would distinguish certain Commissioner notices from other cases, with the new rate generally covering distributions and entitlements from 1 July 2014."
+  ],
+  "changes": [
+   "The primary liability rate for family trust distribution tax would increase to 47 per cent.",
+   "For liabilities triggered by specified Commissioner notices, the change would apply to notices issued on or after 1 July 2014.",
+   "Other liabilities would use the new rate for distributions made or present entitlements conferred on or after 1 July 2014."
+  ],
+  "affected": "People liable for family trust distribution tax on income or capital are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:38.612940+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

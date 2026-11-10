@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "The bill would adjust Medicare levy surcharge rules for fringe benefits to reflect Norfolk Island residents' inclusion in the Australian Medicare levy system.",
+   "It would make consequential amendments alongside the main Norfolk Island tax reforms, under which residents above applicable income thresholds without relevant private health insurance could face the surcharge.",
+   "The package's tax changes would generally begin on 1 July 2016, accompanying extension of Medicare benefits to Norfolk Island residents under separate legislation."
+  ],
+  "changes": [
+   "The 1999 fringe-benefit surcharge legislation would be aligned with removal of Norfolk Island-specific Medicare levy exemptions.",
+   "Norfolk Island residence would cease to provide the associated exemption from surcharge liability.",
+   "The new treatment would apply for the 2016-17 income year and subsequent years."
+  ],
+  "affected": "Norfolk Island resident taxpayers with relevant fringe benefits, income above surcharge thresholds and insufficient private health insurance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:01.497028+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

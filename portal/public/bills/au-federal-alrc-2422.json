@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5086_ems_23f5bce3-e238-4fae-abbb-3aa9ccb0ac7d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5086%22",
+   "document_date": "2013-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00117",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-30",
+  "sentences": [
+   "The bill would bring people participating in or supporting offshore resources activities within Australia's migration zone, requiring foreign workers involved to hold appropriate visas.",
+   "It would link migration coverage to resources activities rather than physical location alone, including workers on vessels and people providing support such as cooking or cleaning.",
+   "The deemed coverage would generally apply only for migration law, with activities defined through resources legislation and ministerial decisions that could include or exclude activities."
+  ],
+  "changes": [
+   "Working on covered activities would require a permanent visa or a visa specifically prescribed for that work.",
+   "Coverage could apply before work starts, during interruptions and after work finishes while a person remains in the relevant area.",
+   "Stowaways and people rescued at sea would fall outside this deeming rule where they were neither participating in nor supporting resources activities."
+  ],
+  "affected": "Foreign offshore resources workers, support staff, contractors and businesses engaging them are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:19.655551+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1116",

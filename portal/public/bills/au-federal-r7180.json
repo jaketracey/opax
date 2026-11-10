@@ -149,7 +149,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-27",
+  "sentences": [
+   "The bill would make six sets of Treasury changes, led by the first tranche of the Delivering Better Financial Outcomes package responding to the Quality of Advice Review.",
+   "Schedule 1 would clarify when superannuation trustees can pay members' advice fees from their accounts, simplify ongoing fee consents, add Financial Services Guide flexibility and rework conflicted remuneration and insurance commission consents.",
+   "Other schedules would redraft petroleum resource rent tax anti-avoidance rules, clarify tax treatment of mining rights and petroleum exploration, incorporate multilateral development bank agreements by reference, make technical fixes and expand film tax offsets."
+  ],
+  "changes": [
+   "Section 99FA of the Superannuation Industry (Supervision) Act 1993 would be replaced to allow individual advice fees to be charged against a member's interest only on written request or consent, excluding collectively charged intra-fund advice.",
+   "The requirement to give clients a fee disclosure statement would be removed.",
+   "The film location tax offset would rise from 16.5 to 30 per cent of qualifying Australian production expenditure, with a $15 million minimum spend rising to $20 million.",
+   "A new producer tax offset category would cover drama series seasons spending at least $35 million in qualifying Australian production expenditure.",
+   "The petroleum resource rent tax anti-avoidance rule would be aligned with Part IVA of the Income Tax Assessment Act 1936 for arrangements entered into from 1 July 2023.",
+   "Mining, quarrying or prospecting rights first held after 7:30PM on 9 May 2023 could not be depreciated for income tax until used."
+  ],
+  "affected": "Superannuation trustees and members, financial advisers and licensees, insurers, petroleum and mining companies and film producers are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:28:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8942",

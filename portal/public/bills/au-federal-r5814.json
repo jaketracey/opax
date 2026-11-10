@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-16",
+  "sentences": [
+   "The bill would correct tax concessions for investments held through trusts and simplify confidential information sharing between the Australian Securities and Investments Commission (ASIC) and the Commissioner of Taxation.",
+   "It would prevent certain exempt investment distributions from triggering capital gains consequences and allow ASIC to share information without its chairperson’s or delegate’s involvement.",
+   "For early stage company investments, the trust correction would cover payments directly from the investing trust, while existing tax secrecy protections would continue."
+  ],
+  "changes": [
+   "The early stage investor correction would apply to capital gains events from 1 July 2017.",
+   "The venture capital correction would cover trust-interest payments in income years starting from 1 July 2016.",
+   "Authorised disclosures could include information ASIC obtained before the information-sharing amendment begins."
+  ],
+  "affected": "Trust beneficiaries investing in early stage companies or venture capital and ASIC would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:38.081286+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

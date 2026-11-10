@@ -49,3 +49,4 @@ Earlier rows and a full table backup are kept with each wave on the desktop, at
 | Wave | Bills | Notes |
 |---|---|---|
 | 1 | 294 | 289 Codex-written and 5 Fable-written; 9 charged, each with a neutrality accept |
+| 2 | 674 | 607 Codex-written, 67 Fable-written; 66 charged, each with a neutrality accept |

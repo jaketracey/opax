@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-27",
+  "sentences": [
+   "The bill would clarify that deposit accounts are excluded from banking law provisions allowing financial instruments to be converted or written off through bail-in.",
+   "It would also state that Commonwealth legislation gives the Australian Prudential Regulation Authority no power to implement, authorise or direct bail-in of deposit accounts.",
+   "The protections would apply to deposit accounts as defined in the bill, including the current and cheque accounts commonly held by Australian bank customers."
+  ],
+  "changes": [
+   "A definition of bail-in would be inserted into banking legislation.",
+   "Banking legislation would gain a definition identifying the deposit accounts covered by the exclusions.",
+   "References to instruments subject to conversion and write-off provisions would expressly exclude deposit accounts."
+  ],
+  "affected": "People and businesses holding deposit accounts, which could not be converted, written off or bailed in under the Banking Act, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:29.480609+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-6743",

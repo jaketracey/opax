@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-09",
+  "sentences": [
+   "The bill would rename the Children’s e-Safety Commissioner as the eSafety Commissioner and expand general online safety functions to cover Australians of all ages.",
+   "Education, research, grants and advice would extend beyond children, while the cyberbullying complaints scheme would continue to cover material targeting Australian children.",
+   "The changes would begin the day after Royal Assent and define Australians by ordinary residence, while preserving existing actions and protections through transitional provisions."
+  ],
+  "changes": [
+   "The principal Act would be renamed the Enhancing Online Safety Act 2015.",
+   "The special account would be renamed and its online safety purpose extended to all Australians.",
+   "The wider functions could allow a broader range of online safety information to be disclosed to specified authorities."
+  ],
+  "affected": "The commissioner, Australian children and adults, including older Australians and people at risk of family or domestic violence, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:28.843066+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-4728",

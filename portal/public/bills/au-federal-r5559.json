@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-10-22",
+  "sentences": [
+   "The bill would extend government study loans to certain New Zealand citizens and update university funding eligibility, research appropriations and reporting requirements for education agencies.",
+   "Eligible New Zealand citizens holding Special Category Visas would need to have become Australian residents as dependent children and satisfy specified long-term residence tests.",
+   "The loan changes would apply to units with census dates from 1 January 2016, while the other schedules would start the day after Royal Assent."
+  ],
+  "changes": [
+   "Torrens University Australia would be listed for research grant and postgraduate scholarship funding available to other private Australian universities.",
+   "The University of Ballarat’s statutory listing would change to Federation University Australia.",
+   "Research funding caps would be updated and extended to the financial years beginning on 1 July 2017 and 1 July 2018.",
+   "The Tertiary Education Quality and Standards Agency would no longer need separate annual operational plans."
+  ],
+  "affected": "Qualifying New Zealand students, Australian universities and the tertiary education regulator would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:30.349969+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3985",

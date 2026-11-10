@@ -101,7 +101,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-04",
+  "sentences": [
+   "The bill would appropriate money from the Consolidated Revenue Fund for additional expenditure by the Parliamentary Departments, covering services that are not the ordinary annual services of the Government.",
+   "It would fund amounts set out in Schedule 1 for departmental items, administered items, administered assets and liabilities items and equity injections, with the Department of the House of Representatives the only department included.",
+   "It is one of three Additional Estimates Appropriation Bills alongside Appropriation Bills (No. 3) and (No. 4) 2024-2025, would commence on Royal Assent and would be repealed on 1 July 2027."
+  ],
+  "changes": [
+   "Departmental items could be spent on any payment related to a Parliamentary Department's functions, including employee and supplier costs and minor assets valued at $10 million or less.",
+   "Administered items would be appropriated separately for each outcome, and equity injections could fund new or major assets valued at more than $10 million or reduce prior year liabilities.",
+   "The Advance to the responsible Presiding Officer would be restored to its original limits once the bill commences, and any advance already allocated for the same expenditure would reduce the appropriation.",
+   "Notional transactions between non-corporate Commonwealth entities would be treated as real and would debit the appropriation.",
+   "Amounts could be credited to a special account where an item shares the account's purpose, and the Portfolio Additional Estimates Statements would be relevant documents for interpreting the Act."
+  ],
+  "affected": "The Department of the House of Representatives, as the only Parliamentary Department funded by the bill, and the responsible Presiding Officer are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:12:00Z"
+ },
  "divisions": [],
  "speeches": [
   {

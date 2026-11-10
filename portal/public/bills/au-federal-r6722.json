@@ -107,7 +107,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-27",
+  "sentences": [
+   "The bill would create an ongoing discretion to protect pension payments when temporary travellers cannot return to their home country because of specified events beyond their control.",
+   "The Secretary could extend the usual 26-week period for reasons including serious illness, family bereavement, natural disasters, legal proceedings and public health crises.",
+   "Starting on 1 July 2021, the changes would cover qualifying pensioners overseas and overseas-resident pensioners temporarily in Australia who retain earlier portability entitlements."
+  ],
+  "changes": [
+   "Extensions would allow pension supplements beyond 26 weeks and delay reductions based on Australian working-life residence.",
+   "An event would need to begin or occur during the relevant absence or return visit.",
+   "Extensions for unrest, industrial action or war would exclude people willingly involved in those events.",
+   "Successive extensions could be granted as circumstances change.",
+   "Favourable decisions could operate retrospectively to maintain pension rates without interruption."
+  ],
+  "affected": "Age pensioners, certain disability support pensioners and the Secretary deciding portability extensions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:23.980191+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7640",

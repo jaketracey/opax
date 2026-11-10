@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-29",
+  "sentences": [
+   "The bill would raise excise on specified Australian-made oils and greases to support the Product Stewardship for Oil Scheme, which finances reuse and recycling.",
+   "The rate would increase from 5.449 cents to 8.5 cents per litre or kilogram from 1 July 2014, covering new and recycled products.",
+   "Synthetic equivalents would also be included, with a separate customs tariff bill applying the corresponding increase to imported goods under the same scheme."
+  ],
+  "changes": [
+   "Four oil-related tariff subitems in the Excise Tariff Act would be amended.",
+   "The higher rates would apply to goods manufactured or produced on or after 1 July 2014.",
+   "Earlier Australian production not yet subject to excise before that date would also be covered."
+  ],
+  "affected": "Manufacturers of covered petroleum-based oils, greases and their synthetic equivalents would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:48.106532+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

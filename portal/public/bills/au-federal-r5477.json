@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-03",
+  "sentences": [
+   "The bill would establish a framework for recovering agricultural export administration costs through levies classified under the Constitution as customs duties.",
+   "Regulations would identify the goods and export-related matters charged, specify amounts or calculation methods, and nominate the people responsible for paying the levies.",
+   "It would accompany separate general and excise imposition bills and a collection bill, with substantive commencement dependent on the collection legislation becoming operational."
+  ],
+  "changes": [
+   "The Agriculture Minister would have to be satisfied that proposed charges recover no more than likely Commonwealth costs.",
+   "Regulations could create exemptions from the new charges.",
+   "Charges could cover individual export goods or broader prescribed matters associated with exporting.",
+   "State-owned property would be protected from taxation under the bill."
+  ],
+  "affected": "Agricultural exporters and persons who export or deal with regulated exported goods would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:03.336083+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

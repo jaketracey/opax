@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-30",
+  "sentences": [
+   "The bill would amend customs administration, export permit controls and trade description rules, and clarify maritime enforcement powers during passage through another country’s waters.",
+   "It would permit export licence revocation on security, defence or international relations grounds and remove the mandatory interim stage of Australian Trusted Trader agreements.",
+   "Most schedules would begin the day after Royal Assent, with later commencement arrangements for export controls and the trusted trader changes."
+  ],
+  "changes": [
+   "The minister could exempt specified importers or goods from import declaration processing charges.",
+   "The manufacturing history period relevant to made-to-order capital equipment tariff concessions would extend from two years to five.",
+   "Trade description regulations could prescribe offence penalties up to 50 penalty units.",
+   "Maritime powers could be exercised during passage through foreign waters consistent with the United Nations Convention on the Law of the Sea."
+  ],
+  "affected": "Importers, exporters, trusted traders, Australian manufacturers and maritime officers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:16.071765+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-09-03",
+  "sentences": [
+   "The bill would transfer selected public health functions and records to the Australian Centre for Disease Control (CDC), supporting its establishment under companion legislation.",
+   "Its director-general would take responsibility for listed human diseases, national surveillance functions, the occupational respiratory disease registry and regulation of security-sensitive biological agents under existing laws.",
+   "Most human biosecurity functions would remain with the health department, and the substantive amendments would start with the companion legislation establishing the new centre."
+  ],
+  "changes": [
+   "The national contact point for communication with the World Health Organization would move to the CDC director-general.",
+   "The health department secretary would replace the Commonwealth Chief Medical Officer as Director of Human Biosecurity.",
+   "The legislation establishing the Australian National Preventative Health Agency would be repealed.",
+   "Information protected under the CDC legislation would be exempt from disclosure under freedom of information law."
+  ],
+  "affected": "The Australian CDC and its Director-General, the Department of Health, Disability and Ageing, the Commonwealth Chief Medical Officer and the Secretary, and people whose protected information is held are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:24.855966+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

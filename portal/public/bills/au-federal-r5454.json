@@ -131,7 +131,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "The bill would close the First Home Saver Accounts scheme, remove the dependent spouse tax offset and amend offshore banking, investment management and other tax rules.",
+   "Saver accounts would generally lose their special status from 1 July 2015, while dependent spouse offset changes would apply from the 2014-15 income year.",
+   "Other schedules would alter offshore banking concessions, provide an infrastructure organisation tax exemption, extend two gift-deductibility listings and make technical tax and superannuation amendments."
+  ],
+  "changes": [
+   "Former saver accounts would lose contribution and withdrawal restrictions and generally receive ordinary savings account tax treatment.",
+   "The invalid and carer dependant offset would expand to spouses previously excluded because of the spouse offset.",
+   "Internal financial dealings involving offshore banking units would be treated on an arm's length basis.",
+   "Global Infrastructure Hub Ltd would receive an income tax exemption from 24 December 2014 to 30 June 2019.",
+   "Gift deductibility for the Australian Peacekeeping Memorial Project and National Boer War Memorial Association would extend to donations before 1 January 2018.",
+   "Qualifying foreign investments through independent Australian fund managers would receive specified treatment removing Australian income tax consequences."
+  ],
+  "affected": "Saver account holders and providers, taxpayers with dependent spouses, offshore banking businesses, foreign investors, fund managers and donors to the listed memorial organisations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:29.906858+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

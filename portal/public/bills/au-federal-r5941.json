@@ -89,7 +89,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-17",
+  "sentences": [
+   "The bill would increase the tax calculation for superannuation contributions where a member's tax file number has not been quoted by the relevant year-end deadline.",
+   "It would change the Medicare levy component from 2 per cent to 2.5 per cent in the formula applying to this category of contributions income.",
+   "It would accompany the proposed Medicare levy increase in a wider package intended to help fund the Commonwealth's contribution to the National Disability Insurance Scheme."
+  ],
+  "changes": [
+   "The amended calculation would apply to assessments for the 2019-20 income year and later years.",
+   "Commencement would align with the companion Medicare levy legislation.",
+   "The levy component in paragraph 29(2)(b) of the Income Tax Rates Act 1986 would be updated."
+  ],
+  "affected": "Trustees of superannuation funds and retirement savings account providers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:02.980512+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

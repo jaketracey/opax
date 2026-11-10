@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-25",
+  "sentences": [
+   "The bill would change how employee shares and options are taxed, extend tax deferral arrangements and introduce additional concessions for employees of qualifying small start-ups.",
+   "The longest available deferral period would increase from seven years to 15 years, while one taxing point for rights would shift to actual exercise.",
+   "The changes would generally cover interests acquired from 1 July 2015, with eligibility conditions applying to deferred taxation and the new start-up concessions."
+  ],
+  "changes": [
+   "The ownership and voting-rights ceiling for concessional treatment would increase from five per cent to 10 per cent, counting associates and rights to acquire shares.",
+   "Qualifying start-up share discounts would be exempt from income tax, while rights would generally enter the capital gains tax system.",
+   "The Taxation Commissioner could approve valuation methods binding on the Commissioner but optional for taxpayers.",
+   "Choosing to let a right lapse could qualify for a tax refund, provided the scheme does not directly protect against market risk."
+  ],
+  "affected": "Employees receiving discounted shares or rights, employers operating share schemes and the Australian Taxation Office are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:05.547026+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

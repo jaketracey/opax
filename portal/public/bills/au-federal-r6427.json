@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-16",
+  "sentences": [
+   "The bill would implement preferential Australian import tariffs under trade agreements with Peru, Indonesia and Hong Kong, China, through amendments to customs tariff legislation.",
+   "Separate schedules would set duty rates for qualifying goods, generally allowing duty-free entry while retaining excise-equivalent charges for specified alcohol, tobacco, fuel and petroleum products.",
+   "Each agreement's tariff amendments would commence with matching customs legislation and depend on that agreement entering into force for Australia before the provisions could operate."
+  ],
+  "changes": [
+   "Certain Peruvian tariff rates would decline in stages until duty-free treatment applied.",
+   "Qualifying Indonesian and Hong Kong goods outside the specified tariff schedules would receive duty-free treatment.",
+   "Concessional tariff items would be updated to align with the three agreements."
+  ],
+  "affected": "Importers of qualifying Peruvian, Indonesian and Hong Kong goods are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:05.176237+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

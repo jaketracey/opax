@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-17",
+  "sentences": [
+   "The bill would extend the parliamentary intelligence and security committee's deadline for its third review of the 2018 assistance and access amendments to telecommunications legislation.",
+   "It would move the deadline from 13 April 2020 to 30 September 2020 and place the review requirement in the Intelligence Services Act.",
+   "The changes would begin the day after royal assent and let a review already underway continue under the new statutory provision governing that review."
+  ],
+  "changes": [
+   "The committee's review would become a distinct function under the Intelligence Services Act.",
+   "References to assistance and access amendments would be removed from the separate data-retention review provision.",
+   "The committee would have to give the responsible minister a written report of its review."
+  ],
+  "affected": "The parliamentary intelligence and security committee would have a revised review deadline.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:51.404442+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

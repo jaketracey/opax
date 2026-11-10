@@ -161,7 +161,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-12",
+  "sentences": [
+   "The bill would authorise spending by the parliamentary departments through appropriations from the Consolidated Revenue Fund as part of the 2015-2016 Budget funding package.",
+   "Its schedules would fund departmental operations, administered activities, assets and liabilities, and departmental capital, with different spending rules for departmental and outcome-specific administered items.",
+   "It would begin on Royal Assent and be repealed at the start of 1 July 2018, alongside separate bills covering ordinary and other government services."
+  ],
+  "changes": [
+   "Presiding Officers could allocate capped advances for urgent expenditure omitted, understated or arising unexpectedly.",
+   "Notional payments within the Commonwealth would debit the relevant appropriation as though money had changed hands.",
+   "Money could be credited to special accounts where the appropriation and account purposes align."
+  ],
+  "affected": "Parliamentary departments and their responsible Presiding Officers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:55.139074+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

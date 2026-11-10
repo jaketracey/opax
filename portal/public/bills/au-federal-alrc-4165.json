@@ -63,8 +63,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5080_ems_abc62842-a919-4711-a37f-1e5118d76a24%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5080%22",
+   "document_date": "2013-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-30",
+  "sentences": [
+   "The bill would transfer responsibility for regulating water taken on National Land in the Australian Capital Territory from Commonwealth authorities to the territory government.",
+   "It would also give the territory responsibility for planning and managing Googong Dam's surface waters, treating them as located within the territory for water legislation.",
+   "The National Capital Authority would retain its other water-related planning functions, including approvals for works and standards concerning Lake Burley Griffin."
+  ],
+  "changes": [
+   "The Australian Capital Territory would assume liability associated with managing water extraction on National Land.",
+   "The Basin Plan would have to place Googong Dam's surface waters within a territory-managed water resource plan area.",
+   "The Executive would gain powers to manage, protect and use Googong Dam water consistently with territory water legislation."
+  ],
+  "affected": "The Australian Capital Territory, Commonwealth agencies and private entities using water on Commonwealth land are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:48.774245+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

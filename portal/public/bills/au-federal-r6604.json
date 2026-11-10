@@ -149,7 +149,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-06",
+  "sentences": [
+   "The bill would authorise Commonwealth funding for expenditure outside ordinary annual government services, supplementing supply appropriations for the 2020 to 2021 financial year.",
+   "It would provide scheduled amounts for grants to other governments, administered activities, assets and corporate entities, together with an advance for urgent funding needs.",
+   "It would accompany separate ordinary-services and parliamentary-department appropriation bills, and commence as an Act on the day it received royal assent."
+  ],
+  "changes": [
+   "Payments to states, territories and local government would be subject to specified conditions.",
+   "The Finance Minister could increase scheduled items through the advance mechanism.",
+   "Amounts could be credited to relevant special accounts."
+  ],
+  "affected": "Commonwealth entities, state and territory governments and local councils would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:41.844901+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

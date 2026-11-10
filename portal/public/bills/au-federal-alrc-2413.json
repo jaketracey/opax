@@ -95,13 +95,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5077_ems_992f7344-20b2-4b23-9220-52a0052e7545%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5077%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00100",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would define charity and charitable purpose for Commonwealth law, replacing reliance on common law and the Extension of Charitable Purpose Act 2004 with a statutory framework based largely on existing principles.",
+   "An organisation would need to be not-for-profit, have charitable purposes for public benefit, and avoid disqualifying purposes, with incidental purposes allowed only when supporting charitable ones.",
+   "The definition would apply from 1 January 2014, while individuals, political parties and government entities would be excluded from qualifying as charities."
+  ],
+  "changes": [
+   "Recognised charitable purposes would include health, education, social welfare, religion, culture, environmental protection and animal welfare.",
+   "Promoting or opposing a political party or candidate would be a disqualifying purpose.",
+   "Advocating changes to laws or policies could qualify as charitable in specified circumstances.",
+   "Open, non-discriminatory self-help groups and qualifying contemplative religious orders would not need to satisfy the public benefit test."
+  ],
+  "affected": "Charities and organisations seeking charitable status are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:00.290863+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1117",

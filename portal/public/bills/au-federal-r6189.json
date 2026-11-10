@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "The bill would refine managed investment trust taxation, expand tax-deductible gift eligibility and remove a competition law exemption for certain intellectual property licensing arrangements.",
+   "It would adjust trust eligibility, capital gains and withholding rules, while adding named gift recipients and allowing organisations promoting Indigenous languages to seek endorsement.",
+   "Indigenous language eligibility would begin on 1 July 2019, while the intellectual property exemption would end after a six-month transition following Royal Assent."
+  ],
+  "changes": [
+   "Eligible trusts with one widely held entity as their sole unitholder could enter the attribution tax regime.",
+   "The Future Fund Board and wholly owned entities would join the eligible investor list for managed investment trusts.",
+   "Six named organisations would receive deductible gift recipient listings for specified periods.",
+   "Discount capital gains would be treated consistently when calculating trust rounding adjustments and shortfalls."
+  ],
+  "affected": "Managed investment trusts and their investors, listed charities, Indigenous language organisations and intellectual property licensors and assignees are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:20.985360+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

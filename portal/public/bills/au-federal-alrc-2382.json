@@ -143,13 +143,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5042_ems_d4adf63a-68b5-4432-828d-889d802b5b8c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5042%22",
+   "document_date": "2013-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00107",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-14",
+  "sentences": [
+   "The bill would authorise funding for the Australian Government's ordinary annual services in 2013-2014, drawing money from the Consolidated Revenue Fund for scheduled purposes.",
+   "It would fund departmental operations, administered programs and payments to Commonwealth authorities and companies, and provide a $295 million advance for urgent expenditure.",
+   "The spending authorities would begin on Royal Assent, alongside separate appropriation bills for other government expenditure and the operations of parliamentary departments."
+  ],
+  "changes": [
+   "Departmental appropriations would be available until spent or formally reduced.",
+   "Unused administered funding would generally be reduced to the amount reported in the agency's annual report.",
+   "The Finance Minister could reduce departmental and Commonwealth authority or company payment items following specified requests.",
+   "Notional payments within and between agencies would count against appropriations."
+  ],
+  "affected": "Australian Government agencies, funded Commonwealth authorities and companies, and the Finance Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:42.962469+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

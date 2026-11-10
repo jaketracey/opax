@@ -69,8 +69,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4954_ems_9d40df59-4720-4ab7-81d8-192e1c5eefe5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4954%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would introduce payment and exemption arrangements for Commonwealth marriage celebrant fees and charges, while changing registration administration and evidence accepted for marriages.",
+   "Celebrants would have to pay an annual registration charge or obtain an exemption, with deregistration for non-payment and application fees for prospective celebrants.",
+   "A companion bill would impose the annual charge, and this bill's fee arrangements would apply from 1 July 2013 alongside separate administrative amendments."
+  ],
+  "changes": [
+   "The Registrar would no longer have to review every celebrant's performance within five years.",
+   "Australian passports could be accepted as evidence of a marrying party's date and place of birth.",
+   "Decisions deregistering celebrants for non-payment could be reviewed by the Administrative Appeals Tribunal.",
+   "Regulations could provide exemptions and internal review of refusals, and charge fees for exemption applications."
+  ],
+  "affected": "Commonwealth-registered and prospective marriage celebrants, marrying couples and the Registrar of Marriage Celebrants are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:24.887731+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 10,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-27",
+  "sentences": [
+   "The bill would establish the Australian Cannabis Agency and a licensing system for producing and distributing recreational cannabis in the Australian Capital Territory and Northern Territory.",
+   "Licensed distribution would be restricted to adults, require plain packaging and warnings, and involve staff trained in mental health first aid and responsible cannabis distribution.",
+   "Medicinal cannabis arrangements would remain unchanged, and the main scheme would commence when funding for the agency is appropriated rather than automatically on Royal Assent."
+  ],
+  "changes": [
+   "The agency would set a wholesale buying and selling price during an initial two-year period.",
+   "Unlicensed production involving seven or more plants would attract criminal and civil penalties.",
+   "People with six or fewer plants could give their cannabis to other individuals without payment."
+  ],
+  "affected": "Recreational cannabis producers, distributors and consumers in the two territories, and the new agency, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:10.256210+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

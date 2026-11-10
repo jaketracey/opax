@@ -105,8 +105,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5012_ems_cafe5b7b-b716-4c87-903f-ec8168feaf25%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5012%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would establish a national Asbestos Safety and Eradication Agency to coordinate the strategic plan for asbestos awareness, removal and management across Australia.",
+   "The Agency would consist of a chief executive and staff, supported by a Council advising the chief executive and Minister on asbestos safety.",
+   "Its functions would include coordination with governments, research and reporting on implementation of the National Strategic Plan, with the legislation extending to external Territories."
+  ],
+  "changes": [
+   "The Agency would need an annual operational plan approved by the Minister.",
+   "The chief executive would have to consider the Council's advice, recommendations and guidelines.",
+   "The Council could advise the chief executive but could not give directions.",
+   "A review of the Agency's role and functions would begin five years after commencement and finish within six months."
+  ],
+  "affected": "Agency staff and Council members, including representatives of Commonwealth, State, Territory and local governments, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:17.429154+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

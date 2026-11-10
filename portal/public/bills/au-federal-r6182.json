@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-19",
+  "sentences": [
+   "The bill would simplify how Australia gives domestic effect to product-specific origin rules under four trade agreements, affecting goods seeking preferential treatment for customs duty.",
+   "It would use direct references to treaty annexes instead of reproducing relevant rules in regulations, and align tariff classification references with the versions used by each agreement.",
+   "Commencement would be set by proclamation, with a six-month fallback after Royal Assent, while direct treaty references would preserve the existing rules’ operation."
+  ],
+  "changes": [
+   "Australia could waive origin certificate requirements under specified agreements where that discretion is not yet implemented.",
+   "Singaporean retail sets could qualify where non-originating items account for no more than 10 per cent of the set’s customs value.",
+   "Singapore’s chemical origin rules would be applied directly through references to the treaty text."
+  ],
+  "affected": "Importers seeking preferential tariffs for goods covered by the relevant trade agreements are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:21.138275+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -95,7 +95,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-25",
+  "sentences": [
+   "The bill would appropriate money from the Consolidated Revenue Fund for the Parliamentary Departments to cover the first part of the 2025-26 financial year.",
+   "It proposes amounts broadly equal to 5/12ths of the estimated 2025-26 annual appropriations, excluding 2025-26 Budget measures, with the remaining 7/12ths plus Budget measures to come in the Appropriation (Parliamentary Departments) Bill (No. 1) 2025-2026.",
+   "The bill would commence on the later of 1 July 2025 or Royal Assent, is one of three Supply Bills, and would be repealed at the start of 1 July 2028."
+  ],
+  "changes": [
+   "Appropriates the amounts in Schedule 1 for departmental items, administered items, administered assets and liabilities items and other departmental items of the Parliamentary Departments.",
+   "Caps the Advance to the responsible Presiding Officer at $300,000 each for the Department of the Senate, the Department of the House of Representatives and the Parliamentary Budget Office, and $1 million for the Department of Parliamentary Services.",
+   "Provides that if both this bill and the Appropriation (Parliamentary Departments) Bill (No. 1) 2025-2026 are enacted, the combined advances cannot exceed $1.9 million.",
+   "Declares the Portfolio Budget Statements relevant documents for interpreting the Act and treats notional transactions between non-corporate Commonwealth entities as real payments.",
+   "Repeals the Act at the start of 1 July 2028."
+  ],
+  "affected": "The Department of the Senate, the Department of the House of Representatives, the Department of Parliamentary Services, the Parliamentary Budget Office and the Presiding Officers are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:12:00Z"
+ },
  "divisions": [],
  "speeches": [
   {

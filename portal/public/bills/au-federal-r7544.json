@@ -41,7 +41,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-17",
+  "sentences": [
+   "The bill would remove the annual $5,000 ceiling on the levy charged for each listed medical device to fund the National Joint Replacement Registry.",
+   "Removing that ceiling would allow the levy to be distributed among medical device companies in proportion to the number of devices they actually supply.",
+   "The change would apply from the financial year starting 1 July 2027, with the registry continuing to receive funding through a Commonwealth grants agreement."
+  ],
+  "changes": [
+   "The existing statutory levy ceiling would be repealed by removing subsection 7(3).",
+   "The amendment would take effect on the 28th day after Royal Assent.",
+   "The uncapped levy would apply from the financial year beginning on 1 July 2027."
+  ],
+  "affected": "Medical device companies that pay the National Joint Replacement Register levy are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:03:32.834476+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

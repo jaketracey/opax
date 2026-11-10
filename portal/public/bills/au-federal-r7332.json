@@ -35,7 +35,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-22",
+  "sentences": [
+   "The bill would make a single technical amendment to the Therapeutic Goods Act 1989, updating the regulation-making power in subsection 63(4) of that Act.",
+   "It would replace subsection 63(4) so that regulations may apply, adopt or incorporate material from an instrument or from other writing, as that material stands from time to time, rather than only from an instrument.",
+   "The change is intended to align subsection 63(4) with similar provisions in the Act and with the Legislation Act 2003, has no specific financial implications, and would commence the day after Royal Assent."
+  ],
+  "changes": [
+   "Replaces subsection 63(4) of the Therapeutic Goods Act 1989 with a new subsection 63(4).",
+   "Adds a reference to other writing alongside the existing reference to instruments, so regulations can incorporate such material as it exists from time to time.",
+   "Provides that the new power operates despite subsection 14(2) of the Legislation Act 2003.",
+   "Commences the day after the Act receives Royal Assent."
+  ],
+  "affected": "Sponsors of therapeutic goods and vaping goods, and people subject to regulations made under the Therapeutic Goods Act 1989, would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:12:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

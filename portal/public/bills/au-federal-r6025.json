@@ -95,7 +95,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-08",
+  "sentences": [
+   "The bill would impose fees payable by developers when near-new dwellings were sold to foreign buyers under the relevant exemption certificates for those sales.",
+   "It would amend foreign investment fee legislation to support reconciliation payments for these transactions, covering dwellings whose earlier sales had failed to reach settlement.",
+   "It would accompany a broader housing tax bill establishing the reconciliation mechanism, with developers paying fees for covered sales rather than buyers lodging individual applications."
+  ],
+  "changes": [
+   "The fee amendments would apply retrospectively from 1 July 2017 to sales made under near-new dwelling exemption certificates.",
+   "Developers holding certificates issued at least six months before enactment would have a 12-month initial reconciliation period.",
+   "Related wording and notes in the fee legislation would be updated to accommodate the new charges."
+  ],
+  "affected": "Property developers selling near-new dwellings to foreign persons under near-new dwelling exemption certificates would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:44:18.628126+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

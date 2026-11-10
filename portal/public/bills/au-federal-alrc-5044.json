@@ -27,8 +27,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s903_ems_b915748e-ec60-4df0-a3d8-0b7b0e4ff125%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s903%22",
+   "document_date": "2013-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-07",
+  "sentences": [
+   "The bill would increase support for eligible Newstart and Youth Allowance recipients and change indexation arrangements for specified social security pension and allowance payments.",
+   "It would provide a $100 fortnightly Newstart supplement for covered recipients and raise specified independent single Youth Allowance rates by the same fortnightly amount.",
+   "The substantive changes would begin 28 days after Royal Assent, but payments would depend on Parliament separately making an appropriation to fund the proposed increases."
+  ],
+  "changes": [
+   "Newstart supplement eligibility would include illness-separated couples and partnered recipients whose partner is in gaol.",
+   "Specified Youth Allowance maximum basic rates would rise by $50 a week.",
+   "Listed pensions and allowances would use the highest result from three specified indexation calculations."
+  ],
+  "affected": "Eligible Newstart recipients, independent single Youth Allowance recipients and recipients of the listed pensions and allowances are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:30.544020+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

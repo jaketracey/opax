@@ -77,7 +77,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-02",
+  "sentences": [
+   "The bill would expand recovery of welfare debts by allowing overseas travel restrictions for targeted debtors and removing the six-year limit on starting recovery action.",
+   "The departmental secretary could issue departure prohibition orders where repayment arrangements are unsatisfactory, after considering matters including capacity to pay, earlier recovery action and unpaid periods.",
+   "The changes would start on 1 July 2016 or the day following royal assent, whichever is later, and cover new and outstanding debts."
+  ],
+  "changes": [
+   "Knowingly or recklessly leaving Australia contrary to an order without authorisation could attract 12 months’ imprisonment.",
+   "Departure certificates could permit temporary travel, including on humanitarian grounds where a person cannot provide security.",
+   "Orders would have to be revoked when covered debts are cleared, satisfactory repayment arrangements are made or the debts are completely irrecoverable.",
+   "People could appeal the making of an order to the Federal Court or Federal Circuit Court.",
+   "Australian Border Force officers and federal police could prevent unauthorised departures and require relevant answers or documents."
+  ],
+  "affected": "Social security, family assistance, paid parental leave and student assistance debtors would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:51:31.403891+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

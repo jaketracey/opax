@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4989_ems_b86a56ee-476c-46f7-aa55-5117dc10f8b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4989%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00064",
    "document_date": "2013-06-26",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would adapt the Water Efficiency Labelling and Standards scheme to administer registration fees imposed as taxes under a companion registration fees bill.",
+   "It would allow scheme rules to address unpaid fees, waivers and refunds, and would direct the new fee revenue into the scheme’s special account.",
+   "People refused a waiver or refund would have access to review, and the substantive amendments would commence together with the companion registration fees legislation."
+  ],
+  "changes": [
+   "Scheme rules could require or permit rejection of applications where registration fees remain unpaid.",
+   "Rules could authorise full or partial waivers and refunds of the tax fees.",
+   "Amounts matching fees received would have to be credited to the scheme’s special account.",
+   "Refusals to waive or refund fees would become reviewable decisions."
+  ],
+  "affected": "Product registration applicants, people seeking fee waivers or refunds, and the Water Efficiency Labelling and Standards Regulator are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:05.589946+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-30",
+  "sentences": [
+   "The bill would establish administrative, reporting and tax arrangements for the major bank levy imposed by a separate bill on large authorised deposit-taking institutions.",
+   "Affected institutions would lodge quarterly returns and pay the Commissioner of Taxation, with ordinary tax collection, recovery and interest rules applying to unpaid amounts.",
+   "The arrangements would support the levy from 1 July 2017, with the first quarter's payment deferred and the liability threshold indexed to nominal gross domestic product."
+  ],
+  "changes": [
+   "Levy expenditure would be deductible for income tax purposes.",
+   "A new anti-avoidance rule would let the Commissioner cancel benefits from schemes designed mainly to reduce or defer the levy.",
+   "The Australian Prudential Regulation Authority and the Commissioner could exchange information relating to the levy."
+  ],
+  "affected": "Authorised deposit-taking institutions with total liabilities above $100 billion, which are liable for the major bank levy, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:28.581910+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4712",

@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-09-03",
+  "sentences": [
+   "The bill would remove annual expiry requirements for Medicare services tables and repeal outdated administrative provisions from the Health Insurance Act 1973 governing Medicare administration.",
+   "Medical, diagnostic imaging and pathology tables would no longer need annual remaking, and obsolete committee references, optometrist undertakings and benefit calculation provisions would be removed.",
+   "The changes would concern government administration, while existing patient and health professional arrangements and parliamentary scrutiny of changes to the tables would continue."
+  ],
+  "changes": [
+   "References to the inactive Medical Benefits Advisory Committee would be repealed.",
+   "The requirement for optometrists to enter an undertaking with the minister would be removed.",
+   "An obsolete Medicare compensation recovery provision would be repealed.",
+   "A redundant anaesthesia benefit calculation would be removed."
+  ],
+  "affected": "Optometrists providing services funded through Medicare would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:41.845188+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

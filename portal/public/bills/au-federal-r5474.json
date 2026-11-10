@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-03",
+  "sentences": [
+   "The bill would support the new Australian Small Business and Family Enterprise Ombudsman by enabling complaint referrals and the transfer of existing small business work.",
+   "The Commonwealth Ombudsman could refer eligible complaints after consultation when the new Ombudsman could handle them more conveniently or effectively within its statutory remit.",
+   "The information-sharing rules would begin on Royal Assent, while complaint-transfer amendments would follow commencement of the new Ombudsman's substantive powers under the companion bill."
+  ],
+  "changes": [
+   "Transferred complaints would count as formal requests for assistance made on their transfer date.",
+   "The Commonwealth Ombudsman would provide related documents and notify complainants in writing of a transfer.",
+   "The new Ombudsman could receive and use transferred Commissioner material only to perform its statutory functions."
+  ],
+  "affected": "Small businesses and family enterprises with complaints, the Commonwealth Ombudsman, the Small Business Commissioner and the new Ombudsman are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:34.999283+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

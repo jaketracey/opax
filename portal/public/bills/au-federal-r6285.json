@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "The bill would adapt tax, health and compensation laws to support special treatment access for eligible members of Australian civilian surgical and medical teams in Vietnam.",
+   "Eligible recipients would gain Medicare levy relief under existing exemption rules, while travel reimbursements and pharmaceutical supplements under the companion scheme would be income-tax exempt.",
+   "Its transitional rules would apply treatment, travel expenses and pharmaceutical supplements from 1 July 2019, with both schedules dependent on commencement of the companion legislation."
+  ],
+  "changes": [
+   "Protected aged-care information could be disclosed to Veterans' Affairs for administering the new treatment arrangements.",
+   "Overlapping pharmaceutical supplements under specified military compensation and social security payments would be prevented.",
+   "Comcare medical expense compensation would generally stop for recipients whose treatment eligibility is established, subject to an exceptional-circumstances determination.",
+   "Existing medical compensation eligibility would be preserved until 1 July 2019 where the new treatment claim was determined earlier."
+  ],
+  "affected": "Eligible Australian civilian surgical and medical team members, Veterans' Affairs and Comcare are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:45.555168+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

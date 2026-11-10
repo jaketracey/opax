@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-29",
+  "sentences": [
+   "The bill would revise pension means tests for lifetime income products, increase the Work Bonus and expand access to loans secured against Australian real property.",
+   "It would raise the Work Bonus from $250 to $300 per fortnight and extend it to qualifying self-employment, contracting and consulting income involving personal work.",
+   "The new lifetime product rules would generally count 60 per cent of payments as income and would apply to products acquired from commencement, preserving older products."
+  ],
+  "changes": [
+   "The maximum accumulated unused Work Bonus would rise from $6,500 to $7,800.",
+   "The Pension Loans Scheme would open to full-rate pensioners and people excluded by both income and assets tests.",
+   "Combined pension and loan payments could reach 150 per cent of the maximum fortnightly pension rate, including applicable supplements."
+  ],
+  "affected": "Eligible social security and veterans’ pensioners, older property owners and recipients holding lifetime income products are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:25.318243+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -131,7 +131,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-29",
+  "sentences": [
+   "The bill would change four Commonwealth Acts to support the Asset Recycling Fund and extend the Future Fund Board's responsibilities to managing that fund.",
+   "It would enable infrastructure grants to states and territories through the Council of Australian Governments Reform Fund and allow shared management expenses to be apportioned.",
+   "The substantive amendments would commence immediately after the Asset Recycling Fund Act, linking these financial administration changes to the legislation establishing the new fund."
+  ],
+  "changes": [
+   "Investment managers engaged for the fund could also manage other specified Commonwealth investment funds.",
+   "Annual reporting would cover the fund's investment performance, withdrawals and performance benchmarks.",
+   "Board members would be protected from breaching Future Fund duties when doing something required by the Asset Recycling Fund Act.",
+   "Specified expense transfers could be reversed, up to the amount originally debited."
+  ],
+  "affected": "The Future Fund Board, investment managers, state and territory governments and officials administering Commonwealth investment funds would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:37.003534+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3226",

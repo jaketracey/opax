@@ -149,7 +149,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-09-12",
+  "sentences": [
+   "The bill would make a first tranche of Privacy Act 1988 reforms agreed in the government's Privacy Act Review response, create a statutory tort for serious invasions of privacy and criminalise doxxing.",
+   "It would give the Office of the Australian Information Commissioner (OAIC) tiered civil penalties, infringement notices and public inquiry powers, and require a Children's Online Privacy Code within 24 months.",
+   "Most of Schedule 1 would commence the day after Royal Assent, the automated decision transparency rules after 24 months, and the tort on proclamation or within six months."
+  ],
+  "changes": [
+   "A new section 13H civil penalty would cover interferences with privacy that are not serious, with a maximum of 2,000 penalty units for a person and 10,000 for a body corporate.",
+   "Individuals could sue for a serious, intentional or reckless invasion of privacy by intrusion or misuse of information where they had a reasonable expectation of privacy.",
+   "Damages under the tort would be capped at $478,550, indexed in line with the defamation cap, and courts could not award aggravated damages.",
+   "Using a carriage service to publish personal data in a menacing or harassing way would carry up to 6 years' imprisonment, or 7 years where a person or group is targeted for a protected attribute.",
+   "The Minister could declare that personal information may be shared to reduce harm after an eligible data breach, with declarations limited to 12 months."
+  ],
+  "affected": "Agencies and organisations covered by the Privacy Act, individuals whose privacy is invaded or data released online, children online, the OAIC and federal courts are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:16:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-10486",

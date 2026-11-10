@@ -77,7 +77,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-16",
+  "sentences": [
+   "The bill would widen access to the veterans' Family Support Package and expand the assistance available to eligible veterans and families facing difficult life circumstances.",
+   "It would extend support across three veterans' compensation laws and allow instruments to set additional eligibility rules, overall funding caps and periods of assistance.",
+   "The substantive changes would start on 1 July 2022, with access no longer dependent on warlike service or participation in a rehabilitation program."
+  ],
+  "changes": [
+   "Available assistance would expand to include household services, skills development and academic or extracurricular support for children.",
+   "Separate financial limits for service categories would give way to overall caps set through legislative instruments.",
+   "Family support payments would be exempt from income tax and excluded from income assessments under social security law."
+  ],
+  "affected": "Eligible veterans, family members, bereaved partners and the commissions administering veterans' benefits would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:34.228148+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

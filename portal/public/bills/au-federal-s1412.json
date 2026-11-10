@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-28",
+  "sentences": [
+   "The bill would amend the Export Control Act 2020 to set 1 May 2026 as the legislated end date for the phase-out of live sheep exports by sea.",
+   "It would insert a new section 23A making the export of livestock sheep by sea from Australian territory absolutely prohibited on and after that date.",
+   "The whole Act would commence the day after it receives Royal Assent, and the statement of compatibility says the bill does not engage any applicable rights or freedoms."
+  ],
+  "changes": [
+   "Section 12 would gain a definition of sheep that includes the young of the animal, so the prohibition would apply to livestock sheep of any age.",
+   "New section 23A would sit in the subdivision of the Act that deals with permanently prohibited goods.",
+   "Breaches of the new prohibition would be dealt with under the existing offence and civil penalty provisions in Division 4 of Part 1 of Chapter 2 of the Act."
+  ],
+  "affected": "Exporters of livestock sheep by sea from Australian territory are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:16:06Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

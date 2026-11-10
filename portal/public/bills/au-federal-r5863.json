@@ -185,7 +185,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-09",
+  "sentences": [
+   "The bill would authorise spending from the Consolidated Revenue Fund for the ordinary annual services of government, covering departmental operations, administered programs and corporate entities.",
+   "Schedule 1 would allocate money by entity and purpose, while the Finance Minister could provide up to $295 million in additional appropriations for qualifying urgent needs.",
+   "It would commence on the later of 1 July 2017 and Royal Assent, with separate budget bills providing other appropriations and parliamentary funding."
+  ],
+  "changes": [
+   "Departmental appropriations could fund entity operations, including employee expenses and suppliers.",
+   "Administered funding would be tied to the outcomes specified for the responsible entity.",
+   "Money could be credited to special accounts where the account and appropriation shared a purpose.",
+   "The legislation would repeal at the start of 1 July 2020."
+  ],
+  "affected": "Commonwealth departments, corporate Commonwealth entities and the Finance Minister would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:06.334458+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

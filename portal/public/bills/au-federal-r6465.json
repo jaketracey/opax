@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "The bill would enable greenhouse gas storage titles spanning Commonwealth and state or territory waters and expand regulatory powers during offshore oil pollution emergencies.",
+   "A new authority comprising Commonwealth and relevant state or Northern Territory ministers would decide cross-boundary title grants, with the area regulated under Commonwealth offshore law.",
+   "During declared oil pollution emergencies originating in Commonwealth operations, inspectors could enter response premises without warrants, including premises within state or territory jurisdiction."
+  ],
+  "changes": [
+   "Holders of adjacent Commonwealth greenhouse gas titles could seek a combined title for a geological formation crossing both areas.",
+   "Greenhouse gas provisions would expressly apply to state and Northern Territory governments, including retrospectively.",
+   "The Commonwealth would assume long-term civil liability for the whole cross-boundary storage operation after site closing.",
+   "Polluter-pays obligations and significant incident directions would extend into state and territory jurisdiction."
+  ],
+  "affected": "Offshore petroleum and greenhouse gas titleholders, Commonwealth and state governments and the National Offshore Petroleum Safety and Environmental Management Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:26.641474+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6204",

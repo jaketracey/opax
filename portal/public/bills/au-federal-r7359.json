@@ -89,7 +89,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-08-28",
+  "sentences": [
+   "The bill would change access to the Defence Honours and Awards Appeals Tribunal by introducing time limits, restricting eligible applicants and clarifying which decisions are reviewable.",
+   "For honours, operational awards and foreign awards, review eligibility would generally depend on applying to Defence within 20 years of service or an operation ending.",
+   "Applications to the tribunal would normally need to follow within six months of Defence's decision, with exceptions available where the statutory exceptional-circumstances test is met."
+  ],
+  "changes": [
+   "Honours review applicants would need a senior command connection or relevant service eyewitness role, plus consent from the affected person or immediate family.",
+   "Refusals concerning honours or awards previously cancelled would be excluded from review.",
+   "Decisions involving associated clasps, bars, ribbons and other specified insignia would be expressly covered.",
+   "Foreign awards available for review would be specified through regulations.",
+   "The tribunal would need to provide annual operational reports for tabling in Parliament."
+  ],
+  "affected": "Defence members and veterans, their families, service eyewitnesses, senior commanders and tribunal members are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:45.358520+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9747",

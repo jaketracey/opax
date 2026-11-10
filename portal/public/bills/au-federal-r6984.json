@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-08",
+  "sentences": [
+   "The bill would establish collection and administration rules for industry levies funding the financial services compensation scheme of last resort and related unpaid complaints fees.",
+   "The Australian Securities and Investments Commission (ASIC) would gather information, issue payment notices and collect levy debts and penalties on behalf of the Commonwealth.",
+   "It would operate alongside the separate levy imposition bill, with collection legislation commencing only if that companion legislation commences, under the joint compensation scheme package."
+  ],
+  "changes": [
+   "Annual levy payment notices would allow at least 30 days before the payment date.",
+   "A false or misleading statement causing underpayment could trigger a penalty twice the shortfall, unless reasonable care steps were taken.",
+   "ASIC could waive levies or penalties in exceptional circumstances.",
+   "Failures to provide required information or substantiation could attract strict liability offences, subject to reasonable excuse protections."
+  ],
+  "affected": "Liable financial services businesses, ASIC and the compensation scheme operator are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:23.904477+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-09",
+  "sentences": [
+   "The bill would provide additional funding for ordinary annual Commonwealth government services in 2022-23, reflecting decisions made after the October budget for that financial year.",
+   "It would authorise scheduled departmental, administered and corporate entity spending through withdrawals from the Consolidated Revenue Fund, supplementing existing supply and appropriation legislation.",
+   "The appropriations would take effect at Royal Assent alongside separate bills for other services and parliamentary departments, without adding an advance to the Finance Minister."
+  ],
+  "changes": [
+   "Departmental funding could cover spending related to an entity's functions, including staff and operational costs.",
+   "Administered funding would be allocated separately to each specified outcome.",
+   "Matching-purpose appropriations could be credited to special accounts.",
+   "The appropriation legislation would repeal at the start of 1 July 2025."
+  ],
+  "affected": "Non-corporate Commonwealth entities, corporate Commonwealth entities and Commonwealth companies receiving the appropriated amounts are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:54.249435+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-8160",

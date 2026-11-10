@@ -95,7 +95,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-23",
+  "sentences": [
+   "The bill would cancel personal income tax changes planned for 1 July 2015, including linked changes to the low-income tax offset in clean energy legislation.",
+   "It would retain the $18,200 tax-free threshold and 32.5 per cent second marginal rate, rather than moving to $19,400 and 33 per cent.",
+   "The amendments would begin the day after Royal Assent and would leave the personal income tax cuts introduced from 1 July 2012 unaffected."
+  ],
+  "changes": [
+   "The maximum low-income tax offset would stay at $445 instead of decreasing to $300.",
+   "The offset's withdrawal rate would remain 1.5 per cent rather than falling to one per cent.",
+   "The offset's eligibility ceiling would stay at taxable income below $66,667 instead of rising to $67,000."
+  ],
+  "affected": "Individual taxpayers, including people eligible for the low-income tax offset, would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:34.671682+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3306",

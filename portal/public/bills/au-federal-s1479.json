@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-25",
+  "sentences": [
+   "The bill would reduce maximum student contributions for selected university subjects by reversing fee increases introduced through the 2020 Job-Ready Graduates legislation for those fields.",
+   "It would reset the relevant caps to the amounts that would have applied on 1 January 2026 without those increases, allowing for indexation.",
+   "The revised caps would apply to units with census dates from commencement onwards, including units taken within courses that students had already started before commencement."
+  ],
+  "changes": [
+   "Lower contribution caps would cover law, accounting, administration, economics and commerce units.",
+   "Society and culture and communications units would also receive revised maximum contribution amounts.",
+   "The bill would begin on the later of 1 January 2026 and the day following Royal Assent."
+  ],
+  "affected": "Students taking affected university units are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:52.828034+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10553",

@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-04",
+  "sentences": [
+   "The bill would amend the Higher Education Support Act 2003 to lower the maximum student contribution for Society and Culture units by moving them to a cheaper funding band.",
+   "It would move Society and Culture from table item 1 to table item 2 in section 93-10, reducing the maximum charge from $15,142 to $4,124 per student per unit.",
+   "The change would apply to units of study whose census date is on or after 1 January 2025, and the explanatory memorandum states the bill would have no financial impact."
+  ],
+  "changes": [
+   "Society and Culture would be removed from table item 1 of the maximum student contribution table in section 93-10, including from the grandfathered student amount.",
+   "Society and Culture would be inserted into table item 2 alongside Visual and Performing Arts and English, for both grandfathered and non-grandfathered students.",
+   "The new amounts would apply to units of study whose census date falls on or after 1 January 2025.",
+   "The sponsor said the Job-ready Graduates policy had significantly raised student contributions for several Arts courses but had only a minimal effect on shaping tertiary education choices."
+  ],
+  "affected": "Students enrolled in Society and Culture units, including grandfathered students, and the tertiary education institutions that charge student contributions are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:07:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

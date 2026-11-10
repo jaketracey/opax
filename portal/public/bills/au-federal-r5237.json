@@ -191,7 +191,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-13",
+  "sentences": [
+   "The bill would provide additional 2013-2014 Commonwealth funding for services outside ordinary annual government operations, supplementing appropriations already made through the Budget and later estimates.",
+   "It would authorise payments for government grants, assets, liabilities and capital needs, and restore the Finance Minister's available advance to its original $380 million limit.",
+   "The bill would commence on Royal Assent alongside a separate ordinary-services appropriation bill, and would revise the Building Australia Fund's annual payment limit."
+  ],
+  "changes": [
+   "Responsible ministers could set conditions, amounts and timing for financial assistance to states, territories and local governments.",
+   "Unused administered and intergovernmental amounts could be reduced to the expenditure reported in annual accounts.",
+   "Specified capital and corporate-body appropriations could be reduced through disallowable ministerial determinations.",
+   "Funding already advanced for the same expenditure would be deducted to prevent duplicate appropriations."
+  ],
+  "affected": "Commonwealth agencies and funded corporate bodies, state, territory and local governments, and ministers administering appropriations would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:35.398947+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-21",
+  "sentences": [
+   "The bill would require sensitive Defence data held in high-risk storage facilities to be transferred to sovereign Australian facilities under a duty imposed on the Secretary.",
+   "The Secretary would have to arrange the relocation before 25 April 2022, using a destination that meets the stated requirement for sovereign Australian storage.",
+   "The proposed transfer requirement would apply when a sensitive data store is held in a high-risk facility, addressing the Department of Defence's data storage arrangements."
+  ],
+  "changes": [
+   "The Secretary would be responsible for ensuring the required transfer occurs.",
+   "The transfer would have a deadline before 25 April 2022.",
+   "The receiving facility would have to provide sovereign Australian storage."
+  ],
+  "affected": "The Department of Defence and its Secretary are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:10.983120+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

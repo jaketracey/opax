@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-25",
+  "sentences": [
+   "The bill would change definitions in the Sex Discrimination Act 1984 and create express discrimination exemptions for services, activities and spaces reserved exclusively for women.",
+   "It would define sex in biological, binary terms, reintroduce definitions of man and woman, and describe gender identity as a person's self-determined classification.",
+   "Sexual orientation, gender identity and intersex status would remain protected attributes, alongside the proposed exceptions for services, spaces and activities reserved for women."
+  ],
+  "changes": [
+   "The sexual orientation definition would use opposite-sex language in place of different-sex wording.",
+   "The intersex status definition would be replaced with references to differences in sexual development.",
+   "The gender identity discrimination comparator would refer to someone who is not of that identity.",
+   "References to designated sex at birth would be removed from the gender identity definition."
+  ],
+  "affected": "People covered by sex discrimination protections and operators of women's services, activities and facilities are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:57.373489+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

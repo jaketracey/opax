@@ -35,7 +35,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "text",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2025-07-31",
+  "sentences": [
+   "The bill would remove gender identity discrimination provisions from the Sex Discrimination Act 1984 and introduce definitions of men and women based on sex.",
+   "It would define men as members of the male sex and women as members of the female sex, with both definitions applying regardless of age.",
+   "The amendments would remove gender identity references across the listed provisions of the Act and take effect on the day following Royal Assent."
+  ],
+  "changes": [
+   "The statutory definition of gender identity would be deleted.",
+   "Section 5B would be repealed, with associated references removed from other provisions.",
+   "Several provisions, including the sexual orientation definition, would refer to the opposite sex instead of a different sex."
+  ],
+  "affected": "People covered by gender identity discrimination provisions, and men and women as defined in the bill, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:24.649628+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-9681",

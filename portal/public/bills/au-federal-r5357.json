@@ -119,7 +119,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-02",
+  "sentences": [
+   "The bill would change social security, student, family and seniors payments, including indexation, eligibility tests, overseas payment rules and support for community service providers.",
+   "It would rename the clean energy supplement and end its indexation from 20 September 2014, alongside temporary freezes of specified asset limits for income support.",
+   "Untaxed superannuation income would enter the Commonwealth Seniors Health Card assessment, with an exemption for existing cardholders' products purchased before 1 January 2015."
+  ],
+  "changes": [
+   "The annual primary earner limit for Family Tax Benefit Part B would fall from $150,000 to $100,000.",
+   "The large family supplement would be limited to families with at least four children.",
+   "Disability Support Pension overseas payment would generally be limited to 28 days within 12 months.",
+   "Young Carer Bursary payments would be excluded from social security and veterans' income tests.",
+   "Relocation scholarships would stop for students moving within or between major cities.",
+   "A Western Australian pay equity decision would qualify for Commonwealth supplementation of affected community service providers."
+  ],
+  "affected": "Families, students, disability pensioners, seniors, young carers and affected community service providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:15.952109+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3582",

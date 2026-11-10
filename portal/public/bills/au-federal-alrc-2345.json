@@ -113,13 +113,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4981_ems_e9f80151-e994-4bac-9366-6a1ccdb412ea%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4981%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00079",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would establish the Australian Aged Care Quality Agency to oversee quality assurance for approved residential and home care services, replacing the existing accreditation body.",
+   "The agency would accredit residential services from 1 January 2014 and take responsibility for quality reviews of home care services from 1 July 2014.",
+   "A chief executive would lead the agency with advice from an expert council, while existing residential accreditation and home care standards would continue to apply."
+  ],
+  "changes": [
+   "The chief executive would register assessors and notify the department of services failing to meet quality standards.",
+   "The chief executive could charge for services such as accreditation and assessor registration.",
+   "An Aged Care Quality Advisory Council would provide advice to the chief executive and minister.",
+   "The chief executive would have to prepare strategic and annual operational plans and report annually to Parliament through the minister."
+  ],
+  "affected": "Approved residential and home care providers, care recipients, quality assessors and agency staff are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:57.524529+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2973",

@@ -107,7 +107,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-29",
+  "sentences": [
+   "The bill would create the statutory position of Head of Environment Information Australia to improve access to national environmental data and provide independent reporting on the state of the environment.",
+   "The Head would publish a State of the Environment report every second year by 30 September, build a framework to measure progress towards nature positive from a set baseline, and keep environmental economic accounts.",
+   "The bill would commence on 1 July 2025, would give the Head no coercive powers, and would supply data to the Chief Executive Officer of Environment Protection Australia under the Nature Positive (Environment Protection Australia) Bill 2024."
+  ],
+  "changes": [
+   "Nature positive would mean an improvement from a baseline set by the Head in the diversity, abundance, resilience and integrity of ecosystems.",
+   "The Head would act free of direction from the Minister or Secretary on State of the Environment reports, the nature positive framework and environmental economic accounts.",
+   "The Head could declare national environmental information assets and list them in a public register without changing their ownership.",
+   "The Minister would have to table a response to each State of the Environment report within 6 months, and an annual statement on environmental economic accounts.",
+   "Unauthorised use or disclosure of protected information would attract a maximum civil penalty of 200 penalty units.",
+   "Independent reviews of the Act's operation would be required within 5 years of commencement and every 5 years after."
+  ],
+  "affected": "The Head of Environment Information Australia, the environment Minister and department, and the public accessing environmental information would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:22:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-8998",

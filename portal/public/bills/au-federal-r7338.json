@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-23",
+  "sentences": [
+   "The bill would amend the Australian Security Intelligence Organisation Act 1979 to extend the compulsory questioning warrant framework of the Australian Security Intelligence Organisation (ASIO) for a further 18 months.",
+   "It would do this by changing the sunset date in section 34JF of the Act from 7 September 2025 to 7 March 2027, so Division 3 of Part III continues to have effect until then.",
+   "The bill contains a single amending item, has no financial impact, and would commence the day after the Act receives Royal Assent."
+  ],
+  "changes": [
+   "Amends section 34JF of the Australian Security Intelligence Organisation Act 1979, under which Division 3 of Part III is currently due to cease on 7 September 2025.",
+   "Extends the operation of Division 3 of Part III, the compulsory questioning warrant framework, by 18 months to 7 March 2027.",
+   "Keeps in force for that period the apprehension, search and travel document provisions, offences and safeguards that sit within Division 3, without altering them.",
+   "Commences the day after the Act receives Royal Assent."
+  ],
+  "affected": "ASIO, the Attorney-General who issues questioning warrants, people who may become the subject of compulsory questioning warrants, including children aged 14 and over in politically motivated violence matters, and police officers exercising apprehension powers would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:08:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-9786",

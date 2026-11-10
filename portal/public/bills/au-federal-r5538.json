@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "The bill would end the low income supplement from 1 July 2017, including the payment administered as the low income family supplement.",
+   "It would remove the ongoing qualification rules for the $300 annual payment to eligible low income adults and make related social security and taxation amendments.",
+   "Savings provisions would retain earlier rules for claims and payments relating to the 2016-17 income year or earlier years, including decisions made after cessation."
+  ],
+  "changes": [
+   "The statutory qualification provisions for the supplement would be repealed.",
+   "Provisions used only to administer the supplement would be removed from social security administration legislation.",
+   "Savings rules would preserve recovery of debts arising from supplement payments.",
+   "The tax-exempt status of supplement payments would continue under a specific saving provision."
+  ],
+  "affected": "Low income adults eligible for the supplement and family tax benefit recipients receiving its family variant would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:59.916124+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3963",

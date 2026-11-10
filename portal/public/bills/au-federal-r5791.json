@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-12-01",
+  "sentences": [
+   "The bill would change terrorism insurance coverage, employee share disclosure, charitable donation deductions, disaster payment taxation and protections for retail clients’ money held for derivatives.",
+   "It would restrict licensees’ use of retail over-the-counter derivative money and prevent public access to employee share scheme disclosure documents lodged by qualifying start-ups.",
+   "Disaster tax relief would cover eligible New Zealand special category visa holders for disasters from the 2014-15 income year, alongside separate commencement rules for other schedules."
+  ],
+  "changes": [
+   "Chemical and biological terrorism exclusions in eligible insurance contracts would be overridden for declared terrorist incidents.",
+   "Six named organisations would gain deductible gift recipient status.",
+   "Eligible ex-gratia income support allowances would receive a tax rebate.",
+   "Eligible ex-gratia disaster recovery payments would become exempt from income tax."
+  ],
+  "affected": "Insurers, eligible policyholders, qualifying start-ups, listed gift recipients, eligible New Zealand visa holders, derivatives licensees and their retail clients are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:17.215450+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

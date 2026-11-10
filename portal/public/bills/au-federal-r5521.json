@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-14",
+  "sentences": [
+   "The bill would prevent registration of trade marks consisting of signs with national significance or iconic value to Australians and require existing registrations to be revoked.",
+   "The Registrar would have to reject qualifying applications and revoke qualifying registered marks, with affected people receiving notice and an opportunity to respond before revocation.",
+   "The changes would start the day after Royal Assent and cover applications decided from commencement and marks registered before, at or after that date."
+  ],
+  "changes": [
+   "Applications for signs closely resembling protected national or iconic signs could also be rejected.",
+   "People aggrieved by a proposed revocation would have an opportunity to be heard.",
+   "Revocation decisions under the new rule could be appealed to the Federal Court or Federal Circuit Court."
+  ],
+  "affected": "Trade mark applicants, owners of registered marks, the Registrar and people seeking to use nationally significant or iconic signs would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:11.719713+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

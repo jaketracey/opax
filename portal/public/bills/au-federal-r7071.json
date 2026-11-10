@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-10",
+  "sentences": [
+   "The bill would extend family assistance and education support to Pacific engagement visa holders and eligible families accompanying workers in the Pacific Australia Labour Mobility scheme.",
+   "Pacific engagement visa holders would gain exemptions from specified waiting periods and access to higher education and vocational student loans, subject to other eligibility rules.",
+   "Eligible workers and family members in the labour mobility scheme could receive Family Tax Benefit and Child Care Subsidy under conditions set by legislative instrument."
+  ],
+  "changes": [
+   "The Family Tax Benefit Part A waiting period would be waived for Pacific engagement visa holders.",
+   "Student and apprentice Youth Allowance and Austudy waiting periods would also be waived for those visa holders.",
+   "Eligible labour mobility participants' waiting periods would run from their first relevant visa, including the former Pacific Labour Scheme visa."
+  ],
+  "affected": "Pacific engagement visa holders, eligible Pacific labour mobility workers and accompanying families are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:48.460419+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-8458",

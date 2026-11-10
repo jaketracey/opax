@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-22",
+  "sentences": [
+   "The bill would restore authority for Veterans’ Affairs to recover death-related pension overpayments by reducing specified bereavement payments made to a surviving partner.",
+   "Deductions would be limited to cases where the surviving partner benefited from the overpayment, and would apply to service pension or income support supplement bereavement payments.",
+   "The restored provision would commence on Royal Assent and operate retrospectively from 1 January 1996, replicating a power previously removed from veterans’ legislation."
+  ],
+  "changes": [
+   "A new provision would permit eligible pension overpayments to be offset against a partner’s bereavement entitlement.",
+   "Existing bereavement provisions would gain cross-references to the restored recovery power.",
+   "An application rule would give the recovery provision effect from 1 January 1996."
+  ],
+  "affected": "Surviving partners who benefited from death-related pension overpayments and the Department of Veterans’ Affairs are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:40:03.340537+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5359",

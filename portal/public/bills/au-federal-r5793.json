@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-12-01",
+  "sentences": [
+   "The bill would reduce the proposed tax on departing superannuation payments attributable to contributions made while a person was working in Australia as a working holiday maker.",
+   "It would substitute a 65 per cent rate for the 95 per cent rate provided by the earlier amendment bill, with effect from 1 July 2017.",
+   "Commencement would follow the earlier superannuation tax amendment immediately and depend on the linked working holiday maker income tax legislation also commencing."
+  ],
+  "changes": [
+   "The statutory working holiday maker departing payment rate would be set at 65 per cent.",
+   "The commencement sequence would prevent the earlier bill’s 95 per cent rate from taking effect.",
+   "Commencement would depend on the earlier working holiday maker income tax reform bill taking effect."
+  ],
+  "affected": "Departing working holiday makers claiming superannuation benefits earned while working in Australia are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:17.215450+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4483",

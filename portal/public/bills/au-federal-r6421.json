@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-14",
+  "sentences": [
+   "The bill would raise the minimum age of criminal responsibility for Commonwealth offences from 10 to 14 years by amending federal crimes and criminal code legislation.",
+   "Children younger than 14 could not be held criminally responsible, and related forensic procedure provisions would be adjusted to reflect the new minimum age.",
+   "It would begin the day after royal assent and apply only to offences committed from commencement, while older children could still face criminal proceedings."
+  ],
+  "changes": [
+   "Redundant criminal responsibility provisions in the Crimes Act and Criminal Code would be repealed.",
+   "For suspect forensic procedures, the statutory child category would cover people aged 14 to under 18.",
+   "Forensic procedures requested by foreign countries would not apply to children under 14."
+  ],
+  "affected": "Children involved in Commonwealth criminal matters are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:05.176885+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

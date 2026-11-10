@@ -101,7 +101,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-12",
+  "sentences": [
+   "The bill would change superannuation guarantee charges, lost superannuation administration and company receivership reporting, and repeal legislation and tax provisions that no longer operate.",
+   "Superannuation guarantee shortfalls would be calculated using ordinary time earnings, with interest linked to the time contributions remain unpaid and general tax penalties replacing additional penalties.",
+   "The superannuation changes would apply from 1 July 2016, while the receivership amendments and legislative repeals would begin the day after Royal Assent."
+  ],
+  "changes": [
+   "The Commissioner of Taxation could pay specified superannuation amounts directly to people with a terminal medical condition.",
+   "Funds would no longer need to lodge a separate lost members statement twice each year.",
+   "Allocation of partial superannuation guarantee charge payments would account for interest and earlier late contributions.",
+   "Notification and reporting obligations would change for certain companies with property under a receiver or controller."
+  ],
+  "affected": "Employers, employees, superannuation funds, terminally ill members and companies with property in receivership would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:15.917357+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4130",

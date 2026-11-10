@@ -53,7 +53,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-11",
+  "sentences": [
+   "The bill would prohibit mining operations in the Commonwealth Great Australian Bight area and require the Minister to nominate the Great Australian Bight for World Heritage listing.",
+   "It would create an offence and a civil penalty for mining operations in the area, each with an aggravated form where the conduct caused or could cause serious harm to the environment.",
+   "The bill would apply despite other Commonwealth laws including the Environment Protection and Biodiversity Conservation Act 1999 and the Offshore Petroleum and Greenhouse Gas Storage Act 2006, and would commence the day after Royal Assent."
+  ],
+  "changes": [
+   "Creates an ordinary and an aggravated criminal offence for mining operations in the Commonwealth Great Australian Bight area.",
+   "Creates an ordinary and an aggravated civil penalty contravention for the same conduct.",
+   "Treats authorisations, permits and titles that permit inconsistent conduct as having no effect to the extent of the inconsistency.",
+   "Applies enforcement under the Regulatory Powers (Standard Provisions) Act 2014, including monitoring and investigation powers, infringement notices and injunctions, and provides for inspectors.",
+   "Obliges the Minister to nominate the Great Australian Bight for World Heritage listing.",
+   "Provides for just-terms compensation for any acquisition of property resulting from the Act."
+  ],
+  "affected": "Mining and petroleum companies with interests in the Great Australian Bight, including people who are not Australian citizens, fishing and tourism industries in the region, and the Minister responsible for nominating the area are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:16:00Z"
+ },
  "divisions": [],
  "speeches": [
   {

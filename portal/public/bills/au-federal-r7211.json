@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-26",
+  "sentences": [
+   "The bill would amend the Telecommunications Act 1997 to require the Australian Communications and Media Authority (ACMA) to establish a Short Message Service (SMS) Sender ID Register listing sender identifications, the alphanumeric message headers on text messages, to help counter SMS impersonation scams.",
+   "Entities would first apply for approval to access the Register and then to register sender identifications, with ACMA able to refuse applications, set further requirements by legislative instrument and automate some decisions.",
+   "The bill leaves open whether registration would be voluntary or mandatory, and it would commence on a day fixed by Proclamation or otherwise six months after Royal Assent."
+  ],
+  "changes": [
+   "A new Part 24B would define a sender identification as a message header made up of letters, numbers or symbols used in SMS or multimedia message services, excluding headers that are only numbers.",
+   "ACMA could remove an entry it considers offensive, misleading or deceptive, a spoofing sender identification, or inappropriate in all the circumstances, without observing the natural justice hearing rule.",
+   "The ACMA Chair could arrange for computer programs to take administrative action, with ACMA able to substitute any decision it considers incorrect and required to publish the arrangement on its website.",
+   "Refusals of approval or of sender identifications, and removals of entries, would be reviewable by ACMA under section 555 and then by the Administrative Appeals Tribunal or its successor."
+  ],
+  "affected": "Businesses, banks and government agencies that send SMS with alphanumeric sender identifications, telecommunications providers, the Australian Communications and Media Authority and mobile phone users are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:28:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

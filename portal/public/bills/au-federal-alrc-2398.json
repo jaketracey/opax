@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5049_ems_4c9c7726-02a6-498b-b90d-14bde208240a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5049%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00046",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would increase tax on excess non-concessional superannuation contributions to reflect the Medicare levy change proposed in the wider DisabilityCare Australia package.",
+   "The rate would rise from 46.5 to 47 per cent, calculated as the maximum income tax rate plus a Medicare levy component of 2 per cent.",
+   "It would apply to assessments for the 2014-15 financial year and later financial years, covering individuals liable for tax on excess non-concessional contributions."
+  ],
+  "changes": [
+   "Section 5 of the excess non-concessional contributions tax legislation would be amended.",
+   "The levy component reflected in the excess contributions tax rate would become 2 per cent.",
+   "The higher rate would first apply in the 2014-15 financial year."
+  ],
+  "affected": "Individuals making excess non-concessional superannuation contributions in a financial year are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:53.557766+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

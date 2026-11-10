@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4978_ems_2fef7ef1-8003-4eee-8f2e-7220d3268964%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4978%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00054",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would create a transfer pathway from the Australian Secret Intelligence Service to public service agencies and permit tailored workplace safety declarations for intelligence work.",
+   "Service employees could move under the public service’s voluntary transfer process, and the Director-General could modify or disapply specified safety provisions with ministerial approval.",
+   "When administering the service and making declarations, the Director-General would have to consider workplace safety objectives so far as consistent with maintaining national security."
+  ],
+  "changes": [
+   "Transferred intelligence employees would become public service employees for all purposes.",
+   "The Public Service Commissioner and Director-General would agree equivalent employee classifications.",
+   "Safety declarations could address particular workplaces, activities or categories of workers.",
+   "The changes would start on Royal Assent."
+  ],
+  "affected": "Intelligence service employees, receiving public service agencies and people working for the Director-General are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:43.529161+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

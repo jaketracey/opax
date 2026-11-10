@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s918_ems_81ff38f0-bdff-47ae-9bb0-503b6a0dedc6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s918%22",
+   "document_date": "2013-06-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-20",
+  "sentences": [
+   "The bill would establish an Office of Animal Welfare as a Commonwealth statutory authority to advise on animal welfare in activities regulated by the Commonwealth.",
+   "Its chief executive would review livestock export standards, supply chain assurance and departmental enforcement, supported by an advisory committee and staff undertaking inquiries and research.",
+   "Reports and recommendations would go to the Minister for tabling in Parliament with written responses, including possible advice on aligning Commonwealth, state and territory laws."
+  ],
+  "changes": [
+   "The Minister could direct the chief executive on performing their functions, and compliance would be mandatory.",
+   "An advisory committee would include welfare organisations, consumers, scientists, ethicists, departmental representatives and commercial animal interests.",
+   "The office would have to produce an annual report for parliamentary tabling.",
+   "The chief executive could delegate functions and powers to staff."
+  ],
+  "affected": "Animal welfare organisations, consumer groups, relevant scientists and ethicists, departmental officials and commercial producers or purchasers of animals or animal products are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:33.771002+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

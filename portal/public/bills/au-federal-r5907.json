@@ -149,7 +149,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-15",
+  "sentences": [
+   "The bill would change media ownership restrictions, regional television programming obligations and sports broadcasting rules, while replacing existing commercial broadcasting licence fee arrangements.",
+   "It would remove the 75 per cent television audience reach limit and the restriction on controlling more than two traditional media platforms locally.",
+   "Regional television licences joining groups above the population threshold would face additional local content obligations, except for remote area broadcasts and section 38A and 38B licences, alongside a companion bill imposing an interim transmitter licence tax."
+  ],
+  "changes": [
+   "Annual television and radio licence fees and datacasting charges would be abolished.",
+   "Listed sporting events would automatically become available for subscription television rights acquisition 26 weeks before the event, subject to ministerial intervention.",
+   "Free-to-air broadcasters could premiere listed events on digital multichannels.",
+   "Specified broadcasters would receive transitional support payments over five years."
+  ],
+  "affected": "Commercial television and radio broadcasters, subscription television operators, regional audiences and the Australian Communications and Media Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:09.311003+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4742",

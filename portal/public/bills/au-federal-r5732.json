@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-13",
+  "sentences": [
+   "The bill would update customs references for biofuels and biofuel blends to reflect revised international tariff classifications and imports covered by the China-Australia Free Trade Agreement.",
+   "It would replace two tariff subheadings in the biofuel blend definition and add references to the tariff schedule implementing the trade agreement’s import duty treatment.",
+   "The substantive changes would commence with the companion Customs Tariff Amendment legislation on 1 January 2017, as part of implementing the international Harmonized System review."
+  ],
+  "changes": [
+   "The biofuel blend definition would refer to subheadings 3824.99.30 and 3824.99.40 instead of the superseded classifications.",
+   "The imported biofuel treatment provision would include Schedule 12 of the Customs Tariff Act.",
+   "The biofuel blend definition would also recognise that trade agreement schedule."
+  ],
+  "affected": "Importers of biofuels and biofuel blends covered by the amended customs provisions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:12.963750+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

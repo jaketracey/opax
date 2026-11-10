@@ -119,7 +119,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-14",
+  "sentences": [
+   "The bill would add inequality research and reporting to the Productivity Commission's functions and require it to consider inequality when carrying out its work.",
+   "The commission would assess the extent and effects of economic inequality, government policies affecting it, and consequences for mobility, community opportunities and economic performance.",
+   "Inequality reports would be tabled within 15 sitting days of an intergenerational report, and the amendments would start the day after Royal Assent."
+  ],
+  "changes": [
+   "Research on inequality's economic and community effects would become an express statutory function.",
+   "The commission's policy guidelines would require attention to mitigating inequality's negative effects.",
+   "A new reporting division would require regular assessments of economic inequality."
+  ],
+  "affected": "The Productivity Commission would be subject to expanded statutory functions and policy guidelines.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:09.311577+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5493",

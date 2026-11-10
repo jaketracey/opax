@@ -131,7 +131,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-21",
+  "sentences": [
+   "The bill would confirm that information the Australian Federal Police (AFP) obtained under specified Operation Ironside warrants was never intercepted in transit over a telecommunications system and was obtained lawfully.",
+   "It would deem that material, and anything done in reliance on it, valid and lawful for all purposes, so the evidence and any derivative evidence would not count as improperly obtained on that ground.",
+   "It covers seven Surveillance Devices Act 2004 warrants issued from 2018 to 2021 and three Crimes Act 1914 search warrants, applies to proceedings begun before or after commencement, and would start the day after Royal Assent."
+  ],
+  "changes": [
+   "Information or records obtained under a relevant warrant would be taken, for all purposes, never to have been intercepted within the meaning of the Telecommunications (Interception and Access) Act 1979.",
+   "Material obtained in reliance on a relevant warrant would be taken to have been obtained under a surveillance device, computer access or search warrant of that kind.",
+   "Acts that would otherwise have been invalid or unlawful would be taken to be valid and lawful, despite any effect on a person's accrued rights.",
+   "The confirmation would apply to civil and criminal proceedings started before or after commencement, including proceedings already concluded.",
+   "Compensation would be payable if the Act caused an acquisition of property under paragraph 51(xxxi) of the Constitution, with the Federal Court or a state or territory Supreme Court deciding disputed amounts."
+  ],
+  "affected": "Defendants and other parties in proceedings that rely on evidence from the AN0M application would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:06:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

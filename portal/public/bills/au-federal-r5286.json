@@ -77,7 +77,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-19",
+  "sentences": [
+   "The bill would restore indexation of excise-equivalent customs duty on imported fuels, including gaseous fuels, as part of a package supporting road infrastructure funding.",
+   "Duty rates would rise with the Consumer Price Index on 1 August 2014 and then be adjusted each 1 February and 1 August.",
+   "Aviation fuel would be excluded, and companion bills would address domestic fuel excise, fuel tax credits and a special account for additional revenue."
+  ],
+  "changes": [
+   "Indexed customs duty rates would be rounded to one decimal place of a cent.",
+   "Percentage-of-value components of duty on certain imports would be excluded from indexation.",
+   "The final scheduled gaseous fuel duty increase on 1 July 2015 would also be indexed and rounded.",
+   "The rules would cover earlier imports still awaiting entry for home consumption when the amendments commence."
+  ],
+  "affected": "Fuel importers liable for indexed customs duty would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:07.912395+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3269",

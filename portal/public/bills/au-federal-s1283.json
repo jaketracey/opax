@@ -77,7 +77,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-08",
+  "sentences": [
+   "The bill would change the purpose of offshore petroleum legislation so that benefit to the Australian community guides how the legislation is interpreted.",
+   "It would add a community benefit purpose concerning exploitation of offshore petroleum and greenhouse gas substances, through a replacement objects clause in the Act.",
+   "The change would guide the offshore regulators and Joint Authorities when granting leases, and would begin the day after the bill received royal assent."
+  ],
+  "changes": [
+   "The existing section 3 objects clause would be repealed.",
+   "A replacement clause would expressly include Australian community benefit.",
+   "Commencement would be on the day following royal assent."
+  ],
+  "affected": "Offshore lease applicants, the National Offshore Petroleum Titles Administrator, the National Offshore Petroleum Safety and Environmental Management Authority and Joint Authorities are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:58.286143+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7753",

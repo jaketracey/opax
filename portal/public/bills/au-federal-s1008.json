@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-24",
+  "sentences": [
+   "The bill would extend access to government student loans to certain New Zealand citizens holding special category visas who settled in Australia as dependent children.",
+   "Applicants would need longstanding residence, including eight of the preceding ten years in Australia and 18 months of the preceding two years, alongside other eligibility requirements.",
+   "The changes would cover higher education and eligible vocational study, applying to units with a census date on or after 1 January 2016."
+  ],
+  "changes": [
+   "Residence testing would generally use the first successful assistance request for the same course.",
+   "The dependent child definition would require someone under 18 without a spouse or de facto partner.",
+   "Additional Commonwealth payments resulting from the bill would require money appropriated by Parliament for that purpose."
+  ],
+  "affected": "New Zealand citizens with special category visas seeking government loans for higher education or eligible vocational study are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:18.192776+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-12",
+  "sentences": [
+   "The bill would restrict when eggs could be marketed as free range by imposing outdoor access, actual ranging and stocking density requirements through consumer law.",
+   "Qualifying eggs would come from hens able to range freely in daylight on most days, with a majority actually doing so and density no higher than 1,500 hens per hectare.",
+   "The bill would begin after a 12-month period following Royal Assent, and its restrictions would apply to information standards already operating or made later."
+  ],
+  "changes": [
+   "Stocking density would have to appear prominently on egg labels using a hens per hectare format.",
+   "Cage-free eggs failing the free range conditions could be marketed as access to range.",
+   "Egg information standards would have no effect to the extent they permitted non-qualifying eggs to be marketed as free range."
+  ],
+  "affected": "Egg producers and sellers marketing eggs as free range or access to range would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:43:21.143104+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

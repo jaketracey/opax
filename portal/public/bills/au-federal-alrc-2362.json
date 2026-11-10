@@ -101,13 +101,47 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5006_ems_2ffb1628-a7fb-4efc-91e9-cfc64ca6b06c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5006%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00099",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would change military rehabilitation, compensation and treatment arrangements, including support for dependants, pension eligibility and the administration of payments under veterans' legislation.",
+   "It would assess impairment payment dates by individual accepted condition, expand partner lump sum choices, increase eligible children's periodic compensation and expand financial and legal advice assistance for eligible members and wholly dependent partners.",
+   "Measures would also cover serving and former members, specified partners and dependants, with changes to reviews, treatment access, superannuation offsets and payment administration."
+  ],
+  "changes": [
+   "Rehabilitation responsibilities assigned to Service Chiefs would transfer to the Chief of the Defence Force, with delegation powers.",
+   "The Veterans' Review Board could remit matters for needs assessment and compensation.",
+   "Special Rate Disability Pension eligibility would expand for otherwise eligible people with lump sum incapacity payments or payments fully offset by Commonwealth superannuation.",
+   "Specified defence-related claimants under the Safety, Rehabilitation and Compensation Act would receive treatment cards for accepted service injuries.",
+   "Travelling expense entitlements would extend to partners of specified eligible people in defined circumstances.",
+   "Overpayments under military compensation legislation could be recovered from Veterans' Entitlements Act payments."
+  ],
+  "affected": "Serving and former Defence Force members, eligible partners and children would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:16.663167+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-03",
+  "sentences": [
+   "The bill would incorporate temporary pandemic import concessions into tariff law, remove certain vehicle duties and change classifications for several kinds of imported goods.",
+   "It would provide duty-free treatment for prescribed medical and hygiene products used against the novel coronavirus that causes the disease known as COVID-19, from 1 February 2020 to 31 December 2020.",
+   "The remaining changes would generally commence 28 days after royal assent, covering vehicle imports, food and supplement classifications, wheelie bins, metal products and redundant tariffs."
+  ],
+  "changes": [
+   "The $12,000 special duty on qualifying Peruvian and Trans-Pacific Partnership used vehicle imports would be removed.",
+   "Separate tariff categories would identify formulated caffeinated drinks and supplementary foods.",
+   "Wheelie bins would be excluded from classification as vehicles.",
+   "Certain metal products needing further modification would be excluded from classification as finished parts."
+  ],
+  "affected": "Importers of the specified goods would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:38.696565+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6962",

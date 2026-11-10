@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-24",
+  "sentences": [
+   "The bill would provide tax concessions for people earning unincorporated small business income, certain business start-up expenses and electronic devices supplied by small employers.",
+   "An income tax offset would reduce tax on qualifying business income by 5 per cent, with an annual maximum of $1,000 per person.",
+   "The offset and start-up deductions would apply from the 2015-16 income year, while the device exemption would start in the 2016-17 fringe benefits tax year."
+  ],
+  "changes": [
+   "The new offset would be non-refundable and exclude income from corporate tax entities.",
+   "Certain business establishment costs, including government charges and capital raising costs, could be deducted immediately instead of over five years.",
+   "Small employers could provide multiple work-related portable electronic devices exempt from fringe benefits tax despite substantially matching functions."
+  ],
+  "affected": "Sole traders, partners, trust beneficiaries, eligible business founders, small business employers and their employees are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:13.966154+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

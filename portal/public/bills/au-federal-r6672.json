@@ -155,7 +155,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-17",
+  "sentences": [
+   "The bill would link employees to an existing default superannuation account across jobs, introduce annual product performance testing and change trustees' duties concerning members' financial interests.",
+   "For jobs starting from 1 July 2021, employers would generally direct contributions to an employee's existing account identified by the tax Commissioner unless another fund is chosen.",
+   "The Australian Prudential Regulation Authority would test MySuper products from 1 July 2021 and other regulated product classes from 1 July 2022 as specified in regulations."
+  ],
+  "changes": [
+   "Trustees would have to notify members when their product fails a performance test.",
+   "Two consecutive failures would bar new members until the regulator lifts the prohibition under prescribed conditions.",
+   "Trustees, including self-managed fund trustees, would owe an expressly financial best-interests duty.",
+   "Registrable fund trustees would bear the evidential burden for compliance with that duty, excluding additional duties prescribed by regulations.",
+   "Regulations could prohibit certain registrable fund trustee payments regardless of a trustee's assessment of members' financial interests.",
+   "An exemption for disclosure of certain portfolio investments would be removed."
+  ],
+  "affected": "Employees, employers, superannuation members, fund trustees and their corporate directors, the tax Commissioner and prudential regulator are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:40.834619+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7198",

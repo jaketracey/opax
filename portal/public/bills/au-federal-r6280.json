@@ -95,7 +95,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would change petroleum resource rent tax by lowering the uplift applied to some unused deductions and removing onshore petroleum projects from its coverage.",
+   "It would change how carried-forward general and exploration expenses grow before being deducted, with separate rules for older expenditure and amounts transferred between projects.",
+   "The reforms would apply from 1 July 2019, while existing projects would retain their current general expenditure uplift unless the new project rules apply."
+  ],
+  "changes": [
+   "For new projects, the premium above the long-term bond rate for general expenditure would end after the specified ten-year period.",
+   "New or transferred exploration expenses would eventually use a gross domestic product factor instead of a premium above the bond rate.",
+   "The Resources Minister could combine related projects only following an application from relevant participants."
+  ],
+  "affected": "Petroleum project participants with carried-forward expenditure and operators of onshore petroleum projects are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:57.859116+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

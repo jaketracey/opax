@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5111_ems_0c93fea2-db94-47c9-9333-82129836fdc0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5111%22",
+   "document_date": "2013-06-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-26",
+  "sentences": [
+   "The bill would extend unfair contract term protections to standard form consumer general insurance policies and give consumers and the corporate regulator access to court remedies.",
+   "Insurers could not rely on terms declared unfair, with unfairness assessed through significant imbalance, detriment and whether a term reasonably protected legitimate underwriting interests.",
+   "The regime would start 12 months after Royal Assent and exclude life and private health insurance, with exceptions for core subject matter, upfront price and legally authorised terms."
+  ],
+  "changes": [
+   "A declaration of unfairness, or reliance on a declared unfair term, would breach the insurer’s duty of utmost good faith.",
+   "Insurers would bear the burden of proving a term reasonably reflected the underwriting risk accepted.",
+   "The Australian Securities and Investments Commission would gain investigation and enforcement powers for the insurance regime.",
+   "The bill would provide that contracts bind the parties if they could operate without reliance on the unfair term."
+  ],
+  "affected": "General insurers, consumers purchasing standard form policies for personal or household purposes and the corporate regulator are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:07.117358+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

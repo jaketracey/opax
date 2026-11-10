@@ -167,7 +167,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-12",
+  "sentences": [
+   "The bill would authorise additional Commonwealth spending for services outside ordinary annual government operations, supplementing appropriations already provided for the 2014-2015 financial year.",
+   "Its scheduled funding would cover state, territory and local government payments, new administered outcomes, administered assets and liabilities, departmental capital and corporate entities.",
+   "It would commence on Royal Assent and expire at the start of 1 July 2017, alongside a separate bill funding ordinary annual services."
+  ],
+  "changes": [
+   "The Finance Minister's available advance would be restored to $380 million for the remaining financial year.",
+   "Amounts already advanced for the same expenditure would reduce the bill's appropriation to avoid duplicate funding.",
+   "Appropriated money could be credited to special accounts where their purposes match the relevant appropriation."
+  ],
+  "affected": "Commonwealth entities receiving appropriations, state and territory governments, local governments and the Finance Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:42.817770+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -77,7 +77,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-04",
+  "sentences": [
+   "The bill would prevent federal environmental approval of actions involving koala habitat clearing and extend koala protections to forestry covered by Regional Forest Agreements.",
+   "It would apply a specific meaning of significant impact on koalas to existing approval and offence provisions, making actions with those impacts unlawful without approval.",
+   "The proposed restrictions would operate through amendments to the Environment Protection and Biodiversity Conservation Act and would commence on the day after Royal Assent."
+  ],
+  "changes": [
+   "Regional Forest Agreement exemptions would cease where an action has, may have or is likely to have a significant impact on koalas.",
+   "New statutory definitions would identify koalas, koala habitat and koala habitat trees.",
+   "A new provision would connect the koala-specific impact test to the Act's existing approval prohibitions and associated offence."
+  ],
+  "affected": "The Environment Minister and people proposing or undertaking actions affecting koalas or their habitat are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:03.355226+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

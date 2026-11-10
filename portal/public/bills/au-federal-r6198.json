@@ -47,7 +47,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "The bill would revise research and development tax incentives and international tax rules, with additional changes for offshore accommodation bookings and cars repaired overseas.",
+   "Smaller eligible research companies would receive an offset linked to their company tax rate plus 13.5 percentage points, while larger companies’ premiums would depend on research intensity.",
+   "The research measures would generally apply to income years beginning from 1 July 2018, with different application dates for the other tax and administrative changes."
+  ],
+  "changes": [
+   "The research expenditure threshold would increase from $100 million to $150 million and become permanent.",
+   "Research offset refunds would generally be capped at $4 million annually, excluding qualifying clinical trial amounts.",
+   "Thin capitalisation valuations would be tied to financial statements rather than separate asset revaluations.",
+   "Offshore accommodation booking suppliers would count relevant Australian accommodation supplies towards goods and services tax turnover.",
+   "Luxury car tax would be removed from cars re-imported after overseas servicing, repair or refurbishment.",
+   "Significant global entity rules would cover qualifying groups headed by entities other than listed companies."
+  ],
+  "affected": "Research companies, multinational groups, offshore accommodation suppliers and importers of cars refurbished overseas are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:17.930470+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

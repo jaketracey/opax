@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "The bill would shorten the period families could receive certain payments while overseas and remove the large family supplement from family tax benefit Part A.",
+   "From 1 January 2016, the usual overseas payment period would fall from 56 weeks to six weeks, while existing provisions for extensions would continue.",
+   "The large family supplement would end from 1 July 2016, and transitional rules would preserve the previous overseas period for certain absences already underway."
+  ],
+  "changes": [
+   "Rules reducing payment rates after six weeks overseas would be repealed as redundant.",
+   "Eligible recipients returning within 13 weeks after their overseas payment period ends could restart family tax benefit without a new claim.",
+   "References to the large family supplement would be removed from payment calculations and the maintenance income test."
+  ],
+  "affected": "Families travelling overseas, recipients of linked child care payments and families with four or more eligible children would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:24.681711+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

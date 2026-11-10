@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-03",
+  "sentences": [
+   "The bill would authorise cost recovery levies for imported food administration where the charges fall outside the constitutional categories of customs duties and excise.",
+   "Regulations would prescribe the matters attracting charges, set amounts or calculation methods and identify who must pay, alongside existing fees for individual services.",
+   "It would work with separate customs and excise charging bills and a collection bill, with substantive operation linked to commencement of the collection arrangements."
+  ],
+  "changes": [
+   "Charges would require ministerial satisfaction that they recover no more than likely Commonwealth costs.",
+   "Regulations could exclude specified matters from charging.",
+   "The framework would prohibit taxation of state-owned property.",
+   "Christmas Island and the Cocos Islands would be covered only if the imported food control legislation extends there."
+  ],
+  "affected": "Food importers and businesses handling imported food would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:35.921626+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

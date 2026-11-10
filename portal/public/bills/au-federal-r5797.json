@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-09",
+  "sentences": [
+   "The bill would remove ordinary and liquid assets waiting periods for Farm Household Allowance and broaden the assets treated as part of a farm enterprise.",
+   "Assets held wholly or mainly for farming would generally count as farm assets, including water entitlement rights, while the new definition would exclude cash and specified deposits.",
+   "The measures would start on the later of 1 April 2017 and the day after Royal Assent, with different transitional rules for waiting periods and assets."
+  ],
+  "changes": [
+   "Waiting period relief would cover new claims and earlier claims still awaiting a decision.",
+   "Existing recipients and pending applicants would retain the previous farm asset assessment rules.",
+   "The minister could exclude additional kinds of assets through rules."
+  ],
+  "affected": "Farmers and their partners claiming or receiving Farm Household Allowance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:28.843066+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-27",
+  "sentences": [
+   "The bill would impose a levy on licensed online wagering providers to recover the Australian Communications and Media Authority's (ACMA) costs of a national self-exclusion register.",
+   "ACMA would determine how the levy is calculated through a legislative instrument after consulting the minister, with recovery limited to costs associated with the register.",
+   "It would commence with the companion register legislation and apply to licensed providers operating overseas as well as within Australia when they serve Australian customers."
+  ],
+  "changes": [
+   "A provider would incur the levy for a period if it was licensed and made at least one register request.",
+   "Register establishment costs incurred before operation began could be included in levy recovery.",
+   "Upfront costs could be spread across multiple periods, with recovery percentages capped at a combined 100%."
+  ],
+  "affected": "Licensed interactive wagering providers and ACMA are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:28.606439+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

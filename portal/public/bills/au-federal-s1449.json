@@ -65,7 +65,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-13",
+  "sentences": [
+   "The bill would recognise in Commonwealth law a right to protest peacefully in public places, implementing Australia's obligations under three articles (19, 21 and 22) of the International Covenant on Civil and Political Rights.",
+   "It would allow the right to be restricted only to the extent necessary in a democratic society for national security, public safety, public order, public health or the rights and freedoms of others.",
+   "Laws inconsistent with the bill would be inoperable to the extent of the inconsistency, and the bill relies on the external affairs power and would not apply where it would infringe the implied freedom of political communication."
+  ],
+  "changes": [
+   "Creates a statutory right, in clause 8, for people to protest peacefully in public places.",
+   "Limits restrictions on the right, under clause 9, to those necessary in a democratic society for one of five listed interests, with lengthy prison sentences or excessive fines treated as unnecessary restrictions.",
+   "Makes other laws that are inconsistent with the bill, whether made before or after its commencement, inoperable to the extent of the inconsistency.",
+   "Binds the Crown, extends to every external Territory, and relies on the external affairs power in paragraph 51(xxix) of the Constitution.",
+   "Does not apply where it would infringe any constitutional implied freedom of political communication."
+  ],
+  "affected": "People taking part in peaceful protests in public places, and the Commonwealth, State and Territory governments whose laws restrict protest, are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:16:00Z"
+ },
  "divisions": [],
  "speeches": [
   {

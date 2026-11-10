@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-07-02",
+  "sentences": [
+   "The bill would broaden the costs recoverable through the existing BetStop levy on licensed interactive wagering providers, including government spending to promote the self-exclusion register.",
+   "Recoverable costs would include relevant departmental expenses as well as those of the Australian Communications and Media Authority, which already administers the levy arrangements.",
+   "The amendments would begin on 1 January 2027 and support separate gambling reform legislation, while levy amounts would continue to be set under the existing Act."
+  ],
+  "changes": [
+   "Reasonable public information, awareness and communications expenditure could be included in the levy calculation.",
+   "Other operational costs incurred by the department or the authority could also be recovered.",
+   "Expenses from earlier levy periods could be recovered if they had not already been included."
+  ],
+  "affected": "Licensed interactive wagering providers and the communications department are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:46.873174+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10701",

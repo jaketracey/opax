@@ -39,8 +39,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s923_ems_b0bf8a51-4ecb-48b1-9deb-f1dc4c9cd3ff%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s923%22",
+   "document_date": "2013-05-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-16",
+  "sentences": [
+   "The bill would recognise in Australia same-sex marriages validly solemnised overseas by changing the Marriage Act 1961's rules on recognition of foreign marriages.",
+   "It would remove the existing prohibition and expressly recognise overseas marriages between two men or two women under the proposed replacement provision.",
+   "Couples in those marriages would have the same Commonwealth rights and obligations as opposite-sex married couples, with the amendments beginning on Royal Assent."
+  ],
+  "changes": [
+   "The prohibition in section 88EA on recognising foreign same-sex marriages would be repealed.",
+   "The replacement would expressly include unions between a man and another man.",
+   "The replacement would also expressly include unions between a woman and another woman."
+  ],
+  "affected": "Same-sex couples whose marriages were solemnised in foreign countries are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:22.634145+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2954",

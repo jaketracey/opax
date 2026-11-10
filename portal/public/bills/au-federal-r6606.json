@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-08",
+  "sentences": [
+   "The bill would make administrative and technical changes to the National Redress Scheme for Institutional Child Sexual Abuse, covering institutions, payment arrangements and protected information.",
+   "It would clarify how associated institutions are identified and how government funders share responsibility for redress owed by an institution that no longer exists.",
+   "Most amendments would commence the day after royal assent, while provisions clarifying the identification of associated institutions would operate retrospectively from 1 July 2018."
+  ],
+  "changes": [
+   "Redress could be paid to a legally appointed manager of a recipient's financial affairs.",
+   "The scheme operator could extend an institution's contribution payment deadline.",
+   "Protected information about a non-participating institution could be disclosed to encourage it to join the scheme, without permitting any further disclosure of information about individuals.",
+   "The scheme's names and symbols would receive statutory protection."
+  ],
+  "affected": "Redress applicants, participating and non-participating institutions and government funders would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:00.543955+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6910",

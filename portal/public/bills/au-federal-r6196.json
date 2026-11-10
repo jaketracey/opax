@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "The bill would change veterans’ compensation administration by enabling Defence-assisted liability claims, expanding information gathering and adopting relevant social security exemptions for lump sums.",
+   "The Chief of the Defence Force could lodge a service injury or disease liability claim for a serving member with consent, without being obliged to do so.",
+   "The amendments would begin the day after Royal Assent, with the additional claim pathway applying to service injuries sustained or diseases contracted from commencement."
+  ],
+  "changes": [
+   "Compensation authorities could require documents, information or attendance from a wider range of agencies and third parties.",
+   "Information notices would generally give recipients at least 14 days to comply.",
+   "Relevant exempt lump sum determinations under social security law would also apply to veterans’ income tests."
+  ],
+  "affected": "Serving members, veterans receiving compensation or income support, the Chief of the Defence Force and third parties holding claim information are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:17.930470+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

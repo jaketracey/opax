@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-25",
+  "sentences": [
+   "The bill would separate deposit-taking banking from investment and other financial businesses by restricting banks' activities, ownership links and relationships with non-bank entities.",
+   "It would prohibit affiliations with non-banks and investments in specified synthetic products, while generally allowing 24 months to end existing prohibited affiliations, subject to extensions.",
+   "The bill would also create parliamentary oversight of the Australian Prudential Regulation Authority and limit Financial Claims Scheme protection to banks complying with activity restrictions."
+  ],
+  "changes": [
+   "People working for entities prohibited from affiliating with banks would generally be barred from equivalent positions in banks.",
+   "Banks would be prohibited from proprietary trading, market-making and underwriting securities issues.",
+   "A joint parliamentary committee would oversee the banking regulator and report on its activities.",
+   "Future prudential standards would require parliamentary approval, and either House could disallow a standard."
+  ],
+  "affected": "Banks, their depositors, affiliated non-bank businesses, bank officers and employees, and the Australian Prudential Regulation Authority would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:34.554941+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

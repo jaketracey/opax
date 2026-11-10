@@ -143,7 +143,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-11",
+  "sentences": [
+   "The bill would clarify federal electoral funding rules and their relationship with state laws, while changing election administration, voting procedures and referendum arrangements.",
+   "It would address donation and disclosure rules, allow funding claim corrections and extend electronically assisted voting to Australians working in Antarctica instead of existing special arrangements.",
+   "Relevant voting changes would also apply to referendums, and the Australian Capital Territory redistribution committee could include a senior electoral commission staff member."
+  ],
+  "changes": [
+   "Election funding claims could be corrected while awaiting determination.",
+   "Polling officials could provide pens or other suitable marking implements as well as pencils.",
+   "Pre-poll voting would use declared centres without a requirement to operate at returning officers' offices."
+  ],
+  "affected": "Electors, political parties, donors, campaign entities and Australian Electoral Commission staff are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:09.637723+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-6564",

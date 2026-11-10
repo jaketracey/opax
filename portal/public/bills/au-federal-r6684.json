@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-25",
+  "sentences": [
+   "The bill would permanently increase working-age income support rates and selected income-free areas, while extending temporary COVID-19 eligibility, waiting-period and pension portability measures.",
+   "Maximum basic payment rates would rise by $50 a fortnight from 1 April 2021, covering JobSeeker, Youth Allowance, Parenting Payment, Austudy and youth disability pensions.",
+   "The ordinary income-free area would become $150 a fortnight for JobSeeker, Youth Allowance for job seekers, partnered Parenting Payment and related payments from April 2021."
+  ],
+  "changes": [
+   "Quarantine, isolation and related caring responsibilities could support JobSeeker or Youth Allowance eligibility until 30 June 2021.",
+   "Ordinary waiting-period waivers would continue until 30 June 2021 for JobSeeker, Parenting Payment and relevant Youth Allowance claims.",
+   "The Secretary could extend specified pension portability periods because of COVID-19, with extensions ending by 30 June 2021.",
+   "Indexation would be removed from the affected income-free thresholds."
+  ],
+  "affected": "Recipients of the covered working-age payments, certain age and disability pensioners affected by COVID-19 travel restrictions, and the Secretary are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:46.140551+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7034",

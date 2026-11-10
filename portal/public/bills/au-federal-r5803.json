@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-09",
+  "sentences": [
+   "The bill would exempt certain Independent Parliamentary Expenses Authority documents from freedom of information requirements as part of establishing the new parliamentary expenses oversight arrangements.",
+   "The exemption would cover requests for personal advice about parliamentary work travel expenses and other documents connected with providing that advice to parliamentarians and staff.",
+   "The substantive change would begin alongside section 3 of the companion authority legislation, on proclamation or after its 12-month fallback period following Royal Assent."
+  ],
+  "changes": [
+   "The authority would be listed in the Freedom of Information Act’s exemption schedule.",
+   "Documents requesting personal travel expenditure advice would fall within the exemption.",
+   "The exemption would also extend to documents about performing those personal advice functions."
+  ],
+  "affected": "The Independent Parliamentary Expenses Authority, members of parliament and their staff are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:33.732627+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

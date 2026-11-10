@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "The bill would add 2018-19 funding for government activities outside ordinary annual services, including capital investment, new administered outcomes and assistance to other governments.",
+   "It would restore the Finance Minister's available advance to $380 million, disregarding earlier allocations so that further urgent expenditure could be funded during the financial year.",
+   "The legislation would commence on Royal Assent and repeal on 1 July 2021, alongside separate additional-estimates bills covering ordinary government services and parliamentary departments."
+  ],
+  "changes": [
+   "Appropriations would be reduced where the Finance Minister had already advanced money for the same expenditure.",
+   "Departmental equity injections would provide funding for asset investment, including heritage and cultural assets at designated collecting institutions.",
+   "Corporate Commonwealth entity funding would be paid through the relevant department for the receiving entity's purposes.",
+   "Transfers between specified Commonwealth entities would count against appropriations as though they were actual payments."
+  ],
+  "affected": "Commonwealth entities, the Finance Minister and state, territory and local governments receiving the scheduled assistance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:40:00.812464+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

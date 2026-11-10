@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-28",
+  "sentences": [
+   "The bill would change levies on manufacturing ozone-depleting substances and synthetic greenhouse gases, removing statutory rate caps while adding a cost recovery limit.",
+   "Rates would be set through regulations, subject to the minister being satisfied that the levy system recovers no more than likely program administration costs.",
+   "The manufacturing changes would operate with the companion ozone protection reforms and apply to reporting periods starting from commencement, with earlier periods retaining existing arrangements."
+  ],
+  "changes": [
+   "The $165 per tonne cap for manufacturing synthetic greenhouse gases would be removed.",
+   "The minister could delegate levy exemption decisions to specified departmental officials.",
+   "Suspension of a manufacturing licence would not remove liability for levies on production before or during the suspension."
+  ],
+  "affected": "Licensed manufacturers of covered substances would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

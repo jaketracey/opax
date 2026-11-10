@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "The bill would replace two medical treatment pathways under military compensation legislation with a single system using Department of Veterans’ Affairs health cards.",
+   "Eligible veterans would access treatment through their cards rather than routinely paying first and seeking reimbursement, with a compensation exception for special circumstances.",
+   "The changes would start on 1 July 2019 and validate earlier transfers between pathways and certain payments already made to treatment providers."
+  ],
+  "changes": [
+   "The Commission would no longer have to choose a treatment pathway after assessing a person’s needs.",
+   "Reasonable treatment costs incurred before an entitlement decision could still be compensated.",
+   "Compensation for the same treatment could not be paid twice under the new reimbursement provisions."
+  ],
+  "affected": "Veterans eligible for military compensation treatment, the Military Rehabilitation and Compensation Commission and treatment providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:52.982114+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

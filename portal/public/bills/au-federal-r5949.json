@@ -95,7 +95,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-17",
+  "sentences": [
+   "The bill would raise the Medicare levy on taxable income as part of a package intended to finance the Commonwealth's contribution to the National Disability Insurance Scheme.",
+   "From the 2019-20 income year, the levy rate would be 2.5 per cent instead of 2 per cent, including for specified trustee assessments.",
+   "Existing low-income relief and exemptions for specified groups would remain, while companion bills would adjust other taxes that include the levy in their rates."
+  ],
+  "changes": [
+   "The upper phase-in amount for specified trust income assessments would rise from $520 to $555.",
+   "The family levy reduction formula would be adjusted to reflect the increased rate.",
+   "Amendments would commence at the first quarterly starting date after Royal Assent."
+  ],
+  "affected": "Taxpayers liable for the Medicare levy, including trustees assessed in specified capacities, would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:19.302220+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4959",

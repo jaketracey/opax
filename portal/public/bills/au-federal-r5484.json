@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-03",
+  "sentences": [
+   "The bill would provide powers to collect imported food charges imposed by three companion bills, as part of arrangements recovering the Commonwealth's food-control costs.",
+   "Regulations could set payment deadlines, agent liabilities and late fees, while unpaid amounts could trigger withheld services, suspended approvals or court action to recover debts.",
+   "It would operate alongside existing fees for individual services and commence the day after Royal Assent, without itself setting the amount of any charge."
+  ],
+  "changes": [
+   "The Secretary could refund or remit charges and late fees where circumstances justify it.",
+   "Reasonable-ground notices could require relevant information or documents, with at least 14 days to respond.",
+   "Failure to comply with an information notice could attract a civil penalty of up to 30 penalty units.",
+   "Decisions suspending or revoking food-control instruments would be subject to internal and tribunal review."
+  ],
+  "affected": "Persons who import or deal with imported food, and agents liable to pay imported food charges on their behalf, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:13.254651+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

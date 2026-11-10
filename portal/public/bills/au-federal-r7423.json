@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-05",
+  "sentences": [
+   "The bill would widen the legal meaning of vaccine so the National Immunisation Program could include products that protect people by providing passive immunity.",
+   "The definition would cover preparations, including vaccines and immunising agents, that confer disease protection through either active or passive immunity, rather than only conventional vaccines.",
+   "Products meeting the expanded definition could be designated through legislative instruments under the existing program framework, which provides free immunisation to eligible people in Australia."
+  ],
+  "changes": [
+   "The existing vaccine definition in the National Health Act would be repealed and replaced.",
+   "Products providing passive immune protection would become eligible for designation under the immunisation program.",
+   "The amendment would begin on the day following Royal Assent."
+  ],
+  "affected": "People eligible for free vaccines under the National Immunisation Program are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:40.165259+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10188",

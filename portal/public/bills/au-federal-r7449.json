@@ -149,7 +149,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-11",
+  "sentences": [
+   "The bill would amend Commonwealth criminal laws governing police powers, serious drug offences, public prosecution arrangements, extradition procedures and references to a Victorian oversight body.",
+   "Drug offence thresholds would use the weight of the whole mixture instead of drug purity, and evidentiary certificates could provide evidence of continuous possession of an exhibit, unless the contrary is shown.",
+   "Specified digital investigation powers would continue until 4 September 2029, while the Australian Criminal Intelligence Commission would lose access to data disruption warrants."
+  ],
+  "changes": [
+   "Sydney West Airport would be listed as a major airport for federal police identity checks and move-on directions.",
+   "Applications for specified search warrants and assistance orders could be transmitted electronically.",
+   "The Attorney-General could authorise a senior substitute when the public prosecutions director has a conflict of interest.",
+   "Police could enter premises and use reasonable force to execute extradition arrest warrants where the statutory requirements are met."
+  ],
+  "affected": "People at Sydney West Airport subject to police powers, people prosecuted for serious drug offences and people subject to extradition arrest warrants are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:04:07.277572+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10656",

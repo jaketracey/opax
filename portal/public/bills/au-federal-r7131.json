@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-29",
+  "sentences": [
+   "The bill would update references to the former Council of Australian Governments across Commonwealth legislation to reflect changes to intergovernmental councils and funding arrangements.",
+   "It would rename the associated reform fund and use broader definitions of first ministers' and ministerial councils that accommodate changes in their titles.",
+   "The amendments would start the day after Royal Assent, with transitional provisions recognising earlier council decisions and allowing unfinished work to continue."
+  ],
+  "changes": [
+   "References to the former reform fund would become references to the Federation Reform Fund.",
+   "Specified health legislation would replace references to advisory bodies with the Health Chief Executives Forum.",
+   "The responsible minister would gain power to make rules addressing transitional matters."
+  ],
+  "affected": "Commonwealth, state and territory governments and intergovernmental councils are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:13.375446+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

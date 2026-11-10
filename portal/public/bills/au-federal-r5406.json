@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-02-26",
+  "sentences": [
+   "The bill would increase the limits on shipowners' and salvors' financial liability for maritime damage claims by implementing amendments to an international maritime liability protocol.",
+   "It would update the legislation's treaty definitions and incorporate revised limits expressed in units linked to the International Monetary Fund's Special Drawing Rights.",
+   "The amendments would begin on the later of royal assent and 8 June 2015, covering personal injury or death claims and other ship-related damage claims."
+  ],
+  "changes": [
+   "The statutory definition of the maritime claims convention would be replaced with updated wording.",
+   "A definition identifying the amended 1996 protocol would be added.",
+   "A new schedule would give domestic effect to the protocol's increased liability amounts."
+  ],
+  "affected": "Shipowners, charterers, managers, operators, salvors and people pursuing covered maritime claims are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:21.891501+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

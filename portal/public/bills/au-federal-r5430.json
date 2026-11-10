@@ -161,7 +161,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-19",
+  "sentences": [
+   "The bill would amend federal criminal laws covering drugs, bribery, forced marriage, war crimes and firearms, alongside changes to sentencing, investigations and confiscated assets.",
+   "It would introduce five-year minimum prison sentences for firearm trafficking, while expanding forced marriage offences and lifting their maximum penalties to seven or nine years.",
+   "The firearm minimum would exclude offenders under 18 at the time of the offence and would leave courts free to determine the non-parole period."
+  ],
+  "changes": [
+   "For attempted serious drug offences, recklessness would suffice regarding whether the substance is controlled.",
+   "Foreign bribery prosecutions would not need to prove an intention to influence a particular official.",
+   "The war crime of outrages upon personal dignity would expressly cover dead people regardless of earlier participation in hostilities.",
+   "Knowing and intentional involvement in an offence would become an additional basis for secondary liability.",
+   "Forced marriage would include cases where a person cannot understand the nature and effect of the ceremony.",
+   "South Australia's Independent Commissioner Against Corruption would gain access to Commonwealth information and specified search-warrant processes."
+  ],
+  "affected": "Federal offenders, people at risk of forced marriage, investigators, courts and anti-corruption agencies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:52.013179+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3871",

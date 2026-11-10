@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would enlarge self-managed superannuation funds, extend the Global Infrastructure Hub’s tax exemption and update Treasury legislation, including rules about repackaging draught beer.",
+   "It would raise the self-managed fund membership cap from four to six and continue the Hub’s income tax exemption until 30 June 2023.",
+   "Its beer provisions would accompany a separate excise tariff bill, extending repackaging safeguards when beer in eligible smaller kegs is transferred into non-qualifying containers."
+  ],
+  "changes": [
+   "Funds with five or six trustees or directors would need at least half to sign their accounts and statements.",
+   "Related small superannuation fund thresholds would rise to fewer than seven members.",
+   "The beer repackaging rule would refer to entry for home consumption rather than delivery."
+  ],
+  "affected": "Members and trustees of small superannuation funds, brewers repackaging concessional beer and Global Infrastructure Hub Ltd are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:57.859116+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -35,7 +35,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "text",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2018-10-18",
+  "sentences": [
+   "The bill would provide for a national plebiscite at the next federal general election, asking voters about the level and composition of migration.",
+   "Its three questions would ask about substantially reducing immigration, favouring predominantly European immigration and prohibiting further Muslim immigration, with separate results for each proposal.",
+   "The vote would use adapted referendum procedures, with voting and roll closure aligned to the election and substantive commencement dependent on funding being appropriated."
+  ],
+  "changes": [
+   "A proposal would be supported if more than 50% of votes favoured it, excluding informal ballots.",
+   "Casting an informal ballot would not itself constitute an offence.",
+   "Federal parliamentarians could appoint scrutineers for voting, early voting and counting within their state or territory.",
+   "During the election period, broadcasters airing material supporting one side would have to offer the opposing side reasonable broadcast opportunities.",
+   "Broadcasters would be prohibited from airing plebiscite advertisements from the end of the preceding Wednesday until polling closed."
+  ],
+  "affected": "Electors and broadcasters are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:22.613363+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

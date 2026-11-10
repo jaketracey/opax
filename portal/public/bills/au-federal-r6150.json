@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-15",
+  "sentences": [
+   "The bill would widen access to independent Youth Allowance for regional students and make technical changes to student payment eligibility and maintenance income calculations.",
+   "It would raise the regional workforce independence parental income cut-off from $150,000 to $160,000, adding $10,000 for each additional qualifying child in the family.",
+   "The regional access changes would start on 1 January 2019, or the first January or July after Royal Assent if that date were missed."
+  ],
+  "changes": [
+   "Parental income could be assessed using the tax year ending before the student's self-support period, with existing assessment options retained.",
+   "The maintenance income reconciliation process would allow arrears whenever parental maintenance income had been overestimated.",
+   "The maintenance income test reduction formula would use 14 divided by 365 instead of dividing by 26.",
+   "The Minister would be authorised to treat a course as eligible for specified students when it ceased to qualify for student payments."
+  ],
+  "affected": "Regional and remote tertiary students, Youth Allowance recipients subject to maintenance income testing, and students in courses losing payment eligibility would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:24.133894+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

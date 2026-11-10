@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-18",
+  "sentences": [
+   "The bill would remove more than 850 spent amending and repeal Acts from the Commonwealth statute book, covering legislation enacted from 1980 to 1989.",
+   "It would repeal the listed Acts while preserving any continuing application, saving or transitional provisions, so earlier changes made by those Acts would remain effective.",
+   "The repeals would take effect 28 days after royal assent, with Acts enacted after 1989 outside this bill and historical versions remaining publicly accessible."
+  ],
+  "changes": [
+   "Schedule 1 would repeal the amending Acts it lists.",
+   "The schedule would also remove listed Acts whose purpose was to repeal other legislation.",
+   "An express saving would protect any residual operation of application, saving and transitional provisions."
+  ],
+  "affected": "Businesses, individuals and publishers who access or consolidate federal legislation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:49.387057+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

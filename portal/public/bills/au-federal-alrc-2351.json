@@ -137,13 +137,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5001_ems_855a1b4f-7f8e-4e74-aec8-78658ce47436%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5001%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00060",
    "document_date": "2013-06-21",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would add federal environmental approval and assessment requirements for coal seam gas and large coal mining developments with significant or likely significant effects on water resources.",
+   "It would make water resources a new protected environmental matter and create civil penalties and criminal offences for covered actions taken without approval or an exemption.",
+   "Transitional rules would exempt specified existing projects and preserve earlier assessment work, with the substantive amendments beginning on the day following Royal Assent."
+  ],
+  "changes": [
+   "Water resource protection would become an additional basis for entering conservation agreements.",
+   "Existing liability provisions for company executives and landholders would extend to the new offences.",
+   "The minister would assess whether the new water trigger applies to specified projects already awaiting an approval decision.",
+   "An independent review would examine the law’s operation and achievement of its objectives."
+  ],
+  "affected": "Coal seam gas and large coal mining proponents, relevant landholders and company executive officers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:25.282667+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-2899",

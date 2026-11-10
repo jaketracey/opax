@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "The bill would extend higher incapacity payment calculations for eligible veterans undertaking approved full-time study through a return-to-work rehabilitation program funded by Veterans’ Affairs.",
+   "It would continue payments based on 100 per cent of normal weekly earnings from 1 July 2022 to 30 June 2023 instead of allowing the usual stepdown.",
+   "The changes would cover both military compensation and defence-related rehabilitation legislation, with back-payments for eligible veterans who received reduced amounts before the bill commenced."
+  ],
+  "changes": [
+   "The military compensation provision’s study exemption would be extended by substituting 2023 for 2022.",
+   "The equivalent defence-related claims provision would receive the same one-year extension.",
+   "The Commonwealth would pay the difference between reduced payments and the higher amount otherwise due."
+  ],
+  "affected": "Eligible veterans studying full-time and their families would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

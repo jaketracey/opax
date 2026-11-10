@@ -155,7 +155,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-05",
+  "sentences": [
+   "The bill would restrict tax concessions for minors receiving testamentary trust income, extend existing financial advisers' qualification deadlines and make technical changes to Treasury legislation.",
+   "Existing advisers would have until 1 January 2026 to hold an approved degree or equivalent qualification, and until 1 January 2022 to pass the exam.",
+   "The trust changes would apply to assets acquired or transferred from 1 July 2019, while income from previously held assets could retain existing treatment."
+  ],
+  "changes": [
+   "Concessional trust income for minors would need a connection to deceased-estate assets or subsequent accumulations from those assets.",
+   "A court could extend the review period when appointing a reviewing liquidator.",
+   "A competition regulator member could vary certain information-production notices, with time extensions delegable to senior executive staff."
+  ],
+  "affected": "Minors receiving testamentary trust income, trustees of those trusts, existing financial advisers and insolvency practitioners such as controllers and liquidators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:37.613858+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6201",

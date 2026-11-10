@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "The bill would establish a national framework acknowledging military service and the sacrifices of veterans and their families, including parliamentary endorsement of a veterans’ covenant.",
+   "It would permit recognition pins, cards and other items, and state commitments about interpreting veterans’ legislation and handling claims fairly and with appropriate evidence.",
+   "The framework would cover current and former permanent and reserve personnel, but its recognition statements would create no enforceable rights or grounds to challenge decisions."
+  ],
+  "changes": [
+   "Parliament would endorse the Australian Defence Veterans’ Covenant in a legislative schedule.",
+   "The Commonwealth would state a commitment to cooperate with veterans, families and ex-service organisations.",
+   "The new Act would begin the day after Royal Assent."
+  ],
+  "affected": "Serving and former Australian Defence Force members, their families and ex-service organisations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:52.982114+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

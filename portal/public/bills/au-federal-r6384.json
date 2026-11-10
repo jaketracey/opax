@@ -95,7 +95,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-31",
+  "sentences": [
+   "The bill would give holders of new provisional skilled regional visas access to specified welfare payments and government services on similar terms to permanent visa holders.",
+   "It would recognise subclasses 491 and 494 in residence and eligibility rules, counting time on those visas towards applicable waiting periods before permanent residence.",
+   "The amendments would start on 16 November 2019 or the day after royal assent, whichever is later, with existing program eligibility requirements still applying."
+  ],
+  "changes": [
+   "Covered visa holders could meet the National Disability Insurance Scheme residence requirement.",
+   "Eligible students could access Commonwealth supported places and bridging-course tuition loans.",
+   "The Fair Entitlements Guarantee could cover eligible workers holding the new visas.",
+   "Certain pension qualifications would end if visa holders failed to progress to permanent residence."
+  ],
+  "affected": "Provisional skilled regional visa holders, their families and education providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:51.150627+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5893",

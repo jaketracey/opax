@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would increase and extend the instant asset write-off available to small businesses, allowing larger eligible asset costs to be deducted immediately.",
+   "It would lift the threshold from $20,000 to $25,000 for qualifying assets first used or ready for use from 29 January 2019 until 30 June 2020.",
+   "The proposal would cover small businesses with aggregated annual turnover below $10 million, with the usual $1,000 threshold returning from 1 July 2020."
+  ],
+  "changes": [
+   "Qualifying small business pool balances below $25,000 could also be deducted in full.",
+   "The higher threshold would extend to eligible later costs of assets already written off.",
+   "Relief from the five-year restriction on re-entering simplified depreciation would continue for another year."
+  ],
+  "affected": "Small business entities using, or seeking to return to, the simplified depreciation rules are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:11.839761+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

@@ -77,7 +77,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-29",
+  "sentences": [
+   "The bill would close two textile, clothing and footwear industry assistance programs on 30 June 2014, bringing their planned end forward by one year.",
+   "The Clothing and Household Textile Building Innovative Capability Scheme would finish with 2013-14 expenditure, while the small business program would end after round 9.",
+   "The amendments would commence on Royal Assent, allowing final grants and reimbursement of eligible earlier expenditure to be paid from the 2014-15 funding allocation."
+  ],
+  "changes": [
+   "The innovation scheme's total grants would fall from $112.5 million to $90 million.",
+   "The small business program's total grants would decrease from $25 million to $22.5 million.",
+   "No further innovation scheme grants would be paid after final 2014-15 reimbursements.",
+   "A clerical error in the principal Act would be corrected."
+  ],
+  "affected": "Textile, clothing and footwear small businesses, and clothing and household textile manufacturers and designers, would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:38.055212+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3214",

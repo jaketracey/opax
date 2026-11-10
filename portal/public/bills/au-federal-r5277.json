@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-24",
+  "sentences": [
+   "The bill would adapt six appropriation Acts to the Public Governance, Performance and Accountability Act, replacing references to the Commonwealth's previous financial management legislation.",
+   "It would update how agencies, corporate bodies, accountable authorities and special accounts are identified, while recognising transitional rules that preserve parts of the older framework.",
+   "The changes would cover specified non-ordinary-service appropriation Acts for 2012-2013, 2013-2014 and 2014-2015, with commencement coordinated with the new framework and relevant appropriation legislation."
+  ],
+  "changes": [
+   "General drawing rights limits would be treated as debit limits from 1 July 2015.",
+   "Notes requiring drawing rights before appropriations can be used would be removed.",
+   "The latest appropriation would expressly allow corporate bodies' funds to be paid directly from the Consolidated Revenue Fund.",
+   "References governing notional payments would be updated."
+  ],
+  "affected": "Commonwealth entities, Commonwealth companies and their accountable authorities would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:35.468747+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3268",

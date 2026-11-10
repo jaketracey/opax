@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-23",
+  "sentences": [
+   "The bill would create a Commonwealth special account to reserve the additional net revenue from fuel duty indexation for investment in road infrastructure.",
+   "Credits would reflect additional fuel duty receipts after estimated tax credits, grants and similar payments, with the Treasurer determining an amount annually after each financial year.",
+   "The money would fund grants to states and territories under written agreements, alongside companion bills indexing fuel excise and equivalent customs duties on imports."
+  ],
+  "changes": [
+   "The Treasurer's credit determinations would be published as legislative instruments without parliamentary disallowance.",
+   "The Infrastructure Minister could direct transfers to the existing intergovernmental reform fund for road grants.",
+   "Commencement of the account would depend on the companion excise and customs indexation legislation."
+  ],
+  "affected": "State and territory governments and the Treasurer would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:48.041733+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

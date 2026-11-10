@@ -95,7 +95,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-28",
+  "sentences": [
+   "The bill would establish a two-year trial of mandatory drug testing for 5,000 new Newstart Allowance and Youth Allowance job seekers in selected areas.",
+   "An initial positive result would trigger 24 months of income management, with repeated positive results leading to medical assessment and recommended treatment requirements.",
+   "The trial would operate in Canterbury-Bankstown, Logan and Mandurah, with people receiving farm household allowance excluded from testing under the proposed arrangements for those areas."
+  ],
+  "changes": [
+   "Refusing a test without a reasonable excuse would cancel payment and trigger a four-week waiting period following cancellation.",
+   "Recipients with an initial positive result would face another random test within 25 working days.",
+   "Costs of second and subsequent positive tests would be recovered through payment deductions, generally capped at 10 per cent, with hardship adjustments available."
+  ],
+  "affected": "Selected new Newstart Allowance and Youth Allowance recipients and contracted testing providers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:41:23.899589+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5326",

@@ -107,13 +107,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5070_ems_d3ced2dd-d5f2-427a-92b7-c2018650eb0c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5070%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00134",
    "document_date": "2013-07-15",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would amend existing laws to support the proposed Commonwealth public interest disclosure scheme, including oversight arrangements and replacement of older whistleblower provisions.",
+   "The Commonwealth Ombudsman and Inspector-General of Intelligence and Security would gain functions to investigate allocated disclosures and complaints about how relevant agencies handled them.",
+   "Existing protections and procedures would continue for earlier whistleblower reports, while public service and parliamentary commissioners would retain inquiry roles for alleged code breaches."
+  ],
+  "changes": [
+   "Separate whistleblower reporting provisions in public service and parliamentary service legislation would be repealed.",
+   "When deciding whether to transfer a misconduct complaint concerning an Agency Head defined by the Public Service Act, the Ombudsman would have to consult the Australian Public Service Commissioner.",
+   "Evidence of possible agency head code breaches would have to be referred to the relevant service commissioner.",
+   "Intelligence oversight secrecy rules would permit information use and disclosure for functions under the new scheme."
+  ],
+  "affected": "Commonwealth public officials and parliamentary employees covered by the whistleblower reporting and disclosure oversight changes would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:23.871951+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

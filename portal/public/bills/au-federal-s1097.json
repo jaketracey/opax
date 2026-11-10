@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-19",
+  "sentences": [
+   "The bill would shorten the default bankruptcy period from three years to one year, while extending income contribution obligations beyond discharge.",
+   "Income contribution assessment would generally run for three years from bankruptcy, with people whose incomes exceed the threshold liable after their earlier discharge.",
+   "The changes would begin six months after Royal Assent and cover existing bankruptcies, with longer periods preserved where an objection to discharge has extended bankruptcy."
+  ],
+  "changes": [
+   "People liable for income contributions would have 10 business days to notify trustees of changes to their contact details.",
+   "Duties to keep and produce financial records would extend to the contribution period after discharge.",
+   "Supervised bank account arrangements could continue after discharge to collect outstanding contributions.",
+   "Trustees and the Official Receiver would retain the ability to object to automatic discharge."
+  ],
+  "affected": "Bankrupt people, discharged people with contribution obligations, creditors, trustees and the Official Receiver would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:04.832774+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

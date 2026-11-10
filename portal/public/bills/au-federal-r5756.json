@@ -149,7 +149,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-09",
+  "sentences": [
+   "The bill would separate Defence Force compensation claims from the general Commonwealth workers compensation legislation by creating a dedicated Act for defence-related claims and dependants.",
+   "It would reproduce the existing scheme for covered service, remove defence coverage from the original Act and link incapacity payment cut-offs to pension age.",
+   "The separate scheme would generally concern service before 1 July 2004, preserving historical entitlement rules and relevant transitional protections when determining earlier claims."
+  ],
+  "changes": [
+   "A separate Defence-related Claims Act would replace reliance on the original Act for covered defence claims.",
+   "Incapacity payments would generally continue until social security pension age rather than a fixed age.",
+   "Members injured within two years before pension age could receive weekly incapacity payments for 104 weeks.",
+   "Relevant references in other legislation would be updated to recognise the separate defence scheme."
+  ],
+  "affected": "Current and former Defence Force members and their dependants with covered compensation claims are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:40:53.189873+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

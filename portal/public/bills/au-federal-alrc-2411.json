@@ -95,13 +95,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5072_ems_b7d9fe2b-808d-4533-890d-a4a638c40a5a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5072%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00090",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would exclude reactivated bank accounts from unclaimed money reporting and transfers, and allow refunds where financial institutions have paid the Commonwealth unnecessarily.",
+   "Accounts used for withdrawals or deposits after assessment could be excluded, while fee debits and interest credits would not count as reactivation transactions.",
+   "The changes would apply to annual statements from the year ending 31 December 2013 and retrospectively to supplementary reporting and transfers due on 31 May 2013."
+  ],
+  "changes": [
+   "The Treasurer could refund unclaimed money overpayments directly to authorised deposit-taking institutions.",
+   "Refunds to institutions would be payable from the Consolidated Revenue Fund.",
+   "Institutions receiving transitional refunds would have to pay account holders the correct amount owed, with non-payment constituting an offence."
+  ],
+  "affected": "Authorised deposit-taking institutions and holders of reactivated accounts are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:14.313842+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1118",

@@ -143,7 +143,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-14",
+  "sentences": [
+   "The bill would repeal the Disability Services Act 1986 and update other Commonwealth laws to support its replacement by a new disability services framework.",
+   "It would preserve existing grant agreements under the former legislation until they end, while new grants and financial arrangements would use the replacement framework.",
+   "The repeal and related changes would commence with the Disability Services and Inclusion Act 2023, supported by saving provisions for existing programs and entitlements."
+  ],
+  "changes": [
+   "Existing disability services payments would retain their income tax exemption.",
+   "Hearing Australia's duties would refer to the new framework's objects and principles.",
+   "New instrument-making powers would identify employment supports relevant to pension and mobility allowance eligibility."
+  ],
+  "affected": "People with disability and the organisations funded under grant agreements to provide supports and services for them are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:26.742352+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

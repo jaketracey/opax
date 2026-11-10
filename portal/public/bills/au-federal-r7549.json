@@ -41,7 +41,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-17",
+  "sentences": [
+   "The bill would change child support and family assistance rules, giving the Child Support Registrar new powers over harmful applications, information sharing and payment collection.",
+   "It would let either parent request agency collection and expand collection of arrears or refunds arising from retrospective changes to privately collected child support.",
+   "Parents in overseas jurisdictions specified by the minister could apply directly for Australian assessments, while existing eligibility rules and standard application requirements would remain."
+  ],
+  "changes": [
+   "The Registrar could refuse a payer's assessment application where the prospective recipient does not want it accepted and would face harm.",
+   "Objections with little prospect of success or only marginal consequences could be dismissed without full consideration.",
+   "Compulsory document exchange would be replaced by discretion over sharing, subject to exchanging information relevant to the decision.",
+   "Recovery of certain Family Tax Benefit debts caused by retrospective child support increases would be temporarily paused."
+  ],
+  "affected": "Child support payers, recipients, carers and children are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:02:55.360784+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

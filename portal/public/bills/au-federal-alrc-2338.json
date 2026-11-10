@@ -95,13 +95,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4973_ems_a7713000-3b12-405c-a738-80f2003864f6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4973%22",
+   "document_date": "2013-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00024",
    "document_date": "2013-03-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-13",
+  "sentences": [
+   "The bill would let multi-member royal commissions divide formal hearings between authorised members and create private sessions for the inquiry into institutional responses to child sexual abuse.",
+   "A chair could authorise hearings with fewer than a quorum, while private sessions would receive voluntary accounts without oath, compulsory attendance or compelled answers.",
+   "Private session provisions would apply only to the child sexual abuse royal commission, while the general hearing changes would cover other commissions conducting inquiries after commencement."
+  ],
+  "changes": [
+   "Unauthorised use or disclosure of private session information would become an offence, subject to defined exceptions.",
+   "Participants and authorised accompanying people would receive specified protections equivalent to those applying at formal hearings.",
+   "Information about individuals from private sessions could enter reports only if de-identified or also obtained through formal evidence processes.",
+   "Authorised member hearings could not exercise specified search warrant authorisation or apprehended-witness functions reserved to the full commission or a quorum."
+  ],
+  "affected": "Royal commissioners, witnesses, people affected by institutional child sexual abuse and authorised support people are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:20.778325+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

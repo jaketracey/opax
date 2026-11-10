@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-19",
+  "sentences": [
+   "The bill would replace the Exploration Development Incentive with a scheme allowing eligible minerals explorers to convert tax losses into credits for new investors.",
+   "Companies would surrender part of their exploration-related tax losses, while Australian resident investors could receive tax offsets or franking credits, depending on their tax status.",
+   "The scheme would cover eligible expenditure from 2017-18 to 2020-21, and investors would need newly issued shares rather than purchases of existing shares."
+  ],
+  "changes": [
+   "Exploration credits would be allocated in application order until the annual cap is reached.",
+   "Annual caps would be $15 million, $25 million, $30 million and $30 million respectively, with unallocated amounts carried forward within the scheme.",
+   "An applicant would generally be limited to five per cent of the annual cap, subject to another prescribed limit.",
+   "Issuing credits beyond permitted limits would attract excess exploration credit tax."
+  ],
+  "affected": "Small minerals exploration companies undertaking greenfields exploration and the Australian resident investors who buy their newly issued shares are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:53.750683+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5121",

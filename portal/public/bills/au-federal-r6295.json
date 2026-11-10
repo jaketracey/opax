@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-18",
+  "sentences": [
+   "The bill would prohibit constitutional corporations from mining thermal coal in Queensland's Galilee Basin, covering proposed mines including the Carmichael project identified in the memorandum.",
+   "Mining operations covered by the prohibition would constitute a strict liability offence, carrying a maximum penalty of two years' imprisonment, 1,000 penalty units, or both.",
+   "The area would follow the Galilee subregion boundaries in the Commonwealth's June 2018 bioregional assessment map, with the legislation commencing the day after Royal Assent."
+  ],
+  "changes": [
+   "The prohibition would prevail over inconsistent laws, permits, titles and other instruments.",
+   "The law would not apply where it would acquire property otherwise than on constitutionally required just terms.",
+   "Thermal coal would be defined by its primary use in electricity generation."
+  ],
+  "affected": "Constitutional corporations carrying out thermal coal mining in the defined Galilee Basin area are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:33.623097+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

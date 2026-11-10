@@ -27,8 +27,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4994_ems_20618f35-26d6-46ce-a8fe-17f7b3329a98%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4994%22",
+   "document_date": "2013-03-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-14",
+  "sentences": [
+   "The bill would establish a process for recognising bodies that oversee standards and handle complaints about journalism by covered print and online news organisations.",
+   "The Public Interest Media Advocate would assess each body's binding standards, complaints processes, independence and transparency before deciding whether to recognise it under the scheme.",
+   "Small business operators and specified broadcasting activities would be excluded, while companion legislation would link the journalism privacy exemption to membership of a recognised body."
+  ],
+  "changes": [
+   "A recognised body would need to be a company limited by guarantee with an enforceable written self-regulation scheme.",
+   "The scheme would have to empower its body to investigate breaches and require remedial action.",
+   "Expulsion and suspension powers would be limited to unpaid fees or charges and failures to follow remedial directions."
+  ],
+  "affected": "Covered news organisations, potential self-regulation bodies and the Public Interest Media Advocate are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:57.028935+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

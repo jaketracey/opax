@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-17",
+  "sentences": [
+   "The bill would change anti-money laundering and counter-terrorism financing requirements for customer identification, banking relationships, financial intelligence sharing and cross-border reporting of monetary instruments.",
+   "It would broaden reliance on third-party identity checks, prohibit designated services where required checks cannot be performed and tighten due diligence for correspondent banking.",
+   "Additional exceptions would permit controlled sharing of suspicious matter information with auditors and overseas group members, subject to safeguards governing confidentiality and use."
+  ],
+  "changes": [
+   "Financial institutions could not enter correspondent relationships with institutions allowing shell banks to use their accounts.",
+   "A single reporting requirement would cover cross-border movements of monetary instruments.",
+   "Property supplied by undercover officers in controlled operations would be treated as proceeds of crime for money laundering prosecutions.",
+   "Dishonestly claiming to have received a police award would become an offence."
+  ],
+  "affected": "Regulated businesses, their customers, financial institutions, travellers, auditors and financial intelligence and law enforcement agencies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:51.404025+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-6870",

@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-20",
+  "sentences": [
+   "The bill would exempt qualifying Australian-owned private companies from the requirement for the Commissioner of Taxation to publish specified income and income tax information.",
+   "Eligibility would be determined from residency and ownership information already supplied in company tax returns, using three conditions relating to company status and foreign ownership.",
+   "The exemption would apply to publications from the day after Royal Assent, while disclosure obligations would continue for other corporate tax entities meeting the existing threshold."
+  ],
+  "changes": [
+   "A company would need to be private for the relevant income year and resident at year end to qualify.",
+   "Members of wholly-owned groups with a foreign resident ultimate holding company would be excluded from the exemption.",
+   "Companies with foreign shareholding exceeding 50 per cent would also be ineligible."
+  ],
+  "affected": "Australian-owned private companies, their ultimate owners and the Commissioner of Taxation would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:58.374105+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3917",

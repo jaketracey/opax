@@ -53,7 +53,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-10",
+  "sentences": [
+   "The bill would change responsibility for defamatory social media posts and create ways for Australians to obtain information about people who posted potentially defamatory material.",
+   "Australian page administrators would be protected from liability for others' posts, while service providers would be treated as publishers of material posted in Australia.",
+   "Providers could obtain a conditional defence through complaint handling and disclosure requirements, with contact details released only with the poster's consent or a court order."
+  ],
+  "changes": [
+   "Courts could order disclosure of whether material was posted in Australia and, where applicable, the poster's contact details.",
+   "Courts could refuse disclosure orders where a poster's safety might be at risk.",
+   "Specified overseas providers would have to establish an Australian company as their nominated agent.",
+   "The Attorney-General could intervene in relevant proceedings and authorise payment of applicants' reasonable legal costs."
+  ],
+  "affected": "Social media users, Australian page administrators, service providers, defamation claimants and courts would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:28.983962+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

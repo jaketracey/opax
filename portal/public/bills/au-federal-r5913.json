@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-19",
+  "sentences": [
+   "The bill would penalise cattle exporters for marketing beef as Australian when the cattle were slaughtered, or the beef was processed after slaughter, overseas.",
+   "It would also require exporters to take all reasonable steps to prevent products from that overseas slaughter or processing being marketed as Australian beef.",
+   "The proposed restriction would apply to people and companies engaged in cattle exporting, and would begin on the day after the bill received Royal Assent."
+  ],
+  "changes": [
+   "A new pecuniary penalty provision would cover exporters who market the relevant products as Australian beef.",
+   "Exporters could also face a penalty for failing to take reasonable preventive steps.",
+   "The amendments would commence on the day following Royal Assent."
+  ],
+  "affected": "Australian cattle exporters, including companies, would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:26.980703+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

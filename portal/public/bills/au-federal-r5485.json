@@ -137,7 +137,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-04",
+  "sentences": [
+   "The bill would revise pension means testing, shorten the period before some overseas pensions are reduced, and end several supplements and education-related payments.",
+   "From 1 January 2017, higher asset-free thresholds would accompany a pension reduction of $3.00 a fortnight for every $1,000 in assets above the relevant threshold.",
+   "People losing pensions through the asset changes would qualify for health concession cards without the usual income test, and affected veterans would retain Gold Cards."
+  ],
+  "changes": [
+   "Non-military defined benefit income exclusions would be capped at 10 per cent from 1 January 2016.",
+   "For relevant departures from 1 January 2017, overseas pension proportionalisation would generally begin after six weeks instead of 26.",
+   "Seniors supplement would cease, generally leaving 20 June 2015 as the final quarterly payment.",
+   "Pensioner education supplement and education entry payment would end from 1 January 2016.",
+   "The legislated pause on indexation of pension asset-free thresholds would be removed."
+  ],
+  "affected": "Pensioners, veterans, defined benefit superannuants, pensioners studying and recipients spending extended periods overseas are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:46.253898+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3809",

@@ -71,7 +71,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-26",
+  "sentences": [
+   "The bill would make Commonwealth school funding decisions conditional on the education minister being satisfied that state or territory school funding had not been cut.",
+   "It would require checks of total state or territory funding for schools before Commonwealth funding was determined, addressing both past reductions and planned reductions.",
+   "The requirements would cover participating and non-participating schools, applying to determinations made from commencement on the day following Royal Assent under the proposed amendments."
+  ],
+  "changes": [
+   "A funding condition would be inserted for determinations concerning participating schools.",
+   "An equivalent condition would be inserted for determinations concerning non-participating schools.",
+   "The new conditions would apply to determinations made on or after the amendments commence."
+  ],
+  "affected": "State and territory governments, participating and non-participating schools, students and the Commonwealth education minister would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:19.642055+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

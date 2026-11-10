@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-02",
+  "sentences": [
+   "The bill would adjust business tax concessions, change consumer data right administration and amend charity rules concerning participation in the institutional child sexual abuse redress scheme.",
+   "Businesses could choose whether to apply specified investment concessions to individual assets, while responsibility for consumer data rules would move to the minister.",
+   "The schedules would commence at different times, and additional technical amendments would correct errors, remove obsolete provisions and address unintended outcomes in Treasury laws."
+  ],
+  "changes": [
+   "An alternative eligibility test would be introduced for temporary full expensing.",
+   "Loss carry back choices would have to specify a fixed dollar amount.",
+   "The department secretary would become responsible for arranging consumer data right sector assessments."
+  ],
+  "affected": "Eligible businesses, consumer data right participants, basic religious charities and the Australian Competition and Consumer Commission would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:42.927363+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

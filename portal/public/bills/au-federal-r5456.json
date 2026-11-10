@@ -83,7 +83,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "The bill would reduce corporate tax concessions for maritime employment and research activities by abolishing the seafarer offset and lowering research and development offset rates.",
+   "Research and development offset rates would fall by 1.5 percentage points for the first $100 million of eligible expenditure, while existing eligibility rules would continue.",
+   "The seafarer repeal would apply from the 2015-16 income year, while the research changes would apply to income years beginning on or after 1 July 2014."
+  ],
+  "changes": [
+   "Companies would lose the refundable offset for eligible seafarer employment and training costs.",
+   "The refundable research and development offset rate would fall from 45 per cent to 43.5 per cent.",
+   "The non-refundable research and development offset rate would fall from 40 per cent to 38.5 per cent."
+  ],
+  "affected": "Companies employing eligible Australian seafarers and corporate entities claiming research and development tax offsets are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:01.818847+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3808",

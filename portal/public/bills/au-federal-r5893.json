@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "The bill would increase excise on loose tobacco and other tobacco products to align their effective duty with cigarettes, through four annual adjustments.",
+   "It would replace the fixed kilogram rate with a formula linked to cigarette duty, reaching a conversion based on 0.7 grams per cigarette from 1 September 2020.",
+   "It would operate alongside matching customs amendments, with the first adjustment due from 1 September 2017 or a later replacement day if indexation were delayed."
+  ],
+  "changes": [
+   "The new formula would replace the fixed excise rate for other tobacco in the tariff schedule.",
+   "The formula's result would be rounded to two decimal places, rounding up where the third digit is five or higher.",
+   "The Commissioner of Taxation would publish the revised other tobacco rate in the Government Gazette."
+  ],
+  "affected": "Australian tobacco producers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:00.718949+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-4775",

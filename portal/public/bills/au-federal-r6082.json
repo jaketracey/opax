@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would revise public sector superannuation arrangements for parliamentarians, members of the Judges' Pensions Scheme and eligible children, and reduce the trustee corporation's board.",
+   "It would correct parliamentary lump sum safety-net calculations, allow eligible scheme members to release money for Division 293 tax, and standardise children's benefit eligibility.",
+   "The Commonwealth Superannuation Corporation board would reduce from 11 to nine directors from 1 July 2020, with earlier appointments preserved under transitional arrangements."
+  ],
+  "changes": [
+   "The age from which eligible children had to study full time would rise from 16 to 18.",
+   "Employment restrictions affecting children's eligibility would be removed where applicable under the relevant schemes.",
+   "The Parliamentary Retiring Allowances Trust could pass resolutions without meetings after setting procedures and informing, or attempting to inform, all trustees.",
+   "Release authority lump sums from the Judges' Pensions Scheme could not reduce a member's retirement pension below zero."
+  ],
+  "affected": "Covered parliamentarians and their estates, eligible Judges' Pensions Scheme members, children of deceased scheme members, trustees and Commonwealth Superannuation Corporation directors would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:37.729677+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

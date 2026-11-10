@@ -71,7 +71,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-07-10",
+  "sentences": [
+   "The bill would establish binding fleet-average carbon emission standards for manufacturers or importers selling more than 1000 passenger or light commercial vehicles annually.",
+   "Targets would be 130 grams of carbon dioxide per kilometre for 2020 and 95 grams for 2023, with compliance phased in from 2017.",
+   "Sellers exceeding the applicable fleet standard would face charges calculated from their excess emissions and vehicle sales, administered through the Clean Energy Regulator."
+  ],
+  "changes": [
+   "Sellers would have to supply information about average emissions performance and the number of vehicles sold.",
+   "Authorised officers could demand further information supported by a statutory declaration.",
+   "Failure to comply with information requests would attract strict liability, subject to a reasonable excuse.",
+   "Overpaid charges could be refunded or credited.",
+   "The Climate Change Authority would review the scheme in 2021 and recommend standards beyond 2023."
+  ],
+  "affected": "Vehicle manufacturers and importers, new vehicle buyers, the Clean Energy Regulator and the Climate Change Authority would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:12.308952+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

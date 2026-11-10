@@ -149,7 +149,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-16",
+  "sentences": [
+   "The bill would amend financial adviser registration, sustainability standard-setting and tax practitioner regulation, and change tax treatment of listed company buybacks and certain distributions.",
+   "It would give existing reporting bodies sustainability standard-setting and oversight functions, with the standards initially unenforceable unless further legislation gives them legal effect.",
+   "Company measures would align off-market and on-market share buyback tax treatment for listed public companies and deny franking for certain distributions funded by capital raisings."
+  ],
+  "changes": [
+   "Financial advisers could be registered in relation to more than one authorising licensee.",
+   "The securities regulator could use assisted and automated processes for adviser registration decisions.",
+   "Tax practitioner registration would move to an annual cycle.",
+   "Tax practitioners would face restrictions on employing or arranging services with disqualified entities.",
+   "The minister could add requirements to tax practitioners' existing professional conduct code."
+  ],
+  "affected": "Financial advisers and licensees, tax practitioners, reporting standard-setters, listed companies and shareholders receiving affected distributions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:04.139967+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7988",

@@ -143,7 +143,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-25",
+  "sentences": [
+   "The bill would authorise funding from the Consolidated Revenue Fund for parliamentary departments, providing appropriations associated with new measures in the October 2022-23 Budget.",
+   "It would allocate money through departmental, administered, asset and liability items, with spending purposes and amounts specified in the bill’s schedule and explained in budget statements.",
+   "The appropriations would become available on royal assent, alongside separate government appropriation bills, and the legislation would be repealed from 1 July 2025."
+  ],
+  "changes": [
+   "Departmental appropriations could support staff, suppliers, operations and eligible asset expenditure.",
+   "Administered appropriations would fund activities contributing to specified departmental outcomes.",
+   "Amounts could be credited to special accounts where their purposes matched the relevant appropriation."
+  ],
+  "affected": "Parliamentary departments receiving the appropriations would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

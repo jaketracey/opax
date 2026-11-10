@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-10",
+  "sentences": [
+   "The bill would clarify that Australia's civil nuclear power restrictions do not prevent regulators from considering activities involving naval propulsion for conventionally armed nuclear-powered submarines.",
+   "It would amend radiation protection and environmental legislation so licensing and approval decisions can be made for relevant naval nuclear propulsion plants and associated activities.",
+   "The exceptions would begin the day after Royal Assent, while the civil nuclear moratorium and existing requirements protecting people and the environment would remain."
+  ],
+  "changes": [
+   "The radiation safety regulator could issue facility licences involving relevant naval propulsion plants.",
+   "The environment minister could make declarations relating to construction or operation of those plants.",
+   "Strategic approval and conservation agreement restrictions would also gain naval propulsion exceptions."
+  ],
+  "affected": "Submarine project proponents, the Australian Radiation Protection and Nuclear Safety Agency and the environment minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:27.667624+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

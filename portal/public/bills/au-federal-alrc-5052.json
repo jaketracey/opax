@@ -27,8 +27,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s912_ems_99571746-bf5f-4196-a697-c248af063128%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s912%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would increase financial support for single parents receiving Newstart and establish enforceable rights for eligible employees with caring responsibilities to request flexible work.",
+   "A supplement of $80 a fortnight would go to eligible single principal carers, and their income test would match that for single Parenting Payment recipients.",
+   "Payments would require a parliamentary appropriation, while eligible carers could seek workplace orders when requests to change hours, work patterns or location were refused."
+  ],
+  "changes": [
+   "The Newstart income free area for single parents would become $152.00 plus $24.60 for each child.",
+   "Employers would have 21 days to respond to flexibility requests and could refuse only on serious countervailing business grounds.",
+   "Fair Work Australia could order flexible arrangements, with civil remedies for breaching an order."
+  ],
+  "affected": "Single parents receiving Newstart, eligible employees with caring responsibilities, their employers and Fair Work Australia are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:00.040621+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

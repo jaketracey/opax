@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5019_ems_992e0a99-cb0f-4f9c-8c09-b79a1a6edd24%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5019%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would establish identifiers for students undertaking nationally recognised vocational education and training, linking their enrolments and achievements to authenticated training transcripts.",
+   "A new Student Identifiers Agency would administer the scheme, which is proposed for training from 1 January 2014, with rules controlling information handling.",
+   "Training organisations generally could not issue qualifications or statements of attainment without an identifier, although the Minister could exempt specified providers, qualifications or individuals."
+  ],
+  "changes": [
+   "Personal information collected solely to obtain an identifier would have to be destroyed, unless retention is legally required or it was also collected for another purpose.",
+   "Collection, use and disclosure of identifiers would require individual authorisation or a permitted statutory or regulatory basis.",
+   "Holders of identifier records would have to protect them against misuse and unauthorised access.",
+   "Breaches of specified safeguards could be investigated by the Australian Information Commissioner as privacy interferences."
+  ],
+  "affected": "Vocational education and training students and registered training organisations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:28.671686+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

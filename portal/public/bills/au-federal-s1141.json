@@ -53,7 +53,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-23",
+  "sentences": [
+   "The bill would bring remote Community Development Program participants under the Targeted Compliance Framework, replacing their separate compliance rules and creating exemptions for subsidised employment.",
+   "Participants in qualifying subsidised jobs would be exempt from additional activity tests and mutual obligations while employed, even if they still receive part-rate income support.",
+   "The main amendments would commence by proclamation, with a six-month fallback after Royal Assent, and specified exceptions would protect participants declining or leaving subsidised jobs."
+  ],
+  "changes": [
+   "The existing compliance division used for remote participants would be repealed.",
+   "Refusing a subsidised job would not count as a work refusal failure.",
+   "People in subsidised work could decline other suitable employment without a work refusal failure.",
+   "Leaving subsidised work voluntarily or through misconduct dismissal would not itself create an unemployment failure."
+  ],
+  "affected": "Remote program participants receiving specified income support payments, including those entering subsidised jobs, and their service providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:40:03.340537+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -125,7 +125,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-09-12",
+  "sentences": [
+   "The bill would tighten foreign resident capital gains withholding, allow standing Single Touch Payroll declarations, extend amendment periods for small and medium businesses and reduce cheque refunds.",
+   "It would lift the foreign resident withholding rate from 12.5 per cent to 15 per cent, remove the $750,000 threshold, and extend the small business amendment period from two to four years on application.",
+   "Schedules 1, 3 and 4 would commence on the next 1 January, 1 April, 1 July or 1 October after Royal Assent and Schedule 2 the day after, with Schedule 1 estimated to raise $150.0 million over five years."
+  ],
+  "changes": [
+   "Purchasers acquiring relevant assets from foreign residents would withhold 15 per cent instead of 12.5 per cent, for acquisitions on or after the later of 1 January 2025 and commencement.",
+   "The $750,000 market value threshold below which withholding does not apply to taxable Australian real property would be removed.",
+   "Employers using a registered tax or business activity statement (BAS) agent could make one standing Single Touch Payroll declaration covering multiple lodgements for up to 12 months.",
+   "The Commissioner could, on application, amend a small or medium business assessment within four years of notice once the standard two-year period has expired.",
+   "The Commissioner could retain certain refunds for up to 90 days, with notice, where an entity has not provided valid financial institution account details."
+  ],
+  "affected": "Foreign resident vendors and purchasers of Australian real property, employers using tax or BAS agents, small and medium business taxpayers, refund recipients and the Commissioner of Taxation are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:24:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9192",

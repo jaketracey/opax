@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-16",
+  "sentences": [
+   "The bill would extend protections against unauthorised event-related marketing to the 2023 Women's World Cup in football and the 2022 men's T20 cricket World Cup.",
+   "Event names, expressions and images would fall within an existing system of restrictions on commercial use that suggests an association with the protected sporting event.",
+   "The existing exemptions for genuine information, criticism and review would remain relevant, and the bill would take effect the day after Royal Assent."
+  ],
+  "changes": [
+   "Cricket event protection would end after 13 November 2023, or earlier if rules prescribed an earlier end.",
+   "Women's football event protection would end after 31 December 2024, subject to an earlier end prescribed by rules.",
+   "The spent schedule for the Gold Coast 2018 Commonwealth Games would be removed.",
+   "An incorrect World Anti-Doping Code reference in the definition of ineligibility would be corrected."
+  ],
+  "affected": "Event owners, organisers, official sponsors and individuals or businesses using protected event names and images commercially are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:40.280849+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

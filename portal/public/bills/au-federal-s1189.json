@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-04-02",
+  "sentences": [
+   "The bill would remove income and assets tests from Age Pension rate calculations by changing the pension calculator used under the Social Security Act.",
+   "It would direct calculation through Pension Rate Calculator B, which does not apply either means test when determining the amount of pension payable.",
+   "The proposal concerns Age Pension means testing, while the memorandum identifies possible further consequential amendments to social security administration and veterans’ legislation beyond this bill."
+  ],
+  "changes": [
+   "Age Pension rates would no longer be reduced through an income test.",
+   "Age Pension rates would no longer be reduced through an assets test.",
+   "The rate calculation references would be redirected to Pension Rate Calculator B."
+  ],
+  "affected": "Australians of pension age claiming or receiving the Age Pension, including those whose income or assets currently reduce their pension rate, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:34.121351+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

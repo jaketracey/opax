@@ -119,7 +119,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "The bill would revise military discipline laws by adding service offences, changing sentencing and administrative procedures, and recognising the position responsible for defence legal representation.",
+   "New offences covering assault causing actual bodily harm and unauthorised Commonwealth credit card use would each carry a maximum punishment of five years in prison.",
+   "The amendments would begin the day after Royal Assent and also extend existing Chief Judge Advocate and full-time Judge Advocate appointment arrangements for two years."
+  ],
+  "changes": [
+   "Service tribunals could set non-parole periods for prison sentences shorter than three years instead of issuing recognisance release orders.",
+   "Fixed monetary fines would be replaced by penalties expressed in units.",
+   "Obsolete provisions for offences under earlier single-service discipline laws would be removed.",
+   "The Director of Defence Counsel Services would gain statutory recognition and specified legal assistance functions.",
+   "Commanding officers beyond a person's immediate chain of command could refer charges to the Director of Military Prosecutions."
+  ],
+  "affected": "Defence members, defence civilians, service tribunals and the Director of Defence Counsel Services would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:14.449081+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

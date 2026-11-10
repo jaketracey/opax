@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-17",
+  "sentences": [
+   "The bill would create offences addressing non-consensual sharing of private sexual material through telecommunications, related threats and preparation of material for use in those offences.",
+   "Sharing and threat offences would carry maximum prison terms of three years, while preparation for commercial purposes or another benefit would attract up to five years.",
+   "Covered material would include sexual images or depictions that a reasonable person in the subject’s circumstances would expect to remain private, with specified statutory defences."
+  ],
+  "changes": [
+   "A threat could be prosecuted even if the material does not exist or the recipient does not actually fear it.",
+   "Sending private sexual material to its subject would be excluded from the sharing offence.",
+   "A defence would cover specified media activities where its conditions, including a reasonable public interest belief, are satisfied.",
+   "Prosecuting a person under 18 would require the Attorney-General’s consent."
+  ],
+  "affected": "People depicted in private sexual material, recipients of threats and people sharing, threatening or preparing such material are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:12.963750+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

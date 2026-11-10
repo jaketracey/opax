@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-10",
+  "sentences": [
+   "The bill would update statutory funding limits for Australian Research Council research programs, applying indexation to existing amounts and authorising funding for two additional years.",
+   "It would extend the funding framework to financial years beginning in July 2020 and July 2021, with a $771,932,000 cap for each year.",
+   "The bill would begin the day after Royal Assent and support approved research programs across disciplines other than health and medical research, without increasing departmental funds."
+  ],
+  "changes": [
+   "The funding cap for the financial year beginning 1 July 2017 would be set at $758,055,000.",
+   "The cap for the financial year beginning 1 July 2018 would become $759,925,000.",
+   "The cap for the financial year beginning 1 July 2019 would become $771,932,000."
+  ],
+  "affected": "Approved research programs funded through the Australian Research Council’s Discovery and Linkage programs would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:20.495995+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

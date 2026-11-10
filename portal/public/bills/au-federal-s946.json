@@ -71,7 +71,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-04",
+  "sentences": [
+   "The bill would lower Commonwealth election nomination fees for individuals and minor parties by reversing increases introduced through electoral legislation passed in February 2013.",
+   "It would halve two nomination amounts in the Commonwealth Electoral Act 1918, reducing the sums payable under the two specified paragraphs of that Act.",
+   "The changes would begin the day after Royal Assent and apply to elections whose writs were issued on or after the amendments commenced."
+  ],
+  "changes": [
+   "The amount in paragraph 170(3)(a) would fall from $2,000 to $1,000.",
+   "The amount in paragraph 170(3)(b) would fall from $1,000 to $500.",
+   "A new application rule would link the reduced amounts to the date election writs were issued."
+  ],
+  "affected": "Individuals and minor parties seeking to contest Commonwealth elections are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:50.787229+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

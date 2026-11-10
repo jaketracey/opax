@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-11-27",
+  "sentences": [
+   "The bill would change federal court procedures, clarify arrest powers and give the Federal Circuit Court jurisdiction over specified tenancy disputes involving Commonwealth-owned land.",
+   "Police and court sheriffs could use necessary, reasonable force to enter premises to execute arrest powers, and appeals against specified procedural decisions would be barred.",
+   "The tenancy jurisdiction would exclude specified Commonwealth tenants and subtenancies, and the amendments would commence on the day after the bill receives royal assent."
+  ],
+  "changes": [
+   "Entry into homes between 9 pm and 6 am would require a reasonable belief that arrest at another time would be impracticable.",
+   "Appeals against specified Federal Circuit Court summary judgments would require leave.",
+   "Delegated legislation could confer additional Commonwealth tenancy jurisdiction and modify applicable state or territory law."
+  ],
+  "affected": "Federal court users, parties to Commonwealth tenancy disputes, police officers, court sheriffs and deputy court sheriffs are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:13.055983+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-07",
+  "sentences": [
+   "The bill would prohibit exporting livestock for slaughter from 1 July 2023 and introduce animal welfare requirements for exports before that date.",
+   "Before the ban, export approval would depend on satisfactory treatment at the destination or a transitional exemption for certain contracts made before commencement.",
+   "The interim standards would address holding premises, transport, slaughter and stunning, while the legislation would commence on the day it received royal assent."
+  ],
+  "changes": [
+   "Export licences would cease to authorise livestock exports for slaughter from the prohibition date.",
+   "Licence holders would have to take reasonable steps to ensure satisfactory treatment overseas.",
+   "Exporters would have to report unsatisfactory treatment to the Secretary within 14 days."
+  ],
+  "affected": "Livestock exporters and export licence holders would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:58.286288+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

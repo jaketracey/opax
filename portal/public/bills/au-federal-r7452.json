@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-25",
+  "sentences": [
+   "The bill would create an offence for importing goods bearing false trade marks and let the Australian Border Force issue infringement notices instead of prosecuting.",
+   "Infringement notices could impose penalties of up to 15 penalty units on individuals or 75 penalty units on companies under the existing customs scheme.",
+   "The changes would cover imports after commencement, set by proclamation or automatically after six months following Royal Assent, and would complement existing seizure arrangements."
+  ],
+  "changes": [
+   "The new strict liability offence would carry maximum court fines of 60 penalty units for individuals and 300 for companies.",
+   "A defence would cover marks applied or altered with permission from the registered owner or an authorised user.",
+   "The new offence would be inserted into Schedule 8 to the Customs Regulation so that infringement notices become available for it."
+  ],
+  "affected": "Importers, registered trade mark owners, authorised users and Australian Border Force officers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:03:15.547835+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

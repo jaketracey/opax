@@ -203,7 +203,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-13",
+  "sentences": [
+   "The bill would authorise 2014-2015 funding for ordinary annual Commonwealth services, including departmental operations, administered programs and payments to Commonwealth authorities and companies.",
+   "It would allocate amounts through a schedule of appropriations and provide a $295 million Finance Minister's advance for urgent expenditure that existing funding could not cover.",
+   "The bill would commence on Royal Assent and cease at the start of 1 July 2017, with departmental funds available until spent or sunset."
+  ],
+  "changes": [
+   "Advance determinations could add funding to existing items, new items or new outcomes.",
+   "Advance determinations would be tabled in Parliament but exempt from disallowance and sunsetting.",
+   "Appropriations could be transferred to special accounts where the spending purposes matched.",
+   "Notional payments within or between agencies would reduce the paying agency's appropriation.",
+   "Earlier in-year appropriation reduction provisions would be omitted."
+  ],
+  "affected": "Agencies under the Financial Management and Accountability Act, bodies under the Commonwealth Authorities and Companies Act and the Finance Minister would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:11.404247+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

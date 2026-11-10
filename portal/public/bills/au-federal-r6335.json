@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "The bill would make the Social Services Secretary responsible for all Cashless Debit Card exit applications and broaden assessment beyond a participant’s financial management.",
+   "It would require consideration of participants’ wider affairs, including children’s interests, safety, homelessness risks, community engagement and other specified circumstances when deciding exit applications.",
+   "The changes would start the day after royal assent, extend wellbeing exemptions across all trial regions and preserve existing exit and wellbeing determinations."
+  ],
+  "changes": [
+   "Exit applications would have to use a form approved by the Secretary.",
+   "Refusal notices would have to explain reasons and review rights.",
+   "A wellbeing exemption determination could not be revoked.",
+   "Health or community workers could request reconsideration of an exit determination for medical or safety reasons."
+  ],
+  "affected": "Cashless Debit Card participants, the Social Services Secretary, community bodies, and health and community workers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:32.240141+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5811",

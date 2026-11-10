@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "The bill would restructure foreign investment application fees by introducing fewer commercial fee tiers and flat charges, while increasing certain residential property fees.",
+   "Residential purchase fees would rise by 10 per cent for acquisitions worth $10 million or less, including relevant purchases covered by exemption certificates.",
+   "The new fee framework would apply from 1 July 2017, with indexation paused for affected fees during 2017-18 and resuming in 2018-19."
+  ],
+  "changes": [
+   "Commercial land and business acquisition fees would use three value bands.",
+   "Applications for land exemption certificates under section 58 would attract a single $35,000 fee.",
+   "Variations of non-residential commercial exemption certificates would carry a flat $10,100 charge."
+  ],
+  "affected": "Foreign investors, property developers and businesses seeking foreign investment approval would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:00.718368+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

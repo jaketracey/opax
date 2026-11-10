@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-15",
+  "sentences": [
+   "The bill would replace setting-specific sexual harassment prohibitions with a general prohibition, extending protection and personal liability to people omitted from existing workplace categories.",
+   "It would remove the separate provisions listing covered situations and expressly reach conduct connected with Commonwealth laws, programs and functions, alongside registered organisations.",
+   "Members of parliament, judges, statutory appointees, contractors and gig workers would be protected and personally liable, with the amendments commencing on Royal Assent."
+  ],
+  "changes": [
+   "The state public servant exemption from Commonwealth sexual harassment law would be repealed.",
+   "Liability for aiding or abetting unlawful conduct would extend to sexual harassment.",
+   "The Act's objects would lose words limiting sexual harassment protections to specified public settings."
+  ],
+  "affected": "Workers, contractors, gig workers, state public servants, parliamentarians, judges and other statutory appointees are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:27.432210+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

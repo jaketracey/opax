@@ -53,7 +53,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-18",
+  "sentences": [
+   "The bill would establish an independent Inspector-General of Animal Welfare and Live Animal Exports to review how regulators administer export and livestock industry laws.",
+   "The Inspector-General could examine past and future regulatory practices, publish review reports and require relevant information or documents, while being unable to overturn individual decisions.",
+   "The main provisions would depend on funding being appropriated, and contingent amendments would extend reviews to replacement export legislation while authorising scrutiny under earlier laws."
+  ],
+  "changes": [
+   "The Minister would appoint the Inspector-General for terms of up to five years, with a ten-year total limit.",
+   "Recipients of information notices would have at least 14 days to respond, with a self-incrimination exception.",
+   "Non-compliance with an information requirement would attract a civil penalty of 30 penalty units.",
+   "Knowingly providing materially false or misleading information would attract a civil penalty of 60 penalty units."
+  ],
+  "affected": "Export and livestock regulators, people holding information relevant to reviews and the proposed Inspector-General would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:32.912347+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

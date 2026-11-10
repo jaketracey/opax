@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "The bill would change veterans' review processes, rehabilitation assistance and information sharing, while updating agreement-making powers and removing spent provisions from veterans' affairs legislation.",
+   "It would align review board procedures with tribunal practice, support employer incentive payments and permit specified compensation information to be shared with the Commonwealth Superannuation Corporation.",
+   "International agreements could cover comparable benefits and rehabilitation under several veterans' laws, while medical review participants could receive assistance with certain travel expenses."
+  ],
+  "changes": [
+   "Claimants and the department would be required to lodge relevant documents with the Veterans' Review Board throughout a review.",
+   "The board's Principal Member could dismiss applications lacking substance or a reasonable prospect of success.",
+   "The minister could delegate powers under military rehabilitation and compensation legislation.",
+   "Certain benefit instruments could incorporate external material as updated from time to time."
+  ],
+  "affected": "Veterans, serving members, dependants, employers, review bodies and agencies administering compensation and superannuation benefits are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:44.405197+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

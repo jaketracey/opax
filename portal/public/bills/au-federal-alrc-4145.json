@@ -39,8 +39,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4991_ems_1f2e8357-7812-4980-82a3-8a346926730d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4991%22",
+   "document_date": "2013-03-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-14",
+  "sentences": [
+   "The bill would require approval by a Public Interest Media Advocate for certain transactions changing control of significant news outlets across broadcasting, print and online services.",
+   "Approval would depend on avoiding a substantial reduction in diversity of control, or showing that public benefits outweigh the harm from reduced diversity.",
+   "The test would cover transactions involving at least two separately controlled news media voices above the specified audience threshold, with the Advocate administering approvals."
+  ],
+  "changes": [
+   "The bill would require the communications regulator to operate a register of news media voices covered by the scheme.",
+   "Parties could offer enforceable undertakings to address concerns about reduced diversity.",
+   "The Advocate would gain powers to obtain information, with civil penalties for failing to comply.",
+   "Reasons for approval decisions would have to be published on the department’s website."
+  ],
+  "affected": "Covered broadcasters, subscription television platforms, print publishers, online news providers and parties to control transactions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:27.618307+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

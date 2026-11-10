@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "The bill would adjust tobacco excise tariffs to account for duty already paid on ingredients, supporting companion legislation that would tax tobacco when manufactured.",
+   "It would reduce duty on newly manufactured tobacco goods by eligible excise or customs duty previously paid on tobacco used to make those goods.",
+   "The tariff amendments would apply to tobacco manufactured from 1 July 2019, alongside the separate bill setting manufacture-time liability, payment periods and return requirements."
+  ],
+  "changes": [
+   "A new tariff category would cover blended tobacco goods made using other tobacco goods.",
+   "The existing general tobacco tariff category would exclude goods covered by the new blended category.",
+   "Credit for customs duty would be capped at the equivalent domestic excise, and reductions could not take duty below zero."
+  ],
+  "affected": "Manufacturers using previously taxed Australian or imported tobacco to produce tobacco goods are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:17.930470+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

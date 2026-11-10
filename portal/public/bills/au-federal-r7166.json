@@ -47,7 +47,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-25",
+  "sentences": [
+   "The bill would create a Commonwealth offence of posting harmful material online to increase notoriety and extend the eSafety Commissioner's powers to criminal activity material.",
+   "A person who posts material showing violence or apparent drug or property offences, intending to raise their own notoriety or that of people depicted, would face up to two years' imprisonment.",
+   "Journalism, genuine scientific, academic, educational, artistic, literary or satirical purposes, reasonable excuse and protected political communication would be defences, and merely filming or re-posting such material would not be caught."
+  ],
+  "changes": [
+   "Intention would be the fault element for the posting and the notoriety purpose, and recklessness for whether the material shows violence or apparent drug or property offences.",
+   "The Online Safety Act 2021 would define criminal activity material as material on such services that constitutes or may constitute a criminal offence and was posted to gain notoriety.",
+   "The eSafety Commissioner would run a complaints system for criminal activity material, investigate complaints and be able to issue removal notices to service providers, hosting providers or the poster.",
+   "Failing to comply with a removal notice could attract a civil penalty of $156,500 or 500 penalty units, with Commissioner decisions reviewable by the Administrative Appeals Tribunal.",
+   "The Crimes Act 1914 would let a court order a person convicted of the new offence to stop using, or only conditionally use, specified online services for up to two years."
+  ],
+  "affected": "People who post material online, social media, electronic and internet service providers, hosting providers, the eSafety Commissioner, courts and journalists are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:12:51Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

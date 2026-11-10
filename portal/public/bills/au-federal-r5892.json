@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "The bill would raise excise-equivalent customs duty on imported loose tobacco and other tobacco products to bring their effective duty into line with cigarettes.",
+   "A formula would link the kilogram duty rate to cigarette duty through four annual adjustments, using a 0.7 gram cigarette equivalent from 1 September 2020.",
+   "It would accompany matching excise changes, applying from 1 September 2017 or a later indexation replacement day to relevant imports and goods awaiting duty calculation."
+  ],
+  "changes": [
+   "Specified tobacco classifications across the customs tariff schedules would replace fixed rates with references to the new formula.",
+   "The Comptroller-General of Customs would publish revised other tobacco duty rates in the Government Gazette.",
+   "The existing indexation provisions would receive simplified rounding rules and updated cross-references."
+  ],
+  "affected": "Tobacco importers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:00.719165+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-4775",

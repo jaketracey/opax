@@ -41,7 +41,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "text",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2021-06-16",
+  "sentences": [
+   "The bill would establish an inquiry into Christian Porter’s suitability to be a federal minister, considering sexual assault allegations against him and ministerial standards.",
+   "A former judge appointed by both Houses of Parliament would conduct the inquiry, with powers to summon witnesses, require evidence and issue search warrants.",
+   "The commission would report to Parliament and the Prime Minister within six months of its member’s appointment, with an extension of up to three months."
+  ],
+  "changes": [
+   "The bill would allow the inquiry to proceed even if Christian Porter ceased to be a parliamentarian.",
+   "Hearings would generally be public, with private hearings and restrictions on publishing evidence available.",
+   "Knowingly giving materially false or misleading evidence would carry a penalty of five years’ imprisonment or 100 penalty units.",
+   "People appearing before the commission could apply for legal or financial assistance, subject to hardship or other circumstances justifying assistance.",
+   "Commencement would depend on both Royal Assent and a separate appropriation to fund the commission."
+  ],
+  "affected": "Christian Porter, witnesses, people required to produce documents and their legal representatives are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:28.692390+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7231",

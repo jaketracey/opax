@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-17",
+  "sentences": [
+   "The bill would extend anti-money laundering and counter-terrorism financing regulation to digital currency exchanges, strengthen enforcement and border powers, and remove some existing industry obligations.",
+   "Exchanges converting digital currency and money would register with the Australian Transaction Reports and Analysis Centre, check customers' identities and report suspicious matters under the regime.",
+   "Cash-in-transit businesses, insurance intermediaries and general insurers would be deregulated under the relevant provisions, while related companies could share information to manage common customer risks."
+  ],
+  "changes": [
+   "Digital currency exchanges would keep specified transaction, identification and compliance program records for seven years.",
+   "The regulator could issue infringement notices for more regulatory offences.",
+   "Remedial directions could require reporting entities to remedy earlier failures to meet obligations.",
+   "Police and customs officers would gain wider powers to search for and seize money or bearer instruments linked to suspected serious crime."
+  ],
+  "affected": "Digital currency exchanges, reporting businesses, travellers, the financial intelligence regulator, police and customs officers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:12.874350+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

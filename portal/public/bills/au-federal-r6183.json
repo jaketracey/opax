@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-19",
+  "sentences": [
+   "The bill would let the responsible departmental secretary issue transport security programs to aviation industry participants, providing an alternative to programs prepared individually by those participants.",
+   "These programs would specify security requirements suited to the participant’s operations, with the approach intended for lower-risk operators whose circumstances do not justify bespoke documentation.",
+   "The amendments would begin the day after Royal Assent and allow programs to be revised or cancelled as circumstances change, with review rights for affected participants."
+  ],
+  "changes": [
+   "Participants could request cancellation of an issued program, with a decision due within 60 days.",
+   "Regulations could establish demerit points that lead to cancellation of either approved or Secretary-issued programs.",
+   "Decisions to issue, revise, cancel or refuse cancellation would be reviewable by the Administrative Appeals Tribunal."
+  ],
+  "affected": "Security-controlled airports, prescribed air operators, other regulated aviation participants and the department’s Secretary are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:21.138275+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -173,7 +173,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-13",
+  "sentences": [
+   "The bill would authorise 2014-2015 Commonwealth expenditure outside ordinary annual government services, including capital funding, payments to corporate bodies and assistance to other levels of government.",
+   "It would provide a $380 million Finance Minister's advance for urgent funding shortfalls and set annual spending limits for specified funds and intergovernmental payments.",
+   "The bill would commence on Royal Assent and cease at the start of 1 July 2017, alongside separate ordinary-services and parliamentary department appropriation bills."
+  ],
+  "changes": [
+   "Responsible ministers could determine conditions, amounts and timing for intergovernmental assistance.",
+   "Payments between agencies would debit appropriations as notional transactions.",
+   "Amounts could be credited to special accounts with matching purposes.",
+   "Annual fund spending limits would increase for qualifying goods and services tax amounts.",
+   "Earlier in-year appropriation reduction provisions would be omitted in favour of a sunset date."
+  ],
+  "affected": "Commonwealth agencies and funded corporate bodies, state, territory and local governments, and ministers responsible for public spending would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:00.438344+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

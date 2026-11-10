@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-03",
+  "sentences": [
+   "The bill would authorise further COVID-19 business support payments, allow related tax information sharing and make specified business and individual support payments tax-free.",
+   "The Treasurer could establish support schemes for entities affected by state or territory public health restrictions during periods from 1 July 2021 to 31 December 2022.",
+   "Ministers could also temporarily adjust Commonwealth information, signature and document requirements in response to COVID-19, with that mechanism ending on 31 December 2022."
+  ],
+  "changes": [
+   "Eligible business payments received in 2021-22 would be tax-free where the declared program and aggregated turnover below $50 million requirements are met.",
+   "COVID-19 disaster payments to individuals would be tax-free from the 2020-21 income year.",
+   "Tax officers could disclose protected information to government agencies administering declared business support programs.",
+   "Rules for new payment schemes would set eligibility, payment amounts, timing and recipient obligations."
+  ],
+  "affected": "Businesses affected by public health restrictions and disaster payment recipients are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:54.380601+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7366",

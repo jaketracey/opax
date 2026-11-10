@@ -47,7 +47,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-09",
+  "sentences": [
+   "The bill would amend administrative rules across Commonwealth legislation covering regulators in areas including insolvency, education, health, energy efficiency, defence and communications.",
+   "It would change decision and review processes, revise bankruptcy indexation arrangements, allow correction of building energy certificates and repeal legislation concerning Cockatoo and Schnapper Islands.",
+   "Most amendments would begin the day after royal assent, while some intellectual property provisions would start later under the bill's staged commencement arrangements."
+  ],
+  "changes": [
+   "Bankruptcy income thresholds would move from twice-yearly indexation to annual adjustment.",
+   "Vocational training providers could seek tribunal review of new reviewable decisions made during internal reconsideration.",
+   "The higher education regulator could extend registration and accreditation decision deadlines with the applicant's written agreement.",
+   "Ministerial pharmacist approval requests would use one stage, with repeat requests for the same premises restricted for 12 months.",
+   "The radiocommunications regulator could withhold personal information from public register inspection in appropriate circumstances."
+  ],
+  "affected": "Regulated businesses, education providers, insolvency practitioners, bankrupt people, pharmacists, building owners and Commonwealth regulators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:41.466109+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

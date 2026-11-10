@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-22",
+  "sentences": [
+   "The bill would require the Treasurer to publish and table regular statements about government measures affecting rural and regional Australia, alongside a national white paper.",
+   "Statements would accompany each budget and mid-year economic and fiscal outlook, describing economic, social, cultural and environmental effects using recent quantitative evidence.",
+   "A national rural and regional white paper would be due within 24 months of commencement and updated every 24 months, starting after Royal Assent."
+  ],
+  "changes": [
+   "Statements would have to explain detrimental effects of government initiatives on rural and regional communities.",
+   "They would have to identify how measures use regional opportunities, including migration, decentralisation and business innovation.",
+   "The Treasurer could require Commonwealth bodies to provide information in time for preparing the statements."
+  ],
+  "affected": "The Treasurer, Commonwealth bodies supplying information and rural and regional communities covered by the statements are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:02.491423+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

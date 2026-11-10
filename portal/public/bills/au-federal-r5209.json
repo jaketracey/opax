@@ -95,7 +95,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "The bill would make employers' role in passing on government-funded parental leave pay voluntary, replacing the requirement to administer payments for eligible long-term employees.",
+   "From 1 July 2014, the Department of Human Services would pay employees directly unless an employer opted in and the employee agreed to employer payment.",
+   "Existing employer payment arrangements already underway on that date would continue, while the amendments would leave payment eligibility, rates and employees' leave entitlements unchanged."
+  ],
+  "changes": [
+   "Employers opting in would need an Australian business number and provide bank account details in their election notice.",
+   "Employers could decline a payment determination orally or in writing.",
+   "Failure to respond to a determination notice would no longer attract a compliance notice.",
+   "Employer rights to internal and tribunal review of payment determinations would be removed.",
+   "Existing opt-in elections would expire at commencement."
+  ],
+  "affected": "Employers, eligible parents and the Department of Human Services would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:40.371944+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

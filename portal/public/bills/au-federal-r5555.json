@@ -89,7 +89,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-10-15",
+  "sentences": [
+   "The bill would merge the Australian Institute of Criminology into the Australian Crime Commission (ACC), transferring research work and abolishing the institute as a statutory agency.",
+   "The ACC would gain express functions to conduct and communicate criminological research, administer research grants and undertake commissioned work for public and private clients.",
+   "The merger would commence by proclamation or on 1 July 2016, with a separate disclosure framework placing conditions on sharing personal information collected for research."
+  ],
+  "changes": [
+   "The statutory position of institute Director would be abolished.",
+   "The ACC could charge research service fees reasonably related to the cost of providing those services.",
+   "The Criminology Research Special Account would continue within the merged agency’s legislation.",
+   "The Criminology Research Advisory Council would cease to be a statutory body."
+  ],
+  "affected": "The Australian Institute of Criminology, whose research and corporate functions would move to the Australian Crime Commission and whose Director position would be abolished, and the ACC are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:34.593101+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

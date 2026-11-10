@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-03",
+  "sentences": [
+   "The bill would establish collection and enforcement arrangements for agricultural export levies imposed through companion bills covering general charges, customs duties and excise.",
+   "Regulations could set payment deadlines, agent liabilities and late fees, while overdue amounts could lead to suspended export approvals, withheld services or court debt recovery.",
+   "The collection framework would cover export control and meat and livestock legislation, starting the day after Royal Assent without itself determining charge amounts."
+  ],
+  "changes": [
+   "The Secretary could refund or remit charges and late fees where circumstances justify it.",
+   "Information notices could require relevant documents or details, allowing at least 14 days for compliance.",
+   "Failure to comply with an information notice could attract a penalty of up to 30 penalty units.",
+   "Suspension or revocation of export-control instruments would be open to internal and tribunal review."
+  ],
+  "affected": "Agricultural exporters, businesses dealing with regulated exports and their agents would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:51.179507+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -89,13 +89,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4971_ems_a68d4a5c-c276-4a8c-b6e3-7add8a688762%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4971%22",
+   "document_date": "2013-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00112",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-14",
+  "sentences": [
+   "The bill would expand eligibility for overseas study loans and offer additional loan support to eligible university students undertaking part of their course in Asia.",
+   "The maximum loan for Asian study would rise to $7,500, with up to $1,000 extra for intensive Asian language study undertaken as preparation.",
+   "The expanded arrangements would apply from 1 January 2014 under transitional rules, with overseas study still required to count towards the student’s Australian course."
+  ],
+  "changes": [
+   "Commonwealth supported postgraduate students would become eligible for overseas study loans.",
+   "Clinical placements and internships could qualify without enrolment at an overseas institution or campus.",
+   "The required study remaining after an overseas period would fall from 0.5 to 0.125 equivalent full time student load units.",
+   "Indexation of the revised maximum loan amounts would begin on 1 January 2015."
+  ],
+  "affected": "Eligible Commonwealth supported students, including postgraduates, and higher education providers selecting students for loans are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:55.149097+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

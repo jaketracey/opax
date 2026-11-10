@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-12",
+  "sentences": [
+   "The bill would remove Australian ships used solely for voyages between states from coverage under the Commonwealth maritime transport and offshore facilities security legislation.",
+   "It would change the definition of a regulated Australian ship so that making interstate voyages would no longer provide a basis for regulation under that Act.",
+   "The amendments would start on a proclaimed date or six months after Royal Assent, whichever comes first, allowing the proposed changes to be implemented earlier."
+  ],
+  "changes": [
+   "The statutory definition of an interstate voyage would be repealed.",
+   "Interstate voyage references would be deleted from the regulated Australian ship definition.",
+   "A new explanatory note would clarify that regulations can prescribe different security requirements for different kinds of regulated Australian ships."
+  ],
+  "affected": "Operators of Australian ships used solely for interstate voyages would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:23.340596+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-4048",

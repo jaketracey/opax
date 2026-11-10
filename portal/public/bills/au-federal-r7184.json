@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-24",
+  "sentences": [
+   "The bill would amend the Governor-General Act 1974 to set the salary of the incoming Governor-General, Samantha Mostyn, before her swearing-in on 1 July 2024.",
+   "It would raise the annual sum payable from $495,000 to $709,017, a figure calculated against what the Chief Justice of the High Court is expected to earn on average over a notional five-year term.",
+   "A transitional provision would keep the new amount from applying to the person in office immediately before commencement, consistent with section 3 of the Constitution, and the Act would commence the day after Royal Assent."
+  ],
+  "changes": [
+   "Section 3 of the Governor-General Act 1974 would be amended to omit the annual salary of $495,000 and substitute $709,017.",
+   "The new figure was set to moderately exceed a projected five-year average of $708,017, based on the Chief Justice's current salary of $649,880 rising to about $769,989.",
+   "A transitional item would prevent the amendment applying during the continuance in office of the Governor-General serving immediately before commencement.",
+   "The explanatory memorandum says the net financial impact cannot be quantified because it depends on the Governor-General's tax position, but is expected to be negligible."
+  ],
+  "affected": "The incoming Governor-General and the Governor-General in office at commencement, whose salary would not change, are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:08:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8963",

@@ -143,7 +143,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "The bill would abolish the Climate Change Authority and Land Sector Carbon and Biodiversity Board, transferring the authority’s assets and liabilities to the Commonwealth.",
+   "It would make the Minister responsible for arranging reviews of renewable energy, carbon farming and greenhouse reporting laws, with public consultation and parliamentary reporting.",
+   "Abolition would occur on a proclaimed date or after six months if no date was set, while existing confidentiality protections and personnel immunities would survive."
+  ],
+  "changes": [
+   "Statutory appointments to the authority and biodiversity board would end automatically.",
+   "The Commonwealth would take the authority’s place in unresolved legal proceedings.",
+   "The Environment Department would receive the authority’s records and responsibility for unresolved Ombudsman matters.",
+   "The department’s Secretary would have to prepare a final report on the authority’s operations."
+  ],
+  "affected": "The authority, biodiversity board, their statutory appointees and staff, the Environment Department and participants in the affected review processes are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:05.080049+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3156",

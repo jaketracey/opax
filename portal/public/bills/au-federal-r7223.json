@@ -191,7 +191,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-07-03",
+  "sentences": [
+   "The bill would amend the Export Finance and Insurance Corporation Act 1991 and the Australian Renewable Energy Agency Act 2011 to deliver measures in the Future Made in Australia agenda from the 2024-25 Budget.",
+   "Schedule 1 would give Export Finance Australia new national economy and net zero functions so it can finance domestic projects in the national interest, and make the Minister for Finance a joint responsible Minister.",
+   "Schedule 2 would expand the Australian Renewable Energy Agency's (ARENA) functions to include manufacturing, reform its governance and restore statutory funding totalling $6.19 billion from 2025-26 to 2038-39, with both schedules commencing the day after Royal Assent."
+  ],
+  "changes": [
+   "Export Finance Australia could use its existing loans, guarantees and insurance tools for the new functions, limited to national interest priorities, and set aside two export-focused primary duties when doing so.",
+   "ARENA could fund the manufacture of renewable energy, electrification, energy efficiency and enabling technologies and would administer the Future Made in Australia Innovation Fund.",
+   "ARENA could employ its own staff, its Board would grow from 6 to 7 members with 3-year terms and a 9-year continuous limit, and a Deputy Chair position would be created.",
+   "A new funding table would restore ARENA's statutory entitlement, with regulations able to add amounts up to a combined cap of $3,980,000,000."
+  ],
+  "affected": "Export Finance Australia, the Australian Renewable Energy Agency and its Board, the Minister for Finance, and businesses seeking finance or grants for net zero and economic resilience projects are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:38:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9102",

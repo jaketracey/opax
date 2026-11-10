@@ -27,8 +27,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s927_ems_37dc4a66-621f-49f2-b510-17dcb6fc294d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s927%22",
+   "document_date": "2013-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-25",
+  "sentences": [
+   "The bill would create a Leaders’ Debate Commission within the Australian Electoral Commission to organise at least three debates before federal elections under independent arrangements.",
+   "A commissioner and seven deputies would oversee debate arrangements, with the commissioner deciding formats, participants, moderators, locations, questions and broadcasting details for the events.",
+   "The rules would apply to participating parliamentary party leaders and sometimes independent members, with no penalties, and the legislation would begin on Royal Assent."
+  ],
+  "changes": [
+   "The Governor-General would appoint a part-time commissioner after consultation with leaders of other parliamentary parties.",
+   "Deputies would represent the press gallery, National Press Club, specified political parties and the community.",
+   "The commissioner would report within three months after polling day, with parliamentary tabling required."
+  ],
+  "affected": "Participating parliamentary leaders and independent members, appointed commissioners, media representatives and electoral commission staff are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:43.644041+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

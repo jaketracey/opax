@@ -69,8 +69,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5018_ems_a5616b1e-4a71-400f-bf85-0b0404e4f858%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5018%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would revise therapeutic goods regulation, including powers to exclude products, remove inappropriate register entries, obtain safety information and address misleading regulatory submissions.",
+   "It would let the Minister exclude specified products by disallowable instrument and let the Secretary remove products that no longer qualify as therapeutic goods.",
+   "Most amendments would begin on Royal Assent, while a separate schedule would start by proclamation or at the end of a six-month fallback period."
+  ],
+  "changes": [
+   "The Secretary could require sponsors to notify the public or specified groups about goods in defined regulatory circumstances.",
+   "Failure to provide requested information could lead to cancellation of a product's registration or listing.",
+   "False or misleading statements supporting a request to vary a register entry would attract new offences and civil penalties.",
+   "Merits review of separate product information approval decisions would be removed, while judicial review and review of registration or variation decisions would remain."
+  ],
+  "affected": "Therapeutic goods sponsors, applicants, suppliers, health professionals and patients are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:28.717933+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

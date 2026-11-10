@@ -83,7 +83,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-11-25",
+  "sentences": [
+   "The bill would change how animal and plant biosecurity levies are administered and spent, including funding priorities for emergency responses and other eligible health activities.",
+   "Animal Health Australia could fund responses under additional prescribed deeds, while Plant Health Australia could use remaining emergency response funds for broader plant health purposes.",
+   "The changes would start on 1 July 2022 and also remove provisions concerning honey levies and the redirection of surplus plant levies to research bodies."
+  ],
+  "changes": [
+   "The Governor-General would gain a regulation-making power under the animal health funding legislation.",
+   "The departmental secretary could recognise one or more relevant plant industry bodies through a notifiable instrument.",
+   "Plant Health Australia would receive total relevant levy and penalty receipts rather than amounts limited by annual contribution liability.",
+   "Plant levy provisions would accommodate multiple industry bodies representing the same plant product."
+  ],
+  "affected": "Animal Health Australia, Plant Health Australia and participating animal and plant industries would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:26.971081+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

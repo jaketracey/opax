@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-11-12",
+  "sentences": [
+   "The bill would create debt restructuring and simplified liquidation processes for eligible small companies, alongside temporary relief and changes to insolvency administration procedures.",
+   "The new process would let directors control the company and its property while developing a debt repayment plan with assistance from a small business restructuring practitioner.",
+   "The restructuring and simplified liquidation measures would commence on 1 January 2021, with eligibility details and other requirements supported by regulations and insolvency rules."
+  ],
+  "changes": [
+   "Qualifying companies seeking restructuring would receive temporary relief from directors' insolvent trading duties.",
+   "A simplified process would be available for eligible creditors' voluntary liquidations.",
+   "External administration documents could be signed electronically and sent electronically in more circumstances."
+  ],
+  "affected": "Small company directors, creditors, employees, restructuring practitioners and liquidators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:21.904927+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6809",

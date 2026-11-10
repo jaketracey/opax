@@ -95,13 +95,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4966_ems_5c51f938-a826-4901-b715-903a3a028681%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4966%22",
+   "document_date": "2013-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00051",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-13",
+  "sentences": [
+   "The bill would narrow datacasting licensing requirements to specified services, allowing other providers to offer services without a datacasting licence under the broadcasting law.",
+   "Commercial television and radio licensees, national broadcasters and service categories designated by the minister would generally remain subject to the licensing regime for their datacasting services.",
+   "The change would support potential early use of digital dividend spectrum while it remained in broadcasting bands, with amendments starting the day after Royal Assent."
+  ],
+  "changes": [
+   "The minister could specify additional categories of datacasting services requiring licences by legislative instrument.",
+   "Unlicensed service offences and civil penalties would be confined to designated services.",
+   "Complaints about unlicensed datacasting would be limited to designated services.",
+   "The bill would repeal the spent requirement to review certain transmission technologies."
+  ],
+  "affected": "Datacasting providers, commercial television and radio licensees, national broadcasters and incoming spectrum licensees are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:33.414733+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

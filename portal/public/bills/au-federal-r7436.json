@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-12",
+  "sentences": [
+   "The bill would consolidate Australia's accounting, auditing and sustainability standard-setting institutions into a new body called External Reporting Australia, overseen by a governing council.",
+   "It would merge the Australian Accounting Standards Board, Auditing and Assurance Standards Board and Financial Reporting Council, including the existing offices supporting standard-setting boards.",
+   "The council would establish boards covering accounting, auditing and assurance, and sustainability standards, while the minister could assign additional functions to respond to future standard-setting needs."
+  ],
+  "changes": [
+   "Council and board meetings concerning the content of particular standards would have to be public.",
+   "Cost-benefit analysis requirements would extend to proposed auditing and assurance standards where practicable.",
+   "Members would have to disclose relevant material personal interests as soon as practicable after becoming aware of them.",
+   "A code of conduct would cover statutory appointees and other personnel outside the public service code."
+  ],
+  "affected": "Standard-setting bodies and their staff, accountants, auditors, reporting businesses and users of financial and sustainability reports are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:05:00.241618+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-10009",

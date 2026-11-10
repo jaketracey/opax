@@ -89,7 +89,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-03",
+  "sentences": [
+   "The bill would create a framework for small, unlisted public companies to raise money from many investors through crowd funding platforms with licensed operators.",
+   "Eligible companies would need consolidated assets and annual revenue each below $5 million, with a fundraising cap of $5 million across a 12-month period.",
+   "Retail investors would receive additional protections, while eligible new public companies would receive temporary relief from some reporting and corporate governance obligations."
+  ],
+  "changes": [
+   "Platform operators would need an Australian Financial Services Licence and would have duties to check offers and handle application money.",
+   "Retail investment through one intermediary would be capped at $10,000 per issuer within 12 months.",
+   "The minister could exempt certain market and clearing facility operators from specified regulatory requirements."
+  ],
+  "affected": "Small public companies seeking capital, crowd funding platform operators and retail investors would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:28.967844+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

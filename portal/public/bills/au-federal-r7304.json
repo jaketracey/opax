@@ -107,7 +107,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-04",
+  "sentences": [
+   "The bill would give the Secretary of the Department of Veterans' Affairs express legal authority to act, on behalf of the Commonwealth, as an agent for an insurer.",
+   "It would insert a new Part VIA into the Defence Service Homes Act 1918 allowing the Commonwealth to enter arrangements with an insurer, sell its policies, handle claims and renew or terminate policies.",
+   "It would also validate everything the Commonwealth has done as an insurer's agent under the Defence Service Home Insurance brand since 1 January 1990, commencing the day after Royal Assent."
+  ],
+  "changes": [
+   "A new section 39 would let the Secretary do anything necessary or convenient to carry out insurance activities for the Commonwealth, including collecting, using and disclosing personal information.",
+   "Section 6A would be amended so the Secretary's powers under the new Part could be delegated.",
+   "The Commonwealth and the Secretary would be deemed to have held the new powers since 1 January 1990, and past arrangements with insurers would be treated as valid and effective for all purposes.",
+   "The validation would not disturb rights or liabilities that a court has already decided in concluded proceedings.",
+   "Where the validation amounts to an acquisition of property, the Commonwealth would pay reasonable compensation, with the Federal Court able to set the amount if the parties cannot agree."
+  ],
+  "affected": "The Department of Veterans' Affairs, its insurance partner and current and past Defence Service Home Insurance policyholders, mostly serving and former Australian Defence Force members, reservists, peacekeepers and their families, are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:07:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-9536",

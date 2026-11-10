@@ -71,7 +71,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-05",
+  "sentences": [
+   "The bill would prohibit specified misconduct in electricity retail, contracting and wholesale markets, and add enforcement options ranging from warnings to court-ordered asset sales.",
+   "Retailers would need to reasonably adjust prices for sustained, substantial supply cost reductions, while serious contracting or wholesale misconduct could trigger further intervention.",
+   "The misconduct regime would apply nationwide until 31 December 2025, with separate provisions expanding the Australian Energy Regulator’s information gathering and sharing powers."
+  ],
+  "changes": [
+   "The competition regulator could issue infringement notices and seek financial penalties for prohibited conduct.",
+   "The Treasurer could order electricity contract offers after a recommendation from the competition regulator.",
+   "For specified wholesale misconduct, the Treasurer could ask the Federal Court to order divestiture following a regulator recommendation."
+  ],
+  "affected": "Electricity retailers, generators, financial market participants and residential and small business customers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:52.323573+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5605",

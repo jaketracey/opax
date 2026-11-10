@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-02",
+  "sentences": [
+   "The bill would end the seniors supplement for Commonwealth Seniors Health Card holders and eligible Veterans' Affairs Gold Card holders, while retaining their energy supplement.",
+   "It would replace seniors supplement provisions with a standalone energy payment, applying from 20 September 2014 but generally affecting quarterly payments from 20 December 2014.",
+   "Transitional rules would protect recipients from debts for seniors supplement already paid for days between 20 September and 20 December 2014 before the bill's passage."
+  ],
+  "changes": [
+   "The energy supplement would use ordinary payment rounding rules instead of rounding instalments to multiples of $2.60.",
+   "Existing elections not to receive the seniors supplement would carry over to the energy supplement.",
+   "Unpaid seniors supplement for earlier covered periods would remain payable.",
+   "Seniors supplement payments would retain their income tax exemption."
+  ],
+  "affected": "Commonwealth Seniors Health Card holders and eligible veterans' cardholders are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:15.952404+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3552",

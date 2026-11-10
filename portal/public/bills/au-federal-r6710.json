@@ -149,7 +149,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-11",
+  "sentences": [
+   "The bill would authorise withdrawals from the Consolidated Revenue Fund for Australia's parliamentary departments, providing their annual appropriations separately from funding for ordinary government services.",
+   "Scheduled funding would cover departmental operations, administered activities, assets and liabilities, and equity injections, with limited advances available for urgent costs omitted or underestimated.",
+   "The legislation would start on the later of 1 July 2021 and Royal Assent, and would be repealed at the start of 1 July 2024."
+  ],
+  "changes": [
+   "Urgent advances would be capped at $1 million for Parliamentary Services and $300,000 each for the Senate, House of Representatives and Parliamentary Budget Office.",
+   "Advance funding would have to be spent by 30 June 2022.",
+   "Appropriated amounts could be credited to special accounts where their purposes match.",
+   "Specified transfers within the Commonwealth would debit appropriations as if they were actual payments."
+  ],
+  "affected": "The Senate and House departments, Department of Parliamentary Services, Parliamentary Budget Office and responsible Presiding Officers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:21.948318+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

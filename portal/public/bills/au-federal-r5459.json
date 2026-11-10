@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "The bill would impose a supervisory levy on registered private health insurers to fund prudential regulation by the Australian Prudential Regulation Authority.",
+   "The levy would remain quarterly during 2015-16, then become annual from 2016-17, calculated using ministerially determined amounts and the number of covered insurance policies.",
+   "Its substantive provisions would begin with the companion prudential supervision legislation, as part of replacing the Private Health Insurance Administration Council's regulatory and funding arrangements."
+  ],
+  "changes": [
+   "Annual levy amounts would be capped at $2 for each single policy and $4 for each other policy.",
+   "Insurers registered after the financial year's start would have their annual levy prorated for the remaining days.",
+   "The Minister's levy determination would specify a census day for counting policies."
+  ],
+  "affected": "Registered private health insurers and the Minister responsible for setting levy amounts would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:45.963314+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

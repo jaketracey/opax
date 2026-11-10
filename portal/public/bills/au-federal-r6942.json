@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-09",
+  "sentences": [
+   "The bill would increase the Commonwealth penalty unit to $275, raising maximum monetary penalties expressed in penalty units across Commonwealth criminal legislation and territory ordinances.",
+   "The higher amount would apply only to offences committed from 1 January 2023, while the regular three-year indexation cycle would continue from 1 July 2023.",
+   "Courts would still determine the appropriate fine in each case, and proceedings relating to offences committed before commencement would retain the earlier penalty settings."
+  ],
+  "changes": [
+   "The statutory penalty unit definition would be replaced with the higher dollar value.",
+   "The indexation provision would substitute 2023 for its previous 2020 reference.",
+   "An application rule would limit the increase to offending occurring from the amendment’s commencement."
+  ],
+  "affected": "People and companies liable for Commonwealth offences would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

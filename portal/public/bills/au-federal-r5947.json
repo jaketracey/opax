@@ -89,7 +89,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-17",
+  "sentences": [
+   "The bill would increase trustee beneficiary non-disclosure tax under the No. 2 legislation, covering specified trust income arrangements where income returns to the original trustee.",
+   "The rate would rise from 47 per cent to 47.5 per cent, combining the top marginal income tax rate with the proposed higher Medicare levy.",
+   "It would accompany the proposed Medicare levy increase in a wider package intended to help fund the Commonwealth's contribution to the National Disability Insurance Scheme."
+  ],
+  "changes": [
+   "The increased rate would apply for the 2019-20 income year and later income years.",
+   "Commencement would be linked to the companion Medicare levy legislation.",
+   "Section 4 of the No. 2 tax imposition Act would contain the updated rate."
+  ],
+  "affected": "Trustees involved in the covered closely held trust income arrangements would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:19.302635+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

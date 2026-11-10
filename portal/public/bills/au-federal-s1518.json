@@ -65,7 +65,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-15",
+  "sentences": [
+   "The bill would prohibit monetary and numerical caps on specified veterans' treatment entitlements, including treatment for accepted injuries or diseases related to their service.",
+   "It would prevent limits based on individual treatment costs, cumulative spending within a period, or the number of times a treatment can be accessed.",
+   "The protections would cover existing and future entitlements from the day after Royal Assent, and would permit clinical appropriateness, safety and quality conditions."
+  ],
+  "changes": [
+   "Treatment determinations under subsection 286(1) would have to comply with the new prohibition on caps.",
+   "The protection would extend to treatment entitlements under Part V of the Veterans' Entitlements Act 1986.",
+   "Regulations could bring additional treatment entitlements within the new protection."
+  ],
+  "affected": "Eligible veterans and practitioners providing their treatment are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:03:32.834649+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

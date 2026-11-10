@@ -131,7 +131,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-07",
+  "sentences": [
+   "The bill would change the Financial Framework (Supplementary Powers) Act 1997 by removing words from sections 32B and 39B that could be read as limiting the Commonwealth's spending and company powers.",
+   "Those sections would be rewritten so they give legislative authority for grants, arrangements and company activities listed in the regulations even where another general power could also support them.",
+   "The amendments would commence prospectively, past spending and company activity relying on the sections would be validated, and redundant cross-references in several other Acts would be repealed."
+  ],
+  "changes": [
+   "Section 32B would be repealed and replaced so it authorises spending through arrangements and grants within its terms even if another general spending power exists.",
+   "Subsections 39B(1) and (2) would be replaced to confirm the power to form a company or acquire shares applies even where other powers are available.",
+   "Provisions in other Acts, including the Biosecurity Act 2015, the Social Security Act 1991 and the Water Act 2007, that address their relationship with section 32B would be repealed as redundant.",
+   "Section 17 of the Disability Services and Inclusion Act 2023 would be replaced to make clear that Act is not an exhaustive code for the spending it authorises.",
+   "Validation items would treat past spending under section 32B and past company activity under section 39B as valid, and existing regulations would continue in force."
+  ],
+  "affected": "The Commonwealth and the spending programs, grants and company activities that rely on sections 32B and 39B of the Financial Framework (Supplementary Powers) Act 1997 are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:16:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-8746",

@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-22",
+  "sentences": [
+   "The bill would align Commonwealth agencies' legislation with the Public Governance, Performance and Accountability Act 2013 (PGPA Act), and update provisions following Medibank Private's sale.",
+   "Across 13 Acts, it would update outdated financial management references and replace separate reporting and interest disclosure provisions with the PGPA Act framework.",
+   "The amendments would start the day after Royal Assent, supported by transitional provisions for reports, interest disclosures and instruments already operating at commencement."
+  ],
+  "changes": [
+   "The Australian Transaction Reports and Analysis Centre and National Competition Council would be listed in their own enabling Acts.",
+   "The Australian Public Service Commissioner's report on the public service would be separated from the commission's annual reporting obligations.",
+   "A typographical error in the PGPA Act would be corrected."
+  ],
+  "affected": "Commonwealth entities, their accountable authorities and officials, and Health Services Australia Limited are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:44.927874+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

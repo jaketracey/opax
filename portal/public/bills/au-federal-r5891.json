@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "The bill would expand foreign resident capital gains withholding by increasing the amount purchasers must remit and lowering the property value threshold for covered transactions.",
+   "The withholding rate would rise from 10 per cent to 12.5 per cent, and the relevant real property threshold would fall from $2 million to $750,000.",
+   "The changes would apply to acquisitions from 1 July 2017, generally determined by the contract date, leaving transfers under earlier contracts outside the amendments."
+  ],
+  "changes": [
+   "Purchasers would remit the higher withholding amount to the Commissioner of Taxation for covered acquisitions.",
+   "The lower threshold would cover both taxable Australian real property and relevant company title interests.",
+   "The new rules would apply to property acquisitions on or after 1 July 2017."
+  ],
+  "affected": "Purchasers of covered Australian property and foreign resident vendors would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:42.146140+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

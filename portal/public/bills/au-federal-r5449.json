@@ -173,7 +173,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-12",
+  "sentences": [
+   "The bill would authorise 2015-2016 Commonwealth spending outside ordinary annual government services, including grants to other governments, capital funding and new administered outcomes.",
+   "Its schedules would allocate money to specified purposes and entities, while separate provisions would set annual spending limits for infrastructure funds and intergovernmental financial assistance.",
+   "It would begin on Royal Assent and be repealed at the start of 1 July 2018, accompanying bills for ordinary services and parliamentary departments."
+  ],
+  "changes": [
+   "The Finance Minister could allocate up to $380 million in advances for urgent expenditure.",
+   "Responsible ministers could set payment conditions, amounts and timing for state, territory and local government grants.",
+   "Relevant fund debit limits would increase to accommodate qualifying goods and services tax amounts.",
+   "Appropriations could be transferred to special accounts with matching purposes."
+  ],
+  "affected": "Commonwealth entities, state and territory governments and local governments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:07.158566+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

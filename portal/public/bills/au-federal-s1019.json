@@ -65,7 +65,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-10-13",
+  "sentences": [
+   "The bill would change how the Commonwealth Grants Commission (CGC) takes mining revenue into account when recommending distribution of goods and services tax (GST) revenue.",
+   "The CGC would use only the latest financial year for which mining revenue data is available, replacing the use of older years in the assessment.",
+   "The restriction would cover relevant inquiries into state and territory GST distribution, while retaining the existing equalisation principle and other aspects of the distribution arrangements."
+  ],
+  "changes": [
+   "A statutory rule would require mining revenue assessments to use the most recent available financial year.",
+   "Mining revenue from earlier financial years would be excluded from that part of the calculation.",
+   "The new rule would begin the day after Royal Assent."
+  ],
+  "affected": "State and territory governments receiving GST revenue and the CGC preparing distribution recommendations would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:03.675894+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

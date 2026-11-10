@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-28",
+  "sentences": [
+   "The bill would amend existing maritime laws to support the proposed domestic commercial vessel levy, including payment arrangements, exemptions and enforcement for unpaid amounts.",
+   "It would let the Australian Maritime Safety Authority (AMSA) suspend or revoke survey certificates, or detain vessels, where levy amounts or instalments remained unpaid.",
+   "The substantive amendments would commence with the companion levy legislation, forming part of a three-bill package covering imposition, collection and consequential changes to maritime laws."
+  ],
+  "changes": [
+   "Existing provisions directing levy payments to AMSA would be extended to the new levy.",
+   "Vessels liable for the new levy would be exempt from the Marine Navigation (Regulatory Functions) Levy.",
+   "Certificate suspension or revocation for non-payment would require a show cause notice, with review rights extending to the new decisions.",
+   "A vessel detained for non-payment would have to be released when the amount was paid."
+  ],
+  "affected": "Owners and survey certificate holders of leviable domestic commercial vessels, AMSA and marine safety inspectors would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:04.952300+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

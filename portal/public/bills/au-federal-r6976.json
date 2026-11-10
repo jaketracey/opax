@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-15",
+  "sentences": [
+   "The bill would extend confidentiality protections to certain information given outside private sessions to the Royal Commission into Defence and Veteran Suicide.",
+   "It would restrict disclosure and use of identifiable accounts of suicide, poor mental health or related systemic issues that the commission has consistently kept confidential.",
+   "The protections would cover information already supplied, apply after the inquiry ends, and retain exceptions allowing some disclosures, including referrals to law enforcement."
+  ],
+  "changes": [
+   "Protected material would be inadmissible against its provider in civil or criminal proceedings.",
+   "Existing provisions on unauthorised recording, use or disclosure, in sections 6OH, 6OK and 6OL, would apply to the protected information.",
+   "Documents containing protected information would be exempt from freedom of information access after the inquiry."
+  ],
+  "affected": "Defence members, veterans, people providing accounts on their behalf and those handling the commission’s confidential records would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

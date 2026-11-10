@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-01",
+  "sentences": [
+   "The bill would give asylum seekers access to the Administrative Appeals Tribunal to challenge adverse security assessments by the Australian Security Intelligence Organisation.",
+   "It would remove migration-related exclusions from security assessment review procedures and prevent asylum seeker status from restricting matters considered by the tribunal.",
+   "It would also enable review when new information emerges, with the amendments commencing on the day after the bill receives Royal Assent."
+  ],
+  "changes": [
+   "Migration action would be removed from the definition of prescribed administrative action.",
+   "The exclusion that denies some migration cases the usual security assessment procedures would be repealed.",
+   "Regulations could not use asylum seeker status to prescribe matters for tribunal consideration.",
+   "Restrictions on reviewing migration security assessments when new information becomes available would be removed."
+  ],
+  "affected": "Asylum seekers subject to adverse security assessments and the Administrative Appeals Tribunal would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:24.437798+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

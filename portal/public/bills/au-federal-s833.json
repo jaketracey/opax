@@ -71,7 +71,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2011-06-20",
+  "sentences": [
+   "The bill would restrict certain betting services, gambling promotions and broadcasts, allow customers to request that unfinished interactive gambling payments be stopped, and create an offence covering match-fixing.",
+   "It would use corporate betting prohibitions, broadcaster licence conditions and changes to gambling and criminal laws, with detailed betting definitions set through regulations.",
+   "The proposal would cover commercial television, radio and subscription television, with commencement on the 28th day after royal assent to the bill is given."
+  ],
+  "changes": [
+   "Corporations would be barred from offering spot, exotic, in-play and similar betting, with those forms defined by regulation.",
+   "Customers could request suspension or cancellation of an unfinished interactive gambling payment, with financial transaction providers protected from liability for stopping it.",
+   "Certain chance-based games intended to induce later gambling would be treated as prohibited gambling services.",
+   "Broadcasters could not advertise betting venues or online gambling sites during G-classified, sports or sports-related programs.",
+   "Licence conditions would also prohibit broadcasting betting odds supplied under commercial arrangements involving broadcasters or their agents.",
+   "Match-fixing involving financial advantage by deception would carry maximum penalties of 10 years' imprisonment, 10,000 penalty units, or both."
+  ],
+  "affected": "Gambling corporations, customers, financial transaction providers, commercial and subscription broadcasters, players, referees and other people associated with sporting codes are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:36.421132+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

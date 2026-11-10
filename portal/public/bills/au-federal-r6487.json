@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-05",
+  "sentences": [
+   "The bill would remove income tax from eligible government assistance linked to the 2019-20 bushfires and make donations to two disaster-support trusts tax deductible.",
+   "Covered payments would include compensation for volunteer firefighters' lost income and government bushfire relief or recovery assistance, applying from the 2019-20 income year.",
+   "Employment payments, workers' compensation and court-ordered or settled damages would be excluded from the new concession, as would commercial payments and ordinary government assistance."
+  ],
+  "changes": [
+   "Eligible bushfire assistance would not reduce current or carried-forward tax losses.",
+   "The Australian Volunteers Support Trust would be listed as a deductible gift recipient.",
+   "The Community Rebuilding Trust would also gain deductible gift recipient status.",
+   "Regulations could extend tax-free treatment to additional kinds of payments or benefits related to the fires."
+  ],
+  "affected": "Volunteer firefighters, bushfire-affected people and businesses, the two trusts and their donors are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:37.608611+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

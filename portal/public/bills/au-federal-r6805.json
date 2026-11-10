@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-28",
+  "sentences": [
+   "The bill would administer collection of industry levies supporting the financial services compensation scheme of last resort, including calculation estimates, payment notices and enforcement.",
+   "The Australian Securities and Investments Commission would collect levies, require supporting information and issue notices giving firms at least 30 days to pay.",
+   "It would commence with the companion levy bill, with reasonable excuse and reasonable steps protections applying to specified information offences and shortfall penalties."
+  ],
+  "changes": [
+   "Late levy payments could attract interest at 20 per cent a year, calculated monthly, unless an extension applied.",
+   "False or misleading statements causing an entity's own levy shortfall could attract a penalty twice the shortfall.",
+   "The regulator could waive levies or penalties where exceptional circumstances justified doing so.",
+   "Failure to supply or substantiate required information would be a strict liability offence carrying a maximum of 10 penalty units."
+  ],
+  "affected": "Financial firms liable for scheme levies and the scheme operator would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:38.486455+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

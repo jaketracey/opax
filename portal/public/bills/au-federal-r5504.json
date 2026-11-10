@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-23",
+  "sentences": [
+   "The bill would restore inflation indexation of excise-equivalent customs duties on imported fuels, validating higher collections authorised by tariff proposals from 10 November 2014.",
+   "Future rates would rise with the consumer price index, generally twice each year in February and August, under changes to the customs tariff legislation.",
+   "Aviation fuels would be excluded, while indexation of imported engine fuel ethanol would begin on the seventh day after Royal Assent under separate provisions."
+  ],
+  "changes": [
+   "The initial liquid fuel duty rate, excluding gaseous fuels, would be $0.386 per litre.",
+   "Indexed customs fuel duty rates would be rounded to one decimal place of a cent.",
+   "Transitional application rules would cover specified unpaid-duty stocks still under customs control."
+  ],
+  "affected": "Fuel importers and businesses claiming fuel tax credits for imported fuels are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:48.042005+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

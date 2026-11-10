@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-24",
+  "sentences": [
+   "The bill would allow the Governor-General to appoint a second Deputy Chair of the Australian Prudential Regulation Authority, while retaining discretion to appoint none.",
+   "It would permit appointment of a current or incoming full-time member as Chair or Deputy Chair, and adjust acting appointments and meeting procedures.",
+   "Existing appointments would continue unaffected, and the changes would apply after a 14-day period beginning on the day the bill received Royal Assent."
+  ],
+  "changes": [
+   "The rule automatically making the Deputy Chair acting Chair during the Chair's absence would be repealed.",
+   "The Minister could appoint an acting Deputy Chair when fewer than two deputies were appointed or a deputy was absent or acting as Chair.",
+   "The Chair could nominate which available Deputy Chair would preside at a meeting when both deputies were available and the Chair was absent."
+  ],
+  "affected": "Members of the Australian Prudential Regulation Authority, the Governor-General and the Minister responsible for appointments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:32.912675+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

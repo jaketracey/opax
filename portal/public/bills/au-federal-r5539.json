@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "The bill would prevent South Australia’s Cost of Living Concession Payment from reducing a recipient’s Commonwealth social security or veterans’ income support through income testing.",
+   "It would expressly exclude the state payment from income definitions in both schemes, so recipients could receive it without that payment affecting their assessed income.",
+   "The amendments would begin on Royal Assent and cover concession payments made before, on or after commencement, including payments already received under the state scheme."
+  ],
+  "changes": [
+   "The Social Security Act’s list of amounts excluded from income would include the concession payment.",
+   "The Veterans’ Entitlements Act would receive a matching income exclusion.",
+   "The application rule would give both exclusions effect for concession payments made before the federal amendments commence."
+  ],
+  "affected": "Eligible South Australian homeowners and low income tenants who receive the concession alongside Commonwealth income support would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:47.035868+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

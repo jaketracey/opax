@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4992_ems_5921e924-1cb5-4c1a-be5a-5d85d54416c0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4992%22",
+   "document_date": "2013-03-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00029",
    "document_date": "2013-03-30",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-14",
+  "sentences": [
+   "The bill would change commercial television licence and Australian content rules, while updating the statutory roles of Australia’s two national public broadcasters.",
+   "It would legislate a 55 per cent Australian program quota for primary channels, generally between 6 am and midnight, and annual requirements for other channels.",
+   "The Australian Broadcasting Corporation and Special Broadcasting Service would have digital services expressly recognised in their charters, alongside changes concerning international broadcasting and Indigenous representation."
+  ],
+  "changes": [
+   "No licence area could have more than three commercial television licences using the broadcasting services bands.",
+   "Other channels would need 730 Australian program hours in 2013, 1095 in 2014 and 1460 annually from 2015, generally counted between 6 am and midnight.",
+   "First release Australian drama on other channels would earn double credit towards their transmission quota.",
+   "The minister would have to consider the need for an Indigenous non-executive director on the Special Broadcasting Service board."
+  ],
+  "affected": "Commercial television licensees, the Australian Broadcasting Corporation, the Special Broadcasting Service and Indigenous board candidates are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:22.262364+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6",

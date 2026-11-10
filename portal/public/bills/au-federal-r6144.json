@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-28",
+  "sentences": [
+   "The bill would revise the framework for automatically repealing older legislative instruments and make technical changes to federal legislation and statutory interpretation rules.",
+   "It would widen the Attorney-General's powers to defer expiry dates or align them for related instruments, while adding parliamentary scrutiny of those decisions.",
+   "The bill would also clarify retrospective commencement, incorporation of earlier documents and correction of errors on the Federal Register of Legislation, subject to safeguards."
+  ],
+  "changes": [
+   "Federal court rules would be exempt from automatic expiry while retaining registration, publication and parliamentary disallowance requirements.",
+   "Parliament's power to extend an instrument's expiry date would no longer be subject to the existing time restriction.",
+   "A sitting day would mean a day a parliamentary House actually sat, with rules for sittings continuing across calendar days.",
+   "Corrected versions of previously tabled, disallowable instruments would generally require fresh tabling and a new disallowance period."
+  ],
+  "affected": "The Attorney-General, federal courts, Parliament, Commonwealth rule-makers and the First Parliamentary Counsel would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:51.265816+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

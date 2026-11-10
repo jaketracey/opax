@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-25",
+  "sentences": [
+   "The bill would make the consequential and transitional changes that sit alongside the Commonwealth Entities (Payment Surcharges) Bill 2024, which gives Commonwealth entities express authority to charge payment surcharges.",
+   "It would apply the new surcharging authority retrospectively to payment surcharges charged or collected on or after 1 January 2003, when the Reserve Bank of Australia first regulated surcharging.",
+   "Its consequential amendments and retrospective provisions would commence with the Payment Surcharges Bill, while its tax liability provisions would commence only once the Tax (Imposition) Bill also commences."
+  ],
+  "changes": [
+   "Schedule 1 would repeal existing provisions in other Commonwealth laws that authorise surcharges on particular payments, along with legislative instruments made under them, for future payments only.",
+   "Schedule 2 to the Administrative Decisions (Judicial Review) Act 1977 would be amended so that decisions to impose or refund a surcharge are excluded from the right to request a statement of reasons.",
+   "A person the Commonwealth would otherwise owe money to because a surcharge was charged on a non-surchargeable payment would be liable for payment surcharge tax, set off against that amount.",
+   "The retrospective provisions would have no effect to the extent they would result in an acquisition of property otherwise than on just terms."
+  ],
+  "affected": "Commonwealth entities that charge payment surcharges, people who have paid surcharges to them since 1 January 2003 and people seeking reasons for surcharge decisions are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:24:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

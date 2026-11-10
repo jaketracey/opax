@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-28",
+  "sentences": [
+   "The bill would tighten the luxury car tax concession for fuel-efficient cars, deny deductions for Australian Taxation Office (ATO) interest charges and give the ATO longer to hold back activity statement refunds.",
+   "Only cars using at most 3.5 litres per 100 kilometres would qualify for the higher threshold, except some second-hand cars kept on the 7 litre test, and the general interest charge and shortfall interest charge would no longer be deductible.",
+   "The car tax changes would apply from 1 July 2025, the deduction denial to charges in income years starting on or after 1 July 2025, and the refund change from the first 1 July after Royal Assent."
+  ],
+  "changes": [
+   "The luxury car tax threshold would be indexed to the motor vehicle purchase sub-group of the Consumer Price Index instead of the All Groups index, with the 2024-25 threshold set at $80,567.",
+   "Paragraph 25-5(1)(c) of the Income Tax Assessment Act 1997 would be repealed and new subsection 26-5(1A) would confirm the charges are not deductible, though the Commissioner could still remit them.",
+   "The Commissioner would have until the 16th day after the running balance account interest day, 30 days in all, to notify a taxpayer that an activity statement refund is being held for verification.",
+   "Refunds without an activity statement credit would keep the 14 day notification period, and unreduced activity statement refunds held over 14 days would accrue interest from day 15."
+  ],
+  "affected": "Buyers and sellers of luxury cars, taxpayers who incur ATO interest charges, businesses lodging activity statements and the Commissioner of Taxation are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:20:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9309",

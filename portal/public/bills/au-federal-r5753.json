@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-21",
+  "sentences": [
+   "The bill would establish a High Speed Rail Planning Authority to advise on, plan and develop an east coast rail network and preserve its corridor.",
+   "The authority would have eleven members, combining ministerial appointees with nominees from relevant state and territory governments, local government and the railway industry.",
+   "Its work would include land use planning and public consultation, and the Act would commence when a budget appropriation is made for the authority’s operation."
+  ],
+  "changes": [
+   "A statutory authority would be created with powers necessary to carry out its functions.",
+   "Members would be appointed for three-year terms.",
+   "The authority could engage staff and consultants.",
+   "The minister could make supporting rules by legislative instrument."
+  ],
+  "affected": "The authority, nominating governments, the Australian Local Government Association, the Australasian Railway Association and people consulted on rail planning are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:40.727616+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

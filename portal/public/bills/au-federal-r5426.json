@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-18",
+  "sentences": [
+   "The bill would change competition and consumer law administration, removing some reporting and consent requirements while expanding court access and the regulator's enforcement options.",
+   "It would exempt food incidents from consumer product safety reporting and let private litigants pursue overseas breaches without first obtaining written ministerial consent.",
+   "Incidents caused by food packaging would remain reportable, and the amendments would begin on the day after royal assent, subject to their application provisions."
+  ],
+  "changes": [
+   "State and territory courts would gain jurisdiction over pyramid selling and manufacturers' liability for unsafe goods.",
+   "The Australian Competition and Consumer Commission could seek court orders compelling compliance with information notices.",
+   "Traders could not supply unsolicited goods or services, or seek payment, before the cooling-off period begins.",
+   "Specified agencies could receive product safety notices where disclosure is reasonably necessary to protect public safety."
+  ],
+  "affected": "Businesses, consumers, private litigants, courts and the Australian Competition and Consumer Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:17.544463+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

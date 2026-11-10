@@ -95,7 +95,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would establish the Australian Business Securitisation Fund to invest in debt securities backed by business loans, with small and medium enterprises as its focus.",
+   "It would provide $2 billion between 1 July 2019 and 1 July 2023, with investment powers governed by eligibility rules and a ministerial mandate.",
+   "Eligible securities would generally relate to business credit below $5 million per amount, with rules able to prescribe another limit or impose further restrictions."
+  ],
+  "changes": [
+   "A special account would hold the fund’s cash and receive investment income and capital returns.",
+   "Eligible investments would have to be denominated in Australian dollars.",
+   "The fund would be reported on annually and reviewed after its second and fifth anniversaries."
+  ],
+  "affected": "Small and medium enterprises, smaller business lenders and the minister responsible for the fund are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:11.839761+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

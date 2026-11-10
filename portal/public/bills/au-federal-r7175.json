@@ -119,7 +119,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-27",
+  "sentences": [
+   "The bill would amend the Criminal Code so that the higher maximum penalties for harming or threatening Commonwealth judicial and law enforcement officers also cover Commonwealth frontline workers.",
+   "It would do this by adding frontline workers to the aggravated forms of the offences in sections 147.1 and 147.2, putting them on the same footing as judicial and law enforcement officers.",
+   "A frontline worker would be a Commonwealth public official whose primary role involves dealing directly with the public, and the changes would apply to conduct after commencement on the day after Royal Assent."
+  ],
+  "changes": [
+   "A definition of Commonwealth frontline worker would be inserted into section 146.1 of the Criminal Code, excluding judicial officers and law enforcement officers.",
+   "The maximum penalty for causing harm to a frontline worker would rise from 10 years' imprisonment to 13 years.",
+   "The maximum penalty for threatening to cause serious harm to a frontline worker would rise from 7 years' imprisonment to 9 years.",
+   "Regulations could prescribe further categories of workers as frontline workers for the purposes of the offences.",
+   "Where the court considers it proper, a charge of causing harm to a frontline worker could be heard summarily if both the defendant and the prosecutor consent."
+  ],
+  "affected": "Commonwealth frontline workers such as service centre staff, call centre operators, security guards, inspectors and interpreters, people who harm or threaten them, and the courts are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:32:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

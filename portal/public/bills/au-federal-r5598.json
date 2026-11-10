@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "The bill would replace Child Care Benefit and Child Care Rebate with a new Child Care Subsidy, alongside additional assistance for vulnerable and disadvantaged families.",
+   "The main subsidy would depend on income and activity tests, with separate additional subsidies for circumstances including children at risk, temporary hardship and grandparent care.",
+   "It would also change provider approval and compliance arrangements and provide transitional rules for families and services moving from the existing child care payments."
+  ],
+  "changes": [
+   "The applicable subsidy percentage would taper from 85 per cent to 20 per cent as combined adjusted taxable income rises across the income thresholds.",
+   "The Secretary could reassess service approvals from 1 July 2016.",
+   "Enrolment advances would close, with provisions allowing outstanding advances to be recovered."
+  ],
+  "affected": "Families using approved child care, children requiring additional support and approved child care providers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:28.968210+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

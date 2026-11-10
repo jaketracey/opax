@@ -41,7 +41,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-14",
+  "sentences": [
+   "The bill would prevent the Clean Energy Finance Corporation from funding farmland purchases where the land would mainly generate carbon credits through regeneration or forestry.",
+   "It would add a prohibited farm investment category and definitions covering Australian farmland, carbon credit units and farm enterprises to the corporation's governing legislation.",
+   "The new restriction would apply whenever the corporation performs its investment function from commencement onwards, covering farmland purchases mainly intended for those carbon credit activities."
+  ],
+  "changes": [
+   "Purchases mainly intended for carbon credit generation through land regeneration would become prohibited investments.",
+   "The legislation would define Australian farmland and farm enterprises for the new investment restriction.",
+   "A statutory definition of carbon credit unit would be added."
+  ],
+  "affected": "The Clean Energy Finance Corporation and businesses seeking its funding for farmland purchases for carbon credit projects are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:04:20.326647+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

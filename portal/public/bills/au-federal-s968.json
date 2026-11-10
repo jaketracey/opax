@@ -71,7 +71,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-07-16",
+  "sentences": [
+   "The bill would establish an independent guardian to represent unaccompanied non-citizen children seeking protection in Australia and its external territories, including children in detention.",
+   "The guardian would arrange care, advocate for children's interests, consult them about decisions and report to Parliament, with their best interests the paramount consideration.",
+   "The main provisions would commence within six months of Royal Assent, covering eligible children already in Australia as well as those arriving subsequently."
+  ],
+  "changes": [
+   "Removing an unaccompanied child from Australia without the guardian's written consent would become a criminal offence.",
+   "The guardian could place children with custodians and change those arrangements.",
+   "Covered children could no longer be designated wards of the immigration minister.",
+   "The Commonwealth Ombudsman could report on whether a child's detention was appropriate."
+  ],
+  "affected": "Unaccompanied non-citizen children, their custodians, the proposed guardian and the Commonwealth Ombudsman would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:52.706448+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

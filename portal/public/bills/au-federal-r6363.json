@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "The bill would require certain Australian welfare recipients aged 80 or older who have spent at least two continuous years overseas to provide proof they are alive.",
+   "It would require certificates at least every two years after notice, with an authorised certifier physically sighting recipients and verifying their identity and survival.",
+   "General amendments would begin on 1 September 2019, with provisions concerning Wife Pension and Widow B Pension removed from 20 March 2020."
+  ],
+  "changes": [
+   "Recipients would generally have 13 weeks after notice to provide a compliant certificate.",
+   "Returning to Australia within the response period would remove the certificate requirement.",
+   "Non-compliance could lead to suspension and then cancellation, with payment restoration and arrears available subject to conditions."
+  ],
+  "affected": "Older overseas recipients of covered pensions and Carer Payment, and authorised certifiers, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:54.328148+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5842",

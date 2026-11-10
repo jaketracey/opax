@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-25",
+  "sentences": [
+   "The bill would expand access to parental leave pay and dad and partner pay for people whose employment was disrupted by COVID-19 lockdowns.",
+   "Periods covered by the COVID-19 Disaster Payment or other prescribed Commonwealth payments would count as work when assessing eligibility for these parental leave payments.",
+   "The changes would cover claims made from commencement, with eligible COVID-19 payment periods starting on or after 3 June 2021 able to count."
+  ],
+  "changes": [
+   "Rules would determine the hours of qualifying work credited for a COVID-19 payment period.",
+   "Future Commonwealth payments could be added through the Paid Parental Leave Rules.",
+   "Eligible primary claimants applying more than 28 days after birth could backdate their payment period to the later of birth or their nominated start day."
+  ],
+  "affected": "Parents claiming parental leave pay or dad and partner pay after COVID-19 disrupted their employment are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:02.688342+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

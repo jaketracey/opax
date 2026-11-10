@@ -173,7 +173,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-13",
+  "sentences": [
+   "The bill would change business reporting, intellectual property administration, trade remedies, social security processes and government information sharing, and repeal legislation described as redundant.",
+   "It would authorise disclosure of patients' death dates to health providers and administrators, and allow more flexible notifications when social security or family payment nominees withdraw.",
+   "Eligible former defence personnel with transferable superannuation lump sums could access the Commonwealth Superannuation Corporation's account-based retirement pension, while retaining the option of other retirement products."
+  ],
+  "changes": [
+   "Regulations could allow patent and trade mark attorney disciplinary processes to run after an attorney's registration ends.",
+   "Plant breeder rights renewal fees would receive a payment grace period.",
+   "Gender equality target cycles would have a 12-month gap for employers to assess results.",
+   "The New Eligible Drama Expenditure scheme would move reporting and acquittals to calendar years.",
+   "Certain goods covered by tariff concession orders would automatically receive dumping and countervailing duty exemptions, subject to an Australian industry exception.",
+   "The separate electoral-law requirement for Commonwealth entities to report payments to advertising and related organisations would be repealed."
+  ],
+  "affected": "Businesses, employers, importers, health providers, payment nominees, pensioners, former defence personnel and government agencies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:57.374214+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-10547",

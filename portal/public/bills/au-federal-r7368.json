@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-09-04",
+  "sentences": [
+   "The bill would change how responsibility for paying the national joint replacement registry levy is identified, allowing the liable person to be specified through rules.",
+   "This would allow liability to follow changes in responsibility for listed medical devices over time, rather than relying solely on the person who obtained the initial listing.",
+   "The bill would validate earlier levy collections on the specified basis and commence on the 14th day after Royal Assent, allowing time to update the rules."
+  ],
+  "changes": [
+   "The levy legislation's definition of sponsor would be removed.",
+   "The definition referring to medical devices and human tissue products rules would be replaced with a clearer version.",
+   "New arrangements would apply to levies imposed from commencement, including where calculations refer to earlier events."
+  ],
+  "affected": "People responsible for relevant listed medical devices who would be liable to pay the levy are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:06.049345+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

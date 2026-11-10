@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-12",
+  "sentences": [
+   "The bill would separate deposit-taking banks from non-bank businesses and restrict banks’ activities, including proprietary trading, derivatives dealings and involvement in managed investment schemes.",
+   "Banks would generally have 24 months to end prohibited affiliations, with regulated extensions possible, while core services such as deposits, lending and payments would be permitted.",
+   "A new parliamentary committee would oversee the Australian Prudential Regulation Authority, and deposit protection would be limited to accounts at banks avoiding prohibited activities."
+  ],
+  "changes": [
+   "Non-banks would be prohibited from accepting deposits of the specified kind.",
+   "People holding specified roles in prohibited affiliates generally could not hold equivalent positions in banks.",
+   "New prudential standards would require parliamentary approval."
+  ],
+  "affected": "Banks, their non-bank affiliates and officers, depositors and the Australian Prudential Regulation Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:34.785140+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

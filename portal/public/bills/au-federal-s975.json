@@ -59,7 +59,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-04",
+  "sentences": [
+   "The bill would prohibit dumping dredged material in the Great Barrier Reef World Heritage Area and loading it for that purpose, subject to an earlier-approval exception.",
+   "It would create offences carrying up to 250 penalty units, 12 months' imprisonment or both, and prevent permits authorising the prohibited dumping or loading.",
+   "Activities approved on or before 9 December 2013 would be excluded, while later approvals, including Abbot Point's 10 December 2013 approval, would be affected."
+  ],
+  "changes": [
+   "Existing permits for prohibited activities would cease to operate, subject to the earlier-approval exception.",
+   "States could not exempt the reef area from the new restrictions by declaration.",
+   "Strict liability would apply to the reef-location element of the dumping offence.",
+   "The legislation would commence on the day after royal assent."
+  ],
+  "affected": "Dredging operators, vessel and platform operators, permit holders and Commonwealth and state environmental administrators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:49.445416+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

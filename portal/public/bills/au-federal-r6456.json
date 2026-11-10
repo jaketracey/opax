@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-28",
+  "sentences": [
+   "The bill would expand the Australian Securities and Investments Commission's (ASIC) search, information access, licensing and banning powers across financial services and credit regulation.",
+   "It would adapt Commonwealth criminal search powers, allow access to lawfully intercepted material for serious offences and extend suitability tests to controllers of licensed businesses.",
+   "The changes would begin the day after royal assent, with search warrants restricted to suspected indictable offences and expanded banning orders covering management or control."
+  ],
+  "changes": [
+   "ASIC would no longer need an unfulfilled notice to produce before seeking relevant search warrants.",
+   "Fit and proper person requirements would extend to officers, partners, trustees and controllers and apply on an ongoing basis.",
+   "A financial services licence could be suspended or revoked if authorised services had not begun within six months."
+  ],
+  "affected": "Financial services and credit licensees and applicants, their controllers, directors and senior managers, and people investigated or prosecuted for corporate law offences are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:27.636459+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

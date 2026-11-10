@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "The bill would shift responsibility for goods and services tax (GST) on certain business transactions involving gold, silver or platinum from sellers to purchasers.",
+   "A reverse charge would generally require registered business purchasers to account for GST, while limiting access to second-hand goods credits for valuable metals.",
+   "The measures would apply to supplies from 1 April 2017, with exceptions for products sufficiently more valuable than their metal content and specified other cases."
+  ],
+  "changes": [
+   "Businesses could agree in writing to reverse charge supplies even where the mandatory rule did not apply.",
+   "The default value-added exception would require goods to be worth at least ten per cent more than their constituent valuable metals.",
+   "The bill would add an exception allowing collectables and antiques to qualify as second-hand goods.",
+   "The Commissioner of Taxation could exempt classes of supplies from the reverse charge by legislative instrument."
+  ],
+  "affected": "Businesses trading goods containing valuable metals and the Commissioner of Taxation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:42.146426+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

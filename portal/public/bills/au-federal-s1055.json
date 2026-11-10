@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-13",
+  "sentences": [
+   "The bill would require the Australian Broadcasting Corporation (ABC) to restore and operate shortwave radio services for domestic listeners and audiences in Papua New Guinea and the Pacific.",
+   "It would require at least three domestic services across the Northern Territory and an international service using at least three transmitters to broadcast ABC programming.",
+   "The international service would have to use relevant local languages, and the new broadcasting obligations would begin on the day after Royal Assent."
+  ],
+  "changes": [
+   "Domestic shortwave services would carry the nearby local radio service.",
+   "The ABC would be required to operate the domestic services that ceased on 31 January 2017.",
+   "International shortwave coverage would be mandated for Papua New Guinea and parts of the Pacific."
+  ],
+  "affected": "The ABC, rural and remote listeners, and audiences in Papua New Guinea and parts of the Pacific are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:38.081286+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

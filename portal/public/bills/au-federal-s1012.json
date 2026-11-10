@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-13",
+  "sentences": [
+   "The bill would transfer responsibility for handling aged care complaints from the Department of Social Services Secretary to the existing commissioner, separating complaints handling from departmental regulation.",
+   "The commissioner would manage and resolve complaints instead of reviewing departmental decisions, supported by authorised complaints officers with specified investigation and information gathering powers.",
+   "The changes would begin on a proclaimed date or after six months if no proclamation is made, with transition rules available for complaints already underway."
+  ],
+  "changes": [
+   "The office would be renamed Aged Care Complaints Commissioner.",
+   "Approved providers would have to cooperate with people exercising the new complaints powers.",
+   "Authorised officers could enter premises with occupier consent, which could be withdrawn at any time.",
+   "The commissioner could disclose protected information in specified circumstances, including to prevent serious risks to a care recipient’s safety or health."
+  ],
+  "affected": "Aged care recipients, complainants, approved providers, departmental staff and the Aged Care Complaints Commissioner would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:56.351607+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

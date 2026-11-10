@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-09",
+  "sentences": [
+   "The bill would authorise additional 2022-23 Commonwealth spending outside ordinary annual government services for decisions made since the October 2022-23 Budget, supplementing existing annual appropriations.",
+   "It would provide scheduled funding for intergovernmental assistance, new administered outcomes, assets and liabilities, departmental equity injections and corporate Commonwealth entities.",
+   "The appropriations would become available at Royal Assent alongside separate ordinary services and parliamentary funding bills, with no additional advance to the Finance Minister."
+  ],
+  "changes": [
+   "Financial assistance to states, territories and local governments would be tied to specified outcomes.",
+   "Corporate entity payments would have to serve the purposes of the receiving entities.",
+   "Appropriations could be transferred into special accounts serving the same purposes.",
+   "The legislation would repeal at the beginning of 1 July 2025."
+  ],
+  "affected": "Commonwealth entities and companies, state and territory governments and local government authorities are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:40.819171+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

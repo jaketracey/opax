@@ -89,7 +89,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "The bill would restructure family tax benefit payments, increase some fortnightly family and youth payment rates, and phase out the annual Part A and Part B supplements.",
+   "Part A rates would rise by $10.08 per fortnight from 1 July 2018, while Part B rates would vary with the youngest child’s age.",
+   "Part B changes would start on 1 July 2016, with existing rates retained for specified older single parents, grandparents and great-grandparents caring for teenagers."
+  ],
+  "changes": [
+   "Families whose youngest child is under one would receive a $1,000.10 annual increase in the standard Part B rate.",
+   "Other eligible families with a youngest child aged 13 to 16 would receive a reduced $1,000.10 annual Part B rate.",
+   "Both annual supplements would be reduced in stages and removed from 1 July 2018.",
+   "Specified under-18 Youth Allowance and disability support pension rates would be linked to the relevant Part A child rate."
+  ],
+  "affected": "Families receiving family tax benefit and young people receiving the specified income support payments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:10.570660+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4069",

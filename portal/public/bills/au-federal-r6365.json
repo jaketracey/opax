@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "The bill would transfer offshore greenhouse gas well and environmental regulation to the National Offshore Petroleum Safety and Environmental Management Authority and expand inspection powers.",
+   "It would extend petroleum inspection arrangements to greenhouse gas storage, add well-integrity inspections and retrospectively validate four areas for a former exploration tax incentive.",
+   "The Minister would retain major title and resource-management decisions, while warrant-free inspection powers would exclude residential premises and remain limited to regulatory compliance purposes."
+  ],
+  "changes": [
+   "Inspectors could retain documents or things produced during inspections for as long as reasonably necessary.",
+   "Regulated business premises would include relevant contractors’ premises and related companies’ premises.",
+   "Responsible regulators could accept and enforce compliance undertakings.",
+   "References to named regulations would be replaced with references prescribed through regulations."
+  ],
+  "affected": "Offshore petroleum and greenhouse gas titleholders, operators, contractors, related companies, inspectors and responsible Commonwealth regulators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:54.327860+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5868",

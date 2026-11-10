@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-28",
+  "sentences": [
+   "The bill would amend the Child Support (Assessment) Act 1989 and the A New Tax System (Family Assistance) Act 1999 to restore interim period determinations of a person's percentage of care for a child.",
+   "It would repeal paragraph 53(1)(c) of the Child Support Act and paragraph 35F(1)(c) of the Family Assistance Act, which bar an interim period determination after an earlier care determination is revoked.",
+   "The amendments would apply where the change of care day falls on or after commencement, and earlier interim period determinations invalid only because of those paragraphs would be validated where the change of care day fell between 23 May 2018 and the day before commencement."
+  ],
+  "changes": [
+   "The repeals respond to the Federal Court's decision in Child Support Registrar v CMU23, which held that paragraph 53(1)(c) barred interim period determinations whenever an earlier determination was revoked.",
+   "Consequential cross-references in paragraphs 35P(2)(a), 35Q(2)(a), 54F(2)(a) and 54H(2)(a) would be removed, including an erroneous reference to paragraph 35F(1)(b) in 35Q(2)(a).",
+   "Connected decisions made in the relevant period, such as variations of family tax benefit or amended child support assessments, would also be valid.",
+   "The validation would not affect rights or liabilities between parties to court proceedings heard and determined before the bill commences."
+  ],
+  "affected": "Separated parents and carers with child support assessments or Family Tax Benefit, the Child Support Registrar and the Secretary of the Department of Social Services are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:21:05Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

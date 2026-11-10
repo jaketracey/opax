@@ -101,7 +101,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-20",
+  "sentences": [
+   "The bill would expand foreign influence registration, reporting and disclosure requirements, including people producing material for public distribution on behalf of a foreign principal.",
+   "It would cover relevant activities undertaken before formal registration, consolidate disbursement reporting and clarify the fault elements of offences concerning registration or renewal failures.",
+   "The changes would begin the day after royal assent, with the expanded communications definition applying to arrangements existing before commencement as well as later arrangements."
+  ],
+  "changes": [
+   "A person’s belief about a foreign principal’s intention could inform the assessed purpose of an activity.",
+   "Registrable communications would require disclosure even where the communicator had not registered.",
+   "Disbursements for a foreign principal would accumulate across voting and non-voting periods.",
+   "Threshold disbursement reports would generally be due within seven days during voting periods and 14 days otherwise.",
+   "Unregistered people could report covered activities when applying for registration."
+  ],
+  "affected": "People conducting registrable activities for foreign principals, producers and distributors of relevant material, and foreign principals are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:04.773203+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

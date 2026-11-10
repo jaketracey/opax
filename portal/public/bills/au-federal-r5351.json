@@ -53,7 +53,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-27",
+  "sentences": [
+   "The bill would tighten rules for mobile phone towers and associated infrastructure by expanding notification, changing permit criteria and creating rights to review installation approvals.",
+   "Carriers would notify landowners and occupiers within 500 metres, with the advance notice period extended from 10 business days to 30 business days.",
+   "Facilities near community-sensitive sites would need to be at least 100 metres away, and alternative, less sensitive locations would have to be unfeasible."
+  ],
+  "changes": [
+   "Towers could no longer be designated through instruments such as the low-impact facilities determination.",
+   "Tower height measurements would include antennae extending above the structure.",
+   "Decisions to issue installation permits could be reviewed by the Administrative Appeals Tribunal.",
+   "The Australian Communications and Media Authority would have to inform the public about infrastructure rather than having a discretion to do so."
+  ],
+  "affected": "Telecommunications carriers, nearby landowners and occupiers and the Australian Communications and Media Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:52.772397+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

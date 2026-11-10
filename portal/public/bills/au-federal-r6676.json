@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-22",
+  "sentences": [
+   "The bill would connect the proposed Australian Local Power Agency with existing clean energy bodies through information-sharing powers and liaison arrangements supporting community energy projects.",
+   "It would amend the laws governing the Australian Renewable Energy Agency, Clean Energy Finance Corporation and Clean Energy Regulator to recognise the new agency.",
+   "The amendments would commence with the separate Australian Local Power Agency legislation, and would not begin if that legislation did not itself commence."
+  ],
+  "changes": [
+   "The Australian Renewable Energy Agency could disclose information to the new agency through its existing disclosure framework.",
+   "The Clean Energy Finance Corporation could liaise with the agency when performing its investment function.",
+   "The corporation could also disclose information to the agency under its existing statutory conditions.",
+   "The Clean Energy Regulator could share information with the agency under the regulator's existing disclosure rules."
+  ],
+  "affected": "The proposed agency, Australian Renewable Energy Agency, Clean Energy Finance Corporation and Clean Energy Regulator are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:08.871687+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-25",
+  "sentences": [
+   "The bill would change federal electoral and spam laws to require unsubscribe options for political electronic messages and identify actors used in political telephone campaigns.",
+   "Electronic communications containing federal electoral matter would need an opt-out facility regardless of commercial purpose, while actors portraying people would be identified when calls began.",
+   "The measures would apply from the twenty-eighth day after royal assent and regulate how political messages were delivered to voters by individuals and organisations."
+  ],
+  "changes": [
+   "Senders of political electronic messages would have to include a working unsubscribe option for recipients.",
+   "Actors performing as people in particular occupations or circumstances during electoral calls would have to be identified.",
+   "Spam legislation provisions referring to commercial electronic messages would be extended to capture political electronic messages."
+  ],
+  "affected": "Voters, political parties, candidates, other political message senders and campaign actors would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:06.392404+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

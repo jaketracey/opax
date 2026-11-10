@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "The bill would revise Australia’s submarine cable protection regime, allowing specified domestic cables to receive protection and simplifying permits for international cables landing in Australia.",
+   "Carriers would need only one installation permit for cables crossing protection zones, and the default processing period outside protection zones would become 60 business days.",
+   "The regime would exclude cables merely passing through Australian waters without landing, and clarify limits on regulating foreign ships and nationals beyond Australia’s territorial sea."
+  ],
+  "changes": [
+   "The Australian Communications and Media Authority would have to consult the Attorney-General’s Department about permit applications.",
+   "The Attorney-General could block a permit on security grounds after consulting the Prime Minister and Communications Minister.",
+   "Protection zone restrictions would exclude cable maintenance or repair by carriers owning or operating the cables, or people acting on their behalf."
+  ],
+  "affected": "Cable carriers, foreign nationals and ships are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:44.997140+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

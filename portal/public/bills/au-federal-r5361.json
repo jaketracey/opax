@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-22",
+  "sentences": [
+   "The bill would repeal more than 650 spent amending and repeal Acts from the 1970 to 1979 period, removing legislation whose principal work is complete.",
+   "It would preserve any ongoing effect of application, saving or transitional provisions, and earlier amendments or repeals made by the listed Acts would remain effective.",
+   "The repeals would start 28 days after royal assent, with later legislation outside the bill's scope and the repealed Acts remaining accessible as historical records."
+  ],
+  "changes": [
+   "Listed Acts that amended other Commonwealth laws would be removed from the statute book.",
+   "Listed repeal Acts would also be repealed once their legislative work was complete.",
+   "An express saving would continue any residual application, saving or transitional provisions."
+  ],
+  "affected": "Businesses, individuals and publishers consulting or consolidating federal legislation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:41.317851+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

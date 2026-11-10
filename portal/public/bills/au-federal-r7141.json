@@ -143,7 +143,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-06",
+  "sentences": [
+   "The bill would amend the Medicare Levy Act 1986 and the fringe benefits surcharge Act to raise the Medicare levy and surcharge low-income thresholds for 2023-24 in line with the consumer price index.",
+   "The individual threshold would rise from $24,276 to $26,000, the family threshold from $40,939 to $43,846, and the extra amount per dependent child or student from $3,760 to $4,027.",
+   "Thresholds for people eligible for the seniors and pensioners tax offset (SAPTO) would also rise, and the changes would apply retrospectively to the 2023-24 and later income years."
+  ],
+  "changes": [
+   "The Medicare levy low-income threshold for individuals would increase from $24,276 to $26,000, and the individual phase-in limit from $30,345 to $32,500.",
+   "The family income threshold would increase from $40,939 to $43,846, plus $4,027 instead of $3,760 for each dependent child or student.",
+   "For individuals eligible for SAPTO the threshold would rise from $38,365 to $41,089, and for SAPTO families from $53,406 to $57,198.",
+   "The individual low-income threshold used for the Medicare levy surcharge on taxable income and on reportable fringe benefits would also rise from $24,276 to $26,000.",
+   "The measure is estimated to cut tax receipts by $640 million across the five years to 2026-27, and the schedule would commence the day after Royal Assent."
+  ],
+  "affected": "Low-income individuals and families, seniors and pensioners eligible for SAPTO, and taxpayers liable for the Medicare levy surcharge are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:28:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-8692",

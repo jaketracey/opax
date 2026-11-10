@@ -95,7 +95,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-10-21",
+  "sentences": [
+   "The bill would replace the two existing Medicare safety nets and the greatest permissible gap arrangement with a single safety net for eligible medical expenses.",
+   "After an annual spending threshold was reached, it would pay 80 per cent of eligible out-of-pocket costs, subject to a uniform cap for each service.",
+   "The new scheme would begin on 1 January 2016 and cover eligible services outside hospital, with revised rules for family registration and pooling expenses."
+  ],
+  "changes": [
+   "Thresholds would be $400 for concession cardholders, $700 for eligible family tax benefit recipients and confirmed singles, and $1,000 for other families and singles.",
+   "Both expense accumulation and benefit caps would be based on 150 per cent of the schedule fee less the standard Medicare rebate.",
+   "Couples living apart because of illness or infirmity could register together as a safety net family.",
+   "The bill would add eligibility for people leaving a family that had already qualified for safety net benefits."
+  ],
+  "affected": "Singles and families with out-of-pocket costs for out-of-hospital Medicare services and concession card holders would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:00.038852+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3993",

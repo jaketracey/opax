@@ -41,7 +41,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-30",
+  "sentences": [
+   "The bill would progressively prohibit advertising of licensed interactive wagering services across broadcasting, online platforms, other media and sporting venues, reaching a comprehensive ban after three years.",
+   "Initial restrictions would cover online and social media advertisements, news and current affairs broadcasts, and commercial radio advertising during specified morning and afternoon school travel periods.",
+   "Exceptions would cover political communications, specified factual business information, harm reduction messages and other defined activities, with a temporary exemption for small community radio services."
+  ],
+  "changes": [
+   "From the first anniversary, restrictions would extend to live sport, surrounding odds promotion and stadium advertising.",
+   "From the second anniversary, broadcasting and datacasting advertisements would be prohibited between 6:00 am and 10:00 pm.",
+   "The full advertising prohibition would operate from the third anniversary, subject to the specified exceptions.",
+   "Breaching the advertising prohibitions could result in criminal prosecution or civil penalties.",
+   "The Australian Communications and Media Authority could investigate breaches and use warnings, infringement notices and injunctions."
+  ],
+  "affected": "Licensed wagering providers, advertisers, broadcasters, online publishers, sporting bodies and the communications regulator are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:52.533928+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

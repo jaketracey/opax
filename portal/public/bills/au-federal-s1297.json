@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-12",
+  "sentences": [
+   "The bill would prevent the Health Minister using human biosecurity emergency powers to block Australian citizens and permanent residents overseas from returning to Australia.",
+   "It would restrict both emergency requirements and directions, and repeal the May 2021 travel-pause determination that barred arrivals who had recently been in India.",
+   "Other biosecurity measures could still apply after return, while permanent residents relying on the protection would need a valid Resident Return visa when arriving."
+  ],
+  "changes": [
+   "Emergency determinations could no longer prevent or restrict covered people entering Australian territory.",
+   "The same limit would apply to the Minister's emergency directions.",
+   "The amendments would govern new requirements and directions during both existing and future emergency periods.",
+   "The legislation would commence the day after Royal Assent."
+  ],
+  "affected": "Australian citizens and permanent residents overseas, and the Health Minister exercising emergency biosecurity powers, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:59.217651+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

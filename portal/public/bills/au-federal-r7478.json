@@ -41,7 +41,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-22",
+  "sentences": [
+   "The bill would add conditions for approving carbon credit methods and change wording used to assess whether those methods satisfy the scheme's integrity standards.",
+   "It would require consistency with the Act's objects and public consultation on relevant supporting material, while changing specified tests to refer to possible non-compliance.",
+   "The amendments would concern the minister's methodology determinations and the Emissions Reduction Assurance Committee's consideration of proposals within the existing statutory carbon credit scheme."
+  ],
+  "changes": [
+   "A ministerial determination would have to align fully with the Act's purposes.",
+   "All relevant documentation, modelling and science would have to be available for public consultation.",
+   "Specified compliance wording in subsections 106(4B) and 123A(3) would be replaced or expanded to address possible failure to meet integrity standards."
+  ],
+  "affected": "Carbon offset project proponents, the responsible minister and the Emissions Reduction Assurance Committee are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:14.915345+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

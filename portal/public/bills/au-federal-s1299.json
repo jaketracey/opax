@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-21",
+  "sentences": [
+   "The bill would defer goods and services tax input credits for certain larger JobKeeper recipients and require public reporting of their payments and voluntary repayments.",
+   "The deferral would apply where a covered recipient made a profit, paid shareholders dividends or paid an executive bonus during a financial year receiving JobKeeper.",
+   "Input credits would be delayed for ten years unless the entity earlier made a voluntary payment meeting the bill's repayment calculation and notified the Commissioner."
+  ],
+  "changes": [
+   "Published information would identify covered recipients by name and Australian business number.",
+   "The public listing would show each covered recipient's total JobKeeper funding.",
+   "Details and dates of voluntary repayments would also be published.",
+   "Entities ending a deferral early would have to notify the Commissioner in writing of the payment amount and date."
+  ],
+  "affected": "Covered larger JobKeeper recipients and the Commissioner of Taxation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:10.982856+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

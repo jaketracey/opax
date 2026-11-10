@@ -95,13 +95,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4969_ems_cc788aa5-7335-4375-aeb7-b81ca5f48640%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4969%22",
+   "document_date": "2013-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00028",
    "document_date": "2013-03-30",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-13",
+  "sentences": [
+   "The bill would give the Australian Capital Territory Legislative Assembly power to determine its own membership size through territory legislation, removing the Commonwealth regulation step.",
+   "Any law setting, changing or repealing the Assembly’s membership number would need support from at least two-thirds of the total membership, rather than only members present.",
+   "The Assembly would remain at 17 members until it legislated a different number, and the revised mechanism would commence on the day following Royal Assent."
+  ],
+  "changes": [
+   "The requirement for Commonwealth regulations to alter Assembly size would be repealed.",
+   "The special majority rule would extend to amendments and repeals of laws setting membership numbers.",
+   "The existing number of 17 members would operate as the default until a territory enactment provided otherwise."
+  ],
+  "affected": "The Australian Capital Territory Legislative Assembly and its members are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:20.778652+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -131,7 +131,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-24",
+  "sentences": [
+   "The bill would create a special appropriation from the Consolidated Revenue Fund to meet any liabilities the Commonwealth incurs under a Pacific banking guarantee.",
+   "A Pacific banking guarantee would be a guarantee the Commonwealth grants to an Australian-headquartered authorised deposit-taking institution (ADI) under the Public Governance, Performance and Accountability Act 2013 for the ADI's banking business in the Pacific region.",
+   "The appropriation would have no direct dollar limit or time limit, but each guarantee would carry its own dollar cap and term, expected in most cases to be 10 years."
+  ],
+  "changes": [
+   "Subclause 5(1) would establish a special appropriation so money is available whenever a guarantee obligation is triggered, rather than relying on the annual appropriation bills.",
+   "Subclause 5(2) would confine the appropriation to liabilities under guarantees that relate to an ADI's banking business in the Pacific region, including through subsidiaries.",
+   "The Pacific region would be defined in clause 3 to include the islands of the Pacific, Papua New Guinea and Timor-Leste.",
+   "An ADI would need a legally binding agreement with the Commonwealth about its continued operations before receiving a guarantee.",
+   "The Act would commence the day after Royal Assent, and the financial impact is not published because of commercial sensitivities."
+  ],
+  "affected": "Australian-headquartered ADIs operating in the Pacific region, their Pacific subsidiaries and the Commonwealth as guarantor are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T10:14:00Z"
+ },
  "divisions": [],
  "speeches": [
   {

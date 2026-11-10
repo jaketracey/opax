@@ -89,7 +89,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would regulate worker entitlement funds and expand financial governance, reporting and disclosure obligations for registered industrial organisations and entities associated with them.",
+   "It would restrict workplace terms directing contributions to certain funds, require employee choice where funds or insurance products are named, and prohibit specified coercion.",
+   "The coercion prohibition would exclude protected industrial action, and employees could still make voluntary election-fund contributions independently of awards, agreements or employment contracts."
+  ],
+  "changes": [
+   "Registered organisations would need written expenditure policies approved by their management committee.",
+   "Organisations would have to report specified loans, grants and donations.",
+   "Financial benefits linked to employee insurance, training funds and welfare arrangements would require disclosure.",
+   "Operating an unregistered worker entitlement fund would become a criminal offence.",
+   "Workplace instruments could not require or permit employee contributions to industrial association election funds."
+  ],
+  "affected": "Workers, employers, registered industrial organisations, worker entitlement fund operators, associated entities and the Registered Organisations Commissioner are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:49.362410+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5857",

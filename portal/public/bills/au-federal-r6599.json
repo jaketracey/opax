@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-08",
+  "sentences": [
+   "The bill would extend an existing native title process used for public housing and specified public facilities serving Aboriginal and Torres Strait Islander communities.",
+   "It would change the process's operating period from 10 years to 20 years, allowing covered legal acts and construction to continue for another decade.",
+   "Existing notice, consultation and compensation arrangements would remain, and the extension would commence on the day after the bill received royal assent."
+  ],
+  "changes": [
+   "The deadline for covered leases, licences and approvals would be extended.",
+   "The period for starting covered construction activities would also be extended.",
+   "The extension would take effect the day after royal assent."
+  ],
+  "affected": "Native title holders and claimants, Indigenous communities and public authorities providing covered housing and infrastructure are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:00.544116+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-6781",

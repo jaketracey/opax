@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-28",
+  "sentences": [
+   "The bill would support establishment of the Future Drought Fund by closing the Building Australia Fund and adapting the investment, expense and reporting arrangements of existing funds.",
+   "It would give the Future Fund Board related functions and allow transfers to apportion shared management expenses between the new drought fund and other funds.",
+   "The main amendments would commence with the companion Future Drought Fund legislation, while transitional provisions would preserve oversight and reporting for the closed Building Australia Fund."
+  ],
+  "changes": [
+   "The Building Australia Fund’s establishing provisions would be repealed.",
+   "The Regional Investment Corporation Board would gain an advisory role on drought fund grants and service payments.",
+   "A single investment manager could be engaged for the drought fund and other funds."
+  ],
+  "affected": "The Future Fund Board, the Regional Investment Corporation Board and ministers overseeing the funds are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:25.318243+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5699",

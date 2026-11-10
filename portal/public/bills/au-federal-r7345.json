@@ -131,7 +131,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-30",
+  "sentences": [
+   "The bill would amend the National Health Act 1953 to cut the Pharmaceutical Benefits Scheme (PBS) general patient co-payment by $6.60, from $31.60 to $25.00.",
+   "It would do this by defining a new general patient charge amount of $25.00 and stopping the planned indexation of the charge on 1 January 2026.",
+   "The reduction would start on 1 January 2026, with indexation in line with the Consumer Price Index resuming from 1 January 2027, and the remaining allowable discount for general patients would be phased out."
+  ],
+  "changes": [
+   "A new definition of general patient charge amount, set at $25.00, would replace the $30.00 figure in subsection 84(1) of the National Health Act.",
+   "The allowable discount that pharmacists could apply to the general co-payment, already reduced to $0.10 for general patients in 2025, would be phased out for general patients from 1 January 2026.",
+   "Section 99GC, which deals with reducing the allowable discount relating to the general patient charge, would be repealed.",
+   "The date in subsection 99G(1A) would move from 1 January 2025 to 1 January 2026 so the reduced charge is not indexed on that day.",
+   "The estimated cost to the budget is $689.1 million in underlying cash over four years from 2025-26."
+  ],
+  "affected": "General PBS patients without a concession card, community pharmacists and pharmaceutical companies with special pricing deeds are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:52:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9713",

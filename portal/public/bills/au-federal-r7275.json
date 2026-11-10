@@ -137,7 +137,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-07",
+  "sentences": [
+   "The bill would insert a Scams Prevention Framework (SPF) into the Competition and Consumer Act 2010, requiring businesses in designated sectors to prevent, detect, report, disrupt and respond to scams.",
+   "A Treasury Minister could designate sectors by legislative instrument, make sector-specific SPF codes and appoint sector regulators, with the Australian Competition and Consumer Commission (ACCC) enforcing the overarching principles.",
+   "The government said it would first designate telecommunications, banking and certain digital platform services, and the bill would commence the day after Royal Assent, with obligations starting once a sector is designated."
+  ],
+  "changes": [
+   "Regulated entities would have to comply with SPF principles on governance, prevention, detection, reporting, disruption and response.",
+   "Tier 1 breaches by a body corporate could attract the greater of 159,745 penalty units, three times the benefit or, if a court cannot determine that benefit, 30 per cent of adjusted turnover.",
+   "Tier 2 breaches, covering SPF codes and the governance and reporting principles, would use the same body corporate formula with 31,950 penalty units and 10 per cent of turnover, or 1,600 penalty units for others.",
+   "Regulated entities would need an internal dispute resolution process and membership of an external dispute resolution scheme authorised by a Treasury Minister, intended to be the Australian Financial Complaints Authority (AFCA).",
+   "Information about scams could be shared between regulated entities, SPF regulators, the dispute resolution scheme operator and, with undertakings, foreign anti-scam agencies."
+  ],
+  "affected": "Telecommunications providers, banks, social media and other digital platform services, their customers who are scam victims, the ACCC and other SPF regulators, and AFCA are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:40:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9515",

@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-02",
+  "sentences": [
+   "The bill would require the Commonwealth Auditor-General to inspect and audit specified Australian banks, including banks identified as domestically systemically important by the prudential regulator.",
+   "Audits would examine derivatives exposures, housing loan portfolios, default provisions, off-balance-sheet liabilities and internal risk models, with findings reported to the Treasurer and Parliament.",
+   "The audit framework would require banks to assist authorised officers, while expressly excluding authority to report on the affairs of an individual bank customer."
+  ],
+  "changes": [
+   "Authorised audit officers would gain access to bank premises and records at reasonable times.",
+   "The Auditor-General could copy bank documents and require information from bank employees and officials.",
+   "The Treasurer would have to provide funding for additional audit staff, resources and facilities."
+  ],
+  "affected": "Covered banks, their employees, the Auditor-General and the Treasurer are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:27.632509+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

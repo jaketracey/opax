@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-09-01",
+  "sentences": [
+   "The bill would establish rules for deciding which goods qualify for preferential customs treatment under the Regional Comprehensive Economic Partnership Agreement and support origin verification.",
+   "Goods would qualify through specified production and materials rules, generally requiring proof of origin unless waived, with tariff changes provided by a separate companion bill.",
+   "The rules would start on royal assent or the agreement's entry into force for Australia, whichever came later, and cover participating countries only."
+  ],
+  "changes": [
+   "Regulations could impose recordkeeping duties on Australian exporters and producers claiming originating status for goods sent to agreement partners.",
+   "Authorised customs officers could require relevant records and answers to questions to verify exported goods' origin.",
+   "Records and answers could be shared with partner customs officials for preferential tariff verification."
+  ],
+  "affected": "Importers, Australian exporters and producers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:45.646828+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7475",

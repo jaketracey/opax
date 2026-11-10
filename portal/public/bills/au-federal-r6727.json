@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 11,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-16",
+  "sentences": [
+   "The bill would incorporate customs tariff proposals granting duty-free treatment to specified COVID-19 medical supplies, Joint Strike Fighter goods and automotive research and development imports.",
+   "It would extend the existing medical and hygiene goods concession and add separate concessions for goods used in the fighter program and qualifying automotive activities.",
+   "The automotive concession would cover duty calculations from 1 April 2021 to 30 June 2025 for qualifying activities involving vehicles designed or engineered in Australia."
+  ],
+  "changes": [
+   "Prescribed medical products would include masks, gloves, gowns, eye protection, test kits and disinfectants.",
+   "The Joint Strike Fighter concession would apply from 1 March 2021, including earlier imports whose duty calculation occurs from that date.",
+   "Automotive eligibility would require the relevant service provider to have been registered under the Automotive Transformation Scheme on 30 March 2021."
+  ],
+  "affected": "Importers of prescribed medical and hygiene products, fighter-program goods and qualifying automotive goods, and eligible automotive service providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:00.595531+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -113,13 +113,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4982_ems_d4a16787-a69a-4330-8bcf-e7f8976de8e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4982%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00077",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would extend the Commonwealth guarantee for aged care accommodation bonds to cover new refundable accommodation deposits and contributions introduced under companion aged care reforms.",
+   "The expanded guarantee would cover eligible lump sums paid by people entering residential care or certain flexible care services from 1 July 2014.",
+   "Existing bonds would remain protected, while the earlier legislation would continue to govern insolvency events occurring before 1 July 2014, when the amendments would commence."
+  ],
+  "changes": [
+   "The existing statute would be renamed the Aged Care (Accommodation Payment Security) Act 2006.",
+   "A new accommodation payment balance definition would bring refundable deposits together with existing protected lump sums.",
+   "Commonwealth refund protection following void or voidable repayments would extend to the new accommodation payment balances.",
+   "The bill would repeal redundant transitional rules from 2008."
+  ],
+  "affected": "Residents paying protected accommodation lump sums and approved residential or relevant flexible care providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:57.524189+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2973",

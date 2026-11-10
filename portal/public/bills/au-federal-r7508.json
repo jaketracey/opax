@@ -83,7 +83,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-07-02",
+  "sentences": [
+   "The bill would allow annual charges to be prescribed for similar biological products grouped within one entry in the Australian Register of Therapeutic Goods.",
+   "A single charge, with its amount set by regulations, would apply to grouped biologicals sharing one biological number rather than separate charges for separate entries.",
+   "It would commence with companion medicines legislation that enables biological products to share an entry, and would not commence if that legislation does not proceed."
+  ],
+  "changes": [
+   "Grouped biologicals would be removed from the provision governing annual charges for individual biological entries.",
+   "A charge would be payable if the grouped entry operated at any point during the relevant financial year.",
+   "The new charge provision would apply to financial years starting on or after commencement."
+  ],
+  "affected": "Sponsors of biological products are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:36.913049+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

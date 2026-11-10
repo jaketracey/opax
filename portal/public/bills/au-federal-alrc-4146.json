@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4993_ems_6d4ee109-01c1-4188-af1e-b4c94895190a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4993%22",
+   "document_date": "2013-03-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-14",
+  "sentences": [
+   "The bill would create an independent Public Interest Media Advocate to carry out functions under companion proposals covering news media self-regulation and changes in media control.",
+   "The minister would appoint a qualified person part time for up to five years, with the office protected from directions by ministers or government.",
+   "Its principal regulatory functions would come from the accompanying self-regulation and news media diversity bills, while this bill would provide appointment and operational arrangements."
+  ],
+  "changes": [
+   "The office holder would have to disclose interests that conflict, or could conflict, with the role.",
+   "The Advocate would be able to hold hearings when carrying out its functions.",
+   "Information sharing would be permitted where it assists another authority’s functions, with conditions available on disclosure.",
+   "An annual report would have to be provided to the minister for presentation to Parliament."
+  ],
+  "affected": "The Public Interest Media Advocate is affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:13.681413+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

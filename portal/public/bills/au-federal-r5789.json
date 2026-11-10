@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-28",
+  "sentences": [
+   "The bill would freeze the passenger movement charge at the $60 rate proposed by earlier legislation, preventing an increase for at least five years.",
+   "It would amend section 6 of the Passenger Movement Charge Act 1978 so that the minimum freeze period runs from 1 July 2017.",
+   "Commencement would be linked to the earlier passenger movement charge legislation, which provides for the rate to rise from $55 to $60 on that date."
+  ],
+  "changes": [
+   "A statutory restriction would prevent increasing the $60 charge during the protected period.",
+   "The restriction would last at least five years from 1 July 2017.",
+   "The freeze would commence with the linked passenger movement charge bill."
+  ],
+  "affected": "People liable for the passenger movement charge at the specified rate are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:00.735216+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4447",

@@ -41,7 +41,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-14",
+  "sentences": [
+   "The bill would restrict defence supplies, investments and trade connected with specified international crimes or illegal settlements, and introduce reporting on genocide risks.",
+   "It would require covered entities to publish annual genocide statements about their operations and value chains, with civil and criminal consequences for serious reporting failures.",
+   "Trade restrictions would target goods and services associated with illegal settlements in occupied territories, while allowing imports from lawful people and entities in lawful settlements."
+  ],
+  "changes": [
+   "The minister would have to refuse, revoke or modify defence permits covering prohibited activities.",
+   "Defence supply prohibitions would extend to transactions that do not require permits.",
+   "The Future Fund, charities and superannuation entities would face divestment duties and restrictions on investments linked to illegal settlements or genocide risk.",
+   "A publicly accessible register would record defence supplies and ministerial decisions, subject to limits on redacting sensitive information.",
+   "An Australian Anti-Genocide Commissioner would be established once separate legislation provided funding."
+  ],
+  "affected": "Defence suppliers, importers, the Commonwealth, covered businesses, universities, charities, superannuation entities and the Future Fund are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:05:19.478805+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

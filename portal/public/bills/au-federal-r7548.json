@@ -41,7 +41,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-17",
+  "sentences": [
+   "The bill would update Australia's anti-doping legislation to reflect the revised World Anti-Doping Code, including rules about sanctions, appeals and publication of violations.",
+   "Sport Integrity Australia would impose provisional suspensions and sanctions, while athletes could ask the National Sports Tribunal to review refusals of therapeutic use exemptions.",
+   "The substantive amendments would start on 1 January 2027 or 28 days after Royal Assent, whichever is later, alongside changes to sporting policies."
+  ],
+  "changes": [
+   "The Australian Sports Drug Medical Advisory Committee's separate review membership would be removed.",
+   "An exception to compulsory publication would cover final findings that a person bore no fault or negligence.",
+   "The definition of athlete would lose its automatic six-month extension after a person last competed.",
+   "Sporting bodies would no longer be required parties to anti-doping disputes unrelated to therapeutic use exemptions."
+  ],
+  "affected": "Athletes, support persons, sporting organisations, Sport Integrity Australia and the National Sports Tribunal are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:03:32.833993+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

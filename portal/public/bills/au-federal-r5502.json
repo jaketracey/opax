@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-23",
+  "sentences": [
+   "The bill would increase the defined benefit superannuation income counted when assessing social security payments for people whose current deductible amount exceeds the proposed limit.",
+   "From 1 January 2016, the amount excluded from assessment would be capped at 10 per cent of the individual's gross annual defined benefit payments.",
+   "Military defined benefit income streams would be exempt from the new cap, while other affected streams would be covered regardless of when the person first received them."
+  ],
+  "changes": [
+   "The Secretary could designate additional superannuation schemes as military schemes through a legislative instrument.",
+   "The cap would apply to deductible amounts under both relevant income assessment provisions.",
+   "Transitional rules dating from the earlier tax changes would also be subject to the cap."
+  ],
+  "affected": "Income support recipients receiving defined benefit superannuation income streams other than military schemes are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:01.712688+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

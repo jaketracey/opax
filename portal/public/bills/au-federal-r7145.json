@@ -119,7 +119,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-07",
+  "sentences": [
+   "The bill would appropriate money from the Consolidated Revenue Fund for the parliamentary departments, covering spending that is not part of the ordinary annual services of the government.",
+   "It would fund departmental, administered, administered assets and liabilities, and equity injection items for the Department of Parliamentary Services and the Department of the House of Representatives in the amounts listed in Schedule 1.",
+   "It is one of three Additional Estimates Bills alongside Appropriation Bills (No. 3) and (No. 4) 2023-2024, would commence on Royal Assent and would be repealed on 1 July 2026."
+  ],
+  "changes": [
+   "Schedule 1 would set out appropriation totals and departmental tables, with further detail in the Portfolio Additional Estimates Statements.",
+   "The Advance to the responsible Presiding Officer would be restored to its original limits after commencement, including $300,000 for the House and $1 million for Parliamentary Services.",
+   "Where the Presiding Officer has already advanced money for the same expenditure before commencement, the bill's appropriation for it would be reduced by that amount, but not below nil.",
+   "Amounts for an item whose purpose matches a special account could be debited from the appropriation and credited to the special account.",
+   "Portfolio statements would be declared relevant documents for interpreting the Act under section 15AB of the Acts Interpretation Act 1901.",
+   "The Act would be repealed at the start of 1 July 2026."
+  ],
+  "affected": "The Department of Parliamentary Services and the Department of the House of Representatives are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:22:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

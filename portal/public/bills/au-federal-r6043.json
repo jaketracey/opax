@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "The bill would provide disclosure exemptions and start-up arrangements for the National Housing Finance and Investment Corporation (NHFIC), accompanying legislation that would establish the corporation.",
+   "It would limit statutory obligations to give reasons for decisions and release commercial documents, while controlling when NHFIC could begin its financial and advisory activities.",
+   "The consequential amendments would start with the companion corporation legislation, while transitional restrictions would prevent specified operational decisions before 1 July 2018 or a later date."
+  ],
+  "changes": [
+   "NHFIC decisions would be exempt from the requirement to provide reasons under the administrative decisions judicial review legislation.",
+   "Documents relating to NHFIC's commercial activities would be exempt from the Freedom of Information Act 1982.",
+   "The Minister could set a later date for operational decisions through a legislative instrument.",
+   "If no date were set and establishment occurred after 1 July 2018, those decisions could begin three months after commencement."
+  ],
+  "affected": "NHFIC, entities seeking its financial or other assistance and the responsible Minister would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:43:21.142696+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

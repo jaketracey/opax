@@ -95,13 +95,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4964_ems_b1f3b3a7-257d-47d5-8197-bfd925a3ad33%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4964%22",
+   "document_date": "2013-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00088",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-13",
+  "sentences": [
+   "The bill would introduce corporate loss carry-back and change tax rules for unclaimed money, airline employee travel, rural water infrastructure and self managed superannuation transactions.",
+   "Eligible corporate entities could claim refundable offsets against earlier tax liabilities, subject to limits tied to losses, prior tax paid and their franking account balance.",
+   "Most interest on unclaimed money reclaimed from 1 July 2013 would receive tax relief, while interest on former temporary residents’ unclaimed superannuation would retain separate taxation."
+  ],
+  "changes": [
+   "The loss carry-back offset would be capped at the tax payable on $1 million of taxable income.",
+   "Airline transport benefit valuation would be brought into the general rules for comparable in-house fringe benefits.",
+   "Rural water program participants could elect tax-free payments while losing deductions for related infrastructure expenditure.",
+   "Specified related party asset transactions involving self managed funds would require values determined by qualified independent valuers.",
+   "Loss carry-back would initially cover one earlier year for 2012-13 assessments, expanding to two earlier years thereafter."
+  ],
+  "affected": "Corporate taxpayers, unclaimed money recipients, airline employers and employees, rural water program participants, and self managed fund trustees and related parties are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:21.495978+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1094",

@@ -95,7 +95,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-10",
+  "sentences": [
+   "The bill would exempt Knox Robodebt class action settlement payments from specified Commonwealth compensation recovery rules and from social security and veterans' income tests.",
+   "It would change the legal treatment of those payments so recipients would avoid compensation repayments and income test reductions under the Social Security Act 1991 and the Veterans’ Entitlements Act 1986.",
+   "The exemptions would cover fixed and individually assessed payments under the court-approved settlement distribution scheme, with the amendments starting the day after Royal Assent."
+  ],
+  "changes": [
+   "Settlement payments would be excluded from compensation under the National Disability Insurance Scheme Act 2013.",
+   "The Social Security Act 1991 would exclude the payments from both income and compensation.",
+   "The Veterans' Entitlements Act 1986 would likewise exclude the payments from income and compensation."
+  ],
+  "affected": "Knox settlement recipients are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:05:52.634217+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

@@ -101,7 +101,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-20",
+  "sentences": [
+   "The bill would amend the Competition and Consumer Act 2010 to legally separate the Australian Energy Regulator (AER) from the Australian Competition and Consumer Commission (ACCC) and establish it as its own non-corporate Commonwealth entity.",
+   "The AER members would become its accountable authority under the Public Governance, Performance and Accountability Act 2013, and the AER Chair would head a statutory agency employing its own staff and engaging consultants.",
+   "The bill would commence on 1 July 2025, with transitional provisions preserving existing delegations, authorising transfer of ACCC records and applying the ACCC Enterprise Agreement 2024-2027 to transferred staff."
+  ],
+  "changes": [
+   "The AER would become a listed entity in its own right, and Part IIIAB, which makes the AER and ACCC a single listed entity, would be repealed.",
+   "AER members would no longer automatically be associate members of the ACCC, though they could still be appointed as such.",
+   "A new section 28A would let the ACCC provide shared services to the AER, including corporate and information technology support and shared premises.",
+   "A new definition of AER State/Territory energy law would let regulations prescribe state and territory energy laws for the AER's part of the Act separately from those within the Treasurer's remit.",
+   "The ACCC could disclose protected and energy-related information to the AER, its staff, persons assisting it and consultants.",
+   "The Minister could make transitional rules by legislative instrument for matters in Schedule 2."
+  ],
+  "affected": "The AER, the ACCC and its Chairperson, Australian Public Service staff who would transfer to the AER, and the Minister for Climate Change and Energy are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:12:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9517",

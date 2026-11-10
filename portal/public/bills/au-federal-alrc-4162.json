@@ -57,8 +57,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5069_ems_df730008-ec1b-4af5-b5b6-8cee2b31730a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5069%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would establish a Housing Payment Deduction Scheme allowing compulsory deductions from specified welfare payments to cover public housing rent, arrears and required utilities.",
+   "Approved public housing lessors could request deductions after arrears exceed a prescribed minimum and reasonable recovery steps, including notice and information about support, have been taken.",
+   "The scheme would cover specified social security and student assistance payments and family tax benefit, with income-managed tenants dealt with through existing income management powers."
+  ],
+  "changes": [
+   "Property damage maintenance debts would be excluded from deductible housing costs.",
+   "Requests could run for 12 months after arrears were cleared to cover ongoing rent and utilities.",
+   "Deductions would be capped by the request, available payment and applicable 35 per cent payment calculation.",
+   "Lessors would need suitable tenancy management and review processes before participating."
+  ],
+  "affected": "Public housing tenants receiving covered welfare payments and participating public housing lessors are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:02.151974+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

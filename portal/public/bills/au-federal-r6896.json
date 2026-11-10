@@ -77,7 +77,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-08",
+  "sentences": [
+   "The bill would impose financial industry levies to fund a compensation scheme of last resort for eligible unpaid financial complaints determinations and related scheme costs.",
+   "It would provide annual and additional levies, generally limited to $250 million across the scheme and $20 million per sub-sector, with specified flexibility for sub-sector limits.",
+   "The Commonwealth would meet first-year operating costs, while companion legislation would establish the compensation scheme and arrangements for collecting levies from financial firms."
+  ],
+  "changes": [
+   "An annual levy would fund estimated compensation, unpaid complaints fees, reserves and administration.",
+   "Further levies could address revised cost estimates within the applicable sub-sector cap.",
+   "Special levies could apply where a ministerial determination addressed funding beyond a sub-sector cap.",
+   "A separate initial levy would fund accumulated claims and fees through the ten largest eligible banking and insurance groups."
+  ],
+  "affected": "Financial firms in prescribed sub-sectors and eligible large banking and insurance groups would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

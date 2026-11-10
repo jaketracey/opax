@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-25",
+  "sentences": [
+   "The bill would invalidate the Commonwealth environmental exemption for Western Australia's shark drum-line program and prevent future exemptions for drum lines used to catch sharks.",
+   "It would prohibit the environment minister from granting those exemptions under section 158 of the Environment Protection and Biodiversity Conservation Act, applying specifically to shark-catching drum lines.",
+   "The proposal would take effect from its introduction on 25 March 2014, including withdrawal of the exemption allowing deployment of 72 baited drum lines."
+  ],
+  "changes": [
+   "The exemption granted on 10 January 2014 would be voided.",
+   "Future environmental exemptions for shark-catching drum lines would be barred.",
+   "Commencement would be backdated to the bill's introduction date."
+  ],
+  "affected": "Shark drum-line operators and the Commonwealth environment minister would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:52.773553+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

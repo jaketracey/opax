@@ -101,13 +101,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s907_ems_6bef64b9-d1a9-4d80-8110-545292f016dc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s907%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00127",
    "document_date": "2013-07-01",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would let regulations confer legal status, privileges and immunities on the International Committee for the Red Cross and the International Criminal Court.",
+   "Separate powers would implement Australia’s regional headquarters arrangement with the Red Cross committee and the Court’s privileges agreement, including protection for participating victims.",
+   "Privileges would be limited by the relevant agreements, and the new Red Cross provision would avoid extending the law to other organisations with similar characteristics."
+  ],
+  "changes": [
+   "Regulations could give the Red Cross committee privileges and legal personality consistent with its Australian headquarters arrangement.",
+   "A dedicated regulation power would cover the Court and people identified in its privileges agreement.",
+   "The international conference definition would include meetings attended by Australian representatives and representatives of either organisation."
+  ],
+  "affected": "The two organisations, their covered officials and associated people, and victims participating in Court proceedings are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:25.282323+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -137,7 +137,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-08",
+  "sentences": [
+   "The bill would establish an accountability framework for banking, insurance and superannuation institutions and their directors and senior executives, extending regulation beyond the existing banking regime.",
+   "Institutions would assign executive responsibilities, register accountable people and meet conduct, remuneration deferral and reporting obligations, with regulators empowered to enforce compliance.",
+   "The regime would apply to banking six months after the bill commences, and to insurance and superannuation eighteen months after commencement, with later entrants covered."
+  ],
+  "changes": [
+   "Accountable people breaching their obligations would have variable remuneration reduced proportionately.",
+   "Entities above a prescribed threshold would submit accountability statements and maps.",
+   "Regulators could disqualify accountable people and direct reassignment of responsibilities to address specified risks.",
+   "At least 40 per cent of qualifying variable remuneration would generally be deferred for four years.",
+   "Deferral would generally not apply where the amount to be deferred is below $50,000."
+  ],
+  "affected": "Regulated financial institutions, their directors and senior executives, the Australian Prudential Regulation Authority and the Australian Securities and Investments Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:01.341652+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8008",

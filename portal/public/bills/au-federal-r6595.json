@@ -155,7 +155,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-09-03",
+  "sentences": [
+   "The bill would support the proposed foreign relations scheme by changing statutory judicial review coverage and allowing information sharing from the foreign investment regime.",
+   "Decisions under the companion foreign relations legislation would be excluded from the Administrative Decisions (Judicial Review) Act 1977, while other judicial review avenues would remain.",
+   "The information-sharing amendment would permit protected investment information to reach the Foreign Affairs Minister and department secretary for administering the companion foreign relations scheme."
+  ],
+  "changes": [
+   "The foreign relations legislation would be added to the statutory judicial review exclusion list.",
+   "The foreign investment disclosure rules would include administration of the foreign relations scheme as a permitted purpose.",
+   "The substantive amendments would commence with the companion foreign relations legislation."
+  ],
+  "affected": "State, territory and foreign entities with covered arrangements and individuals with subsidiary contracts under those arrangements would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:41.845046+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-6768",

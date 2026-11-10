@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-16",
+  "sentences": [
+   "The bill would extend tax-free treatment for eligible state and territory COVID-19 business grants and permit tax information sharing for the COVID-19 Disaster Payment.",
+   "Eligible grants received in 2021-22 would receive the same income tax treatment as those received in 2020-21, including for businesses using substituted accounting periods.",
+   "The amendments would commence the day after Royal Assent, with the information-sharing provisions covering disclosures from Royal Assent regardless of when the information was obtained."
+  ],
+  "changes": [
+   "The tax law would add 2021-22 to the financial years covered by the grant concession.",
+   "Tax officers could give protected information to Services Australia's chief executive for disaster payment administration, including compliance activities.",
+   "Officers relying on the disclosure exception would bear the evidential burden for that exception."
+  ],
+  "affected": "Eligible business grant recipients, disaster payment applicants and tax officers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:00.595238+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7304",

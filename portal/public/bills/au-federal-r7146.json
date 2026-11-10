@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-12",
+  "sentences": [
+   "The bill would amend the Criminal Code Act 1995 so that the telecommunications offence of using a carriage service to counsel or incite suicide does not catch lawful voluntary assisted dying (VAD).",
+   "It would confirm that the offence in section 474.29 does not apply to acts or omissions done in accordance with state or territory VAD laws, so VAD services could be accessed by telehealth.",
+   "The exception would apply retrospectively, so VAD practitioners who have followed state laws would not have committed an offence, and the explanatory memorandum says the bill has no financial impact."
+  ],
+  "changes": [
+   "The offence of using a carriage service to incite suicide would not apply to acts or omissions carried out under state or territory VAD laws.",
+   "The change would be retrospective, so practitioners who followed state VAD laws in the past would not be guilty of the offence.",
+   "The explanatory memorandum states that the bill would have no financial impact."
+  ],
+  "affected": "Health practitioners providing voluntary assisted dying and patients seeking to access VAD services by telehealth or other carriage services are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:16:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

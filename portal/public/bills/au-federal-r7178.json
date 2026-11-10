@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "text",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2024-03-27",
+  "sentences": [
+   "The bill would provide transitional arrangements for the Net Zero Economy Authority, covering its initial governance, employee agreement, transferred documents and energy industry jobs plan.",
+   "It would transfer the former Net Zero Economy Agency’s documents and continue the departmental enterprise agreement for specified employees of the new Authority.",
+   "The bill would start alongside the Net Zero Economy Authority Act 2024, and its provisions would not commence if that companion Act did not commence."
+  ],
+  "changes": [
+   "The minister could appoint the first chief executive without a board recommendation.",
+   "The board would be exempt from the requirement for six meetings in its first calendar year.",
+   "Specified jobs plan notice provisions would apply to notices given before commencement as well as afterwards.",
+   "Transitional rules could be made, but could not create offences, impose taxes or confer arrest, detention, entry, search or seizure powers."
+  ],
+  "affected": "Authority employees covered by the enterprise agreement, its board and its first chief executive are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:21.291239+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8951",

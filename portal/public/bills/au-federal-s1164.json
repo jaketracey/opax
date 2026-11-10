@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-05",
+  "sentences": [
+   "The bill would extend federal protections against unauthorised commercial associations to names and imagery connected with the International Cricket Council (ICC) T20 World Cup 2020.",
+   "It would add both the women’s and men’s tournaments to the protected events framework, allowing existing remedies such as injunctions, damages and seizure of goods.",
+   "Protection would run from the day after Royal Assent until 30 November 2021 unless shortened by rules, with existing exemptions for information, criticism and review."
+  ],
+  "changes": [
+   "Schedules for the 2015 Asian Cup and Cricket World Cup would be repealed.",
+   "ICC Business Corporation FZ-LLC would be named as the body authorising commercial use.",
+   "Rules could add further protected expressions to the event’s list."
+  ],
+  "affected": "Event organisers, sponsors, businesses using tournament branding and importers of goods bearing protected material are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:13.507995+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

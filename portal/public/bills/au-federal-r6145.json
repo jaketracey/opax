@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-28",
+  "sentences": [
+   "The bill would relax ownership limits for financial sector companies, introduce a streamlined approval route for certain larger stakes and support restricted banking licences.",
+   "It would lift the shareholding limit requiring approval from 15 to 20 per cent for deposit-taking institutions, insurers and relevant holding companies.",
+   "The streamlined ownership route would cover qualifying Australian-incorporated companies entering the sector or licensed for fewer than five years, subject to asset and suitability tests."
+  ],
+  "changes": [
+   "The Australian Prudential Regulation Authority would be able to issue banking licences with a time limit.",
+   "Streamlined approval holders would have to report relevant prudential information annually to the regulator.",
+   "The regulator would review ownership structures every five years following streamlined approval.",
+   "The Treasurer could revoke streamlined approval if an owner ceased to satisfy the fit and proper test."
+  ],
+  "affected": "Banks, credit unions, building societies, insurers, relevant holding companies and their shareholders, the Treasurer and the Australian Prudential Regulation Authority would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:16.461906+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

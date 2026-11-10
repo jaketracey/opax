@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-18",
+  "sentences": [
+   "The bill would broaden and clarify proceeds of crime laws so authorities could restrain or confiscate property supported by criminal funds after its initial purchase.",
+   "Property could become criminal proceeds or an instrument of crime where those funds pay mortgages, related liabilities, maintenance or improvements, even if originally bought lawfully.",
+   "Several changes would reach property acquired or dealt with before commencement, while existing court safeguards and protections for qualifying innocent purchasers would continue to apply."
+  ],
+  "changes": [
+   "Unexplained wealth provisions would expressly cover wealth realised directly or indirectly from relevant offences.",
+   "Property treated as criminal proceeds or an instrument of crime could not also qualify as lawfully acquired.",
+   "The definition of improvements would include repairs, restructuring and other alterations whether or not they increase value."
+  ],
+  "affected": "People subject to confiscation proceedings, property owners, affected dependants and proceeds of crime authorities would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:35.517747+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

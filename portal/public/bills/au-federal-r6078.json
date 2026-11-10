@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would align imported goods' country-of-origin description rules with consumer law exceptions and allow import regulations to incorporate updated information standards over time.",
+   "Qualifying origin claims would no longer make goods falsely described merely because of the claim, providing a defence where the consumer law requirements were met.",
+   "The country-of-origin changes would start on Royal Assent, while information-standard amendments would begin by proclamation or the day after a six-month waiting period."
+  ],
+  "changes": [
+   "Consumer law rules about substantial transformation and where goods were grown would also govern the new import exception.",
+   "Regulations clarifying the substantial transformation test would apply when assessing imported goods' trade descriptions.",
+   "Import regulations could incorporate information standards as amended over time, including later changes to food labelling requirements."
+  ],
+  "affected": "Importers of goods bearing country-of-origin descriptions would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:40:12.254371+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

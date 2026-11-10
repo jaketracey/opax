@@ -95,7 +95,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-28",
+  "sentences": [
+   "The bill would alter tax treatment of renewable energy charge refunds, support the closure of a superannuation tribunal and expand industry code penalty limits.",
+   "It would make covered refunds non-assessable non-exempt income and raise the penalty ceiling available in industry code regulations from 300 to 600 penalty units.",
+   "The refund change would apply from 1 January 2019, and the bill would also extend temporary powers to modify Commonwealth document and information requirements."
+  ],
+  "changes": [
+   "Tribunal records could be transferred to the Australian Securities and Investments Commission.",
+   "Transitional rules could address matters arising from closure of the Superannuation Complaints Tribunal.",
+   "A legislative instrument could further extend the temporary document modification arrangements."
+  ],
+  "affected": "Electricity retailers, large electricity users, superannuation complainants and businesses covered by industry codes would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:21.905263+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7083",

@@ -89,7 +89,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-12",
+  "sentences": [
+   "The bill would allow two people to marry regardless of sex, sexual orientation or gender identity by changing the definition of marriage in federal law.",
+   "It would remove the express ban on recognising overseas same-sex marriages and revise the words used by couples and authorised celebrants in marriage ceremonies.",
+   "Religious ministers would retain their freedom to decline to solemnise marriages, and the amendments would start on the day after the bill received Royal Assent."
+  ],
+  "changes": [
+   "References to a brother and sister in the prohibited relationships rule would become references to siblings.",
+   "The consent table for marriages involving minors would replace husband and wife with gender-neutral wording.",
+   "Regulations could make consequential amendments to legislation other than the Marriage Act."
+  ],
+  "affected": "People seeking marriage, same-sex couples married overseas, authorised celebrants and ministers of religion are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:22.824305+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-4149",

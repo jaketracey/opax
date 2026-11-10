@@ -47,7 +47,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would transfer offshore greenhouse gas well and environmental oversight, expand inspection and enforcement powers, and retrospectively validate designated frontier areas for tax purposes.",
+   "Oversight would move from the Commonwealth Minister to the National Offshore Petroleum Safety and Environmental Management Authority (NOPSEMA), alongside its existing petroleum regulation responsibilities.",
+   "The Minister would retain major decisions about greenhouse gas titles, including grants, conditions and cancellation, as well as core resource management and security decisions."
+  ],
+  "changes": [
+   "Inspection powers would extend to relevant contractors' and related companies' business premises, excluding residential premises.",
+   "Inspectors could retain produced documents or things for as long as reasonably necessary, with copies and access safeguards.",
+   "New powers would permit warrant-free monitoring of compliance with well integrity obligations.",
+   "The Minister, Titles Administrator and NOPSEMA's chief executive could accept and enforce compliance undertakings.",
+   "Four areas from the 2005 exploration acreage release would be retrospectively designated frontier areas for the existing tax incentive."
+  ],
+  "affected": "Offshore petroleum and greenhouse gas titleholders, operators, relevant contractors and related companies, NOPSEMA and Commonwealth resources decision-makers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:40:47.212233+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

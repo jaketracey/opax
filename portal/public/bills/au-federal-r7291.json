@@ -119,7 +119,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-21",
+  "sentences": [
+   "The bill would let the Minister declare items such as mobile phones and controlled drugs prohibited things in immigration detention, where their possession or use might risk the health, safety, security or order of a facility.",
+   "Authorised officers could search detainees and Commonwealth-run facilities without a warrant, using detector dogs only for facility searches, and seize prohibited things where they believe on reasonable grounds this is necessary to prevent or lessen that risk.",
+   "Where a device declared prohibited as a facility risk is seized from a detainee in a facility and not returned, they would get alternative means to contact family, obtain legal advice or prescribed support, or discuss governmental or political matters."
+  ],
+  "changes": [
+   "The Minister could determine prohibited things by disallowable legislative instrument, covering unlawful items or things whose possession or use might be a facility risk.",
+   "The Minister could issue binding, non-disallowable written directions requiring officers to seize specified things from specified detainees or facilities.",
+   "Officers would have to take all reasonable steps to return seized facility-risk items (not unlawful items) once retention was no longer reasonably believed necessary, and owners could request temporary return.",
+   "Seized things could be forfeited to the Commonwealth if the owner cannot be identified, it is abandoned or cannot be returned when the detainee leaves detention.",
+   "Medications supplied for a detainee's own use by an authorised health provider, and detainees under a residence determination, would be excluded from the new powers."
+  ],
+  "affected": "Detainees, visitors to detention facilities, Department of Home Affairs and Australian Border Force officers, and the Minister are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:12:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9252",

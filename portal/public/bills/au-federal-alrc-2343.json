@@ -113,13 +113,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4979_ems_459322bb-5bbe-49a7-9c3f-fcf003bd7993%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4979%22",
+   "document_date": "2013-03-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00080",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-13",
+  "sentences": [
+   "The bill would expand aged care levy legislation so the Commonwealth could recover guarantee scheme costs relating to new refundable accommodation deposits and contributions.",
+   "Approved providers could face a levy if the Commonwealth refunds outstanding accommodation payments after provider insolvency and decides to recover its refund and administration costs.",
+   "The amendments would begin on 1 July 2014 alongside companion changes extending the guarantee scheme, while retaining the existing approach to calculating the levy ceiling."
+  ],
+  "changes": [
+   "The levy statute would become the Aged Care (Accommodation Payment Security) Levy Act 2006.",
+   "Broader accommodation payment definitions would replace the existing bond balance definitions.",
+   "The amended rules would apply to relevant default declarations made before, on or after 1 July 2014."
+  ],
+  "affected": "Approved aged care providers holding accommodation lump sums are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:43.528864+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2973",

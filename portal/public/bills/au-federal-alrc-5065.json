@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s930_ems_d95d967e-0d8e-41ec-aa2d-7242f83741ea%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s930%22",
+   "document_date": "2013-06-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-27",
+  "sentences": [
+   "The bill would establish an independent guardian for unaccompanied non-citizen children in Australia and its external territories, with legal guardianship, advocacy and service oversight functions.",
+   "The guardian would arrange custody, promote suitable care and involve children in decisions, while removal from Australia would require the guardian’s prior written consent.",
+   "The defined group would be children under 18 arriving without visas and without specified adult relatives, with exclusions for certain family and permanent adoption circumstances."
+  ],
+  "changes": [
+   "Removing a child from Australia without the required written consent would become a criminal offence.",
+   "Offences would also address removal from custodial arrangements and harbouring children removed from them.",
+   "Covered children could no longer be made wards of the Immigration Minister under the existing guardianship law.",
+   "The guardian would provide an annual report for presentation to Parliament."
+  ],
+  "affected": "Unaccompanied non-citizen children, their custodians and the guardian would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:05.523042+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

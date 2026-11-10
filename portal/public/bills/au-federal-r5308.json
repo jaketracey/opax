@@ -77,7 +77,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-07-17",
+  "sentences": [
+   "The bill would replace student start-up scholarships with repayable loans and introduce interest charges on specified unpaid student support debts from 1 January 2015.",
+   "Students could voluntarily take up to two loans each year, worth $1,025 apiece, and would start repayments after clearing any Higher Education Loan Programme debt.",
+   "Interest on relevant support debts would apply when acceptable repayment arrangements were absent or breached, while existing scholarship recipients would receive no grandfathering protection."
+  ],
+  "changes": [
+   "Student start-up scholarships would close and be repealed.",
+   "Loan amounts would be indexed from 2017.",
+   "Student start-up loan debts would not be provable in bankruptcy.",
+   "The debt interest rate would use the 90-day Bank Accepted Bill rate plus seven per cent.",
+   "Payments reducing student start-up loan debts would not be tax deductible."
+  ],
+  "affected": "Students receiving youth allowance, austudy or Aboriginal and Torres Strait Islander Study Assistance Scheme payments, apprentices and people owing relevant support debts would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:07.622473+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3552",

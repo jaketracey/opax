@@ -131,7 +131,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "The bill would introduce interim veteran income support, expand assistance for families and care needs, establish a mental health pilot and amend veterans' entitlement administration.",
+   "Veteran Payment would support eligible claimants awaiting mental health injury decisions, subject to income and assets tests and rehabilitation requirements, with some partners also eligible.",
+   "The family support scheme would cover prescribed members, former members and relatives, linked to warlike service rendered on or after 1 July 2004."
+  ],
+  "changes": [
+   "A pilot would provide additional mental health support for veterans in rural and regional areas.",
+   "Compensation for catastrophic injury household and attendant care could exceed existing limits where reasonable for individual needs.",
+   "Qualifying service determinations could be made using shared service information without a separate application from the veteran.",
+   "An inadvertently omitted compensation provision for peacekeepers would be restored retrospectively from 12 October 2017.",
+   "Medical treatment eligibility would extend to defence members in Japan between 16 August 1945 and 30 January 1946."
+  ],
+  "affected": "Eligible veterans, current and former defence members, their partners and families, peacekeepers and veterans' entitlement authorities would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:28.611682+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

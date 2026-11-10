@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-26",
+  "sentences": [
+   "The bill would protect information collected through family safety risk screening in federal family law courts and provide immunity for court workers administering the process.",
+   "Screening information would generally be confidential and inadmissible in proceedings, with exceptions allowing disclosure for legal obligations, consent and specified safety or assistance purposes.",
+   "The protections would initially support a pilot in Adelaide, Brisbane and Parramatta, and would also apply if screening later expanded to other court registries."
+  ],
+  "changes": [
+   "Screening workers would have to disclose information where reasonably necessary to comply with law.",
+   "Adults could consent to disclosure of information about their screening.",
+   "For screened parties under 18, disclosure consent would instead come from a court."
+  ],
+  "affected": "Family law litigants, children, registrars, family counsellors and other workers involved in risk screening are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:09.636857+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

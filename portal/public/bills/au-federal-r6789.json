@@ -47,7 +47,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-21",
+  "sentences": [
+   "The bill would expand Medicare compliance arrangements for corporate and other non-practitioner providers and change debt recovery rules across medical, pharmaceutical and child dental benefits.",
+   "It would allow all persons under Professional Services Review to negotiate agreements acknowledging inappropriate practice, and add sanctions for failing to provide documents or attend hearings.",
+   "The changes would begin the day after royal assent, while corporate agreements concerning inappropriate practice would be separate from reviews of individual practitioners."
+  ],
+  "changes": [
+   "Written review agreements could include counselling and requirements to educate associated staff about appropriate claiming or service provision.",
+   "The review director could seek court orders requiring documents to be produced.",
+   "Set-off and garnishee powers would extend to debts arising under agreements with the review director.",
+   "Pharmaceutical and dental benefits paid because of false or misleading information would be recoverable as debts.",
+   "Corporate providers could be required to send an executive officer to give evidence at review hearings."
+  ],
+  "affected": "Health practitioners, corporate healthcare providers, other reviewed persons and Professional Services Review would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:55.615567+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

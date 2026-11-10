@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "The bill would create child sexual abuse offences and change federal bail, sentencing, parole and witness rules, including mandatory minimum sentences for specified offences.",
+   "It would criminalise grooming third parties to facilitate child sexual activity and operating electronic services for child abuse material, while increasing certain maximum penalties.",
+   "Mandatory minimums would cover the most serious Commonwealth child sex offences and repeat offending, but would exclude offences committed while the offender was under 18."
+  ],
+  "changes": [
+   "Certain serious or repeat child sex charges would carry a rebuttable presumption against bail.",
+   "Children and other vulnerable witnesses could not be cross-examined at committal proceedings.",
+   "Courts would have to consider rehabilitation when sentencing Commonwealth child sex offenders.",
+   "Community safety could justify revoking a federal offender’s parole without notice."
+  ],
+  "affected": "Children, vulnerable witnesses, people accused or convicted of Commonwealth child sex offences, federal parolees, courts and parole decision-makers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:51.426784+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-6391",

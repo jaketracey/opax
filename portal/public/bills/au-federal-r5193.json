@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "The bill would correct drafting and clerical errors across Commonwealth legislation and remove provisions and Acts that are obsolete or have finished operating.",
+   "It would repeal 17 spent Acts, modernise legislative wording and replace some references to named ministers with references based on their administrative responsibilities.",
+   "Most amendments would begin 28 days after Royal Assent, while some corrections to earlier amending Acts would operate from the dates of those amendments."
+  ],
+  "changes": [
+   "It would renumber a duplicated family assistance provision.",
+   "It would update the judgment certificate form to accommodate years from 2000 to 2099 and provide space for the month.",
+   "It would remove an unused definition of nursing home patient."
+  ],
+  "affected": "Private publishers of Commonwealth legislation would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:23:27.036243+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

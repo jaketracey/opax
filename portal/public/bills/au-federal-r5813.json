@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-16",
+  "sentences": [
+   "The bill would increase the dollar value used to calculate monetary penalties for Commonwealth offences and change when automatic inflation adjustments next take place.",
+   "The value of a penalty unit would rise from $180 to $210 on 1 July 2017, increasing fines expressed as multiples of that unit.",
+   "The higher value would cover offences committed from commencement, while existing proceedings would retain their current penalty basis and later adjustments would remain linked to inflation."
+  ],
+  "changes": [
+   "The statutory penalty unit definition would specify $210.",
+   "The first automatic indexation date would move from 1 July 2018 to 1 July 2020.",
+   "Subsequent indexation dates would shift to every third 1 July after 2020."
+  ],
+  "affected": "People and companies committing Commonwealth offences subject to monetary penalties are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:38.081286+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

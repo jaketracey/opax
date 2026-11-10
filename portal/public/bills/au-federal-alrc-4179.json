@@ -69,8 +69,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5108_ems_1536486a-d281-4b67-b068-9c49c1fe36e4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5108%22",
+   "document_date": "2013-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-24",
+  "sentences": [
+   "The bill would merge the grape and wine research corporation and Wine Australia Corporation into the Australian Grape and Wine Authority, combining their existing functions.",
+   "The new authority would begin on 1 July 2014, receive the bodies’ assets, staff and functions, and coordinate research alongside marketing responsibilities.",
+   "The package would preserve existing levy structures and amounts, with companion customs charge and excise levy bills redirecting collections to support the merged authority."
+  ],
+  "changes": [
+   "The authority would have a Chair and between five and seven directors, with the chief executive outside the board.",
+   "Ministerial approval would no longer be required for annual operational plans.",
+   "An annual general meeting would be optional unless requested by a representative organisation or at least ten relevant levy payers.",
+   "The authority would gain express powers to make research agreements, provide grants and engage consultants."
+  ],
+  "affected": "Grape growers, winemakers, industry representative organisations, the merging bodies and their staff are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:03.631731+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

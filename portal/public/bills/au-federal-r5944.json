@@ -89,7 +89,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-17",
+  "sentences": [
+   "The bill would raise tax on excess after-tax superannuation contributions where a person exceeds their contribution cap and chooses not to release the excess and earnings.",
+   "The rate would rise from 47 per cent to 47.5 per cent, combining the top marginal income tax rate with the proposed higher Medicare levy.",
+   "It would accompany the proposed Medicare levy increase in a wider package intended to help fund the Commonwealth's contribution to the National Disability Insurance Scheme."
+  ],
+  "changes": [
+   "The new rate would apply to assessments for the 2019-20 financial year and later financial years.",
+   "Commencement would align with the companion Medicare levy legislation.",
+   "Section 5 of the excess non-concessional contributions tax Act would be updated."
+  ],
+  "affected": "Individuals liable for excess non-concessional contributions tax would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:21:02.979683+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

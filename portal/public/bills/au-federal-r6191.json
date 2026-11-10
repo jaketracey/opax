@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "The bill would set a default income tax rate for foreign sovereign entities as part of a legislative package changing sovereign immunity tax arrangements.",
+   "It would impose a 30 per cent rate on taxable income where another provision does not specify a different rate for the sovereign entity.",
+   "Entities taxed as companies or trusts would retain their relevant rates, while the companion Treasury bill would determine liability and the scope of exemptions."
+  ],
+  "changes": [
+   "A specific statutory rate of 30 per cent would apply as the fallback for sovereign entities.",
+   "The new rate provision would defer to other applicable provisions setting a different income tax rate.",
+   "The rates amendment would form part of changes applying from 1 July 2019."
+  ],
+  "affected": "Foreign governments, their agencies and qualifying wholly owned foreign entities with Australian taxable income are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:20.985360+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

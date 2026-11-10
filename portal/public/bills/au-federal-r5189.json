@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "The bill would abolish the Independent National Security Legislation Monitor and repeal the legislation establishing its role in reviewing counter-terrorism and national security laws.",
+   "It would transfer the office's records to the Department of Prime Minister and Cabinet while retaining arrangements for the Monitor's final annual report.",
+   "The repeal would begin on the later of 21 April 2014 and the day after Royal Assent, after the current Monitor's term expired."
+  ],
+  "changes": [
+   "Protection from criminal and civil liability would continue for people served notices before commencement.",
+   "Existing immunity from legal action would be preserved.",
+   "The final report would have to be tabled in each House within 15 sitting days after the Prime Minister received it."
+  ],
+  "affected": "The Monitor and people served notices would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:12.447809+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

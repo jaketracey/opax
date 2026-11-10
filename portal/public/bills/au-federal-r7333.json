@@ -119,7 +119,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-24",
+  "sentences": [
+   "The bill would amend the Customs Tariff Act 1995 to apply the preferential tariff treatment for goods from the United Arab Emirates (UAE) under the Comprehensive Economic Partnership Agreement signed on 6 November 2024.",
+   "UAE originating goods not listed in a new Schedule 16 would become duty free, while Schedule 16 would phase other rates down to Free by the fifth calendar year after entry into force and keep excise-equivalent duty on certain alcohol, tobacco, fuel and petroleum products.",
+   "It sits with a companion Customs Amendment bill setting the rules of origin, and both would commence on the later of Royal Assent and the Agreement's entry into force for Australia."
+  ],
+  "changes": [
+   "New paragraph 16(1)(v) would set duty by reference to Schedule 16 for listed goods, and at Free otherwise.",
+   "Table items 145 to 257 of Schedule 16 would phase down ad valorem duty on listed goods, eliminating it by 1 January of the fifth calendar year after entry into force.",
+   "Table items 1 to 144 would charge duty on UAE alcohol, tobacco, fuel and petroleum products at rates equal to excise on locally made goods, with the usual indexation applying.",
+   "Schedule 4 concessional rates would apply to UAE originating goods only where lower than the Schedule 16 rate.",
+   "Customs duty collections are estimated to fall by $16 million in 2025-26, rising to $23 million a year by 2029-30 when all tariff reductions are fully implemented."
+  ],
+  "affected": "Importers of goods qualifying for UAE tariff preferences would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T10:40:00Z"
+ },
  "divisions": [],
  "speeches": [
   {

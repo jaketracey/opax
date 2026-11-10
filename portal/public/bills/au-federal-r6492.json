@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-12",
+  "sentences": [
+   "The bill would broaden tax rules for significant global entities, revise which entities must undertake country by country reporting and make superannuation merger relief permanent.",
+   "Large groups would be assessed as though their parent were listed, disregarding accounting consolidation exceptions, while separate reporting rules would exclude individuals.",
+   "The global entity changes would generally apply to income years or periods beginning on or after 1 July 2019, with delayed penalties for newly covered entities."
+  ],
+  "changes": [
+   "Missing or inadequate global financial statements would no longer prevent annual global income from being assessed.",
+   "General purpose financial statement requirements would apply to country by country reporting entities rather than all significant global entities.",
+   "Merging superannuation funds could continue choosing loss relief and asset roll-over without the existing expiry restriction."
+  ],
+  "affected": "Large multinational groups, merging superannuation funds and their members are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:37.606957+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6342",

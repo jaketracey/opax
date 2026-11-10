@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "The bill would let parts of amalgamated registered organisations seek a member vote on leaving the organisation after the existing five-year application limit.",
+   "The Fair Work Commission would consider workplace and safety compliance, the departing part's contribution to breaches, and its ability to represent members independently.",
+   "The provisions would also cover qualifying amalgamations under earlier legislation, with a review required to be completed within two years of the amendments commencing."
+  ],
+  "changes": [
+   "Applications would need proposed names and rules for both organisations after separation.",
+   "The commission could accept undertakings intended to prevent disputes over membership coverage.",
+   "Failure to obey an information direction could attract a civil penalty of up to 100 penalty units."
+  ],
+  "affected": "Amalgamated registered organisations, their constituent branches and divisions, members and the Fair Work Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:58.285965+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6831",

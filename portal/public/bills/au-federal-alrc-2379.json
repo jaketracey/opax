@@ -101,13 +101,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5028_ems_3772bfc1-8666-4a57-9caa-5a65607b5f83%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5028%22",
+   "document_date": "2013-03-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00073",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-21",
+  "sentences": [
+   "The bill would expand workplace flexibility and parental protections, introduce a process for stopping workplace bullying and change rules governing union access to workplaces.",
+   "It would let eligible workers seek Fair Work Commission orders stopping bullying and require the Commission to begin handling applications within 14 days.",
+   "The bullying provisions would cover constitutionally covered businesses, exclude reasonable management action carried out reasonably and allow preventive orders without awarding money."
+  ],
+  "changes": [
+   "Concurrent unpaid parental leave for employee couples would increase from three weeks to eight weeks.",
+   "Taking special maternity leave would no longer reduce an eligible employee's unpaid parental leave entitlement.",
+   "Modern awards and enterprise agreements would require consultation before changes to regular rosters or ordinary hours.",
+   "Modern award decisions would have to consider additional pay for overtime, shifts, weekends, public holidays and unsocial or irregular hours.",
+   "Remote-site transport and accommodation arrangements for entry permit holders would be limited to cost recovery."
+  ],
+  "affected": "Covered workers, pregnant employees, working parents, employers, union entry permit holders, workplace occupiers and the Fair Work Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:55.044718+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1113",

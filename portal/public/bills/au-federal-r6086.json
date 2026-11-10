@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill would allow the Governor-General to appoint a second Deputy Chairperson of the Australian Securities and Investments Commission, while retaining discretion to appoint none.",
+   "Only full-time commission members could hold deputy positions, and meeting procedures and acting appointment powers would be adjusted to accommodate having two deputies.",
+   "The changes would apply after a 14-day period starting on Royal Assent, with appointments already in place at commencement continuing unaffected by the amendments."
+  ],
+  "changes": [
+   "When both deputies were available and the Chairperson was absent, the Chairperson could nominate which deputy would preside at a meeting.",
+   "The Minister could appoint an acting deputy when fewer than two deputies held office or a deputy was absent or acting as Chairperson.",
+   "References in the Foreign Evidence Act 1994 would be updated to accommodate multiple Deputy Chairpersons."
+  ],
+  "affected": "Commission members, the Governor-General and the Minister responsible for appointments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:39:21.605440+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

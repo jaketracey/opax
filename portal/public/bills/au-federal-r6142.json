@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-27",
+  "sentences": [
+   "The bill would incorporate tariff proposals removing duties on specified agricultural chemicals and clinical trial imports, and make a technical correction to Chinese tariff preferences.",
+   "The chemical changes would apply from 20 September 2017, while concessions for qualifying clinical trial kits and placebos would apply from 1 July 2018.",
+   "The chemical concessions would apply to all signatories of the regional free trade agreement covering Australia, New Zealand and participating Southeast Asian countries."
+  ],
+  "changes": [
+   "Blinded clinical trial kits meeting by-law requirements could be imported without separately classifying their medicaments and placebos.",
+   "Placebos imported separately for use in Australian clinical trials would also receive duty-free treatment.",
+   "A redundant entry for herbicides and related products would be removed from the Chinese preferential tariff schedule without changing duty rates."
+  ],
+  "affected": "Importers of covered agricultural chemicals, blinded clinical trial kits and placebos for Australian clinical trials would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:19.659258+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

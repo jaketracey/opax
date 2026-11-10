@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "text",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2024-10-09",
+  "sentences": [
+   "The bill would revise Sydney Airport’s slot allocation and enforcement framework and allow temporary increases in aircraft movements during declared periods following significant disruption.",
+   "It would set hourly limits of 80 movements normally and 85 during recovery, alongside a daily limit of 1,360 movements outside the curfew.",
+   "Recovery declarations would require an Airservices Australia recommendation and satisfaction of regulatory criteria, and recovery periods could not overlap any part of the curfew."
+  ],
+  "changes": [
+   "Airlines deciding to stop a service, or learning its slots were unlikely to be used, would need to return or transfer them within 14 days.",
+   "Applying for slots without practicable plans to use them would attract civil penalties, unless the airline disclosed that intention when applying.",
+   "The enforcement framework would provide for infringement notices, undertakings enforceable by courts and injunctions."
+  ],
+  "affected": "Aircraft operators at Sydney Airport, the Slot Manager and Airservices Australia are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:21.290555+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10463",

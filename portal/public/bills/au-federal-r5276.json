@@ -113,7 +113,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-24",
+  "sentences": [
+   "The bill would update six appropriation Acts for ordinary annual government services to reflect the Public Governance, Performance and Accountability Act and its financial framework.",
+   "It would replace references to the former financial management laws and update definitions used to identify agencies, corporate Commonwealth bodies and special accounts.",
+   "The amendments would cover specified appropriations from 2012-2013 to 2014-2015, with commencement linked to the new framework and, where relevant, the latest appropriation Act."
+  ],
+  "changes": [
+   "Chief Executive references in the earlier Acts would refer to accountable authorities.",
+   "References governing notional payments would move to the new framework.",
+   "Drawing rights notes would be removed because the new framework does not require those authorisations.",
+   "The latest appropriation would expressly provide for direct payments to corporate bodies from the Consolidated Revenue Fund.",
+   "Notes would preserve recognition of applicable transitional provisions under the former legislation."
+  ],
+  "affected": "Commonwealth entities and Commonwealth companies would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:47.109485+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3268",

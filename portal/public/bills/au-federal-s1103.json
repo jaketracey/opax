@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "The bill would change digital radio licensing and planning procedures, shortening several application periods and removing some separate notice and consultation requirements for rollout.",
+   "Share invitations would generally remain open for at least 60 days for community representative companies and 80 days for joint venture companies, with earlier closure possible.",
+   "The changes would begin on Royal Assent, with application provisions limiting specified amendments to later invitations, licence issues and declarations of digital radio start-up days."
+  ],
+  "changes": [
+   "The separate requirement to give 30 days' advance notice of a digital radio start-up declaration would be removed.",
+   "Separate consultation rules for channel plans would be removed, leaving the general rules for legislative instruments.",
+   "Multiplex licensees would need to submit access undertakings within 50 days, replacing the three-month period.",
+   "Existing excess-capacity access entitlements would count when assessing whether further capacity is available."
+  ],
+  "affected": "Radio broadcasters, multiplex licence applicants and the Australian Communications and Media Authority would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:17.943440+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

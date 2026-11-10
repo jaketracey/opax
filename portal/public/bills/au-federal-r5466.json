@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-28",
+  "sentences": [
+   "The bill would expand immediate asset deductions for small businesses and accelerate deductions for primary producers' water facilities, fencing and fodder storage investments.",
+   "For businesses with aggregated annual turnover below $2 million, a temporary $20,000 asset write-off threshold would replace $1,000, subject to acquisition and use requirements.",
+   "The higher threshold would generally apply from 7.30 pm Australian Capital Territory time on 12 May 2015 until 30 June 2017 under temporary depreciation provisions."
+  ],
+  "changes": [
+   "Qualifying water facilities and fencing expenditure by primary producers could be deducted immediately.",
+   "Capital expenditure on eligible fodder storage assets would be deductible over three years.",
+   "General small business pool balances below $20,000 could be written off in qualifying income years.",
+   "The five-year exclusion after opting out of simplified depreciation would be suspended for qualifying years."
+  ],
+  "affected": "Eligible small businesses and primary producers purchasing assets or incurring qualifying capital expenditure are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:41.396559+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3791",

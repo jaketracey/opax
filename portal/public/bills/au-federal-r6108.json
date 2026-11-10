@@ -149,7 +149,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-08",
+  "sentences": [
+   "The bill would authorise spending from the Consolidated Revenue Fund for parliamentary departments as part of the Commonwealth's budget appropriations for the 2018-19 financial year.",
+   "It would provide departmental operating funds, administered payments and funding for assets and liabilities, with amounts allocated through a schedule for each parliamentary department.",
+   "The legislation would begin on the later of 1 July 2018 and Royal Assent, and be repealed at the start of 1 July 2021."
+  ],
+  "changes": [
+   "The responsible Presiding Officer could allocate up to $1 million in additional urgent funding for the Department of Parliamentary Services.",
+   "Equivalent urgent funding limits would be $300,000 each for the Senate department, House of Representatives department and Parliamentary Budget Office.",
+   "Appropriated amounts could be credited to special accounts where the purposes of the appropriation and account matched."
+  ],
+  "affected": "The departments of the Senate, House of Representatives and Parliamentary Services, the Parliamentary Budget Office and responsible Presiding Officers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:37:53.228683+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

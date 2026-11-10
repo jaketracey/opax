@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-26",
+  "sentences": [
+   "The bill would clarify how the Australian Criminal Intelligence Commission’s board authorises special operations and investigations, simplifying definitions and the wording of its determinations.",
+   "It would replace layered criminal activity definitions with clearer crime definitions and expressly connect special operations and investigations to the board’s written authorisations.",
+   "The commission’s jurisdiction, investigative powers and existing safeguards would remain, with current determinations, information arrangements and interception warrants preserved through transitional provisions."
+  ],
+  "changes": [
+   "A federally relevant crime definition would identify Commonwealth and territory offences and state offences with a federal aspect.",
+   "The relevant crime definition would consolidate past, ongoing and potential future offending.",
+   "Related parliamentary oversight and telecommunications interception provisions would use the revised terminology."
+  ],
+  "affected": "The Australian Criminal Intelligence Commission and its board would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

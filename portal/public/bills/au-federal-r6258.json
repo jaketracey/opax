@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-14",
+  "sentences": [
+   "The bill would amend the Governor-General’s salary legislation to set the pay for incoming Governor-General David Hurley before his planned swearing-in in June 2019.",
+   "It would replace the existing annual amount of $425,000 with $495,000, calculated by reference to the Chief Justice’s estimated average salary over the appointment.",
+   "The proposed figure takes account of Hurley’s military pension, while a transitional provision would preserve the salary of the Governor-General already holding office."
+  ],
+  "changes": [
+   "The statutory yearly salary would rise to $495,000.",
+   "The person in office immediately before commencement would be excluded from the salary change.",
+   "The amendment would take effect when Royal Assent is given."
+  ],
+  "affected": "The incoming Governor-General, David Hurley, and the Governor-General holding office immediately before commencement are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:29.597029+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5721",

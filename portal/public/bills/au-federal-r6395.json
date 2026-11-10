@@ -89,7 +89,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "The bill would establish a two-year trial requiring random drug tests for 5,000 new Newstart Allowance and Youth Allowance job seekers in selected regions.",
+   "Positive tests would trigger income management and further testing, with repeated positive results leading to medical assessment and recommended treatment requirements in employment plans.",
+   "The trial would operate in Canterbury-Bankstown, Logan and Mandurah, excluding farm household allowance recipients and Youth Allowance recipients undertaking full-time study or apprenticeships."
+  ],
+  "changes": [
+   "Refusing a test without reasonable excuse would cancel payment immediately.",
+   "A new claim after cancellation for test refusal would face a four-week non-payment period.",
+   "A requested retest that also returned positive would create a repayment obligation.",
+   "The Minister could set rules for samples, tests, confidentiality and records."
+  ],
+  "affected": "Selected new allowance recipients in the three trial regions and contracted testing providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:51.427099+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5905",

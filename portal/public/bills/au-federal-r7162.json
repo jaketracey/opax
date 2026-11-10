@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-20",
+  "sentences": [
+   "The bill would amend the Customs Tariff Act 1995 to raise customs duty on imported tobacco products, giving legislative effect to the Customs Tariff Proposal (No. 2) 2023 tabled on 7 August 2023.",
+   "It would increase the customs duty rate for all tobacco products by five per cent a year for three years from 1 September 2023, on top of existing biannual indexation to average weekly ordinary time earnings.",
+   "The amendments would apply retrospectively from 1 September 2023, and the bill sits with the Excise Tariff Amendment (Tobacco) Bill 2024, which would make matching changes for tobacco manufactured in Australia."
+  ],
+  "changes": [
+   "The weight conversion factor for tobacco taxed per kilogram, such as loose leaf tobacco, would fall by 0.000025 each year on 1 September from 2023 to 2026, taking it from 0.0007 to 0.0006.",
+   "That change would raise the per kilogram duty to broadly align it with the per stick duty on cigarettes.",
+   "The higher rate would apply to goods imported on or after 1 September 2023 and to earlier imports where the duty rate had not yet been worked out.",
+   "Transitional provisions would treat indexation under the old formula on 1 September 2023 and 1 March 2024 as of no effect and replace it with indexation under the amended formula."
+  ],
+  "affected": "Tobacco importers and people who buy tobacco products would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:18:32Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

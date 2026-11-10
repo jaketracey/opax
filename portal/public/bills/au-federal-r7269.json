@@ -113,7 +113,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-07",
+  "sentences": [
+   "The bill would amend the Customs Tariff Act 1995 to abolish over 450 nuisance tariffs, extend duty-free access for goods from Ukraine and remove spent phased-rate provisions.",
+   "It would set the general duty rate on those headings and subheadings to Free from 1 July 2024 and extend the Ukraine concession by 24 months to 3 July 2026.",
+   "Parts 1 and 2 would commence retrospectively on 1 July and 4 July 2024 to match earlier Customs Tariff Proposals, while Part 3 would commence 28 days after Royal Assent."
+  ],
+  "changes": [
+   "Part 1 would set the customs duty rate to Free for over 450 tariff headings and subheadings in Schedule 3, applying to goods imported on or after 1 July 2024.",
+   "Part 1 would also revise Schedule 14 so that preferential rates for goods originating under the Regional Comprehensive Economic Partnership (RCEP) Agreement are no higher than the general rate.",
+   "Part 2 would extend the temporary duty reduction for goods that are the produce or manufacture of Ukraine to 3 July 2026, keeping existing exceptions for goods such as alcohol, fuel and tobacco.",
+   "Part 3 would repeal spent phased-rate table items in Schedules 10 and 11 for Korean and Japanese originating goods, and redundant paragraphs of section 11.",
+   "Abolishing the tariffs is estimated to cut receipts by $41.0 million over four years from 2024-25, and the Ukraine extension by $2.0 million over two years."
+  ],
+  "affected": "Importers of goods such as toothbrushes, tools, fridges and clothing, importers of goods from Ukraine, and traders using the RCEP, Korea and Japan trade agreements are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:05:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

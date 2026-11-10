@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-12",
+  "sentences": [
+   "The bill would extend the freeze on income thresholds used for private health insurance rebates and the Medicare levy surcharge for a further two financial years.",
+   "Base thresholds would stay at $90,000 for singles and $180,000 for families, with the existing higher income tiers also retained during the extended pause.",
+   "The amendments would begin on 1 July 2021, apply for 2021-22 and later years, and provide for annual indexation to resume from 1 July 2023."
+  ],
+  "changes": [
+   "The indexation formula would use the index number for the quarter ending 31 December 2021 as its reference.",
+   "Revised indexation rules would prevent thresholds falling below amounts calculated for earlier financial years.",
+   "Obsolete provisions for the earlier indexation pause would be removed."
+  ],
+  "affected": "Individuals and families eligible for private health insurance rebates, and taxpayers subject to the Medicare levy surcharge, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:09.099845+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7173",

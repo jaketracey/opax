@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-10-18",
+  "sentences": [
+   "The bill would update references to the monarch in Commonwealth legislation, generally replacing references to a particular king or queen with the Sovereign.",
+   "It would also make statutory oaths adaptable to future monarchs and define Senior Counsel to include both King's Counsel and Queen's Counsel.",
+   "The changes would take effect the day after Royal Assent, while specified historical references and legislation potentially requiring state involvement would remain unchanged."
+  ],
+  "changes": [
+   "The Fair Work Act's public holiday terminology would refer to the Sovereign's birthday.",
+   "High Court documents issued in the monarch's name would use the Sovereign terminology.",
+   "The Marriage Act would replace its definition of Queen's dominions with Sovereign's dominions."
+  ],
+  "affected": "People taking statutory oaths and senior barristers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:13.230915+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8519",

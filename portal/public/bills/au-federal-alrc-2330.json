@@ -113,13 +113,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4956_ems_248b896d-e35b-4341-8f67-db496304393a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4956%22",
+   "document_date": "2013-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00021",
    "document_date": "2013-03-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-07",
+  "sentences": [
+   "The bill would provide additional funding for the Commonwealth’s ordinary annual services in 2012-2013, supplementing the amounts proposed in the Budget through scheduled appropriations.",
+   "Funding would cover departmental operations, administered programs and payments to listed Commonwealth authorities and companies, with separate rules governing how each category could be spent.",
+   "The bill would commence on Royal Assent and sit alongside a companion appropriation bill funding services beyond the government’s ordinary annual operations."
+  ],
+  "changes": [
+   "The Finance Minister’s available advance would be restored to $295 million.",
+   "Funding already provided through an advance for the same expenditure would reduce the corresponding appropriation.",
+   "Surplus appropriations could be reduced through the bill’s specified determination and reporting processes.",
+   "Amounts could be moved into special accounts where the appropriation and account shared a purpose."
+  ],
+  "affected": "Commonwealth agencies and funded Commonwealth authorities and companies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:14.043169+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

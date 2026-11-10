@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "The bill would change tax treatment for cyclone recovery grants and the Women’s World Cup, manage superannuation complaint transitions and make technical legislative amendments.",
+   "It would exclude qualifying Cyclone Seroja grants from taxable income and provide limited tournament-related tax exemptions, while supporting the transfer of former tribunal responsibilities.",
+   "Separate technical measures would delay the automatic commencement of business register modernisation legislation until 1 July 2026, unless an earlier date was proclaimed."
+  ],
+  "changes": [
+   "The cyclone grant tax treatment would apply from the 2021-2022 income year.",
+   "Former Superannuation Complaints Tribunal records would become the Australian Securities and Investments Commission’s responsibility, with confidentiality protections.",
+   "The Federal Court could send former tribunal matters to the Australian Financial Complaints Authority for redetermination.",
+   "The International Federation of Association Football and FWWC2023 Pty Ltd would receive relevant tournament tax exemptions covering 1 July 2020 to 31 December 2028."
+  ],
+  "affected": "Eligible cyclone-affected businesses and primary producers, superannuation complainants, tournament organisers and entities using business registers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7707",

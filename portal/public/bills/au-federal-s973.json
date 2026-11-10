@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-02",
+  "sentences": [
+   "The bill would change the terminology used for financial product information that does not consider a consumer's personal circumstances, replacing general advice with general information.",
+   "It would require warnings to retail clients to say the information is not advice, alongside the existing warning that personal objectives, finances and needs are unconsidered.",
+   "The terminology and warning amendments would begin the day after six months from royal assent, giving providers time before the substantive requirements would apply."
+  ],
+  "changes": [
+   "References to general advice across the Corporations Act would be replaced with general information.",
+   "The client warning in section 949A would expressly distinguish general information from advice.",
+   "The preliminary provisions would begin on the day after royal assent."
+  ],
+  "affected": "Financial product information providers, financial advisers and retail clients receiving general information are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:16.311174+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

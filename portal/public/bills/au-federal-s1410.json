@@ -59,7 +59,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-02-27",
+  "sentences": [
+   "The bill would require the Transport Minister to make rules setting obligations that airline carriers operating in Australian airspace owe passengers who face delays, cancellations or denied boarding.",
+   "The carriers' obligations rules would have to be made within 12 months of commencement, after consulting aviation industry stakeholders, consumer advocates and other relevant agencies.",
+   "It would also require the Minister to establish an aviation industry code of conduct protecting passengers and third parties from improper conduct by carriers, and the Act would commence the day after Royal Assent."
+  ],
+  "changes": [
+   "Australia would be defined to cover all Australian airspace including the external territories, and carrier and passenger-carrying operation defined so the rules apply to any aviation passenger service.",
+   "The code of conduct would at a minimum set out the recourse or intervention available to passengers for improper conduct, and require a consistent definition of a ticket of carriage.",
+   "The Minister would have to consider the constitutional heads of power supporting both the rules and the code of conduct, and consult stakeholders before making the code.",
+   "The rules would also have to ensure that children 14 and under can sit beside a parent or guardian without an extra charge.",
+   "The Transport Minister would be whichever minister administers the Civil Aviation (Carriers' Liability) Act 1959, regardless of a change in title."
+  ],
+  "affected": "Airline carriers operating to, from and within Australia and its external territories, including foreign carriers, airline passengers and the Transport Minister are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:18:32Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

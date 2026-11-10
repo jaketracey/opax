@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "The bill would extend waiting periods for newly arrived residents to receive specified social security payments and concession cards, generally from 104 weeks to 156 weeks.",
+   "It would also introduce 156-week waiting periods for family tax benefit, parental leave pay and dad and partner pay, expanding the payments subject to waiting.",
+   "Existing social security exemptions for refugees and citizens would remain, with earlier visa holders generally covered by the current rules rather than the new periods."
+  ],
+  "changes": [
+   "Carer allowance would become subject to a 156-week waiting period, with specified exemptions.",
+   "Bereavement allowance, widow allowance and parenting payment would receive new waiting periods alongside existing qualification requirements.",
+   "The farm household allowance waiting period would increase from 104 to 156 weeks.",
+   "The special benefit exemption for changed circumstances would require the relevant change to occur after the person's waiting period began."
+  ],
+  "affected": "Newly arrived residents seeking covered payments or concession cards, including eligible carers, parents and farm household allowance claimants, would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:42:50.139337+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5582",

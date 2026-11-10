@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-29",
+  "sentences": [
+   "The bill would broaden the circumstances in which Australian Secret Intelligence Service staff and agents could use force overseas and protect people beyond existing categories.",
+   "It would permit reasonable force during specified, ministerially approved activities, subject to consultation with senior ministers, binding guidelines and oversight by the intelligence inspector-general.",
+   "It would expressly prohibit torture, cruel treatment and sexual offences, allowing potentially lethal force only where reasonably believed necessary to protect life or prevent serious injury."
+  ],
+  "changes": [
+   "The minister could approve additional people or classes of people for protection using weapons or self-defence techniques.",
+   "Uses or threats of force under the new framework would have to be reported to the inspector-general.",
+   "Classified annual reports would include the number and broad nature of occasions involving force or threats."
+  ],
+  "affected": "Service staff and agents, people protected or subjected to force overseas, responsible ministers and intelligence oversight bodies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:25.318243+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

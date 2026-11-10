@@ -143,7 +143,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-05",
+  "sentences": [
+   "The bill would amend the Criminal Code Act 1995 to replace the private sexual material offence with a new offence of using a carriage service to transmit sexual material of an adult without consent.",
+   "The new section 474.17A offence would carry a maximum of 6 years' imprisonment and apply whether the material is unaltered or created or altered using technology such as artificial intelligence, including deepfakes.",
+   "Two aggravated offences with 7-year maximums would cover people with three or more civil penalty orders for Online Safety Act 2021 intimate-image or removal-notice breaches and people who created or altered the material, commencing the day after Royal Assent."
+  ],
+  "changes": [
+   "Existing sections 474.17A and 474.17B and the definitions of private sexual material and subject in section 473.1 would be repealed.",
+   "It would cover material showing a person who is, or appears to be, 18 or older in a sexual pose or activity, or their sexual organ, anal region or female breasts.",
+   "The sender would have to know the person depicted did not consent to the transmission, or be reckless about it, with consent required for each transmission.",
+   "Exceptions would cover law enforcement, court proceedings, genuine medical or scientific purposes, or where a reasonable person would consider the transmission acceptable, with the defendant bearing an evidential burden.",
+   "The amendments would apply to material transmitted after commencement, whether it was created or altered before or after that date."
+  ],
+  "affected": "People depicted in sexual material shared without consent and people who share or create that material would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:20:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-9081",

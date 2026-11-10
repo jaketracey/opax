@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5051_ems_f2750285-7473-4809-95b0-0cf48751a213%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5051%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00039",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would raise fringe benefits tax to reflect the proposed Medicare levy increase, as part of the package associated with DisabilityCare Australia funding.",
+   "The employer fringe benefits tax rate would increase from 46.5 to 47 per cent, combining the maximum income tax rate with the higher levy component.",
+   "The new rate would apply from the fringe benefits tax year beginning on 1 April 2014 and for later fringe benefits tax years."
+  ],
+  "changes": [
+   "Section 6 of the Fringe Benefits Tax Act 1986 would be amended to set the higher rate.",
+   "The levy component reflected in the rate would become 2 per cent.",
+   "The amended rate would first apply for the tax year starting 1 April 2014."
+  ],
+  "affected": "Employers liable for tax on their fringe benefits taxable amount are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:53.472233+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

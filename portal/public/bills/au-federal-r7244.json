@@ -131,7 +131,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-09-11",
+  "sentences": [
+   "The bill would amend the Ombudsman Act 1976 to create a National Student Ombudsman as a new function of the Commonwealth Ombudsman, giving higher education students an escalated complaints pathway.",
+   "The Ombudsman could handle complaints about Tertiary Education Quality and Standards Agency (TEQSA) registered providers, investigate on its own motion, compel information and entry to premises, and recommend action to providers.",
+   "The substantive provisions would commence on the later of 1 February 2025 and one month after Royal Assent, backed by $19.4 million over two years from 2024-25."
+  ],
+  "changes": [
+   "The National Student Ombudsman would not investigate the exercise of academic judgement, employment matters or complaints about vocational education and training.",
+   "It could offer restorative engagement and alternative dispute resolution, and failing to participate in a directed dispute resolution process if the other party attended or was willing to attend would carry a maximum penalty of 10 penalty units.",
+   "Causing or threatening detriment to a person because they made or may make a complaint would be an offence punishable by six months' imprisonment, with civil remedies also available.",
+   "If a provider did not take appropriate action on recommendations, the Ombudsman could give the Minister for Education an investigation report for tabling in Parliament.",
+   "State and territory ombudsmen or prescribed bodies could transfer complaints and share information with the National Student Ombudsman despite other laws, and TEQSA could share complaints under a new section 194A."
+  ],
+  "affected": "Prospective, current and former higher education students, including offshore students, TEQSA registered higher education providers, the Commonwealth Ombudsman and TEQSA would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:31:00Z"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9170",

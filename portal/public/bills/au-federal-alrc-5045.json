@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s904_ems_58cbaabf-d9fd-4160-bbd6-c8b445a3e72d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s904%22",
+   "document_date": "2013-02-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-25",
+  "sentences": [
+   "The bill would establish a statutory Small Business Commissioner to represent small businesses nationally, assist with disputes and investigate market practices that may adversely affect them.",
+   "The Commissioner could investigate complaints about Commonwealth bodies, facilitate business dispute resolution within constitutional limits and require relevant information, documents and attendance for questioning.",
+   "The existing Federal Small Business Commissioner would become the first statutory office holder, serving full time under appointment arrangements allowing terms of up to five years."
+  ],
+  "changes": [
+   "The office would publish guidance on commercial dealings with Commonwealth bodies and undertake small business research.",
+   "The Commissioner could share information with the competition and corporate regulators.",
+   "People could be required to answer relevant questions under oath, with financial penalties for failing to attend.",
+   "An annual operations report would be presented to Parliament through the minister."
+  ],
+  "affected": "Small businesses, Commonwealth departments and agencies, other businesses in commercial disputes, and people required to provide information are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:42.386046+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

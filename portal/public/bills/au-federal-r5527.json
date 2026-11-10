@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-10",
+  "sentences": [
+   "The bill would change parental means testing for Youth Allowance, remove family asset and actual means tests, and revise how maintenance income and siblings affect payments.",
+   "From 1 January 2016, it would remove those family tests and stop including maintenance paid to a parent in the ordinary parental income assessment.",
+   "A separate maintenance income test would start on 1 January 2017, using arrangements modelled on family tax benefit Part A and annual reconciliation rules."
+  ],
+  "changes": [
+   "From 1 July 2016, the parental income calculation would recognise younger siblings eligible for family tax benefit in the family pool.",
+   "Parental income test exemptions linked to a parent’s low income health care card or New Enterprise Incentive Scheme allowance would be removed.",
+   "Maintenance income estimates could be revised during the year and reconciled against verified amounts after year end."
+  ],
+  "affected": "Dependent Youth Allowance recipients and their parents and siblings would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:24.553858+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

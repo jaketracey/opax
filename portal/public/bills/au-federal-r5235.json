@@ -167,7 +167,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-13",
+  "sentences": [
+   "The bill would authorise Commonwealth funding for parliamentary departments in 2014-2015, separately from the annual appropriation bills covering ordinary government services and other expenditure.",
+   "Amounts set out in its schedule would support departmental operations, administered expenses, assets and liabilities, and capital funding provided through equity injections.",
+   "The legislation would commence on Royal Assent and cease at the start of 1 July 2017, allowing unspent departmental appropriations to remain available until then."
+  ],
+  "changes": [
+   "Presiding officers could allocate capped advances for urgent expenditure omitted, understated or arising unexpectedly.",
+   "Appropriations could be credited to special accounts where their purposes matched.",
+   "Notional payments between departments would be treated as real transactions that debit appropriations.",
+   "Earlier in-year appropriation reduction provisions would be omitted because the Act would have a sunset date."
+  ],
+  "affected": "Parliamentary departments and their responsible Presiding Officers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:46.647048+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-03",
+  "sentences": [
+   "The bill would extend Medicare levy provisions to certain tax liabilities of attribution managed investment trust trustees under the proposed new trust taxation system.",
+   "It would include the levy when trustees are taxed on income allocation shortfalls, complementing the income tax rates specified by a companion bill.",
+   "These amendments would operate with the broader managed investment trust reform package and apply to specified trustee liabilities arising under its income allocation rules."
+  ],
+  "changes": [
+   "The levy would apply when a member’s attributed assessable income is less than the amount that should have been attributed.",
+   "The levy would apply when total assessable income allocated to members falls below the relevant trust component.",
+   "The levy would apply to shortfalls arising when previously understated assessable income is not properly carried forward."
+  ],
+  "affected": "Trustees of attribution managed investment trusts with the specified income shortfalls would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:48.957884+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

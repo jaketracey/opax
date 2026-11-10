@@ -137,7 +137,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-23",
+  "sentences": [
+   "The bill would amend federal court and tribunal procedures, including administrative review powers, remote hearings, civil appeal reasons and appeals from Nauru's Supreme Court.",
+   "The Administrative Appeals Tribunal (AAT) would gain more consistent evidence-gathering and procedural fairness rules, and its Social Services and Child Support Division could hold pre-hearing conferences.",
+   "Video hearings in the specified federal courts would be recognised as proceedings in open court, clarifying the legal basis for conducting those hearings remotely."
+  ],
+  "changes": [
+   "Each parent or non-parent carer could seek review of child support care-percentage decisions and would automatically join the review.",
+   "Veterans' claimants would automatically become parties when specified authorities seek review of Veterans' Review Board decisions.",
+   "Immigration Assessment Authority reviewers would receive statutory immunity.",
+   "The Federal Court could give short-form reasons when dismissing a civil appeal that raises no question of general principle.",
+   "The law enabling High Court appeals from Nauru's Supreme Court would be repealed."
+  ],
+  "affected": "Tribunal parties, parents and carers in child support reviews, veterans' claimants, Immigration Assessment Authority reviewers and federal court litigants are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:44.540516+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7613",

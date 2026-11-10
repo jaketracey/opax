@@ -167,7 +167,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-12",
+  "sentences": [
+   "The bill would authorise spending from the Consolidated Revenue Fund for ordinary annual Commonwealth government services in 2026-27, using allocations listed for departments and agencies.",
+   "The scheduled amounts would cover departmental operations, payments administered for government outcomes and corporate Commonwealth entities, with further allocations available for specified urgent funding gaps.",
+   "It would begin on 1 July 2026 or Royal Assent, whichever is later, and the appropriation legislation would be repealed at the start of 1 July 2029."
+  ],
+  "changes": [
+   "Finance Minister advances would be capped at $2,400 million, comprising $400 million for any purpose and $2,000 million limited to fuel security responses.",
+   "Unused advance allocations would become unavailable to recipients on 1 July 2027.",
+   "Advance determinations would be tabled in Parliament but exempt from disallowance.",
+   "Appropriated amounts could be credited to special accounts where their purposes match."
+  ],
+  "affected": "Commonwealth departments, corporate entities and recipients of administered payments are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:13.186222+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-10240",

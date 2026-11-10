@@ -125,13 +125,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5068_ems_152dd06b-241d-4599-b829-062782989744%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5068%22",
+   "document_date": "2013-06-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00122",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-06",
+  "sentences": [
+   "The bill would change temporary sponsored work visa arrangements by requiring labour market testing for specified sponsors and strengthening sponsorship obligations and enforcement.",
+   "Standard business sponsors would face a labour market testing requirement, while affected Subclass 457 visa holders would have 90 consecutive days to find new sponsored work.",
+   "Labour market testing would be subject to international trade obligations, with exemptions available for major disasters and specified skilled occupations meeting qualification or experience requirements."
+  ],
+  "changes": [
+   "The Minister could accept enforceable undertakings from current or former approved sponsors.",
+   "Fair Work Inspectors would gain powers to check compliance under migration legislation.",
+   "Either House of Parliament could disallow instruments specifying occupations exempt from labour market testing."
+  ],
+  "affected": "Approved sponsors, sponsored overseas workers, Australian workers and Fair Work Inspectors are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:21.259670+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-2911",

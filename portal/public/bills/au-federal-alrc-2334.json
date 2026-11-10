@@ -95,13 +95,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4965_ems_b7b5685c-d33d-4c8c-8d95-24a621d41342%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4965%22",
+   "document_date": "2013-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00101",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-13",
+  "sentences": [
+   "The bill would revise the general income tax anti-avoidance rule and replace domestic transfer pricing rules for cross-border dealings and profit allocations involving Australia.",
+   "It would clarify how tax benefits from avoidance schemes are identified and require relevant international dealings to be assessed against conditions expected between independent parties.",
+   "The anti-avoidance changes would cover schemes begun from 16 November 2012, while the transfer pricing rules would apply in both treaty and non-treaty cases."
+  ],
+  "changes": [
+   "Separate alternative tests would identify tax benefits by removing a scheme or considering a reasonable substitute.",
+   "Reasonable substitute arrangements would be assessed by their substance and effects while disregarding potential tax costs.",
+   "The new transfer pricing provisions would operate through self-assessment rather than requiring an initial determination by the Tax Commissioner.",
+   "Without qualifying transfer pricing records, entities could not establish a reasonably arguable position for penalty purposes."
+  ],
+  "affected": "Taxpayers using covered schemes and entities with relevant international dealings or permanent establishments are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:36:01.266511+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-2904",

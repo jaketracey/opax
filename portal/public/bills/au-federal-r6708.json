@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-13",
+  "sentences": [
+   "The bill would raise Medicare levy thresholds, enable a housing guarantee for single parents and change tax treatment of survivor payments, disaster grants and charitable gifts.",
+   "Low-income levy thresholds and related phase-in limits would increase for individuals and families, including eligible seniors and pensioners, from the 2020-21 income year.",
+   "The housing changes would let the Minister direct the National Housing Finance and Investment Corporation to support eligible single parents with dependants, including previous homeowners."
+  ],
+  "changes": [
+   "Commonwealth thalidomide survivor payments would be exempt from income tax and social security and veterans' income tests.",
+   "Specified recovery grants for storms and floods between 19 February and 31 March 2021 would be tax-free.",
+   "Six named organisations would gain deductible gift recipient listings.",
+   "Existing listings for the Centre for Entrepreneurial Research and Innovation and Sydney Chevra Kadisha would be extended."
+  ],
+  "affected": "Low-income taxpayers, eligible single parents, thalidomide survivors, disaster-affected primary producers and small businesses, and listed gift recipients are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:34.993604+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7162",

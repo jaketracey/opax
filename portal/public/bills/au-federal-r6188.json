@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "The bill would create national consumer rules for gift cards, requiring a minimum period of validity, clear expiry information and restrictions on fees charged after supply.",
+   "Covered cards would have to be redeemable for at least three years, with expiry details displayed prominently on the card and prohibited fee terms made void.",
+   "The requirements would apply to cards supplied from 1 November 2019, with regulations able to exempt particular cards, suppliers or circumstances from some obligations."
+  ],
+  "changes": [
+   "Suppliers would have to state on a card when it has no expiry date.",
+   "The competition regulator could issue infringement notices for specified gift card breaches.",
+   "Civil penalties and strict liability offences would enforce the new supply and fee requirements.",
+   "The definition would cover both electronic and physical cards or vouchers redeemable for goods or services."
+  ],
+  "affected": "Businesses supplying gift cards in trade or commerce and consumers buying or receiving those cards are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:38:20.985360+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5466",

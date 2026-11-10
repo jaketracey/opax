@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-14",
+  "sentences": [
+   "The bill would impose a night curfew and hourly movement limit at Brisbane Airport, supported by slot allocation, compliance monitoring and long-term operating arrangements.",
+   "The curfew would run from 10 pm to 6 am Queensland time, and aircraft movements would be capped at 45 in each regulated hour.",
+   "Emergency and exceptional circumstance arrangements would qualify the restrictions, while a long-term operating plan would address aircraft noise and community impacts following broad consultation."
+  ],
+  "changes": [
+   "The minister could lower the hourly movement limit after consulting industry and community stakeholders.",
+   "A Slot Manager would develop and administer a scheme allocating permissions for gate movements.",
+   "A Compliance Committee would develop a scheme to monitor authorised gate movements and infringements.",
+   "Airservices Australia would monitor aircraft movements and report compliance with the movement limit to the minister."
+  ],
+  "affected": "Aircraft operators, nearby residents, Airservices Australia and the proposed airport management bodies would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:46.725667+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

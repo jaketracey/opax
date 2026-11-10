@@ -107,7 +107,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-07-17",
+  "sentences": [
+   "The bill would tighten tax rules for multinational financing, change foreign dividend and capital gains provisions, and require personalised receipts for individual income tax.",
+   "It would lower permitted debt ratios while increasing the exemption threshold for debt deductions from $250,000 to $2 million under the thin capitalisation rules.",
+   "The financing changes would apply to income years starting on or after 1 July 2014, while tax receipts would cover 2014-15 and later assessments."
+  ],
+  "changes": [
+   "The general entity safe harbour debt-to-equity ratio would fall from 3:1 to 1.5:1.",
+   "Eligible inward investors would gain an optional debt test based on their worldwide group's gearing.",
+   "The foreign non-portfolio dividend exemption would be reformed.",
+   "Certain assets could not be counted twice when testing foreign residents' interests in Australian land-rich entities.",
+   "Redundant taxation and superannuation provisions would be repealed and technical errors corrected."
+  ],
+  "affected": "Multinational businesses, foreign investors, individual taxpayers and the Commissioner of Taxation would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:51.478992+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

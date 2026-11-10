@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-28",
+  "sentences": [
+   "The bill would require large businesses and other covered entities to publish annual statements describing modern slavery risks in their operations and supply chains.",
+   "Reporting would cover qualifying Australian entities and foreign entities doing business in Australia, using consolidated annual revenue to determine whether mandatory statements were required.",
+   "The Commonwealth would also report annually, while other entities could volunteer and state and territory governments would have no compulsory reporting obligation under the bill."
+  ],
+  "changes": [
+   "Statements would describe risk assessment, responses to risks and how the effectiveness of those responses was measured.",
+   "Entities would need governing-body approval and a responsible member's signature before giving statements to the Minister within six months of financial year end.",
+   "The legislation would require a review three years after commencement."
+  ],
+  "affected": "Large Australian businesses and other covered entities, foreign entities carrying on business in Australia, and the Commonwealth would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:16.461507+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5417",

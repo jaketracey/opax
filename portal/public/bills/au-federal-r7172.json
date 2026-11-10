@@ -143,7 +143,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-27",
+  "sentences": [
+   "The bill would amend five Acts, including the Crimes Act 1914, the Proceeds of Crime Act 2002 and the Telecommunications (Interception and Access) Act 1979, covering digital assets, penalties and telecommunications oversight.",
+   "It would let warrants authorise seizure of digital assets by transferring a wallet's contents, extend information-gathering and freezing orders to digital currency exchanges, and raise the Commonwealth penalty unit from $313 to $330.",
+   "Schedules 2, 4 and 5 would commence the day after Royal Assent, Schedule 1 one month after Royal Assent and Schedule 3 on 1 July 2024."
+  ],
+  "changes": [
+   "Definitions of digital asset and seize would be inserted into the Crimes Act so an executing officer could access a person's digital wallet and transfer its contents.",
+   "The definition of financial institution in the Proceeds of Crime Act would expand to cover digital currency exchanges, bringing them within freezing orders, notices and monitoring orders.",
+   "The penalty unit would rise from $313 to $330 for offences committed on or after 1 July 2024, with three-yearly indexation continuing from 1 July 2026.",
+   "A Communications Security Coordinator in the Department of Home Affairs would take over Part 14 Telecommunications Act functions from the Communications Access Coordinator.",
+   "Five state oversight bodies, including the Victorian Inspectorate, could receive intercepted information and interception warrant information from integrity agencies."
+  ],
+  "affected": "Law enforcement agencies, digital currency exchanges and their customers, people fined under Commonwealth law, telecommunications carriers, the Attorney-General's Department, the Department of Home Affairs and state oversight bodies are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:38:00Z"
+ },
  "divisions": [
   {
    "key": "federal-senate-9199",

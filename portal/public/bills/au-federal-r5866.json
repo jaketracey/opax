@@ -155,7 +155,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-11",
+  "sentences": [
+   "The bill would change Commonwealth school funding calculations to a consistent share of assessed needs, with a transition from existing allocations and revised accountability conditions.",
+   "Target Commonwealth contributions would be 20 per cent of the Schooling Resource Standard for government schools and 80 per cent for non-government schools.",
+   "Most amendments would start on 1 January 2018, with funding tied to national and bilateral agreements and state and territory funding commitments."
+  ],
+  "changes": [
+   "Disability loadings would vary according to students' required levels of educational adjustment.",
+   "Base funding amounts would have an indexation floor of three per cent.",
+   "Non-government schools would receive individual socioeconomic status scores instead of shared system scores.",
+   "States and territories would need to maintain at least their 2017 funding per student as a condition of Commonwealth assistance."
+  ],
+  "affected": "Schools, students, approved authorities and state and territory governments receiving Commonwealth school funding are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:06.333982+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4692",

@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-04",
+  "sentences": [
+   "The bill would create a transitional planning framework for Sydney West Airport at Badgerys Creek and broaden the Commonwealth's options for airport ownership and development.",
+   "The Infrastructure Minister could determine an airport plan after environmental assessment and consideration by the Environment Minister, authorising the initial development through that plan.",
+   "The airport lessee would generally have five years after the first lease to submit a master plan, while the amendments would commence after Royal Assent."
+  ],
+  "changes": [
+   "Common ownership with Sydney Kingsford-Smith Airport would become optional rather than mandatory.",
+   "Restrictions linking Sydney West ownership with Melbourne, Perth and Brisbane airport ownership would be removed.",
+   "The Environment Minister could block an airport plan or require environmental conditions.",
+   "Developments outside the airport plan would remain subject to the ordinary approval framework."
+  ],
+  "affected": "Sydney airport operators, prospective airport developers and Commonwealth planning ministers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:22:59.745508+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

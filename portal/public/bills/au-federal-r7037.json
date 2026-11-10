@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-25",
+  "sentences": [
+   "The bill would amend veterans' legislation concerning firefighter compensation, employment program income, rent assistance during overseas absences and support for grandparents caring for veterans' children.",
+   "For defence firefighters, it would reduce the oesophageal cancer qualifying period from 25 years to 15 years and broaden the test for relevant firefighting duties.",
+   "The changes would begin at Royal Assent and extend acute support eligibility to further grandparent carers, including those parenting children of deceased veterans."
+  ],
+  "changes": [
+   "Specified employment program payments could be excluded from veterans' income support means tests.",
+   "The bill would permit rent assistance beyond 26 weeks overseas when eligible recipients cannot return because of specified events.",
+   "The firefighter amendments would cover relevant oesophageal cancer sustained on or after 4 July 2011."
+  ],
+  "affected": "Defence firefighters, veterans receiving income support or rent assistance, and eligible grandparent carers and children are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:38.247713+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [
