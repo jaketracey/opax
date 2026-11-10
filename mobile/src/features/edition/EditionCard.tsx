@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { StyleSheet, View, useColorScheme } from 'react-native';
 import type { Block, EditionView } from '../../api/selectors';
 import { Card } from '../../design/card';
@@ -8,7 +7,7 @@ import { SourceLine } from '../../design/source';
 import { Text } from '../../design/text';
 import { colors, radii } from '../../design/tokens';
 import { editionRoute } from '../../navigation/routes/edition';
-import { sourceRoute } from '../../navigation/routes/sheets';
+import { presentSource } from '../../navigation/sheets';
 import { counted, formatDate } from '../../design/format';
 import { copy } from '../../design/copy';
 import { symbols } from '../../design/symbols';
@@ -62,8 +61,20 @@ export function EditionCard({
     (tier ?? editionTier(edition.date, today)) === 'old'
   )
     return null;
-  const source = editionSources(edition, subject.originals);
-  const openSources = () => router.push(sourceRoute({ block: 'edition' }));
+  const details = editionSources(edition, subject.originals);
+  const source = {
+    ...details,
+    notes:
+      block.stale && block.savedAt != null
+        ? [copy.savedCopyNote(block.savedAt), ...(details.notes ?? [])]
+        : details.notes,
+    dateLabel:
+      block.stale && block.savedAt != null
+        ? `Saved ${formatDate(block.savedAt, 'short')}`
+        : undefined,
+  };
+  const openSources = () =>
+    presentSource(source, { testID: 'today-edition-sources' });
   const figure = edition.facts.figures[0];
   const division = edition.facts.division;
   const artLabel = division
@@ -134,20 +145,7 @@ export function EditionCard({
           </View>
         </Card>
         <View style={styles.source}>
-          <SourceLine
-            {...source}
-            notes={
-              block.stale && block.savedAt != null
-                ? [copy.savedCopyNote(block.savedAt), ...(source.notes ?? [])]
-                : source.notes
-            }
-            dateLabel={
-              block.stale && block.savedAt != null
-                ? `Saved ${formatDate(block.savedAt, 'short')}`
-                : undefined
-            }
-            testID="today-edition-sources"
-          />
+          <SourceLine {...source} testID="today-edition-sources" />
         </View>
       </View>
     </View>
