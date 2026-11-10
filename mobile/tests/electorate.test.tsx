@@ -826,3 +826,13 @@ test('the Members page uses the system page-heading role', async () => {
   expect(heading.props.children).toBe('Senators for New South Wales');
   await act(async () => r.unmount());
 });
+
+test('a Members link to a seat not in the release says so, never loads for good', async () => {
+  load('New South Wales');
+  mockParams.seat = 'fixture-removed-seat';
+  const r = await render(<Members />);
+  expect(unavailable(r, 'members-missing')).toBe(
+    "These members couldn't be found.",
+  );
+  await act(async () => r.unmount());
+});
