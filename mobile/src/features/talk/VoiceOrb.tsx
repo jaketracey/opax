@@ -287,10 +287,14 @@ export function VoiceOrb({
     <SizedCanvas
       width={size}
       height={size}
+      colorSpace={Platform.OS === 'android' ? 'srgb' : undefined}
       accessible={false}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
     >
+      {Platform.OS === 'android' ? (
+        <Circle cx={c} cy={c} r={size} color={paint('paper')} />
+      ) : null}
       <Circle cx={c} cy={c} r={R * EXTENT} opacity={halo}>
         <RadialGradient
           c={centre}

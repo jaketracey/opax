@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import type * as ReanimatedTypes from 'react-native-reanimated';
 import TestRenderer from 'react-test-renderer';
 import { VoiceOrb } from '../src/features/talk/VoiceOrb';
+import { SizedCanvas } from '../src/design/canvas';
 
 const Reanimated = jest.requireMock(
   'react-native-reanimated',
@@ -77,6 +78,12 @@ test.each(['android', 'ios'] as const)(
     clock.setActive.mockClear();
     // Layout may arrive after the first settling window on a busy Android host.
     act(() => renderer.update(orb(240)));
+    expect(renderer.root.findByType(SizedCanvas).props.colorSpace).toBe(
+      os === 'android' ? 'srgb' : undefined,
+    );
+    const background = renderer.root.findAllByType('OrbCircle' as never)[0];
+    expect(background.props.color !== undefined).toBe(os === 'android');
+    if (os === 'android') expect(background.props.r).toBe(240);
     // Even with every derived value still zero, Android's initial core is
     // opaque and has a positive radius. iOS keeps its original shared values.
     const cores = renderer.root.findAllByType('OrbCircle' as never).slice(-3);
