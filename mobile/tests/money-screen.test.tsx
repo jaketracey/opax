@@ -11,7 +11,12 @@ import MoneyScreen, {
 import MoneyDonors from '../src/features/money/MoneyDonors';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { decodeMoneyGraph } from '../src/features/money/data';
-import { defaultMoneyFilters } from '../src/features/money/view';
+import {
+  defaultMoneyFilters,
+  moneyView,
+  rankedDonors,
+} from '../src/features/money/view';
+import { filtersFromParams } from '../src/features/money/records';
 import { filterStore } from '../src/features/sheets/filter-model';
 import {
   Button,
@@ -352,6 +357,27 @@ test('the complete donors list virtualises rows while retaining every named dono
   expect(mounted.length).toBeLessThan(named.length);
   expect(byTestID(r, SourceLine, 'money-donors-source')).toBeDefined();
 });
+
+test.each([
+  ['industry', { industry: 'unions' }],
+  ['minimum flow', { min: '1000000000000000' }],
+  ['layers', { layers: 'contracts' }],
+] as const)(
+  'the donors page respects the carried %s filter',
+  async (_name, params) => {
+    Object.assign(mockParams, params);
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<MoneyDonors />);
+    });
+    const expected = rankedDonors(
+      moneyView(graph, filtersFromParams(graph, mockParams)),
+    ).filter((n) => !n.withheld);
+    const actual: { id: string }[] = r.root.findByType(FlatList).props.data;
+    expect(actual.length).toBe(expected.length);
+    expect(actual.every((node, i) => node.id === expected[i]?.id)).toBe(true);
+  },
+);
 
 test('the donors page states an industry window in plain words', async () => {
   Object.assign(mockParams, { industry: 'unions' });

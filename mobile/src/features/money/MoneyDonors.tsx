@@ -30,7 +30,7 @@ import {
   type MoneyParams,
 } from './records';
 import { moneyNotes, moneyOriginals, moneySourceDetails } from './sources';
-import { moneyView, moneyWindowNodes, rankedDonors } from './view';
+import { moneyView, rankedDonors } from './view';
 
 /** "400 donors, largest first"; searching, "12 of 400 donors". */
 export function donorsCaption(shown: number, all: number, searching: boolean) {
@@ -64,13 +64,7 @@ export default function MoneyDonors() {
     [graph, params],
   );
   const view = useMemo(
-    () =>
-      graph && filters
-        ? {
-            ...moneyView(graph, filters),
-            nodes: moneyWindowNodes(graph, filters),
-          }
-        : null,
+    () => (graph && filters ? moneyView(graph, filters) : null),
     [graph, filters],
   );
   const donors = useMemo(
