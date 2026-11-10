@@ -69,6 +69,8 @@ export const accountCopy = {
   consentWithdrawn: 'Voice consent withdrawn',
 
   // Sign in (5.5).
+  signUpToTalk: 'Sign up to talk',
+  signUpOrSignIn: 'Sign up or sign in',
   checkEmail: 'Check your email',
   email: 'Email',
   emailFooter:

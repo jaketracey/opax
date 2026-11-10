@@ -38,6 +38,8 @@ test('no "Try again." inside a sentence, and refusals are one or two sentences',
 test('the bar title, the sign-in row and the identity', () => {
   expect(accountCopy.title).toBe('Account');
   expect(accountCopy.signIn).toBe('Sign in');
+  expect(accountCopy.signUpToTalk).toBe('Sign up to talk');
+  expect(accountCopy.signUpOrSignIn).toBe('Sign up or sign in');
   expect(accountCopy.signInDetail).toBe(
     'Talk to OPAX, and keep your Ask conversations on all your devices.',
   );

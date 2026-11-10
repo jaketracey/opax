@@ -36,6 +36,8 @@ import { CodeStep, EmailStep } from '../src/features/account/SignInFlow';
 import {
   SignInCodeScreen,
   SignInScreen,
+  TalkSignInCodeScreen,
+  TalkSignInScreen,
 } from '../src/features/account/SignInScreen';
 import {
   accountDeleted,
@@ -638,6 +640,43 @@ describe('Sign in by code', () => {
     );
     return renderer;
   }
+  test('Talk leads with sign-up copy and keeps its return through the code step', async () => {
+    const renderer = await render(<TalkSignInScreen />);
+    expect(
+      renderer.root.findByProps({ testID: 'account-sign-in-heading' }).props,
+    ).toMatchObject({ children: 'Sign up or sign in' });
+    expect(
+      renderer.root
+        .findAll(
+          (node) =>
+            node.type === 'Text' && node.props.accessibilityRole === 'header',
+        )
+        .map((node) => node.props.children),
+    ).toContain('Sign up or sign in');
+    await type(renderer, 'account-email', email);
+    await press(renderer, 'account-send-code');
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/talk/sign-in/code',
+      params: { email, challenge: challengeId, return: 'talk' },
+    });
+    mockParams = { email, challenge: challengeId };
+    takeConsentAfterSignIn();
+    const code = await render(<TalkSignInCodeScreen />);
+    await type(code, 'account-sign-in-code', '01234567');
+    expect(mocked.consumeCode).toHaveBeenCalledWith(challengeId, '01234567');
+    expect(router.dismissTo).toHaveBeenCalledWith('/talk');
+    expect(takeConsentAfterSignIn()).toBe(true);
+  });
+  test.each([{}, { return: 'account' }, { return: 'talk' }, { return: 'dismiss' }])(
+    'Account keeps its existing sign-in copy with params %j',
+    async (params) => {
+      mockParams = params;
+      const renderer = await render(<SignInScreen />);
+      expect(has(renderer, 'account-sign-in-heading')).toBe(false);
+      expect(shows(renderer, 'Sign up or sign in')).toBe(false);
+      expect(shows(renderer, accountCopy.emailFooter)).toBe(true);
+    },
+  );
   test('step 1: one labelled field, the age line, Send code, then the privacy row', async () => {
     const onSent = jest.fn();
     const renderer = await render(<EmailStep onSent={onSent} />);
