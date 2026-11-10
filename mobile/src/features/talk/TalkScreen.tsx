@@ -367,17 +367,19 @@ export default function TalkScreen({
   }, [s.sources, active, live, stateText, phase]);
   useEffect(() => resetTalk, []);
   // Android's Back is the sheet's Done: during a call it asks first.
-  useEffect(() => {
-    if (!android || !active) return;
-    const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        handlers.current.close();
-        return true;
-      },
-    );
-    return () => subscription.remove();
-  }, [active]);
+  useFocusEffect(
+    useCallback(() => {
+      if (!android || !active) return;
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          handlers.current.close();
+          return true;
+        },
+      );
+      return () => subscription.remove();
+    }, [active]),
+  );
   const menuTitle = timeLeft(live, s.remaining, s.status);
   const reportable = canReport(s.transcript);
   const records = useMemo(() => reportChoices(s.sources), [s.sources]);

@@ -11,6 +11,11 @@ import type { VoiceSnapshot, VoiceStatus } from '../src/voice';
 // asking before a call ends. No device: the accessibility props are the proof.
 
 jest.mock('../src/features/talk/VoiceOrb', () => ({ VoiceOrb: () => null }));
+jest.mock('expo-router/react-navigation', () => ({
+  ...jest.requireActual('expo-router/react-navigation'),
+  usePreventRemove: jest.fn(),
+  useNavigation: jest.fn(() => ({ dispatch: jest.fn() })),
+}));
 jest.mock('../src/features/talk/useVoiceLevels', () => ({
   useVoiceLevels: () => ({}),
 }));
@@ -466,6 +471,16 @@ describe('Talk with TalkBack', () => {
     android(async (show) => {
       mockCall = talk({ state: 'live', mode: 'listening', status: status() });
       const live = await show(talkScreen);
+      const focus = jest.requireMock<{ useFocusEffect: jest.Mock }>(
+        'expo-router',
+      ).useFocusEffect;
+      // The listener belongs to Talk's focus, never a Sources/record push.
+      const remove = jest.fn();
+      live.spies.back.mockReturnValue({ remove });
+      let blur!: () => void;
+      live.app.React.act(() => {
+        blur = focus.mock.lastCall![0]();
+      });
       const handler = live.spies.back.mock.calls.find(
         ([name]) => name === 'hardwareBackPress',
       )?.[1] as () => boolean;
@@ -480,9 +495,12 @@ describe('Talk with TalkBack', () => {
         undefined,
         expect.any(Array),
       );
+      live.app.React.act(() => blur());
+      expect(remove).toHaveBeenCalledTimes(1);
       const before = live.spies.back.mock.calls.length;
       mockCall = talk({ state: 'ready', status: status() });
       const idle = await show(talkScreen);
+      idle.app.React.act(() => focus.mock.lastCall![0]());
       expect(
         idle.spies.back.mock.calls
           .slice(before)

@@ -133,10 +133,23 @@ export function useTalk() {
       if (state === 'background') void uiBridge.background();
       if (state === 'active')
         void (async () => {
+          // Settings can revoke access while this screen remains mounted.
+          // Stop before recovering a live snapshot; returning never restarts it.
+          const checkMicrophone = asksForMicrophone();
+          let revoked = false;
+          if (checkMicrophone) {
+            revoked = !(await microphoneGranted());
+            if (!mounted.current) return;
+            if (revoked && isCallActive(current.current.state)) {
+              await voice.end();
+              if (!mounted.current) return;
+              setMicrophone(microphoneBlocked() ? 'blocked' : 'denied');
+            }
+          }
           await refresh();
           await recover();
           // Back from Settings: access turned on clears the refusal.
-          if (asksForMicrophone() && (await microphoneGranted()))
+          if (checkMicrophone && !revoked && mounted.current)
             setMicrophone((step) => (step === 'rationale' ? step : null));
         })();
       // A brief inactive state (Control Centre) leaves the call alone.

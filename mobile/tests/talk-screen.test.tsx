@@ -1,5 +1,7 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { BackHandler } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Button, IconButton, Text } from '../src/design/primitives';
 import TalkScreen from '../src/features/talk/TalkScreen';
@@ -104,6 +106,22 @@ test('idle and signed in: Start is the one primary action, and nothing starts by
   expect(mockCall.agreeAndStart).not.toHaveBeenCalled();
   // Ready needs no line: Start says it.
   expect(line(renderer, 'talk-state')).toBeUndefined();
+});
+
+test('iOS keeps native Back handling while Talk is focused during a call', () => {
+  mockCall = call({ state: 'live', mode: 'listening', status: status() }, true);
+  const back = jest.spyOn(BackHandler, 'addEventListener');
+  try {
+    render();
+    let blur: void | (() => void);
+    act(() => {
+      blur = jest.mocked(useFocusEffect).mock.lastCall![0]();
+    });
+    expect(blur).toBeUndefined();
+    expect(back).not.toHaveBeenCalled();
+  } finally {
+    back.mockRestore();
+  }
 });
 
 test('while voice is checked, the status says so and Start waits with a spinner', () => {

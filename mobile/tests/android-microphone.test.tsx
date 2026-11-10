@@ -62,6 +62,7 @@ const { GRANTED, DENIED, NEVER_ASK_AGAIN } = PermissionsAndroid.RESULTS;
 let check: jest.SpyInstance;
 let request: jest.SpyInstance;
 let lifecycle: (state: AppStateStatus) => void;
+let emit: (event: VoiceEvent) => void;
 let call!: ReturnType<typeof useTalk>;
 let renderer: TestRenderer.ReactTestRenderer;
 function Probe() {
@@ -94,6 +95,7 @@ beforeEach(() => {
   let listener: (event: VoiceEvent) => void = () => {};
   mockVoice.subscribe.mockImplementation((fn) => {
     listener = fn;
+    emit = fn;
     return jest.fn();
   });
   mockVoice.status.mockImplementation(async () => {
@@ -287,6 +289,36 @@ test('the e2e prompt build asks as production does; other e2e builds never do', 
     delete mockExtra.e2eMicrophonePrompt;
   }
 });
+
+test.each(['android', 'ios'] as const)(
+  '%s returning with a revoked grant only ends an Android call',
+  async (os) => {
+    asPlatform(os);
+    check.mockResolvedValue(true);
+    await mount();
+    act(() => emit({ type: 'state', state: 'live', reason: null }));
+    check.mockResolvedValue(false);
+    mockVoice.end.mockImplementation(async () => {
+      emit({ type: 'state', state: 'ended', reason: 'user' });
+      return ok;
+    });
+    mockVoice.snapshot.mockResolvedValue({
+      ok: true,
+      value: { ...emptySnapshot, state: 'ended', reason: 'user', status },
+    });
+    await act(async () => lifecycle('active'));
+    if (os === 'android') {
+      expect(mockVoice.end).toHaveBeenCalledTimes(1);
+      expect(call.microphone).toBe('denied');
+    } else {
+      expect(check).not.toHaveBeenCalled();
+      expect(mockVoice.end).not.toHaveBeenCalled();
+      expect(call.microphone).toBeNull();
+    }
+    expect(request).not.toHaveBeenCalled();
+    expect(mockVoice.start).not.toHaveBeenCalled();
+  },
+);
 
 test.each([
   ['Android e2e and development', 'android', undefined],
