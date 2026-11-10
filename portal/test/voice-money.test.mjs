@@ -80,12 +80,12 @@ test('known donors, parties, aliases and jurisdictions retain their scope',()=>{
  assert.equal(receiptJurisdiction('federal and Queensland gambling'),null);
  assert.equal(answer('gambling over the last 20 years').needs_period,true);
 });
-test('money tools return computed receipts before speech search without changing explicit grant or speech searches',async()=>{
+test('money tools distinguish donation limitations from mixed receipt exploration before speech search',async()=>{
  const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async()=>Response.json(graph)}};
  for(const [tool,args] of [['search_records',{query:'gambling donations'}],['find_connections',{query:'gambling'}]]){
   const out=await runVoiceTool(tool,args,env,async()=>{throw Error('Unrelated speech retrieval')});
   if(tool==='search_records'){
-   assert.equal(out.data.answer_status,'calculated');assert.match(out.data.answer,/disclosed receipts/);assert.ok(out.sources.every(s=>s.kind==='receipt'));
+   assert.equal(out.data.answer_status,'evidence_gap');assert.match(out.data.answer,/figures currently combine donations with loans and other receipts/);assert.doesNotMatch(out.data.answer,/\$\d/);assert.ok(out.sources.every(s=>s.kind==='receipt'));
   }else{
    assert.equal(out.data.total_aud,350);assert.equal(out.sources.length,1);assert.match(out.data.answer,/disclosed receipt total/);
   }

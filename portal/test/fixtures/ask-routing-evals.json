@@ -8093,30 +8093,35 @@
       "question": "Who takes the most money from the gambling lobby?",
       "old_route": "ordinary",
       "expected": {
-        "kind": "answer"
+        "kind": "decline"
       },
       "must": [
         {
           "type": "sources",
-          "min": 1
+          "min": 2
         },
         {
           "type": "matches",
-          "match": "10,763,834"
+          "match": "^OPAX's industry figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation",
+          "why": "The first sentence must identify the mixed receipt measure and inability to answer donations."
         },
         {
-          "type": "mentions",
-          "all": [
-            "Labor"
-          ]
+          "type": "must_not",
+          "match": "^(?!OPAX's industry figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation)",
+          "why": "Fail even a decline if its first sentence does not name the mixed receipt measure."
         },
         {
-          "type": "matches",
-          "match": "donors OPAX groups under"
+          "type": "decline",
+          "or_match": "cannot yet (?:say|establish)"
         },
         {
           "type": "matches",
           "match": "Other receipts.*not donations"
+        },
+        {
+          "type": "must_not",
+          "match": "\\$\\s*\\d|\\b\\d[\\d,.]*\\s*(?:AUD|dollars?|million|billion)\\b",
+          "why": "Published flows have no receipt type or return side; mixed totals must never answer a donation question."
         },
         {
           "type": "caveat"
@@ -8124,12 +8129,14 @@
       ],
       "must_not": [
         "682 chamber speeches",
-        "takes the most money"
+        "takes the most money",
+        "40,608,922",
+        "20,896,422"
       ],
-      "local_match": "10,763,834",
+      "local_match": "cannot yet say who received the most gambling donations",
       "provenance": {
         "file": "Jake feedback, 11 November 2026",
-        "id": "ask-lobby-money"
+        "id": "ask-lobby-money-round-2"
       }
     },
     {
@@ -8140,30 +8147,35 @@
       "question": "Which party gets the most money from mining companies?",
       "old_route": "ordinary",
       "expected": {
-        "kind": "answer"
+        "kind": "decline"
       },
       "must": [
         {
           "type": "sources",
-          "min": 1
+          "min": 2
         },
         {
           "type": "matches",
-          "match": "155,465,435"
+          "match": "^OPAX's industry figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation",
+          "why": "The first sentence must identify the mixed receipt measure and inability to answer donations."
         },
         {
-          "type": "mentions",
-          "all": [
-            "United Australia Party"
-          ]
+          "type": "must_not",
+          "match": "^(?!OPAX's industry figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation)",
+          "why": "Fail even a decline if its first sentence does not name the mixed receipt measure."
         },
         {
-          "type": "matches",
-          "match": "donors OPAX groups under"
+          "type": "decline",
+          "or_match": "cannot yet (?:say|establish)"
         },
         {
           "type": "matches",
           "match": "Other receipts.*not donations"
+        },
+        {
+          "type": "must_not",
+          "match": "\\$\\s*\\d|\\b\\d[\\d,.]*\\s*(?:AUD|dollars?|million|billion)\\b",
+          "why": "Published flows have no receipt type or return side; mixed totals must never answer a donation question."
         },
         {
           "type": "caveat"
@@ -8171,12 +8183,14 @@
       ],
       "must_not": [
         "682 chamber speeches",
-        "takes the most money"
+        "takes the most money",
+        "40,608,922",
+        "20,896,422"
       ],
-      "local_match": "155,465,435",
+      "local_match": "cannot yet say who received the most mining donations",
       "provenance": {
         "file": "Jake feedback, 11 November 2026",
-        "id": "ask-lobby-money"
+        "id": "ask-lobby-money-round-2"
       }
     },
     {
@@ -8192,15 +8206,40 @@
       "must": [
         {
           "type": "sources",
-          "min": 1
+          "min": 2
         },
         {
           "type": "matches",
-          "match": "40,608,922"
+          "match": "^OPAX's bank figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation",
+          "why": "The first sentence must identify the mixed receipt measure and inability to answer donations."
+        },
+        {
+          "type": "must_not",
+          "match": "^(?!OPAX's bank figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation)",
+          "why": "Fail even a decline if its first sentence does not name the mixed receipt measure."
         },
         {
           "type": "decline",
-          "or_match": "cannot establish a banks-only donation total"
+          "or_match": "cannot yet (?:say|establish)"
+        },
+        {
+          "type": "matches",
+          "match": "Other receipts.*not donations"
+        },
+        {
+          "type": "must_not",
+          "match": "\\$\\s*\\d|\\b\\d[\\d,.]*\\s*(?:AUD|dollars?|million|billion)\\b",
+          "why": "Published flows have no receipt type or return side; mixed totals must never answer a donation question."
+        },
+        {
+          "type": "caveat"
+        },
+        {
+          "type": "mentions",
+          "all": [
+            "Westpac Banking Corporation",
+            "National Australia Bank"
+          ]
         },
         {
           "type": "matches",
@@ -8209,12 +8248,14 @@
       ],
       "must_not": [
         "682 chamber speeches",
-        "takes the most money"
+        "takes the most money",
+        "40,608,922",
+        "20,896,422"
       ],
-      "local_match": "40,608,922",
+      "local_match": "cannot yet establish a banks-only donation total",
       "provenance": {
         "file": "Jake feedback, 11 November 2026",
-        "id": "ask-lobby-money"
+        "id": "ask-lobby-money-round-2"
       }
     },
     {
@@ -8225,43 +8266,54 @@
       "question": "Who receives the most union money?",
       "old_route": "ordinary",
       "expected": {
-        "kind": "answer"
+        "kind": "decline"
       },
       "must": [
         {
           "type": "sources",
-          "min": 1
+          "min": 2
         },
         {
           "type": "matches",
-          "match": "247,398,401"
+          "match": "^OPAX's industry figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation",
+          "why": "The first sentence must identify the mixed receipt measure and inability to answer donations."
         },
         {
-          "type": "mentions",
-          "all": [
-            "Labor"
-          ]
+          "type": "must_not",
+          "match": "^(?!OPAX's industry figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation)",
+          "why": "Fail even a decline if its first sentence does not name the mixed receipt measure."
         },
         {
-          "type": "matches",
-          "match": "donors OPAX groups under"
+          "type": "decline",
+          "or_match": "cannot yet (?:say|establish)"
         },
         {
           "type": "matches",
           "match": "Other receipts.*not donations"
         },
         {
+          "type": "must_not",
+          "match": "\\$\\s*\\d|\\b\\d[\\d,.]*\\s*(?:AUD|dollars?|million|billion)\\b",
+          "why": "Published flows have no receipt type or return side; mixed totals must never answer a donation question."
+        },
+        {
           "type": "caveat"
+        },
+        {
+          "type": "matches",
+          "match": "cannot separate union affiliation fees from donations"
         }
       ],
       "must_not": [
         "682 chamber speeches",
-        "takes the most money"
+        "takes the most money",
+        "40,608,922",
+        "20,896,422"
       ],
-      "local_match": "247,398,401",
+      "local_match": "cannot yet say who received the most union donations",
       "provenance": {
         "file": "Jake feedback, 11 November 2026",
-        "id": "ask-lobby-money"
+        "id": "ask-lobby-money-round-2"
       }
     },
     {
@@ -8272,30 +8324,35 @@
       "question": "Who takes money from the tobacco lobby?",
       "old_route": "ordinary",
       "expected": {
-        "kind": "answer"
+        "kind": "decline"
       },
       "must": [
         {
           "type": "sources",
-          "min": 1
+          "min": 2
         },
         {
           "type": "matches",
-          "match": "4,342,665"
+          "match": "^OPAX's industry figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation",
+          "why": "The first sentence must identify the mixed receipt measure and inability to answer donations."
         },
         {
-          "type": "mentions",
-          "all": [
-            "Liberal"
-          ]
+          "type": "must_not",
+          "match": "^(?!OPAX's industry figures currently combine donations with loans and other receipts,[^.!?]*cannot yet[^.!?]*donation)",
+          "why": "Fail even a decline if its first sentence does not name the mixed receipt measure."
         },
         {
-          "type": "matches",
-          "match": "donors OPAX groups under"
+          "type": "decline",
+          "or_match": "cannot yet (?:say|establish)"
         },
         {
           "type": "matches",
           "match": "Other receipts.*not donations"
+        },
+        {
+          "type": "must_not",
+          "match": "\\$\\s*\\d|\\b\\d[\\d,.]*\\s*(?:AUD|dollars?|million|billion)\\b",
+          "why": "Published flows have no receipt type or return side; mixed totals must never answer a donation question."
         },
         {
           "type": "caveat"
@@ -8303,12 +8360,14 @@
       ],
       "must_not": [
         "682 chamber speeches",
-        "takes the most money"
+        "takes the most money",
+        "40,608,922",
+        "20,896,422"
       ],
-      "local_match": "4,342,665",
+      "local_match": "cannot yet say who received the most tobacco donations",
       "provenance": {
         "file": "Jake feedback, 11 November 2026",
-        "id": "ask-lobby-money"
+        "id": "ask-lobby-money-round-2"
       }
     },
     {

@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises'
 import assert from 'node:assert/strict'
 const root=new URL('../',import.meta.url).pathname
 export async function localApi(){
- const b=await build({stdin:{contents:"export {runAgentic,verifyComposition} from './src/agentic-ask';export {agenticAskPayload} from './src/agentic-response';export {linkAskSources} from './src/ask-source-links';export {federalPartyMoneyAnswer} from './src/ask-money-routing';export {industryMoneyIntent} from './src/ask-money-industry';",resolveDir:root},bundle:true,write:false,platform:'node',format:'esm'})
+ const b=await build({stdin:{contents:"export {runAgentic,verifyComposition} from './src/agentic-ask';export {agenticAskPayload} from './src/agentic-response';export {linkAskSources} from './src/ask-source-links';export {federalPartyMoneyAnswer} from './src/ask-money-routing';export {industryMoneyIntent,industryMoneyAnswer} from './src/ask-money-industry';",resolveDir:root},bundle:true,write:false,platform:'node',format:'esm'})
  return import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'))
 }
 export const asset=async path=>{try{return JSON.parse(await readFile(root+'public'+path,'utf8'))}catch{return null}}

@@ -22,9 +22,8 @@ export function industryMoneyIntent(question:string):{subject:string;recipient?:
  return m?{subject:m[1],recipient:m[2],total:!!m[2],period}:null
 }
 
-const aud=(n:number)=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(n)
 const safe=(s:string)=>s.replace(/[|\n\r\[\]*<>]/g,' ').trim()
-const limits='AEC disclosure thresholds apply and vary by financial year; amounts below the applicable threshold may not be individually disclosed. OPAX applies industry labels to named donors; a label does not establish coordinated lobbying or influence. AEC "Other receipts" are not donations. These mixed disclosed receipts cannot establish a donations-only total. Coverage is limited to the published map selection. Receipts of associated entities without a canonical party recipient are excluded, so this is not a complete party-and-associated-entity total. These are not personal payments to MPs.'
+const limits='AEC disclosure thresholds apply and vary by financial year; amounts below the applicable threshold may not be individually disclosed. OPAX applies industry labels to named donors; a label does not establish coordinated lobbying or influence. AEC "Other receipts" are not donations. Coverage is limited to the published map selection. Receipts of associated entities without a canonical party recipient are excluded. The map cannot establish personal payments to MPs.'
 
 export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
  const intent=industryMoneyIntent(input.question??'')
@@ -42,51 +41,55 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
  const industries=[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((s):s is string=>!!s))]
  const subject=intent.subject.replace(/\bunion\b/gi,'unions')
  const selected=mentionedReceiptIndustries(subject,industries)
- if(!selected.length&&receiptDonorChoices(graph,subject).length)return null
+ const named=selected.length?[]:receiptDonorChoices(graph,subject)
+ // Keep the existing named-source funding route, but never answer an explicit
+ // donation question there with an untyped bank or other donor aggregate.
+ if(named.length&&!/\bdonat\w*\b/i.test(input.question??''))return null
  const recipient=intent.recipient?federalPartyRankingIntent('Who funds '+intent.recipient+'?')?.parties[0]:undefined
  if(intent.recipient&&!recipient)return gap('OPAX cannot establish personal payments to an MP from these party receipt records. Please name a recipient party, or a named donor whose disclosed records you want to inspect.')
  const scoped={...input,...(recipient?{party:recipient}:{}),...(intent.period?{from:undefined,to:undefined}:{})}
  const bankOnly=/^(?:the\s+)?banks?(?:ing)?$/i.test(subject)
- if(bankOnly){
-  // Offer named sources from the existing broader label, never a banks-only sum.
-  const names=graph.nodes.filter(n=>n.kind==='donor'&&n.industry==='finance'&&/\bbank(?:ing)?\b/i.test(n.label)).slice(0,5)
-  let answer='OPAX cannot establish a banks-only donation total from its published industry labels. Its finance grouping includes organisations beyond banks. The closest available records are disclosed receipts from these named sources in that broader grouping.'
-  const sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean}[]=[],citations:Record<string,number[][]>={}
-  for(const donor of names){
-   const query=`Who receives the most disclosed receipts from ${donor.label}${recipient?' to '+recipient:''}${intent.period?' '+intent.period:''}?`
-   const result=receiptAnswer(graph,query,'federal','https://opax.com.au',scoped)
-   if(!result||'needs_scope' in result||'needs_period' in result||!result.receipts)continue
-   answer+=`\n\n${safe(donor.label)}${recipient?' to '+recipient:''}: ${aud(result.total_aud)} in disclosed receipts, financial years ${result.period}.`
-   const resource='industry-named-'+sources.length,url=result.sources[0].url
-   citations[resource]=[[Array.from(answer).length-1,Array.from(answer).length]]
-   sources.push({resource,title:`${donor.label}: selected disclosed receipts`,href:url,url,kind:'receipt',snippet:`${donor.label}${recipient?' to '+recipient:''}: ${aud(result.total_aud)}, financial years ${result.period}.`,cited:true})
-  }
-  answer+='\n\n'+limits
-  return {...gap(answer,'evidence_gap'),sources,citations}
- }
- if(selected.length!==1)return gap(`OPAX cannot total donations for that industry from its published donor labels. Please name a donor to see what it disclosed, or choose an existing grouping in the [money map](/money). No speech or topic counts have been substituted.`,'evidence_gap')
+ if(!bankOnly&&selected.length!==1&&!named.length)return gap(`OPAX cannot total donations for that industry from its published donor labels. Please name a donor to see what it disclosed, or choose an existing grouping in the [money map](/money). No speech or topic counts have been substituted.`,'evidence_gap')
  // Only question grammar is removed. Unknown qualifiers must survive validation.
  const cleaned=subject.replace(/\b(?:companies|company|lobby|lobbies|donors?|industry|sector)\b/gi,' ').replace(/\s+/g,' ').trim()
- const query=`Who receives the most disclosed receipts from ${cleaned}${recipient?' to '+recipient:''}${intent.period?' '+intent.period:''}?`
+ const query=`Who receives the most disclosed receipts from ${bankOnly?'finance':cleaned}${recipient?' to '+recipient:''}${intent.period?' '+intent.period:''}?`
  const result=receiptAnswer(graph,query,'federal','https://opax.com.au',scoped)
  if(!result||'needs_scope' in result||'needs_period' in result)return gap(result?.answer??'OPAX cannot calculate that industry selection. Please name a donor or an existing industry label.')
  const unmatched=unmatchedReceiptRankingScope(graph,receiptPeriodQuery(query).query,result,scoped.party)
  if(unmatched)return gap(`OPAX could not match the whole industry or recipient scope (${safe(unmatched)}), so it has not calculated a total. Please name a donor or use a published industry label.`)
- if(!result.receipts)return gap('No matching disclosed receipts are shown for that industry and period in the published selection. This does not establish that no receipts occurred.','evidence_gap')
- // Complete selected edges determine the ranking. Never rank a retrieved sample.
- const rows=result.by_party.slice(0,5),sector=safe(selected[0].replaceAll('_',' '))
+ // The published edges have neither receipt type nor return side. Annual
+ // return references cannot identify which part is a donation. aec-extras
+ // splits party-wide receipts, but cannot attribute those types to donors.
+ // Use receiptAnswer only to validate scope, period and map links, never its
+ // mixed amounts, ranking, answer or source titles as donation evidence.
+ const sector=safe((selected[0]??'').replaceAll('_',' '))
+ const donationSector=sector==='unions'?'union':sector
+ const measure=bankOnly?'bank figures':named.length?'named donor figures':'industry figures'
+ const cannot=bankOnly?`establish a banks-only donation total${recipient?' to '+safe(recipient):''}`
+  :intent.total?`say how much ${safe(recipient??'the recipient')} received in ${donationSector||'disclosed'} donations`
+  :`say who received the most ${donationSector||'disclosed'} donations`
+ let answer=`OPAX's ${measure} currently combine donations with loans and other receipts, so it cannot yet ${cannot}.`
+ answer+=' The published graph does not identify receipt types or distinguish party returns from donor-side donations made, so no donation amounts or rankings are shown.'
+ if(bankOnly)answer+=' Its finance grouping includes organisations beyond banks.'
+ if(selected[0]==='unions')answer+=' This graph also cannot separate union affiliation fees from donations.'
+ if(result.period)answer+=` Matching mixed receipts span financial years ${result.period}; that is not a donation period total.`
  const sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean}[]=[],citations:Record<string,number[][]>={}
- let answer=''
- for(const [index,row] of rows.entries()){
-  const text=index===0?`${safe(row.name)} received ${intent.total?aud(row.total_aud)+' in disclosed receipts':'the most disclosed receipts'} from donors OPAX groups under ${sector} in this published selection${intent.total?'':': '+aud(row.total_aud)}, across financial years ${result.period}.`
-   :`${safe(row.name)} received ${aud(row.total_aud)} in disclosed receipts from the same selected donors over those financial years.`
-  const start=Array.from(answer).length
-  answer+=(answer?'\n\n':'')+text
-  const resource='industry-receipts-'+index,url=new URL(result.sources[0].url)
-  url.searchParams.set('party',row.id)
+ const mapUrl=result.sources[0].url
+ citations['industry-receipts-coverage']=[[0,Array.from(answer).length]]
+ sources.push({resource:'industry-receipts-coverage',title:`${bankOnly?'Finance':sector||'Named donor'}: mixed receipt records; donation totals unavailable`,href:mapUrl,url:mapUrl,kind:'receipt',snippet:answer,cited:true})
+ answer+=`\n\nExplore the [money map filtered to ${bankOnly?'finance':sector||'the named donor'}](${mapUrl}).`
+ const names=graph.nodes.filter(n=>n.kind==='donor'&&result.selected_donors.includes(n.label)&&(!bankOnly||/\bbank(?:ing)?\b/i.test(n.label)))
+  .sort((a,b)=>a.label.localeCompare(b.label,'en-AU')).slice(0,bankOnly?10:5)
+ if(names.length)answer+=` Named sources${sector?' OPAX groups under '+sector:''} to inspect, listed alphabetically without amounts:`
+ for(const [index,donor] of names.entries()){
+  const url=new URL(mapUrl)
+  url.searchParams.set('focus',donor.id)
+  const start=Array.from(answer).length,resource='industry-named-'+index
+  answer+=`\n\n[${safe(donor.label)}](${url.href})`
   citations[resource]=[[start,Array.from(answer).length]]
-  sources.push({resource,title:`${row.name}: ${aud(row.total_aud)} in selected disclosed receipts`,href:url.href,url:url.href,kind:'receipt',snippet:`${row.name}: ${aud(row.total_aud)} in AEC-disclosed receipts from donors OPAX groups under ${sector}. Financial years: ${result.period}. ${row.receipts} receipt records.`,cited:true})
+  sources.push({resource,title:`${donor.label}: mixed receipt records`,href:url.href,url:url.href,kind:'receipt',snippet:`${donor.label}: named source in the published map selection. Receipt types and donor-side donations cannot be separated; no donation amount established.`,cited:true})
  }
- answer+='\n\nThese federal totals mix donations with other receipts such as loans, so this is not a donation ranking. '+limits+' Amounts are in Australian dollars and are not adjusted for inflation.'
- return {answer,answer_status:'calculated',money_ranking:true,citations,sources,coverage:result.period_coverage,money_question:query,scope:{state:'federal'}}
+ if(!result.receipts)answer+=' No matching mixed receipts are shown for that selection and period; this does not establish that no donations occurred.'
+ answer+='\n\n'+limits
+ return {answer,answer_status:'evidence_gap',money_ranking:true,citations,sources,coverage:result.period_coverage,money_question:query,scope:{state:'federal'}}
 }
