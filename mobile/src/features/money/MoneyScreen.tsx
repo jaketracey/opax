@@ -509,14 +509,18 @@ function MapMode({
   const [topHeight, setTopHeight] = useState(0);
   const [peek, setPeek] = useState(0);
   const window = useWindowDimensions();
+  // The stage runs under the tab bar and the home indicator; the panel host
+  // sits above them, so the band beneath it is measured from its layout and
+  // counted in the map's bottom inset with the panel's peek.
+  const [below, setBelow] = useState(0);
   const insets = useMemo(
     () => ({
       top: topHeight + rhythm.tight,
-      bottom: peek + rhythm.tight,
+      bottom: below + peek + rhythm.tight,
       left: rhythm.tight,
       right: 44 + rhythm.block * 2,
     }),
-    [topHeight, peek],
+    [topHeight, peek, below],
   );
   // Android's Back closes the search, then the panel, then the focus.
   useEffect(() => {
@@ -673,7 +677,10 @@ function MapMode({
           overview={
             large || searchOpen || expanded
               ? null
-              : { left: rhythm.block, bottom: peek + rhythm.block }
+              : {
+                  left: rhythm.block,
+                  bottom: below + peek + rhythm.block,
+                }
           }
         />
         <SafeAreaView
@@ -721,6 +728,11 @@ function MapMode({
           <View
             style={[styles.panelHost, regular ? styles.panelRegular : null]}
             pointerEvents="box-none"
+            onLayout={(event) => {
+              const { y, height } = event.nativeEvent.layout;
+              const gap = Math.max(0, Math.round(stage.height - (y + height)));
+              setBelow((previous) => (previous === gap ? previous : gap));
+            }}
           >
             <MoneyMapPanel
               focus={panelFocus}

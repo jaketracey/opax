@@ -138,8 +138,7 @@ export function visibleLabels(
       if (
         sx < -box.width ||
         sy < -box.height ||
-        sx > viewport.width + box.width ||
-        sy > bottom - box.height / 2
+        sx > viewport.width + box.width
       )
         continue;
       const lines = Math.min(3, Math.ceil(slot.text.length / perLine));
@@ -153,6 +152,8 @@ export function visibleLabels(
           : sx + slot.r * camera.k + 6;
       const top =
         slot.kind === 'cluster' ? sy - box.height - 4 : sy - box.height / 2;
+      // Its last line must clear the panel's edge, with a little air.
+      if (top + h > bottom - 6) continue;
       const cy = top + h / 2;
       let clear = true;
       for (let i = 0; i < keptX.length; i++)

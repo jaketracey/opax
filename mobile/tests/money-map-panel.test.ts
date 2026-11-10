@@ -184,11 +184,14 @@ describe('focusFlowGroups', () => {
     ]);
     const [went, received] = groups;
     for (const row of went!.rows) expect(row.edge.type).toBe('donations');
-    for (const row of received!.rows) expect(row.edge.type).not.toBe('donations');
+    for (const row of received!.rows)
+      expect(row.edge.type).not.toBe('donations');
     expect(went!.note).toBeUndefined();
     expect(received!.note).toBe(PUBLIC_MONEY_NOTE);
     // Every flow is in exactly one group, keeping its strongest-first index.
-    const indices = groups.flatMap((g) => g.rows.map((r) => r.index)).sort((a, b) => a - b);
+    const indices = groups
+      .flatMap((g) => g.rows.map((r) => r.index))
+      .sort((a, b) => a - b);
     expect(indices).toEqual(flows.map((_, i) => i));
     for (const g of groups)
       for (const row of g.rows) expect(flows[row.index]!.edge).toBe(row.edge);
@@ -216,7 +219,11 @@ describe('focusFlowGroups', () => {
     expect(hubGroups.map((g) => g.title)).toEqual([
       'Largest recipients on the map',
     ]);
-    expect(partyGroups[0]!.rows).toHaveLength(focusFlows(model, party.index).length);
-    expect(hubGroups[0]!.rows).toHaveLength(focusFlows(model, hub.index).length);
+    expect(partyGroups[0]!.rows).toHaveLength(
+      focusFlows(model, party.index).length,
+    );
+    expect(hubGroups[0]!.rows).toHaveLength(
+      focusFlows(model, hub.index).length,
+    );
   });
 });
