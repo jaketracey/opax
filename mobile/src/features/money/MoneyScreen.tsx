@@ -997,7 +997,7 @@ function ListBody({
                       {
                         value: formatMoneyCompact(grants.total),
                         label: 'in grants',
-                        testID: 'money-public-grants',
+                        testID: 'money-public-grants-total',
                       },
                     ]
                   : []),
@@ -1006,7 +1006,7 @@ function ListBody({
                       {
                         value: formatMoneyCompact(contracts.total),
                         label: 'in contracts',
-                        testID: 'money-public-contracts',
+                        testID: 'money-public-contracts-total',
                       },
                     ]
                   : []),

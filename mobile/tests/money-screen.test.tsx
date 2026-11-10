@@ -452,3 +452,19 @@ test.each([
     await act(async () => r.unmount());
   },
 );
+
+test('the List view gives the public money rows and their totals distinct IDs', async () => {
+  const { StatStrip } = jest.requireActual('../src/design/primitives');
+  const r = await render();
+  const rows = r.root
+    .findAllByType(MoneyRow)
+    .map((x) => x.props.testID as string)
+    .filter((id) => id.startsWith('money-public-'));
+  expect(rows.length).toBeGreaterThan(0);
+  const tiles = r.root
+    .findAllByType(StatStrip)
+    .flatMap((x) => x.props.tiles.map((t: { testID: string }) => t.testID));
+  expect(tiles.length).toBeGreaterThan(0);
+  for (const id of tiles) expect(rows).not.toContain(id);
+  await act(async () => r.unmount());
+});
