@@ -1,5 +1,6 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
+import { FlatList } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { apiClient } from '../src/api/runtime';
 import MoneyScreen, {
@@ -333,6 +334,23 @@ test('a donors search with no match keeps its caption over one plain line', asyn
   expect(none.props).toMatchObject({ variant: 'body', tone: 'inkSoft' });
   expect(none.props.children).toBe('No donors match “zzzz”.');
   await act(async () => r.unmount());
+});
+
+test('the complete donors list virtualises rows while retaining every named donor', async () => {
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<MoneyDonors />);
+  });
+  const list = r.root.findByType(FlatList);
+  const named = graph.nodes.filter((n) => n.kind === 'donor' && !n.withheld);
+  expect(list.props.data).toHaveLength(named.length);
+  expect(
+    list.props.data.every((n: { withheld?: boolean }) => !n.withheld),
+  ).toBe(true);
+  const mounted = r.root.findAllByType(MoneyRow);
+  expect(mounted.length).toBeGreaterThan(0);
+  expect(mounted.length).toBeLessThan(named.length);
+  expect(byTestID(r, SourceLine, 'money-donors-source')).toBeDefined();
 });
 
 test('the donors page states an industry window in plain words', async () => {
