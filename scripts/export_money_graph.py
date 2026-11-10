@@ -12,6 +12,13 @@ Produces a JSON graph of donor -> party flows:
 
 Methodology / exclusion rules (all documented in the output's `meta` block):
 
+0. Only AEC Transparency Register rows (source aec_annual, aec_election,
+   aec_referendum; donor_disclosure.AEC_SOURCES). The `donations` table also
+   holds a third-party re-publication of AEC annual returns ('icacpls',
+   2010-11 to 2017-18: 6,920 of its rows are exact copies of AEC rows) and
+   Queensland ECQ state disclosures ('qld_ecq', shown on money.qld.json from
+   ext_donations). Counting either here double counts AEC money and cites a
+   state register as an AEC return (money-donations-001, -004).
 1. Only rows with `recipient_canonical` set are used. Rows without it are
    receipts reported by unions, foundations and other associated entities --
    money flowing *between* non-party actors -- not donations to parties.
@@ -20,7 +27,12 @@ Methodology / exclusion rules (all documented in the output's `meta` block):
    not a plausible single receipt).
 3. Public electoral funding is not a donation: any donor whose name matches
    an electoral commission / public funding body / tax office pattern is
-   excluded, regardless of its (often wrong) industry classification.
+   excluded, regardless of its (often wrong) industry classification. The
+   pattern takes the misspellings the returns carry ("NSW Electoral Comission",
+   "Australian Electoral Commision") and "Electoral Funding Authority"
+   (money-donations-006). Party node totals drop the same rows and the rows of
+   entities the resolver knows as kind 'government' (Dept of Finance
+   discretionary benefits are not party income from a donor).
 4. Internal party transfers are excluded from the donor list: rows with
    industry = 'party_internal', plus any donor whose name contains a party
    name word (labor, liberal, greens, ...) -- these are party investment
@@ -40,12 +52,25 @@ Methodology / exclusion rules (all documented in the output's `meta` block):
    canonical name and `aliases` lists the other spellings behind it, biggest
    first. A donor_name with no alias row (a return loaded after the resolver
    last ran) falls back to the old light normalisation and is counted in
-   meta.donors_unresolved.
+   meta.donors_unresolved. Before that fallback, a spelling that differs from a
+   resolved alias only by case or punctuation (the resolver's exact tier) takes
+   that alias's entity, so "TIm Mead" joins "Tim Mead".
 7. Entities whose kind is 'government' or 'party_unit' are dropped. This is
    what finally removes "Dept of Finance" and "Dept Finance" -- two spellings
    of one department that the rule-3 name regex missed (it looks for
    "department of", not "dept of") and that carried a bogus
    industry='individual' tag.
+
+8. A donor node's industry is never 'individual' (the colour of a private
+   person) when the resolver knows the entity as a company, association,
+   government body or party unit; such a node shows 'other' instead
+   (money-donations-014). Rule 5 still judges map membership on the tags as
+   classified, so this changes a colour, never which donors are shown.
+
+Node ids are 'donor:' + norm_key(label). Two donors whose labels share a key
+(an entity and an unresolved look-alike) get distinct ids: the second takes
+'~<entity id>' (or '~2') and meta.node_id_collisions counts them, so an id
+lookup never finds two nodes.
 
 `financial_year` is not always a year: AEC election returns store the event
 name, and by-election events ("Wentworth by-election") carry no digits at all.
@@ -62,9 +87,10 @@ instead of only testing whether a lifetime span overlaps it.
 
 
 try:
-    from scripts.donor_disclosure import attach_donor_disclosures
+    from scripts.donor_disclosure import (AEC_SOURCE_SQL, attach_donor_disclosures, exact_alias_index,
+                                          resolve_alias)
 except ModuleNotFoundError:
-    from donor_disclosure import attach_donor_disclosures
+    from donor_disclosure import AEC_SOURCE_SQL, attach_donor_disclosures, exact_alias_index, resolve_alias
 
 import os
 import json
@@ -82,7 +108,7 @@ OTHER_INDUSTRY_FLOOR = 5_000_000  # rule 5
 # Rule 3: public funding / government bodies. Matched against the donor name;
 # donors whose dominant industry is 'government' are excluded wholesale too.
 PUBLIC_FUNDING_RE = re.compile(
-    r"electoral commission|election funding|electoral office|"
+    r"electoral comm?iss?ions?|election funding|electoral funding|electoral office|"
     r"tax(ation)?\s+(office|authority)|\bato\b|\baec\b|\becq\b|"
     r"department of|australian agency|commonwealth of australia|"
     r"electoral comm\b",
@@ -98,6 +124,9 @@ PARTY_WORD_RE = re.compile(
     r"\bnational party\b|\bdemocrats\b",
     re.I,
 )
+
+# Rule 8: resolver kinds that are never a private person.
+NOT_A_PERSON = {"company", "association", "government", "party_unit", "union"}
 
 SUFFIX_TOKENS = {
     "pty", "ltd", "limited", "proprietary", "inc", "incorporated",
@@ -478,15 +507,22 @@ def main() -> None:
     db = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
     alias_to_entity, entities = load_canonical(db)
+    exact_index = exact_alias_index(alias_to_entity)
 
-    rows = db.execute(
-        """
-        SELECT donor_name, recipient_canonical AS party, amount, financial_year,
-               industry, donor_type
+    base = """
         FROM donations
         WHERE recipient_canonical IS NOT NULL AND recipient_canonical != ''
           AND donation_type != 'flagged_review'
           AND amount > 0
+    """
+    # rule 0: what the AEC filter leaves out, by source, for meta
+    non_aec = {r[0] or "unknown": r[1] for r in db.execute(
+        f"SELECT source, COUNT(*) {base} AND NOT ({AEC_SOURCE_SQL}) GROUP BY source")}
+    rows = db.execute(
+        f"""
+        SELECT donor_name, recipient_canonical AS party, amount, financial_year,
+               industry, donor_type
+        {base} AND {AEC_SOURCE_SQL}
         """
     ).fetchall()
     used_rows = len(rows)
@@ -500,7 +536,7 @@ def main() -> None:
         name = (r["donor_name"] or "").strip()
         if not name:
             continue
-        eid = alias_to_entity.get(name)
+        eid = resolve_alias(name, alias_to_entity, exact_index)
         ent = entities.get(eid) if eid else None
         if ent is None:
             unresolved.add(name)
@@ -540,7 +576,7 @@ def main() -> None:
         tally(d["parties"][r["party"]], y, amt)
 
     # Rank donors; rule 5 for industry-less donors.
-    def dominant_industry(d: dict) -> str:
+    def classified_industry(d: dict) -> str:
         # A union is a union. Rolling branches up can let one oddly-tagged branch
         # (a CFMEU building fund tagged 'property') outweigh the rest and recolour
         # the whole union on the map, so the resolver's kind wins for unions.
@@ -556,10 +592,20 @@ def main() -> None:
             return max(known.items(), key=lambda kv: kv[1])[0]
         return "other"
 
+    def dominant_industry(d: dict) -> str:
+        """The industry shown (rule 8): never 'individual' for an entity the
+        resolver knows is an organisation; its next classified tag, else 'other'."""
+        ind = classified_industry(d)
+        if ind == "individual" and d.get("entity_kind") in NOT_A_PERSON:
+            known = {k: v for k, v in d["industries"].items()
+                     if k and k not in ("other", "unidentified", "individual")}
+            return max(known.items(), key=lambda kv: kv[1])[0] if known else "other"
+        return ind
+
     ranked = sorted(donors.values(), key=lambda d: -d["total"])
     picked = []
     for d in ranked:
-        ind = dominant_industry(d)
+        ind = classified_industry(d)
         if ind == "government":
             continue  # rule 3: a government body is not a donor
         if ind == "other" and d["total"] < OTHER_INDUSTRY_FLOOR:
@@ -584,7 +630,7 @@ def main() -> None:
     for d in ranked:
         if id(d) in on_map or not d.get("eid"):
             continue
-        if dominant_industry(d) == "government":
+        if classified_industry(d) == "government":
             continue
         pm = public.get(d["eid"], 0.0)
         if pm >= PUBLIC_MONEY_FLOOR:
@@ -597,10 +643,16 @@ def main() -> None:
 
     # Party aggregates over the FULL cleaned row set (not just top donors).
     party_totals = defaultdict(lambda: {"total": 0.0, "count": 0, **year_cells()})
+    party_excluded = {"public_funding": 0, "government_entity": 0}
     for r in rows:
         name = (r["donor_name"] or "").strip()
         if PUBLIC_FUNDING_RE.search(name):
+            party_excluded["public_funding"] += 1
             continue  # public funding inflates party totals misleadingly
+        ent = entities.get(resolve_alias(name, alias_to_entity, exact_index))
+        if ent and ent["kind"] == "government":
+            party_excluded["government_entity"] += 1
+            continue  # rule 3: a government body's payment is not income from a donor
         tally(party_totals[r["party"]], year_of(r["financial_year"]), float(r["amount"]))
 
     nodes = []
@@ -619,6 +671,8 @@ def main() -> None:
         })
 
     eid_to_node: dict = {}
+    used_ids = {n["id"] for n in nodes}
+    collisions = 0
     for d in picked:
         display = d["canonical"]
         if not display:
@@ -635,6 +689,12 @@ def main() -> None:
                   if norm_key(n) != norm_key(display)]
         ind = dominant_industry(d)
         node_id = "donor:" + norm_key(display)
+        if node_id in used_ids:
+            collisions += 1
+            node_id = next(c for c in [f"{node_id}~{d['eid']}" if d.get("eid") else None]
+                           + [f"{node_id}~{i}" for i in range(2, 10_000)] if c and c not in used_ids)
+            sys.stderr.write(f"export_money_graph: node id collision, {display!r} published as {node_id}\n")
+        used_ids.add(node_id)
         nodes.append({
             "id": node_id,
             "label": display,
@@ -679,7 +739,7 @@ def main() -> None:
     out = {
         "meta": {
             "generated": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
-            "source": "AEC donation returns via parli.db `donations` table",
+            "source": "AEC Transparency Register returns (annual, election, referendum) via parli.db `donations` table",
             "coverage": "financial years 1998-99 to 2025-26",
             "methodology": (
                 "Donor->party flows from rows with a canonical party recipient; "
@@ -706,6 +766,8 @@ def main() -> None:
                 "count up to rounding, so a year window can re-sum every figure."
             ),
             "exclusions": [
+                "rows not from the AEC Transparency Register (a third-party copy of AEC annual returns; "
+                "Queensland ECQ state disclosures, shown on money.qld.json)",
                 "rows without a canonical party recipient (receipts of unions/associated entities)",
                 "donation_type='flagged_review' rows (data-quality outliers)",
                 "public electoral funding (AEC / state electoral commissions / ATO / Dept of Finance)",
@@ -714,11 +776,15 @@ def main() -> None:
                 "donors with industry other/unknown under $5m lifetime",
             ],
             "rows_considered": used_rows,
+            "rows_excluded_non_aec_source": non_aec,
             "rows_excluded_public_funding": excluded["public_funding"],
             "rows_excluded_party_internal": excluded["party_internal"],
             "rows_excluded_government_entity": excluded["government_entity"],
             "rows_without_year": rows_without_year,
             "donors_unresolved": len(unresolved),
+            "node_id_collisions": collisions,
+            "party_rows_excluded_public_funding": party_excluded["public_funding"],
+            "party_rows_excluded_government_entity": party_excluded["government_entity"],
             "donor_nodes": len(picked),
             "donor_nodes_by_total": len(picked) - len(extras),
             "donors_via_public_money": len(extras),
@@ -731,9 +797,9 @@ def main() -> None:
             **grants_meta,
             **contracts_meta,
             "party_totals_note": (
-                "Party node totals cover all cleaned rows assigned to a party except public funding "
-                "identified by the reported donor name, unchanged by entity resolution; unlike donor "
-                "totals and flows, they include internal party transfers."
+                "Party node totals cover all cleaned AEC rows assigned to a party except public funding "
+                "identified by the reported donor name and payments by entities the resolver knows as "
+                "government bodies; unlike donor totals and flows, they include internal party transfers."
             ),
         },
         "nodes": nodes,

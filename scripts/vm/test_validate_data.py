@@ -350,6 +350,40 @@ class MoneyTests(Base):
         (self.root / rel).unlink()
         self.assertFails("money", "money.json missing")
 
+    def test_a_node_id_published_twice_fails_once_head_is_clean(self):
+        # state-datasets-008: two "donor:tim mead" nodes in money.tas.json
+        self.edit(f"{P}/graph/money.tas.json", lambda d: d["nodes"].append({"id": "r3"}))
+        self.assertFails("money", "money.tas.json has 1 duplicate node ids (HEAD 0)")
+
+    def test_a_fault_head_already_has_is_not_a_regression(self):
+        rel = f"{P}/graph/money.tas.json"
+        self.files[rel]["nodes"].append({"id": "r3"})
+        self.make()
+        self.assertOk("money")
+        self.edit(rel, lambda d: d["nodes"].append({"id": "r4"}))
+        self.assertFails("money", "has 2 duplicate node ids (HEAD 1)")
+
+    def test_federal_references_must_be_aec_returns_with_a_year(self):
+        # money-donations-001/-004/-012: icacpls and ECQ rows cited as AEC returns, some with no year
+        refs = [{"return_type": "AEC annual return", "year": "2024-25"},
+                {"return_type": "icacpls", "year": "2015-16"},
+                {"return_type": "ECQ direct", "year": "2020-21"},
+                {"return_type": "AEC election return", "year": None}]
+        self.edit(f"{P}/graph/money.json", lambda d: d["nodes"][0].update(returnReferences=refs))
+        self.assertFails("money", "money.json has 2 non-AEC return references (HEAD 0)")
+        self.assertFails("money", "money.json has 1 return references without a year (HEAD 0)")
+
+    def test_state_graphs_and_state_disclosures_keep_their_own_commission(self):
+        ecq = [{"return_type": "ECQ gift", "year": None}]
+        self.edit(f"{P}/graph/money.qld.json", lambda d: d["nodes"][0].update(returnReferences=ecq))
+        rel = f"{P}/graph/donor-disclosures.json"
+        self.write(rel, {"version": 1, "references": [], "donors": [
+            {"id": "donor:a:federal", "jurisdiction": "federal", "returnReferences": [{"return_type": "AEC annual return", "year": "2024-25"}]},
+            {"id": "donor:a:qld", "jurisdiction": "qld", "returnReferences": ecq}]})
+        self.assertOk("money")
+        self.edit(rel, lambda d: d["donors"][0]["returnReferences"].append({"return_type": "ECQ direct", "year": "2021-22"}))
+        self.assertFails("money", "donor-disclosures.json has 1 non-AEC return references (HEAD 0)")
+
 
 class SuppliersTests(Base):
     def profile(self, **over):

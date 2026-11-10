@@ -12,9 +12,9 @@ from pathlib import Path
 from urllib.parse import quote
 
 try:
-    from scripts.donor_disclosure import attach_donor_disclosures
+    from scripts.donor_disclosure import attach_donor_disclosures, clean_name
 except ModuleNotFoundError:
-    from donor_disclosure import attach_donor_disclosures
+    from donor_disclosure import attach_donor_disclosures, clean_name
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -74,8 +74,18 @@ def disclosure_catalog(db, candidates):
         graph = {"meta": {"sourceShort": jurisdiction.upper() + " disclosure returns"},
                  "nodes": [{**n, "aliases": list(n["aliases"]), "_summarise_disclosures": True} for n in candidates]}
         attach_donor_disclosures(db, graph, jurisdiction)
+        # Candidates are keyed by spelling, so two spellings of one resolved entity
+        # come back as two identical records; publish one (money-donations-009).
+        by_entity = {}
         for node in graph["nodes"]:
             if not node.pop("has_disclosure_rows", False):
+                continue
+            eid = (node.get("match") or {}).get("entity_id")
+            first = by_entity.get(eid) if eid else None
+            if first is not None and first.get("total") == node.get("total"):
+                # Same entity, same returns: keep the first record and every name the other answered to.
+                first["lookup_names"] = sorted({*first.get("lookup_names", []), *node.get("lookup_names", [])})
+                first["aliases"] = sorted({*first.get("aliases", []), *node.get("aliases", [])} - {first["label"]})
                 continue
             node["jurisdiction"] = jurisdiction
             node["id"] += ":" + jurisdiction
@@ -83,15 +93,19 @@ def disclosure_catalog(db, candidates):
             node.pop("entity_id", None)
             node.pop("source_path", None)
             donors.append(node)
+            if eid:
+                by_entity.setdefault(eid, node)
     # A resolver hint with no actual return is a source reference, not proof of a donation.
     covered = {name.casefold().strip() for n in donors for name in [n["label"], *n.get("lookup_names", [])]}
     references = []
     for candidate in candidates:
-        if candidate["label"].casefold().strip() in covered:
+        label = clean_name(candidate["label"])
+        if label.casefold().strip() in covered:
             continue
         refs = candidate["references"][:1] or [{"return_type":"Source export; electoral return unconfirmed", "url":"https://opax.com.au/"+candidate.get("source_path","methods")}]
-        references.append({"id": candidate["id"], "label": candidate["label"], "source_name": candidate["label"],
-                           "jurisdiction": "federal", "kind": "reference", "lookup_names": candidate["aliases"],
+        references.append({"id": candidate["id"], "label": label, "source_name": label,
+                           "jurisdiction": "federal", "kind": "reference",
+                           "lookup_names": sorted({clean_name(a) for a in candidate["aliases"]}),
                            "match": {"confidence": 0, "method": "unresolved", "href": None},
                            "returnReferences": refs,
                            "source_note": "Source reference only; no matching electoral return established."})
