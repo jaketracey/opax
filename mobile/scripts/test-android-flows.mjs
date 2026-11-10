@@ -206,4 +206,7 @@ test('Android root restoration does not press Back through hideKeyboard and web 
   );
   assert.ok(invitation.includes('seat-location-finding'));
   assert.ok(!invitation.includes('use-my-location'));
+  const about = JSON.stringify(read('14-about.yaml')[1].toJS());
+  assert.ok(about.includes('about-privacy-device'));
+  assert.ok(!about.includes('Privacy policy-device'));
 });

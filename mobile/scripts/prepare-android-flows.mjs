@@ -84,6 +84,7 @@ const nativeSearchHints = new Set([
 const nativeSearch = { id: '.*:id/search_src_text' };
 function selector(v) {
   if (v === 'Profile sources') return 'Sources';
+  if (v === 'Privacy policy-device') return { id: 'about-privacy-device' };
   if (nativeSearchHints.has(v)) return { ...nativeSearch };
   if (typeof v === 'string')
     return (
@@ -93,6 +94,10 @@ function selector(v) {
         : v.replaceAll('iPhone', 'phone'))
     );
   if (!v || typeof v !== 'object') return v;
+  if (v.text === 'Privacy policy-device') {
+    const { text, ...options } = v;
+    return { ...options, id: 'about-privacy-device' };
+  }
   // The redesigned suggestion list promotes an exact person match to Top
   // and deliberately omits its duplicate from the People group.
   if (v.id === 'search-suggestion-person-.*')
