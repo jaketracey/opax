@@ -104,10 +104,18 @@ shutil.copyfile('android/gradle.properties', out/'gradle.properties')
 shutil.copyfile('android/app/build.gradle', out/'app.build.gradle')
 r8=bool(re.search(r'^android.enableMinifyInReleaseBuilds=true\s*$', props, re.M) or re.search(r'minifyEnabled\s+(?:=\s*)?true\b', gradle))
 symbols=bool(re.search(r'debugSymbolLevel\s*(?:=\s*)?[\'\"](?:FULL|SYMBOL_TABLE)[\'\"]', gradle))
+# A mapping or symbol payload in the AAB proves the feature is on even when it
+# was enabled outside the generated Gradle text, so verify-play must check it.
+with zipfile.ZipFile(out/f"opax-{os.environ['OPAX_BUILD_NUMBER']}.aab") as archive:
+    names=archive.namelist()
+r8=r8 or any(name.startswith('BUNDLE-METADATA/com.android.tools.build.obfuscation/') for name in names)
+symbols=symbols or any(name.startswith('BUNDLE-METADATA/com.android.tools.build.debugsymbols/') for name in names)
 evidence={'commit':sys.argv[2], 'production_voice_mode':sys.argv[3], 'version':configured_version(Path.cwd()),
           'versionCode':int(os.environ['OPAX_BUILD_NUMBER']), 'artifacts':artifacts,
           'r8_enabled':r8, 'native_symbols_enabled':symbols}
-(out/'build-evidence.json').write_text(json.dumps(evidence, indent=2)+'\n')
+(out/'build-evidence.json.pending').write_text(json.dumps(evidence, indent=2)+'\n')
 PY
+# Publish evidence only after the final HEAD/tree/voice check passes.
 check_inputs
+mv "$OUT/build-evidence.json.pending" "$OUT/build-evidence.json"
 echo "PASS local upload-signed Android $OPAX_BUILD_NUMBER; evidence: $OUT"

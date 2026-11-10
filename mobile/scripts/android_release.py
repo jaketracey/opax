@@ -84,6 +84,8 @@ def debug_artifacts(archive, evidence, output):
         enabled = evidence.get(flag)
         require(type(enabled) is bool, "Build evidence must state " + flag)
         found = [name for name in names if name.startswith(prefix) and not name.endswith("/")]
+        require(enabled or not found,
+                "Release metadata present but build evidence says disabled: " + flag)
         if enabled:
             require(found and all(archive.getinfo(name).file_size for name in found),
                     "Missing enabled release metadata: " + flag)

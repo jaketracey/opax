@@ -67,6 +67,9 @@ class AndroidReleaseTests(unittest.TestCase):
                 for abi in ('arm64-v8a', 'x86_64'): archive.writestr(f'BUNDLE-METADATA/com.android.tools.build.debugsymbols/{abi}/libfixture.so.sym', 'symbols')
             with zipfile.ZipFile(bundle) as archive:
                 self.assertEqual(set(debug_artifacts(archive, {'r8_enabled':True, 'native_symbols_enabled':True}, directory).values()), {'passed'})
+                for flag in ('r8_enabled', 'native_symbols_enabled'):
+                    with self.assertRaisesRegex(Exception, 'present but build evidence says disabled'):
+                        debug_artifacts(archive, {'r8_enabled':flag != 'r8_enabled', 'native_symbols_enabled':flag != 'native_symbols_enabled'}, directory)
 
     def fixture(self, directory):
         root = Path(directory); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
@@ -149,7 +152,7 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
             shutil.copyfile(Path(__file__).parent/'check-release-bundle.sh', mobile/'scripts/check-release-bundle.sh')
             (mobile/'node_modules/.bin/expo').write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> export.trace\n')
             tsx=mobile/'node_modules/.bin/tsx'
-            tsx.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> policy.trace\ncase "$*" in *production-bundle/android*) exit "${FAIL_ANDROID:-0}" ;; esac\n')
+            tsx.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> policy.trace\ncase "$*" in *production-bundle-android*) exit "${FAIL_ANDROID:-0}" ;; esac\n')
             tsx.chmod(0o755)
             for fail in ('0','7'):
                 result=subprocess.run(['bash','scripts/check-release-bundle.sh','--inside-gate'], cwd=mobile,
@@ -157,8 +160,17 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
                 self.assertEqual(result.returncode,int(fail),result.stdout+result.stderr)
             trace=(mobile/'export.trace').read_text(); policy=(mobile/'policy.trace').read_text()
             self.assertIn('--platform ios',trace); self.assertIn('--platform android',trace)
-            self.assertIn('--production-bundle build/production-bundle/android',policy)
+            self.assertIn('--production-bundle build/production-bundle-android',policy)
+            self.assertIn('--production-bundle build/production-bundle\n',policy)
             self.assertIn('skipping Xcode-only',result.stdout)
+            # npm run qa's Android-only mode never prebuilds or exports iOS.
+            for name in ('export.trace','policy.trace'): (mobile/name).unlink()
+            for fail in ('0','7'):
+                result=subprocess.run(['bash','scripts/check-release-bundle.sh','--android'], cwd=mobile,
+                                      env={**env,'FAIL_ANDROID':fail},capture_output=True,text=True)
+                self.assertEqual(result.returncode,int(fail),result.stdout+result.stderr)
+            trace=(mobile/'export.trace').read_text()
+            self.assertNotIn('--platform ios',trace); self.assertNotIn('prebuild',trace); self.assertIn('--platform android',trace)
 
 
     @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop native lock')
