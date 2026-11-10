@@ -12,6 +12,7 @@ import {
   PUBLIC_MONEY,
   publicEdgeWidth,
 } from './scales';
+import { partyDot } from '../../../design/party';
 
 /**
  * The map's model: the graph as marks. Every number here is the record's
@@ -121,7 +122,10 @@ export function buildModel(view: MoneyGraph): MapModel {
       kind === 'hub'
         ? (n.colour ?? palette.moneyInk)
         : kind === 'party'
-          ? clusterColour(PARTIES).colour
+          ? // A party's disc takes its own colour (the app's party dots;
+            // TestFlight AA8AR3Xv). Labels keep the neutral ink, and the
+            // largest parties are named, so colour is never the only cue.
+            (partyDot(n.label) ?? clusterColour(PARTIES).colour)
           : (n.colour ?? clusterColour(n.group).colour);
     const ink =
       kind === 'hub'

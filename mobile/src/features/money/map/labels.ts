@@ -89,7 +89,7 @@ export function labelSlots(
       r: 0,
     });
   }
-  // Parties are drawn in one neutral grey: the largest are named beside
+  // Party discs carry party colours; the largest are also named beside
   // their discs, so no party is told apart by colour alone.
   const parties = model.nodes
     .filter((n) => n.kind === 'party' && !named.has(n.index))

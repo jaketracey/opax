@@ -1,4 +1,6 @@
 import { Skia } from '@shopify/react-native-skia';
+import { partyDot } from '../src/design/party';
+import { partyColors } from '../src/design/palette';
 import { decodeMoneyGraph, type MoneyGraph } from '../src/features/money/data';
 import { layoutBounds, layoutFor } from '../src/features/money/map/layout';
 import {
@@ -292,4 +294,18 @@ test('a state map with no public money paints without hubs', () => {
   expect(drawn).toBe(tas.model.nodes.length);
   expect(tas.model.nodes.some((n) => n.kind === 'hub')).toBe(false);
   expect(counts.circles).toBe(tas.model.nodes.length);
+});
+
+test('party discs take their party colours (TestFlight AA8AR3Xv)', () => {
+  const graph = decodeMoneyGraph(pinned('/graph/money.json'));
+  const model = buildModel(moneyView(graph, defaultMoneyFilters(graph)));
+  const parties = model.nodes.filter((n) => n.kind === 'party');
+  expect(parties.length).toBeGreaterThan(0);
+  for (const party of parties) {
+    const dot = partyDot(party.label);
+    if (dot) expect(party.colour).toBe(dot);
+  }
+  const labor = parties.find((n) => /labor/i.test(n.label));
+  expect(labor?.colour).toBe(partyColors.labor);
+  expect(new Set(parties.map((n) => n.colour)).size).toBeGreaterThan(1);
 });
