@@ -167,6 +167,17 @@ name: 30 Ask idle, a starter, the answer with its records, a follow-up, a clarif
     visible:
       id: ask-idle-line
     timeout: 10000
+# Ask's ScrollView dismisses the keyboard interactively during a downward
+# drag. Start on its idle content and finish below the keyboard's edge.
+- swipe:
+    start: 50%, 30%
+    end: 50%, 90%
+    duration: 600
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: tab-your-mp
+    timeout: 15000
 - assertVisible:
     id: ask-conversation-0
 # The seat starter fills the composer with the member and Speeches; nothing is sent.

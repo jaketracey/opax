@@ -25,16 +25,19 @@ name: 33 Bill text versions, source navigation, Just added and native records
     visible:
       id: bill-text-reader
     timeout: 20000
-# The default version's text opens at once, under the header.
-- extendedWaitUntil:
-    visible:
+# The reader opens with its summary and overview above the first text block.
+- scrollUntilVisible:
+    element:
       id: reader-text-0
-    timeout: 20000
+    direction: DOWN
+    visibilityPercentage: 10
+    speed: 20
+    timeout: 180000
 - takeScreenshot: ${EVIDENCE}/33-bill-text
 - scrollUntilVisible:
     element:
       id: bill-text-overview
-    direction: DOWN
+    direction: UP
     centerElement: true
     speed: 20
     timeout: 180000
@@ -50,17 +53,26 @@ name: 33 Bill text versions, source navigation, Just added and native records
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/33-overview
 # Share as text file is in the bar's ⋯.
-- tapOn: More for this bill text
+- runFlow:
+    file: support/open-more.yaml
+    env:
+      NAME: this bill text
 - waitForAnimationToEnd
 - tapOn: Share as text file
 - assertVisible: 'Share file: au-federal-r7534-r7534-aspassed.txt'
 - takeScreenshot: ${EVIDENCE}/33-text-file
 - tapOn: OK
-# The version is a bar menu labelled with the current short stage.
-- tapOn: As passed
+# The version's accessible label includes the full stage and date.
+- tapOn:
+    id: bill-text-version
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/33-version-picker
 - tapOn: 'First reading: synthetic fixture, 1 Oct 2026'
+- extendedWaitUntil:
+    visible:
+      id: bill-text-version
+      text: 'Version, First reading: synthetic fixture(, 1 October 2026)?'
+    timeout: 20000
 - scrollUntilVisible:
     element:
       id: bill-text-stage
@@ -73,7 +85,7 @@ name: 33 Bill text versions, source navigation, Just added and native records
 - takeScreenshot: ${EVIDENCE}/33-version-switched
 # Contents hands the chosen section back to the reader; the same choice
 # twice still scrolls.
-- tapOn: Contents
+- runFlow: support/bill-text-contents.yaml
 - extendedWaitUntil:
     visible:
       id: bill-text-contents-screen
@@ -87,7 +99,7 @@ name: 33 Bill text versions, source navigation, Just added and native records
 - takeScreenshot: ${EVIDENCE}/33-text-navigation
 - scroll
 - scroll
-- tapOn: Contents
+- runFlow: support/bill-text-contents.yaml
 - extendedWaitUntil:
     visible:
       id: bill-text-contents-screen

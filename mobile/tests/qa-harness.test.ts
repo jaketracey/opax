@@ -2,6 +2,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
@@ -66,52 +67,78 @@ describe('Maestro startup budgets', () => {
   );
 });
 
-test('screens 4.26.0 patch applies cleanly and assigns menu and plain header ids last', () => {
-  const version = JSON.parse(
-    readFileSync('node_modules/react-native-screens/package.json', 'utf8'),
-  ).version;
-  expect(version).toBe('4.26.0');
-  const file = 'node_modules/react-native-screens/ios/RNSBarButtonItem.mm';
+test('screens 4.26.0 patch applies cleanly to the menu item and its exposed view', () => {
+  expect(
+    JSON.parse(
+      readFileSync('node_modules/react-native-screens/package.json', 'utf8'),
+    ).version,
+  ).toBe('4.26.0');
   const patch = resolve('patches/react-native-screens+4.26.0.patch');
   const digest = (value: string) =>
     createHash('sha256').update(value).digest('hex');
-  // Accept pristine or previously patched installs, then verify the exact
-  // upstream bytes before replay. No installed package is modified by this test.
-  const upstream = readFileSync(file, 'utf8')
-    .replace(/  \/\/ Menu and target\/action setup[^]*?(?=  return self;)/, '')
-    .replace(
-      /\n  if \(dict\[@"testID"\]\) \{\n    (self|menu|actionElement)\.accessibilityIdentifier = dict\[@"testID"\];\n  }\n/g,
-      '',
-    )
-    .replace(
-      '  UIMenu *menu = [UIMenu menuWithTitle:',
-      '  return [UIMenu menuWithTitle:',
-    )
-    .replace('  return menu;\n', '\n');
-  expect(digest(upstream)).toBe(
-    'f6680e8d632552969582162782db40a5b20a7fa5ce36f1584bf4736c1b3547d3',
-  );
+  const files = [
+    {
+      name: 'RNSBarButtonItem.mm',
+      before:
+        'f6680e8d632552969582162782db40a5b20a7fa5ce36f1584bf4736c1b3547d3',
+      after: 'd2ecac91610e46bb0a0fce42ceb61563326fd06fc886b4d769021aac1f553066',
+    },
+    {
+      name: 'RNSScreen.mm',
+      before:
+        '7685f8732386a62dc82c8ab21fb37211ce4f51299af9e9ea6dea1a2d1c279207',
+      after: 'd2dfc7ebfcca140ab2da8ed2e39c86ef53222ea6177dbdb5ab16593b0f8eb551',
+    },
+  ];
   expect(digest(readFileSync(patch, 'utf8'))).toBe(
-    '8b763ee16ec844d570af33facdddd3e2de57f696c966ea1e734c689a8ae6aae7',
+    '58341749258e695f7cdabca91ff6bfad69130324055421e73aa3e3786e88ec4c',
   );
   const root = mkdtempSync(join(tmpdir(), 'screens-patch-'));
+  const directory = join(root, 'node_modules/react-native-screens/ios');
+  mkdirSync(directory, { recursive: true });
   try {
-    const target = join(root, 'RNSBarButtonItem.mm');
-    writeFileSync(target, upstream);
+    for (const file of files) {
+      // Accept pristine, wave 10/11 or current installs, then verify exact
+      // upstream bytes. Tests never modify the installed package.
+      const upstream = readFileSync(
+        join('node_modules/react-native-screens/ios', file.name),
+        'utf8',
+      )
+        .replace(
+          /  \/\/ Menu and target\/action setup[^]*?(?=  return self;)/,
+          '',
+        )
+        .replace(
+          /\n  if \(dict\[@"testID"\]\) \{\n    (self|menu|actionElement)\.accessibilityIdentifier = dict\[@"testID"\];\n  }\n/g,
+          '',
+        )
+        .replace(
+          '  UIMenu *menu = [UIMenu menuWithTitle:',
+          '  return [UIMenu menuWithTitle:',
+        )
+        .replace('  return menu;\n', '\n')
+        .replace(
+          /\n *\/\/ OPAX menu accessibility:[^]*?\/\/ OPAX menu accessibility end\.\n/g,
+          '',
+        );
+      expect(digest(upstream)).toBe(file.before);
+      writeFileSync(join(directory, file.name), upstream);
+    }
     for (const extra of [['--dry-run'], []]) {
       const result = spawnSync(
         '/usr/bin/patch',
-        ['--batch', '--fuzz=0', '-p1', target, '-i', patch, ...extra],
-        { encoding: 'utf8' },
+        ['--batch', '--fuzz=0', '-p1', '-i', patch, ...extra],
+        { cwd: root, encoding: 'utf8' },
       );
       expect(result.status).toBe(0);
       expect(result.stdout + result.stderr).not.toMatch(/offset|fuzz/i);
     }
-    const source = readFileSync(target, 'utf8');
-    expect(digest(source)).toBe(
-      'd2ecac91610e46bb0a0fce42ceb61563326fd06fc886b4d769021aac1f553066',
-    );
-    const init = source.split('+ (void)resolveImageFromConfig')[0]!;
+    for (const file of files)
+      expect(digest(readFileSync(join(directory, file.name), 'utf8'))).toBe(
+        file.after,
+      );
+    const item = readFileSync(join(directory, files[0]!.name), 'utf8');
+    const init = item.split('+ (void)resolveImageFromConfig')[0]!;
     expect(init).toContain(
       'NSString *testID = dict[@"testID"] ?: dict[@"identifier"];',
     );
@@ -120,9 +147,33 @@ test('screens 4.26.0 patch applies cleanly and assigns menu and plain header ids
     expect(idAt).toBeGreaterThan(init.indexOf('self.action ='));
     expect(init).toContain('self.menu.accessibilityIdentifier = testID;');
     for (const target of ['menu', 'actionElement'])
-      expect(source).toContain(
+      expect(item).toContain(
         `${target}.accessibilityIdentifier = dict[@"testID"];`,
       );
+    const screen = readFileSync(join(directory, files[1]!.name), 'utf8');
+    expect(screen).toContain(
+      'view.isAccessibilityElement && [view.accessibilityLabel isEqualToString:item.accessibilityLabel]',
+    );
+    expect(screen).toContain(
+      'view.accessibilityIdentifier = item.accessibilityIdentifier;',
+    );
+    expect(screen).toContain(
+      'RNSApplyMenuButtonAccessibilityIdentifier(subview, item);',
+    );
+    const layout = screen
+      .split('- (void)viewDidLayoutSubviews')[1]!
+      .split('- (BOOL)isModalWithHeader')[0]!;
+    expect(layout).toContain('if (@available(iOS 26.0, *))');
+    expect(layout).toContain('navigationController.topViewController == self');
+    expect(layout).toContain(
+      'item.menu && item.accessibilityIdentifier.length > 0 && item.accessibilityLabel.length > 0',
+    );
+    expect(
+      layout.indexOf('RNSApplyMenuButtonAccessibilityIdentifier(bar, item);'),
+    ).toBeGreaterThan(layout.indexOf('[bar layoutIfNeeded];'));
+    expect(screen).not.toMatch(
+      /valueForKey:|NSSelectorFromString|method_exchangeImplementations/,
+    );
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -182,6 +233,16 @@ test('flow 27 bounds chrome recovery and the top fallback before searching down'
     TOP_ID: 'today-screen-message',
     TAB_ID: 'tab-today',
   });
+  expect(restore[0]).toEqual({ runFlow: 'search-dismiss.yaml' });
+  const back = restore.find(
+    (step: any) => step.repeat?.while?.visible?.id === 'BackButton',
+  ).repeat;
+  expect(back.commands).toContainEqual({ runFlow: 'search-dismiss.yaml' });
+  expect(lead[returnAt - 1]).toEqual({
+    runFlow: 'support/search-dismiss.yaml',
+  });
+  expect(lead[returnAt - 2].extendedWaitUntil.visible.id).toBe('leads-screen');
+  expect(lead[returnAt - 3]).toEqual({ tapOn: { id: 'BackButton' } });
   const declarations = lead
     .slice(returnAt)
     .find(
@@ -194,6 +255,299 @@ test('flow 27 bounds chrome recovery and the top fallback before searching down'
   ).scrollUntilVisible;
   expect(declarations.timeout).toBe(opening.timeout);
   expect(declarations.timeout).toBe(180000);
+});
+
+test('bar search cancellation recognises the iOS 26 Close label before restoring Back', () => {
+  const [dismiss] = maestroSteps('.maestro/support/search-dismiss.yaml');
+  expect(dismiss.runFlow.when).toEqual({
+    platform: 'iOS',
+    visible: '^(Cancel|Close)$',
+  });
+  expect(dismiss.runFlow.commands[0].tapOn).toEqual({
+    text: '^(Cancel|Close)$',
+    retryTapIfNoChange: false,
+  });
+  expect(dismiss.runFlow.commands[1]).toBe('waitForAnimationToEnd');
+});
+
+test('Ask drags the interactive keyboard down and waits for the tab before the seat starter', () => {
+  const steps = maestroSteps('.maestro/30-ask.yaml');
+  const fresh = steps.findIndex((step: any) => step.tapOn === 'New question');
+  const tab = steps.findIndex(
+    (step: any, index: number) =>
+      index > fresh && step.tapOn?.id === 'tab-your-mp',
+  );
+  const dismiss = steps.findIndex(
+    (step: any, index: number) => index > fresh && step.swipe,
+  );
+  expect(dismiss).toBeGreaterThan(fresh);
+  expect(dismiss).toBeLessThan(tab);
+  expect(steps).not.toContain('hideKeyboard');
+  expect(steps[dismiss].swipe).toEqual({
+    start: '50%, 30%',
+    end: '50%, 90%',
+    duration: 600,
+  });
+  expect(steps[dismiss + 1]).toBe('waitForAnimationToEnd');
+  expect(steps[dismiss + 2].extendedWaitUntil.visible).toEqual({
+    id: 'tab-your-mp',
+  });
+  expect(dismiss + 2).toBeLessThan(tab);
+  expect(steps.slice(fresh)).not.toContainEqual({ pressKey: 'Enter' });
+  expect(steps[tab + 1]).toEqual({
+    runFlow: 'support/location-manual-seat.yaml',
+  });
+});
+
+test('Money map expands the industry sheet before scrolling to Unions', () => {
+  const steps = maestroSteps('.maestro/23-money-map.yaml');
+  const industry = steps.findIndex(
+    (step: any) => step.tapOn?.id === 'filters-row-industry',
+  );
+  expect(steps[industry + 1].runFlow.when.visible).toBe('Half screen');
+  expect(steps[industry + 1].runFlow.commands[0].swipe).toMatchObject({
+    from: { text: 'Half screen' },
+    direction: 'UP',
+  });
+  expect(steps[industry + 2].scrollUntilVisible).toMatchObject({
+    element: { id: 'filters-choice-unions' },
+    direction: 'DOWN',
+    centerElement: true,
+  });
+  expect(steps[industry + 4]).toEqual({
+    tapOn: { id: 'filters-choice-unions' },
+  });
+  expect(steps[industry + 5]).toEqual({
+    tapOn: { id: 'BackButton', text: 'Filters' },
+  });
+  expect(steps[industry + 6].extendedWaitUntil.visible).toEqual({
+    id: 'filters-row-contracts',
+  });
+});
+
+test('Money record source returns below the bar before its tap and waits for the original', () => {
+  const steps = maestroSteps('.maestro/23-money-map.yaml');
+  const allYears = steps.findIndex(
+    (step: any) =>
+      step.scrollUntilVisible?.element?.id ===
+      'money-record-donations-all-years',
+  );
+  const source = steps.findIndex(
+    (step: any) => step.scrollUntilVisible?.element?.id === 'money-source',
+  );
+  expect(source).toBeGreaterThan(allYears);
+  expect(steps[source - 2]).toEqual({
+    swipe: { start: '50%, 40%', end: '50%, 60%', duration: 600 },
+  });
+  expect(steps[source - 1]).toBe('waitForAnimationToEnd');
+  expect(steps[source].scrollUntilVisible).toMatchObject({
+    element: { id: 'money-source' },
+    direction: 'UP',
+    centerElement: true,
+  });
+  expect(steps[source + 1]).toBe('waitForAnimationToEnd');
+  expect(steps[source + 2]).toEqual({ tapOn: { id: 'money-source' } });
+  expect(steps[source + 3].extendedWaitUntil.visible).toEqual({
+    id: 'money-source-sheet-original-0',
+  });
+});
+
+test('Money map and List restore the off-screen summary after record returns', () => {
+  const steps = maestroSteps('.maestro/23-money-map.yaml');
+  const returns = steps.flatMap((step: any, index: number) =>
+    step.extendedWaitUntil?.visible?.id === 'money-view-summary' &&
+    !step.extendedWaitUntil.visible.text
+      ? [index]
+      : [],
+  );
+  expect(returns).toHaveLength(2);
+  for (const at of returns) {
+    expect(steps[at - 3]).toEqual({ tapOn: { id: 'BackButton' } });
+    expect(steps[at - 2].extendedWaitUntil.visible).toEqual({
+      id: 'money-screen',
+    });
+  }
+  expect(steps[returns[0] - 1]).toEqual({
+    runFlow: {
+      file: 'support/money-screen-scroll-up.yaml',
+      env: { TARGET_ID: 'money-view-summary' },
+    },
+  });
+  expect(steps[returns[1] - 1].scrollUntilVisible).toMatchObject({
+    element: { id: 'money-view-summary' },
+    direction: 'UP',
+    centerElement: true,
+    speed: 20,
+  });
+});
+
+test('See all donors is centred upwards from the later footnote before tapping', () => {
+  const steps = maestroSteps('.maestro/23-money-map.yaml');
+  const footnote = steps.findIndex(
+    (step: any) => step.runFlow?.env?.TARGET_ID === 'money-individual-donors',
+  );
+  const all = steps.findIndex(
+    (step: any) => step.scrollUntilVisible?.element?.id === 'money-donors-all',
+  );
+  expect(all).toBeGreaterThan(footnote);
+  expect(steps[all].scrollUntilVisible).toMatchObject({
+    element: { id: 'money-donors-all' },
+    direction: 'UP',
+    centerElement: true,
+    speed: 20,
+  });
+  expect(steps[all + 1]).toBe('waitForAnimationToEnd');
+  expect(steps[all + 2]).toEqual({ tapOn: { id: 'money-donors-all' } });
+});
+
+test('declarations retry the profile push without clearing search and dismiss it only after checking the return', () => {
+  const steps = maestroSteps('.maestro/27-leads.yaml');
+  const at = steps.findIndex(
+    (step: any) => step.repeat?.while?.notVisible?.id === 'person-screen-title',
+  );
+  expect(at).toBeGreaterThan(0);
+  expect(steps[at].repeat).toEqual({
+    times: 3,
+    while: { notVisible: { id: 'person-screen-title' } },
+    commands: [
+      { tapOn: { id: 'declaration-person-0', retryTapIfNoChange: false } },
+      'waitForAnimationToEnd',
+    ],
+  });
+  expect(steps[at + 1].extendedWaitUntil.visible).toEqual({
+    id: 'person-screen-title',
+  });
+  const search = steps.findIndex((step: any) => step.inputText === 'Briskey');
+  expect(search).toBeLessThan(at);
+  expect(steps.slice(search, at)).not.toContainEqual({
+    runFlow: 'support/search-dismiss.yaml',
+  });
+  const tail = steps.slice(-5);
+  expect(tail[0]).toEqual({ tapOn: { id: 'BackButton' } });
+  expect(tail[1].extendedWaitUntil.visible).toEqual({
+    id: 'declarations-screen',
+  });
+  expect(tail[2].assertVisible).toEqual({
+    id: 'declaration-person-0',
+    text: 'Jo Briskey, .*House of Representatives.*',
+  });
+  expect(tail[3]).toEqual({ runFlow: 'support/search-dismiss.yaml' });
+  expect(tail[4].runFlow).toEqual({
+    file: 'support/restore-tab-bar.yaml',
+    env: { TOP_ID: 'today-screen-message', TAB_ID: 'tab-today' },
+  });
+});
+
+test('Bill text scrolls past the summary, returns to the overview and opens Contents via More on compact bars', () => {
+  const steps = maestroSteps('.maestro/33-bill-text-recent.yaml');
+  const reader = steps.findIndex(
+    (step: any) => step.extendedWaitUntil?.visible?.id === 'bill-text-reader',
+  );
+  expect(steps[reader + 1].scrollUntilVisible).toMatchObject({
+    element: { id: 'reader-text-0' },
+    direction: 'DOWN',
+  });
+  expect(steps[reader + 3].scrollUntilVisible).toMatchObject({
+    element: { id: 'bill-text-overview' },
+    direction: 'UP',
+  });
+  const contents = steps.filter(
+    (step: any) => step.runFlow === 'support/bill-text-contents.yaml',
+  );
+  expect(contents).toHaveLength(2);
+  expect(steps).not.toContainEqual({ tapOn: 'Contents' });
+  const [open, tap] = maestroSteps('.maestro/support/bill-text-contents.yaml');
+  expect(open.runFlow.when.notVisible).toBe('Contents');
+  expect(open.runFlow.commands[0]).toEqual({
+    runFlow: { file: 'open-more.yaml', env: { NAME: 'this bill text' } },
+  });
+  expect(tap).toEqual({ tapOn: 'Contents' });
+});
+
+test('bill text selects Version by id, checks its accessible stage and retains the in-content stage assertion', () => {
+  const steps = maestroSteps('.maestro/33-bill-text-recent.yaml');
+  const version = steps.findIndex(
+    (step: any) => step.tapOn?.id === 'bill-text-version',
+  );
+  expect(version).toBeGreaterThan(0);
+  expect(steps).not.toContainEqual({ tapOn: 'As passed' });
+  const choose = steps.findIndex(
+    (step: any) =>
+      step.tapOn === 'First reading: synthetic fixture, 1 Oct 2026',
+  );
+  expect(choose).toBeGreaterThan(version);
+  expect(steps[choose + 1].extendedWaitUntil.visible).toEqual({
+    id: 'bill-text-version',
+    text: 'Version, First reading: synthetic fixture(, 1 October 2026)?',
+  });
+  expect(steps[choose + 2].scrollUntilVisible.element).toEqual({
+    id: 'bill-text-stage',
+  });
+  expect(steps[choose + 3].assertVisible).toEqual({
+    id: 'bill-text-stage',
+    text: 'First reading: synthetic fixture',
+  });
+  expect(steps).toContainEqual({
+    runFlow: {
+      file: 'support/open-more.yaml',
+      env: { NAME: 'this bill text' },
+    },
+  });
+});
+
+test.each([
+  'header-more',
+  'electorate-more',
+  'doc-actions',
+  'bill-text-actions',
+  'android-more',
+])(
+  'More opens once when the visible button id is %s, even if opening removes the button from the tree',
+  (buttonId) => {
+    const steps = maestroSteps('.maestro/support/open-more.yaml');
+    const label = 'More for ${NAME}';
+    expect(steps[0].extendedWaitUntil.visible).toBe(label);
+    const output: Record<string, boolean> = {};
+    const taps: unknown[] = [];
+    let visibleId: string | undefined = buttonId;
+    const evaluate = (expression: string) =>
+      Function('output', `return ${expression.slice(2, -1)}`)(output);
+    const run = (commands: any[]) => {
+      for (const step of commands) {
+        if (step.evalScript) evaluate(step.evalScript);
+        if (step.runFlow) {
+          const when = step.runFlow.when;
+          if (
+            when.visible
+              ? when.visible.id === visibleId && when.visible.text === label
+              : evaluate(when.true)
+          )
+            run(step.runFlow.commands);
+        }
+        if (step.tapOn) {
+          taps.push(step.tapOn);
+          visibleId = undefined;
+        }
+      }
+    };
+    run(steps);
+    expect(taps).toEqual([
+      buttonId === 'header-more' ? { id: 'header-more', text: label } : label,
+    ]);
+  },
+);
+
+test('all three typed quiz guesses use the exposed Done label and wait for editing to finish', () => {
+  const steps = maestroSteps('.maestro/48-explore-quiz.yaml');
+  const typed = steps.flatMap((step: any, index: number) =>
+    step.inputText ? [index] : [],
+  );
+  expect(typed).toHaveLength(3);
+  for (const at of typed)
+    expect(steps[at + 1]).toEqual({ runFlow: 'support/quiz-number-done.yaml' });
+  const [done, wait] = maestroSteps('.maestro/support/quiz-number-done.yaml');
+  expect(done).toEqual({ tapOn: '^Done$' });
+  expect(wait.extendedWaitUntil.notVisible).toEqual({ id: 'quiz-number' });
 });
 
 test('Ask idle excludes both options row ids without matching the composer Options button', () => {
