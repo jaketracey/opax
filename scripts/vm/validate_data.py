@@ -366,11 +366,50 @@ def check_wrangler() -> list[str]:
     return []
 
 
+AEC_RETURN_TYPES = {"AEC annual return", "AEC election return", "AEC referendum return"}
+
+
+def _money_faults(doc, federal: bool) -> dict[str, int]:
+    """Counts of the faults findings money-donations-001/-004/-012 and state-datasets-008 fixed: node ids
+    published twice, and on a federal file a donor reference that is not an AEC return (a third-party copy
+    or a Queensland ECQ row cited as the AEC) or has no year."""
+    nodes = doc.get("nodes") if isinstance(doc, dict) else None
+    nodes = nodes if isinstance(nodes, list) else (doc.get("donors") or []) if isinstance(doc, dict) else []
+    ids = [n.get("id") for n in nodes if isinstance(n, dict)]
+    faults = {"duplicate node ids": len(ids) - len(set(ids))}
+    if federal:
+        refs = [r for n in nodes if isinstance(n, dict) and n.get("jurisdiction", "federal") == "federal"
+                for r in n.get("returnReferences") or [] if isinstance(r, dict)]
+        faults["non-AEC return references"] = sum(r.get("return_type") not in AEC_RETURN_TYPES for r in refs)
+        faults["return references without a year"] = sum(not r.get("year") for r in refs)
+    return faults
+
+
+def _check_money_faults(rel: str, federal: bool) -> list[str]:
+    """No fault count may rise above HEAD's (HEAD may predate the fix; once it is clean, any return fails)."""
+    doc, err = _load_json(rel)
+    if err:
+        return []  # _check_json reports it
+    old_raw = head_bytes(rel)
+    try:
+        old = _money_faults(json.loads(old_raw), federal) if old_raw else {}
+    except ValueError:
+        old = {}
+    return [f"{rel} has {n:,} {name} (HEAD {old.get(name, 0):,})"
+            for name, n in _money_faults(doc, federal).items() if n > old.get(name, 0)]
+
+
 def check_money() -> list[str]:
     errs = _check_json(f"{PUBLIC}/graph/money.json", ("meta", "nodes", "edges"), ("nodes", "edges"), MONEY_MIN_RATIO)
+    errs += _check_money_faults(f"{PUBLIC}/graph/money.json", federal=True)
     for jur in ("qld", "vic", "tas"):
-        errs += _check_json(f"{PUBLIC}/graph/money.{jur}.json", ("meta", "nodes", "edges"), ("nodes", "edges"),
-                            MONEY_MIN_RATIO, optional=True)
+        rel = f"{PUBLIC}/graph/money.{jur}.json"
+        errs += _check_json(rel, ("meta", "nodes", "edges"), ("nodes", "edges"), MONEY_MIN_RATIO, optional=True)
+        if (ROOT / rel).exists():
+            errs += _check_money_faults(rel, federal=False)
+    disclosures = f"{PUBLIC}/graph/donor-disclosures.json"
+    if (ROOT / disclosures).exists():
+        errs += _check_money_faults(disclosures, federal=True)
     return errs
 
 
