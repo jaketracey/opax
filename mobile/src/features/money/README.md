@@ -1,109 +1,77 @@
-# Native money map
+# Money map
 
-The native `/money` screen uses the held federal, Queensland, Victoria and
+The native `/money` screen draws the held federal, Queensland, Victoria and
 Tasmania graph catalogs. Today links to it after the daily edition; the Person
-party-receipts record links to the party's map focus and preserves its web link.
-State and federal returns are never combined.
+party-receipts record links to the party's map focus and preserves its web
+link. State and federal returns are never combined.
 
-The 6 October decision is **continue**. The earlier spike's growth, rather than
-its short steady-state footprint, prompted bounded frame submission. Expo GL
-copies uploaded typed arrays into queued native batches. The adapter now waits
-for each frame's GL work and native batch to finish, uploads settled geometry
-only when it changes, and calculates camera-facing ribbons in the vertex shader.
-It targets 30 completed frames per second. Current profile and gate evidence
-belongs under ignored `mobile/private/`; earlier JS-only intervals below do not
-measure completed GPU frames.
+## The 2D map (November 2026, `map/`)
 
-| Historical 5 October spike | Cold graph-cache first verified frame | JS interval median / p95 | Native footprint peak |
-| -------------------------- | ------------------------------------- | ------------------------ | --------------------- |
-| 16e simulator, iOS 18.4    | 1,446.4 ms                            | 16.67 / 16.74 ms         | 260.6 MB              |
-| 17 Pro simulator, iOS 26.5 | 1,385.7 ms                            | 16.67 / 16.73 ms         | 304.7 MB              |
+The map is a Skia stage. Every layer is recorded once into an `SkPicture`
+(the thin and thick flows, the small and large discs, the focus) and replayed
+by the GPU under one `Group` whose transform is a derived value of the camera
+shared values `tx`, `ty`, `k`. Pan, pinch and the flick run as worklets on the
+UI thread; the only JS work during a gesture is none. The expo-gl + three.js
+scene it replaces (`NativeMoneyScene`) uploaded typed arrays through Expo's
+native queue every orbit and was capped at 30 fps.
 
-The pooled experiment reached 769.4 MB and stopped before its final readback.
-Memory uses physical process accounting and decimal MB. Simulator measurements
-cannot establish phone GPU performance, thermal behaviour or jetsam limits.
+| Module | Role |
+|---|---|
+| `scales.ts` | How a figure becomes a size: disc area ∝ amount (radius = `NODE_SCALE`·√amount, floor `NODE_FLOOR`), line width ∝ √amount with a floor and a cap; the public-money hubs are a fixed ring (a different register, never summed with donations). The legend states all of it. |
+| `model.ts` | `buildModel(view)`: the filtered graph as marks, with clusters (parties first, then by size), each node's flows strongest first, and totals by flow type. `nextAlongFlows` walks the strongest flow not already on the trail. |
+| `layout.ts` | A deterministic 2D force layout on typed arrays (seeded LCG, d3-force physics ported from the 3D scene, a counting-sort grid for the pairwise forces, so a tick allocates nothing). Parties at the origin, industry clusters on an aspect-stretched ring grown until no blobs overlap. One layout per loaded graph (`layoutFor`), ticked over a few frames (`TICKS_PER_FRAME`) so the discs glide into place; under Reduce Motion it settles before the first draw. The federal graph settles in 192 ticks. |
+| `camera.ts` | Pure, worklet-safe camera maths: fit, clamp (the world box's centre never leaves the inset viewport), zoom about a focal point, fly targets, and the level-of-detail ramps (small discs and thin lines fade in as the reader comes closer; cluster names give way to node names). |
+| `hit.ts` | Tap picking on a uniform grid over the drawn discs; the allowance grows as the reader zooms out. |
+| `scene.ts` | The draw calls for each layer against a `Painter`; `skia-painter.ts` records them into pictures, `countingPainter` is for tests and the probe. |
+| `labels.ts` | Which names are drawn (cluster names, the four largest parties, the largest discs, the focus and its flows) and a greedy de-overlap that runs on the UI thread as the camera moves. |
+| `MoneyMap.tsx` | The stage: the canvas, the gestures, the camera cache per jurisdiction, the label overlay, the overview and the e2e probes. The chrome drives it with a `command` (fit, zoom, fly to) held in state. |
+| `MoneyMapLabels.tsx` | Label slots as `Animated.View`s placed on the UI thread; native `Text`, so Dynamic Type and Bold Text apply. |
+| `MoneyMapPanel.tsx` | The bottom panel: the two totals and the legend at rest; with a focus the disc's name, kind and figure, Previous and Next flow, Open record and its flows (each opening the record at the other end). Two heights, dragged by the handle. |
+| `MoneyMapSearch.tsx` | Search to fly: donors, parties and the hubs by normalised organisation name; choosing one flies there and focuses it. |
+| `MiniMap.tsx` | The overview: cluster blobs and the viewport frame (UI thread); tap to move the view. Hidden at accessibility sizes. |
+| `MoneyMapLegend.tsx` | Reference discs ($1m, $100m, $1bn), reference lines, the industry swatches, parties grey, public money ring, and the floor and cap. |
 
-## Port and native adapter
+`MoneyScreen.tsx` has two modes. **Map:** the stage fills the screen under a
+floating card (jurisdiction, one line saying what the map shows, the List |
+Map picker), the control stack (search, zoom in, zoom out, fit), the overview
+and the panel. **List:** Donors, Parties and Public money, the full accessible
+data, and the default while VoiceOver is on or not yet known.
 
-Three.js **0.185.1** matches the web lockfile; Expo GL is **57.0.2**. The force
-simulation, palette, radius helpers and ABS CPI table are copied from
-`portal/graph/`. Edge-shader constants retain web parity; the native vertex
-adapter moves ribbon orientation to the GPU. The lights, fog and force layout
-follow the web. Native views replace DOM labels, controls and the focus card.
-The shipping screen sizes nodes by connectedness, as briefed; the historical
-lab sizes them by donation value. Geometry, materials and typed arrays are
-shared across year, industry and layer changes. A jurisdiction change owns a
-new scene, and releases the old one.
+Ways around: pinch about the focal point, pan with momentum (rubber-banded at
+the map's edge), double tap to zoom, the zoom and Fit buttons, tap a disc to
+focus it, search to fly, Next and Previous along the strongest flows, the
+overview, and every action as a VoiceOver custom action on the stage. Android
+Back closes the search, then collapses the panel, then clears the focus; the
+stage leaves the leading 24 pt to predictive back.
 
-The context shim validates native OpenGL ES 3 and removes the inherited WebGL1
-brand that Three's browser check rejects. It binds methods to the supplied
-native context. No Three loaders, textures, fonts, images or remote assets are
-requested. Every graph request goes through `ApiClient`, four exact reviewed
-static routes and the existing bounded disk cache. Fixture snapshots pin all
-four files by hash; tests never use production data requests.
+State across returns: the filters, the focus (`select`) and the view are route
+params, written through the screen's navigation object (w12-fix2), so a record
+visit returns to the same map; the camera is kept per jurisdiction in memory.
 
-A published state export can split one canonical donor ID across name casing
-and different financial years. The decoder joins only complete, disjoint annual
-disclosures with the same identity and category, preserving every flow and
-amount. Ambiguous or overlapping duplicates remain a data error.
+Filters: years, industry, layers, inflation (the shared sheet) plus the map's
+own **Minimum flow** facet (`min` route param, whole dollars). `moneyView`
+drops flows under it; the record and donors screens read the same param.
+
+Honesty: every figure in the panel is the record's own figure in the window
+and opens the record. Sizes are proportional and stated. No copy implies that
+one flow led to another.
 
 ## Records and accessibility
 
-Native adjustable financial-year rails also have earlier/later buttons and
-VoiceOver increment/decrement actions. Industry, donation, grant, contract and
-inflation controls preserve the web's year semantics, including undated rows.
-Public-money figures stay separate from donation totals. The full-height native
-focus sheet uses the app's figures, record sources and as-at components. An
-explicit native person profile path opens its page; other profiles open the
-website. Party totals remain across all industries within the chosen years,
-with that distinction stated when the relationships are industry-filtered.
+Public-money figures stay separate from donation totals. The record screen
+(`MoneyRecord.tsx`) uses the app's figures, record sources and as-at
+components. An explicit native person profile path opens its page; other
+profiles open the website. Party totals remain across all industries within
+the chosen years, with that distinction stated when the relationships are
+industry-filtered.
 
-The ranked donor list is virtualized: one row a donor (rank and name, amount,
-then "Disclosed donations · years · parties"). Its sources are the map's
-source line and each donor's record. It is the initial view while the
-VoiceOver setting is unknown, and the default when VoiceOver is enabled. All controls have accessible names; text is
-uncapped through AX5. Reduce Motion disables the idle orbit before the setting
-has answered. Focus changes are immediate, so no camera fly animation runs.
-
-Rendering stops on route blur, background and scrolling the map out of view.
-Switching to the list or leaving releases Three resources; GLView destroys its
-owned native context on unmount. Context errors remove the GL view and offer a
-fresh one. Cleanup continues if the native context has already been destroyed.
-Expo's native `isContextLost()` is a stub, so the adapter also checks GL errors
-and catches invalid-context exceptions.
-
-## Design pass 4A (October 2026)
-
-The plan of record is `docs/design/DESIGN-REVIEW-2026-10.md` (section 2 and
-"Money and leads").
-
-- **One meta line** under the 3D map / List view control: "Donations and
-  public money · years · nodes · recorded flows". No subtitle or ⓘ.
-- **One source line per block** (`MoneySourceLine`): the map's sits under
-  "Totals are a floor." and its sheet holds the originals (the returns and
-  each public-money register), the methodology, the layer notes and the
-  licence. The record sheet has one for its figure and one for public money.
-  A saved copy says "Saved …" in the line; the banner says only "offline".
-- **One accented figure** on the record: the amount, what it is, then "2024 ·
-  3,929 receipts". Public money received is a two-row list, never a second
-  accented figure. The caveats stay as one line each: "Totals are a floor.",
-  "Never summed with donations.", "Commitments, not verified payments."
-- **Colour.** The 16 industry hues come from the design tokens
-  (`chartIndustry`) and are the map's only multi-colour element. Parties are
-  drawn in the neutral parties grey and the largest four in view are named
-  beside their nodes (placed before cluster names); the selection is named
-  once, as the focus. No party colour is drawn without its name.
-- **No inert accents** on disclosures or rows; section marks and the figure
-  carry the money ink. On a regular-width window the view control stops at
-  420pt.
-
-The public-money screens (`features/money-public`) follow the same rules:
-titles in ink; one figure and one `MetaSource` line under the title;
-`RowSource` gives a listed record one line ("GrantConnect · GA123456") whose
-sheet opens the original and, for an organisation, its page on opax.com.au;
-the hub is one list; cross-links ("The month's largest grants", "Discover:
-companies in both") sit at the foot of their lists. An individual recipient's
-award record is never linked.
+The stage is one VoiceOver element whose label says what is drawn and what is
+focused, with custom actions (zoom in, zoom out, show the whole map, next
+flow, previous flow, open the record, clear the focus). Every action is also
+a real button. Labels use the `footnote` role; node names hide at
+accessibility sizes. Reduce Motion: the layout settles before it is drawn, a
+fly is a cut, a flick stops where the finger lifts, the panel does not
+animate.
 
 ## Donor privacy (October 2026)
 
@@ -120,15 +88,22 @@ from the pinned exports.
 
 ## Verification
 
-Journey 23 starts at Today, verifies native pixels and completed frames, captures
-an orbit sequence, changes year and industry, focuses through the same selection
-callback as a tap, checks the held figure, opens the record's source sheet and
-its guarded original, and reads the list. Its diagnostic and accessible journey actions are substituted with a
-production stub before Metro traverses them. A separate cold relaunch verifies
-the map and list from disk cache with the fixture server stopped.
+Jest: `money-map-layout`, `money-map-camera`, `money-map-hit`,
+`money-map-scene`, `money-map-labels`, `money-map-model`, `money-map-panel`,
+`money-min-filter`, plus the screen, navigation and privacy suites.
 
-The development/e2e-only `opax://money-map-spike?benchmark=1&seconds=300&leave=1`
-lab automates a five-minute orbit and repeated selection. It records native
-pixel readback, completed-frame count, completion time and interval separately.
-The lab, its route, private device identifiers, traces and screenshots never
-ship in production or in tracked evidence.
+Journey 23 opens the map, verifies the native raster (the stage's testID
+carries the drawn pixel count in e2e builds), pans, changes the year and
+industry through the Filters sheet, focuses through the same callback as a
+tap, checks the held figure, opens the record's source sheet and its guarded
+original, and reads the list. Journey 69 covers zoom (buttons, double tap,
+fit), search to fly, Next and Previous, the panel's flows and Open record,
+the minimum-flow facet, the focus and filters surviving a record visit, the
+frame sampler line and the list. `.maestro/android/69-money-map-v2.yaml` is
+the Android variant (hardware Back).
+
+E2E builds only: `money-probe.e2e.tsx` reads the native raster back for the
+pixel count and samples the interval of every frame in which the camera
+moved, summarised each second as
+`money-map-frames-<n>-p50-<ms>-p95-<ms>-max-<ms>` (a hidden line). Production
+ships the stubs in `money-probe.production.ts`.

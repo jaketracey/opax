@@ -1,0 +1,234 @@
+# Android variant of 69-money-map-v2.yaml: hardware Back instead of the bar's
+# back button, the keyboard dismissed before a result is tapped.
+appId: au.com.opax.app
+name: 69 Money map on Android, zoom, focus, search to fly, next flow, minimum flow filter, record return and the list
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+      id: today-screen-message
+    timeout: 120000
+- openLink: opax://money
+- extendedWaitUntil:
+    visible:
+      id: money-map-drawn-pixels-[1-9][0-9]*
+    timeout: 120000
+- assertVisible:
+    id: money-map-card
+- assertVisible:
+    id: money-map-panel
+- assertVisible:
+    id: money-map-total-donations
+- takeScreenshot: ${EVIDENCE}/69-fit
+# Zoom: the control stack, then a double tap about a point, then Fit.
+- tapOn:
+    id: money-map-zoom-in
+- tapOn:
+    id: money-map-zoom-in
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/69-zoomed-in
+- tapOn:
+    id: money-map-zoom-out
+- waitForAnimationToEnd
+- doubleTapOn:
+    point: 50%, 55%
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/69-double-tap
+- tapOn:
+    id: money-fit
+- waitForAnimationToEnd
+# A pinch has no Maestro command; the frame sampler below covers gestures.
+# Search to fly: the field over the map, a result, then the focus panel.
+- tapOn:
+    id: money-map-search
+- extendedWaitUntil:
+    visible:
+      id: money-map-search-field
+    timeout: 15000
+- inputText: Mineralogy
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: money-map-result-0
+    timeout: 15000
+- tapOn:
+    id: money-map-result-0
+- extendedWaitUntil:
+    visible:
+      id: money-map-focus-name
+      text: Mineralogy Pty Ltd
+    timeout: 30000
+- assertVisible:
+    id: money-map-focus-meta
+    text: Donor · Mining and energy
+- assertVisible:
+    id: money-map-focus-figure
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/69-focus
+# Next walks the strongest flow; Previous retraces it.
+- tapOn:
+    id: money-map-next
+- extendedWaitUntil:
+    visible:
+      id: money-map-focus-name
+      text: United Australia Party
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/69-next-flow
+- tapOn:
+    id: money-map-previous
+- extendedWaitUntil:
+    visible:
+      id: money-map-focus-name
+      text: Mineralogy Pty Ltd
+    timeout: 30000
+# The panel expands to the flows; the first row opens the record at the
+# other end, with the map's window; Back keeps the focus.
+- runFlow:
+    when:
+      notVisible:
+        id: money-map-open-record
+    commands:
+      - tapOn:
+          id: money-map-handle
+- extendedWaitUntil:
+    visible:
+      id: money-map-flow-0
+    timeout: 15000
+- takeScreenshot: ${EVIDENCE}/69-flows
+- tapOn:
+    id: money-map-open-record
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: Mineralogy Pty Ltd
+    timeout: 30000
+- assertVisible:
+    id: money-record-screen
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: money-map-focus-name
+      text: Mineralogy Pty Ltd
+    timeout: 30000
+# Clear the focus from the panel.
+- tapOn:
+    id: money-map-focus-clear
+- extendedWaitUntil:
+    visible:
+      id: money-map-panel
+    timeout: 15000
+# Minimum flow: a facet of the Filters sheet; the summary line says it.
+- tapOn: Filters(, on)?
+- extendedWaitUntil:
+    visible:
+      id: filters-screen
+    timeout: 15000
+- runFlow:
+    when:
+      visible: Half screen
+    commands:
+      - swipe:
+          from:
+            text: Half screen
+          direction: UP
+          duration: 600
+      - waitForAnimationToEnd
+- scrollUntilVisible:
+    element:
+      id: filters-row-min
+    direction: DOWN
+    centerElement: true
+    speed: 20
+    timeout: 60000
+- tapOn:
+    id: filters-row-min
+- extendedWaitUntil:
+    visible:
+      id: filters-choice-10000000
+    timeout: 15000
+- tapOn:
+    id: filters-choice-10000000
+- extendedWaitUntil:
+    visible:
+      id: filters-row-min
+    timeout: 15000
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: money-view-summary
+      text: .*flows of \$10m and over
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: money-map-drawn-pixels-[1-9][0-9]*
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/69-min-flow
+# The filter and the view survive a record visit from the focus panel.
+- tapOn:
+    id: money-map-search
+- inputText: Labor
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: money-map-result-0
+    timeout: 15000
+- tapOn:
+    id: money-map-result-0
+- extendedWaitUntil:
+    visible:
+      id: money-map-focus-name
+      text: Labor
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: money-map-open-record
+    commands:
+      - tapOn:
+          id: money-map-handle
+- extendedWaitUntil:
+    visible:
+      id: money-map-open-record
+    timeout: 15000
+- tapOn:
+    id: money-map-open-record
+- extendedWaitUntil:
+    visible:
+      id: money-focus-name
+      text: Labor
+    timeout: 30000
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: money-view-summary
+      text: .*flows of \$10m and over
+    timeout: 30000
+- assertVisible:
+    id: money-map-focus-name
+    text: Labor
+# The frame sampler (e2e builds only): camera-driven frames, p50 and p95.
+- assertVisible:
+    id: money-map-frames-[1-9][0-9]*-p50-[0-9]+-p95-[0-9]+-max-[0-9]+
+- copyTextFrom:
+    id: money-map-frames-[1-9][0-9]*-p50-[0-9]+-p95-[0-9]+-max-[0-9]+
+- evalScript: ${console.log('MONEY_MAP_PERF ' + maestro.copiedText)}
+- takeScreenshot: ${EVIDENCE}/69-frames
+# The List view carries the same filter.
+- tapOn: List
+- assertVisible:
+    text: List
+    selected: true
+- runFlow:
+    file: support/money-screen-scroll.yaml
+    env:
+      TARGET_ID: money-donor-caption
+- assertVisible:
+    id: money-view-summary
+    text: .*flows of \$10m and over
+- takeScreenshot: ${EVIDENCE}/69-list
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 30000

@@ -1,7 +1,12 @@
-import type { MoneyTestHookProps } from './probe-types';
-export function moneyProbeId(_completedFrames: number, _pixels: number) {
-  return 'money-map-canvas';
-}
+import type {
+  MoneyMapPerf,
+  MoneyMapProbe,
+  MoneyTestHookProps,
+} from './probe-types';
+
+// Production ships no journey hooks, pixel readback or frame sampling.
 export function MoneyTestHooks(_props: MoneyTestHookProps) {
   return null;
 }
+export const useMoneyMapProbe: MoneyMapProbe = () => 'money-map-canvas';
+export const useMoneyMapPerf: MoneyMapPerf = () => null;

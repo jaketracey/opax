@@ -5,6 +5,7 @@ import {
   type FilterValues,
 } from '../../design/filter-sheet';
 import { filtersRoute } from '../../navigation/routes/filters';
+import { defineModel, facet } from '../sheets/filter-model';
 import { moneyFilterModel } from '../sheets/filter-models';
 import type { MoneyGraph } from './data';
 import { CPI_REFERENCE_YEAR } from './ported/cpi';
@@ -26,11 +27,28 @@ export type MoneyFilterValues = FilterValues & {
   grants: boolean;
   contracts: boolean;
   inflation: boolean;
+  /** The smallest flow shown, in dollars, as the `min` route param. */
+  min?: number;
 };
+
+/** The "Minimum flow" choices: any amount, then round thresholds. */
+export const MIN_FLOW_CHOICES = [
+  { value: '', label: 'Any amount' },
+  { value: '10000', label: '$10,000 and over' },
+  { value: '100000', label: '$100,000 and over' },
+  { value: '1000000', label: '$1 million and over' },
+  { value: '10000000', label: '$10 million and over' },
+  { value: '100000000', label: '$100 million and over' },
+] as const;
 
 const number = (value: string | string[] | undefined) => {
   const n = Number(param(value));
   return Number.isInteger(n) && param(value) ? n : undefined;
+};
+/** A minimum flow as `filtersFromParams` reads it: whole dollars, never negative. */
+const minimumFlow = (value: string | string[] | undefined) => {
+  const n = Number(param(value));
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
 };
 
 /** The sheet's values from the map's route params (the one source of truth). */
@@ -48,6 +66,7 @@ export function moneyFilterValues(
       grants: f.grants,
       contracts: f.contracts,
       inflation: f.inflation,
+      min: f.min,
     };
   }
   const layers = param(params.layers)?.split(',');
@@ -59,6 +78,7 @@ export function moneyFilterValues(
     grants: layers ? layers.includes('grants') : true,
     contracts: layers ? layers.includes('contracts') : true,
     inflation: param(params.inflation) === '1',
+    min: minimumFlow(params.min),
   };
 }
 
@@ -87,6 +107,10 @@ export function moneyFilterParams(
     industry: values.industry ? String(values.industry) : undefined,
     layers: layers.length === 3 ? undefined : layers.join(','),
     inflation: values.inflation ? '1' : undefined,
+    min:
+      typeof values.min === 'number' && values.min > 0
+        ? String(values.min)
+        : undefined,
   };
 }
 
@@ -99,8 +123,23 @@ export function moneyFilterParams(
 export function moneyFiltersModel(
   graph: MoneyGraph | null,
 ): FilterModel<FilterValues> {
-  if (!graph)
-    return moneyFilterModel({ loaded: false, dollarsYear: CPI_REFERENCE_YEAR });
+  // The map's own row: the smallest flow drawn and listed. A `facet`
+  // stores a string; the map reads a number, so select converts.
+  const minimum = facet('min', 'Minimum flow', MIN_FLOW_CHOICES, {
+    value: (state) => (Number(state.min) > 0 ? String(state.min) : ''),
+    select: (state, value) => ({ ...state, min: value ? Number(value) : 0 }),
+  });
+  if (!graph) {
+    const model = moneyFilterModel({
+      loaded: false,
+      dollarsYear: CPI_REFERENCE_YEAR,
+    });
+    return defineModel({
+      ...model,
+      initial: { ...model.initial, min: 0 },
+      rows: [...model.rows, minimum],
+    });
+  }
   const extent = yearExtent(graph);
   const years = Array.from(
     { length: Math.max(0, extent.to - extent.from + 1) },
@@ -119,40 +158,45 @@ export function moneyFiltersModel(
     industries,
     dollarsYear: CPI_REFERENCE_YEAR,
   });
-  return {
+  // defineModel again, so Reset, "N filters" and isDefault know `min`.
+  return defineModel({
     ...model,
-    rows: model.rows.map((row) =>
-      row.key === 'industry'
-        ? {
-            ...row,
-            multiple: true,
-            select: (state, value) => {
-              const values = new Set(
-                String(state.industry ?? '')
-                  .split(',')
-                  .filter(Boolean),
-              );
-              if (!value) values.clear();
-              else if (values.has(value)) values.delete(value);
-              else values.add(value);
-              return { ...state, industry: [...values].join(',') };
-            },
-            choices: (state) => {
-              const [all, ...rest] = row.choices(state);
-              return [
-                all!,
-                ...rest
-                  .map((choice) => ({
-                    ...choice,
-                    label: industryLabel(choice.value),
-                  }))
-                  .sort((a, b) => a.label.localeCompare(b.label, 'en-AU')),
-              ];
-            },
-          }
-        : row,
-    ),
-  };
+    initial: { ...model.initial, min: 0 },
+    rows: [
+      ...model.rows.map((row) =>
+        row.key === 'industry'
+          ? {
+              ...row,
+              multiple: true,
+              select: (state: FilterValues, value: string) => {
+                const values = new Set(
+                  String(state.industry ?? '')
+                    .split(',')
+                    .filter(Boolean),
+                );
+                if (!value) values.clear();
+                else if (values.has(value)) values.delete(value);
+                else values.add(value);
+                return { ...state, industry: [...values].join(',') };
+              },
+              choices: (state: FilterValues) => {
+                const [all, ...rest] = row.choices(state);
+                return [
+                  all!,
+                  ...rest
+                    .map((choice) => ({
+                      ...choice,
+                      label: industryLabel(choice.value),
+                    }))
+                    .sort((a, b) => a.label.localeCompare(b.label, 'en-AU')),
+                ];
+              },
+            }
+          : row,
+      ),
+      minimum,
+    ],
+  });
 }
 
 let owners = 0;

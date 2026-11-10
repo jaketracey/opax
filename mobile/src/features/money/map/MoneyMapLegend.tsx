@@ -1,0 +1,169 @@
+import { StyleSheet, View } from 'react-native';
+import { formatMoneyCompact } from '../../../design/format';
+import { Text } from '../../../design/primitives';
+import { colors, rhythm } from '../../../design/tokens';
+import { clusterColour } from '../ported/palette';
+import type { MapModel } from './model';
+import {
+  edgeCapAmount,
+  edgeWidth,
+  LEGEND_EDGES,
+  LEGEND_NODES,
+  nodeFloorAmount,
+  nodeRadius,
+  PARTIES,
+  PUBLIC_MONEY,
+} from './scales';
+
+/** The $1bn reference disc is drawn this wide, in points; the rest follow. */
+const LARGEST = 40;
+
+/**
+ * What the marks mean, with the scales the map uses: area for amounts,
+ * width for flows, hue for the donor's industry. Parties are one grey and
+ * always named; the public-money registers are rings, a different measure.
+ */
+export function MoneyMapLegend({ model }: { model: MapModel }) {
+  const discScale =
+    LARGEST / 2 / nodeRadius(LEGEND_NODES[LEGEND_NODES.length - 1]!);
+  const lineScale = 8 / edgeWidth(LEGEND_EDGES[LEGEND_EDGES.length - 1]!);
+  const industries = model.clusters.filter(
+    (c) => c.key !== PARTIES && c.key !== PUBLIC_MONEY,
+  );
+  const floor = formatMoneyCompact(nodeFloorAmount());
+  const cap = formatMoneyCompact(edgeCapAmount());
+  return (
+    <View style={styles.legend} testID="money-map-legend">
+      <View style={styles.block}>
+        <Text wordSafe variant="footnote">
+          Disc area is the amount. Discs under {floor} are drawn at the smallest
+          size.
+        </Text>
+        <View
+          style={styles.samples}
+          accessible
+          accessibilityLabel={`Reference discs: ${LEGEND_NODES.map((n) => formatMoneyCompact(n)).join(', ')}`}
+        >
+          {LEGEND_NODES.map((amount) => {
+            const size = nodeRadius(amount) * 2 * discScale;
+            return (
+              <View key={amount} style={styles.sample}>
+                <View style={styles.discBox}>
+                  <View
+                    style={{
+                      width: size,
+                      height: size,
+                      borderRadius: size / 2,
+                      borderCurve: 'continuous',
+                      backgroundColor: colors.inkSoft,
+                    }}
+                  />
+                </View>
+                <Text variant="footnote" tabular>
+                  {formatMoneyCompact(amount)}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+      <View style={styles.block}>
+        <Text wordSafe variant="footnote">
+          Line width is the flow. Lines over {cap} are drawn at the widest.
+        </Text>
+        <View
+          style={styles.samples}
+          accessible
+          accessibilityLabel={`Reference lines: ${LEGEND_EDGES.map((n) => formatMoneyCompact(n)).join(', ')}`}
+        >
+          {LEGEND_EDGES.map((amount) => (
+            <View key={amount} style={styles.sample}>
+              <View style={styles.lineBox}>
+                <View
+                  style={{
+                    width: 36,
+                    height: Math.max(1, edgeWidth(amount) * lineScale),
+                    borderRadius: 4,
+                    borderCurve: 'continuous',
+                    backgroundColor: colors.inkSoft,
+                  }}
+                />
+              </View>
+              <Text variant="footnote" tabular>
+                {formatMoneyCompact(amount)}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
+      <View style={styles.block}>
+        <Text wordSafe variant="footnote">
+          Colour is the donor’s industry. Parties are grey and named. Public
+          money is a ring: a different register, never added to donations.
+        </Text>
+        <View style={styles.swatches}>
+          {industries.map((cluster) => (
+            <View
+              key={cluster.key}
+              style={styles.swatch}
+              accessible
+              accessibilityLabel={cluster.label}
+            >
+              <View style={[styles.dot, { backgroundColor: cluster.colour }]} />
+              <Text variant="footnote" wordSafe>
+                {cluster.label}
+              </Text>
+            </View>
+          ))}
+          <View style={styles.swatch} accessible accessibilityLabel="Parties">
+            <View
+              style={[
+                styles.dot,
+                { backgroundColor: clusterColour(PARTIES).colour },
+              ]}
+            />
+            <Text variant="footnote">Parties</Text>
+          </View>
+          <View
+            style={styles.swatch}
+            accessible
+            accessibilityLabel="Public money"
+          >
+            <View style={styles.ring} />
+            <Text variant="footnote">Public money</Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  legend: { gap: rhythm.block },
+  block: { gap: rhythm.tight },
+  samples: { flexDirection: 'row', gap: rhythm.block, alignItems: 'flex-end' },
+  sample: { alignItems: 'center', gap: rhythm.line },
+  discBox: {
+    width: LARGEST,
+    height: LARGEST,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lineBox: { height: 16, justifyContent: 'center' },
+  swatches: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
+  swatch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.line,
+    marginRight: rhythm.tight,
+  },
+  dot: { width: 10, height: 10, borderRadius: 5, borderCurve: 'continuous' },
+  ring: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    borderCurve: 'continuous',
+    borderWidth: 2.5,
+    borderColor: colors.moneyInk,
+  },
+});
