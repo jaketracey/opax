@@ -195,6 +195,39 @@ test('End cancels a pending Start, with no blind retry', async () => {
   });
   expect(mockVoice.start).toHaveBeenCalledTimes(1);
 });
+
+test('an old Start acknowledgement cannot clear a newer dispatch or restore its error after End', async () => {
+  mockBridge.readConsent.mockResolvedValue(true);
+  await mount();
+  const first = deferred<voice.VoiceResult<void>>(),
+    second = deferred<voice.VoiceResult<void>>();
+  mockVoice.start
+    .mockReturnValueOnce(first.promise)
+    .mockReturnValueOnce(second.promise);
+  let starting!: Promise<void>, restarting!: Promise<void>;
+  act(() => {
+    starting = call.start();
+  });
+  await act(async () => {
+    await call.end();
+  });
+  act(() => {
+    restarting = call.start();
+  });
+  expect(call.busy).toBe(true);
+  await act(async () => {
+    first.resolve({ ok: false, error: 'microphoneDenied' });
+    await starting;
+  });
+  expect(call.error).toBeNull();
+  expect(call.busy).toBe(true);
+  await act(async () => {
+    second.resolve(ok);
+    await restarting;
+  });
+  expect(call.busy).toBe(false);
+  expect(mockVoice.start).toHaveBeenCalledTimes(2);
+});
 test('a push inside Talk keeps the call: blur neither ends nor unsubscribes, and refocus rereads consent', async () => {
   mockBridge.readConsent.mockResolvedValue(true);
   await mount();
