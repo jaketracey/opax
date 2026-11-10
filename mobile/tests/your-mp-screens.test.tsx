@@ -21,6 +21,7 @@ import {
   catalogs as runtime,
 } from '../src/api/runtime';
 import * as format from '../src/design/format';
+import { VoteSplit } from '../src/design/charts';
 import {
   Button,
   LinkRow,
@@ -545,6 +546,32 @@ test('historical electorate records retain the abolished notice', async () => {
   expect(text(r)).not.toContain('Historical representation is shown');
   await act(async () => r.unmount());
 });
+
+test.each(['anthony-albanese', 'julia-gillard'])(
+  '%s keeps the division summary and source totals without a profile vote split',
+  async (slug) => {
+    mockParams.slug = slug;
+    const identity = c.joinPerson(slug, slugs, roster, people, manifest);
+    const profile = c.profileFor(identity.canonicalPersonId!, catalogs);
+    mock.person.mockResolvedValue(result(identity));
+    mock.profileFor.mockResolvedValue(profile);
+    const r = await render(<Person />);
+    const votes = profile.blocks.votes.data!;
+    expect(votes.total).toBeGreaterThan(0);
+    expect(text(r)).toContain(
+      `Voted in ${format.formatCount(votes.total)} divisions`,
+    );
+    expect(r.root.findAllByType(VoteSplit)).toHaveLength(0);
+    await act(async () => pressable(r, 'person-votes-source').props.onPress());
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    expect(sheetPayload(params.key, 'source')?.details.notes).toContain(
+      `Of these divisions, voted for ${format.formatCount(votes.ayes)} and voted against ${format.formatCount(votes.noes)}. Most divisions are on procedural motions and amendments.`,
+    );
+    await act(async () => r.unmount());
+  },
+);
 
 test('profile bill votes push the matched native bill route and keep unmatched votes as text', async () => {
   const identity = c.joinPerson(
