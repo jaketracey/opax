@@ -2084,9 +2084,22 @@
       "kind": "association",
       "aliases": [
         "National Automative Leasing & Salary Packaging Assoc.",
-        "NALSPA"
+        "NALSPA",
+        "National Automotive Leasing & Salary Packaging Ass",
+        "National Automotive Leasing & Salary Pack"
       ],
-      "notes": null
+      "notes": "The two short spellings are the full name cut off at a field limit on AEC returns (AEC AllAnnualData, https://transparency.aec.gov.au/Download/AllAnnualData: 'National Automotive Leasing & Salary Packaging Ass' on 7 lines against 93 lines of the full name); money-donations-008."
+    },
+    {
+      "id": "j-j-richards-sons",
+      "canonical": "J.J. Richards & Sons Pty Ltd",
+      "kind": "company",
+      "abn": "40000805425",
+      "aliases": [
+        "JJ Richards & Sons Pty Ltd",
+        "JJ Richards & Sons P/L"
+      ],
+      "notes": "One company filed with and without the stops in its initials (AEC AllAnnualData, https://transparency.aec.gov.au/Download/AllAnnualData: 'JJ Richards & Sons Pty Ltd' 266 lines, 'J J Richards and Sons Pty Ltd' 14, 'J.J. RICHARDS & SONS PTY LTD' 8). ABN 40 000 805 425 is J.J. RICHARDS & SONS PTY LTD (https://abr.business.gov.au/ABN/View?abn=40000805425). NOT 'J R Richards & Sons' (J.R. & E.G. Richards (N.S.W.) Pty Ltd, a different ABN); money-donations-008."
     },
     {
       "canonical": "Firearm Dealers Association Queensland",

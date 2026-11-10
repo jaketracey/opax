@@ -54,6 +54,7 @@ from __future__ import annotations
 
 import os
 import argparse
+import html
 import json
 import re
 import sqlite3
@@ -158,7 +159,8 @@ UNION_RX = re.compile(
     re.I,
 )
 GOVERNMENT_RX = re.compile(
-    r"\bdept\b|\bdepartment\b|\belectoral commission\b|\belections? (act|nsw|wa|sa|tas|vic|qld|nt)\b|"
+    # "Comission" and "Commision" are how the returns spell it too (money-donations-006).
+    r"\bdept\b|\bdepartment\b|\belectoral comm?iss?ions?\b|\belect(?:ion|oral) funding authority\b|\belections? (act|nsw|wa|sa|tas|vic|qld|nt)\b|"
     r"\belectoral office\b|\bcommonwealth of australia\b|\baustralian taxation office\b|\bato\b|"
     r"\baec\b|\becq\b|\bvec\b|\bwaec\b|\bpublic funding\b|\bcity council\b|\bshire council\b|"
     r"\bregional council\b|\bstate government\b|\bgovernment of\b|\bcommonwealth government\b|"
@@ -210,9 +212,41 @@ def _ascii(s: str) -> str:
     return unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode("ascii")
 
 
+# The AEC CSVs carry HTML entities ("&amp;", "&#39;", "&#160;") and an older load
+# left cp1252 mojibake ("â€“"), so "J J Richards &amp; Sons" formed its own
+# entity apart from "J J Richards & Sons" (money-donations-011). Names are read
+# through clean_name before they are keyed or displayed. A copy of this function
+# lives in scripts/donor_disclosure.py (the exporters cannot import parli);
+# tests/test_money_sources.py keeps the two in step. Only a complete,
+# semicolon-terminated entity is decoded ("Smith &Regal" keeps its "&Reg").
+_ENTITY = re.compile(r"&(?:#\d{1,7}|#[xX][0-9a-fA-F]{1,6}|[A-Za-z][A-Za-z0-9]{1,31});")
+_MOJIBAKE = re.compile("[\u00c2\u00c3\u00e2][\u0080-\u00bf\u20ac\u201a\u0192\u201e\u2026\u2020\u2021\u02c6\u2030"
+                       "\u0160\u2039\u0152\u017d\u2018\u2019\u201c\u201d\u2022\u2013\u2014\u02dc\u2122\u0161"
+                       "\u203a\u0153\u017e\u0178]")
+
+
+def clean_name(name: str) -> str:
+    """Decoded form of a disclosed name: HTML entities (also double escaped) and
+    cp1252 mojibake repaired, non-breaking spaces and runs of whitespace collapsed."""
+    if not isinstance(name, str):
+        return name
+    s = name
+    for _ in range(2):
+        t = _ENTITY.sub(lambda m: html.unescape(m.group(0)), s)
+        if t == s:
+            break
+        s = t
+    if _MOJIBAKE.search(s):
+        try:
+            s = s.encode("cp1252").decode("utf-8")
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            pass
+    return re.sub(r"\s+", " ", s.replace("\u00a0", " ")).strip()
+
+
 def norm_exact(name: str) -> str:
-    """Case, punctuation, whitespace, '&'->'and', apostrophes joined."""
-    s = _ascii(name or "").lower()
+    """Case, punctuation, whitespace, '&'->'and', apostrophes joined (entities decoded first)."""
+    s = _ascii(clean_name(name or "")).lower()
     s = s.replace("&", " and ").replace("+", " and ")
     s = re.sub(r"['’`´]", "", s)
     s = re.sub(r"[^a-z0-9]+", " ", s)
@@ -323,7 +357,7 @@ def pretty_person(name: str) -> str:
     person-shaped name ('Clubs NSW', 'ASX Group') keeps the organisation form."""
     if not strong_person(name):
         return pretty(name)
-    raw = re.sub(r"\s+", " ", (name or "").strip())
+    raw = clean_name(name or "")
     s = _strip_honorifics(raw)
     if " " not in s.strip() and "," not in s:
         s = raw  # a title plus one word ("Lady Fairfax"): the title is the only given name we have
@@ -383,7 +417,7 @@ _SMALL = {"and", "of", "the", "for", "in", "on", "at", "to", "by", "a", "an", "d
 
 def pretty(name: str) -> str:
     """Title-case ALL-CAPS filings for display; keep short acronyms and fix legal suffixes."""
-    s = re.sub(r"\s+", " ", (name or "").strip())
+    s = clean_name(name or "")
     if s.isupper() and len(s) > 5:
         words = []
         for i, w in enumerate(s.split(" ")):
