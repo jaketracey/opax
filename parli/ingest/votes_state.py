@@ -307,6 +307,21 @@ _NSW_NAME_CELL = re.compile(
 )
 
 
+NSW_DIVIDED = re.compile(r"The (House|Council|Committee) divided\s*\.?")
+
+
+def nsw_block_matches(block: Optional[dict], ayes: Optional[int], noes: Optional[int]) -> bool:
+    """A fragment block belongs to a TOC division only when its name tables
+    hold the TOC's counts. Otherwise the pairing is unproven, and the block's
+    question and outcome must not be attached to that division."""
+    if not block:
+        return False
+    names = block.get("names") or {}
+    if ayes is None or noes is None or not (names.get("aye") or names.get("no")):
+        return True  # nothing to compare against; keep the positional pairing
+    return len(names.get("aye", [])) == ayes and len(names.get("no", [])) == noes
+
+
 def nsw_fragment_blocks(frag: ET.Element) -> list[dict]:
     """One dict per 'The House divided.' block in a fragment, in document order:
     the motion text put (nearest preceding 'That ...' paragraph), the outcome
@@ -319,7 +334,10 @@ def nsw_fragment_blocks(frag: ET.Element) -> list[dict]:
     classes = [p.get("class", "") for p in paras]
     blocks = []
     for k, t in enumerate(texts):
-        if not re.fullmatch(r"The (House|Council|Committee) divided\.?", t):
+        # The markup sometimes splits the full stop off ("The Committee divided .",
+        # Legislative Council 23 Dec 2025); missing one block pairs every later
+        # TOC division in the topic with the block after its own.
+        if not NSW_DIVIDED.fullmatch(t):
             continue
         question = None
         for b in range(k - 1, max(-1, k - 60), -1):
@@ -390,6 +408,11 @@ def nsw_parse_day(day: dict, members: dict, fetch_fragments: bool = True
 
         ayes_el, noes_el = div.find("ayes"), div.find("noes")
         ayes_n, noes_n = count(ayes_el), count(noes_el)
+        if block and not nsw_block_matches(block, ayes_n, noes_n):
+            print(f"  {day['date']} {day['house']} division {seq}: fragment block names "
+                  f"({len(block['names']['aye'])}-{len(block['names']['no'])}) disagree with the "
+                  f"table of contents ({ayes_n}-{noes_n}); question and outcome text not used", file=sys.stderr)
+            block = None
         result = result_from_text(div.findtext("questionresolved")) \
             or (result_from_text(block["result_text"]) if block else None)
         if result is None and ayes_n is not None and noes_n is not None:
