@@ -1,5 +1,8 @@
 import type { Chat, ChatStore } from '../src/features/ask/model';
-import { syncConversations } from '../src/features/ask/conversation-actions';
+import {
+  deleteConversation,
+  syncConversations,
+} from '../src/features/ask/conversation-actions';
 import { askSession } from '../src/features/ask/session';
 import { chatsSnapshot, saveChats } from '../src/features/ask/store';
 import { reconcileChats } from '../src/features/ask/sync';
@@ -81,4 +84,13 @@ test('a conversation deleted on this device during the pull does not come back',
   await syncConversations();
   const saved = jest.mocked(saveChats).mock.calls.at(-1)![0];
   expect(saved.chats.map((c) => c.id)).toEqual(['fixture-kept']);
+});
+
+test('deleting the conversation being answered stops the answer so it is not saved back', async () => {
+  jest.mocked(askSession.snapshot).mockReturnValue({
+    id: 'fixture-running',
+    busy: true,
+  } as ReturnType<typeof askSession.snapshot>);
+  await deleteConversation('fixture-running', null);
+  expect(askSession.start).toHaveBeenCalledTimes(1);
 });

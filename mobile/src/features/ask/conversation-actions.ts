@@ -35,7 +35,8 @@ export async function deleteConversation(
   status: ChatAccount,
 ): Promise<boolean> {
   const s = askSession.snapshot();
-  if (s.id === id && !s.busy) askSession.start();
+  // A running answer goes too, or it would save the conversation back.
+  if (s.id === id) askSession.start();
   await deleteChats([id]);
   if (!inAccount(status)) return true;
   try {
