@@ -187,6 +187,7 @@ export function AskSuggestionRow({
   onPress,
   offline = false,
   menu,
+  minimumHeight,
   testID,
 }: {
   question: string;
@@ -194,6 +195,8 @@ export function AskSuggestionRow({
   onPress: () => void;
   offline?: boolean;
   menu?: RowMenuAction[];
+  /** Ask next's two-line slot; the full question remains its accessible label. */
+  minimumHeight?: number;
   testID?: string;
 }) {
   const highlight = useRowHighlight();
@@ -233,6 +236,7 @@ export function AskSuggestionRow({
       style={({ pressed }) => [
         styles.row,
         cellStyle,
+        minimumHeight ? { minHeight: minimumHeight } : null,
         pressed && !offline ? { backgroundColor: highlight } : null,
       ]}
     >
@@ -240,6 +244,7 @@ export function AskSuggestionRow({
       <Text
         wordSafe
         variant="body"
+        numberOfLines={minimumHeight ? 2 : undefined}
         tone={offline ? 'inkSoft' : undefined}
         style={styles.main}
       >

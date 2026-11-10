@@ -259,10 +259,8 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
                         <SwiftText
                           modifiers={[
                             lineLimit(2),
-                            foregroundStyle({
-                              type: 'hierarchical',
-                              style: 'primary',
-                            }),
+                            // Hierarchical styles inherit the native button tint.
+                            foregroundStyle(colors.ink),
                           ]}
                         >
                           {chat.title}
@@ -270,10 +268,7 @@ export default function Conversations({ mode }: { mode: 'sheet' | 'account' }) {
                         <SwiftText
                           modifiers={[
                             font({ textStyle: 'subheadline' }),
-                            foregroundStyle({
-                              type: 'hierarchical',
-                              style: 'secondary',
-                            }),
+                            foregroundStyle(colors.inkSoft),
                           ]}
                         >
                           {conversationMeta(chat, now)}

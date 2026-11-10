@@ -322,6 +322,33 @@ describe('Account › Ask', () => {
 });
 
 describe('Conversations', () => {
+  test('native row labels use adaptive ink roles instead of the button tint', async () => {
+    const saved = chat('first-chat', '2026-11-09T01:00:00Z');
+    stored([saved]);
+    const root = await render(<Conversations mode="sheet" />);
+    const row = swiftByID(root, 'ask-restore-0');
+    const labels = row.findAll(
+      (n) => n.type === 'View' && n.props.swift === 'Text',
+    );
+    expect(labels.map((n) => n.props.children)).toEqual([
+      saved.title,
+      conversationMeta(saved, Date.now()),
+    ]);
+    for (const [index, colour] of [colors.ink, colors.inkSoft].entries()) {
+      expect(labels[index]!.props.modifiers).toContainEqual({
+        modifier: 'foregroundStyle',
+        args: [colour],
+      });
+      // DynamicColorIOS carries all four appearance/contrast variants to SwiftUI.
+      expect(colour).toHaveProperty('dynamic.light');
+      expect(colour).toHaveProperty('dynamic.dark');
+      expect(colour).toHaveProperty('dynamic.highContrastLight');
+      expect(colour).toHaveProperty('dynamic.highContrastDark');
+    }
+    act(() => row.props.onPress());
+    expect(askSession.open).toHaveBeenCalledWith(saved.id);
+    expect(router.back).toHaveBeenCalled();
+  });
   test('loading shows a skeleton, never "No conversations yet"', async () => {
     jest.mocked(loadChats).mockReturnValue(new Promise(() => {}));
     const root = await render(<Conversations mode="sheet" />);
