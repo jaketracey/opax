@@ -69,6 +69,7 @@ import { scopedQuestion } from '../ask/AskAbout';
 import { useOpenAsk } from '../ask/open';
 import BillTextReader from '../records/BillTextReader';
 import { BillTextPaneBar } from '../split/RecordDetail';
+import { ScopeChips } from '../search/ScopeChips';
 import BillDetail, { PaneMenu } from './BillDetail';
 import {
   activeFilterCount,
@@ -576,6 +577,16 @@ function ScopeControl({
     ...s,
     testID: `bills-scope-${s.value}`,
   }));
+  if (Platform.OS === 'android')
+    return (
+      <ScopeChips
+        label="Showing bills"
+        options={options}
+        value={value}
+        onChange={onChange}
+        testID="bills-scope"
+      />
+    );
   return (
     <View onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
       <View

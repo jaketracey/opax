@@ -13,6 +13,7 @@ import {
   AccessibilityInfo,
   Keyboard,
   LayoutAnimation,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -128,7 +129,8 @@ export default function AskScreen() {
   const docked =
     isPad && sizeClassFor(room?.width ?? outer.width) === 'regular';
   const column = useScreenColumn('readable');
-  const keyboard = useKeyboardOverlap(root);
+  const { overlap: keyboard, visible: keyboardVisible } =
+    useKeyboardOverlap(root);
 
   useEffect(() => {
     void loadChats().catch(() => setReadFailed(true));
@@ -305,7 +307,9 @@ export default function AskScreen() {
       contentInsetAdjustmentBehavior="automatic"
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={false}
-      keyboardDismissMode="interactive"
+      keyboardDismissMode={
+        Platform.OS === 'android' ? 'on-drag' : 'interactive'
+      }
       scrollToOverflowEnabled
       onLayout={column.onLayout}
       onScroll={(event) => {
@@ -390,7 +394,11 @@ export default function AskScreen() {
                   ) : (
                     <>
                       {content}
-                      <PhoneDock keyboard={keyboard} ground={ground}>
+                      <PhoneDock
+                        keyboard={keyboard}
+                        keyboardVisible={keyboardVisible}
+                        ground={ground}
+                      >
                         {dock}
                       </PhoneDock>
                     </>
@@ -401,7 +409,11 @@ export default function AskScreen() {
           ) : (
             <>
               {content}
-              <PhoneDock keyboard={keyboard} ground={ground}>
+              <PhoneDock
+                keyboard={keyboard}
+                keyboardVisible={keyboardVisible}
+                ground={ground}
+              >
                 {dock}
               </PhoneDock>
             </>
@@ -423,21 +435,23 @@ export default function AskScreen() {
  */
 export function PhoneDock({
   keyboard,
+  keyboardVisible = keyboard > 0,
   ground,
   children,
 }: {
   keyboard: number;
+  keyboardVisible?: boolean;
   ground: Role;
   children: ReactNode;
 }) {
   return (
     <SafeAreaView
-      edges={keyboard ? [] : ['bottom']}
+      edges={keyboardVisible ? [] : ['bottom']}
       mode="padding"
       pointerEvents="box-none"
       style={[
         styles.phoneDock,
-        keyboard
+        keyboardVisible
           ? {
               paddingBottom: keyboard,
               paddingTop: rhythm.tight,
@@ -460,7 +474,7 @@ function PadColumn({
   children: ReactNode;
 }) {
   const ref = useRef<View>(null);
-  const lift = useKeyboardOverlap(ref);
+  const { overlap: lift } = useKeyboardOverlap(ref);
   const ground = { backgroundColor: colors[askGround()] };
   return (
     <View ref={ref} style={[styles.fill, ground, { paddingBottom: lift }]}>
@@ -481,7 +495,39 @@ function PadColumn({
 /** How far the software keyboard overlaps the bottom of `ref`, animated with it. */
 function useKeyboardOverlap(ref: RefObject<View | null>) {
   const [overlap, setOverlap] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const { height: windowHeight } = useWindowDimensions();
+  // Android resizes the native window with the IME. Measure the remaining
+  // overlap after that resize, including when the window changes late, so
+  // its height is never subtracted a second time in JS.
   useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    let active = true;
+    const measure = (top: number) => {
+      ref.current?.measureInWindow((_x, y, _w, height) => {
+        if (!active || !Keyboard.isVisible()) return;
+        setVisible(Keyboard.isVisible());
+        setOverlap(Math.max(0, Math.round(y + height - top)));
+      });
+    };
+    const metrics = Keyboard.metrics();
+    if (metrics) measure(metrics.screenY);
+    const show = Keyboard.addListener('keyboardDidShow', (event) => {
+      setVisible(true);
+      measure(event.endCoordinates.screenY);
+    });
+    const hide = Keyboard.addListener('keyboardDidHide', () => {
+      setVisible(false);
+      setOverlap(0);
+    });
+    return () => {
+      active = false;
+      show.remove();
+      hide.remove();
+    };
+  }, [ref, windowHeight]);
+  useEffect(() => {
+    if (Platform.OS === 'android') return;
     const animate = (event: KeyboardEvent) => {
       if (event.duration)
         LayoutAnimation.configureNext({
@@ -505,7 +551,10 @@ function useKeyboardOverlap(ref: RefObject<View | null>) {
       hide.remove();
     };
   }, [ref]);
-  return overlap;
+  return {
+    overlap,
+    visible: Platform.OS === 'android' ? visible : overlap > 0,
+  };
 }
 const styles = StyleSheet.create({
   fill: { flex: 1 },
