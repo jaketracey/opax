@@ -21,15 +21,16 @@ import { tool as entityProfile } from './entity-profile'
 import { tool as accessRegisters } from './access-registers'
 import { tool as memberDivisions } from './member-divisions'
 import { tool as sponsoredBills } from './sponsored-bills'
+import { tool as annualReports } from './annual-reports'
 import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type StructuredToolResult } from './types'
 import type { ToolDeps, ToolSpec, ToolResult } from '../agentic-tools'
 export * from './types'
 import { validToolIdentifier } from './identifiers'
 export * from './identifiers'
 
-export const TOOL_REGISTRY_VERSION = 'structured-tools-9-shared-ask-data'
+export const TOOL_REGISTRY_VERSION = 'structured-tools-10-annual-reports'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
-export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools])
+export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports])
 const names = new Set<string>()
 for (const tool of tools) {
   if (!/^[a-z][a-z0-9_]*$/.test(tool.name) || names.has(tool.name)) throw new Error('Invalid or duplicate registry tool name')

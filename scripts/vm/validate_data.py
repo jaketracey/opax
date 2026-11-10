@@ -589,6 +589,24 @@ def check_audit(directory=None, compare_head=True) -> list[str]:
         return [f"audit export unreadable: {error}"]
 
 
+def check_annual_reports() -> list[str]:
+    """Transparency Portal projection: the index keeps its bodies and headline rows (90% of HEAD), every
+    year file named in the index parses and keeps 90% of its HEAD rows, and KMP rows stay within 90%."""
+    rel = PUBLIC + "/annual-reports"
+    errs = _check_json(rel + "/index.json", keys=("meta.counts.years", "meta.snapshot_at"), counts=("bodies", "headline"), ratio=0.9)
+    errs += _check_json(rel + "/manifest.json", keys=("counts.kmp_rows", "files"), counts=("counts.kmp_rows",), ratio=0.9)
+    doc, err = _load_json(rel + "/index.json")
+    if err:
+        return errs
+    for year in doc["meta"]["counts"]["years"]:
+        if not re.fullmatch(r"\d{4}-\d{2}", str(year)):
+            errs.append(f"{rel}/index.json names an invalid year {year!r}")
+            continue
+        errs += _check_json(f"{rel}/remuneration-{year}.json", keys=("tables",), counts=("rows",), ratio=0.9)
+        errs += _check_json(f"{rel}/suppliers-{year}.json", keys=("tables",), counts=(), ratio=0.9)
+    return errs
+
+
 def check_evidence() -> list[str]:
     from scripts.vm.evidence_guard import check
     try:
@@ -646,7 +664,7 @@ def check_promoted_hub(name):
         return [str(error)]
 
 
-CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "budget": lambda: check_promoted_hub("budget"), "vic-gifts": lambda: check_promoted_hub("vic-gifts"), "bills-tas": lambda: check_promoted_hub("bills-tas"), "bills-act": lambda: check_promoted_hub("bills-act"), "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
+CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "annual-reports": check_annual_reports, "budget": lambda: check_promoted_hub("budget"), "vic-gifts": lambda: check_promoted_hub("vic-gifts"), "bills-tas": lambda: check_promoted_hub("bills-tas"), "bills-act": lambda: check_promoted_hub("bills-act"), "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
           "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,

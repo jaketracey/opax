@@ -277,6 +277,13 @@ Nine jurisdictions are enumerated for each generally applicable record family. C
 | ACT | ACT Audit Office [source][S48] | not yet | 0 verified dedicated published rows; years none | ACT portal CC BY 4.0; verify agency/dataset terms | Source: reports tabled + annual financial audits; OPAX: none | None | No verified dedicated audit corpus, findings/recommendations or government-response series. General speech mentions are not report ingestion. |
 | NT | NT Auditor-General; [source discovery pending](COVERAGE.md#source-access-limits) (canonical series URL unverified) | not yet | 0 verified dedicated published rows; years none | Unverified; clearance required | Source: reports tabled + annual financial audits; OPAX: none | None | No verified dedicated audit corpus, findings/recommendations or government-response series. General speech mentions are not report ingestion. |
 
+### Commonwealth entity annual reports
+
+| Area | Source (publisher + URL) | Status | What OPAX holds (rows and years) | Licence | Update cadence | Surface | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Federal | Department of Finance, Transparency Portal delivery API (`previewapi.transparency.gov.au/delivery/items`) | partial | 231 bodies, 1,378 reports; 6,481 key management personnel rows, 6,505 senior executive and highly paid band rows, 3,658 supplier rows, 646 body-year headline rows; 2022-23 to 2025-26; snapshot 10 Nov 2026 | Non-corporate entities CC BY 4.0 (Finance attribution); corporate entities and companies keep copyright, rows attributed and linked | Source: reports tabled mostly Sep to Nov; OPAX: weekly | MCP and Ask `annual_reports`; public JSON at /annual-reports/ | Typed tables only from 2022-23; 2018-19 to 2021-22 CSV/ZIP files not yet loaded. Figures shown as published, with component and scale flags. See [annual reports data](DATA-ANNUAL-REPORTS.md). |
+| States and territories | Agency annual reports | not yet | 0 rows | Varies | None | None | Victorian Public Sector Commission workforce data and departmental HTML reports are the next candidates. |
+
 ### Budget papers
 
 | Area | Source (publisher + URL) | Status | What OPAX holds (rows and years) | Licence | Update cadence | Surface | Notes |
