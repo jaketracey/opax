@@ -27,7 +27,8 @@ recorded in each file's `meta` block:
    assigned to a party is kept.
 2. amount > 0 only.
 3. Public funding / government bodies are excluded (same name regex; donors whose
-   dominant industry is 'government' are dropped wholesale).
+   dominant industry is 'government' are dropped wholesale). Party node totals
+   drop the same rows and those of entities resolved to kind 'government'.
 4. Internal party transfers (industry = 'party_internal' or a party word in the
    donor name: the Greens' national body gifting its QLD branch, etc.) are
    excluded from donor totals and flows only. Party node totals keep them, as in
@@ -41,12 +42,17 @@ recorded in each file's `meta` block:
    ext_donor_entities (parli.ingest.donor_entities), the node `label` is the
    canonical name and `aliases` lists the other spellings behind it. Entities
    resolved to kind='government' or kind='party_unit' are dropped. A donor_name
-   with no alias row falls back to the old light normalisation and is counted in
-   meta.donors_unresolved.
+   with no alias row first takes the entity of a resolved alias it matches on the
+   resolver's exact tier (case and punctuation only: "TIm Mead" = "Tim Mead"),
+   else falls back to the old light normalisation and is counted in
+   meta.donors_unresolved. Repeated node ids are disambiguated as in money.json
+   (meta.node_id_collisions).
 7. Per-source rows that are not gifts are dropped: VIC `loan` rows (repayable)
    and WA `compulsory party levy` rows (sitting members paying their own party).
    QLD lists every gift to a party and, since 2022-23, flags which ones the Act
    calls "political donations"; all gifts are kept and the flag counts are in meta.
+8. A donor's industry is never shown as 'individual' when the resolver knows the
+   entity as an organisation (export_money_graph.py rule 8).
 
 This script is streamed to the database host over ssh stdin, so it cannot import
 its sibling; the shared constants below are a deliberate copy of
@@ -55,9 +61,9 @@ export_money_graph.py and must be kept in step with it.
 
 
 try:
-    from scripts.donor_disclosure import attach_donor_disclosures
+    from scripts.donor_disclosure import attach_donor_disclosures, exact_alias_index, resolve_alias
 except ModuleNotFoundError:
-    from donor_disclosure import attach_donor_disclosures
+    from donor_disclosure import attach_donor_disclosures, exact_alias_index, resolve_alias
 
 import os
 import json
@@ -232,7 +238,7 @@ JURISDICTIONS = {
 # --- mirror of export_money_graph.py (keep in step) --------------------------
 
 PUBLIC_FUNDING_RE = re.compile(
-    r"electoral commission|election funding|electoral office|"
+    r"electoral comm?iss?ions?|election funding|electoral funding|electoral office|"
     r"tax(ation)?\s+(office|authority)|\bato\b|\baec\b|\becq\b|"
     r"department of|australian agency|commonwealth of australia|"
     r"electoral comm\b",
@@ -247,6 +253,8 @@ PARTY_WORD_RE = re.compile(
     r"\bnational party\b|\bdemocrats\b",
     re.I,
 )
+
+NOT_A_PERSON = {"company", "association", "government", "party_unit", "union"}
 
 SUFFIX_TOKENS = {
     "pty", "ltd", "limited", "proprietary", "inc", "incorporated",
@@ -627,6 +635,7 @@ def main() -> None:
     db = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True)
     db.row_factory = sqlite3.Row
     alias_to_entity, entities = load_canonical(db)
+    exact_index = exact_alias_index(alias_to_entity)
 
     rows = db.execute(
         """
@@ -680,7 +689,7 @@ def main() -> None:
         name = (r["donor_name"] or "").strip()
         if not name:
             continue
-        eid = alias_to_entity.get(name)
+        eid = resolve_alias(name, alias_to_entity, exact_index)
         ent = entities.get(eid) if eid else None
         if ent is None:
             unresolved.add(name)
@@ -718,7 +727,7 @@ def main() -> None:
         d["industries"][r["industry"] or "other"] += amt
         tally(d["parties"][r["party"]], y, amt)
 
-    def dominant_industry(d: dict) -> str:
+    def classified_industry(d: dict) -> str:
         # A union is a union: see export_money_graph.py for why rolled-up
         # branches must not be recoloured by one oddly-tagged branch.
         if d.get("entity_kind") == "union":
@@ -733,11 +742,20 @@ def main() -> None:
             return max(known.items(), key=lambda kv: kv[1])[0]
         return "other"
 
+    def dominant_industry(d: dict) -> str:
+        """The industry shown (rule 8); membership still follows classified_industry."""
+        ind = classified_industry(d)
+        if ind == "individual" and d.get("entity_kind") in NOT_A_PERSON:
+            known = {k: v for k, v in d["industries"].items()
+                     if k and k not in ("other", "unidentified", "individual")}
+            return max(known.items(), key=lambda kv: kv[1])[0] if known else "other"
+        return ind
+
     ranked = sorted(donors.values(), key=lambda d: -d["total"])
     picked = []
     skipped_other = 0
     for d in ranked:
-        ind = dominant_industry(d)
+        ind = classified_industry(d)
         if ind == "government":
             continue  # rule 3: a government body is not a donor
         if ind == "other" and d["total"] < cfg["other_floor"]:
@@ -749,9 +767,15 @@ def main() -> None:
 
     # Party aggregates over the FULL cleaned row set (not just top donors).
     party_totals = defaultdict(lambda: {"total": 0.0, "count": 0, **year_cells()})
+    party_excluded = {"public_funding": 0, "government_entity": 0}
     for r in rows:
         name = (r["donor_name"] or "").strip()
         if PUBLIC_FUNDING_RE.search(name):
+            party_excluded["public_funding"] += 1
+            continue
+        ent = entities.get(resolve_alias(name, alias_to_entity, exact_index))
+        if ent and ent["kind"] == "government":
+            party_excluded["government_entity"] += 1
             continue
         tally(party_totals[r["party"]], year_of(r["financial_year"]), float(r["amount"]))
 
@@ -771,6 +795,8 @@ def main() -> None:
         })
 
     eid_to_node: dict = {}
+    used_ids = {n["id"] for n in nodes}
+    collisions = 0
     for d in picked:
         display = d["canonical"]
         if not display:
@@ -784,6 +810,12 @@ def main() -> None:
                   if norm_key(n) != norm_key(display)]
         ind = dominant_industry(d)
         node_id = "donor:" + norm_key(display)
+        if node_id in used_ids:
+            collisions += 1
+            node_id = next(c for c in [f"{node_id}~{d['eid']}" if d.get("eid") else None]
+                           + [f"{node_id}~{i}" for i in range(2, 10_000)] if c and c not in used_ids)
+            sys.stderr.write(f"export_state_money: node id collision, {display!r} published as {node_id}\n")
+        used_ids.add(node_id)
         nodes.append({
             "id": node_id,
             "label": display,
@@ -879,6 +911,9 @@ def main() -> None:
             "rows_excluded_government_entity": excluded["government_entity"],
             "rows_without_year": rows_without_year,
             "donors_unresolved": len(unresolved),
+            "node_id_collisions": collisions,
+            "party_rows_excluded_public_funding": party_excluded["public_funding"],
+            "party_rows_excluded_government_entity": party_excluded["government_entity"],
             "rows_dropped_by_disclosure_type": dict(dropped_types),
             "rows_dropped_election_duplicates": dropped_election or None,
             "political_donation_flag": flag_counts if jur == "qld" else None,
@@ -890,8 +925,8 @@ def main() -> None:
             **contracts_meta,
             "party_totals_note": (
                 "Party node totals cover all cleaned rows assigned to a party except public funding "
-                "identified by the reported donor name, unchanged by entity resolution; unlike donor "
-                "totals and flows, they include internal party transfers."
+                "identified by the reported donor name and payments by entities the resolver knows as "
+                "government bodies; unlike donor totals and flows, they include internal party transfers."
             ),
         },
         "nodes": nodes,

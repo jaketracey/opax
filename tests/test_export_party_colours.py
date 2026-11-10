@@ -57,7 +57,7 @@ class PartyColourTests(unittest.TestCase):
                     """)
                     for n in party_nodes:
                         args = ("Fixture donor", n["label"], n["total"], "2025-26", "finance", "company")
-                        db.execute("INSERT INTO donations (donor_name,recipient_canonical,amount,financial_year,industry,donor_type,donation_type) VALUES (?,?,?,?,?,?,?)", (*args, "donation"))
+                        db.execute("INSERT INTO donations (donor_name,recipient_canonical,amount,financial_year,industry,donor_type,donation_type,source) VALUES (?,?,?,?,?,?,?,?)", (*args, "donation", "aec_annual"))
                         db.execute("INSERT INTO ext_donations (donor_name,recipient_party,amount,financial_year,industry,donor_type,disclosure_type,is_political_donation,election,jurisdiction) VALUES (?,?,?,?,?,?,?,?,?,?)",
                                    (*args, "gift", 1, None, jurisdiction))
                 def run():
