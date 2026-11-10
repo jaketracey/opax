@@ -540,7 +540,8 @@ export class ApiClient {
         !response.headers.get('content-type')?.includes('text/event-stream')
       )
         return await waiting(response.json());
-      if (!response.body) throw new AskFailure('empty', 'No answer came back.');
+      if (!response.body)
+        throw new AskFailure('invalid', 'No answer came back.');
       on.stage('Searching the record');
       const stream = new AskStream({
           ...on,
@@ -580,6 +581,8 @@ export class ApiClient {
       if (e instanceof AskFailure) throw e;
       if (shown)
         throw new AskFailure('partial', 'The answer stream ended early.');
+      if (e instanceof SyntaxError)
+        throw new AskFailure('invalid', 'The answer could not be read.');
       throw new AskFailure(
         'offline',
         'The record could not be reached. Check your connection and try again.',
