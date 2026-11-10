@@ -173,7 +173,8 @@ def upsert(db, rec, listing, now):
     key = bc.bill_key(rec["code"])
     intro = [e["date"] for e in rec["events"] if e["stage"] == "introduced"]
     all_dates = [e["date"] for e in rec["events"] if e["date"]]
-    introduced = min(intro) if intro else (min(all_dates) if all_dates else None)
+    # A later reading or passage date is not evidence of introduction.
+    introduced = min(intro) if intro else None
     house = HOUSE_MAP.get((rec.get("chamber") or "").lower(),
                           (rec.get("chamber") or "").lower() or None)
     if not house and listing.get("source"):
