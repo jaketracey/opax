@@ -757,7 +757,9 @@ test('Just added: a failed first read offers Try again', async () => {
   await act(async () => view.unmount());
 });
 
-test('Just added starts only one refresh when pull events repeat before the next render', async () => {
+// Repeated pulls each start a read and only the newest answer is kept
+// (recent-record-races.test.tsx owns the race rules); the spinner ends with it.
+test('Just added keeps the newest refresh when pull events repeat before the next render', async () => {
   let finish!: (value: Awaited<ReturnType<typeof records.recent>>) => void;
   jest
     .mocked(records.recent)
@@ -774,7 +776,7 @@ test('Just added starts only one refresh when pull events repeat before the next
     refresh();
     refresh();
   });
-  expect(records.recent).toHaveBeenCalledTimes(2);
+  expect(records.recent).toHaveBeenCalledTimes(3);
   await act(async () => finish(record(decodeRecent(responses['/api/recent']))));
   expect(view.root.findByType(RefreshControl).props.refreshing).toBe(false);
   expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
