@@ -127,7 +127,9 @@ def run(args, api):
             break
         if time.monotonic() >= deadline:
             raise ReleaseError("Processing deadline reached. Retry after the build becomes VALID.")
-        time.sleep(min(30, max(0, deadline - time.monotonic())))
+        # Processing takes two to three minutes; a 10 s poll trims the wait by
+        # about 10 s on average against 30 s, for one small GET per poll.
+        time.sleep(min(10, max(0, deadline - time.monotonic())))
     if args.dry_run:
         if build:
             localizations = api.list(f"/v1/builds/{build['id']}/betaBuildLocalizations")

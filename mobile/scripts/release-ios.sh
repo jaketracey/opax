@@ -151,7 +151,8 @@ verify() {
 }
 verify "$ARCHIVE/Products/Applications/OPAX.app" archive
 echo 'Exporting an App Store Connect IPA locally…'
-scripts/capacity.sh
+# No capacity wait here: the export is about 30 seconds of signing and
+# packaging, and a wait for the load to fall cost build 42 three minutes.
 release_step export
 IPAS=("$OUT/export/"*.ipa)
 [ "${#IPAS[@]}" = 1 ] && [ -f "${IPAS[0]}" ] || { echo 'Expected exactly one IPA.' >&2; exit 1; }
