@@ -538,6 +538,40 @@ test('choosing another version from the bar menu loads it in place', async () =>
   await act(async () => view.unmount());
 });
 
+test('In short retains the recorded version caveat when the reader changes bill text versions', async () => {
+  mockBillText();
+  const summary = Object.freeze({
+    sentences: Object.freeze(['Fixture summary sentence.']),
+    changes: Object.freeze(['Fixture change.']),
+    attribution: 'Fixture attribution.',
+    describes_version: 'as introduced',
+  });
+  jest.mocked(catalogs.billFor).mockResolvedValue(
+    record({
+      identity: { data: { shortTitle: 'Fixture bill' } },
+      summary: { data: summary },
+    }) as never,
+  );
+  const view = await mount(<BillTextReader />);
+  expect(textOfId(view, 'bill-text-summary-version')).toBe(
+    'Describes the bill as introduced.',
+  );
+  const version = (
+    mockOptions.unstable_headerRightItems as () => {
+      menu: { items: { onPress: () => void }[] };
+    }[]
+  )()[0]!;
+  await act(async () => version.menu.items[1]!.onPress());
+  expect(textOfId(view, 'bill-text-summary-version')).toBe(
+    'Describes the bill as introduced.',
+  );
+  expect(textOfId(view, 'bill-text-summary-text')).toBe(
+    'Fixture summary sentence.',
+  );
+  expect(summary.sentences).toEqual(['Fixture summary sentence.']);
+  await act(async () => view.unmount());
+});
+
 test.each([
   [1, 1],
   [1, 2],

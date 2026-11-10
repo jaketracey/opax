@@ -458,6 +458,16 @@ export default function BillTextReader({
                     }}
                     testID="bill-text-summary-label"
                   />
+                  {summary.describes_version ? (
+                    <Text
+                      wordSafe
+                      variant="footnote"
+                      tone="inkSoft"
+                      testID="bill-text-summary-version"
+                    >
+                      {`Describes the bill ${summary.describes_version}.`}
+                    </Text>
+                  ) : null}
                   <View testID="bill-text-summary-text" style={styles.brief}>
                     {firstSentences(summary.sentences).map(
                       (sentence, index) => (
