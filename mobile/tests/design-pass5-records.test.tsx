@@ -26,6 +26,7 @@ import {
   PersonRow,
   RecordRow,
   SourceLine,
+  VoteSplit,
 } from '../src/design/primitives';
 import BillTextReader from '../src/features/records/BillTextReader';
 import { useBillTextPane } from '../src/features/records/billTextPane';
@@ -226,6 +227,41 @@ test('each record kind names its own source and only a verified licence', () => 
   });
   expect(state.licence).toBeUndefined();
 });
+
+test.each(['', '  ', false, -1, 1.5, 'unavailable', null, undefined])(
+  'a division with an invalid count (%j) does not draw a vote split',
+  async (ayes) => {
+    const division = doc('/api/resource/division-federal-senate-10701');
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        ...division,
+        metadata: { ...division.metadata, ayes_count: ayes, noes_count: 20 },
+      }),
+    );
+    const view = await mount(<DocumentReader />);
+    expect(view.root.findAllByType(VoteSplit).length).toBe(0);
+    await act(async () => view.unmount());
+  },
+);
+
+test.each([0, '0', 42, '42'])(
+  'a division keeps a recorded integer count (%j), including zero',
+  async (ayes) => {
+    const division = doc('/api/resource/division-federal-senate-10701');
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        ...division,
+        metadata: { ...division.metadata, ayes_count: ayes, noes_count: '20' },
+      }),
+    );
+    const view = await mount(<DocumentReader />);
+    expect(view.root.findByType(VoteSplit).props).toMatchObject({
+      ayes: Number(ayes),
+      noes: 20,
+    });
+    await act(async () => view.unmount());
+  },
+);
 
 const textOfId = (view: TestRenderer.ReactTestRenderer, testID: string) =>
   view.root

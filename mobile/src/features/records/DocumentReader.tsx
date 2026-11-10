@@ -530,6 +530,17 @@ function Bar({ width, height }: { width: `${number}%`; height: number }) {
   return <View style={[styles.bar, { width, height }]} />;
 }
 
+/** Metadata can be partial: blank strings and booleans are not zero votes. */
+function divisionCount(raw: unknown): number | null {
+  if (
+    typeof raw !== 'number' &&
+    (typeof raw !== 'string' || !/^\d+$/.test(raw.trim()))
+  )
+    return null;
+  const value = Number(raw);
+  return Number.isSafeInteger(value) && value >= 0 ? value : null;
+}
+
 function ReaderHeader({
   doc,
   headline,
@@ -550,15 +561,13 @@ function ReaderHeader({
   const meta = metaLine(doc, { date: false });
   const caveat = recordCaveat(doc);
   const organisation = organisationOf(doc);
-  const ayes = Number(doc.metadata.ayes_count);
-  const noes = Number(doc.metadata.noes_count);
+  const ayes = divisionCount(doc.metadata.ayes_count);
+  const noes = divisionCount(doc.metadata.noes_count);
   const day = recordDate(doc);
   const votes =
     doc.labels.kind === 'division' &&
-    Number.isFinite(ayes) &&
-    Number.isFinite(noes) &&
-    doc.metadata.ayes_count != null &&
-    doc.metadata.noes_count != null &&
+    ayes !== null &&
+    noes !== null &&
     // The split's spoken label names its date; an undated division has none.
     !!day;
   return (
