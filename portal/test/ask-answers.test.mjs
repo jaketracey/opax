@@ -31,8 +31,8 @@ const gambling='Which gambling companies gave the most money to Labor?',followUp
 
 test('the production ranking refusal now leads with the figures found',()=>{
  const out=api.groundAnswerPayload(api.proseFallback(moneyInput(gambling,'Labor')),gambling)
- assert.match(out.answer.split('\n')[0],/1998-99 to 2025-26.*Tabcorp Holdings Limited provided the most disclosed funding to Labor: \$2,371,237/)
- assert.match(out.answer,/Clubs NSW.*2,134,784/);assert.match(out.answer,/lower bound/);assert.equal(out.answer_decision,'answer')
+ assert.match(out.answer.split('\n')[0],/^Tabcorp Holdings Limited provided the most disclosed funding to Labor: \$2,371,237.*1998-99 to 2025-26/)
+ assert.match(out.answer,/Clubs NSW.*2,134,784/);assert.match(out.coverage.note,/lower bounds/);assert.equal(out.answer_decision,'answer')
  assert.ok(out.citations['fact-1/t/body/0']);assert.doesNotMatch(out.answer,/cannot establish|gave Labor|donated/i)
 })
 test('a how-much follow-up leads with its figures, not the speech points beside them',()=>{
@@ -123,7 +123,7 @@ test('a known wrong period stays a limitation; only undated rows stand, marked',
  const undated={tool:'contracts',ok:true,data:{rows:[{name:'X'}]},cite:[{kind:'record',label:'X Pty Ltd: $5,000 contract',url:'https://example.org/c'}],notes:[]},guarded=api.guardToolPeriod(undated,{tool:'contracts',args:{}},constraints)
  assert.equal(guarded.data.coverage_only,undefined);assert.equal(guarded.notes[0],api.UNCONFIRMED_PERIOD)
  const facts=[{id:1,text:'X Pty Ltd: $5,000 contract',source:{...unseenSource,snippet:'x'}},{id:2,text:api.UNCONFIRMED_PERIOD,coverage:true,source:{...unseenSource,resource:'coverage',snippet:'x'}}]
- assert.match(api.proseFallback({question:'Who won contracts in 2005?',period:constraints.period,facts}).answer,/could not confirm/)
+ assert.match(api.proseFallback({question:'Who won contracts in 2005?',period:constraints.period,facts}).coverage.note,/could not confirm/)
 })
 test('a receipt total from outside the requested period is not the answer: the limitation stands',()=>{
  const q='How much did Labor disclose from Tabcorp in 1990?',input=moneyInput(q,'Labor'),answer='The disclosed returns cover 1998–99 to 2025–26 and cannot establish the answer for 1990.'
@@ -133,7 +133,7 @@ test('a receipt total from outside the requested period is not the answer: the l
 test('ordinary fallback keeps prose outside the period with its dates stated, never figures',async()=>{
  const period={kind:'window',since:'2005-01-01',until:'2005-12-31',label:'2005'},source={resource:'r',kind:'speech',date:'2023-05-01',cited:true,href:'https://example.org/d'}
  const prose=await(await api.withFallbackPeriod(Response.json({answer:'Parliament debated the reform at length.',sources:[source],citations:{'r/t/body/0':[[0,40]]}}),period)).json()
- assert.match(prose.answer,/dated 2023-05-01/);assert.match(prose.answer,/debated the reform/);assert.equal(prose.answer_status,'coverage_only');assert.ok(prose.citations['r/t/body/0'][0][0]>0)
+ assert.match(prose.coverage.note,/dated 2023-05-01/);assert.match(prose.answer,/debated the reform/);assert.equal(prose.answer_status,'coverage_only');assert.equal(prose.citations['r/t/body/0'][0][0],0)
  const figures=await(await api.withFallbackPeriod(Response.json({answer:'The salary is $622,102.',sources:[source],citations:{}}),period)).json()
  assert.doesNotMatch(figures.answer,/622,102/)
 })
@@ -155,7 +155,7 @@ test('the production refusal cannot be cached, and its question now can be',()=>
  assert.equal(api.cacheableRoutedAnswer(before,true),false)
  assert.equal(api.cacheableRoutedAnswer(api.groundAnswerPayload(api.proseFallback(moneyInput(gambling,'Labor')),gambling),true),true)
 })
-test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-13-honest-limits')})
+test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-14-direct-prose')})
 
 // Review of 36bf23f48, each finding on its exact input. The rule: a generic refusal gives way to on-topic facts,
 // a specific limit stays first with the facts beside it, and typed decisions, causal asks and period guards are left alone.
@@ -171,13 +171,13 @@ test('finding 1: an unconfirmed period is said plainly, with neither the request
  const q='Which supplier got the most contract money in 2005?',input=plain(q,['Thales Australia: $1,200,000,000 across 42 contracts'])
  const guarded=api.guardToolPeriod({tool:'contracts',ok:true,data:{rows:[{}]},cite:[{kind:'record',label:input.facts[0].text,url:'https://opax.com.au/c'}],notes:[]},{tool:'contracts',args:{}},{dated:true,period:input.period})
  input.facts.push({id:9,text:guarded.notes[0],coverage:true,source:src('coverage',guarded.notes[0])})
- const out=api.proseFallback(input);assert.match(out.answer,/Thales Australia: \$1,200,000,000/);assert.match(out.answer,/could not confirm/);assert.doesNotMatch(out.answer,/2005|\breceived the most\b/)
+ const out=api.proseFallback(input);assert.match(out.answer,/Thales Australia: \$1,200,000,000/);assert.match(out.coverage.note,/could not confirm/);assert.doesNotMatch(out.answer,/2005|\breceived the most\b/)
 })
 test('finding 2: the terminal rule does not undo the fallback period guard, on the full response chain',async()=>{
  const q='Who won the biggest contracts in 2005?',period=api.inferPeriod(q),input=plain(q,['Thales Australia: $1,200,000,000 contract']),trail={mode:'planner',rounds:1,trail:[],sources:[],pre_writer_sources:pre(input)}
  const run=async payload=>(await api.withAnswerLanguage(await api.withPlannerResearch(await api.withFallbackPeriod(Response.json(payload),period),trail),q)).json()
  const prose=await run({answer:'Parliament debated these contracts.',sources:[src('c','x','record',{date:'2023-05-01'})],citations:{'c/t/body/0':[[0,35]]}})
- assert.match(prose.answer,/^These records may not cover .*dated 2023-05-01/);assert.equal(prose.answer_status,'coverage_only');assert.doesNotMatch(prose.answer,/Thales|1,200,000,000/)
+ assert.match(prose.coverage.note,/^These records may not cover .*dated 2023-05-01/);assert.equal(prose.answer_status,'coverage_only');assert.doesNotMatch(prose.answer,/Thales|1,200,000,000/)
  const figure=await run({answer:'The current salary is $622,102.',sources:[src('p','x','pay',{date:'2026-10-19'})],citations:{}})
  assert.match(figure.answer,/^The returned records do not establish the requested answer/);assert.doesNotMatch(figure.answer,/622,102|1,200,000,000/)
  const matched=await api.withAnswerLanguage(Response.json({answer:'That period is not covered.',coverage:{matched:false},citations:{},sources:[],research:trail}),q);assert.equal((await matched.json()).answer,'That period is not covered.')
@@ -202,24 +202,24 @@ test('finding 4: an ordinary question about change is not causal',()=>{
 test('finding 5: no lead-line superlative, the jurisdiction labelled, never "unknown"',()=>{
  const q='Who gives the most money to the LNP in Queensland disclosures?',input=allRows(q,'LNP'),out=api.groundAnswerPayload(api.proseFallback(input),q)
  assert.match(out.answer,/^LNP disclosed \$2,222,296 in receipts from Tabcorp Holdings Limited \(federal disclosures; financial years 1998-99 to 2025-26\)/)
- assert.match(out.answer,/These are federal records, not Queensland records\./);assert.doesNotMatch(out.answer,/provided the most|has the largest|unknown|cannot establish a donor ranking/)
+ assert.match(out.coverage.note,/These are federal records, not Queensland records\./);assert.doesNotMatch(out.answer,/provided the most|has the largest|unknown|cannot establish a donor ranking/)
  const undated=api.proseFallback({...input,facts:input.facts.map(f=>f.source.receipt?{...f,source:{...f.source,receipt:{...f.source.receipt,period:'unknown'}}}:f)});assert.doesNotMatch(undated.answer,/unknown/)
 })
 test('finding 5: ranked_money rows rank from their typed receipts alone',async()=>{
  const q='Who gave the most money to Labor in 2023–24?',row=src('receipt-ranking-1','Pratt Holdings Pty Ltd: $2,000,000, 2 disclosed receipt records. Period: 2023–24.','receipt',{url:'https://opax.com.au/money?jur=federal&party=party%3ALabor',receipt:{party:'Labor',source:'Pratt Holdings Pty Ltd',amount:2000000,period:'2023–24',jurisdiction:'federal'}}),period=api.inferPeriod(q)
  const out=api.proseFallback({question:q,period,constraints:{period,party:'Labor'},facts:api.writingFacts({answer:'',citations:{},sources:[row]})})
- assert.match(out.answer,/2023–24 in OPAX’s published selection, Pratt Holdings Pty Ltd provided the most disclosed funding: \$2,000,000/)
+ assert.match(out.answer,/^Pratt Holdings Pty Ltd provided the most disclosed funding: \$2,000,000.*2023–24 in OPAX’s published selection/)
 })
 test('finding 6: the caveat stays beside votes, and the unconfirmed note sits beside it, not instead',()=>{
  const q='Who gave the most money to Labor and how did Labor vote on pokies?',input=allRows(q,'Labor',{}),vote='Labor voted in 13 divisions with "pokies" in the title: all aye in 9, all no in 4, split in 0'
  input.facts.push({id:50,text:vote,source:src('votes',vote)})
- const out=api.proseFallback(input);assert.match(out.answer,/13 divisions/);assert.match(out.answer,/not evidence that it influenced a vote or speech/)
+ const out=api.proseFallback(input);assert.match(out.answer,/13 divisions/);assert.match(out.answer,/do not establish that money caused a vote/);assert.match(out.coverage.note,/published selection/)
  input.facts.push({id:51,text:api.UNCONFIRMED_PERIOD,coverage:true,source:src('coverage-note',api.UNCONFIRMED_PERIOD)})
- const both=api.proseFallback(input);assert.match(both.answer,/could not confirm/);assert.match(both.answer,/not evidence that it influenced a vote or speech/)
+ const both=api.proseFallback(input);assert.match(both.coverage.note,/could not confirm/);assert.match(both.answer,/do not establish that money caused a vote/);assert.match(both.coverage.note,/published selection/)
 })
 test('finding 7: filtered rows cannot answer an unfiltered ranking, and an aggregate never ranks as a donor',()=>{
  const q='Who gave the most money to Labor?',out=api.proseFallback(moneyInput(q,'Labor'))
- assert.doesNotMatch(out.answer,/provided the most/);assert.match(out.answer,/These rows cover gambling sources only\./);assert.match(out.answer,/\$2,371,237/)
+ assert.doesNotMatch(out.answer,/provided the most/);assert.match(out.coverage.note,/These rows cover gambling sources only\./);assert.match(out.answer,/\$2,371,237/)
  const totals={tool:'party_receipts',ok:true,data:{industry:'gambling',years:[null,null],rows:[{party:'Labor',total_aud:9000000}]},cite:[{kind:'export',label:'a',url:'https://opax.com.au/money/party/Labor'}],notes},{facts}=api.factSheet([totals])
  assert.equal(facts[0].receipt.aggregate,true);assert.equal(facts[0].receipt.filter,'gambling')
  const period=api.inferPeriod(gambling),sources=[src('fact-1',facts[0].text,'export',{receipt:facts[0].receipt})]
@@ -262,11 +262,11 @@ test('finding 11: "voted" is not garbled, and an open-ended start is not outside
 })
 test('a dated question answered from a wider range says so in words',()=>{
  const q='How much did Labor get from gambling companies in 2005?',out=api.groundAnswerPayload(api.proseFallback(moneyInput(q,'Labor')),q)
- assert.match(out.answer,/These are totals across 1998-99 to 2025-26, not 2005 amounts\./);assert.match(out.answer,/\$2,371,237/);assert.doesNotMatch(out.answer,/In 2005|in 2005/)
+ assert.match(out.coverage.note,/These are totals across 1998-99 to 2025-26, not 2005 amounts\./);assert.match(out.answer,/\$2,371,237/);assert.doesNotMatch(out.answer,/In 2005|in 2005/)
 })
 test('case 2 keeps the limit unchanged and first, never adds a superlative or the requested period, and is stable',()=>{
  const q='Who gave the most money to Labor in 2005?',limit='OPAX can only show aggregate receipts for that party.',input=allRows(q,'Labor'),once=limited(input,limit),[first,second]=once.answer.split('\n\n')
- assert.equal(first,limit);assert.equal(second,'What the records do show:');assert.equal(once.answer_decision,'limitation');assert.doesNotMatch(once.answer.slice(limit.length),SUPERLATIVE);assert.match(once.answer,/not 2005 amounts/);assert.equal(once.answer.split('\n\n').filter(l=>l.startsWith('- ')).length,3);for(const row of once.answer.split('\n\n').filter(l=>l.startsWith('- ')))assert.match(row,/financial years 1998-99 to 2025-26\)\.$/);assert.ok(Object.keys(once.citations).length)
+ assert.equal(first,limit);assert.equal(second,'What the records do show:');assert.equal(once.answer_decision,'limitation');assert.doesNotMatch(once.answer.slice(limit.length),SUPERLATIVE);assert.match(api.normaliseCoveragePayload(once,q).coverage.note,/not 2005 amounts/);assert.equal(once.answer.split('\n\n').filter(l=>l.startsWith('- ')).length,3);for(const row of once.answer.split('\n\n').filter(l=>l.startsWith('- ')))assert.match(row,/financial years 1998-99 to 2025-26\)\.$/);assert.ok(Object.keys(once.citations).length)
  assert.equal(api.groundAnswerPayload(once,q).answer,once.answer)
  assert.equal(api.cacheableRoutedAnswer(once,true),false,'a limitation with facts beside it is still not stored')
 })
@@ -306,7 +306,7 @@ test('spoken points can answer a position question: the shape rule stands aside'
 test('a two-part question keeps its rows, votes and caveat, under the limit',()=>{
  const q='Who gave the most money to Labor and how did Labor vote on pokies?',input=allRows(q,'Labor',{}),vote='Labor voted in 13 divisions with "pokies" in the title: all aye in 9, all no in 4, split in 0'
  input.facts.push({id:50,text:vote,source:src('votes',vote)})
- const out=api.proseFallback(input);assert.equal(out.answer_decision,'limitation');assert.match(out.answer,/^Public donation and voting records do not establish that money caused a vote\./);assert.match(out.answer,/\$2,371,237/);assert.match(out.answer,/13 divisions/);assert.match(out.answer,/not evidence that it influenced a vote or speech/)
+ const out=api.proseFallback(input);assert.equal(out.answer_decision,'limitation');assert.match(out.answer,/^Public donation and voting records do not establish that money caused a vote\./);assert.match(out.answer,/\$2,371,237/);assert.match(out.answer,/13 divisions/);assert.match(out.answer,/do not establish that money caused a vote/);assert.match(out.coverage.note,/published selection/)
 })
 for(const [q,text] of [['How much funding has Bob Katter secured for Kennedy?','Kennedy: $4,500,000 across 12 grants'],['How much went to first home buyers grants?','First Home Buyers: $900,000 across 3 grants'],['Which grants went to bushfire-affected towns?','Cobargo Recovery: $250,000 grant']])test('an ordinary question is not causal: '+q,()=>{
  const input=plain(q,[text]),out=api.groundAnswerPayload({answer:refusal,answer_decision:'limitation',citations:{},sources:[],research:{mode:'loop',pre_writer_sources:pre(input)}},q)

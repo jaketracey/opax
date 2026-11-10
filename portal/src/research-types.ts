@@ -37,6 +37,8 @@ export interface Passage {
 export type AnswerDecision = 'answer' | 'limitation' | 'clarification' | 'refusal' | 'preserve'
 export interface QualitativeAnswer {
   answer: string
+  /** Source limitations belong beside the answer, without occupying its citation ranges. */
+  coverage?: { note?: string; [key: string]: unknown }
   answer_decision?: AnswerDecision
   /** Resolved question constraints survive writing and cached response boundaries. */
   answer_scope?: Partial<import('./ask-constraints').AskConstraints> & {entity_type?:string}

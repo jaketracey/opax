@@ -46,9 +46,10 @@ test('GOLD-M03 never reconstructs or cites unselected USER_CONTEXT',()=>{
 })
 test('aggregate donor range occurs once, with selection, lower-bound and receipts caveats',()=>{
  const out=api.groundAnswerPayload(structuredClone(hanson.payload),hanson.question)
- assert.match(out.answer,/^Across disclosed returns from 1998[–-]99 to 2025[–-]26 in OPAX.s published selection, Westpac/)
+ assert.match(out.answer.split('\n')[0],/^Westpac Banking Corporation.*161,787.*1998[–-]99 to 2025[–-]26 in OPAX.s published selection/)
  assert.equal((out.answer.match(/1998[–-]99 to 2025[–-]26/g)??[]).length,1)
- assert.match(out.answer,/floor|lower.bound|under.*threshold/i);assert.match(out.answer,/more than gifts|not.*gifts/i)
+ assert.match(out.coverage?.note??'',/floor|lower.bound|(?:under|below).*threshold/i);assert.match(out.coverage?.note??'',/more than gifts|not.*gifts|non-gift/i)
+ assert.doesNotMatch(out.answer,/floor|lower.bound|(?:under|below).*threshold|more than gifts|not.*gifts|non-gift/i)
  for(const id of Object.keys(out.citations))assert.ok(out.sources.some(s=>s.cited&&id.startsWith(s.resource+'/')))
 })
 test('PLACE-OLD proseFallback preserves the Census coverage explanation',()=>{
@@ -117,7 +118,9 @@ test('a later caveat cannot exempt an affirmative lead from ranking checks',()=>
 for(const question of ['Did Westpac give money to One Nation in most years?','Who gave the most money to Labor?','Who gave the most money to One Nation in 1990?'])test('proseFallback itself cannot turn out-of-scope donor facts into a ranking: '+question,()=>{
  const facts=hanson.payload.sources.flatMap((source,i)=>source.snippet.split(/\n+/).map((text,j)=>({id:100*i+j+1,text,source,coverage:source.resource==='coverage'})))
  const out=api.proseFallback({question,period:{kind:'all',label:''},facts})
- assert.doesNotMatch(out.answer,/provided the most|received the most|runners.up/i);assert.match(out.answer,/cannot|can't|do not establish|does not establish/i)
+ assert.doesNotMatch(out.answer,/provided the most|received the most|runners.up/i)
+ if(out.answer_decision==='limitation')assert.match(out.answer,/cannot|can't|do not establish|does not establish/i)
+ else {assert.match(out.coverage?.note??'',/cannot|can't|do not establish|does not establish/i);assert.doesNotMatch(out.answer,/cannot|can't|do not establish|does not establish/i)}
 })
 test('ranking party scope reads the selected calculation URL, including encoded party labels',()=>{
  const f=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-labor-2023.json',import.meta.url)))
@@ -186,7 +189,7 @@ test('selected receipt periods survive when the writer fact is prose rather than
  const row={receipt:{party:'Labor',source:'Shop Distributive & Allied Employees Association',amount:974058,period:'2019–20',jurisdiction:'federal'},resource:'receipt-ranking-1',kind:'receipt',title:'Shop Distributive & Allied Employees Association: $974,058',url:'https://opax.com.au/money?jur=federal&party=party%3ALabor&from=2019&to=2019',snippet:'Shop Distributive & Allied Employees Association: $974,058, 13 disclosed receipt records. Period: 2019–20.',cited:true}
  const coverage={...row,resource:'receipt-ranking-0',snippet:'Opax added the disclosed receipts matching this question, grouped by donor.'}
  const facts=[{id:1,text:'Shop Distributive & Allied Employees Association has the largest disclosed total: $974,058.',source:row},{id:2,text:coverage.snippet,coverage:true,source:coverage}]
- const blocked=api.proseFallback({question:'Who donates the most to Labor in federal records in 2019?',period:{kind:'all',label:''},facts});assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/974,058/);assert.doesNotMatch(blocked.answer,/provided the most/);assert.match(blocked.answer,/not a ranking/)
+ const blocked=api.proseFallback({question:'Who donates the most to Labor in federal records in 2019?',period:{kind:'all',label:''},facts});assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/974,058/);assert.doesNotMatch(blocked.answer,/provided the most|not a ranking/);assert.match(blocked.coverage?.note??'',/not a ranking/)
  const question='Who donates the most to Labor in federal disclosures in 2019–20?',out=api.proseFallback({question,period:{kind:'all',label:''},facts})
  assert.match(out.answer.split('\n')[0],/Shop Distributive.*974,058/);assert.match(out.answer.split('\n')[0],/2019[–-]20/);assert.equal(coherenceCheck(question,out).pass,true)
 })

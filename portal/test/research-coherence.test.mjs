@@ -17,11 +17,12 @@ for(const stream of [false,true])for(const cache of [false,true])for(const fallb
  const headers={...(cache?{'x-opax-cache':'HIT'}:{}),...(stream?{'content-type':'text/event-stream'}:{})}
  const response=stream?new Response('event: delta\ndata: '+JSON.stringify({text:p.answer})+'\n\nevent: done\ndata: '+JSON.stringify(p)+'\n\n',{headers}):Response.json(p,{headers})
  const wire=await(await api.withAnswerLanguage(response,fixture.question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- assert.match(out.answer.split('\n')[0],/1998-99 to 2025-26.*Westpac Banking Corporation.*161,787/)
+ assert.match(out.answer.split('\n')[0],/^Westpac Banking Corporation.*161,787.*1998-99 to 2025-26/)
  assert.equal(coherenceCheck(fixture.question,out).pass,true)
  assert.equal(auditPayload(fixture.question,out).findings.length,0)
  assert.ok(out.citations['fact-1/t/body/0']);assert.ok(out.citations[k]);assert.equal(out.coherence.fallback,true)
- assert.equal((out.answer.match(/not evidence/g)??[]).length,1)
+ assert.doesNotMatch(out.answer,/not evidence/)
+ assert.equal((out.coverage?.note.match(/not evidence/g)??[]).length,1)
  assert.deepEqual(api.groundAnswerPayload(out,fixture.question),out)
 })
 const source={resource:'salary',title:'Salary',kind:'record',snippet:'Avery Example: $100,000 annual salary.',cited:true,href:'https://example.org',url:'https://example.org',slug:''}
@@ -89,9 +90,9 @@ test('year-filtered disclosed-donor tables recover their leading donor and perio
  const bad='Avery Example received $2,000,000.',answer=bad+'\n\nOther donors included United Workers Union at $953,447.',p={answer,sources,citations:{'receipt-ranking-1/t/body/0':[[0,bad.length]],'receipt-ranking-2/t/body/0':[[bad.length+2,answer.length]]}}
  // The former phrasing is now outside the repair allowlist; keep its checked point.
  const blocked=api.groundAnswerPayload(structuredClone(p),'Who gave the most disclosed funding to Labor in 2023?')
- assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/2,000,000 in receipts from Pratt Holdings Pty Ltd/);assert.match(blocked.answer,/953,447 in receipts from United Workers Union/);assert.doesNotMatch(blocked.answer,/provided the most|Avery Example/);assert.match(blocked.answer,/not a ranking/)
+ assert.equal(blocked.answer_decision,'answer');assert.match(blocked.answer,/2,000,000 in receipts from Pratt Holdings Pty Ltd/);assert.match(blocked.answer,/953,447 in receipts from United Workers Union/);assert.doesNotMatch(blocked.answer,/provided the most|Avery Example|not a ranking/);assert.match(blocked.coverage?.note??'',/not a ranking/)
  const question='Who gave the most money to Labor in 2023–24?',out=api.groundAnswerPayload(p,question)
- assert.match(out.answer.split('\n')[0],/2023–24.*Pratt Holdings Pty Ltd.*2,000,000/)
+ assert.match(out.answer.split('\n')[0],/^Pratt Holdings Pty Ltd.*2,000,000.*2023–24/)
  assert.equal(coherenceCheck(question,out).pass,true);assert.equal(auditPayload('',out).findings.length,0)
 })
 test('an incorrect party adjective is repaired without changing quotation ownership',()=>{
@@ -114,7 +115,7 @@ test('native ranked-money tables repair a rejected draft figure with the selecte
  f.payload.citations=Object.fromEntries(Object.entries(f.payload.citations).map(([id,ranges])=>[id,ranges.map(([a,b])=>[a+shift,b+shift])]))
  f.payload.citations[f.payload.sources.find(s=>s.snippet.includes('$55,227,183')).resource+'/t/body/0']=[[0,bad.length]]
  const out=api.groundAnswerPayload(f.payload,f.question)
- assert.match(out.answer.split('\n')[0],/1998[–-]99 to 2025[–-]26.*Westpac Banking Corporation.*55,227,183/)
+ assert.match(out.answer.split('\n')[0],/^Westpac Banking Corporation.*55,227,183.*1998[–-]99 to 2025[–-]26/)
  assert.equal(coherenceCheck(f.question,out).pass,true);assert.equal(auditPayload(f.question,out).findings.length,0)
 })
 test('a supported speech-ranking lead is repaired while retaining the year and coverage citations',()=>{

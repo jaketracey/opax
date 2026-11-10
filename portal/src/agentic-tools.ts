@@ -190,7 +190,7 @@ function coverageNotes(f: SpeechFilter, groupBy?: string): string[] {
   if (groupBy === 'party' && !f.state) notes.push('Only federal and some Queensland speeches carry a party label; state speeches are not counted by party.')
   if (groupBy === 'party' && f.state === 'qld') notes.push('Only about 27% of Queensland speeches carry a party label, so this party comparison is incomplete.')
   if (f.venue !== 'committee') notes.push('Counts are chamber speeches; committee-hearing turns are separate records and are not included.')
-  if (groupBy === 'speaker') notes.push('A speaker name can be a surname-only record for some state members. Some federal debate records hold more than one speaker under one name (a known source fault being repaired).')
+  if (groupBy === 'speaker') notes.push('Some state members are recorded by surname only, and some federal debate records group several speakers under one name.')
   return notes
 }
 
@@ -360,7 +360,7 @@ export async function memberVotes(deps: ToolDeps, input: { keyword: string; pers
     // The same title search over divisions, as a list a reader can open.
     list: `${origin}/search?${new URLSearchParams({ kind: 'division', q: keyword, mode: 'keyword' })}`,
     query: { kb: 'catalog title search, kind division', keyword, divisions_found: slugs.length },
-    notes: ['Divisions are matched by a word in the division or bill title, so related divisions under other titles are missed.', 'A recorded vote is not a statement of reasons; read the speeches for those.'],
+    notes: ['Divisions are matched by words in their titles; divisions filed under other titles may be missed.', 'A recorded vote does not establish why a member voted that way.'],
   }
 }
 
@@ -467,7 +467,7 @@ export async function findQuotes(deps: ToolDeps, input: SpeechFilter & { query: 
   return {
     tool: 'find_quotes', ok: true, data: { passages: picked },
     cite: picked.map((p) => ({ kind: 'record' as const, label: p.title, url: `${origin}/doc/${p.slug}` })),
-    query: { endpoint: '/find', query: q, filter: f }, notes: ['Passages are a ranked sample, not every speech; never count them.'],
+    query: { endpoint: '/find', query: q, filter: f }, notes: ['The selected passages are a ranked sample, not a complete speech count.'],
   }
 }
 

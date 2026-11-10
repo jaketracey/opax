@@ -33,7 +33,11 @@ test('review grounding: structured atoms retain entity metric value unit chamber
 test('review coverage: every percentage resolves to retained source text',()=>{
  const fs=api.writingFacts(undefined,[{id:1,text:'Avery Example: 87 chamber speeches labelled housing.',cite:{kind:'count',url:'https://example.org',label:'count'}}],['Topic labels cover 73% of the record.','Topic labels cover 91% of the 2010s record.'])
  const out=api.verifyWrittenAnswer({sentences:[{text:'Avery Example recorded 87 chamber speeches about housing.',facts:[1]},{text:'Topic labels cover 73% of the record and 91% of the 2010s record.',facts:[2,3],coverage:true}]},{question:'Who spoke most about housing?',period,facts:fs})
- for(const value of ['73%','91%'])assert.ok(out.sources.some(s=>s.snippet.includes(value)&&Object.keys(out.citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))),value)
+ for(const value of ['73%','91%']){
+  assert.ok(out.coverage.note.includes(value),value)
+  assert.ok(out.sources.some(s=>s.coverage&&s.snippet.includes(value)),value)
+  assert.ok(!out.answer.includes(value),value)
+ }
 })
 const mining=[fact(1,'Labor: $165,050, 13 disclosed receipt records.'),fact(2,'Liberal: $125,483, 15 disclosed receipt records.'),fact(3,'Nationals: $82,815, 10 disclosed receipt records.'),{...fact(4,'Period: 2005–06.'),coverage:true},{...fact(5,'Coverage: Only receipts included in the published map are ranked; this is a selection, not an exhaustive industry total.'),coverage:true}]
 test('review period: a verified financial year supports an ordinary written claim',()=>{
@@ -44,7 +48,7 @@ test('review fallback: ranking retains subject period runners-up and selection',
  const out=api.proseFallback({question:'Who gets most from mining in 2005?',period,facts:mining})
  assert.match(out.answer.split(/(?<=[.!?])\s/)[0],/Labor.*(?:most|led|largest).*mining.*2005–06.*165,050|2005–06.*Labor.*(?:most|led|largest).*mining.*165,050/)
  assert.match(out.answer,/Liberal.*125,483.*Nationals.*82,815/)
- assert.match(out.answer,/selection|published map/)
+ assert.match(out.coverage.note,/selection|published map/)
 })
 test('review fallback: missing historical salary retains December 1999 boundary',()=>{
  const facts=[fact(1,"OPAX's pay records cover 1999-12-07 to 2026-10-19; the requested period 1990-01-01 to 1990-12-31 is not fully covered.")]
