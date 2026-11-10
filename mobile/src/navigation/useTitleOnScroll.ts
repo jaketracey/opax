@@ -105,6 +105,24 @@ export function minimumBarTitleWidth(title: string, fontScale = 1): number {
   );
 }
 
+/** The longest leading whole words that fit, or no useful bar title. */
+export function shortenBarTitle(
+  title: string,
+  room: number,
+  fontScale = 1,
+): string | null {
+  if (room < minimumBarTitleWidth(title, fontScale)) return null;
+  const scale = Math.min(fontScale, inlineTitleScaleCap);
+  const fits = (text: string) => (backPillWidth(text) - 48) * scale <= room;
+  if (fits(title)) return title;
+  const words = title.trim().split(/\s+/);
+  for (let count = words.length - 1; count > 0; count--) {
+    const candidate = `${words.slice(0, count).join(' ')}…`;
+    if (fits(candidate)) return candidate;
+  }
+  return null;
+}
+
 /**
  * On iOS 26, react-native-screens sizes the centre title subview from its
  * first layout. Starting with zero width and empty text prevents later
@@ -137,7 +155,8 @@ export function BarTitle({
     backTitle,
     fontScale,
   );
-  const fits = room >= minimumBarTitleWidth(title, fontScale);
+  const shortened = shortenBarTitle(title, room, fontScale);
+  const fits = shortened !== null;
   const visible = shown && fits;
   const [opacity] = useState(() => new Animated.Value(visible ? 1 : 0));
   useEffect(() => {
@@ -158,8 +177,9 @@ export function BarTitle({
     Animated.Text,
     {
       numberOfLines: 1,
-      ellipsizeMode: 'tail',
+      ellipsizeMode: 'clip',
       maxFontSizeMultiplier: inlineTitleScaleCap,
+      accessibilityLabel: title,
       accessibilityElementsHidden: !visible,
       importantForAccessibility: visible ? 'auto' : 'no-hide-descendants',
       testID: 'bar-title',
@@ -173,7 +193,7 @@ export function BarTitle({
         },
       ],
     },
-    title,
+    shortened ?? title,
   );
 }
 

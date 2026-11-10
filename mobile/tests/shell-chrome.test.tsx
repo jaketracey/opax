@@ -583,7 +583,7 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     const text = view.root.findByType(Animated.Text);
     expect(text.props.children).toBe('Interactive Gambling Bill');
     expect(text.props.numberOfLines).toBe(1);
-    expect(text.props.ellipsizeMode).toBe('tail');
+    expect(text.props.ellipsizeMode).toBe('clip');
     expect(style(view).opacity.__getValue()).toBe(1);
     expect(text.props.accessibilityElementsHidden).toBe(false);
     expect(text.props.importantForAccessibility).toBe('auto');

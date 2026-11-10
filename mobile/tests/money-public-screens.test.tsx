@@ -475,7 +475,7 @@ test.each([
                 : style.opacity.__getValue(),
             ).toBe(visible ? 1 : 0);
             expect(text.props).toMatchObject({
-              children: title,
+              accessibilityLabel: title,
               accessibilityElementsHidden: !visible,
               importantForAccessibility: visible
                 ? 'auto'
