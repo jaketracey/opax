@@ -24,6 +24,7 @@ import {
 } from '../src/features/today/DailyPair';
 import {
   FeaturedPeopleCarousel,
+  featuredLabel,
   TodayEditionCard,
 } from '../src/features/today/FeaturedPeopleCard';
 import {
@@ -342,6 +343,22 @@ describe('neutral daily featured selection', () => {
 });
 
 describe('featured carousel', () => {
+  test('the VoiceOver label says Machine-written and skips empty parts', () => {
+    const person = people[0]!;
+    const machine = {
+      ...person,
+      edition: {
+        ...person.edition,
+        title: 'Fixture Member',
+        machineWritten: { attribution: 'Fixture model' },
+        facts: { ...person.edition.facts, line: null },
+        paragraphs: ['A fixture paragraph.'],
+      },
+    };
+    expect(featuredLabel(machine, 0, 3)).toBe(
+      'Featured parliamentarian, 1 of 3. Fixture Member. Machine-written. A fixture paragraph.',
+    );
+  });
   test('snaps with a 16 pt peek, opens each person and exposes positions to VoiceOver', async () => {
     const { root } = await render(<FeaturedPeopleCarousel people={people} />);
     act(() =>
