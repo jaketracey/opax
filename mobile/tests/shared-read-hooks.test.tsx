@@ -78,7 +78,11 @@ test('returning after a day revalidates a previously fresh catalogue without ref
   act(() => jest.setSystemTime(Date.now() + 1));
   await act(async () => listener('active'));
   expect(load).toHaveBeenCalledTimes(2);
-  expect(load).toHaveBeenLastCalledWith(true, expect.any(Function));
+  expect(load).toHaveBeenLastCalledWith(
+    true,
+    expect.any(Function),
+    expect.any(AbortSignal),
+  );
   probe.unmount();
 });
 
@@ -95,7 +99,11 @@ test('a catalogue left open revalidates daily and cancels its timer on unmount',
     await act(async () => {});
     await act(async () => jest.advanceTimersByTimeAsync(day));
     expect(load).toHaveBeenCalledTimes(2);
-    expect(load).toHaveBeenLastCalledWith(true, expect.any(Function));
+    expect(load).toHaveBeenLastCalledWith(
+      true,
+      expect.any(Function),
+      expect.any(AbortSignal),
+    );
     probe.unmount();
     await act(async () => jest.advanceTimersByTimeAsync(day));
     expect(load).toHaveBeenCalledTimes(2);
