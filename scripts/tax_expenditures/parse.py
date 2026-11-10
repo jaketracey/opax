@@ -99,6 +99,16 @@ def document_metadata(path):
     return items, combined
 
 
+def cell_text(value):
+    """A workbook text cell as displayed: OOXML _xHHHH_ escapes decoded, the control characters they can carry
+    dropped ("_x000D_" is a trailing carriage return, "_x001F_" an Excel hyphenation mark in "low_x001F_-income"),
+    and surrounding whitespace removed (search-hubs-010). Non-text cells pass through unchanged."""
+    if not isinstance(value, str):
+        return value
+    decoded = re.sub(r'_x([0-9A-Fa-f]{4})_', lambda m: chr(int(m[1], 16)), value)
+    return re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', decoded).strip()
+
+
 def parse_sheet(grid, document, items):
     if not permitted(document):
         return []
@@ -107,6 +117,7 @@ def parse_sheet(grid, document, items):
     rows = []
     for row_index, cells in enumerate(grid[1:], 2):
         code, title, *estimates = cells
+        title = cell_text(title)
         if code not in items or len(estimates) != len(grid[0])-2:
             raise ValueError('Missing item metadata or incomplete source row')
         for column, (year, raw) in enumerate(zip(grid[0][2:], estimates), 3):

@@ -34,6 +34,17 @@ class TaxExpendituresTest(unittest.TestCase):
         self.assertIsNone(rows[1]['value']);self.assertEqual(rows[1]['source_value'],'*')
         self.assertNotEqual(key(rows[0]),key({**rows[0],'statement':'2024-25'}))
 
+    def test_workbook_title_escapes_are_decoded_and_trimmed(self):
+        # search-hubs-010: the source cell for A17 ends in an OOXML-escaped carriage return, A20 carries Excel
+        # hyphenation marks; both titles read as the statement prints them
+        from scripts.tax_expenditures.parse import cell_text
+        self.assertEqual(cell_text('Exempting lump sum payments in arrears from the Medicare levy_x000D_\n'),
+                         'Exempting lump sum payments in arrears from the Medicare levy')
+        self.assertEqual(cell_text('below the low_x001F__x001F__x001F_-income thresholds'), 'below the low-income thresholds')
+        self.assertEqual(cell_text(-250), -250)
+        d,i,g,_=fixture();g[1][1]='Example exemption_x000D_\n'
+        self.assertEqual({r['title'] for r in parse_sheet(g,d,{'A1':i})},{'Example exemption'})
+
     def test_codes_never_become_zero(self):
         for marker,status in [('-','nil'),('..','non-zero rounded to zero'),('*','unquantifiable'),('nfp','not for publication'),('N/A','not available')]:
             self.assertEqual(value(marker),(None,status))
