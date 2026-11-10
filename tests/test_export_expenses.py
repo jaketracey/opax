@@ -84,5 +84,32 @@ class LicenceTests(unittest.TestCase):
                       {"licence_url": "https://creativecommons.org/licenses/by/4.0/"}):
             self.assertIsNotNone(money_ipea.licence_problem(dict(ok, **other)), other)
 
+
+class ReportingYearTests(unittest.TestCase):
+    def test_financial_year_uses_reporting_quarters_and_keeps_adjustments(self):
+        rows = []
+        # Transaction dates deliberately fall in a different reporting year.
+        for period, start, amount in [
+                ("2024Q02", "2024-04-01", 99.0),
+                ("2024Q03", "2024-07-01", 100.4),
+                ("2024Q04", "2024-10-01", 200.4),
+                ("2025Q01", "2025-01-01", -20.0),
+                ("2025Q02", "2025-04-01", 300.4),
+                ("2025Q03", "2025-07-01", 400.0)]:
+            rows.append(["Ms Jane Smith", "P1", "Fares", "Travel", "Fares", "Fixture",
+                         "2023-01-01", period, period, start, amount, LicenceTests.URL])
+        result = export(rows)
+        person = result["people"]["P1"]
+        self.assertEqual(person["by_year"], [[2024, 400], [2025, 680]])
+        # Round the raw line sum once, rather than summing rounded quarters.
+        self.assertEqual(person["by_financial_year"], [["2023-24", 99], ["2024-25", 581], ["2025-26", 400]])
+        self.assertEqual(result["meta"]["reporting_periods"], [row[8] for row in rows])
+
+    def test_period_inventory_does_not_fill_a_missing_quarter(self):
+        rows = [LicenceTests.ROW.copy(), LicenceTests.ROW.copy()]
+        rows[0][8:10] = ["2025Q04", "2025-10-01"]
+        result = export(rows)
+        self.assertEqual(result["meta"]["reporting_periods"], ["2025Q04", "2026Q02"])
+
 if __name__ == "__main__":
     unittest.main()
