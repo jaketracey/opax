@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Keyboard } from 'react-native';
 import { catalogs } from '../src/api/runtime';
 import { InlineError, Skeleton } from '../src/design/primitives';
 import { ResultsScreen } from '../src/features/search/ResultsScreen';
@@ -118,4 +119,30 @@ test('a new arrival on a retained results screen applies its query, scope and fi
     view.update(draw());
   });
   expect(view.root.findByType(ResultsView).props.scope).toBe('people');
+});
+
+test('submitting the pushed results field dismisses the iOS keyboard', async () => {
+  mockParams = { kind: 'people', q: 'housing' };
+  jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue(ready());
+  let bar!: Record<string, any>;
+  await act(async () => {
+    TestRenderer.create(
+      withNavigationOptions(<ResultsScreen />, (options) => {
+        if (options.headerSearchBarOptions)
+          bar = options.headerSearchBarOptions;
+      }),
+    );
+  });
+  const nativeBar = { setText: jest.fn(), blur: jest.fn() };
+  bar.ref.current = nativeBar;
+  const dismiss = jest.spyOn(Keyboard, 'dismiss');
+  try {
+    await act(async () =>
+      bar.onSearchButtonPress({ nativeEvent: { text: 'education' } }),
+    );
+    expect(nativeBar.blur).toHaveBeenCalled();
+    expect(dismiss).toHaveBeenCalled();
+  } finally {
+    dismiss.mockRestore();
+  }
 });

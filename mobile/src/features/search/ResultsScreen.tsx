@@ -1,7 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
-import { Platform, ScrollView, type TextInput } from 'react-native';
+import { Keyboard, Platform, ScrollView, type TextInput } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
 import { formatCount } from '../../design/format';
 import {
@@ -78,6 +78,10 @@ export function ResultsScreen() {
     setQ(words);
     setText(words);
     (search.ref as RefObject<SearchBarCommands | null>).current?.setText(words);
+    if (Platform.OS === 'ios') {
+      (search.ref as RefObject<SearchBarCommands | null>).current?.blur();
+      Keyboard.dismiss();
+    }
     scroll.current?.scrollTo({ y: 0, animated: false });
   }
   const search = useListSearchBar({

@@ -127,6 +127,37 @@ async function mount() {
   return r;
 }
 
+test.each(['search-key', 'speech-suggestion'])(
+  'submitting from %s dismisses the iOS keyboard and keeps the results',
+  async (action) => {
+    jest.mocked(recordSearch.search).mockResolvedValue(empty() as never);
+    const r = await mount();
+    const nativeBar = {
+      setText: jest.fn(),
+      blur: jest.fn(),
+      cancelSearch: jest.fn(),
+    };
+    bar().ref.current = nativeBar;
+    const dismiss = jest.spyOn(Keyboard, 'dismiss');
+    try {
+      await type('housing');
+      if (action === 'search-key') await submit('housing');
+      else
+        await act(async () =>
+          r.root.findByType(SearchSuggestions).props.onSearchSpeeches(),
+        );
+      expect(nativeBar.blur).toHaveBeenCalled();
+      expect(dismiss).toHaveBeenCalled();
+      expect(nativeBar.cancelSearch).not.toHaveBeenCalled();
+      expect(r.root.findByType(ScopeBar).props.value).toBe(
+        action === 'search-key' ? 'all' : 'speeches',
+      );
+    } finally {
+      dismiss.mockRestore();
+    }
+  },
+);
+
 test.each(['typing', 'results'])(
   'selecting Search from %s restores Browse with a fresh native scroll view and no keyboard',
   async (phase) => {
