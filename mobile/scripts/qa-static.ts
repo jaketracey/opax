@@ -132,9 +132,43 @@ assert(
   ),
 );
 assert(!JSON.stringify(e2e).includes('opax.com.au'));
+// Analytics: iOS production sends through the opax.com.au proxy; e2e and
+// development (without OPAX_ANALYTICS=1) carry no analytics configuration.
+assert.deepEqual(release.extra.analytics, {
+  host: 'https://opax.com.au/ingest',
+  projectToken: 'phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr',
+  environment: 'production',
+});
+assert.equal(e2e.extra.analytics, undefined, 'E2E builds send no analytics');
+if (process.env.OPAX_ANALYTICS !== '1')
+  assert.equal(
+    config('development').extra.analytics,
+    undefined,
+    'Development builds send analytics only with OPAX_ANALYTICS=1',
+  );
+assert.deepEqual(
+  release.ios.privacyManifests.NSPrivacyCollectedDataTypes.filter(
+    (entry: { NSPrivacyCollectedDataTypePurposes: string[] }) =>
+      entry.NSPrivacyCollectedDataTypePurposes.includes(
+        'NSPrivacyCollectedDataTypePurposeAnalytics',
+      ),
+  ).map(
+    (entry: {
+      NSPrivacyCollectedDataType: string;
+      NSPrivacyCollectedDataTypeTracking: boolean;
+    }) => [entry.NSPrivacyCollectedDataType, entry.NSPrivacyCollectedDataTypeTracking],
+  ),
+  [
+    ['NSPrivacyCollectedDataTypeProductInteraction', false],
+    ['NSPrivacyCollectedDataTypeDeviceID', false],
+  ],
+  'Analytics declares Product Interaction and Device ID, never tracking',
+);
 for (const app of [release, e2e]) {
   assert.equal(app.name, 'OPAX');
   assert.equal(app.version, '1.1.0');
+  // The API User-Agent and analytics report the store version.
+  assert.equal(app.extra.appVersion, app.version);
   assert.equal(app.ios.bundleIdentifier, 'au.com.opax.app');
   assert.equal(app.ios.buildNumber, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(
@@ -173,9 +207,22 @@ for (const version of Object.values({
     'All direct dependencies must be pinned',
   );
 const lock = JSON.parse(readFileSync('package-lock.json', 'utf8'));
+// PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): the JS SDK
+// and its two JS dependencies, never replay, the native plugin or another SDK.
+assert.deepEqual(
+  Object.keys(lock.packages)
+    .filter((path) => /posthog/i.test(path))
+    .sort(),
+  [
+    'node_modules/@posthog/core',
+    'node_modules/@posthog/types',
+    'node_modules/posthog-react-native',
+  ],
+  'Only the reviewed PostHog JS SDK',
+);
 for (const path of Object.keys(lock.packages))
   assert(
-    !/node_modules\/(?:@sentry\/|@amplitude\/|@segment\/|@react-native-firebase\/|firebase(?:\/|$)|posthog|mixpanel|appcenter|react-native-appsflyer|react-native-adjust|expo-notifications|expo-tracking-transparency|expo-insights|@bugsnag\/|bugsnag|@datadog\/|datadog|react-native-fbsdk|@facebook\/)/i.test(
+    !/node_modules\/(?:@sentry\/|@amplitude\/|@segment\/|@react-native-firebase\/|firebase(?:\/|$)|mixpanel|appcenter|react-native-appsflyer|react-native-adjust|expo-notifications|expo-tracking-transparency|expo-insights|@bugsnag\/|bugsnag|@datadog\/|datadog|react-native-fbsdk|@facebook\/)/i.test(
       path,
     ),
     `Forbidden SDK: ${path}`,

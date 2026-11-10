@@ -932,6 +932,20 @@ class BundleAttackTests(unittest.TestCase):
                     verify.framework_allowlist(app)
                 plant.rmdir()
 
+    def test_reviewed_posthog_sdk_strings_only(self):
+        # posthog-react-native's bare default hosts, its docs links and its bot
+        # list pass; any PostHog endpoint or other host is still a plant.
+        for entry in (b"https://us.i.posthog.com", b"https://eu-assets.i.posthog.com",
+                      b"Learn more at https://posthog.com/docs/feature-flags/best-practices", b"sentryuptimebot",
+                      b"PostHog", b"posthog-react-native"):
+            with self.subTest(entry=entry):
+                self.assertFalse(verify.has_analytics(entry))
+        for entry in (b"https://us.i.posthog.com/i/v0/e/", b"https://app.posthog.com", b"https://posthog.com/capture",
+                      b"see https://posthog.com/docs/x and https://us.posthog.com/e", b"https://example.posthog.com"):
+            with self.subTest(entry=entry):
+                self.assertTrue(verify.has_analytics(entry))
+        self.assertEqual(verify.ANALYTICS_CONFIG["host"], "https://opax.com.au/ingest")
+
     def test_analytics_check_reads_hermes_entries_and_still_refuses_sdk_and_host_plants(self):
         storage = b"ignoreAllLogsENTRY_EXIT"
         safe = hermes_bundle(storage, [packed(storage, entry) for entry in (b"ignoreAllLogs", b"ENTRY_EXIT")])
@@ -963,12 +977,17 @@ class ProductionVoiceTests(unittest.TestCase):
                 "OPAXVoiceAllowedRoutes": verify.VOICE_POLICY["routes"]}
 
     def manifest(self):
-        return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": [
-            {"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataType" + name,
-             "NSPrivacyCollectedDataTypeLinked": linked, "NSPrivacyCollectedDataTypeTracking": False,
-             "NSPrivacyCollectedDataTypePurposes": ["NSPrivacyCollectedDataTypePurposeAppFunctionality"]}
-            for linked, names in ((True, verify.VOICE_POLICY["linkedDataTypes"]),
-                                  (False, verify.VOICE_POLICY["unlinkedDataTypes"])) for name in names],
+        # The voice label's linked App Functionality types; Product Interaction
+        # also carries Analytics, and analytics adds an unlinked Device ID.
+        function, analytics = "NSPrivacyCollectedDataTypePurposeAppFunctionality", "NSPrivacyCollectedDataTypePurposeAnalytics"
+        rows = [{"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataType" + name,
+                 "NSPrivacyCollectedDataTypeLinked": True, "NSPrivacyCollectedDataTypeTracking": False,
+                 "NSPrivacyCollectedDataTypePurposes": [function, analytics] if name == "ProductInteraction" else [function]}
+                for name in verify.VOICE_POLICY["linkedDataTypes"]]
+        rows.append({"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeDeviceID",
+                     "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
+                     "NSPrivacyCollectedDataTypePurposes": [analytics]})
+        return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": rows,
             "NSPrivacyAccessedAPITypes": [{"NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
                                          "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]}]}
 
@@ -1057,6 +1076,24 @@ class ProductionVoiceTests(unittest.TestCase):
                            ("NSPrivacyCollectedDataType", "NSPrivacyCollectedDataTypePreciseLocation")):
             changed = self.manifest(); changed["NSPrivacyCollectedDataTypes"][0][key] = value
             with self.subTest(key=key), self.assertRaises(ReleaseError): verify.verify_voice_privacy(changed)
+
+    def test_analytics_types_alone_without_voice(self):
+        analytics = "NSPrivacyCollectedDataTypePurposeAnalytics"
+        def manifest(**change):
+            return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": [
+                {"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataType" + name,
+                 "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
+                 "NSPrivacyCollectedDataTypePurposes": [analytics], **change}
+                for name in ("ProductInteraction", "DeviceID")]}
+        verify.verify_collected_types(manifest(), False)
+        for change in ({"NSPrivacyCollectedDataTypeLinked": True}, {"NSPrivacyCollectedDataTypeTracking": True},
+                       {"NSPrivacyCollectedDataTypePurposes": [analytics, "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"]}):
+            with self.subTest(change=change), self.assertRaises(ReleaseError):
+                verify.verify_collected_types(manifest(**change), False)
+        with self.assertRaises(ReleaseError):
+            verify.verify_collected_types({"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": []}, False)
+        with self.assertRaises(ReleaseError):
+            verify.verify_collected_types(manifest(), True)
 
     def test_voice_routes_required_as_whole_hermes_entries_in_on_mode(self):
         parts = [b"./talk.tsx", b"./account/index.tsx", b"./account/sign-in.tsx", b"./account/delete.tsx",

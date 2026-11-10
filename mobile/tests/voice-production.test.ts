@@ -30,10 +30,20 @@ test.each(['0', '1'])(
     expect(config.ios.infoPlist.OPAXVoiceAllowedRoutes).toEqual(
       enabled ? policy.routes : undefined,
     );
-    // ios/app declares no tracking and no collected data for on-device location.
+    // ios/app declares no tracking and no collected data for on-device
+    // location. Anonymous analytics (docs/ANALYTICS.md) declares product
+    // interaction and a random install ID, unlinked, for Analytics only.
+    const analyticsTypes = ['ProductInteraction', 'DeviceID'].map((type) => ({
+      NSPrivacyCollectedDataType: `NSPrivacyCollectedDataType${type}`,
+      NSPrivacyCollectedDataTypeLinked: false,
+      NSPrivacyCollectedDataTypeTracking: false,
+      NSPrivacyCollectedDataTypePurposes: [
+        'NSPrivacyCollectedDataTypePurposeAnalytics',
+      ],
+    }));
     const base = {
       NSPrivacyTracking: false,
-      NSPrivacyCollectedDataTypes: [],
+      NSPrivacyCollectedDataTypes: analyticsTypes,
       NSPrivacyAccessedAPITypes:
         config.ios.privacyManifests.NSPrivacyAccessedAPITypes,
     };

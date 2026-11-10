@@ -75,6 +75,56 @@ activity are not instrumented.
 Capture is enabled only on `opax.com.au` and `www.opax.com.au`. Local development
 and workers.dev previews do not send production analytics.
 
+## iOS and Android app
+
+From 1.1.1 the iOS app sends anonymous product analytics to the same PostHog
+project, through the same `https://opax.com.au/ingest` proxy (native requests
+carry no `Origin`, which the proxy already accepts). The SDK is
+`posthog-react-native`, pinned to an exact version with no native modules.
+The token and host live in build config (`mobile/app.config.ts`,
+`extra.analytics`), never in `src/`. Only iOS production builds carry that
+config; e2e builds never do, and a development build does only when made with
+`OPAX_ANALYTICS=1`. Android stays off until its Google Play Data safety answers
+include analytics.
+
+`mobile/src/analytics/events.ts` is the app's boundary, the counterpart of
+`analytics/events.js`. `cleanEvent` checks what app code asks to send; the
+SDK's `before_send` runs `scrubEvent`, which drops every event not listed below
+and rebuilds each payload from fixed lists, so SDK enrichment (deep-link URLs,
+screen sizes, locale, device name, flags, person and super properties) never
+leaves the phone. Every event carries `platform` (`ios`), `app` (`opax`),
+`app_version`, `app_build` and `environment`, with `$process_person_profile`
+false and `$geoip_disable` true.
+
+| Event | Properties |
+| --- | --- |
+| `$screen` | `$screen_name`: the route template (`/person/[slug]`), never a parameter value |
+| `Application Installed`, `Application Opened`, `Application Became Active`, `Application Backgrounded` | none beyond the common set |
+| `Application Updated` | `previous_version`, `previous_build` |
+| `opax_ask_started` | `from_section`, `follow_up` |
+| `opax_ask_completed` | `from_section`, `follow_up`, `duration_ms`, `source_count`, `has_answer` |
+| `opax_ask_failed` | `from_section`, `follow_up`, `duration_ms`, `cancelled` |
+| `opax_search_started` | `scope`, `page`, `filter_count` |
+| `opax_search_completed` | `scope`, `page`, `result_count`, `total_count`, `duration_ms` |
+| `opax_search_failed` | `scope`, `page`, `duration_ms` |
+| `opax_source_open` | `from_section`, `destination` (`app` or `browser`) |
+| `opax_chip` | `chip_kind` (`ask`), `placement` (`ask` or `today`) |
+| `opax_voice_card` | `action` (`open`), `account` (`signed_in` or `signed_out`) |
+
+`from_section` is the first segment of the current route (`today` for the
+home screen); anything else becomes `other`. `scope` is one of the fixed search
+scopes. Counts are integers from 0 to 1,000,000 and durations are milliseconds
+up to an hour; any other value is dropped. The app never calls identify.
+Person profiles, session replay, touch and text autocapture, exception capture, surveys and feature flags
+are off, and GeoIP is disabled. The install ID is a random UUID made by the SDK and kept in the
+app's documents folder; it is not the IDFV or IDFA and is not linked to an
+account. `tests/analytics-sdk.test.ts` runs the real SDK against a mocked
+network and proves a raw question cannot reach any request.
+
+The privacy manifest declares Product Interaction and Device ID, not linked,
+not used for tracking, purpose Analytics; `NSPrivacyTracking` stays false. The
+App Store privacy label is in `IOS-STORE.md` section 4.
+
 ## Build, test, deploy
 
 From `portal/`:

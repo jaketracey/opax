@@ -1,6 +1,7 @@
 import { useMemo, useState, useSyncExternalStore } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
+import { track } from '../../analytics';
 import { haptic } from '../../design/haptics';
 import { requestFocus } from '../../design/keyboard';
 import { InsetGroup, SectionHeader } from '../../design/layout';
@@ -135,6 +136,7 @@ export function AskIdle({
                 )
                   askSession.options({ ...defaultOptions });
                 seatFill = null;
+                track('opax_chip', { chip_kind: 'ask', placement: 'ask' });
                 onAsk(question);
               }}
               menu={menu(question)}

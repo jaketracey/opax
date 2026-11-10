@@ -21,6 +21,7 @@ import {
 } from './store';
 import { syncSubmittedChat } from './sync';
 import { accountSnapshot } from '../account/store';
+import { currentSection, track } from '../../analytics';
 export const askSession = new AskController({
   post: (...args) => client.askPost(...args),
   read: chatsSnapshot,
@@ -29,6 +30,8 @@ export const askSession = new AskController({
   id: () =>
     `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`,
   now: Date.now,
+  measure: (event, properties) => track(event, properties),
+  section: currentSection,
   sync: async (id) => {
     const c = chatsSnapshot().chats.find((c) => c.id === id);
     if (c) await syncSubmittedChat(c, accountSnapshot().status);

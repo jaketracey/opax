@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import { fromWebPath } from './paths';
 import { searchRouteFromWebPath } from '../routes/search';
 import * as WebBrowser from 'expo-web-browser';
+import { currentSection, track } from '../../analytics';
 import { hasSourcePreview, isE2E, webOrigin } from '../../design/environment';
 import { dark, light } from '../../design/palette';
 import {
@@ -327,7 +328,12 @@ export async function openSource(
     Alert.alert("Couldn't open the original", 'Check your connection.');
     return;
   }
-  if (openNativePage(checked)) return;
+  const section = currentSection();
+  if (openNativePage(checked)) {
+    track('opax_source_open', { from_section: section, destination: 'app' });
+    return;
+  }
+  track('opax_source_open', { from_section: section, destination: 'browser' });
   recordExternalURL(checked);
   if (isE2E) {
     if (hasSourcePreview) presentSourceDestination({ url: checked, citation });
