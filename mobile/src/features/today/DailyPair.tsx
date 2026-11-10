@@ -1,4 +1,4 @@
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { Card } from '../../design/card';
 import { Icon } from '../../design/icon';
@@ -78,8 +78,8 @@ function Kicker({
 
 /**
  * From the archive (today.md 5.10): the day's photograph at 16:10, the year,
- * the caption clamped to three lines (the full caption is a tap away in the
- * Time machine) and "Photo: {credit}", never clamped. One element; it opens
+ * the caption up to three lines, expanding at accessibility text sizes,
+ * and "Photo: {credit}", never clamped. One element; it opens
  * the Time machine on that year with that photograph first.
  */
 export function ArchiveCard({
@@ -89,6 +89,7 @@ export function ArchiveCard({
   year: number;
   picture: YearPicture;
 }) {
+  const large = useAccessibilitySize();
   return (
     <Card
       testID="today-archive"
@@ -120,7 +121,11 @@ export function ArchiveCard({
           From the archive
         </Kicker>
         <Text variant="tileFigure">{String(year)}</Text>
-        <Text wordSafe variant="secondary" numberOfLines={3}>
+        <Text
+          wordSafe
+          variant="secondary"
+          numberOfLines={large ? undefined : 3}
+        >
           {picture.caption}
         </Text>
         {picture.credit ? (
@@ -163,10 +168,9 @@ export function QuestionCard({ question }: { question: FrontPageQuestion }) {
 }
 
 /**
- * The daily pair: From the archive and Today's question, side by side and
- * stretched to the taller card; one per line at accessibility sizes or
- * below 375 pt. A card whose data is missing is absent and the other takes
- * the full width; with both absent, nothing is drawn.
+ * The daily pair: From the archive and Today's question each have their
+ * own full-width row, with natural heights at every text size. A card
+ * whose data is missing is absent; with both absent, nothing is drawn.
  */
 export function DailyPair({
   today,
@@ -175,9 +179,6 @@ export function DailyPair({
   today: SydneyDate;
   attempt: number;
 }) {
-  const large = useAccessibilitySize();
-  const { width } = useWindowDimensions();
-  const stacked = large || width < 375;
   const read = useTodayRead(
     'pictures',
     // The manifest is optional: a failed read collapses the archive card.
@@ -195,10 +196,7 @@ export function DailyPair({
   const question = dailyQuestion(today);
   if (!loading && !archive && !question) return null;
   return (
-    <View
-      testID="today-pair"
-      style={[styles.pair, stacked ? null : styles.row]}
-    >
+    <View testID="today-pair" style={styles.pair}>
       {loading ? (
         <View style={[styles.cell, styles.loading]}>
           <Skeleton
@@ -223,9 +221,8 @@ export function DailyPair({
 }
 
 const styles = StyleSheet.create({
-  pair: { gap: 12 },
-  row: { flexDirection: 'row', alignItems: 'flex-start' },
-  cell: { flex: 1 },
+  pair: { gap: 12, alignItems: 'stretch' },
+  cell: { alignSelf: 'stretch' },
   loading: { minHeight: 200 },
   card: { flexGrow: 0, flexShrink: 1 },
   words: { padding: 12, gap: rhythm.line },
