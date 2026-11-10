@@ -9,7 +9,12 @@ import {
   type LabelSlot,
 } from '../src/features/money/map/labels';
 import { layoutFor } from '../src/features/money/map/layout';
-import { buildModel, otherEnd, PARTIES } from '../src/features/money/map/model';
+import {
+  buildModel,
+  otherEnd,
+  PARTIES,
+  PUBLIC_MONEY,
+} from '../src/features/money/map/model';
 import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
 import { pinned } from './pinned';
 
@@ -31,9 +36,12 @@ const namedNodes = (slots: LabelSlot[]) =>
 describe('labelSlots without a focus', () => {
   const slots = labelSlots(model, layout.centres, at, null);
 
-  test('one cluster slot per non-party cluster, hung from the top of its blob', () => {
+  test('one cluster slot per industry cluster, hung from the top of its blob', () => {
     const clusters = ofKind(slots, 'cluster');
-    const expected = model.clusters.filter((c) => c.key !== PARTIES);
+    // Parties are named one by one, and so are the public-money hubs.
+    const expected = model.clusters.filter(
+      (c) => c.key !== PARTIES && c.key !== PUBLIC_MONEY,
+    );
     expect(clusters.map((s) => s.key)).toEqual(
       expected.map((c) => `cluster:${c.key}`),
     );
@@ -45,6 +53,42 @@ describe('labelSlots without a focus', () => {
       expect(slot.node).toBeUndefined();
     }
     expect(clusters.map((s) => s.text)).toEqual(expected.map((c) => c.label));
+  });
+
+  test('names every public-money hub, before the parties and at every zoom', () => {
+    const hubs = ofKind(slots, 'hub');
+    // Largest register first: the hubs share one spot, and the larger keeps the name.
+    const expected = model.nodes
+      .filter((n) => n.kind === 'hub')
+      .sort((a, b) => b.amount - a.amount);
+    expect(expected.length).toBeGreaterThan(0);
+    expect(hubs.map((s) => s.node)).toEqual(expected.map((n) => n.index));
+    for (const slot of hubs) {
+      const node = model.nodes[slot.node!]!;
+      expect(slot).toEqual({
+        key: `hub:${node.id}`,
+        kind: 'hub',
+        text: node.label,
+        ink: node.ink,
+        x: at(node.index).x,
+        y: at(node.index).y,
+        r: node.radius,
+        node: node.index,
+      });
+    }
+    // A hub is never also a plain name.
+    for (const slot of ofKind(slots, 'name'))
+      expect(model.nodes[slot.node!]!.kind).not.toBe('hub');
+    // The hub wins its place over a party or a cluster name at the same spot.
+    const hub = hubs[0]!;
+    const rival: LabelSlot = { ...hub, key: 'cluster:x', kind: 'cluster' };
+    const shown = visibleLabels(
+      [rival, hub],
+      { tx: -hub.x + 200, ty: -hub.y + 300, k: 1 },
+      { width: 400, height: 800 },
+      { width: 120, height: 22 },
+    );
+    expect(shown).toEqual({ [hub.key]: 1 });
   });
 
   test('names the largest parties, up to PARTY_LABELS', () => {
@@ -280,4 +324,19 @@ test('visibleLabels hides a name that would hang under the panel', () => {
   expect(
     visibleLabels(slots, camera, { width: 400, height: 800, insets: { bottom: 200 } }, box),
   ).toEqual({ a: 1 });
+});
+
+test('visibleLabels counts a long name in lines, so a wrapped name clears the room it takes', () => {
+  const camera = { tx: 0, ty: 0, k: 1 };
+  const viewport = { width: 400, height: 800 };
+  const box = { width: 120, height: 22 };
+  const short = { key: 'short', kind: 'party' as const, text: 'Labor', ink: '#000', x: 100, y: 100, r: 2 };
+  const below = { key: 'below', kind: 'name' as const, text: 'Rio', ink: '#000', x: 100, y: 130, r: 2 };
+  // Two one-line names 30 points apart both fit.
+  expect(visibleLabels([short, below], camera, viewport, box)).toEqual({ short: 1, below: 1 });
+  // A two-line name above takes the room the second needs.
+  const long = { ...short, key: 'long', text: 'Commonwealth contracts' };
+  expect(visibleLabels([long, below], camera, viewport, box)).toEqual({ long: 1 });
+  // Further down, both are back.
+  expect(visibleLabels([long, { ...below, y: 160 }], camera, viewport, box)).toEqual({ long: 1, below: 1 });
 });

@@ -63,6 +63,7 @@ import type { MapModel } from './model';
 import { LABEL_HEIGHT, LABEL_WIDTH, MoneyMapLabels } from './MoneyMapLabels';
 import { paintEdges, paintFocus, paintNodes } from './scene';
 import { recordPicture } from './skia-painter';
+import { TapRouter } from './taps';
 
 /**
  * What the chrome asks the camera to do, as state (a new `seq` runs it):
@@ -416,6 +417,30 @@ export function MoneyMap({
     },
     [current, hit, model, onFocus],
   );
+  // Taps are decided on JS (see TapRouter): a second tap inside the window
+  // zooms about the point; a lone tap picks once the window has passed.
+  const zoomAt = useCallback(
+    (sx: number, sy: number) =>
+      animateTo(
+        zoomAbout(
+          current(),
+          ZOOM_STEP,
+          sx,
+          sy,
+          fitK.get() * ZOOM_OUT,
+          fitK.get() * ZOOM_IN,
+        ),
+      ),
+    [animateTo, current, fitK],
+  );
+  const taps = useMemo(() => new TapRouter(pick, zoomAt), [pick, zoomAt]);
+  useEffect(() => () => taps.cancel(), [taps]);
+  const onTap = useCallback(
+    (sx: number, sy: number) => {
+      taps.tap(sx, sy);
+    },
+    [taps],
+  );
 
   // ---- gestures (UI thread) ---------------------------------------------
   // One state for pan and pinch together: the camera at the last rebase,
@@ -562,49 +587,12 @@ export function MoneyMap({
     .onEnd(() => {
       finish();
     });
-  const doubleTap = Gesture.Tap()
-    .numberOfTaps(2)
-    .maxDuration(260)
-    .onEnd((e) => {
-      const kMin = fitK.get() * ZOOM_OUT,
-        kMax = fitK.get() * ZOOM_IN;
-      const target = clampCamera(
-        zoomAbout(
-          { tx: tx.get(), ty: ty.get(), k: k.get() },
-          ZOOM_STEP,
-          e.x,
-          e.y,
-          kMin,
-          kMax,
-        ),
-        boundsSV.get(),
-        viewportSV.get(),
-        kMin,
-        kMax,
-      );
-      if (reduced) {
-        tx.set(target.tx);
-        ty.set(target.ty);
-        k.set(target.k);
-      } else {
-        const config = {
-          duration: FLY_MS,
-          easing: Easing.bezier(...motion.easing.standard),
-        };
-        tx.set(withTiming(target.tx, config));
-        ty.set(withTiming(target.ty, config));
-        k.set(withTiming(target.k, config));
-      }
-    });
   const tap = Gesture.Tap()
     .maxDuration(260)
     .onEnd((e) => {
-      runOnJS(pick)(e.x, e.y);
+      runOnJS(onTap)(e.x, e.y);
     });
-  const composed = Gesture.Race(
-    Gesture.Exclusive(doubleTap, tap),
-    Gesture.Simultaneous(pan, pinch),
-  );
+  const composed = Gesture.Race(tap, Gesture.Simultaneous(pan, pinch));
 
   // ---- derived drawing values -------------------------------------------
   const transform = useDerivedValue(() => [
