@@ -18,6 +18,9 @@
 -keep class * implements expo.modules.kotlin.views.ComposeProps { *; }
 -keep class expo.modules.ui.** { *; }
 
+# Expo GL's EXGLJniApi.cpp looks up this non-native callback with GetMethodID.
+-keepclassmembers class expo.modules.gl.GLContext { public void flush(); }
+
 # Skia and Reanimated/worklets register Java methods and classes from JNI.
 -keep class com.shopify.reactnative.skia.** { *; }
 -keep class com.swmansion.reanimated.** { *; }

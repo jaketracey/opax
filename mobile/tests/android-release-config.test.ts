@@ -113,6 +113,7 @@ test('keep rules cover native entry points without disabling R8 globally', () =>
     'expo.modules.kotlin.records.Record',
     'expo.modules.kotlin.views.ComposeProps',
     'expo.modules.ui.**',
+    'expo.modules.gl.GLContext { public void flush(); }',
     'com.shopify.reactnative.skia.**',
     'com.swmansion.reanimated.**',
     'com.swmansion.worklets.**',
