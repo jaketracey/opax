@@ -787,6 +787,15 @@ describe('the bill page', () => {
       )
       .map((node) => node.props.testID);
     expect(marked).toEqual([`bill-date-${last}-new`]);
+    // The row is one accessible element: its label must carry the dot's "New".
+    const spoken = (index: number) =>
+      root.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === `bill-date-${index}`,
+      ).props.accessibilityLabel as string;
+    expect(spoken(last)).toMatch(/\. New$/);
+    if (last > 0) expect(spoken(0)).not.toMatch(/New/);
   });
 
   const relatedLine = (root: ReactTestInstance) =>

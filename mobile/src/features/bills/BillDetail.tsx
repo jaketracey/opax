@@ -1260,7 +1260,8 @@ function DateRows({
         <View
           key={`${entry.from}-${entry.to}-${index}`}
           accessible
-          accessibilityLabel={`${dateSpan(entry.from, entry.to, 'long')}: ${entry.stages.map(stageText).join('; ')}`}
+          // The row's label replaces its children's: the dot's "New" is said here.
+          accessibilityLabel={`${dateSpan(entry.from, entry.to, 'long')}: ${entry.stages.map(stageText).join('; ')}${entryHas(entry, freshStages) ? '. New' : ''}`}
           testID={`bill-date-${index}`}
           style={styles.date}
         >
