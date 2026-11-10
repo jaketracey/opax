@@ -57,6 +57,50 @@ def aec_surname(value: str) -> str:
     return _CAPS_RUN.sub(lambda m: m.group(0).title(), str(value or "").strip())
 
 
+# Courtesy titles OpenAustralia prints before a few names ('Mr Anthony Stephen Burke', 'the Hon. ...').
+_TITLES = re.compile(r"^(?:the\s+)?(?:(?:mr|ms|mrs|dr|hon|rt|sir)\.?\s+)+", re.I)
+
+
+def oa_name_key(name: str) -> str:
+    return fold(_TITLES.sub("", str(name or "").strip()))
+
+
+def first_last(name: str) -> tuple:
+    tokens = oa_name_key(name).split()
+    return (tokens[0], tokens[-1]) if tokens else ()
+
+
+def oa_person_index(people_rows) -> dict:
+    """OpenAustralia people.csv rows [(person count, APH id, [names])] as name-key lookups.
+
+    people.csv holds one row per person: column three is the name OpenAustralia prints and the
+    columns after the birthday are alternate names ('580,00ATG,Bill Richard Shorten,,William Richard
+    Shorten,William Shorten'). The OPAX person id is 10000 plus the person count (OpenAustralia
+    lib/person.rb), the id parliamentarians.json, votes and the members table use."""
+    exact, loose, named = defaultdict(set), defaultdict(set), {}
+    for count, _aph_id, names in people_rows:
+        named[int(count)] = [_TITLES.sub("", name).strip() for name in names if oa_name_key(name)]
+        for name in names:
+            if oa_name_key(name):
+                exact[oa_name_key(name)].add(int(count))
+            if len(first_last(name)) == 2:
+                loose[first_last(name)].add(int(count))
+    return {"exact": exact, "first_last": loose, "names": named}
+
+
+def oa_person_count(index: dict, name: str):
+    """The one OpenAustralia person count a representatives.csv name belongs to, or None.
+
+    An exact name or alternate name decides; two people.csv rows with the same name (there are two
+    'Robert James Brown' rows) decide nothing. Only when no row has the exact name does a unique
+    first-and-last-name match among all people.csv names count ('Jason Wood' for 'Jason Peter Wood')."""
+    exact = index["exact"].get(oa_name_key(name))
+    if exact:
+        return next(iter(exact)) if len(exact) == 1 else None
+    loose = index["first_last"].get(first_last(name), set())
+    return next(iter(loose)) if len(loose) == 1 else None
+
+
 def csv_rows(raw: bytes, header: str) -> list[dict]:
     lines = raw.decode("utf-8-sig").splitlines()
     start = next((i for i, line in enumerate(lines) if line.startswith(header)), None)
@@ -71,6 +115,7 @@ class Builder:
         self.cache.mkdir(parents=True, exist_ok=True)
         self.as_of = as_of
         self.refresh = refresh
+        self.oa_people_digest = None  # Tests only; None means the digest scripts/export_profile_links.py pins.
         self.rows = {name: {} for name in TABLES}
         self.coverage = {"notes": ["Federal results: 2019, 2022, 2025 and indexed intervening by-elections.",
                                    "State election results require separate imports; empty timelines mean missing coverage.",
@@ -354,26 +399,19 @@ class Builder:
                                           "indicators": {k: v for k, v in d.items() if k not in ("id", "electorate_name", "state", "year", "source", "created_at")},
                                           "note": "2021 Census geography; values have not been redistributed to current boundaries.", "sources": [dsid]})
 
-    def person(self, name, source_key, sid, *, url=None, jurisdiction="federal"):
-        # Exact full-name or first/last match, only when unambiguous.
+    def person(self, name, source_key, sid, *, url=None, jurisdiction="federal", oa_count=None, first_last_ok=True):
+        """The person a source name belongs to: the OPAX person by OpenAustralia id, else an
+        unambiguous name match, else a standalone person minted from `source_key`.
+
+        `oa_count` is the name's OpenAustralia people.csv person count. When the members table holds
+        that person (OPAX pid 10000 + count) the service record joins them whatever names each source
+        prints: 'William Richard Shorten' (the service record) is 10580 'Bill Shorten' (the members
+        table). The name rule never joins a member whose OpenAustralia id is a different person's,
+        and `first_last_ok=False` (two different people share the name's first and last name, as
+        'Anthony Charles Smith' and 'Anthony David Hawthorn Smith' do) leaves only exact names."""
         name = re.sub(r"^(Mr|Ms|Mrs|Dr|Hon)\.?\s+", "", name).strip()
-        reviewed_aliases = {"Anthony Stephen Burke": "10081", "Alexander George Hawke": "10290", "Antonio Zappia": "10695", "Christopher Eyles Bowen": "10060", "Robert Carl Katter": "10352"}
-        if jurisdiction == "federal" and name in reviewed_aliases:
-            pid = stable_id("person", "opax:" + reviewed_aliases[name])
-            if pid in self.rows["people"]:
-                p = self.rows["people"][pid]
-                if name not in p["aliases"]:
-                    p["aliases"].append(name)
-                if sid not in p["sources"]:
-                    p["sources"].append(sid)
-                return pid
-        tokens = fold(name).split()
-        def same(p):
-            theirs = fold(p["name"]).split()
-            return fold(p["name"]) == fold(name) or (len(theirs) >= 2 and len(tokens) >= 2 and (theirs[0], theirs[-1]) == (tokens[0], tokens[-1]))
-        matches = [p for p in self.rows["people"].values() if p.get("jurisdiction") == jurisdiction and same(p)]
-        if len(matches) == 1:
-            p = matches[0]
+
+        def join(p):
             if name != p["name"] and name not in p["aliases"]:
                 p["aliases"].append(name)
             if sid not in p["sources"]:
@@ -381,6 +419,24 @@ class Builder:
             if url:
                 p["source_url"] = url
             return p["person_id"]
+
+        oa_pid = str(10000 + int(oa_count)) if oa_count is not None else None
+        if oa_pid and jurisdiction == "federal":
+            known = self.rows["people"].get(stable_id("person", "opax:" + oa_pid))
+            if known and str(known.get("legacy_person_id")) == oa_pid:
+                return join(known)
+        tokens = fold(name).split()
+        def same(p):
+            theirs = fold(p["name"]).split()
+            if fold(p["name"]) == fold(name):
+                return True
+            return first_last_ok and len(theirs) >= 2 and len(tokens) >= 2 and (theirs[0], theirs[-1]) == (tokens[0], tokens[-1])
+        def other_person(p):
+            legacy = str(p.get("legacy_person_id") or "")
+            return bool(oa_pid) and legacy.isdigit() and legacy != oa_pid
+        matches = [p for p in self.rows["people"].values() if p.get("jurisdiction") == jurisdiction and same(p) and not other_person(p)]
+        if len(matches) == 1:
+            return join(matches[0])
         pid = stable_id("person", source_key)
         self.put("people", {"person_id": pid, "name": name, "jurisdiction": jurisdiction, "aliases": [], "source_url": url, "sources": [sid]})
         return pid
@@ -389,6 +445,19 @@ class Builder:
         url = "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv"
         raw, sid = self.fetch(url, "OpenAustralia parliamentary service records")
         rows = csv_rows(raw, "member count,")
+        # representatives.csv names a person but leaves 'person count' empty, so the person id comes
+        # from people.csv, pinned to the commit and digest scripts/export_profile_links.py verifies.
+        from scripts.export_profile_links import SOURCE_SHA256 as OA_PEOPLE_SHA256, SOURCE_URL as OA_PEOPLE_URL
+        from scripts.oa_people_ids import rows as oa_people_rows
+        people_raw, people_sid = self.fetch(OA_PEOPLE_URL, "OpenAustralia people register (person ids)")
+        if hashlib.sha256(people_raw).hexdigest() != (self.oa_people_digest or OA_PEOPLE_SHA256):
+            raise ValueError("OpenAustralia people.csv does not match the pinned digest; review before export")
+        index = oa_person_index(oa_people_rows(people_raw.decode("utf-8-sig")))
+        counts = {r["name"]: oa_person_count(index, r["name"]) for r in rows if r.get("name")}
+        # Distinct people behind one first-and-last-name pair; an unresolved name counts as its own person.
+        people_by_pair = defaultdict(set)
+        for name, count in counts.items():
+            people_by_pair[first_last(name)].add(count if count is not None else "name:" + oa_name_key(name))
         def day(s):
             if not s:
                 return None
@@ -403,19 +472,45 @@ class Builder:
             eid = self.by_name(r["Division"], "federal", state, "representatives")
             if not eid:
                 eid = self.electorate("oa_division", f"{state}:{r['Division']}", r["Division"], "federal", "representatives", state or "", sid, status="historical")
-            pid = self.person(r["name"], "oa:" + r["name"], sid)
+            count = counts[r["name"]]
+            pid = self.person(r["name"], "oa:" + r["name"], sid, oa_count=count,
+                              first_last_ok=len(people_by_pair[first_last(r["name"])]) == 1)
+            if count is not None:
+                # people.csv's own name and alternate names for the person ('Bill Richard Shorten',
+                # 'William Shorten'), courtesy titles dropped: the names other sources print.
+                joined = self.rows["people"][pid]
+                known = {fold(joined["name"]), *map(fold, joined["aliases"])}
+                for alias in index["names"].get(count, []):
+                    if fold(alias) not in known:
+                        joined["aliases"].append(alias)
+                        known.add(fold(alias))
+                if people_sid not in joined["sources"]:
+                    joined["sources"].append(people_sid)
             if end and end <= start:
                 continue
             self.put("terms", {"representation_id": stable_id("term", f"oa:{r['member count']}"), "electorate_id": eid, "person_id": pid,
                                "start": start, "end": end, "start_precision": "day", "end_precision": "day" if end else "open",
                                "observed_through": self.rows["sources"][sid]["fetched_at"][:10], "start_reason": r.get("Type of election") or "election", "end_reason": r.get("reason"),
                                "party_periods": [{"party": party(r["Most recent party"]), "start": start, "end": end}] if r["Most recent party"] != "SPK" else [], "source_party_label": r["Most recent party"], "sources": [sid]})
-        # Link candidacies only when the same verified person held the same seat.
+        self.link_candidates()
+
+    def link_candidates(self):
+        """Link candidacies only when the same verified person held the same seat.
+
+        The AEC prints the name a candidate stands under ('Bill SHORTEN'); the service record may
+        print the legal name ('William Richard Shorten'). Each holder's name and reviewed aliases are
+        compared on first and last name, and a candidacy links only when exactly one holder agrees."""
+        def pair(name):
+            tokens = fold(name).split()
+            return (tokens[0:1], tokens[-1:])
+        holders = defaultdict(set)
+        for t in self.rows["terms"].values():
+            holders[t["electorate_id"]].add(t["person_id"])
         for c in self.rows["contests"].values():
             for candidate in c["candidates"]:
-                matches = {t["person_id"] for t in self.rows["terms"].values() if t["electorate_id"] == c["electorate_id"]
-                           and fold(self.rows["people"][t["person_id"]]["name"]).split()[0:1] == fold(candidate["name"]).split()[0:1]
-                           and fold(self.rows["people"][t["person_id"]]["name"]).split()[-1:] == fold(candidate["name"]).split()[-1:]}
+                want = pair(candidate["name"])
+                matches = {pid for pid in holders[c["electorate_id"]]
+                           if any(pair(n) == want for n in [self.rows["people"][pid]["name"], *self.rows["people"][pid].get("aliases", [])])}
                 if len(matches) == 1:
                     candidate["person_id"] = next(iter(matches))
 
@@ -509,6 +604,24 @@ class Builder:
                 **{name: list(rows.values()) for name, rows in self.rows.items()}}
 
 
+def check_people(bundle: dict) -> dict:
+    """Person-linking counts for the build log; one OPAX person id shared by two people stops the build."""
+    people = bundle["people"]
+    seen = defaultdict(list)
+    for p in people:
+        if p.get("legacy_person_id") is not None:
+            seen[str(p["legacy_person_id"])].append(p["person_id"])
+    shared = {pid: ids for pid, ids in seen.items() if len(ids) > 1}
+    if shared:
+        raise ValueError(f"OPAX person ids held by more than one person: {shared}")
+    holders = {t["person_id"] for t in bundle["terms"]}
+    candidates = [c for contest in bundle["contests"] for c in contest["candidates"]]
+    return {"service_people": len(holders),
+            "service_people_without_legacy_person_id": sum(1 for p in people if p["person_id"] in holders and p.get("legacy_person_id") is None),
+            "candidacies_linked": sum(1 for c in candidates if c["person_id"]),
+            "elected_candidacies_unlinked": sum(1 for c in candidates if c["elected"] and not c["person_id"])}
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--cache", type=Path, default=Path(".cache/electorates"))
@@ -521,6 +634,7 @@ def main():
     b.aec(); b.geography(); b.legacy(args.legacy); b.history(); b.victoria(); b.statewide_councils()
     bundle = b.bundle()
     validate(bundle)
+    print(check_people(bundle))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(canonical_json(bundle) + "\n")
     print({k: len(v) for k, v in b.rows.items()})
