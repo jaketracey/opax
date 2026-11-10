@@ -71,9 +71,20 @@ class AndroidReleaseTests(unittest.TestCase):
                     with self.assertRaisesRegex(Exception, 'present but build evidence says disabled'):
                         debug_artifacts(archive, {'r8_enabled':flag != 'r8_enabled', 'native_symbols_enabled':flag != 'native_symbols_enabled'}, directory)
 
+    def test_configured_version_reads_a_literal_or_one_named_constant(self):
+        with tempfile.TemporaryDirectory() as d:
+            config = Path(d)/'app.config.ts'
+            config.write_text("  version: '1.1.0',\n")
+            self.assertEqual(configured_version(d), '1.1.0')
+            config.write_text("const appVersion = '1.2.0';\nconst config = {\n  version: appVersion,\n};\n")
+            self.assertEqual(configured_version(d), '1.2.0')
+            config.write_text("const config = {\n  version: appVersion,\n};\n")
+            with self.assertRaises(Exception):
+                configured_version(d)
+
     def fixture(self, directory):
         root = Path(directory); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
-        for name in ('build-play.sh', 'qa-lock.sh', 'android_release.py', 'release_inputs.py', 'release_support.py'):
+        for name in ('build-play.sh', 'capacity.sh', 'qa-lock.sh', 'android_release.py', 'release_inputs.py', 'release_support.py'):
             shutil.copyfile(Path(__file__).parent/name, scripts/name)
         (scripts/'qa-env.sh').write_text('build_command() { "$@"; }\n')
         (root/'.gitignore').write_text('mobile/private/\nmobile/android/\nmobile/node_modules/\nnative.lock/\n')
@@ -110,7 +121,9 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
         git('add', '.'); git('commit', '-qm', 'fixture')
         env = {**os.environ, 'JAVA_HOME':str(java.parent.parent), 'ANDROID_HOME':str(root/'sdk'),
                'OPAX_ANDROID_VERSION_CODE':'2026111001', 'OPAX_PRODUCTION_VOICE':'1',
-               'OPAX_ANDROID_NATIVE_LOCK':str(root/'native.lock'), 'OPAX_NATIVE_WAIT_SECONDS':'0'}
+               'OPAX_ANDROID_NATIVE_LOCK':str(root/'native.lock'), 'OPAX_NATIVE_WAIT_SECONDS':'0',
+               # The Mac path runs capacity.sh; no capacity command applies to a fixture.
+               'OPAX_CAPACITY_CMD':''}
         env.pop('ATTACK', None)
         return mobile, git('rev-parse', 'HEAD'), env
 

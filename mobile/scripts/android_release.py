@@ -18,9 +18,15 @@ def require(condition, message):
 def configured_version(mobile):
     # The top-level Expo version is the release marketing version. extra.appVersion
     # is independently owned and is deliberately not used for release identity.
-    versions = re.findall(r"^\s*version:\s*['\"]([^'\"]+)['\"],?\s*$",
-                          (Path(mobile) / "app.config.ts").read_text(), re.M)
-    require(len(versions) == 1, "Expected one literal Expo version in app.config.ts")
+    # It is a literal, or one named string constant (`version: appVersion`,
+    # the one app version that extra.appVersion and analytics also read).
+    text = (Path(mobile) / "app.config.ts").read_text()
+    versions = re.findall(r"^\s*version:\s*['\"]([^'\"]+)['\"],?\s*$", text, re.M)
+    names = re.findall(r"^\s*version:\s*([A-Za-z_$][\w$]*),?\s*$", text, re.M)
+    for name in names:
+        versions += re.findall(r"^const\s+" + re.escape(name) + r"\s*=\s*['\"]([^'\"]+)['\"];?\s*$", text, re.M)
+    require(len(versions) == 1 and len(versions) >= len(names),
+            "Expected one literal Expo version in app.config.ts")
     return versions[0]
 
 
