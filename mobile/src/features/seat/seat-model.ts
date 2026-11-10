@@ -155,6 +155,8 @@ export const vicCopy = {
   placeholder: 'District, region or member’s name',
   districts: 'Legislative Assembly districts',
   regions: 'Legislative Council regions',
+  outside:
+    'Your location isn’t inside a Victorian district. Search by name instead.',
 } as const;
 const victorian = (chamber: string) => (electorates: readonly Electorate[]) =>
   electorates
@@ -285,6 +287,7 @@ export type LocationAnswer =
 export function locationAnswer(
   result: Suggestion | StateSuggestion,
   cancelled: boolean,
+  scope: 'federal' | 'vic' = 'federal',
 ): LocationAnswer {
   if (cancelled) return { kind: 'idle' };
   switch (result.kind) {
@@ -313,7 +316,12 @@ export function locationAnswer(
     case 'denied':
       return { kind: 'message', text: seatCopy.denied, settings: true };
     case 'no-match':
-      return { kind: 'message', text: seatCopy.outside, settings: false };
+      return {
+        kind: 'message',
+        // The Victorian chooser looks for a district, not a federal seat.
+        text: scope === 'vic' ? vicCopy.outside : seatCopy.outside,
+        settings: false,
+      };
     default:
       return { kind: 'message', text: seatCopy.unavailable, settings: false };
   }

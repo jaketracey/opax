@@ -114,7 +114,7 @@ export function LocationRow({
     const cancelled = controller.signal.aborted;
     if (pending.current === controller) pending.current = null;
     if (cancelled) return;
-    const next = locationAnswer(result, cancelled);
+    const next = locationAnswer(result, cancelled, scope);
     setAnswer(next);
     AccessibilityInfo.announceForAccessibility(spoken(next));
   }
