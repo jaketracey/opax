@@ -37,7 +37,7 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
   const a = { ...step.args }, has = (k: string) => Object.hasOwn(properties, k)
   if (step.tool === 'contracts' && c.contractSupplier && has('supplier')) {
     a.supplier = c.contractSupplier
-    const words=(s:string)=>s.toLowerCase().match(/[\p{L}\p{N}]+/gu)??[]
+    const words=(s:string):string[]=>s.toLowerCase().match(/[\p{L}\p{N}]+/gu)??[]
     if (typeof a.agency === 'string' && words(a.agency).length && words(a.agency).every(word=>words(c.contractSupplier!).includes(word))) delete a.agency
   }
   if (step.tool === 'grants' && c.grantRecipient && has('recipient')) {
