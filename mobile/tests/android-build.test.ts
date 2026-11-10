@@ -48,7 +48,7 @@ afterEach(() => rmSync(root, { recursive: true, force: true }));
 function executable(path: string, text: string) {
   writeFileSync(join(root, path), text, { mode: 0o755 });
 }
-function run(args: string[], env: NodeJS.ProcessEnv = {}) {
+function run(args: string[], env: Partial<NodeJS.ProcessEnv> = {}) {
   return spawnSync('/bin/bash', args, {
     cwd: root,
     env: {
