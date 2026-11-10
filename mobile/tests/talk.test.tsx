@@ -289,6 +289,29 @@ test('inactive does not end; background delegates a specific reason; foreground 
   expect(mockVoice.status).toHaveBeenCalledTimes(2);
   expect(mockVoice.snapshot).toHaveBeenCalledTimes(2);
 });
+test("the microphone prompt's inactive round trip keeps a denial on screen", async () => {
+  let lifecycle!: (state: AppStateStatus) => void;
+  jest.spyOn(AppState, 'addEventListener').mockImplementation((_name, fn) => {
+    lifecycle = fn;
+    return { remove: jest.fn() };
+  });
+  const started = deferred<Awaited<ReturnType<typeof mockVoice.start>>>();
+  mockVoice.start.mockReturnValueOnce(started.promise);
+  await mount();
+  let pending!: Promise<unknown>;
+  act(() => {
+    pending = call.startConsented();
+  });
+  act(() => lifecycle('inactive'));
+  await act(async () => {
+    started.resolve({ ok: false, error: 'microphoneDenied' });
+    await pending;
+  });
+  expect(call.error).toBe('microphoneDenied');
+  await act(async () => lifecycle('active'));
+  expect(call.error).toBe('microphoneDenied');
+  expect(mockVoice.status).toHaveBeenCalledTimes(1);
+});
 test('leaving unsubscribes, ends and clears transient captions; remount reads a new snapshot', async () => {
   await mount();
   act(() =>

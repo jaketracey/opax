@@ -131,10 +131,18 @@ export function useTalk() {
     }, [recover, refresh]),
   );
   useEffect(() => {
+    // Only a return from the background is a new visit. iOS's microphone
+    // prompt and Control Centre pass through inactive alone, and a refresh
+    // then would clear the denial the prompt just produced.
+    let away = false;
     const subscription = AppState.addEventListener('change', (state) => {
-      if (!mounted.current || askingMicrophone.current) return;
+      if (!mounted.current) return;
+      if (state === 'background') away = true;
+      const returning = state === 'active' && away;
+      if (state === 'active') away = false;
+      if (askingMicrophone.current) return;
       if (state === 'background') void uiBridge.background();
-      if (state === 'active')
+      if (returning)
         void (async () => {
           await refresh();
           await recover();
