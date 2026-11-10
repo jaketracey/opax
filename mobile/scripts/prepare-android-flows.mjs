@@ -89,6 +89,10 @@ function selector(v) {
         : v.replaceAll('iPhone', 'phone'))
     );
   if (!v || typeof v !== 'object') return v;
+  // The redesigned suggestion list promotes an exact person match to Top
+  // and deliberately omits its duplicate from the People group.
+  if (v.id === 'search-suggestion-person-.*')
+    return { ...v, id: 'search-(suggestion-person-.*|top-suggestion)' };
   if (v.id?.endsWith('-elected') && v.text === 'Elected')
     return { ...v, text: '^(Status: )?Elected$' };
   if (nativeSearchHints.has(v.text)) {
