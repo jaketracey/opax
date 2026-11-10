@@ -978,3 +978,24 @@ test('a largest grant states the count of the recipient’s other awards that mo
   expect((await fact(withMore.id))?.value).toBe(String(withMore.more));
   expect(await fact(without.id)).toBeUndefined();
 });
+
+test('a seat with one of its grants listed says it is listed', async () => {
+  Object.assign(mockParams, {
+    jur: 'federal',
+    id: 'GO6821',
+    seat: 'Bruce',
+    state: 'vic',
+  });
+  const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+  const r = await mount(Program);
+  await act(async () => {
+    r.root
+      .findAllByType(SegmentedPicker)
+      .find((n) => n.props.testID === 'program-view')!
+      .props.onChange('grants');
+  });
+  expect(
+    r.root.find((n) => n.props.testID === 'program-caption').props.children,
+  ).toBe('1 of the 3 grants in Bruce is listed, largest first');
+  await act(async () => r.unmount());
+});

@@ -241,7 +241,7 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
           ? seatFigure.count && !seatGrants.length
             ? `None of the ${counted(seatFigure.count, 'grant')} in ${seat} is in the listed grants`
             : seatGrants.length < seatFigure.count
-              ? `${seatGrants.length.toLocaleString('en-AU')} of the ${counted(seatFigure.count, 'grant')} in ${seat} are listed, largest first`
+              ? `${seatGrants.length.toLocaleString('en-AU')} of the ${counted(seatFigure.count, 'grant')} in ${seat} ${seatGrants.length === 1 ? 'is' : 'are'} listed, largest first`
               : `${counted(seatGrants.length, 'grant')} in ${seat}, largest first`
           : `${counted(recipients.length, 'recipient')} in the listed grants in ${seat}, largest first`
         : view === 'recipients'
