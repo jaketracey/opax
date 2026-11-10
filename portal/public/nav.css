@@ -120,9 +120,12 @@
 .nav-feature-more { padding-top: var(--space-row); }
 .nav-feature:hover .nav-feature-title { color: var(--bronze-ink); }
 
-/* The page behind an open panel dims a little; a click there only closes. */
+/* The page behind an open panel dims a little; a click there only closes.
+   Anchored to the header itself, not a fixed offset from the viewport top:
+   anything above the header (the app banner) would otherwise push the band
+   down under the scrim, and the scrim would cover the triggers that opened it. */
 .site-header::after {
-  content: ""; position: fixed; left: 0; right: 0; bottom: 0; top: var(--header-h); z-index: 1;
+  content: ""; position: absolute; left: 0; right: 0; top: calc(100% + var(--border-focus)); height: 100dvh; z-index: 1;
   background: rgb(20 42 67 / 0.22); opacity: 0; pointer-events: none;
 }
 .site-header.nav-is-open::after { opacity: 1; pointer-events: auto; }
