@@ -30,7 +30,11 @@ import { answerBlocks } from './answer-markdown';
 import { openAnswerLink } from './AnswerBody';
 import { AskIdle } from './AskIdle';
 import { CitedRecordRow } from './AskRows';
-import { firstClaim, selectCitation } from './citation-state';
+import {
+  citationSelection,
+  firstClaim,
+  selectCitation,
+} from './citation-state';
 import {
   CitationContent,
   citationCopy,
@@ -94,7 +98,11 @@ export function useAskSources(
     setMark(null);
     setStack([]);
   }
-  useEffect(() => selectCitation(null), [chat, latest]);
+  useEffect(() => {
+    const selection = citationSelection();
+    if (selection && (!chat || !selection.turn.startsWith(`${chat}:`)))
+      selectCitation(null);
+  }, [chat]);
   const answers = useRef(new Map<number, RefObject<View | null>>());
   const { height } = useWindowDimensions();
   const measuring = useRef(false);

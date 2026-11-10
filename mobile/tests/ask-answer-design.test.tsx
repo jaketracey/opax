@@ -544,4 +544,15 @@ describe('the iPad pane is never empty', () => {
     expect(words()).toContain('Synthetic passage 1 from the record.');
     expect(citationSelection()).toBeNull();
   });
+  test('an earlier citation stays available when another answer arrives in the same conversation', () => {
+    const { press, renderer } = drawPane([question, answer()]);
+    act(() => press('ask-pane-source-3'));
+    const selected = citationSelection();
+    act(() =>
+      renderer.update(
+        <Pane thread={[question, answer(), question, answer()]} />,
+      ),
+    );
+    expect(citationSelection()).toEqual(selected);
+  });
 });
