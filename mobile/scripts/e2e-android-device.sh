@@ -244,7 +244,7 @@ printf '<map><string name="debug_http_host">localhost:8081</string></map>' | "${
 # when the welcome tour is visibly rendered. Confirm the process and Metro
 # bundle, then retain a launch capture for the required visual review.
 deadline=$((SECONDS + 120))
-until timed 5 "${ADB[@]}" shell pidof au.com.opax.app > "$OUT/debug-process.txt" && rg -q 'Android Bundled' "$OUT/metro.log"; do
+until timed 5 "${ADB[@]}" shell pidof au.com.opax.app > "$OUT/debug-process.txt" && grep -Eq 'Android Bundled' "$OUT/metro.log"; do
   if [ "$SECONDS" -ge "$deadline" ]; then
     timed 15 "${ADB[@]}" exec-out screencap -p > "$OUT/debug-readiness-last.png" || true
     timed 10 "${ADB[@]}" logcat -d > "$OUT/debug-failure-logcat.txt" || true
@@ -255,7 +255,7 @@ done
 sleep 2
 "${ADB[@]}" exec-out screencap -p > "$OUT/debug-launch.png"
 timed 10 "${ADB[@]}" logcat -d > "$OUT/debug-launch-logcat.txt"
-if rg -q 'FATAL EXCEPTION|Fatal signal|ReactNativeJS:.*(Error:|Invariant Violation)' "$OUT/debug-launch-logcat.txt"; then
+if grep -Eq 'FATAL EXCEPTION|Fatal signal|ReactNativeJS:.*(Error:|Invariant Violation)' "$OUT/debug-launch-logcat.txt"; then
   echo 'Debug launch emitted a fatal error' >&2; exit 1
 fi
 "${ADB[@]}" shell am force-stop au.com.opax.app
@@ -267,7 +267,7 @@ if [ "${OPAX_ANDROID_PRESERVE_STATE:-0}" = 1 ]; then
   # Targeted continuation keeps the seat/history already validated in this AVD.
   "${ADB[@]}" shell am start -n au.com.opax.app/.MainActivity > "$OUT/e2e-continue-launch.log"
   deadline=$((SECONDS + 120))
-  until "${ADB[@]}" shell uiautomator dump /sdcard/opax-continue.xml >/dev/null 2>&1 && "${ADB[@]}" shell cat /sdcard/opax-continue.xml | rg -q 'today-screen'; do
+  until "${ADB[@]}" shell uiautomator dump /sdcard/opax-continue.xml >/dev/null 2>&1 && "${ADB[@]}" shell cat /sdcard/opax-continue.xml | grep -Eq 'today-screen'; do
     [ "$SECONDS" -lt "$deadline" ] || exit 1
     sleep 2
   done
@@ -378,7 +378,7 @@ for file in "${FILES[@]}"; do
   fi
   if [ "$flow" = 01-launch ]; then
     "${ADB[@]}" shell dumpsys package au.com.opax.app > "$OUT/permissions-after-launch.txt"
-    if rg -q 'android.permission.ACCESS_(FINE|COARSE)_LOCATION: granted=true' "$OUT/permissions-after-launch.txt"; then
+    if grep -Eq 'android.permission.ACCESS_(FINE|COARSE)_LOCATION: granted=true' "$OUT/permissions-after-launch.txt"; then
       echo 'Location unexpectedly granted on initial launch' >&2; failed=1
     fi
   fi
