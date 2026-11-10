@@ -118,6 +118,20 @@ test('during a call the menu title changes only at five minutes and each minute 
   ]);
 });
 
+test('signed out, the menu title names no allowance', () => {
+  const status = {
+    enabled: true,
+    signedIn: false,
+    unlimited: false,
+    totalSeconds: 600,
+    remainingSeconds: 480,
+    activeSession: null,
+    budgetOpen: null,
+  };
+  expect(timeLeft(false, 0, status)).toBeUndefined();
+  expect(timeLeft(false, 0, { ...status, signedIn: true })).toBe('8 min left');
+});
+
 test('the menu keeps web pages out of a call and offers withdrawal only after consent', () => {
   const during = talkMenu({
     active: true,

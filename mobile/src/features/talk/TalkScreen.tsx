@@ -383,7 +383,8 @@ export default function TalkScreen({
     );
     return () => subscription.remove();
   }, [active]);
-  const menuTitle = timeLeft(live, s.remaining, s.status);
+  // After a session expires the cached status still says signed in.
+  const menuTitle = timeLeft(live, s.remaining, signedOut ? null : s.status);
   const reportable = canReport(s.transcript);
   const records = useMemo(() => reportChoices(s.sources), [s.sources]);
   const canCaption = active || s.transcript.length > 0;
