@@ -13,17 +13,13 @@ import {
 } from '../../design/row-link';
 import { LinkRow } from '../../design/rows';
 import { SourceLine } from '../../design/source';
-import { InlineError, Skeleton } from '../../design/states';
+import { InlineError } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { membersRoute, personRoute, seatRoute } from '../../navigation/routes';
 import { byFamilyName, FaceStackRow } from './FaceStackRow';
-import {
-  representativeProfile,
-  type Directory,
-  type YourMPView,
-} from './model';
+import { representativeProfile, type Directory } from './model';
 
 const vic = (s: Pick<Electorate, 'state_code' | 'jurisdiction'>) =>
   s.state_code.toLowerCase() === 'vic' || s.jurisdiction === 'vic';
@@ -43,15 +39,12 @@ export function showsVictorianSection(
 export function StateMembers({
   directory,
   stateSeatIds,
-  view,
   failed,
   onRetry,
   onRemove,
 }: {
   directory: Directory;
   stateSeatIds: readonly string[];
-  /** The loaded seat view; null while it loads (or with no federal seat). */
-  view: YourMPView | null;
   failed?: boolean;
   onRetry?: () => void;
   onRemove: () => void;
@@ -102,11 +95,10 @@ export function StateMembers({
             testID="choose-state-seat"
           />
         </InsetGroup>
-      ) : stateSeatIds.length &&
-        !view &&
-        seats.length !== stateSeatIds.length ? (
-        <Skeleton shape="people" count={stateSeatIds.length} />
       ) : (
+        // The seats come from the directory already read, so there is
+        // nothing to wait for: a saved id the release no longer has is
+        // left out, never held on a skeleton.
         <>
           <InsetGroup>
             {district ? (

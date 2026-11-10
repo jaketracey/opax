@@ -368,7 +368,6 @@ export default function YourMP() {
             <StateMembers
               directory={directory}
               stateSeatIds={stateSeatIds}
-              view={view.status === 'ready' ? view.data : null}
               onRemove={removeState}
             />
           ) : null}
@@ -514,7 +513,6 @@ function NoSeat({
         <StateMembers
           directory={directory}
           stateSeatIds={stateSeatIds}
-          view={null}
           onRemove={onRemoveState}
         />
       ) : null}

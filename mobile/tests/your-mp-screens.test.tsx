@@ -1004,6 +1004,15 @@ describe('Your MP tab', () => {
     await act(async () => r.unmount());
   });
 
+  test('a saved state seat no longer in the release does not hold the others on a skeleton', async () => {
+    const district = seatNamed('Wendouree');
+    choose(district.electorate_id, ['fixture-removed-region']);
+    const r = await render(<YourMP />);
+    expect(has(r, 'your-state')).toBe(true);
+    expect(ids(r, 'your-state-member-')).not.toHaveLength(0);
+    await act(async () => r.unmount());
+  });
+
   test('state electorate: add opens the Victorian chooser; removal keeps the federal choice', async () => {
     const seat = seatNamed('Ballarat'),
       district = seatNamed('Wendouree'),
