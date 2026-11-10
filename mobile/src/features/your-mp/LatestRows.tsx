@@ -192,6 +192,9 @@ export function LatestRow({
       accessible
       accessibilityRole="link"
       accessibilityLabel={label}
+      accessibilityHint={
+        record.href ? undefined : 'Opens in the in-app browser'
+      }
       onPress={
         onPress ??
         (() => {
@@ -224,14 +227,12 @@ export function LatestRow({
         </Text>
         <Text variant="secondary">{detail}</Text>
       </View>
-      {record.href || !['vote', 'division'].includes(record.kind) ? (
-        <Icon
-          name={record.href ? symbols.chevron : symbols.external}
-          size={13}
-          maxScale={1.5}
-          tone="inkSoft"
-        />
-      ) : null}
+      <Icon
+        name={record.href ? symbols.chevron : symbols.external}
+        size={13}
+        maxScale={1.5}
+        tone="inkSoft"
+      />
     </Pressable>
   );
   const path = record.billKey

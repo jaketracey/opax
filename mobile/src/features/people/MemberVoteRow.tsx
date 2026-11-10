@@ -8,13 +8,14 @@ import { Text } from '../../design/text';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { formatDate } from '../../design/format';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { openSource } from '../../navigation/external';
 import { NewDot } from '../follows/NewDot';
 
 /**
  * One member's position on one named bill at one stage (people.md 2.1):
  * "Voted for" or "Voted against" as a neutral capsule, the bill's title in
  * the record face, "{Stage} · {d MMM yyyy}", and a chevron to the division
- * on the bill's page. A vote not matched to a bill is the same row, static.
+ * on the bill's page. Unmatched votes open their original in the in-app browser.
  */
 export function MemberVoteRow({
   position,
@@ -22,6 +23,7 @@ export function MemberVoteRow({
   stage,
   date,
   href,
+  url,
   isNew = false,
   testID,
 }: {
@@ -30,6 +32,7 @@ export function MemberVoteRow({
   stage: string;
   date: string | null;
   href?: Href;
+  url?: string;
   isNew?: boolean;
   testID?: string;
 }) {
@@ -37,6 +40,12 @@ export function MemberVoteRow({
   const status = position === 'for' ? 'Voted for' : 'Voted against';
   const meta = date ? `${stage} · ${formatDate(date, 'short')}` : stage;
   const spoken = `${status}. ${name}. ${date ? `${stage}, ${formatDate(date)}` : stage}`;
+  const select =
+    !href && url
+      ? () => {
+          void openSource(url, name);
+        }
+      : undefined;
   const body = (
     <View style={styles.row}>
       {isNew ? <NewDot testID={testID ? `${testID}-new` : undefined} /> : null}
@@ -51,17 +60,24 @@ export function MemberVoteRow({
           {meta}
         </Text>
       </View>
-      {href ? (
-        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkFaint" />
+      {href || url ? (
+        <Icon
+          name={href ? symbols.chevron : symbols.external}
+          size={13}
+          maxScale={1.5}
+          tone="inkFaint"
+        />
       ) : null}
     </View>
   );
-  return href ? (
-    <RowLink href={href}>
+  return href || url ? (
+    <RowLink href={href ?? (url as Href)} preview={!!href} select={select}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={spoken}
-        accessibilityHint="Opens the bill"
+        accessibilityHint={
+          href ? 'Opens the bill' : 'Opens in the in-app browser'
+        }
         testID={testID}
         style={({ pressed }) =>
           pressed ? { backgroundColor: colors.sunken } : null

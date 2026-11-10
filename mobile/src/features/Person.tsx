@@ -586,7 +586,11 @@ function ProfileContent({
       ...v.against.map((r) => ({ ...r, position: 'against' as const })),
     ].sort((a, c) => (c.date ?? '').localeCompare(a.date ?? ''));
   const voteRow = (row: VoteRowData, i: number) => {
-    const raw = row as VoteRowData & { key?: string; division_key?: string };
+    const raw = row as VoteRowData & {
+      key?: string;
+      division_key?: string;
+      url?: string;
+    };
     return (
       <MemberVoteRow
         key={`${row.position}-${row.name}-${row.stage}-${row.date}-${i}`}
@@ -594,6 +598,10 @@ function ProfileContent({
         name={row.name}
         stage={row.stage}
         date={row.date}
+        url={
+          raw.url ??
+          `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(row.name)}`
+        }
         href={
           row.billKey
             ? billRoute(row.billKey, undefined, {
