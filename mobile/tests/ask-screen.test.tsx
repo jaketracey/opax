@@ -71,9 +71,13 @@ jest.mock('../src/features/ask/consent', () => ({
   askConsentGiven: jest.fn().mockResolvedValue(true),
   giveAskConsent: jest.fn().mockResolvedValue(undefined),
 }));
+const mockAccount: {
+  status: { signedIn: boolean } | null;
+  checking: boolean;
+} = { status: { signedIn: true }, checking: false };
 jest.mock('../src/features/account/store', () => ({
-  useAccount: () => ({ status: { signedIn: true } }),
-  accountSnapshot: () => ({ status: { signedIn: true } }),
+  useAccount: () => mockAccount,
+  accountSnapshot: () => mockAccount,
 }));
 jest.mock('../src/voice/linked', () => ({ voiceLinked: true }));
 jest.mock('../src/features/ask/store', () => {
@@ -168,6 +172,8 @@ const answer = {
 let view: ReactTestRenderer | null = null;
 let scrollTo: jest.SpyInstance;
 beforeEach(() => {
+  mockAccount.status = { signedIn: true };
+  mockAccount.checking = false;
   takeFocusRequest('ask');
   jest.mocked(TextInput.prototype.focus).mockClear();
   jest.mocked(client.askPost).mockReset();
@@ -622,16 +628,56 @@ test('mount, typing, Options and a remount never call paid routes', async () => 
   expect(syncSubmittedChat).not.toHaveBeenCalled();
 });
 
-test('Talk sits in the empty composer for a signed-in reader and turns into Send', async () => {
-  await mount();
-  expect(byId('ask-talk')).not.toEqual([]);
-  expect(byId('ask-submit')).toEqual([]);
+test.each([
+  [undefined, 'Talk to OPAX'],
+  ['Sign up to talk', 'Sign up to talk'],
+])('AskDock Talk label %s reads as %s', async (talkLabel, expected) => {
+  const onTalk = jest.fn();
+  await act(async () => {
+    view = create(
+      <AskDock
+        onSend={() => {}}
+        onStop={() => {}}
+        onOptions={() => {}}
+        onTalk={onTalk}
+        talkLabel={talkLabel}
+        offline={false}
+      />,
+    );
+  });
+  expect(a11y('ask-talk', 'accessibilityLabel')).toBe(expected);
   await press('ask-talk');
-  expect(router.push).toHaveBeenCalledWith('/talk');
-  await type('A question');
-  expect(byId('ask-talk')).toEqual([]);
-  expect(one('ask-submit').props.accessibilityLabel).toBe('Send');
+  expect(onTalk).toHaveBeenCalledTimes(1);
 });
+
+test.each([
+  { signedIn: false, checking: false, signup: true },
+  { signedIn: true, checking: false, signup: false },
+  { signedIn: null, checking: false, signup: false },
+  { signedIn: null, checking: true, signup: false },
+  { signedIn: false, checking: true, signup: false },
+])(
+  'Talk in the empty composer with signedIn=$signedIn and checking=$checking',
+  async ({ signedIn, checking, signup }) => {
+    mockAccount.status = signedIn === null ? null : { signedIn };
+    mockAccount.checking = checking;
+    await mount();
+    expect(byId('ask-talk')).not.toEqual([]);
+    expect(a11y('ask-talk', 'accessibilityLabel')).toBe(
+      signup ? 'Sign up to talk' : 'Talk to OPAX',
+    );
+    expect(byId('ask-submit')).toEqual([]);
+    expect(router.push).not.toHaveBeenCalled();
+    await press('ask-talk');
+    expect(router.push).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledWith(
+      signup ? { pathname: '/talk/sign-in' } : '/talk',
+    );
+    await type('A question');
+    expect(byId('ask-talk')).toEqual([]);
+    expect(one('ask-submit').props.accessibilityLabel).toBe('Send');
+  },
+);
 
 test('a starter asks at once; the seat starter only fills the composer', async () => {
   jest.mocked(useSeat).mockReturnValue({

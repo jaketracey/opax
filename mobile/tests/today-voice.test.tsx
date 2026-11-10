@@ -4,7 +4,7 @@ import { act, type ReactElement, type ReactNode } from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Button, Card, Icon, Text } from '../src/design/primitives';
-import { useAccountSignedIn } from '../src/features/account/store';
+import { useAccount } from '../src/features/account/store';
 import Today from '../src/features/Today';
 import { AskBlock } from '../src/features/today/AskBlock';
 import { readCachedEdition } from '../src/features/today/edition-store';
@@ -56,7 +56,7 @@ jest.mock('expo-router', () => {
   };
 });
 jest.mock('../src/features/account/store', () => ({
-  useAccountSignedIn: jest.fn(),
+  useAccount: jest.fn(),
 }));
 // Keep Today's real order, Ask block and voice card; other feeds own their tests.
 jest.mock('../src/api/runtime', () => ({
@@ -104,6 +104,27 @@ jest.mock('../src/features/ask/open', () => ({ useOpenAsk: () => jest.fn() }));
 jest.mock('../src/launch/splash', () => ({ releaseSplash: jest.fn() }));
 
 const standard = { width: 390, height: 844, scale: 3, fontScale: 1 };
+function accountState(signedIn: boolean | null, checking = false) {
+  jest.mocked(useAccount).mockReturnValue({
+    status:
+      signedIn === null
+        ? null
+        : {
+            enabled: true,
+            signedIn,
+            unlimited: false,
+            totalSeconds: 600,
+            remainingSeconds: 600,
+            activeSession: null,
+            budgetOpen: null,
+          },
+    checking,
+    error: null,
+    email: null,
+    cleared: false,
+    notice: null,
+  });
+}
 const mounted: TestRenderer.ReactTestRenderer[] = [];
 async function render(element: ReactElement = <VoiceCard />) {
   let renderer!: TestRenderer.ReactTestRenderer;
@@ -145,29 +166,41 @@ beforeEach(() => {
   Constants.expoConfig!.extra = { variant: 'development' };
   jest.mocked(useWindowDimensions).mockReturnValue(standard);
   jest.mocked(readCachedEdition).mockResolvedValue(null);
+  accountState(true);
 });
 afterEach(async () => {
   await act(async () => mounted.splice(0).forEach((r) => r.unmount()));
 });
 
-test.each([false, true])(
-  'offers Talk directly with signedIn=%s, leaving sign-in and consent to Talk',
-  async (signedIn) => {
-    jest.mocked(useAccountSignedIn).mockReturnValue(signedIn);
+test.each([
+  { signedIn: false, checking: false, signup: true },
+  { signedIn: true, checking: false, signup: false },
+  { signedIn: null, checking: false, signup: false },
+  { signedIn: null, checking: true, signup: false },
+  { signedIn: false, checking: true, signup: false },
+  { signedIn: true, checking: true, signup: false },
+])(
+  'voice invitation with signedIn=$signedIn and checking=$checking',
+  async ({ signedIn, checking, signup }) => {
+    accountState(signedIn, checking);
+    const label = signup ? 'Sign up to talk' : 'Start a voice chat';
+    const route = { pathname: signup ? '/talk/sign-in' : '/talk' };
     const { root } = await render();
     expect(root.findByType(Card).props).toMatchObject({
       testID: 'today-voice',
-      accessibilityLabel: 'Start a voice chat',
+      accessibilityLabel: label,
       accessibilityHint: 'Talk to OPAX about parliament',
     });
     expect(root.findAllByType(Text).map((text) => text.props.children)).toEqual(
       expect.arrayContaining([
         'Talk it through',
-        'Ask about a bill, a vote or your MP, out loud. Answers come with sources.',
+        signup
+          ? 'You’ll need a free account for voice chats. Ask about a bill, a vote or your MP, with sources.'
+          : 'Ask about a bill, a vote or your MP, out loud. Answers come with sources.',
       ]),
     );
     expect(root.findByType(Button).props).toMatchObject({
-      label: 'Start a voice chat',
+      label,
       variant: 'primary',
       fullWidth: true,
       testID: 'today-voice-start',
@@ -175,17 +208,12 @@ test.each([false, true])(
     expect(router.push).not.toHaveBeenCalled();
     act(() => root.findByType(Card).props.onPress());
     expect(router.push).toHaveBeenCalledTimes(1);
-    expect(router.push).toHaveBeenCalledWith({ pathname: '/talk' });
-    expect(useAccountSignedIn).not.toHaveBeenCalled();
+    expect(router.push).toHaveBeenLastCalledWith(route);
+    act(() => root.findByType(Button).props.onPress());
+    expect(router.push).toHaveBeenCalledTimes(2);
+    expect(router.push).toHaveBeenLastCalledWith(route);
   },
 );
-
-test('the visible primary action also pushes /talk', async () => {
-  const { root } = await render();
-  act(() => root.findByType(Button).props.onPress());
-  expect(router.push).toHaveBeenCalledTimes(1);
-  expect(router.push).toHaveBeenCalledWith({ pathname: '/talk' });
-});
 
 test.each([
   [false, true],
@@ -211,9 +239,15 @@ test.each([undefined, false, true])(
   },
 );
 
-test.each([1, 3.571])(
-  'one accessible button, wrapping text and a reachable action at font scale %s',
-  async (fontScale) => {
+test.each([
+  [1, false],
+  [1, true],
+  [3.571, false],
+  [3.571, true],
+] as const)(
+  'one accessible button and wrapping text at font scale %s with signedIn=%s',
+  async (fontScale, signedIn) => {
+    accountState(signedIn);
     jest.mocked(useWindowDimensions).mockReturnValue({
       ...standard,
       width: 320,
@@ -226,7 +260,7 @@ test.each([1, 3.571])(
     expect(host(root, 'today-voice').props).toMatchObject({
       accessible: true,
       accessibilityRole: 'button',
-      accessibilityLabel: 'Start a voice chat',
+      accessibilityLabel: signedIn ? 'Start a voice chat' : 'Sign up to talk',
       accessibilityHint: 'Talk to OPAX about parliament',
     });
     const text = root.findAll((node) => node.type === 'Text');
@@ -242,7 +276,9 @@ test.each([1, 3.571])(
     expect(icon.props).toMatchObject({ name: 'waveform', maxScale: 1 });
     expect(icon.props.animation).toBeUndefined();
     act(() => root.findByType(Button).props.onPress());
-    expect(router.push).toHaveBeenCalledWith({ pathname: '/talk' });
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: signedIn ? '/talk' : '/talk/sign-in',
+    });
   },
 );
 

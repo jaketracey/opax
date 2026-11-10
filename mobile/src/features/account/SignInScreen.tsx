@@ -1,10 +1,11 @@
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
-import { Screen } from '../../design/primitives';
+import { Heading, Screen } from '../../design/primitives';
 import {
   signInCodeRoute,
   talkSignInCodeRoute,
 } from '../../navigation/routes/account';
 import { finishSignIn, signInReturn } from './navigation';
+import { accountCopy } from './copy';
 import { CodeStep, EmailStep } from './SignInFlow';
 
 type Base = 'account' | 'talk';
@@ -20,6 +21,11 @@ export function SignInScreen({ base = 'account' }: { base?: Base }) {
   const to = signInReturn(one(params.return), base);
   return (
     <Screen grouped testID="account-sign-in-screen">
+      {base === 'talk' ? (
+        <Heading testID="account-sign-in-heading">
+          {accountCopy.signUpOrSignIn}
+        </Heading>
+      ) : null}
       <EmailStep
         onSent={(email, challenge) =>
           router.push(
