@@ -475,6 +475,23 @@ class InterestsTests(Base):
         self.write(f"{P}/interests/n-p4.json", b'{"name": "N4", ')
         self.assertFails("interests", "interests/n-p4.json unreadable")
 
+    def _person(self, *descriptions):
+        return {"name": "P2", "buckets": {"shareholdings": {"count": len(descriptions), "items": [
+            {"holder": "self", "description": d, "kind": "statement"} for d in descriptions]}}}
+
+    def test_changed_person_file_with_a_nil_answer_or_share_fragment_fails(self):
+        for desc in ("No", "No.", ".", "100%"):
+            self.write(f"{P}/interests/10002.json", self._person("Medibank", desc))
+            self.assertFails("interests", f"publishes a placeholder interest {desc!r}")
+
+    def test_real_interests_and_unchanged_files_pass(self):
+        self.write(f"{P}/interests/10002.json", self._person("Medibank", "Nobel Ltd", "Windsor, unit; 100%"))
+        self.assertOk("interests")
+        # a placeholder already committed at HEAD is not re-reported while the export is unchanged
+        self.files[f"{P}/interests/10002.json"] = self._person("No")
+        self.make()
+        self.assertOk("interests")
+
     def test_changed_numeric_person_file_that_does_not_parse_fails(self):
         self.write(f"{P}/interests/10001.json", b"")
         self.assertFails("interests", "interests/10001.json unreadable")

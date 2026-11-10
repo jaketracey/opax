@@ -166,6 +166,34 @@ def _is_nil(s: str | None) -> bool:
     return not s or bool(NIL_RE.match(s))
 
 
+# Whole-entry nil answers. Kept out of NIL_RE, which is applied line by line, where a
+# lone ")" or "No" line can be the end of a wrapped cell rather than an answer.
+_PUNCT_ONLY_RE = re.compile(r"^[\W_]+$")
+_BARE_NO_RE = re.compile(r"^\s*no\s*\.?\s*$", re.I)
+
+
+def _is_nil_entry(values) -> bool:
+    """An entry says nothing when every cell is nil or punctuation only (Landry's lone
+    "."), or when one or more cells are a bare "No" and every other cell is nil (Marles'
+    "Self  No  Nil  Nil"). A "No" beside real content in another cell keeps the entry."""
+    vals = [_norm_ws(v) for v in values if v and _norm_ws(v)]
+    rest = [v for v in vals if not _BARE_NO_RE.match(v)]
+    return all(_is_nil(v) or _PUNCT_ONLY_RE.match(v) for v in rest)
+
+
+def _join_lines(a: str | None, b: str | None) -> str:
+    """Join two physical lines of one cell. A line that ends in a letter or digit plus "-"
+    was hyphenated at the wrap ("Mid-" / "Winter Ball", "2025-" / "26"), so the next line
+    follows it without a space; any other pair is joined with one space. Every place that
+    glues a cell's wrapped lines back together goes through here."""
+    a, b = _norm_ws(a), _norm_ws(b)
+    if not a or not b:
+        return a or b
+    if re.search(r"[A-Za-z0-9]-$", a):
+        return a + b
+    return a + " " + b
+
+
 def _sha256(path: Path) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -367,7 +395,7 @@ def _partition(lines, cell_x0, cell_x1, n=None):
         if i in breaks:
             entries.append([l["top"], _norm_ws(l["text"])])
         else:
-            entries[-1][1] += " " + _norm_ws(l["text"])
+            entries[-1][1] = _join_lines(entries[-1][1], l["text"])
     return entries
 
 
@@ -438,7 +466,7 @@ def _parse_statement_table(page, table, section, pageno, subsection=None):
             if len(cl) >= len(anchors):
                 # as many or more lines than entries: partition into exactly N groups in order
                 for k, (top, text) in enumerate(_partition(cl, cx0, cx1, len(anchors))):
-                    entries[k][key] = (entries[k].get(key, "") + " " + text).strip()
+                    entries[k][key] = _join_lines(entries[k].get(key, ""), text)
             else:
                 # fewer lines than entries: attach each to the entry it sits beside
                 for top, text in _group_entries(cl, cx0, cx1):
@@ -446,8 +474,10 @@ def _parse_statement_table(page, table, section, pageno, subsection=None):
                     for i, a in enumerate(anchors):
                         if a[0] <= top + 2.5:
                             k = i
-                    entries[k][key] = (entries[k].get(key, "") + " " + text).strip()
+                    entries[k][key] = _join_lines(entries[k].get(key, ""), text)
         for e in entries:
+            if _is_nil_entry(e.values()):
+                continue
             rows_out.append(InterestRow(
                 holder=holder, section_code=section[1], category=SECTIONS[section[1]][0],
                 kind="statement", fields=e, description=" — ".join(v for v in e.values() if v),
@@ -495,7 +525,7 @@ def _alteration_blocks(page, table, pageno, kind_hint):
             if m and 1 <= int(m.group(1)) <= 14:
                 items.append([l["top"], int(m.group(1)), _norm_ws(m.group(2))])
             elif items:
-                items[-1][2] = _norm_ws(items[-1][2] + " " + l["text"])
+                items[-1][2] = _join_lines(items[-1][2], l["text"])
             elif not _is_nil(l["text"]):
                 items.append([l["top"], None, _norm_ws(l["text"])])
         for l in det_lines:
@@ -567,7 +597,7 @@ def _fallback_alteration_blocks(page, cols, pageno, kind):
             if m and 1 <= int(m.group(1)) <= 14:
                 cur["items"].append([val["top"], int(m.group(1)), _norm_ws(m.group(2))])
             elif cur["items"]:
-                cur["items"][-1][2] = _norm_ws(cur["items"][-1][2] + " " + val["text"])
+                cur["items"][-1][2] = _join_lines(cur["items"][-1][2], val["text"])
         else:
             cur["details"].append(val)
     if cur["items"] or cur["details"]:
@@ -616,7 +646,7 @@ def _rows_from_alteration_block(b):
                 for i, it in enumerate(items):
                     if it[0] <= top + 2.5:
                         k = i
-                details[k] = (details[k] + " " + text).strip()
+                details[k] = _join_lines(details[k], text)
     for (top, code, label), d in zip(items, details):
         if not d and not label:
             continue
@@ -661,7 +691,7 @@ def _parse_text_lines_statement(text: str, pageno: int, ocr: int) -> list[Intere
             if hm.group(1).lower() in ("partner", "children") and seen_holder:
                 rest = hm.group(2)
                 if rest and not _is_nil(rest) and out and out[-1].section_code == section:
-                    out[-1].fields["text"] += " " + rest
+                    out[-1].fields["text"] = _join_lines(out[-1].fields["text"], rest)
                     out[-1].description = out[-1].fields["text"]
                 continue
             holder = h; seen_holder = True
@@ -674,7 +704,7 @@ def _parse_text_lines_statement(text: str, pageno: int, ocr: int) -> list[Intere
         if _is_nil(line) or re.match(r"^\d+$", line):
             continue
         if line[:1].islower() and out and out[-1].section_code == section and out[-1].holder == holder:
-            out[-1].fields["text"] += " " + line
+            out[-1].fields["text"] = _join_lines(out[-1].fields["text"], line)
             out[-1].description = out[-1].fields["text"]
         else:
             out.append(InterestRow(holder, section, SECTIONS[section][0], "statement", {"text": line}, line, None, pageno, ocr))

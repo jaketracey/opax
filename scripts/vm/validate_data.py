@@ -434,7 +434,35 @@ def check_interests() -> list[str]:
             errs.append(f"index lists {pid} but {pid}.json is missing")
             if len(errs) > 10:
                 break
-    return errs + _check_dir(d, r"[^/]+\.json", INTERESTS_MIN_RATIO)
+    errs += _check_dir(d, r"[^/]+\.json", INTERESTS_MIN_RATIO)
+    return errs + _interest_placeholder_items(d)
+
+
+# A published interest that is only a nil answer ("No", a lone "."), or only an ownership
+# share split off its item ("100%"), is a parser or export regression (data cleanup
+# 2026-11-10, interests-expenses-004 and -010).
+_INTEREST_PLACEHOLDER = re.compile(r"^(?:no\.?|[\W_]+|\d{1,3}(?:\.\d+)?\s*%)$", re.I)
+
+
+def _interest_placeholder_items(rel_dir: str) -> list[str]:
+    errs: list[str] = []
+    for name in _changed(rel_dir, r"[^/]+\.json"):
+        if name in ("index.json", "recent.json", "ties-by-donor.json"):
+            continue
+        doc, err = _load_json(f"{rel_dir}/{name}")
+        if err or not isinstance(doc, dict):
+            continue
+        buckets = doc.get("buckets")
+        for bucket, b in (buckets.items() if isinstance(buckets, dict) else ()):
+            for item in (b.get("items") or [] if isinstance(b, dict) else []):
+                if not isinstance(item, dict):
+                    continue
+                desc = str(item.get("description") or "").strip()
+                if _INTEREST_PLACEHOLDER.match(desc):
+                    errs.append(f"{name} {bucket} publishes a placeholder interest {desc!r}")
+                    if len(errs) > 10:
+                        return errs
+    return errs
 
 
 def check_fits() -> list[str]:
