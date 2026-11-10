@@ -79,7 +79,7 @@ export function AddedSinceGroup({
       <Text
         variant="groupHeader"
         style={{ marginBottom: rhythm.groupHeader }}
-      >{`Added since ${changeDate(displayed.since).replace(/ \d{4}$/, '')}`}</Text>
+      >{`Added since ${changeDate(displayed.since)}`}</Text>
       <InsetGroup>
         {shown.map((change, i) => {
           if (change.record?.kind === 'member' && change.record.slug)
