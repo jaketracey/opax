@@ -483,6 +483,16 @@ class ExpensesTests(Base):
         self.assertFails("expenses", "person k0: by_category plus net_adjustments is +9,306 from the total")
 
 
+class FitsTests(Base):
+    REG = {"registrant": "RICHARDSON COUTTS PTY LTD", "from": "2024-03-06", "to": "2023-12-31", "status": "ceased"}
+
+    def test_inverted_interval_without_note_fails_and_with_note_passes(self):
+        self.edit(f"{P}/fits.json", lambda d: d["by_entity"].update({"richardson coutts": [dict(self.REG)]}))
+        self.assertFails("fits", "by_entity richardson coutts: 2024-03-06 to 2023-12-31 is inverted and has no date_note")
+        self.edit(f"{P}/fits.json", lambda d: d["by_entity"].update({"richardson coutts": [dict(self.REG, date_note="n")]}))
+        self.assertOk("fits")
+
+
 class AccessTests(Base):
     def test_meeting_dated_after_the_export_fails(self):
         def future(d):

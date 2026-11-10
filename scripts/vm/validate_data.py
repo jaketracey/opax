@@ -40,7 +40,7 @@ way and every file that `git status` shows as changed or added must parse.
   interests  interests/index.json (_meta, _by_name, people), a file for every person it lists,
              and the per-person files; a changed person file publishes no nil answer ("No", ".")
              or lone share fragment ("100%") as an interest
-  fits       fits.json: meta, by_entity, people
+  fits       fits.json: meta, by_entity, people; in a new export an inverted from/to carries date_note
   speakers   speakers.json: a non-empty array
   people     parliamentarians.json: meta, people
   pay        pay.json: meta, base, offices, current, names, people
@@ -506,7 +506,19 @@ def _interest_placeholder_items(rel_dir: str) -> list[str]:
 
 
 def check_fits() -> list[str]:
-    return _check_json(f"{PUBLIC}/fits.json", ("meta", "by_entity", "people"), ("by_entity", "people"), FITS_MIN_RATIO)
+    errs = _check_json(f"{PUBLIC}/fits.json", ("meta", "by_entity", "people"), ("by_entity", "people"), FITS_MIN_RATIO)
+    # An inverted register interval is published as the register gives it, but never
+    # without its date_note (data cleanup 2026-11-10, interests-expenses-011).
+    if errs or "fits.json" not in _changed(PUBLIC, r"fits\.json"):
+        return errs
+    doc, _ = _load_json(f"{PUBLIC}/fits.json")
+    for section in ("by_entity", "people"):
+        for key, regs in (doc.get(section) or {}).items():
+            for e in regs if isinstance(regs, list) else []:
+                if (isinstance(e, dict) and e.get("from") and e.get("to") and str(e["from"]) > str(e["to"])
+                        and not e.get("date_note")):
+                    errs.append(f"{section} {key}: {e['from']} to {e['to']} is inverted and has no date_note")
+    return errs[:11]
 
 
 def check_speakers() -> list[str]:

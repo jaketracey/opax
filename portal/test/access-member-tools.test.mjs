@@ -197,3 +197,18 @@ test('all three tools are shared by authenticated MCP and Ask with matching sche
     assert.equal((await send('tools/call', { name, arguments: { extra: true } })).error.code, -32602);
   }
 });
+test('an inverted FITS interval keeps the register dates and is matched on its activity dates', async () => {
+  // Richardson Coutts / Etisalat Group: the register gives 2024-03-06 to 2023-12-31 (lodged after the
+  // activity ended); its activity ran 2023-09-15 to 2023-12-31
+  const reg = { registrant: 'RICHARDSON COUTTS PTY LTD', principal: 'Etisalat Group', country: 'United Arab Emirates',
+    activities: ['General political lobbying'], from: '2024-03-06', to: '2023-12-31', status: 'ceased',
+    url: 'https://foreigninfluence.ag.gov.au/Profile/4aa9150a-abe4-ee11-a9ab-0050569fe6ca?page=ForeignPrincipals',
+    activity_from: '2023-09-15', activity_to: '2023-12-31', date_note: 'The register gives a commencement date later than the cease date.' };
+  const data = structuredClone(await asset('/fits.json')); data.by_entity['richardson coutts'] = [reg];
+  const fixture = { ...env, asset: async path => path === '/fits.json' ? data : asset(path) };
+  const hit = await api.callTool(fixture, 'access_registers', { register: 'fits', organisation: 'Richardson Coutts', since: '2023-10-01', until: '2023-10-31' }); cited(hit);
+  assert.equal(hit.rows[0].from, '2024-03-06'); assert.equal(hit.rows[0].to, '2023-12-31');
+  assert.match(hit.citations.map(c => c.text).join(' '), /registered activities 2023-09-15 to 2023-12-31/);
+  const miss = await api.callTool(fixture, 'access_registers', { register: 'fits', organisation: 'Richardson Coutts', since: '2024-06-01', until: '2024-06-30' });
+  assert.equal(miss.rows.length, 0);
+});
