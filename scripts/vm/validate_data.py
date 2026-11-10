@@ -414,8 +414,29 @@ def check_suppliers() -> list[str]:
 
 
 def check_access() -> list[str]:
-    return _check_json(f"{PUBLIC}/access.json", ("meta", "donors", "ministers", "aliases"),
+    errs = _check_json(f"{PUBLIC}/access.json", ("meta", "donors", "ministers", "aliases"),
                        ("donors", "ministers", "aliases"), ACCESS_MIN_RATIO)
+    if errs:
+        return errs
+    # No diary can disclose a meeting after the export ran (data cleanup 2026-11-10,
+    # interests-expenses-006: source typos such as "9/12/2026" in a Q4 2025 diary). Held
+    # against a new export only, so the file committed before the fix does not fail.
+    if "access.json" not in _changed(PUBLIC, r"access\.json"):
+        return errs
+    doc, _ = _load_json(f"{PUBLIC}/access.json")
+    generated = str((doc.get("meta") or {}).get("generated") or "")[:10]
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", generated):
+        return errs
+    rows = [(f"minister {k}", r) for k, m in (doc.get("ministers") or {}).items() if isinstance(m, dict)
+            for r in m.get("recent") or [] if isinstance(r, dict)]
+    rows += [(f"donor {k}", r) for k, d in (doc.get("donors") or {}).items() if isinstance(d, dict)
+             for r in d.get("meetings") or [] if isinstance(r, dict)]
+    for where, r in rows:
+        if str(r.get("date") or "")[:10] > generated:
+            errs.append(f"{where} has a meeting dated {r.get('date')} after the export ({generated})")
+            if len(errs) > 10:
+                break
+    return errs
 
 
 def check_expenses() -> list[str]:

@@ -466,6 +466,23 @@ class TaxCharityTests(Base):
         self.assertFails("taxcharity", "has no files matching")
 
 
+class AccessTests(Base):
+    def test_meeting_dated_after_the_export_fails(self):
+        def future(d):
+            d["meta"]["generated"] = "2026-10-18T00:00:00Z"
+            d["ministers"]["k1"] = {"recent": [{"date": "2026-12-09", "org": "Full Stop Australia"}]}
+        self.edit(f"{P}/access.json", future)
+        self.assertFails("access", "minister k1 has a meeting dated 2026-12-09 after the export (2026-10-18)")
+
+    def test_meetings_up_to_the_export_date_pass(self):
+        def past(d):
+            d["meta"]["generated"] = "2026-10-18T00:00:00Z"
+            d["ministers"]["k1"] = {"recent": [{"date": "2026-10-18"}, {"date": "2026-06-29"}]}
+            d["donors"]["k2"] = {"meetings": [{"date": "2025-10-01"}]}
+        self.edit(f"{P}/access.json", past)
+        self.assertOk("access")
+
+
 class InterestsTests(Base):
     def test_index_that_lists_a_person_without_a_file_fails(self):
         (self.root / f"{P}/interests/10003.json").unlink()
