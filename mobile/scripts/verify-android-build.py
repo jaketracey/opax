@@ -10,7 +10,7 @@ import subprocess
 import xml.etree.ElementTree as ET
 import zipfile
 
-from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate
+from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, permission_allowlist, bundled_routes
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("variant", choices=["development", "e2e", "production"])
@@ -60,9 +60,7 @@ if args.variant != "development":
     # for Talk's permission journeys; its native input stays synthetic.
     microphone_prompt = args.variant == "e2e" and packaged.get("e2eMicrophonePrompt") is True
 voice_permissions = {"android.permission.RECORD_AUDIO", "android.permission.MODIFY_AUDIO_SETTINGS"}
-allowed = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION",
-           "android.permission.INTERNET", "android.permission.VIBRATE",
-           "au.com.opax.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"}
+allowed = permission_allowlist(voice, microphone_prompt)
 if voice:
     allowed |= voice_permissions
     assert voice_permissions <= set(permissions), f"Voice build without {voice_permissions - set(permissions)}"
@@ -94,13 +92,13 @@ with zipfile.ZipFile(args.apk) as archive:
         assert extra["apiOrigin"] == expected_origin
         assert extra["variant"] == args.variant
         bundle = archive.read("assets/index.android.bundle")
-        routes = [b"./talk.tsx", b"./account/sign-in.tsx", b"./account/delete.tsx"]
+        routes = bundled_routes(bundle)
         if args.variant == "e2e" or voice:
             # Talk, sign-in and deletion ship as on iOS; the app offers them
             # when the OpaxVoice module is linked (src/voice/linked.ts).
-            assert all(route in bundle for route in routes), "Talk and account routes missing"
+            assert all(routes.values()), "Talk and account routes missing"
         else:
-            assert not any(route in bundle for route in routes[1:]), "Voice-off sign-in or deletion route"
+            assert not routes["sign_in"] and not routes["delete"], "Voice-off sign-in or deletion route"
         if args.variant == "e2e":
             assert not extra.get("productionVoiceEnabled")
         if voice:

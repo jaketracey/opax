@@ -175,5 +175,27 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
             self.assertFalse(lock.exists())
 
 
+    def test_network_state_permissions_do_not_relax_microphone_or_camera_policy(self):
+        from android_release import permission_allowlist
+        normal=permission_allowlist()
+        self.assertIn('android.permission.ACCESS_NETWORK_STATE',normal)
+        self.assertIn('android.permission.ACCESS_WIFI_STATE',normal)
+        for permission in ('RECORD_AUDIO','MODIFY_AUDIO_SETTINGS','CAMERA','ACCESS_BACKGROUND_LOCATION'):
+            self.assertNotIn('android.permission.'+permission,normal)
+        self.assertIn('android.permission.RECORD_AUDIO',permission_allowlist(voice=True))
+        self.assertIn('android.permission.MODIFY_AUDIO_SETTINGS',permission_allowlist(voice=True))
+        self.assertIn('android.permission.RECORD_AUDIO',permission_allowlist(microphone_prompt=True))
+        self.assertNotIn('android.permission.MODIFY_AUDIO_SETTINGS',permission_allowlist(microphone_prompt=True))
+
+
+    def test_talk_file_and_directory_routes_are_both_valid_whole_keys(self):
+        from android_release import bundled_routes
+        account=b'./account/index.tsx\0./account/sign-in.tsx\0./account/delete.tsx\0'
+        for talk in (b'./talk.tsx',b'./talk/index.tsx'):
+            self.assertTrue(all(bundled_routes(talk+b'\0'+account).values()))
+        for talk in (b'./talk/index.tsx.workbench.tsx',b'./talk.tsx.unshipped'):
+            self.assertFalse(bundled_routes(talk+b'\0'+account)['talk'])
+
+
 if __name__ == '__main__':
     unittest.main()

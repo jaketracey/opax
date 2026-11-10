@@ -96,3 +96,35 @@ def debug_artifacts(archive, evidence, output):
                 target.write_bytes(archive.read(name))
         result[flag] = "passed" if enabled else "not enabled (conditional check skipped)"
     return result
+
+
+def permission_allowlist(voice=False, microphone_prompt=False):
+    # expo-network declares the two normal network-state permissions. They
+    # expose connectivity state and do not add a runtime permission dialog.
+    allowed = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION",
+               "android.permission.INTERNET", "android.permission.VIBRATE",
+               "android.permission.ACCESS_NETWORK_STATE", "android.permission.ACCESS_WIFI_STATE",
+               "au.com.opax.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"}
+    if voice:
+        allowed |= {"android.permission.RECORD_AUDIO", "android.permission.MODIFY_AUDIO_SETTINGS"}
+    if microphone_prompt:
+        allowed.add("android.permission.RECORD_AUDIO")
+    return allowed
+
+
+def bundled_routes(body):
+    # Use the release reader's whole Hermes entries: packed strings are not
+    # NUL-separated, and Talk moved from talk.tsx to talk/index.tsx in 1.1.
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('opax_ios_bundle_reader', Path(__file__).with_name('verify-ios-release.py'))
+    reader = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(reader)
+    strings = reader.hermes_strings(body)
+    if strings is None:
+        strings = {token.decode('latin-1') for token in reader.PATH_TOKENS.findall(body)}
+    return {
+        'talk': bool({'./talk.tsx', './talk/index.tsx'} & strings),
+        'account': './account/index.tsx' in strings,
+        'sign_in': './account/sign-in.tsx' in strings,
+        'delete': './account/delete.tsx' in strings,
+    }

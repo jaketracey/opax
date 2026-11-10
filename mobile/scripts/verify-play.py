@@ -17,7 +17,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
 
-from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, debug_artifacts
+from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, debug_artifacts, bundled_routes
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("aab", type=Path)
@@ -278,14 +278,15 @@ build_tools = (
 (output / "zipalign.txt").write_text(
     run(build_tools / "zipalign", "-c", "-P", "16", "-v", "4", apk)
 )
+routes = bundled_routes(js)
 parity = {
     "community_hidden": b"./community/home.tsx" not in js,
     "voice_on": extra.get("productionVoiceEnabled") is True,
     "voice_consent_off_by_default": extra.get("voiceConsentDefault") is False,
     "microphone_declared": "android.permission.RECORD_AUDIO" in permissions,
-    "talk_route": b"./talk.tsx" in js,
-    "account_sign_in_route": b"./account/sign-in.tsx" in js,
-    "account_delete_route": b"./account/delete.tsx" in js,
+    "talk_route": routes["talk"],
+    "account_sign_in_route": routes["sign_in"],
+    "account_delete_route": routes["delete"],
     "same_commit_as_ios_candidate": ios_commit == build_evidence["commit"],
     "approved_version_code": args.version_code is not None,
     "version_name": root.attrib[namespace + "versionName"] == expected_version,
