@@ -18,7 +18,9 @@ money maps' "public money" layer reads:
                           out of totals (scripts/corrections/contracts.json).
   ext_contract_suppliers  one row per supplier: ABN when the feed gave one
                           (nearly always), else the name matched against the
-                          ABN Bulk Extract, else the name; the ABR's legal name,
+                          ABN Bulk Extract, else one ABN supplier's own reported
+                          spelling of it (method 'reported_spelling', logged),
+                          else the name; the ABR's legal name,
                           type and status; a link to the donor register
                           (`ext_donor_entities`) by ABN, then by exact or
                           rule-normalised name, then by any registered name of
@@ -117,6 +119,126 @@ class Sup:
         self.donor = None
         self.keys: list = []
         self.by_source: dict = defaultdict(lambda: [0.0, 0])
+
+
+# A notice without an ABN is matched to an ABN supplier only on that supplier's own reported spellings
+# (contracts-grants-010): the same name once case, spacing, punctuation and a trailing (or AusTender's
+# leading "Llc") legal form are set aside, with legal forms that agree (Pty Ltd is never the same company as
+# Ltd, or Ltd as Inc), or a name cut off at AusTender's 35-character supplier-name limit that begins exactly
+# one ABN supplier's spelling. A name more than one ABN reports stays unmatched, and person-shaped names are
+# never matched by name. A spelling counts as the supplier's own only when every distinctive word in it is in a
+# name the ABR registers for that ABN, with a legal form one of those names carries: AusTender also files
+# programme names, other suppliers' names and overseas affiliates under an Australian ABN ('AIR7000 P8 POSEIDON'
+# under Defence's, 'Splunk Services Singapore Pte Ltd' and 'Hootsuite Inc.' under Australian Pty Ltds'), and
+# those never take more notices.
+LEGAL_FORMS = {"pty": "pty", "proprietary": "pty", "ltd": "ltd", "limited": "ltd", "inc": "inc",
+               "incorporated": "inc", "llc": "llc", "plc": "plc"}
+TRUNCATED_NAME_LENGTH = 35
+GENERIC_WORDS = set(LEGAL_FORMS) | {
+    "the", "of", "and", "for", "in", "a", "co", "company", "corp", "corporation", "group", "holdings", "trust",
+    "trustee", "australia", "australian", "aust", "qld", "queensland", "international", "services", "service",
+    "department", "dept", "pte", "p", "l"}
+
+
+def distinctive_words(name: str | None) -> set[str]:
+    return {t for t in norm_name(name).split() if t not in GENERIC_WORDS and len(t) > 1}
+
+
+def registered_spelling(raw: str, registered_words: set[str], registered_forms: set[str] = frozenset({""})) -> bool:
+    """Every distinctive word of the spelling is in a name the ABR registers for the ABN (the last word of a
+    name cut at 35 characters as a prefix), and a legal form the spelling carries is one a registered name
+    carries. 'Splunk Services Singapore Pte Ltd' or 'Hootsuite Inc.' filed under the ABN of an Australian Pty
+    Ltd is the overseas affiliate, not the Australian company, and takes no other notices."""
+    form = spelling_key(raw)[1]
+    if form and len(spelling_text(raw)) != TRUNCATED_NAME_LENGTH and form not in registered_forms:
+        return False
+    toks = [t for t in norm_name(raw).split() if t not in GENERIC_WORDS and len(t) > 1]
+    if not toks:
+        return False
+    if len(spelling_text(raw)) == TRUNCATED_NAME_LENGTH and toks[-1] not in registered_words \
+            and any(w.startswith(toks[-1]) for w in registered_words | GENERIC_WORDS):
+        toks = toks[:-1]
+    return set(toks) <= registered_words
+
+
+def spelling_text(name: str | None) -> str:
+    return re.sub(r"\s+", " ", (name or "").strip()).casefold()
+
+
+def spelling_key(name: str | None) -> tuple[str, str]:
+    """(base name, legal form) of a reported supplier spelling: 'RAPISARDA NOMINEES P/L' and
+    'Rapisarda Nominees Pty Ltd' are ('rapisarda nominees', 'pty'); 'Llc Gurobi Optimization' and
+    'GUROBI OPTIMIZATION, LLC' are ('gurobi optimization', 'llc')."""
+    s = re.sub(r"\bp\s*/\s*l\b", " pty ltd ", (name or "").casefold())
+    toks = norm_name(s.replace("&", " and ")).split()
+    forms = []
+    if len(toks) > 1 and toks[0] == "llc":
+        forms.append(toks.pop(0))
+    if len(toks) > 1 and toks[0] == "the":
+        toks.pop(0)
+    while len(toks) > 1 and toks[-1] in LEGAL_FORMS:
+        forms.append(toks.pop())
+    classes = {LEGAL_FORMS[t] for t in forms}
+    form = "pty" if "pty" in classes else "+".join(sorted(classes))
+    return " ".join(toks), form
+
+
+class SpellingIndex:
+    """The spellings each ABN supplier reports, for the no-ABN fallback (contracts-grants-010)."""
+
+    def __init__(self, groups, registered=None):
+        """`registered(abn)` gives the names the ABR registers for an ABN; None skips that check (tests)."""
+        self.exact: dict[str, set] = defaultdict(set)
+        self.base: dict[str, dict[str, set]] = defaultdict(lambda: defaultdict(set))
+        self.skipped_unregistered = 0
+        self.forms: dict[str, set] = {}  # legal forms of the ABR's names for each ABN (when checked)
+        words: dict[str, set] = {}
+        for g in groups:
+            abn = re.sub(r"\D", "", g["supplier_abn"] or "")
+            raw = (g["supplier_name"] or "").strip()
+            if len(abn) != 11 or not raw or gr.is_placeholder(raw):
+                continue
+            base, form = spelling_key(raw)
+            if not form and gr.looks_like_person(raw):
+                continue  # a sole trader's own name never takes a no-ABN notice by name
+            if registered is not None:
+                if abn not in words:
+                    names = registered(abn)
+                    words[abn] = (set().union(*[distinctive_words(n) for n in names]),
+                                  {spelling_key(n)[1] for n in names})
+                    self.forms[abn] = words[abn][1]
+                if not registered_spelling(raw, *words[abn]):
+                    self.skipped_unregistered += 1
+                    continue
+            self.exact[spelling_text(raw)].add(abn)
+            self.base[base][form].add(abn)
+
+    def match(self, raw: str) -> tuple[str, str] | None:
+        """(abn, how) when `raw` is one ABN supplier's reported spelling, else None."""
+        base, form = spelling_key(raw)
+        if not form and gr.looks_like_person(raw):
+            return None
+        text = spelling_text(raw)
+        abns = self.exact.get(text, set())
+        if len(abns) == 1:
+            return next(iter(abns)), "exact"
+        if abns:
+            return None  # more than one ABN reports this spelling
+        abns = set()
+        for f, held in self.base.get(base, {}).items():
+            if f == form or not f or not form:
+                # 'Dataminr Inc' never joins Dataminr Australia Pty Ltd through its plain 'DataMinr' spelling
+                abns |= {a for a in held if not form or a not in self.forms or form in self.forms[a]}
+        if len(abns) == 1:
+            return next(iter(abns)), "legal_form"
+        if abns:
+            return None
+        if len(text) == TRUNCATED_NAME_LENGTH:
+            abns = {a for spelling, held in self.exact.items()
+                    if len(spelling) > len(text) and spelling.startswith(text) for a in held}
+            if len(abns) == 1:
+                return next(iter(abns)), "truncated"
+        return None
 
 
 CANCELLED = "cancelled"
@@ -268,6 +390,10 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
         agencies_by[(r["source"], r["supplier_abn"], r["supplier_name"])][r["agency"] or ""] += r["total"] or 0
 
     matched = 0
+    reported = SpellingIndex(groups, lambda abn: [row["name"] for row in idx.db.execute(
+        "SELECT DISTINCT name FROM names WHERE abn = ?", (abn,))])
+    stats["reported_spelling_not_registered"] = reported.skipped_unregistered
+    merges = []
     for g in groups:
         raw = (g["supplier_name"] or "").strip()
         abn = re.sub(r"\D", "", g["supplier_abn"] or "")
@@ -275,25 +401,33 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
             abn = ""
         method = "source" if abn else None
         if not abn:
+            m = None
+            person = gr.looks_like_person(raw)
+            if not gr.is_placeholder(raw) and raw and not person:
+                m = match_entity(idx, raw, [])
+            hit = None if (m and m.get("abn")) or gr.is_placeholder(raw) or not raw else reported.match(raw)
             if gr.is_placeholder(raw) or not raw:
                 sid = "undisclosed:federal"
-            elif gr.looks_like_person(raw):
+            elif m and m.get("abn"):
+                abn, method = m["abn"], "abr_" + m["method"]
+                matched += 1
+                sid = f"abn:{abn}"
+                s = sup_for(sid)
+                if not s.abr:
+                    s.abr = m
+            elif hit:
+                # Reversible: the raw name keeps its own key row (below), and the merge is logged.
+                abn, method = hit[0], "reported_spelling"
+                sid = f"abn:{abn}"
+                merges.append((g["source"], raw, abn, hit[1], g["n"] or 0, float(g["total"] or 0)))
+            elif person:
                 sid = f"person:{gr.norm_person(raw)}"
             else:
-                m = match_entity(idx, raw, [])
-                if m and m.get("abn"):
-                    abn, method = m["abn"], "abr_" + m["method"]
-                    matched += 1
-                    sid = f"abn:{abn}"
-                    s = sup_for(sid)
-                    if not s.abr:
-                        s.abr = m
-                else:
-                    sid = f"name:{gr.norm_rule(raw)}"
+                sid = f"name:{gr.norm_rule(raw)}"
         else:
             sid = f"abn:{abn}"
         s = sup_for(sid)
-        if abn and not s.abn:
+        if abn and (not s.abn or (method == "source" and s.abn_method == "reported_spelling")):
             s.abn, s.abn_method = abn, method
         n = g["n"] or 0
         total = float(g["total"] or 0)
@@ -312,6 +446,11 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
         s.keys.append((g["source"], "name", raw, n, total))
         stats["groups_" + g["source"]] += 1
     log(f"  {len(sups):,} suppliers; ABR matched {matched:,} unkeyed names ({time.time() - t0:.0f}s)")
+    stats["reported_spelling_merges"] = len(merges)
+    stats["reported_spelling_dollars"] = round(sum(m[5] for m in merges))
+    log(f"  reported_spelling: {len(merges):,} unkeyed names matched to an ABN supplier's own spelling")
+    for src, raw, abn, how, n, total in sorted(merges, key=lambda m: -m[5]):
+        log(f"    reported_spelling {how}: {src} {raw!r} -> abn:{abn} ({n} contracts, ${total:,.2f})")
 
     for s in sups.values():
         if s.abn and not s.abr:

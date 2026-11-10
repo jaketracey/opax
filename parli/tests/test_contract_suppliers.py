@@ -80,3 +80,78 @@ class ContractLineageTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def group(name, abn=None):
+    return {"supplier_name": name, "supplier_abn": abn}
+
+
+class ReportedSpellingTests(unittest.TestCase):
+    """contracts-grants-010: a no-ABN notice joins an ABN supplier only on that supplier's own spelling."""
+
+    def setUp(self):
+        self.index = cs.SpellingIndex([
+            group("VMware International Unlimited Company", "81427693656"),
+            group("Rapisarda Nominees Pty Ltd", "83010027068"),
+            group("GUROBI OPTIMIZATION, LLC", "83134771821"),
+            group("PROQUEST LLC", "98331366081"),
+            group("ProQuest LLC", "41102833483"),
+            group("ADAM SMITH INTERNATIONAL PTY LTD", "58155763410"),
+            group("THE UNIVERSITY OF THE SOUTH PACIFIC", "94908793523"),
+            group("Jane Citizen", "11111111111"),
+            group("Some Name Unkeyed"),
+        ])
+
+    def test_the_same_spelling_and_legal_form_matches(self):
+        self.assertEqual(self.index.match("VMWARE INTERNATIONAL UNLIMITED COMPANY"), ("81427693656", "exact"))
+        self.assertEqual(self.index.match("RAPISARDA NOMINEES P/L"), ("83010027068", "legal_form"))
+        self.assertEqual(self.index.match("Llc Gurobi Optimization"), ("83134771821", "legal_form"))
+        self.assertEqual(self.index.match("University of the South Pacific"), ("94908793523", "legal_form"))
+
+    def test_a_name_cut_at_35_characters_matches_one_spelling_it_begins(self):
+        self.assertEqual(len("VMware International Unlimited Comp"), 35)
+        self.assertEqual(self.index.match("VMware International Unlimited Comp"), ("81427693656", "truncated"))
+        self.assertIsNone(self.index.match("VMware International Unlimited"))  # short of the limit: not a cut
+
+    def test_a_different_legal_form_stays_separate(self):
+        # parent and subsidiary: Adam Smith International Ltd is not its Australian Pty Ltd
+        self.assertIsNone(self.index.match("Adam Smith International Ltd"))
+        self.assertIsNone(self.index.match("Rapisarda Nominees Inc"))
+
+    def test_a_spelling_two_abns_report_stays_unmatched(self):
+        self.assertIsNone(self.index.match("ProQuest LLC"))
+
+    def test_people_are_never_matched_by_name(self):
+        self.assertIsNone(self.index.match("Jane Citizen"))  # the ABN holder's own name, person-shaped
+        self.assertIsNone(self.index.match("Jane Citizen Pty Ltd"))  # a sole trader never takes a company
+        self.assertIsNone(self.index.match("Some Name Unkeyed"))  # spellings without an ABN are not indexed
+
+    def test_legal_form_key(self):
+        self.assertEqual(cs.spelling_key("RAPISARDA NOMINEES P/L"), ("rapisarda nominees", "pty"))
+        self.assertEqual(cs.spelling_key("Pluralsight, LLC"), ("pluralsight", "llc"))
+        self.assertEqual(cs.spelling_key("Llc Pluralsight"), ("pluralsight", "llc"))
+        self.assertEqual(cs.spelling_key("VMware International Ltd"), cs.spelling_key("VMWARE INTERNATIONAL LIMITED"))
+
+    def test_a_spelling_the_abr_does_not_register_for_the_abn_never_takes_notices(self):
+        registered = {"68706814312": ["DEPARTMENT OF DEFENCE"], "39008488373": ["GHD PTY LTD"]}.get
+        index = cs.SpellingIndex([group("AIR7000 P8 POSEIDON", "68706814312"), group("DEPT OF DEFENCE", "68706814312"),
+                                  group("GHD", "39008488373")], lambda abn: registered(abn, []))
+        self.assertIsNone(index.match("AIR7000 P8 POSEIDON"))
+        self.assertEqual(index.match("Dept of Defence"), ("68706814312", "exact"))
+        self.assertEqual(index.match("GHD Pty Ltd"), ("39008488373", "legal_form"))
+        self.assertEqual(index.skipped_unregistered, 1)
+
+    def test_an_overseas_affiliate_filed_under_the_australian_abn_stays_separate(self):
+        registered = {"51609939817": ["SPLUNK SERVICES AUSTRALIA PTY. LTD."],
+                      "81427693656": ["VMWARE INTERNATIONAL UNLIMITED COMPANY"]}.get
+        index = cs.SpellingIndex([group("Splunk Services Singapore Pte Ltd", "51609939817"),
+                                  group("VMware International Unlimited Comp", "81427693656")],
+                                 lambda abn: registered(abn, []))
+        self.assertIsNone(index.match("SPLUNK SERVICES SINGAPORE PTE. LTD."))
+        hootsuite = cs.SpellingIndex([group("Hootsuite Inc.", "11111111112")],
+                                     lambda abn: ["HOOTSUITE MEDIA AUS PTY LIMITED"])
+        self.assertIsNone(hootsuite.match("Hootsuite Inc."))  # Inc. is not the registered Pty Ltd
+        dataminr = cs.SpellingIndex([group("DataMinr", "16636009866")], lambda abn: ["DATAMINR AUSTRALIA PTY LIMITED"])
+        self.assertIsNone(dataminr.match("Dataminr, Inc."))
+        self.assertEqual(dataminr.match("Dataminr Pty Ltd"), ("16636009866", "legal_form"))
+        self.assertEqual(index.match("VMWARE INTERNATIONAL UNLIMITED COMP"), ("81427693656", "exact"))
