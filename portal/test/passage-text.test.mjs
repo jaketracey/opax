@@ -9,6 +9,7 @@ import ts from 'typescript';
 import {spawnSync} from 'node:child_process';
 import * as passageText from '../src/passage-text.ts';
 import {isIdentityQuestion} from '../src/ask-identity-intent.ts';
+import {isRecordCountQuestion} from '../src/ask-scope-intent.ts';
 import {compareSearchResults} from '../src/search-sort.ts';
 import {isWitness} from '../public/speech-attribution.js';
 import { cacheKeyParams } from '../src/cache-key.ts';
@@ -20,7 +21,7 @@ const select = names => source.statements.filter(n => ts.isFunctionDeclaration(n
 const transpile = text => ts.transpileModule(text,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 const compile = (names, context) => runInNewContext(transpile(select(names)) + ';({' + names.join(',') + '})', {saConversationInput,ANSWER_WRITING_VERSION:'written-answer-1',...passageText, ...context});
 const evidence = {};
-runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), {exports: evidence, require: () => ({...passageText,isIdentityQuestion})});
+runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), {exports: evidence, require: () => ({...passageText,isIdentityQuestion,isRecordCountQuestion})});
 const rid = '855d6df1c8c1429df4e4123c7557373b';
 const pid = rid + '/t/body/0-3425';
 const record = text => ({slug:'speech-1198151', title:'Housing debate', fields:{body:{paragraphs:{[pid]:{text,score:.9,score_type:'VECTOR'}}}}});

@@ -2,7 +2,7 @@ import { scopeAfterStatutes } from './ask-statute-titles.mjs'
 import type { Period, NamedScope, PlanStep } from './agentic-ask'
 import type { ToolResult } from './agentic-tools'
 import { receiptYearWindow } from './receipt-period'
-import { requestedBillTitle } from './ask-exact-lookup'
+import { requestedBillTitle, billTitleMatches } from './ask-exact-lookup'
 export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
@@ -10,6 +10,8 @@ export interface AskConstraints {
   resolved_question?: string
   recordKind?: 'bill' | 'division'
   exactBillTitle?: string
+  contractSupplier?: string
+  grantRecipient?: string
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}, statuteTitles: ReadonlySet<string> | null = null): AskConstraints {
   question = named.resolvedQuestion ?? question
@@ -23,13 +25,28 @@ export function extractAskConstraints(question: string, period: Period, named: N
   const chamber = String(filters.chamber || (/\bsenat(?:e|ors?)\b/.test(q) ? 'senate' : /house of representatives/.test(q) ? 'representatives' : '')) || undefined
   const party = named.correctedParty ? undefined : String(filters.party || (named.parties.length === 1 ? named.parties[0] : '')) || undefined
   const place = /\b(?:electorate|seat) of ([A-Z][\p{L}'-]*(?: [A-Z][\p{L}'-]*)*)/u.exec(question)?.[1]?.trim()
-  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, recordKind: /\b(?:divisions?|vot(?:e|ed|es|ing))\b/i.test(question) ? 'division' : /\bbill\b/i.test(question) ? 'bill' : undefined, exactBillTitle: requestedBillTitle(question) ?? undefined, ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
+  const contractSupplier = /\b(?:which|what)\s+(?:department|agency)\s+(?:gives?|awards?|awarded)\s+(.+?)\s+(?:(?:the\s+)?(?:most|more|largest)\s+)?contracts?\b/i.exec(question)?.[1]?.trim()
+  const grantTotal = /\b(?:total|how much)\b/i.test(question) && !/\b(?:largest|biggest|single|individual)\s+(?:(?:federal|Commonwealth)\s+)?grant\b/i.test(question)
+  const grantRecipient = grantTotal ? (/\bgrants?\s+to\s+(.+?)(?=[?!]|\.\s|\s+(?:in|during|since|from|between)\s+(?:\d|financial|FY)|$)/i.exec(question)?.[1] ?? /\bhow much has\s+(.+?)\s+(?:received|been awarded)\s+in\s+(?:(?:federal|Commonwealth|Queensland Government)\s+)?grants?\b/i.exec(question)?.[1])?.trim().replace(/\.$/,'') : undefined
+  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, ...(contractSupplier?{contractSupplier}:{}), ...(grantRecipient?{grantRecipient}:{}), recordKind: /\b(?:divisions?|vot(?:e|ed|es|ing))\b/i.test(question) ? 'division' : /\bbill\b/i.test(question) ? 'bill' : undefined, exactBillTitle: requestedBillTitle(question) ?? undefined, ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
     superlative: /\b(?:lowest|least|fewest|smallest|youngest)\b/.test(q) ? 'lowest' : /\b(?:highest|most|largest|biggest|oldest|top)\b/.test(q) ? 'highest' : undefined,
     trend: /\b(?:trend|since|over time|each year|by year|changed?|increas\w*|decreas\w*)\b/.test(q) }
 }
 /** Restrict model arguments using only parameters the tool actually supports. */
 export function constrainStep(step: PlanStep, c: AskConstraints, properties: Record<string, unknown>): PlanStep {
   const a = { ...step.args }, has = (k: string) => Object.hasOwn(properties, k)
+  if (step.tool === 'contracts' && c.contractSupplier && has('supplier')) {
+    a.supplier = c.contractSupplier
+    const words=(s:string)=>s.toLowerCase().match(/[\p{L}\p{N}]+/gu)??[]
+    if (typeof a.agency === 'string' && words(a.agency).length && words(a.agency).every(word=>words(c.contractSupplier!).includes(word))) delete a.agency
+  }
+  if (step.tool === 'grants' && c.grantRecipient && has('recipient')) {
+    // A named total keeps the name the reader supplied, even when a planner
+    // abbreviates it to a different recipient or falls back to an award list.
+    a.recipient = c.grantRecipient
+    delete a.query
+    if (has('operation')) a.operation = 'totals'
+  }
   if (c.actUnfiltered) for (const key of ['state', 'jurisdiction']) if (a[key] === 'act') delete a[key]
   // Count selectors are exclusive. Preserve individual periods in comparisons;
   // the result's query window is checked by guardToolPeriod after the lookup.
@@ -96,7 +113,7 @@ export function guardExactLookupResult(result: ToolResult, c: AskConstraints): T
   const all = result.data.rows as Record<string, unknown>[]
   const rows = all.filter(r => {
     if (c.recordKind && r.kind !== c.recordKind) return false
-    if (c.recordKind === 'bill' && c.exactBillTitle && normal(r.title) !== normal(c.exactBillTitle) && normal(r.title).replace(/ (?:19|20)\d{2}$/, '') !== normal(c.exactBillTitle)) return false
+    if (c.recordKind === 'bill' && c.exactBillTitle && !billTitleMatches(r.title, c.exactBillTitle)) return false
     if (c.recordKind === 'division' && c.exactBillTitle && !normal(r.title).includes(normal(c.exactBillTitle))) return false
     if (c.recordKind === 'division' && c.dated) {
       const date = /^(\d{4}-\d{2}-\d{2})(?:$|[T\s])/.exec(String(r.period ?? ''))?.[1]

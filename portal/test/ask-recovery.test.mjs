@@ -4,6 +4,7 @@ const runInNewContext = (code, context = {}, options) => { context.speechPresent
 import {saConversationInput} from './sa-evidence-harness.mjs';
 import * as passageText from '../src/passage-text.ts';
 import {isIdentityQuestion} from '../src/ask-identity-intent.ts';
+import {isRecordCountQuestion} from '../src/ask-scope-intent.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -13,7 +14,7 @@ import ts from 'typescript';
 
 const transpile = s => ts.transpileModule(s, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 const helpers = {};
-runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), { exports: helpers, require: () => ({...passageText,isIdentityQuestion}) });
+runInNewContext(transpile(readFileSync(new URL('../src/ask-evidence.ts', import.meta.url), 'utf8')), { exports: helpers, require: () => ({...passageText,isIdentityQuestion,isRecordCountQuestion}) });
 const parsed = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
 const names = new Set(['apiAsk', 'apiAskStream', 'askPayload', 'hasUnsupportedQuotes', 'unsupportedQuotesIn', 'unquoteUnsupported', 'looseAnswer', 'evidenceOnlyAnswer', 'isRefusal', 'withAskedAs']);
 const code = parsed.statements.filter(n => ts.isFunctionDeclaration(n) ? names.has(n.name?.text) : ts.isVariableStatement(n) && n.declarationList.declarations.some(d => names.has(d.name.getText(parsed)))).map(n => n.getText(parsed)).join('\n');

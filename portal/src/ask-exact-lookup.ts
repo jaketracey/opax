@@ -2,6 +2,8 @@ import type { NamedScope, Period } from './agentic-ask'
 import type { ToolDeps } from './agentic-tools'
 import type { QualitativeAnswer } from './research-types'
 import { resolvePersonName } from './person-name-matching'
+import { offScopeQuestion } from './ask-scope-intent'
+import { appendWrittenPoints } from './research-writing'
 
 type Row = Record<string, unknown>
 export interface LookupDecision { answer: QualitativeAnswer; terminal: boolean; correctedParty?: true }
@@ -11,6 +13,11 @@ const normal = (v: unknown) => String(v ?? '').normalize('NFKD').replace(/[\u030
 const day = (v: unknown) => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) ? v.slice(0, 10) : ''
 const latest = (dates: string[]) => dates.filter(Boolean).sort().at(-1)
 const voteQuestion = /\b(?:divisions?|vot(?:e|ed|es|ing))\b|\bwhy(?: did|['’]d)\b.{0,120}\bback\b/i
+export const normalBillTitle = (value: unknown): string => normal(String(value ?? '').replace(/\s*\[(?:19|20)\d{2}\]\s*$/, ''))
+export function billTitleMatches(recorded: unknown, requested: string): boolean {
+  const title = normalBillTitle(requested),candidate = normalBillTitle(recorded)
+  return candidate === title || !/\d{4}$/.test(requested) && candidate.replace(/ (?:19|20)\d{2}(?: \d{2,4})?$/, '') === title
+}
 
 function decision(text: string, path: string, deps: ToolDeps, terminal = true, recorded?: string): LookupDecision {
   const url = new URL(path, deps.origin ?? 'https://opax.com.au').href
@@ -21,7 +28,7 @@ function decision(text: string, path: string, deps: ToolDeps, terminal = true, r
 /** Only explicit title slots establish a missing bill, never a bag of subject words. */
 export function requestedBillTitle(question: string): string | null {
   const prefix = /\b(?:who\s+(?:introduc\w*|sponsor\w*|wrote)|(?:status|sponsor|portfolio|text|history|details)\s+of|why\s+was|when\s+was|what\s+(?:happened|became)\s+(?:to|of)|tell me about|(?:vot(?:e|ed|ing)|said|say|debate[ds]?)\s+(?:on|for|against|about)|(?:say|said)\s+about)\s+(?:the\s+)?(.+?\bBill(?:\s+\(No\.\s*\d+\))?(?:\s+(?:19|20)\d{2}(?:[-–]\d{2,4})?)?)(?=\s|[?.!,]|$)/i.exec(question)
-  const title = prefix?.[1]?.trim()
+  const title = prefix?.[1]?.replace(/^(?:(?:for|or|against|on|about|the)\s+)+/i, '').trim()
   return title && title.length <= 220 && !/[?!]/.test(title) ? title : null
 }
 
@@ -51,6 +58,7 @@ function requestedPerson(question: string): string | null {
  * Unavailable indexes remain unknown. A missing indexed record does not mean an event never happened. */
 export async function exactRecordLookup(question: string, deps: ToolDeps, period: Period, named?: NamedScope): Promise<LookupDecision | null> {
   question = named?.resolvedQuestion ?? question
+  if (offScopeQuestion(question)) return { terminal: true, answer: { answer: 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.', answer_decision: 'refusal', citations: {}, sources: [] } }
   const read = async (path: string) => { try { return await deps.asset(path) } catch { return null } }
   const today = new Date().toISOString().slice(0, 10)
   const prediction = /\bwill\b.{0,100}\b(?:vote|declare|win|receive|award|pass)\b|\bwho will (?:be|become)\b|\bwill\b.{0,100}\bbe paid\b|\bnext (?:year|budget|election)\b/i.test(question)
@@ -121,11 +129,32 @@ export async function exactRecordLookup(question: string, deps: ToolDeps, period
   if (title && !/\b(?:NSW|Victorian?|Queensland|Tasmanian?|South Australian|Western Australian|Northern Territory)\b/i.test(question)) {
     const index = await read('/bills/index.json'), bills = rows(index, 'bills')
     if (bills) {
-      const matches = bills.filter(b => [b.title, b.short_title].some(t => normal(t) === normal(title) || !/\d{4}$/.test(title) && normal(t).replace(/ (?:19|20)\d{2}$/, '') === normal(title)))
-      if (!matches.length) return decision(`OPAX has no record of a bill by that name: ${title}.`, '/bills', deps)
+      const withoutYear = (v: unknown) => normalBillTitle(v).replace(/ (?:19|20)\d{2}(?: \d{2,4})?$/, '')
+      const matches = bills.filter(b => [b.title, b.short_title].some(t => billTitleMatches(t, title)))
+      if (!matches.length) {
+        // A lifecycle index is not the division archive. A dated vote must be
+        // checked there before declaring the named bill absent.
+        if (voteQuestion.test(question) && period.since && period.until) {
+          const divisions = rows(await read('/divisions/index.json'), 'divisions')
+          if (!divisions) return null
+          const chamber = /\bsenat(?:e|ors?)\b/i.test(question) ? 'senate' : /\bhouse\b/i.test(question) ? 'representatives' : undefined
+          const candidates = divisions.filter(r => (!chamber || String(r.key).startsWith('federal-'+chamber+'-')) && day(r.date) >= period.since! && day(r.date) <= period.until!)
+          if (candidates.length) {
+            if (candidates.length > 60) return null
+            const files = await Promise.all(candidates.map(async r => {
+              if (r.name || r.title) return r
+              return object(await read('/divisions/' + String(r.slug ?? 'division-' + r.key) + '.json'))
+            }))
+            // Missing title data is unknown, not evidence of absence.
+            if (files.some(r => !r.name && !r.title || (' ' + withoutYear(r.name ?? r.title) + ' ').includes(' ' + withoutYear(title) + ' '))) return null
+            const window = period.since === period.until ? `on ${period.since}` : `from ${period.since} to ${period.until}`
+            return decision(`OPAX has no recorded ${chamber === 'senate' ? 'Senate ' : chamber ? 'House ' : 'federal '}division on ${title} ${window}.`, '/divisions/index.json', deps)
+          }
+        } else return decision(`OPAX has no record of a bill by that name: ${title}.`, '/bills', deps)
+      }
       const bill = matches[0]
-      if (matches.every(b => b.status === 'passed') && /\b(?:rejected|defeated|voted down|failed to pass)\b/i.test(question)) return decision(`${bill.title} passed parliament; it was not rejected.`, '/bill/' + encodeURIComponent(String(bill.key)), deps, true, `${bill.title}: passed.`)
-      if (/\bintroduc\w*\s+on\b/i.test(question) && period.since === period.until && day(bill.introduced) && day(bill.introduced) !== period.since) return decision(`${bill.title} was introduced on ${day(bill.introduced)}, not ${period.since}.`, '/bill/' + encodeURIComponent(String(bill.key)), deps)
+      if (bill && matches.every(b => b.status === 'passed') && /\b(?:rejected|defeated|voted down|failed to pass)\b/i.test(question)) return decision(`${bill.title} passed parliament; it was not rejected.`, '/bill/' + encodeURIComponent(String(bill.key)), deps, true, `${bill.title}: passed.`)
+      if (bill && /\bintroduc\w*\s+on\b/i.test(question) && period.since === period.until && day(bill.introduced) && day(bill.introduced) !== period.since) return decision(`${bill.title} was introduced on ${day(bill.introduced)}, not ${period.since}.`, '/bill/' + encodeURIComponent(String(bill.key)), deps)
     }
   }
 
@@ -157,9 +186,6 @@ export async function exactRecordLookup(question: string, deps: ToolDeps, period
 
 /** A checked correction stays first even when the writer reorders or omits other facts. */
 export function prependLookupCorrection(answer: QualitativeAnswer, correction: QualitativeAnswer): QualitativeAnswer {
-  const offset = Array.from(correction.answer).length + 2
-  const citations = { ...correction.citations }
-  for (const [id, ranges] of Object.entries(answer.citations)) citations[id] = ranges.map(([a, b]) => [a + offset, b + offset])
   // The false premise limits the original question. This typed decision also keeps final grounding from moving it.
-  return { ...answer, answer_decision: 'limitation', answer: correction.answer + '\n\n' + answer.answer, citations, sources: [...correction.sources, ...answer.sources] }
+  return { ...answer, ...appendWrittenPoints(correction, answer), answer_decision: 'limitation' }
 }
