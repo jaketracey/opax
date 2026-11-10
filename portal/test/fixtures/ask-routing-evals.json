@@ -8084,6 +8084,263 @@
         "file": "scripts/ask_regression_questions.json",
         "id": "followup-funding"
       }
+    },
+    {
+      "id": "MONEY-INDUSTRY-gambling",
+      "kind": "money",
+      "family": "money.industry",
+      "stratum": "money",
+      "question": "Who takes the most money from the gambling lobby?",
+      "old_route": "ordinary",
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "sources",
+          "min": 1
+        },
+        {
+          "type": "matches",
+          "match": "10,763,834"
+        },
+        {
+          "type": "mentions",
+          "all": [
+            "Labor"
+          ]
+        },
+        {
+          "type": "matches",
+          "match": "donors OPAX groups under"
+        },
+        {
+          "type": "matches",
+          "match": "Other receipts.*not donations"
+        },
+        {
+          "type": "caveat"
+        }
+      ],
+      "must_not": [
+        "682 chamber speeches",
+        "takes the most money"
+      ],
+      "local_match": "10,763,834",
+      "provenance": {
+        "file": "Jake feedback, 11 November 2026",
+        "id": "ask-lobby-money"
+      }
+    },
+    {
+      "id": "MONEY-INDUSTRY-mining",
+      "kind": "money",
+      "family": "money.industry",
+      "stratum": "money",
+      "question": "Which party gets the most money from mining companies?",
+      "old_route": "ordinary",
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "sources",
+          "min": 1
+        },
+        {
+          "type": "matches",
+          "match": "155,465,435"
+        },
+        {
+          "type": "mentions",
+          "all": [
+            "United Australia Party"
+          ]
+        },
+        {
+          "type": "matches",
+          "match": "donors OPAX groups under"
+        },
+        {
+          "type": "matches",
+          "match": "Other receipts.*not donations"
+        },
+        {
+          "type": "caveat"
+        }
+      ],
+      "must_not": [
+        "682 chamber speeches",
+        "takes the most money"
+      ],
+      "local_match": "155,465,435",
+      "provenance": {
+        "file": "Jake feedback, 11 November 2026",
+        "id": "ask-lobby-money"
+      }
+    },
+    {
+      "id": "MONEY-INDUSTRY-banks",
+      "kind": "money",
+      "family": "money.industry",
+      "stratum": "money",
+      "question": "How much have the banks donated to the Liberals?",
+      "old_route": "ordinary",
+      "expected": {
+        "kind": "decline"
+      },
+      "must": [
+        {
+          "type": "sources",
+          "min": 1
+        },
+        {
+          "type": "matches",
+          "match": "40,608,922"
+        },
+        {
+          "type": "decline",
+          "or_match": "cannot establish a banks-only donation total"
+        },
+        {
+          "type": "matches",
+          "match": "finance grouping includes organisations beyond banks"
+        }
+      ],
+      "must_not": [
+        "682 chamber speeches",
+        "takes the most money"
+      ],
+      "local_match": "40,608,922",
+      "provenance": {
+        "file": "Jake feedback, 11 November 2026",
+        "id": "ask-lobby-money"
+      }
+    },
+    {
+      "id": "MONEY-INDUSTRY-unions",
+      "kind": "money",
+      "family": "money.industry",
+      "stratum": "money",
+      "question": "Who receives the most union money?",
+      "old_route": "ordinary",
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "sources",
+          "min": 1
+        },
+        {
+          "type": "matches",
+          "match": "247,398,401"
+        },
+        {
+          "type": "mentions",
+          "all": [
+            "Labor"
+          ]
+        },
+        {
+          "type": "matches",
+          "match": "donors OPAX groups under"
+        },
+        {
+          "type": "matches",
+          "match": "Other receipts.*not donations"
+        },
+        {
+          "type": "caveat"
+        }
+      ],
+      "must_not": [
+        "682 chamber speeches",
+        "takes the most money"
+      ],
+      "local_match": "247,398,401",
+      "provenance": {
+        "file": "Jake feedback, 11 November 2026",
+        "id": "ask-lobby-money"
+      }
+    },
+    {
+      "id": "MONEY-INDUSTRY-tobacco",
+      "kind": "money",
+      "family": "money.industry",
+      "stratum": "money",
+      "question": "Who takes money from the tobacco lobby?",
+      "old_route": "ordinary",
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "sources",
+          "min": 1
+        },
+        {
+          "type": "matches",
+          "match": "4,342,665"
+        },
+        {
+          "type": "mentions",
+          "all": [
+            "Liberal"
+          ]
+        },
+        {
+          "type": "matches",
+          "match": "donors OPAX groups under"
+        },
+        {
+          "type": "matches",
+          "match": "Other receipts.*not donations"
+        },
+        {
+          "type": "caveat"
+        }
+      ],
+      "must_not": [
+        "682 chamber speeches",
+        "takes the most money"
+      ],
+      "local_match": "4,342,665",
+      "provenance": {
+        "file": "Jake feedback, 11 November 2026",
+        "id": "ask-lobby-money"
+      }
+    },
+    {
+      "id": "MONEY-INDUSTRY-speech",
+      "kind": "qualitative",
+      "family": "speeches.topic",
+      "stratum": "parliament",
+      "question": "Who talks about gambling the most?",
+      "old_route": "ordinary",
+      "expected": {
+        "kind": "answer"
+      },
+      "must": [
+        {
+          "type": "sources",
+          "min": 1
+        },
+        {
+          "type": "matches",
+          "match": "682"
+        },
+        {
+          "type": "matches",
+          "match": "most speeches labelled gambling"
+        }
+      ],
+      "must_not": [],
+      "local_match": "682",
+      "provenance": {
+        "file": "Jake feedback, 11 November 2026",
+        "id": "ask-lobby-money"
+      }
     }
   ]
 }

@@ -2,11 +2,14 @@ import type {RecordQuestion} from './ask-records'
 import {rankedMoneyAnswer, fundingResearchFollowUp} from './ask-money'
 import {fundingContinuation, fundingUserTurns} from './ask-money-followup'
 import {federalPartyRankingQuestion,federalPartyRankingIntent,federalPartyRankingClarification} from './ask-money-family'
+import {industryMoneyAnswer} from './ask-money-industry'
 export {federalPartyRankingQuestion,federalPartyRankingIntent} from './ask-money-family'
 
-export type PartyMoneyAnswer=NonNullable<Awaited<ReturnType<typeof rankedMoneyAnswer>>>&{money_route:'federal-party-ranking-v1'}
+export type PartyMoneyAnswer=(NonNullable<Awaited<ReturnType<typeof rankedMoneyAnswer>>>|NonNullable<Awaited<ReturnType<typeof industryMoneyAnswer>>>)&{money_route:'federal-party-ranking-v1'}
 /** Resolve before model selection, model prose, cache reads or paid overview. */
 export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetcher):Promise<PartyMoneyAnswer|null> {
+ const industry=await industryMoneyAnswer(input,assets)
+ if(industry)return {...industry,money_route:'federal-party-ranking-v1'}
  if(input.state&&input.state!=='federal')return null
  const intent=federalPartyRankingIntent(input.question??'')
  if(intent?.uncertain)return {...federalPartyRankingClarification(intent),money_route:'federal-party-ranking-v1'}

@@ -38,14 +38,14 @@ test('with budget to spare the gate lets the call through', async () => {
   assert.ok(env.MODEL_LIMITER.calls >= 1);
 });
 
-test('the money overview spends the reader\'s Ask quota and the model budget; past either the calculated answer stands alone', async () => {
+test('industry money questions use the early calculator without spending model or overview quota', async () => {
   const question = 'Who receives the most funding from gambling donors?';
   reset(limiter(true), limiter(false));
   let response = await post('/api/ask', {question});
   let out = await response.json();
   assert.equal(out.answer_status, 'calculated');
   assert.equal(out.money_overview, undefined);
-  assert.equal(response.headers.get('x-opax-overview'), 'rate-limited');
+  assert.equal(response.headers.get('x-opax-money-route'), 'federal-party-ranking-v1');
   assert.equal(outbound.length, 0);
   assert.equal(env.MODEL_LIMITER.calls, 0, 'the budget is not touched once the reader is limited');
   reset(limiter(false), limiter(true));
@@ -53,6 +53,7 @@ test('the money overview spends the reader\'s Ask quota and the model budget; pa
   out = await response.json();
   assert.equal(out.answer_status, 'calculated');
   assert.equal(out.money_overview, undefined);
-  assert.equal(response.headers.get('x-opax-overview'), 'upstream-429');
+  assert.equal(response.headers.get('x-opax-money-route'), 'federal-party-ranking-v1');
   assert.equal(outbound.length, 0);
+  assert.equal(env.MODEL_LIMITER.calls, 0);
 });

@@ -278,7 +278,7 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   const who=rows[0], recipient=result.selected_parties.join(' and '), sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
   const lead=who ? allFlows ? `The largest source-to-party receipt connection in this published selection is **${plain(who.name)}: ${aud(who.total_aud)}**.`
     : fromDonors ? `The largest disclosed receipts${recipient?` to ${plain(recipient)}`:''}${sector?` among ${plain(sector)} sources`:''} in this published selection are from **${plain(who.name)}: ${aud(who.total_aud)}** across ${who.receipts.toLocaleString('en-AU')} records.`
-    : `**${plain(who.name)}** received the most disclosed receipts${sector?` from ${plain(sector)} receipt sources`:` from ${plain(result.subject)}`} in this published selection: **${aud(who.total_aud)}**.`
+    : `**${plain(who.name)}** received the most disclosed receipts${sector?` from donors OPAX groups under ${plain(sector)}`:` from ${plain(result.subject)}`} in this published selection: **${aud(who.total_aud)}**.`
     : result.answer
   const sources: {resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string;receipt?:ReceiptFact;coverage?:boolean}[]=[]
   const citations: Record<string,number[][]>={}

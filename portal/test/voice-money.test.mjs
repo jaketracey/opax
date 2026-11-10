@@ -84,7 +84,11 @@ test('money tools return computed receipts before speech search without changing
  const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async()=>Response.json(graph)}};
  for(const [tool,args] of [['search_records',{query:'gambling donations'}],['find_connections',{query:'gambling'}]]){
   const out=await runVoiceTool(tool,args,env,async()=>{throw Error('Unrelated speech retrieval')});
-  assert.equal(out.data.total_aud,350);assert.equal(out.sources.length,1);assert.match(out.data.answer,/disclosed receipt total/);
+  if(tool==='search_records'){
+   assert.equal(out.data.answer_status,'calculated');assert.match(out.data.answer,/disclosed receipts/);assert.ok(out.sources.every(s=>s.kind==='receipt'));
+  }else{
+   assert.equal(out.data.total_aud,350);assert.equal(out.sources.length,1);assert.match(out.data.answer,/disclosed receipt total/);
+  }
  }
  let reads=0;
  await runVoiceTool('search_records',{query:'health grant funding'},env,async()=>{reads++;return Response.json({results:[]})});assert.equal(reads,1);

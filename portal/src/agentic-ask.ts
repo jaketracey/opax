@@ -1,4 +1,5 @@
 import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
+import {claimMeasureConsistent,guardClaimMeasures} from './ask-claim-measures'
 import { researchPhaseWallMs } from './research-time'
 import { ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_TOOL_WALL_MS, ASK_MAX_MODEL_USD, ASK_FALLBACK_RESERVE_USD, reserveQuestionTurn } from './ask-budgets'
 import { researchTurnReservationUsd, unmeteredResearchBudget } from './research-budget'
@@ -293,7 +294,7 @@ export function verifyComposition(text: string, _facts: Fact[], _question = ''):
   const kept: string[] = []; let dropped = 0
   for (const sentence of sentences) {
     if (!sentence.trim()) continue
-    if (/\p{N}/u.test(sentence) || NUMBER_WORD.test(sentence) || CAUSAL.test(sentence) || /^based on\b/i.test(sentence)) { dropped++; continue }
+    if (!claimMeasureConsistent(sentence,[]) || /\p{N}/u.test(sentence) || NUMBER_WORD.test(sentence) || CAUSAL.test(sentence) || /^based on\b/i.test(sentence)) { dropped++; continue }
     kept.push(sentence)
   }
   return { prose: kept.join(' '), cited: [], dropped }
@@ -620,7 +621,14 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const primary=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,signal},deps.research?loopProgress:progress,budgetMs,period,filters,resolvedScope,started)
     const run = await (reserveEnabled?bounded(primary,selectionLeft(),deps.signal):primary(deps.signal))
     if (deps.research && !isElectorateDataQuestion(question) && !run.answered) throw new ResearchError(run.reason === 'no_supported_claim' ? 'no_supported_claim' : 'grounding', { rounds: run.research?.rounds ?? 0, tokens: run.tokens, turns: run.research?.turns, ...(run.cost_usd != null ? { costUsd: run.cost_usd } : {}) })
-    return completeLookup(await writeRun(run))
+    const complete=completeLookup(await writeRun(run))
+    if(complete.qualitative){
+      const original=complete.qualitative
+      const checked=guardClaimMeasures(complete.qualitative as unknown as Record<string,unknown>) as unknown as QualitativeAnswer
+      complete.answer=checked.answer;complete.qualitative=checked
+      if(complete.research&&checked!==original)complete.research.sources=checked.sources.map(s=>({title:s.title,url:s.url,kind:s.kind,...(s.date?{date:s.date}:{}),...(s.speaker?{speaker:s.speaker}:{})}))
+    }
+    return complete
   }
   catch (error) {
     if (!deps.research) throw error
