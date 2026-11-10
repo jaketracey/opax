@@ -31,8 +31,27 @@ export function decodeSeatGrants(value: unknown) {
   const grants = array((value) => {
     const g = object(value);
     const programId = optional(text)(g.pid) ?? '';
+    const name = optional(text)(g.rn) ?? '';
+    const rid = optional(text)(g.rid) ?? '';
+    const kind = optional(text)(g.k)?.trim().toLowerCase();
+    const missingName = !name.trim();
+    const anonymous =
+      missingName ||
+      (!rid.startsWith('person:') &&
+        (kind === 'undisclosed' ||
+          rid.startsWith('undisclosed:') ||
+          name === 'Unnamed recipient'));
+    // Anonymous source labels describe missing disclosure, not a named
+    // individual. Keep that label, but retain no navigable identity.
+    const label = missingName ? 'Unnamed recipient' : name;
+    const grant = decodeGrant({
+      ...g,
+      rn: label,
+      ...(anonymous ? { k: 'individual', rid: '' } : {}),
+    });
     return {
-      ...decodeGrant(g),
+      ...grant,
+      name: anonymous ? label : grant.name,
       programId,
       program: programName(optional(text)(g.pr) ?? '', programId),
     };
