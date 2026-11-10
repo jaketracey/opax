@@ -40,3 +40,10 @@ New `validate_data.py` checks guard each class against regression.
 - The 18 late bill-vote links listed for review in `bills/index.json`.
 - The roster changes the overlay holds for review (state codes, six twin folds), and the 18 former senators.
 - Budget, vic-gifts, bills-act and bills-tas review files were re-digested by the fix lanes for the reviewed diffs listed above.
+
+## Deploy record
+
+- Merged to main as `9ffa310da` (59 commits, including the retained-shard tally guard in `scripts/vm/validate_data.py`).
+- Deploy run 42817714267 stopped at Test: `qld-interest-links` used Ann Leahy as a name with no profile, and the people fix now gives the `Leahy` row its full-name address. The fixture was changed to an invented name in `49b6c41a1`. Nothing deployed from that run.
+- Deploy run 42823458675 attempt 1 failed on a timing-flaky voice quota test (no voice code changed); attempt 2 deployed `49b6c41a1` successfully on 11 Nov 2026. The regenerated vic-gifts, bills-tas and bills-act data match production byte for byte.
+- Divisions: the committed shards predate the office-code fix, so `validate_data.py divisions` fails on them until the VM regenerates the group. The lane's full export passes the merged validator (311 retained shards, no office code in any party tally).
