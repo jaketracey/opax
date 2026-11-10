@@ -3704,6 +3704,7 @@ exports[`iOS design at font scale 1 MoneyRow retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    push={false}
   >
     <RouteHost
       withAppleZoom={false}
@@ -4901,6 +4902,7 @@ exports[`iOS design at font scale 1 RecordRow retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    push={false}
   >
     <RouteHost
       withAppleZoom={false}
@@ -6739,6 +6741,7 @@ exports[`iOS design at font scale 1 Tile retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    push={false}
   >
     <RouteHost
       withAppleZoom={false}
@@ -11025,6 +11028,7 @@ exports[`iOS design at font scale 2 MoneyRow retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    push={false}
   >
     <RouteHost
       withAppleZoom={false}
@@ -12227,6 +12231,7 @@ exports[`iOS design at font scale 2 RecordRow retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    push={false}
   >
     <RouteHost
       withAppleZoom={false}
@@ -14167,6 +14172,7 @@ exports[`iOS design at font scale 2 Tile retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    push={false}
   >
     <RouteHost
       withAppleZoom={false}
