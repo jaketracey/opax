@@ -200,8 +200,21 @@ android_flow() {
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots/$size" "$OUT/maestro/$key" > "$OUT/$key-captures.log"
   if [ "$rc" != 0 ]; then
     timed 15 "${ADB[@]}" exec-out screencap -p > "$OUT/maestro/$key/failure.png" || true
-    timed 15 "${ADB[@]}" shell uiautomator dump /sdcard/opax-failure.xml >/dev/null 2>&1 || true
-    timed 10 "${ADB[@]}" exec-out cat /sdcard/opax-failure.xml > "$OUT/maestro/$key/failure-ui.xml" || true
+    # The reused Maestro driver owns UIAutomation. Prefer its own fresh
+    # failure hierarchy; never copy a stale dump left by an earlier journey.
+    if ! python3 - "$OUT/maestro/$key" <<'PYHIERARCHY'
+import pathlib, shutil, sys
+root=pathlib.Path(sys.argv[1])
+files=list(root.glob('**/screen-hierarchy/*.json'))
+if not files: sys.exit(1)
+shutil.copyfile(max(files,key=lambda p:p.stat().st_mtime),root/'failure-ui.json')
+PYHIERARCHY
+    then
+      timed 5 "${ADB[@]}" shell rm -f /sdcard/opax-failure.xml >/dev/null 2>&1 || true
+      if timed 15 "${ADB[@]}" shell uiautomator dump /sdcard/opax-failure.xml >/dev/null 2>&1; then
+        timed 10 "${ADB[@]}" exec-out cat /sdcard/opax-failure.xml > "$OUT/maestro/$key/failure-ui.xml" || true
+      fi
+    fi
   fi
   printf '%s\t%s\t%s\n' "$file" "$(cat "$OUT/android-api.txt" | tr -d '\r')" "$rc" >> "$OUT/flow-results.tsv"
   return "$rc"

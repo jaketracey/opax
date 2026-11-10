@@ -48,6 +48,11 @@ elif name=='emulator':
 elif name=='tsx':
     if args[0]=='scripts/fixture-server.ts': time.sleep(600)
 elif name=='maestro':
+    if os.environ['MOCK_FAIL']=='1':
+        out=pathlib.Path(args[args.index('--test-output-dir')+1])
+        hierarchy=out/'run/flow/screen-hierarchy/failed-step.json'
+        hierarchy.parent.mkdir(parents=True,exist_ok=True)
+        hierarchy.write_text(json.dumps({'attributes':{'text':'current failure'}}))
     raise SystemExit(int(os.environ['MOCK_FAIL']))
 elif name=='xcrun': raise SystemExit('Linux must not invoke xcrun')
 elif name=='git': print('a'*40)
@@ -70,6 +75,10 @@ elif name=='git': print('a'*40)
                 try: os.killpg(child.pid,signal.SIGTERM)
                 except ProcessLookupError: pass
             commands=[json.loads(line) for line in (root/'commands.jsonl').read_text().splitlines()]
+            if fail and any(c[0]=='maestro' for c in commands):
+                hierarchy=out/'maestro/01-launch/failure-ui.json'
+                self.assertEqual(json.loads(hierarchy.read_text())['attributes']['text'],'current failure')
+                self.assertFalse(any('uiautomator' in c for c in commands),'Reuse Maestro hierarchy rather than stale on-device XML')
             return child.returncode, stdout+stderr, commands, (out/'flow-results.tsv').read_text() if (out/'flow-results.tsv').exists() else ''
 
     @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
