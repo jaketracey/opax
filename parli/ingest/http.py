@@ -45,7 +45,12 @@ class _ChallengeHTML(HTMLParser):
         marker = " ".join(values.get(k, "") or "" for k in ("id", "class"))
         if re.search(r"(?:^|\s)(?:cf-chl-[\w-]*|challenge-form|challenge-running)(?:\s|$)", marker, re.I):
             self.found = True
-        if tag in ("script", "iframe") and re.search(r"/cdn-cgi/challenge-platform/|/_Incapsula_Resource", values.get("src", ""), re.I):
+        # The challenge itself, never its detection script: Cloudflare and Imperva inject
+        # /cdn-cgi/challenge-platform/ and /_Incapsula_Resource scripts into the ordinary content pages
+        # they front as well (cabinet.qld.gov.au served its real ministers page that way, 10 November
+        # 2026, and the diaries source was paused for a month on it). A challenge page presents the
+        # challenge in an iframe or a form, or says so in its title.
+        if tag == "iframe" and re.search(r"/cdn-cgi/challenge-platform/|/_Incapsula_Resource", values.get("src", ""), re.I):
             self.found = True
 
     def handle_data(self, data):

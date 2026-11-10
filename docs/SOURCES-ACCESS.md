@@ -85,6 +85,40 @@ The approved identity and no-workaround policy above continue to apply. These
 email findings do not clear an inaccessible route, enable a research-only export
 or authorise the publication of held source bodies.
 
+## Pause review, 10 November 2026
+
+Each paused host was asked once with the identifying agent, from the refresh
+instance and from a home connection, following no redirect and touching no
+pipeline state. The parliamentary hosts and GrantConnect refuse the agent from
+both: `parlinfo.aph.gov.au`, `www.aph.gov.au`, `data.parliament.qld.gov.au`,
+`hansardsearch.parliament.sa.gov.au` and `www.grants.gov.au/Ga/List` answered
+HTTP 403 to the page and to `/robots.txt` alike, so the refusal is of the agent,
+not of a datacentre address. Those pauses stand; permission remains requested.
+
+Two pauses were the client's, not the publisher's:
+
+- `diaries_qld`: `cabinet.qld.gov.au` serves the real ministers page (HTTP 200,
+  37 KB) with Imperva's `/_Incapsula_Resource` detection script near the end, and
+  the challenge detector treated any such script as a challenge page. Cloudflare's
+  `/cdn-cgi/challenge-platform/` script is injected into content pages the same
+  way. The detector now recognises the challenge itself (an iframe or form, or a
+  title that says so), never its detection script (`parli/ingest/http.py`,
+  `tests/test_challenge_detection.py`). The source resumes with the next monthly
+  group; it had been paused since 19 October on this false positive.
+- `qld_contracts`: `www.data.qld.gov.au/api/3/action/package_search` answers
+  HTTP 200 to the agent, but the portal's `robots.txt` disallows `/api/` for every
+  agent (RFC 9309 reading; Python 3.12's parser drops the rule because of the
+  blank lines after `User-agent: *`, which is why the earlier probe read it as
+  allowed), and the dataset downloads the fetcher then follows redirect to a host
+  the shared transport cannot check. The pause stands until either the CKAN
+  listing is read from a path robots allows or Queensland's open data team
+  confirms the API is open to identifying clients.
+
+The knowledge box's schema stopped offering a no-generation summary provider on
+about 4 November, which made the releases publication gate refuse every night
+after. The newest resources carry no processing summary, so the gate now proves
+behaviour as well as configuration (`scripts/publish_collected_bill_texts.py`).
+
 ## Review correction and rollback
 
 The review correction removes the remaining contact-log browser path, tightens
