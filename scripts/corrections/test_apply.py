@@ -102,5 +102,29 @@ class CorrectionsTest(unittest.TestCase):
                 corrections.load(path.stem)
 
 
+class SelectorTests(unittest.TestCase):
+    def entry(self, **kw):
+        e = {"id": "b1", "field": "sources[label=As presented].url", "from": "u1", "to": "u9",
+             "evidence_url": "https://www.legislation.act.gov.au/b/db_65320", "evidence": "e",
+             "finding": "state-datasets-005", "reviewed": "2026-11-10"}
+        e.update(kw)
+        return e
+
+    def test_selects_one_list_element(self):
+        rows = [{"key": "b1", "sources": [{"label": "As presented", "url": "u1"}, {"label": "Other", "url": "u2"}]}]
+        self.assertEqual(len(corrections.apply("t", rows, key="key", entries=[self.entry()])), 1)
+        self.assertEqual(rows[0]["sources"], [{"label": "As presented", "url": "u9"}, {"label": "Other", "url": "u2"}])
+
+    def test_missing_element_fails(self):
+        rows = [{"key": "b1", "sources": [{"label": "Other", "url": "u1"}]}]
+        with self.assertRaises(corrections.CorrectionError):
+            corrections.apply("t", rows, key="key", entries=[self.entry()])
+
+    def test_ambiguous_element_fails(self):
+        rows = [{"key": "b1", "sources": [{"label": "As presented", "url": "u1"}, {"label": "As presented", "url": "u1"}]}]
+        with self.assertRaises(corrections.CorrectionError):
+            corrections.apply("t", rows, key="key", entries=[self.entry()])
+
+
 if __name__ == "__main__":
     unittest.main()

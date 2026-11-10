@@ -202,11 +202,14 @@ class CorrectionTests(unittest.TestCase):
                 "evidence": "the source says b", "finding": "test", "reviewed": "2026-11-10"}
         return {**base, **kw}
 
-    def test_apply_sets_the_value_and_a_rerun_is_a_no_op(self):
+    def test_apply_sets_the_value_and_a_stale_entry_stops_for_review(self):
+        # The shared helper (scripts/corrections/apply.py) fails loudly once the record
+        # already holds `to`: the source now agrees, so the entry must be removed.
         records = [{"id": "r1", "f": "a"}]
         self.assertEqual(len(corrections.apply("t", records, entries=[self.entry()])), 1)
         self.assertEqual(records[0]["f"], "b")
-        self.assertEqual(len(corrections.apply("t", records, entries=[self.entry()])), 1)
+        with self.assertRaisesRegex(corrections.CorrectionMismatch, "remove the correction"):
+            corrections.apply("t", records, entries=[self.entry()])
 
     def test_a_changed_or_missing_record_stops_for_review(self):
         with self.assertRaises(corrections.CorrectionMismatch):

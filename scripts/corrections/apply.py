@@ -16,8 +16,10 @@ is gone) apply raises CorrectionError and changes nothing, so a stale
 correction forces a fresh review instead of silently overwriting new data.
 
 `field` is a top-level key or a dotted path into nested objects
-("_meta.duplicate_of"). A missing key reads as null, so `"from": null` adds a
-field and `"to": null` clears one (the key is kept, holding null).
+("_meta.duplicate_of"). A part `name[key=value]` selects the one element of
+the list `name` whose `key` equals `value` ("sources[label=As presented].url").
+A missing key reads as null, so `"from": null` adds a field and `"to": null`
+clears one (the key is kept, holding null).
 
 Rules for writing entries are in scripts/corrections/README.md. Never write a
 correction from memory or model knowledge: evidence_url is the original
@@ -34,12 +36,17 @@ from typing import Any, Callable, Iterable
 DIRECTORY = Path(__file__).resolve().parent
 FIELDS = ("id", "field", "from", "to", "evidence_url", "evidence", "finding", "reviewed")
 DATASET = re.compile(r"[a-z0-9][a-z0-9_-]{0,63}")
-FIELD_PATH = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*")
+_SEGMENT = r"[A-Za-z_][A-Za-z0-9_]*(?:\[[A-Za-z_][A-Za-z0-9_]*=[^\[\]]*\])?"
+FIELD_PATH = re.compile(_SEGMENT + r"(?:\." + _SEGMENT + r")*")
+SELECTOR = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)\[([A-Za-z_][A-Za-z0-9_]*)=([^\[\]]*)\]")
 _MISSING = object()
 
 
 class CorrectionError(ValueError):
     """A correction file is malformed or no longer matches the data it corrects."""
+
+
+CorrectionMismatch = CorrectionError  # the name the bills exporter's first copy used
 
 
 def path_for(dataset: str, directory: Path | None = None) -> Path:
@@ -94,25 +101,53 @@ def load(dataset: str, directory: Path | None = None) -> list[dict]:
     return entries
 
 
+def _select(items: Any, key: str, value: str, field: str) -> Any:
+    """The one element of the list `items` whose `key` equals `value` (as text)."""
+    if not isinstance(items, list):
+        return _MISSING
+    hits = [x for x in items if isinstance(x, dict) and str(x.get(key)) == value]
+    if len(hits) > 1:
+        raise CorrectionError(f"{field}: {len(hits)} elements have {key}={value}, expected one")
+    return hits[0] if hits else _MISSING
+
+
+def _step(value: Any, part: str, field: str) -> Any:
+    selector = SELECTOR.fullmatch(part)
+    name = selector.group(1) if selector else part
+    if not isinstance(value, dict) or name not in value:
+        return _MISSING
+    value = value[name]
+    return _select(value, selector.group(2), selector.group(3), field) if selector else value
+
+
 def _get(record: dict, field: str) -> Any:
     value: Any = record
     for part in field.split("."):
-        if not isinstance(value, dict) or part not in value:
+        value = _step(value, part, field)
+        if value is _MISSING:
             return None
-        value = value[part]
     return value
 
 
 def _set(record: dict, field: str, value: Any) -> None:
+    """Set `field`. A dotted part creates a missing object; a `name[key=value]`
+    part must already select exactly one list element (it is never created)."""
     parts = field.split(".")
     target = record
     for part in parts[:-1]:
-        child = target.get(part, _MISSING)
-        if child is _MISSING or child is None:
-            child = target[part] = {}
+        if SELECTOR.fullmatch(part):
+            child = _step(target, part, field)
+            if child is _MISSING:
+                raise CorrectionError(f"cannot set {field}: {part} selects no element")
+        else:
+            child = target.get(part, _MISSING)
+            if child is _MISSING or child is None:
+                child = target[part] = {}
         if not isinstance(child, dict):
             raise CorrectionError(f"cannot set {field}: {part} is not an object")
         target = child
+    if SELECTOR.fullmatch(parts[-1]):
+        raise CorrectionError(f"cannot set {field}: the last part must name a field")
     target[parts[-1]] = value
 
 

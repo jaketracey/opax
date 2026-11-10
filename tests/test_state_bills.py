@@ -286,14 +286,14 @@ class CorrectionsTests(unittest.TestCase):
 
     def test_fails_loudly_when_the_source_value_changed(self):
         rows=self.records(); rows[0]['sources'][0]['url']='https://x/fixed-at-source'
-        with self.assertRaisesRegex(corrections.CorrectionError,'not the reviewed'):
+        with self.assertRaisesRegex(corrections.CorrectionError,'now holds'):
             corrections.apply('t',rows,key='key',entries=[self.ENTRY])
 
     def test_fails_on_missing_record_or_ambiguous_path(self):
-        with self.assertRaisesRegex(corrections.CorrectionError,'0 records'):
+        with self.assertRaisesRegex(corrections.CorrectionError,'record not found'):
             corrections.apply('t',[],key='key',entries=[self.ENTRY])
         rows=self.records(); rows[0]['sources'].append({'label':'As presented','url':'https://x/old'})
-        with self.assertRaisesRegex(corrections.CorrectionError,'one required'):
+        with self.assertRaisesRegex(corrections.CorrectionError,'expected one'):
             corrections.apply('t',rows,key='key',entries=[self.ENTRY])
 
     def test_entries_need_a_source_url(self):
