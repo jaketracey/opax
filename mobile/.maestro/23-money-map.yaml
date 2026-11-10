@@ -348,6 +348,13 @@ name: 23 Native money map, held figures, original source and ranked list
     file: support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-party-0
+# The helper stops as soon as the row enters the screen, which can leave it
+# under the tab bar, where a tap opens the Bills tab. Lift it clear first.
+- swipe:
+    start: 97%, 70%
+    end: 97%, 50%
+    duration: 600
+- waitForAnimationToEnd
 - assertVisible:
     id: money-party-0
     text: Labor.*
@@ -365,6 +372,12 @@ name: 23 Native money map, held figures, original source and ranked list
     file: support/money-screen-scroll.yaml
     env:
       TARGET_ID: money-public-contracts
+# Lift the row clear of the tab bar, as for the party rows above.
+- swipe:
+    start: 97%, 70%
+    end: 97%, 50%
+    duration: 600
+- waitForAnimationToEnd
 - tapOn:
     id: money-public-contracts
 - extendedWaitUntil:
