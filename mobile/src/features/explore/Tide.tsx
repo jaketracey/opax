@@ -116,7 +116,13 @@ export default function Tide() {
                       <LinkRow
                         title={`${order === 'now' ? (metric(slug).now * 100).toFixed(1) + '%' : `${metric(slug).change >= 0 ? '+' : '−'}${Math.abs(metric(slug).change * 100).toFixed(1)} pp`}`}
                         onPress={() =>
-                          router.push(topicRoute(slug, {}, topicNames[slug]!))
+                          router.push(
+                            topicRoute(
+                              slug,
+                              scope === 'federal' ? { state: 'federal' } : {},
+                              topicNames[slug]!,
+                            ),
+                          )
                         }
                       />
                       <ShareBars
