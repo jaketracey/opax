@@ -1,6 +1,7 @@
 // Lane P, part 2 (people.md 2.1, 2.2): the person profile and the party
 // page on the shared templates. Each block holds one acceptance check.
 import { act } from 'react';
+import { router } from 'expo-router';
 import * as Native from 'react-native';
 import { FlatList, Platform, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -16,6 +17,9 @@ import {
 } from '../src/design/format';
 import { Section } from '../src/design/layout';
 import { useReduceMotion } from '../src/design/accessibility';
+import { SegmentedPicker } from '../src/design/controls';
+import { Icon } from '../src/design/icon';
+import { LinkRow, ValueRow } from '../src/design/rows';
 import { rhythm } from '../src/design/tokens';
 import { partySlug } from '../src/design/party';
 import { Text } from '../src/design/primitives';
@@ -33,6 +37,8 @@ import {
   votesCount,
 } from '../src/features/people/model';
 import RecordList from '../src/features/people/RecordList';
+import { MoreFromRecord } from '../src/features/people/Sections';
+import { topicRoute } from '../src/navigation/routes';
 import Person from '../src/features/Person';
 import type { ProfileView } from '../src/features/your-mp/model';
 import { catalogs, manifest, people, pinned, roster, slugs } from './pinned';
@@ -58,6 +64,7 @@ jest.mock('../src/api/runtime', () => ({
     followSources: jest.fn(),
   },
   peopleDepth: {
+    topics: jest.fn(),
     access: jest.fn(),
     funding: jest.fn(),
     mentions: jest.fn(),
@@ -200,8 +207,126 @@ beforeEach(() => {
   jest.mocked(useReduceMotion).mockReturnValue(false);
   delete mockParams.section;
   mock.directory.mockResolvedValue(directory as never);
+  jest.mocked(peopleDepth.topics).mockRejectedValue(new Error('none'));
   jest.mocked(useFollows).mockReturnValue([]);
   jest.mocked(useFollowStates).mockReturnValue({ states: new Map() } as never);
+});
+
+describe('Topics in More from the record', () => {
+  const topics = () => {
+    const profile = (
+      label: string,
+      from: number,
+      to: number,
+      share: number,
+    ) => ({
+      label,
+      from,
+      to,
+      labelled: 100,
+      topics: [
+        { slug: 'tax-budget', count: share * 100, share },
+        { slug: 'health', count: 14, share: 0.14 },
+        { slug: 'future-topic', count: 3, share: 0.03 },
+        { slug: '', count: 1, share: 0.01 },
+      ],
+    });
+    return {
+      person: result({
+        name: 'Katy Gallagher',
+        indexed: 100,
+        profiles: {
+          all: profile('All years', 2010, 2026, 0.26),
+          then: profile('2010s', 2010, 2019, 0.2),
+          now: profile('Since 2020', 2020, 2026, 0.32),
+        },
+        coverage: undefined,
+      }),
+      baseline: result({
+        labelled: 100,
+        topics: [{ slug: 'tax-budget', count: 26 }],
+      }),
+    };
+  };
+
+  test.each([
+    { person: 'katy-gallagher', name: 'Katy Gallagher' },
+    { party: 'labor', name: 'Labor' },
+  ])(
+    '$name topic rows open the topic page as accessible full-width rows',
+    async (subject) => {
+      jest.mocked(peopleDepth.topics).mockResolvedValue(topics());
+      let r!: TestRenderer.ReactTestRenderer;
+      await act(async () => {
+        r = TestRenderer.create(
+          <MoreFromRecord subject={subject} kinds={[]} topics testID="more" />,
+        );
+      });
+      const tax = r.root
+        .findAllByType(LinkRow)
+        .find((n) => n.props.testID === 'person-topic-0');
+      expect(tax).toBeDefined();
+      expect(tax!.props.href).toEqual(topicRoute('tax-budget'));
+      expect(tax!.props.value).toBe('26%');
+      const accessible = host(r, 'person-topic-0');
+      expect(accessible.props.accessibilityRole).toBe('link');
+      expect(accessible.props.accessibilityLabel).toBe(
+        'Tax and budget, 26 percent of their speeches, opens topic',
+      );
+      const pressable = tax!.find(
+        (n) =>
+          typeof n.type !== 'string' && typeof n.props.style === 'function',
+      );
+      const style = Native.StyleSheet.flatten(
+        pressable.props.style({ pressed: false }),
+      );
+      expect(style.minHeight).toBeGreaterThanOrEqual(44);
+      expect(style.flexDirection).toBe('row');
+      expect(
+        tax!.findAllByType(Icon).some((n) => n.props.name === 'chevron.right'),
+      ).toBe(true);
+      await act(async () => accessible.props.onAccessibilityTap());
+      expect(router.push).toHaveBeenCalledWith(topicRoute('tax-budget'));
+      for (const i of [2, 3]) {
+        const plain = r.root
+          .findAllByType(ValueRow)
+          .find((n) => n.props.testID === `person-topic-${i}`);
+        expect(plain).toBeDefined();
+        expect(plain!.props.href).toBeUndefined();
+        expect(
+          host(r, `person-topic-${i}`).props.accessibilityRole,
+        ).toBeUndefined();
+      }
+      await act(async () => r.unmount());
+    },
+  );
+
+  test('period changes update shares and accessible labels while topic destinations stay unfiltered', async () => {
+    jest.mocked(peopleDepth.topics).mockResolvedValue(topics());
+    const { r } = await wong();
+    const picker = r.root.findByType(SegmentedPicker);
+    expect(picker.props.options.map((o: { label: string }) => o.label)).toEqual(
+      ['All', '2010 to 2019', 'Since 2020'],
+    );
+    for (const [era, percent] of [
+      ['then', 20],
+      ['now', 32],
+      ['all', 26],
+    ] as const) {
+      await act(async () => picker.props.onChange(era));
+      const row = r.root
+        .findAllByType(LinkRow)
+        .find((n) => n.props.testID === 'person-topic-0');
+      expect(row).toBeDefined();
+      expect(row!.props.value).toBe(`${percent}%`);
+      expect(row!.props.href).toEqual(topicRoute('tax-budget'));
+      expect(host(r, 'person-topic-0').props.accessibilityLabel).toBe(
+        `Tax and budget, ${percent} percent of their speeches, opens topic`,
+      );
+    }
+    expect(peopleDepth.topics).toHaveBeenCalledTimes(1);
+    await act(async () => r.unmount());
+  });
 });
 
 describe('profile', () => {
