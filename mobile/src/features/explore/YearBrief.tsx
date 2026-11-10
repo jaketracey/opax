@@ -8,7 +8,7 @@ import {
   Text,
   type SourceDetails,
 } from '../../design/primitives';
-import { formatDate } from '../../design/format';
+import { counted, formatDate } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes/records';
 import { partyName } from '../reports/model';
@@ -105,7 +105,9 @@ export function YearBrief({ data, meta }: { data: Year; meta: YearMeta }) {
             <SpeechRow key={s.slug} speech={s} />
           ))}
           {cited.length > 3 ? (
-            <Disclosure label={`${cited.length - 3} more speeches`}>
+            <Disclosure
+              label={counted(cited.length - 3, 'more speech', 'more speeches')}
+            >
               <View>
                 {cited.slice(3).map((s) => (
                   <SpeechRow key={s.slug} speech={s} />
