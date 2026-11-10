@@ -920,6 +920,24 @@ class DivisionRecordRulesTests(unittest.TestCase):
         self.assertTrue(self.errs(self.record(_meta={"corrections": [carried]}), reviewed={}))
 
 
+    def test_a_retained_record_skips_only_the_tally_rule(self):
+        retained = {"refresh_retained": True}
+        # nsw-lc-2025-12-23-23 style: a retained shard whose tally disagrees passes.
+        self.assertEqual(self.errs(self.record(ayes=5, noes=25, jurisdiction="nsw", house="nsw_lc",
+                                               result="affirmative", _meta=dict(retained))), [])
+        cases = [
+            (self.record(members=[{"name": "A", "vote": "aye", "party": "PRES"}], _meta=dict(retained)), "office code"),
+            (self.record(question="No motion text available", _meta=dict(retained)), "placeholder"),
+            (self.record(_meta={**retained, "duplicate_of": "federal-senate-9"}), "duplicate_of"),
+            (self.record(_meta={**retained, "corrections": [dict(self.CORRECTION, to="tied")]}), "not in scripts/corrections"),
+        ]
+        for record, needle in cases:
+            with self.subTest(needle=needle):
+                errs = self.errs(record)
+                self.assertEqual(len(errs), 1, errs)
+                self.assertIn(needle, errs[0])
+
+
 class BillDocShapeTests(unittest.TestCase):
     """validate_data.bill_doc_errors: the shape rules from data cleanup wave 1 (bills)."""
     GOOD = {"key": "au-federal-s1062", "status": "negatived", "sponsor": "WHISH-WILSON, Sen Peter",

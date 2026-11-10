@@ -344,13 +344,16 @@ def division_record_rules(record: dict, keys: set, reviewed: dict, office_codes,
         errs.append(f"division {key} publishes an office code as a party")
     if isinstance(record.get("question"), str) and record["question"].strip() in placeholders:
         errs.append(f"division {key} publishes a placeholder question")
+    meta = record.get("_meta", {})
     ayes, noes, result = record.get("ayes"), record.get("noes"), record.get("result")
-    if type(ayes) is int and type(noes) is int and result in ("affirmative", "negative"):
+    # A refresh-retained shard keeps the previously published body, so its tally is
+    # re-ingested in wave 2 rather than failing (and reverting) the whole group here.
+    if type(ayes) is int and type(noes) is int and result in ("affirmative", "negative") \
+            and not meta.get("refresh_retained"):
         senate = record.get("jurisdiction") == "federal" and record.get("house") == "senate"
         expected = "affirmative" if ayes > noes else "negative" if ayes < noes or senate else None
         if expected and result != expected:
             errs.append(f"division {key} result {result} disagrees with its tally {ayes}-{noes}")
-    meta = record.get("_meta", {})
     if meta.get("duplicate_of") and (meta["duplicate_of"] == key or meta["duplicate_of"] not in keys):
         errs.append(f"division {key} duplicate_of does not name another published division")
     for c in meta.get("corrections", []):
