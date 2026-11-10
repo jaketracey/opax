@@ -284,11 +284,10 @@ export function requestBody(
     .filter((m) => m.role === 'answer')
     .slice(-2)
     .reverse()) {
-    const sources = m.sources || [];
-    for (const s of [
-      ...sources.filter((s) => s.cited),
-      ...sources.filter((s) => !s.cited),
-    ])
+    // Cited records only (docs/STREAMING.md). An uncited record came back
+    // because an earlier pin searched it, so re-pinning it would carry an old
+    // subject into every later follow-up.
+    for (const s of (m.sources || []).filter((s) => s.cited))
       if (/^[a-f0-9]{32}$/i.test(s.resource) && !prior.includes(s.resource))
         prior.push(s.resource);
   }
