@@ -7,7 +7,11 @@ import {
   type Block,
   type Inline,
 } from '../src/features/ask/answer-markdown';
-import type { Answer, Source } from '../src/features/ask/model';
+import {
+  decodeAnswer,
+  type Answer,
+  type Source,
+} from '../src/features/ask/model';
 
 const source = (resource: string, ranges: [number, number][]): Source => ({
   resource,
@@ -81,6 +85,23 @@ test('citation offsets are code points, after emoji too', () => {
     sources: [source('a', [[0, 11]]), source('b', [[12, 22]])],
   };
   expect(citedAnswer(answer)).toBe('🙂 Levy set. [1] Next part. [2]');
+});
+
+test('decoding keeps citation offsets aligned when the answer has surrounding whitespace', () => {
+  const answer = decodeAnswer({
+    answer: '\n  🙂 Levy set. Next part. \n',
+    citations: {
+      'fixture/f/text/0': [
+        [3, 14],
+        [15, 25],
+      ],
+    },
+    sources: [{ resource: 'fixture', title: 'Fixture record' }],
+  });
+  expect(citedAnswer(answer).trim()).toBe('🙂 Levy set. [1] Next part. [1]');
+  // Source ranges restored from history use the same coordinate system.
+  const restored = decodeAnswer({ ...answer, citations: {} });
+  expect(citedAnswer(restored)).toBe(citedAnswer(answer));
 });
 
 test('adjacent marks merge into one: "1, 2" and a run of three "1 to 3"', () => {

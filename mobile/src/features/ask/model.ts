@@ -164,7 +164,13 @@ export function decodeAnswer(raw: unknown): Answer {
       if (typeof s[k] === 'string') out[k] = s[k];
     return [out];
   });
-  const out: Answer = { answer: v.answer.trim(), citations, sources };
+  // Citation ranges refer to the Worker's original Unicode code points.
+  // Trimming leading whitespace moves every mark to the wrong sentence.
+  const out: Answer = {
+    answer: v.answer.trim() ? v.answer : '',
+    citations,
+    sources,
+  };
   for (const k of [
     'asked_as',
     'answer_status',
