@@ -6,6 +6,7 @@ import * as choices from '../src/features/your-mp/choice-store';
 import {
   migrateSeatChoice,
   resetSeatForTests,
+  savedSeatDirectory,
   useSeat,
   type SeatActions,
   type SeatState,
@@ -196,6 +197,18 @@ test('a failed save changes no consumer and gives no haptic', async () => {
   });
   expect(value.status).toBe('none');
   expect(haptic).not.toHaveBeenCalled();
+});
+test('a choice saved after the directory failed reads the directory again', async () => {
+  jest.mocked(catalogs.directory).mockRejectedValueOnce(new Error('Offline'));
+  await mount();
+  expect(value.status).toBe('error');
+  await act(async () => value.choose(seat('Grayndler')));
+  expect(catalogs.directory).toHaveBeenCalledTimes(2);
+  expect(value).toMatchObject({
+    status: 'chosen',
+    choice: choice(seat('Grayndler')),
+  });
+  expect(savedSeatDirectory()).not.toBeNull();
 });
 test('directory failure produces the typed error state', async () => {
   jest.mocked(catalogs.directory).mockRejectedValue(new Error('offline'));

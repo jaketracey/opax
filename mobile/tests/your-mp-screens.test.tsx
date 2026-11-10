@@ -1140,6 +1140,13 @@ describe('Your MP tab', () => {
     await act(async () => fail(new Error('Offline')));
     expect(has(r, 'your-mp-error')).toBe(true);
     expect(has(r, 'seat-search')).toBe(false);
+    // Try again reads the directory again; the page recovers.
+    const error = r.root.find(
+      (n) => n.props.testID === 'your-mp-error' && !!n.props.onRetry,
+    );
+    await act(async () => error.props.onRetry());
+    expect(has(r, 'your-mp-error')).toBe(false);
+    expect(has(r, 'your-invitation')).toBe(true);
     await act(async () => r.unmount());
   });
 });

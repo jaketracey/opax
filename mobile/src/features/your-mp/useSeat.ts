@@ -64,6 +64,13 @@ function publish(choice: SeatChoice | null) {
 function initialise() {
   removeSubscription ??= subscribeChoice((choice) => {
     rawChoice = choice;
+    // A choice saved after the directory read failed (Today's invitation
+    // stays usable) would publish "chosen" with no directory, and screens
+    // that need both would wait for good. Read the directory again.
+    if (!directory && snapshot.status === 'error') {
+      actions.retry();
+      return;
+    }
     publish(choice);
   });
   pending ??= (async () => {

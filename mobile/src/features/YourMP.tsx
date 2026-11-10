@@ -299,7 +299,11 @@ export default function YourMP() {
       grouped
       testID="your-mp-screen"
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={retry} />
+        <RefreshControl
+          refreshing={refreshing}
+          // A failed seat read has no blocks yet: a pull reads the seat again.
+          onRefresh={seat.status === 'error' ? seat.retry : retry}
+        />
       }
     >
       <RouteOptions
@@ -323,6 +327,8 @@ export default function YourMP() {
         <InlineError
           subject="Your electorate"
           message={`Your electorate couldn't be read on this ${thisDevice()}.`}
+          // The seat store reads the directory once: Try again reads it again.
+          onRetry={seat.retry}
           testID="your-mp-error"
         />
       ) : home && federal && directory ? (
