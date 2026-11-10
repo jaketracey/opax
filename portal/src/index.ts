@@ -6271,6 +6271,7 @@ function agenticToolDeps(env: Env, signal?: AbortSignal, ctx?: ExecutionContext)
 }
 function agenticDeps(env: Env, ctx: ExecutionContext, signal?: AbortSignal, input: Record<string, unknown> = {}): AgenticDeps {
   return {
+    modelPrices: { input: Number(env.AGENTIC_INPUT_USD_PER_MILLION) > 0 ? Number(env.AGENTIC_INPUT_USD_PER_MILLION) : 1, output: Number(env.AGENTIC_OUTPUT_USD_PER_MILLION) > 0 ? Number(env.AGENTIC_OUTPUT_USD_PER_MILLION) : 3 },
     ...agenticToolDeps(env, signal, ctx),
     ...(env.RESEARCH_SHADOW ? { researchShadow: true } : {}),
     plannerTrail: true,
@@ -6532,7 +6533,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     // but can neither read nor fill the agentic cache. The numerical path
     // declines unsafe scopes; qualitative research verifies original passages.
     const privateTurn = Array.isArray(input.context) && input.context.length > 0
-    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/${ANSWER_WRITING_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${env.RESEARCH_LOOP_STEPS ?? '5'}/${env.RESEARCH_LOOP_TOKENS ?? '96000'}/${env.RESEARCH_LOOP_MS ?? '8000'}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
+    const loopLimits = researchLimits({ steps: env.RESEARCH_LOOP_STEPS, tokens: env.RESEARCH_LOOP_TOKENS, wallMs: env.RESEARCH_LOOP_MS })
+    const loopVersion = loopRoute ? `${AGENTIC_TOOLS_VERSION}/${ANSWER_WRITING_VERSION}/loop/${researchModelKey(env.RESEARCH_LOOP_MODEL_ID, env.RESEARCH_LOOP_PROVIDER, env.RESEARCH_LOOP_REASONING)}/${loopLimits.rounds}/${loopLimits.tokens}/${loopLimits.wallMs}/${String(input.kind ?? 'all')}` : AGENTIC_TOOLS_VERSION
     const key = namedScope.unresolved || namedScope.ambiguous || namedScope.bills.length || loopRoute && Array.isArray(input.prior_resources) && input.prior_resources.length ? undefined : new Request(await agenticCacheKey(question, env.CACHE_EPOCH, env.ASK_MODEL || 'openai-compatible', agenticPeriod(input, loopRoute), loopVersion, agenticFilters(input), classifyAgentic(question).shape, namedScope))
     const streaming = url.searchParams.get('stream') === '1' || (request.headers.get('accept') ?? '').includes('text/event-stream')
     if (key && !privateTurn && !cacheBypass(request, url)) {

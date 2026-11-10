@@ -1,5 +1,7 @@
 import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
 import { researchPhaseWallMs } from './research-time'
+import { ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_TOOL_WALL_MS, ASK_MAX_MODEL_USD, ASK_FALLBACK_RESERVE_USD, reserveQuestionTurn } from './ask-budgets'
+import { researchTurnReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { resolvePartySubject } from './ask-party-subject'
 import { receiptYearWindow } from './receipt-period'
 import { exactRecordLookup, prependLookupCorrection } from './ask-exact-lookup'
@@ -10,12 +12,11 @@ import { serviceText, type ServicePeriod } from './person-service'
  * (docs/design/agentic-ask-2026-10.md). /api/ask uses AGENTIC_ASK_MODE;
  * it stays off unless the operator selects route or shadow.
  *
- *   classify (rules, no model) -> plan (one model call, JSON) -> run tools
- *   (src/agentic-tools.ts, deterministic) -> render bound tool-row templates.
- *   The model never writes answer text or figures.
+ * Route mode observes each batch of tool results before choosing the next
+ * lookup or finishing. The original JSON planner remains a bounded fallback.
  *
- * Counts and rankings only ever come from tool results. The model only plans;
- * it never counts or phrases numerical claims. `answered: false` with a reason
+ * Counts and rankings only ever come from tool results; selected figures are
+ * rendered and checked against their source rows. `answered: false` with a reason
  * when no tool result supports an answer (the web-ask-no-answer contract).
  */
 import { TOOL_SPECS, TOPICS, STATES, CHAMBERS, TERMS, runTool, validToolArgs, AGENTIC_TOOLS_VERSION, type ToolDeps, type ToolResult, type Cite, type RelatedCite } from './agentic-tools'
@@ -27,11 +28,11 @@ import { ResearchError, researchSources, type Research, type ResearchPayload, ty
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
 import { CAUSAL } from './research-coherence.mjs'
 
-export const AGENTIC_PROMPT_VERSION = `agentic-ask-8-exact-lookups/${ANSWER_WRITING_VERSION}`
-export const AGENTIC_BUDGET_MS = 40_000
-export const AGENTIC_MAX_STEPS = 6
-/** A loop answer's time target: optional extras (the committee supplement) are dropped rather than run past it. */
-export const LOOP_ANSWER_TARGET_MS = 13_000
+export const AGENTIC_PROMPT_VERSION = `agentic-ask-9-observe-act/${ANSWER_WRITING_VERSION}`
+export const AGENTIC_BUDGET_MS = ASK_HARD_WALL_MS
+export const AGENTIC_MAX_STEPS = ASK_MAX_TOOL_CALLS
+/** Soft answer target; a missing fact or recovery may use the rest of the hard allowance. */
+export const LOOP_ANSWER_TARGET_MS = ASK_ANSWER_TARGET_MS
 
 export type Shape = 'ranking' | 'trend' | 'comparison' | 'money'
 export interface Period { kind: 'current' | 'all' | 'window'; since?: string; until?: string; label: string }
@@ -90,7 +91,7 @@ export function inferPeriod(question: string, override?: unknown): Period {
   if (override === 'current' || /\b(?:this|current) (?:term|parliament)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
   if (/\blast (?:term|parliament)\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], until: TERMS['47th'][1]!, label: 'Counting speeches in the previous parliament, July 2022 to March 2025.' }
   // A bill/statute title's year is not a date filter on its debate history.
-  const dated = q.replace(/\([^()]*\)(?=\s+(?:bill|act)\b)/g, '').replace(/\b(?:bill|act)(?:\s+\(no\.\s*\d+\))?\s+(?:19|20)\d{2}(?:[-–]\d{2,4})?\b/g, '')
+  const dated = q.replace(/\([^()]*\)(?=\s+(?:bill|act)\b)/g, '').replace(/\b(?:bill|act)(?:\s+\(no\.\s*\d+\))?\s+(?:19|20)\d{2}(?:[-–]\d{2,4})?(?:\s*\[(?:19|20)\d{2}\])?/g, '')
   const tokens = periodTokens(dated)
   if (tokens.length) {
     const shift = (date: string, days: number) => new Date(Date.parse(date) + days * 86400000).toISOString().slice(0, 10)
@@ -434,7 +435,11 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     if (!surnames.has(surname)) surnames.set(surname, new Set())
     surnames.get(surname)!.add(p.name)
   }
+  const namePrefixes = new Set('has have did does do what who why how when is was were are by from about on of for to with and or versus vs compare senator minister mr mrs ms dr the will can could should'.split(' '))
   for (const [surname, names] of surnames) if (remainder.includes(` ${surname} `) && capitalised([...names][0].trim().split(' ').at(-1)!)) {
+    const before = remainder.slice(0, remainder.indexOf(` ${surname} `)).trim().split(' ').at(-1) ?? ''
+    const given = [...names].some(name => normaliseQuestion(name).split(' ').slice(0, -1).includes(before))
+    if (before && before !== '~' && !namePrefixes.has(before) && !given) continue
     if (names.size === 1) people.push([...names][0]); else ambiguous = true
   }
   const parties = Object.entries(aliases).filter(([, names]) => names.some(mentions)).map(([name]) => name)
@@ -488,9 +493,12 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
 export async function resolveNamedScope(question: string, deps: ToolDeps, ms = 4_000, filters: Record<string, unknown> = {}): Promise<NamedScope> {
   return bounded(async signal => {
     const assets = deps.withSignal?.(signal) ?? deps
-    const [roster, bills] = await Promise.all([assets.asset('/parliamentarians.json'), assets.asset('/bills/index.json')])
+    const [roster, bills, interests] = await Promise.all([assets.asset('/parliamentarians.json'), assets.asset('/bills/index.json'), /\b(?:declare\w*|interests?|real estate)\b/i.test(question) ? assets.asset('/interests/index.json').catch(() => null) : null])
+    const register = Object.values((interests as { people?: Record<string, { name: string }> } | null)?.people ?? {})
+    const people = [...register, ...((roster as { people?: { name: string }[] } | null)?.people ?? [])]
+    const combined = { people: [...new Map(people.map(p => [p.name, p])).values()] }
     signal.throwIfAborted()
-    const scope = extractNamedScope(question + (filters.speaker ? ` speeches by ${filters.speaker}` : ''), roster, bills)
+    const scope = extractNamedScope(question + (filters.speaker ? ` speeches by ${filters.speaker}` : ''), combined, bills)
     if (!(bills as { bills?: unknown[] } | null)?.bills && /\bbill\b/i.test(question)) scope.unresolved = true
     return scope
   }, ms, deps.signal)
@@ -516,6 +524,7 @@ export function planRetainsNamedScope(plan: Plan, scope: NamedScope): boolean {
 // ---------------------------------------------------------------- orchestration
 export type Progress = (event: string, data: unknown) => Promise<void>
 export interface AgenticDeps extends ToolDeps {
+  modelPrices?: { input: number; output: number }
   /** A comparison run must never pay for a second old-path planner. */
   researchShadow?: boolean
   generate: (query: string, prompt: { system: string; user: string }, maxTokens: number, signal: AbortSignal) => Promise<{ text: string; tokens?: { input: number; output: number }; costUsd?: number }>
@@ -585,11 +594,11 @@ export function stepEvent(step: PlanStep, id: number, committee = false): StepEv
   const registered = getAskTool(step.tool)
   if (registered) return { id, ...registered.stepLabel(step.args), state: 'running' }
   const a = step.args
-  const label = committee ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_receipts: 'Checking disclosed receipts', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Searching speeches', search: 'Searching the record', person_quotes: 'Reading their speeches', read_passage: 'Reading a passage', finish: 'Selecting record facts', answer: 'Checking the answer' } as Record<string, string>)[step.tool]
+  const label = committee || step.tool === 'count_speeches' && a.venue === 'committee' ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_receipts: 'Checking disclosed receipts', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Resolving a name', search: 'Searching the record', person_quotes: 'Reading their speeches', read_passage: 'Reading a passage', finish: 'Selecting record facts', answer: 'Checking the answer', decline: 'Checking record coverage' } as Record<string, string>)[step.tool]
   const moneyArgs = new Set(['Labor', 'Liberal', 'Greens', 'Nationals', 'LNP', 'Independent', 'One Nation', 'United Australia Party', 'gambling', 'mining', 'fossil_fuels', 'finance', 'property', 'unions', 'health', 'hospitality', 'media', 'tech'])
   const raw = step.tool === 'party_receipts' ? [a.party, a.industry].find(v => typeof v === 'string' && moneyArgs.has(v)) : a.keyword ?? a.party ?? a.industry ?? a.speaker ?? a.person ?? a.topic ?? a.query ?? a.name
   const arg = typeof raw === 'string' ? raw.replace(/[<>&"'\x00-\x1f]/g, '').slice(0, 40) : undefined
-  return { id, label, ...(arg ? { arg } : {}), state: 'running' }
+  return { id, label: label ?? 'Checking public records', ...(arg ? { arg } : {}), state: 'running' }
 }
 export function resultCount(result: ToolResult): number {
   for (const key of ['rows', 'passages', 'people', 'facts']) if (Array.isArray(result.data?.[key])) return (result.data![key] as unknown[]).length
@@ -639,7 +648,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
     if (!sheet.length) return run
     await progress('status', {phase:'writing'})
-    const stats = { rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
+    const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
@@ -648,7 +657,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
     run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started
-    if(run.research){run.research.turns=stats.turns;run.research.sources=complete.sources.map(s=>({title:s.title,url:s.url,kind:s.kind,...(s.date?{date:s.date}:{}),...(s.speaker?{speaker:s.speaker}:{})}))}
+    if(run.research){run.research.reserved_cost_usd=stats.reservedCostUsd;run.research.turns=stats.turns;run.research.sources=complete.sources.map(s=>({title:s.title,url:s.url,kind:s.kind,...(s.date?{date:s.date}:{}),...(s.speaker?{speaker:s.speaker}:{})}))}
     return run
   }
   try {
@@ -662,6 +671,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const failure = error instanceof ResearchError ? error : new ResearchError(deps.signal?.aborted ? 'aborted' : error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'error')
     await deps.onResearchFailure?.(failure)
     if (deps.signal?.aborted) throw error
+    if (failure.reason === 'spend' || (failure.stats.reservedCostUsd ?? 0) + ASK_FALLBACK_RESERVE_USD > ASK_MAX_MODEL_USD) return { ...lookupPayload({ answer: 'Research reached its per-question budget before the requested answer could be established.', answer_decision: 'limitation', citations: {}, sources: [] }), tokens: failure.stats.tokens, cost_usd: failure.stats.costUsd ?? null, events: attempted, research_failure: 'spend', research: { mode: 'loop', rounds: failure.stats.rounds, trail: researchTrail(attempted, []), sources: [], failure: 'spend', turns: failure.stats.turns, reserved_cost_usd: failure.stats.reservedCostUsd } }
     if (deps.researchShadow || failure.reason === 'timeout' || !classifyAgentic(question).shape) {
       const steps = attempted.map(event => ({ tool: event.tool ?? 'search', args: {}, ok: event.state === 'done', ms: event.ms ?? 0, label: event.label }))
       return completeLookup({ answered: false, reason: 'declined', answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period,
@@ -675,11 +685,18 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
       const value = data as { step?: StepEvent }
       await progress(event, value?.step ? { ...value, step: { ...value.step, id: value.step.id + offset } } : data)
     }
-    const recover=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,signal,research:undefined,plannerTrail:true},shifted,Math.max(0,budgetMs-(Date.now()-started)),period,filters,resolvedScope,started)
+    const fallbackSpend = { reservedCostUsd: failure.stats.reservedCostUsd }
+    const generate: AgenticDeps['generate'] = async (query, prompt, maxTokens, signal) => {
+      const input = Math.ceil(new TextEncoder().encode(JSON.stringify({ query, prompt })).length / 3) + 4096
+      // The old planner has no provider receipt. Its conservative ceiling stays charged for writing admission.
+      await reserveQuestionTurn(fallbackSpend, researchTurnReservationUsd(input, maxTokens, deps.modelPrices?.input, deps.modelPrices?.output), unmeteredResearchBudget)
+      return deps.generate(query, prompt, maxTokens, signal)
+    }
+    const recover=(signal?:AbortSignal)=>runAgenticAttempt(question,{...deps,generate,signal,research:undefined,plannerTrail:true},shifted,Math.max(0,budgetMs-(Date.now()-started)),period,filters,resolvedScope,started)
     const fallback = await (reserveEnabled?bounded(recover,selectionLeft(),deps.signal):recover(deps.signal))
     fallback.events = fallback.events.map(e => ({ ...e, id: e.id + offset }))
     if (fallback.research) fallback.research.trail = fallback.research.trail.map(e => ({ ...e, id: e.id + offset }))
-    if (fallback.research) Object.assign(fallback.research, { failure: failure.reason, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) })
+    if (fallback.research) Object.assign(fallback.research, { failure: failure.reason, reserved_cost_usd: fallbackSpend.reservedCostUsd, turns: failure.stats.turns, cached_input_by_turn: failure.stats.turns?.map(turn => turn.cached_input) })
     fallback.tokens.input += failure.stats.tokens.input; fallback.tokens.output += failure.stats.tokens.output
     if (failure.stats.costUsd != null) fallback.cost_usd = (fallback.cost_usd ?? 0) + failure.stats.costUsd
     fallback.timings.total_ms = Date.now() - started
@@ -707,7 +724,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   const base = (over: Partial<AgenticPayload>): AgenticPayload => ({ answered: false, answer: '', answer_source: 'none', shape: classifyAgentic(question).shape, period, facts: [], notes: [], steps, events, tokens, cost_usd: cost, over_budget: !left(), version: `${AGENTIC_PROMPT_VERSION}/${AGENTIC_TOOLS_VERSION}`,
     ...(researched?.constraints?{answer_scope:researched.constraints}:{}),
     ...(deps.plannerTrail ? { research: { mode: 'planner', rounds: 1, trail: researchTrail(events, steps), sources: [] } as ResearchPayload } : {}),
-    ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
+    ...(researched ? { research: { mode: 'loop', rounds: researched.rounds, reserved_cost_usd:researched.reservedCostUsd, trail: researchTrail(events, steps), sources: [], turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input) } as ResearchPayload } : {}),
     ...over, source_links: sourceLinks(results), timings: { ...timings, total_ms: Date.now() - t0 } })
   // The decade candidate proof supports leaders, not the least active member.
   if (!deps.research && !electorateData && /\b(?:least|fewest)\b/i.test(question)) return base({ reason: 'declined' })
@@ -740,7 +757,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
         // Adapters use the scoped signal on fetch and body reads.
         if (deps.withSignal) Object.assign(scoped, deps.withSignal(signal))
         return custom ? custom(scoped) : runTool(scoped, step.tool, step.args)
-      }, Math.min(12_000, Math.max(0, left() - 5_000)), parentSignal)
+      }, Math.min(ASK_TOOL_WALL_MS, Math.max(0, left() - 5_000)), parentSignal)
     } catch { r = { tool: step.tool, ok: false, error: 'lookup timed out or unavailable', cite: [], notes: [] } }
     const ms = Date.now() - started
     steps.push({ tool: step.tool, args: step.args, ok: r.ok, error: r.error, ms, label: event.label })
@@ -748,8 +765,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
     events.push(done); await progress('status', { phase: 'step', step: done })
     return r
   }
-  // Committee-hearing supplement for a federal chamber ranking. A loop run starts it as soon as that ranking lands,
-  // so it runs while the model picks its facts instead of after them.
+  // The planner keeps its committee supplement. Loop runs choose each lookup explicitly, inside their call cap.
   const eligibleRank = (s: PlanStep) => s.tool === 'count_speeches' && ['speaker', 'party'].includes(String(s.args.group_by)) && !s.args.speaker && (s.args.venue ?? 'chamber') === 'chamber' && (!s.args.state || s.args.state === 'federal')
   const committeeChecks = new Map<string, Promise<ToolResult>>()
   const committeeCheck = (step: PlanStep, ranked: ToolResult, round?: number) => {
@@ -780,13 +796,8 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
     researched = await bounded(signal => { executionSignal = signal; return deps.research!(question, {
       deps, period, named, signal, progress,selectionWallMs:(deps.research!.writingWallMs??budgetMs)>=1000?Math.max(1,researchPhaseWallMs(Math.min(budgetMs,deps.research!.writingWallMs??budgetMs))-(Date.now()-primaryStarted)-50):undefined,
       scope: step => periodPlan({ shape: classifyAgentic(question).shape ?? 'ranking', steps: [step] }, period, { ...explicit, ...filters }).steps[0],
-      execute: async (step, round, custom, signal) => {
-        const r = await execute(step, false, custom, round, signal)
-        // Only while it can still land inside the answer target; a slow index gets no extra load.
-        if (r.ok && eligibleRank(step) && steps.length < AGENTIC_MAX_STEPS && Date.now() - t0 < LOOP_ANSWER_TARGET_MS - 6_000) void committeeCheck(step, r, round).catch(() => {})
-        return r
-      },
-    }) }, Math.max(0, Math.min(30_000, left() - 8_000)), deps.signal)
+      execute: (step, round, custom, signal) => execute(step, false, custom, round, signal),
+    }) }, Math.max(0, left() - 4_000), deps.signal)
     executionSignal = deps.signal
     usage(researched)
     results.push(...researched.results)
@@ -800,7 +811,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
       if (researched.answer) await deps.onResearchAnswer?.(researched.answer).catch(() => {})
       await progress('status', { phase: 'writing' })
       return base({ answered: true, answer: researched.qualitative.answer, answer_source: 'model', qualitative: researched.qualitative, passage_answer:researched.points,
-        research: { mode: 'loop', rounds: researched.rounds, trail: researchTrail(events, steps), turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input), ...(researched.answer ? { answer_stats: researched.answer } : {}), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}), ...(s.speaker ? { speaker: s.speaker } : {}) })) } })
+        research: { mode: 'loop', rounds: researched.rounds, reserved_cost_usd:researched.reservedCostUsd, trail: researchTrail(events, steps), turns: researched.turns, cached_input_by_turn: researched.turns?.map(turn => turn.cached_input), ...(researched.answer ? { answer_stats: researched.answer } : {}), sources: researched.qualitative.sources.map(s => ({ title: s.title, url: s.url, kind: s.kind, ...(s.date ? { date: s.date } : {}), ...(s.speaker ? { speaker: s.speaker } : {}) })) } })
     }
   }
   let plannerFailed = false
@@ -878,13 +889,9 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   }
   const rankIndex = plan.steps.findIndex((s, i) => eligibleRank(s) && (!researched || !used.size || used.has(i)))
   const committeeFacts: Fact[] = []
-  if (rankIndex >= 0 && left() >= 8_000) {
-    const step = plan.steps[rankIndex], early = committeeChecks.get(JSON.stringify(step.args))
-    // A loop answer waits for its early check only until the loop's time target, and never starts a late one;
-    // without the supplement the counts still say chamber speeches, with committee turns noted as excluded.
-    let timer: ReturnType<typeof setTimeout> | undefined
-    const r = researched ? early && await Promise.race([early, new Promise<null>(resolve => { timer = setTimeout(() => resolve(null), Math.max(0, LOOP_ANSWER_TARGET_MS - (Date.now() - t0))) })]).finally(() => { if (timer !== undefined) clearTimeout(timer) })
-      : steps.length < AGENTIC_MAX_STEPS ? await committeeCheck(step, results[rankIndex]) : null
+  if (!researched && rankIndex >= 0 && left() >= 8_000) {
+    const step = plan.steps[rankIndex]
+    const r = steps.length < AGENTIC_MAX_STEPS ? await committeeCheck(step, results[rankIndex]) : null
     if (r && r.ok && r.data?.committeeSupplement) {
       const more = factSheet([r]); results.push(r)
       committeeFacts.push(...more.facts)
@@ -918,7 +925,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   timings.compose_ms = Date.now() - tCompose
   if (!left() || deps.signal?.aborted) return base({ reason: 'declined', over_budget: true })
   return base({ answered: true, answer, answer_source: 'template', facts: factOut, notes,
-    ...(researched || deps.plannerTrail ? { chosen_facts: selected.map(f => f.id), research: { mode: researched ? 'loop' : 'planner', rounds: researched?.rounds ?? 1, trail: researchTrail(events, steps), turns: researched?.turns, cached_input_by_turn: researched?.turns?.map(turn => turn.cached_input), sources: researchSources([...selected, ...facts.filter(f => committeeFacts.some(c => c.text === f.text))]) } } : {}) })
+    ...(researched || deps.plannerTrail ? { chosen_facts: selected.map(f => f.id), research: { mode: researched ? 'loop' : 'planner', rounds: researched?.rounds ?? 1, reserved_cost_usd:researched?.reservedCostUsd, trail: researchTrail(events, steps), turns: researched?.turns, cached_input_by_turn: researched?.turns?.map(turn => turn.cached_input), sources: researchSources([...selected, ...facts.filter(f => committeeFacts.some(c => c.text === f.text))]) } } : {}) })
 }
 export function normaliseQuestion(question: string): string {
   return question.normalize('NFKC').toLowerCase().replace(/[‘’“”]/g, "'").replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim()

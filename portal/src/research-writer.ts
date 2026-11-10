@@ -1,4 +1,5 @@
 import { generateText } from 'ai'
+import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
 import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, payRate, usableFact, type WritingInput } from './research-writing'
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
@@ -61,7 +62,7 @@ export function createAnswerWriter(options: ResearchOptions) {
     keepsRequired=keepsAll
     let activeInput=input, prompt=writingPrompt(input)
     const startedWriting=Date.now()
-    const inputReserve=Math.ceil(prompt.length/3)+1024, outputReserve=Math.min(1400,Math.min(160000,Number(options.tokens ?? 96000))-stats.tokens.input-stats.tokens.output-inputReserve)
+    const inputReserve=Math.ceil(prompt.length/3)+1024, outputReserve=Math.min(1400,Math.min(ASK_MAX_TOKENS,Number(options.tokens ?? ASK_DEFAULT_TOKENS))-stats.tokens.input-stats.tokens.output-inputReserve)
     if (outputReserve<=0) return fallback()
     for(let pass=0;pass<2;pass++){
       if(credits.blocked())return fallback()
@@ -69,9 +70,9 @@ export function createAnswerWriter(options: ResearchOptions) {
       const currentPrompt=prompt
       if (outputReserve<=0) return fallback()
       try {if(await options.modelBudgetSpent())return fallback()}catch{return fallback()}
-      if(signal?.aborted||stats.tokens.input+stats.tokens.output+Math.ceil(currentPrompt.length/3)+1024+outputReserve>Math.min(160000,Number(options.tokens??96000)))return fallback()
+      if(signal?.aborted||stats.tokens.input+stats.tokens.output+Math.ceil(currentPrompt.length/3)+1024+outputReserve>Math.min(ASK_MAX_TOKENS,Number(options.tokens??ASK_DEFAULT_TOKENS)))return fallback()
       const inPrice=options.inputPrice ?? 1, outPrice=options.outputPrice ?? 3
-      let reservation;try {reservation=await options.dailyBudget.reserve(researchTurnReservationUsd(inputReserve,outputReserve,inPrice,outPrice))}catch{return fallback()}
+      let reservation;try {reservation=await reserveQuestionTurn(stats,researchTurnReservationUsd(inputReserve,outputReserve,inPrice,outPrice),options.dailyBudget)}catch{return fallback()}
       if(!reservation)return fallback()
       const controller=new AbortController(), abort=()=>controller.abort(signal?.reason)
       signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort()
@@ -93,7 +94,7 @@ export function createAnswerWriter(options: ResearchOptions) {
         const cost=receipt ?? (inputTokens*inPrice+outputTokens*outPrice)/1e6
         stats.tokens.input+=inputTokens;stats.tokens.output+=outputTokens;stats.costUsd=(stats.costUsd??0)+cost
         Object.assign(turn,{input:inputTokens,output:outputTokens,cached_input:result.usage.inputTokenDetails?.cacheReadTokens??0,cost_usd:cost,provider:meta?.provider??'',ms:Date.now()-started})
-        if(stats.tokens.input+stats.tokens.output>Math.min(160000,Number(options.tokens ?? 96000)))return fallback()
+        if(stats.tokens.input+stats.tokens.output>Math.min(ASK_MAX_TOKENS,Number(options.tokens ?? ASK_DEFAULT_TOKENS)))return fallback()
         let raw;try{raw=JSON.parse(result.text.replace(/^```(?:json)?\s*|\s*```$/g,''))}catch{return fallback()}
         lastDraft=draftWrittenAnswer(raw,activeInput)
         const verified=verifyWrittenAnswer(raw,activeInput)
