@@ -14,9 +14,13 @@ import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
 import {
+  DatedMembers,
   ElectorateHistory,
+  rosterName,
   termSpan,
 } from '../src/features/directories/ElectorateHistory';
+import { CachedPortrait } from '../src/features/CachedPortrait';
+import { personRoute } from '../src/navigation/routes';
 import {
   RepresentativeRows,
   sinceLine,
@@ -305,6 +309,107 @@ test('McLeay reads Labor in Past members, including older terms with only a pres
   expect(mcleay.findByType(PartyLabel).props.party).toBe('Labor');
   expect(text(r)).not.toMatch(/\b(?:SPK|PRES)\b/);
   expect(mcleay.props.detail).toBe('29 Aug 1989 to 13 Mar 1993');
+  await act(async () => r.unmount());
+});
+
+test('Maribyrnong past members use preferred names, native portraits and person routes without visible legal-name clutter', async () => {
+  load('Maribyrnong');
+  const r = await render(<Electorate />);
+  const rows = r.root.findAllByType(PersonRow);
+  for (const [name, slug, legalName, span] of [
+    [
+      'Bill Shorten',
+      'bill-shorten',
+      'William Richard Shorten',
+      '24 Nov 2007 to 20 Jan 2025',
+    ],
+    [
+      'Bob Sercombe',
+      'bob-sercombe',
+      'Robert Charles Grant Sercombe',
+      '2 Mar 1996 to 17 Oct 2007',
+    ],
+  ]) {
+    const row = rows.find((n) => n.props.name === name)!;
+    expect(row.props.href).toEqual(personRoute(slug!));
+    expect(row.findByType(CachedPortrait).props).toMatchObject({ name, slug });
+    expect(row.props.accessibilityLabel).toBe(
+      `${name}, Recorded as ${legalName}, Labor, ${span}`,
+    );
+    expect(text(r)).not.toContain(legalName);
+  }
+  const griffiths = rows.find((n) => n.props.name === 'Alan Gordon Griffiths')!;
+  expect(griffiths.props.href).toBeUndefined();
+  expect(griffiths.findByType(CachedPortrait).props.slug).toBeUndefined();
+  await act(async () => r.unmount());
+});
+
+test.each([
+  ['2022-06-01', 'Bill Shorten', 'bill-shorten', 'William Richard Shorten'],
+  [
+    '2000-06-01',
+    'Bob Sercombe',
+    'bob-sercombe',
+    'Robert Charles Grant Sercombe',
+  ],
+])(
+  'dated members on %s share the preferred identity and keep the legal name accessible',
+  async (asof, name, slug, legalName) => {
+    const view = c.electorateFor(
+      c.decodeElectorate(pinned(seat('Maribyrnong').detail_url)),
+    );
+    const r = await render(
+      <DatedMembers
+        view={view}
+        directory={directory}
+        asof={asof!}
+        onBackToToday={jest.fn()}
+      />,
+    );
+    const row = r.root.findByType(PersonRow);
+    expect(row.props.name).toBe(name);
+    expect(row.props.href).toEqual(personRoute(slug!));
+    expect(row.findByType(CachedPortrait).props).toMatchObject({ name, slug });
+    expect(row.props.accessibilityLabel).toContain(`Recorded as ${legalName}`);
+    expect(text(r)).not.toContain(legalName);
+    await act(async () => r.unmount());
+  },
+);
+
+test.each([
+  ['LEO McLEAY', 'Leo McLeay'],
+  ['Bill Shorten', 'Bill Shorten'],
+  ['William Richard Shorten', 'William Richard Shorten'],
+])(
+  'an unresolved roster name %s keeps the casing fallback %s',
+  (name, expected) => {
+    expect(rosterName(name!)).toBe(expected);
+  },
+);
+
+test('a history term with a directory ID still links when its local name record is missing', async () => {
+  const view = c.electorateFor(
+    c.decodeElectorate(pinned(seat('Maribyrnong').detail_url)),
+  );
+  const jo = Object.values(view.people).find((p) => p.name === 'Jo Briskey')!;
+  const term = view.terms.find((t) => t.person_id === jo.person_id)!;
+  const r = await render(
+    <ElectorateHistory
+      view={{
+        ...view,
+        people: {},
+        terms: [{ ...term, end: '2026-11-10', end_precision: 'day' }],
+      }}
+      directory={directory}
+    />,
+  );
+  const row = r.root.findByType(PersonRow);
+  expect(row.props.name).toBe('Jo Briskey');
+  expect(row.props.href).toEqual(personRoute('jo-briskey'));
+  expect(row.findByType(CachedPortrait).props).toMatchObject({
+    name: 'Jo Briskey',
+    slug: 'jo-briskey',
+  });
   await act(async () => r.unmount());
 });
 
