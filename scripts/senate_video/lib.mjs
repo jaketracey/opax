@@ -5,6 +5,7 @@
 // playlistItems list of the uploads playlist. Video is linked or embedded with the
 // Senate's own player, never downloaded or re-hosted (docs/COVERAGE.md, Parliamentary video).
 import { personSlug, slugIndex } from '../../portal/src/person-slug.ts'
+import { apply as applyCorrections } from '../corrections/apply.mjs'
 
 export const CHANNEL_ID = 'UCQptchvNlCzMKsGPU8s_6UQ'
 export const CHANNEL_TITLE = 'AuSenate: The Senate Public Information Office'
@@ -18,8 +19,13 @@ const month = name => { const n = name.toLowerCase(); return n === 'sept' ? 9 : 
 const pad = n => String(n).padStart(2, '0')
 const fold = s => String(s ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[’‘ʼ`]/g, "'").toLowerCase().trim()
 
-/** "15 October 2026", "Tuesday 15 Oct 2026", "15/10/2026" -> 2026-10-15; anything else null. */
-export function parseDay(text) {
+/**
+ * "15 October 2026", "Tuesday 15 Oct 2026", "3 August, 2022", "15/10/2026" -> 2026-10-15;
+ * anything else null. With { monthFirst: true } the whole text may also be one month-first
+ * date ("February 3 2021", "October 15, 2026"): only for a title whose remainder is a single
+ * sitting date, so a range such as "November 22 - December 2, 2021" is never read as one day.
+ */
+export function parseDay(text, { monthFirst = false } = {}) {
   const s = String(text ?? '').trim()
   let m = /(?:^|[\s,])(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})\.?,?\s+(\d{4})\b/.exec(s)
   let d, mo, y
@@ -27,6 +33,10 @@ export function parseDay(text) {
     mo = month(m[2])
     if (!mo) return null
     d = Number(m[1]); y = Number(m[3])
+  } else if (monthFirst && (m = /^[\s,:\-–—]*([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})\s*$/.exec(s))) {
+    mo = month(m[1])
+    if (!mo) return null
+    d = Number(m[2]); y = Number(m[3])
   } else if ((m = /\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/.exec(s))) {
     d = Number(m[1]); mo = Number(m[2]); y = Number(m[3])
   } else return null
@@ -45,19 +55,21 @@ export function parseTitle(title, published = '') {
   // A day of grace: the upload time is UTC, the sitting day is Canberra's.
   const stamp = Date.parse(published)
   const latest = Number.isFinite(stamp) ? new Date(stamp + 86400000).toISOString().slice(0, 10) : ''
-  const dated = text => {
-    const day = parseDay(text)
+  const dated = (text, options) => {
+    const day = parseDay(text, options)
     return day && latest && day > latest ? null : day
   }
-  if (/^Senate Question Time\b/i.test(t)) return { kind: 'question_time', date: dated(t.replace(/^Senate Question Time/i, '')) }
+  if (/^Senate Question Time\b/i.test(t)) return { kind: 'question_time', date: dated(t.replace(/^Senate Question Time/i, ''), { monthFirst: true }) }
   const first = /^First speech\s*[:\-–—]\s*(.+)$/i.exec(t)
   if (first) {
-    // "Senator Gatenby - 16 September 2026": the name runs to the last dash or comma before a date.
+    // "Senator Gatenby - 16 September 2026", "Senator Babet - 3 August, 2022": the name runs to
+    // the first dash or comma after which only a date is left. The date may hold one comma
+    // before its year, and a hyphenated surname (Allman-Payne) stays in the name.
     const rest = first[1]
-    const split = /^(.*?)\s*[-–—,]\s*([^-–—,]*\d{4}\s*)$/.exec(rest)
+    const split = /^(.*?)\s*[-–—,]\s*([^-–—,]*?(?:,\s*)?\d{4}\s*)$/.exec(rest)
     const who = (split ? split[1] : rest).trim()
     const named = /^Senator\s+(?:the\s+Hon\.?\s+)?(.+)$/i.exec(who)
-    return { kind: 'first_speech', date: split ? dated(split[2]) : null, speaker: named ? named[1].trim() : null }
+    return { kind: 'first_speech', date: split ? dated(split[2], { monthFirst: true }) : null, speaker: named ? named[1].trim() : null }
   }
   return { kind: 'other', date: dated(t) }
 }
@@ -89,7 +101,9 @@ export function matchSenator(speaker, date, people, { mpidOf = new Map(), senato
   const candidates = people.filter(p => {
     const name = fold(p.full || p.name).split(/\s+/)
     if (name.at(-1) !== surname) return false
-    if (given && name.length > 1 && name[0] !== given) return false
+    // A printed two-part surname ("Nampijinpa Price") is the tail of the roster's full name.
+    const tail = words.length > 1 && name.length > words.length && name.slice(-words.length).join(' ') === words.join(' ')
+    if (given && name.length > 1 && name[0] !== given && !tail) return false
     if (given && name.length === 1) return false
     return isSenator(p) && years(p)
   })
@@ -151,6 +165,11 @@ const byNewest = (a, b) => String(b.published || '').localeCompare(String(a.publ
  * Accumulate: every row already staged stays (the feed only ever shows 15), a fresh
  * sighting replaces its title and upload time, and every row is re-derived so a later
  * roster can match a first speech that failed closed before.
+ *
+ * context.corrections holds the reviewed entries of scripts/corrections/senate_video.json
+ * (a title whose date is a typo the parse cannot see, such as a wrong year). They are
+ * applied to the derived rows, all or none, and throw when a row no longer derives the
+ * reviewed `from` value; a first speech whose date is corrected is matched again.
  */
 export function mergeRows(existing, items, people, context = {}) {
   const slugs = slugIndex(people).slugOf
@@ -160,7 +179,17 @@ export function mergeRows(existing, items, people, context = {}) {
     const before = seen.get(item.id)
     seen.set(item.id, { id: item.id, title: item.title || before?.title, published: item.published || before?.published })
   }
-  return [...seen.values()].map(item => toRow(item, people, context, slugs)).filter(Boolean).sort(byNewest)
+  const rows = [...seen.values()].map(item => toRow(item, people, context, slugs)).filter(Boolean)
+  const applied = applyCorrections('senate_video', rows, context.corrections || [])
+  for (const entry of applied) {
+    const row = rows.find(r => r.id === entry.id)
+    if (row?.kind === 'first_speech' && entry.field === 'date') {
+      const p = matchSenator(parseTitle(row.title, row.published).speaker, row.date, people, context)
+      row.person_slug = p ? slugs.get(p.name) || personSlug(p.name) : null
+      row.person_pid = p?.pid ? String(p.pid) : null
+    }
+  }
+  return rows.sort(byNewest)
 }
 
 /** The staged file's shape: meta, then one row per video. */

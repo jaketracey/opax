@@ -132,6 +132,7 @@ import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, repor
 import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import {renderMoneyConnectionsTable} from './money-connections-table'
+import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 
 interface FindParagraph {
@@ -800,7 +801,7 @@ async function searchWindow(
       id: m ? Number(m[2]) : null,
       slug,
       resource: rid,
-      title: resource.title ?? slug,
+      title: pressTitle(slug, resource.title) ?? slug,
       // A division's collaborators are its voters, not a speaker.
       speaker: division || billText ? null : (resource.origin?.collaborators?.[0] ?? null),
       party: witness || outside ? null : label(resource, 'party'),
@@ -2839,6 +2840,9 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   const labels: Record<string, string> = {}
   for (const c of r.usermetadata?.classifications ?? []) labels[c.labelset] = c.label
   const metadata = { ...r.extra?.metadata }
+  // PM Transcripts titles stored entity-encoded (speeches-press-005): decoded at read time.
+  const press = pressHeadlineAndText(slug, metadata.headline, bodyText)
+  if (press.headline !== metadata.headline) metadata.headline = press.headline
   const witness = isWitness({ ...labels, ...metadata })
   const speaker = DIVISION_SLUG_RE.test(slug) ? null : r.origin?.collaborators?.[0] ?? null
   const scope = witness ? null : await speakerAttribution(env, speaker)
@@ -2867,7 +2871,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
   if (labels.speaker_type === 'multi_speaker') { delete labels.party; metadata.person_id = null; metadata.electorate = null }
   const out = json({
     slug,
-    title: r.title ?? slug,
+    title: pressTitle(slug, r.title) ?? slug,
     speaker, // voters are not a speaker
     speaker_attribution: witness || outside ? 'unattributed' : null,
     url: r.origin?.url ?? null,
@@ -2876,7 +2880,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     metadata,
     ...presentation,
     summary: brief,
-    text: labels.kind === 'bill_text' || slug.startsWith('bill-text-') ? bodyText : normalizePassage(bodyText),
+    text: labels.kind === 'bill_text' || slug.startsWith('bill-text-') ? press.text : normalizePassage(press.text),
   })
   cacheStore(ctx, cacheKey, out, RESOURCE_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
@@ -3095,7 +3099,7 @@ async function apiRecent(env: Env): Promise<Response> {
   }
   const items = Object.values(data.resources ?? {})
     .filter((r) => isPublicSlug(r.slug ?? ''))
-    .map((r) => ({ slug: r.slug, title: r.title ?? r.slug, indexed: r.created ?? null }))
+    .map((r) => ({ slug: r.slug, title: pressTitle(r.slug ?? '', r.title) ?? r.slug, indexed: r.created ?? null }))
     .slice(0, 12)
   const out = json({ items })
   out.headers.set('cache-control', `public, max-age=${RECENT_CACHE_TTL}`)

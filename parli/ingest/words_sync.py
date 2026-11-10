@@ -41,14 +41,49 @@ def _body_key(text: str) -> str:
     return hashlib.sha256(clean.encode()).hexdigest()
 
 
+# nsw.gov.au publishes some releases twice: at a base slug and a Drupal "-0" slug, or under
+# both /ministerial-releases/ and a department news path, sometimes a day apart and with a
+# reworded line or footer, so the exact body key above lets the second copy through
+# (speeches-press-007: 17 such pairs were live twice). A twin is a release from the same
+# source with the same normalised title, dated within a day, whose body shares at least 90%
+# of its word set. Same-title template releases for different towns ("... boost for Bega",
+# "... for Crookwell") differ in title and are never folded. Both URLs stay live at the source,
+# so nothing is deleted: the later copy is not published and the pair is logged.
+NEAR_DUPLICATE_SOURCES = {"nsw"}
+NEAR_DUPLICATE_OVERLAP = 0.9
+
+
+def _title_key(title: str) -> str:
+    return " ".join(re.findall(r"[0-9a-z]+", unicodedata.normalize("NFKD", title or "").casefold()))
+
+
+def _words(text: str) -> frozenset:
+    return frozenset(re.findall(r"[0-9a-z]+", (text or "").casefold()))
+
+
+def _overlap(a: frozenset, b: frozenset) -> float:
+    return len(a & b) / len(a | b) if a or b else 1.0
+
+
+def _within_a_day(a: str, b: str) -> bool:
+    return abs((date.fromisoformat(a) - date.fromisoformat(b)).days) <= 1
+
+
 def _has_disallowed_control(text: str) -> bool:
     return any(unicodedata.category(char) == "Cc" and char not in "\t\n\r" for char in text)
 
 
-def audit_rows(rows: Iterable[sqlite3.Row], *, since: str) -> tuple[list[sqlite3.Row], dict]:
+def audit_rows(rows: Iterable[sqlite3.Row], *, since: str,
+               twins: list | None = None) -> tuple[list[sqlite3.Row], dict]:
+    """Accepted rows in input order and rejection counts by reason.
+
+    `twins`, when given, collects one {"kept", "twin", "reason"} record per near-duplicate
+    release left unpublished, so the refresh log names every pair it folded.
+    """
     accepted: list[sqlite3.Row] = []
     rejected: dict[str, int] = {}
     bodies: set[str] = set()
+    titled: dict[tuple[str, str], list[tuple[str, frozenset, sqlite3.Row]]] = {}
     today = date.today().isoformat()
 
     def reject(reason: str) -> None:
@@ -76,6 +111,19 @@ def audit_rows(rows: Iterable[sqlite3.Row], *, since: str) -> tuple[list[sqlite3
             if key in bodies:
                 reject("duplicate_body")
                 continue
+            if source in NEAR_DUPLICATE_SOURCES:
+                title = _title_key(row["title"] if "title" in row.keys() else "")
+                words = _words(body)
+                earlier = [kept for when_kept, kept_words, kept in titled.get((source, title), [])
+                           if title and _within_a_day(when, when_kept)
+                           and _overlap(words, kept_words) >= NEAR_DUPLICATE_OVERLAP]
+                if earlier:
+                    reject("near_duplicate")
+                    if twins is not None:
+                        twins.append({"kept": earlier[0]["source_id"], "twin": row["source_id"],
+                                      "reason": "same title within a day, body word overlap >= 90%"})
+                    continue
+                titled.setdefault((source, title), []).append((when, words, row))
             bodies.add(key)
             accepted.append(row)
     return accepted, rejected
@@ -120,7 +168,8 @@ def main() -> None:
         "rowid",
         (args.source,),
     ).fetchall()
-    accepted, rejected = audit_rows(rows, since=args.since)
+    twins: list = []
+    accepted, rejected = audit_rows(rows, since=args.since, twins=twins)
     selected = select_rows(accepted, after_rowid=args.after_rowid, limit=args.limit)
     result = {
         "source": args.source,
@@ -130,6 +179,7 @@ def main() -> None:
         "after_rowid": args.after_rowid,
         "next_after_rowid": max((row["rowid"] for row in selected), default=args.after_rowid),
         "rejected": rejected,
+        "near_duplicates": twins,
         "mode": "apply" if args.apply else "audit",
         "created": 0,
         "existing": 0,

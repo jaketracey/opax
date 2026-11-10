@@ -7,6 +7,7 @@ import { isSaHansard, saExcerpt, saOfficialUrl } from '../../public/sa-hansard.j
 import { clip, fold, siteUrl } from './record-common'
 import { inWindow, object, publishedResult, records, sourceUrl, validWindow, type RecordRow } from './published-records'
 import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
+import { pressHeadlineAndText, pressTitle } from '../press-title'
 
 const SLUG = /^(?:speech-\d+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+)$/
 const COMMITTEES = ['senate_committee', 'joint_committee', 'house_committee']
@@ -46,9 +47,12 @@ async function original(env: ToolEnv, slug: string): Promise<RecordRow> {
   const { labels, meta, speaker, date } = metadata(data)
   if (labels.kind && labels.kind !== (slug.startsWith('press-') ? 'press_release' : 'speech')) throw new Error('Corpus kind mismatch')
   const unattributed = isUnattributed({ ...labels, ...meta })
-  return { slug, title: data.title ?? slug, speaker: unattributed ? null : speaker || null, date: date || null, labels, metadata: meta,
+  // PM Transcripts titles stored entity-encoded (speeches-press-005): decoded at read time.
+  const press = pressHeadlineAndText(slug, meta.headline, body)
+  const recordMeta = press.headline === meta.headline ? meta : { ...meta, headline: press.headline }
+  return { slug, title: pressTitle(slug, typeof data.title === 'string' ? data.title : slug), speaker: unattributed ? null : speaker || null, date: date || null, labels, metadata: recordMeta,
     source_url: sourceUrl(meta.source_url) ?? sourceUrl(object(data.origin).url), speaker_attribution: unattributed ? String(labels.speaker_type ?? 'unattributed') : 'source collaborator',
-    text: body, kind: slug.startsWith('press-') ? 'press_release' : 'speech' }
+    text: press.text, kind: slug.startsWith('press-') ? 'press_release' : 'speech' }
 }
 function excerpt(text: string, query: string, size: number, offset?: number) {
   // Whitespace-only normalisation preserves the source's words for quotations.
