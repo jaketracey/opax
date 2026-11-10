@@ -10,11 +10,19 @@ import subprocess
 import xml.etree.ElementTree as ET
 import zipfile
 
+from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate
+
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("variant", choices=["development", "e2e", "production"])
 parser.add_argument("apk", type=Path)
 parser.add_argument("output", type=Path)
 parser.add_argument("--certificate-sha256", help="Expected public upload certificate SHA-256; default is the local debug key")
+parser.add_argument("--expected-version")
+parser.add_argument("--version-code", type=int)
+parser.add_argument("--expected-commit")
+parser.add_argument("--build-evidence", type=Path)
+parser.add_argument("--ios-release", type=Path)
+parser.add_argument("--require-ios-parity", action="store_true")
 args = parser.parse_args()
 sdk = Path(os.environ["ANDROID_HOME"])
 analyzer = sdk / "cmdline-tools/latest/bin/apkanalyzer"
@@ -28,6 +36,13 @@ def run(*command):
 manifest = run(analyzer, "manifest", "print", args.apk)
 root = ET.fromstring(manifest)
 ns = "{http://schemas.android.com/apk/res/android}"
+expected_version = args.expected_version or configured_version(Path(__file__).resolve().parent.parent)
+release_candidate = args.require_ios_parity or args.version_code is not None or bool(args.certificate_sha256)
+code = verify_identity(root, expected_version, args.version_code, release_candidate)
+with zipfile.ZipFile(args.apk) as archive:
+    abis = sorted({name.split("/")[1] for name in archive.namelist() if name.startswith("lib/") and name.endswith(".so")})
+if args.variant == "production" and release_candidate:
+    assert abis == ["arm64-v8a", "x86_64"], "Unexpected release ABIs"
 permissions = sorted(n.attrib[ns + "name"] for n in root.findall("uses-permission"))
 # The production voice switch (OPAX_PRODUCTION_VOICE, default on) is the only
 # build that may declare the microphone, as only its iOS twin embeds the
@@ -97,6 +112,15 @@ with zipfile.ZipFile(args.apk) as archive:
             for marker in [b"Route is outside the public catalog allow-list",
                            b"Cross-origin API requests are forbidden", b"Redirects are not allowed for catalog data"]:
                 assert marker in bundle, f"Missing API guard: {marker}"
+build_evidence = None
+if args.build_evidence or args.expected_commit or args.require_ios_parity:
+    build_evidence = verify_evidence(args.apk, args.build_evidence or args.apk.parent / "build-evidence.json", args.expected_commit, voice)
+    assert build_evidence.get("version") == expected_version and build_evidence.get("versionCode") == code, "Build evidence identity mismatch"
+if args.require_ios_parity:
+    assert args.variant == "production" and voice, "iOS 1.1 parity requires production voice"
+    assert args.ios_release and args.version_code is not None, "Parity requires --ios-release and --version-code"
+    verify_ios_candidate(args.ios_release, build_evidence, expected_version)
+    assert b"./community/home.tsx" not in bundle, "Community must stay hidden"
 signing = run(build_tools / "apksigner", "verify", "--print-certs", args.apk)
 if args.certificate_sha256:
     expected = args.certificate_sha256.replace(":", "").lower()
@@ -111,6 +135,10 @@ args.output.parent.mkdir(parents=True, exist_ok=True)
 args.output.with_suffix(".manifest.xml").write_text(manifest)
 args.output.with_suffix(".network.xml").write_text(network)
 evidence = {"variant": args.variant, "version": root.attrib[ns + "versionName"],
+            "versionCode": code, "targetSdk": 36, "abis": abis,
+            "commit": build_evidence["commit"] if build_evidence else None,
+            "ios_1_1_parity": "passed" if args.require_ios_parity else "not requested",
+            "r8_mapping_and_native_symbols": "Conditional AAB metadata check in verify-play.py; not carried by an APK",
             "apk_bytes": args.apk.stat().st_size,
             "sha256": hashlib.sha256(args.apk.read_bytes()).hexdigest(),
             "permissions": permissions, "production_voice": voice,
