@@ -5,6 +5,9 @@ import {
   clampCamera,
   clusterLabelOpacity,
   discInView,
+  DOUBLE_TAP_MS,
+  DOUBLE_TAP_SLOP,
+  isDoubleTap,
   publicEdgeOpacity,
   fitCamera,
   focusScale,
@@ -395,4 +398,21 @@ test('public money lines are a haze at the fit and firm by the names level', () 
   const mid = publicEdgeOpacity(1.7);
   expect(mid).toBeGreaterThan(0.45);
   expect(mid).toBeLessThan(1);
+});
+
+describe('isDoubleTap', () => {
+  const first = { x: 100, y: 200, at: 1000 };
+  test('a second tap inside the window and the slop is a double tap', () => {
+    expect(isDoubleTap(first, { x: 104, y: 196, at: 1000 + DOUBLE_TAP_MS - 1 })).toBe(true);
+    expect(isDoubleTap(first, { x: 100, y: 200, at: 1001 })).toBe(true);
+  });
+  test('too late, too far, or with no first tap, it is a single tap', () => {
+    expect(isDoubleTap(first, { x: 100, y: 200, at: 1000 + DOUBLE_TAP_MS })).toBe(false);
+    expect(isDoubleTap(first, { x: 100 + DOUBLE_TAP_SLOP, y: 200, at: 1050 })).toBe(false);
+    expect(isDoubleTap(null, { x: 100, y: 200, at: 1050 })).toBe(false);
+  });
+  test('the window and the slop can be set', () => {
+    expect(isDoubleTap(first, { x: 130, y: 200, at: 1400 }, 500, 40)).toBe(true);
+    expect(isDoubleTap(first, { x: 130, y: 200, at: 1400 }, 300, 40)).toBe(false);
+  });
 });

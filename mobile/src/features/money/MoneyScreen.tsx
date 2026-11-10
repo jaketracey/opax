@@ -704,7 +704,7 @@ function MapMode({
               </View>
             )}
           </View>
-          {searchOpen ? null : (
+          {searchOpen || expanded ? null : (
             <View
               style={[styles.controls, { top: topHeight + rhythm.block }]}
               pointerEvents="box-none"

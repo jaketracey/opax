@@ -179,6 +179,31 @@ export function cameraAt(
   return { k, tx: centre.x - x * k, ty: centre.y - y * k };
 }
 
+/**
+ * A double tap, told apart on JS: two taps within the window and the slop.
+ * (A native tap made to wait for a double tap to fail never fired at all on
+ * iOS, so the stage takes single taps and decides itself.)
+ */
+export interface TapPoint {
+  x: number;
+  y: number;
+  at: number;
+}
+export const DOUBLE_TAP_MS = 280;
+export const DOUBLE_TAP_SLOP = 24;
+export function isDoubleTap(
+  previous: TapPoint | null,
+  next: TapPoint,
+  window = DOUBLE_TAP_MS,
+  slop = DOUBLE_TAP_SLOP,
+) {
+  return (
+    previous !== null &&
+    next.at - previous.at < window &&
+    Math.hypot(next.x - previous.x, next.y - previous.y) < slop
+  );
+}
+
 /** Where a tap-to-focus flies: at least a readable zoom, never further out. */
 export function focusScale(current: number, fit: number) {
   'worklet';
