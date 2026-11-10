@@ -1,0 +1,392 @@
+[
+ {
+  "id": "federal-representatives-4270",
+  "field": "noes",
+  "from": 72,
+  "to": 70,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2016-09-01.xml",
+  "evidence": "Representatives 2016-09-01, division 3: divisioncount ayes 71, noes 70, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The question is that the amendment be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-4270",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2016-09-01.xml",
+  "evidence": "Representatives 2016-09-01, division 3: divisioncount ayes 71, noes 70, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The question is that the amendment be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-4271",
+  "field": "noes",
+  "from": 72,
+  "to": 70,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2016-09-01.xml",
+  "evidence": "Representatives 2016-09-01, division 4: divisioncount ayes 71, noes 70, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The question now is that the motion, as amended, be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-4271",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2016-09-01.xml",
+  "evidence": "Representatives 2016-09-01, division 4: divisioncount ayes 71, noes 70, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The question now is that the motion, as amended, be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5020",
+  "field": "noes",
+  "from": 74,
+  "to": 72,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2017-12-04.xml",
+  "evidence": "Representatives 2017-12-04, division 2: divisioncount ayes 73, noes 72, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5020",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2017-12-04.xml",
+  "evidence": "Representatives 2017-12-04, division 2: divisioncount ayes 73, noes 72, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5063",
+  "field": "noes",
+  "from": 73,
+  "to": 72,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2017-12-06.xml",
+  "evidence": "Representatives 2017-12-06, division 1: divisioncount ayes 73, noes 72, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5063",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2017-12-06.xml",
+  "evidence": "Representatives 2017-12-06, division 1: divisioncount ayes 73, noes 72, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5585",
+  "field": "noes",
+  "from": 73,
+  "to": 72,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2018-12-04.xml",
+  "evidence": "Representatives 2018-12-04, division 1: divisioncount ayes 73, noes 72, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5585",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2018-12-04.xml",
+  "evidence": "Representatives 2018-12-04, division 1: divisioncount ayes 73, noes 72, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5604",
+  "field": "noes",
+  "from": 73,
+  "to": 72,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2018-12-05.xml",
+  "evidence": "Representatives 2018-12-05, division 4: divisioncount ayes 73, noes 72, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5604",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2018-12-05.xml",
+  "evidence": "Representatives 2018-12-05, division 4: divisioncount ayes 73, noes 72, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5650",
+  "field": "noes",
+  "from": 75,
+  "to": 74,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 1: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The question is that the amendments moved by the Manager of Opposition Business be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5650",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 1: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The question is that the amendments moved by the Manager of Opposition Business be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5651",
+  "field": "noes",
+  "from": 75,
+  "to": 74,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 2: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The question is that the motion, as amended, be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5651",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 2: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The question is that the motion, as amended, be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5652",
+  "field": "noes",
+  "from": 75,
+  "to": 74,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 3: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5652",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 3: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5653",
+  "field": "noes",
+  "from": 75,
+  "to": 74,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 4: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The immediate question now is that the amendment moved by the Leader of the Opposition be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5653",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 4: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the next speech: 'The immediate question now is that the amendment moved by the Leader of the Opposition be agreed to.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5654",
+  "field": "noes",
+  "from": 75,
+  "to": 74,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 5: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5654",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 5: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5655",
+  "field": "noes",
+  "from": 75,
+  "to": 74,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 6: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-representatives-5655",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
+  "evidence": "Representatives 2019-02-12, division 6: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-senate-3304",
+  "field": "ayes",
+  "from": 38,
+  "to": 37,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-09.xml",
+  "evidence": "Senate 2014-07-09, division 4: divisioncount ayes 37, noes 37, equal to the named aye and no lists including tellers; the votes are equal, so the question passed in the negative (Constitution s 23); the next speech: 'The question now is that the Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills be read a second time.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-senate-3304",
+  "field": "result",
+  "from": "affirmative",
+  "to": "negative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-09.xml",
+  "evidence": "Senate 2014-07-09, division 4: divisioncount ayes 37, noes 37, equal to the named aye and no lists including tellers; the votes are equal, so the question passed in the negative (Constitution s 23); the next speech: 'The question now is that the Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 [No. 2] and related bills be read a second time.'.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-senate-5513",
+  "field": "ayes",
+  "from": 31,
+  "to": 30,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-13.xml",
+  "evidence": "Senate 2018-11-13, division 6: divisioncount ayes 30, noes 30, equal to the named aye and no lists including tellers; the votes are equal, so the question passed in the negative (Constitution s 23).",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-senate-5513",
+  "field": "result",
+  "from": "affirmative",
+  "to": "negative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-13.xml",
+  "evidence": "Senate 2018-11-13, division 6: divisioncount ayes 30, noes 30, equal to the named aye and no lists including tellers; the votes are equal, so the question passed in the negative (Constitution s 23).",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-senate-1519",
+  "field": "noes",
+  "from": 32,
+  "to": 33,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2008-09-24.xml",
+  "evidence": "Senate 2008-09-24, division 5: divisioncount ayes 33, noes 33, equal to the named aye and no lists including tellers; the votes are equal, so the question passed in the negative (Constitution s 23).",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-senate-1519",
+  "field": "result",
+  "from": "affirmative",
+  "to": "negative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2008-09-24.xml",
+  "evidence": "Senate 2008-09-24, division 5: divisioncount ayes 33, noes 33, equal to the named aye and no lists including tellers; the votes are equal, so the question passed in the negative (Constitution s 23).",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-senate-1888",
+  "field": "ayes",
+  "from": 32,
+  "to": 33,
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2010-10-28.xml",
+  "evidence": "Senate 2010-10-28, division 1: divisioncount ayes 33, noes 32, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the vote was later recommitted as division 4 of the same day (32-32), a separate record.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "federal-senate-1888",
+  "field": "result",
+  "from": "negative",
+  "to": "affirmative",
+  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2010-10-28.xml",
+  "evidence": "Senate 2010-10-28, division 1: divisioncount ayes 33, noes 32, equal to the named aye and no lists including tellers; a majority of 1 for the ayes; the vote was later recommitted as division 4 of the same day (32-32), a separate record.",
+  "finding": "divisions-votes-002",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "nsw-lc-2025-12-23-23",
+  "field": "question",
+  "from": "That this bill be now read a third time.",
+  "to": "That the amendment be agreed to.",
+  "evidence_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+  "evidence": "The CHAIR (The Hon. Rod Roberts): 'Ms Sue Higginson has moved The Greens amendment No. 2 on sheet c2025-339D. The question is that the amendment be agreed to.' The Committee divided, Ayes 5, Noes 25; 'Amendment negatived.'",
+  "finding": "divisions-votes-007",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "nsw-lc-2025-12-23-23",
+  "field": "result",
+  "from": "affirmative",
+  "to": "negative",
+  "evidence_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+  "evidence": "The CHAIR (The Hon. Rod Roberts): 'Ms Sue Higginson has moved The Greens amendment No. 2 on sheet c2025-339D. The question is that the amendment be agreed to.' The Committee divided, Ayes 5, Noes 25; 'Amendment negatived.'",
+  "finding": "divisions-votes-007",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "nsw-lc-2025-12-23-24",
+  "field": "question",
+  "from": "Terrorism and Other Legislation Amendment Bill 2025",
+  "to": "That this bill be now read a third time.",
+  "evidence_url": "https://api.parliament.nsw.gov.au/api/hansard/search/daily/fragment/HANSARD-1820781676-102591",
+  "evidence": "The PRESIDENT: 'The question is that this bill be now read a third time.' The House divided, Ayes 18, Noes 8; 'Motion agreed to.'",
+  "finding": "divisions-votes-007",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "vic-lc-2026-08-14-7",
+  "field": "name",
+  "from": "That the bill be now read a third time and do pass.",
+  "to": "Consumer Legislation Amendment Bill 2026",
+  "evidence_url": "https://www.parliament.vic.gov.au/4a47c4/globalassets/hansard-daily-pdfs/hansard-974425065-36410/hansard-974425065-36410.pdf",
+  "evidence": "Legislative Council, Friday 14 August 2026: the bill heading 'Consumer Legislation Amendment Bill 2026' (p 3345) opens the second reading and committee stage; then, under 'Third reading' (p 3407), 'That the bill be now read a third time and do pass.' and 'Council divided on motion: Ayes (29) ... Noes (2) ... Motion agreed to.', with no other bill heading between.",
+  "finding": "divisions-votes-011",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "vic-lc-2026-08-14-12",
+  "field": "name",
+  "from": "That the bill be now read a third time and do pass.",
+  "to": "Racing Legislation Amendment (Entity Governance and Other Matters) Bill 2026",
+  "evidence_url": "https://www.parliament.vic.gov.au/4a47c4/globalassets/hansard-daily-pdfs/hansard-974425065-36410/hansard-974425065-36410.pdf",
+  "evidence": "Legislative Council, Friday 14 August 2026: the bill heading 'Racing Legislation Amendment (Entity Governance and Other Matters) Bill 2026' (p 3407) opens the second reading and committee stage; then, under 'Third reading' (p 3441), 'That the bill be now read a third time and do pass.' and 'Council divided on motion: Ayes (26) ... Noes (6) ... Motion agreed to.', with no other bill heading between.",
+  "finding": "divisions-votes-011",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "vic-la-2026-08-27-3",
+  "field": "name",
+  "from": "That this bill be now read a second time and a third time.",
+  "to": "Workplace Legislation Amendment (Accident Compensation and Other Matters) Bill 2026",
+  "evidence_url": "https://www.parliament.vic.gov.au/4a475c/globalassets/hansard-daily-pdfs/hansard-2145855009-37081/hansard-2145855009-37081.pdf",
+  "evidence": "Legislative Assembly, Thursday 27 August 2026, p 3637: bill heading 'Workplace Legislation Amendment (Accident Compensation and Other Matters) Bill 2026', 'Second reading', then 'The SPEAKER: The question is: That this bill be now read a second time and a third time.' and 'Assembly divided on question: Ayes (52) ... Noes (27) ... Question agreed to.'",
+  "finding": "divisions-votes-011",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "vic-la-2026-08-27-5",
+  "field": "name",
+  "from": "Other Matters) Bill 2026",
+  "to": "Education and Training Reform Amendment (Apprenticeships, Traineeships, Schools and Other Matters) Bill 2026",
+  "evidence_url": "https://www.parliament.vic.gov.au/4a475c/globalassets/hansard-daily-pdfs/hansard-2145855009-37081/hansard-2145855009-37081.pdf",
+  "evidence": "Legislative Assembly, Thursday 27 August 2026, p 3639: bill heading 'Education and Training Reform Amendment (Apprenticeships, Traineeships, Schools and / Other Matters) Bill 2026' (set over two lines), 'Second reading', then 'The SPEAKER: The question is: That this bill be now read a second time and a third time.' and 'Assembly divided on question: Ayes (52) ... Noes (27) ... Question agreed to.' The published name kept only the heading's second line.",
+  "finding": "divisions-votes-011",
+  "reviewed": "2026-11-10"
+ }
+]

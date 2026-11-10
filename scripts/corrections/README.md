@@ -14,7 +14,7 @@ The file is a JSON list. Every entry has exactly these fields:
 {"id": "federal-representatives-5650", "field": "result",
  "from": "negative", "to": "affirmative",
  "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml",
- "evidence": "Division 1: divisioncount ayes 75, noes 74; 'Question agreed to.'",
+ "evidence": "Representatives 2019-02-12, division 1: divisioncount ayes 75, noes 74, equal to the named aye and no lists including tellers; a majority of 1 for the ayes.",
  "finding": "divisions-votes-002", "reviewed": "2026-11-10"}
 ```
 
