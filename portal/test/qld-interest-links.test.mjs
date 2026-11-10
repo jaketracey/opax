@@ -6,10 +6,12 @@ import {interestHref, interestPerson} from '../../scripts/build_search_catalog.m
 import {searchCatalog} from '../src/catalog-search.ts';
 
 test('speaker-only names keep the official source unless a canonical profile exists', () => {
-  const register = {name: 'Ann Leahy', jurisdiction: 'qld', source_url: 'https://register.example/qld.pdf'};
-  const speakers = new Set(['Ann Leahy']);
+  // An invented name: no roster row prints it or carries it as a full name (a real
+  // surname row such as 'Leahy' now answers to its full name 'Ann Leahy').
+  const register = {name: 'Wendell Ostrander-Quill', jurisdiction: 'qld', source_url: 'https://register.example/qld.pdf'};
+  const speakers = new Set(['Wendell Ostrander-Quill']);
   assert.equal(interestHref(register, null, speakers), register.source_url);
-  assert.equal(interestHref({...register, name: 'ann leahy'}, null, speakers), register.source_url);
+  assert.equal(interestHref({...register, name: 'wendell ostrander-quill'}, null, speakers), register.source_url);
   assert.equal(interestHref({...register, name: 'Unknown Member'}, null, speakers), register.source_url);
   assert.equal(interestHref(register, {name: 'Resolved Member'}, speakers), register.source_url);
   const known = {...register, name: 'Jess Pugh'};
