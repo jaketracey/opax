@@ -127,7 +127,7 @@ export function CitedRecordRow({
         title,
         speaker,
         speaker && source.party
-          ? partyText({ party: source.party }).spoken
+          ? partyText({ party: source.party, status: 'unknown' }).spoken
           : null,
       ]
         .filter(Boolean)
