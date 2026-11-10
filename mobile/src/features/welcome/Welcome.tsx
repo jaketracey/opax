@@ -69,6 +69,7 @@ export function WelcomePage({
   const [laidOut, setLaidOut] = useState(false);
   const [covered, setCovered] = useState(launch);
   const leaving = useRef(false);
+  const advancing = useRef(false);
   const accessible = isAccessibilityCategory(fontScale);
   const pinned = continuePinned(fontScale);
   const wide = isPad && layout.regular;
@@ -84,8 +85,12 @@ export function WelcomePage({
     closeWelcome(navigation as Parameters<typeof closeWelcome>[0]);
   };
   const next = () => {
+    if (leaving.current || advancing.current) return;
     if (short) leave(false);
-    else router.push(welcomeSeatRoute());
+    else {
+      advancing.current = true;
+      router.push(welcomeSeatRoute());
+    }
   };
   // Two-finger Z, Escape and Android back: "Not now" (today.md 3.2). A
   // replay with a seat saved changes nothing; the short welcome declines
@@ -104,7 +109,10 @@ export function WelcomePage({
   const [focused, setFocused] = useState(true);
   useEffect(() => {
     const blur = navigation.addListener('blur', () => setFocused(false));
-    const focus = navigation.addListener('focus', () => setFocused(true));
+    const focus = navigation.addListener('focus', () => {
+      advancing.current = false;
+      setFocused(true);
+    });
     return () => {
       blur();
       focus();
