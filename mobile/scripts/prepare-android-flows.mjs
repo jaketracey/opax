@@ -176,6 +176,8 @@ function command(v, relative) {
   if (out.tapOn) {
     const tap = out.tapOn;
     const text = typeof tap === 'string' ? tap : tap.text;
+    if (relative === 'support/search-scope.yaml' && text === '^${SCOPE}$')
+      return { tapOn: { id: 'search-scope-${SCOPE.toLowerCase()}' } };
     if (
       nativeSearchHints.has(text) ||
       (text === 'Name' && relative === '43-money-agencies.yaml')
@@ -209,7 +211,29 @@ function command(v, relative) {
       text === 'Cancel' &&
       /^(07-your-mp|13e-|24-electorate-map-cancel)/.test(relative)
     )
-      return { runFlow: { commands: ['hideKeyboard', 'back'] } };
+      return {
+        runFlow: {
+          commands: [
+            {
+              runFlow: {
+                when: {
+                  visible: {
+                    id: '.*inputmethod.*:id/(keyboard_holder|input_view)',
+                  },
+                },
+                commands: ['back'],
+              },
+            },
+            'back',
+            {
+              runFlow: {
+                when: { visible: { id: 'seat-sheet' } },
+                commands: ['back'],
+              },
+            },
+          ],
+        },
+      };
     if (text === 'Cancel' && relative === '22b-sources.yaml')
       return 'hideKeyboard';
     if (text === 'Open' && tap.optional)
@@ -246,6 +270,11 @@ function command(v, relative) {
       };
     if (out.tapOn?.id?.startsWith('tab-')) out.tapOn.retryTapIfNoChange = true;
   }
+  if (
+    out.assertVisible === 'Cancel' &&
+    relative === '24-electorate-map-cancel.yaml'
+  )
+    out.assertVisible = backSelector;
   if (out.assertVisible?.id === 'search-scope.*')
     return {
       runFlow: {

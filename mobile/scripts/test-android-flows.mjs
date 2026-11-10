@@ -145,6 +145,8 @@ test('API 34 and 36 use permission-controller ids, preserving once, foreground, 
     read('24-electorate-map-cancel.yaml')[1].toJS(),
   );
   assert.ok(cancel.includes('back') && !cancel.includes('permission_allow_'));
+  assert.ok(cancel.includes('keyboard_holder'));
+  assert.ok(!cancel.includes('hideKeyboard'));
 });
 
 test('Android copies replace iOS back actions and UIKit probes without changing shared bytes', () => {
