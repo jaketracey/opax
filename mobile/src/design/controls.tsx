@@ -1,3 +1,5 @@
+import { AndroidButton, AndroidSwitch, AndroidField } from './android-controls';
+import { Pressable } from './pressable';
 import { Host, Picker, Text as SwiftText } from '@expo/ui/swift-ui';
 import {
   accessibilityIdentifier,
@@ -22,8 +24,8 @@ import {
 import {
   ActivityIndicator,
   Keyboard,
+  findNodeHandle,
   Platform,
-  Pressable,
   StyleSheet,
   Switch,
   TextInput,
@@ -44,6 +46,7 @@ import { phoneCopy } from './phone-copy';
 import { symbols } from './symbols';
 import { Text, type TextTone } from './text';
 import {
+  androidControls,
   colors,
   controlHeight,
   interfaceFonts as fonts,
@@ -62,6 +65,10 @@ export { ChoiceChip, Tag } from './labels';
 
 type LegacyButtonVariant = 'default' | 'quiet' | 'danger';
 export type ButtonVariant =
+  | 'filled'
+  | 'tonal'
+  | 'outlined'
+  | 'text'
   | 'primary'
   | 'secondary'
   | 'plain'
@@ -104,6 +111,10 @@ const originalButtonStates: Record<
   },
 };
 export const buttonStates = {
+  filled: originalButtonStates.primary,
+  tonal: originalButtonStates.default,
+  outlined: originalButtonStates.default,
+  text: originalButtonStates.quiet,
   ...originalButtonStates,
   secondary: originalButtonStates.default,
   plain: originalButtonStates.quiet,
@@ -198,6 +209,33 @@ export function Button({
   const inert = disabled || loading;
   // Loading keeps the resting look; only a disabled button changes colour.
   const resting = disabled && !loading ? states.disabled : states.rest;
+  if (Platform.OS === 'android')
+    return (
+      <AndroidButton
+        {...{
+          ref,
+          label,
+          onPress,
+          variant,
+          size,
+          icon,
+          symbol,
+          symbolAnimation,
+          trailingIcon,
+          disabled,
+          loading,
+          fullWidth,
+          hug,
+          accessibilityLabel,
+          accessibilityHint,
+          expanded,
+          selected,
+          on,
+          hitSlop,
+          testID,
+        }}
+      />
+    );
   return (
     <Hoverable
       effect={inert ? 'none' : 'highlight'}
@@ -451,6 +489,8 @@ function MenuPicker<T extends string>({
   row?: boolean;
   disabled?: boolean;
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const triggerRef = useRef<View>(null);
   const large = useAccessibilitySize();
   const selected = options.find((option) => option.value === value);
   const current =
@@ -458,21 +498,30 @@ function MenuPicker<T extends string>({
   const layout = useLayout();
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const fallbackWidth = columnWidth(layout);
-  const spoken = `${label}, ${selected?.label ?? value}, pop-up button`;
+  const spoken =
+    Platform.OS === 'android'
+      ? `${label}, ${selected?.label ?? value}`
+      : `${label}, ${selected?.label ?? value}, pop-up button`;
   if (Platform.OS !== 'ios')
     return (
       <Button
+        ref={triggerRef}
+        expanded={menuOpen}
         label={current}
         variant="secondary"
         disabled={disabled}
-        trailingIcon={symbols.menu}
+        trailingIcon={
+          Platform.OS === 'android' ? symbols.chevronDown : symbols.menu
+        }
         accessibilityLabel={spoken}
         testID={testID}
-        onPress={() =>
+        onPress={() => {
+          setMenuOpen(true);
           showMenu(
             label,
             options.map((option) => ({
-              title: `${option.value === value ? '✓ ' : ''}${option.label}`,
+              title: option.label,
+              selected: option.value === value,
               onPress: () => {
                 if (option.value !== value) {
                   haptic('selection');
@@ -480,8 +529,11 @@ function MenuPicker<T extends string>({
                 }
               },
             })),
-          )
-        }
+            findNodeHandle(triggerRef.current) ?? undefined,
+            undefined,
+            () => setMenuOpen(false),
+          );
+        }}
       />
     );
   // At accessibility sizes the button spans the column, so a long value
@@ -616,6 +668,24 @@ function estimatedLabelWidth(label: string, fontSize: number) {
     else em += 0.57;
   }
   return em * fontSize;
+}
+/**
+ * Android: whether the selected segment's 18 dp check and its 8 dp gap fit
+ * beside the longest word of every label (17 sp strong, wrapping allowed).
+ */
+export function checkFits(
+  labels: readonly string[],
+  width: number,
+  fontScale = 1,
+): boolean {
+  if (!labels.length || !(width > 0)) return false;
+  const share = width / labels.length - 2 * rhythm.tight - 2 - (18 + 8);
+  const fontSize = 17 * Math.max(1, fontScale);
+  return labels.every((label) =>
+    label
+      .split(/\s+/)
+      .every((word) => estimatedLabelWidth(word, fontSize) <= share),
+  );
 }
 /**
  * Whether two to four labels fit a segmented control `width` points wide
@@ -901,6 +971,16 @@ export function IconButton({
         accessibilityLargeContentTitle={accessibilityLabel}
         testID={testID}
         disabled={disabled}
+        android_ripple={
+          Platform.OS === 'android'
+            ? {
+                borderless: true,
+                ...(selected || variant === 'primary' || variant === 'danger'
+                  ? { color: androidControls.rippleOnFilled }
+                  : {}),
+              }
+            : undefined
+        }
         onPress={onPress}
         style={({ pressed }) => {
           const state = stateOf(pressed);
@@ -976,10 +1056,28 @@ export function FilterChip({
       style={({ pressed }) => [
         styles.chip,
         stacked ? styles.chipStacked : null,
+        ...(Platform.OS === 'android'
+          ? [
+              {
+                borderRadius: androidControls.chipRadius,
+                borderCurve: 'continuous',
+                borderWidth: 1,
+                borderColor: colors.lineControl,
+              } as const,
+            ]
+          : []),
         { backgroundColor: pressed ? colors.sunken : colors.navyWash },
       ]}
     >
-      <Text variant="secondary" style={styles.chipText} accessible={false}>
+      {Platform.OS === 'android' ? (
+        <Icon name={symbols.selected} size={18} tone="navy" />
+      ) : null}
+      <Text
+        wordSafe={Platform.OS === 'android'}
+        variant="secondary"
+        style={styles.chipText}
+        accessible={false}
+      >
         <Text variant="secondary" tone="inkSoft">
           {filter[0]!.toLocaleUpperCase('en-AU') + filter.slice(1)}{' '}
         </Text>
@@ -1021,17 +1119,52 @@ export function SegmentedControl<T extends string>({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize() || alwaysStacked;
+  const { fontScale } = useWindowDimensions();
+  const [trackWidth, setTrackWidth] = useState<number | null>(null);
+  // Material shows a check on the selected segment, but never at the cost of
+  // a word: inline segments draw it only when every label's longest word
+  // still fits beside it. Stacked segments always have the room.
+  const showCheck =
+    Platform.OS === 'android' &&
+    (stacked ||
+      (trackWidth !== null &&
+        checkFits(
+          segments.map((segment) => segment.label),
+          trackWidth,
+          fontScale,
+        )));
   return (
     <View
       testID={testID}
-      style={[styles.segmented, stacked ? styles.segmentedStacked : null]}
+      onLayout={
+        Platform.OS === 'android'
+          ? (event) => setTrackWidth(event.nativeEvent.layout.width)
+          : undefined
+      }
+      style={[
+        styles.segmented,
+        stacked ? styles.segmentedStacked : null,
+        ...(Platform.OS === 'android'
+          ? [
+              {
+                padding: 0,
+                gap: 0,
+                borderRadius: stacked ? 12 : 24,
+                borderCurve: 'continuous',
+                borderColor: colors.lineControl,
+                backgroundColor: 'transparent',
+                overflow: 'hidden' as const,
+              } as const,
+            ]
+          : []),
+      ]}
     >
       {segments.map((segment, index) => {
         const selected = segment.value === value;
         return (
           <Pressable
             key={segment.value}
-            accessibilityRole="button"
+            accessibilityRole={Platform.OS === 'android' ? 'tab' : 'button'}
             accessibilityLabel={segment.label}
             accessibilityState={{ selected }}
             accessibilityValue={{ text: `${index + 1} of ${segments.length}` }}
@@ -1042,24 +1175,60 @@ export function SegmentedControl<T extends string>({
                 onChange(segment.value);
               }
             }}
-            style={[styles.segment, stacked ? null : styles.segmentInline]}
+            style={[
+              styles.segment,
+              stacked ? null : styles.segmentInline,
+              ...(Platform.OS === 'android'
+                ? [
+                    {
+                      flexDirection: 'row' as const,
+                      gap: 8,
+                      backgroundColor: selected
+                        ? colors.navyWash
+                        : 'transparent',
+                      ...(index
+                        ? stacked
+                          ? {
+                              borderTopWidth: 1,
+                              borderTopColor: colors.lineControl,
+                            }
+                          : {
+                              borderLeftWidth: 1,
+                              borderLeftColor: colors.lineControl,
+                            }
+                        : {}),
+                    },
+                  ]
+                : []),
+            ]}
           >
             {({ pressed }) => (
               <>
                 {/* The highlight sits 3pt inside the 44pt target, so the
                     control still reads as 48pt outside with 4pt insets. */}
-                <View
-                  style={[
-                    styles.segmentFill,
-                    {
-                      backgroundColor: selected
-                        ? colors.raised
-                        : pressed
-                          ? colors.sunken
-                          : 'transparent',
-                    },
-                  ]}
-                />
+                {Platform.OS === 'android' ? (
+                  selected && showCheck ? (
+                    <Icon
+                      name={symbols.selected}
+                      size={18}
+                      maxScale={1}
+                      tone="navy"
+                    />
+                  ) : null
+                ) : (
+                  <View
+                    style={[
+                      styles.segmentFill,
+                      {
+                        backgroundColor: selected
+                          ? colors.raised
+                          : pressed
+                            ? colors.sunken
+                            : 'transparent',
+                      },
+                    ]}
+                  />
+                )}
                 <Text
                   variant="strong"
                   tone="ink"
@@ -1206,11 +1375,15 @@ export function SwitchRow({
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
       >
-        <Switch
-          value={value}
-          disabled={disabled}
-          trackColor={{ false: colors.lineControl, true: colors.navy }}
-        />
+        {Platform.OS === 'android' ? (
+          <AndroidSwitch value={value} disabled={disabled} />
+        ) : (
+          <Switch
+            value={value}
+            disabled={disabled}
+            trackColor={{ false: colors.lineControl, true: colors.navy }}
+          />
+        )}
       </View>
     </Pressable>
   );
@@ -1251,6 +1424,23 @@ export function Field({
   const description = [error ? `Error: ${error}` : null, hint]
     .filter(Boolean)
     .join('. ');
+  if (Platform.OS === 'android')
+    return (
+      <AndroidField
+        {...{
+          label,
+          hint,
+          error,
+          required,
+          grouped,
+          labelHidden,
+          variant,
+          testID,
+          inputRef,
+          ...input,
+        }}
+      />
+    );
   return (
     <View style={styles.field}>
       {/* The input carries the label, so VoiceOver reads it once. */}
@@ -1391,6 +1581,7 @@ export function Composer({
   submitTestID?: string;
 }) {
   const { fontScale, height } = useWindowDimensions();
+  const [inputFocused, setInputFocused] = useState(false);
   const [keyboardTop, setKeyboardTop] = useState<number | null>(() =>
     Platform.OS === 'ios' ? (Keyboard.metrics()?.screenY ?? null) : null,
   );
@@ -1430,7 +1621,22 @@ export function Composer({
           ))}
         </View>
       ) : null}
-      <View style={styles.composer}>
+      <View
+        style={
+          Platform.OS === 'android'
+            ? [
+                styles.composer,
+                {
+                  borderColor: inputFocused ? colors.navy : colors.lineControl,
+                  borderWidth: inputFocused ? 2 : 1,
+                  paddingLeft: rhythm.block - (inputFocused ? 1 : 0),
+                  paddingRight: rhythm.line - (inputFocused ? 1 : 0),
+                  paddingVertical: rhythm.line - (inputFocused ? 1 : 0),
+                },
+              ]
+            : styles.composer
+        }
+      >
         {leading}
         <TextInput
           ref={inputRef}
@@ -1443,10 +1649,36 @@ export function Composer({
           testID={testID}
           accessibilityLabel={label}
           onFocus={onFocus}
+          {...(Platform.OS === 'android'
+            ? {
+                underlineColorAndroid: 'transparent',
+                selectionColor: colors.navy,
+                cursorColor: colors.navy,
+                onFocus: (
+                  event: Parameters<NonNullable<TextInputProps['onFocus']>>[0],
+                ) => {
+                  setInputFocused(true);
+                  onFocus?.(event);
+                },
+                onBlur: () => setInputFocused(false),
+              }
+            : {})}
           allowFontScaling
           maxFontSizeMultiplier={0}
           placeholderTextColor={colors.inkFaint}
-          style={[styles.composerInput, { maxHeight: inputHeight }]}
+          style={[
+            styles.composerInput,
+            { maxHeight: inputHeight },
+            ...(Platform.OS === 'android'
+              ? [
+                  {
+                    includeFontPadding: false,
+                    textAlignVertical: 'top' as const,
+                    minWidth: 0,
+                  },
+                ]
+              : []),
+          ]}
         />
         {trailing ?? (
           <IconButton
@@ -1479,7 +1711,18 @@ export function Composer({
           {content}
         </GlassView>
       ) : (
-        <View style={styles.composerFallback}>{content}</View>
+        <View
+          style={
+            Platform.OS === 'android'
+              ? [
+                  styles.composerFallback,
+                  { backgroundColor: colors.sunken, padding: 4 },
+                ]
+              : styles.composerFallback
+          }
+        >
+          {content}
+        </View>
       )}
     </View>
   );

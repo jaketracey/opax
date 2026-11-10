@@ -1,4 +1,5 @@
-import { Linking, Pressable, View } from 'react-native';
+import { Pressable } from './pressable';
+import { Linking, View } from 'react-native';
 import { copyText } from '../features/records/actions';
 import { useAccessibilitySize } from './accessibility';
 import { AUTHORISATION_LINE, CORRECTION_CONTACT } from './authorisation';

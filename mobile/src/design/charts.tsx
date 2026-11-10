@@ -1,7 +1,7 @@
+import { Pressable } from './pressable';
 import { Rect } from '@shopify/react-native-skia';
 import { useState } from 'react';
 import {
-  Pressable,
   StyleSheet,
   View,
   useColorScheme,

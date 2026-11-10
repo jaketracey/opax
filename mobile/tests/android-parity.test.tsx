@@ -390,62 +390,51 @@ describe('Android ⋯ menus', () => {
     };
   };
 
-  test('a menu rises as a bottom sheet titled small, rows with Material’s ripple, and Cancel', () => {
+  test('a Material popup is anchored, scrollable and exposes labelled menu items', () => {
     const ask = jest.fn();
     const { menu, renderer } = host();
     asPlatform('android', () =>
       act(() =>
-        menu.showMenu('Offshore Petroleum Amendment Bill 2023', [
-          { title: 'Ask about this', onPress: ask },
-          { title: 'Open on opax.com.au', onPress: jest.fn() },
-        ]),
+        menu.showMenu(
+          'Bill actions',
+          [
+            { title: 'Ask about this', onPress: ask },
+            { title: 'Open on opax.com.au', onPress: jest.fn() },
+          ],
+          { x: 40, y: 200, width: 48, height: 48 },
+        ),
       ),
     );
     const modal = renderer.root.findByType(Modal);
     expect(modal.props.transparent).toBe(true);
-    expect(modal.props.presentationStyle).toBeUndefined();
-    const sheet = renderer.root.find(
+    expect(modal.props.animationType).toBe('none');
+    const popup = renderer.root.find(
       (n) => n.props.testID === 'android-menu' && typeof n.type === 'string',
     );
-    const { radii } = jest.requireActual<typeof import('../src/design/tokens')>(
-      '../src/design/tokens',
-    );
-    expect(flat(sheet.props.style)).toMatchObject({
-      borderTopLeftRadius: radii.container,
-      // The gesture inset plus the tight rhythm.
-      paddingBottom: 16 + 8,
+    expect(popup.props.accessibilityRole).toBe('menu');
+    expect(flat(popup.props.style)).toMatchObject({
+      borderRadius: 12,
+      left: 40,
+      top: 248,
     });
-    const title = sheet
-      .findAllByType(NativeText)
-      .find((n) => n.props.accessibilityRole === 'header')!;
-    expect(title.props.children).toBe('Offshore Petroleum Amendment Bill 2023');
-    // Small, as the iPhone action sheet's title; not a serif heading.
-    expect(flat(title.props.style).fontSize).toBe(15);
-    const buttons = (within: TestRenderer.ReactTestInstance) =>
-      within.findAll(
-        (n) =>
-          typeof n.type !== 'string' &&
-          n.props.accessibilityRole === 'button' &&
-          typeof n.props.onPress === 'function',
-      );
-    const rows = buttons(sheet);
+    const rows = popup.findAll(
+      (n) =>
+        typeof n.type !== 'string' &&
+        Array.isArray(n.props.style) &&
+        typeof n.props.onPressIn === 'function' &&
+        n.props.accessibilityRole === 'menuitem',
+    );
     expect(rows.map((n) => n.props.accessibilityLabel)).toEqual([
       'Ask about this',
       'Open on opax.com.au',
-      'Cancel',
     ]);
-    const first = rows[0]!;
-    expect(first.props.android_ripple).toBeDefined();
-    // TalkBack hears one Cancel: the scrim stays out of the way.
-    const scrim = buttons(renderer.root).find((n) => !rows.includes(n))!;
-    expect(scrim.props.importantForAccessibility).toBe('no');
-    expect(scrim.props.accessible).toBe(false);
-    act(() => first.props.onPress());
-    expect(ask).toHaveBeenCalled();
+    expect(rows[0]!.props.android_ripple).toBeDefined();
+    act(() => rows[0]!.props.onPress());
+    expect(ask).toHaveBeenCalledTimes(1);
     expect(renderer.root.findAllByType(Modal)).toHaveLength(0);
   });
 
-  test('Back and Cancel close the menu without acting', () => {
+  test('Back and outside tap close the menu without acting', () => {
     const ask = jest.fn();
     const { menu, renderer } = host();
     const open = () =>
@@ -460,7 +449,7 @@ describe('Android ⋯ menus', () => {
     act(() => renderer.root.findByType(Modal).props.onRequestClose());
     expect(renderer.root.findAllByType(Modal)).toHaveLength(0);
     open();
-    act(() => pressable(renderer, 'android-menu-close').props.onPress());
+    act(() => pressable(renderer, 'android-menu-outside').props.onPress());
     expect(renderer.root.findAllByType(Modal)).toHaveLength(0);
     expect(ask).not.toHaveBeenCalled();
   });

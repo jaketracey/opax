@@ -1,3 +1,5 @@
+export { Slider, Stepper } from './adjustable';
+export type { AdjustableProps } from './adjustable';
 // Canonical shared controls. Each public name has one explicit owner.
 export {
   useAccessibilitySize,
