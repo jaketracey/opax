@@ -46,8 +46,10 @@ import {
 } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { askHeaderItems } from '../../navigation/chrome';
+import { talkSignInRoute } from '../../navigation/routes/account';
 import { conversationsRoute } from '../../navigation/routes/ask';
 import { voiceLinked } from '../../voice/linked';
+import { accountCopy } from '../account/copy';
 import { useAccount } from '../account/store';
 import { AskRevealContext, announceAnswer } from './AnswerView';
 import { AskDock } from './AskDock';
@@ -265,9 +267,10 @@ export default function AskScreen() {
     },
     idle,
   );
+  const talkSignedOut = !account.checking && account.status?.signedIn === false;
   const talk =
-    designFlags.talkInAsk && voiceLinked && signedIn
-      ? () => router.push('/talk')
+    designFlags.talkInAsk && voiceLinked
+      ? () => router.push(talkSignedOut ? talkSignInRoute : '/talk')
       : undefined;
   const chat = saved.chats.find((c) => c.id === s.id);
   const sources = useAskSources(s.thread, {
@@ -287,6 +290,7 @@ export default function AskScreen() {
         void openAskOptions();
       }}
       onTalk={talk}
+      talkLabel={talkSignedOut ? accountCopy.signUpToTalk : undefined}
       offline={offline}
       inputError={inputError}
       onLayout={(e) => setDockHeight(e.nativeEvent.layout.height)}

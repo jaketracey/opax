@@ -84,7 +84,7 @@ export function composerFieldCap({
 /**
  * Ask's composer, docked above the tab bar (DIRECTION 4.24). Leading,
  * Options; the field; trailing, one button: Stop while an answer is
- * written, Talk while the field is empty (signed-in readers, D5 on), else
+ * written, Talk while the field is empty (D5 on), else
  * Send. The options in force show as one line inside it, above the field;
  * an arrival's draft that waits for a running answer says it starts a new
  * conversation.
@@ -95,6 +95,7 @@ export function AskDock({
   onStop,
   onOptions,
   onTalk,
+  talkLabel = composerCopy.talk,
   offline,
   inputError,
   onLayout,
@@ -104,8 +105,9 @@ export function AskDock({
   onSend: () => void;
   onStop: () => void;
   onOptions: () => void;
-  /** Present for signed-in readers when Talk lives in Ask. */
+  /** Present when Talk lives in Ask. */
   onTalk?: () => void;
+  talkLabel?: string;
   offline: boolean;
   inputError?: string;
   onLayout?: (event: LayoutChangeEvent) => void;
@@ -158,7 +160,7 @@ export function AskDock({
   ) : empty && onTalk ? (
     <IconButton
       symbol="waveform"
-      accessibilityLabel={composerCopy.talk}
+      accessibilityLabel={talkLabel}
       onPress={onTalk}
       testID="ask-talk"
     />
