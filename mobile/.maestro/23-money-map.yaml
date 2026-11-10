@@ -272,12 +272,23 @@ name: 23 Native money map, held figures, original source and ranked list
       TARGET_ID: money-title
 - tapOn: Filters(, on)?
 # Reset sits under the facets and Show toggles: below the fold at the sheet's
-# half-height detent, so scroll the sheet to it.
-- scrollUntilVisible:
-    element:
-      id: filters-reset
-    centerElement: true
+# half-height detent. A plain scroll moves the map behind the sheet, so drag
+# inside the sheet itself until Reset is on screen.
+- extendedWaitUntil:
+    visible:
+      id: filters-screen
     timeout: 15000
+- repeat:
+    while:
+      notVisible:
+        id: filters-reset
+    times: 4
+    commands:
+      - swipe:
+          start: 50%, 90%
+          end: 50%, 62%
+          duration: 500
+      - waitForAnimationToEnd
 - tapOn:
     id: filters-reset
 - tapOn: Done
