@@ -29,6 +29,7 @@ def index(root, prepared, blocked_reason=''):
                 try:
                     failure = ET.parse(report).find('.//failure')
                     if failure is not None: step = failure.get('message') or failure.text or 'See Maestro report'
+                    elif status != '0': step = 'Post-flow audit failed; inspect records-copy-check.json and the Maestro log'
                 except ET.ParseError: step = 'See incomplete Maestro report'
             elif status != '0':
                 step = 'Harness failed before a flow report was written; inspect '+Path(file).stem+'-maestro.log'

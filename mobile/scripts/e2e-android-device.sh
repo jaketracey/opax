@@ -220,6 +220,19 @@ android_flow() {
     --format junit --output "$OUT/$key-report.xml" -e EVIDENCE=screenshots \
     -e CONTENT_SIZE=large -e FIXTURE_PORT="$PORT" "$OUT/android-flows/${file#.maestro/}" || rc=$?
   if [ "$rc" = 0 ] || [ -s "$OUT/$key-report.xml" ]; then MAESTRO_DRIVER_READY=1; fi
+  if [ "$rc" = 0 ] && [ "$key" = 32-record-reader ]; then
+    if python3 - "$OUT" <<'PYCITATION'
+import json, pathlib, re, sys
+out=pathlib.Path(sys.argv[1])
+log=(out/'32-record-reader-maestro.log').read_text()
+payloads=re.findall(r'OPAX_NATIVE_CITATION=("[^\n]*")',log)
+assert payloads, 'Native clipboard payload was not captured'
+(out/'records-pasteboard.txt').write_text(json.loads(payloads[-1]))
+PYCITATION
+    then
+      TZ=$("${ADB[@]}" shell getprop persist.sys.timezone | tr -d '\r') ./node_modules/.bin/tsx scripts/check-record-copy.ts "$OUT/records-pasteboard.txt" > "$OUT/records-copy-check.json" 2>&1 || rc=1
+    else rc=1; fi
+  fi
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots/$size" "$OUT/maestro/$key" > "$OUT/$key-captures.log"
   if [ "$rc" != 0 ]; then
     timed 15 "${ADB[@]}" exec-out screencap -p > "$OUT/maestro/$key/failure.png" || true

@@ -15,7 +15,7 @@ SCRIPTS = Path(__file__).resolve().parent
 
 
 class AndroidHarnessTests(unittest.TestCase):
-    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False, local_avds=()):
+    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False, local_avds=(), reader=False, bad_copy=False):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
             for name in ('e2e-android-device.sh','qa-env.sh','qa-maestro.sh','qa-flows.sh','maestro-watch.py','android-parity-results.py'):
@@ -30,7 +30,9 @@ class AndroidHarnessTests(unittest.TestCase):
             (out/'android-flows').mkdir()
             (out/'android-flows/01-launch.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
             (out/'android-flows/02-search.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
-            (out/'android-flows/suite.json').write_text(json.dumps([{'path':'01-launch.yaml','run':True},{'path':'02-search.yaml','run':True}]))
+            (out/'android-flows/android').mkdir()
+            (out/'android-flows/android/32-record-reader.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
+            (out/'android-flows/suite.json').write_text(json.dumps([{'path':'01-launch.yaml','run':True},{'path':'02-search.yaml','run':True},{'path':'android/32-record-reader.yaml','run':reader}]))
             (scripts/'prepare-android-flows.py').write_text('print("")\n')
             (mobile/'node_modules/.bin').mkdir(parents=True)
             with zipfile.ZipFile(mobile/'fixture.apk','w') as archive:
@@ -53,7 +55,12 @@ elif name=='emulator':
     (root/'emulator.pid').write_text(str(os.getpid())); time.sleep(600)
 elif name=='tsx':
     if args[0]=='scripts/fixture-server.ts': time.sleep(600)
+    elif args[0]=='scripts/check-record-copy.ts':
+        assert pathlib.Path(args[1]).read_text()=='@misc{opax-public-fixture}'+chr(10)
+        raise SystemExit(int(os.environ['MOCK_BAD_COPY']))
 elif name=='maestro':
+    if args[-1].endswith('32-record-reader.yaml'):
+        print('OPAX_NATIVE_CITATION='+json.dumps('@misc{opax-public-fixture}'+chr(10)))
     if os.environ['MOCK_FAIL']=='1':
         out=pathlib.Path(args[args.index('--test-output-dir')+1])
         hierarchy=out/'run/flow/screen-hierarchy/failed-step.json'
@@ -74,8 +81,10 @@ elif name=='git': print('a'*40)
                  'OPAX_EMULATOR_PROC_ROOT':str(root/'proc'),
                  'OPAX_EMULATOR_START_LOCK':str(root/'start.lock'),
                  'MOCK_ROOT':str(root),'MOCK_SERIAL':'emulator-'+port,'MOCK_FAIL':str(int(fail)), 'MOCK_EXISTING':str(existing)}
+            env['MOCK_BAD_COPY']=str(int(bad_copy))
             for key in ('OPAX_PASTE_LOCK','OPAX_BUILD_GATE'): env.pop(key,None)
-            child=subprocess.Popen(['bash','scripts/e2e-android-device.sh',avd,str(out),'--all-android' if twice else '01'],cwd=mobile,env=env,
+            selector='.maestro/android/32-record-reader.yaml' if reader else '--all-android' if twice else '01'
+            child=subprocess.Popen(['bash','scripts/e2e-android-device.sh',avd,str(out),selector],cwd=mobile,env=env,
                                    stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
             try:
                 stdout, stderr=child.communicate(timeout=30)
@@ -124,6 +133,14 @@ elif name=='git': print('a'*40)
         self.assertNotEqual(rc,0,log)
         self.assertIn('Three-emulator capacity',log)
         self.assertFalse(any(c[0]=='emulator' for c in commands))
+
+    @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
+    def test_native_reader_clipboard_audit_can_fail_an_otherwise_passing_flow(self):
+        for bad_copy in (False,True):
+            rc,log,commands,results=self.run_device(reader=True,bad_copy=bad_copy)
+            self.assertEqual(rc,int(bad_copy),log)
+            self.assertTrue(any(c[:2]==['tsx','scripts/check-record-copy.ts'] for c in commands),log)
+            self.assertTrue(results.strip().endswith(str(int(bad_copy))),results)
 
 
     @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
