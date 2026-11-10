@@ -499,7 +499,10 @@ def validate_title(row) -> None:
     if not isinstance(row, dict) or not isinstance(row.get("id"), str) or not ID.fullmatch(row["id"]):
         raise Held("Invalid FRL id")
     if row.get("collection") != "LegislativeInstrument" or row.get("isInForce") is not True:
-        raise Held("Out-of-scope title; snapshot held")
+        # Name the row: the 5 and 9 November 2026 holds left no way to tell a repealed-mid-crawl title from a
+        # changed filter without re-running the whole crawl.
+        raise Held(f"Out-of-scope title; snapshot held (id {row.get('id')!r}, collection {row.get('collection')!r}, "
+                   f"isInForce {row.get('isInForce')!r})")
     if not isinstance(row.get("name"), str) or not row["name"]:
         raise Held("Title missing its authorised name")
 
