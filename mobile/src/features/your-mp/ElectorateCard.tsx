@@ -16,6 +16,7 @@ import { presentSource } from '../../navigation/sheets';
 import { hasOutline, OutlineMap } from '../electorate-map/OutlineMap';
 import {
   censusHeadline,
+  electionsNewestFirst,
   latestElection,
   newestCensus,
 } from './election-summary';
@@ -26,10 +27,16 @@ export function electorateCardSource(
   seat: Pick<Electorate, 'representation_as_of'>,
   view: ElectorateView,
 ): SourceDetails & { title: string } {
-  const census = view.census.find((b) => b.data) ?? null;
-  const election = view.elections
-    .filter((b) => b.data)
-    .sort((a, b) => (b.asAt ?? '').localeCompare(a.asAt ?? ''))[0];
+  const censusRecord = newestCensus(view);
+  const census = censusRecord
+    ? view.census.find((b) => b.data === censusRecord)
+    : null;
+  const electionRecord = electionsNewestFirst(
+    view.elections.flatMap((b) => (b.data ? [b.data] : [])),
+  )[0];
+  const election = electionRecord
+    ? view.elections.find((b) => b.data === electionRecord)
+    : null;
   const aecDate = election?.asAt ?? seat.representation_as_of ?? null;
   return {
     title: 'About your electorate',

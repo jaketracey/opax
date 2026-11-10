@@ -10,7 +10,10 @@ import { Icon } from '../src/design/icon';
 import { symbols } from '../src/design/symbols';
 import { rhythm } from '../src/design/tokens';
 import { OutlineMap } from '../src/features/electorate-map/OutlineMap';
-import { ElectorateCard } from '../src/features/your-mp/ElectorateCard';
+import {
+  ElectorateCard,
+  electorateCardSource,
+} from '../src/features/your-mp/ElectorateCard';
 import { pinned } from './pinned';
 
 jest.mock('../src/design/row-link', () => ({
@@ -22,6 +25,82 @@ const manifest = pinned('/electorates/manifest.json') as { index_url: string };
 const index = decodeElectorateIndex(pinned(manifest.index_url));
 const seat = index.electorates.find((item) => item.name === 'Grayndler')!;
 const view = electorateFor(decodeElectorate(pinned(seat.detail_url)));
+
+test('the card cites the Census and election it actually displays, regardless of file order or update date', () => {
+  const census = view.census.find((block) => block.data)!;
+  const election = view.elections.find((block) => block.data)!;
+  const latest = {
+    ...election,
+    asAt: '2025-05-03',
+    sources: [
+      {
+        label: 'Fixture latest election',
+        url: 'https://example.org/latest-election',
+      },
+    ],
+    data: {
+      ...election.data!,
+      election: { ...election.data!.election, poll_date: '2025-05-03' },
+    },
+  };
+  const source = electorateCardSource(seat, {
+    ...view,
+    census: [
+      {
+        ...census,
+        asAt: '2016-08-09',
+        data: { ...census.data!, year: 2016 },
+        sources: [
+          {
+            label: 'Fixture old Census',
+            url: 'https://example.org/old-census',
+          },
+        ],
+      },
+      {
+        ...census,
+        asAt: '2021-08-10',
+        data: { ...census.data!, year: 2021 },
+        sources: [
+          {
+            label: 'Fixture latest Census',
+            url: 'https://example.org/latest-census',
+          },
+        ],
+      },
+    ],
+    elections: [
+      {
+        ...election,
+        asAt: '2026-10-01',
+        data: {
+          ...election.data!,
+          election: { ...election.data!.election, poll_date: '2022-05-21' },
+        },
+        sources: [
+          {
+            label: 'Fixture old election',
+            url: 'https://example.org/old-election',
+          },
+        ],
+      },
+      latest,
+    ],
+  });
+  expect(source.citation).toEqual([
+    expect.objectContaining({ label: 'AEC', asOf: latest.asAt }),
+    expect.objectContaining({
+      label: 'ABS',
+      title: 'ABS Census 2021',
+      asOf: '2021-08-10',
+    }),
+  ]);
+  expect(source.originals?.map((original) => original.url)).toEqual([
+    'https://example.org/latest-election',
+    'https://example.org/latest-census',
+  ]);
+  expect(source.notes?.join(' ')).toContain('2021 Census');
+});
 
 test.each([true, false])(
   'the electorate disclosure uses the full trailing edge, with outline %s',
