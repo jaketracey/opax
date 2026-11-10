@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { useRecordPush } from '../../navigation/record-link';
 import { useSplitPane } from '../../design/primitives';
 import {
   billRoute,
@@ -14,24 +14,25 @@ import type { RecordEntry } from '../split/entry';
  * reader; everywhere else it pushes the route (records.md section 1).
  */
 export function useRecordNavigation() {
+  const push = useRecordPush();
   const pane = useSplitPane<RecordEntry>();
   return {
     inPane: pane !== null,
     openDoc(slug: string, title?: string) {
       if (pane) pane.push({ kind: 'doc', key: slug, title });
-      else router.push(docRoute(slug));
+      else push(docRoute(slug));
     },
     openBill(key: string, title?: string) {
       if (pane) pane.push({ kind: 'bill', key, title });
-      else router.push(billRoute(key));
+      else push(billRoute(key));
     },
     openText(key: string, version?: string, title?: string) {
       if (pane) pane.push({ kind: 'text', key, title });
-      else router.push(billTextRoute(key, version));
+      else push(billTextRoute(key, version));
     },
     openPerson(slug: string, name?: string) {
       if (pane) pane.push({ kind: 'person', key: slug, title: name });
-      else router.push(personRoute(slug));
+      else push(personRoute(slug));
     },
   };
 }

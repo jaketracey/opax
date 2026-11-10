@@ -54,6 +54,7 @@ const loadedTitleRoutes = new Set([
   'grant-program',
   'agency',
   'money-item',
+  'money-record',
   'connection',
 ]);
 const doneItems = headerItems(() => [closeSheetItem()]);
@@ -89,7 +90,9 @@ export function rootBackTitle(
   if (at === 1 && stackRootTitle) return stackRootTitle;
   if (previous?.name && loadedTitleRoutes.has(previous.name)) {
     const name = previous.params?.name;
-    return typeof name === 'string' && name.trim() ? name : 'Back';
+    return typeof name === 'string' && name.trim()
+      ? name
+      : (rootTitles[previous.name] ?? 'Back');
   }
   return previous?.name ? rootTitles[previous.name] : undefined;
 }
