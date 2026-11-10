@@ -29,6 +29,7 @@ import {
   VoteSplit,
 } from '../src/design/primitives';
 import BillTextReader from '../src/features/records/BillTextReader';
+import BillTextContents from '../src/features/records/BillTextContents';
 import { useBillTextPane } from '../src/features/records/billTextPane';
 import { ReaderList } from '../src/features/records/ReaderList';
 import DocumentReader from '../src/features/records/DocumentReader';
@@ -381,6 +382,39 @@ test('bill text has no generic title before its text loads', async () => {
   jest.mocked(records.billManifest).mockReturnValue(new Promise(() => {}));
   const view = await mount(<BillTextReader />);
   expect(mockOptions.title).toBe('');
+  await act(async () => view.unmount());
+});
+
+test('Contents announces its pending read and replaces it with the loaded section list', async () => {
+  mockBillText();
+  let finish!: (
+    value: Awaited<ReturnType<typeof records.billManifest>>,
+  ) => void;
+  jest.mocked(records.billManifest).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const view = await mount(<BillTextContents />);
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-contents-loading' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () =>
+    finish(
+      record(
+        decodeBillTextManifest(
+          responses['/bill-texts/au-federal-r7534/index.json'],
+        ),
+      ),
+    ),
+  );
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-contents-loading' }).length,
+  ).toBe(0);
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-section-0' }).length,
+  ).toBeGreaterThan(0);
   await act(async () => view.unmount());
 });
 
