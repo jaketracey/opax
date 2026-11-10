@@ -105,5 +105,18 @@
         "after": "d2dfc7ebfcca140ab2da8ed2e39c86ef53222ea6177dbdb5ab16593b0f8eb551"
       }
     ]
+  },
+  {
+    "package": "expo-router",
+    "version": "57.0.24",
+    "patch": "expo-router+57.0.24.patch",
+    "sha256": "ff33cc7f75a663409b38dc576b816ed529a6dc2e6223c3bd84249aaac2ad0552",
+    "files": [
+      {
+        "path": "build/useScreens.js",
+        "before": "fe94c51fb0d6091e3467cde1401d437f9b8c94b2fe2172e5768cf46774a81498",
+        "after": "477ebcfcc4c294a14dad6272c5aec1c56ec1200c3076718940fe57bda6b78f26"
+      }
+    ]
   }
 ]
