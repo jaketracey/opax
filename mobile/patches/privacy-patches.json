@@ -92,12 +92,17 @@
     "package": "react-native-screens",
     "version": "4.26.0",
     "patch": "react-native-screens+4.26.0.patch",
-    "sha256": "8b763ee16ec844d570af33facdddd3e2de57f696c966ea1e734c689a8ae6aae7",
+    "sha256": "58341749258e695f7cdabca91ff6bfad69130324055421e73aa3e3786e88ec4c",
     "files": [
       {
         "path": "ios/RNSBarButtonItem.mm",
         "before": "f6680e8d632552969582162782db40a5b20a7fa5ce36f1584bf4736c1b3547d3",
         "after": "d2ecac91610e46bb0a0fce42ceb61563326fd06fc886b4d769021aac1f553066"
+      },
+      {
+        "path": "ios/RNSScreen.mm",
+        "before": "7685f8732386a62dc82c8ab21fb37211ce4f51299af9e9ea6dea1a2d1c279207",
+        "after": "d2dfc7ebfcca140ab2da8ed2e39c86ef53222ea6177dbdb5ab16593b0f8eb551"
       }
     ]
   }
