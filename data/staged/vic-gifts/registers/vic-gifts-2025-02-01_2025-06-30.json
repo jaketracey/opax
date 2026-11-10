@@ -889,7 +889,12 @@
       "register_id": "vic-gifts-2025-02-01_2025-06-30",
       "period": "1 February 2025 to 30 June 2025",
       "role": "Minister",
-      "official": null,
+      "official": {
+        "name": "Colin Brooks",
+        "href": "/subject/person/colin-brooks",
+        "pid": null,
+        "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+      },
       "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
       "source_locator": "table-1/row-32",
       "source_table_id": "table-1",
@@ -1127,7 +1132,12 @@
       "register_id": "vic-gifts-2025-02-01_2025-06-30",
       "period": "1 February 2025 to 30 June 2025",
       "role": "Minister",
-      "official": null,
+      "official": {
+        "name": "Steve Dimopoulos",
+        "href": "/subject/person/steve-dimopoulos",
+        "pid": null,
+        "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+      },
       "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
       "source_locator": "table-1/row-41",
       "source_table_id": "table-1",
@@ -1149,7 +1159,12 @@
       "register_id": "vic-gifts-2025-02-01_2025-06-30",
       "period": "1 February 2025 to 30 June 2025",
       "role": "Minister",
-      "official": null,
+      "official": {
+        "name": "Steve Dimopoulos",
+        "href": "/subject/person/steve-dimopoulos",
+        "pid": null,
+        "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+      },
       "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
       "source_locator": "table-1/row-42",
       "source_table_id": "table-1",
@@ -1846,7 +1861,12 @@
       "register_id": "vic-gifts-2025-02-01_2025-06-30",
       "period": "1 February 2025 to 30 June 2025",
       "role": "Minister",
-      "official": null,
+      "official": {
+        "name": "Vicki Ward",
+        "href": "/subject/person/vicki-ward",
+        "pid": null,
+        "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+      },
       "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
       "source_locator": "table-1/row-68",
       "source_table_id": "table-1",
@@ -2003,7 +2023,12 @@
       "register_id": "vic-gifts-2025-02-01_2025-06-30",
       "period": "1 February 2025 to 30 June 2025",
       "role": "Parliamentary secretary",
-      "official": null,
+      "official": {
+        "name": "Luba Grigorovitch",
+        "href": "/subject/person/luba-grigorovitch",
+        "pid": null,
+        "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+      },
       "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
       "source_locator": "table-2/row-5",
       "source_table_id": "table-2",
@@ -2025,7 +2050,12 @@
       "register_id": "vic-gifts-2025-02-01_2025-06-30",
       "period": "1 February 2025 to 30 June 2025",
       "role": "Parliamentary secretary",
-      "official": null,
+      "official": {
+        "name": "Luba Grigorovitch",
+        "href": "/subject/person/luba-grigorovitch",
+        "pid": null,
+        "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+      },
       "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
       "source_locator": "table-2/row-6",
       "source_table_id": "table-2",

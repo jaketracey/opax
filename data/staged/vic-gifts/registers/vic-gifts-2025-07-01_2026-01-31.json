@@ -916,7 +916,12 @@
       "register_id": "vic-gifts-2025-07-01_2026-01-31",
       "period": "1 July 2025 to 31 January 2026",
       "role": "Minister",
-      "official": null,
+      "official": {
+        "name": "Lizzie Blandthorn",
+        "href": "/subject/person/lizzie-blandthorn",
+        "pid": null,
+        "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+      },
       "source_url": "https://www.vic.gov.au/ministerial-register-gifts-benefits-and-hospitality-july-2025-january-2026",
       "source_locator": "table-1/row-33",
       "source_table_id": "table-1",

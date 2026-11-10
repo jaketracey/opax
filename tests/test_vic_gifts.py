@@ -70,6 +70,28 @@ class VictorianGiftsTests(unittest.TestCase):
         self.assertIsNone(exact_holder("Example Member", ROSTER + [ROSTER[0]], PATHS))
         self.assertIsNone(exact_holder("Example Member", [{**ROSTER[0], "witness_name": "fixture"}], PATHS))
 
+    def test_lodgement_note_and_repeated_title_are_matched_not_rewritten(self):
+        # interests-expenses-009 (data cleanup 10 Nov 2026): the 2025 registers print a lodgement
+        # note in the holder cell and once print the title and given name twice.
+        roster = ROSTER + [{"name": n, "representation": [{"jurisdiction": "vic"}]}
+                           for n in ("Steve Dimopoulos", "Lizzie Blandthorn", "Colin Brooks")]
+        paths = {p["name"]: "/subject/person/" + p["name"].lower().replace(" ", "-") for p in roster}
+        note = " (via Material Change to Primary Return or Ordinary Return Form provided in November 2025)"
+        for cell, name in [("Steve Dimopoulos" + note, "Steve Dimopoulos"), ("Hon Colin Brooks" + note, "Colin Brooks"),
+                           ("Hon Lizzie Hon Lizzie Blandthorn", "Lizzie Blandthorn")]:
+            official = exact_holder(cell, roster, paths)
+            self.assertEqual(official["name"], name, cell)
+            self.assertIn("lodgement note or repeated title and name", official["method"])
+        plain = exact_holder("Hon Colin Brooks", roster, paths)
+        self.assertEqual(plain["method"], "unique exact Victorian roster name after removing Hon title")
+        # other parentheticals, or a different name before the second title, are not removed
+        self.assertIsNone(exact_holder("Colin Brooks (acting)", roster, paths))
+        self.assertIsNone(exact_holder("Hon Colin Hon Lizzie Blandthorn", roster, paths))
+
+    def test_staged_registers_link_every_row(self):
+        inventory = json.loads((ROOT / "data/staged/vic-gifts/inventory.json").read_text())
+        self.assertEqual(inventory["counts"]["unlinked_rows"], 0)
+
     def test_hash_and_unsupported_tables_fail_closed(self):
         with self.assertRaisesRegex(ValueError, "hash mismatch"):
             parse_register(BODY + b"changed", document(), ROSTER, PATHS)
