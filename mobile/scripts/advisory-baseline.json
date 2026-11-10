@@ -98,6 +98,36 @@
       "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
     },
     {
+      "package": "node-forge",
+      "advisory": "GHSA-9wg5-mj3p-v49q",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-2vgq-wchc-25w7",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-h46v-rmh6-fq4f",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-rhr8-3pm8-cq29",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-6qrw-m8cv-hcxf",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli > @expo/code-signing-certificates: the Expo CLI's local code-signing helper, run on the developer machine only, never bundled by Metro. Reviewed 9 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
       "package": "zod",
       "advisory": "GHSA-mrhx-c7xc-m3w5",
       "exposure": "tooling",
