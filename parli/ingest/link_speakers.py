@@ -176,10 +176,18 @@ def extract_surname(raw: str) -> str | None:
     Handles: "Mr HUGHES", "Senator PEARCE", "Sir WILLIAM LYNE",
     "Dr EARLE PAGE", "JOSEPH COOK"
     Returns the surname (last word), title-cased.
+
+    A comma print ("Hunt, Gregory, MP", "Theophanous, Dr Andrew, MP") puts the
+    surname first: it is the segment before the first comma, never the last
+    word, which is the given name (speeches-press-001: "Hunt, Gregory" was
+    filed under a historical member surnamed Gregory).
     """
     if not raw or not raw.strip():
         return None
     name = raw.strip()
+    comma = "," in name
+    if comma:
+        name = PAREN_RE.sub(" ", name).split(",", 1)[0]
     # Remove titles
     name = STRIP_SUFFIXES.sub(" ", name)
     name = MULTI_SPACE.sub(" ", name).strip()
@@ -188,8 +196,8 @@ def extract_surname(raw: str) -> str | None:
     parts = name.split()
     if not parts:
         return None
-    # The surname is the last word
-    surname = parts[-1].strip().title()
+    # The surname is the last word, or the whole segment before a comma ("Van Manen, Bert, MP")
+    surname = (" ".join(parts) if comma else parts[-1]).strip().title()
     if len(surname) < 2:
         return None
     return surname
@@ -203,8 +211,10 @@ def build_member_lookup(db) -> tuple[dict, dict]:
       - surname_lookup: surname_lower -> list of (person_id, first_name, last_name, chamber)
         (for historical last-name-only matching)
     """
+    columns = {r[1] for r in db.execute("PRAGMA table_info(members)")}
+    dates = ", ".join(c if c in columns else f"NULL AS {c}" for c in ("entered_house", "left_house"))
     members = db.execute(
-        "SELECT person_id, first_name, last_name, full_name, chamber FROM members "
+        f"SELECT person_id, first_name, last_name, full_name, chamber, {dates} FROM members "
         "WHERE full_name IS NOT NULL AND full_name != '' "
         # State speeches have their own jurisdiction-scoped lookup below.
         # A unique state surname must not capture a historic federal speaker.
@@ -238,6 +248,8 @@ def build_member_lookup(db) -> tuple[dict, dict]:
                 "first_name": first,
                 "last_name": last,
                 "chamber": chamber,
+                "entered": _iso_date(m["entered_house"]),
+                "left": _iso_date(m["left_house"]),
             })
 
     log.info("Built member lookup with %d name variants for %d members, "
@@ -355,6 +367,107 @@ def _prefer_real_candidates(candidates: list[dict]) -> list[dict]:
     return candidates
 
 
+def _iso_date(value) -> str | None:
+    """A members.entered_house / left_house value as YYYY-MM-DD, or None ('unknown', blank)."""
+    text = str(value or "").strip()
+    return text[:10] if re.match(r"\d{4}-\d{2}-\d{2}", text) else None
+
+
+def print_given_name(raw: str) -> str | None:
+    """The given name a print carries, or None for a surname-only print.
+
+    "Hunt, Gregory, MP" -> "Gregory"; "Kemp, Dr David, MP" -> "David";
+    "The Hon. Julia Gillard MP" -> "Julia"; "Mr HUGHES" -> None.
+    """
+    normalized = normalize_speaker_name(raw) if raw else None
+    return normalized.split()[0] if normalized else None
+
+
+def print_chamber(raw: str) -> str | None:
+    """The chamber a print names: Senator -> senate; MP, Mr, Mrs or Ms -> representatives."""
+    if re.search(r"\bsenator\b", raw or "", re.IGNORECASE):
+        return "senate"
+    if re.search(r"\bMP\b", raw or "") or re.search(r"\b(?:mr|mrs|ms)\b", raw or "", re.IGNORECASE):
+        return "representatives"
+    return None
+
+
+def _given_key(name: str) -> str:
+    return re.sub(r"[^a-z]", "", (name or "").lower())
+
+
+def given_names_compatible(printed: str, member_first: str) -> bool:
+    """True when a printed given name can be the member's: the same name, a listed
+    nickname (Bob/Robert), one a prefix of the other of at least three letters
+    (Pat/Patrick, Alex/Alexander), or an initial. A member with no given name on
+    record cannot confirm one and is not compatible: a print that carries a given
+    name is never matched on surname alone (speeches-press-001)."""
+    a = _given_key(printed)
+    b = _given_key(member_first.split()[0] if member_first and member_first.split() else "")
+    if not a or not b:
+        return False
+    if a == b or b in NICKNAME_MAP.get(a, []) or a in NICKNAME_MAP.get(b, []):
+        return True
+    short, long_ = sorted((a, b), key=len)
+    if len(short) == 1:
+        return long_.startswith(short)
+    return len(short) >= 3 and long_.startswith(short)
+
+
+def served_during(candidate: dict, span: tuple[str | None, str | None] | None, margin_years: int = 1) -> bool:
+    """True unless the member's recorded service and the print's speech dates are
+    known and more than margin_years apart."""
+    if not span or not span[0]:
+        return True
+    first, last = span[0][:10], (span[1] or span[0])[:10]
+    entered, left = candidate.get("entered"), candidate.get("left")
+
+    def shift(day: str, years: int) -> str:
+        return f"{int(day[:4]) + years:04d}{day[4:]}"
+
+    if entered and last < shift(entered, -margin_years):
+        return False
+    if left and first > shift(left, margin_years):
+        return False
+    return True
+
+
+def match_print_with_given_name(
+    raw: str,
+    surname_lookup: dict,
+    span: tuple[str | None, str | None] | None = None,
+    *,
+    real_only: bool = False,
+) -> str | None:
+    """Match a print that carries a given name on surname, given name, chamber and
+    service dates together; None unless exactly one member fits all four.
+
+    The surname is the print's own (extract_surname: before the comma for
+    "Surname, Given, MP"); the chamber is the one the print names, and a print
+    that names one never matches the other house. Replaces the old surname-only
+    step, which took any unique surname regardless of the given name ("Moore,
+    John, MP" -> Claire Moore, "Reid, Bruce, MP" -> Gordon Reid) (speeches-press-001).
+    """
+    given = print_given_name(raw)
+    surname = extract_surname(raw) if "," in (raw or "") else None
+    if not surname:
+        normalized = normalize_speaker_name(raw)
+        surname = normalized.split()[-1] if normalized else None
+    if not given or not surname:
+        return None
+    chamber = print_chamber(raw)
+    candidates = [
+        c for c in surname_lookup.get(surname.lower(), [])
+        if (not chamber or c["chamber"] == chamber)
+        and given_names_compatible(given, c["first_name"])
+        and served_during(c, span)
+    ]
+    if real_only:
+        candidates = [c for c in candidates if _is_real_pid(c["person_id"])]
+    candidates = _prefer_real_candidates(candidates)
+    return candidates[0]["person_id"] if len(candidates) == 1 else None
+
+
 def match_historical_surname(
     speaker_name: str,
     surname: str,
@@ -414,7 +527,7 @@ def seed_zenodo_members(db) -> int:
     Returns count of members created or updated.
     """
     rows = db.execute("""
-        SELECT speaker_name, COUNT(*) as cnt FROM speeches
+        SELECT speaker_name, COUNT(*) as cnt, MIN(date) AS first_date, MAX(date) AS last_date FROM speeches
         WHERE source = 'zenodo' AND person_id IS NULL
           AND speaker_name IS NOT NULL AND speaker_name != ''
           AND speaker_name LIKE '%,%'
@@ -426,6 +539,11 @@ def seed_zenodo_members(db) -> int:
     existing_names = set()
     for r in db.execute("SELECT LOWER(full_name) FROM members WHERE full_name IS NOT NULL"):
         existing_names.add(r[0])
+    # A print a sitting or former member already fits on surname, given name, chamber
+    # and dates ("Farmer, Patrick, MP" is Pat Farmer) gets no stub (speeches-press-001).
+    _, surname_lookup = build_member_lookup(db)
+    member_columns = {r[1] for r in db.execute("PRAGMA table_info(members)")}
+    stub_dates = ", ".join(c if c in member_columns else f"NULL AS {c}" for c in ("entered_house", "left_house"))
 
     updated = 0
     inserted = 0
@@ -449,19 +567,29 @@ def seed_zenodo_members(db) -> int:
 
         if full_name.lower() in existing_names:
             continue
+        span = (row["first_date"], row["last_date"])
+        if match_print_with_given_name(raw, surname_lookup, span, real_only=True):
+            continue
 
         # Infer chamber from suffix
         raw_lower = raw.lower()
         chamber = "senate" if "senator" in raw_lower else "representatives"
 
-        # Check if there's a wragge_ stub for this surname + chamber
+        # Check if there's a wragge_ stub for this surname + chamber. A stub only
+        # takes this print's name when its recorded service overlaps the print's
+        # speeches: a "Reid" stub with no recorded service is not "Reid, Bruce, MP".
         wragge_stub = db.execute(
-            """SELECT person_id, first_name, full_name FROM members
+            f"""SELECT person_id, first_name, full_name, {stub_dates} FROM members
                WHERE person_id LIKE 'wragge_%'
                  AND last_name = ? AND chamber = ?
                  AND (first_name IS NULL OR first_name = '')""",
             (last_name, chamber),
         ).fetchone()
+        if wragge_stub:
+            service = {"entered": _iso_date(wragge_stub["entered_house"]),
+                       "left": _iso_date(wragge_stub["left_house"])}
+            if not (service["entered"] or service["left"]) or not served_during(service, span):
+                wragge_stub = None
 
         if wragge_stub:
             # Update the stub with the full name
@@ -1010,8 +1138,16 @@ def match_surname_with_date(
     For ambiguous surnames (multiple members with same surname + chamber),
     checks which member's known date range overlaps the speech date.
     Prefers real (numeric) person_ids over synthetic wragge_ ones.
+
+    A print that carries a given name only matches a member with a compatible
+    given name in the chamber it names (speeches-press-001).
     """
     candidates = surname_lookup.get(surname.lower(), [])
+    given = print_given_name(speaker_name)
+    if given:
+        chamber = print_chamber(speaker_name)
+        candidates = [c for c in candidates if given_names_compatible(given, c["first_name"])
+                      and (not chamber or c["chamber"] == chamber)]
     if not candidates:
         return None
 
@@ -1277,7 +1413,8 @@ def link_speakers() -> None:
     # Step 3: Get all distinct speaker_name values with their counts (federal)
     log.info("Loading distinct speaker names from speeches (federal + remaining)...")
     speaker_rows = db.execute(
-        "SELECT DISTINCT speaker_name, COUNT(*) as cnt FROM speeches "
+        "SELECT DISTINCT speaker_name, COUNT(*) as cnt, MIN(date) AS first_date, MAX(date) AS last_date "
+        "FROM speeches "
         "WHERE person_id IS NULL AND speaker_name IS NOT NULL AND speaker_name != '' "
         f"AND (state IS NULL OR state = 'federal') {guard} "
         "GROUP BY speaker_name ORDER BY cnt DESC"
@@ -1321,30 +1458,16 @@ def link_speakers() -> None:
                         if pid:
                             break
 
-            # Fallback: if we have a normalized first+last name but no match,
-            # try matching by surname to members and pick the one with matching
-            # first-name initial or nickname
-            if not pid and normalized:
-                parts = normalized.split()
-                if len(parts) >= 2:
-                    first = parts[0]
-                    last_name = parts[-1]
-                    candidates = surname_lookup.get(last_name.lower(), [])
-                    candidates = _prefer_real_candidates(candidates)
-                    if len(candidates) == 1:
-                        pid = candidates[0]["person_id"]
-                    elif len(candidates) > 1:
-                        # Try to narrow by first-name initial
-                        initial_match = [
-                            c for c in candidates
-                            if c["first_name"] and
-                            c["first_name"][0].lower() == first[0].lower()
-                        ]
-                        if len(initial_match) == 1:
-                            pid = initial_match[0]["person_id"]
+            # Fallback: surname, given name, chamber and service dates together
+            # (speeches-press-001). A unique surname alone no longer decides it.
+            if not pid:
+                pid = match_print_with_given_name(
+                    speaker_name, surname_lookup, (row["first_date"], row["last_date"]))
 
-        # If no full-name match, try surname-only for historical records
-        if not pid:
+        # Surname-only prints ("Mr HUGHES") for historical records. A print that
+        # carries a given name was decided above and does not fall back to its
+        # surname alone.
+        if not pid and not normalized:
             surname = extract_surname(speaker_name)
             if surname:
                 pid = match_historical_surname(speaker_name, surname, surname_lookup)
