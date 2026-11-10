@@ -137,6 +137,13 @@ function command(v, relative) {
   }
   if (!v || typeof v !== 'object') return v;
   const out = structuredClone(v);
+  if (out.scrollUntilVisible)
+    // A headless Android scroll can expose the target just as Maestro's
+    // default 20-second deadline expires. Retain longer explicit waits.
+    out.scrollUntilVisible.timeout = Math.max(
+      out.scrollUntilVisible.timeout ?? 20000,
+      90000,
+    );
   if (
     out.pressKey === 'Enter' &&
     ['06-open-profile.yaml', '08-open-profile.yaml'].includes(relative)

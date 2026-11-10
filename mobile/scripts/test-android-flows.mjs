@@ -209,4 +209,9 @@ test('Android root restoration does not press Back through hideKeyboard and web 
   const about = JSON.stringify(read('14-about.yaml')[1].toJS());
   assert.ok(about.includes('about-privacy-device'));
   assert.ok(!about.includes('Privacy policy-device'));
+  const voice = read('20-voice-bridge.yaml')[1].toJS();
+  const state = voice.find(
+    (step) => step.scrollUntilVisible?.element?.id === 'voice-state',
+  );
+  assert.equal(state.scrollUntilVisible.timeout, 90000);
 });
