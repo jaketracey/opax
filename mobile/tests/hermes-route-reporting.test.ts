@@ -1,0 +1,171 @@
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { act, createElement } from 'react';
+import TestRenderer from 'react-test-renderer';
+import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
+import Constants from 'expo-constants';
+import { cleanEvent, scrubEvent } from '../src/analytics/events';
+import { RouteErrorBoundary } from '../src/navigation/RouteErrorBoundary';
+
+const mockSegments = ['(tabs)', '(today)', 'person', '[slug]'];
+const mockCapture = jest.fn();
+const mockClient = jest.fn((..._args: unknown[]) => ({ capture: mockCapture }));
+jest.mock('posthog-react-native', () => ({
+  __esModule: true,
+  default: function (...args: unknown[]) {
+    return mockClient(...args);
+  },
+}));
+jest.mock('expo-router', () => ({ useSegments: () => mockSegments }));
+jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
+jest.mock('expo-constants', () => ({
+  __esModule: true,
+  default: {
+    expoConfig: {
+      version: '1.1.0',
+      extra: {
+        analytics: {
+          host: 'https://opax.com.au/ingest',
+          projectToken: 'phc_fixture000000000000000000000000',
+          environment: 'production',
+        },
+      },
+    },
+  },
+}));
+
+const context = {
+  platform: 'ios',
+  appVersion: '1.1.0',
+  appBuild: '46',
+  environment: 'production',
+} as const;
+const privateText = 'Fixture private question, answer and record title';
+
+test('only fixed error classes and actual route patterns survive both privacy guards', () => {
+  const properties = {
+    error_class: 'TypeError',
+    route_pattern: '/person/[slug]',
+    $screen_name: '/person/fixture-member',
+    message: privateText,
+    stack: privateText,
+    question: privateText,
+    answer: privateText,
+    slug: 'fixture-member',
+    name: 'Fixture Member',
+    app_version: privateText,
+  };
+  expect(cleanEvent('opax_route_error', properties)).toEqual({
+    error_class: 'TypeError',
+    route_pattern: '/person/[slug]',
+  });
+  const scrubbed = scrubEvent(
+    { event: 'opax_route_error', properties },
+    context,
+  )!;
+  expect(scrubbed.properties).toMatchObject({
+    error_class: 'TypeError',
+    route_pattern: '/person/[slug]',
+    app_version: '1.1.0',
+    $process_person_profile: false,
+    $is_identified: false,
+    $geoip_disable: true,
+  });
+  expect(JSON.stringify(scrubbed)).not.toMatch(/Fixture|fixture-member/);
+  expect(
+    cleanEvent('opax_route_error', {
+      error_class: privateText,
+      route_pattern: '/person/fixture-member',
+    }),
+  ).toEqual({ error_class: 'other' });
+  expect(scrubEvent({ event: '$exception', properties }, context)).toBeNull();
+});
+
+test('every route file has an explicitly allowlisted error pattern', () => {
+  function routes(dir: string, segments: string[] = []): string[][] {
+    return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      if (entry.isDirectory())
+        return routes(join(dir, entry.name), [...segments, entry.name]);
+      if (!entry.name.endsWith('.tsx') || /^[_+]/.test(entry.name)) return [];
+      return [[...segments, entry.name.replace(/\.tsx$/, '')]];
+    });
+  }
+  for (const segments of routes(join(__dirname, '../src/app'))) {
+    const pattern =
+      '/' +
+      segments.filter((s) => s !== 'index' && !s.startsWith('(')).join('/');
+    expect(cleanEvent('opax_route_error', { route_pattern: pattern })).toEqual({
+      route_pattern: pattern,
+    });
+  }
+});
+
+test('the reporting boundary captures once per caught error, without error text or route params', () => {
+  const error = new TypeError(privateText);
+  error.name = privateText;
+  const retry = async () => {};
+  mockCapture.mockClear();
+  let tree!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    tree = TestRenderer.create(
+      createElement(RouteErrorBoundary, { error, retry }),
+    );
+  });
+  act(() => {
+    tree.update(createElement(RouteErrorBoundary, { error, retry }));
+  });
+  expect(mockCapture.mock.calls).toEqual([
+    [
+      'opax_route_error',
+      { error_class: 'TypeError', route_pattern: '/person/[slug]' },
+    ],
+  ]);
+  act(() => {
+    tree.update(
+      createElement(RouteErrorBoundary, {
+        error: new RangeError(privateText),
+        retry,
+      }),
+    );
+  });
+  expect(mockCapture).toHaveBeenCalledTimes(2);
+  expect(JSON.stringify(tree.toJSON())).not.toContain(privateText);
+  act(() => tree.unmount());
+});
+
+test('reporting respects the existing build gate, Android exclusion and anonymous SDK options', () => {
+  const original = Constants.expoConfig!.extra;
+  const report = (
+    extra: typeof original,
+    platform: 'ios' | 'android' = 'ios',
+  ) => {
+    Constants.expoConfig!.extra = extra;
+    jest.isolateModules(() => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { Platform } = require('react-native');
+      const os = jest.replaceProperty(Platform, 'OS', platform);
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('../src/analytics').reportRouteError(new TypeError(privateText), [
+        'person',
+        '[slug]',
+      ]);
+      os.restore();
+    });
+  };
+  mockClient.mockClear();
+  report(undefined);
+  expect(mockClient).not.toHaveBeenCalled();
+  report({ analytics: { ...original!.analytics, environment: 'e2e' } });
+  expect(mockClient).not.toHaveBeenCalled();
+  report(original, 'android');
+  expect(mockClient).not.toHaveBeenCalled();
+  report(original);
+  expect(mockClient).toHaveBeenCalledTimes(1);
+  expect(mockClient.mock.calls[0]![1]).toMatchObject({
+    personProfiles: 'never',
+    enableSessionReplay: false,
+    disableGeoip: true,
+    errorTracking: { autocapture: false },
+  });
+  Constants.expoConfig!.extra = original;
+});

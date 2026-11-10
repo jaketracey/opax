@@ -11,6 +11,7 @@
  * so SDK enrichment (deep link URLs, screen sizes, flags, person
  * properties) cannot slip through either.
  */
+import { routeErrorPattern } from './route-patterns';
 
 type Value = string | number | boolean;
 type Rule = (value: unknown) => Value | undefined;
@@ -46,6 +47,26 @@ export const section: Rule = (value) =>
 const version = pattern(/^\d{1,4}(?:\.\d{1,4}){0,3}$/);
 const build = pattern(/^\d{1,10}$/);
 
+// Constructor names are categories, never error.name/message/stack or a
+// caller-provided class name. Unknown constructors use the fixed "other".
+const errorClasses = new Set([
+  'Error',
+  'AggregateError',
+  'EvalError',
+  'RangeError',
+  'ReferenceError',
+  'SyntaxError',
+  'TypeError',
+  'URIError',
+  'ApiError',
+  'PersonIdentityError',
+  'ChatSyncError',
+  'AskFailure',
+  'other',
+]);
+const errorClass: Rule = (value) =>
+  typeof value === 'string' && errorClasses.has(value) ? value : 'other';
+
 /**
  * Where a search ran: speeches, every record type ("Type: All records"), or
  * one of the list groups in features/search/scopes.ts.
@@ -65,6 +86,10 @@ export const searchScopes = [
 
 /** Custom events: the website's names where they match, with app properties. */
 export const eventFields = {
+  opax_route_error: {
+    error_class: errorClass,
+    route_pattern: routeErrorPattern,
+  },
   opax_ask_started: { from_section: section, follow_up: flag },
   opax_ask_completed: {
     from_section: section,
@@ -232,6 +257,9 @@ export function scrubEvent<T extends CaptureEvent>(
     app_build: context.appBuild,
     environment: context.environment,
   };
+  // This report has its own fixed route allowlist. Do not inherit the SDK's
+  // screen property, which is irrelevant here and may contain a pathname.
+  if (captured.event === 'opax_route_error') delete properties.$screen_name;
   if (captured.event === '$screen' && !properties.$screen_name) return null;
   return {
     ...captured,
