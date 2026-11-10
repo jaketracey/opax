@@ -43,7 +43,7 @@ import {
 import { askGround } from './ground';
 import { turnKey, type Turn } from './model';
 import type { AskPerson } from './people';
-import { citedSources } from './source-present';
+import { citedSources, sourceTitle } from './source-present';
 
 /**
  * Ask on iPad regular width (journeys/ask.md 4.12): the conversation in the
@@ -313,7 +313,7 @@ function SourceList({
     ordered.map((s) => s.resource),
     (key) => {
       const s = ordered.find((item) => item.resource === key);
-      if (s) open(s.href, s.title);
+      if (s) open(s.href, sourceTitle(s));
     },
     () => undefined,
   );
@@ -361,7 +361,7 @@ function SourceList({
                 source.slug && citationPassage(source)
                   ? `/doc/${source.slug}?${new URLSearchParams({ passage: citationPassage(source)!.slice(0, 4000) })}`
                   : source.href,
-                source.title,
+                sourceTitle(source),
               )
             }
             onOpenPerson={(person) =>
@@ -384,7 +384,9 @@ function SourceList({
                 record={s}
                 n={numbered ? i + 1 : undefined}
                 selected={numbered ? marked === i + 1 : cursor === s.resource}
-                onPress={() => (numbered ? move(i + 1) : open(s.href, s.title))}
+                onPress={() =>
+                  numbered ? move(i + 1) : open(s.href, sourceTitle(s))
+                }
                 testID={`ask-pane-source-${i + 1}`}
               />
             ))}
@@ -400,7 +402,7 @@ function SourceList({
                 key={s.resource}
                 record={s}
                 selected={cursor === s.resource}
-                onPress={() => open(s.href, s.title)}
+                onPress={() => open(s.href, sourceTitle(s))}
               />
             ))}
           </InsetGroup>

@@ -1,3 +1,4 @@
+import { decodeEntities } from '../../api/passage-text';
 import {
   cleanRecordTitle,
   formatDate,
@@ -14,7 +15,9 @@ import { parliaments, sourceGroups, type Source } from './model';
  * dates, no roster-form names) and never "Federal".
  */
 export function personName(raw: string | null | undefined): string {
-  const name = (raw ?? '').replace(/\s+/g, ' ').trim();
+  const name = decodeEntities(raw ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
   // "WILKIE, Andrew, MP" and "Wilkie, Andrew" become "Andrew Wilkie".
   const roster =
     /^([^,]+),\s*([^,]+?)(?:,\s*(?:MP|Senator|MLA|MLC|MHR))?$/i.exec(name);
@@ -46,8 +49,10 @@ export function sourceKind(s: Source): string {
   return s.speaker ? 'Speech' : 'Record';
 }
 export function sourceTitle(s: Source): string {
+  // Titles stay raw in saved answers; decode only for presentation.
+  const title = decodeEntities(s.title);
   const subject = titleSubject({
-    title: s.title,
+    title,
     speaker: s.speaker ? personName(s.speaker) : null,
     date: s.date ?? null,
   });
@@ -56,17 +61,17 @@ export function sourceTitle(s: Source): string {
     ? subject
         .replace(
           new RegExp(
-            `^${s.speaker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*[\u2014–-]\\s*`,
+            `^${decodeEntities(s.speaker).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*[\u2014–-]\\s*`,
           ),
           '',
         )
         .trim()
     : subject;
-  return cleanRecordTitle(raw || s.title) || s.slug || 'Record';
+  return cleanRecordTitle(raw || title) || s.slug || 'Record';
 }
 /** The stage the stored title carried, folded into the meta line. */
 export function sourceStage(s: Source): string | null {
-  return recordTitleStage(s.title);
+  return recordTitleStage(decodeEntities(s.title));
 }
 /** "Speech · Second reading · Victoria · 18 Aug 2026"; never "Federal". */
 export function sourceMeta(s: Source): string {

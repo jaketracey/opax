@@ -158,7 +158,10 @@ function DocPaneBar({ entry }: { entry: RecordEntry }) {
   const target = {
     slug: entry.key,
     title: entry.title
-      ? recordHeadline({ slug: entry.key, title: entry.title })
+      ? recordHeadline(
+          { slug: entry.key, title: entry.title },
+          { titleDecoded: true },
+        )
       : 'This record',
   };
   return (

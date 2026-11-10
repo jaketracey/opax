@@ -1,4 +1,5 @@
 import { billTextPathPattern, isRecordSlug } from '../../api/record-policy';
+import { decodeEntities } from '../../api/passage-text';
 import {
   array,
   date,
@@ -391,7 +392,7 @@ const PROCEDURAL =
 /** A division's subject from its stored question (records.md 2.4 rule 1). */
 function divisionHeadline(rec: RecordLike, chamber: string, rest: string) {
   const subject = field(rec, 'subject') || field(rec, 'bill_ref');
-  if (subject) return plainTitle(subject);
+  if (subject) return plainTitle(decodeEntities(subject));
   const question =
     /The question is that\s+([\s\S]*?)(?:[.?!](?=\s|[A-Z]|$)|$)/.exec(rest);
   const clause = question?.[1]?.replace(/\s+/g, ' ').trim();
@@ -410,7 +411,17 @@ function divisionHeadline(rec: RecordLike, chamber: string, rest: string) {
  * or role prefix, an ISO date, a division's "Senate division, 2026-08-19:"
  * preamble or an em dash.
  */
-export function recordHeadline(rec: RecordLike): string {
+export function recordHeadline(
+  rec: RecordLike,
+  { titleDecoded = false }: { titleDecoded?: boolean } = {},
+): string {
+  // Pane entries carry a presented title; server records still carry entities.
+  if (!titleDecoded)
+    rec = {
+      ...rec,
+      title: decodeEntities(rec.title),
+      speaker: rec.speaker ? decodeEntities(rec.speaker) : rec.speaker,
+    };
   const division = DIVISION.exec(rec.title.trim());
   if (division) return divisionHeadline(rec, division[1]!, division[3]!);
   const speaker = rec.speaker ?? titleSpeaker(rec);

@@ -1,3 +1,4 @@
+import { decodeEntities } from '../../api/passage-text';
 import type { DocumentRecord } from './model';
 // Ports of portal/public/app.js splitName, fmtDate, titleSubject, bibtexFor,
 // risFor and citePanelHTML. Tests execute those web functions for parity.
@@ -90,7 +91,7 @@ export function bibtexFor(s: CitationSource, context: CitationContext) {
     month = Number((s.date || '').slice(5, 7)) || '';
   const fields = [
     s.speaker ? `  author = {${family}, ${given}}` : null,
-    `  title = {${(s.title || s.slug).replace(/[{}]/g, '')}}`,
+    `  title = {${decodeEntities(s.title || s.slug).replace(/[{}]/g, '')}}`,
     year ? `  year = {${year}}` : null,
     month ? `  month = {${month}}` : null,
     `  howpublished = {Public record, via OPAX corpus v${context.corpusVersion}}`,
@@ -106,7 +107,7 @@ export function risFor(s: CitationSource, context: CitationContext) {
   const { family, given } = splitName(s.speaker ?? null),
     lines = ['TY  - GOVDOC'];
   if (s.speaker) lines.push(`AU  - ${family}, ${given}`);
-  lines.push(`TI  - ${s.title || s.slug}`);
+  lines.push(`TI  - ${decodeEntities(s.title || s.slug)}`);
   if (s.date)
     lines.push(
       `PY  - ${s.date.slice(0, 4)}`,
@@ -143,7 +144,12 @@ export function citationsFor(doc: DocumentRecord, context: CitationContext) {
         id: 'source',
         label: 'Source citation',
         extension: 'txt',
-        text: [doc.title, doc.metadata.stage, doc.metadata.date, doc.url || url]
+        text: [
+          decodeEntities(doc.title),
+          doc.metadata.stage,
+          doc.metadata.date,
+          doc.url || url,
+        ]
           .filter(Boolean)
           .join('. '),
         note: 'Use the original bill document for authoritative wording and page or clause references.',
@@ -161,7 +167,7 @@ export function citationsFor(doc: DocumentRecord, context: CitationContext) {
       id: 'apa',
       label: 'APA 7',
       extension: 'txt',
-      text: `${family}${given ? `, ${given[0]}.` : ''} (${year || 'n.d.'}). ${doc.title}. Parliamentary record, Australia. OPAX. ${url}`,
+      text: `${family}${given ? `, ${given[0]}.` : ''} (${year || 'n.d.'}). ${decodeEntities(doc.title)}. Parliamentary record, Australia. OPAX. ${url}`,
     },
     {
       id: 'bibtex',

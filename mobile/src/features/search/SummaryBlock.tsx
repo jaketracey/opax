@@ -163,7 +163,9 @@ export function SummaryBlock({
             ? 'Some sources were temporarily unavailable when this summary was written.'
             : null,
           saved.note,
-          ...sources.map((s, i) => `${i + 1}. ${s.title}`),
+          ...sources.map(
+            (s, i) => `${i + 1}. ${resultTitle({ ...s, kind: 'speech' })}`,
+          ),
         ]}
         testID="records-summary-sources"
       />
