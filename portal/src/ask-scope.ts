@@ -2,6 +2,7 @@ import type { RecordQuestion } from './ask-records'
 import { isMoneyRanking } from './ask-money'
 import { isPositionDurationQuestion } from './position-evidence'
 import { isIdentityQuestion } from './ask-identity-intent'
+import { isRecordCountQuestion } from './ask-scope-intent'
 import { overviewSubject, isPersonOverviewCandidate } from './ask-person-overview'
 
 // Infer only an unambiguous political cohort, not arbitrary mentions of
@@ -173,7 +174,7 @@ export function resolveAskScope<T extends RecordQuestion>(input: T, people: read
 /** All resolved named speech questions get the original-turn attribution guard,
  * including ordinary "said" questions and referential follow-ups. */
 export function isNamedPositionQuestion(input: RecordQuestion): boolean {
-  return !isIdentityQuestion(input.question ?? '') && !!input.speaker && input.kind === 'speech' &&
+  return !isIdentityQuestion(input.question ?? '') && !isRecordCountQuestion(input.question ?? '') && !!input.speaker && input.kind === 'speech' &&
     (!!namedPositionRequest(input.question || '') || inheritsSubject(input.question || ''))
 }
 

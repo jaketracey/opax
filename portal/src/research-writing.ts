@@ -5,9 +5,9 @@ import { atomsFromText, claimIdentity, claimClauses, normalClaim, numberValue, m
 import { claimAttributionOk, claimMatchesParty, withoutUnsupportedFigures } from './research-evidence'
 import { withoutSaPlaceholder } from '../public/sa-hansard.js'
 import type { QualitativeAnswer, ReceiptFact } from './research-types'
-import { plainAnswerPayload } from './research-language'
+import { plainAnswerPayload, rewriteAnswerPayload } from './research-language'
 import { repairDonorRanking,selectedDonorFacts,answerDecision,canReconstructRanking,CAUSAL,causalAsk,receiptsCannotAnswer,donorRankingAsked } from './research-coherence.mjs'
-import {auditPayload} from './research-claim-audit.mjs'
+import {auditPayload,sentenceParts} from './research-claim-audit.mjs'
 import {rankingCoverageMatches,rankingScopeGaps,partyNamed,sourceMetadata,resolvedRankingScope,jurisdictionNames} from './research-ranking-scope.mjs'
 import {questionIndustry} from './research-ranking-repair.mjs'
 import {donationCoverageLimit} from './research-coverage'
@@ -15,12 +15,40 @@ import {UNCONFIRMED_PERIOD} from './ask-constraints'
 import {recordAnswerLines,recordEvidenceText} from './research-record-answer'
 import {decodeHTMLStrict} from 'entities'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-15-record-findings'
+export const ANSWER_WRITING_VERSION = 'written-answer-16-record-findings-distinct-summaries'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
 const clean = (s: string) => s.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim()
 const key = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+/** Remove repeated sentences at composition and public boundaries, preserving
+ * original code-point citation ranges through every deletion. */
+export function distinctSummary<T extends Record<string, unknown>>(payload:T):T {
+  const answer=String(payload.answer??''),seen=new Set<string>(),remove:{start:number;end:number}[]=[]
+  for(const part of sentenceParts(answer)) {
+    const signature=key(part.text)
+    if(!signature||/^what the records do show$/.test(signature))continue
+    if(seen.has(signature)||signature.length>=20&&[...seen].some(previous=>(' '+previous+' ').includes(' '+signature+' '))) {
+      const line=answer.lastIndexOf('\n',part.at-1)+1,prefix=answer.slice(line,part.at)
+      remove.push({start:/^\s*[-*]?\s*$/.test(prefix)?line:part.at,end:part.at+part.text.length})
+    } else seen.add(signature)
+  }
+  return rewriteAnswerPayload(payload,replace=>{
+    // Positional deletions must run from right to left, so identical text in
+    // the opening remains the cited answer rather than being removed too.
+    for(const {start,end} of remove.reverse())replace(new RegExp(`(?<=^[\\s\\S]{${start}})[\\s\\S]{${end-start}}`,'g'),'')
+    // Some register exports list a company once by name and again with its
+    // business details. Keep the fuller item without repeating the name.
+    replace(/:\s*[^:\n]+;[^\n]+/g,list=>{
+      const prefix=/^:\s*/.exec(list)![0],items=list.slice(prefix.length).replace(/\.$/,'').split(/;\s*|\s+and\s+(?=[A-Z])/)
+      const kept=items.filter((item,i)=>!items.some((other,j)=>i!==j&&key(other).startsWith(key(item)+' ')&&other.startsWith(item+',')))
+      return kept.length===items.length?list:prefix+kept.join('; ')+'.'
+    })
+    replace(/(^|\n)[ \t]*What the records do show:[ \t]*(?:\n\s*)?$/gi,'')
+    replace(/\n{3,}/g,'\n\n')
+    replace(/^\s+|\s+$/g,'')
+  })
+}
 export const isCoverage = (s: string) => /^.*requested period.*(?:not fully covered|unknown)|^The requested period|^Coverage:|^Salary entitlements|^Federal parliament only|^\*?\*?Salaries as at|^These records|^Party and chamber labels|^Committee chair loadings|^Opax added|^This selection covers|^It excludes|^Amounts are|^Based on AEC/i.test(s)
 export const tokens = (s: string) => (s.match(/\d[\d,]*(?:\.\d+)?%?|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|hundred|thousand|million|billion|twice|half)\b/gi) ?? []).map(n => n.toLowerCase().replace(/,/g, '').replace(/\.0+(?=%?$)/, ''))
 const dateWords = (s: string) => s.replace(/\b\d{4}-\d{2}-\d{2}\b/g, iso => `${iso} ${new Date(iso+'T00:00:00Z').toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}`)
@@ -113,7 +141,7 @@ function assemble(lines: WrittenSentence[], input: WritingInput, preserveCoverag
       if(!ranges.some(([a,b])=>a===start&&b===Array.from(answer).length))ranges.push([start,Array.from(answer).length])
     }
   }
-  return plainAnswerPayload({ answer, answer_decision:lines.length&&lines.every(l=>l.coverage)?'limitation' as const:'answer' as const, ...(notes.length?{coverage:{note:notes.join(' ')}}:{}), ...(input.constraints?{answer_scope:input.constraints}:{}), citations, sources:[...sources.values()] })
+  return distinctSummary(plainAnswerPayload({ answer, answer_decision:lines.length&&lines.every(l=>l.coverage)?'limitation' as const:'answer' as const, ...(notes.length?{coverage:{note:notes.join(' ')}}:{}), ...(input.constraints?{answer_scope:input.constraints}:{}), citations, sources:[...sources.values()] }))
 }
 const finish = (s: string) => /[.!?]$/.test(s) ? s : s+'.'
 export const payRate = (s: string) => /^(.+?): (\$\d(?:[\d,]*\d)?(?:\.\d+)?) a year as (.+?), (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2});/.exec(s)
@@ -422,7 +450,9 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     }
     if(!rows.length)for(const f of available.slice(0,/each year|by year|year-by-year|trend|over time/i.test(input.question)?30:Math.min(30,Number(/top (\d+)/i.exec(input.question)?.[1])||8))) {
       const count=/^([^:]+): (\d[\d,]*)(.*)/.exec(f.text), total=/^(\d[\d,]*) (.+)/.exec(f.text)
-      if(count){const who=count[1], detail=count[3].replace(/^([^()]*)/,part=>/^\d{4}$/.test(who)?part.replace(/\s+from \d{4}-\d{2}-\d{2}(?: to \d{4}-\d{2}-\d{2})?/,''):part).replace(/\s*\([^)]*\)/g,'').replace(/[.;]+$/,'');lines.push({text:/^\d{4}$/.test(who)?`In ${who}, there were ${count[2]}${detail}.`:`${who} ${lines.length===0&&/most|highest|top|largest/i.test(input.question)?'led the selected ranking with':'recorded'} ${count[2]}${detail}.`,facts:[f.id]})}
+      const cohort=/^(\d[\d,]*) bill records in the introduction cohort (.+?); (\d[\d,]*) have snapshot status (\w+) \(([\d.]+)%\)/.exec(f.text)
+      if(cohort&&available.some(other=>other!==f&&other.text.startsWith(cohort[3]+' '+cohort[4]+' bill records'))){lines.push({text:`The introduction cohort contained ${cohort[1]} bill records ${cohort[2]}; ${cohort[5]}% had snapshot status ${cohort[4]}.`,facts:[f.id]})}
+      else if(count){const who=count[1], detail=count[3].replace(/^([^()]*)/,part=>/^\d{4}$/.test(who)?part.replace(/\s+from \d{4}-\d{2}-\d{2}(?: to \d{4}-\d{2}-\d{2})?/,''):part).replace(/\s*\([^)]*\)/g,'').replace(/[.;]+$/,'');lines.push({text:/^\d{4}$/.test(who)?`In ${who}, there were ${count[2]}${detail}.`:`${who} ${lines.length===0&&/most|highest|top|largest/i.test(input.question)?'led the selected ranking with':'recorded'} ${count[2]}${detail}.`,facts:[f.id]})}
       else if(total)lines.push({text:`There were ${total[1]} ${total[2].replace(/[.;]+$/,'')}.`,facts:[f.id]})
       else if(/\b(?:divisions|all aye|all no)\b/.test(f.text) && !rawToolEcho(f.text))lines.push({text:finish(f.text),facts:[f.id]})
     }
@@ -660,5 +690,5 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
   }
   const used=points.sources.filter(s=>Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))),sources=new Map<string,WritingFact['source']>()
   for(const source of [...written.sources,...used]){const prior=sources.get(source.resource);sources.set(source.resource,prior?{...prior,snippet:[...new Set([prior.snippet,source.snippet])].join('\n')}:source)}
-  return {...written,...(emptyRecordRefusal?{answer_decision:'answer' as const}:{}),answer,citations,sources:[...sources.values()],...(points.answer_status?{answer_status:written.sources.length?'partly_cited' as const:points.answer_status}:{})}
+  return distinctSummary({...written,...(emptyRecordRefusal?{answer_decision:'answer' as const}:{}),answer,citations,sources:[...sources.values()],...(points.answer_status?{answer_status:written.sources.length?'partly_cited' as const:points.answer_status}:{})})
 }

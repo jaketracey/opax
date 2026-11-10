@@ -2,7 +2,7 @@ import {auditPayload,quotationSpans,sentenceParts} from './research-claim-audit.
 import {plainAnswerPayload,rewriteAnswerPayload} from './research-language'
 import {leadWithFinding,neutralAnonymousAttribution} from './research-answer-shape'
 import {coherenceCheck,citationHasSentence,protectedDecision,answerDecision,canReconstructRanking,causalAsk} from './research-coherence.mjs'
-import {causalDecline,proseFallback,writingFacts,appendWrittenPoints,usableFact,foundFacts,besideLimitation,receiptsAsLimitation,emptyAnswer,renderedKind,tokens,RANKING_WORDS,type WritingInput} from './research-writing'
+import {causalDecline,proseFallback,writingFacts,appendWrittenPoints,usableFact,foundFacts,besideLimitation,receiptsAsLimitation,emptyAnswer,renderedKind,tokens,RANKING_WORDS,distinctSummary,type WritingInput} from './research-writing'
 import {inferPeriod} from './agentic-ask'
 import type {QualitativeAnswer} from './research-types'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
@@ -155,7 +155,7 @@ function answerFromFound(out:Record<string,unknown>,question:string,evidence:Rec
   const beneath=(list:QualitativeAnswer)=>{
     const lead=text.trim()+'\n\n',offset=Array.from(lead).length,citations=Object.fromEntries(Object.entries((out.citations??{}) as Record<string,number[][]>).map(([id,ranges])=>[id,[...ranges]]))
     for(const [id,ranges] of Object.entries(list.citations))(citations[id]??=[]).push(...ranges.map(([a,b])=>[a+offset,b+offset]))
-    return {...out,answer:lead+list.answer,citations,sources:[...sources.filter(s=>!list.sources.some(b=>b.resource===s.resource)),...list.sources],coherence:{...diagnostics,method:'facts_beside'}}
+    return distinctSummary({...out,answer:lead+list.answer,citations,sources:[...sources.filter(s=>!list.sources.some(b=>b.resource===s.resource)),...list.sources],coherence:{...diagnostics,method:'facts_beside'}})
   }
   // Spoken points can answer a question about a position; receipts alone cannot, whoever wrote them.
   const spoken=citedBy.some(s=>['speech','bill'].includes(s.kind))||['uncited','partly_cited'].includes(String(out.answer_status))
@@ -177,7 +177,7 @@ function answerFromFound(out:Record<string,unknown>,question:string,evidence:Rec
 }
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
-  return answerFromFound(checkedAnswer(payload,question),question,payload)
+  return distinctSummary(answerFromFound(checkedAnswer(payload,question),question,payload))
 }
 function checkedAnswer(payload:Record<string,unknown>,question:string):Record<string,unknown> {
   payload=plainCoverageRefusal(payload,question)

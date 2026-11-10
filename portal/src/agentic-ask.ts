@@ -3,6 +3,7 @@ import { researchPhaseWallMs } from './research-time'
 import { resolvePartySubject } from './ask-party-subject'
 import { receiptYearWindow } from './receipt-period'
 import { exactRecordLookup, prependLookupCorrection } from './ask-exact-lookup'
+import { isRecordCountQuestion } from './ask-scope-intent'
 import { serviceText, type ServicePeriod } from './person-service'
 /**
  * OPAX-owned Ask orchestration in the Worker
@@ -125,6 +126,7 @@ export function classifyAgentic(question: string): { route: 'agentic' | 'ask'; s
   if (/\b(?:most recently|latest|last speech|knows? most)\b/.test(q)) return { route: 'ask', shape: null, rule: 'ordinary' }
   if (MONEY_WORDS.test(q) && SPEECH_WORDS.test(q) && /\bmost\b|\bhow much\b/.test(q)) return { route: 'agentic', shape: 'money', rule: 'money+speech' }
   if (VOTE_WORDS.test(q) && SPEECH_WORDS.test(q) && (COMPARE_WORDS.test(q) || /\bhow often\b|\bhow many\b/.test(q))) return { route: 'agentic', shape: 'comparison', rule: 'vote+speech' }
+  if (isRecordCountQuestion(q) && /\bspeech(?:es|se)?\b/.test(q) && /\b(?:more|fewer)\b/.test(q)) return { route: 'agentic', shape: 'comparison', rule: 'speech-count-comparison' }
   if (COMPARE_WORDS.test(q) && /\bhow often\b|\bhow many\b/i.test(q)) return { route: 'agentic', shape: 'comparison', rule: 'compare-counts' }
   if (/\bhow many\b/i.test(q) && SPEECH_WORDS.test(q)) return { route: 'agentic', shape: 'trend', rule: 'how-many' }
   if (TREND_WORDS.test(q) && SPEECH_WORDS.test(q) && /\b(?:more|less|fewer|number|count|volume|how many|which year|over time|each year|by year|increase\w*|decrease\w*|risen|fallen)\b/.test(q)) return { route: 'agentic', shape: 'trend', rule: 'trend' }
@@ -151,6 +153,10 @@ export function fallbackPlan(question: string): Plan | null {
   const q = question.toLowerCase()
   const topics = [...new Set([...TOPIC_RULES.filter(([, re]) => re.test(q)).map(([topic]) => topic), ...TOPICS.filter(t => q.includes(t))])]
   const topic = topics.length === 1 ? topics[0] : undefined
+  if (shape === 'comparison' && isRecordCountQuestion(q) && /\bspeech(?:es|se)?\b/.test(q)) {
+    const parties = extractNamedScope(question, null, null).parties
+    if (parties.length > 1 && (topic || !/\b(?:about|on|topic|subject)\b/.test(q))) return { shape, steps: parties.map(party => ({ tool: 'count_speeches', args: { party, group_by: 'none', ...(topic?{topic}:{}) } })) }
+  }
   if (!topic) return null // never replace an unknown subject with overall counts
   const state = /\bnsw\b|new south wales/.test(q) ? 'nsw' : /victori|\bvic\b/.test(q) ? 'vic' : /\bact\b|legislative assembly/.test(q) ? 'act' : /queensland|\bqld\b/.test(q) ? 'qld' : /south australia|\bsa\b/.test(q) ? 'sa' : /federal|senat|representatives/.test(q) ? 'federal' : undefined
   const chamber = /senat/.test(q) ? 'senate' : /house of representatives/.test(q) ? 'representatives' : undefined
@@ -392,6 +398,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   const resolvedQuestion = subject.question !== question ? subject.question : undefined
   question = subject.question
   const publicQuestion = question.replace(/\b[^\s@]+@[^\s@]+\.[^\s@]+\b/g, ' ').replace(/https?:\/\/\S+/gi, ' ')
+    .replace(/\bquick\s+(?:check|question|one|note)\b/gi, ' ')
   const q = ` ${normaliseQuestion(publicQuestion)} `
   const mentions = (name: string) => !!name && q.includes(` ${normaliseQuestion(name)} `)
   const exported = (roster as { people?: { name: string; party?: string; party_now?: string }[] } | null)?.people ?? []
