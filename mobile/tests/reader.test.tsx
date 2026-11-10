@@ -190,30 +190,62 @@ test.each([false, true])(
   },
 );
 
-test.each(['bill_text', 'division', 'grant_award'] as const)(
-  '%s summaries keep their collapsed default',
+test.each([
+  'press_release',
+  'government_release',
+  'bill_text',
+  'division',
+  'grant_invitation',
+  'grant_award',
+  'contract',
+  'research_report',
+  'legal',
+  'another_kind',
+])(
+  '%s summaries start open and keep a collapsed choice for the visit',
   async (kind) => {
-    jest
-      .mocked(records.document)
-      .mockResolvedValue(
-        record({
-          ...speech,
-          speaker: null,
-          labels: { ...speech.labels, kind },
-          summary: 'Another record summary.',
-        }),
-      );
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        ...speech,
+        speaker: null,
+        labels: { ...speech.labels, kind },
+        summary: 'Another record summary.',
+      }),
+    );
     const view = await mount(<DocumentReader />);
     const toggle = view.root.find(
       (node) =>
         node.props.testID === 'doc-brief' &&
         typeof node.props.onPress === 'function',
     );
-    expect(toggle.props.accessibilityState).toEqual({ expanded: false });
-    expect(text(view)).not.toContain('Another record summary.');
-    await act(async () => toggle.props.onPress());
     expect(toggle.props.accessibilityState).toEqual({ expanded: true });
     expect(text(view)).toContain('Another record summary.');
+    await act(async () => toggle.props.onPress());
+    expect(toggle.props.accessibilityState).toEqual({ expanded: false });
+    expect(text(view)).not.toContain('Another record summary.');
+    await act(async () =>
+      view.update(
+        withNavigationOptions(<DocumentReader />, (options) => {
+          mockOptions = options;
+        }),
+      ),
+    );
+    expect(toggle.props.accessibilityState).toEqual({ expanded: false });
+    await act(async () => view.unmount());
+    const revisit = await mount(<DocumentReader />);
+    expect(text(revisit)).toContain('Another record summary.');
+    await act(async () => revisit.unmount());
+  },
+);
+
+test.each([null, ''])(
+  'a record with summary %s has no In short section',
+  async (summary) => {
+    jest
+      .mocked(records.document)
+      .mockResolvedValue(record({ ...speech, summary }));
+    const view = await mount(<DocumentReader />);
+    expect(view.root.findAllByProps({ testID: 'doc-brief' })).toHaveLength(0);
     await act(async () => view.unmount());
   },
 );

@@ -19,8 +19,13 @@ import {
   formatPercent,
 } from '../../design/format';
 import { colors, hairline, rhythm } from '../../design/tokens';
-import { fromWebPath, recordListRoute } from '../../navigation/routes';
+import {
+  fromWebPath,
+  recordListRoute,
+  topicRoute,
+} from '../../navigation/routes';
 import { openOnWeb } from '../../navigation/external';
+import { topicNames as pageTopicNames } from '../reports/model';
 import { BlockSource, recordBlock } from '../your-mp/Evidence';
 import {
   diaryEligible,
@@ -199,14 +204,27 @@ export function Topics({ name }: { name: string }) {
       ) : null}
       {profile.topics.length ? (
         <View>
-          {profile.topics.slice(0, 8).map((t, i) => (
-            <ValueRow
-              key={t.slug}
-              label={topicNames[t.slug] ?? t.slug}
-              value={formatPercent(t.share * 100, 0)}
-              testID={`person-topic-${i}`}
-            />
-          ))}
+          {profile.topics.slice(0, 8).map((t, i) => {
+            const label = topicNames[t.slug] ?? t.slug;
+            const value = formatPercent(t.share * 100, 0);
+            return Object.hasOwn(pageTopicNames, t.slug) ? (
+              <LinkRow
+                key={t.slug}
+                title={label}
+                value={value}
+                href={topicRoute(t.slug)}
+                accessibilityLabel={`${pageTopicNames[t.slug]}, ${Math.round(t.share * 100)} percent of their speeches, opens topic`}
+                testID={`person-topic-${i}`}
+              />
+            ) : (
+              <ValueRow
+                key={t.slug}
+                label={label}
+                value={value}
+                testID={`person-topic-${i}`}
+              />
+            );
+          })}
         </View>
       ) : (
         <Text wordSafe variant="secondary">

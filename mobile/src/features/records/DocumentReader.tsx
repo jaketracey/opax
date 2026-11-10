@@ -634,7 +634,7 @@ function ReaderHeader({
             key={doc.slug}
             label="In short"
             testID="doc-brief"
-            defaultOpen={doc.labels.kind === 'speech'}
+            defaultOpen
           >
             <View style={styles.brief}>
               <MachinePill
