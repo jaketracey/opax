@@ -130,8 +130,12 @@ export const tool: ToolDefinition = {
       if (d) params.set('focus', d.id)
       const who = row.donor ? `${row.donor}: ${aud(row.total_aud)} in federal disclosed receipts to ${row.party ?? 'all recipient parties'}`
         : `${row.party ?? 'Federal parties'}: ${aud(row.total_aud)} in federal disclosed receipts`
-      const dates = `(${row.year ?? from}-07-01 to ${(row.year ?? to) + 1}-06-30)`
-      const text = `${who} across ${row.receipts.toLocaleString('en-AU')} receipt${row.receipts === 1 ? '' : 's'} in financial years ${row.period} ${dates}${undated && row.year === undefined ? ', including undated receipts' : ''}.`
+      // Human-readable dates survive clients that remove ISO dates from source titles.
+      // ISO boundaries remain in coverage; the basis travels with each selected citation.
+      const dates = `(1 July ${row.year ?? from} to 30 June ${(row.year ?? to) + 1})`
+      const basis = edgeScope || donor || group === 'donor' ? 'Donor aggregates and flows exclude internal party transfers and public funding.'
+        : 'Party aggregates include internal party transfers and exclude identified public electoral funding.'
+      const text = `${who} across ${row.receipts.toLocaleString('en-AU')} receipt${row.receipts === 1 ? '' : 's'} in financial years ${row.period} ${dates}${undated && row.year === undefined ? ', including undated receipts' : ''}. ${basis}`
       return { kind: 'export' as const, text, value: row.total_aud, url: siteUrl(env, '/money?' + params) }
     })
     return { rows: picked, citations, notes, period, group_by: group, ...(party ? { party: party.label } : {}), ...(donor ? { donor: donorDisclosure(donor).name } : {}),

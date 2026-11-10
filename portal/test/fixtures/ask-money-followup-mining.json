@@ -1,0 +1,89 @@
+[
+  {
+    "request": {
+      "question": "How many receipts did the Mining and Energy Union make?",
+      "kind": "all",
+      "context": [
+        {
+          "author": "user",
+          "text": "How much has the Mining and Energy Union donated?"
+        },
+        {
+          "author": "answer",
+          "text": "Mining and Energy Union provided $4,720,421 in federal disclosed receipts to all recipient parties in financial years 1998-99 to 2025-26.\n\nMining and Energy Union provided $4,720,421 in federal disclosed receipts to Labor in financial years 1998-99 to 2025-26.\n\nMining and Energy Union provided $4,102,022 in federal disclosed receipts to all recipient parties in financial years 2024-25.\n\nMining and Energy Union provided $500,000 in federal disclosed receipts to all recipient parties in financial years 2021-22.\n\nMining and Energy Union provided $93,954 in federal disclosed receipts to all recipient parties in financial years 2002-03.\n\nMining and Energy Union provided $8,149 in federal disclosed receipts to all recipient parties in financial years 2001-02.\n\nMining."
+        }
+      ],
+      "prior_resources": []
+    },
+    "response": {
+      "answer": "The Mining and Energy Union made 56 disclosed receipts to all recipient parties across financial years 1998-99 to 2025-26, a federal total of $4,720,421.",
+      "answer_decision": "answer"
+    }
+  },
+  {
+    "request": {
+      "question": "Are internal party transfers counted in the $4,720,421?",
+      "kind": "all",
+      "context": [
+        {
+          "author": "user",
+          "text": "How much has the Mining and Energy Union donated?"
+        },
+        {
+          "author": "answer",
+          "text": "Mining and Energy Union provided $4,720,421 in federal disclosed receipts to all recipient parties in financial years 1998-99 to 2025-26.\n\nMining and Energy Union provided $4,720,421 in federal disclosed receipts to Labor in financial years 1998-99 to 2025-26.\n\nMining and Energy Union provided $4,102,022 in federal disclosed receipts to all recipient parties in financial years 2024-25.\n\nMining and Energy Union provided $500,000 in federal disclosed receipts to all recipient parties in financial years 2021-22.\n\nMining and Energy Union provided $93,954 in federal disclosed receipts to all recipient parties in financial years 2002-03.\n\nMining and Energy Union provided $8,149 in federal disclosed receipts to all recipient parties in financial years 2001-02.\n\nMining."
+        },
+        {
+          "author": "user",
+          "text": "How many receipts did the Mining and Energy Union make?"
+        },
+        {
+          "author": "answer",
+          "text": "The Mining and Energy Union made 56 disclosed receipts to all recipient parties across financial years 1998-99 to 2025-26, a federal total of $4,720,421."
+        }
+      ],
+      "prior_resources": []
+    },
+    "response": {
+      "answer": "Mining.",
+      "answer_decision": "answer"
+    }
+  },
+  {
+    "request": {
+      "question": "What financial years do the Mining and Energy Union receipts cover?",
+      "kind": "all",
+      "context": [
+        {
+          "author": "user",
+          "text": "How much has the Mining and Energy Union donated?"
+        },
+        {
+          "author": "answer",
+          "text": "Mining and Energy Union provided $4,720,421 in federal disclosed receipts to all recipient parties in financial years 1998-99 to 2025-26.\n\nMining and Energy Union provided $4,720,421 in federal disclosed receipts to Labor in financial years 1998-99 to 2025-26.\n\nMining and Energy Union provided $4,102,022 in federal disclosed receipts to all recipient parties in financial years 2024-25.\n\nMining and Energy Union provided $500,000 in federal disclosed receipts to all recipient parties in financial years 2021-22.\n\nMining and Energy Union provided $93,954 in federal disclosed receipts to all recipient parties in financial years 2002-03.\n\nMining and Energy Union provided $8,149 in federal disclosed receipts to all recipient parties in financial years 2001-02.\n\nMining."
+        },
+        {
+          "author": "user",
+          "text": "How many receipts did the Mining and Energy Union make?"
+        },
+        {
+          "author": "answer",
+          "text": "The Mining and Energy Union made 56 disclosed receipts to all recipient parties across financial years 1998-99 to 2025-26, a federal total of $4,720,421."
+        },
+        {
+          "author": "user",
+          "text": "Are internal party transfers counted in the $4,720,421?"
+        },
+        {
+          "author": "answer",
+          "text": "Mining."
+        }
+      ],
+      "prior_resources": []
+    },
+    "response": {
+      "answer": "Mining.",
+      "answer_decision": "answer"
+    }
+  }
+]

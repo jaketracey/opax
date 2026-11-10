@@ -1,12 +1,48 @@
 /** Money summaries preserve the recorded total, counterparties and reporting basis. */
 import type { WritingFact, WritingInput, WrittenSentence } from './research-writing'
 import { mergeRegisterItems } from './tools/interests'
+import { causalAsk } from './research-coherence.mjs'
 
 const key = (text: string) => text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
 const named = (question: string, name: string) => (' ' + key(question) + ' ').includes(' ' + key(name) + ' ')
 const dollars = (amount: number) => '$' + amount.toLocaleString('en-AU')
 const donorTotal = (f: WritingFact) => /^(.+?): (\$[\d,.]+) in federal disclosed receipts to (.+?) across ([\d,]+) receipts? in financial years (.+?) \(/.exec(f.text)
 const donorName = (f: WritingFact) => f.source.receipt?.source ?? donorTotal(f)?.[1]
+
+/** Answer the requested field of a selected receipt aggregate, never the previous turn's metric. */
+export function receiptWritingLines(input: WritingInput, available = input.facts): WrittenSentence[] | null {
+  if (causalAsk(input.question) || /\b(?:why|votes?|voted|positions?|policy|policies)\b/i.test(input.question)) return null
+  const rows = available.flatMap(f => { const m = donorTotal(f); return m ? [{ f, m }] : [] })
+  const donors = [...new Set(rows.map(({ m }) => m[1]))]
+  let selected = rows.filter(({ m }) => named(input.question, m[1]) || donors.length === 1 &&
+    /\b(?:receipts?|internal party transfers)\b/i.test(input.question) && input.question.includes(m[2]))
+  if (!selected.length) return null
+  const parties = selected.filter(({ m }) => m[3] !== 'all recipient parties' && named(input.question, m[3]))
+  if (parties.length) selected = parties
+  else if (selected.some(({ m }) => m[3] === 'all recipient parties')) selected = selected.filter(({ m }) => m[3] === 'all recipient parties')
+  const ranged = selected.filter(({ m }) => / to /i.test(m[5]))
+  if (ranged.length && !/\b(?:each year|by year|annual|trend|over time)\b/i.test(input.question)) selected = ranged
+  selected = selected.filter(({ m }, i, all) => all.findIndex(other => other.m.slice(1).join('|') === m.slice(1).join('|')) === i)
+  const line = (text: string, facts: number[]): WrittenSentence => ({ text, facts })
+  if (/\binternal party transfers\b/i.test(input.question)) {
+    const basis = input.facts.find(f => /Donor aggregates and flows exclude internal party transfers and public funding\./.test(f.text))
+    if (!basis) return null
+    const { f, m } = selected[0]
+    return [line(`No, internal party transfers and public funding are excluded from the ${m[2]} in federal disclosed receipts from ${m[1]}.`, [f.id, basis.id])]
+  }
+  if (/\b(?:how many|number of|count of)\b/i.test(input.question) && /\breceipts?\b/i.test(input.question)) {
+    return selected.map(({ f, m }) => line(`${m[4]} disclosed receipt${m[4] === '1' ? '' : 's'} from ${m[1]} ${m[4] === '1' ? 'was' : 'were'} recorded to ${m[3]} in financial years ${m[5]}.`, [f.id]))
+  }
+  if (/\b(?:what|which) financial years?\b|\b(?:years?|period)\b.*\bcover\w*\b/i.test(input.question)) {
+    if (selected.length === 1) { const { f, m } = selected[0]; return [line(`The ${m[1]} receipt total covers financial years ${m[5]}.`, [f.id])] }
+    const years = [...new Set(selected.map(({ m }) => m[5]))].sort()
+    return [line(`The ${selected[0].m[1]} receipts are recorded in financial years ${years.slice(0, -1).join(', ')} and ${years.at(-1)}.`, selected.map(({ f }) => f.id))]
+  }
+  if (/\b(?:how much|total|donat\w*|gave)\b/i.test(input.question) && !/\b(?:who|which|what parties|whether)\b/i.test(input.question)) {
+    return selected.map(({ f, m }) => line(`${m[1]} provided ${m[2]} in federal disclosed receipts to ${m[3]} in financial years ${m[5]}.`, [f.id]))
+  }
+  return null
+}
 
 /** Label both ends of an explicit award relation for the independent claim reader. */
 export function moneyEvidenceRows(text: string, url = ''): string[] {
@@ -55,11 +91,8 @@ export function moneyWritingLines(input: WritingInput, available: WritingFact[])
     const { f, m } = interests[0], items = mergeRegisterItems(m[5].split('; ').map(description => ({ description })))
     if (items.length < m[5].split('; ').length) return [line(`${m[1]} declared ${m[4]}: ${items.map(item => item.description).join('; ')} (${m[2]} register of interests${m[3] ?? ''}).`, f)]
   }
-  const donors = facts.flatMap(f => { const m = donorTotal(f); return m ? [{ f, m }] : [] })
-    .filter(({ m }) => named(input.question, m[1]))
-  if (donors.length && /\b(?:how much|total|donat|gave|receipts)\w*/i.test(input.question)) {
-    return donors.map(({ f, m }) => line(`${m[1]} provided ${m[2]} in federal disclosed receipts to ${m[3]} in financial years ${m[5]}.`, f))
-  }
+  const receipts = receiptWritingLines(input, facts)
+  if (receipts) return receipts
   const partyTotals = facts.flatMap(f => {
     const m = /^(.+?)(?: received |: )(\$[\d,.]+) in federal disclosed receipts across ([\d,]+) receipts? in financial years (.+?) \(/.exec(f.text)
     return m && named(input.question, m[1]) ? [{ f, m }] : []

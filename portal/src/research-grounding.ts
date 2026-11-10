@@ -7,6 +7,7 @@ import {inferPeriod} from './agentic-ask'
 import type {QualitativeAnswer} from './research-types'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
 import {plainCoverageRefusal} from './research-coverage'
+import {atomsFromText,sentenceFragment} from './research-claims'
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
 function checkedClaims(payload:Record<string,unknown>,question:string,promote=true):Record<string,unknown> {
@@ -44,7 +45,12 @@ function checkedClaims(payload:Record<string,unknown>,question:string,promote=tr
       if(base<0)continue
       const at=finding.offset===undefined?Math.max(0,text.indexOf(finding.quote??finding.entity)):Math.max(0,finding.offset-base)
       const quotes=quotationSpans(text)
-      const boundaries=[0,...[...text.matchAll(/;\s+|,?\s+(?:and|while|whereas|because|but)\s+(?=(?:the |a |an |that |their |no |full |more |said |[A-Z]))/g)].filter(m=>!quotes.some(q=>m.index!>q.at&&m.index!<q.end)).map(m=>m.index!),text.length]
+      const boundaries=[0]
+      for(const m of text.matchAll(/;\s+|,?\s+(?:and|while|whereas|because|but)\s+(?=(?:the |a |an |that |their |no |full |more |said |[A-Z]))/g)){
+        if(quotes.some(q=>m.index!>q.at&&m.index!<q.end)||sentenceFragment(text.slice(boundaries.at(-1),m.index)))continue
+        boundaries.push(m.index!)
+      }
+      boundaries.push(text.length)
       const index=Math.max(0,boundaries.findIndex((b,i)=>b<=at&&boundaries[i+1]>at))
       remove.add(text.slice(boundaries[index],boundaries[index+1]))
     }
@@ -65,7 +71,13 @@ function checkedClaims(payload:Record<string,unknown>,question:string,promote=tr
 
 /** Remove empty paragraphs before remapping anchors; punctuation alone cannot carry a citation. */
 export function cleanAnswerShape(payload:Record<string,unknown>):Record<string,unknown> {
+  const original=(Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]
+  const selected=original.map(source=>typeof source.title==='string'&&/\(\s*to\s*\)/i.test(source.title)?{...source,title:source.title.replace(/\s*\(\s*to\s*\)/gi,'')}:source)
+  if(selected.some((source,i)=>source!==original[i]))payload={...payload,sources:selected}
+  const entities=selected.flatMap(source=>[source.speaker,source.receipt?.source,...atomsFromText(String(source.snippet??''),source.resource,source).map(a=>a.entity)]).filter((s):s is string=>!!s)
+  const fragments=sentenceParts(String(payload.answer??'')).filter(part=>sentenceFragment(part.text,entities))
   const cleaned=rewriteAnswerPayload(payload,replace=>{
+    for(const part of fragments.reverse())replace(new RegExp(`(?<=^[\\s\\S]{${part.at}})[\\s\\S]{${part.text.length}}`,'g'),'')
     replace(/^(?:[ \t]*(?:\[\d+\]|[.!?,;:—–-]))+[ \t]*(?:\n|$)/gm,'')
     replace(/^(?:What the records? say(?:s)?|Answer|Overview|Summary):[ \t]*\n/gi,'')
     replace(/^(?:Other large donors include|Other donors include|Smaller amounts included)\s+/gi,'')
@@ -177,7 +189,7 @@ function answerFromFound(out:Record<string,unknown>,question:string,evidence:Rec
 }
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
-  return distinctSummary(answerFromFound(checkedAnswer(payload,question),question,payload))
+  return cleanAnswerShape(distinctSummary(answerFromFound(checkedAnswer(payload,question),question,payload)))
 }
 function checkedAnswer(payload:Record<string,unknown>,question:string):Record<string,unknown> {
   payload=plainCoverageRefusal(payload,question)

@@ -1,7 +1,7 @@
 import {RECEIPTS_WRITING_RULE} from './receipt-copy'
 /** Tools supply evidence; only checked, newly written prose reaches an Ask reader. */
 import type { Fact, Period } from './agentic-ask'
-import { atomsFromText, claimIdentity, claimClauses, normalClaim, numberValue, metricAt, proseClaimKeys, censusField, type ClaimAtom } from './research-claims'
+import { atomsFromText, claimIdentity, claimClauses, normalClaim, numberValue, metricAt, proseClaimKeys, censusField, sentenceFragment, type ClaimAtom } from './research-claims'
 import { claimAttributionOk, claimMatchesParty, withoutUnsupportedFigures } from './research-evidence'
 import { withoutSaPlaceholder } from '../public/sa-hansard.js'
 import type { QualitativeAnswer, ReceiptFact } from './research-types'
@@ -16,7 +16,7 @@ import {recordAnswerLines,recordEvidenceText} from './research-record-answer'
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-18-bill-speeches-money'
+export const ANSWER_WRITING_VERSION = 'written-answer-19-receipt-followups'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -607,7 +607,7 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
     for(const clause of claimClauses(clean(line.text))) {
       if(!comparativeGrounded(clause.text,facts))continue
       const text=withoutUnsupportedFigures(clause.text,s=>tokens(s).every(n=>allowed.has(n))&&supportedDates(s,evidence)&&boundFigures(s,facts,inherited))
-      if(!text||!boundFigures(text,facts,inherited)||rawToolEcho(text)||/[\n|`#]|https?:\/\/|\[\d+\]/.test(text)||CAUSAL.test(text))continue
+      if(!text||sentenceFragment(text)||!boundFigures(text,facts,inherited)||rawToolEcho(text)||/[\n|`#]|https?:\/\/|\[\d+\]/.test(text)||CAUSAL.test(text))continue
       const entities=facts.flatMap(f=>(f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)).map(a=>a.entity)).filter(Boolean)
       inherited=entities.find(e=>text.includes(e))??inherited
       const speakers=facts.map(f=>f.source.speaker).filter((name):name is string=>!!name)

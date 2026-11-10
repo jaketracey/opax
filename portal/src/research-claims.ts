@@ -6,7 +6,26 @@ export interface ClaimAtom {
 export const normalClaim = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim()
 export const claimIdentity = (a: ClaimAtom) => JSON.stringify([normalClaim(a.entity),a.metric,a.value,a.unit,a.chamber,a.period])
 export const numberValue = (s: string) => s.replace(/[$,%\s]/g,'').replace(/\.0+$/,'')
-const datePattern=/\b\d{4}-\d{2}-\d{2}\b/g
+const CLAUSE_VERB = /\b(?:is|are|was|were|be|has|have|had|can|cannot|could|will|would|should|must|do|does|did|said|says|made|gave|received|provided|recorded|earned|declared|covers?|include[sd]?|exclude[sd]?|passed|defeated|voted|spoke|led|show[sn]?|contain[sd]?)\b/i
+/** A surviving name or connective is not a claim, even when it has a citation. */
+export function sentenceFragment(text: string, entities: string[] = []): boolean {
+  const plain = normalClaim(text.replace(/\[\d+\]/g, '').replace(/^[-*•]\s*/, ''))
+  if (!plain) return true
+  const name = plain.replace(/^(?:the|a|an) /, '')
+  const words = plain.split(' ')
+  if (/^(?:please )?(?:name|choose|specify|ask|check|select|try|tell|give|provide|narrow|clarify)\b/.test(plain) && words.length >= 2) return false
+  if (words.length < 3) return !/\b(?:passed|failed|won|lost|spoke|voted|resigned|died)\b/i.test(plain) || words.length < 2
+  const names = text.match(/[\p{L}'’-]+/gu) ?? []
+  if (names.every(word => /^(?:and|of|the|for|to|a|an)$/.test(word) || /^\p{Lu}/u.test(word))) return true
+  // Accept ordinary finite verbs beyond the common record vocabulary.
+  if (CLAUSE_VERB.test(plain) || /\b\p{L}+(?:ed|es|s)\b/u.test(plain)) return false
+  if (entities.some(entity => { const full = normalClaim(entity).replace(/^the /, ''); return full === name || full.startsWith(name + ' ') })) return true
+  // Labelled numerical findings are used in checked record lists.
+  if (/:\s*\$?\d/.test(text)) return false
+  return words.length < 5
+}
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December']
+const datePattern=/\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2} (?:January|February|March|April|May|June|July|August|September|October|November|December) \d{4}\b/g
 export const censusField=(text:string)=>/^(.+?) \([^)]+\): ([^:$\d]+?) (\$?\d[\d,]*(?:\.\d+)?%?)([^()]*) \(2021 Census \(ABS\)\)/.exec(text)
 export function metricOf(text: string, unit: string): string {
   const topic=/\b(?:housing|gambling|poker|immigration|asylum|climate|health|agriculture|tax(?:-budget)?|budget|education)\b/i.exec(text)?.[0].toLowerCase()
@@ -36,7 +55,8 @@ export function atomsFromText(text: string, evidenceId: string, source: {speaker
   const table=text.startsWith('|')?text.split('|').map(s=>s.trim()).find(s=>/[a-z]/i.test(s)):undefined
   const entity=(rate?.[1]??current?.[1]??label??table??source.speaker??/^(.+?) (?:gave|received|was awarded)\b/.exec(text)?.[1]??'').replace(/\s+(?:received|provided|gave|led)\b.*$/i,'')
   const field=censusField(text)
-  const dates=text.match(datePattern)??[]
+  const dated=[...text.matchAll(datePattern)]
+  const dates=dated.map(m=>{const human=/^(\d+) (\w+) (\d{4})$/.exec(m[0]);return human?`${human[3]}-${String(MONTHS.indexOf(human[2])+1).padStart(2,'0')}-${human[1].padStart(2,'0')}`:m[0]})
   const period:ClaimAtom['period']=rate?{since:rate[4],until:rate[5]}:{...(dates[0]?{since:dates[0]}:{}),...(dates[1]?{until:dates[1]}:{})}
   const fiscal=/\b(?:19|20)\d{2}[–-]\d{2}(?:\d{2})?\b/.exec(text)?.[0]
   if(fiscal)period.label=fiscal
@@ -46,7 +66,7 @@ export function atomsFromText(text: string, evidenceId: string, source: {speaker
   const out:ClaimAtom[]=[]
   for(const m of text.matchAll(/\$\d[\d,]*(?:\.\d+)?|\b\d[\d,]*(?:\.\d+)?%?/g)) {
     const at=m.index!, value=m[0]
-    if(dates.some(d=>{const i=text.indexOf(d);return at>=i&&at<i+d.length})||/^\d{4}$/.test(value)||/\d(?:st|nd|rd|th)\b/.test(text.slice(at,at+7)))continue
+    if(dated.some(d=>at>=d.index!&&at<d.index!+d[0].length)||/^\d{4}$/.test(value)||/\d(?:st|nd|rd|th)\b/.test(text.slice(at,at+7)))continue
     let unit=value.startsWith('$')?(rate||current||/\b(?:annual|a year|per year)\b/i.test(text)?'AUD/year':/per week|weekly/i.test(text)?'AUD/week':/per month|monthly/i.test(text)?'AUD/month':'AUD'):value.endsWith('%')?'%':'count'
     let metric=metricAt(text,at,unit)
     if(field&&metric.startsWith('field:')&&!value.startsWith('$')&&!value.endsWith('%'))unit=field[4].trim()||'count'
@@ -59,7 +79,13 @@ export function atomsFromText(text: string, evidenceId: string, source: {speaker
 /** Independent clauses retain their original offsets for Unicode citation rebasing. */
 export function claimClauses(text: string): {text:string;start:number;end:number}[] {
   const out:{text:string;start:number;end:number}[]=[]
-  const boundaries=[0,...[...text.matchAll(/(?<=[.!?])\s+(?=[A-Z$“"‘'(])|;\s+|,?\s+and\s+(?=(?:[A-Z][\p{L}'’-]*(?:\s+[A-Z][\p{L}'’-]*)*\s+(?:received|recorded|earned|had|has|was|spoke)|\$\d))/gu)].map(m=>m.index!),text.length]
+  const boundaries=[0]
+  for (const match of text.matchAll(/(?<=[.!?])\s+(?=[A-Z$“"‘'(])|;\s+|,?\s+and\s+(?=(?:[A-Z][\p{L}'’-]*(?:\s+[A-Z][\p{L}'’-]*)*\s+(?:received|recorded|earned|had|has|was|spoke)|\$\d))/gu)) {
+    // A conjunction inside an organisation name cannot start a second claim.
+    if (/\band\b/.test(match[0]) && sentenceFragment(text.slice(boundaries.at(-1), match.index))) continue
+    boundaries.push(match.index!)
+  }
+  boundaries.push(text.length)
   for(let i=0;i<boundaries.length-1;i++){
     const raw=text.slice(boundaries[i],boundaries[i+1]),leading=/^(?:\s*[,;]?\s*and\s+|\s+)/.exec(raw)?.[0]??'',value=raw.slice(leading.length).trim()
     if(value)out.push({text:value,start:boundaries[i]+leading.length,end:boundaries[i]+leading.length+value.length})

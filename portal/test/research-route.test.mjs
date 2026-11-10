@@ -286,6 +286,38 @@ test('loop follow-ups search the standalone question, expose asked_as and pre-wr
  globalThis.fetch=(input,init)=>{const body=JSON.parse(init?.body??'{}');return body.prompt?.system?.startsWith('You rewrite follow-up')?Promise.resolve(Response.json({answer:q,metadata:{tokens:{input:8,output:8}}})):originalFetch(input,init)}
  try{for(const stream of [false,true]){globalThis.__researchModel=counted();const r=await post('and gambling?',stream,{context:[{author:'user',text:'Who speaks most about housing in NSW across the whole record?'},{author:'answer',text:'Taylor Example.'}]});const raw=await r.text(),body=r.headers.get('content-type')?.includes('event-stream')?decodeStream(raw):JSON.parse(raw);assert.equal(body.asked_as,q);assert.match(body.answer,/Taylor Example/);assert.ok(body.research.pre_writer_sources.some(s=>s.snippet.includes('Taylor Example')))}}finally{globalThis.fetch=originalFetch}
 })
+test('three receipt follow-ups use fresh tool fields with the iOS author/text conversation shape in JSON and SSE',async()=>{
+ const donor='Mining and Energy Union',originalAssets=h.env.ASSETS,originalFetch=globalThis.fetch
+ const graph=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url)))
+ h.env.ASSETS={fetch:req=>new URL(req.url).pathname==='/graph/money.json'?Response.json(graph):originalAssets.fetch(req)}
+ h.env.RESEARCH_LOOP='route'
+ globalThis.fetch=(url,init)=>{
+  const body=JSON.parse(init?.body??'{}')
+  if(body.prompt?.system?.startsWith('You rewrite follow-up'))return Promise.resolve(Response.json({answer:body.query?.includes('internal')?`Are internal party transfers counted in the $4,720,421 of federal disclosed receipts from the ${donor}?`:body.query,metadata:{tokens:{input:8,output:8}}}))
+  return originalFetch(url,init)
+ }
+ const fixture=JSON.parse(readFileSync(new URL('./fixtures/ask-money-followup-mining.json',import.meta.url)))
+ try{for(const stream of [false,true]){
+  // Start with the actual TestFlight-style context, including a prior answer.
+  let context=fixture[0].request.context
+  for(const [i,{request}] of fixture.entries()){
+   const model=new MockLanguageModelV4({doGenerate:[reply([call('money_totals',{donor})]),reply([call('finish',{facts:[1]})])]})
+   globalThis.__researchModel=model
+   const response=await post(request.question,stream,{kind:'all',context,prior_resources:request.prior_resources})
+   const wire=await response.text(),payload=response.headers.get('content-type')?.includes('event-stream')?decodeStream(wire):JSON.parse(wire)
+   assert.equal(response.status,200)
+   assert.match(payload.answer,[/^56 disclosed receipts/,/^No, internal party transfers/,/financial years 1998-99 to 2025-26/][i])
+   assert.doesNotMatch(payload.answer,/(?:^|\n)(?:The )?Mining\./)
+   assert.equal(model.doGenerateCalls.length,2,'a complete selected receipt field needs no model writing turn')
+   assert.ok(payload.research.trail.some(step=>step.tool==='money_totals'))
+   assert.ok(payload.sources.some(s=>s.cited&&/1 July 1998 to 30 June 2026/.test(s.title)))
+   for(const ranges of Object.values(payload.citations))for(const [a,b]of ranges)assert.ok(a>=0&&a<b&&b<=Array.from(payload.answer).length)
+   context=[...context,{author:'user',text:request.question},{author:'answer',text:payload.answer}].slice(-12)
+   await flush()
+  }
+ }}finally{h.env.ASSETS=originalAssets;globalThis.fetch=originalFetch}
+})
+
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;
  for(const stream of [false,true]){
