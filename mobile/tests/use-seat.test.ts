@@ -2,6 +2,7 @@ import { act, useEffect, createElement, Fragment } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { catalogs } from '../src/api/runtime';
 import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
+import * as choices from '../src/features/your-mp/choice-store';
 import {
   migrateSeatChoice,
   resetSeatForTests,
@@ -85,6 +86,7 @@ afterEach(() => {
   act(() => renderer?.unmount());
   renderer = null;
   resetSeatForTests();
+  jest.restoreAllMocks();
 });
 async function mount() {
   await act(async () => {
@@ -199,6 +201,24 @@ test('directory failure produces the typed error state', async () => {
   jest.mocked(catalogs.directory).mockRejectedValue(new Error('offline'));
   await mount();
   expect(value.status).toBe('error');
+});
+
+test('forgetting while the initial disk read is pending cannot revive the old choice', async () => {
+  const oldChoice = choice(seat('Grayndler'));
+  let finishRead!: (saved: SeatChoice | null) => void;
+  jest.spyOn(choices, 'loadChoice').mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finishRead = resolve;
+      }),
+  );
+  await mount();
+  expect(value.status).toBe('loading');
+  await act(async () => value.forget());
+  expect(value.status).toBe('none');
+  await act(async () => finishRead(oldChoice));
+  expect(value.status).toBe('none');
+  expect(await loadChoice()).toBeNull();
 });
 
 test('a migrated Victorian district survives the next Victorian federal choice', async () => {

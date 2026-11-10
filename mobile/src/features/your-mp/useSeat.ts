@@ -23,7 +23,8 @@ export interface SeatActions {
   retry(): void;
 }
 let snapshot: SeatState = { status: 'loading' };
-let rawChoice: SeatChoice | null = null;
+// Undefined means the initial read has not answered; null is a saved forget.
+let rawChoice: SeatChoice | null | undefined;
 let directory: Directory | null = null;
 let pending: Promise<void> | null = null;
 let removeSubscription: (() => void) | null = null;
@@ -69,7 +70,7 @@ function initialise() {
     try {
       const choice = await loadChoice();
       // A save while the initial read is in flight wins over that read.
-      if (rawChoice === null) rawChoice = choice;
+      if (rawChoice === undefined) rawChoice = choice;
       directory = await catalogs.directory();
       publish(rawChoice);
     } catch {
@@ -213,7 +214,7 @@ export function resetSeatForTests(): void {
   removeSubscription?.();
   removeSubscription = null;
   snapshot = { status: 'loading' };
-  rawChoice = null;
+  rawChoice = undefined;
   directory = null;
   pending = null;
   saving = Promise.resolve();
