@@ -67,14 +67,34 @@ export function reportCardHTML(r) {
 }
 
 // --- source lines per block ------------------------------------------------------
-export function billsSourceHTML(index) {
-  return sourceLineHTML({ updated: index.generated_at, source: 'Parliament of Australia', notes: [
+// "Updated" is the date of the export the block's rows came from, which the nightly rewrites only when its
+// content changes. It is not a source check: corpus.json's refresh block says when the site was last refreshed
+// and which sources are paused (the honest OPAX agent refused; records retained), and the line says so.
+let refreshRead;
+/** corpus.json's `refresh` block, read once per page; null when unreadable. */
+export function refreshInfo() {
+  return refreshRead ??= read('/corpus.json').then(corpus => corpus?.refresh || null).catch(() => null);
+}
+/** The state and sheet facts a block's source line owes the reader for the sources it draws on. */
+export function sourceFreshness(refresh, sources = []) {
+  const paused = sources.map(name => [name, refresh?.source_access?.[name]]).filter(([, access]) => access?.status === 'paused');
+  const facts = [];
+  if (refresh?.checked_at) facts.push(['Site refreshed', esc(date(refresh.checked_at))]);
+  for (const [name, access] of paused) {
+    facts.push(['Source check', esc(`${access.host || name}: paused, ${access.reason || 'access refused'}. Entries shown are retained from the last successful read, not a current check.`)]);
+  }
+  return { state: paused.length ? 'source paused' : '', facts };
+}
+export function billsSourceHTML(index, refresh = null) {
+  const freshness = sourceFreshness(refresh, ['bills']);
+  return sourceLineHTML({ updated: index.generated_at, source: 'Parliament of Australia', state: freshness.state, facts: freshness.facts, notes: [
     'Bills and their dates come from the parliamentary record; each bill page links the official source it was read from.',
     'A bill missing from this list is not evidence it does not exist: the register is still being built.',
   ] });
 }
-export function declarationsSourceHTML(meta) {
-  return sourceLineHTML({ updated: meta?.generated, source: 'Registers of interests', asAt: meta?.source ? `${meta.source}.` : '', notes: [
+export function declarationsSourceHTML(meta, refresh = null) {
+  const freshness = sourceFreshness(refresh, ['interests_federal', 'interests_qld']);
+  return sourceLineHTML({ updated: meta?.generated, source: 'Registers of interests', state: freshness.state, facts: freshness.facts, asAt: meta?.source ? `${meta.source}.` : '', notes: [
     'Entries as declared, not verified by OPAX.',
     'The date is when the register recorded the entry, which can differ from the date of the gift or event. Each entry links to its page in the register.',
   ] });
@@ -84,9 +104,10 @@ export function mapSpan(meta) {
   const m = /(\d{4})-(\d{2})\s+to\s+(\d{4})-(\d{2})/.exec(String(meta?.coverage || ''));
   return m ? `${m[1]}–${m[2]} to ${m[3]}–${m[4]}` : '';
 }
-export function mapSourceHTML(meta) {
+export function mapSourceHTML(meta, refresh = null) {
   const span = mapSpan(meta);
-  return sourceLineHTML({ updated: meta?.generated, source: 'AEC annual returns', state: 'totals are a floor',
+  const freshness = sourceFreshness(refresh);
+  return sourceLineHTML({ updated: meta?.generated, source: 'AEC annual returns', state: 'totals are a floor', facts: freshness.facts,
     originals: [
       { label: 'AEC Transparency Register', href: 'https://transparency.aec.gov.au/' },
       { label: 'Funding records', href: '/money/receipts' },
@@ -139,13 +160,14 @@ export async function hydrateCollections() {
 /** New bills and declarations: read when the block nears the screen. A failed
  *  read keeps the rows the page was published with, and their dated line. */
 export async function hydrateLatest() {
+  const refresh = await refreshInfo();
   await Promise.allSettled([
     (async () => {
       const index = await read('/bills/index.json');
       const rows = newest(index.bills,'introduced',3);
       if (!rows.length) return;
       document.querySelector('#hp-bills').innerHTML = rows.map(billRowHTML).join('');
-      document.querySelector('#hp-bills-source').innerHTML = billsSourceHTML(index);
+      document.querySelector('#hp-bills-source').innerHTML = billsSourceHTML(index, refresh);
     })(),
     (async () => {
       const [recent, photos, roster] = await Promise.allSettled([read('/interests/recent.json'), read('/photos/people.json', IDENTITY), read('/parliamentarians.json', IDENTITY)]);
@@ -160,7 +182,7 @@ export async function hydrateLatest() {
       }
       const identity = { photos: photos.status === 'fulfilled' ? photos.value : {}, parties };
       document.querySelector('#hp-declared').innerHTML = rows.map(item => declarationRowHTML(item, identity)).join('');
-      document.querySelector('#hp-declared-source').innerHTML = declarationsSourceHTML(recent.value.meta);
+      document.querySelector('#hp-declared-source').innerHTML = declarationsSourceHTML(recent.value.meta, refresh);
     })(),
   ]);
 }

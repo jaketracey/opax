@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {newest,safeSource,partyLabelHTML,statusLabelHTML,sourceLineHTML,billRowHTML,declarationRowHTML,industryGroups,mapSpan,mapSourceHTML,coverageLineHTML} from '../public/home-data.js';
+import {newest,safeSource,partyLabelHTML,statusLabelHTML,sourceLineHTML,billRowHTML,declarationRowHTML,industryGroups,mapSpan,mapSourceHTML,coverageLineHTML,billsSourceHTML,declarationsSourceHTML,sourceFreshness} from '../public/home-data.js';
 import {readFileSync} from 'node:fs';
 test('recent lists use recording dates, retain ties, and exclude undated entries',()=>{
  const rows=[{id:1,date:'2026-09-01'},{id:2,date:'2026-09-19'},{id:3,date:'2026-09-19'},{id:4},{id:5,date:'2026-08-01'}];
@@ -66,6 +66,27 @@ test('the map chips come from the export: industries by donors in the map, large
  assert.match(line,new RegExp(`Updated ${money.meta.generated.slice(8,10).replace(/^0/,'')} [A-Z][a-z]{2} ${money.meta.generated.slice(0,4)}`));
  assert.match(line,/AEC annual returns/);
  assert.match(line,/href="https:\/\/transparency.aec.gov.au\/"/);
+});
+// "Updated" is an export date. The line says when the site was last refreshed and when a block's source is
+// paused, so a date that stops moving reads as a refused source, not a site nobody runs.
+test('source lines say when the site was refreshed and which of their sources are paused',()=>{
+ const money=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
+ const refresh={checked_at:'2026-11-09T19:10:54+00:00',source_access:{bills:{status:'paused',host:'parlinfo.aph.gov.au',reason:'HTTP 403 verified 2026-10-10; permission requested'},interests_federal:{status:'paused',host:'www.aph.gov.au',reason:'HTTP 403'}}};
+ assert.deepEqual(sourceFreshness(null,['bills']),{state:'',facts:[]});
+ assert.deepEqual(sourceFreshness(refresh,['nsw']),{state:'',facts:[['Site refreshed','9 Nov 2026']]});
+ const bills=billsSourceHTML({generated_at:'2026-10-04T16:27:54+00:00',bills:[]},refresh);
+ assert.match(bills,/Updated 4 Oct 2026 · <span class="ui-source-name">Parliament of Australia<\/span>/);
+ assert.match(bills,/ui-source-state">· source paused</);
+ assert.match(bills,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);
+ assert.match(bills,/<dt>Source check<\/dt><dd>parlinfo.aph.gov.au: paused, HTTP 403 verified 2026-10-10; permission requested\. Entries shown are retained from the last successful read, not a current check\.<\/dd>/);
+ assert.doesNotMatch(billsSourceHTML({generated_at:'2026-10-04',bills:[]}),/source paused|Site refreshed/);
+ const declared=declarationsSourceHTML({generated:'2026-10-18',source:'Registers'},refresh);
+ assert.match(declared,/source paused/);assert.match(declared,/www.aph.gov.au: paused, HTTP 403\./);
+ assert.doesNotMatch(declarationsSourceHTML({generated:'2026-10-18'},{checked_at:'2026-11-09T19:10:54+00:00',source_access:{}}),/source paused/);
+ const map=mapSourceHTML(money.meta,refresh);
+ assert.match(map,/totals are a floor/);assert.match(map,/<dt>Site refreshed<\/dt><dd>9 Nov 2026<\/dd>/);assert.doesNotMatch(map,/source paused/);
+ const hostile=billsSourceHTML({generated_at:'2026-10-04',bills:[]},{source_access:{bills:{status:'paused',host:'<b>x</b>',reason:'<script>'}}});
+ assert.doesNotMatch(hostile,/<b>|<script>/);
 });
 test('the footer coverage line is dated, and only the link survives a failed read',()=>{
  const corpus=JSON.parse(readFileSync(new URL('../public/corpus.json',import.meta.url),'utf8'));
