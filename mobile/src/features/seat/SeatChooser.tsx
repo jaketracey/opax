@@ -154,6 +154,23 @@ async function chooseVictorian(
   return seat.chooseState(target, region ?? undefined);
 }
 
+/** A failed write: the line and Try again, above the seats (chooser and Browse by state). */
+export function SeatSaveError({ onRetry }: { onRetry: () => void }) {
+  return (
+    <View style={styles.error} testID="seat-save-error">
+      <Text wordSafe variant="body">
+        {seatCopy.saveFailed()}
+      </Text>
+      <Button
+        label={copy.tryAgain}
+        variant="plain"
+        size="compact"
+        onPress={onRetry}
+      />
+    </View>
+  );
+}
+
 /** The row accessory for a seat while a choice is being written. */
 export function accessoryFor(
   id: string,
@@ -390,17 +407,7 @@ export function SeatChooser({
     </InsetGroup>
   );
   const saveError = failed ? (
-    <View style={styles.error} testID="seat-save-error">
-      <Text wordSafe variant="body">
-        {seatCopy.saveFailed()}
-      </Text>
-      <Button
-        label={copy.tryAgain}
-        variant="plain"
-        size="compact"
-        onPress={() => void choose(failed)}
-      />
-    </View>
+    <SeatSaveError onRetry={() => void choose(failed)} />
   ) : null;
 
   return (

@@ -543,6 +543,17 @@ describe('Browse by state', () => {
     expect(markWelcomeSeen).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   });
+  test('a failed save says so with Try again, and stays open', async () => {
+    choose.mockRejectedValueOnce(new Error('disk'));
+    const r = await render(<SeatStateList code="nsw" presentation="sheet" />);
+    await act(async () => one(r, `seat-row-${grayndler.slug}`).props.onPress());
+    expect(byID(r, 'seat-save-error')).not.toHaveLength(0);
+    expect(words(r)).toContain(
+      'Your electorate couldn’t be saved on this iPhone.',
+    );
+    expect(closeWelcome).not.toHaveBeenCalled();
+    await act(async () => r.unmount());
+  });
 });
 
 describe('the Victorian scope', () => {
