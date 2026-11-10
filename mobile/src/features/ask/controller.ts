@@ -167,45 +167,46 @@ export class AskController {
   clearFresh() {
     this.update({ fresh: false, freshOptions: null });
   }
-  open(id: string) {
-    if (this.state.busy) return;
+  /** Opens a saved conversation. False while an answer is being written. */
+  open(id: string): boolean {
+    if (this.state.busy) return false;
     const store = this.io.read();
     const c = store.chats.find((c) => c.id === id);
-    if (c) {
-      this.cancel();
-      const mine = ++this.sequence;
-      this.update({
-        id,
-        thread: c.thread,
-        options: c.options || {
-          ...defaultOptions,
-          kind: c.kind,
-          speaker: c.speaker,
-        },
-        error: null,
-        failed: null,
-        streaming: '',
-        stage: null,
-        clarify: null,
-        notice: null,
-        fresh: false,
-        freshOptions: null,
-        nextLoading: false,
-        reading: 0,
-        draft: '',
-        pending: null,
+    if (!c) return false;
+    this.cancel();
+    const mine = ++this.sequence;
+    this.update({
+      id,
+      thread: c.thread,
+      options: c.options || {
+        ...defaultOptions,
+        kind: c.kind,
+        speaker: c.speaker,
+      },
+      error: null,
+      failed: null,
+      streaming: '',
+      stage: null,
+      clarify: null,
+      notice: null,
+      fresh: false,
+      freshOptions: null,
+      nextLoading: false,
+      reading: 0,
+      draft: '',
+      pending: null,
+    });
+    // Remember the selection without changing the conversation's date.
+    if (store.active !== id)
+      void this.io.save({ ...store, active: id }).catch(() => {
+        if (mine === this.sequence)
+          this.update({
+            notice: phoneCopy(
+              "This conversation couldn't be saved on this iPhone.",
+            ),
+          });
       });
-      // Remember the selection without changing the conversation's date.
-      if (store.active !== id)
-        void this.io.save({ ...store, active: id }).catch(() => {
-          if (mine === this.sequence)
-            this.update({
-              notice: phoneCopy(
-                "This conversation couldn't be saved on this iPhone.",
-              ),
-            });
-        });
-    }
+    return true;
   }
   /**
    * A sync brought a newer copy of the open conversation: show its turns
