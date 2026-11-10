@@ -566,6 +566,113 @@ class WriteOutputsTests(unittest.TestCase):
             self.assertEqual(json.loads((pdir / "go1.json").read_text())["id"], "GO1")
             self.assertEqual(json.loads((out / "graph" / "grants.federal.json").read_text())["programs"][0]["key"], "go1")
 
+    def test_seat_pages_written_and_stale_continuations_removed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            sdir = out / "grants/federal/seats"
+            sdir.mkdir(parents=True)
+            (sdir / "bass-2.json").write_text("{}")
+            (sdir / "gone.json").write_text("{}")
+            data = {"index": {}, "details": {}, "seats": {"bass": {"grants": []}}}
+            result = eg.write_outputs(data, out, "federal")
+            self.assertEqual((result["seat_files"], result["removed"]), (1, 2))
+            self.assertEqual(result["seat_bytes"], (sdir / "bass.json").stat().st_size)
+            self.assertEqual(sorted(p.name for p in sdir.glob("*.json")), ["bass.json"])
+            self.assertEqual(json.loads((sdir / "bass.json").read_text()), {"grants": []})
+
+
+class SeatFilesTests(unittest.TestCase):
+    def index(self, total=100, count=1):
+        return {"meta": {"source": "GrantConnect", "generated": "2026-11-10T00:00:00Z"},
+                "electorates": [{"n": "Eden-Monaro", "st": "nsw", "t": total, "c": count}]}
+
+    def seat_grant(self, **kw):
+        return grant(el="Eden-Monaro", elst="nsw", pid="GO1", **kw)
+
+    def test_shape_preserves_source_cents_and_index_metadata(self):
+        index = self.index(total=100)
+        pages = eg.build_seat_files([self.seat_grant(v=100.35)], RECIPS, {"GO1": "Program one"}, index)
+        page = pages["eden-monaro"]
+        self.assertEqual((page["n"], page["st"], page["t"], page["c"], page["next"]),
+                         ("Eden-Monaro", "nsw", 100, 1, None))
+        self.assertEqual(page["meta"], index["meta"])
+        self.assertEqual(page["grants"][0], {"id": "GA1", "rid": "abn:97694995462",
+            "rn": RECIPS["abn:97694995462"]["canonical_name"], "k": "trust", "n": "Title",
+            "pid": "GO1", "pr": "Program one", "v": 100.35, "fy": "2018-19", "s": "2019-02-12",
+            "el": "Eden-Monaro", "elst": "nsw", "guid": None})
+
+    def test_every_grant_is_paged_even_when_recipient_and_program_are_unlisted(self):
+        gs = [self.seat_grant(id=f"GA{i:04d}", v=i, rid="abn:1") for i in range(1001)]
+        index = self.index(total=sum(range(1001)), count=1001)
+        pages = eg.build_seat_files(gs, RECIPS, {"GO1": "Unlisted program"}, index)
+        self.assertEqual([len(p["grants"]) for p in pages.values()], [500, 500, 1])
+        self.assertEqual([p["page"] for p in pages.values()], [1, 2, 3])
+        self.assertEqual([p["next"] for p in pages.values()],
+                         ["/grants/federal/seats/eden-monaro-2.json", "/grants/federal/seats/eden-monaro-3.json", None])
+        rows = [g for p in pages.values() for g in p["grants"]]
+        self.assertEqual([g["v"] for g in rows], list(reversed(range(1001))))
+        self.assertEqual(len({g["id"] for g in rows}), 1001)
+        self.assertTrue(all((p["t"], p["c"], p["meta"]) == (index["electorates"][0]["t"], 1001, index["meta"])
+                            for p in pages.values()))
+
+    def test_boundary_and_only_matched_seats_are_indexed(self):
+        gs = [self.seat_grant(id=f"GA{i}", v=1) for i in range(500)]
+        index = self.index(total=500, count=500)
+        eg.prepare_seat_index(index)
+        pages = eg.build_seat_files(gs, RECIPS, {"GO1": "Program"}, index)
+        self.assertEqual(set(pages), {"eden-monaro"})
+        self.assertEqual([e["n"] for e in index["electorates"]], ["Eden-Monaro"])
+        self.assertIsNone(pages["eden-monaro"]["next"])
+
+    def test_zero_grant_seat_cannot_be_exported_as_a_zero_total(self):
+        index = self.index(total=0, count=0)
+        with self.assertRaisesRegex(ValueError, "no matched grants; omit"):
+            eg.prepare_seat_index(index)
+        with self.assertRaisesRegex(ValueError, "no matched grants; omit"):
+            eg.build_seat_files([], {}, {}, index)
+
+    def test_zero_dollar_award_is_still_a_matched_grant(self):
+        index = self.index(total=0, count=1)
+        eg.prepare_seat_index(index)
+        page = eg.build_seat_files([self.seat_grant(v=0)], RECIPS, {"GO1": "Program"}, index)["eden-monaro"]
+        self.assertEqual((page["t"], page["c"], page["grants"][0]["v"]), (0, 1, 0))
+
+    def test_index_total_and_count_mismatch_fail_before_writing(self):
+        for index in (self.index(total=99), self.index(count=2)):
+            with self.assertRaisesRegex(ValueError, "do not match"):
+                eg.build_seat_files([self.seat_grant()], RECIPS, {"GO1": "Program"}, index)
+
+    def test_half_dollar_rounding_at_large_totals_keeps_the_index_figure(self):
+        # The existing Leichhardt index rounds a floating-point sum up at .50.
+        index = self.index(total=3055693009)
+        page = eg.build_seat_files([self.seat_grant(v=3055693008.5)], RECIPS, {"GO1": "Program"}, index)["eden-monaro"]
+        self.assertEqual(page["t"], 3055693009)
+
+    def test_missing_index_seat_and_colliding_file_keys_fail(self):
+        with self.assertRaisesRegex(ValueError, "no seat index"):
+            eg.build_seat_files([self.seat_grant()], RECIPS, {}, {"meta": {}, "electorates": []})
+        index = self.index()
+        index["electorates"].append({"n": "Eden Monaro", "st": "nsw", "t": 100, "c": 1})
+        with self.assertRaisesRegex(ValueError, "Duplicate seat file key"):
+            eg.build_seat_files([self.seat_grant(), grant(id="GA2", el="Eden Monaro", pid="GO1")], RECIPS, {"GO1": "Program"}, index)
+
+    def test_index_key_uses_recorded_seat_spelling(self):
+        index = {"meta": {}, "electorates": [{"n": "Mcpherson", "st": "qld", "t": 100, "c": 1}]}
+        eg.prepare_seat_index(index)
+        self.assertEqual(len(index["electorates"]), 1)
+        self.assertEqual(index["electorates"][0]["key"], "mcpherson")
+
+    def test_program_identity_is_resolved_before_listing_caps(self):
+        gs = [grant(go="GO3141", pr="Community Development Grants"),
+              grant(go=None, pr="Community Development Grants"),
+              grant(go=None, pr=None, n="Activity only")]
+        names = eg.resolve_programs(gs, "federal")
+        self.assertEqual([g["pid"] for g in gs], ["GO3141", "GO3141", "activity:Activity only"])
+        self.assertEqual(eg.program_name(names["GO3141"]), "Community Development Grants")
+        qld = [grant(pr="  Queensland   program ", go="GO1")]
+        eg.resolve_programs(qld, "qld")
+        self.assertEqual(qld[0]["pid"], "Queensland program")
+
 
 class RemoteProgramTests(unittest.TestCase):
     def test_streamed_program_carries_the_shared_rules_and_compiles(self):
@@ -577,6 +684,10 @@ class RemoteProgramTests(unittest.TestCase):
                      "SEAT_PERIODS = {'calare': [['2016-07-02', '2022-12-23', 'Andrew Gee', 'Nationals']]}",
                      '"seat_periods": SEAT_PERIODS', "programs_out", "go_by_name"):
             self.assertIn(name, src)
+        self.assertIn("def build_seat_files(", src)
+        self.assertIn('g["pid"] = key', src)
+        self.assertIn('out["seats"] = build_seat_files(', src)
+        self.assertNotIn("CURRENT_SEAT_STATES", src)
 
     def test_current_seats_from_roster(self):
         with tempfile.TemporaryDirectory() as tmp:

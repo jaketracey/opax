@@ -29,6 +29,19 @@ test('_headers stays under the Workers Assets limit of 100 rules', () => {
   assert.ok(rules.length <= 100, `${rules.length} rules`);
 });
 
+test('grant seat pages use the existing grants JSON cache policy and assets route', async () => {
+  const config = await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8');
+  const runFirst = JSON.parse(config.match(/"run_worker_first": (\[[^\]]*\])/)[1]);
+  for (const path of ['/graph/grants.federal.json', '/grants/federal/shard-00.json',
+    '/grants/federal/programs/go3141.json', '/grants/federal/seats/maribyrnong.json',
+    '/grants/federal/seats/melbourne-2.json']) {
+    assert.ok(!runFirst.some(pattern => matches(pattern, path)), `${path} is served by the assets binding`);
+    const cache = rules.filter(rule => matches(rule.pattern, path)).flatMap(rule => rule.lines)
+      .filter(line => /^(?:! )?Cache-Control/i.test(line));
+    assert.deepEqual(cache, ['Cache-Control: public, max-age=0, must-revalidate'], path);
+  }
+});
+
 test('no path collects Cache-Control from two rules without detaching one', () => {
   for (const rule of rules.filter((r) => setsCache(r) && !r.pattern.includes('*'))) {
     const others = rules.filter((r) => r !== rule && setsCache(r) && matches(r.pattern, rule.pattern));

@@ -49,7 +49,14 @@ def fixture() -> dict:
     keys = [f"go{i}" for i in range(N)]
     f[f"{P}/graph/grants.federal.json"] = {
         "meta": {"shards": 10, "generated": "2026-09-21T00:00:00Z"}, "agencies": rows(N), "recipients": rows(N),
-        "programs": [{"id": k.upper(), "key": k} for k in keys]}
+        "programs": [{"id": k.upper(), "key": k} for k in keys],
+        "electorates": [{"n": "Bass", "key": "bass", "st": "tas", "t": 30, "c": 2}]}
+    f[f"{P}/grants/federal/seats/bass.json"] = {
+        "meta": f[f"{P}/graph/grants.federal.json"]["meta"].copy(),
+        "n": "Bass", "key": "bass", "st": "tas", "jur": "federal", "t": 30, "c": 2, "page": 1, "next": None,
+        "grants": [{"id": f"GA{i}", "rid": "abn:1", "rn": "Organisation", "k": "company", "n": "Grant",
+                    "pid": "GO1", "pr": "Program", "v": v, "fy": "2025-26", "s": "2026-01-01",
+                    "el": "Bass", "elst": "tas"} for i, v in enumerate((20, 10))]}
     for i in range(10):
         f[f"{P}/grants/federal/shard-{i:02d}.json"] = {f"abn-{i}": {"n": i}}
     for k in keys:
@@ -692,6 +699,79 @@ class GrantsTests(Base):
     FED = f"{P}/grants/federal"
     IDX = f"{P}/graph/grants.federal.json"
 
+    def test_missing_or_unreadable_seat_page_fails(self):
+        page = f"{self.FED}/seats/bass.json"
+        (self.root / page).unlink()
+        self.assertFails("grants", "bass.json unreadable or missing")
+        self.write(page, b"{")
+        self.assertFails("grants", "bass.json unreadable or missing")
+
+    def test_seat_totals_count_and_metadata_must_equal_index(self):
+        for key, value, message in (("t", 31, "does not match the seat index"),
+                                    ("c", 3, "does not match the seat index"),
+                                    ("meta", {"generated": "old"}, "metadata does not match")):
+            with self.subTest(key=key):
+                page = f"{self.FED}/seats/bass.json"
+                good = self.load(page)
+                self.edit(page, lambda d: d.update({key: value}))
+                self.assertFails("grants", message)
+                self.write(page, good)
+
+    def test_seat_grant_sum_count_sort_and_required_fields_are_checked(self):
+        page = f"{self.FED}/seats/bass.json"
+        good = self.load(page)
+        cases = [
+            (lambda d: d["grants"][0].update(v=21), "sum/count"),
+            (lambda d: d["grants"].pop(), "expected 2"),
+            (lambda d: d["grants"].reverse(), "not sorted"),
+            (lambda d: d["grants"][0].pop("pid"), "missing required fields"),
+            (lambda d: d["grants"][0].update(el="Other seat"), "seat/state"),
+            (lambda d: d["grants"][0].update(v=float("nan")), "finite value"),
+            (lambda d: d["grants"][1].update(id="GA0"), "duplicates grant"),
+            (lambda d: d.update(next="/grants/federal/seats/bass.json"), "invalid next"),
+        ]
+        for edit, message in cases:
+            with self.subTest(message=message):
+                self.edit(page, edit)
+                self.assertFails("grants", message)
+                self.write(page, good)
+
+    def test_complete_paged_seat_and_cross_page_sort(self):
+        page = f"{self.FED}/seats/bass.json"
+        first = self.load(page)
+        row = first["grants"][0]
+        first.update(c=501, t=501, next="/grants/federal/seats/bass-2.json",
+                     grants=[dict(row, id=f"GA{i}", v=1) for i in range(500)])
+        last = dict(first, page=2, next=None, grants=[dict(row, id="GA500", v=1)])
+        self.edit(self.IDX, lambda d: d["electorates"][0].update(c=501, t=501))
+        self.write(page, first)
+        self.write(f"{self.FED}/seats/bass-2.json", last)
+        self.assertOk("grants")
+        self.edit(f"{self.FED}/seats/bass-2.json", lambda d: d["grants"][0].update(v=2))
+        self.assertFails("grants", "not sorted")
+        (self.root / f"{self.FED}/seats/bass-2.json").unlink()
+        self.assertFails("grants", "bass-2.json unreadable or missing")
+
+    def test_zero_grant_index_entry_is_rejected_even_with_a_matching_empty_slice(self):
+        self.edit(self.IDX, lambda d: d["electorates"][0].update(c=0, t=0))
+        self.edit(f"{self.FED}/seats/bass.json", lambda d: d.update(c=0, t=0, grants=[]))
+        self.assertFails("grants", "seat Bass has 0 matched grants; omit it from the index")
+
+    def test_nonempty_zero_dollar_total_is_valid(self):
+        self.edit(self.IDX, lambda d: d["electorates"][0].update(t=0))
+        self.edit(f"{self.FED}/seats/bass.json", lambda d: d.update(t=0, grants=[dict(g, v=0) for g in d["grants"]]))
+        self.assertOk("grants")
+
+    def test_orphan_page_is_rejected(self):
+        self.write(f"{self.FED}/seats/bass-2.json", {})
+        self.assertFails("grants", "unlinked pages")
+
+    def test_source_cents_reconcile_with_index_rounded_once(self):
+        self.edit(f"{self.FED}/seats/bass.json", lambda d: d["grants"][0].update(v=20.49))
+        self.assertOk("grants")
+        self.edit(f"{self.FED}/seats/bass.json", lambda d: d["grants"][0].update(v=20.51))
+        self.assertFails("grants", "sum/count")
+
     def test_changed_shard_that_does_not_parse_fails(self):
         self.write(f"{self.FED}/shard-03.json", b"{")
         self.assertFails("grants", "shard-03.json unreadable")
@@ -704,6 +784,7 @@ class GrantsTests(Base):
         (self.root / f"{self.FED}/shard-00.json").unlink()
         self.assertFails("grants", "says 10 shards but")  # 9 of 10 is exactly 90%, but meta.shards disagrees
         self.edit(self.IDX, lambda d: d["meta"].update(shards=9))
+        self.edit(f"{self.FED}/seats/bass.json", lambda d: d["meta"].update(shards=9))
         self.assertOk("grants")
         (self.root / f"{self.FED}/shard-01.json").unlink()
         self.assertFails("grants", "grants/federal/ file count fell from 10 to 8")
@@ -760,6 +841,7 @@ class GrantsTests(Base):
             d["programs"] += [{"id": f"GOX{i}", "key": f"gox{i}"} for i in range(5)]
             d["meta"]["shards"] = 12
         self.edit(self.IDX, grow)
+        self.edit(f"{self.FED}/seats/bass.json", lambda d: d["meta"].update(shards=12))
         for i in range(5):
             self.write(f"{self.FED}/programs/gox{i}.json", {"id": f"GOX{i}"})
         for i in (10, 11):
