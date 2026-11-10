@@ -2,11 +2,14 @@
 
 The masthead mark: the Australia map in `--bronze-bright` (#D9A84A) with the
 ring of seven pale stars in `--on-navy-soft` (#B7C6D9), on `--navy` (#142A43).
-Land and star paths are copied unchanged from the masthead mark in
-`portal/public/index.html` (`.logo-mark`, viewBox 0 0 176 160), the same paths
-`portal/src/og.ts` draws. Jake asked for the stars on 10 Nov 2026 so the icon
-matches the website; they stay pale rather than gold, away from official
-insignia. No text, no crest.
+The land paths are copied unchanged from the masthead mark in
+`portal/public/index.html` (`.logo-mark`, viewBox 0 0 176 160). The stars keep
+the masthead's seven positions but are redrawn (Jake chose direction A, "refined
+ring", 10 Nov 2026): four rays with concave sides tapering to fine points, a
+deliberate size order with the anchor star at the top, and unequal pairs so the
+ring never reads as a wreath. Their paths, in mark units, are kept in
+`stars-a.txt` for the website mark. The stars stay pale rather than gold, away
+from official insignia. No text, no crest.
 
 - `icon.svg` → `icon.png`: the default icon, opaque, no alpha channel.
 - `icon-dark.svg` → `icon-dark.png`: gold land and pale stars on transparency; iOS supplies the dark ground.
