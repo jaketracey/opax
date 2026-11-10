@@ -55,13 +55,19 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
  * background colour or blur (react-native-screens#3100, reproduced in UIKit).
  * Keep both appearances transparent while expanded. A scroll-edge background
  * also suppresses the title, even with a transparent standard appearance.
- * The screen supplies the page ground beneath the native hard scroll edge.
+ * The screen supplies the page ground beneath the native scroll edge.
  * A native height change adds the standard colour on collapse and clears it
  * on return. Empty styles replace the navigator's opaque defaults.
+ * A soft edge leaves the large title clear at rest. Shrinking below the known
+ * expanded height selects the protective hard edge; a settled full height or
+ * overscroll restores soft. A permanently hard edge paints a divider at rest.
+ * Soft alone blurs only the status strip, leaving content sharp behind the
+ * title. Switching the edge keeps both expanded appearances background-free.
  */
 export const largeTitleBar = (
   ground: ColorValue = colors.paper,
   collapsed = false,
+  scrolled = collapsed,
 ) =>
   glassBar()
     ? {
@@ -70,33 +76,13 @@ export const largeTitleBar = (
         contentStyle: { backgroundColor: ground },
         headerTransparent: true,
         headerShadowVisible: true,
-      }
-    : opaqueBar(ground);
-
-/**
- * Today's soft edge leaves the dot map and large title clear at rest. Native
- * header height shrinking below its known expanded height selects the other
- * roots' protective edge; a settled full height or overscroll restores soft.
- * Soft alone blurs only the status strip, leaving cards sharp behind the title.
- * A permanently hard edge paints a divider at rest. Switching the edge keeps
- * both expanded appearances background-free (react-native-screens#3100).
- */
-export const todayTitleBar = (
-  ground: ColorValue = colors.paper,
-  collapsed = false,
-  scrolled = collapsed,
-) => ({
-  ...largeTitleBar(ground, collapsed),
-  ...(glassBar()
-    ? {
         headerLargeTitleShadowVisible: false,
         scrollEdgeEffects: {
           top: collapsed || scrolled ? ('hard' as const) : ('soft' as const),
           bottom: 'soft' as const,
         },
       }
-    : {}),
-});
+    : opaqueBar(ground);
 
 /** Initial tab grounds, also used by roots with their own scrolling view. */
 export const tabRootGround = (name: string) =>
