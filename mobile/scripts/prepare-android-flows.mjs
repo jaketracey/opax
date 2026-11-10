@@ -417,6 +417,16 @@ function prepare(body, relative) {
               },
             }),
           );
+          // A busy headless emulator can also report System UI as not
+          // responding. Waiting keeps the system bars; the app is untouched.
+          result.push(
+            doc.createNode({
+              runFlow: {
+                when: { visible: "^System UI (isn't|is not) responding$" },
+                commands: [{ tapOn: { text: '^Wait$' } }],
+              },
+            }),
+          );
           result.push(
             doc.createNode({ waitForAnimationToEnd: { timeout: 5000 } }),
           );

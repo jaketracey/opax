@@ -215,3 +215,11 @@ test('Android root restoration does not press Back through hideKeyboard and web 
   );
   assert.equal(state.scrollUntilVisible.timeout, 90000);
 });
+
+test('cold launches dismiss only named system ANR dialogs', () => {
+  const body = fs.readFileSync(path.join(out, '01-launch.yaml'), 'utf8');
+  assert.ok(body.includes("^Pixel Launcher (isn't|is not) responding$"));
+  assert.ok(body.includes("^System UI (isn't|is not) responding$"));
+  assert.ok(body.includes('^Wait$'));
+  assert.ok(!body.includes('OPAX (isn'));
+});
