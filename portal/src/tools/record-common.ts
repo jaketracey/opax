@@ -36,7 +36,7 @@ export interface BillFields {
   key: string | null; lifecycle_available: boolean; introduced: string | null; originating_house: string | null
   key_dates: BillStage[]; passed_both_houses: true | null; passed_both_houses_date: string | null
   royal_assent: string | null; act_number: string | null; acts: BillAct[]
-  sponsor: string | null; sponsors: string[]; sponsor_party: string | null; sponsor_person_id: string | null
+  sponsor: string | null; sponsors: string[]; sponsor_parties: (string | null)[]; sponsor_party: string | null; sponsor_person_id: string | null
   portfolio: string | null; status: string | null; status_as_of: string | null
 }
 const textField = (value: unknown): string | null => typeof value === 'string' && value.trim() ? value.trim() : null
@@ -60,7 +60,7 @@ export function billKey(href: string, slug: string): string | null {
 /** Read the same lifecycle as the bill page; missing evidence stays missing. */
 export async function billFields(env: ToolEnv, key: string | null): Promise<BillFields> {
   const empty: BillFields = { key, lifecycle_available: false, introduced: null, originating_house: null, key_dates: [], passed_both_houses: null, passed_both_houses_date: null,
-    royal_assent: null, act_number: null, acts: [], sponsor: null, sponsors: [], sponsor_party: null, sponsor_person_id: null, portfolio: null, status: null, status_as_of: null }
+    royal_assent: null, act_number: null, acts: [], sponsor: null, sponsors: [], sponsor_parties: [], sponsor_party: null, sponsor_person_id: null, portfolio: null, status: null, status_as_of: null }
   if (!key) return empty
   let doc: Record<string, unknown> | null
   try { doc = objectField(await readToolAsset(env, '/bills/' + key + '.json')) }
@@ -78,7 +78,16 @@ export async function billFields(env: ToolEnv, key: string | null): Promise<Bill
   const sponsor = textField(doc.sponsor) ?? privateSponsors
   // Legacy private-member records explicitly put sponsors in the portfolio slot.
   const members = sponsor ? [...sponsor.matchAll(/([\p{Lu}][\p{Lu}'’\- ]*[\p{Lu}]),\s*([^,]+?),\s*(?:MP|Senator|Sen\.?)(?=\p{Lu}|$)/gu)] : []
-  const sponsors = members.length ? members.map(member => sponsorName(member[1] + ', ' + member[2])) : sponsor ? [sponsorName(sponsor)] : []
+  // The export lists every sponsor with their own party (bills-006); older files
+  // carry only the first sponsor, or the private-member print above.
+  const listed = Array.isArray(doc.sponsors) ? (doc.sponsors as unknown[]).flatMap(entry => {
+    const row = entry && typeof entry === 'object' ? entry as Record<string, unknown> : {}
+    const name = textField(row.name)
+    return name ? [{ name: sponsorName(name), party: textField(row.party) }] : []
+  }) : []
+  const sponsors = listed.length ? listed.map(entry => entry.name)
+    : members.length ? members.map(member => sponsorName(member[1] + ', ' + member[2])) : sponsor ? [sponsorName(sponsor)] : []
+  const sponsor_parties = listed.length ? listed.map(entry => entry.party) : sponsors.map((_, i) => i === 0 ? textField(doc.sponsor_party) : null)
   return { ...empty, lifecycle_available: true,
     introduced: dateField(doc.introduced) ?? firstDate(key_dates.filter(event => event.stage === 'introduced').map(event => event.date)),
     originating_house: textField(doc.originating_house), key_dates,
@@ -86,7 +95,7 @@ export async function billFields(env: ToolEnv, key: string | null): Promise<Bill
     passed_both_houses_date: dateField(doc.passed_both_houses_date) ?? sameDate(passed.map(event => event.date)),
     royal_assent: dateField(doc.royal_assent) ?? dateField(doc.assent) ?? sameDate([...key_dates.filter(event => ['royal_assent', 'assent', 'assented'].includes(event.stage)).map(event => event.date), ...acts.map(act => act.assent_date)]),
     act_number: textField(doc.act_number) ?? (actNumbers.length === 1 ? actNumbers[0] : null), acts,
-    sponsor, sponsors, sponsor_party: textField(doc.sponsor_party), sponsor_person_id: textField(doc.sponsor_person_id),
+    sponsor, sponsors, sponsor_parties, sponsor_party: textField(doc.sponsor_party), sponsor_person_id: textField(doc.sponsor_person_id),
     portfolio: privatePortfolio ? null : portfolio, status: textField(doc.status), status_as_of: dateField(doc.status_as_of) }
 }
 
@@ -106,12 +115,21 @@ export function billCitations(bill: BillFields, title: string, url: string, quer
   if (!bill.lifecycle_available) return [{ kind: 'record', text: `OPAX lists ${title}, but its lifecycle record is unavailable.`, url }]
   const facts: { topic: string; text: string; url: string }[] = []
   const add = (topic: string, text: string, source = url) => facts.push({ topic, text, url: source })
-  if (bill.introduced) add('introduced', `On ${displayDate(bill.introduced)}, the ${title} was first introduced${bill.originating_house ? ' in the ' + houseName(bill.originating_house) : ''}.`)
+  // An exposure draft is released for consultation, never introduced (bills-013).
+  if (bill.introduced) add('introduced', bill.status === 'exposure_draft'
+    ? `On ${displayDate(bill.introduced)}, the ${title} was released as an exposure draft for consultation.`
+    : `On ${displayDate(bill.introduced)}, the ${title} was first introduced${bill.originating_house ? ' in the ' + houseName(bill.originating_house) : ''}.`)
   if (bill.royal_assent) add('assent', `On ${displayDate(bill.royal_assent)}, the ${title} received royal assent${bill.act_number ? ' as Act No. ' + bill.act_number : ''}.`)
   if (bill.passed_both_houses_date) add('passed', `On ${displayDate(bill.passed_both_houses_date)}, the ${title} passed both houses.`)
   else if (bill.passed_both_houses) add('passed', `The ${title} is recorded as having passed both houses; the record does not establish a passage date.`)
   if (bill.act_number && !bill.royal_assent) add('assent', `The ${title} became Act No. ${bill.act_number}.`)
-  if (bill.sponsors.length) add('sponsor', `${bill.sponsors.join('; ')}${bill.sponsor_party ? ' (' + bill.sponsor_party + ')' : ''} ${bill.sponsors.length === 1 ? 'is the recorded sponsor' : 'are the recorded sponsors'} of the ${title}.`)
+  // Each sponsor with their own recorded party: one party after a list of
+  // co-sponsors would attribute the first sponsor's party to all of them.
+  const named = bill.sponsors.map((name, i) => {
+    const party = bill.sponsor_parties[i] ?? (bill.sponsors.length === 1 ? bill.sponsor_party : null)
+    return party ? `${name} (${party})` : name
+  })
+  if (named.length) add('sponsor', `${named.join('; ')} ${named.length === 1 ? 'is the recorded sponsor' : 'are the recorded sponsors'} of the ${title}.`)
   if (bill.status) add('status', `The ${title} has recorded status ${bill.status.replaceAll('_', ' ')}${bill.status_as_of ? ' as at ' + displayDate(bill.status_as_of) : ''}.`)
   if (bill.portfolio && !/^\(s\)/i.test(bill.portfolio)) add('portfolio', `The ${title} is recorded under the ${bill.portfolio} portfolio.`)
   const stages: string[] = []

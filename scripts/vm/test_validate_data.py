@@ -920,5 +920,34 @@ class DivisionRecordRulesTests(unittest.TestCase):
         self.assertTrue(self.errs(self.record(_meta={"corrections": [carried]}), reviewed={}))
 
 
+class BillDocShapeTests(unittest.TestCase):
+    """validate_data.bill_doc_errors: the shape rules from data cleanup wave 1 (bills)."""
+    GOOD = {"key": "au-federal-s1062", "status": "negatived", "sponsor": "WHISH-WILSON, Sen Peter",
+            "sponsor_party": "Greens", "portfolio": None,
+            "sponsors": [{"name": "WHISH-WILSON, Sen Peter", "person_id": "10780", "party": "Greens"},
+                         {"name": "HANSON, Sen Pauline", "person_id": "10280", "party": "One Nation"}],
+            "key_dates": [{"stage": "second_reading", "house": "senate", "date": "2017-03-20"},
+                          {"stage": "royal_assent", "house": None, "date": "2017-03-21"}]}
+
+    def errs(self, **change):
+        return vd.bill_doc_errors({**copy.deepcopy(self.GOOD), **change})
+
+    def test_a_clean_bill_passes(self):
+        self.assertEqual(self.errs(), [])
+
+    def test_each_defect_fails(self):
+        cases = {
+            "not a known party": {"sponsor_party": "independent candidate for the federal seat of Bass, Tas"},
+            "HTML entity": {"sponsor": "O&#39;CONNOR, Brendan, MP"},
+            "published as the portfolio": {"portfolio": "(s) ENTSCH, Warren, MP"},
+            "is not a chamber": {"key_dates": [{"stage": "royal_assent", "house": "Assent", "date": "2017-03-21"}]},
+            "published vocabulary": {"status": "defeated"},
+            "sponsors[1].party": {"sponsors": [self.GOOD["sponsors"][0], {"name": "X", "party": "xx"}]},
+        }
+        for needle, change in cases.items():
+            with self.subTest(needle=needle):
+                self.assertTrue(any(needle in e for e in self.errs(**change)), self.errs(**change))
+
+
 if __name__ == "__main__":
     unittest.main()

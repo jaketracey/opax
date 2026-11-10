@@ -70,6 +70,7 @@ STATUS_WORDS = {
     "rejected": "Rejected",
     "withdrawn": "Withdrawn",
     "lapsed": "Lapsed",
+    "negatived": "Negatived",
     "exposure_draft": "Exposure draft",
 }
 SOURCE_NAMES = {

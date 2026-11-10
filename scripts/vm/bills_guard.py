@@ -14,9 +14,14 @@ import tarfile
 from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from bills_registry.bills_stages import BILL_STAGE_ORDER, lifecycle  # noqa: E402
+from bills_registry.bills_stages import BILL_STAGE_ORDER, lifecycle, stage_signature  # noqa: E402
 
 BILLS = "portal/public/bills"
+SCRIPTS = Path(__file__).resolve().parents[1]
+# Reviewed removals the guard accepts rather than holds. Each file carries a
+# source URL per entry; nothing outside them may disappear.
+SUPPRESSED = SCRIPTS / "bills_registry/suppressed.json"
+LINK_CORRECTIONS = SCRIPTS / "corrections/bill_links.json"
 SYDNEY = ZoneInfo("Australia/Sydney")
 MAX_HELD = 5
 MAX_HELD_PERCENT = 2
@@ -94,7 +99,26 @@ def latest_stage_date(doc: dict) -> date | None:
     return max(dates, default=None)
 
 
-def regressions(old: dict, new: dict) -> list[str]:
+def reviewed_suppressions(path: Path = SUPPRESSED) -> set[str]:
+    if not path.exists():
+        return set()
+    return {row["key"] for row in json.loads(path.read_text())["suppressed"]}
+
+
+def reviewed_moves(path: Path = LINK_CORRECTIONS) -> set[tuple[str, str]]:
+    """(bill key, division key) pairs that a reviewed correction moved to
+    another bill. Losing one of these from its old bill is not a regression."""
+    if not path.exists():
+        return set()
+    moves = set()
+    for entry in json.loads(path.read_text()):
+        bill, kind, target = entry["id"].split("|", 2)
+        if kind == "division" and entry["field"] == "bill_key" and entry["from"] == bill:
+            moves.add((bill, target))
+    return moves
+
+
+def regressions(old: dict, new: dict, moved: set[tuple[str, str]] = frozenset()) -> list[str]:
     reasons = []
     for name, was, now in (
         ("latest stage date", latest_stage_date(old), latest_stage_date(new)),
@@ -106,12 +130,16 @@ def regressions(old: dict, new: dict) -> list[str]:
     # conceal a degraded status such as passed -> before_parliament.
     if BILL_STAGE_ORDER.get(new.get("status"), -2) < BILL_STAGE_ORDER.get(old.get("status"), -2):
         reasons.append(f"status went backwards ({old.get('status')} -> {new.get('status')})")
-    if lifecycle(new) < lifecycle(old):
+    # A stage now flagged negatived (bills-004) was never passage, so rank the
+    # HEAD copy with the same flags rather than reading the flag as a regression.
+    negatived = {stage_signature(s) for s in new.get("key_dates", []) if s.get("negatived")}
+    if lifecycle(new) < lifecycle(old, negatived):
         reasons.append("bill lifecycle went backwards")
     removed_stages = len(old.get("key_dates", [])) - len(new.get("key_dates", []))
     if removed_stages > 0:
         reasons.append(f"{removed_stages} recorded stages removed")
-    old_divisions, new_divisions = old.get("divisions", []), new.get("divisions", [])
+    old_divisions = [d for d in old.get("divisions", []) if (old.get("key"), d["key"]) not in moved]
+    new_divisions = new.get("divisions", [])
     if len(new_divisions) < len(old_divisions):
         reasons.append(f"division count decreased ({len(old_divisions)} -> {len(new_divisions)})")
     removed_divisions = {d["key"] for d in old_divisions} - {d["key"] for d in new_divisions}
@@ -125,13 +153,23 @@ def check(apply_holds: bool = False, held_report: Path | None = None) -> str:
     current = {p.as_posix(): p.read_bytes() for p in Path(BILLS).glob("*.json")}
     old_index, old = projection(head)
     new_index, new = projection(current)
-    if new_index["count"] < old_index["count"]:
+    # A reviewed suppression (bills-008) removes a duplicate record only when it
+    # is listed in suppressed.json and the new index redirects it to a kept bill.
+    redirects = new_index.get("redirects") or {}
+    reviewed = reviewed_suppressions()
+    suppressed = {key for key in set(old) - set(new)
+                  if key in reviewed and redirects.get(key) in new}
+    if new_index["count"] < old_index["count"] - len(suppressed):
         raise ValueError(f"bill count shrank: {old_index['count']} -> {new_index['count']}")
-    missing = set(old) - set(new)
-    missing_files = set(head) - set(current)
+    missing = set(old) - set(new) - suppressed
+    missing_files = set(head) - set(current) - {f"{BILLS}/{key}.json" for key in suppressed}
     if missing or missing_files:
         raise ValueError(f"existing bills disappeared: {len(missing)} keys, {len(missing_files)} files")
-    held = {key: reasons for key in sorted(old) if (reasons := regressions(old[key], new[key]))}
+    for key in sorted(suppressed):
+        print(f"bill {key}: suppressed as a reviewed duplicate of {redirects[key]}", file=sys.stderr)
+    old = {key: doc for key, doc in old.items() if key not in suppressed}
+    moved = reviewed_moves()
+    held = {key: reasons for key in sorted(old) if (reasons := regressions(old[key], new[key], moved))}
     if held_report is not None:
         held_report.write_text(json.dumps(held, indent=1) + "\n")
     for key, reasons in held.items():

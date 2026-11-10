@@ -405,6 +405,18 @@ test('ordinary Victorian electorate summaries carry the exact authorisation serv
     assert.ok(block(html)?.includes(line),flag);assert.match(block(html),/href="mailto:corrections@opax.com.au"/);
   }
 });
+test('bill answers name every sponsor, show the source stage wording and never borrow the roster party (bills-001/004/005/006/007)',()=>{
+  const people=[{name:'Peter Whish-Wilson',pid:'10780',party:'Independent',chambers:['senate'],states:['TAS'],current:false}];
+  const row=(event_raw,extra={})=>({stage:'other',date:'2017-03-20',house:'senate',url:'https://www.aph.gov.au/x',event_raw,...extra});
+  const html=renderBillAnswer({title:'Example Bill 2017',key:'x',sponsor:'WHISH-WILSON, Sen Peter',sponsor_person_id:'10780',portfolio:'(s) WHISH-WILSON, Sen Peter',
+    sponsors:[{name:'WHISH-WILSON, Sen Peter',person_id:'10780',party:null},{name:'HANSON, Sen Pauline',person_id:null,party:'One Nation'}],
+    key_dates:[row('Order of the day removed'),row('Order of the day removed'),row('Second reading',{stage:'second_reading',negatived:true})],divisions:[]},people,new Map(),[]).html;
+  assert.match(html,/<dt>Co-sponsors<\/dt><dd>HANSON, Sen Pauline \(One Nation\)<\/dd>/);
+  assert.ok(!html.includes("Sponsor's recorded party"),'no roster party stands in for the recorded one');
+  assert.ok(!html.includes('(s) WHISH'),'a private print is not a portfolio');
+  assert.equal(html.split('Order of the day removed').length-1,1,'an exact repeat is shown once');
+  assert.match(html,/Second reading \(negatived\)/);
+});
 test('server pages leave out empty sections, heading and all',async()=>{
   const bill=renderBillAnswer({title:'Example Bill 2026',key:'x',sponsor:'Example Member',portfolio:'Example Portfolio',divisions:[]},[],new Map(),[]).html;
   for(const gone of ['Plain-language summary','Other bills from this sponsor','Other bills in this portfolio','in this export','in the export'])assert.ok(!bill.includes(gone),gone);

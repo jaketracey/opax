@@ -8482,7 +8482,13 @@ const billOriginals = (sources) => (sources || []).filter((s) => safeUrl(s?.url)
 /** The head of every bill list row: the name, then what it is and where it got to. */
 function billRowHTML(b) {
   const year = String(b.introduced || "").slice(0, 4);
+  // A private member's bill: the sponsor, with a count of the co-sponsors the
+  // bill page names (bills-006/007). Older files carry them in the portfolio.
   const members = billSponsorFromPortfolio(b.portfolio);
+  const others = Math.max(0, Number(b.sponsor_count || 1) - 1);
+  const sponsorLabel = members ? billMembersLabel(members)
+    : b.sponsor && !b.portfolio
+      ? `${billSponsorName(b.sponsor)}${others ? ` and ${others} other${others === 1 ? "" : "s"}` : ""}` : "";
   const figures = [
     // Not "28 divisions": the index counts the register's division records, and
     // the source records one division several times, so the bill page folds
@@ -8499,7 +8505,7 @@ function billRowHTML(b) {
       b.status ? statusLabelHTML(sentenceCase(b.status), billStatusTone(b.status)) : "",
       year ? esc(year) : "",
       b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
-      members ? esc(billMembersLabel(members)) : esc(billPortfolio(b)),
+      sponsorLabel ? esc(sponsorLabel) : esc(billPortfolio(b)),
     ].filter(Boolean).join("&nbsp;· ")}</span>
     ${b.short_title && b.short_title !== b.title ? `<p class="bill-row-long">${esc(b.title)}</p>` : ""}
     ${figures.length ? `<p class="bill-row-figures">${figures.join(" · ")}</p>` : ""}
@@ -8671,10 +8677,17 @@ function billRulerHTML(dates) {
 function billStageRuns(dates) {
   const runs = [];
   for (const d of dates) {
-    const stage = billStage(d.stage) || "Stage not named";
+    // The register's own words where the export kept them (bills-005), and a
+    // defeated question said to be one (bills-004).
+    let stage = billStage(d.event_raw || d.stage) || "Stage not named";
+    if (d.negatived && !/negatived/i.test(stage)) stage += " (negatived)";
     const house = billHouse(d.house);
     const last = runs[runs.length - 1];
-    if (last && last.stage === stage && last.house === house) { last.dates.push(d); continue; }
+    if (last && last.stage === stage && last.house === house) {
+      // The same stage recorded twice on one day is one day, not two.
+      if (!last.dates.some((x) => x.date === d.date)) last.dates.push(d);
+      continue;
+    }
     runs.push({ stage, house, dates: [d] });
   }
   return runs;
@@ -9170,8 +9183,12 @@ async function openBill(key, manageFocus) {
   setCrumbs(crumbsFor("/bills", billName(bill)));
   const members = billSponsorFromPortfolio(bill.portfolio);
   // Each co-sponsor is a person with an entry of their own, so each is a link.
+  // The export lists every sponsor in the register's order (bills-006); the
+  // first is `sponsor`, linked once its roster row is known.
+  const coSponsors = (bill.sponsors || []).slice(1).map((s) => billSponsorName(s.name)).filter(Boolean);
   const sponsorLinks = bill.sponsor
-    ? [`<span data-sponsor="${esc(billSponsorName(bill.sponsor))}">${esc(billSponsorName(bill.sponsor))}</span>`]
+    ? [`<span data-sponsor="${esc(billSponsorName(bill.sponsor))}">${esc(billSponsorName(bill.sponsor))}</span>`,
+      ...coSponsors.map((name) => `<a ${entityHrefAttr(subjectHash("person", name))}>${esc(name)}</a>`)]
     : (members || []).map((m) => `<a data-sponsor="${esc(m.name)}" ${entityHrefAttr(subjectHash("person", m.name))}>${esc(m.name)}</a>${
       m.suffix ? ` ${esc(m.suffix)}` : ""}`);
   const draft = bill.status === "exposure_draft";

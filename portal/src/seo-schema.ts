@@ -36,14 +36,14 @@ export interface SchemaGraphOptions {
 const STATUS_LABELS: Record<string, string> = {
   introduced: 'Introduced', before_house: 'Before the house', before_parliament: 'Before parliament',
   passed_one_house: 'Passed one house', passed_both: 'Passed both houses', passed: 'Passed',
-  assented: 'Assented', rejected: 'Rejected', withdrawn: 'Withdrawn', lapsed: 'Lapsed',
+  assented: 'Assented', rejected: 'Rejected', withdrawn: 'Withdrawn', lapsed: 'Lapsed', negatived: 'Negatived',
   exposure_draft: 'Exposure draft', in_force: 'In force', partially_in_force: 'Partially in force',
   repealed: 'Repealed',
 }
 
 const PROPOSED_STATUSES = new Set([
   'introduced', 'before_house', 'before_parliament', 'passed_one_house', 'passed_both',
-  'rejected', 'withdrawn', 'lapsed', 'exposure_draft',
+  'rejected', 'withdrawn', 'lapsed', 'negatived', 'exposure_draft',
 ])
 
 /** Only exact official profiles qualify as sameAs; a search does not identify a person. */

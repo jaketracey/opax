@@ -231,6 +231,22 @@ test('private co-sponsors and Mc or Jnr names retain each member and their spell
   assert.match(junior.citations[0].text, /^Robin Example Jnr is the recorded sponsor/);
 });
 
+test('every listed sponsor carries their own recorded party, not the first sponsor party for all (bills-006)', async () => {
+  const detail = { ...complete, sponsor: 'EXAMPLE, Robin, MP', sponsor_party: 'Labor', portfolio: null,
+    sponsors: [{ name: 'EXAMPLE, Robin, MP', person_id: 'person-fixture', party: 'Labor' },
+      { name: 'MCDONALD, Sam, MP', person_id: null, party: 'Greens' }, { name: 'OTHER, Alex, MP', person_id: null, party: null }] };
+  const result = await callTool(fixture(detail).env, 'find_records', { query: 'Who sponsored the Sample Estuary Protection Bill 2026?', kind: 'bill' });
+  assert.deepEqual(result.rows[0].sponsors, ['Robin Example', 'Sam McDonald', 'Alex Other']);
+  assert.match(result.citations[0].text, /^Robin Example \(Labor\); Sam McDonald \(Greens\); Alex Other are the recorded sponsors/);
+});
+
+test('an exposure draft is released for consultation, not introduced (bills-013)', async () => {
+  const detail = { ...complete, status: 'exposure_draft', originating_house: null, introduced: '2026-09-08', key_dates: [], acts: [] };
+  const result = await callTool(fixture(detail).env, 'find_records', { query: title, kind: 'bill' });
+  assert.ok(result.citations.some(c => /^On 8 September 2026, the .* was released as an exposure draft for consultation\.$/.test(c.text)));
+  assert.ok(!result.citations.some(c => /was first introduced/.test(c.text)));
+});
+
 test('oversized multi-bill discovery retains complete returned lifecycles within the Ask result cap', async () => {
   const rows = [], details = {};
   for (let index = 0; index < 8; index++) {

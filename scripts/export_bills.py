@@ -42,6 +42,7 @@ import argparse
 import bisect
 import collections
 import hashlib
+import html
 import json
 import os
 import re
@@ -57,6 +58,7 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import roster_identity  # noqa: E402
 from bills_registry.bills_stages import BILL_STAGE_ORDER  # noqa: E402,F401 -- shared export vocabulary
+from corrections.apply import apply as apply_corrections  # noqa: E402
 
 DB_PATH = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 DB_URI = f"file:{DB_PATH}?mode=ro"
@@ -84,6 +86,17 @@ DATASET_KIND = {"billhome": "billhome", "ems": "em", "billsdgs": "digest", "bill
 # billhome row to key on. docs/BILLS-EXPOSURE.md "Exposure drafts".
 DRAFTS_PATH = Path(__file__).resolve().parent / "bills_registry" / "exposure_drafts.json"
 DRAFT_STATUS = "exposure_draft"
+
+# Registry rows that are not published, each with the record that replaces it
+# and the source that shows they are one bill (bills-008). /bill/<key> for a
+# suppressed key redirects to its replacement through index.json `redirects`.
+SUPPRESSED_PATH = Path(__file__).resolve().parent / "bills_registry" / "suppressed.json"
+
+# A bill the chamber voted down. ParlInfo's status for these is "Not
+# Proceeding", the same as for a bill that lapsed at a dissolution, so the
+# outcome is read from the final recorded event instead (bills-003).
+NEGATIVED_STATUS = "negatived"
+_NEGATIVED_EVENT = re.compile(r"\bnegatived\b", re.I)
 
 HOUSE_CODE = {
     "house of representatives": "representatives",
@@ -334,7 +347,175 @@ def has_table(db: sqlite3.Connection, name: str) -> bool:
 
 
 def house_code(raw: str | None) -> str | None:
-    return HOUSE_CODE.get((raw or "").strip().lower()) or (raw or None)
+    """A chamber code, or None. The legacy progress table writes "Assent" in the
+    house column of an assent row; that is not a chamber, so it is not passed
+    through (bills-012)."""
+    return HOUSE_CODE.get((raw or "").strip().lower())
+
+
+# --- sponsor metadata -------------------------------------------------------
+
+# ParlInfo's billhome page carries each sponsor in a hidden tag,
+# <sponsor id=".." party="..">NAME</sponsor>. The party attribute is free text:
+# mostly a party name, sometimes entity-encoded and quoted (&#34;ALP&#34;),
+# truncated at a bracket ("United Australia Party (Clive Palmer"), or not a
+# party at all ("independent candidate for the federal seat of Bass, Tas",
+# "monarchist", "xx"), and the visible aph.gov.au page prints no party. A value
+# is published only when it names a known party; anything else is dropped and
+# the party recorded for that person on the introduction date stands in, or
+# nothing does (bills-001, bills-002). The map gives OPAX's party token for each
+# label, so one party has one party page. Labels are folded with casefold().
+SPONSOR_PARTY_TOKENS = {
+    "alp": "Labor",
+    "australian labor party": "Labor",
+    "labor": "Labor",
+    "liberal party of australia": "Liberal",
+    "liberal": "Liberal",
+    "nationals": "Nationals",
+    "the nationals": "Nationals",
+    "national party of australia": "Nationals",
+    "liberal national party of queensland": "LNP",
+    "lnp": "LNP",
+    "australian greens": "Greens",
+    "queensland greens": "Greens",  # the Queensland branch of the Australian Greens
+    "greens": "Greens",
+    "independent": "Independent",
+    "independent member": "Independent",
+    "independent members": "Independent",
+    "pauline hanson's one nation": "One Nation",
+    "pauline hansons one nation": "One Nation",
+    "one nation": "One Nation",
+    "katter's australian party": "Katter's Australian Party",
+    "centre alliance": "Centre Alliance",
+    "nick xenophon team": "Nick Xenophon Team",
+    "rex patrick team": "Rex Patrick Team",
+    "jacqui lambie network": "Jacqui Lambie Network",
+    "liberal democratic party": "Liberal Democratic Party",
+    "palmer united party": "Palmer United Party",
+    "united australia party": "United Australia Party",
+    "united australia party (clive palmer": "United Australia Party",  # truncated in the source
+    "country liberals (northern territory": "Country Liberal Party",  # truncated in the source
+    "country liberal party": "Country Liberal Party",
+    "democratic labour party (dlp": "DLP",  # truncated in the source
+    "democratic labor party (dlp": "DLP",  # truncated in the source
+    "democratic labor party": "DLP",
+    "derryn hinch's justice party": "Derryn Hinch's Justice Party",
+    "australia's voice": "Australia's Voice",
+    "australian motoring enthusiast party": "Australian Motoring Enthusiast Party",
+    "family first": "Family First",
+    "australian democrats": "Australian Democrats",
+    "gerard rennick people first": "Gerard Rennick People First",
+}
+SPONSOR_PARTY_TOKEN_SET = frozenset(SPONSOR_PARTY_TOKENS.values())
+# Values `speeches.party_canonical` can give the dated fallback that are not
+# themselves tokens (Hansard abbreviations). validate_data.py accepts a
+# published party only from these two sets; a new party fails validation until
+# it is reviewed and added here.
+TIMELINE_ONLY_PARTIES = frozenset({"JLN", "LP"})
+PUBLISHED_PARTIES = SPONSOR_PARTY_TOKEN_SET | TIMELINE_ONLY_PARTIES
+
+
+def source_text(raw: str | None) -> str | None:
+    """A ParlInfo attribute or print as text: entities decoded (twice, for the
+    double-escaped rows), one pair of surrounding quotes removed, whitespace
+    collapsed."""
+    if raw is None:
+        return None
+    s = html.unescape(html.unescape(str(raw)))
+    s = WS.sub(" ", s).strip()
+    if len(s) >= 2 and s[0] == s[-1] == '"':
+        s = s[1:-1].strip()
+    return s or None
+
+
+def sponsor_party_token(raw: str | None) -> str | None:
+    """The party token a source party label names, or None when it names none."""
+    s = source_text(raw)
+    if not s:
+        return None
+    return SPONSOR_PARTY_TOKENS.get(s.replace("’", "'").casefold())
+
+
+# A private member's bill in the legacy ALRC table carries its sponsors in the
+# portfolio slot, run together: "(s) ENTSCH, Warren, MPGAMBARO, Teresa, MP".
+_PRIVATE_PORTFOLIO = re.compile(r"^\(s\)\s*", re.I)
+_MEMBER_BOUNDARY = re.compile(r"(?<=,\sMP)(?=\S)|(?<=,\sSenator)(?=\S)|(?<=,\sSen)(?=[A-Z])")
+
+
+def portfolio_sponsors(portfolio: str | None) -> list[str] | None:
+    """The member prints a "(s) ..." portfolio string names, or None when the
+    string is a real portfolio."""
+    raw = (portfolio or "").strip()
+    if not _PRIVATE_PORTFOLIO.match(raw):
+        return None
+    rest = source_text(_PRIVATE_PORTFOLIO.sub("", raw)) or ""
+    return [p.strip() for p in _MEMBER_BOUNDARY.split(rest) if p.strip()]
+
+
+def negatived_event(event: dict) -> bool:
+    return bool(_NEGATIVED_EVENT.search(event.get("event_raw") or ""))
+
+
+def final_status(status: str | None, events: list[dict]) -> str | None:
+    """`negatived` for a dead bill whose last recorded event is a negatived
+    vote; otherwise the registry's status unchanged. Only a dead ('lapsed')
+    status changes: a bill negatived at one stage and later recommitted and
+    passed (r5738, r5269, r5270) keeps `passed`, and one restored to the
+    Notice Paper and still before parliament keeps its status."""
+    if status != "lapsed":
+        return status
+    dated = [e for e in events if e.get("date")]
+    if not dated:
+        return status
+    last = max(e["date"] for e in dated)
+    negatived = [e["date"] for e in dated if negatived_event(e)]
+    return NEGATIVED_STATUS if negatived and max(negatived) == last else status
+
+
+def key_dates(events: list[dict]) -> list[dict]:
+    """The published stage rows: every recorded event with the source's own
+    wording (`event_raw`), a negatived vote marked as such, and an exact repeat
+    of a row dropped (bills-004, bills-005)."""
+    out, seen = [], set()
+    for e in events:
+        row = {"stage": e["stage"], "date": e["date"], "house": e["house"], "url": e["url"],
+               "event_raw": e.get("event_raw")}
+        if negatived_event(e):
+            row["negatived"] = True
+        sig = tuple(row.get(k) for k in ("stage", "date", "house", "url", "event_raw"))
+        if sig in seen:
+            continue
+        seen.add(sig)
+        out.append(row)
+    return out
+
+
+def registry_sponsors(row: dict, extras: dict, portfolio_prints: list[str] | None) -> list[dict]:
+    """Every sponsor the source lists, first sponsor first. ParlInfo rows read
+    the scraper's `sponsors` list when the row carries one; the legacy "(s)"
+    portfolio string stands in when it names the same first sponsor."""
+    listed = extras.get("sponsors") if isinstance(extras.get("sponsors"), list) else None
+    out: list[dict] = []
+    if listed:
+        for s in listed:
+            if isinstance(s, dict) and source_text(s.get("name")):
+                out.append({"name": source_text(s.get("name")), "party": sponsor_party_token(s.get("party")),
+                            "_party_raw": source_text(s.get("party"))})
+    elif row.get("sponsor_name"):
+        out.append({"name": source_text(row["sponsor_name"]), "party": sponsor_party_token(extras.get("sponsor_party")),
+                    "_party_raw": source_text(extras.get("sponsor_party"))})
+        if portfolio_prints and len(portfolio_prints) > 1:
+            first = (sponsor_print({"sponsor": portfolio_prints[0]}) or "").casefold()
+            if first and first == (sponsor_print({"sponsor": out[0]["name"]}) or "").casefold():
+                out += [{"name": p, "party": None, "_party_raw": None} for p in portfolio_prints[1:]]
+    elif portfolio_prints:
+        out = [{"name": p, "party": None, "_party_raw": None} for p in portfolio_prints]
+    seen, unique = set(), []
+    for s in out:
+        if s["name"] not in seen:
+            seen.add(s["name"])
+            unique.append(s)
+    return unique
 
 
 class PartyTimeline:
@@ -460,6 +641,8 @@ def load_legacy_bills(db: sqlite3.Connection) -> list[dict]:
         evs = events.get(r["bill_id"], [])
         lifecycle = lifecycle_fields(evs)
         last = max((e["date"] for e in evs if e["date"]), default=None)
+        prints = portfolio_sponsors(r["portfolio"])
+        sponsors = registry_sponsors({}, {}, prints)
         bills.append({
             "key": f"au-federal-alrc-{r['bill_id']}",
             "legacy_bill_id": r["bill_id"],
@@ -473,20 +656,18 @@ def load_legacy_bills(db: sqlite3.Connection) -> list[dict]:
             "session": None,
             "introduced": r["introduced_date"],
             "originating_house": house_code(r["house"]),
-            "sponsor": None,
+            "sponsor": sponsors[0]["name"] if sponsors else None,
+            "sponsors": sponsors,
             "sponsor_party": None,
             "sponsor_person_id": None,
-            "portfolio": r["portfolio"] or None,
-            "status": r["status"],
+            # A "(s) MEMBER" string is the sponsor, now carried there (bills-007).
+            "portfolio": None if prints is not None else (r["portfolio"] or None),
+            "status": final_status(r["status"], evs),
             "status_raw": r["status"],
             "status_as_of": last,
             "assent": lifecycle["royal_assent"],
             **lifecycle,
-            "key_dates": [
-                {"stage": e["stage"], "date": e["date"], "house": e["house"], "url": e["url"],
-                 "event_raw": e["event_raw"]}
-                for e in evs
-            ],
+            "key_dates": key_dates(evs),
         })
     return bills
 
@@ -530,6 +711,13 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
             other = parsed.get("listing_title")
             if isinstance(other, str) and other and other != row.get("title"):
                 aliases.append(other)
+        # A "(s) MEMBER, Name, MP" portfolio is a sponsor print, not a portfolio:
+        # the legacy ALRC table wrote private members' bills that way, and the
+        # reconcile copied it onto ParlInfo rows whose own page has no portfolio
+        # (bills-007). It becomes the sponsor where the row has none, and the
+        # portfolio is published empty.
+        prints = portfolio_sponsors(row.get("portfolio"))
+        sponsors = registry_sponsors(row, extras, prints)
         bills.append({
             "key": row["bill_key"],
             "legacy_bill_id": row.get("legacy_bill_id"),
@@ -543,20 +731,19 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
             "session": row.get("session"),
             "introduced": row.get("introduced_date"),
             "originating_house": house_code(row.get("originating_house")),
-            "sponsor": row.get("sponsor_name"),
-            "sponsor_party": extras.get("sponsor_party") or None,
+            "sponsor": source_text(row.get("sponsor_name")) or (sponsors[0]["name"] if sponsors else None),
+            "sponsors": sponsors,
+            # The source's party label only when it names a known party; the
+            # dated party record fills the rest (fill_sponsor_parties).
+            "sponsor_party": sponsors[0]["party"] if sponsors else None,
             "sponsor_person_id": row.get("sponsor_person_id"),
-            "portfolio": row.get("portfolio"),
-            "status": row.get("status"),
+            "portfolio": None if prints is not None else row.get("portfolio"),
+            "status": final_status(row.get("status"), evs),
             "status_raw": row.get("status_raw"),
             "status_as_of": row.get("status_as_of") or max((e["date"] for e in evs if e["date"]), default=None),
             "assent": lifecycle["royal_assent"],
             **lifecycle,
-            "key_dates": [
-                {"stage": e["stage"], "date": e["date"], "house": e["house"], "url": e["url"],
-                 "event_raw": e["event_raw"]}
-                for e in evs
-            ],
+            "key_dates": key_dates(evs),
         })
     return bills
 
@@ -591,22 +778,55 @@ def fill_sponsor_ids(bills: list[dict], members: dict[str, dict]) -> int:
     filled = 0
     for b in bills:
         year = (b.get("introduced") or "")[:4]
-        if b.get("sponsor_person_id") or not year.isdigit():
+        if not year.isdigit():
             continue
-        pid = roster_identity.sole_member(sponsor_print(b), members, b.get("originating_house"), int(year))
-        if pid:
-            b["sponsor_person_id"] = pid
-            filled += 1
+        if not b.get("sponsor_person_id"):
+            pid = roster_identity.sole_member(sponsor_print(b), members, b.get("originating_house"), int(year))
+            if pid:
+                b["sponsor_person_id"] = pid
+                filled += 1
+        # Co-sponsors by the same rule; the first listed sponsor is `sponsor`.
+        for i, s in enumerate(b.get("sponsors") or []):
+            if "person_id" in s:
+                continue
+            s["person_id"] = b.get("sponsor_person_id") if i == 0 else roster_identity.sole_member(
+                sponsor_print({"sponsor": s["name"]}), members, b.get("originating_house"), int(year))
     return filled
 
 
 def fill_sponsor_parties(bills: list[dict], timeline: PartyTimeline) -> None:
     """The sponsor's party on the day they introduced the bill, for the
-    `sponsor_party/<party>` label."""
+    `sponsor_party/<party>` label: the source's label when it names a known
+    party, otherwise the party recorded for that person on the day, otherwise
+    nothing. The same for every co-sponsor."""
+    def dated(pid: str | None, day: str | None) -> str | None:
+        if not pid:
+            return None
+        party, how = timeline.at(pid, day)
+        return None if how == "unknown" else party
+
     for b in bills:
         if not b.get("sponsor_party") and b.get("sponsor_person_id"):
-            party, how = timeline.at(b["sponsor_person_id"], b.get("introduced"))
-            b["sponsor_party"] = None if how == "unknown" else party
+            b["sponsor_party"] = dated(b["sponsor_person_id"], b.get("introduced"))
+        for i, s in enumerate(b.get("sponsors") or []):
+            if not s.get("party"):
+                s["party"] = b.get("sponsor_party") if i == 0 else dated(s.get("person_id"), b.get("introduced"))
+
+
+def published_sponsors(b: dict) -> list[dict]:
+    """sponsors[] as published: name, person id and party, in the source's order."""
+    return [{"name": s["name"], "person_id": s.get("person_id"), "party": s.get("party")}
+            for s in b.get("sponsors") or []]
+
+
+def log_sponsor_party_labels(bills: list[dict]) -> None:
+    """Say which source party labels were not published, so a new label is
+    reviewed and added to SPONSOR_PARTY_TOKENS rather than silently lost."""
+    dropped = collections.Counter(
+        s["_party_raw"] for b in bills for s in b.get("sponsors") or []
+        if s.get("_party_raw") and not sponsor_party_token(s["_party_raw"]))
+    for label, n in dropped.most_common():
+        log(f"sponsor party label not a known party, not published: {label!r} x{n}")
 
 
 # --- divisions --------------------------------------------------------------
@@ -762,6 +982,12 @@ def load_acts(db: sqlite3.Connection) -> tuple[dict[str, list[dict]], dict[str, 
         }
         idx[act_key(r["name"])].append(act)
         by_id[r["act_id"]] = act
+    # FRL's makingDate stands in for the assent date, and for a few Acts it is
+    # not the date the Act's own text gives. Reviewed corrections cite that
+    # text (scripts/corrections/bill_acts.json, bills-014).
+    if by_id:
+        applied = apply_corrections("bill_acts", by_id.values(), key="act_id")
+        log(f"acts: {len(applied)} reviewed assent date corrections")
     return idx, by_id
 
 
@@ -881,11 +1107,70 @@ def load_links(db: sqlite3.Connection) -> dict[str, dict[str, list[str]]]:
         lambda: collections.defaultdict(list))
     if not has_table(db, "bill_links"):
         return out
-    for r in db.execute(
-        "SELECT bill_key, kind, target_key FROM bill_links "
-        "WHERE COALESCE(audited,'') != 'wrong'"
-    ):
-        out[r["bill_key"]][r["kind"]].append(r["target_key"])
+    rows = [{"id": f"{r['bill_key']}|{r['kind']}|{r['target_key']}", "bill_key": r["bill_key"],
+             "kind": r["kind"], "target_key": r["target_key"]}
+            for r in db.execute(
+                "SELECT bill_key, kind, target_key FROM bill_links "
+                "WHERE COALESCE(audited,'') != 'wrong'")]
+    # A link the source got wrong moves to the bill the original record names,
+    # by reviewed correction (scripts/corrections/bill_links.json, bills-009).
+    if rows:
+        applied = apply_corrections("bill_links", rows, key="id")
+        if applied:
+            log(f"bill_links: {len(applied)} reviewed link corrections")
+    for r in rows:
+        targets = out[r["bill_key"]][r["kind"]]
+        if r["target_key"] not in targets:
+            targets.append(r["target_key"])
+    return out
+
+
+def load_suppressed(path: Path = SUPPRESSED_PATH) -> list[dict]:
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    rows = data.get("suppressed") if isinstance(data, dict) else data
+    for r in rows or []:
+        for field in ("key", "duplicate_of", "reason", "evidence_url", "evidence", "finding", "reviewed"):
+            if not r.get(field):
+                raise ValueError(f"{path.name}: {r.get('key')!r} has no {field}")
+    return rows or []
+
+
+def suppress(bills: list[dict], suppressed: list[dict]) -> tuple[list[dict], dict[str, str]]:
+    """Drop reviewed duplicate rows; return the kept bills and the redirects.
+    A replacement that is not in the registry is refused, so a redirect never
+    points at nothing."""
+    keys = {b["key"] for b in bills}
+    redirects: dict[str, str] = {}
+    for s in suppressed:
+        if s["duplicate_of"] not in keys:
+            raise ValueError(f"suppressed {s['key']}: replacement {s['duplicate_of']} is not in the registry")
+        redirects[s["key"]] = s["duplicate_of"]
+        log(f"suppressed {s['key']} ({s['reason']}, {s['finding']}): see {s['duplicate_of']}"
+            + ("" if s["key"] in keys else "; not in the registry any more"))
+    return [b for b in bills if b["key"] not in redirects], redirects
+
+
+TERMINAL_STATUSES = ("passed", "lapsed", NEGATIVED_STATUS)
+
+
+def links_after_last_event(docs: list[dict]) -> list[dict]:
+    """Division links dated after a finished bill's last recorded event. They
+    are listed for review in index.json meta, never dropped: most are real
+    (a later procedural vote that names the bill), and some are links to the
+    wrong bill (bills-009)."""
+    out = []
+    for d in docs:
+        if d.get("status") not in TERMINAL_STATUSES:
+            continue
+        last = max((e["date"] for e in d.get("key_dates") or [] if e.get("date")), default=None)
+        if not last:
+            continue
+        for v in d.get("divisions") or []:
+            if v.get("date") and v["date"] > last:
+                out.append({"bill": d["key"], "status": d["status"], "last_event": last,
+                            "division": v["key"], "division_date": v["date"]})
     return out
 
 
@@ -899,10 +1184,15 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
 
     bills = load_legacy_bills(db) if legacy else load_v2_bills(db)
     log(f"registry: {len(bills)} bills")
+    redirects: dict[str, str] = {}
+    if not legacy:
+        bills, redirects = suppress(bills, load_suppressed())
     if has_table(db, "members"):
         filled = fill_sponsor_ids(bills, roster_identity.federal_members(db))
         log(f"sponsor ids: {filled} filled from the members table")
     fill_sponsor_parties(bills, timeline)
+    log_sponsor_party_labels(bills)
+    log(f"status: {sum(b['status'] == NEGATIVED_STATUS for b in bills)} bills negatived on their final event")
 
     divisions = load_divisions(db, timeline)
     log(f"divisions: {len(divisions)} federal")
@@ -973,6 +1263,7 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
             "introduced": b["introduced"],
             "originating_house": b["originating_house"],
             "sponsor": b["sponsor"],
+            "sponsors": published_sponsors(b),
             "sponsor_party": b["sponsor_party"],
             "sponsor_person_id": b["sponsor_person_id"],
             "portfolio": b["portfolio"],
@@ -993,6 +1284,9 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
     totals: collections.Counter = collections.Counter()
     for d in divisions.values():
         totals.update(d["party_coverage"])
+    review = links_after_last_event(docs)
+    log(f"review: {len(review)} division links dated after a finished bill's last event "
+        f"({len({r['bill'] for r in review})} bills), listed in index meta")
 
     generated = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     index = {
@@ -1013,9 +1307,13 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
             "speech_cap": SPEECH_CAP,
             "match_rule": "docs/SCOPE-BILLS.md s4 title rule" if (legacy or not links) else "bill_links",
             "parliament_floor": PARLIAMENT_STARTS[0],
+            "suppressed": len(redirects),
+            "review_links_after_last_event": review,
         },
         "bills": sorted([index_row(d) for d in docs], key=index_sort_key, reverse=True),
     }
+    if redirects:
+        index["redirects"] = dict(sorted(redirects.items()))
     drafts = load_drafts(DRAFTS_PATH)
     if drafts:
         docs, index = merge_drafts(docs, index, drafts)
@@ -1033,6 +1331,7 @@ def index_row(d: dict) -> dict:
         "royal_assent": d.get("royal_assent"), "act_number": d.get("act_number"),
         "sponsor": d["sponsor"], "sponsor_party": d["sponsor_party"],
         "sponsor_person_id": d.get("sponsor_person_id"),
+        "sponsor_count": len(d.get("sponsors") or []),
         "portfolio": d["portfolio"],
         "has_summary": d["summary"] is not None,
         "summary_version": d["summary"]["version"] if d["summary"] else None,
@@ -1083,6 +1382,8 @@ def draft_doc(d: dict) -> dict:
         "sponsor": d.get("sponsor"),
         "sponsor_party": d.get("sponsor_party"),
         "sponsor_person_id": d.get("sponsor_person_id"),
+        "sponsors": ([{"name": d["sponsor"], "person_id": d.get("sponsor_person_id"),
+                       "party": d.get("sponsor_party")}] if d.get("sponsor") else []),
         "portfolio": d.get("portfolio"),
         "status": DRAFT_STATUS,
         "status_as_of": d.get("status_as_of") or released,
@@ -1213,6 +1514,13 @@ def write_out(docs: list[dict], index: dict, out: Path, sample: int | None) -> N
             preserve_speech_briefs(d, json.loads(path.read_text()))
         path.write_text(json.dumps(d, ensure_ascii=False, indent=1) + "\n")
         written += 1
+    # A suppressed duplicate (bills-008) leaves the projection; its address
+    # redirects through index.json, so its old file must not linger.
+    for key, target in sorted((index.get("redirects") or {}).items()):
+        path = out / f"{key}.json"
+        if path.exists():
+            path.unlink()
+            log(f"removed {path.name}: reviewed duplicate of {target}")
     log(f"wrote {written} bill files + index.json to {out}")
 
 

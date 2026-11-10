@@ -1,0 +1,22 @@
+[
+ {
+  "id": "C2024A00135",
+  "field": "assent_date",
+  "from": "2024-12-11",
+  "to": "2024-12-10",
+  "evidence_url": "https://www.legislation.gov.au/C2024A00135/asmade/text",
+  "evidence": "The Act as made, Treasury Laws Amendment (2024 Tax and Other Measures No. 1) Act 2024 (No. 135, 2024), reads '[Assented to 10 December 2024]'. ParlInfo's progress for r7241 also records 'Assent (Act no: 135 - Year: 2024)' on 10 December 2024. The FRL makingDate (11 December 2024) is not the assent date.",
+  "finding": "bills-014",
+  "reviewed": "2026-11-10"
+ },
+ {
+  "id": "C2026A00064",
+  "field": "assent_date",
+  "from": "2026-07-02",
+  "to": "2026-07-06",
+  "evidence_url": "https://www.legislation.gov.au/C2026A00064/asmade/text",
+  "evidence": "The Act as made, Competition and Consumer Amendment (Unfair Trading Practices) Act 2026 (No. 64, 2026), reads '[Assented to 6 July 2026]'. ParlInfo's progress for r7468 also records 'Assent (Act no: 64 - Year: 2026)' on 6 July 2026. The FRL makingDate (2 July 2026) is not the assent date.",
+  "finding": "bills-014",
+  "reviewed": "2026-11-10"
+ }
+]

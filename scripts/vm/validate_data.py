@@ -199,6 +199,35 @@ def _check_dir(rel_dir: str, pattern: str, ratio: float) -> list[str]:
     return errs
 
 
+BILL_STATUSES = {"before_parliament", "passed", "lapsed", "negatived", "exposure_draft"}
+BILL_HOUSES = {"representatives", "senate", None}
+_ENTITY = re.compile(r"&(#\d+|#x[0-9a-f]+|[a-z]+);", re.I)
+
+
+def bill_doc_errors(doc: dict, parties: frozenset | set | None = None) -> list[str]:
+    """Shape rules for one published bill (bills-001/002/004/007/012)."""
+    if parties is None:
+        from scripts.export_bills import PUBLISHED_PARTIES as parties
+    key, errs = doc.get("key"), []
+    if doc.get("status") not in BILL_STATUSES:
+        errs.append(f"{key}: status {doc.get('status')!r} is not in the published vocabulary")
+    labels = [("sponsor_party", doc.get("sponsor_party"))] + [
+        (f"sponsors[{i}].party", s.get("party")) for i, s in enumerate(doc.get("sponsors") or [])
+        if isinstance(s, dict)]
+    for field, party in labels:
+        if party is not None and party not in parties:
+            errs.append(f"{key}: {field} {party!r} is not a known party")
+    texts = [doc.get("sponsor")] + [s.get("name") for s in doc.get("sponsors") or [] if isinstance(s, dict)]
+    if any(isinstance(t, str) and _ENTITY.search(t) for t in texts + [p for _, p in labels]):
+        errs.append(f"{key}: HTML entity in a sponsor name or party")
+    if isinstance(doc.get("portfolio"), str) and doc["portfolio"].lstrip().startswith("(s)"):
+        errs.append(f"{key}: private member's sponsors published as the portfolio")
+    houses = {d.get("house") for d in doc.get("key_dates") or [] if isinstance(d, dict)}
+    if houses - BILL_HOUSES:
+        errs.append(f"{key}: key_dates house {sorted(map(str, houses - BILL_HOUSES))} is not a chamber")
+    return errs
+
+
 def check_bills() -> list[str]:
     errs: list[str] = []
     try:
@@ -240,6 +269,7 @@ def check_bills() -> list[str]:
             continue
         if doc.get("key") != p.stem:
             errs.append(f"{p.name} carries key {doc.get('key')!r}")
+        errs.extend(bill_doc_errors(doc))
         if len(errs) > 10:
             break
     return errs
