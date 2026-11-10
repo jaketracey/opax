@@ -237,3 +237,12 @@ test('bottom tab taps are confirmed by the selected tab', () => {
   assert.match(body, /notVisible:\n\s+id: tab-search\n\s+selected: true/);
   assert.match(body, /extendedWaitUntil:\n\s+visible:\n\s+id: tab-search\n\s+selected: true/);
 });
+
+test('cold-launch readiness keeps waiting out system ANRs before requiring the root', () => {
+  const steps = read('27-leads.yaml')[1].toJS();
+  const loop = steps.find((s) => s.repeat?.while?.notVisible);
+  assert.ok(loop, 'readiness loop');
+  assert.equal(loop.repeat.commands[1].extendedWaitUntil.optional, true);
+  const i = steps.indexOf(loop);
+  assert.ok(steps[i + 1].extendedWaitUntil.visible.id.includes('today-screen'));
+});

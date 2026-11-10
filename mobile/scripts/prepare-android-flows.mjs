@@ -463,14 +463,37 @@ function prepare(body, relative) {
           );
           // Readiness is based on the mounted root, not the current tab. A
           // relaunch may restore a detail or welcome screen rather than Today.
+          const root = {
+            id: 'today-screen|welcome-screen|person-screen-title|ask-screen|bill-screen|talk-sheet|search-screen',
+          };
+          // A system ANR can also appear after the check above; keep
+          // waiting it out until the root shows, then require the root.
           result.push(
             doc.createNode({
-              extendedWaitUntil: {
-                visible: {
-                  id: 'today-screen|welcome-screen|person-screen-title|ask-screen|bill-screen|talk-sheet|search-screen',
-                },
-                timeout: 30000,
+              repeat: {
+                while: { notVisible: { ...root } },
+                times: 4,
+                commands: [
+                  {
+                    runFlow: {
+                      when: { visible: systemAnr },
+                      commands: [{ tapOn: { text: '^Wait$' } }],
+                    },
+                  },
+                  {
+                    extendedWaitUntil: {
+                      visible: { ...root },
+                      timeout: 10000,
+                      optional: true,
+                    },
+                  },
+                ],
               },
+            }),
+          );
+          result.push(
+            doc.createNode({
+              extendedWaitUntil: { visible: { ...root }, timeout: 30000 },
             }),
           );
         }
