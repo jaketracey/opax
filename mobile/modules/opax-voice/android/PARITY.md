@@ -23,7 +23,9 @@ Related Android UI defects fixed in this package:
 
 - The resting orb could remain blank before its first animation frame. Android
   now warms the frame loop when the surface receives a size, then stops it after
-  settling. iOS keeps its existing resting-frame policy.
+  settling. Its resting core also has a plain radius and opacity in the initial
+  display list, so it does not wait for animated values. iOS keeps its existing
+  resting-frame policy.
 - Talk's system Back listener belonged to its mount, so it could intercept Back
   beneath Sources or a record. It now belongs to Talk's focus. Navigation removal
   also uses the call's leave confirmation, covering the custom bar's Back arrow.

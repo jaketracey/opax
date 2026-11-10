@@ -1,4 +1,5 @@
-import { act, useRef } from 'react';
+import { act, createElement, useRef } from 'react';
+import type * as SkiaTypes from '@shopify/react-native-skia';
 import { Platform } from 'react-native';
 import type * as ReanimatedTypes from 'react-native-reanimated';
 import TestRenderer from 'react-test-renderer';
@@ -7,6 +8,7 @@ import { VoiceOrb } from '../src/features/talk/VoiceOrb';
 const Reanimated = jest.requireMock(
   'react-native-reanimated',
 ) as typeof ReanimatedTypes;
+const Skia = jest.requireMock('@shopify/react-native-skia') as typeof SkiaTypes;
 
 jest.mock('../src/design/accessibility', () => ({
   useIncreaseContrast: () => false,
@@ -38,6 +40,14 @@ beforeEach(() => {
       return useRef(shared(value)).current as never;
     });
   jest.spyOn(Reanimated, 'useDerivedValue').mockReturnValue(shared(0) as never);
+  jest
+    .spyOn(Skia, 'Group')
+    .mockImplementation(({ children, ...props }) =>
+      createElement('OrbGroup', props, children),
+    );
+  jest
+    .spyOn(Skia, 'Circle')
+    .mockImplementation((props) => createElement('OrbCircle', props));
 });
 afterEach(() => {
   jest.restoreAllMocks();
@@ -67,6 +77,14 @@ test.each(['android', 'ios'] as const)(
     clock.setActive.mockClear();
     // Layout may arrive after the first settling window on a busy Android host.
     act(() => renderer.update(orb(240)));
+    // Even with every derived value still zero, Android's initial core is
+    // opaque and has a positive radius. iOS keeps its original shared values.
+    const cores = renderer.root.findAllByType('OrbCircle' as never).slice(-3);
+    expect(cores).toHaveLength(3);
+    for (const core of cores) {
+      expect(typeof core.props.r).toBe(os === 'android' ? 'number' : 'object');
+      if (os === 'android') expect(core.props.r).toBeGreaterThan(0);
+    }
     expect(clock.setActive.mock.calls).toEqual(
       os === 'android' ? [[true]] : [],
     );

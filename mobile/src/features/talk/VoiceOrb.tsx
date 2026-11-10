@@ -266,6 +266,11 @@ export function VoiceOrb({
     );
   });
   const coreR = useDerivedValue(() => R * swell.get());
+  // A resting Android canvas can paint before its derived values arrive.
+  // Keep its opaque core in the initial display list; motion still uses coreR.
+  const androidRest = Platform.OS === 'android' && phase === 'rest';
+  const coreRadius = androidRest ? R : coreR;
+  const coreOpacity = androidRest ? 1 : coreAlpha;
   const glow = useDerivedValue(() => 0.12 + 0.55 * pulse.get());
   const halo = useDerivedValue(() => 0.35 + 0.65 * pulse.get());
   const sweepAlpha = useDerivedValue(() =>
@@ -312,8 +317,8 @@ export function VoiceOrb({
         color={colours.sweep}
         opacity={sweepAlpha}
       />
-      <Group opacity={coreAlpha}>
-        <Circle cx={c} cy={c} r={coreR}>
+      <Group opacity={coreOpacity}>
+        <Circle cx={c} cy={c} r={coreRadius}>
           <RadialGradient
             c={highlight}
             r={R * 1.7}
@@ -327,13 +332,13 @@ export function VoiceOrb({
           strokeWidth={0.75}
           color={colours.rosette}
         />
-        <Circle cx={c} cy={c} r={coreR} opacity={glow}>
+        <Circle cx={c} cy={c} r={coreRadius} opacity={glow}>
           <RadialGradient c={centre} r={R} colors={colours.glow} />
         </Circle>
         <Circle
           cx={c}
           cy={c}
-          r={coreR}
+          r={coreRadius}
           style="stroke"
           strokeWidth={1}
           color={colours.edge}
