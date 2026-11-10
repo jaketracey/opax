@@ -6154,7 +6154,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const { profileJurisdictions, profileAffiliations } = await import('/profile-jurisdictions.js?v=20261016-1');
   if (currentSubjectKey !== key) return;
   const representation = profileJurisdictions(roster);
-  const party = partyNow || roster?.party || spokeAs;
+  let party = partyNow || roster?.party || spokeAs;
+  // With no party of its own, the record may take the one a verified seat roster
+  // records for this person (roster-party.js through electorates.js): read below,
+  // with the electorate data, and preferred to the speeches' labels.
+  const rosterFallback = !partyNow && !roster?.party && Boolean(roster?.representation?.length);
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
@@ -6226,9 +6230,12 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // The party receipts row below only points at the party's map entry when
     // the money data has one; an independent's would land on "Not among the
     // top 250 disclosed donors", so they get the map itself instead.
-    party ? loadMoneyData().catch(() => null) : null,
+    party || rosterFallback ? loadMoneyData().catch(() => null) : null,
   ]);
   if (currentSubjectKey !== key) return;
+  const seatParty = rosterFallback && electorateReference
+    ? electorateReference.module.rosterSeatParty?.(roster, electorateReference.data.electorates) || null : null;
+  if (seatParty) party = seatParty.party;
   const partyOnMap = Boolean(party && findMoneyNode("party", party));
   const electorateLinks = electorateReference
     ? electorateReference.module.personElectorateLinksHTML(electorateReference.person, representation.representations, electorateReference.data.electorates)
@@ -7250,7 +7257,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=ca44f4e382").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=7d80b3995c").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

@@ -258,7 +258,7 @@ test('own-speaker search expands aliases without admitting another speaker; test
 
 test('every clean profile keeps current main’s curated roster party precedence', () => {
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
-  const partyLine = app.match(/  const party = partyNow \|\|.*;/)[0];
+  const partyLine = app.match(/  (?:const|let) party = partyNow \|\|.*;/)[0];
   const party = (roster, spokeAs) => scopedContext(partyLine + ';party', {roster, spokeAs, partyNow:roster?.party_now || null});
   for (const p of roster.people.filter(p=>!p.speech_scope)) for (const spokeAs of ['Labor','Independent',null]) {
     assert.equal(party(p,spokeAs),p.party_now || p.party || spokeAs,p.name);

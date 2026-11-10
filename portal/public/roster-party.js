@@ -1,0 +1,73 @@
+/** The party a verified electorate roster records for a person whose own
+ * record carries none.
+ *
+ * parliamentarians.json has no party for most state members (it is built from
+ * Hansard prints and the federal APH list), while the electorates release
+ * records, for each seat a parliament publishes a roster for, the members
+ * holding it on a stated date and the party that roster gives them
+ * (representation_status "verified", representatives[].party, each member
+ * with the parliament's own profile URL).
+ *
+ * The roster decides only when it is unambiguous: the person's recorded seat
+ * must name exactly one release entry in the same jurisdiction and chamber,
+ * that entry must be verified with a valid as-of date, and across all their
+ * recorded seats exactly one representative may be this person (the person
+ * ID decides where both sides carry one; otherwise the exact full name, never
+ * a surname print). Anything else gives null: no party is shown rather than a
+ * guess.
+ *
+ * Shared by the person page (public/app.js, through electorates.js) and the
+ * Worker's crawlable person answers (src/seo-content.ts);
+ * test/roster-party.test.mjs.
+ */
+
+/** Diacritics, case, curly apostrophes and spacing folded away. */
+export function rosterFold(value) {
+  return String(value ?? '').normalize('NFKD').replace(/\p{M}/gu, '').replace(/[‘’ʼ`]/g, "'")
+    .replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+const isoDate = (value) => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+  !Number.isNaN(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
+
+/** Whether a roster representative is this person: the ID where both carry one, else the exact name. */
+function isPerson(rep, person) {
+  const member = rep?.person || {};
+  const ids = [member.legacy_person_id].filter(Boolean);
+  if (person.pid && ids.length) return ids.includes(person.pid);
+  // A surname print ("Pearson") can hold several people; only a full name may match.
+  const name = rosterFold(person.name);
+  if (!name.includes(' ')) return false;
+  return [member.name, ...(member.aliases || [])].some((n) => rosterFold(n) === name);
+}
+
+/**
+ * @param {{name: string, pid?: string|null, representation?: {electorate: string, jurisdiction: string, chamber: string}[]}} person
+ * @param {object[]} electorates the release index's electorates
+ * @returns {{party: string, as_of: string, electorate: string, url: string|null, source_url: string|null} | null}
+ */
+export function rosterSeatParty(person, electorates) {
+  if (!person?.name || !Array.isArray(electorates)) return null;
+  const hits = [];
+  for (const r of person.representation || []) {
+    const seats = electorates.filter((e) => e && e.jurisdiction === r.jurisdiction && e.chamber === r.chamber &&
+      rosterFold(e.name) === rosterFold(r.electorate));
+    if (seats.length !== 1) continue;
+    const seat = seats[0];
+    if (seat.representation_status !== 'verified' || !isoDate(seat.representation_as_of)) continue;
+    for (const rep of seat.representatives || []) {
+      if (isPerson(rep, person)) hits.push({ rep, seat });
+    }
+  }
+  if (hits.length !== 1) return null;
+  const { rep, seat } = hits[0];
+  const party = typeof rep.party === 'string' ? rep.party.trim() : '';
+  if (!party) return null;
+  return {
+    party,
+    as_of: seat.representation_as_of,
+    electorate: seat.name,
+    url: typeof seat.url === 'string' ? seat.url : null,
+    source_url: typeof rep.person?.source_url === 'string' ? rep.person.source_url : null,
+  };
+}
