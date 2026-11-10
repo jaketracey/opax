@@ -168,6 +168,68 @@ test('the all-years grant figure names the full recorded range, including future
 
 test.each([
   [
+    'grant',
+    {
+      kind: 'grant',
+      jur: 'federal',
+      program: 'go3141',
+      id: program.grants[0].id,
+    },
+  ],
+  [
+    'recipient',
+    {
+      kind: 'recipient',
+      jur: 'federal',
+      program: 'go3141',
+      recipient: program.grants[0].rid,
+    },
+  ],
+  ['award', { kind: 'award', id: raw('/research/mlci.json').awards[0].ga_id }],
+] as const)(
+  '%s details distinguish award values from payments',
+  async (_name, params) => {
+    const item = (await loadMoneyItem(params, false)).data;
+    expect(item.notes.join(' ')).toMatch(
+      /award value.*not payments|award values.*not amounts paid/i,
+    );
+  },
+);
+
+test('program sources retain the source caveats and explain award values', async () => {
+  Object.assign(mockParams, { jur: 'federal', id: 'GO3141' });
+  const rendered = await mount(Program);
+  const source = rendered.root.findByType(FigureBlock).props.citation;
+  expect(source.notes).toEqual(
+    expect.arrayContaining(
+      decodeGrantIndex(raw('/graph/grants.federal.json')).meta.caveats,
+    ),
+  );
+  expect(source.notes.join(' ')).toMatch(
+    /award value.*not payments|award values.*not amounts paid/i,
+  );
+});
+
+test('Queensland expenditure records do not acquire a federal award-value caveat', async () => {
+  const index = raw('/graph/grants.qld.json');
+  const entry = index.programs[0];
+  const first = raw(`/grants/qld/programs/${entry.key}.json`).grants[0];
+  const item = (
+    await loadMoneyItem(
+      {
+        kind: 'grant',
+        jur: 'qld',
+        program: entry.key,
+        id: first.id,
+      },
+      false,
+    )
+  ).data;
+  expect(item.notes.join(' ')).not.toMatch(/award values.*not amounts paid/i);
+});
+
+test.each([
+  [
     'Program',
     Program,
     { jur: 'federal', id: 'GO3141' },

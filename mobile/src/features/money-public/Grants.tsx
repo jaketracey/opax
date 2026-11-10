@@ -22,7 +22,7 @@ import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { stateChoices } from '../sheets/filter-models';
 import type { GrantIndex, Jurisdiction } from './data';
-import { FUTURE_YEARS_NOTE, grantsFigure } from './HubCards';
+import { FUTURE_YEARS_NOTE, GRANTS_CAVEAT, grantsFigure } from './HubCards';
 import {
   ListCaption,
   MoneyList,
@@ -237,6 +237,7 @@ function GrantList({
                 <FigureBlock
                   value={formatMoneyCompact(figure.value)}
                   ink="money"
+                  caveat={jur === 'federal' ? GRANTS_CAVEAT : undefined}
                   label={
                     jur === 'qld'
                       ? `recorded annual spending, ${fyRange(data.meta.years[0] ?? '', data.meta.years.at(-1) ?? '')}`

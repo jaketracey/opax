@@ -38,6 +38,7 @@ import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { programRecipients, type Program as ProgramData } from './data';
+import { GRANTS_CAVEAT } from './HubCards';
 import {
   askAbout,
   counted,
@@ -366,6 +367,8 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
                         })),
                       ],
                       notes: [
+                        jur === 'federal' ? GRANTS_CAVEAT : null,
+                        ...data.index.meta.caveats,
                         seat
                           ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
                           : null,
