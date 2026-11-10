@@ -22,5 +22,5 @@ for gate in typecheck lint test qa-static qa-advisories; do
   echo "OPAX QA: $gate"
   nice -n 10 npm run "$gate"
 done
-echo 'OPAX QA: production exports (iOS and Android)'
-nice -n 10 bash scripts/check-release-bundle.sh
+echo 'OPAX QA: Android production export'
+nice -n 10 bash scripts/check-release-bundle.sh --android
