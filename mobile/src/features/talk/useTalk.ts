@@ -195,6 +195,11 @@ export function useTalk() {
   /** The rationale's Continue: the system dialog, then the call if allowed. */
   async function allowMicrophone() {
     if (askingMicrophone.current || dispatching.current) return;
+    if (asksForMicrophone() && (!consent || !consentLoaded)) {
+      setMicrophone(null);
+      setError('consentRequired');
+      return;
+    }
     const generation = focusGeneration.current;
     askingMicrophone.current = true;
     setBusy(true);
@@ -218,6 +223,7 @@ export function useTalk() {
     const stored = await uiBridge.setConsent(granted);
     if (mounted.current) {
       showConsent(stored && granted);
+      if (stored && !granted && asksForMicrophone()) setMicrophone(null);
       if (!stored) setError('unavailable');
       setBusy(false);
     }

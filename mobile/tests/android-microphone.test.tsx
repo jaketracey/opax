@@ -195,6 +195,24 @@ test('Not now leaves the microphone alone', async () => {
   expect(mockVoice.start).not.toHaveBeenCalled();
 });
 
+test('withdrawing consent closes an old rationale and prevents its permission request', async () => {
+  await mount();
+  await act(async () => {
+    await call.start();
+  });
+  expect(call.microphone).toBe('rationale');
+  await act(async () => {
+    await call.changeConsent(false);
+  });
+  expect(call.microphone).toBeNull();
+  await act(async () => {
+    await call.allowMicrophone();
+  });
+  expect(call.error).toBe('consentRequired');
+  expect(request).not.toHaveBeenCalled();
+  expect(mockVoice.start).not.toHaveBeenCalled();
+});
+
 test('denied: no call, status is read again, and Start asks again', async () => {
   request.mockResolvedValue(DENIED);
   await mount();
