@@ -184,7 +184,11 @@ export function useAgencySupplier(rid: string | null, agency: string | null) {
           supplier,
           contracts: supplier.organisation
             ? profile.contracts
-                .filter((c) => c.supplier === supplier.name)
+                .filter((c) =>
+                  c.supplierId
+                    ? c.supplierId === supplier.id
+                    : c.supplier === supplier.name,
+                )
                 .map((c) => ({
                   id: c.id,
                   title: c.title,
