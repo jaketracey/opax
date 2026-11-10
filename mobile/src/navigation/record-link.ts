@@ -119,7 +119,9 @@ function identity({
     route.fields ?? Object.keys(values).filter((key) => key !== 'name');
   return JSON.stringify([
     route.path,
-    fields.toSorted().map((key) => [key, values[key] ?? '']),
+    // Not toSorted: the shipped Hermes has no Array.prototype.toSorted, so
+    // it threw on every record page (TestFlight AEi_banN, build 45).
+    [...fields].sort().map((key) => [key, values[key] ?? '']),
   ]);
 }
 
