@@ -153,6 +153,60 @@ class FoldTests(unittest.TestCase):
         self.assertEqual(out[0]["speeches"], 790)
 
 
+class TwinTests(unittest.TestCase):
+    """members-electorates-011: a state print that differs only in case or apostrophe is the same person."""
+    SEAT = [{"jurisdiction": "nsw", "chamber": "nsw_la", "electorate": "Prospect"}]
+
+    def test_a_state_case_twin_folds_into_the_spelling_with_more_speeches(self):
+        people = [row("Hugh McDermott", None, ["nsw"], ["nsw_la"], 2015, 2026, 956, representation=self.SEAT),
+                  row("Hugh Mcdermott", None, ["nsw"], ["nsw_la"], 2015, 2016, 13, representation=self.SEAT)]
+        out, folded, _ = fold(people)
+        self.assertEqual(folded, [("Hugh Mcdermott", "Hugh McDermott")])
+        self.assertEqual(len(out), 1)
+        self.assertEqual((out[0]["speeches"], out[0]["prints"]), (969, ["Hugh Mcdermott"]))
+        self.assertEqual(refusals(people, out), [])
+
+    def test_an_apostrophe_twin_brings_its_register_name_and_keeps_the_partys_absence_neutral(self):
+        people = [row("D’Ambrosio", None, ["vic"], ["vic_la"], 2018, 2022, 243),
+                  row("D'Ambrosio", None, ["vic"], ["vic_la"], 2018, 2019, 12, full="Lily D'Ambrosio"),
+                  row("M O’Brien", "Liberal", ["vic"], ["vic_la"], 2018, 2022, 272),
+                  row("M O'Brien", None, ["vic"], ["vic_la"], 2018, 2019, 14)]
+        out, folded, _ = fold(people)
+        self.assertEqual(sorted(folded), [("D'Ambrosio", "D’Ambrosio"), ("M O'Brien", "M O’Brien")])
+        by = {p["name"]: p for p in out}
+        self.assertEqual(by["D’Ambrosio"]["full"], "Lily D'Ambrosio")
+        self.assertEqual(by["M O’Brien"]["party"], "Liberal")
+
+    def test_anything_that_separates_two_spellings_leaves_both(self):
+        base = row("Ann Example", "Labor", ["nsw"], ["nsw_la"], 2010, 2020, 500, representation=self.SEAT)
+        cases = {
+            "another seat": dict(representation=[{"jurisdiction": "nsw", "chamber": "nsw_la", "electorate": "Other"}]),
+            "another party": dict(party="Liberal"),
+            "another chamber": dict(chambers=["nsw_lc"]),
+            "years outside": dict(first=2000, last=2004),
+            "another parliament": dict(states=["vic"], chambers=["vic_la"]),
+            "a reviewed split": dict(speech_scope={"state": "nsw", "chamber": "nsw_la"}),
+            "witness rows": dict(witness_rows=3),
+        }
+        for why, change in cases.items():
+            with self.subTest(why):
+                twin = {**row("Ann EXAMPLE", "Labor", ["nsw"], ["nsw_la"], 2012, 2014, 9, representation=self.SEAT), **change}
+                out, folded, _ = fold([base, twin])
+                self.assertEqual(len(out), 2, why)
+        # Federal twins carry ids and are reviewed separately (members-electorates-001).
+        fed = [row("Kim O'Dell", "Labor", ["federal"], ["representatives"], 1998, 2013, 700, pid="1"),
+               row("Kim O’Dell", "Labor", ["federal"], ["representatives"], 1998, 2013, 300, pid="1")]
+        self.assertEqual(len(fold(fed)[0]), 2)
+
+    def test_the_published_roster_folds_only_the_six_reviewed_state_twins(self):
+        # 10 Nov 2026 roster: exactly these six; once installed, none remain to fold.
+        doc = json.loads((ROOT / "portal/public/parliamentarians.json").read_text())
+        _, twins = roster_fold.fold_twins(copy.deepcopy(doc["people"]))
+        self.assertLessEqual(set(twins), set([("D O'Brien", "D O’Brien"), ("M O'Brien", "M O’Brien"),
+            ("Hugh Mcdermott", "Hugh McDermott"), ("Jodi Mckay", "Jodi McKay"), ("D'Ambrosio", "D’Ambrosio"),
+            ("Scot Macdonald", "Scot MacDonald")]))
+
+
 class SafetyNetTests(unittest.TestCase):
     def test_a_fold_is_not_a_dropped_row_and_a_folded_sitting_print_is_not_lost(self):
         previous = [dict(SHOEBRIDGE), dict(DAVID),

@@ -239,7 +239,9 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 changes=[p['name'] for p in shipped if p['name'] in by and by[p['name']]['name'] == p['name']
                          and any(p.get(k)!=by[p['name']].get(k) for k in IDENTITY_FIELDS)]
                 self.assertEqual({p['name'] for p in shipped} - by.keys(), renamed, 'every shipped row survives or is folded')
-                self.assertEqual(set(changes),{'Blandthorn',"D'Ambrosio",'McDermott','Robinson','Crawford'})
+                # "D'Ambrosio" is now folded into its spelling twin 'D’Ambrosio' (members-electorates-011), so it is
+                # read under that row and is no longer a separate identity change.
+                self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford'})
                 print(f'Reviewer replay {scenario}: SHIPPED {len(actual)} records, {len(scoped)}/16 scoped; 5 identity differences / cap25; zero unscoped split identities; Robinson/Crawford below own-service floor',file=sys.stderr)
 
 
