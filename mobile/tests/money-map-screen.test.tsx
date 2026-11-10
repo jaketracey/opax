@@ -21,7 +21,9 @@ jest.mock('../src/features/money/hooks', () => ({
   ...jest.requireActual('../src/features/money/hooks'),
   useFirstScreenReader: () => mockReader,
 }));
-jest.mock('react-native-gesture-handler', () => require('./gesture-mock'));
+jest.mock('react-native-gesture-handler', () =>
+  jest.requireActual('./gesture-mock'),
+);
 jest.mock('react-native-safe-area-context', () => ({
   SafeAreaView: jest.requireActual('react-native').View,
   SafeAreaInsetsContext: jest
@@ -172,6 +174,36 @@ test('a tap on a disc writes the focus to the route and the panel shows its reco
       'clearFocus',
     ]),
   );
+  act(() => r.unmount());
+});
+
+test('clearing the focus collapses the panel, so the next focus starts at the peek', async () => {
+  const r = await render();
+  const refresh = () =>
+    act(async () =>
+      r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+    );
+  const panel = () => r.root.findByType(MoneyMapPanel).props;
+  await act(async () => stage().onFocus('party:Labor'));
+  await refresh();
+  await act(async () => panel().onExpanded(true));
+  expect(panel().expanded).toBe(true);
+  // The panel's own Clear.
+  await act(async () => panel().onClear());
+  await refresh();
+  expect(stage().focus).toBeNull();
+  expect(panel().expanded).toBe(false);
+  // The stage's accessibility action.
+  await act(async () => stage().onFocus('party:Labor'));
+  await refresh();
+  await act(async () => panel().onExpanded(true));
+  const clear = stage().actions.find(
+    (a: { name: string }) => a.name === 'clearFocus',
+  );
+  await act(async () => clear.onAction());
+  await refresh();
+  expect(stage().focus).toBeNull();
+  expect(panel().expanded).toBe(false);
   act(() => r.unmount());
 });
 

@@ -32,7 +32,9 @@ jest.mock('../src/features/money/hooks', () => ({
   ...jest.requireActual('../src/features/money/hooks'),
   useFirstScreenReader: () => mockReader,
 }));
-jest.mock('react-native-gesture-handler', () => require('./gesture-mock'));
+jest.mock('react-native-gesture-handler', () =>
+  jest.requireActual('./gesture-mock'),
+);
 const mockParams: Record<string, string> = {};
 const mockRouter = {
   push: jest.fn(),

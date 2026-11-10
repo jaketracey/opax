@@ -8,6 +8,10 @@ name: 69 Money map, zoom, focus, search to fly, next flow, minimum flow filter, 
       id: today-screen-message
     timeout: 120000
 - openLink: opax://money
+# A fresh simulator asks before opening a scheme link from the test runner.
+- tapOn:
+    text: Open
+    optional: true
 - extendedWaitUntil:
     visible:
       id: money-map-drawn-pixels-[1-9][0-9]*
@@ -81,8 +85,13 @@ name: 69 Money map, zoom, focus, search to fly, next flow, minimum flow filter, 
     timeout: 30000
 # The panel expands to the flows; the first row opens the record at the
 # other end, with the map's window; Back keeps the focus.
-- tapOn:
-    id: money-map-handle
+- runFlow:
+    when:
+      notVisible:
+        id: money-map-open-record
+    commands:
+      - tapOn:
+          id: money-map-handle
 - extendedWaitUntil:
     visible:
       id: money-map-flow-0
@@ -172,8 +181,13 @@ name: 69 Money map, zoom, focus, search to fly, next flow, minimum flow filter, 
       id: money-map-focus-name
       text: Labor
     timeout: 30000
-- tapOn:
-    id: money-map-handle
+- runFlow:
+    when:
+      notVisible:
+        id: money-map-open-record
+    commands:
+      - tapOn:
+          id: money-map-handle
 - extendedWaitUntil:
     visible:
       id: money-map-open-record

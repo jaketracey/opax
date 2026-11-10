@@ -473,6 +473,9 @@ export function MoneyMap({
     .averageTouches(true)
     .activeOffsetX([-4, 4])
     .activeOffsetY([-4, 4])
+    // Android's predictive back owns the leading edge: the map still draws
+    // there, but a drag that starts in it goes to the system.
+    .hitSlop(Platform.OS === 'android' ? { left: -24 } : {})
     .onStart(() => {
       gesture.set({ ...gesture.get(), lastPanX: 0, lastPanY: 0 });
       begin();
@@ -657,11 +660,7 @@ export function MoneyMap({
           accessibilityActions={accessibilityActions}
           onAccessibilityAction={onAccessibilityAction}
           testID={probe}
-          style={[
-            styles.fill,
-            // Android's predictive back owns the leading edge.
-            Platform.OS === 'android' ? styles.androidEdge : null,
-          ]}
+          style={styles.fill}
         >
           <SizedCanvas
             ref={canvasRef}
@@ -728,6 +727,5 @@ export function MoneyMap({
 const styles = StyleSheet.create({
   stage: { ...fill, overflow: 'hidden' },
   fill,
-  androidEdge: { left: 24 },
   overview: { position: 'absolute' },
 });

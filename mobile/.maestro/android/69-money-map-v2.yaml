@@ -84,8 +84,13 @@ name: 69 Money map on Android, zoom, focus, search to fly, next flow, minimum fl
     timeout: 30000
 # The panel expands to the flows; the first row opens the record at the
 # other end, with the map's window; Back keeps the focus.
-- tapOn:
-    id: money-map-handle
+- runFlow:
+    when:
+      notVisible:
+        id: money-map-open-record
+    commands:
+      - tapOn:
+          id: money-map-handle
 - extendedWaitUntil:
     visible:
       id: money-map-flow-0
@@ -175,8 +180,13 @@ name: 69 Money map on Android, zoom, focus, search to fly, next flow, minimum fl
       id: money-map-focus-name
       text: Labor
     timeout: 30000
-- tapOn:
-    id: money-map-handle
+- runFlow:
+    when:
+      notVisible:
+        id: money-map-open-record
+    commands:
+      - tapOn:
+          id: money-map-handle
 - extendedWaitUntil:
     visible:
       id: money-map-open-record

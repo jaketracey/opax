@@ -613,7 +613,10 @@ function MapMode({
         {
           name: 'clearFocus',
           label: 'Clear the focus',
-          onAction: () => setFocus(null),
+          onAction: () => {
+            setFocus(null);
+            setExpanded(false);
+          },
         },
       ]
     : [];
@@ -724,7 +727,11 @@ function MapMode({
               stageHeight={stage.height || window.height}
               expanded={expanded}
               onExpanded={setExpanded}
-              onClear={() => setFocus(null)}
+              // Clearing ends the subject: the next focus starts at the peek.
+              onClear={() => {
+                setFocus(null);
+                setExpanded(false);
+              }}
               onPeekHeight={setPeek}
             />
           </View>

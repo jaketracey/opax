@@ -48,6 +48,10 @@ name: 23 Native money map, held figures, original source and ranked list
 # the screen; its testID says how many pixels Skia drew once the layout
 # settled (e2e builds read the native raster back).
 - openLink: opax://money
+# A fresh simulator asks before opening a scheme link from the test runner.
+- tapOn:
+    text: Open
+    optional: true
 - extendedWaitUntil:
     visible:
       id: money-map-(canvas|drawn-pixels-.*)
@@ -281,6 +285,12 @@ name: 23 Native money map, held figures, original source and ranked list
 - tapOn:
     id: filters-reset
 - tapOn: Done
+# The List view keeps its scroll position across the sheet; the summary sits
+# under the title, so scroll back up to it.
+- runFlow:
+    file: support/money-screen-scroll-up.yaml
+    env:
+      TARGET_ID: money-view-summary
 - extendedWaitUntil:
     visible:
       id: money-view-summary
