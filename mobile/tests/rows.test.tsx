@@ -169,14 +169,87 @@ test.each([
       minWidth: '35%',
     });
     expect(flat(valueText!.props.style)).toMatchObject({
-      flexShrink: 1,
-      maxWidth: '65%',
+      flexShrink: 0,
       textAlign: 'right',
     });
+    expect(flat(valueText!.props.style).maxWidth).toBeUndefined();
     expect(flat(valueText!.props.style).flex).toBeUndefined();
     expect(valueText!.props.numberOfLines).toBeUndefined();
   },
 );
+
+test.each([
+  ['Median monthly mortgage repayment', '$3,000', 58],
+  ['Unemployment', '1.2%', 40],
+  ['Commonwealth Bank of Australia Limited', '$79,800', 72],
+  ['Owed to banks and lenders', '$52,405', 72],
+])(
+  'ValueRow keeps %s beside the whole figure %s at 402 pt',
+  (label, value, figureWidth) => {
+    size(1, 402);
+    const root = render(<ValueRow label={label} value={value} />).root;
+    const [labelText, valueText] = root.findAllByType(Text);
+    act(() => {
+      labelText!.parent!.props.onLayout({
+        nativeEvent: { layout: { width: 370 } },
+      });
+      valueText!.props.onTextLayout({
+        nativeEvent: { lines: [{ text: value, width: figureWidth }] },
+      });
+    });
+    const nativeValue = root.findAllByType(NativeText)[1]!;
+    expect(nativeValue.props.children).toBe(value);
+    expect(flat(nativeValue.props.style)).toMatchObject({ flexShrink: 0 });
+    expect(flat(nativeValue.props.style).maxWidth).toBeUndefined();
+    expect(nativeValue.props.numberOfLines).toBeUndefined();
+    expect(flat(labelText!.props.style).flexShrink).toBe(1);
+    expect(flat(labelText!.parent!.props.style).flexDirection).toBe('row');
+  },
+);
+
+test('ValueRow stacks a long figure, then returns inline when the column widens', () => {
+  const value = '$123,456,789,012,345,678';
+  const renderer = render(<ValueRow label="Total debts" value={value} />);
+  const content = () => renderer.root.findAllByType(Text)[0]!.parent!;
+  act(() => {
+    content().props.onLayout({ nativeEvent: { layout: { width: 370 } } });
+    renderer.root.findAllByType(Text)[1]!.props.onTextLayout({
+      nativeEvent: {
+        lines: [
+          { text: '$123,456,789,', width: 140 },
+          { text: '012,345,678', width: 120 },
+        ],
+      },
+    });
+  });
+  expect(flat(content().props.style)).toMatchObject({
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+  });
+  expect(strings(renderer.root)).toEqual(['Total debts', value]);
+  const valueStyle = flat(
+    renderer.root.findAllByType(NativeText)[1]!.props.style,
+  );
+  expect(valueStyle.flexShrink).toBe(0);
+  expect(valueStyle.textAlign).toBeUndefined();
+  act(() => {
+    renderer.root.findAllByType(Text)[1]!.props.onTextLayout({
+      nativeEvent: { lines: [{ text: value, width: 260 }] },
+    });
+  });
+  expect(flat(content().props.style).flexDirection).toBe('column');
+  act(() =>
+    content().props.onLayout({ nativeEvent: { layout: { width: 600 } } }),
+  );
+  expect(flat(content().props.style).flexDirection).toBe('row');
+  act(() =>
+    content().props.onLayout({ nativeEvent: { layout: { width: 370 } } }),
+  );
+  expect(flat(content().props.style).flexDirection).toBe('column');
+  act(() => renderer.update(<ValueRow label="Total debts" value="$3,000" />));
+  expect(flat(content().props.style).flexDirection).toBe('row');
+});
 
 test.each([1.786, 3.571])(
   'ValueRow retains the stacked layout at font scale %s',
@@ -190,7 +263,7 @@ test.each([1.786, 3.571])(
     ).root;
     const [label, value] = root.findAllByType(Text);
     expect(label!.props.style).toBeUndefined();
-    expect(value!.props.style).toBeUndefined();
+    expect(flat(value!.props.style)).toEqual({ flexShrink: 0 });
     expect(flat(label!.parent!.props.style)).toMatchObject({
       flexDirection: 'column',
       flexWrap: 'nowrap',
