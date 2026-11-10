@@ -1,7 +1,7 @@
 // Lane P, part 2 (people.md 2.1, 2.2): the person profile and the party
 // page on the shared templates. Each block holds one acceptance check.
 import { act } from 'react';
-import { ScrollView } from 'react-native';
+import { FlatList, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -23,6 +23,7 @@ import {
   annualPay,
   decodeAccess,
   decodeFunding,
+  decodeRecords,
   interestsCount,
   payRateLine,
   stripSources,
@@ -757,6 +758,7 @@ describe('party', () => {
 });
 
 describe('record list', () => {
+  beforeEach(() => jest.mocked(peopleDepth.list).mockReset());
   afterEach(() => {
     delete mockParams.kind;
     delete mockParams.person;
@@ -772,6 +774,68 @@ describe('record list', () => {
     });
     return r;
   }
+
+  const page = (start: number, count: number) => ({
+    records: result(
+      decodeRecords({
+        results: Array.from({ length: count }, (_, index) => ({
+          slug: `speech-fixture-${start + index}`,
+          title: `Fixture speech ${start + index}`,
+        })),
+      }),
+    ),
+    briefs: {},
+  });
+
+  test('a failed next page keeps loaded speeches and offers an explicit retry of that page', async () => {
+    jest
+      .mocked(peopleDepth.list)
+      .mockResolvedValueOnce(page(0, 20))
+      .mockRejectedValueOnce(new ApiError('server', 'Unavailable'))
+      .mockResolvedValueOnce(page(20, 1));
+    const r = await list('speeches');
+    await act(async () => r.root.findByType(FlatList).props.onEndReached());
+    expect(r.root.findByType(FlatList).props.data).toHaveLength(20);
+    const error = r.root.find(
+      (node) =>
+        node.props.testID === 'record-list-page-error' && !!node.props.onRetry,
+    );
+    // Scrolling again cannot repeatedly retry a failed paid read.
+    await act(async () => r.root.findByType(FlatList).props.onEndReached());
+    expect(peopleDepth.list).toHaveBeenCalledTimes(2);
+    await act(async () => error.props.onRetry());
+    expect(peopleDepth.list).toHaveBeenLastCalledWith(
+      'Penny Wong',
+      'speeches',
+      2,
+    );
+    expect(r.root.findByType(FlatList).props.data).toHaveLength(21);
+    expect(has(r, 'record-list-page-error')).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('repeated end events start one page read and overlapping pages draw each record once', async () => {
+    let finish!: (value: ReturnType<typeof page>) => void;
+    jest
+      .mocked(peopleDepth.list)
+      .mockResolvedValueOnce(page(0, 20))
+      .mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            finish = resolve;
+          }),
+      );
+    const r = await list('speeches');
+    await act(async () => {
+      const next = r.root.findByType(FlatList).props.onEndReached;
+      next();
+      next();
+    });
+    expect(peopleDepth.list).toHaveBeenCalledTimes(2);
+    await act(async () => finish(page(19, 2)));
+    expect(r.root.findByType(FlatList).props.data).toHaveLength(21);
+    await act(async () => r.unmount());
+  });
 
   test('news is not available yet: no read, and no Try again that cannot work', async () => {
     const r = await list('news');
