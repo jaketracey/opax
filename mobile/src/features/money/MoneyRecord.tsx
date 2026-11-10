@@ -227,6 +227,7 @@ function Title({
       ) : null}
       <View
         ref={measure?.ref}
+        collapsable={false}
         onLayout={measure?.onLayout}
         style={styles.title}
       >

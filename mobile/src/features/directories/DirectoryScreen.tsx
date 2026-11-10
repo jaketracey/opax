@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
+  Platform,
   Pressable,
   RefreshControl,
   SectionList,
@@ -38,6 +39,7 @@ import type { SourceDetails } from '../../design/source';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
+import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { resultsRoute } from '../../navigation/routes/search';
 import { presentSource } from '../../navigation/sheets';
@@ -204,6 +206,7 @@ export default function DirectoryScreen() {
 }
 function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const title = titles[kind];
+  const backTitle = useNamedBackTitle();
   const load = useCallback(
     (refresh: boolean) => loadDirectory(kind, refresh),
     [kind],
@@ -368,7 +371,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
   }, [split, params.open, first]);
 
   const offline = record ? savedCopy(record.stale, record.staleReason) : null;
-  const header =
+  const statusHeader =
     offline?.state === 'offline' || (record && (filtered || query)) ? (
       <View style={styles.header}>
         {offline?.state === 'offline' ? (
@@ -525,7 +528,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         maxToRenderPerBatch={8}
         windowSize={7}
         removeClippedSubviews={false}
-        ListHeaderComponent={header}
+        ListHeaderComponent={statusHeader}
         ListEmptyComponent={unavailable}
         ListFooterComponent={footer}
       />
@@ -536,6 +539,14 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
       <RouteOptions
         options={{
           title,
+          headerTitle: kind === 'person' ? 'People' : title,
+          ...(Platform.OS === 'ios' && backTitle
+            ? {
+                headerBackTitle: backTitle,
+                headerBackButtonMenuEnabled: false,
+                headerBackButtonDisplayMode: 'default' as const,
+              }
+            : {}),
           headerLargeTitleEnabled: false,
           headerSearchBarOptions: { ...searchBar, obscureBackground: false },
           ...headerItems(

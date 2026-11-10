@@ -1,6 +1,10 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import { Text as NativeText, StyleSheet } from 'react-native';
 import { Icon } from '../src/design/icon';
 import { index } from './pinned';
@@ -162,12 +166,13 @@ test('a directory-kind deep link starts a blank query and waits for that kind’
   await act(async () => renderer.unmount());
 });
 
-test('nothing above the first row; the source and count are the list’s foot', async () => {
+test('nothing precedes the first row; source and count stay at the foot', async () => {
   const renderer = await open('party', parties);
   const list = renderer.root.find(
     (n) => n.props.testID === 'directory-party-screen' && n.props.sections,
   );
   expect(list.props.ListHeaderComponent).toBeNull();
+  expect(byID(renderer, 'directory-title')).toHaveLength(0);
   expect(list.props.stickySectionHeadersEnabled).toBe(true);
   // Name order by default.
   expect(
@@ -196,6 +201,57 @@ test('nothing above the first row; the source and count are the list’s foot', 
   );
   await act(async () => renderer.unmount());
 });
+
+test.each([
+  ['person', 'Parliamentarians', 'People'],
+  ['party', 'Parties', 'Parties'],
+  ['electorate', 'Electorates', 'Electorates'],
+])(
+  '%s shows %s as its route title and %s in the bar from first render',
+  async (kind, title, headerTitle) => {
+    mockParams.kind = kind;
+    jest
+      .mocked(loadDirectory)
+      .mockReturnValue(new Promise<DirectoryRecord>(() => {}));
+    const route = { key: 'directory', name: 'subject/[kind]' };
+    const navigation = {
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'search', name: 'search' }, route],
+      }),
+      setOptions: (next: object) => {
+        mockScreen.options = { ...mockScreen.options, ...next };
+      },
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    let renderer!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      renderer = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <DirectoryScreen />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    const list = renderer.root.find(
+      (node) =>
+        node.props.testID === `directory-${kind}-screen` && node.props.sections,
+    );
+    expect(mockScreen.options).toMatchObject({
+      title,
+      headerTitle,
+      headerBackTitle: 'Search',
+      headerBackButtonMenuEnabled: false,
+      headerBackButtonDisplayMode: 'default',
+    });
+    expect(byID(renderer, 'directory-title')).toHaveLength(0);
+    expect(list.props.ListHeaderComponent).toBeNull();
+    expect(list.props.onScroll).toBeUndefined();
+    await act(async () => renderer.unmount());
+  },
+);
 
 test('the bar holds Filters and a menu with Sources, Share, Copy link and Open on the website', async () => {
   const renderer = await open('electorate', empty);

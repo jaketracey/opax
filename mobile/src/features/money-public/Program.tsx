@@ -1,7 +1,18 @@
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Platform, Pressable, View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { Button, SegmentedPicker } from '../../design/controls';
 import {
@@ -21,6 +32,8 @@ import {
   largestGrantsRoute,
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useNamedBackOptions } from '../../navigation/useNamedBackOptions';
+import { shareRecord } from '../../navigation/share';
 import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
@@ -152,11 +165,17 @@ export default function Program() {
   const [view, setView] = useState<'recipients' | 'grants'>('recipients');
   const search = useMoneySearch(
     view === 'recipients' ? 'Recipients' : 'Grants',
-    'button',
   );
   const titleRef = useRef<View>(null);
   const name = program?.name ?? routeName ?? 'Grant program';
-  const title = useTitleOnScroll(titleRef, name);
+  const navigation = useContext(NavigationContext);
+  const route = useContext(NavigationRouteContext);
+  const routes = navigation?.getState?.()?.routes ?? [];
+  const at = routes.findIndex((item) => item.key === route?.key);
+  const previous = at > 0 ? routes[at - 1] : undefined;
+  const backTitle = previous?.name === 'grants' ? 'Grants' : undefined;
+  const title = useTitleOnScroll(titleRef, name, { trailing: 1, backTitle });
+  const backOptions = useNamedBackOptions();
   const openAsk = useOpenAsk();
   const seatGrants = useMemo(
     () =>
@@ -222,10 +241,25 @@ export default function Program() {
       <RouteOptions
         options={{
           title: name,
+          ...backOptions,
+          ...(Platform.OS === 'ios' && backTitle
+            ? { headerBackTitle: backTitle, headerBackButtonMenuEnabled: false }
+            : {}),
           headerSearchBarOptions: program ? search.options : undefined,
           ...moneyBar({
             name,
             path: program ? path : null,
+            share: false,
+            // Keep a named back item and a readable program name together.
+            extra: program
+              ? [
+                  {
+                    title: 'Share',
+                    symbol: 'square.and.arrow.up',
+                    onPress: () => void shareRecord({ path, title: name }),
+                  },
+                ]
+              : [],
             ask: program
               ? () => openAsk({ question: askAbout(program.name) })
               : null,
@@ -242,7 +276,11 @@ export default function Program() {
         onScroll={title.onScroll}
         header={
           <>
-            <View ref={titleRef} onLayout={title.onTitleLayout}>
+            <View
+              ref={titleRef}
+              collapsable={false}
+              onLayout={title.onTitleLayout}
+            >
               <Heading level={1} testID="program-title">
                 {name}
               </Heading>

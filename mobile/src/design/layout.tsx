@@ -1,5 +1,4 @@
 import { type Href } from 'expo-router';
-import { HeaderHeightContext } from 'expo-router/react-navigation';
 import {
   Children,
   cloneElement,
@@ -27,7 +26,7 @@ import {
 import { opaqueBar } from '../navigation/chrome';
 import { useSafeSetOptions } from '../navigation/preview';
 import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
-import { BarTitle } from '../navigation/useTitleOnScroll';
+import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize } from './accessibility';
 import {
   columnBreakout,
@@ -153,15 +152,26 @@ export function Screen({
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
   const suppliedBridge = useContext(ScreenTitleContext);
-  const nativeBridge = useBarTitle(
-    inPane ? undefined : barTitle,
-    anchorBottom !== null,
+  const heading = useRef<View | null>(null);
+  const setHeading = useCallback((node: View | null) => {
+    heading.current = node;
+  }, []);
+  const nativeTitle = useTitleOnScroll(
+    Platform.OS === 'ios' ? heading : null,
+    inPane || suppliedBridge ? undefined : barTitle,
   );
-  const titleBridge = suppliedBridge ?? (inPane ? null : nativeBridge);
+  const setNativeAnchorBottom = nativeTitle.setAnchorBottom;
+  const setContentAnchor = useCallback(
+    (bottom: number) => {
+      setAnchorBottom(bottom);
+      if (Platform.OS !== 'ios') setNativeAnchorBottom(bottom);
+    },
+    [setNativeAnchorBottom],
+  );
   useLayoutEffect(() => {
     titleScroll.current =
-      barTitle && titleBridge ? titleBridge(barTitle) : null;
-  }, [barTitle, titleBridge]);
+      barTitle && suppliedBridge ? suppliedBridge(barTitle) : null;
+  }, [barTitle, suppliedBridge]);
   useRefreshCommand(
     refreshControl?.props.onRefresh,
     !!refreshControl?.props.refreshing,
@@ -190,25 +200,36 @@ export function Screen({
           }}
           onScroll={(event) => {
             const y = event.nativeEvent.contentOffset.y;
-            titleScroll.current?.(y, anchorBottom);
+            if (titleScroll.current) titleScroll.current(y, anchorBottom);
+            else if (!inPane && barTitle) nativeTitle.onScroll(y);
             onScroll?.(y);
           }}
           scrollEventThrottle={16}
         >
           <RegionProvider value={inner}>
             <SurfaceContext.Provider value={ground}>
-              <TitleAnchorContext.Provider value={setAnchorBottom}>
-                <TitleContentContext.Provider value={contentRoot}>
-                  <View
-                    ref={contentRoot}
-                    style={{
-                      gap: regular ? rhythmRegular.section : rhythm.section,
-                    }}
-                  >
-                    {bar}
-                    {anchorHeadings(withOffline(children, offline))}
-                  </View>
-                </TitleContentContext.Provider>
+              <TitleAnchorContext.Provider value={setContentAnchor}>
+                <TitleHeadingContext.Provider
+                  value={{
+                    setRef: setHeading,
+                    onLayout:
+                      Platform.OS === 'ios'
+                        ? nativeTitle.onTitleLayout
+                        : undefined,
+                  }}
+                >
+                  <TitleContentContext.Provider value={contentRoot}>
+                    <View
+                      ref={contentRoot}
+                      style={{
+                        gap: regular ? rhythmRegular.section : rhythm.section,
+                      }}
+                    >
+                      {bar}
+                      {anchorHeadings(withOffline(children, offline))}
+                    </View>
+                  </TitleContentContext.Provider>
+                </TitleHeadingContext.Provider>
               </TitleAnchorContext.Provider>
             </SurfaceContext.Provider>
           </RegionProvider>
@@ -467,43 +488,6 @@ export function InsetGroup({
   );
 }
 
-function useBarTitle(title: string | undefined, anchored: boolean) {
-  const setOptions = useSafeSetOptions();
-  const header = useContext(HeaderHeightContext) || 44;
-  const shown = useRef(false);
-  useLayoutEffect(() => {
-    if (title)
-      setOptions({
-        title,
-        headerTitle: () => <BarTitle title={title} shown={false} />,
-      });
-  }, [setOptions, title]);
-  useLayoutEffect(() => {
-    if (!title || !anchored) return;
-    shown.current = false;
-    setOptions({
-      headerTitle: () => <BarTitle title={title} shown={false} />,
-    });
-  }, [setOptions, title, anchored]);
-  return useCallback(
-    (barTitle: string): TitleScrollHandler =>
-      (y, bottom) => {
-        if (bottom === null) return;
-        const next = y + header > bottom;
-        if (next === shown.current) return;
-        shown.current = next;
-        setOptions(
-          Platform.OS === 'android'
-            ? { headerTitle: next ? barTitle : '' }
-            : {
-                headerTitle: () => <BarTitle title={barTitle} shown={next} />,
-              },
-        );
-      },
-    [setOptions, header],
-  );
-}
-
 /** The shell lane installs its fading title renderer using this bridge. */
 export type TitleScrollHandler = (
   y: number,
@@ -518,14 +502,29 @@ export const TitleAnchorContext = createContext<
 export const TitleContentContext = createContext<RefObject<View | null> | null>(
   null,
 );
+const TitleHeadingContext = createContext<{
+  setRef: (node: View | null) => void;
+  onLayout: ViewProps['onLayout'];
+} | null>(null);
 export function TitleAnchor({ children }: { children: ReactNode }) {
   const report = useContext(TitleAnchorContext);
   const content = useContext(TitleContentContext);
   const anchor = useRef<View>(null);
+  const heading = useContext(TitleHeadingContext);
+  const setHeading = heading?.setRef;
+  const setAnchor = useCallback(
+    (node: View | null) => {
+      anchor.current = node;
+      setHeading?.(node);
+    },
+    [setHeading],
+  );
   return (
     <View
-      ref={anchor}
+      ref={setAnchor}
+      collapsable={false}
       onLayout={(event) => {
+        heading?.onLayout?.(event);
         const fallback = () =>
           report?.(
             event.nativeEvent.layout.y + event.nativeEvent.layout.height,

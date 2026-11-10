@@ -1,7 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { BarSeries } from '../../design/charts';
 import { PopUpButton, SegmentedPicker } from '../../design/controls';
@@ -11,12 +11,14 @@ import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Heading, Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
 import {
   agenciesRoute,
   agencyRoute,
   leadRoute,
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
 import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { leadsFor } from '../leads/model';
@@ -87,11 +89,24 @@ export default function Agencies() {
   const total = all.reduce((sum, a) => sum + a.total, 0);
   const saved = recordSource(status.record);
   const name = 'Government agencies';
+  const backTitle = useNamedBackTitle();
+  const titleRef = useRef<View>(null);
+  const scrollTitle = useTitleOnScroll(titleRef, name, {
+    routeTitle: name,
+    backTitle,
+  });
   return (
     <>
       <RouteOptions
         options={{
           title: name,
+          ...(Platform.OS === 'ios' && backTitle
+            ? {
+                headerBackTitle: backTitle,
+                headerBackButtonMenuEnabled: false,
+                headerBackButtonDisplayMode: 'default' as const,
+              }
+            : {}),
           headerLargeTitleEnabled: true,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,
@@ -105,12 +120,22 @@ export default function Agencies() {
         rowKey={(a) => a.id}
         refreshing={status.refreshing}
         refresh={status.refresh}
+        onScroll={scrollTitle.onScroll}
         header={
           <>
             <TitleAlias title={name} testID="agencies-title" />
-            <MoneyStatus status={status} name={name} testID="agencies-status" />
-            {data ? (
-              <>
+            <View
+              ref={titleRef}
+              collapsable={false}
+              onLayout={scrollTitle.onTitleLayout}
+              style={{ gap: rhythm.block }}
+            >
+              <MoneyStatus
+                status={status}
+                name={name}
+                testID="agencies-status"
+              />
+              {data ? (
                 <FigureBlock
                   value={formatMoneyCompact(total)}
                   ink="money"
@@ -136,6 +161,10 @@ export default function Agencies() {
                   }}
                   testID="agencies-total"
                 />
+              ) : null}
+            </View>
+            {data ? (
+              <>
                 <View style={{ alignSelf: 'flex-start' }}>
                   <PopUpButton
                     label="Sort"
@@ -214,7 +243,9 @@ export function Agency() {
   useEffect(() => setQuery(''), [view, setQuery]);
   const titleRef = useRef<View>(null);
   const name = profile?.name ?? routeName ?? 'Government agency';
-  const title = useTitleOnScroll(titleRef, name);
+  const title = useTitleOnScroll(titleRef, name, {
+    trailing: profile && view !== 'years' ? 3 : 2,
+  });
   const openAsk = useOpenAsk();
   const lead = useAgencyLead(profile?.name);
   type Row =
@@ -286,7 +317,11 @@ export function Agency() {
         onScroll={title.onScroll}
         header={
           <>
-            <View ref={titleRef} onLayout={title.onTitleLayout}>
+            <View
+              ref={titleRef}
+              collapsable={false}
+              onLayout={title.onTitleLayout}
+            >
               <Heading level={1} kind="page" testID="agency-title">
                 {name}
               </Heading>

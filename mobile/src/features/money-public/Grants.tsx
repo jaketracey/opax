@@ -1,7 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { View as NativeView, RefreshControl } from 'react-native';
+import { View as NativeView, Platform, RefreshControl } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { SegmentedPicker } from '../../design/controls';
 import { formatMoney, formatMoneyCompact } from '../../design/format';
@@ -10,6 +10,7 @@ import { FigureBlock } from '../../design/record';
 import { LinkRow, MoneyRow, ValueRow } from '../../design/rows';
 import { EmptyState } from '../../design/states';
 import { Heading, Text } from '../../design/text';
+import { rhythm } from '../../design/tokens';
 import {
   grantProgramRoute,
   grantsRoute,
@@ -17,6 +18,7 @@ import {
 } from '../../navigation/routes/public-money';
 import { electorateRoute } from '../../navigation/routes/your-mp';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
+import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { stateChoices } from '../sheets/filter-models';
 import type { GrantIndex, Jurisdiction } from './data';
@@ -127,6 +129,12 @@ function GrantList({
     initialView === 'seat' ? 'electorates' : initialView,
   );
   const title = jur === 'federal' ? 'Commonwealth grants' : 'Queensland grants';
+  const backTitle = useNamedBackTitle();
+  const titleRef = useRef<NativeView>(null);
+  const scrollTitle = useTitleOnScroll(titleRef, title, {
+    routeTitle: title,
+    backTitle,
+  });
   const search = useMoneySearch(
     view === 'programs'
       ? 'Grant programs'
@@ -188,6 +196,13 @@ function GrantList({
       <RouteOptions
         options={{
           title,
+          ...(Platform.OS === 'ios' && backTitle
+            ? {
+                headerBackTitle: backTitle,
+                headerBackButtonMenuEnabled: false,
+                headerBackButtonDisplayMode: 'default' as const,
+              }
+            : {}),
           headerLargeTitleEnabled: true,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,
@@ -203,12 +218,22 @@ function GrantList({
         }
         refreshing={status.refreshing}
         refresh={status.refresh}
+        onScroll={scrollTitle.onScroll}
         header={
           <>
             <TitleAlias title={title} testID="grants-title" />
-            <MoneyStatus status={status} name={title} testID="grants-status" />
-            {data && figure ? (
-              <>
+            <NativeView
+              ref={titleRef}
+              collapsable={false}
+              onLayout={scrollTitle.onTitleLayout}
+              style={{ gap: rhythm.block }}
+            >
+              <MoneyStatus
+                status={status}
+                name={title}
+                testID="grants-status"
+              />
+              {data && figure ? (
                 <FigureBlock
                   value={formatMoneyCompact(figure.value)}
                   ink="money"
@@ -238,6 +263,10 @@ function GrantList({
                   }}
                   testID="grants-total"
                 />
+              ) : null}
+            </NativeView>
+            {data && figure ? (
+              <>
                 {figure.allYears ? (
                   <ValueRow
                     label={figure.allYears.label}
@@ -370,8 +399,7 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
         e.name.toLocaleLowerCase('en-AU') === seat.toLocaleLowerCase('en-AU') &&
         (!state || e.state_code.toLowerCase() === state.toLowerCase()),
     );
-  // The bar title fades in by scroll with no width at rest, so the back
-  // button keeps its label (money-03), and truncates inside the bar items.
+  // Keep the constrained title laid out while hidden at rest.
   const barTitleRef = useRef<NativeView>(null);
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
   return (

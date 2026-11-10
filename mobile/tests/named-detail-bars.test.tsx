@@ -6,7 +6,8 @@ import {
   Platform,
   SectionList,
   StyleSheet,
-  type View,
+  View,
+  ScrollView,
 } from 'react-native';
 import {
   HeaderHeightContext,
@@ -15,8 +16,14 @@ import {
 } from 'expo-router/react-navigation';
 import DivisionHistory from '../src/features/directories/DivisionHistory';
 import Members from '../src/features/your-mp/Members';
+import Agencies from '../src/features/money-public/Agencies';
+import Program from '../src/features/money-public/Program';
+import { MoneyList, TitleAlias } from '../src/features/money-public/parts';
+import { RouteOptions } from '../src/navigation/preview';
+import { rootBackTitle } from '../src/navigation/stack/screen';
 import { catalogs } from '../src/api/runtime';
-import { Screen } from '../src/design/layout';
+import { Screen, TitleAnchor } from '../src/design/layout';
+import { Heading } from '../src/design/text';
 import { loadDivisionHistory } from '../src/features/directories/division-data';
 import {
   useNamedBackOptions,
@@ -26,6 +33,7 @@ import {
   BarTitle,
   backPillWidth,
   barTitleWidth,
+  minimumBarTitleWidth,
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
 
@@ -33,12 +41,19 @@ const mockParams = { seat: 'federal-senate-nsw-new-south-wales' };
 jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
   useLocalSearchParams: () => mockParams,
+  useSegments: () => [],
 }));
 jest.mock('../src/api/runtime', () => ({
   catalogs: { directory: jest.fn(), electorateFor: jest.fn() },
 }));
 jest.mock('../src/features/directories/division-data', () => ({
   loadDivisionHistory: jest.fn(),
+}));
+jest.mock('../src/features/money-public/runtime', () => ({
+  money: {
+    agencies: jest.fn(() => new Promise(() => {})),
+    grants: jest.fn(() => new Promise(() => {})),
+  },
 }));
 
 let view: TestRenderer.ReactTestRenderer | undefined;
@@ -84,6 +99,7 @@ test.each([
   [['index', 'leads', 'lead/[id]', 'money-item'], 'Lead'],
   [['index', 'explore/[tool]'], 'Today'],
   [['bills', 'bill/[key]'], 'Bills'],
+  [['index', 'grants', 'grant-program'], 'Commonwealth grants'],
   [['your-mp', 'members'], 'Your MP'],
   [['index', 'bill/[key]', 'bill-text/[key]'], undefined],
   [['index'], undefined],
@@ -137,6 +153,95 @@ test('named back options leave Android to its native header', () => {
       value: original,
     });
   }
+});
+
+test.each(['grants', 'money-record', 'largest-grants'])(
+  '%s pushed from Grants reserves the Commonwealth grants pill drawn by its stack',
+  (destination) => {
+    const { route, navigation } = navigationFor('index', 'grants', destination);
+    const options: Record<string, unknown> = {};
+    navigation.setOptions.mockImplementation((next) =>
+      Object.assign(options, next),
+    );
+    function Probe() {
+      useTitleOnScroll({ current: null }, 'Destination');
+      return null;
+    }
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <Probe />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    const inline = (options.headerTitle as () => React.ReactElement)();
+    expect(rootBackTitle(navigation, route.key)).toBe('Commonwealth grants');
+    expect(inline.props.backTitle).toBe('Commonwealth grants');
+    expect(
+      barTitleWidth(402, 2, undefined, inline.props.backTitle),
+    ).toBeLessThan(barTitleWidth(402, 2, undefined, 'Grants'));
+  },
+);
+
+test.each([
+  ['grants', 'Grants'],
+  ['largest-grants', 'Largest grants'],
+  ['index', 'Today'],
+])('Program from %s draws and reserves %s', async (previous, backTitle) => {
+  const { route, navigation } = navigationFor(
+    'index',
+    previous,
+    'grant-program',
+  );
+  const options: Record<string, unknown> = {};
+  navigation.setOptions.mockImplementation((next) =>
+    Object.assign(options, next),
+  );
+  await act(async () => {
+    view = TestRenderer.create(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <Program />
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+  });
+  expect(options).toMatchObject({
+    headerBackTitle: backTitle,
+    headerBackButtonDisplayMode: 'default',
+  });
+  if (previous === 'grants')
+    expect(options.headerBackButtonMenuEnabled).toBe(false);
+  const inline = (options.headerTitle as () => React.ReactElement)();
+  expect(inline.props).toMatchObject({
+    backTitle,
+    trailing: 1,
+    shown: false,
+  });
+});
+
+test('Agencies restores the system Government agencies title and its alias', async () => {
+  await act(async () => {
+    view = TestRenderer.create(<Agencies />);
+  });
+  expect(view!.root.findByType(RouteOptions).props.options).toMatchObject({
+    title: 'Government agencies',
+    headerLargeTitleEnabled: true,
+    headerSearchBarOptions: { placement: 'stacked' },
+  });
+  expect(view!.root.findByType(RouteOptions).props.options).not.toHaveProperty(
+    'headerTitle',
+  );
+  const list = view!.root.findByType(MoneyList);
+  expect(typeof list.props.onScroll).toBe('function');
+  const alias = list.props.header.props.children[0];
+  expect(alias.type).toBe(TitleAlias);
+  expect(alias.props).toEqual({
+    title: 'Government agencies',
+    testID: 'agencies-title',
+  });
 });
 
 test('Votes keeps its named back button and shows the inline title only after the heading scrolls away', async () => {
@@ -308,6 +413,152 @@ const headingLayout = {
   nativeEvent: { layout: { x: 0, y: 0, width: 300, height: 80 } },
 } as never;
 
+test('Screen.barTitle measures an anchored heading, including when it is inside a custom component', async () => {
+  const native = nativeMeasurements();
+  const { route, navigation } = navigationFor('index', 'person/[slug]');
+  const options: Record<string, unknown> = {};
+  navigation.setOptions.mockImplementation((next) =>
+    Object.assign(options, next),
+  );
+  function ProfileName() {
+    return (
+      <TitleAnchor>
+        <Heading level={1}>Anthony Albanese</Heading>
+      </TitleAnchor>
+    );
+  }
+  act(() => {
+    view = TestRenderer.create(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderHeightContext.Provider value={100}>
+            <Screen barTitle="Anthony Albanese">
+              <ProfileName />
+            </Screen>
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+  });
+  const anchor = view!.root.findByType(TitleAnchor).findByType(View);
+  expect(anchor.props.collapsable).toBe(false);
+  act(() => anchor.props.ref(native.node));
+  const inline = () => (options.headerTitle as () => React.ReactElement)();
+  expect(inline().props).toMatchObject({ shown: false, backTitle: 'Today' });
+  expect(native.measure).not.toHaveBeenCalled();
+  const scroll = (y: number) =>
+    act(() =>
+      view!.root
+        .findByType(ScrollView)
+        .props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+    );
+  scroll(9000);
+  await native.answer(0, 150);
+  expect(inline().props.shown).toBe(false);
+  scroll(-900);
+  // The first half is under the bar; the bottom line remains visible.
+  await native.answer(1, 50, 100);
+  expect(inline().props.shown).toBe(true);
+  scroll(9000);
+  await native.answer(2, 150);
+  expect(inline().props.shown).toBe(false);
+});
+
+test.each([
+  ['Votes in parliament', 'A bill name', 1],
+  ['Bills', 'A bill name', 3],
+  ['Bills', 'Supercalifragilisticexpialidocious Act', 1],
+] as const)(
+  'an undersized title stays laid out and hidden beside %s at scale %s',
+  (backTitle, title, fontScale) => {
+    const originalWindow = Dimensions.get('window');
+    const originalScreen = Dimensions.get('screen');
+    try {
+      act(() => {
+        Dimensions.set({
+          window: { ...originalWindow, width: 402, fontScale },
+          screen: { ...originalScreen, width: 402 },
+        });
+        view = TestRenderer.create(
+          <BarTitle title={title} shown backTitle={backTitle} />,
+        );
+      });
+      const text = view!.root.findByType(Animated.Text);
+      const style = StyleSheet.flatten(text.props.style);
+      expect(style.maxWidth).toBeLessThan(
+        minimumBarTitleWidth(title, fontScale),
+      );
+      expect(style.opacity).toBe(0);
+      expect(text.props.children).toBe(title);
+      expect(text.props.accessibilityElementsHidden).toBe(true);
+      expect(text.props.importantForAccessibility).toBe('no-hide-descendants');
+    } finally {
+      act(() =>
+        Dimensions.set({ window: originalWindow, screen: originalScreen }),
+      );
+    }
+  },
+);
+
+test('the useful minimum includes a whole first word and the capped text scale', () => {
+  expect(minimumBarTitleWidth('A bill')).toBe(60);
+  expect(minimumBarTitleWidth('Commonwealth grants')).toBeGreaterThan(100);
+  expect(minimumBarTitleWidth('Members', 3)).toBe(
+    Math.ceil(minimumBarTitleWidth('Members') * (23 / 17)),
+  );
+});
+
+test.each([false, true])(
+  'an unknown back title leaves the title at its intrinsic width, shown=%s',
+  (shown) => {
+    const { route, navigation } = navigationFor('index', 'leads', 'lead/[id]');
+    let backTitle: string | undefined;
+    function Probe() {
+      backTitle = useNamedBackTitle();
+      return (
+        <BarTitle
+          title="Lead"
+          shown={shown}
+          trailing={1}
+          backTitle={backTitle}
+        />
+      );
+    }
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <Probe />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    expect(backTitle).toBeUndefined();
+    const text = view!.root.findByType(Animated.Text);
+    const style = StyleSheet.flatten(text.props.style);
+    expect(style.width).toBeUndefined();
+    expect(style.textAlign).toBeUndefined();
+    expect(style.maxWidth).toBeGreaterThan(0);
+    expect(text.props.children).toBe('Lead');
+    expect(text.props.accessibilityElementsHidden).toBe(!shown);
+  },
+);
+
+test('Program has room for Commonwealth at Large with Grants and More', () => {
+  const fontScale = 1.118;
+  const room = barTitleWidth(402, 1, undefined, 'Grants', fontScale);
+  expect(room).toBeGreaterThanOrEqual(
+    minimumBarTitleWidth('Commonwealth Home Support Programme', fontScale),
+  );
+});
+
+test('People fits as a whole word beside Search, Filters and More at Large', () => {
+  const fontScale = 1.118;
+  expect(
+    barTitleWidth(402, 2, undefined, 'Search', fontScale),
+  ).toBeGreaterThanOrEqual(minimumBarTitleWidth('People', fontScale));
+});
+
 test('iOS compares asynchronous window measurements without using the JS scroll offset', async () => {
   const native = nativeMeasurements();
   const { hook, inline, setOptions } = scrollTitle(native.ref);
@@ -396,10 +647,10 @@ test.each([
 );
 
 test.each([
-  [21, true],
-  [21.1, false],
+  [61, true],
+  [61.1, false],
 ])(
-  'the window boundary has 1 pt tolerance at pageY %s',
+  'a mostly hidden heading has 1 pt tolerance at pageY %s',
   async (pageY, expected) => {
     const native = nativeMeasurements();
     const { hook, inline } = scrollTitle(native.ref);
@@ -512,6 +763,57 @@ test('Android keeps its baseline content-coordinate measurement and string title
   }
 });
 
+test('Android Screen.barTitle keeps its content anchor rather than measuring window coordinates', () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  const options: Record<string, unknown> = {};
+  const navigation = {
+    setOptions: (next: object) => Object.assign(options, next),
+    isFocused: () => true,
+    addListener: () => () => {},
+  };
+  try {
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <HeaderHeightContext.Provider value={100}>
+            <Screen barTitle="Members">
+              <Heading level={1}>Members</Heading>
+            </Screen>
+          </HeaderHeightContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    const anchor = view!.root.findByType(TitleAnchor).findByType(View);
+    act(() => {
+      anchor.props.ref({
+        measureLayout: (
+          _parent: unknown,
+          done: (...values: number[]) => void,
+        ) => done(0, 160, 300, 80),
+      });
+      anchor.props.onLayout(headingLayout);
+    });
+    expect(options.headerTitle).toBe('');
+    const scroll = (y: number) =>
+      act(() =>
+        view!.root
+          .findByType(ScrollView)
+          .props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+      );
+    scroll(155);
+    expect(options.headerTitle).toBe('');
+    scroll(157);
+    expect(options.headerTitle).toBe('Members');
+    scroll(0);
+    expect(options.headerTitle).toBe('');
+    act(() => view!.unmount());
+    view = undefined;
+  } finally {
+    Platform.OS = original;
+  }
+});
+
 test.each([
   [402, 1, 266],
   [402, 2, 146],
@@ -577,12 +879,12 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
   try {
     act(() => {
       Dimensions.set({
-        window: { ...originalWindow, width: 402 },
+        window: { ...originalWindow, width: 402, fontScale: 1 },
         screen: { ...originalScreen, width: 402 },
       });
       view = TestRenderer.create(
         <BarTitle
-          title="Synthetic short bill name"
+          title="Bill name"
           shown
           trailing={2}
           trailingWidth={120 + 44}
@@ -592,6 +894,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
     });
     const text = () => view!.root.findByType(Animated.Text);
     expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
+    expect(StyleSheet.flatten(text().props.style).width).toBeUndefined();
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(1);
     expect(text().props).toMatchObject({
       numberOfLines: 1,
@@ -601,7 +904,7 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
       view!.update(
         <BarTitle
           key="rest"
-          title="Synthetic short bill name"
+          title="Bill name"
           shown={false}
           trailing={2}
           trailingWidth={120 + 44}
@@ -610,9 +913,10 @@ test('the Version pill and Bills back name leave the title laid out at rest and 
       ),
     );
     expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
+    expect(StyleSheet.flatten(text().props.style).width).toBeUndefined();
     expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(0);
     expect(text().props).toMatchObject({
-      children: 'Synthetic short bill name',
+      children: 'Bill name',
       accessibilityElementsHidden: true,
       importantForAccessibility: 'no-hide-descendants',
     });

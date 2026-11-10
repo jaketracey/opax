@@ -348,7 +348,7 @@ test('bill text keeps a named route title before its text loads', async () => {
   await act(async () => view.unmount());
 });
 
-test('the reader reveals the short bill name after its whole heading leaves, with room beside Bills', async () => {
+test('the reader reveals the short bill name after most of its heading leaves, with room beside Bills', async () => {
   mockBillText();
   jest.mocked(catalogs.billFor).mockResolvedValue(
     record({
@@ -385,11 +385,11 @@ test('the reader reveals the short bill name after its whole heading leaves, wit
   await answer(0, 120);
   expect(inline().props.shown).toBe(false);
   await scroll(-1000);
-  await answer(1, -34);
+  await answer(1, 6);
   expect(inline().props.shown).toBe(false);
   await scroll(-2000);
   expect(inline().props.shown).toBe(false);
-  await answer(2, -36);
+  await answer(2, 4);
   expect(inline().props).toMatchObject({
     shown: true,
     title: 'Synthetic short bill name',
