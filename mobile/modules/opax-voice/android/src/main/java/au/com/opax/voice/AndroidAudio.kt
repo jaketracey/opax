@@ -481,7 +481,8 @@ class AndroidVoiceAudioSession(
   private var knownDevices = emptySet<Int>()
   private val focusListener = AudioManager.OnAudioFocusChangeListener { change ->
     when (change) {
-      AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> lifecycle.emit(LifecycleEvent.interruptionBegan)
+      AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
+      AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> lifecycle.emit(LifecycleEvent.interruptionBegan)
       AudioManager.AUDIOFOCUS_GAIN -> lifecycle.emit(LifecycleEvent.interruptionEnded)
     }
   }
@@ -499,6 +500,8 @@ class AndroidVoiceAudioSession(
       val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
           .setAudioAttributes(voiceAttributes)
+          // Speech must be interrupted rather than mixed with an alarm or navigation prompt.
+          .setWillPauseWhenDucked(true)
           .setOnAudioFocusChangeListener(focusListener, main)
           .build()
         focus = request
