@@ -19,7 +19,7 @@ def lane(name):
 def index(root, prepared, blocked_reason=''):
     plan = json.loads((prepared/'suite.json').read_text())
     runs = {}
-    for path in root.rglob('flow-results.tsv'):
+    for path in sorted(root.rglob('flow-results.tsv'), key=lambda p: p.stat().st_mtime):
         for file, api, status in csv.reader(path.open(), delimiter='\t'):
             if api not in ('34', '36'): continue
             name = Path(file).name

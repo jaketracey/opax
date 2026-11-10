@@ -207,6 +207,16 @@ function prepare(body, relative) {
         next.comment = node.comment;
         result.push(next);
         if (before === 'launchApp' || before?.launchApp) {
+          // A cold headless Pixel may show its launcher ANR over the app.
+          // Close that system launcher only; app ANRs remain test failures.
+          result.push(
+            doc.createNode({
+              runFlow: {
+                when: { visible: "^Pixel Launcher (isn't|is not) responding$" },
+                commands: [{ tapOn: { text: '^Close app$' } }],
+              },
+            }),
+          );
           result.push(
             doc.createNode({ waitForAnimationToEnd: { timeout: 5000 } }),
           );
