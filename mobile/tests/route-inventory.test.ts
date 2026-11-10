@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Platform } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
 import SharedLayout, {
   unstable_settings,
@@ -76,6 +78,29 @@ jest.mock('../src/design/environment', () => ({
 }));
 
 const app = resolve(__dirname, '../src/app');
+test.each([
+  ['ios', 'auto'],
+  ['android', 'dark'],
+] as const)(
+  '%s root keeps the appropriate system icon appearance',
+  (os, style) => {
+    const original = Platform.OS;
+    let tree: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      Object.defineProperty(Platform, 'OS', { value: os, configurable: true });
+      act(() => {
+        tree = TestRenderer.create(React.createElement(RootLayout));
+      });
+      expect(tree!.root.findByType(StatusBar).props.style).toBe(style);
+    } finally {
+      if (tree) act(() => tree!.unmount());
+      Object.defineProperty(Platform, 'OS', {
+        value: original,
+        configurable: true,
+      });
+    }
+  },
+);
 const sharedFolder = '(tabs)/(today,your-mp,bills,search,ask)';
 const layouts = {
   shared: SharedLayout,

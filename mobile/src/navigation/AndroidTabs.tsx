@@ -91,7 +91,10 @@ export function AndroidTabs() {
                   selected: !!props.accessibilityState?.selected,
                 }}
                 android_ripple={{ color: colors.navyWash, borderless: false }}
-                onLongPress={() => ToastAndroid.show(title, ToastAndroid.SHORT)}
+                onLongPress={(event) => {
+                  props.onLongPress?.(event);
+                  ToastAndroid.show(title, ToastAndroid.SHORT);
+                }}
               />
             ),
             tabBarIcon: ({ focused }) => (

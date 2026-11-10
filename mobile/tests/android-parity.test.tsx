@@ -32,15 +32,20 @@ jest.mock('react-native-safe-area-context', () => {
 });
 const mockScreens: { name: string; options: Record<string, unknown> }[] = [];
 let mockTabOptions: Record<string, unknown> = {};
+let mockTabNavigation: Record<string, unknown> = {};
 jest.mock('expo-router', () => {
   function Tabs({
     screenOptions,
     children,
+    ...navigation
   }: {
     screenOptions: Record<string, unknown>;
     children: ReactNode;
+    initialRouteName?: string;
+    backBehavior?: string;
   }) {
     mockTabOptions = screenOptions;
+    mockTabNavigation = navigation;
     return children;
   }
   Tabs.Screen = function Screen({
@@ -186,6 +191,10 @@ describe('Android tabs', () => {
       'Search',
       'Ask',
     ]);
+    expect(mockTabNavigation).toMatchObject({
+      initialRouteName: '(today)',
+      backBehavior: 'initialRoute',
+    });
   });
 
   test('the chosen tab sits in a navy-wash pill; the others draw none', () => {
@@ -271,6 +280,7 @@ describe('Android bars', () => {
     expect(atDefault.headerTitleStyle.fontSize).toBeUndefined();
     expect(atDouble.headerTitleStyle.fontSize).toBeUndefined();
     expect(atDefault.headerShadowVisible).toBe(true);
+    expect(atDefault).not.toHaveProperty('statusBarStyle');
   });
 
   test('Android bar actions are words on the type scale, at least 48dp', () => {

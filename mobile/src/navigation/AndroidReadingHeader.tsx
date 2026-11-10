@@ -55,7 +55,7 @@ export function AndroidReadingHeader({
             style={styles.action}
           >
             <Icon
-              name={up ? symbols.arrowLeft : 'xmark'}
+              name={up ? symbols.arrowLeft : symbols.close}
               size={24}
               maxScale={1}
             />
