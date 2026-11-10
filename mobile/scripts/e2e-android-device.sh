@@ -211,7 +211,8 @@ if [ -n "$PRIVATE_ADB_PID" ]; then
 fi
 timed 240 "${ADB[@]}" wait-for-device
 if [ "$HOST_OS" = Linux ]; then flock -u 9; exec 9>&-; BOOT_LOCK_HELD=0; fi
-deadline=$((SECONDS + 240))
+# OPAX_ANDROID_BOOT_SECONDS lets a loaded shared desktop allow a slower boot.
+deadline=$((SECONDS + ${OPAX_ANDROID_BOOT_SECONDS:-240}))
 until [ "$("${ADB[@]}" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = 1 ]; do
   [ "$SECONDS" -lt "$deadline" ] || { echo 'Android boot timed out' >&2; exit 1; }
   sleep 1
