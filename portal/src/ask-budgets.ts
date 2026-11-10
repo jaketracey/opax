@@ -6,8 +6,8 @@ export const ASK_MAX_ROUNDS = 8
 export const ASK_MAX_MODEL_USD = 0.25
 /** Keep a conservative allowance for the legacy answer path when research cannot return checked evidence. */
 export const ASK_FALLBACK_RESERVE_USD = 0.05
-export const ASK_DEFAULT_TOKENS = 96_000
-export const ASK_MAX_TOKENS = 160_000
+export const ASK_DEFAULT_TOKENS = 256_000
+export const ASK_MAX_TOKENS = 320_000
 export const ASK_TURN_OUTPUT_TOKENS = 1_800
 export const ASK_RESULT_BYTES = 16_384
 export const ASK_TOOL_WALL_MS = 20_000

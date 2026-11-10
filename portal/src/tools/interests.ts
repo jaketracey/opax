@@ -36,6 +36,7 @@ async function memberRegister(env: ToolEnv, args: Record<string, unknown>) {
   if (!/^(?:\d+|n-[a-z0-9-]+)$/.test(id)) throw new Error('Invalid register identifier')
   const register = await readToolAsset(env, `/interests/${id}.json`) as Register | null
   if (!register?.buckets) throw new Error('Member register unavailable')
+  if (args.jurisdiction && args.jurisdiction !== register.jurisdiction) return { rows: [], citations: [], notes: [`The matching register for ${register.name} is ${register.jurisdiction === 'qld' ? 'Queensland' : 'federal'}, outside the requested jurisdiction. No declaration from it has been substituted.`] }
   const limit = Number(args.limit) || 20
   const query = typeof args.query === 'string' ? fold(args.query) : ''
   const href = register.source_url && /^https:\/\//.test(register.source_url) ? register.source_url : siteUrl(env, personUrl(register.name))
@@ -50,12 +51,11 @@ async function memberRegister(env: ToolEnv, args: Record<string, unknown>) {
   const rows = all.slice(0, limit)
   const citations: ToolCitation[] = summaries.filter(s => s.items.length || !query).map(s => {
     const shown = rows.filter(r => r.category === s.category)
-    const count = query ? `${s.items.length} published matching` : String(s.declared_entries)
     const merged = s.items.length < s.published_items && !query
     const listing = shown.map(r => itemText({ description: r.description, holder: r.holder, kind: r.kind, date: r.declaration_date ?? undefined })).join('; ')
     return { kind: 'record', url: href, text: merged && shown.length
       ? `${register.name} declared ${categoryLabel(s.category)}: ${listing} (${register.jurisdiction === 'qld' ? 'Queensland' : 'federal'} register of interests${register.as_at ? ` as at ${register.as_at}` : ''}${shown.length < s.items.length ? `; showing ${shown.length} of ${s.items.length} published items after combining overlapping descriptions` : ''}).`
-      : `${register.name}'s ${register.jurisdiction === 'qld' ? 'Queensland' : 'federal'} register of interests${register.as_at ? ` as at ${register.as_at}` : ''} records ${count} ${categoryLabel(s.category)} entries${shown.length ? `: ${listing}` : ''}${shown.length < (query ? s.items.length : s.declared_entries) ? ` (showing ${shown.length} published items)` : ''}.` }
+      : `${register.name} declared ${query ? `${s.items.length} published matching` : s.declared_entries} ${categoryLabel(s.category)} entries${shown.length ? `: ${listing}` : ''} (${register.jurisdiction === 'qld' ? 'Queensland' : 'federal'} register of interests${register.as_at ? ` as at ${register.as_at}` : ''}${shown.length < (query ? s.items.length : s.declared_entries) ? `; showing ${shown.length} published items` : ''}).` }
   })
   const notes = ['Register entries include statements, additions and removals; an entry is not necessarily a current holding or evidence of a conflict of interest.']
   if (summaries.some(s => s.published_items < s.declared_entries)) notes.push('The public export contains a preview of each category. Declared entry counts come from the register; only the published items are listed here.')
@@ -81,6 +81,7 @@ export const tool: ToolDefinition = {
   description: 'Registers of members\' interests (federal and Queensland). For a named member pass person and the requested category: returns declared items, holders, entry counts, register date and addition/removal dates. Covers register members even without speeches. Published items can be a preview; category counts cover the register. Filter across members by category, ministers or declaration words. A declaration is not evidence of a conflict.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     person: { type: 'string', minLength: 2, maxLength: 120, description: 'A member\'s name.' },
+    jurisdiction: { type: 'string', enum: ['federal', 'qld'], description: 'Require this register jurisdiction; never substitute a different parliament.' },
     category: { type: 'string', enum: CATEGORIES },
     ministers: { type: 'boolean', description: 'Only sitting federal ministers (including assistant ministers).' },
     query: { type: 'string', minLength: 2, maxLength: 120, description: 'Words in the declaration, e.g. a company name.' },
@@ -102,7 +103,7 @@ export const tool: ToolDefinition = {
     // One person: their declarations. Several people (ministers, a category, a company): one line per member, so a
     // long register does not fill the answer with one name.
     const grouped = !(typeof args.person === 'string')
-    const page = await tableRows(env, 'interests', { q: typeof args.query === 'string' ? args.query : undefined, ...(names ? { 'f.name': JSON.stringify(names) } : {}),
+    const page = await tableRows(env, 'interests', { q: typeof args.query === 'string' ? args.query : undefined, ...(names ? { 'f.name': JSON.stringify(names) } : {}), ...(args.jurisdiction ? { 'f.jurisdiction': JSON.stringify([args.jurisdiction]) } : {}),
       ...(typeof args.category === 'string' ? { 'f.category': JSON.stringify([args.category]) } : {}), sort: 'name:asc', pageSize: grouped ? '200' : String(limit) })
     const href = (r: Record<string, unknown>) => personUrl(String(r.name)) === '/subject/person' ? (typeof r.url === 'string' && /^https:\/\//.test(r.url) ? r.url : siteUrl(env, '/subject/person')) : siteUrl(env, personUrl(String(r.name)))
     const register = (r: Record<string, unknown>) => `${r.jurisdiction === 'qld' ? 'Queensland' : 'federal'} register, ${r.date ?? 'date not recorded'}`

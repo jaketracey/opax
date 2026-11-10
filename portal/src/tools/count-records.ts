@@ -158,6 +158,10 @@ export const tool: ToolDefinition = {
       ...(window.since ? { requested_since: window.since } : {}), ...(window.until ? { requested_until: window.until } : {}),
       note: `Full published-index selection ${window.label}; ${kind === 'bills' && args.term ? 'bill parliament metadata defines the cohort; ' : ''}observed indexed dates ${range.first_record_date ?? 'unavailable'} to ${range.last_record_date ?? 'unavailable'}. Query bounds do not establish complete historical coverage.`,
       ...(object(index.coverage) ? { source_coverage: index.coverage } : {}) }
+    const outside = dateFiltered && !!(window.until && range.first_record_date && window.until < range.first_record_date || window.since && range.last_record_date && window.since > range.last_record_date)
+    if (outside) return { rows: [], total: null, coverage: { ...coverage, matched: false }, citations: [{ kind: 'record', url,
+      text: `The published ${kind} index covers ${range.first_record_date} to ${range.last_record_date}; it does not establish a count ${window.label}. No zero has been inferred for an uncovered period.` }],
+      notes: ['The requested period is outside the dated index. Search original corpus records for historical debates; do not treat an uncovered year as an absence.'], filter: args, query: { method: 'full-published-index', path, window } }
     const notes = [
       `Exact count of the full published ${bill ? 'bill division links' : `${kind} index`}; not a ranked sample. Coverage ${where}: ${range.first_record_date ?? 'no dated records'} to ${range.last_record_date ?? 'no dated records'}. This describes indexed records, not proof of complete parliamentary history.`,
       snapshot.generated_at ? `Published snapshot build date: ${snapshot.generated_at}. This is a build stamp, not a live data currency guarantee. Latest indexed ${field} date: ${snapshot.latest_record_date ?? 'not recorded'}.` : `Snapshot build date is not published. Latest indexed ${field} date: ${snapshot.latest_record_date ?? 'not recorded'}; this is not a generation timestamp.`,
@@ -186,6 +190,7 @@ export const tool: ToolDefinition = {
         citations.push({ kind: 'count', text: `${count} ${metric} ${where} across ${chunk[0].period} to ${chunk.at(-1)!.period}, within the selection ${window.label}; by ${args.group_by}: ${chunk.map(row => `${row.count} in ${row.period}`).join('; ')}`, value: count, url })
       }
     } else citations.push(...aggregate.map(row => ({ kind: 'count' as const, text: countText(row), value: row.count, url })))
+    if (args.group_by) citations.push({ kind: 'count', text: `${total} ${metric} ${where} ${window.label}`, value: total, url })
     if (!aggregate.length) citations.push({ kind: 'count', text: `${total} ${metric} ${where} ${window.label}`, value: total, url })
     const share = cohort.length ? Math.round(total / cohort.length * 10000) / 100 : null
     if (args.status) citations.push({ kind: 'count', text: `${cohort.length} bill records in the introduction cohort ${where} ${window.label}; ${total} have snapshot status ${args.status}${share === null ? '; a share cannot be calculated for an empty cohort' : ` (${share}%)`}`, value: cohort.length, url })

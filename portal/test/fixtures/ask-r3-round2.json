@@ -1,0 +1,2759 @@
+{
+  "TT-YDEB-004": {
+    "question": "Who were the most prominent voices in the the Canberra bushfires debate in 2003?",
+    "run3_answer": "Bob Brown led the selected ranking with 245 chamber speeches labelled climate-environment from 2003-01-01 to 2003-12-31.\n\nRobert Murray Hill recorded 189 chamber speeches labelled climate-environment from 2003-01-01 to 2003-12-31.\n\nDavid Kemp recorded 111 chamber speeches labelled climate-environment from 2003-01-01 to 2003-12-31.\n\nLyn Allison recorded 111 chamber speeches labelled climate-environment from 2003-01-01 to 2003-12-31.\n\nKelvin Thomson recorded 79 chamber speeches labelled climate-environment from 2003-01-01 to 2003-12-31.\n\nMeg Heather Lees recorded 54 chamber speeches labelled climate-environment from 2003-01-01 to 2003-12-31.\n\nKerry O'Brien recorded 49 chamber speeches labelled climate-environment from 2003-01-01 to 2003-12-31.\n\nIan Macdonald recorded 43 chamber speeches labelled climate-environment from 2003-01-01 to 2003-12-31.\n\n- Simon Crean told the House on 4 February 2003 that he supported the Prime Minister's motion and detailed the scale of the fire season, including the Canberra deaths among seven nationally.\n\n- Jenny Macklin said on 4 February 2003 that the Canberra fires cost four lives and many homes, and conveyed the House's good wishes through the member for Canberra.\n\n- Kenneth Ticehurst on 5 March 2003 praised firefighters, police, emergency services, Defence personnel and volunteers, and sent condolences to families of those who died.\n\n- Annette Ellis described on 5 February 2003 how Saturday, 18 January 2003 was a devastating day for Canberra, with fires driven by terrain, weather and extreme drought.\n\n- Margaret Elizabeth Reid had a media release read into the Senate on 4 February 2003 inviting Canberrans to knit squares for patchwork rugs for those who lost homes in the 18 January bushfires.\n\n- Nick Minchin told the Senate on 24 November 2003 that Treasury offered interest-free loans to employees directly affected by the 18 January Canberra fires, and two employees took them up.",
+    "run5_answer": "The available records do not establish an answer to this question.",
+    "sources": [],
+    "trail": [
+      {
+        "id": 1,
+        "tool": "count_speeches",
+        "round": 1,
+        "label": "Searching speeches",
+        "arg": "John Howard",
+        "results": 1,
+        "ms": 157,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "search",
+        "round": 1,
+        "label": "Searching the record",
+        "arg": "Canberra bushfires 2003",
+        "results": 6,
+        "ms": 1581,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "Canberra firestorm 18 January 2003",
+        "results": 5,
+        "ms": 1072,
+        "ok": true
+      },
+      {
+        "id": 4,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "bushfire Canberra coronial inquiry recov",
+        "results": 6,
+        "ms": 1286,
+        "ok": true
+      },
+      {
+        "id": 6,
+        "tool": "search",
+        "round": 3,
+        "label": "Searching the record",
+        "arg": "18 January 2003 Canberra fires community",
+        "results": 6,
+        "ms": 920,
+        "ok": true
+      },
+      {
+        "id": 5,
+        "tool": "count_speeches",
+        "round": 3,
+        "label": "Counting by speaker",
+        "arg": "climate-environment",
+        "results": 10,
+        "ms": 3348,
+        "ok": true
+      },
+      {
+        "id": 8,
+        "tool": "search",
+        "round": 4,
+        "label": "Searching the record",
+        "arg": "Prime Minister motion bushfire sympathy ",
+        "results": 6,
+        "ms": 1336,
+        "ok": true
+      },
+      {
+        "id": 7,
+        "tool": "search",
+        "round": 4,
+        "label": "Searching the record",
+        "arg": "bushfires select committee report nation",
+        "results": 6,
+        "ms": 1549,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14096,
+        "output": 110,
+        "cached_input": 0,
+        "cached": 0,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12530,
+        "ms": 1076,
+        "cost_usd": 0.0043608
+      },
+      {
+        "round": 2,
+        "input": 16422,
+        "output": 112,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 14793,
+        "ms": 661,
+        "cost_usd": 0.00092148
+      },
+      {
+        "round": 3,
+        "input": 20255,
+        "output": 186,
+        "cached_input": 16384,
+        "cached": 16384,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 18680,
+        "ms": 1352,
+        "cost_usd": 0.001482804
+      },
+      {
+        "round": 4,
+        "input": 23195,
+        "output": 111,
+        "cached_input": 20224,
+        "cached": 20224,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 21515,
+        "ms": 932,
+        "cost_usd": 0.001145844
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "record_list",
+      "salvaged": "tokens"
+    },
+    "rejections": [],
+    "retrieved_sources": [
+      {
+        "resource": "99ce6f1fb4564e80b224a04be513eaa3",
+        "slug": "speech-90405",
+        "title": "Annette Ellis \u2014 2003-02-05",
+        "href": "https://opax.com.au/doc/speech-90405",
+        "url": "https://opax.com.au/doc/speech-90405",
+        "snippet": "In beginning my contribution today, could I make the point that, whilst I am obviously going to be concentrating on the fires in Canberra of 18 January, I fully recognise and acknowledge that there have been severe fires in Queensland, Victoria, New South Wales, Tasmania and Western Australia\u2014in fact, virtually right across the continent. Saturday, 18 January 2003 was a devastating day for Canberra. Fires\u2014begun by a lightning strike some time earlier and encouraged and fed by terrain, weather conditions and extreme drought\u2014hit our community in a way never imagined. I was at home that day in Monash, a suburb of Tuggeranong, and my neighbours and I heard the emergency warnings and prepared our houses. At the time, we had no way of knowing the actual dimension of what was happening, except to say that the heat, the wind and the overwhelming red glow followed by darkness\u2014virtually as dark as midnight\u2014in the middle of the afternoon told us something terrible was happening. We were lucky because the fires did not actually reach our suburb. But the statistics I am referring to are stark. It is worth noting, in referring to those statistics, that up until this time I believe it had been 51",
+        "cited": true,
+        "kind": "speech",
+        "date": "2003-02-05",
+        "speaker": "Annette Ellis"
+      },
+      {
+        "resource": "ea81394a4ea34f779e64734a732fc33a",
+        "slug": "speech-1137479000122",
+        "title": "Richard Kenneth Robert Alston \u2014 HIGHER EDUCATION LEGISLATION AMENDMENT BILL 2003 \u2014 2003-08-13",
+        "href": "https://opax.com.au/doc/speech-1137479000122",
+        "url": "https://opax.com.au/doc/speech-1137479000122",
+        "snippet": "The bill provides $7.3 million in 2003 to assist the Australian National University rebuild its world class research facilities at Mt Stromlo Observatory following their devastation by the Canberra bushfires on 18 January 2003. The bushfires that swept through the Research School of Astronomy and Astrophysics site destroyed heritage buildings, critical workshops and state-of-the-art telescopes that were also a key tourist attraction. The Research School has long been recognised as an important player in national and international astronomy, providing leading edge training for students as well as world class pure and applied research facilities.",
+        "cited": false,
+        "kind": "speech",
+        "date": "2003-08-13",
+        "speaker": "Richard Kenneth Robert Alston"
+      },
+      {
+        "resource": "1e3f8f249d614bf58440186d6b95776c",
+        "slug": "speech-1137582000149",
+        "title": "Nick Minchin \u2014 QUESTIONS ON NOTICE \u2014 2003-11-24",
+        "href": "https://opax.com.au/doc/speech-1137582000149",
+        "url": "https://opax.com.au/doc/speech-1137582000149",
+        "snippet": "(2) Following the bushfires that struck Canberra on 18 January 2003, the Treasury made an offer of assistance to employees who were directly affected by the fires - that is, through loss or substantial damage to their homes. The offer included short-term, interest free loans, based on demonstrated need. Two employees took up the offer. They were loaned $2000 and $1000 respectively. The latter has been repaid in full; the former is subject to regular repayments and will be fully paid in November.",
+        "cited": true,
+        "kind": "speech",
+        "date": "2003-11-24",
+        "speaker": "Nick Minchin"
+      },
+      {
+        "resource": "e50c0c3d323649fd96f64439f1414713",
+        "slug": "speech-106972",
+        "title": "Stewart McArthur \u2014 2003-11-05",
+        "href": "https://opax.com.au/doc/speech-106972",
+        "url": "https://opax.com.au/doc/speech-106972",
+        "snippet": "A nation charred is the result of 500 submissions from those people at the coalface of firefighting\u2014firefighters, landowners, farmers and community people\u2014who have been personally affected by the fires. The impact of this devastation is evidenced by the hearings that were held in Omeo, Buchan, Wodonga, Canberra and Cooma, so much so that those of us who attended those hearings were on the verge of crying when we heard about the devastation that was brought about by these fires. The fact of the matter is that four million hectares were burnt; nothing can refute that fundamental evidence. The fires burnt out about 56 years of forest production in current harvesting rates and the fires were so hot that it will mean that much of it will not recover. National parks were devastated and there is very strong evidence that this was the worst fire since 1939.The observation I make is that there was a conspiracy of silence by state authorities, bushfire brigades and the green movement, who made no comment on the fires. They were strangely silent. They said nothing for weeks and weeks about this absolute devastation. There was overwhelming evidence that fuel reduction burning is a desirable te",
+        "cited": true,
+        "kind": "speech",
+        "date": "2003-11-05",
+        "speaker": "Stewart McArthur"
+      },
+      {
+        "resource": "381f73e5f2c74716b55faa1047706978",
+        "slug": "speech-1137289000037",
+        "title": "Kate Lundy \u2014 ADJOURNMENT \u2014 2003-02-04",
+        "href": "https://opax.com.au/doc/speech-1137289000037",
+        "url": "https://opax.com.au/doc/speech-1137289000037",
+        "snippet": "A bushfire recovery appeal has been set up and is receiving strong local and outside support, with many businesses and organisations donating quite extraordinary amounts of money. About $3\u00bd million has been collected to date. From memory, the target was $10 million for this fund. I would like to mention some of the donors to that fund. Licensed clubs throughout Canberra have rallied to the emergency by not only donating large amounts of money to the bushfire recovery appeal through ClubsACT but providing food and facilities and supporting emergency services and the efforts of other organisations. In some cases, this was as straightforward as making sandwiches on the day. In the week following the firestorm\u2014 when Belconnen and other places were still on alert; we had no idea if the fires were going to come back\u2014those clubs made sandwiches to make sure that the volunteers, the firies and the emergency services workers had food to be able to keep going. Those little things really mattered and made a big difference.",
+        "cited": false,
+        "kind": "speech",
+        "date": "2003-02-04",
+        "speaker": "Kate Lundy"
+      }
+    ]
+  },
+  "TT-YDEB-003": {
+    "question": "Who were the most prominent voices in the the drought debate in 2002?",
+    "run3_answer": "The most prominent voices in the 2002 agriculture-labelled chamber debate were Kerry O'Brien, with 194 speeches, and Ian Macdonald, with 189 speeches, from 2002-01-01 to 2002-12-31.\n\nWarren Truss followed with 100 speeches.\n\nBob Katter, John Anderson and Mark Vaile each gave 28 speeches, while John Cobb and Shayne Michael Murphy each gave 24.",
+    "run5_answer": "The available records do not establish an answer to this question.",
+    "sources": [],
+    "trail": [
+      {
+        "id": 3,
+        "tool": "corpus_records",
+        "round": 1,
+        "label": "Reading source passages",
+        "arg": "drought assistance farmers",
+        "results": 5,
+        "ms": 2422,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "corpus_records",
+        "round": 1,
+        "label": "Reading source passages",
+        "arg": "drought",
+        "results": 5,
+        "ms": 2461,
+        "ok": true
+      },
+      {
+        "id": 1,
+        "tool": "count_speeches",
+        "round": 1,
+        "label": "Counting by speaker",
+        "arg": "agriculture",
+        "results": 10,
+        "ms": 3112,
+        "ok": true
+      },
+      {
+        "id": 4,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "drought",
+        "results": 6,
+        "ms": 1534,
+        "ok": true
+      },
+      {
+        "id": 5,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "drought farmers assistance 2002",
+        "results": 6,
+        "ms": 1628,
+        "ok": true
+      },
+      {
+        "id": 8,
+        "tool": "count_speeches",
+        "round": 3,
+        "label": "Searching speeches",
+        "arg": "Warren Truss",
+        "results": 1,
+        "ms": 65,
+        "ok": true
+      },
+      {
+        "id": 9,
+        "tool": "count_speeches",
+        "round": 3,
+        "label": "Searching speeches",
+        "arg": "John Cobb",
+        "results": 1,
+        "ms": 71,
+        "ok": true
+      },
+      {
+        "id": 6,
+        "tool": "count_speeches",
+        "round": 3,
+        "label": "Searching speeches",
+        "arg": "Kerry OBrien",
+        "results": 1,
+        "ms": 72,
+        "ok": true
+      },
+      {
+        "id": 7,
+        "tool": "count_speeches",
+        "round": 3,
+        "label": "Searching speeches",
+        "arg": "Ian Macdonald",
+        "results": 1,
+        "ms": 72,
+        "ok": true
+      },
+      {
+        "id": 10,
+        "tool": "person_quotes",
+        "round": 4,
+        "label": "Reading their speeches",
+        "arg": "John Anderson",
+        "results": 4,
+        "ms": 1442,
+        "ok": true
+      },
+      {
+        "id": 11,
+        "tool": "person_quotes",
+        "round": 4,
+        "label": "Reading their speeches",
+        "arg": "Warren Truss",
+        "results": 4,
+        "ms": 1649,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14094,
+        "output": 331,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12527,
+        "ms": 993,
+        "cost_usd": 0.000561144
+      },
+      {
+        "round": 2,
+        "input": 20887,
+        "output": 103,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 19186,
+        "ms": 778,
+        "cost_usd": 0.00225018
+      },
+      {
+        "round": 3,
+        "input": 24272,
+        "output": 310,
+        "cached_input": 20864,
+        "cached": 20864,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 22397,
+        "ms": 1513,
+        "cost_usd": 0.001519584
+      },
+      {
+        "round": 4,
+        "input": 25473,
+        "output": 140,
+        "cached_input": 24192,
+        "cached": 24192,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 23445,
+        "ms": 910,
+        "cost_usd": 0.000697452
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "record_list",
+      "salvaged": "tokens"
+    },
+    "rejections": [],
+    "retrieved_sources": [
+      {
+        "title": "Kerry O'Brien \u2014 QUESTIONS ON NOTICE \u2014 2002-10-15",
+        "url": "https://opax.com.au/doc/speech-1137177000120",
+        "kind": "speech",
+        "date": "2002-10-15",
+        "speaker": "Kerry O'Brien"
+      },
+      {
+        "title": "Kerry O'Brien \u2014 QUESTIONS ON NOTICE \u2014 2002-09-23",
+        "url": "https://opax.com.au/doc/speech-1137155000118",
+        "kind": "speech",
+        "date": "2002-09-23",
+        "speaker": "Kerry O'Brien"
+      },
+      {
+        "title": "Ian Campbell \u2014 NOTICES \u2014 2002-12-09",
+        "url": "https://opax.com.au/doc/speech-1137232000097",
+        "kind": "speech",
+        "date": "2002-12-09",
+        "speaker": "Ian Campbell"
+      }
+    ]
+  },
+  "TT-AGRE-008": {
+    "question": "How often did the Liberal Party and the Nationals vote together in the Senate in 2016?",
+    "run3_answer": "The selected records do not establish the requested answer for 2016-01-01 to 2016-12-31.",
+    "run5_answer": "The selected records do not establish the requested answer for 2016-01-01 to 2016-12-31.",
+    "sources": [],
+    "trail": [
+      {
+        "id": 1,
+        "tool": "division",
+        "round": 1,
+        "label": "Comparing party votes",
+        "results": 1,
+        "ms": 40,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "count_records",
+        "round": 2,
+        "label": "Counting divisions",
+        "arg": "2016-01-01",
+        "results": 1,
+        "ms": 55,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "answer",
+        "round": 3,
+        "label": "Checking the answer",
+        "ms": 6,
+        "ok": false
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14106,
+        "output": 135,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12543,
+        "ms": 571,
+        "cost_usd": 0.000329544
+      },
+      {
+        "round": 2,
+        "input": 14808,
+        "output": 100,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 13273,
+        "ms": 479,
+        "cost_usd": 0.00042288
+      },
+      {
+        "round": 3,
+        "input": 15805,
+        "output": 42,
+        "cached_input": 14720,
+        "cached": 14720,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 14146,
+        "ms": 1259,
+        "cost_usd": 0.00046422
+      }
+    ],
+    "answer_stats": null,
+    "rejections": [
+      "fact 1: named_unresolved",
+      "fact 2: named_unresolved"
+    ]
+  },
+  "NP-VOTE-015": {
+    "question": "How did Tanmy Tyrrell vote on the Fuel - Let another motion be moved division on 5 March 2026?",
+    "run3_answer": "Please give the full name of the person you mean so I can distinguish their records.",
+    "run5_answer": "The selected records do not establish the requested answer for 2026-03-05 to 2026-03-05.",
+    "sources": [],
+    "trail": [
+      {
+        "id": 2,
+        "tool": "find_people",
+        "round": 1,
+        "label": "Resolving a name",
+        "arg": "Tammy Tyrrell",
+        "results": 1,
+        "ms": 20,
+        "ok": true
+      },
+      {
+        "id": 1,
+        "tool": "division",
+        "round": 1,
+        "label": "Checking a recorded division",
+        "arg": "Fuel",
+        "results": 0,
+        "ms": 58,
+        "ok": true
+      },
+      {
+        "id": 4,
+        "tool": "count_records",
+        "round": 2,
+        "label": "Counting divisions",
+        "arg": "2026-03-05",
+        "results": 1,
+        "ms": 98,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "division",
+        "round": 2,
+        "label": "Checking a recorded division",
+        "arg": "Fuel",
+        "results": 1,
+        "ms": 117,
+        "ok": true
+      },
+      {
+        "id": 5,
+        "tool": "answer",
+        "round": 3,
+        "label": "Checking the answer",
+        "ms": 5,
+        "ok": false
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14101,
+        "output": 127,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12533,
+        "ms": 811,
+        "cost_usd": 0.000318444
+      },
+      {
+        "round": 2,
+        "input": 14972,
+        "output": 146,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 13411,
+        "ms": 976,
+        "cost_usd": 0.00052728
+      },
+      {
+        "round": 3,
+        "input": 17222,
+        "output": 216,
+        "cached_input": 14976,
+        "cached": 14976,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 15371,
+        "ms": 1020,
+        "cost_usd": 0.001022856
+      }
+    ],
+    "answer_stats": null,
+    "rejections": [
+      "fact 5: named_unresolved",
+      "fact 4: named_unresolved",
+      "answer: named_unresolved"
+    ]
+  },
+  "TT-AGRE-004": {
+    "question": "In 2011, in how many Senate divisions did Labor and the Liberal Party vote the same way?",
+    "run3_answer": "The returned records do not establish the requested answer for 2011-01-01 to 2011-12-31. The returned evidence has no verified date coverage for that period. I have not substituted current figures. Please narrow the question or check the records linked here.",
+    "run5_answer": "The selected records do not establish the requested answer for 2011-01-01 to 2011-12-31.",
+    "sources": [],
+    "trail": [
+      {
+        "id": 2,
+        "tool": "count_records",
+        "round": 1,
+        "label": "Counting divisions",
+        "arg": "2011-01-01",
+        "results": 1,
+        "ms": 71,
+        "ok": true
+      },
+      {
+        "id": 1,
+        "tool": "division",
+        "round": 1,
+        "label": "Comparing party votes",
+        "results": 1,
+        "ms": 104,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "answer",
+        "round": 2,
+        "label": "Checking the answer",
+        "ms": 8,
+        "ok": false
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14107,
+        "output": 242,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12543,
+        "ms": 1257,
+        "cost_usd": 0.000458244
+      },
+      {
+        "round": 2,
+        "input": 15814,
+        "output": 123,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 14110,
+        "ms": 1034,
+        "cost_usd": 0.00075228
+      }
+    ],
+    "answer_stats": null,
+    "rejections": [
+      "fact 1: named_unresolved",
+      "fact 2: named_unresolved"
+    ]
+  },
+  "NP-VOTE-021": {
+    "question": "how'd Sharkie vote on Online Safety Amendment (Social Media Minimum Age) Bill 2024 - Consideration in Detail - Exempt providers, 27 November 2024",
+    "run3_answer": "Rebekha Sharkie (Centre Alliance) voted aye.",
+    "run5_answer": "No votes against an eligible party majority were recorded in that division.",
+    "sources": [
+      {
+        "resource": "fact-5",
+        "slug": "",
+        "title": "Division defeated, 15 ayes to 44 noes: Online Safety Amendment (Social Media Minimum Age) Bill 2024 - Consideration in Detail - Exempt providers (House of Representatives, 2024-11-27). Rebekha Sharkie (Centre Alliance) voted aye. No votes against an eligible party majority were recorded.",
+        "href": "https://opax.com.au/doc/division-federal-representatives-9429",
+        "url": "https://opax.com.au/doc/division-federal-representatives-9429",
+        "snippet": "Division defeated, 15 ayes to 44 noes: Online Safety Amendment (Social Media Minimum Age) Bill 2024 - Consideration in Detail - Exempt providers (House of Representatives, 2024-11-27). Rebekha Sharkie (Centre Alliance) voted aye. No votes against an eligible party majority were recorded.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-6",
+        "slug": "",
+        "title": "Online Safety Amendment (Social Media Minimum Age) Bill 2024: 1 matching recorded division on 2024-11-27 since 2024-11-27 until 2024-11-27 in the House of Representatives with title words Exempt providers.",
+        "href": "https://opax.com.au/bill/au-federal-r7284",
+        "url": "https://opax.com.au/bill/au-federal-r7284",
+        "snippet": "Online Safety Amendment (Social Media Minimum Age) Bill 2024: 1 matching recorded division on 2024-11-27 since 2024-11-27 until 2024-11-27 in the House of Representatives with title words Exempt providers.",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/doc/division-federal-representatives-9429",
+        "url": "https://opax.com.au/doc/division-federal-representatives-9429",
+        "snippet": "Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes. Independents, unknown parties, ties, paired and absent votes are excluded. Party affiliations are the published labels and may reflect a later affiliation rather than the affiliation on the division date. Calculated dissent is not independently verified historical floor crossing.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ],
+    "trail": [
+      {
+        "id": 2,
+        "tool": "find_people",
+        "round": 1,
+        "label": "Resolving a name",
+        "arg": "Rebekha Sharkie",
+        "results": 1,
+        "ms": 17,
+        "ok": true
+      },
+      {
+        "id": 1,
+        "tool": "division",
+        "round": 1,
+        "label": "Checking a recorded division",
+        "arg": "Exempt providers",
+        "results": 1,
+        "ms": 73,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "answer",
+        "round": 2,
+        "label": "Checking the answer",
+        "results": 3,
+        "ms": 3,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14137,
+        "output": 176,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12572,
+        "ms": 1131,
+        "cost_usd": 0.000388044
+      },
+      {
+        "round": 2,
+        "input": 16279,
+        "output": 135,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 14531,
+        "ms": 1344,
+        "cost_usd": 0.00090618
+      },
+      {
+        "round": 3,
+        "input": 1644,
+        "output": 96,
+        "cached_input": 0,
+        "input_reserve": 3375,
+        "ms": 813,
+        "cost_usd": 0.0006084,
+        "provider": "Together"
+      },
+      {
+        "round": 3,
+        "input": 1137,
+        "output": 106,
+        "cached_input": 256,
+        "input_reserve": 3375,
+        "ms": 754,
+        "cost_usd": 0.000393036,
+        "provider": "Together"
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "facts"
+    },
+    "rejections": []
+  },
+  "DT-YEAR-014": {
+    "question": "What big issues did the Australian parliament debate in 2002?",
+    "run3_answer": "Linda Kirk told the Senate on 17 October 2002 that the ASIO terrorism bill was brought on five days after the Bali tragedy and appeared to be a hasty overreaction rather than an appropriate response to the issues facing Australia.\n\n-, and that following the Bali bombings of 12 October terrorist violence was no longer just a threat to Australia.\n\n- Michael Forshaw described the June 2002 debate on the Security Legislation Amendment (Terrorism) Bill 2002 [No. 2] and related bills as probably the most important debate and legislation the parliament had had to consider for some time.\n- Alexander Downer said in August 2002 that the critical issue in the Iraq debate was Iraq's possession of weapons of mass destruction, calling it a very grave and very serious issue.",
+    "run5_answer": "No bills were introduced in federal parliament in 2002.",
+    "sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "0 bill records by introduction date in federal parliament in 2002",
+        "href": "https://opax.com.au/bills",
+        "url": "https://opax.com.au/bills",
+        "snippet": "0 bill records by introduction date in federal parliament in 2002",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/bills",
+        "url": "https://opax.com.au/bills",
+        "snippet": "Exact count of the full published bills index; not a ranked sample. Coverage in federal parliament: 2010-11-24 to 2026-09-17. This describes indexed records, not proof of complete parliamentary history. Published snapshot build date: 2026-10-04T16:27:54+00:00. This is a build stamp, not a live data currency guarantee. Latest indexed introduced date: 2026-09-17. Dates are introduction dates and chambers are originating chambers. A status filter gives the snapshot status of that cohort, not bills passing on those dates.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ],
+    "trail": [
+      {
+        "id": 1,
+        "tool": "count_records",
+        "round": 1,
+        "label": "Counting bills",
+        "arg": "2002",
+        "results": 1,
+        "ms": 11,
+        "ok": true
+      },
+      {
+        "id": 5,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "drought assistance farmers rural Austral",
+        "results": 5,
+        "ms": 1460,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "Tampa children overboard asylum seekers",
+        "results": 5,
+        "ms": 1858,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "terrorism Bali bombing national security",
+        "results": 5,
+        "ms": 1922,
+        "ok": true
+      },
+      {
+        "id": 4,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "Iraq war deployment troops",
+        "results": 5,
+        "ms": 2045,
+        "ok": true
+      },
+      {
+        "id": 7,
+        "tool": "search",
+        "round": 3,
+        "label": "Searching the record",
+        "arg": "indigenous reconciliation Aboriginal aff",
+        "results": 3,
+        "ms": 1457,
+        "ok": true
+      },
+      {
+        "id": 6,
+        "tool": "search",
+        "round": 3,
+        "label": "Searching the record",
+        "arg": "goods and services tax GST budget surplu",
+        "results": 5,
+        "ms": 1477,
+        "ok": true
+      },
+      {
+        "id": 8,
+        "tool": "answer",
+        "round": 4,
+        "label": "Checking the answer",
+        "results": 2,
+        "ms": 3,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14084,
+        "output": 131,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12518,
+        "ms": 796,
+        "cost_usd": 0.000318144
+      },
+      {
+        "round": 2,
+        "input": 14988,
+        "output": 202,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 13364,
+        "ms": 993,
+        "cost_usd": 0.00059928
+      },
+      {
+        "round": 3,
+        "input": 21076,
+        "output": 108,
+        "cached_input": 14976,
+        "cached": 14976,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 19526,
+        "ms": 1070,
+        "cost_usd": 0.002049456
+      },
+      {
+        "round": 4,
+        "input": 23411,
+        "output": 1013,
+        "cached_input": 21120,
+        "cached": 21120,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 21846,
+        "ms": 4057,
+        "cost_usd": 0.00202962
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "facts"
+    },
+    "rejections": []
+  },
+  "BL-STAT-001": {
+    "question": "ASIC Supervisory Cost Recovery Levy Bill 2017 status?",
+    "run3_answer": "Michael Sukkar told the House the measure formed part of a package introducing an industry funding model for ASIC, with regulated entities paying a levy to offset regulatory costs.\n\nThe ASIC Supervisory Cost Recovery Levy Bill 2017 was introduced in the House of Representatives on 30 March 2017, passed both houses on 15 June 2017, and is linked to the ASIC Supervisory Cost Recovery Levy Act 2017, which received royal assent on 19 June 2017.",
+    "run5_answer": "The ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 was presented and read a first time in 2017 and passed by both houses in 2018.\n\n- In 2017, Scott Morrison (Liberal) said: \u201cThe ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 forms part of a package of bills to reform the regulation of financial benchmarks.\u201d",
+    "sources": [
+      {
+        "resource": "68158e0df92a4321a3c0acac7af06914",
+        "slug": "bill-text-au-federal-r5961-aspassed",
+        "title": "ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 \u2014 As passed by both houses",
+        "href": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "url": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "snippet": "In 2018, a speaker said: \u201cASIC Supervisory Cost Recovery Levy Amendment Bill 2017",
+        "cited": true,
+        "kind": "bill_text",
+        "date": "2018-03-28"
+      },
+      {
+        "resource": "68158e0df92a4321a3c0acac7af06914",
+        "slug": "bill-text-au-federal-r5961-aspassed",
+        "title": "ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 \u2014 As passed by both houses",
+        "href": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "url": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "snippet": "The Parliament of the",
+        "cited": true,
+        "kind": "bill_text",
+        "date": "2018-03-28"
+      },
+      {
+        "resource": "68158e0df92a4321a3c0acac7af06914",
+        "slug": "bill-text-au-federal-r5961-aspassed",
+        "title": "ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 \u2014 As passed by both houses",
+        "href": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "url": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "snippet": "Commonwealth of Australia",
+        "cited": true,
+        "kind": "bill_text",
+        "date": "2018-03-28"
+      },
+      {
+        "resource": "68158e0df92a4321a3c0acac7af06914",
+        "slug": "bill-text-au-federal-r5961-aspassed",
+        "title": "ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 \u2014 As passed by both houses",
+        "href": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "url": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "snippet": "HOUSE OF REPRESENTATIVES",
+        "cited": true,
+        "kind": "bill_text",
+        "date": "2018-03-28"
+      },
+      {
+        "resource": "68158e0df92a4321a3c0acac7af06914",
+        "slug": "bill-text-au-federal-r5961-aspassed",
+        "title": "ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 \u2014 As passed by both houses",
+        "href": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "url": "https://opax.com.au/doc/bill-text-au-federal-r5961-aspassed",
+        "snippet": "As passed by both\u201d",
+        "cited": true,
+        "kind": "bill_text",
+        "date": "2018-03-28"
+      },
+      {
+        "resource": "b9dec42d48244840b8668894478e6be0",
+        "slug": "bill-text-au-federal-r5961-first-reps",
+        "title": "ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 \u2014 First reading \u2014 House of Representatives",
+        "href": "https://opax.com.au/doc/bill-text-au-federal-r5961-first-reps",
+        "url": "https://opax.com.au/doc/bill-text-au-federal-r5961-first-reps",
+        "snippet": "In 2017, a speaker said: \u201cASIC Supervisory Cost Recovery Levy Amendment Bill 2017",
+        "cited": true,
+        "kind": "bill_text",
+        "date": "2017-09-07"
+      },
+      {
+        "resource": "b9dec42d48244840b8668894478e6be0",
+        "slug": "bill-text-au-federal-r5961-first-reps",
+        "title": "ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 \u2014 First reading \u2014 House of Representatives",
+        "href": "https://opax.com.au/doc/bill-text-au-federal-r5961-first-reps",
+        "url": "https://opax.com.au/doc/bill-text-au-federal-r5961-first-reps",
+        "snippet": "Presented and read a first\u201d",
+        "cited": true,
+        "kind": "bill_text",
+        "date": "2017-09-07"
+      }
+    ],
+    "trail": [
+      {
+        "id": 1,
+        "tool": "find_records",
+        "round": 1,
+        "label": "Finding records",
+        "arg": "au-federal-r5842",
+        "results": 1,
+        "ms": 21,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "find_records",
+        "round": 1,
+        "label": "Finding records",
+        "arg": "ASIC Supervisory Cost Recovery Levy Bil\u2026",
+        "results": 1,
+        "ms": 21,
+        "ok": true
+      },
+      {
+        "id": 4,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "ASIC supervisory cost recovery levy seco",
+        "results": 4,
+        "ms": 3381,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "search",
+        "round": 2,
+        "label": "Searching the record",
+        "arg": "ASIC Supervisory Cost Recovery Levy Bill",
+        "results": 3,
+        "ms": 3548,
+        "ok": true
+      },
+      {
+        "id": 5,
+        "tool": "search",
+        "round": 3,
+        "label": "Searching the record",
+        "arg": "ASIC Supervisory Cost Recovery Levy Bill",
+        "results": 4,
+        "ms": 1596,
+        "ok": true
+      },
+      {
+        "id": 6,
+        "tool": "person_quotes",
+        "round": 3,
+        "label": "Reading their speeches",
+        "arg": "Michael Sukkar",
+        "results": 5,
+        "ms": 2253,
+        "ok": true
+      },
+      {
+        "id": 7,
+        "tool": "search",
+        "round": 4,
+        "label": "Searching the record",
+        "arg": "ASIC industry funding model levy regulat",
+        "results": 5,
+        "ms": 2502,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14038,
+        "output": 115,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12503,
+        "ms": 922,
+        "cost_usd": 0.000285144
+      },
+      {
+        "round": 2,
+        "input": 17162,
+        "output": 113,
+        "cached_input": 13952,
+        "cached": 13952,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 15090,
+        "ms": 872,
+        "cost_usd": 0.001182312
+      },
+      {
+        "round": 3,
+        "input": 20057,
+        "output": 124,
+        "cached_input": 17152,
+        "cached": 17152,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 18132,
+        "ms": 855,
+        "cost_usd": 0.001123212
+      },
+      {
+        "round": 4,
+        "input": 23452,
+        "output": 61,
+        "cached_input": 20096,
+        "cached": 20096,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 21908,
+        "ms": 736,
+        "cost_usd": 0.001200576
+      },
+      {
+        "round": 5,
+        "input": 1358,
+        "output": 73,
+        "cached_input": 0,
+        "input_reserve": 2901,
+        "ms": 739,
+        "cost_usd": 0.000495,
+        "provider": "Together"
+      },
+      {
+        "round": 5,
+        "input": 1358,
+        "output": 65,
+        "cached_input": 1280,
+        "input_reserve": 2901,
+        "ms": 456,
+        "cost_usd": 0.00010908,
+        "provider": "Together"
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "record_list",
+      "salvaged": "tokens"
+    },
+    "rejections": []
+  },
+  "DV-PRTY-036": {
+    "question": "Labor vote Special Minister of State - Stop 2015?",
+    "run3_answer": "no votes against an eligible party majority were recorded.",
+    "run5_answer": "Labor voted in 11 divisions with \"Special Minister of State\" in the title: all aye in 2, all no in 9, split in 0.",
+    "sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "Divisions with \"Special Minister of State\" in the title",
+        "href": "https://opax.com.au/search?kind=division&q=Special+Minister+of+State&mode=keyword",
+        "url": "https://opax.com.au/search?kind=division&q=Special+Minister+of+State&mode=keyword",
+        "snippet": "Labor voted in 11 divisions with \"Special Minister of State\" in the title: all aye in 2, all no in 9, split in 0",
+        "cited": true,
+        "kind": "record",
+        "entities": [
+          "party:Labor"
+        ]
+      },
+      {
+        "resource": "fact-2",
+        "slug": "",
+        "title": "Division passed, 81 ayes to 50 noes: Motions \u2014 Special Minister of State; Attempted Censure (House of Representatives, 2015-12-03). Labor voted no (0 ayes, 48 noes). No votes against an eligible party majority were recorded.",
+        "href": "https://opax.com.au/doc/division-federal-representatives-4034",
+        "url": "https://opax.com.au/doc/division-federal-representatives-4034",
+        "snippet": "Division passed, 81 ayes to 50 noes: Motions \u2014 Special Minister of State; Attempted Censure (House of Representatives, 2015-12-03). Labor voted no (0 ayes, 48 noes). No votes against an eligible party majority were recorded.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-3",
+        "slug": "",
+        "title": "Division defeated, 48 ayes to 83 noes: Motions \u2014 Special Minister of State (House of Representatives, 2015-12-02). Labor voted aye (46 ayes, 0 noes). No votes against an eligible party majority were recorded.",
+        "href": "https://opax.com.au/doc/division-federal-representatives-4025",
+        "url": "https://opax.com.au/doc/division-federal-representatives-4025",
+        "snippet": "Division defeated, 48 ayes to 83 noes: Motions \u2014 Special Minister of State (House of Representatives, 2015-12-02). Labor voted aye (46 ayes, 0 noes). No votes against an eligible party majority were recorded.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/search?kind=division&q=Special+Minister+of+State&mode=keyword",
+        "url": "https://opax.com.au/search?kind=division&q=Special+Minister+of+State&mode=keyword",
+        "snippet": "Divisions are matched by words in their titles; divisions filed under other titles may be missed. A recorded vote does not establish why a member voted that way. Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes. Independents, unknown parties, ties, paired and absent votes are excluded.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ],
+    "trail": [
+      {
+        "id": 2,
+        "tool": "member_votes",
+        "round": 1,
+        "label": "Checking votes",
+        "arg": "Special Minister of State",
+        "results": 11,
+        "ms": 254,
+        "ok": true
+      },
+      {
+        "id": 1,
+        "tool": "division",
+        "round": 1,
+        "label": "Checking a recorded division",
+        "arg": "Special Minister of State",
+        "results": 1,
+        "ms": 661,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "division",
+        "round": 2,
+        "label": "Checking a recorded division",
+        "arg": "federal-representatives-4025",
+        "results": 1,
+        "ms": 49,
+        "ok": true
+      },
+      {
+        "id": 4,
+        "tool": "answer",
+        "round": 3,
+        "label": "Checking the answer",
+        "results": 4,
+        "ms": 7,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14094,
+        "output": 168,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12530,
+        "ms": 1009,
+        "cost_usd": 0.000365544
+      },
+      {
+        "round": 2,
+        "input": 16919,
+        "output": 60,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 15059,
+        "ms": 823,
+        "cost_usd": 0.00100818
+      },
+      {
+        "round": 3,
+        "input": 18826,
+        "output": 172,
+        "cached_input": 16896,
+        "cached": 16896,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 16784,
+        "ms": 1027,
+        "cost_usd": 0.000886776
+      },
+      {
+        "round": 4,
+        "input": 1948,
+        "output": 201,
+        "cached_input": 0,
+        "input_reserve": 3682,
+        "ms": 1619,
+        "cost_usd": 0.0008256,
+        "provider": "Together"
+      },
+      {
+        "round": 4,
+        "input": 1948,
+        "output": 179,
+        "cached_input": 1920,
+        "input_reserve": 3682,
+        "ms": 1167,
+        "cost_usd": 0.00023472,
+        "provider": "Together"
+      }
+    ],
+    "answer_stats": {
+      "points_in": 2,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {
+        "unknown_passage": 2
+      },
+      "uncited": {},
+      "mode": "facts"
+    },
+    "rejections": []
+  },
+  "NP-INTR-007": {
+    "question": "Bree James declared real estate?",
+    "run3_answer": "Bree James declared an investment real estate interest in Westcourt.",
+    "run5_answer": "Bree James's Queensland register of interests as at 2026-10-16 records 4 real estate entries: Westcourt, 610m\u00b2, investment, joint tenants; Manunda, 190m\u00b2, investment, landlord; Brinsmead, 705m\u00b2, principal place, joint tenants; Boambee East, 334m\u00b2, investment, landlord.",
+    "sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "Bree James's Queensland register of interests as at 2026-10-16 records 4 real estate entries: Westcourt, 610m\u00b2, investment, joint tenants; Manunda, 190m\u00b2, investment, landlord; Brinsmead, 705m\u00b2, principal place, joint tenants; Boambee East, 334m\u00b2, investment, landlord.",
+        "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+        "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+        "snippet": "Bree James's Queensland register of interests as at 2026-10-16 records 4 real estate entries: Westcourt, 610m\u00b2, investment, joint tenants; Manunda, 190m\u00b2, investment, landlord; Brinsmead, 705m\u00b2, principal place, joint tenants; Boambee East, 334m\u00b2, investment, landlord.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+        "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+        "snippet": "Register entries include statements, additions and removals; an entry is not necessarily a current holding or evidence of a conflict of interest.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ],
+    "trail": [
+      {
+        "id": 2,
+        "tool": "declared_interests",
+        "round": 1,
+        "label": "Checking declared interests",
+        "arg": "Bree James",
+        "results": 4,
+        "ms": 9,
+        "ok": true
+      },
+      {
+        "id": 1,
+        "tool": "find_records",
+        "round": 1,
+        "label": "Finding records",
+        "arg": "Bree James",
+        "results": 3,
+        "ms": 9,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "answer",
+        "round": 2,
+        "label": "Checking the answer",
+        "results": 2,
+        "ms": 8,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14028,
+        "output": 108,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12494,
+        "ms": 722,
+        "cost_usd": 0.000273744
+      },
+      {
+        "round": 2,
+        "input": 15419,
+        "output": 39,
+        "cached_input": 13952,
+        "cached": 13952,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 13820,
+        "ms": 828,
+        "cost_usd": 0.000570612
+      },
+      {
+        "round": 3,
+        "input": 1382,
+        "output": 139,
+        "cached_input": 0,
+        "input_reserve": 3060,
+        "ms": 826,
+        "cost_usd": 0.0005814,
+        "provider": "Together"
+      },
+      {
+        "round": 3,
+        "input": 1328,
+        "output": 99,
+        "cached_input": 384,
+        "input_reserve": 3060,
+        "ms": 683,
+        "cost_usd": 0.000404304,
+        "provider": "Together"
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "facts"
+    },
+    "rejections": []
+  },
+  "NP-VOTE-040": {
+    "question": "How did Mark Furner vote on the Grocerychoice divisoon on 26 November 2008?",
+    "run3_answer": "Mark Furner served in the Senate from 1 July 2008 to 30 June 2014.",
+    "run5_answer": "On 26 November 2008, the Grocerychoice division in the Senate was defeated 32 ayes to 32 noes, and Mark Furner (Labor) voted no.\n\nNo votes against an eligible party majority were recorded for this division.",
+    "sources": [
+      {
+        "resource": "fact-5",
+        "slug": "",
+        "title": "Division defeated, 32 ayes to 32 noes: Grocerychoice (Senate, 2008-11-26). Mark Furner (Labor) voted no. No votes against an eligible party majority were recorded.",
+        "href": "https://opax.com.au/doc/division-federal-senate-1562",
+        "url": "https://opax.com.au/doc/division-federal-senate-1562",
+        "snippet": "Division defeated, 32 ayes to 32 noes: Grocerychoice (Senate, 2008-11-26). Mark Furner (Labor) voted no. No votes against an eligible party majority were recorded.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-4",
+        "slug": "",
+        "title": "5 recorded divisions in federal parliament on 2008-11-26",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "5 recorded divisions in federal parliament on 2008-11-26",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/divisions/index.json",
+        "url": "https://opax.com.au/divisions/index.json",
+        "snippet": "OPAX could not confirm that these records fall in the requested period, so check their dates. Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes. Independents, unknown parties, ties, paired and absent votes are excluded. Party affiliations are the published labels and may reflect a later affiliation rather than the affiliation on the division date. Calculated dissent is not independently verified historical floor crossing.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ],
+    "trail": [
+      {
+        "id": 1,
+        "tool": "find_people",
+        "round": 1,
+        "label": "Resolving a name",
+        "arg": "Mark Furner",
+        "results": 1,
+        "ms": 19,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "division",
+        "round": 1,
+        "label": "Checking a recorded division",
+        "arg": "Grocerychoice",
+        "results": 0,
+        "ms": 64,
+        "ok": true
+      },
+      {
+        "id": 4,
+        "tool": "count_records",
+        "round": 2,
+        "label": "Counting divisions",
+        "arg": "2008-11-26",
+        "results": 1,
+        "ms": 100,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "division",
+        "round": 2,
+        "label": "Checking a recorded division",
+        "arg": "Grocery",
+        "results": 1,
+        "ms": 111,
+        "ok": true
+      },
+      {
+        "id": 5,
+        "tool": "answer",
+        "round": 3,
+        "label": "Checking the answer",
+        "results": 3,
+        "ms": 7,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14105,
+        "output": 127,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12536,
+        "ms": 862,
+        "cost_usd": 0.000319644
+      },
+      {
+        "round": 2,
+        "input": 14962,
+        "output": 146,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 13401,
+        "ms": 1087,
+        "cost_usd": 0.00052428
+      },
+      {
+        "round": 3,
+        "input": 17181,
+        "output": 42,
+        "cached_input": 14976,
+        "cached": 14976,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 15340,
+        "ms": 759,
+        "cost_usd": 0.000801756
+      },
+      {
+        "round": 4,
+        "input": 1311,
+        "output": 61,
+        "cached_input": 0,
+        "input_reserve": 2987,
+        "ms": 1148,
+        "cost_usd": 0.0004665,
+        "provider": "Together"
+      },
+      {
+        "round": 4,
+        "input": 1311,
+        "output": 88,
+        "cached_input": 1280,
+        "input_reserve": 2987,
+        "ms": 450,
+        "cost_usd": 0.00012258,
+        "provider": "Together"
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "facts"
+    },
+    "rejections": []
+  },
+  "DT-SINC-008": {
+    "question": "How many divisions has the House of Representatives held since 2025?",
+    "run3_answer": "There were 310 recorded divisions in the House of Representatives since 2025-01-01 (inclusive, to the published snapshot).\n\nThere were 30 recorded divisions in the House of Representatives in 2025-02.\n\nThere were 16 recorded divisions in the House of Representatives in 2025-10.\n\nThere were 51 recorded divisions in the House of Representatives in 2026-06.\n\nThere were 40 recorded divisions in the House of Representatives in 2026-10.",
+    "run5_answer": "The monthly counts were 0 in 2025-01, 30 in 2025-02, 12 in 2025-03, 0 in 2025-04, 0 in 2025-05, 0 in 2025-06, 6 in 2025-07, 3 in 2025-08, 5 in 2025-09, 16 in 2025-10, 0 in 2025-11, 0 in 2025-12, 5 in 2026-01, 20 in 2026-02 and 27 in 2026-03.\n\nThe published divisions index covers the House of Representatives from 2006-02-07 to 2026-10-29.",
+    "sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "0 recorded divisions in the House of Representatives in 2025-01",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "0 recorded divisions in the House of Representatives in 2025-01",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-2",
+        "slug": "",
+        "title": "30 recorded divisions in the House of Representatives in 2025-02",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "30 recorded divisions in the House of Representatives in 2025-02",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-3",
+        "slug": "",
+        "title": "12 recorded divisions in the House of Representatives in 2025-03",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "12 recorded divisions in the House of Representatives in 2025-03",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-4",
+        "slug": "",
+        "title": "0 recorded divisions in the House of Representatives in 2025-04",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "0 recorded divisions in the House of Representatives in 2025-04",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-5",
+        "slug": "",
+        "title": "0 recorded divisions in the House of Representatives in 2025-05",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "0 recorded divisions in the House of Representatives in 2025-05",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-6",
+        "slug": "",
+        "title": "0 recorded divisions in the House of Representatives in 2025-06",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "0 recorded divisions in the House of Representatives in 2025-06",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-7",
+        "slug": "",
+        "title": "6 recorded divisions in the House of Representatives in 2025-07",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "6 recorded divisions in the House of Representatives in 2025-07",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-8",
+        "slug": "",
+        "title": "3 recorded divisions in the House of Representatives in 2025-08",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "3 recorded divisions in the House of Representatives in 2025-08",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-9",
+        "slug": "",
+        "title": "5 recorded divisions in the House of Representatives in 2025-09",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "5 recorded divisions in the House of Representatives in 2025-09",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-10",
+        "slug": "",
+        "title": "16 recorded divisions in the House of Representatives in 2025-10",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "16 recorded divisions in the House of Representatives in 2025-10",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-11",
+        "slug": "",
+        "title": "0 recorded divisions in the House of Representatives in 2025-11",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "0 recorded divisions in the House of Representatives in 2025-11",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-12",
+        "slug": "",
+        "title": "0 recorded divisions in the House of Representatives in 2025-12",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "0 recorded divisions in the House of Representatives in 2025-12",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-13",
+        "slug": "",
+        "title": "5 recorded divisions in the House of Representatives in 2026-01",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "5 recorded divisions in the House of Representatives in 2026-01",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-14",
+        "slug": "",
+        "title": "20 recorded divisions in the House of Representatives in 2026-02",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "20 recorded divisions in the House of Representatives in 2026-02",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-15",
+        "slug": "",
+        "title": "27 recorded divisions in the House of Representatives in 2026-03",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "27 recorded divisions in the House of Representatives in 2026-03",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/divisions",
+        "url": "https://opax.com.au/divisions",
+        "snippet": "Exact count of the full published divisions index; not a ranked sample. Coverage in the House of Representatives: 2006-02-07 to 2026-10-29. This describes indexed records, not proof of complete parliamentary history. Snapshot build date is not published. Latest indexed date date: 2026-10-29; this is not a generation timestamp.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ],
+    "trail": [
+      {
+        "id": 1,
+        "tool": "count_records",
+        "round": 1,
+        "label": "Counting divisions",
+        "arg": "2025-01-01",
+        "results": 22,
+        "ms": 51,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "finish",
+        "round": 2,
+        "label": "Selecting record facts",
+        "results": 15,
+        "ms": 1,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14068,
+        "output": 114,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12523,
+        "ms": 783,
+        "cost_usd": 0.000292944
+      },
+      {
+        "round": 2,
+        "input": 15716,
+        "output": 103,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 14004,
+        "ms": 1014,
+        "cost_usd": 0.00069888
+      },
+      {
+        "round": 3,
+        "input": 3036,
+        "output": 199,
+        "cached_input": 0,
+        "input_reserve": 4957,
+        "ms": 1174,
+        "cost_usd": 0.0011496,
+        "provider": "Together"
+      },
+      {
+        "round": 3,
+        "input": 3036,
+        "output": 332,
+        "cached_input": 2944,
+        "input_reserve": 4957,
+        "ms": 1490,
+        "cost_usd": 0.000443664,
+        "provider": "Together"
+      }
+    ],
+    "answer_stats": null,
+    "rejections": []
+  },
+  "DT-MNTH-005": {
+    "question": "how many bills came in during November 2021",
+    "run3_answer": "17 bills were introduced in federal parliament in 2021-11.",
+    "run5_answer": "Greenhouse Gas Storage Amendment (Fight for Australia\u2019s Coastline) Bill 2021; Illegal Detention of Australian Journalists (Free Julian Assange) Bill 2021; Religious Discrimination Bill 2022; Human Rights Legislation Amendment Bill 2022; Religious Discrimination (Consequential Amendments) Bill 2021; Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021; Corporate Collective Investment Vehicle Framework and Other Measures Bill 2021; Animal Health Australia and Plant Health Australia Funding Legislation Amendment Bill 2021; Electoral Legislation Amendment (Candidate Eligibility) Bill 2021; National Security Legislation Amendment (Comprehensive Review; Autonomous Sanctions Amendment (Magnitsky-style and Other Thematic Sanctions) Bill 2021; Migration Amendment (Strengthening the Character Test) Bill 2021; Migration Amendment (Protecting Migrant Workers) Bill 2021; Customs Amendment (Controlled Trials) Bill 2021; Health Insurance Legislation Amendment (Transparent Patient Outcomes) Bill 2021; Fair Work Amendment (Same Job, Same Pay) Bill 2021.",
+    "sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "17 bill records by introduction date in federal parliament in 2021-11",
+        "href": "https://opax.com.au/bills",
+        "url": "https://opax.com.au/bills",
+        "snippet": "17 bill records by introduction date in federal parliament in 2021-11",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-2",
+        "slug": "",
+        "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Fight for Australia\u2019s Coastline) Bill 2021: introduced 2021-11-29 in the Senate",
+        "href": "https://opax.com.au/bill/au-federal-s1328",
+        "url": "https://opax.com.au/bill/au-federal-s1328",
+        "snippet": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Fight for Australia\u2019s Coastline) Bill 2021: introduced 2021-11-29 in the Senate",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-3",
+        "slug": "",
+        "title": "Illegal Detention of Australian Journalists (Free Julian Assange) Bill 2021: introduced 2021-11-29 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6822",
+        "url": "https://opax.com.au/bill/au-federal-r6822",
+        "snippet": "Illegal Detention of Australian Journalists (Free Julian Assange) Bill 2021: introduced 2021-11-29 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-4",
+        "slug": "",
+        "title": "Religious Discrimination Bill 2022: introduced 2021-11-25 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6821",
+        "url": "https://opax.com.au/bill/au-federal-r6821",
+        "snippet": "Religious Discrimination Bill 2022: introduced 2021-11-25 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-5",
+        "slug": "",
+        "title": "Human Rights Legislation Amendment Bill 2022: introduced 2021-11-25 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6820",
+        "url": "https://opax.com.au/bill/au-federal-r6820",
+        "snippet": "Human Rights Legislation Amendment Bill 2022: introduced 2021-11-25 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-6",
+        "slug": "",
+        "title": "Religious Discrimination (Consequential Amendments) Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6819",
+        "url": "https://opax.com.au/bill/au-federal-r6819",
+        "snippet": "Religious Discrimination (Consequential Amendments) Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-7",
+        "slug": "",
+        "title": "Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6818",
+        "url": "https://opax.com.au/bill/au-federal-r6818",
+        "snippet": "Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-8",
+        "slug": "",
+        "title": "Corporate Collective Investment Vehicle Framework and Other Measures Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6817",
+        "url": "https://opax.com.au/bill/au-federal-r6817",
+        "snippet": "Corporate Collective Investment Vehicle Framework and Other Measures Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-9",
+        "slug": "",
+        "title": "Animal Health Australia and Plant Health Australia Funding Legislation Amendment Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6814",
+        "url": "https://opax.com.au/bill/au-federal-r6814",
+        "snippet": "Animal Health Australia and Plant Health Australia Funding Legislation Amendment Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-10",
+        "slug": "",
+        "title": "Electoral Legislation Amendment (Candidate Eligibility) Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6773",
+        "url": "https://opax.com.au/bill/au-federal-r6773",
+        "snippet": "Electoral Legislation Amendment (Candidate Eligibility) Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-11",
+        "slug": "",
+        "title": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6762",
+        "url": "https://opax.com.au/bill/au-federal-r6762",
+        "snippet": "National Security Legislation Amendment (Comprehensive Review and Other Measures No. 1) Bill 2021: introduced 2021-11-25 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-12",
+        "slug": "",
+        "title": "Autonomous Sanctions Amendment (Magnitsky-style and Other Thematic Sanctions) Bill 2021: introduced 2021-11-24 in the Senate",
+        "href": "https://opax.com.au/bill/au-federal-s1326",
+        "url": "https://opax.com.au/bill/au-federal-s1326",
+        "snippet": "Autonomous Sanctions Amendment (Magnitsky-style and Other Thematic Sanctions) Bill 2021: introduced 2021-11-24 in the Senate",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-13",
+        "slug": "",
+        "title": "Migration Amendment (Strengthening the Character Test) Bill 2021: introduced 2021-11-24 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6816",
+        "url": "https://opax.com.au/bill/au-federal-r6816",
+        "snippet": "Migration Amendment (Strengthening the Character Test) Bill 2021: introduced 2021-11-24 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-14",
+        "slug": "",
+        "title": "Migration Amendment (Protecting Migrant Workers) Bill 2021: introduced 2021-11-24 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6815",
+        "url": "https://opax.com.au/bill/au-federal-r6815",
+        "snippet": "Migration Amendment (Protecting Migrant Workers) Bill 2021: introduced 2021-11-24 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-15",
+        "slug": "",
+        "title": "Customs Amendment (Controlled Trials) Bill 2021: introduced 2021-11-24 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6813",
+        "url": "https://opax.com.au/bill/au-federal-r6813",
+        "snippet": "Customs Amendment (Controlled Trials) Bill 2021: introduced 2021-11-24 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-16",
+        "slug": "",
+        "title": "Health Insurance Legislation Amendment (Transparent Patient Outcomes) Bill 2021: introduced 2021-11-23 in the Senate",
+        "href": "https://opax.com.au/bill/au-federal-s1327",
+        "url": "https://opax.com.au/bill/au-federal-s1327",
+        "snippet": "Health Insurance Legislation Amendment (Transparent Patient Outcomes) Bill 2021: introduced 2021-11-23 in the Senate",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-17",
+        "slug": "",
+        "title": "Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2021 [No. 2]: introduced 2021-11-22 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6809",
+        "url": "https://opax.com.au/bill/au-federal-r6809",
+        "snippet": "Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2021 [No. 2]: introduced 2021-11-22 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-18",
+        "slug": "",
+        "title": "Fair Work Amendment (Same Job, Same Pay) Bill 2021: introduced 2021-11-22 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6808",
+        "url": "https://opax.com.au/bill/au-federal-r6808",
+        "snippet": "Fair Work Amendment (Same Job, Same Pay) Bill 2021: introduced 2021-11-22 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/bills",
+        "url": "https://opax.com.au/bills",
+        "snippet": "Exact count of the full published bills index; not a ranked sample. Coverage in federal parliament: 2010-11-24 to 2026-09-17. This describes indexed records, not proof of complete parliamentary history. Published snapshot build date: 2026-10-04T16:27:54+00:00. This is a build stamp, not a live data currency guarantee. Latest indexed introduced date: 2026-09-17. Dates are introduction dates and chambers are originating chambers. A status filter gives the snapshot status of that cohort, not bills passing on those dates.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ],
+    "trail": [
+      {
+        "id": 1,
+        "tool": "count_records",
+        "round": 1,
+        "label": "Counting bills",
+        "arg": "2021-11",
+        "results": 1,
+        "ms": 19,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "answer",
+        "round": 2,
+        "label": "Checking the answer",
+        "results": 19,
+        "ms": 6,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14081,
+        "output": 78,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12514,
+        "ms": 796,
+        "cost_usd": 0.000253644
+      },
+      {
+        "round": 2,
+        "input": 16570,
+        "output": 51,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 14745,
+        "ms": 865,
+        "cost_usd": 0.00089268
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "facts"
+    },
+    "rejections": []
+  },
+  "DT-MNTH-008": {
+    "question": "How many new federal bils were introduced druing November 2022?",
+    "run3_answer": "22 bills were introduced in federal parliament in 2022-11.\n\n- Human Rights (Children Born Alive Protection) Bill 2022.\n\n- Education and Other Legislation Amendment (Abolishing Indexation and Raising the Minimum Repayment Income for Education and Training Loans) Bill 2022.\n\n- Treasury Laws Amendment (2022 Measures No. 5) Bill 2022.\n\n- Inspector-General of Intelligence and Security and Other Legislation Amendment (Modernisation) Bill 2022.\n\n- COVID-19 Vaccination Status (Prevention of Discrimination) Bill 2022.\n\n- Classification (Publications, Films and Computer Games) Amendment (Loot Boxes) Bill 2022.\n\n- Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2022.\n\n- Treasury Laws Amendment (2022 Measures No. 4) Bill 2022.\n\n- Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2022.\n\n- Crimes Amendment (Penalty Unit) Bill 2022.",
+    "run5_answer": "Education and Other Legislation Amendment (Abolishing Indexation and Raising the Minimum Repayment Income for Education and Training Loans) Bill 2022; Inspector-General of Intelligence and Security and Other Legislation Amendment (Modernisation) Bill 2022; Paid Parental Leave Amendment (Improvements for Families and Gender Equality) Bill 2022; Public Interest Disclosure Amendment (Review) Bill 2022; Safeguard Mechanism (Crediting) Amendment Bill 2023; National Reconstruction Fund Corporation Bill 2023; Customs Legislation Amendment (Controlled Trials and Other Measures) Bill 2022; Export Control Amendment (Streamlining Administrative Processes) Bill 2022; Treasury Laws Amendment (Consumer Data Right) Bill 2022; Classification (Publications, Films and Computer Games) Amendment (Loot Boxes) Bill 2022; Fuel and Vehicle Standards Legislation Amendment (Reducing Vehicle Pollution) Bill 2022; Commonwealth Electoral Amendment (Stop the Lies) Bill 2022; Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2022; Treasury Laws Amendment (Modernising Business Communications and Other Measures) Bill 2023; Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2022; Telecommunications Legislation Amendment (Information Disclosure, National Interest and Other Measures) Bill 2022; Crimes Amendment (Penalty Unit) Bill 2022.",
+    "sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "22 bill records by introduction date in federal parliament in 2022-11",
+        "href": "https://opax.com.au/bills",
+        "url": "https://opax.com.au/bills",
+        "snippet": "22 bill records by introduction date in federal parliament in 2022-11",
+        "cited": true,
+        "kind": "count"
+      },
+      {
+        "resource": "fact-2",
+        "slug": "",
+        "title": "Human Rights (Children Born Alive Protection) Bill 2022: introduced 2022-11-30 in the Senate",
+        "href": "https://opax.com.au/bill/au-federal-s1359",
+        "url": "https://opax.com.au/bill/au-federal-s1359",
+        "snippet": "Human Rights (Children Born Alive Protection) Bill 2022: introduced 2022-11-30 in the Senate",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-3",
+        "slug": "",
+        "title": "Education and Other Legislation Amendment (Abolishing Indexation and Raising the Minimum Repayment Income for Education and Training Loans) Bill 2022: introduced 2022-11-30 in the Senate",
+        "href": "https://opax.com.au/bill/au-federal-s1355",
+        "url": "https://opax.com.au/bill/au-federal-s1355",
+        "snippet": "Education and Other Legislation Amendment (Abolishing Indexation and Raising the Minimum Repayment Income for Education and Training Loans) Bill 2022: introduced 2022-11-30 in the Senate",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-4",
+        "slug": "",
+        "title": "Treasury Laws Amendment (2022 Measures No. 5) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6968",
+        "url": "https://opax.com.au/bill/au-federal-r6968",
+        "snippet": "Treasury Laws Amendment (2022 Measures No. 5) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-5",
+        "slug": "",
+        "title": "Inspector-General of Intelligence and Security and Other Legislation Amendment (Modernisation) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6964",
+        "url": "https://opax.com.au/bill/au-federal-r6964",
+        "snippet": "Inspector-General of Intelligence and Security and Other Legislation Amendment (Modernisation) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-6",
+        "slug": "",
+        "title": "Paid Parental Leave Amendment (Improvements for Families and Gender Equality) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6960",
+        "url": "https://opax.com.au/bill/au-federal-r6960",
+        "snippet": "Paid Parental Leave Amendment (Improvements for Families and Gender Equality) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-7",
+        "slug": "",
+        "title": "Public Interest Disclosure Amendment (Review) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6958",
+        "url": "https://opax.com.au/bill/au-federal-r6958",
+        "snippet": "Public Interest Disclosure Amendment (Review) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-8",
+        "slug": "",
+        "title": "Safeguard Mechanism (Crediting) Amendment Bill 2023: introduced 2022-11-30 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6957",
+        "url": "https://opax.com.au/bill/au-federal-r6957",
+        "snippet": "Safeguard Mechanism (Crediting) Amendment Bill 2023: introduced 2022-11-30 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-9",
+        "slug": "",
+        "title": "National Reconstruction Fund Corporation Bill 2023: introduced 2022-11-30 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6955",
+        "url": "https://opax.com.au/bill/au-federal-r6955",
+        "snippet": "National Reconstruction Fund Corporation Bill 2023: introduced 2022-11-30 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-10",
+        "slug": "",
+        "title": "Customs Legislation Amendment (Controlled Trials and Other Measures) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6952",
+        "url": "https://opax.com.au/bill/au-federal-r6952",
+        "snippet": "Customs Legislation Amendment (Controlled Trials and Other Measures) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-11",
+        "slug": "",
+        "title": "Export Control Amendment (Streamlining Administrative Processes) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6951",
+        "url": "https://opax.com.au/bill/au-federal-r6951",
+        "snippet": "Export Control Amendment (Streamlining Administrative Processes) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-12",
+        "slug": "",
+        "title": "Treasury Laws Amendment (Consumer Data Right) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6950",
+        "url": "https://opax.com.au/bill/au-federal-r6950",
+        "snippet": "Treasury Laws Amendment (Consumer Data Right) Bill 2022: introduced 2022-11-30 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-13",
+        "slug": "",
+        "title": "COVID-19 Vaccination Status (Prevention of Discrimination) Bill 2022: introduced 2022-11-29 in the Senate",
+        "href": "https://opax.com.au/bill/au-federal-s1358",
+        "url": "https://opax.com.au/bill/au-federal-s1358",
+        "snippet": "COVID-19 Vaccination Status (Prevention of Discrimination) Bill 2022: introduced 2022-11-29 in the Senate",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-14",
+        "slug": "",
+        "title": "Classification (Publications, Films and Computer Games) Amendment (Loot Boxes) Bill 2022: introduced 2022-11-28 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6949",
+        "url": "https://opax.com.au/bill/au-federal-r6949",
+        "snippet": "Classification (Publications, Films and Computer Games) Amendment (Loot Boxes) Bill 2022: introduced 2022-11-28 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-15",
+        "slug": "",
+        "title": "Fuel and Vehicle Standards Legislation Amendment (Reducing Vehicle Pollution) Bill 2022: introduced 2022-11-28 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6948",
+        "url": "https://opax.com.au/bill/au-federal-r6948",
+        "snippet": "Fuel and Vehicle Standards Legislation Amendment (Reducing Vehicle Pollution) Bill 2022: introduced 2022-11-28 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-16",
+        "slug": "",
+        "title": "Commonwealth Electoral Amendment (Stop the Lies) Bill 2022: introduced 2022-11-28 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6947",
+        "url": "https://opax.com.au/bill/au-federal-r6947",
+        "snippet": "Commonwealth Electoral Amendment (Stop the Lies) Bill 2022: introduced 2022-11-28 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-17",
+        "slug": "",
+        "title": "Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2022: introduced 2022-11-24 in the Senate",
+        "href": "https://opax.com.au/bill/au-federal-s1357",
+        "url": "https://opax.com.au/bill/au-federal-s1357",
+        "snippet": "Commonwealth Electoral Amendment (Banning Dirty Donations) Bill 2022: introduced 2022-11-24 in the Senate",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-18",
+        "slug": "",
+        "title": "Treasury Laws Amendment (2022 Measures No. 4) Bill 2022: introduced 2022-11-23 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6946",
+        "url": "https://opax.com.au/bill/au-federal-r6946",
+        "snippet": "Treasury Laws Amendment (2022 Measures No. 4) Bill 2022: introduced 2022-11-23 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-19",
+        "slug": "",
+        "title": "Treasury Laws Amendment (Modernising Business Communications and Other Measures) Bill 2023: introduced 2022-11-23 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6945",
+        "url": "https://opax.com.au/bill/au-federal-r6945",
+        "snippet": "Treasury Laws Amendment (Modernising Business Communications and Other Measures) Bill 2023: introduced 2022-11-23 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-20",
+        "slug": "",
+        "title": "Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2022: introduced 2022-11-22 in the Senate",
+        "href": "https://opax.com.au/bill/au-federal-s1356",
+        "url": "https://opax.com.au/bill/au-federal-s1356",
+        "snippet": "Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2022: introduced 2022-11-22 in the Senate",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-21",
+        "slug": "",
+        "title": "Higher Education Support Amendment (2022 Measures No. 1) Bill 2022: introduced 2022-11-10 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6944",
+        "url": "https://opax.com.au/bill/au-federal-r6944",
+        "snippet": "Higher Education Support Amendment (2022 Measures No. 1) Bill 2022: introduced 2022-11-10 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-22",
+        "slug": "",
+        "title": "Telecommunications Legislation Amendment (Information Disclosure, National Interest and Other Measures) Bill 2022: introduced 2022-11-10 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6943",
+        "url": "https://opax.com.au/bill/au-federal-r6943",
+        "snippet": "Telecommunications Legislation Amendment (Information Disclosure, National Interest and Other Measures) Bill 2022: introduced 2022-11-10 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-23",
+        "slug": "",
+        "title": "Crimes Amendment (Penalty Unit) Bill 2022: introduced 2022-11-09 in the House of Representatives",
+        "href": "https://opax.com.au/bill/au-federal-r6942",
+        "url": "https://opax.com.au/bill/au-federal-r6942",
+        "snippet": "Crimes Amendment (Penalty Unit) Bill 2022: introduced 2022-11-09 in the House of Representatives",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/bills",
+        "url": "https://opax.com.au/bills",
+        "snippet": "Exact count of the full published bills index; not a ranked sample. Coverage in federal parliament: 2010-11-24 to 2026-09-17. This describes indexed records, not proof of complete parliamentary history. Published snapshot build date: 2026-10-04T16:27:54+00:00. This is a build stamp, not a live data currency guarantee. Latest indexed introduced date: 2026-09-17. Dates are introduction dates and chambers are originating chambers. A status filter gives the snapshot status of that cohort, not bills passing on those dates.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ],
+    "trail": [
+      {
+        "id": 1,
+        "tool": "count_records",
+        "round": 1,
+        "label": "Counting bills",
+        "arg": "2022-11",
+        "results": 1,
+        "ms": 14,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "answer",
+        "round": 2,
+        "label": "Checking the answer",
+        "results": 24,
+        "ms": 6,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14092,
+        "output": 78,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12526,
+        "ms": 524,
+        "cost_usd": 0.000256944
+      },
+      {
+        "round": 2,
+        "input": 17150,
+        "output": 39,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 15263,
+        "ms": 463,
+        "cost_usd": 0.00105228
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "facts"
+    },
+    "rejections": []
+  },
+  "NP-SAID-012": {
+    "question": "what did Zali Steggall reckon about the Climate Change (National Framework for Adaptation and Mitigation) (Consequential and Transitional Provisions) Bill 2021",
+    "run3_answer": "Zali Steggall is recorded as the sponsor of the Climate Change (National Framework for Adaptation and Mitigation) (Consequential.\n\n- and Mitigation) Bill 2021.\n\n- In the same speech she described the bill's second element as extending climate risk disclosure to government agencies and departments, arguing they too are exposed to climate change impacts.\n\n- She told the House on 18 October 2021 that the Reserve Bank of Australia had observed climate change exposing financial institutions and the wider financial system to rising risks if unaddressed.\n\n-, and that businesses worldwide had recognised the value of such disclosure.\n\n- On 27 October 2021 Zali Steggall sought leave to move that standing orders be suspended so both framework bills in her name could be debated together and take priority for final determination.",
+    "run5_answer": "- In 2021, Zali Steggall (Independent) said: \u201cthe Climate Change (National Framework for Adaptation and Mitigation) Bill 2021 and the Climate Change (National Framework for Adaptation and Mitigation) (Consequential and Transitional Provisions\u201d\n- In 2021, Zali Steggall (Independent) said: \u201cThis bill, the Climate Change (National Framework for Adaptation and Mitigation) (Consequential and Transitional Provisions) Bill 2021, will make consequential and transitional amendments to existing\u201d\n- In 2020, Zali Steggall (Independent) said: \u201cThe Climate Change (National Framework for Adaptation and Mitigation) (Consequential and Transitional Provisions) Bill 2020 will repeal the\u201d",
+    "sources": [
+      {
+        "resource": "adb71691c3e04cc787480fb392e34168",
+        "slug": "speech-414556",
+        "title": "Zali Steggall \u2014 2021-10-27",
+        "href": "https://opax.com.au/doc/speech-414556",
+        "url": "https://opax.com.au/doc/speech-414556",
+        "snippet": "I seek leave to move the following motion: That so much of the standing orders be suspended as would prevent the private Members' business orders of the day relating to the Climate Change (National Framework for Adaptation and Mitigation) Bill 2021 and the Climate Change (National Framework for Adaptation and Mitigation) (Consequential and Transitional Provisions) Bill 2021 standing in the name of the Member for Warringah being called on immediately, debated together and given priority over all other business for final determination of the House.",
+        "cited": true,
+        "kind": "speech",
+        "date": "2021-10-27",
+        "speaker": "Zali Steggall"
+      },
+      {
+        "resource": "6e7a21c9e36f48cebcec72f90c2718ab",
+        "slug": "speech-413018",
+        "title": "Zali Steggall \u2014 2021-10-18",
+        "href": "https://opax.com.au/doc/speech-413018",
+        "url": "https://opax.com.au/doc/speech-413018",
+        "snippet": "I move: That this bill be now read a second time. This bill, the Climate Change (National Framework for Adaptation and Mitigation) (Consequential and Transitional Provisions) Bill 2021, will make consequential and transitional amendments to existing acts for the purposes of the substantive bill, the Climate Change (National Framework for Adaptation and Mitigation) Bill 2021. This bill also introduces climate risk disclosure for Commonwealth entities. Commonwealth entities like government agencies and departments are exposed to the risks of climate change impacts. The Reserve Bank of Australia has observed that climate change is exposing financial institutions and the financial system more broadly to risks that will rise over time if not addressed. Since 2017, the Task Force on Climate-related Financial Disclosures, TCFD, led by Michael Bloomberg, has been leading voluntary climate reporting standardisation for private companies. Companies around the world have recognised the value of climate disclosure. Benefits include more effective risk assessment, capital allocation and strategic planning. Banks, insurers, developers, miners and big business around the world have been rapidly i",
+        "cited": true,
+        "kind": "speech",
+        "date": "2021-10-18",
+        "speaker": "Zali Steggall"
+      },
+      {
+        "resource": "2d3f130cc6b347e4b04ce3b39f6cb4eb",
+        "slug": "speech-397916",
+        "title": "Zali Steggall \u2014 2020-11-09",
+        "href": "https://opax.com.au/doc/speech-397916",
+        "url": "https://opax.com.au/doc/speech-397916",
+        "snippet": "I move: That this bill be now read a second time. I've already introduced the climate change bill which puts into law, if passed, a net zero emissions target by 2050; legislates for climate risk assessment and adaptation, and resilience planning; and establishes regular technology readiness assessments and an independent climate change commission. Independent Climate Change CommissionUnderpinning the other elements of the climate change bill, is the establishment of an independent climate change commission. This body is modelled on the successful and respected Climate Change Committee in the United Kingdom. The Climate Change Committee has provided sound advice over the last decade, ensuring that the United Kingdom is on track with their Paris commitments. We have already had the Climate Change Authority, but, unfortunately, over many years of partisan attacks it has been defunded and weakened. We need a trusted independent body that the government defers to and from which the public can receive clear, independent, expert based climate advice. The Climate Change (National Framework for Adaptation and Mitigation) (Consequential and Transitional Provisions) Bill 2020 will repeal the",
+        "cited": true,
+        "kind": "speech",
+        "date": "2020-11-09",
+        "speaker": "Zali Steggall"
+      }
+    ],
+    "trail": [
+      {
+        "id": 2,
+        "tool": "person_quotes",
+        "round": 1,
+        "label": "Reading their speeches",
+        "arg": "Zali Steggall",
+        "results": 6,
+        "ms": 1579,
+        "ok": true
+      },
+      {
+        "id": 1,
+        "tool": "search",
+        "round": 1,
+        "label": "Searching the record",
+        "arg": "Climate Change (National Framework for A",
+        "results": 6,
+        "ms": 2747,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "read_passage",
+        "round": 2,
+        "label": "Reading a passage",
+        "results": 1,
+        "ms": 0,
+        "ok": true
+      },
+      {
+        "id": 4,
+        "tool": "read_passage",
+        "round": 2,
+        "label": "Reading a passage",
+        "ms": 0,
+        "ok": false
+      },
+      {
+        "id": 6,
+        "tool": "corpus_records",
+        "round": 3,
+        "label": "Reading source passages",
+        "arg": "Zali Steggall",
+        "results": 4,
+        "ms": 1594,
+        "ok": true
+      },
+      {
+        "id": 5,
+        "tool": "corpus_records",
+        "round": 3,
+        "label": "Reading source passages",
+        "arg": "Zali Steggall",
+        "results": 4,
+        "ms": 1624,
+        "ok": true
+      },
+      {
+        "id": 7,
+        "tool": "search",
+        "round": 4,
+        "label": "Searching the record",
+        "arg": "Steggall consequential bill climate risk",
+        "results": 4,
+        "ms": 1407,
+        "ok": true
+      },
+      {
+        "id": 8,
+        "tool": "search",
+        "round": 4,
+        "label": "Searching the record",
+        "arg": "Steggall second reading Climate Change C",
+        "results": 4,
+        "ms": 1618,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14077,
+        "output": 145,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12543,
+        "ms": 984,
+        "cost_usd": 0.000332844
+      },
+      {
+        "round": 2,
+        "input": 18341,
+        "output": 127,
+        "cached_input": 14080,
+        "cached": 14080,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 16919,
+        "ms": 967,
+        "cost_usd": 0.00151518
+      },
+      {
+        "round": 3,
+        "input": 19034,
+        "output": 200,
+        "cached_input": 18432,
+        "cached": 18432,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 17686,
+        "ms": 1055,
+        "cost_usd": 0.000531192
+      },
+      {
+        "round": 4,
+        "input": 23901,
+        "output": 122,
+        "cached_input": 18944,
+        "cached": 18944,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 22648,
+        "ms": 1082,
+        "cost_usd": 0.001747164
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "record_list",
+      "salvaged": "tokens"
+    },
+    "rejections": []
+  },
+  "BL-ASNT-004": {
+    "question": "when did the Maritime Legislation Amendment Bill 2022 become law",
+    "run3_answer": "The Maritime Legislation Amendment Bill 2022 became law on 5 December 2022, when the Maritime Legislation Amendment Act 2022 received royal assent.\n\nThe bill had passed both houses on 28 November 2022, after first being introduced in the Senate on 28 September 2022.",
+    "run5_answer": "The Maritime Legislation Amendment Bill 2022 became law as the Maritime Legislation Amendment Act 2022.",
+    "sources": [
+      {
+        "resource": "fact-1",
+        "slug": "",
+        "title": "On 28 September 2022, the Maritime Legislation Amendment Bill 2022 was first introduced in the Senate.",
+        "href": "https://opax.com.au/bill/au-federal-s1349",
+        "url": "https://opax.com.au/bill/au-federal-s1349",
+        "snippet": "On 28 September 2022, the Maritime Legislation Amendment Bill 2022 was first introduced in the Senate.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-2",
+        "slug": "",
+        "title": "On 5 December 2022, the Maritime Legislation Amendment Bill 2022 received royal assent.",
+        "href": "https://opax.com.au/bill/au-federal-s1349",
+        "url": "https://opax.com.au/bill/au-federal-s1349",
+        "snippet": "On 5 December 2022, the Maritime Legislation Amendment Bill 2022 received royal assent.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-3",
+        "slug": "",
+        "title": "On 28 November 2022, the Maritime Legislation Amendment Bill 2022 passed both houses.",
+        "href": "https://opax.com.au/bill/au-federal-s1349",
+        "url": "https://opax.com.au/bill/au-federal-s1349",
+        "snippet": "On 28 November 2022, the Maritime Legislation Amendment Bill 2022 passed both houses.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-4",
+        "slug": "",
+        "title": "The Maritime Legislation Amendment Bill 2022 has recorded status passed as at 5 December 2022.",
+        "href": "https://opax.com.au/bill/au-federal-s1349",
+        "url": "https://opax.com.au/bill/au-federal-s1349",
+        "snippet": "The Maritime Legislation Amendment Bill 2022 has recorded status passed as at 5 December 2022.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "fact-7",
+        "slug": "",
+        "title": "The Maritime Legislation Amendment Bill 2022 is linked to Maritime Legislation Amendment Act 2022, with royal assent on 5 December 2022.",
+        "href": "https://www.legislation.gov.au/C2022A00078",
+        "url": "https://www.legislation.gov.au/C2022A00078",
+        "snippet": "The Maritime Legislation Amendment Bill 2022 is linked to Maritime Legislation Amendment Act 2022, with royal assent on 5 December 2022.",
+        "cited": true,
+        "kind": "record"
+      },
+      {
+        "resource": "coverage",
+        "slug": "",
+        "title": "Coverage of the selected records",
+        "href": "https://opax.com.au/bill/au-federal-s1349",
+        "url": "https://opax.com.au/bill/au-federal-s1349",
+        "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. Bill lifecycle dates and sponsors come from the published bill records. Null fields are not recorded or unavailable; status_as_of is not an introduction, passage or assent date.",
+        "cited": true,
+        "kind": "record",
+        "coverage": true
+      }
+    ],
+    "trail": [
+      {
+        "id": 1,
+        "tool": "find_records",
+        "round": 1,
+        "label": "Finding records",
+        "arg": "Maritime Legislation Amendment Bill 2022",
+        "results": 1,
+        "ms": 31,
+        "ok": true
+      },
+      {
+        "id": 2,
+        "tool": "find_records",
+        "round": 1,
+        "label": "Finding records",
+        "arg": "au-federal-s1349",
+        "results": 1,
+        "ms": 32,
+        "ok": true
+      },
+      {
+        "id": 3,
+        "tool": "answer",
+        "round": 2,
+        "label": "Checking the answer",
+        "results": 6,
+        "ms": 8,
+        "ok": true
+      }
+    ],
+    "turns": [
+      {
+        "round": 1,
+        "input": 14051,
+        "output": 96,
+        "cached_input": 13824,
+        "cached": 13824,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 12516,
+        "ms": 798,
+        "cost_usd": 0.000266244
+      },
+      {
+        "round": 2,
+        "input": 17086,
+        "output": 51,
+        "cached_input": 13952,
+        "cached": 13952,
+        "provider": "Together",
+        "reasoning": 0,
+        "input_reserve": 15136,
+        "ms": 525,
+        "cost_usd": 0.001085112
+      },
+      {
+        "round": 3,
+        "input": 1572,
+        "output": 60,
+        "cached_input": 0,
+        "input_reserve": 3295,
+        "ms": 615,
+        "cost_usd": 0.0005436,
+        "provider": "Together"
+      },
+      {
+        "round": 3,
+        "input": 995,
+        "output": 56,
+        "cached_input": 0,
+        "input_reserve": 3295,
+        "ms": 520,
+        "cost_usd": 0.0003657,
+        "provider": "Together"
+      }
+    ],
+    "answer_stats": {
+      "points_in": 0,
+      "points_kept": 0,
+      "points_uncited": 0,
+      "repairs": {},
+      "drops": {},
+      "uncited": {},
+      "mode": "facts"
+    },
+    "rejections": []
+  }
+}

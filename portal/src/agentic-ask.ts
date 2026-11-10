@@ -6,6 +6,8 @@ import { resolvePartySubject } from './ask-party-subject'
 import { receiptYearWindow } from './receipt-period'
 import { exactRecordLookup, prependLookupCorrection } from './ask-exact-lookup'
 import { isRecordCountQuestion } from './ask-scope-intent'
+import { requestedPersonSlot } from './ask-person-slot'
+import { resolvePersonName } from './person-name-matching'
 import { serviceText, type ServicePeriod } from './person-service'
 /**
  * OPAX-owned Ask orchestration in the Worker
@@ -28,85 +30,15 @@ import { ResearchError, researchSources, type Research, type ResearchPayload, ty
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
 import { CAUSAL } from './research-coherence.mjs'
 
-export const AGENTIC_PROMPT_VERSION = `agentic-ask-9-observe-act/${ANSWER_WRITING_VERSION}`
+export const AGENTIC_PROMPT_VERSION = `agentic-ask-10-evidence-completion/${ANSWER_WRITING_VERSION}`
 export const AGENTIC_BUDGET_MS = ASK_HARD_WALL_MS
 export const AGENTIC_MAX_STEPS = ASK_MAX_TOOL_CALLS
 /** Soft answer target; a missing fact or recovery may use the rest of the hard allowance. */
 export const LOOP_ANSWER_TARGET_MS = ASK_ANSWER_TARGET_MS
 
 export type Shape = 'ranking' | 'trend' | 'comparison' | 'money'
-export interface Period { kind: 'current' | 'all' | 'window'; since?: string; until?: string; label: string }
-/** Consume specific dates before bare years, so their years cannot widen the window. */
-function periodTokens(text: string): { start: string; end: string; index: number }[] {
-  const tokens: { start: string; end: string; index: number }[] = []
-  const rejected: [number, number][] = []
-  let remaining = text
-  const scan = (pattern: RegExp, bounds: (m: RegExpMatchArray) => [string, string] | null, bareYears = false) => {
-    remaining = remaining.replace(pattern, (...args) => {
-      const index = args.at(-2) as number, m = args.slice(0, -2) as RegExpMatchArray
-      if (!bareYears && rejected.some(([start, end]) => index < end && index + m[0].length > start)) return m[0]
-      const value = bounds(m)
-      // Rejected new syntax retains the existing year fallback; never erase it into all-time.
-      if (!value) { rejected.push([index, index + m[0].length]); return m[0] }
-      tokens.push({ start: value[0], end: value[1], index })
-      return ' '.repeat(m[0].length)
-    })
-  }
-  const date = (year: number, month: number, day: number): string | null => {
-    const value = new Date(Date.UTC(year, month - 1, day))
-    return value.getUTCFullYear() === year && value.getUTCMonth() === month - 1 && value.getUTCDate() === day ? value.toISOString().slice(0, 10) : null
-  }
-  // Preserve the existing ISO-date path; tool validation owns invalid ISO dates.
-  scan(/\b((?:19|20)\d{2})-(\d{2})-(\d{2})\b/g, m => [m[0], m[0]])
-  const financialYear = (year: number): [string, string] => [`${year}-07-01`, `${year + 1}-06-30`]
-  scan(/\b(?:fy|financial[ -]years?)\s*(?:ending|ended)\s+((?:19|20)\d{2})\b/g, m => financialYear(Number(m[1]) - 1))
-  scan(/\b(?:fy|financial[ -]years?)\s*((?:19|20)\d{2})(?:\s*[/–—‑-]\s*((?:19|20)\d{2}|\d{2}))?\b(?!\s*(?:\/\s*\d|[–—‑-]\s*\d{1,2}\b))/g, m => {
-    const year = Number(m[1])
-    return !m[2] || Number(m[2]) === (m[2].length === 2 ? (year + 1) % 100 : year + 1) ? financialYear(year) : null
-  })
-  // A short ending or slash denotes an FY; a full dashed pair remains a calendar-year range.
-  scan(/\b((?:19|20)\d{2})\s*(?:[/–—‑-]\s*(\d{2})|\/\s*((?:19|20)\d{2}))\b(?!\s*(?:\/\s*\d|[–—‑-]\s*\d{1,2}\b))/g, m => {
-    const year = Number(m[1]), end = m[2] || m[3]
-    return Number(end) === (end.length === 2 ? (year + 1) % 100 : year + 1) ? financialYear(year) : null
-  })
-  const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
-  const month = '(?:january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sept?|oct|nov|dec)'
-  const dayBounds = (year: string, name: string, day: string): [string, string] | null => {
-    const value = date(Number(year), months.indexOf(name.slice(0, 3)) + 1, Number(day))
-    return value ? [value, value] : null
-  }
-  scan(new RegExp(`\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+(?:of\\s+)?(${month})\\.?\\s+((?:19|20)\\d{2})\\b`, 'g'), m => dayBounds(m[3], m[2], m[1]))
-  scan(new RegExp(`\\b(${month})\\.?\\s+(\\d{1,2})(?:st|nd|rd|th)?[,]?\\s+((?:19|20)\\d{2})\\b`, 'g'), m => dayBounds(m[3], m[1], m[2]))
-  scan(new RegExp(`\\b(${month})\\.?\\s+((?:19|20)\\d{2})\\b`, 'g'), m => {
-    const year = Number(m[2]), month = months.indexOf(m[1].slice(0, 3)) + 1
-    return [date(year, month, 1)!, new Date(Date.UTC(year, month, 0)).toISOString().slice(0, 10)]
-  })
-  scan(/\b((?:19|20)\d{2})(s)?\b/g, m => [`${m[1]}-01-01`, `${Number(m[1]) + (m[2] === 's' ? 9 : 0)}-12-31`], true)
-  return tokens
-}
-export function inferPeriod(question: string, override?: unknown): Period {
-  const q = question.toLowerCase()
-  if (override === 'all' || /\b(?:whole record|all[ -]time|across the record)\b/.test(q)) return { kind: 'all', label: 'Counting speeches across the whole record.' }
-  if (/\bthis term\b/.test(q) && /\blast term\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], label: 'Counting speeches in the current and previous parliaments, since July 2022.' }
-  if (override === 'current' || /\b(?:this|current) (?:term|parliament)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
-  if (/\blast (?:term|parliament)\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], until: TERMS['47th'][1]!, label: 'Counting speeches in the previous parliament, July 2022 to March 2025.' }
-  // A bill/statute title's year is not a date filter on its debate history.
-  const dated = q.replace(/\([^()]*\)(?=\s+(?:bill|act)\b)/g, '').replace(/\b(?:bill|act)(?:\s+\(no\.\s*\d+\))?\s+(?:19|20)\d{2}(?:[-–]\d{2,4})?(?:\s*\[(?:19|20)\d{2}\])?/g, '')
-  const tokens = periodTokens(dated)
-  if (tokens.length) {
-    const shift = (date: string, days: number) => new Date(Date.parse(date) + days * 86400000).toISOString().slice(0, 10)
-    const bounds = tokens.map(({ start, end, index }) => {
-      const operator = dated.slice(0, index).match(/\b(since|from|after|before|until|through|to)\s+(?:the\s+)?$/)?.[1]
-      return { start: operator === 'after' ? shift(end, 1) : start, end: operator === 'before' ? shift(start, -1) : end, operator }
-    })
-    const starts = bounds.filter(b => !['before', 'until', 'through', 'to'].includes(b.operator ?? ''))
-    const ends = bounds.filter(b => !['after', 'since', 'from'].includes(b.operator ?? ''))
-    const since = starts.map(b => b.start).sort().at(0), until = ends.map(b => b.end).sort().at(-1)
-    return { kind: 'window', ...(since ? { since } : {}), ...(until ? { until } : {}), label: `Records from ${since ?? 'the start of the record'} to ${until ?? 'the present'}.` }
-  }
-  if (/\b(?:is|are)\s+(?:\S+\s+){0,4}(?:making|speaking|debating|discussing|talking)\b|\b(?:speaks|says|mentions|debates|discusses)\b|\b(?:is|are)\s+(?:\S+\s+){0,3}(?:debated|discussed)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
-  return { kind: 'all', label: 'Counting speeches across the whole record.' }
-}
+export { inferPeriod, type Period } from './ask-period'
+import { inferPeriod, type Period } from './ask-period'
 // ---------------------------------------------------------------- route classifier
 /**
  * Route-only rollout: only these shapes take the agentic path; every other
@@ -195,6 +127,7 @@ export function plannerPrompt(): { system: string; user: string } {
     '',
     `Topics: ${TOPICS.join(', ')}. States: ${STATES.join(', ')} (federal = Commonwealth parliament). Chambers: ${CHAMBERS.join(', ')}. Terms: ${Object.entries(TERMS).map(([k, [a, b]]) => `${k} ${a}..${b ?? 'now'}`).join('; ')}.`,
     'Rules:',
+    '- Choose capabilities from their registry descriptions, including original speeches and releases, state legislation, finance datasets, entity profiles, access registers, member voting histories and sponsored bills. Follow returned detail and paging instructions. Do not stop after an empty sample or infer a whole-period absence from it.',
     '- Electorate demographics -> electorates only, never find_quotes or speech counts. Unqualified "median income" = median_income (personal AUD/week), NOT household income. Highest/oldest/most -> order desc; lowest/youngest -> asc. "In X" for a named seat -> operation lookup and electorate X. State parliament -> jurisdiction (e.g. vic); federal seats in a state -> jurisdiction federal + state (e.g. vic). Missing profiles cannot answer a ranking; never substitute speech figures.',
     '- Any "how many", "number of" or "more or fewer than" question about divisions or bills -> count_records with record_type divisions or bills. Never derive totals from find_records, search or other ranked samples. Set the requested jurisdiction and chamber. Select one date (YYYY-MM-DD), month (YYYY-MM), year, financial_year (YYYY-YY) or federal term (e.g. 44th), or use inclusive since/until dates. Use group_by year or month for trends and comparisons across periods; retain every requested group. For divisions on a named bill, pass bill. For bills introduced on a day, use date; add include_records true when their names are requested. For bill passage rates, request status and use the returned denominator and share, never calculate a rate from sample records.',
     '- Map the subject to ONE topic label when it fits ("gambling reform" -> gambling, "climate change" -> climate-environment, "the budget" -> tax-budget).',
@@ -202,7 +135,7 @@ export function plannerPrompt(): { system: string; user: string } {
     '- Dates: "since 2022" -> since 2022-01-01. "this term" -> term 48th, "last term" -> term 47th. A decade ("the 2010s") -> since 2010-01-01, until 2019-12-31.',
     '- An exact person, bill, division or date lookup must retain that identity and date. A nearby title or another date cannot answer it. Empty results mean no matching record, not zero votes and not permission to substitute a related record. Check a claimed party, vote or bill status against the record before explaining its reasons.',
     '- Speech totals -> count_speeches, not count_records or a retrieved sample. "Is X debated more / how has X changed / which year" about speeches -> speech_trend (by year, decade or term). Two named speech years -> speech_trend by year with from_year and to_year.',
-    '- Votes versus words -> member_votes(keyword, person or party) AND count_speeches for the same person or party and topic (group_by none).',
+    '- Select the dedicated capability described in the tool catalogue. For vote histories use the authoritative archive reader and follow its paging; count words using the same person, party and period. Compatibility aliases are for old clients.',
     '- One recorded division, its outcome, party vote, named member vote or floor crossers -> division, preserving exact date and chamber and passing title words, bill or division_id. Use lookup for who crossed the floor on one division and select its named dissenters, not the number of matching divisions. Outcome questions need the result and recorded ayes/noes, without floor-crossing commentary unless asked. A year in a bill title is not the division date. Floor crossing over a period -> division operation floor_crossing; party agreement -> operation party_agreement with party and other_party. member_votes only summarises a keyword sample across several divisions.',
     '- A later step can use an earlier result: "$1" is the top name from step 1 (a speaker or party), "$1.party" is that person\'s party. To get a speaker\'s party use find_people("$1") then "$2.party".',
     '- Money: summed federal receipts, rankings by total and annual receipt trends -> money_totals, with financial_year or FY starting years in from_year/to_year. party_receipts(party) lists donors to a party; party_receipts(industry) gives an industry\'s totals by party. Member expense totals -> member_expenses with the requested calendar or financial year. Industries: gambling, mining, fossil_fuels, finance, property, unions, health, hospitality, media, tech.',
@@ -284,7 +217,22 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
     entities = [filter.speaker || d.person ? `person:${filter.speaker || d.person}` : '', filter.party || d.party ? `party:${filter.party || d.party}` : ''].filter(Boolean)
     if (d.coverage_only || d.calculated_answer || r.tool === 'person_overview') {
       r.cite.forEach(cite => add(cite.label, cite))
-    } else if (getAskTool(r.tool)) {
+    } else if (getAskTool(r.tool)?.evidenceKind === 'passages') {
+      // Original passages use citation IDs, never a second set of record-fact IDs.
+      continue
+    } else if (r.tool === 'member_votes' && d.counts_complete_for_scope && d.person && d.counts && r.cite[0]) {
+      const counts = d.counts as Record<string, number>
+      const divisions = counts.aye + counts.no + counts.paired + counts.absent + counts.other
+      const related = (d.rows as Record<string, unknown>[]).map(row => ({ label: `${row.date}: ${row.title} (${row.vote === 'aye' || row.vote === 'no' ? 'voted ' : ''}${row.vote})`, url: String(row.url) }))
+      if (divisions) add(`${d.person} voted in ${divisions} divisions with "${d.keyword}" in the title: aye ${counts.aye}, no ${counts.no}`, { ...r.cite[0], kind: 'record', related })
+    } else if (r.tool === 'member_votes' && d.summary) {
+      // Cached pre-registry vote payloads retain their labelled split and original supporting records.
+      const s = d.summary as Record<string, number>, who = (d.person ?? d.party) as string
+      if (!s.divisions || !r.cite[0]) continue
+      const url = r.list ?? r.cite[0].url, related = r.cite.map(c => ({ label: c.label, url: c.url }))
+      add(d.person ? `${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: aye ${s.aye}, no ${s.no}`
+        : `${who} voted in ${s.divisions} divisions with "${d.keyword}" in the title: all aye in ${s.all_aye}, all no in ${s.all_no}, split in ${s.split}`, { kind: 'record', label: `Divisions with "${d.keyword}" in the title`, url, related })
+    } else if (getAskTool(r.tool) && getAskTool(r.tool)?.askFactStyle !== 'legacy') {
       r.cite.forEach(cite => add(cite.label, cite))
     } else if (r.tool === 'count_speeches') {
       const rows = (d.rows as { name: string; count: number }[] | undefined)
@@ -292,7 +240,7 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
       else if (rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} ${d.described}`, r.cite[i], [...entities, `${d.group_by === 'party' ? 'party' : 'person'}:${row.name}`],
         { group: countLead(filter, d.group_by === 'party' ? 'party' : 'speaker'), row: `${row.name}: ${n(row.count)}`, basis: String(filter.venue ?? 'chamber') }))
       else if (d.unanswerable) notes.add('The record cannot rank these speeches by party.')
-      else if (!Array.isArray(rows) && typeof d.total === 'number' && r.cite[0]) add(`${d.total} ${d.described}`, r.cite[0], entities, { basis: String(filter.venue ?? 'chamber') })
+      else if ((!Array.isArray(rows) || !['speaker', 'party'].includes(String(d.group_by))) && typeof d.total === 'number' && r.cite[0]) add(`${d.total} ${d.described}`, r.cite[0], entities, { basis: String(filter.venue ?? 'chamber') })
     } else if (r.tool === 'speech_trend') {
       ;(d.rows as { period: string; count: number; share: number; labelled: number }[]).forEach((row, i) =>
         add(`${row.period}: ${row.count} ${d.described}${row.labelled ? ` (${(row.share * 100).toFixed(1)}% of ${row.labelled} topic-labelled speeches)` : ''}`, r.cite[i], entities,
@@ -435,7 +383,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     if (!surnames.has(surname)) surnames.set(surname, new Set())
     surnames.get(surname)!.add(p.name)
   }
-  const namePrefixes = new Set('has have did does do what who why how when is was were are by from about on of for to with and or versus vs compare senator minister mr mrs ms dr the will can could should'.split(' '))
+  const namePrefixes = new Set('d has have did does do what who why how when is was were are by from about on of for to with and or versus vs compare senator minister mr mrs ms dr the will can could should'.split(' '))
   for (const [surname, names] of surnames) if (remainder.includes(` ${surname} `) && capitalised([...names][0].trim().split(' ').at(-1)!)) {
     const before = remainder.slice(0, remainder.indexOf(` ${surname} `)).trim().split(' ').at(-1) ?? ''
     const given = [...names].some(name => normaliseQuestion(name).split(' ').slice(0, -1).includes(before))
@@ -498,7 +446,11 @@ export async function resolveNamedScope(question: string, deps: ToolDeps, ms = 4
     const people = [...register, ...((roster as { people?: { name: string }[] } | null)?.people ?? [])]
     const combined = { people: [...new Map(people.map(p => [p.name, p])).values()] }
     signal.throwIfAborted()
-    const scope = extractNamedScope(question + (filters.speaker ? ` speeches by ${filters.speaker}` : ''), combined, bills)
+    const slot = requestedPersonSlot(question)
+    const resolution = slot ? resolvePersonName(slot, combined.people) : null
+    const corrected = slot && resolution?.status === 'matched' ? question.replace(slot, resolution.candidates[0].person.name) : question
+    const scope = extractNamedScope(corrected + (filters.speaker ? ` speeches by ${filters.speaker}` : ''), combined, bills)
+    if (corrected !== question) scope.resolvedQuestion = corrected
     if (!(bills as { bills?: unknown[] } | null)?.bills && /\bbill\b/i.test(question)) scope.unresolved = true
     return scope
   }, ms, deps.signal)
@@ -592,7 +544,10 @@ export function periodPlan(plan: Plan, period: Period, filters: Record<string, u
 /** Fixed labels and bounded plain arguments. The client escapes these as text. */
 export function stepEvent(step: PlanStep, id: number, committee = false): StepEvent {
   const registered = getAskTool(step.tool)
-  if (registered) return { id, ...registered.stepLabel(step.args), state: 'running' }
+  if (registered && registered.askFactStyle !== 'legacy') {
+    const label = registered.stepLabel(step.args)
+    return { id, ...label, ...(label.arg ? { arg: label.arg.replace(/[<>&"'\x00-\x1f]/g, '').slice(0, 40) } : {}), ...(committee ? { label: 'Checking committee hearings' } : {}), state: 'running' }
+  }
   const a = step.args
   const label = committee || step.tool === 'count_speeches' && a.venue === 'committee' ? 'Checking committee hearings' : step.tool === 'count_speeches' ? a.group_by === 'speaker' ? 'Counting by speaker' : a.group_by === 'party' ? 'Counting by party' : 'Searching speeches' : ({ member_votes: 'Checking votes', party_receipts: 'Checking disclosed receipts', speech_trend: 'Comparing years', find_quotes: 'Searching speeches', find_people: 'Resolving a name', search: 'Searching the record', person_quotes: 'Reading their speeches', read_passage: 'Reading a passage', finish: 'Selecting record facts', answer: 'Checking the answer', decline: 'Checking record coverage' } as Record<string, string>)[step.tool]
   const moneyArgs = new Set(['Labor', 'Liberal', 'Greens', 'Nationals', 'LNP', 'Independent', 'One Nation', 'United Australia Party', 'gambling', 'mining', 'fossil_fuels', 'finance', 'property', 'unions', 'health', 'hospitality', 'media', 'tech'])
@@ -837,7 +792,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
         /\bwhich year\b.*\bmost\b/i.test(question) && !plan.steps.some(s => s.tool === 'speech_trend' && (s.args.by ?? 'year') === 'year') ||
         plan.shape === 'trend' && !has('count_speeches') && !has('speech_trend') ||
         plan.shape === 'money' && (!has('party_receipts') || !has('count_speeches')) ||
-        plan.shape === 'comparison' && (!has('count_speeches') || VOTE_WORDS.test(question) && !has('member_votes'))) plan = null
+        plan.shape === 'comparison' && (!has('count_speeches') || VOTE_WORDS.test(question) && !['member_votes', 'member_divisions', 'division'].some(has))) plan = null
   }
   if (plan && plan.shape !== 'unanswerable' && ((!researched && plan.shape !== classifyAgentic(question).shape) || topic && usedOnly(plan.steps).filter(s => ['count_speeches', 'speech_trend'].includes(s.tool)).some(s => s.args.topic !== topic))) plan = null
   // Schema-valid but semantically incomplete plans also fall back to Ask.
@@ -872,7 +827,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   // A failed join or partial comparison must never imply missing votes or money.
   const checkedResults = usedOnly(results.map((result, index) => ({ result, index }))).filter(({ index }) => !coverageBlocked.has(index)).map(({ result }) => result)
   if (results.length !== plan.steps.length || checkedResults.some(r => !r.ok || r.data?.exact === false ||
-    r.tool === 'member_votes' && !(r.data?.summary as { divisions?: number } | undefined)?.divisions ||
+    r.tool === 'member_votes' && !(r.data?.rows as unknown[] | undefined)?.length ||
     r.tool === 'party_receipts' && !donationLimitation(r) && !(r.data?.rows as unknown[] | undefined)?.length)) return base({ reason: 'no_supported_claim', over_budget: left() < 8_000 })
   const limitedDonations = checkedResults.find(donationLimitation)
   if (limitedDonations) {

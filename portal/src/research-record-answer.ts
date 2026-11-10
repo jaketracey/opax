@@ -5,7 +5,7 @@ import { requestedBillTitle, billTitleMatches } from './bill-title'
 /** Keep the requested bill fact ahead of supporting lifecycle dates, including misspelt introduction verbs. */
 export function billQuestionFocus(question: string): 'sponsor' | 'introduced' | 'assent' | 'status' | 'passed' | 'portfolio' {
   if (/\bsponsor\w*|\bwho\b.{0,60}\b(?:intro\w*|mov\w*)\b/i.test(question)) return 'sponsor'
-  if (/\bassent\b|\bact (?:no|number)\b/i.test(question)) return 'assent'
+  if (/\bassent\b|\bact (?:no|number)\b|\b(?:become|became) law\b/i.test(question)) return 'assent'
   if (/\bportfolio\b/i.test(question)) return 'portfolio'
   if (/\bstatus\b/i.test(question)) return 'status'
   return /\bpass(?:ed)?\b/i.test(question) ? 'passed' : 'introduced'
@@ -31,9 +31,11 @@ function divisionFinding(text: string) {
     : /No votes against an eligible party majority were identified among the available party-labelled votes\./.test(text) ? [`No members were identified voting against an eligible party majority among the available party-labelled votes ${context}`,
       ...(partial ? ['The member list is partial or unavailable, so this does not establish that nobody crossed the floor'] : [])] : []
   const parties = [...text.matchAll(/\. ([^.]+?) voted (aye|no)( by majority)? \((\d+) ayes, (\d+) noes\)/g)]
-  return { title: m[4], context, parties, outcome: m[1] !== 'outcome not recorded' && m[2] && m[3] ? `The motion was ${m[1]} ${context}, with ${m[2]} ayes and ${m[3]} noes` : null, crossing }
+  const members = [...text.matchAll(/\. ([^.]+?) \(([^)]+)\) voted (aye|no|paired|absent)\./g)]
+  return { title: m[4], context, parties, members, date: m[6], outcome: m[1] !== 'outcome not recorded' && m[2] && m[3] ? `The motion was ${m[1]} ${context}, with ${m[2]} ayes and ${m[3]} noes` : null, crossing }
 }
 const partyFinding = (finding: NonNullable<ReturnType<typeof divisionFinding>>, party: RegExpMatchArray) => `${party[1]} voted ${party[2]}${party[3] ?? ''} on ${finding.title} ${finding.context}, with ${party[4]} ayes and ${party[5]} noes`
+const memberFinding = (finding: NonNullable<ReturnType<typeof divisionFinding>>, member: RegExpMatchArray) => `${member[1]} (${member[2]}) voted ${member[3]} on ${finding.title} ${finding.context}`
 const statusFinding = (m: RegExpExecArray) => `The ${m[1]} ${m[2] === 'passed' ? 'passed' : m[2] === 'lapsed' ? 'did not pass; it lapsed' : 'has recorded status ' + m[2]} as at ${m[3]}`
 const statusPattern = /^The (.+) has recorded status (.+?) as at (.+)\.$/
 
@@ -44,7 +46,7 @@ export function recordEvidenceText(text: string, url: string): string {
   const decoded = decodeHTMLStrict(text)
   const division = /\/doc\/division-/.test(url) ? divisionFinding(decoded) : null
   const status = /\/bill\//.test(url) ? statusPattern.exec(decoded.split('\n')[0]) : null
-  const projected = division ? [division.outcome, ...division.crossing, ...division.parties.map(p => partyFinding(division, p))].filter((text): text is string => !!text).map(sentence) : status ? [sentence(statusFinding(status))] : []
+  const projected = division ? [division.outcome, ...division.crossing, ...division.parties.map(p => partyFinding(division, p)), ...division.members.map(m => memberFinding(division, m))].filter((text): text is string => !!text).map(sentence) : status ? [sentence(statusFinding(status))] : []
   return [decoded, ...projected.filter(text => !decoded.split('\n').includes(text))].join('\n')
 }
 
@@ -57,10 +59,14 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
   }).filter((row, i, all) => all.findIndex(other => other.f.source.url === row.f.source.url) === i)
   const crossing = /\b(?:cross\w* (?:the )?floor|floor[- ]cross\w*|against (?:their |the )?party majority|rebels?)\b/i.test(input.question)
   const outcome = /\b(?:result|outcome)\b|\bdid\b.+\bpass\b|\b(?:ayes|noes)\b/i.test(input.question)
-  if (divisions.length === 1 && /\bvot(?:e|ed|ing)\b/i.test(input.question) && !crossing) {
-    const { f, finding } = divisions[0]
-    const party = finding.parties.find(p => input.question.toLowerCase().includes(p[1].toLowerCase()))
-    if (party) return [line(partyFinding(finding, party), [f])]
+  if (divisions.length && /\bvot(?:e|ed|ing)\b/i.test(input.question) && !crossing) {
+    const selected = divisions.flatMap(({ f, finding }) => {
+      const member = finding.members.find(m => input.constraints?.people?.includes(m[1]) || input.question.toLowerCase().includes(m[1].toLowerCase()) || input.question.toLowerCase().includes(m[1].split(' ').at(-1)!.toLowerCase()))
+      if (member) return [{ f, date: finding.date, text: memberFinding(finding, member) }]
+      const party = finding.parties.find(p => input.question.toLowerCase().includes(p[1].toLowerCase()))
+      return party ? [{ f, date: finding.date, text: partyFinding(finding, party) }] : []
+    }).sort((a, b) => b.date.localeCompare(a.date))
+    if (selected.length) return selected.map(s => line(s.text, [s.f]))
   }
   if (divisions.length === 1 && (crossing || outcome)) {
     const { f, finding } = divisions[0]
@@ -85,6 +91,18 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
       return match && (!title || billTitleMatches(match[1], title))
     }).filter((f, i, all) => all.findIndex(other => other.source.url === f.source.url) === i)
     if (introductions.length === 1) return [line(introductions[0].text, [introductions[0]])]
+  }
+
+  if (billQuestionFocus(input.question) === 'assent') {
+    const title = input.constraints?.exactBillTitle ?? requestedBillTitle(input.question)
+    const assent = facts.filter(f => /\/bill\//.test(f.source.url) && /^On .+, the (.+) received royal assent\./.test(f.text))
+      .filter(f => !title || billTitleMatches(/^On .+, the (.+) received royal assent\./.exec(f.text)![1], title))
+    if (assent.length) return [line(assent[0].text, [assent[0]])]
+  }
+
+  if (/\bhow many\b/i.test(input.question) && /\bdivisions?\b/i.test(input.question) && !/\b(?:by|each|per) (?:month|year)|trend\b/i.test(input.question)) {
+    const total = facts.find(f => f.source.kind === 'count' && /^\d[\d,]* recorded divisions .+ (?:since|from|on|in|up to) .+/.test(f.text) && !/ in \d{4}-(?:0[1-9]|1[0-2])$/.test(f.text))
+    if (total) return [line(total.text, [total])]
   }
 
   if (/\bbill\b/i.test(input.question) && ['status', 'passed'].includes(billQuestionFocus(input.question))) {
@@ -115,6 +133,7 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
     }
   }
 
+  if (!/\bbil(?:ls?|s|ks)\b/i.test(input.question)) return null
   // The legacy count facts and the current prose facts represent the same exact index selection.
   const billCounts = facts.flatMap(f => {
     if (f.source.kind !== 'count') return []
@@ -132,6 +151,7 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
       return [{ f, title: m[1] }]
     }).filter((row, i, all) => all.findIndex(other => other.f.source.url === row.f.source.url) === i)
     const lead = `${recordCount(count)} ${count === 1 ? 'bill was' : 'bills were'} introduced ${where} ${period}`
+    if (!/\bwhich\b|\b(?:name|list|show)\b/i.test(input.question)) return [line(lead, [f])]
     if (records.length === count && count > 0) return [line(`${lead}: ${records.map(r => r.title).join('; ')}`, [f, ...records.map(r => r.f)])]
     if (!records.length && count > 0 && /\bwhich\b/i.test(input.question)) return null
     return [line(lead, [f]), ...records.map(r => line(`- ${r.title}`, [r.f]))]

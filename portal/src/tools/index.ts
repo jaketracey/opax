@@ -1,4 +1,8 @@
 import { z } from 'zod'
+import { tool as personQuotes } from './person-quotes'
+import { search, readPassage, personOverview } from './corpus-aliases'
+import { calculatedRecordTools } from './calculated-records'
+import { speechDataTools } from './speech-data'
 import { tool as electorates } from './electorates'
 import { tool as findRecords } from './find-records'
 import { tool as parliamentaryPay } from './pay'
@@ -18,14 +22,14 @@ import { tool as accessRegisters } from './access-registers'
 import { tool as memberDivisions } from './member-divisions'
 import { tool as sponsoredBills } from './sponsored-bills'
 import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type StructuredToolResult } from './types'
-import type { ToolDeps, ToolSpec } from '../agentic-tools'
+import type { ToolDeps, ToolSpec, ToolResult } from '../agentic-tools'
 export * from './types'
 import { validToolIdentifier } from './identifiers'
 export * from './identifiers'
 
-export const TOOL_REGISTRY_VERSION = 'structured-tools-8-access-member-records'
+export const TOOL_REGISTRY_VERSION = 'structured-tools-9-shared-ask-data'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
-export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills])
+export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools])
 const names = new Set<string>()
 for (const tool of tools) {
   if (!/^[a-z][a-z0-9_]*$/.test(tool.name) || names.has(tool.name)) throw new Error('Invalid or duplicate registry tool name')
@@ -73,8 +77,9 @@ export const askToolSpecs: ToolSpec[] = tools.map(tool => ({
   name: tool.askName ?? tool.name, description: tool.description, input: tool.inputSchema,
   async run(deps: ToolDeps, args: ToolArgs) {
     const data = await callTool({ ...deps.toolEnv, asset: deps.asset, kb: deps.kb, origin: deps.origin, signal: deps.signal }, tool.name, args)
-    return { tool: tool.askName ?? tool.name, ok: !data.error, ...(data.error ? { error: data.error } : {}), data,
-      cite: data.citations.map(c => ({ kind: c.kind ?? 'record', label: c.text, url: c.url, ...(c.value === undefined ? {} : { value: c.value }) })),
+    return { tool: tool.askName ?? tool.name, ok: !data.error, ...(data.error ? { error: data.error === 'Published tool data is temporarily unavailable.' ? 'lookup timed out or unavailable' : data.error } : {}), ...(data.list ? { list: String(data.list) } : {}), data,
+      cite: data.citations.map(c => ({ kind: c.kind ?? 'record', label: c.text, url: c.url, ...(c.value === undefined ? {} : { value: c.value }), ...(c.related ? { related: c.related } : {}) })),
+      ...(data.coverage ? { coverage: data.coverage as ToolResult['coverage'] } : {}),
       notes: data.notes, query: data.query,
       // The register a result was drawn from: its coverage row opens this, not one of its records.
       ...(REGISTER_PAGES[tool.name] ? { list: `${deps.origin ?? 'https://opax.com.au'}${REGISTER_PAGES[tool.name]}` } : {}),

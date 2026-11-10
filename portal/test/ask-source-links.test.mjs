@@ -8,7 +8,16 @@ import {build} from 'esbuild'
 import {loadWorker, offline} from './worker-harness.mjs'
 
 const root = new URL('../', import.meta.url).pathname, pub = root + 'public'
-const built = await build({stdin: {contents: "export {partyDonations, memberVotes, countSpeeches, speechTrend, findPeople, findQuotes} from './src/agentic-tools';export {factSheet, sourceLinks} from './src/agentic-ask';export {agenticAskPayload} from './src/agentic-response';export {linkAskSources, cleanSnippet, withoutBareUrls} from './src/ask-source-links';export {getTool} from './src/tools/index';export {federalPartyMoneyAnswer, publicPartyMoneyAnswer} from './src/ask-money-routing';", resolveDir: root}, bundle: true, write: false, platform: 'browser', format: 'esm', external: ['node:*']})
+// Supply the published division table from the same original files as its detail reader.
+const tables = {name: 'source-links-table', setup(builder) {
+ builder.onResolve({filter: /^\.\.\/table-api$/}, () => ({path: 'source-links-table', namespace: 'fixture'}))
+ builder.onLoad({filter: /.*/, namespace: 'fixture'}, () => ({loader: 'js', contents: `export async function tableApi(req) {
+  const q = new URL(req.url).searchParams, words = (q.get('q') || '').toLowerCase().split(/\\s+/).filter(Boolean);
+  const rows = globalThis.__sourceLinksDivisions.filter(r => words.every(w => r.title.toLowerCase().includes(w)));
+  return Response.json({rows: rows.slice(0, 200), total: rows.length});
+ }`}))
+}}
+const built = await build({stdin: {contents: "export {partyDonations, memberVotes, countSpeeches, speechTrend, findPeople, findQuotes} from './src/agentic-tools';export {factSheet, sourceLinks} from './src/agentic-ask';export {agenticAskPayload} from './src/agentic-response';export {linkAskSources, cleanSnippet, withoutBareUrls} from './src/ask-source-links';export {getTool} from './src/tools/index';export {federalPartyMoneyAnswer, publicPartyMoneyAnswer} from './src/ask-money-routing';", resolveDir: root}, bundle: true, write: false, platform: 'browser', format: 'esm', external: ['node:*'], plugins: [tables]})
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 const restore = offline()
 test.after(restore)
@@ -44,16 +53,19 @@ async function unserved(urls) {
 // The published money graph and division exports stand in for production assets; the knowledge box is a stub.
 const divisionFiles = readdirSync(pub + '/divisions').filter(f => /^division-federal-representatives-\d+\.json$/.test(f)).slice(0, 40)
 const divisions = divisionFiles.map(f => json('/divisions/' + f)).filter(d => d?.members?.length)
+globalThis.__sourceLinksDivisions = divisions.map(d => ({key: d.key, title: d.name, date: d.date, house: d.house, jurisdiction: d.jurisdiction}))
 const member = divisions[0].members[0].name, memberParty = divisions[0].members[0].party
 const asset = async path => json(path)
 const kb = async (endpoint, body) => {
   if (endpoint === '/catalog' && JSON.stringify(body).includes('"division"')) return {resources: Object.fromEntries(divisionFiles.map((f, i) => [String(i), {slug: f.replace(/\.json$/, '')}]))}
   if (endpoint === '/catalog') return {fulltext: {total: 40, facets: {'/u/o': {[`/u/o/${member}`]: 30}, '/l/party': {'/l/party/Labor': 30}}}, resources: {}}
   if (endpoint === '/search') return {fulltext: {total: 12}, resources: {}}
-  if (endpoint === '/find') return {resources: {r1: {slug: 'speech-1509316', title: 'Fixture passage', origin: {collaborators: [member], created: '2020-06-15T00:00:00Z'}, fields: {f: {paragraphs: {p: {text: 'A fixture passage about the topic.'}}}}}}}
+  const speech = {slug: 'speech-1509316', title: 'Fixture passage', origin: {collaborators: [member], created: '2020-06-15T00:00:00Z'}, usermetadata: {classifications: [{labelset: 'kind', label: 'speech'}, {labelset: 'state', label: 'federal'}, {labelset: 'chamber', label: 'representatives'}]}, data: {texts: {body: {value: {body: 'A fixture passage about housing supply.'}}}}}
+  if (endpoint === '/find') return {resources: {r1: speech}}
+  if (endpoint.startsWith('/slug/speech-1509316?')) return speech
   throw Error('unexpected knowledge-box call ' + endpoint)
 }
-const deps = {asset, kb, origin}
+const deps = {asset, kb, origin, toolEnv: {TABLE_DB: {}}}
 
 async function allToolResults() {
   const results = [
@@ -105,11 +117,13 @@ test('party receipts cite the receipts map filtered to the party (and industry, 
 })
 
 test('a vote count opens the division list, and every counted division is its own source row', async () => {
-  const votes = await api.memberVotes(deps, {keyword: 'bill', person: member})
+  const selected = divisions.filter(d => /bill/i.test(d.name) && d.members.some(m => m.name === member)).slice(0, 3)
+  assert.ok(selected.length)
+  const votes = await api.memberVotes({...deps, asset: async path => path === '/divisions/index.json' ? {divisions: selected.map(d => ({key: d.key, date: d.date}))} : asset(path)}, {keyword: 'bill', person: member})
   const {facts} = api.factSheet([votes])
   assert.equal(facts.length, 1)
-  assert.equal(facts[0].cite.url, `${origin}/search?kind=division&q=bill&mode=keyword`)
-  assert.equal(facts[0].cite.related.length, Math.min(12, votes.data.summary.divisions))
+  assert.equal(facts[0].cite.url, `${origin}/divisions/index.json`)
+  assert.equal(facts[0].cite.related.length, votes.data.rows.length)
   assert.match(facts[0].cite.related[0].label, /^\d{4}-\d{2}-\d{2}: .+ \((?:voted aye|voted no|paired)\)$/)
   const run = {answered: true, answer: `${facts[0].text} [1].`, period: {label: ''}, facts: facts.map(f => ({id: f.id, text: f.text, url: f.cite.url, kind: f.cite.kind})), notes: [], steps: [], events: [], timings: {total_ms: 0}, tokens: {input: 0, output: 0}, cost_usd: 0}
   const payload = api.linkAskSources(api.agenticAskPayload(run, 'How has this member voted?'), api.sourceLinks([votes]), origin)

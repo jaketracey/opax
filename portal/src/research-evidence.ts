@@ -14,7 +14,8 @@ const CLAIM_VERB = /\b(?:said|says|say|argued?|argues|supported?|supports|oppose
 function unresolvedPersonQuestion(question: string): boolean {
   const subject = /\b(?:has|have|did|does|do)\s+([\p{L}'’-]+(?:\s+[\p{L}'’-]+){0,7})\s+(?:said|say|says|spoken|spoke|speak|propos\w*|argu\w*|voted?)\b/iu.exec(question)?.[1]
   const collective = /^(?:(?:the|all|these|those|australian|federal|state)\s+)*(?:records?|parliament|senate|house|committees?|government|opposition|members|mps|senators|politicians)$/i
-  return !!subject && !collective.test(subject) || /\b(?:speeches|remarks|statements|votes)\s+(?:by|from|of)\s+(?!the\b|all\b)[\p{L}'’-]+/iu.test(question)
+  const groups = subject?.replace(/\b(?:the|and|or|party)\b/gi, ' ').trim().split(/\s+/).filter(Boolean)
+  return !!subject && !collective.test(subject) && !groups?.every(word => collective.test(word)) || /\b(?:speeches|remarks|statements|votes)\s+(?:by|from|of)\s+(?!the\b|all\b)[\p{L}'’-]+/iu.test(question)
 }
 
 // A claim that describes its speaker by party ("A Labor member said", "Coalition senators argued") must match the
@@ -42,8 +43,9 @@ export function claimMatchesParty(claim: string, party: string | undefined): boo
  * resolve, in "what has X said" grammar) blocks an answer about that person. */
 export function unresolvedPersonAsked(question: string, named: NamedScope): boolean {
   if (!named.unresolved) return false
+  question = named.resolvedQuestion ?? question
   const resolved = [...named.people, ...named.people.map(n => n.split(' ').at(-1)!), ...named.parties]
-  const masked = resolved.reduce((q, name) => q.replace(new RegExp(`(?<![\\p{L}])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'giu'), 'members'), question)
+  const masked = resolved.sort((a, b) => b.length - a.length).reduce((q, name) => q.replace(new RegExp(`(?<![\\p{L}])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'giu'), 'members'), question).replace(/\bmembers\s+Party\b/gi, 'members')
   return unresolvedPersonQuestion(masked)
 }
 // ---------------------------------------------------------------- repair helpers (deterministic, no model)

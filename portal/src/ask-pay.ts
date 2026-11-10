@@ -1,5 +1,5 @@
 import { datedPay } from './pay-history'
-import { inferPeriod } from './agentic-ask'
+import { inferPeriod } from './ask-period'
 import type { RecordQuestion } from './ask-records'
 import type { CatalogRecord } from './catalog-search'
 import { payPersonRecord, payGeneralRecords } from './pay-records.mjs'

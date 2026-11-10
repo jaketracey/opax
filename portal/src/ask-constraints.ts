@@ -48,6 +48,8 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
     if (has('operation')) a.operation = 'totals'
   }
   if (c.actUnfiltered) for (const key of ['state', 'jurisdiction']) if (a[key] === 'act') delete a[key]
+  // Exact detail IDs locate a source, rather than a filtered search. The returned rows still face scope checks.
+  if (has('record_id') && typeof a.record_id === 'string' || has('bill_id') && typeof a.bill_id === 'string') return { ...step, args: a }
   // Count selectors are exclusive. Preserve individual periods in comparisons;
   // the result's query window is checked by guardToolPeriod after the lookup.
   const countPeriod = step.tool === 'count_records' && ['date', 'month', 'year', 'financial_year', 'term'].some(key => a[key] !== undefined)
@@ -89,7 +91,7 @@ export interface Coverage { since: string | null; until: string | null; as_of: s
 /** Unknown coverage stays unknown; never describe the requested window as observed data. */
 export function resultCoverage(result: ToolResult, step: PlanStep): Coverage {
   const d = result.data ?? {}, known = d.coverage as Coverage | undefined
-  if (step.tool === 'division' && (!d.operation || d.operation === 'lookup') && Array.isArray(d.rows) && d.rows.length) {
+  if ((step.tool === 'division' && (!d.operation || d.operation === 'lookup') || Array.isArray(d.rows) && d.rows.every(row => typeof (row as Record<string, unknown>).excerpt === 'string')) && Array.isArray(d.rows) && d.rows.length) {
     const dates = d.rows.map(row => (row as Record<string, unknown>).date).filter((date): date is string => typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)).sort()
     if (dates.length === d.rows.length) return { since: dates[0], until: dates.at(-1)!, as_of: null, note: 'Dates of the returned division records.' }
   }

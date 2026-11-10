@@ -16,7 +16,7 @@ const local = async path => {
 const emptyScope = { people: [], parties: [], bills: [], ambiguous: false, unresolved: false };
 const dailyBudget = { reserve: async () => ({ settle: async () => {} }) };
 const call = (toolName, args, toolCallId = toolName) => ({ type: 'tool-call', toolName, toolCallId, input: JSON.stringify(args) });
-const reply = (content, cost) => ({ content, finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage: { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }, ...(cost === undefined ? {} : { providerMetadata: { openrouter: { usage: { cost } } } }), warnings: [] });
+const reply = (content, cost = 0.001) => ({ content, finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage: { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }, ...(cost == null ? {} : { providerMetadata: { openrouter: { usage: { cost } } } }), warnings: [] });
 const inputFor = id => ({ question: saved[id].question, period: api.inferPeriod(saved[id].question), facts: api.writingFacts({ answer: '', citations: {}, sources: saved[id].sources }) });
 const noNetwork = globalThis.fetch;
 globalThis.fetch = async () => { throw Error('Agentic unit tests must not access the network'); };
@@ -68,7 +68,7 @@ test('NP-INTR-007: resolve register-only members without substituting a roster s
   const model = new MockLanguageModelV4({ doGenerate: [reply([call('declared_interests', { person: 'Tim James', category: 'real_estate' })]), reply([call('answer', { facts: [1] })])] });
   const research = Object.assign(api.createResearch({ model, dailyBudget, modelBudgetSpent: async () => false }), { write: undefined });
   const run = await api.runAgentic(question, { asset: local, kb: async () => ({}), origin: 'https://opax.test', research }, undefined, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, scope);
-  assert.equal(run.answered, true);
+  assert.equal(run.answered, true, JSON.stringify(run.research));
   assert.match(run.answer, /Bree James.*Westcourt/);
   assert.doesNotMatch(run.answer, /Tim James|cannot establish/);
 });
@@ -79,7 +79,7 @@ test('TT-SPCH-003: a misspelt speech comparison retains both parties and the cou
   const model = new MockLanguageModelV4({ doGenerate: [reply([call('count_speeches', { party: 'Greens', group_by: 'none' }, 'g'), call('count_speeches', { party: 'Nationals', group_by: 'none' }, 'n')]), reply([call('finish', { facts: [1, 2] })])] });
   const research = Object.assign(api.createResearch({ model, dailyBudget, modelBudgetSpent: async () => false }), { write: undefined });
   const run = await api.runAgentic(question, { asset: async () => null, origin: 'https://opax.test', kb: async () => ({ fulltext: { total: 100 } }), research }, undefined, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, { ...emptyScope, parties: ['Greens', 'Nationals'] });
-  assert.equal(run.answered, true);
+  assert.equal(run.answered, true, JSON.stringify(run.research));
   assert.match(run.answer, /Greens/); assert.match(run.answer, /Nationals/);
   assert.doesNotMatch(run.answer, /position|does not establish/);
 });
@@ -97,12 +97,12 @@ test('an empty first result must recover after observing it, then refine and fet
   const research = Object.assign(api.createResearch({ model, dailyBudget, modelBudgetSpent: async () => false }), { write: undefined });
   const progress = [];
   const run = await api.runAgentic(question, { asset: local, origin: 'https://opax.test', research, toolEnv: { ASSETS: emptyCatalog }, kb: async () => ({ resources: {} }) }, async (_event, data) => { if (data.step) progress.push(data.step); }, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, emptyScope);
-  assert.equal(run.answered, true);
+  assert.equal(run.answered, true, JSON.stringify(run.research));
   assert.match(run.answer, /32 ayes to 34 noes/);
   assert.equal(model.doGenerateCalls.length, 5);
   assert.match(JSON.stringify(model.doGenerateCalls[2].prompt), /empty lookup is not absence/i);
   assert.equal(model.doGenerateCalls[3].toolChoice.type, 'required', 'a third lookup turn remains available');
-  for (const tool of api.registry) assert.ok(model.doGenerateCalls[0].tools.some(t => t.name === (tool.askName ?? tool.name)), tool.name);
+  for (const tool of api.registry.filter(t => t.name !== 'find_quotes')) assert.ok(model.doGenerateCalls[0].tools.some(t => t.name === (tool.askName ?? tool.name)), tool.name);
   const begun = progress.filter(s => s.state === 'running'), ended = progress.filter(s => s.state !== 'running');
   assert.deepEqual(begun.map(s => s.id).sort(), ended.map(s => s.id).sort());
   assert.equal(new Set(begun.map(s => s.id)).size, begun.length);
@@ -111,7 +111,7 @@ test('an empty first result must recover after observing it, then refine and fet
 });
 
 test('round, token, wall and dollar budgets stop inference; spend exhaustion never starts a paid fallback', async () => {
-  assert.deepEqual(api.researchLimits({}), { rounds: 8, wallMs: 60_000, tokens: 96_000 });
+  assert.deepEqual(api.researchLimits({}), { rounds: 8, wallMs: 60_000, tokens: 256_000 });
   assert.equal(api.researchLimits({ steps: 99, wallMs: 999_999 }).wallMs, api.ASK_HARD_WALL_MS);
   const question = 'Find the public record for an unrecorded parliamentary motion';
   for (const [options, expected] of [[{ steps: 2, inputPrice: 0.1, outputPrice: 0.3 }, 'steps'], [{ tokens: 1 }, 'tokens'], [{ wallMs: 15 }, 'timeout'], [{ inputPrice: 100, outputPrice: 300 }, 'spend']]) {
@@ -137,7 +137,7 @@ test('an empty division citation cannot become a limitation answer before recove
   ] });
   const research = Object.assign(api.createResearch({ model, dailyBudget, modelBudgetSpent: async () => false }), { write: undefined });
   const run = await api.runAgentic(question, { asset: local, kb: async () => ({}), origin: 'https://opax.test', research }, undefined, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, emptyScope);
-  assert.equal(model.doGenerateCalls.length, 4);
+  assert.equal(model.doGenerateCalls.length, 4, JSON.stringify(run.research));
   assert.match(JSON.stringify(model.doGenerateCalls[2].prompt), /empty lookup is not absence/i);
   assert.match(run.answer, /32 ayes to 34 noes/);
   assert.doesNotMatch(run.answer, /no recorded division matching/);
@@ -161,7 +161,7 @@ test('TT-DIVC-012: loop selection retains the maximum even when the model choose
   const model = new MockLanguageModelV4({ doGenerate: [reply([call('count_records', { record_type: 'divisions', chamber: 'senate', since: '2010-01-01', until: '2019-12-31', group_by: 'year' })]), reply([call('finish', { facts: [2] })])] });
   const research = Object.assign(api.createResearch({ model, dailyBudget, modelBudgetSpent: async () => false }), { write: undefined });
   const run = await api.runAgentic(question, { asset: local, kb: async () => ({}), origin: 'https://opax.test', research }, undefined, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, emptyScope);
-  assert.equal(run.answered, true);
+  assert.equal(run.answered, true, JSON.stringify(run.research));
   assert.match(run.answer, /450 recorded divisions in the Senate in 2018/);
   assert.doesNotMatch(run.answer, /360 recorded divisions/);
 });
@@ -173,13 +173,13 @@ test('the answer target stays soft with a missing detail after 35 seconds', asyn
   try {
     const model = new MockLanguageModelV4({ doGenerate: () => {
       turn++;
-      if (turn === 1) { advanced = 35_000; return reply([call('division', { division_id: 'federal-senate-1895' })]); }
+      if (turn === 1) { advanced = 35_000; return reply([call('count_records', { record_type: 'divisions', chamber: 'senate', date: '2010-11-17' })]); }
       if (turn === 2) return reply([call('division', { division_id: 'federal-senate-1895', party: 'Labor' })]);
       return reply([call('answer', { facts: [1] })]);
     } });
     const research = Object.assign(api.createResearch({ model, dailyBudget, modelBudgetSpent: async () => false }), { write: undefined });
     const run = await api.runAgentic(question, { asset: local, kb: async () => ({}), origin: 'https://opax.test', research }, undefined, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, emptyScope);
-    assert.equal(run.answered, true);
+    assert.equal(run.answered, true, JSON.stringify(run.research));
     assert.equal(model.doGenerateCalls.length, 3);
     assert.equal(model.doGenerateCalls[1].toolChoice.type, 'required');
     assert.match(JSON.stringify(model.doGenerateCalls[1].prompt), /"answer_target_reached":true/);
@@ -201,7 +201,7 @@ test('cumulative unknown billing exhausts the dollar cap before an additional lo
   const question = 'Find the original public record for this parliamentary motion';
   let charged = 0;
   const ledger = { reserve: async amount => { charged += amount; return { settle: async () => {} }; } };
-  const model = new MockLanguageModelV4({ doGenerate: Array.from({ length: 9 }, (_, i) => reply([call('search', { query: 'unrecorded parliamentary motion ' + i })])) });
+  const model = new MockLanguageModelV4({ doGenerate: Array.from({ length: 9 }, (_, i) => reply([call('search', { query: 'unrecorded parliamentary motion ' + i })], null)) });
   const research = Object.assign(api.createResearch({ model, dailyBudget: ledger, modelBudgetSpent: async () => false, tokens: 160_000 }), { write: undefined });
   const run = await api.runAgentic(question, { asset: async () => null, kb: async () => ({}), research, generate: async () => { throw Error('An exhausted question cannot start a paid fallback'); } }, undefined, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, emptyScope);
   assert.equal(run.research.failure, 'spend');

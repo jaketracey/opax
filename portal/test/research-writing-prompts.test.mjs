@@ -40,19 +40,21 @@ test('documented-position prompt answers before distinct supporting points witho
 });
 
 test('vote-selection notes describe the boundary separately from unchanged vote rows',async()=>{
- const division={key:'2025-07-31-example',date:'2025-07-31',name:'Housing Bill',ayes:35,noes:28,members:[{name:'Example Member',vote:'aye',party:'Example Party'}]};
- const result=await memberVotes({kb:async()=>({resources:{one:{slug:'division-'+division.key}}}),asset:async()=>division},{keyword:'Housing',person:'Example Member'});
- assert.equal(result.data.summary.divisions,1);
+ const division={key:'federal-senate-1',date:'2025-07-31',name:'Housing Bill',ayes:35,noes:28,members:[{name:'Example Member',vote:'aye',party:'Example Party'}]};
+ const result=await memberVotes({kb:async()=>{throw Error('Archive votes do not use ranked search')},asset:async path=>path==='/parliamentarians.json'?{people:[{name:'Example Member'}]}:path==='/divisions/index.json'?{divisions:[{key:division.key,date:division.date}]}:division},{keyword:'Housing',person:'Example Member'});
+ assert.equal(result.data.counts.aye,1);
+ assert.equal(result.data.counts_complete_for_scope,true);
  assert.equal(result.data.rows[0].vote,'aye');
- assert.equal(result.cite[0].url,'https://opax.com.au/doc/division-'+division.key);
- assert.deepEqual(result.notes,['Divisions are matched by words in their titles; divisions filed under other titles may be missed.','A recorded vote does not establish why a member voted that way.']);
+ assert.equal(result.cite[1].url,'https://opax.com.au/doc/division-'+division.key);
+ assert.match(result.notes.join(' '),/Missing member rows do not establish absence/);
  assert.doesNotMatch(result.notes.join(' '),/read the speeches|coverage\.note|put .*answer/);
 });
 
 test('ranked-passage notes stay plain metadata and avoid count-answer boilerplate',async()=>{
- const result=await findQuotes({kb:async()=>({resources:{one:{slug:'speech-example',title:'Housing debate',fields:{body:{paragraphs:{p:{text:'Housing supply needs attention.'}}}}}}}),asset:async()=>null},{query:'housing'});
+ const record={slug:'speech-1',title:'Housing debate',origin:{collaborators:['Example Member'],created:'2025-01-01'},usermetadata:{classifications:[{labelset:'kind',label:'speech'},{labelset:'state',label:'federal'},{labelset:'chamber',label:'senate'}]},data:{texts:{body:{value:{body:'Housing supply needs attention.'}}}}};
+ const result=await findQuotes({kb:async path=>path==='/find'?{resources:{one:record}}:record,asset:async()=>null},{query:'housing'});
  assert.equal(result.data.passages[0].text,'Housing supply needs attention.');
- assert.deepEqual(result.notes,['The selected passages are a ranked sample, not a complete speech count.']);
+ assert.match(result.notes.join(' '),/ranked sample, not a complete count/);
  assert.doesNotMatch(result.notes.join(' '),/That count comes|never count them|coverage\.note/);
 });
 
