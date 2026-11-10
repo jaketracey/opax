@@ -8,13 +8,19 @@ import { index, manifest, people, roster, slugs, pinned } from './pinned';
 import Electorate, { identityLine } from '../src/features/Electorate';
 import { router } from 'expo-router';
 import { ContentUnavailable } from '../src/design/states';
-import { PartyLabel } from '../src/design/people';
+import { PartyLabel, PersonRow } from '../src/design/people';
 import { Heading } from '../src/design/text';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
-import { termSpan } from '../src/features/directories/ElectorateHistory';
-import { sinceLine } from '../src/features/your-mp/RepresentativeRows';
+import {
+  ElectorateHistory,
+  termSpan,
+} from '../src/features/directories/ElectorateHistory';
+import {
+  RepresentativeRows,
+  sinceLine,
+} from '../src/features/your-mp/RepresentativeRows';
 import { loadChoice } from '../src/features/your-mp/choice-store';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 
@@ -288,6 +294,127 @@ test('a chosen date shows the members on that date and Back to today', async () 
   expect(text(r)).not.toContain('Member on');
   await act(async () => r.unmount());
 });
+
+test('McLeay reads Labor in Past members, including older terms with only a presiding code', async () => {
+  load('Grayndler');
+  const r = await render(<Electorate />);
+  const mcleay = r.root
+    .findAllByType(PersonRow)
+    .find((n) => n.props.name === 'Leo McLeay')!;
+  expect(mcleay.props.party).toBe('Labor');
+  expect(mcleay.findByType(PartyLabel).props.party).toBe('Labor');
+  expect(text(r)).not.toMatch(/\b(?:SPK|PRES)\b/);
+  expect(mcleay.props.detail).toBe('29 Aug 1989 to 13 Mar 1993');
+  await act(async () => r.unmount());
+});
+
+test.each([
+  {
+    label: 'last party period',
+    periods: ['Greens', 'Labor', 'SPK'],
+    source: 'SPK',
+  },
+  { label: 'source party label', periods: ['SPK'], source: 'Labor' },
+])(
+  'Past members uses the $label before a presiding role',
+  async ({ periods, source }) => {
+    const view = c.electorateFor(
+      c.decodeElectorate(pinned(seat('Grayndler').detail_url)),
+    );
+    const term = view.terms.find(
+      (t) => view.people[t.person_id]?.name === 'LEO McLEAY',
+    )!;
+    const r = await render(
+      <ElectorateHistory
+        view={{
+          ...view,
+          terms: [
+            {
+              ...term,
+              source_party_label: source,
+              party_periods: periods.map((party) => ({
+                party,
+                start: term.start,
+                end: term.end,
+              })),
+            },
+          ],
+        }}
+        directory={{ ...directory, people: result({ ...people, people: [] }) }}
+      />,
+    );
+    expect(r.root.findByType(PersonRow).props.party).toBe('Labor');
+    expect(text(r)).toContain('Labor');
+    expect(text(r)).not.toMatch(/\b(?:SPK|PRES)\b/);
+    await act(async () => r.unmount());
+  },
+);
+
+test.each([
+  { code: 'SPK', role: 'Speaker', period: true },
+  { code: 'PRES', role: 'President', period: true },
+  { code: ' spk ', role: 'Speaker', period: true },
+  { code: 'SPK', role: 'Speaker', period: false },
+  { code: 'PRES', role: 'President', period: false },
+])(
+  'a $code-only history term leaves the party slot empty and says $role',
+  async ({ code, role, period }) => {
+    const view = c.electorateFor(
+      c.decodeElectorate(pinned(seat('Grayndler').detail_url)),
+    );
+    const term = view.terms[0]!;
+    const r = await render(
+      <ElectorateHistory
+        view={{
+          ...view,
+          terms: [
+            {
+              ...term,
+              source_party_label: period ? null : code,
+              party_periods: period
+                ? [{ party: code, start: term.start, end: term.end }]
+                : [],
+            },
+          ],
+        }}
+        directory={{ ...directory, people: result({ ...people, people: [] }) }}
+      />,
+    );
+    const row = r.root.findByType(PersonRow);
+    expect(row.props.party).toBeUndefined();
+    expect(row.props.detail).toBe(role);
+    expect(row.findAllByType(PartyLabel)).toHaveLength(0);
+    expect(text(r)).toContain(role);
+    expect(text(r)).not.toMatch(/\b(?:SPK|PRES|Party not recorded)\b/);
+    await act(async () => r.unmount());
+  },
+);
+
+test.each([
+  { party: 'SPK', expectedParty: undefined, detail: 'Speaker' },
+  { party: 'PRES', expectedParty: undefined, detail: 'President' },
+  { party: 'Labor', expectedParty: 'Labor', detail: 'Since 1996' },
+  { party: 'Independent', expectedParty: 'Independent', detail: 'Since 1996' },
+])(
+  'current representative party $party has no pipeline code',
+  async ({ party, expectedParty, detail }) => {
+    const member = seat('Grayndler').representatives[0]!;
+    const r = await render(
+      <RepresentativeRows
+        rows={[{ ...member, party }]}
+        directory={{ ...directory, people: result({ ...people, people: [] }) }}
+        id="representative"
+        detailFor={() => 'Since 1996'}
+      />,
+    );
+    const row = r.root.findByType(PersonRow);
+    expect(row.props.party).toBe(expectedParty);
+    expect(row.props.detail).toBe(detail);
+    expect(row.findAllByType(PartyLabel)).toHaveLength(expectedParty ? 1 : 0);
+    expect(text(r)).not.toMatch(/\b(?:SPK|PRES|Party not recorded)\b/);
+    await act(async () => r.unmount());
+  },
+);
 
 test('a changed followed electorate shows its Added since group after the title block', async () => {
   load('Grayndler');
