@@ -44,17 +44,17 @@ name: 23 Native money map, held figures, original source and ranked list
     id: BackButton
 - assertVisible:
     id: today-screen
-# The map itself, by its link: pushed in the Today stack.
+# The map itself, by its link: pushed in the Today stack. The stage fills
+# the screen; its testID says how many pixels Skia drew once the layout
+# settled (e2e builds read the native raster back).
 - openLink: opax://money
-- scrollUntilVisible:
-    element:
-      id: money-map-(canvas|drawn-frames-.*-pixels-.*)
-    centerElement: true
-    visibilityPercentage: 10
+- extendedWaitUntil:
+    visible:
+      id: money-map-(canvas|drawn-pixels-.*)
     timeout: 120000
 - extendedWaitUntil:
     visible:
-      id: money-map-drawn-frames-[2-9][0-9]*-pixels-[1-9][0-9]*
+      id: money-map-drawn-pixels-[1-9][0-9]*
     timeout: 90000
 # The map is pushed in the Today stack, so its back button names Today. The
 # bar can stay minimised on a pushed page at its top; the flow's end returns
@@ -64,18 +64,18 @@ name: 23 Native money map, held figures, original source and ranked list
     text: Today
 - assertVisible:
     id: money-view-summary
-- takeScreenshot: ${EVIDENCE}/23-orbit-0
-# A sideways drag on the scene orbits it without a preview tap.
+- takeScreenshot: ${EVIDENCE}/23-map-0
+# A drag on the stage pans the map (momentum follows the finger).
 - swipe:
-    start: 30%, 42%
-    end: 70%, 42%
+    start: 30%, 50%
+    end: 70%, 50%
     duration: 1000
-- takeScreenshot: ${EVIDENCE}/23-orbit-1
+- takeScreenshot: ${EVIDENCE}/23-map-1
 - swipe:
-    start: 70%, 44%
-    end: 30%, 39%
+    start: 70%, 52%
+    end: 30%, 47%
     duration: 1000
-- takeScreenshot: ${EVIDENCE}/23-orbit-2
+- takeScreenshot: ${EVIDENCE}/23-map-2
 # This accessible action writes the same from/to params as the Years row.
 - runFlow:
     file: support/money-screen-scroll.yaml
@@ -83,10 +83,6 @@ name: 23 Native money map, held figures, original source and ranked list
       TARGET_ID: money-test-year
 - tapOn:
     id: money-test-year
-- runFlow:
-    file: support/money-screen-scroll-up.yaml
-    env:
-      TARGET_ID: money-title
 # Filters is a bar button opening the Filters sheet; changes apply live.
 - tapOn: Filters(, on)?
 - extendedWaitUntil:
@@ -216,18 +212,15 @@ name: 23 Native money map, held figures, original source and ranked list
     timeout: 15000
 - tapOn:
     id: BackButton
-# The map keeps the offset of Focus Labor, below the scene and summary.
+# Back lands on the map with its summary line and filters as they were.
 - extendedWaitUntil:
     visible:
       id: money-screen
     timeout: 30000
-- runFlow:
-    file: support/money-screen-scroll-up.yaml
-    env:
-      TARGET_ID: money-view-summary
 - extendedWaitUntil:
     visible:
       id: money-view-summary
+      text: Donations to parties in 2024–25, union donors only
     timeout: 30000
 # The List view: Donors first, with the cut in its caption.
 - runFlow:
@@ -266,10 +259,6 @@ name: 23 Native money map, held figures, original source and ranked list
       id: money-donor-0
     timeout: 30000
 # Reset filters from the sheet: the list returns to every year and industry.
-- runFlow:
-    file: support/money-screen-scroll-up.yaml
-    env:
-      TARGET_ID: money-title
 - tapOn: Filters(, on)?
 # Reset sits under the facets and Show toggles: below the fold at the sheet's
 # half-height detent. A plain scroll moves the map behind the sheet, so drag

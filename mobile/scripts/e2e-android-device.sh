@@ -138,6 +138,8 @@ android_flow() {
     --format junit --output "$OUT/$key-report.xml" -e EVIDENCE=screenshots \
     -e FIXTURE_PORT="$PORT" "$OUT/android-flows/${file#.maestro/}" || rc=$?
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots/$size" "$OUT/maestro/$key" > "$OUT/$key-captures.log"
+  # The process's own frame statistics for the flow (janky frames, percentiles).
+  timed 20 "${ADB[@]}" shell dumpsys gfxinfo au.com.opax.app > "$OUT/$key-gfxinfo.txt" 2>/dev/null || true
   return "$rc"
 }
 failed=0
@@ -156,6 +158,8 @@ for flow in "${FLOWS[@]}"; do
     26) file=.maestro/android/26-follows.yaml ;;
     32) file=.maestro/android/32-record-reader.yaml ;;
     39) file=.maestro/android/39-topics.yaml ;;
+    23) file=.maestro/23-money-map.yaml ;;
+    69) file=.maestro/android/69-money-map-v2.yaml ;;
     *) echo 'Unsupported Android journey' >&2; exit 2 ;;
   esac
   assert_lock

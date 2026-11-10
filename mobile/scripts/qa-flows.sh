@@ -41,7 +41,7 @@ qa_iphone_suite() {
     .maestro/13i-today-see-all.yaml 29 \
     .maestro/30-ask-entry-points.yaml .maestro/30-ask-people.yaml \
     .maestro/30-ask-progress.yaml .maestro/30-ask.yaml \
-    31 32 33 34 35 36 37 39 42 43 44 45 46 48 49 50 51 55 57 58 59 60 61 62 63 64 65 66 67 68 .maestro/22b-sources.yaml
+    31 32 33 34 35 36 37 39 42 43 44 45 46 48 49 50 51 55 57 58 59 60 61 62 63 64 65 66 67 68 69 .maestro/22b-sources.yaml
 }
 
 # Journeys that need their own fixture or text size, one e2e.sh run each.

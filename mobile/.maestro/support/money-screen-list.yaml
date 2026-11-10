@@ -1,16 +1,22 @@
 appId: au.com.opax.app
 ---
-# The List | Map picker sits just under the title and summary line; List is
-# its first segment.
+# The List | Map picker: in the Map view it sits in the floating card at the
+# top of the stage; in the List view it sits under the title and summary
+# line, so scroll back up to it there. List is its first segment.
 - runFlow:
-    file: money-screen-scroll-up.yaml
-    env:
-      TARGET_ID: money-title
-# A hierarchy element can be reported visible while UIKit's bar covers its centre.
-- swipe:
-    start: 97%, 30%
-    end: 97%, 85%
-    duration: 600
+    when:
+      notVisible:
+        text: List
+    commands:
+      - runFlow:
+          file: money-screen-scroll-up.yaml
+          env:
+            TARGET_ID: money-title
+      # A hierarchy element can be reported visible while UIKit's bar covers its centre.
+      - swipe:
+          start: 97%, 30%
+          end: 97%, 85%
+          duration: 600
 # A native segment: tap and assert it by its label.
 - tapOn: List
 - assertVisible:

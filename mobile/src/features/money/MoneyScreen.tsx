@@ -1,20 +1,23 @@
-import { RouteOptions } from '../../navigation/preview';
+import { RouteOptions, useSafeSetOptions } from '../../navigation/preview';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
-  type RefObject,
 } from 'react';
 import {
+  BackHandler,
+  Platform,
   RefreshControl,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
@@ -24,7 +27,6 @@ import {
   moneyAccessibilityLabel,
 } from '../../design/format';
 import {
-  Button,
   ContentUnavailable,
   FigureBlock,
   Group,
@@ -39,11 +41,12 @@ import {
   SourceLine,
   StatStrip,
   Text,
+  useAccessibilitySize,
   useLayout,
   useScreenColumn,
 } from '../../design/primitives';
-import { colors, rhythm } from '../../design/tokens';
-import { headerItems, pageItems } from '../../navigation/chrome';
+import { colors, hairline, radii, rhythm } from '../../design/tokens';
+import { headerItems, opaqueBar, pageItems } from '../../navigation/chrome';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import {
@@ -54,10 +57,19 @@ import {
 } from './data';
 import { useFirstScreenReader, useMoneyRecord } from './hooks';
 import { partyNodeFor } from './lookup';
+import { MoneyMap, type MapCommand, type MapRequest } from './map/MoneyMap';
+import { MoneyMapControls } from './map/MoneyMapControls';
+import { MoneyMapLegend } from './map/MoneyMapLegend';
+import {
+  MoneyMapPanel,
+  focusFlows,
+  type PanelFocus,
+} from './map/MoneyMapPanel';
+import { MoneyMapSearch } from './map/MoneyMapSearch';
+import { buildModel, nextAlongFlows, type MapModel } from './map/model';
 import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
 import { useMoneyFilters } from './MoneyFilters';
-import { NativeMoneyMap, type NativeMoneyMapHandle } from './NativeMoneyMap';
 import { moneyPartyGroups, PartyMoneyRow } from './parts';
 import {
   donationsCaveat,
@@ -75,7 +87,6 @@ import {
   publicMoneySource,
   type MoneyParams,
 } from './records';
-import { moneySceneHeight } from './scene-size';
 import {
   moneyNotes,
   moneyOriginals,
@@ -90,7 +101,7 @@ import {
 } from './view';
 
 const TOP_DONORS = 20;
-type Mode = 'list' | '3d';
+type Mode = 'list' | 'map';
 
 /** "Donations to parties, 1998–99 to 2025–26, and public money to donors on the map". */
 export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
@@ -111,12 +122,17 @@ export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
   const industry = filters.industry
     ? `, ${industryDonors(filters.industry)} only`
     : '';
+  const minimum =
+    filters.min > 0
+      ? `, flows of ${formatMoneyCompact(filters.min)} and over`
+      : '';
   const publicMoney = filters.grants || filters.contracts;
-  const narrowed = !isAllYears(graph, filters) || !!filters.industry;
+  const narrowed =
+    !isAllYears(graph, filters) || !!filters.industry || filters.min > 0;
   if (!filters.donations)
-    return `Public money to donors on the map${window}${industry}`;
+    return `Public money to donors on the map${window}${industry}${minimum}`;
   return narrowed || !publicMoney
-    ? `Donations to parties${window}${industry}`
+    ? `Donations to parties${window}${industry}${minimum}`
     : `Donations to parties${window}, and public money to donors on the map`;
 }
 
@@ -149,6 +165,21 @@ export function individualDonorsLine(nodes: readonly MoneyNode[]) {
   return `${formatCount(count)} individual ${count === 1 ? 'donor' : 'donors'}, ${formatMoneyCompact(total)}, not named.`;
 }
 
+/** The stage's one VoiceOver label: what is drawn, and what is focused. */
+export function moneyMapLabel(
+  model: Pick<MapModel, 'nodes' | 'edges'>,
+  focus: string | null,
+) {
+  const focused = focus ? model.nodes.find((n) => n.id === focus) : null;
+  return [
+    `Money map: ${formatCount(model.nodes.length)} discs and ${formatCount(model.edges.length)} recorded flows.`,
+    focused ? `Focused on ${focused.label}.` : null,
+    'The List view has the same data.',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
 const jurisdictionOptions = (
   Object.keys(moneyCatalogs) as MoneyJurisdiction[]
 ).map((value) => ({
@@ -157,13 +188,22 @@ const jurisdictionOptions = (
   testID: `money-jurisdiction-${value}`,
 }));
 
-/** The share path for the map as drawn: its jurisdiction and filters. */
+/** The share path for the map as drawn: its jurisdiction, filters and focus. */
 function sharePath(params: MoneyParams) {
   const query = new URLSearchParams();
   const jurisdiction = param(params.jurisdiction);
   if (jurisdiction && jurisdiction !== 'federal')
     query.set('jur', jurisdiction);
-  for (const key of ['from', 'to', 'industry', 'layers', 'inflation', 'view'])
+  for (const key of [
+    'from',
+    'to',
+    'industry',
+    'layers',
+    'inflation',
+    'min',
+    'view',
+    'select',
+  ])
     if (param(params[key])) query.set(key, param(params[key])!);
   const text = query.toString();
   return text ? `/money?${text}` : '/money';
@@ -171,11 +211,11 @@ function sharePath(params: MoneyParams) {
 
 /**
  * The money map (specs/money.md 2.13): pushed in the current tab with a
- * named back button. Title, the jurisdiction pop-up and one line saying
- * what the map shows; the List | Map picker; then the scene with two
- * figure blocks under it (donations, and public money beside it, never
- * added), or the list (Donors, Parties, Public money). Filters are a bar
- * button opening `/filters/money`, which writes this screen's params live.
+ * named back button. Map view: the stage fills the screen under a floating
+ * card (jurisdiction, one line saying what the map shows, the List | Map
+ * picker), a control stack, an overview and the detail panel. List view:
+ * Donors, Parties and Public money. Filters are a bar button opening
+ * `/filters/money`, which writes this screen's params live.
  */
 export default function MoneyScreen() {
   const params = useLocalSearchParams<MoneyParams>();
@@ -205,11 +245,8 @@ export default function MoneyScreen() {
   const linked = param(params.view);
   const mode: Mode =
     chosen ??
-    (linked === 'list' ? 'list' : linked === 'map' ? '3d' : null) ??
-    (reader === false ? '3d' : 'list');
-  const [glFailed, setGLFailed] = useState(false);
-  const map = useRef<NativeMoneyMapHandle | null>(null);
-  const [plate] = useState(createPlate);
+    (linked === 'list' ? 'list' : linked === 'map' ? 'map' : null) ??
+    (reader === false ? 'map' : 'list');
   const select = useCallback(
     (id: string, name?: string) => {
       if (filters)
@@ -251,39 +288,475 @@ export default function MoneyScreen() {
     error.code === 'not-found' &&
     jurisdiction !== 'federal';
   const picker = (
-    <View>
-      <SegmentedPicker
-        options={[
-          { value: 'list', label: 'List', testID: 'money-mode-list' },
-          { value: '3d', label: 'Map', testID: 'money-mode-3d' },
-        ]}
-        value={mode}
-        onChange={(next: Mode) => {
-          if (next === '3d') setGLFailed(false);
-          setMode(next);
-        }}
-        accessibilityLabel="View"
-        testID="money-view-toggle"
-      />
-      {glFailed ? (
-        <Group gap={rhythm.tight}>
-          <Text wordSafe variant="footnote" testID="money-gl-note">
-            The map can’t be drawn on this device. The List view has the same
-            data.
-          </Text>
-          <Button
-            label={copy.tryAgain}
-            size="compact"
-            onPress={() => {
-              setGLFailed(false);
-              setMode('3d');
-            }}
-            testID="money-gl-retry"
-          />
-        </Group>
-      ) : null}
-    </View>
+    <SegmentedPicker
+      options={[
+        { value: 'list', label: 'List', testID: 'money-mode-list' },
+        { value: 'map', label: 'Map', testID: 'money-mode-map' },
+      ]}
+      value={mode}
+      onChange={(next: Mode) => setMode(next)}
+      accessibilityLabel="View"
+      testID="money-view-toggle"
+    />
   );
+  const jurisdictionControl = (
+    <PopUpButton
+      label="Jurisdiction"
+      value={jurisdiction}
+      options={jurisdictionOptions}
+      onChange={(next) =>
+        write({
+          jurisdiction: next === 'federal' ? undefined : next,
+          from: undefined,
+          to: undefined,
+          industry: undefined,
+          layers: undefined,
+          inflation: undefined,
+          min: undefined,
+          select: undefined,
+        })
+      }
+      testID="money-jurisdiction"
+    />
+  );
+  const summary =
+    graph && filters ? (
+      <Text wordSafe variant="secondary" testID="money-view-summary">
+        {moneySummary(graph, filters)}
+      </Text>
+    ) : null;
+  const reset = () =>
+    write({
+      from: undefined,
+      to: undefined,
+      industry: undefined,
+      layers: undefined,
+      inflation: undefined,
+      min: undefined,
+    });
+  const body =
+    error && !record ? (
+      missingState ? (
+        <ContentUnavailable
+          symbol="magnifyingglass"
+          title={`${moneyCatalogs[jurisdiction].label} isn’t available yet`}
+          action={{
+            label: 'Show federal',
+            onPress: () => write({ jurisdiction: undefined }),
+            testID: 'money-show-federal',
+          }}
+          testID="money-missing"
+        />
+      ) : offline ? (
+        <ContentUnavailable
+          symbol="wifi.slash"
+          title={copy.notSaved}
+          body={copy.notSavedBody}
+          testID="money-error"
+        />
+      ) : (
+        <ContentUnavailable
+          symbol="exclamationmark.triangle"
+          title="The money map couldn’t be loaded"
+          body="Check your connection and try again."
+          action={{ label: copy.tryAgain, onPress: retry }}
+          testID="money-error"
+        />
+      )
+    ) : !record || !graph || !filters || !view ? (
+      <MoneySkeleton mode={mode} />
+    ) : !view.nodes.length ? (
+      <ContentUnavailable
+        symbol="line.3.horizontal.decrease.circle"
+        title="Nothing matches these filters"
+        action={{
+          label: copy.resetFilters,
+          onPress: reset,
+          testID: 'money-empty-reset',
+        }}
+        testID="money-empty"
+      />
+    ) : null;
+  const hooks =
+    graph && view && filters ? (
+      <MoneyTestHooks
+        graph={view}
+        onYear={(year) => write({ from: String(year), to: String(year) })}
+        onFocus={(id) =>
+          select(id, graph.nodes.find((n) => n.id === id)?.label)
+        }
+      />
+    ) : null;
+  if (mode === 'map' && record && graph && filters && view && !body)
+    return (
+      <MapMode
+        record={record}
+        graph={graph}
+        view={view}
+        filters={filters}
+        jurisdiction={jurisdiction}
+        params={params}
+        write={write}
+        options={{ ...options, title }}
+        controls={
+          <>
+            {jurisdictionControl}
+            {summary}
+            {picker}
+            {hooks}
+          </>
+        }
+        offline={
+          record.stale && record.staleReason !== 'unreadable' ? (
+            <OfflineLine savedAt={record.savedAt} testID="money-offline" />
+          ) : null
+        }
+      />
+    );
+  return (
+    <ListMode
+      options={options}
+      title={title}
+      refreshing={refreshing}
+      refresh={refresh}
+      head={
+        <>
+          {jurisdictionControl}
+          {summary}
+        </>
+      }
+      offline={
+        record?.stale && record.staleReason !== 'unreadable' ? (
+          <OfflineLine savedAt={record.savedAt} testID="money-offline" />
+        ) : null
+      }
+      picker={picker}
+      body={
+        body ??
+        (record && graph && filters && view ? (
+          <ListBody
+            record={record}
+            filters={filters}
+            view={view}
+            jurisdiction={jurisdiction}
+          />
+        ) : null)
+      }
+      hooks={hooks}
+    />
+  );
+}
+
+// ------------------------------------------------------------------ map
+
+function MapMode({
+  record,
+  graph,
+  view,
+  filters,
+  jurisdiction,
+  params,
+  write,
+  options,
+  controls,
+  offline,
+}: {
+  record: RecordResult<MoneyGraph>;
+  graph: MoneyGraph;
+  view: MoneyGraph;
+  filters: MoneyFilters;
+  jurisdiction: MoneyJurisdiction;
+  params: MoneyParams;
+  write: (next: Record<string, string | undefined>) => void;
+  options: Record<string, unknown>;
+  controls: React.ReactNode;
+  offline: React.ReactNode;
+}) {
+  const setOptions = useSafeSetOptions();
+  useLayoutEffect(() => {
+    setOptions(opaqueBar(colors.paper));
+  }, [setOptions]);
+  const navigation = useNavigation();
+  const router = useRouter();
+  const { regular } = useLayout();
+  const large = useAccessibilitySize();
+  // The camera is driven by state: each command runs once, by its seq.
+  const [command, setCommand] = useState<MapCommand | null>(null);
+  const dispatch = useCallback(
+    (next: MapRequest) =>
+      setCommand((previous) => ({
+        ...next,
+        seq: (previous?.seq ?? 0) + 1,
+      })),
+    [],
+  );
+  const model = useMemo(() => buildModel(view), [view]);
+  const focus = param(params.select) ?? null;
+  const focusIndex = focus === null ? null : (model.byId.get(focus) ?? null);
+  // The trail Next has walked, as node ids, so Previous retraces it.
+  const [trail, setTrail] = useState<string[]>([]);
+  const setFocus = useCallback(
+    (id: string | null, viaTrail: string[] | null = null) => {
+      setTrail(viaTrail ?? (id ? [id] : []));
+      write({ select: id ?? undefined });
+    },
+    [write],
+  );
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [stage, setStage] = useState({ width: 0, height: 0 });
+  const [topHeight, setTopHeight] = useState(0);
+  const [peek, setPeek] = useState(0);
+  const window = useWindowDimensions();
+  const insets = useMemo(
+    () => ({
+      top: topHeight + rhythm.tight,
+      bottom: peek + rhythm.tight,
+      left: rhythm.tight,
+      right: 44 + rhythm.block * 2,
+    }),
+    [topHeight, peek],
+  );
+  // Android's Back closes the search, then the panel, then the focus.
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    const back = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (!navigation.isFocused()) return false;
+      if (searchOpen) {
+        setSearchOpen(false);
+        return true;
+      }
+      if (expanded) {
+        setExpanded(false);
+        return true;
+      }
+      if (focus) {
+        setFocus(null);
+        return true;
+      }
+      return false;
+    });
+    return () => back.remove();
+  }, [navigation, searchOpen, expanded, focus, setFocus]);
+  // Every fly the chrome asks for goes through here: the camera, the focus
+  // and the trail move together.
+  const go = (id: string, nextTrail: string[]) => {
+    setSearchOpen(false);
+    dispatch({ type: 'flyTo', id });
+    setFocus(id, nextTrail);
+  };
+  const flyTo = (id: string) => go(id, [id]);
+  const record_ = useCallback(
+    (id: string, name?: string) =>
+      moneyFocusRoute(id, jurisdiction, filters, name, 'map'),
+    [jurisdiction, filters],
+  );
+  const panelFocus: PanelFocus | null = (() => {
+    if (focusIndex === null) return null;
+    const node = model.nodes[focusIndex]!;
+    const trailIndices = trail
+      .map((id) => model.byId.get(id))
+      .filter((i): i is number => i !== undefined);
+    const next = nextAlongFlows(model, focusIndex, trailIndices);
+    const previousId = trail.length > 1 ? trail[trail.length - 2]! : null;
+    const previous = previousId
+      ? model.nodes[model.byId.get(previousId) ?? -1]
+      : undefined;
+    return {
+      node,
+      flows: focusFlows(model, focusIndex),
+      record: record_(node.id, node.label),
+      flowRecord: (other) => record_(other.id, other.label),
+      next:
+        next === null
+          ? null
+          : {
+              label: model.nodes[next]!.label,
+              onPress: () => {
+                const id = model.nodes[next]!.id;
+                go(id, [...trail, id]);
+              },
+            },
+      previous: previous
+        ? {
+            label: previous.label,
+            onPress: () => go(previous.id, trail.slice(0, -1)),
+          }
+        : null,
+    };
+  })();
+  const actions = panelFocus
+    ? [
+        ...(panelFocus.next
+          ? [
+              {
+                name: 'nextFlow',
+                label: `Next flow, ${panelFocus.next.label}`,
+                onAction: panelFocus.next.onPress,
+              },
+            ]
+          : []),
+        ...(panelFocus.previous
+          ? [
+              {
+                name: 'previousFlow',
+                label: `Previous, ${panelFocus.previous.label}`,
+                onAction: panelFocus.previous.onPress,
+              },
+            ]
+          : []),
+        {
+          name: 'openRecord',
+          label: `Open the record for ${panelFocus.node.label}`,
+          onAction: () => router.push(panelFocus.record),
+        },
+        {
+          name: 'clearFocus',
+          label: 'Clear the focus',
+          onAction: () => setFocus(null),
+        },
+      ]
+    : [];
+  const totals = {
+    donations: model.totals.donations,
+    publicMoney:
+      filters.grants || filters.contracts
+        ? model.totals.grants + model.totals.contracts
+        : null,
+  };
+  const shortSource = moneyShortSource(graph);
+  const sourceLine = (
+    <SourceLine
+      {...moneySourceDetails(record, {
+        citation: [
+          shortSource,
+          ...(['grants', 'contracts'] as const)
+            .filter((kind) => filters[kind] && graph.meta[`${kind}_source`])
+            .map((kind) => publicMoneySource(graph, kind).label),
+        ],
+        originals: moneyOriginals(graph),
+        notes: [...moneyNotes(graph), donationsCaveat, publicMoneyCaveat],
+        testID: 'money-source',
+      })}
+    />
+  );
+  const cardWidth = regular ? { maxWidth: 420 } : null;
+  return (
+    <GestureHandlerRootView style={styles.root}>
+      <RouteOptions options={options} />
+      <View
+        style={styles.root}
+        testID="money-screen"
+        onLayout={(event) => {
+          const { width, height } = event.nativeEvent.layout;
+          setStage((previous) =>
+            previous.width === width && previous.height === height
+              ? previous
+              : { width, height },
+          );
+        }}
+      >
+        <MoneyMap
+          command={command}
+          graph={graph}
+          model={model}
+          focus={focus}
+          onFocus={(id) => setFocus(id)}
+          insets={insets}
+          cacheKey={jurisdiction}
+          accessibilityLabel={moneyMapLabel(model, focus)}
+          actions={actions}
+          overview={
+            large || searchOpen || expanded
+              ? null
+              : { left: rhythm.block, bottom: peek + rhythm.block }
+          }
+        />
+        <SafeAreaView
+          edges={['top', 'bottom']}
+          pointerEvents="box-none"
+          style={styles.chrome}
+        >
+          <View
+            style={[styles.top, cardWidth]}
+            pointerEvents="box-none"
+            onLayout={(event) =>
+              setTopHeight(Math.ceil(event.nativeEvent.layout.height))
+            }
+          >
+            {searchOpen ? (
+              <MoneyMapSearch
+                model={model}
+                onChoose={flyTo}
+                onClose={() => setSearchOpen(false)}
+              />
+            ) : (
+              <View style={styles.card} testID="money-map-card">
+                {controls}
+                {offline}
+              </View>
+            )}
+          </View>
+          {searchOpen ? null : (
+            <View
+              style={[styles.controls, { top: topHeight + rhythm.block }]}
+              pointerEvents="box-none"
+            >
+              <MoneyMapControls
+                onSearch={() => setSearchOpen(true)}
+                onZoomIn={() => dispatch({ type: 'zoom', direction: 1 })}
+                onZoomOut={() => dispatch({ type: 'zoom', direction: -1 })}
+                onFit={() => dispatch({ type: 'fit' })}
+              />
+            </View>
+          )}
+          <View style={styles.grow} pointerEvents="box-none" />
+          <View
+            style={[styles.panelHost, regular ? styles.panelRegular : null]}
+            pointerEvents="box-none"
+          >
+            <MoneyMapPanel
+              focus={panelFocus}
+              totals={totals}
+              caption={`${formatCount(model.nodes.length)} discs · ${formatCount(model.edges.length)} recorded flows · ${moneyAccessibilityLabel(model.totals.donations, true)} in donations`}
+              legend={<MoneyMapLegend model={model} />}
+              sourceLine={sourceLine}
+              stageHeight={stage.height || window.height}
+              expanded={expanded}
+              onExpanded={setExpanded}
+              onClear={() => setFocus(null)}
+              onPeekHeight={setPeek}
+            />
+          </View>
+        </SafeAreaView>
+      </View>
+    </GestureHandlerRootView>
+  );
+}
+
+// ----------------------------------------------------------------- list
+
+function ListMode({
+  options,
+  title,
+  refreshing,
+  refresh,
+  head,
+  offline,
+  picker,
+  body,
+  hooks,
+}: {
+  options: Record<string, unknown>;
+  title: string;
+  refreshing: boolean;
+  refresh: () => void;
+  head: React.ReactNode;
+  offline: React.ReactNode;
+  picker: React.ReactNode;
+  body: React.ReactNode;
+  hooks: React.ReactNode;
+}) {
   // The bar title fades in by scroll with no width at rest, so the back
   // button keeps its label (money-03), and truncates inside the bar items.
   const barTitleRef = useRef<View>(null);
@@ -294,10 +767,7 @@ export default function MoneyScreen() {
       <Screen
         column="wide"
         testID="money-screen"
-        onScroll={(y) => {
-          plate.onScroll(y);
-          barTitle.onScroll(y);
-        }}
+        onScroll={barTitle.onScroll}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -316,147 +786,15 @@ export default function MoneyScreen() {
               {title}
             </Heading>
           </View>
-          <PopUpButton
-            label="Jurisdiction"
-            value={jurisdiction}
-            options={jurisdictionOptions}
-            onChange={(next) =>
-              write({
-                jurisdiction: next === 'federal' ? undefined : next,
-                from: undefined,
-                to: undefined,
-                industry: undefined,
-                layers: undefined,
-                inflation: undefined,
-              })
-            }
-            testID="money-jurisdiction"
-          />
-          {graph && filters ? (
-            <Text wordSafe variant="secondary" testID="money-view-summary">
-              {moneySummary(graph, filters)}
-            </Text>
-          ) : null}
+          {head}
         </Group>
-        {record?.stale && record.staleReason !== 'unreadable' ? (
-          <OfflineLine savedAt={record.savedAt} testID="money-offline" />
-        ) : null}
+        {offline}
         {picker}
-        {error && !record ? (
-          missingState ? (
-            <ContentUnavailable
-              symbol="magnifyingglass"
-              title={`${moneyCatalogs[jurisdiction].label} isn’t available yet`}
-              action={{
-                label: 'Show federal',
-                onPress: () => write({ jurisdiction: undefined }),
-                testID: 'money-show-federal',
-              }}
-              testID="money-missing"
-            />
-          ) : offline ? (
-            <ContentUnavailable
-              symbol="wifi.slash"
-              title={copy.notSaved}
-              body={copy.notSavedBody}
-              testID="money-error"
-            />
-          ) : (
-            <ContentUnavailable
-              symbol="exclamationmark.triangle"
-              title="The money map couldn’t be loaded"
-              body="Check your connection and try again."
-              action={{ label: copy.tryAgain, onPress: retry }}
-              testID="money-error"
-            />
-          )
-        ) : !record || !graph || !filters || !view ? (
-          <MoneySkeleton mode={mode} />
-        ) : !view.nodes.length ? (
-          <ContentUnavailable
-            symbol="line.3.horizontal.decrease.circle"
-            title="Nothing matches these filters"
-            action={{
-              label: copy.resetFilters,
-              onPress: () =>
-                write({
-                  from: undefined,
-                  to: undefined,
-                  industry: undefined,
-                  layers: undefined,
-                  inflation: undefined,
-                }),
-              testID: 'money-empty-reset',
-            }}
-            testID="money-empty"
-          />
-        ) : (
-          <MoneyBody
-            record={record}
-            filters={filters}
-            view={view}
-            mode={mode}
-            jurisdiction={jurisdiction}
-            plate={plate}
-            map={map}
-            select={select}
-            initialFocus={param(params.select) ?? null}
-            onUnavailable={() => {
-              setGLFailed(true);
-              setMode('list');
-            }}
-          />
-        )}
-        {graph && view && filters ? (
-          <MoneyTestHooks
-            graph={view}
-            onYear={(year) => write({ from: String(year), to: String(year) })}
-            onFocus={(id) =>
-              select(id, graph.nodes.find((n) => n.id === id)?.label)
-            }
-          />
-        ) : null}
+        {body}
+        {hooks}
       </Screen>
     </GestureHandlerRootView>
   );
-}
-
-/** Whether the scene is on screen: GL draws only while it is. */
-function createPlate() {
-  let top = 0,
-    bottom = 700,
-    offset = 0,
-    height = 800;
-  const listeners = new Set<(shown: boolean) => void>();
-  const shown = () => offset < bottom && offset + height > top;
-  const notify = () => listeners.forEach((l) => l(shown()));
-  return {
-    onScroll(y: number) {
-      const before = shown();
-      offset = y;
-      if (shown() !== before) notify();
-    },
-    layout(nextTop: number, nextBottom: number, window: number) {
-      top = nextTop;
-      bottom = nextBottom;
-      height = window;
-      notify();
-    },
-    subscribe(listener: (shown: boolean) => void) {
-      listeners.add(listener);
-      return () => {
-        listeners.delete(listener);
-      };
-    },
-    shown,
-  };
-}
-type Plate = ReturnType<typeof createPlate>;
-
-function usePlateVisible(source: Plate) {
-  const [visible, setVisible] = useState(source.shown());
-  useEffect(() => source.subscribe(setVisible), [source]);
-  return visible;
 }
 
 function MoneySkeleton({ mode }: { mode: Mode }) {
@@ -464,19 +802,19 @@ function MoneySkeleton({ mode }: { mode: Mode }) {
   const { regular } = useLayout();
   return (
     <Group>
-      {mode === '3d' ? (
+      {mode === 'map' ? (
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
           style={{
-            height: moneySceneHeight(width, regular),
+            height: regular ? 560 : Math.min(Math.round(width), 440),
             backgroundColor: colors.sunken,
           }}
         />
       ) : null}
       <Skeleton
         shape="figure"
-        count={mode === '3d' ? 2 : 1}
+        count={mode === 'map' ? 2 : 1}
         label="Loading the money map"
         testID="money-loading"
       />
@@ -485,32 +823,18 @@ function MoneySkeleton({ mode }: { mode: Mode }) {
   );
 }
 
-function MoneyBody({
+function ListBody({
   record,
   filters,
   view,
-  mode,
   jurisdiction,
-  plate: source,
-  map,
-  select,
-  initialFocus,
-  onUnavailable,
 }: {
   record: RecordResult<MoneyGraph>;
   filters: MoneyFilters;
   view: MoneyGraph;
-  mode: Mode;
   jurisdiction: MoneyJurisdiction;
-  plate: Plate;
-  map: RefObject<NativeMoneyMapHandle | null>;
-  select: (id: string, name?: string) => void;
-  initialFocus: string | null;
-  onUnavailable: () => void;
 }) {
   const graph = record.data;
-  const visible = usePlateVisible(source);
-  const { height } = useWindowDimensions();
   const column = useScreenColumn('wide');
   const donations = useMemo(
     () => partyDonationsTotal(graph, filters),
@@ -558,16 +882,6 @@ function MoneyBody({
       testID="money-donations"
     />
   ) : null;
-  const publicNotes = [
-    typeof graph.meta.donor_nodes_by_total === 'number' &&
-    typeof graph.meta.donors_via_public_money === 'number'
-      ? `The map holds the ${formatCount(graph.meta.donor_nodes_by_total)} largest donors by lifetime donations, plus ${formatCount(graph.meta.donors_via_public_money)} smaller donors that hold at least $50 million in Commonwealth grants and contracts.`
-      : null,
-    grants ? grantsSource.citation : null,
-    contracts ? contractsSource.citation : null,
-    contracts ? 'Contract values as last published, not amounts paid.' : null,
-  ];
-  // --- List view rows ---
   const named = rankedDonors(view).filter((n) => !n.withheld);
   const top = named
     .filter((n) => n.via !== 'public_money')
@@ -590,166 +904,117 @@ function MoneyBody({
       testID={`money-party-${index}`}
     />
   );
+  void column;
   return (
     <>
-      {mode === '3d' ? (
-        <Group>
-          <View
-            style={{
-              marginHorizontal: column.regular
-                ? 0
-                : -column.content.paddingHorizontal,
+      {donationsBlock}
+      {filters.donations ? (
+        <View testID="money-donors" style={styles.section}>
+          <SectionHeader
+            title="Donors"
+            action={{
+              label: copy.seeAll,
+              accessibilityLabel: `See all ${formatCount(named.length)} donors`,
+              href: moneyDonorsRoute({
+                jurisdiction,
+                ...moneyWindowParams(filters),
+                via: 'map',
+              }),
+              testID: 'money-donors-all',
             }}
-            onLayout={(event) => {
-              const { y, height: h } = event.nativeEvent.layout;
-              source.layout(y, y + h, height);
-            }}
-          >
-            <NativeMoneyMap
-              ref={map}
-              graph={graph}
-              view={view}
-              active={visible}
-              onSelect={(id) =>
-                select(id, view.nodes.find((n) => n.id === id)?.label)
-              }
-              onUnavailable={onUnavailable}
-              initialFocus={initialFocus}
-            />
+          />
+          <Text wordSafe variant="footnote" testID="money-donor-caption">
+            {donorCaption(graph, filters)}
+          </Text>
+          <View>
+            {top.map((node, index) => (
+              <MoneyRow
+                key={node.id}
+                name={node.label}
+                detail={donorDetail(node)}
+                amount={node.total}
+                href={record_(node)}
+                testID={`money-donor-${index}`}
+              />
+            ))}
           </View>
-          {donationsBlock}
-          {grants || contracts ? (
-            <View testID="money-public-money" style={styles.block}>
-              <Heading level={3}>Public money to donors on the map</Heading>
-              <StatStrip
-                tiles={[
-                  ...(grants
-                    ? [
-                        {
-                          value: formatMoneyCompact(grants.total),
-                          label: 'in grants',
-                          testID: 'money-public-grants',
-                        },
-                      ]
-                    : []),
-                  ...(contracts
-                    ? [
-                        {
-                          value: formatMoneyCompact(contracts.total),
-                          label: 'in contracts',
-                          testID: 'money-public-contracts',
-                        },
-                      ]
-                    : []),
-                ]}
-              />
-              <Text wordSafe variant="footnote">
-                {publicMoneyCaveat}
-              </Text>
-              <SourceLine
-                {...moneySourceDetails(record, {
-                  citation: publicCitation,
-                  returns: false,
-                  originals: moneyOriginals(graph).slice(1),
-                  notes: publicNotes,
-                  testID: 'money-public-money-source',
-                })}
-              />
-            </View>
+          {individuals ? (
+            <Text wordSafe variant="footnote" testID="money-individual-donors">
+              {individuals}
+            </Text>
           ) : null}
-        </Group>
-      ) : (
-        <>
-          {donationsBlock}
-          {filters.donations ? (
-            <View testID="money-donors" style={styles.section}>
-              <SectionHeader
-                title="Donors"
-                action={{
-                  label: copy.seeAll,
-                  accessibilityLabel: `See all ${formatCount(named.length)} donors`,
-                  href: moneyDonorsRoute({
-                    jurisdiction,
-                    ...moneyWindowParams(filters),
-                    via: 'map',
-                  }),
-                  testID: 'money-donors-all',
-                }}
-              />
-              <Text wordSafe variant="footnote" testID="money-donor-caption">
-                {donorCaption(graph, filters)}
-              </Text>
+        </View>
+      ) : null}
+      {partyNodes.main.length || partyNodes.other.length ? (
+        <View testID="money-parties" style={styles.section}>
+          <SectionHeader title="Parties" />
+          <View>{partyNodes.main.map(partyRow)}</View>
+          {partyNodes.other.length ? (
+            <>
+              <SectionHeader title="Other parties" level={3} />
               <View>
-                {top.map((node, index) => (
-                  <MoneyRow
-                    key={node.id}
-                    name={node.label}
-                    detail={donorDetail(node)}
-                    amount={node.total}
-                    href={record_(node)}
-                    testID={`money-donor-${index}`}
-                  />
-                ))}
-              </View>
-              {individuals ? (
-                <Text
-                  wordSafe
-                  variant="footnote"
-                  testID="money-individual-donors"
-                >
-                  {individuals}
-                </Text>
-              ) : null}
-            </View>
-          ) : null}
-          {partyNodes.main.length || partyNodes.other.length ? (
-            <View testID="money-parties" style={styles.section}>
-              <SectionHeader title="Parties" />
-              <View>{partyNodes.main.map(partyRow)}</View>
-              {partyNodes.other.length ? (
-                <>
-                  <SectionHeader title="Other parties" level={3} />
-                  <View>
-                    {partyNodes.other.map((node, index) =>
-                      partyRow(node, partyNodes.main.length + index),
-                    )}
-                  </View>
-                </>
-              ) : null}
-            </View>
-          ) : null}
-          {grants || contracts ? (
-            <View testID="money-public" style={styles.section}>
-              <SectionHeader title="Public money" />
-              <View>
-                {[grants, contracts].map((node) =>
-                  node ? (
-                    <MoneyRow
-                      key={node.id}
-                      name={`${node.label} to donors on the map`}
-                      detail={moneyYears(node.firstYear, node.lastYear)}
-                      amount={node.total}
-                      href={record_(node)}
-                      testID={`money-public-${node.flow === 'contracts' ? 'contracts' : 'grants'}`}
-                    />
-                  ) : null,
+                {partyNodes.other.map((node, index) =>
+                  partyRow(node, partyNodes.main.length + index),
                 )}
               </View>
-              <Text wordSafe variant="footnote">
-                {publicMoneyCaveat}
-              </Text>
-            </View>
+            </>
           ) : null}
-          <SourceLine
-            {...moneySourceDetails(record, {
-              citation: [shortSource, ...publicCitation],
-              originals: moneyOriginals(graph),
-              notes: moneyNotes(graph),
-              testID: 'money-list-source',
-            })}
-          />
-        </>
-      )}
+        </View>
+      ) : null}
+      {grants || contracts ? (
+        <View testID="money-public" style={styles.section}>
+          <SectionHeader title="Public money" />
+          <View>
+            {[grants, contracts].map((node) =>
+              node ? (
+                <MoneyRow
+                  key={node.id}
+                  name={`${node.label} to donors on the map`}
+                  detail={moneyYears(node.firstYear, node.lastYear)}
+                  amount={node.total}
+                  href={record_(node)}
+                  testID={`money-public-${node.flow === 'contracts' ? 'contracts' : 'grants'}`}
+                />
+              ) : null,
+            )}
+          </View>
+          <Text wordSafe variant="footnote">
+            {publicMoneyCaveat}
+          </Text>
+          {grants || contracts ? (
+            <StatStrip
+              tiles={[
+                ...(grants
+                  ? [
+                      {
+                        value: formatMoneyCompact(grants.total),
+                        label: 'in grants',
+                        testID: 'money-public-grants',
+                      },
+                    ]
+                  : []),
+                ...(contracts
+                  ? [
+                      {
+                        value: formatMoneyCompact(contracts.total),
+                        label: 'in contracts',
+                        testID: 'money-public-contracts',
+                      },
+                    ]
+                  : []),
+              ]}
+            />
+          ) : null}
+        </View>
+      ) : null}
+      <SourceLine
+        {...moneySourceDetails(record, {
+          citation: [shortSource, ...publicCitation],
+          originals: moneyOriginals(graph),
+          notes: moneyNotes(graph),
+          testID: 'money-list-source',
+        })}
+      />
     </>
   );
 }
@@ -757,5 +1022,23 @@ function MoneyBody({
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.paper },
   section: { gap: rhythm.tight },
-  block: { gap: rhythm.tight },
+  chrome: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+  top: {
+    paddingHorizontal: rhythm.block,
+    paddingTop: rhythm.tight,
+    width: '100%',
+  },
+  card: {
+    backgroundColor: colors.raised,
+    borderRadius: radii.container,
+    borderCurve: 'continuous',
+    borderWidth: hairline,
+    borderColor: colors.dividerSubtle,
+    padding: rhythm.block,
+    gap: rhythm.tight,
+  },
+  controls: { position: 'absolute', right: rhythm.block },
+  grow: { flex: 1 },
+  panelHost: { width: '100%' },
+  panelRegular: { maxWidth: 480 },
 });
