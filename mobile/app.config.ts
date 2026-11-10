@@ -239,6 +239,14 @@ const config: ExpoConfig = {
     },
   },
   plugins: [
+    ...(androidBuild
+      ? [
+          ['./plugins/withAndroidRelease.js', { variant }] as [
+            string,
+            { variant: Variant },
+          ],
+        ]
+      : []),
     './plugins/withAndroidPolicy.js',
     ...(androidBuild
       ? [
