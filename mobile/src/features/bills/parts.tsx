@@ -695,8 +695,8 @@ const slugOf = (label: string) =>
 /**
  * A vote's party rows in the fixed groups Labor, the Coalition and the
  * crossbench: each group's summed counts in words, then each party as a
- * row with its own bar (one ink for every party) and counts, opening the
- * party. Zero sides are left out on screen and said by VoiceOver.
+ * row with its own bar (one ink for every party, all on one scale) and
+ * counts, opening the party. Zero sides are left out on screen and said by VoiceOver.
  */
 export function PartyVotes({
   splits,
@@ -715,6 +715,9 @@ export function PartyVotes({
         Party votes not recorded for this vote.
       </Text>
     );
+  // One scale for every row, so a small party's bar is not drawn as long as
+  // a large one's just because it heads its own group.
+  const max = Math.max(...splits.map((r) => r.ayes + r.noes), 1);
   const groups = new Map<PartyBloc, BillSplit[]>();
   for (const split of splits) {
     const bloc = partyBloc(split.party);
@@ -728,7 +731,6 @@ export function PartyVotes({
           const rows = groups.get(bloc)!;
           const ayes = rows.reduce((n, r) => n + r.ayes, 0);
           const noes = rows.reduce((n, r) => n + r.noes, 0);
-          const max = Math.max(...rows.map((r) => r.ayes + r.noes), 1);
           return (
             <View key={bloc} style={styles.bloc} testID={`${testID}-${bloc}`}>
               <Text

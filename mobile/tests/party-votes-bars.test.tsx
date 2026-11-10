@@ -39,6 +39,12 @@ async function tracks() {
   return result;
 }
 
+test('bars in different groups share one scale', async () => {
+  const [labor, greens] = await tracks();
+  expect(labor!.ayes).toBe('100%');
+  expect(greens!.ayes).toBe(`${(11 / 70) * 100}%`);
+});
+
 test('at accessibility sizes each bar takes the full line', async () => {
   jest.mocked(useAccessibilitySize).mockReturnValue(true);
   for (const { track } of await tracks()) expect(track.width).toBe('100%');
