@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native';
 import { formatMoneyCompact } from '../../../design/format';
 import { Text } from '../../../design/primitives';
 import { colors, rhythm } from '../../../design/tokens';
-import { clusterColour } from '../ported/palette';
 import type { MapModel } from './model';
 import {
   edgeCapAmount,
@@ -21,11 +20,13 @@ import {
 
 /** The $1bn reference disc is drawn this wide, in points; the rest follow. */
 const LARGEST = 40;
+/** How many parties the legend names in their colours: the largest in view. */
+const PARTY_SWATCHES = 6;
 
 /**
  * What the marks mean, with the scales the map uses: area for amounts,
- * width for flows, hue for the donor's industry. Parties are one grey and
- * always named; the public-money registers are rings, a different measure.
+ * width for flows, hue for the donor's industry or the party. Parties are
+ * named; the public-money registers are rings, a different measure.
  */
 export function MoneyMapLegend({ model }: { model: MapModel }) {
   const discScale =
@@ -39,6 +40,11 @@ export function MoneyMapLegend({ model }: { model: MapModel }) {
   const publicCap = formatMoneyCompact(publicEdgeCapAmount());
   const equivalent = formatMoneyCompact(publicEdgeEquivalent(1e9));
   const hasPublicMoney = model.clusters.some((c) => c.key === PUBLIC_MONEY);
+  // The largest parties in the view, in their own colours.
+  const parties = model.nodes
+    .filter((n) => n.kind === 'party')
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, PARTY_SWATCHES);
   return (
     <View style={styles.legend} testID="money-map-legend">
       <View style={styles.block}>
@@ -138,9 +144,25 @@ export function MoneyMapLegend({ model }: { model: MapModel }) {
       ) : null}
       <View style={styles.block}>
         <Text wordSafe variant="footnote">
-          Colour is the donor’s industry. Parties are grey and named. Public
-          money is a ring: a different register, never added to donations.
+          Colour is the donor’s industry, or the party’s own. Parties are named.
+          Public money is a ring: a different register, never added to
+          donations.
         </Text>
+        <View style={styles.swatches} testID="money-map-legend-parties">
+          {parties.map((party) => (
+            <View
+              key={party.id}
+              style={styles.swatch}
+              accessible
+              accessibilityLabel={`${party.label}, party`}
+            >
+              <View style={[styles.dot, { backgroundColor: party.colour }]} />
+              <Text variant="footnote" wordSafe>
+                {party.label}
+              </Text>
+            </View>
+          ))}
+        </View>
         <View style={styles.swatches}>
           {industries.map((cluster) => (
             <View
@@ -155,15 +177,6 @@ export function MoneyMapLegend({ model }: { model: MapModel }) {
               </Text>
             </View>
           ))}
-          <View style={styles.swatch} accessible accessibilityLabel="Parties">
-            <View
-              style={[
-                styles.dot,
-                { backgroundColor: clusterColour(PARTIES).colour },
-              ]}
-            />
-            <Text variant="footnote">Parties</Text>
-          </View>
           <View
             style={styles.swatch}
             accessible

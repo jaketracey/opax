@@ -36,7 +36,7 @@ export const SMALL_NODE = 3.2;
 export const THIN_EDGE = 1.0;
 const EDGE_ALPHA = 0.42;
 /** Public money lines sit beneath the donations, as a quieter register. */
-const PUBLIC_EDGE_ALPHA = 0.3;
+const PUBLIC_EDGE_ALPHA = 0.22;
 const NODE_ALPHA = 0.94;
 const HUB_RING = 3.5;
 

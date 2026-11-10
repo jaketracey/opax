@@ -1,3 +1,4 @@
+import { partyMapColour } from '../ported/palette';
 import type { Centre } from './layout';
 import { otherEnd, PARTIES, PUBLIC_MONEY, type MapModel } from './model';
 
@@ -20,7 +21,11 @@ export interface LabelSlot {
   /** World position the label hangs from. */
   x: number;
   y: number;
-  /** World offset: the disc's radius, so the text sits beside its rim. */
+  /**
+   * World offset: the disc's radius, so the text sits beside its rim, or
+   * further when another disc covers the rim (parties crowd the centre, and
+   * a smaller party's name would otherwise start inside its neighbour).
+   */
   r: number;
   /** A node's model index, where the slot names one. */
   node?: number;
@@ -49,10 +54,11 @@ export function labelSlots(
       key: `${kind}:${node.id}`,
       kind,
       text: node.label,
-      ink: node.ink,
+      // A party's name is set in its colour, darkened to read on paper.
+      ink: node.kind === 'party' ? partyMapColour(node.label).ink : node.ink,
       x: p.x,
       y: p.y,
-      r: node.radius,
+      r: clearRim(model, at, index),
       node: index,
     };
   };
@@ -102,6 +108,37 @@ export function labelSlots(
     .slice(0, NAME_LABELS);
   for (const node of others) slots.push(nodeSlot(node.index, 'name'));
   return slots;
+}
+
+/**
+ * Where a disc's name begins, as a distance from its centre: the rim, pushed
+ * right past any other disc that covers the point where the name would start.
+ */
+export function clearRim(
+  model: MapModel,
+  at: (modelIndex: number) => { x: number; y: number },
+  index: number,
+): number {
+  const node = model.nodes[index]!;
+  const p = at(index);
+  let r = node.radius;
+  for (let pass = 0; pass < 4; pass++) {
+    let moved = false;
+    for (const other of model.nodes) {
+      if (other.index === index) continue;
+      const q = at(other.index);
+      const dy = q.y - p.y;
+      if (Math.abs(dy) >= other.radius) continue;
+      const half = Math.sqrt(other.radius * other.radius - dy * dy);
+      const start = p.x + r;
+      if (q.x - half <= start && q.x + half > start) {
+        r = q.x + half - p.x;
+        moved = true;
+      }
+    }
+    if (!moved) break;
+  }
+  return r;
 }
 
 /**

@@ -30,6 +30,14 @@ import {
   moneyFlowType,
   moneyView,
 } from '../src/features/money/view';
+import { contrastRatio } from '../src/design/contrast';
+import { partyColors } from '../src/design/palette';
+import {
+  clusterColour,
+  inkOn,
+  partyMapColour,
+  SURFACE,
+} from '../src/features/money/ported/palette';
 import { pinned } from './pinned';
 
 const federal = decodeMoneyGraph(pinned('/graph/money.json'));
@@ -76,6 +84,36 @@ describe('buildModel on the federal graph', () => {
       }
       if (node.kind === 'party') expect(node.cluster).toBe(PARTIES);
     }
+  });
+
+  test('a party disc is its party colour, with a label ink that reads on paper', () => {
+    const parties = model.nodes.filter((n) => n.kind === 'party');
+    expect(parties.length).toBeGreaterThan(1);
+    for (const node of parties) {
+      const { colour, ink } = partyMapColour(node.label);
+      expect(node.colour).toBe(colour);
+      expect(contrastRatio(ink, SURFACE)).toBeGreaterThanOrEqual(4.5);
+    }
+    // Labor and the Liberals are the app's party dots, not one grey.
+    const labor = parties.find((n) => /labor/i.test(n.label));
+    const liberal = parties.find((n) => /^liberal/i.test(n.label));
+    if (labor) expect(labor.colour).toBe(partyColors.labor);
+    if (liberal) expect(liberal.colour).toBe(partyColors.liberal);
+    expect(new Set(parties.map((n) => n.colour)).size).toBeGreaterThan(1);
+    // An unmapped party takes the app's "other" dot, as its chips do; only a
+    // label that is no party at all keeps the neutral grey.
+    expect(partyMapColour('Not a party').colour).toBe(partyColors.other);
+    expect(partyMapColour('Party not recorded').colour).toBe(
+      clusterColour(PARTIES).colour,
+    );
+  });
+
+  test('inkOn darkens a colour only as far as 4.5:1 on paper needs', () => {
+    expect(inkOn('#1D4F91')).toBe('#1d4f91');
+    const lnp = inkOn(partyColors.lnp);
+    expect(lnp).not.toBe(partyColors.lnp.toLowerCase());
+    expect(contrastRatio(lnp, SURFACE)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(lnp, SURFACE)).toBeLessThan(5.2);
   });
 
   test('byId maps every node id to its index', () => {

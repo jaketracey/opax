@@ -391,12 +391,12 @@ describe('discInView', () => {
 });
 
 test('public money lines are a haze at the fit and firm by the names level', () => {
-  expect(publicEdgeOpacity(0.6)).toBeCloseTo(0.45, 9);
-  expect(publicEdgeOpacity(1)).toBeCloseTo(0.45, 9);
+  expect(publicEdgeOpacity(0.6)).toBeCloseTo(0.3, 9);
+  expect(publicEdgeOpacity(1)).toBeCloseTo(0.3, 9);
   expect(publicEdgeOpacity(2.4)).toBeCloseTo(1, 9);
   expect(publicEdgeOpacity(5)).toBeCloseTo(1, 9);
   const mid = publicEdgeOpacity(1.7);
-  expect(mid).toBeGreaterThan(0.45);
+  expect(mid).toBeGreaterThan(0.3);
   expect(mid).toBeLessThan(1);
 });
 

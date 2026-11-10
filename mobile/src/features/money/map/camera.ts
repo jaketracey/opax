@@ -270,7 +270,7 @@ export function thinEdgeOpacity(level: number) {
 /** Public money lines: a haze at the overview, firm once the reader is closer. */
 export function publicEdgeOpacity(level: number) {
   'worklet';
-  return 0.45 + 0.55 * ramp(level, LOD.publicEdges[0], LOD.publicEdges[1]);
+  return 0.3 + 0.7 * ramp(level, LOD.publicEdges[0], LOD.publicEdges[1]);
 }
 export function clusterLabelOpacity(level: number) {
   'worklet';
