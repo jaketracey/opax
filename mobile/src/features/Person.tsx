@@ -6,6 +6,7 @@ import {
   RefreshControl,
   StyleSheet,
   View,
+  type LayoutChangeEvent,
   type ScrollView,
 } from 'react-native';
 import type { Electorate } from '../api/catalogs';
@@ -15,7 +16,12 @@ import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, ReadableColumn } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
 import { counted, formatCount, formatMoney } from '../design/format';
-import { Group, Screen, TitleAnchor } from '../design/layout';
+import {
+  Group,
+  Screen,
+  SectionHeadingLayoutContext,
+  TitleAnchor,
+} from '../design/layout';
 import { isPartyLabel } from '../design/party';
 import { phoneCopy } from '../design/phone-copy';
 import { StatStrip, type StatTileProps } from '../design/record';
@@ -363,6 +369,16 @@ type VoteRowData = NonNullable<
   ProfileView['blocks']['votes']['data']
 >['for'][number] & { position: 'for' | 'against' };
 
+const headingSections: Record<string, ProfileSection | undefined> = {
+  'person-votes-heading': 'votes',
+  'person-interests-heading': 'interests',
+  'person-pay-heading': 'pay',
+  'person-expenses-heading': 'expenses',
+  'person-receipts-heading': 'receipts',
+  'person-diary-heading': 'diary',
+  'person-more-heading': 'more',
+};
+
 function ProfileContent({
   slug,
   loaded,
@@ -388,6 +404,11 @@ function ProfileContent({
   const b = profile.blocks;
   const scroll = useRef<ScrollView>(null);
   const y = useRef<Partial<Record<ProfileSection | 'changes', number>>>({});
+  const headings = useRef<
+    Partial<
+      Record<ProfileSection | 'changes', LayoutChangeEvent['currentTarget']>
+    >
+  >({});
   const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
   const yourMP = useIsMyMember(slug);
@@ -405,23 +426,61 @@ function ProfileContent({
     setGoTo({ to, animated: !reduceMotion, at: Date.now() });
   useEffect(() => {
     if (!goTo) return;
+    if (Platform.OS === 'ios') {
+      const heading = headings.current[goTo.to];
+      const view = scroll.current;
+      const viewport = view?.getNativeScrollRef();
+      const inner = view?.getInnerViewNode();
+      if (!heading || !view || !viewport || inner == null) return;
+      let active = true;
+      // Native content coordinates include Screen's padding and every nested
+      // row/grid inset. Re-measure after the large title changes bar height.
+      viewport.measureInWindow((_x, viewportTop) => {
+        if (!active) return;
+        // Opaque bars already place the viewport below the bar. Only subtract
+        // the part covering this scroll view for translucent/large-title bars.
+        const overlay = Math.max(0, headerBottom - viewportTop);
+        heading.measureLayout(inner, (_x, top) => {
+          if (!active) return;
+          view.scrollTo({
+            y: Math.max(-overlay, top - overlay - rhythm.block),
+            animated: goTo.animated,
+          });
+        });
+      });
+      return () => {
+        active = false;
+      };
+    }
     const top = y.current[goTo.to];
-    if (top === undefined) return;
-    // The scroll view runs under the native header on iOS.
-    const offset = Platform.OS === 'ios' ? headerBottom : 0;
-    scroll.current?.scrollTo({
-      y: Math.max(0, top - offset - rhythm.heading),
-      animated: goTo.animated,
-    });
+    if (top !== undefined)
+      scroll.current?.scrollTo({
+        y: Math.max(0, top - rhythm.heading),
+        animated: goTo.animated,
+      });
   }, [goTo, headerBottom]);
   // Arriving at a section (`?section=`): once, when its place is known.
   const arrived = useRef(false);
-  const placed = (to: ProfileSection | 'changes') => (top: number) => {
-    y.current[to] = top;
+  const arrive = (to: ProfileSection | 'changes') => {
     if (arrival && !arrived.current && arrival === to) {
       arrived.current = true;
       setGoTo({ to, animated: false, at: Date.now() });
     }
+  };
+  const placed = (to: ProfileSection | 'changes', event: LayoutChangeEvent) => {
+    y.current[to] = event.nativeEvent.layout.y;
+    if (Platform.OS !== 'ios') arrive(to);
+    else if (to === 'changes') {
+      // This group's first text starts at its origin, with no row padding.
+      headings.current[to] = event.currentTarget;
+      arrive(to);
+    }
+  };
+  const headingPlaced = (testID: string, event: LayoutChangeEvent) => {
+    const section = headingSections[testID];
+    if (!section) return;
+    headings.current[section] = event.currentTarget;
+    arrive(section);
   };
 
   // What changed since the reader last looked, for a followed person.
@@ -834,7 +893,7 @@ function ProfileContent({
         ) : null}
       </ReadableColumn>
       {follow && changes.length ? (
-        <View onLayout={(e) => placed('changes')(e.nativeEvent.layout.y)}>
+        <View onLayout={(e) => placed('changes', e)}>
           <AddedSinceGroup
             follow={follow}
             changes={changes}
@@ -852,14 +911,15 @@ function ProfileContent({
           />
         </View>
       ) : null}
-      {PROFILE_SECTIONS.filter(shows).map((section) => (
-        <View
-          key={section}
-          onLayout={(e) => placed(section)(e.nativeEvent.layout.y)}
-        >
-          {sections[section]()}
-        </View>
-      ))}
+      <SectionHeadingLayoutContext.Provider
+        value={Platform.OS === 'ios' ? headingPlaced : null}
+      >
+        {PROFILE_SECTIONS.filter(shows).map((section) => (
+          <View key={section} onLayout={(e) => placed(section, e)}>
+            {sections[section]()}
+          </View>
+        ))}
+      </SectionHeadingLayoutContext.Provider>
       {footRow ? (
         <LinkRow
           title={`${identity.name} on opax.com.au`}
