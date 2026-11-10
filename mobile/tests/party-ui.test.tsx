@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { act } from 'react';
 import {
   AppState,
+  RefreshControl,
   Text as NativeText,
   useWindowDimensions,
 } from 'react-native';
@@ -485,6 +486,21 @@ test('failed read offers retry and does not mistake a network failure for an unk
   expect(drawn(r)).toContain('Try again');
   act(() => r.unmount());
 });
+test('with no receipts held, a failed returns read is said under Debts, not an empty heading', async () => {
+  // The funding read fails by default in this file.
+  jest.mocked(runtime.partyPage).mockResolvedValue({
+    ...view,
+    data: {
+      ...view.data!,
+      receipts: { ...view.data!.receipts, status: 'missing', data: null },
+      associated: { ...view.data!.associated, status: 'ready', data: null },
+    },
+  } as typeof view);
+  const r = await render();
+  expect(has(r, 'party-debts-section')).toBe(true);
+  expect(has(r, 'party-funding-error')).toBe(true);
+  act(() => r.unmount());
+});
 test('Independent is not a party: it points to independent members', async () => {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
@@ -492,6 +508,8 @@ test('Independent is not a party: it points to independent members', async () =>
   });
   expect(has(r, 'party-not-a-party')).toBe(true);
   expect(unavailable(r)).toEqual(['Not a party']);
+  // Nothing is read for a label, so there is nothing to pull to refresh.
+  expect(r.root.findAllByType(RefreshControl)).toHaveLength(0);
   press(r, 'party-not-a-party-action');
   expect(router.push).toHaveBeenCalledWith({
     pathname: '/directory',

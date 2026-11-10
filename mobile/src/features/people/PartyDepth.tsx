@@ -28,8 +28,8 @@ export function usePartyFunding() {
 }
 
 /** The notes the returns and debts carry into their section's source sheet. */
-export function fundingNotes(record: Funding): string[] {
-  const rows = receiptsSeries(Object.values(record.data.parties)[0]?.returns);
+export function fundingNotes(record: Funding, name: string): string[] {
+  const rows = receiptsSeries(record.data.parties[name]?.returns);
   return [
     '“Not itemised” is receipts minus the sums itemised as donations and as other receipts on the same return; the AEC does not require receipts under the disclosure threshold to be itemised. Public election funding is left where the return puts it.',
     'Debts are the balances the party’s branches listed as owed at 30 June on their own AEC annual returns, all branches summed: bank loans sit beside trade creditors and tax owed, and a balance is not new borrowing. Creditors under the disclosure threshold are not itemised.',

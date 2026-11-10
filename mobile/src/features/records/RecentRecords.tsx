@@ -1,10 +1,11 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { NavigationContext } from 'expo-router/react-navigation';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import {
   ContentUnavailable,
   Heading,
   InsetGroup,
+  InlineError,
   RecordRow,
   Screen,
   SourceLine,
@@ -61,17 +62,33 @@ export default function RecentRecords() {
   const [fresh, setFresh] = useState<RecordResult<RecentFeed> | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<unknown>(null);
+  const pending = useRef(false);
+  const active = useRef(true);
+  useEffect(() => {
+    active.current = true;
+    return () => {
+      active.current = false;
+    };
+  }, []);
   const value = fresh ?? first.value;
   const refresh = useCallback(() => {
+    if (pending.current) return;
+    pending.current = true;
     setRefreshing(true);
-    void records
-      .recent({ fresh: true })
+    void Promise.resolve()
+      .then(() => records.recent({ fresh: true }))
       .then((next) => {
+        if (!active.current) return;
         setFresh(next);
         setRefreshError(null);
       })
-      .catch((error: unknown) => setRefreshError(error))
-      .finally(() => setRefreshing(false));
+      .catch((error: unknown) => {
+        if (active.current) setRefreshError(error);
+      })
+      .finally(() => {
+        pending.current = false;
+        if (active.current) setRefreshing(false);
+      });
   }, []);
   const rows = value?.data ?? [];
   const newest =
@@ -187,6 +204,15 @@ export default function RecentRecords() {
           Just added
         </Heading>
       )}
+      {/* Offline, the screen's banner already says the copy is saved. */}
+      {value && refreshError && !offline ? (
+        <InlineError
+          subject="New records"
+          message="New records couldn't be refreshed. Showing the saved copy."
+          onRetry={refresh}
+          testID="recent-refresh-error"
+        />
+      ) : null}
       {body}
     </Screen>
   );

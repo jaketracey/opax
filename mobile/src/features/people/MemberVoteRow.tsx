@@ -39,7 +39,8 @@ export function MemberVoteRow({
   const stacked = useAccessibilitySize();
   const status = position === 'for' ? 'Voted for' : 'Voted against';
   const meta = date ? `${stage} · ${formatDate(date, 'short')}` : stage;
-  const spoken = `${status}. ${name}. ${date ? `${stage}, ${formatDate(date)}` : stage}`;
+  // The row's own label replaces its children's, so the dot's "New" is said here.
+  const spoken = `${status}. ${name}. ${date ? `${stage}, ${formatDate(date)}` : stage}${isNew ? '. New' : ''}`;
   const select =
     !href && url
       ? () => {

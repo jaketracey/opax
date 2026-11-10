@@ -29,6 +29,7 @@ import {
   aboutLede,
   categoryFrom,
   categoryLabel,
+  categoryNone,
   categorySearch,
   categorySeeAll,
   categorySource,
@@ -223,6 +224,15 @@ export default function Leads() {
         symbol="magnifyingglass"
         title="No leads yet"
         testID="leads-empty"
+      />
+    );
+  else if (category && !kindAll.length)
+    // A link to a kind the current export has none of.
+    body = (
+      <ContentUnavailable
+        symbol="magnifyingglass"
+        title={categoryNone(category)}
+        testID="leads-kind-empty"
       />
     );
   else if (category)

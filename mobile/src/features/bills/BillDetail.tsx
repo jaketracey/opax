@@ -117,6 +117,7 @@ import { sponsorRows, type SponsorDirectory } from './sponsors';
 import { statusEvent, statusEventText } from './status-event';
 import { useCatalogRecord } from './useCatalogRecord';
 import { memberPosition, useMyMemberVotes } from './your-mp-vote';
+import { sydneyDay } from '../today/rules';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
 type BillView = BillRecord['data'];
@@ -1095,9 +1096,9 @@ function Consultation({ view }: { view: BillView }) {
   const consultation = view.consultation.data;
   if (view.identity.data?.status !== 'exposure_draft' || !consultation)
     return null;
-  const closed =
-    !!consultation.closes &&
-    consultation.closes < new Date().toISOString().slice(0, 10);
+  // Closing dates are Australian calendar days; the UTC date lags a day
+  // every Australian morning.
+  const closed = !!consultation.closes && consultation.closes < sydneyDay();
   return (
     <Section title="Consultation" testID="bill-consultation">
       <Text variant="body">
@@ -1260,7 +1261,8 @@ function DateRows({
         <View
           key={`${entry.from}-${entry.to}-${index}`}
           accessible
-          accessibilityLabel={`${dateSpan(entry.from, entry.to, 'long')}: ${entry.stages.map(stageText).join('; ')}`}
+          // The row's label replaces its children's: the dot's "New" is said here.
+          accessibilityLabel={`${dateSpan(entry.from, entry.to, 'long')}: ${entry.stages.map(stageText).join('; ')}${entryHas(entry, freshStages) ? '. New' : ''}`}
           testID={`bill-date-${index}`}
           style={styles.date}
         >
@@ -1334,7 +1336,8 @@ function KeyDates({
         ) : null}
         {entries.length === 1 ? (
           <DateRows entries={entries} freshStages={freshStages} />
-        ) : entries.length > points.length ? (
+        ) : timeline.runs > points.length ||
+          entries.some((entry) => entry.to) ? (
           <Disclosure
             label={`All ${formatCount(timeline.runs)} stages`}
             open={open}
@@ -1736,6 +1739,8 @@ function BillVoteRow({
           <PartyVotes
             splits={[...division.splits.drawn, ...division.splits.folded]}
             paired={division.paired}
+            // Pairs have their own line.
+            notes={parties.notes.filter((note) => !/ paired$/.test(note))}
             recorded={parties.recorded}
             testID={`${id}-parties`}
           />

@@ -1,7 +1,7 @@
 // Lane P, part 2 (people.md 2.1, 2.2): the person profile and the party
 // page on the shared templates. Each block holds one acceptance check.
 import { act } from 'react';
-import { ScrollView } from 'react-native';
+import { FlatList, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -23,6 +23,7 @@ import {
   annualPay,
   decodeAccess,
   decodeFunding,
+  decodeRecords,
   interestsCount,
   payRateLine,
   stripSources,
@@ -184,6 +185,36 @@ beforeEach(() => {
 });
 
 describe('profile', () => {
+  test('a member with one recorded division is counted in the singular', async () => {
+    mockParams.slug = 'penny-wong';
+    const person = c.joinPerson('penny-wong', slugs, roster, people, manifest);
+    const profile = c.profileFor(person.canonicalPersonId!, catalogs);
+    const votes = profile.blocks.votes;
+    mock.person.mockResolvedValue(result(person));
+    mock.profileFor.mockResolvedValue({
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        votes: { ...votes, data: { ...votes.data!, total: 1 } },
+      },
+    });
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<Person />);
+    });
+    expect(text(r)).toContain('Voted in 1 division');
+    expect(text(r)).not.toContain('1 divisions');
+    expect(
+      r.root.find(
+        (n) =>
+          typeof n.type !== 'string' &&
+          n.props.testID === 'person-figure-votes' &&
+          typeof n.props.label === 'string',
+      ).props.label,
+    ).toMatch(/^vote( since|$)/);
+    await act(async () => r.unmount());
+  });
+
   test('strip and sections agree: each tile reads its section’s selector', async () => {
     const { r, profile } = await wong();
     const votes = votesCount(profile)!;
@@ -522,6 +553,43 @@ describe('party', () => {
     });
   });
 
+  test('one sitting member and one receipt are counted in the singular', async () => {
+    const labor = views.Labor!;
+    const data = labor.data!;
+    views.Single = {
+      ...labor,
+      data: {
+        ...data,
+        members: {
+          ...data.members,
+          data: { ...data.members.data!, currentCount: 1 },
+        },
+        receipts: {
+          ...data.receipts,
+          data: {
+            ...data.receipts.data!,
+            node: { ...data.receipts.data!.node, count: 1 },
+          },
+        },
+      },
+    } as PartyView;
+    const r = await party('Single');
+    const words = text(r);
+    expect(words).toContain('1 sitting member');
+    expect(words).not.toContain('1 sitting members');
+    expect(words).toContain('from 1 donation or receipt');
+    expect(
+      r.root.find(
+        (n) =>
+          typeof n.type !== 'string' &&
+          n.props.testID === 'party-figure-members' &&
+          typeof n.props.label === 'string',
+      ).props.label,
+    ).toBe('sitting member');
+    delete views.Single;
+    await act(async () => r.unmount());
+  });
+
   test('the strip has two tiles, each the figure its section draws', async () => {
     const r = await party('Labor');
     const data = views.Labor!.data!;
@@ -757,6 +825,7 @@ describe('party', () => {
 });
 
 describe('record list', () => {
+  beforeEach(() => jest.mocked(peopleDepth.list).mockReset());
   afterEach(() => {
     delete mockParams.kind;
     delete mockParams.person;
@@ -772,6 +841,68 @@ describe('record list', () => {
     });
     return r;
   }
+
+  const page = (start: number, count: number) => ({
+    records: result(
+      decodeRecords({
+        results: Array.from({ length: count }, (_, index) => ({
+          slug: `speech-fixture-${start + index}`,
+          title: `Fixture speech ${start + index}`,
+        })),
+      }),
+    ),
+    briefs: {},
+  });
+
+  test('a failed next page keeps loaded speeches and offers an explicit retry of that page', async () => {
+    jest
+      .mocked(peopleDepth.list)
+      .mockResolvedValueOnce(page(0, 20))
+      .mockRejectedValueOnce(new ApiError('server', 'Unavailable'))
+      .mockResolvedValueOnce(page(20, 1));
+    const r = await list('speeches');
+    await act(async () => r.root.findByType(FlatList).props.onEndReached());
+    expect(r.root.findByType(FlatList).props.data).toHaveLength(20);
+    const error = r.root.find(
+      (node) =>
+        node.props.testID === 'record-list-page-error' && !!node.props.onRetry,
+    );
+    // Scrolling again cannot repeatedly retry a failed paid read.
+    await act(async () => r.root.findByType(FlatList).props.onEndReached());
+    expect(peopleDepth.list).toHaveBeenCalledTimes(2);
+    await act(async () => error.props.onRetry());
+    expect(peopleDepth.list).toHaveBeenLastCalledWith(
+      'Penny Wong',
+      'speeches',
+      2,
+    );
+    expect(r.root.findByType(FlatList).props.data).toHaveLength(21);
+    expect(has(r, 'record-list-page-error')).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('repeated end events start one page read and overlapping pages draw each record once', async () => {
+    let finish!: (value: ReturnType<typeof page>) => void;
+    jest
+      .mocked(peopleDepth.list)
+      .mockResolvedValueOnce(page(0, 20))
+      .mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            finish = resolve;
+          }),
+      );
+    const r = await list('speeches');
+    await act(async () => {
+      const next = r.root.findByType(FlatList).props.onEndReached;
+      next();
+      next();
+    });
+    expect(peopleDepth.list).toHaveBeenCalledTimes(2);
+    await act(async () => finish(page(19, 2)));
+    expect(r.root.findByType(FlatList).props.data).toHaveLength(21);
+    await act(async () => r.unmount());
+  });
 
   test('news is not available yet: no read, and no Try again that cannot work', async () => {
     const r = await list('news');

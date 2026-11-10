@@ -200,8 +200,11 @@ export function PartyPage({
         <Screen
           column="wide"
           testID="party-screen"
+          // "Not a party" makes no read, so a pull would spin forever.
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            notAParty ? undefined : (
+              <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            )
           }
         >
           {pending}
@@ -374,7 +377,7 @@ function PartyContent({
   if (members && view.members.status !== 'error')
     tiles.push({
       value: formatCount(members.currentCount),
-      label: 'sitting members',
+      label: members.currentCount === 1 ? 'sitting member' : 'sitting members',
       onPress: () => jump('members'),
       testID: 'party-figure-members',
     });
@@ -448,7 +451,7 @@ function PartyContent({
       {(data) => (
         <View>
           <LinkRow
-            title={`${formatCount(data.currentCount)} sitting members`}
+            title={counted(data.currentCount, 'sitting member')}
             leading={
               <View style={styles.faces}>
                 {newMembers ? <NewDot testID="party-members-new" /> : null}
@@ -456,7 +459,7 @@ function PartyContent({
               </View>
             }
             href={partyMembersRoute(label)}
-            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}`}
+            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}${newMembers ? '. New' : ''}`}
             accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
             testID="party-current-count"
           />
@@ -508,7 +511,7 @@ function PartyContent({
           'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
           'Sources are the largest donor-to-party flows in the disclosure returns, largest first; they are not all of the party’s receipts. No sequence or causal link is inferred.',
           disclosureYearNote,
-          ...(fundingRecord ? fundingNotes(fundingRecord) : []),
+          ...(fundingRecord ? fundingNotes(fundingRecord, label) : []),
         ],
       })}
     >
@@ -524,7 +527,7 @@ function PartyContent({
             </Text>
             <Text wordSafe variant="secondary">
               {[
-                `disclosed, from ${formatCount(data.node.count)} donations and receipts`,
+                `disclosed, from ${formatCount(data.node.count)} ${data.node.count === 1 ? 'donation or receipt' : 'donations and receipts'}`,
                 data.node.firstYear !== undefined &&
                 data.node.lastYear !== undefined
                   ? data.node.firstYear === data.node.lastYear
@@ -587,9 +590,10 @@ function PartyContent({
       <Group>
         {funding.read.status === 'loading' ? (
           <FundingLoading />
-        ) : view.receipts.status === 'error' &&
-          funding.read.status === 'error' ? (
-          // The Receipts section is in error too: say it once here.
+        ) : funding.read.status === 'error' &&
+          (view.receipts.status === 'error' || view.receipts.data === null) ? (
+          // Receipts draws no funding error when it is in error itself or
+          // has nothing to show: say it once here.
           <FundingError retry={funding.retry} />
         ) : fundingRecord ? (
           <PartyDebts record={fundingRecord} name={label} />

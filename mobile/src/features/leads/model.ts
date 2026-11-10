@@ -86,6 +86,9 @@ export function categoryFrom(value: unknown): LeadCategory | null {
 }
 export const categorySeeAll = (category: LeadCategory, count: number) =>
   `See all ${formatCount(count)} ${categoryWords[category].seeAll}`;
+/** "No company leads yet": a kind the export has none of. */
+export const categoryNone = (category: LeadCategory) =>
+  `No ${categoryWords[category].seeAll} yet`;
 export const categorySearch = (category: LeadCategory) =>
   categoryWords[category].search;
 export const categorySource = (category: LeadCategory) =>
