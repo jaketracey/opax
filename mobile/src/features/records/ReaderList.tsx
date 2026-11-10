@@ -107,10 +107,22 @@ export function ReaderList({
   const pending = useRef<number | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reduced = useReduceMotion();
+  const lastJump = useRef<typeof jumpTo>(null);
   // A readable column on iPad, with a split pane's Back first.
   const column = useScreenColumn();
   useEffect(() => {
-    if (!jumpTo) return;
+    if (!jumpTo) {
+      lastJump.current = null;
+      return;
+    }
+    // A motion setting change affects future jumps, never replays the last.
+    if (
+      lastJump.current?.index === jumpTo.index &&
+      lastJump.current.attempt === jumpTo.attempt &&
+      lastJump.current.position === jumpTo.position
+    )
+      return;
+    lastJump.current = jumpTo;
     pending.current = jumpTo.index;
     list.current?.scrollToIndex({
       index: jumpTo.index,
