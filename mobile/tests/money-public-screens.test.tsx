@@ -284,7 +284,8 @@ test.each([
       expect(inline().props.backTitle).toBe('Grants');
       expect(inline().props.trailing).toBe(1);
       expect(options.headerSearchBarOptions).toMatchObject({
-        placement: 'stacked',
+        placement: 'integratedButton',
+        allowToolbarIntegration: false,
       });
       const items = (
         options.unstable_headerRightItems as () => {
@@ -337,6 +338,34 @@ test('Agencies keeps its system large title, stacked search and zero-height titl
     title: 'Government agencies',
     testID: 'agencies-title',
   });
+  await act(async () => rendered.unmount());
+});
+
+test('Program has a search button at rest that filters and restores its recipients', async () => {
+  Object.assign(mockParams, { jur: 'federal', id: 'GO3141' });
+  const rendered = await mount(Program);
+  const options = () => rendered.root.findByType(RouteOptions).props.options;
+  const list = () => rendered.root.findByType(MoneyList);
+  const search = options().headerSearchBarOptions;
+  expect(search).toMatchObject({
+    placement: 'integratedButton',
+    allowToolbarIntegration: false,
+    placeholder: 'Recipients',
+  });
+  const heading = list().props.header.props.children[0].props.children;
+  expect(heading.props.children).toBe(decodeProgram(program).name);
+  expect(heading.props.numberOfLines).toBeUndefined();
+  const count = list().props.rows.length;
+  expect(count).toBeGreaterThan(0);
+  await act(async () => search.onChangeText({ nativeEvent: { text: 'zzzz' } }));
+  expect(list().props.rows).toHaveLength(0);
+  await act(async () => search.onCancelButtonPress());
+  expect(list().props.rows).toHaveLength(count);
+  const items = options().unstable_headerRightItems();
+  const share = items[0].menu.items.find(
+    (item: { label: string }) => item.label === 'Share',
+  );
+  expect(typeof share.onPress).toBe('function');
   await act(async () => rendered.unmount());
 });
 

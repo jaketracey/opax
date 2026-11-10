@@ -165,6 +165,7 @@ export default function Program() {
   const [view, setView] = useState<'recipients' | 'grants'>('recipients');
   const search = useMoneySearch(
     view === 'recipients' ? 'Recipients' : 'Grants',
+    'button',
   );
   const titleRef = useRef<View>(null);
   const name = program?.name ?? routeName ?? 'Grant program';
