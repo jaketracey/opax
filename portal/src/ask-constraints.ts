@@ -31,11 +31,11 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
   if (c.dated) {
     for (const key of ['since', 'from_year', 'from']) if (has(key) && !c.period.since) delete a[key]
     for (const key of ['until', 'to_year', 'to']) if (has(key) && !c.period.until) delete a[key]
-    if (has('since') && c.period.since) a.since = c.period.since
-    if (has('until') && c.period.until) a.until = c.period.until
+    if (has('since') && c.period.since && !(step.tool === 'grants' && !a.recipient)) a.since = c.period.since
+    if (has('until') && c.period.until && !(step.tool === 'grants' && !a.recipient)) a.until = c.period.until
     if (has('from_year') && c.period.since) a.from_year = Number(c.period.since.slice(0, 4))
     if (has('to_year') && c.period.until) a.to_year = Number(c.period.until.slice(0, 4))
-    if (step.tool === 'party_receipts') {
+    if (['party_receipts', 'money_totals'].includes(step.tool)) {
       delete a.from_year; delete a.to_year
       const years = receiptYearWindow(c.period.since, c.period.until)
       if (!years.error) Object.assign(a, years)
@@ -46,7 +46,7 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
   }
   if (c.jurisdiction) {
     if (has('jurisdiction')) a.jurisdiction = step.tool === 'grants' && c.locationState && !c.stateGovernment ? 'federal' : c.jurisdiction
-    if (has('jurisdiction') && has('state') && c.locationState && !(step.tool === 'grants' && c.stateGovernment)) a.state = c.locationState
+    if (has('jurisdiction') && has('state') && c.locationState && !(step.tool === 'grants' && (c.stateGovernment || a.recipient))) a.state = c.locationState
     // A state location in a federal grant/electorate question is a location, not a different legislature.
     if (has('state') && !has('jurisdiction')) a.state = c.jurisdiction
   }
