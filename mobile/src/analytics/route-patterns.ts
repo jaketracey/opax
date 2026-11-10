@@ -91,7 +91,6 @@ const routePatterns = new Set([
   '/seat',
   '/seat/state/[code]',
   '/source',
-  '/source-destination',
   '/stats',
   '/talk',
   '/talk/consent',
@@ -101,11 +100,9 @@ const routePatterns = new Set([
   '/talk/sources',
   '/topic/[slug]',
   '/topics',
-  '/voice-bridge-test',
   '/welcome',
   '/welcome/seat',
   '/welcome/seat/state/[code]',
-  '/workbench',
   '/your-mp',
 ]);
 

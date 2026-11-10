@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { act, createElement } from 'react';
 import TestRenderer from 'react-test-renderer';
@@ -6,6 +6,10 @@ import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import Constants from 'expo-constants';
 import { cleanEvent, scrubEvent } from '../src/analytics/events';
 import { RouteErrorBoundary } from '../src/navigation/RouteErrorBoundary';
+
+// Mirrors DEVELOPMENT_ROUTE in scripts/verify-ios-release.py.
+const DEVELOPMENT_ROUTE =
+  /workbench|source-destination|fixture|__tests__|\(dev\)|__dev|home-prototype|voice-bridge-test|test-screens/i;
 
 const mockSegments = ['(tabs)', '(today)', 'person', '[slug]'];
 const mockCapture = jest.fn();
@@ -94,10 +98,26 @@ test('every route file has an explicitly allowlisted error pattern', () => {
     const pattern =
       '/' +
       segments.filter((s) => s !== 'index' && !s.startsWith('(')).join('/');
+    // Development routes are stripped from release builds, and naming them
+    // here would put their names in production JS (verify-ios-release.py).
+    if (DEVELOPMENT_ROUTE.test(pattern)) {
+      expect(cleanEvent('opax_route_error', { route_pattern: pattern })).toEqual(
+        {},
+      );
+      continue;
+    }
     expect(cleanEvent('opax_route_error', { route_pattern: pattern })).toEqual({
       route_pattern: pattern,
     });
   }
+});
+
+test('the allowlist never names a development route', () => {
+  const source = readFileSync(
+    join(__dirname, '../src/analytics/route-patterns.ts'),
+    'utf8',
+  );
+  expect(source).not.toMatch(DEVELOPMENT_ROUTE);
 });
 
 test('the reporting boundary captures once per caught error, without error text or route params', () => {
