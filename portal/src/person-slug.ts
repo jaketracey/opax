@@ -17,7 +17,7 @@ export function personSlug(name: string): string {
 }
 
 /** The roster lookup shared by redirects and the generated browser URL table. */
-export function personIndex<T extends { name: string; speeches: number | null; full?: string; speech_scope?: SpeechScope; prints?: string[] }>(people: readonly T[]) {
+export function personIndex<T extends { name: string; speeches: number | null; full?: string; states?: string[]; speech_scope?: SpeechScope; prints?: string[] }>(people: readonly T[]) {
   const byName = new Map(people.map(p => [p.name, p]))
   const byFold = new Map<string, T>()
   for (const p of people) {
@@ -29,7 +29,36 @@ export function personIndex<T extends { name: string; speeches: number | null; f
     const key = personNameKey(alias)
     if (!byFold.has(key)) byFold.set(key, p)
   }
-  return { byName, byFold, ...slugIndex(people) }
+  // byFold stays the speech identity (a speaker filter reads it); addresses also take the full names.
+  const fullNames = fullNameAliases(people, byFold)
+  const addresses = new Map([...byFold, ...fullNames])
+  return { byName, byFold, fullNames, addresses, ...slugIndex(people) }
+}
+
+/**
+ * A surname row's own full name ("Crisafulli", full "David Crisafulli") reads as that row, so a
+ * register that names the member in full (a ministerial diary, the pay record) reaches the profile
+ * (search-hubs-006, registers-003). Only where the full name is free: no row is printed under it
+ * and no other row claims it. The alias adds no identity the roster does not already show, since
+ * the profile is titled with that full name; but a surname row can hold several parliaments'
+ * speeches (state-datasets-001), so callers that know the register's parliament check it against
+ * the row's (fullNameMatches).
+ */
+export function fullNameAliases<T extends { name: string; full?: string; states?: string[] }>(people: readonly T[], taken: ReadonlyMap<string, T>): Map<string, T> {
+  const claims = new Map<string, T[]>()
+  for (const p of people) {
+    if (!p.full || p.full === p.name) continue
+    const key = personNameKey(p.full)
+    if (!key || taken.has(key)) continue
+    claims.set(key, [...(claims.get(key) || []), p])
+  }
+  return new Map([...claims].filter(([, rows]) => rows.length === 1).map(([key, rows]) => [key, rows[0]]))
+}
+
+/** True unless `name` reaches its row only through a full-name alias from another parliament. */
+export function fullNameMatches<T extends { states?: string[] }>(index: { fullNames: ReadonlyMap<string, T> }, name: string, jurisdiction?: string | null): boolean {
+  const row = index.fullNames.get(personNameKey(name))
+  return !row || !jurisdiction || (row.states || []).includes(String(jurisdiction).toLowerCase())
 }
 
 export interface SlugIndex<T> { bySlug: Map<string, T>; slugOf: Map<string, string> }

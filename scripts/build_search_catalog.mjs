@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
 import { normalize, tokens, bucket } from '../portal/src/catalog-query.mjs';
 import { personNameKey, personUrl } from '../portal/public/canonical-urls.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
-import { personSlug, personIndex } from '../portal/src/person-slug.ts';
+import { personSlug, personIndex, fullNameMatches } from '../portal/src/person-slug.ts';
 import {donorDisclosure,donorLookup} from '../portal/public/donor-disclosure.js';
 import {foldDonorName} from '../portal/public/donor-entity.js';
 import { moneyFlowType } from '../portal/public/money-records.js';
@@ -18,8 +18,10 @@ const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
 const docs = [], ids = new Set(), counts = {};
 const cash = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:2});
-let canonicalPeople=new Map(), canonicalAliases=new Map();
+let canonicalPeople=new Map(), canonicalAliases=new Map(), peopleIndex={fullNames:new Map()};
 const personHref = n => { const slug=canonicalPeople.get(n) || canonicalAliases.get(personNameKey(n)); return slug ? '/subject/person/'+slug : personUrl(n); };
+// A minister's diary reaches a full-name alias only in the minister's own parliament.
+const ministerHref = m => { const n=m.page||m.name; return fullNameMatches(peopleIndex,n,m.jurisdiction) ? personHref(n) : personUrl(n); };
 const supplierHref = n => '/subject/supplier/'+encodeURIComponent(n);
 const year = d => Number(String(d || '').slice(0,4)) || 0;
 const period = (a,b) => a && b ? (a===b?String(a):`${a}–${b}`) : '';
@@ -99,7 +101,7 @@ export function accessDonorHref(donorNames, name, fallback) {
 
 async function main() {
  const roster = await read('parliamentarians.json');
- const identity=personIndex(roster.people); canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.byFold].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
+ const identity=personIndex(roster.people); peopleIndex=identity; canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.addresses].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
  for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:p.name,from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
  const donorRecords=[];
  for(const [jur,file] of [['federal','money.json'],['qld','money.qld.json'],['vic','money.vic.json'],['tas','money.tas.json']]) {
@@ -173,7 +175,7 @@ async function main() {
  // Every access.json donor is a money-map donor (scripts/export_access.py), so an unlinked row is a lookup fault.
  const unlinked=docs.filter(d=>d.record.kind==='access' && !d.record.href && /^(meeting|lobbyist):/.test(d.key)).length;
  if(unlinked) throw new Error(`${unlinked} access-register search rows have no link (search-hubs-005)`);
- for(const [id,m] of Object.entries(access.ministers)) for(const [i,r] of (m.recent||[]).entries()) add(`minister-meeting:${id}:${i}`,'access',`${m.name} — ${r.org}`,personHref(m.page||m.name),r.purpose||'Recorded ministerial meeting',{date:r.date,state:m.jurisdiction,speakers:[m.name],source:'Ministerial diary'});
+ for(const [id,m] of Object.entries(access.ministers)) for(const [i,r] of (m.recent||[]).entries()) add(`minister-meeting:${id}:${i}`,'access',`${m.name} — ${r.org}`,ministerHref(m),r.purpose||'Recorded ministerial meeting',{date:r.date,state:m.jurisdiction,speakers:[m.name],source:'Ministerial diary'});
  const fits=await read('fits.json');
  for(const list of [...Object.values(fits.by_entity),...Object.values(fits.people)]) for(const r of list) add(`fits:${r.registrant}:${r.principal}:${r.from}`,'access',`${r.registrant} — ${r.principal}`,r.url,`${r.country}. ${(r.activities||[]).join('; ')}. ${r.status}.`,{date:r.from,state:'federal',source:'Foreign Influence Transparency Scheme',url:r.url});
  const agencies=await read('agencies.json');
