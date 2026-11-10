@@ -30,6 +30,7 @@ import {
   yearRange,
 } from './parts';
 import { moneyItemHref } from './routes';
+import { unnamedRecipient } from './privacy';
 import { money } from './runtime';
 
 const MERIT =
@@ -147,7 +148,8 @@ export default function Allocation() {
   );
   const titleOf = useCallback(
     (r: (typeof all)[number]) =>
-      (stage === 'history'
+      (stage === 'history' ||
+      ('recipient' in r && r.recipient === unnamedRecipient)
         ? undefined
         : data?.locations?.records.find(
             (l) =>

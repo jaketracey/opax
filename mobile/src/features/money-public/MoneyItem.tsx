@@ -510,12 +510,14 @@ async function readMoneyItem(
           : allocation.data.projects;
       const p = list.find((x) => x.id === params.id);
       if (!p) throw gone();
-      const located = locations?.data.records.find(
-        (l) =>
-          l.id === p.id &&
-          l.kind === (params.kind === 'award' ? 'award' : 'invitation'),
-      );
       const individual = p.recipient === unnamedRecipient;
+      const located = individual
+        ? undefined
+        : locations?.data.records.find(
+            (l) =>
+              l.id === p.id &&
+              l.kind === (params.kind === 'award' ? 'award' : 'invitation'),
+          );
       return {
         ...(locations ? combine([allocation, locations], null) : allocation),
         data: {

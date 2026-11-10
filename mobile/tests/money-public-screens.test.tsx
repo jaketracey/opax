@@ -228,6 +228,57 @@ test('Queensland expenditure records do not acquire a federal award-value caveat
   expect(item.notes.join(' ')).not.toMatch(/award values.*not amounts paid/i);
 });
 
+test('a venue overlay cannot re-identify an individual recipient in community funding or its record', async () => {
+  const allocation = await fixture.allocation();
+  const privateAward = {
+    ...allocation.data.awards[0]!,
+    title: 'Grant project',
+    recipient: unnamedRecipient,
+  };
+  money.allocation = jest.fn().mockResolvedValue({
+    ...allocation,
+    data: { ...allocation.data, awards: [privateAward] },
+  });
+  money.locations = jest.fn().mockResolvedValue({
+    stale: false,
+    savedAt: 10,
+    asOf: null,
+    data: {
+      asOf: allocation.data.asOf,
+      methodology: [],
+      records: [
+        {
+          id: privateAward.id,
+          kind: 'award',
+          verified: true,
+          title: 'Fixture Private Recipient venue',
+          sites: [
+            {
+              name: 'Fixture Private Recipient site',
+              address: '1 Fixture Street',
+              verified: true,
+              sourceUrl: 'https://example.org/fixture',
+            },
+          ],
+        },
+      ],
+    },
+  });
+  const record = await loadMoneyItem(
+    { kind: 'award', id: privateAward.id },
+    false,
+  );
+  expect(record.data.name).toBe('Grant project');
+  expect(record.data.facts.some((fact) => fact.label === 'Sites')).toBe(false);
+  const rendered = await mount(Allocation);
+  const list = rendered.root.findByType(MoneyList);
+  const row = list.props.render(list.props.rows[0], 0);
+  expect(row.props.name).toBe('Grant project');
+  expect(JSON.stringify(record.data)).not.toContain(
+    'Fixture Private Recipient',
+  );
+});
+
 test.each([
   [
     'Program',
