@@ -39,6 +39,9 @@ Related Android UI defects fixed in this package:
 - Sign-in and deletion supplied iOS's `one-time-code` autocomplete value, which
   React Native's Android text input does not map. Android now supplies its
   `email-otp` autofill hint for these emailed codes; iOS keeps its original hint.
+- Returning from Agree started the Android call during its focus status read,
+  so Kotlin correctly refused it with `statusChecking`. Android now awaits that
+  read before dispatching the explicit consent-start action.
 
 The TypeScript cross-language contract tests run in `npm run qa`; the native
 projection, HTTP, call and audio tests run with `:opax-voice:testDebugUnitTest`.

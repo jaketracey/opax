@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import * as voice from '../../voice';
 import type { EndReason, VoiceFailure, VoiceSnapshot } from '../../voice';
@@ -41,6 +41,7 @@ export function useTalk() {
   const askingMicrophone = useRef(false);
   const mounted = useRef(false);
   const focusGeneration = useRef(0);
+  const focusRead = useRef<Promise<void>>(Promise.resolve());
   const sequence = useRef(0);
   const revisions = useRef<Partial<Record<keyof VoiceSnapshot, number>>>({});
   const set = useCallback((value: VoiceSnapshot) => {
@@ -111,7 +112,7 @@ export function useTalk() {
       const generation = ++focusGeneration.current;
       const calling = isCallActive(current.current.state);
       if (!calling) setMicrophone(null);
-      void (async () => {
+      focusRead.current = (async () => {
         if (!calling) {
           await refresh();
           if (!mounted.current || generation !== focusGeneration.current)
@@ -233,6 +234,9 @@ export function useTalk() {
   async function startConsented() {
     showConsent(true);
     setConsentLoaded(true);
+    // Refocusing from Android's consent route also starts a status read.
+    // Kotlin refuses Start while that read is in flight.
+    if (Platform.OS === 'android') await focusRead.current;
     if (!mounted.current || AppState.currentState === 'background') return;
     await begin();
   }
