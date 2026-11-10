@@ -526,6 +526,11 @@ test('bar title shortening hides a first word that cannot fit', () => {
   ).toBeNull();
 });
 
+test('bar title shortening reserves the full ellipsis advance', () => {
+  expect(shortenBarTitle('Anthony Albanese MP', 159)).toBe('Anthony…');
+  expect(shortenBarTitle('Anthony Albanese MP', 160)).toBe('Anthony Albanese…');
+});
+
 test('bar title shortening scales its advances and caps a large font scale', () => {
   expect(shortenBarTitle('Anthony Albanese', 150, 1)).toBe('Anthony Albanese');
   expect(shortenBarTitle('Anthony Albanese', 150, 3)).toBe('Anthony…');

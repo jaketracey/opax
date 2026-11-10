@@ -33,6 +33,7 @@ export const TitleAnchorContext = createContext<
 // Mirrors the existing inline navigation ramp (17 pt to 23 pt). The device
 // reviewer must confirm this cap at AX5; this lane never boots a simulator.
 export const inlineTitleScaleCap = 23 / 17;
+const barTitleEllipsisWidth = 17;
 
 // SF Pro 17 pt advances tuned to lane lead's device measurements, 10 Nov 2026.
 const backTitleAdvances = [
@@ -100,7 +101,7 @@ export function minimumBarTitleWidth(title: string, fontScale = 1): number {
   const firstWord = words[0] ?? '';
   const advance = backPillWidth(firstWord) - 48;
   return Math.ceil(
-    Math.max(60, advance + (words.length > 1 ? 17 : 0)) *
+    Math.max(60, advance + (words.length > 1 ? barTitleEllipsisWidth : 0)) *
       Math.min(fontScale, inlineTitleScaleCap),
   );
 }
@@ -113,12 +114,13 @@ export function shortenBarTitle(
 ): string | null {
   if (room < minimumBarTitleWidth(title, fontScale)) return null;
   const scale = Math.min(fontScale, inlineTitleScaleCap);
-  const fits = (text: string) => (backPillWidth(text) - 48) * scale <= room;
+  const fits = (text: string, extra = 0) =>
+    (backPillWidth(text) - 48 + extra) * scale <= room;
   if (fits(title)) return title;
   const words = title.trim().split(/\s+/);
   for (let count = words.length - 1; count > 0; count--) {
-    const candidate = `${words.slice(0, count).join(' ')}…`;
-    if (fits(candidate)) return candidate;
+    const wordsToShow = words.slice(0, count).join(' ');
+    if (fits(wordsToShow, barTitleEllipsisWidth)) return `${wordsToShow}…`;
   }
   return null;
 }
