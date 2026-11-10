@@ -433,3 +433,42 @@ test('the workbench Android controls gallery draws every Material control', () =
     'adjustable',
   );
 });
+test('segmented checks never cost a word: the check draws only where the longest word still fits', () => {
+  const { checkFits } =
+    require('../src/design/controls') as typeof import('../src/design/controls');
+  const status = ['Before parliament', 'Recent', 'All'];
+  // A 412 dp phone less the 16 dp margins: "parliament" would break beside a check.
+  expect(checkFits(status, 380)).toBe(false);
+  expect(checkFits(['All', 'Passed'], 380)).toBe(true);
+  expect(checkFits(['All', 'Passed', 'Recent'], 380)).toBe(true);
+  expect(checkFits(['All', 'Passed', 'Recent'], 380, 2)).toBe(false);
+  const checks = (labels: string[], width: number) => {
+    const r = render(
+      <SegmentedControl
+        testID="seg"
+        value="a"
+        segments={labels.map((label, index) => ({
+          value: index ? `v${index}` : 'a',
+          label,
+        }))}
+        onChange={noop}
+      />,
+    );
+    // Before layout there is no width, so no check can break a word.
+    const before = r.UNSAFE_root.findAll(
+      (n) => n.props.name === 'checkmark' && typeof n.type !== 'string',
+    ).length;
+    act(() =>
+      r
+        .getByTestId('seg')
+        .props.onLayout({ nativeEvent: { layout: { width, height: 48 } } }),
+    );
+    const after = r.UNSAFE_root.findAll(
+      (n) => n.props.name === 'checkmark' && typeof n.type !== 'string',
+    ).length;
+    r.unmount();
+    return [before, after > 0];
+  };
+  expect(checks(status, 380)).toEqual([0, false]);
+  expect(checks(['All', 'Passed'], 380)).toEqual([0, true]);
+});

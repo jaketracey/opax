@@ -670,6 +670,24 @@ function estimatedLabelWidth(label: string, fontSize: number) {
   return em * fontSize;
 }
 /**
+ * Android: whether the selected segment's 18 dp check and its 8 dp gap fit
+ * beside the longest word of every label (17 sp strong, wrapping allowed).
+ */
+export function checkFits(
+  labels: readonly string[],
+  width: number,
+  fontScale = 1,
+): boolean {
+  if (!labels.length || !(width > 0)) return false;
+  const share = width / labels.length - 2 * rhythm.tight - 2 - (18 + 8);
+  const fontSize = 17 * Math.max(1, fontScale);
+  return labels.every((label) =>
+    label
+      .split(/\s+/)
+      .every((word) => estimatedLabelWidth(word, fontSize) <= share),
+  );
+}
+/**
  * Whether two to four labels fit a segmented control `width` points wide
  * at the reader's text size without truncating. Segments share the width
  * equally, so the longest label decides. Text smaller than the default
@@ -1101,9 +1119,28 @@ export function SegmentedControl<T extends string>({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize() || alwaysStacked;
+  const { fontScale } = useWindowDimensions();
+  const [trackWidth, setTrackWidth] = useState<number | null>(null);
+  // Material shows a check on the selected segment, but never at the cost of
+  // a word: inline segments draw it only when every label's longest word
+  // still fits beside it. Stacked segments always have the room.
+  const showCheck =
+    Platform.OS === 'android' &&
+    (stacked ||
+      (trackWidth !== null &&
+        checkFits(
+          segments.map((segment) => segment.label),
+          trackWidth,
+          fontScale,
+        )));
   return (
     <View
       testID={testID}
+      onLayout={
+        Platform.OS === 'android'
+          ? (event) => setTrackWidth(event.nativeEvent.layout.width)
+          : undefined
+      }
       style={[
         styles.segmented,
         stacked ? styles.segmentedStacked : null,
@@ -1170,7 +1207,7 @@ export function SegmentedControl<T extends string>({
                 {/* The highlight sits 3pt inside the 44pt target, so the
                     control still reads as 48pt outside with 4pt insets. */}
                 {Platform.OS === 'android' ? (
-                  selected ? (
+                  selected && showCheck ? (
                     <Icon
                       name={symbols.selected}
                       size={18}
