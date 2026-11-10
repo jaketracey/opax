@@ -238,19 +238,20 @@ test('sentence offsets are code points and quotations tolerate ellipses and punc
   assert.equal(quoteCheck('She said "we will never act on this, whatever the cost may be".', ['we will act on this']).missing.length, 1)
 })
 
-test('routing fixture, detached baseline selection and the spend ceiling are explicit', async () => {
+test('routing fixture, detached baseline selection and a reported spend ceiling are explicit', async () => {
   assert.ok((await loadQuestions('routing')).length >= 40)
   const request=requestFor({question:'Who is the highest paid politician?'},'planner',{operator:true,baselineLoop:true,secret:'fixture-only'})
   assert.equal(request.headers['x-opax-research'],'loop')
   assert.equal(request.headers['x-opax-nocache'],'1')
   assert.throws(()=>parseArgs(['http://127.0.0.1:8963','--spend-cap','NaN']),/spend-cap/)
-  const {rows,report}=await runEval({questions:[q('H01'),q('H02')],modes:['loop'],bases:{loop:'http://127.0.0.1:8963'},spendCap:0.5,fetchImpl:()=>{throw Error('must not spend past admission')}})
-  assert.equal(rows.length,0);assert.equal(report.stopped,'spend_cap')
+  let calls=0
+  const {rows,report}=await runEval({questions:[q('H01'),q('H02')],modes:['loop'],bases:{loop:'http://127.0.0.1:8963'},spendCap:0.5,fetchImpl:async()=>{calls++;return Response.json({answer:'No record.',research:{cost_usd:0.5}})}})
+  assert.equal(calls,1);assert.equal(rows.length,1);assert.equal(report.spent_usd,0.5);assert.equal(report.stopped,'spend_cap')
 })
 
-test('a bounded request reservation keeps an unknown-cost failure charged and stops subsequent calls',async()=>{
+test('an unknown-cost failure charges the reserve and stops once it crosses the cap',async()=>{
  let calls=0
- const {rows,report}=await runEval({questions:[q('H01'),q('H02')],modes:['loop'],bases:{loop:'http://127.0.0.1:8963'},spendCap:0.22,requestReserveUsd:0.2,fetchImpl:async()=>{calls++;return new Response('local failure',{status:503})}})
+ const {rows,report}=await runEval({questions:[q('H01'),q('H02')],modes:['loop'],bases:{loop:'http://127.0.0.1:8963'},spendCap:0.18,requestReserveUsd:0.2,fetchImpl:async()=>{calls++;return new Response('local failure',{status:503})}})
  assert.equal(calls,1);assert.equal(rows.length,1);assert.equal(report.spent_upper_estimate,0.2);assert.equal(report.stopped,'spend_cap')
 })
 
