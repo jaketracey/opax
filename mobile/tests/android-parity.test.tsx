@@ -53,7 +53,11 @@ jest.mock('expo-router', () => {
     mockScreens.push({ name, options });
     return null;
   };
-  return { Tabs, router: { push: jest.fn(), back: jest.fn() } };
+  return {
+    Tabs,
+    useSegments: () => ['(tabs)', '(today)', 'index'],
+    router: { push: jest.fn(), back: jest.fn() },
+  };
 });
 
 const MOBILE = join(__dirname, '..');
@@ -218,7 +222,7 @@ describe('Android tabs', () => {
     expect(text.props.maxFontSizeMultiplier).toBe(1.4);
     expect(text.props.numberOfLines).toBe(1);
     expect(flat(text.props.style)).toMatchObject({ fontSize: 12 });
-    expect(flat(mockTabOptions.tabBarStyle).height).toBe(72 + 16);
+    expect(flat(mockTabOptions.tabBarStyle).height).toBe(80 + 16);
   });
 
   test('High contrast text takes the stronger ink for the other tabs', () => {
@@ -314,7 +318,8 @@ describe('Android reading header', () => {
   test('a pushed reading screen backs out with Material’s arrow, labelled Back', () => {
     const { renderer, goBack } = header(true);
     const back = pressable(renderer, 'header-back');
-    expect(back.props.accessibilityLabel).toBe('Back to Account and about');
+    expect(back.props.accessibilityLabel).toBe('Navigate up');
+    expect(back.props.android_ripple).toBeDefined();
     const symbol = back.findAll(
       (n) => n.props.name && typeof n.props.name === 'string',
     )[0]!;
@@ -328,10 +333,10 @@ describe('Android reading header', () => {
     expect(flat(title.props.style)).toMatchObject({ fontSize: 22 });
   });
 
-  test('a sheet’s root closes with Done, as on iPhone', () => {
+  test('an Android dialog root has an X close action', () => {
     const { renderer, goBack } = header(false, 'Account and about');
     const done = pressable(renderer, 'header-done');
-    expect(done.props.accessibilityLabel).toBe('Done');
+    expect(done.props.accessibilityLabel).toBe('Close');
     expect(
       renderer.root.findAll((n) => n.props.testID === 'header-back'),
     ).toHaveLength(0);

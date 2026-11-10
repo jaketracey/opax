@@ -4,7 +4,7 @@ import { useFonts } from 'expo-font';
 import { Stack, router, useRootNavigationState, type Href } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
+import { Linking, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { startAnalytics, useScreenTracking } from '../analytics';
 import { isPad } from '../design/adaptive';
@@ -86,7 +86,7 @@ export default function Layout() {
   if (!loaded && !error) return null;
   return (
     <SafeAreaProvider>
-      <StatusBar style="auto" />
+      <StatusBar style={Platform.OS === 'android' ? 'dark' : 'auto'} />
       <View style={styles.app}>
         <AndroidMenuHost />
         <ExternalURLProbe />

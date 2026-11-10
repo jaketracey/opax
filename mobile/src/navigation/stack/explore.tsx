@@ -42,7 +42,7 @@ export function exploreScreens() {
           title: exploreToolTitle(params),
           ...untitled,
           headerLargeTitleEnabled: false,
-          headerTitleAlign: 'center',
+          headerTitleAlign: Platform.OS === 'android' ? 'left' : 'center',
           headerBackButtonDisplayMode: 'default',
           ...(back ? { headerBackTitle: back } : {}),
         };
@@ -51,6 +51,7 @@ export function exploreScreens() {
     screen('explore/photo', 'Photograph', {
       presentation: 'fullScreenModal',
       ...headerItems(() => [closeSheetItem()]),
+      ...(Platform.OS === 'android' ? { statusBarStyle: 'light' as const } : {}),
     }),
     screen('explore/tide-table', 'The tide', {
       ...sheetOptions,

@@ -10,11 +10,13 @@ import {
   Platform,
   Pressable,
   Text,
+  ToastAndroid,
   View,
   useWindowDimensions,
   type ColorValue,
 } from 'react-native';
 import { designFlags } from '../design/flags';
+import { Icon, type SFSymbol } from '../design/icon';
 import { showMenu, type MenuAction } from '../design/menu';
 import type { RowMenuAction } from '../design/row-link';
 import {
@@ -110,6 +112,9 @@ export function useStackChrome() {
   };
   return {
     headerTintColor: colors.navy,
+    ...(Platform.OS === 'android'
+      ? { headerTitleAlign: 'left' as const, statusBarStyle: 'dark' as const }
+      : {}),
     // Inline and sheet bars must not inherit Expo's transparent form-sheet
     // default. Large-title roots opt into translucency for native collapse.
     headerTransparent: false,
@@ -347,8 +352,8 @@ function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
 }
 
 /**
- * Android's bar for a screen's items: a button's word, and a menu's word
- * that opens its rows as a bottom sheet. Labelled, scalable touch targets.
+ * Android app-bar actions use Material symbols, 48dp targets and ripples.
+ * Keep a word for actions without a symbol, including Done and Cancel.
  */
 export function androidHeaderBar(items: TestableHeaderItem[]) {
   return createElement(
@@ -368,6 +373,20 @@ export function androidHeaderBar(items: TestableHeaderItem[]) {
                 `header-${item.label.toLowerCase().replaceAll(' ', '-')}`,
               accessibilityRole: 'button',
               accessibilityLabel: item.accessibilityLabel ?? item.label,
+              accessibilityHint:
+                item.type === 'menu' ? 'Opens more actions' : item.label,
+              accessibilityState: {
+                disabled: item.type === 'button' && !!item.disabled,
+              },
+              disabled: item.type === 'button' && item.disabled,
+              android_ripple: { color: colors.navyWash, borderless: true },
+              onLongPress: () => {
+                if (Platform.OS === 'android')
+                  ToastAndroid.show(
+                    item.accessibilityLabel ?? item.label,
+                    ToastAndroid.SHORT,
+                  );
+              },
               onPress:
                 item.type === 'menu'
                   ? () => {
@@ -386,21 +405,36 @@ export function androidHeaderBar(items: TestableHeaderItem[]) {
                 minWidth: 48,
                 minHeight: 48,
                 justifyContent: 'center',
+                alignItems: 'center',
                 paddingHorizontal: 8,
+                opacity: item.type === 'button' && item.disabled ? 0.38 : 1,
               },
             },
-            createElement(
-              Text,
-              {
-                maxFontSizeMultiplier: 1.5,
-                style: {
-                  color: colors.navy,
-                  fontFamily: fonts.sansSemiBold,
-                  fontSize: androidBar.action,
-                },
-              },
-              item.label,
-            ),
+            item.type === 'menu' ||
+              item.icon?.type === 'sfSymbol' ||
+              item.label === 'Cancel'
+              ? createElement(Icon, {
+                  name:
+                    item.type === 'menu'
+                      ? 'ellipsis'
+                      : item.label === 'Cancel'
+                        ? 'xmark'
+                        : (item.icon as { name: SFSymbol }).name,
+                  size: 24,
+                  maxScale: 1,
+                })
+              : createElement(
+                  Text,
+                  {
+                    maxFontSizeMultiplier: 1.5,
+                    style: {
+                      color: colors.navy,
+                      fontFamily: fonts.sansSemiBold,
+                      fontSize: androidBar.action,
+                    },
+                  },
+                  item.label,
+                ),
           )
         : null,
     ),

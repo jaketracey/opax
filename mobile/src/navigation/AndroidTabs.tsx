@@ -1,9 +1,10 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useSegments } from 'expo-router';
 import type { Ref } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHighTextContrast } from '../design/accessibility';
-import { Icon } from '../design/icon';
+import { AndroidTabIcon } from './AndroidTabIcon';
+import { requestSearchTabReset } from '../features/search/tab-reset';
 import { lightHighContrast } from '../design/palette';
 import {
   colors,
@@ -24,7 +25,12 @@ const tabs = [
 // so five tabs keep whole words at 200% text on a 360dp phone; the bar is
 // tall enough for the indicator and that label.
 const LABEL_SCALE = 1.4;
-const BAR_HEIGHT = 72;
+const BAR_HEIGHT = 80;
+
+/** Full-screen viewer routes own their bottom inset and closing controls. */
+export function androidTabsHidden(segments: readonly string[]) {
+  return segments.includes('explore') && segments.at(-1) === 'photo';
+}
 
 /** Use the stable Android navigator for focus-driven catalogs and Back.
  * The iOS layout keeps its original NativeTabs implementation. Material's
@@ -33,6 +39,7 @@ const BAR_HEIGHT = 72;
  */
 export function AndroidTabs() {
   const insets = useSafeAreaInsets();
+  const hidden = androidTabsHidden(useSegments());
   const chrome = useChromeColours();
   // The labels are plain hex, so High contrast text takes the stronger role
   // by hand, as `Text` does everywhere else. (Icons are not text.)
@@ -48,10 +55,13 @@ export function AndroidTabs() {
         tabBarActiveTintColor: chrome.tint,
         tabBarInactiveTintColor: inactive,
         tabBarHideOnKeyboard: true,
+        tabBarShowLabel: true,
+        tabBarLabelPosition: 'below-icon',
         tabBarStyle: {
           backgroundColor: colors.paper,
           borderTopColor: colors.dividerSubtle,
           height: BAR_HEIGHT + insets.bottom,
+          ...(hidden ? { display: 'none' as const } : {}),
         },
         tabBarIconStyle: styles.indicatorFrame,
       }}
@@ -60,6 +70,13 @@ export function AndroidTabs() {
         <Tabs.Screen
           key={name}
           name={name}
+          listeners={{
+            // NativeStack already pops a reselected tab to its root. Search
+            // also clears query/focus, matching the iOS trigger's listener.
+            tabPress: () => {
+              if (name === '(search)') requestSearchTabReset();
+            },
+          }}
           options={{
             title,
             tabBarButtonTestID: `tab-${id}`,
@@ -70,21 +87,17 @@ export function AndroidTabs() {
                 ref={props.ref as Ref<View>}
                 accessible
                 accessibilityRole="tab"
+                accessibilityState={{
+                  selected: !!props.accessibilityState?.selected,
+                }}
+                android_ripple={{ color: colors.navyWash, borderless: false }}
+                onLongPress={() => ToastAndroid.show(title, ToastAndroid.SHORT)}
               />
             ),
             tabBarIcon: ({ focused }) => (
               // The navigator draws both states and fades between them.
               <View style={[styles.indicator, focused ? styles.chosen : null]}>
-                <Icon
-                  name={
-                    focused && symbol !== 'magnifyingglass'
-                      ? (`${symbol}.fill` as typeof symbol)
-                      : symbol
-                  }
-                  tone={focused ? 'navy' : 'inkSoft'}
-                  size={24}
-                  maxScale={1}
-                />
+                <AndroidTabIcon symbol={symbol} focused={focused} />
               </View>
             ),
             tabBarLabel: ({ color }) => (

@@ -262,7 +262,7 @@ export function useTitleOnScroll(
       shown.current = next;
       setOptions(
         Platform.OS === 'android'
-          ? { headerTitle: next ? title : '' }
+          ? { headerTitle: title }
           : {
               headerTitle: () =>
                 createElement(BarTitle, {
@@ -306,7 +306,7 @@ export function useTitleOnScroll(
     setOptions({
       title: routeTitle,
       ...(Platform.OS === 'android'
-        ? { headerTitle: shown.current ? title : '' }
+        ? { headerTitle: title }
         : {
             headerTitle: () =>
               createElement(BarTitle, {
