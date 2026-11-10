@@ -1,6 +1,13 @@
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Platform,
   RefreshControl,
@@ -24,7 +31,7 @@ import {
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../design/format';
-import { Group, Screen, Section } from '../design/layout';
+import { Group, Screen, Section, TitleAnchor } from '../design/layout';
 import { isPartyLabel, partySlug } from '../design/party';
 import { FaceStack, PersonRow } from '../design/people';
 import { StatStrip, type StatTileProps } from '../design/record';
@@ -767,6 +774,9 @@ function PartyContent({
       </ProfileBlock>
     ) : null;
 
+  // ProfileHeader owns the H1, so Screen cannot find it among its children.
+  // Match the person's measured title handover on iOS only.
+  const ProfileTitle = Platform.OS === 'ios' ? TitleAnchor : Fragment;
   return (
     <Screen
       column="wide"
@@ -778,16 +788,18 @@ function PartyContent({
       }
     >
       <View style={styles.top} testID={titleTiming ?? 'party'}>
-        <ProfileHeader
-          variant="party"
-          name={label}
-          follow={{ kind: 'party', id }}
-          testID="party"
-          titleTestID="party-title"
-          onTitleLayout={() => {
-            if (!titleTiming) setTitleTiming(partyTimingID());
-          }}
-        />
+        <ProfileTitle>
+          <ProfileHeader
+            variant="party"
+            name={label}
+            follow={{ kind: 'party', id }}
+            testID="party"
+            titleTestID="party-title"
+            onTitleLayout={() => {
+              if (!titleTiming) setTitleTiming(partyTimingID());
+            }}
+          />
+        </ProfileTitle>
         {tiles.length ? (
           <Group gap={rhythm.tight}>
             <StatStrip tiles={tiles} testID="party-figures" />

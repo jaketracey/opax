@@ -2,21 +2,34 @@ import { router } from 'expo-router';
 import { act } from 'react';
 import {
   AppState,
+  Platform,
   RefreshControl,
+  ScrollView,
   Text as NativeText,
+  View,
   useWindowDimensions,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import {
+  HeaderHeightContext,
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { moneyAccessibilityLabel } from '../src/design/format';
 import { partyColors } from '../src/design/palette';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
+import { Screen, TitleAnchor } from '../src/design/layout';
 import { ContentUnavailable } from '../src/design/states';
 import { textStyles } from '../src/design/tokens';
 import { DivisionSplits, RecordedParty } from '../src/features/bills/parts';
 import { PartyPage, faceCandidates, loadFaces } from '../src/features/Party';
-import { firstLineOffset } from '../src/features/people/ProfileHeader';
+import {
+  firstLineOffset,
+  ProfileHeader,
+} from '../src/features/people/ProfileHeader';
+import { peopleScreens } from '../src/navigation/stack/people';
 import { openOnWeb } from '../src/navigation/external';
 import {
   moneyRecordRoute,
@@ -89,6 +102,98 @@ async function render() {
   });
   return renderer;
 }
+
+test('a loaded party heading reveals its named bar title when it scrolls under the header', async () => {
+  let finishLoading!: (loaded: typeof view) => void;
+  jest.mocked(runtime.partyPage).mockReturnValueOnce(
+    new Promise((resolve) => {
+      finishLoading = resolve;
+    }),
+  );
+  const routes = [
+    { key: 'root', name: 'index' },
+    {
+      key: 'party',
+      name: 'party/[slug]',
+      params: { slug: 'labor' },
+    },
+  ];
+  const screen = peopleScreens().find(
+    (item) => item.props.name === 'party/[slug]',
+  )!;
+  let options: Record<string, unknown> = {};
+  const navigation = {
+    getState: () => ({ index: 1, routes }),
+    setOptions: (next: object) => Object.assign(options, next),
+    isFocused: () => true,
+    addListener: () => () => {},
+  };
+  options = screen.props.options({ route: routes[1], navigation });
+  expect(options).toMatchObject({
+    title: '',
+    headerBackTitle: 'Today',
+  });
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={routes[1]!}>
+          <HeaderHeightContext.Provider value={100}>
+            <PartyPage input="Labor" />
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+  });
+  expect(options.title).toBe('');
+  await act(async () => finishLoading(view));
+  const inline = () => (options.headerTitle as () => React.ReactElement)();
+  expect(options.title).toBe('Labor');
+  expect(inline().props).toMatchObject({ title: 'Labor', shown: false });
+  const heading = r.root.findByType(ProfileHeader);
+  const anchor = r.root.findByType(TitleAnchor);
+  expect(anchor.findByType(ProfileHeader)).toBe(heading);
+  const measured = anchor.findByType(View);
+  expect(measured.props.collapsable).toBe(false);
+  let pageY = 180;
+  const measure = jest.fn((done) => done(0, 0, 300, 80, 0, pageY));
+  act(() => measured.props.ref({ measure }));
+  const scroll = () =>
+    act(() =>
+      r.root.findByType(ScrollView).props.onScroll({
+        nativeEvent: { contentOffset: { y: 200 } },
+      }),
+    );
+  scroll();
+  expect(measure).toHaveBeenCalled();
+  expect(inline().props.shown).toBe(false);
+  pageY = 50;
+  scroll();
+  expect(inline().props).toMatchObject({ title: 'Labor', shown: true });
+  pageY = 180;
+  scroll();
+  expect(inline().props.shown).toBe(false);
+  expect(options).toMatchObject({
+    headerBackTitle: 'Today',
+    headerBackButtonDisplayMode: 'default',
+    headerBackButtonMenuEnabled: false,
+  });
+  act(() => r.unmount());
+});
+
+test('Party keeps its existing Android heading and bar title behaviour', async () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  try {
+    const r = await render();
+    expect(r.root.findByType(Screen).props.barTitle).toBe('Labor');
+    expect(r.root.findAllByType(TitleAnchor)).toHaveLength(0);
+    expect(r.root.findByType(ProfileHeader).props.name).toBe('Labor');
+    act(() => r.unmount());
+  } finally {
+    Platform.OS = original;
+  }
+});
 const press = (r: TestRenderer.ReactTestRenderer, id: string) =>
   act(() =>
     r.root
