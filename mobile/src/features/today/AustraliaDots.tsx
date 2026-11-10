@@ -44,6 +44,8 @@ import {
   dotScrollDistance,
   dotStates,
   dotWidth,
+  dotHeight,
+  androidDotScale,
   outlineDotState,
   sampleDotRows,
   type DotHighlight,
@@ -51,7 +53,7 @@ import {
   type DotState,
 } from './australia-dots-model';
 
-const height = (outline.height / outline.width) * dotWidth;
+const height = dotHeight;
 let sampled: DotRow[] | undefined;
 function dotRows() {
   // Like SeatInvitation: use the ABS SVG paths directly, without new artwork.
@@ -120,6 +122,7 @@ function DotField({
   const palette = paletteFor(scheme === 'dark' ? 'dark' : 'light');
   const layout = useLayout();
   const window = useWindowDimensions();
+  const android = Platform.OS === 'android';
   const inset = Math.max(0, (window.width - layout.width) / 2);
   const rows = useMemo(() => dotRows(), []);
   const time = useSharedValue(0);
@@ -212,9 +215,12 @@ function DotField({
   useEffect(() => () => frame.setActive(false), [frame]);
 
   const position = useAnimatedStyle(() => ({
-    top: 30 - expandedHeader.value - rhythm.block,
+    top: android ? 0 : 30 - expandedHeader.value - rhythm.block,
     // The art lives in scroll content: give back 55% for a net 0.45 drift.
-    transform: [{ translateY: calm.value ? 0 : scroll.value * 0.55 }],
+    transform: [
+      { translateY: calm.value ? 0 : scroll.value * 0.55 },
+      ...(android ? [{ scale: androidDotScale }] : []),
+    ],
   }));
   return (
     <Animated.View
@@ -223,7 +229,13 @@ function DotField({
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
       pointerEvents="none"
-      style={[styles.art, { left: -8 - inset }, position]}
+      style={[
+        styles.art,
+        android
+          ? { left: layout.width - dotWidth, transformOrigin: 'top right' }
+          : { left: -8 - inset },
+        position,
+      ]}
     >
       <SizedCanvas width={dotWidth} height={height}>
         {rows.map((row) => (

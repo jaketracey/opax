@@ -58,6 +58,8 @@ test('a real ApiClient request and cache-write audit never receive the device fi
       cache,
       transport: request,
       retries: 0,
+      // Cache reuse is the assertion here, independent of host clock changes.
+      now: () => 1_000_000,
     }),
   );
   (Location.requestForegroundPermissionsAsync as jest.Mock).mockResolvedValue({

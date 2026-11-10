@@ -198,6 +198,13 @@ export default function YourMP() {
           if (index === 0) run();
         },
       );
+    else if (Platform.OS === 'android')
+      confirmAction(
+        title,
+        [{ title: 'Forget', destructive: true, onPress: run }],
+        undefined,
+        message,
+      );
     else confirmAction(title, [{ title: 'Forget', onPress: run }]);
   }, []);
   const menu = useMemo((): RowMenuAction[] => {
