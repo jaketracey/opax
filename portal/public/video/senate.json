@@ -1,7 +1,7 @@
 {
   "meta": {
     "schema": 1,
-    "updated": "2026-10-18",
+    "updated": "2026-11-10",
     "channel": {
       "id": "UCQptchvNlCzMKsGPU8s_6UQ",
       "title": "AuSenate: The Senate Public Information Office",
@@ -426,7 +426,7 @@
       "title": "Senate Question Time, 2 March 2025",
       "published": "2026-03-02T06:24:21Z",
       "kind": "question_time",
-      "date": "2025-03-02",
+      "date": "2026-03-02",
       "chamber": "senate",
       "url": "https://www.youtube.com/watch?v=xqHWtT_4k5c"
     },
@@ -525,7 +525,7 @@
       "title": "Senate Question Time, 5 November 2025",
       "published": "2025-11-04T21:48:00Z",
       "kind": "question_time",
-      "date": "2025-11-05",
+      "date": "2025-11-04",
       "chamber": "senate",
       "url": "https://www.youtube.com/watch?v=wPh1LZNAnEc"
     },
@@ -2390,10 +2390,10 @@
       "title": "First speech: Senator Babet - 3 August, 2022",
       "published": "2022-08-05T05:13:31Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2022-08-03",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "ralph-babet",
+      "person_pid": "11003",
       "url": "https://www.youtube.com/watch?v=h040yr8DWig"
     },
     {
@@ -2401,10 +2401,10 @@
       "title": "First speech: Senator Barbara Pocock - 3 August, 2022",
       "published": "2022-08-05T04:52:10Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2022-08-03",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "barbara-pocock",
+      "person_pid": "11008",
       "url": "https://www.youtube.com/watch?v=SnbGj3t--Mg"
     },
     {
@@ -2412,10 +2412,10 @@
       "title": "First speech: Senator Shoebridge - 2 August, 2022",
       "published": "2022-08-05T04:49:11Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2022-08-02",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "david-shoebridge",
+      "person_pid": "11010",
       "url": "https://www.youtube.com/watch?v=yAaoFX3iayc"
     },
     {
@@ -2434,10 +2434,10 @@
       "title": "First speech: Senator Allman-Payne - 1 August, 2022",
       "published": "2022-08-05T04:00:42Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2022-08-01",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "penny-allman-payne",
+      "person_pid": "11002",
       "url": "https://www.youtube.com/watch?v=z-pHmkyM_S8"
     },
     {
@@ -2445,10 +2445,10 @@
       "title": "First speech: Senator Nampijinpa Price - 27 July, 2022",
       "published": "2022-08-05T03:52:54Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2022-07-27",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "jacinta-nampijinpa-price",
+      "person_pid": "11006",
       "url": "https://www.youtube.com/watch?v=Ah5uQg-eUDk"
     },
     {
@@ -2456,10 +2456,10 @@
       "title": "First speech: Senator Stewart - 27 July, 2022",
       "published": "2022-08-05T02:06:33Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2022-07-27",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "jana-stewart",
+      "person_pid": "11011",
       "url": "https://www.youtube.com/watch?v=QXkfamnJga0"
     },
     {
@@ -2575,10 +2575,10 @@
       "title": "First speech: Senator Mirabella - 9 February, 2022",
       "published": "2022-02-11T04:09:51Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2022-02-09",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "greg-mirabella",
+      "person_pid": "10966",
       "url": "https://www.youtube.com/watch?v=TVocLJS0uD8"
     },
     {
@@ -2694,10 +2694,10 @@
       "title": "First speech: Senator Grogan - 20 October, 2021",
       "published": "2021-11-04T05:32:48Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2021-10-20",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "karen-grogan",
+      "person_pid": "10965",
       "url": "https://www.youtube.com/watch?v=Z3Pcy7S_ueM"
     },
     {
@@ -2705,10 +2705,10 @@
       "title": "First speech: Senator Cox - 19 October, 2021",
       "published": "2021-11-04T05:30:27Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2021-10-19",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "dorinda-cox",
+      "person_pid": "10964",
       "url": "https://www.youtube.com/watch?v=G5UTPY0EcCY"
     },
     {
@@ -3175,10 +3175,10 @@
       "title": "First speech: Senator Small - 3 February, 2021",
       "published": "2021-02-08T00:54:18Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2021-02-03",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "ben-small",
+      "person_pid": "10962",
       "url": "https://www.youtube.com/watch?v=Nfxi8Msnhk4"
     },
     {
@@ -3186,7 +3186,7 @@
       "title": "Senate Question Time, February 3 2021",
       "published": "2021-02-08T00:52:27Z",
       "kind": "question_time",
-      "date": null,
+      "date": "2021-02-03",
       "chamber": "senate",
       "url": "https://www.youtube.com/watch?v=R-tc_DSmduc"
     },
@@ -3195,7 +3195,7 @@
       "title": "Senate Question Time, February 2 2021",
       "published": "2021-02-08T00:49:06Z",
       "kind": "question_time",
-      "date": null,
+      "date": "2021-02-02",
       "chamber": "senate",
       "url": "https://www.youtube.com/watch?v=m5EAQfjin_Q"
     },
@@ -3258,10 +3258,10 @@
       "title": "First speech: Senator Thorpe - 2 December, 2020",
       "published": "2020-12-03T05:22:02Z",
       "kind": "first_speech",
-      "date": null,
+      "date": "2020-12-02",
       "chamber": "senate",
-      "person_slug": null,
-      "person_pid": null,
+      "person_slug": "lidia-thorpe",
+      "person_pid": "10961",
       "url": "https://www.youtube.com/watch?v=GRopg-qWNyU"
     },
     {
