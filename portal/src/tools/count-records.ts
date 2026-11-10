@@ -1,6 +1,7 @@
 /** Exact counts over the full published page exports, never ranked search hits. */
 import { readToolAsset, type ToolArgs, type ToolCitation, type ToolDefinition } from './types'
 import { fold, siteUrl } from './record-common'
+import { recordCount } from '../research-record-answer'
 
 type Row = Record<string, unknown>
 type Window = { since?: string; until?: string; label: string }
@@ -169,6 +170,13 @@ export const tool: ToolDefinition = {
     }
     if ((window.since && range.first_record_date && window.since < range.first_record_date) || (window.until && range.last_record_date && window.until > range.last_record_date)) notes.push('The requested window extends beyond the dated records in this published selection; counts cover indexed records only, including any zero periods.')
     const aggregate = args.group_by ? groups(selected, field, String(args.group_by), window, range) : [{ period: window.label, count: total }]
+    const countText = (row: { period: string; count: number }) => {
+      const period = args.group_by ? `in ${row.period}` : window.label
+      // Exposure drafts have release dates, so retain the registry wording for mixed cohorts.
+      if (kind !== 'bills' || args.status || !args.date || args.group_by || selected.some(row => row.status === 'exposure_draft')) return `${row.count} ${metric} ${where} ${period}`
+      const datedPeriod = period.replace(/\d{4}-\d{2}-\d{2}/g, date => new Date(date + 'T00:00:00Z').toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }))
+      return `${recordCount(row.count)} ${row.count === 1 ? 'bill was' : 'bills were'} introduced ${where} ${datedPeriod}.`
+    }
     const citations: ToolCitation[] = []
     if (args.group_by && aggregate.length > 24) {
       // Compact long series so Ask can select every group within its fact budget.
@@ -177,7 +185,7 @@ export const tool: ToolDefinition = {
         const chunk = aggregate.slice(offset, offset + 20), count = chunk.reduce((sum, row) => sum + row.count, 0)
         citations.push({ kind: 'count', text: `${count} ${metric} ${where} across ${chunk[0].period} to ${chunk.at(-1)!.period}, within the selection ${window.label}; by ${args.group_by}: ${chunk.map(row => `${row.count} in ${row.period}`).join('; ')}`, value: count, url })
       }
-    } else citations.push(...aggregate.map(row => ({ kind: 'count' as const, text: `${row.count} ${metric} ${where} ${args.group_by ? `in ${row.period}` : window.label}`, value: row.count, url })))
+    } else citations.push(...aggregate.map(row => ({ kind: 'count' as const, text: countText(row), value: row.count, url })))
     if (!aggregate.length) citations.push({ kind: 'count', text: `${total} ${metric} ${where} ${window.label}`, value: total, url })
     const share = cohort.length ? Math.round(total / cohort.length * 10000) / 100 : null
     if (args.status) citations.push({ kind: 'count', text: `${cohort.length} bill records in the introduction cohort ${where} ${window.label}; ${total} have snapshot status ${args.status}${share === null ? '; a share cannot be calculated for an empty cohort' : ` (${share}%)`}`, value: cohort.length, url })

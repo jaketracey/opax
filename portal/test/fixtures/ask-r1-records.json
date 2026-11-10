@@ -1,0 +1,530 @@
+{
+  "source": "gate150-run2-results.json; recorded answers, pre_writer_sources, citations and scopes",
+  "rows": [
+    {
+      "id": "DV-OUTC-012",
+      "question": "I am researching this for a community newsletter and want to get it right. What was the result of the Senate division on Australian National Preventive Health Agency Bill 2010: In Committee on 17 November 2010? If the record does not cover it, say so rather than guessing.",
+      "payload": {
+        "answer": "No votes against an eligible party majority were recorded in that division.",
+        "answer_scope": {
+          "period": {
+            "kind": "window",
+            "since": "2010-11-17",
+            "until": "2010-11-17",
+            "label": "Records from 2010-11-17 to 2010-11-17."
+          },
+          "dated": true,
+          "chamber": "senate",
+          "people": [],
+          "stateGovernment": false,
+          "recordKind": "division",
+          "actUnfiltered": true,
+          "trend": false
+        },
+        "sources": [
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "Division defeated, 32 ayes to 34 noes: Australian National Preventive Health Agency Bill 2010 — In Committee (Senate, 2010-11-17). No votes against an eligible party majority were recorded.",
+            "href": "https://opax.com.au/doc/division-federal-senate-1895",
+            "url": "https://opax.com.au/doc/division-federal-senate-1895",
+            "snippet": "Division defeated, 32 ayes to 34 noes: Australian National Preventive Health Agency Bill 2010 — In Committee (Senate, 2010-11-17). No votes against an eligible party majority were recorded.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/doc/division-federal-senate-1895",
+            "url": "https://opax.com.au/doc/division-federal-senate-1895",
+            "snippet": "OPAX could not confirm that these records fall in the requested period, so check their dates. Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes. Independents, unknown parties, ties, paired and absent votes are excluded. Party affiliations are the published labels and may reflect a later affiliation rather than the affiliation on the division date. Calculated dissent is not independently verified historical floor crossing.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "citations": {
+          "fact-2/t/body/0": [
+            [
+              0,
+              75
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "DV-CROS-003",
+      "question": "who crossed the floor on Covid-19 Vaccination Status (Prevention of Discrimination) Bill 2021 - Second Reading - Agree with the bill's main idea on 22 November 2021",
+      "payload": {
+        "answer": "COVID-19 Vaccination Status (Prevention of Discrimination) Bill 2021 recorded 1 matching recorded divisions since 2021-11-22 until 2021-11-22.",
+        "answer_scope": {
+          "period": {
+            "kind": "window",
+            "since": "2021-11-22",
+            "until": "2021-11-22",
+            "label": "Records from 2021-11-22 to 2021-11-22."
+          },
+          "dated": true,
+          "people": [],
+          "stateGovernment": false,
+          "recordKind": "bill",
+          "actUnfiltered": true,
+          "trend": false
+        },
+        "sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Division defeated, 5 ayes to 44 noes: Covid-19 Vaccination Status (Prevention of Discrimination) Bill 2021 - Second Reading - Agree with the bill's main idea (Senate, 2021-11-22). Against their published party majority: Alex Antic (Liberal) voted aye, party majority no; Concetta Fierravanti-Wells (Liberal) voted aye, party majority no.",
+            "href": "https://opax.com.au/doc/division-federal-senate-7505",
+            "url": "https://opax.com.au/doc/division-federal-senate-7505",
+            "snippet": "Division defeated, 5 ayes to 44 noes: Covid-19 Vaccination Status (Prevention of Discrimination) Bill 2021 - Second Reading - Agree with the bill's main idea (Senate, 2021-11-22). Against their published party majority: Alex Antic (Liberal) voted aye, party majority no; Concetta Fierravanti-Wells (Liberal) voted aye, party majority no.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "COVID-19 Vaccination Status (Prevention of Discrimination) Bill 2021: 1 matching recorded divisions since 2021-11-22 until 2021-11-22.",
+            "href": "https://opax.com.au/bill/au-federal-s1325",
+            "url": "https://opax.com.au/bill/au-federal-s1325",
+            "snippet": "COVID-19 Vaccination Status (Prevention of Discrimination) Bill 2021: 1 matching recorded divisions since 2021-11-22 until 2021-11-22.",
+            "cited": true,
+            "kind": "count"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/doc/division-federal-senate-7505",
+            "url": "https://opax.com.au/doc/division-federal-senate-7505",
+            "snippet": "OPAX could not confirm that these records fall in the requested period, so check their dates. Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes. Independents, unknown parties, ties, paired and absent votes are excluded. Party affiliations are the published labels and may reflect a later affiliation rather than the affiliation on the division date. Calculated dissent is not independently verified historical floor crossing.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "citations": {
+          "fact-2/t/body/0": [
+            [
+              0,
+              142
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "BL-PORT-012",
+      "question": "Which minister's portfolio did the Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020 come from?",
+      "payload": {
+        "answer": "The Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020 is recorded under the Youth and Sport portfolio.\n\n- On 26 August 2020, the Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020 was first introduced in the Senate.",
+        "answer_scope": {
+          "period": {
+            "kind": "all",
+            "label": "Counting speeches across the whole record."
+          },
+          "dated": false,
+          "people": [],
+          "stateGovernment": false,
+          "recordKind": "bill",
+          "actUnfiltered": true,
+          "trend": false
+        },
+        "sources": [
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "The Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020 is recorded under the Youth and Sport portfolio.",
+            "href": "https://opax.com.au/bill/au-federal-s1268",
+            "url": "https://opax.com.au/bill/au-federal-s1268",
+            "snippet": "The Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020 is recorded under the Youth and Sport portfolio.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "On 26 August 2020, the Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020 was first introduced in the Senate.",
+            "href": "https://opax.com.au/bill/au-federal-s1268",
+            "url": "https://opax.com.au/bill/au-federal-s1268",
+            "snippet": "On 26 August 2020, the Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020 was first introduced in the Senate.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "689aa26932224260a4d8828fa31fa5b2",
+            "slug": "bill-text-au-federal-s1268-first-senate",
+            "title": "Sport Integrity Australia Amendment (World Anti-Doping Code Review) Bill 2020 — First reading — Senate",
+            "href": "https://opax.com.au/doc/bill-text-au-federal-s1268-first-senate",
+            "url": "https://opax.com.au/doc/bill-text-au-federal-s1268-first-senate",
+            "snippet": "The bill came from the Youth and Sport portfolio, and the first-reading Senate bill text was presented as “Youth and Sport”.",
+            "cited": true,
+            "kind": "bill_text",
+            "date": "2020-08-26"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/bill/au-federal-s1268",
+            "url": "https://opax.com.au/bill/au-federal-s1268",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. Bill lifecycle dates and sponsors come from the published bill records. Null fields are not recorded or unavailable; status_as_of is not an introduction, passage or assent date.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "citations": {
+          "fact-5/t/body/0": [
+            [
+              0,
+              130
+            ]
+          ],
+          "fact-1/t/body/0": [
+            [
+              132,
+              270
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "DT-BDAY-020",
+      "question": "Which bilks were introducd in the Senate on 30 October 2012?",
+      "payload": {
+        "answer": "There were 1 bill records by introduction date in the Senate on 2012-10-30.",
+        "answer_scope": {
+          "period": {
+            "kind": "window",
+            "since": "2012-10-30",
+            "until": "2012-10-30",
+            "label": "Records from 2012-10-30 to 2012-10-30."
+          },
+          "dated": true,
+          "chamber": "senate",
+          "people": [],
+          "stateGovernment": false,
+          "actUnfiltered": true,
+          "trend": false
+        },
+        "sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "1 bill records by introduction date in the Senate on 2012-10-30",
+            "href": "https://opax.com.au/bills",
+            "url": "https://opax.com.au/bills",
+            "snippet": "1 bill records by introduction date in the Senate on 2012-10-30",
+            "cited": true,
+            "kind": "count"
+          },
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "Anti-Money Laundering Amendment (Gaming Machine Venues) Bill 2012 [2013]: introduced 2012-10-30 in the Senate",
+            "href": "https://opax.com.au/bill/au-federal-s889",
+            "url": "https://opax.com.au/bill/au-federal-s889",
+            "snippet": "Anti-Money Laundering Amendment (Gaming Machine Venues) Bill 2012 [2013]: introduced 2012-10-30 in the Senate",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-3",
+            "slug": "",
+            "title": "On 30 October 2012, the Anti-Money Laundering Amendment (Gaming Machine Venues) Bill 2012 [2013] was first introduced in the Senate.",
+            "href": "https://opax.com.au/bill/au-federal-s889",
+            "url": "https://opax.com.au/bill/au-federal-s889",
+            "snippet": "On 30 October 2012, the Anti-Money Laundering Amendment (Gaming Machine Venues) Bill 2012 [2013] was first introduced in the Senate.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-4",
+            "slug": "",
+            "title": "Nick Xenophon (Independent Member) is the recorded sponsor of the Anti-Money Laundering Amendment (Gaming Machine Venues) Bill 2012 [2013].",
+            "href": "https://opax.com.au/bill/au-federal-s889",
+            "url": "https://opax.com.au/bill/au-federal-s889",
+            "snippet": "Nick Xenophon (Independent Member) is the recorded sponsor of the Anti-Money Laundering Amendment (Gaming Machine Venues) Bill 2012 [2013].",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "The Anti-Money Laundering Amendment (Gaming Machine Venues) Bill 2012 [2013] has recorded status lapsed as at 9 May 2016.",
+            "href": "https://opax.com.au/bill/au-federal-s889",
+            "url": "https://opax.com.au/bill/au-federal-s889",
+            "snippet": "The Anti-Money Laundering Amendment (Gaming Machine Venues) Bill 2012 [2013] has recorded status lapsed as at 9 May 2016.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/bills",
+            "url": "https://opax.com.au/bills",
+            "snippet": "Exact count of the full published bills index; not a ranked sample. Coverage in the Senate: 2010-11-24 to 2026-09-15. This describes indexed records, not proof of complete parliamentary history. Published snapshot build date: 2026-10-04T16:27:54+00:00. This is a build stamp, not a live data currency guarantee. Latest indexed introduced date: 2026-09-17. Dates are introduction dates and chambers are originating chambers. A status filter gives the snapshot status of that cohort, not bills passing on those dates.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "citations": {
+          "fact-1/t/body/0": [
+            [
+              0,
+              75
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "BL-SPON-017",
+      "question": "Who sponsored the Diplomatic Appointments (Selection Process) Bill 2026?",
+      "payload": {
+        "answer": "The Diplomatic Appointments (Selection Process) Bill 2026 was first introduced in the Senate on 7 September 2026.",
+        "answer_scope": {
+          "period": {
+            "kind": "all",
+            "label": "Counting speeches across the whole record."
+          },
+          "dated": false,
+          "people": [],
+          "stateGovernment": false,
+          "recordKind": "bill",
+          "exactBillTitle": "Diplomatic Appointments (Selection Process) Bill 2026",
+          "actUnfiltered": true,
+          "trend": false
+        },
+        "sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "On 7 September 2026, the Diplomatic Appointments (Selection Process) Bill 2026 was first introduced in the Senate.",
+            "href": "https://opax.com.au/bill/au-federal-s1514",
+            "url": "https://opax.com.au/bill/au-federal-s1514",
+            "snippet": "On 7 September 2026, the Diplomatic Appointments (Selection Process) Bill 2026 was first introduced in the Senate.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "Fatima Payman (Australia&#39;s Voice) is the recorded sponsor of the Diplomatic Appointments (Selection Process) Bill 2026.",
+            "href": "https://opax.com.au/bill/au-federal-s1514",
+            "url": "https://opax.com.au/bill/au-federal-s1514",
+            "snippet": "Fatima Payman (Australia&#39;s Voice) is the recorded sponsor of the Diplomatic Appointments (Selection Process) Bill 2026.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-3",
+            "slug": "",
+            "title": "The Diplomatic Appointments (Selection Process) Bill 2026 has recorded status before parliament as at 7 September 2026.",
+            "href": "https://opax.com.au/bill/au-federal-s1514",
+            "url": "https://opax.com.au/bill/au-federal-s1514",
+            "snippet": "The Diplomatic Appointments (Selection Process) Bill 2026 has recorded status before parliament as at 7 September 2026.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-4",
+            "slug": "",
+            "title": "The Diplomatic Appointments (Selection Process) Bill 2026 has these recorded lifecycle stages: 7 September 2026: introduced (Senate); 7 September 2026: second reading (Senate).",
+            "href": "https://opax.com.au/bill/au-federal-s1514",
+            "url": "https://opax.com.au/bill/au-federal-s1514",
+            "snippet": "The Diplomatic Appointments (Selection Process) Bill 2026 has these recorded lifecycle stages: 7 September 2026: introduced (Senate); 7 September 2026: second reading (Senate).",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/bill/au-federal-s1514",
+            "url": "https://opax.com.au/bill/au-federal-s1514",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. Bill lifecycle dates and sponsors come from the published bill records. Null fields are not recorded or unavailable; status_as_of is not an introduction, passage or assent date.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "citations": {
+          "fact-1/t/body/0": [
+            [
+              0,
+              113
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "DV-OUTC-007",
+      "question": "Did the Senate division on Carbon Pricing - Stop the increase in the carbon price on 27 June 2013 pass, and what was the vote?",
+      "payload": {
+        "answer": "The Senate division on Carbon Pricing - Stop the increase in the carbon price on 27 June 2013 was defeated.\n\nNo votes against an eligible party majority were recorded.",
+        "answer_scope": {
+          "period": {
+            "kind": "window",
+            "since": "2013-06-27",
+            "until": "2013-06-27",
+            "label": "Records from 2013-06-27 to 2013-06-27."
+          },
+          "dated": true,
+          "chamber": "senate",
+          "people": [],
+          "stateGovernment": false,
+          "recordKind": "division",
+          "actUnfiltered": true,
+          "trend": true
+        },
+        "sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Division defeated, 33 ayes to 37 noes: Motions - Carbon Pricing - Stop the increase in the carbon price (Senate, 2013-06-27). No votes against an eligible party majority were recorded.",
+            "href": "https://opax.com.au/doc/division-federal-senate-2417",
+            "url": "https://opax.com.au/doc/division-federal-senate-2417",
+            "snippet": "Division defeated, 33 ayes to 37 noes: Motions - Carbon Pricing - Stop the increase in the carbon price (Senate, 2013-06-27). No votes against an eligible party majority were recorded.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/doc/division-federal-senate-2417",
+            "url": "https://opax.com.au/doc/division-federal-senate-2417",
+            "snippet": "OPAX could not confirm that these records fall in the requested period, so check their dates. Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes. Independents, unknown parties, ties, paired and absent votes are excluded. Party affiliations are the published labels and may reflect a later affiliation rather than the affiliation on the division date. Calculated dissent is not independently verified historical floor crossing.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "citations": {
+          "fact-1/t/body/0": [
+            [
+              0,
+              107
+            ],
+            [
+              109,
+              167
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "BL-SPON-006",
+      "question": "Who introduecd the Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021?",
+      "payload": {
+        "answer": "The Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021 was first introduced in the Senate on 1 September 2021.",
+        "answer_scope": {
+          "period": {
+            "kind": "all",
+            "label": "Counting speeches across the whole record."
+          },
+          "dated": false,
+          "people": [],
+          "stateGovernment": false,
+          "recordKind": "bill",
+          "actUnfiltered": true,
+          "trend": false
+        },
+        "sources": [
+          {
+            "resource": "fact-9",
+            "slug": "",
+            "title": "On 1 September 2021, the Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021 was first introduced in the Senate.",
+            "href": "https://opax.com.au/bill/au-federal-s1316",
+            "url": "https://opax.com.au/bill/au-federal-s1316",
+            "snippet": "On 1 September 2021, the Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021 was first introduced in the Senate.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-10",
+            "slug": "",
+            "title": "Rex Patrick (Rex Patrick Team) is the recorded sponsor of the Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021.",
+            "href": "https://opax.com.au/bill/au-federal-s1316",
+            "url": "https://opax.com.au/bill/au-federal-s1316",
+            "snippet": "Rex Patrick (Rex Patrick Team) is the recorded sponsor of the Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-11",
+            "slug": "",
+            "title": "The Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021 has recorded status lapsed as at 25 July 2022.",
+            "href": "https://opax.com.au/bill/au-federal-s1316",
+            "url": "https://opax.com.au/bill/au-federal-s1316",
+            "snippet": "The Aged Care Amendment (Registered Nurses Ensuring Quality Care) Bill 2021 has recorded status lapsed as at 25 July 2022.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
+            "url": "https://opax.com.au/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. Bill lifecycle dates and sponsors come from the published bill records. Null fields are not recorded or unavailable; status_as_of is not an introduction, passage or assent date.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ],
+        "citations": {
+          "fact-9/t/body/0": [
+            [
+              0,
+              131
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "NP-ELEC-055",
+      "question": "What seat does the record show S.J.R. Patterson holding in the SA House of Assembly?",
+      "payload": {
+        "answer": "S.J.R. Patterson's recorded representation is Morphett (SA House of Assembly).",
+        "answer_scope": null,
+        "sources": [
+          {
+            "resource": "identity-1",
+            "title": "S.J.R. Patterson",
+            "kind": "person",
+            "href": "https://opax.com.au/subject/person/S.J.R.%20Patterson",
+            "url": "https://opax.com.au/subject/person/S.J.R.%20Patterson",
+            "snippet": "S.J.R. Patterson's recorded representation is Morphett (SA House of Assembly).",
+            "cited": true,
+            "answer_ranges": [
+              [
+                0,
+                78
+              ]
+            ]
+          }
+        ],
+        "citations": {
+          "identity-1/t/identity": [
+            [
+              0,
+              78
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}
