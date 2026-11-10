@@ -40,8 +40,11 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     timeout: 20000
 - tapOn: BibTeX
 - waitForAnimationToEnd
+# "Copied" shows for 2 s; a short settle keeps the assertion inside it on a
+# slow emulator.
 - tapOn:
     id: cite-copy-bibtex
+    waitToSettleTimeoutMs: 300
 - assertVisible: Copied BibTeX
 - takeScreenshot: ${EVIDENCE}/32-cite-bibtex
 # Android Back returns to the existing reader with its position preserved.
@@ -136,8 +139,11 @@ name: 32 Bill to native speech, cite BibTeX, similar on tap and roster profile
     timeout: 20000
 - tapOn: BibTeX
 - waitForAnimationToEnd
+# "Copied" shows for 2 s; a short settle keeps the assertion inside it on a
+# slow emulator.
 - tapOn:
     id: cite-copy-bibtex
+    waitToSettleTimeoutMs: 300
 - assertVisible: Copied BibTeX
 - back
 - extendedWaitUntil:
