@@ -71,6 +71,16 @@ test('native search selectors tolerate Android SearchView hint padding', () => {
     assert.ok(body.includes('search-top-suggestion'), name);
     assert.ok(body.includes('${NAME}.*'), name);
   }
+  assert.ok(
+    JSON.stringify(read('10-bills.yaml')[1].toJS()).includes(
+      '.*:id/(search_src_text|search_button)',
+    ),
+  );
+  assert.ok(
+    JSON.stringify(read('09-electorate.yaml')[1].toJS()).includes(
+      '^(Status: )?Elected$',
+    ),
+  );
 });
 
 test('all prepared YAML parses as two documents, with bounded support references', () => {

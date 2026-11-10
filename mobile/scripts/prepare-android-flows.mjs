@@ -89,6 +89,8 @@ function selector(v) {
         : v.replaceAll('iPhone', 'phone'))
     );
   if (!v || typeof v !== 'object') return v;
+  if (v.id?.endsWith('-elected') && v.text === 'Elected')
+    return { ...v, text: '^(Status: )?Elected$' };
   if (nativeSearchHints.has(v.text)) {
     const { text, ...options } = v;
     return { ...options, ...nativeSearch };
@@ -174,6 +176,24 @@ function command(v, relative) {
   if (out.tapOn) {
     const tap = out.tapOn;
     const text = typeof tap === 'string' ? tap : tap.text;
+    if (
+      nativeSearchHints.has(text) ||
+      (text === 'Name' && relative === '43-money-agencies.yaml')
+    )
+      return {
+        runFlow: {
+          commands: [
+            {
+              tapOn: {
+                ...(typeof tap === 'object' ? tap : {}),
+                id: '.*:id/(search_src_text|search_button)',
+                text: undefined,
+              },
+            },
+            { extendedWaitUntil: { visible: nativeSearch, timeout: 15000 } },
+          ],
+        },
+      };
     // Only navigation dismissals: editing Done and action-sheet cancellation
     // remain real taps. Follows Done exits edit mode and must also remain a tap.
     if (
