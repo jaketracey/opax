@@ -82,7 +82,7 @@ export function SeatFigure({
     testID: `${testID}-source`,
   };
   const years = index.meta.years;
-  if (!seat)
+  if (!seat || seat.count === 0)
     return (
       <Group gap={rhythm.tight}>
         <Text wordSafe testID={`${testID}-unmatched`}>

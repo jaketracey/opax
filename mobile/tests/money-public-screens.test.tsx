@@ -4,6 +4,7 @@ import { Animated, Dimensions, Platform, StyleSheet } from 'react-native';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MoneyCatalogs } from '../src/features/money-public/catalog';
+import { ApiError } from '../src/api/errors';
 import type { ApiClient, RecordResult } from '../src/api/client';
 import { assertAllowedPath } from '../src/api/policy';
 import { decodeDiscovery } from '../src/api/catalog-decoders';
@@ -30,8 +31,11 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { unnamedRecipient } from '../src/features/money-public/privacy';
-import { organisationHref } from '../src/features/money-public/routes';
-import { LinkRow } from '../src/design/rows';
+import {
+  moneyItemHref,
+  organisationHref,
+} from '../src/features/money-public/routes';
+import { LinkRow, MoneyRow } from '../src/design/rows';
 import { Screen as PageScreen } from '../src/design/layout';
 import {
   MoneyList,
@@ -49,6 +53,10 @@ import {
   formatMoney,
   formatMoneyCompact,
 } from '../src/design/format';
+import { decodeSeatGrants } from '../src/features/money-public/seat-grants-data';
+import seatIndexFixture from './fixtures/money/seat-index.json';
+import seatFirstFixture from './fixtures/money/seat-maribyrnong.json';
+import seatSecondFixture from './fixtures/money/seat-maribyrnong-2.json';
 
 const mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => {
@@ -110,6 +118,7 @@ beforeEach(() => {
     'grants',
     'notes',
     'program',
+    'seat',
     'largest',
     'agencies',
     'agency',
@@ -764,5 +773,276 @@ describe('a program, place or organisation', () => {
       r.root.findAll((n) => n.props.testID === `connection-excerpt-${i}-more`),
     ).toHaveLength(0);
     await act(async () => r.unmount());
+  });
+});
+
+describe('the seat grant list', () => {
+  const record = <T,>(data: T, stale = false): RecordResult<T> => ({
+    data,
+    stale,
+    savedAt: 10,
+    asOf: null,
+  });
+  const byID = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+    r.root.findAll(
+      (n) => n.props.testID === testID && typeof n.type !== 'string',
+    );
+  const list = (r: TestRenderer.ReactTestRenderer) =>
+    r.root.findByType(MoneyList);
+  const index = decodeGrantIndex(seatIndexFixture);
+  const first = decodeSeatGrants(seatFirstFixture);
+  const second = decodeSeatGrants(seatSecondFixture);
+  beforeEach(() => {
+    Object.assign(mockParams, { seat: 'Maribyrnong', state: 'vic' });
+    money.grants = jest.fn(async () => record(index));
+    money.seat = jest.fn(async (_jur, _key, _refresh, options) =>
+      record(options?.page ? second : first),
+    );
+  });
+
+  test('lists the first 25 grants under the exact index total, with the caveats, source and Originals last', async () => {
+    const r = await mount(Grants);
+    const page = list(r);
+    expect(page.props.rows).toHaveLength(25);
+    expect(money.seat).toHaveBeenCalledTimes(1);
+    const figure = byID(r, 'grants-seat-total')[0]!;
+    expect(figure.props.value).toBe(formatMoneyCompact(index.seats[0]!.total));
+    expect(figure.props.accessibilityLabel).toContain('28 Commonwealth grants');
+    expect(figure.props.caveat).toBe(
+      'Matched by postcode where one is recorded, so this is a minimum.',
+    );
+    expect(figure.props.citation.asOf).toBe(index.meta.asOf);
+    expect(byID(r, 'grants-seat-award-note')[0]!.props.children).toBe(
+      'An award is not a payment.',
+    );
+    expect(byID(r, 'grants-seat-caption')[0]!.props.children).toBe(
+      '25 of 28 grants, largest first',
+    );
+    expect(byID(r, 'grants-seat-show-all')[0]!.props.label).toBe('Show all 28');
+    const row = page.props.render(page.props.rows[0], 0);
+    expect(row.type).toBe(MoneyRow);
+    expect(row.props).toMatchObject({
+      name: 'Fixture Association 1',
+      detail: 'Fixture support program · 2020–21',
+      amount: seatFirstFixture.grants[0]!.v,
+      href: organisationHref(
+        seatFirstFixture.grants[0]!.rid,
+        'Fixture Association 1',
+        'federal',
+      ),
+    });
+    // Every rendered row speaks its recipient, program, year and amount.
+    for (const grant of first.grants.slice(0, 10)) {
+      const cell = r.root.findAll(
+        (n) =>
+          n.type === LinkRow &&
+          n.props.testID === `grants-seat-grant-${first.grants.indexOf(grant)}`,
+      )[0]!;
+      expect(cell.props.accessibilityLabel).toContain(grant.name);
+      expect(cell.props.accessibilityLabel).toContain(grant.program);
+      expect(cell.props.accessibilityLabel).toContain('2020–21');
+      expect(cell.props.accessibilityLabel).toContain('dollars');
+    }
+    const footer = page.props.footer.props.children.filter(Boolean);
+    expect(footer.at(-1).props.testID).toBe('grants-seat-originals');
+    expect(byID(r, 'grants-seat-original')[0]!.props.external.url).toBe(
+      index.meta.sourceUrl,
+    );
+  });
+
+  test('Show all loads continuation pages and exposes all grants once, preserving index figures', async () => {
+    const r = await mount(Grants);
+    await act(async () => byID(r, 'grants-seat-show-all')[0]!.props.onPress());
+    expect(list(r).props.rows.map((g: { id: string }) => g.id)).toEqual(
+      [...first.grants, ...second.grants].map((g) => g.id),
+    );
+    expect(jest.mocked(money.seat).mock.calls.at(-1)?.[3]?.page).toBe(
+      'maribyrnong-2.json',
+    );
+    expect(byID(r, 'grants-seat-show-all')).toHaveLength(0);
+    expect(byID(r, 'grants-seat-total')[0]!.props.value).toBe(
+      formatMoneyCompact(index.seats[0]!.total),
+    );
+  });
+
+  test('an unnamed grant uses the existing program grant route without exposing a private identity', async () => {
+    const privatePage = decodeSeatGrants({
+      ...seatFirstFixture,
+      grants: [
+        {
+          ...seatFirstFixture.grants[0],
+          rn: 'Fixture private recipient',
+          rid: 'person:fixture',
+          k: 'individual',
+          n: 'Fixture private purpose',
+        },
+      ],
+    });
+    money.seat = jest.fn(async () => record(privatePage));
+    const r = await mount(Grants);
+    const page = list(r),
+      row = page.props.render(page.props.rows[0], 0);
+    expect(row.props.name).toBe('Individual recipient');
+    expect(row.props.href).toEqual(
+      moneyItemHref(
+        {
+          kind: 'grant',
+          jur: 'federal',
+          program: 'go6809',
+          id: privatePage.grants[0]!.id,
+        },
+        { name: 'Individual recipient' },
+      ),
+    );
+    const strings = r.root
+      .findAll(() => true)
+      .flatMap((n) => [
+        ...Object.values(n.props),
+        ...[n.props.children].flat(),
+      ])
+      .filter((v): v is string => typeof v === 'string');
+    expect(strings.join('\n')).not.toContain('Fixture private');
+  });
+
+  test('an organisation outside the recipient list opens its GrantConnect award, not a record that cannot load', async () => {
+    money.grants = jest.fn(async () => record({ ...index, recipients: [] }));
+    const r = await mount(Grants);
+    const page = list(r),
+      row = page.props.render(page.props.rows[0], 0);
+    expect(row.props.href).toBeUndefined();
+    expect(row.props.external).toEqual({
+      url: `https://www.grants.gov.au/Ga/Show/${seatFirstFixture.grants[0]!.guid}`,
+      label: `GrantConnect · ${seatFirstFixture.grants[0]!.id}`,
+    });
+  });
+
+  test.each(['no row', 'no key', '404'] as const)(
+    '%s says no grants are listed without claiming a zero total',
+    async (kind) => {
+      if (kind === '404') money.seat = jest.fn(async () => null);
+      else
+        money.grants = jest.fn(async () =>
+          record({
+            ...index,
+            seats:
+              kind === 'no row'
+                ? []
+                : index.seats.map((s) => ({ ...s, key: '' })),
+          }),
+        );
+      const r = await mount(Grants);
+      if (kind === 'no row') {
+        // The figure's own line says it once; no second empty message.
+        expect(byID(r, 'grants-seat-unmatched')[0]!.props.children).toBe(
+          'No grants are matched to Maribyrnong in the grant records. This is not a zero total.',
+        );
+        expect(byID(r, 'grants-seat-empty')).toHaveLength(0);
+      } else {
+        expect(byID(r, 'grants-seat-empty')[0]!.props.message).toBe(
+          "The individual grants for Maribyrnong aren't listed yet.",
+        );
+        expect(byID(r, 'grants-seat-total')[0]!.props.value).toBe(
+          formatMoneyCompact(index.seats[0]!.total),
+        );
+      }
+      expect(byID(r, 'grants-seat-records-error')).toHaveLength(0);
+      expect(byID(r, 'grants-seat-show-all')).toHaveLength(0);
+      expect(list(r).props.rows).toHaveLength(0);
+      if (kind !== '404') expect(money.seat).not.toHaveBeenCalled();
+      expect(
+        r.root.findAllByType(FigureBlock).every((n) => n.props.value !== '$0'),
+      ).toBe(true);
+    },
+  );
+
+  test('a seat page loads below the still-readable index figure', async () => {
+    money.seat = jest.fn(() => new Promise(() => {}));
+    const r = await mount(Grants);
+    expect(byID(r, 'grants-seat-records-loading').length).toBeGreaterThan(0);
+    expect(byID(r, 'grants-seat-total')[0]!.props.value).toBe(
+      formatMoneyCompact(index.seats[0]!.total),
+    );
+    expect(byID(r, 'grants-seat-empty')).toHaveLength(0);
+  });
+
+  test('an empty legacy index row never turns missing seat records into a $0 figure', async () => {
+    money.grants = jest.fn(async () =>
+      record({
+        ...index,
+        seats: index.seats.map((s) => ({ ...s, key: '', count: 0, total: 0 })),
+      }),
+    );
+    const r = await mount(Grants);
+    expect(byID(r, 'grants-seat-unmatched').length).toBeGreaterThan(0);
+    // A zero count renders no stray "0" in place of an empty state.
+    expect(list(r).props.empty).toBeNull();
+    expect(r.root.findAllByType(FigureBlock)).toHaveLength(0);
+  });
+
+  test.each(['offline', 'server'] as const)(
+    'a %s first read uses the shared money state and keeps the totals',
+    async (code) => {
+      money.seat = jest.fn(async () => {
+        throw new ApiError(code, 'Fixture failure');
+      });
+      const r = await mount(Grants);
+      expect(
+        byID(
+          r,
+          code === 'offline'
+            ? 'grants-seat-records-offline-uncached'
+            : 'grants-seat-records-error',
+        ).length,
+      ).toBeGreaterThan(0);
+      expect(byID(r, 'grants-seat-total').length).toBeGreaterThan(0);
+      expect(byID(r, 'grants-seat-empty')).toHaveLength(0);
+      if (code === 'server') {
+        money.seat = jest.fn(async () => record(first));
+        await act(async () =>
+          byID(r, 'grants-seat-records-retry')[0]!.props.onPress(),
+        );
+        expect(list(r).props.rows).toHaveLength(25);
+      }
+    },
+  );
+
+  test('a saved offline seat page stays readable with the shared offline line', async () => {
+    money.seat = jest.fn(async () => record(first, true));
+    const r = await mount(Grants);
+    expect(list(r).props.rows).toHaveLength(25);
+    expect(byID(r, 'grants-status-offline').length).toBeGreaterThan(0);
+    expect(byID(r, 'grants-seat-total')[0]!.props.citation.savedAt).toBe(10);
+  });
+
+  test('a later page failure keeps the loaded rows and Show all retries the continuation', async () => {
+    let fail = true;
+    money.seat = jest.fn(async (_jur, _key, _refresh, options) => {
+      if (options?.page && fail)
+        throw new ApiError('server', 'Fixture failure');
+      return record(options?.page ? second : first);
+    });
+    const r = await mount(Grants);
+    await act(async () => byID(r, 'grants-seat-show-all')[0]!.props.onPress());
+    expect(list(r).props.rows).toHaveLength(26);
+    expect(byID(r, 'grants-seat-more-error').length).toBeGreaterThan(0);
+    expect(byID(r, 'grants-seat-show-all')[0]!.props.loading).toBe(false);
+    fail = false;
+    await act(async () =>
+      byID(r, 'grants-seat-more-retry')[0]!.props.onPress(),
+    );
+    expect(list(r).props.rows).toHaveLength(28);
+    expect(byID(r, 'grants-seat-more-error')).toHaveLength(0);
+  });
+
+  test('electorate rows with keys still open the seat screen', async () => {
+    Object.assign(mockParams, { view: 'electorates' });
+    const r = await mount(Grants);
+    const page = list(r);
+    const row = page.props.render(page.props.rows[0], 0);
+    expect(row.props.href.params).toMatchObject({
+      seat: 'Maribyrnong',
+      state: 'vic',
+    });
+    expect(row.props.detail).toBe('Victoria · 28 grants');
   });
 });

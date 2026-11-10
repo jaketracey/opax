@@ -45,5 +45,14 @@
       "dt": 0
     }
   ],
-  "recipients": []
+  "recipients": [
+    {
+      "id": "abn:50203962931",
+      "sh": 1,
+      "n": "Fixture Association 1",
+      "k": "association",
+      "t": 15918362.46,
+      "c": 1
+    }
+  ]
 }
