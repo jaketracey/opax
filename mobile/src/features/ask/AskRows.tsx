@@ -4,6 +4,7 @@ import { useAccessibilitySize } from '../../design/accessibility';
 import { CitationBadge } from '../../design/citation-mark';
 import { Icon } from '../../design/icon';
 import { confirmAction } from '../../design/menu';
+import { partyText } from '../../design/party';
 import { PartyLabel } from '../../design/people';
 import { RowLink, type RowMenuAction } from '../../design/row-link';
 import {
@@ -120,7 +121,15 @@ export function CitedRecordRow({
   const row = (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={[n ? `${n}.` : null, meta, title, speaker]
+      accessibilityLabel={[
+        n ? `${n}.` : null,
+        meta,
+        title,
+        speaker,
+        speaker && source.party
+          ? partyText({ party: source.party }).spoken
+          : null,
+      ]
         .filter(Boolean)
         .join(', ')}
       accessibilityState={selected ? { selected } : undefined}
@@ -144,7 +153,10 @@ export function CitedRecordRow({
         {speaker ? (
           <View style={styles.speaker}>
             <Text variant="secondary">{speaker}</Text>
-            {source.party ? <PartyLabel party={source.party} /> : null}
+            {source.party ? (
+              // The row says the party; a link inside it would steal the tap.
+              <PartyLabel party={source.party} linked={false} nested />
+            ) : null}
           </View>
         ) : null}
       </View>

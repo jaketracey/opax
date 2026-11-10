@@ -237,6 +237,26 @@ test('the answer leads with one machine pill and its records, cited once each', 
   expect(words()).not.toMatch(/\[\d\] Synthetic|Also retrieved|retrieved/);
 });
 
+test("a cited row says the speaker's party and the party is not a separate link inside it", () => {
+  const { renderer } = draw();
+  const [row] = renderer.root.findAll(
+    (n) =>
+      typeof n.props.accessibilityLabel === 'string' &&
+      n.props.accessibilityLabel.startsWith('2.') &&
+      typeof n.type !== 'string',
+  );
+  expect(row!.props.accessibilityLabel).toMatch(
+    /Sam Placeholder, Example Party$/,
+  );
+  expect(
+    row!.findAll(
+      (n) =>
+        n.props.accessibilityRole === 'link' &&
+        n.props.accessibilityLabel !== row!.props.accessibilityLabel,
+    ),
+  ).toHaveLength(0);
+});
+
 test('adjacent citations merge into one mark that opens the first source beside its claim', () => {
   const { renderer, press } = draw();
   const marks = renderer.root.findAllByType(CitationMark);
