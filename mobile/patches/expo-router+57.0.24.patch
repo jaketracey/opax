@@ -1,0 +1,9 @@
+--- a/node_modules/expo-router/build/useScreens.js
++++ b/node_modules/expo-router/build/useScreens.js
+@@ -268,5 +268,5 @@
+                 }
+             });
+-        }, [navigation]);
++        }, [navigation, route?.params]);
+         const isRouteType = value.type === 'route';
+         const hasRouteKey = !!route?.key;

@@ -228,7 +228,7 @@ test('Filters open /filters/money and apply live through the params', async () =
   await act(async () =>
     store.set({ ...store.get(), from: 2024, to: 2024 } as never),
   );
-  expect(mockRouter.setParams).toHaveBeenLastCalledWith(
+  expect(mockNavigation.setParams).toHaveBeenLastCalledWith(
     expect.objectContaining({ from: '2024', to: '2024' }),
   );
   await act(async () => r.unmount());
@@ -239,7 +239,7 @@ test('the jurisdiction pop-up writes the jurisdiction and clears the window', as
   const popup = r.root.findByType(PopUpButton);
   expect(popup.props.testID).toBe('money-jurisdiction');
   await act(async () => popup.props.onChange('qld'));
-  expect(mockRouter.setParams).toHaveBeenLastCalledWith(
+  expect(mockNavigation.setParams).toHaveBeenLastCalledWith(
     expect.objectContaining({
       jurisdiction: 'qld',
       from: undefined,
@@ -254,7 +254,7 @@ test('test hooks write the year and push a party record with the window', async 
   const r = await render();
   const button = (id: string) => byTestID(r, Button, id)!;
   await act(async () => button('money-test-year').props.onPress());
-  expect(mockRouter.setParams).toHaveBeenCalled();
+  expect(mockNavigation.setParams).toHaveBeenCalled();
   await act(async () => button('money-test-focus').props.onPress());
   expect(mockRouter.push).toHaveBeenLastCalledWith(
     expect.objectContaining({

@@ -1,20 +1,23 @@
 import { act } from 'react';
-import TestRenderer from 'react-test-renderer';
-import { Stack, Tabs, router } from 'expo-router';
-import { ExpoRoot } from 'expo-router/build/ExpoRoot';
+import { Stack, router } from 'expo-router';
+import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { renderRouter } from 'expo-router/testing-library';
 import { store } from 'expo-router/build/global-state/router-store';
-import { inMemoryContext } from 'expo-router/build/testing-library/context-stubs';
 import { Text as NativeText } from 'react-native';
 import { apiClient } from '../src/api/runtime';
 import MoneyScreen from '../src/features/money/MoneyScreen';
+import MoneyRecordScreen from '../src/features/money/MoneyRecord';
+import { NativeMoneyMap } from '../src/features/money/NativeMoneyMap';
 import {
   FilterRoute,
   FilterFacetRoute,
   FiltersLayout,
 } from '../src/features/sheets/FilterRoutes';
-import { FilterSheet } from '../src/design/filter-sheet';
-import { MoneyRow, Text } from '../src/design/primitives';
+import { FilterSheet, FilterFacet } from '../src/design/filter-sheet';
+import { MoneyRow, SegmentedPicker, Text } from '../src/design/primitives';
 import { RouteOptions } from '../src/navigation/preview';
+import { filterFacetRoute } from '../src/navigation/routes/filters';
+import { filtersScreens } from '../src/navigation/stack/filters';
 import { pinned } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
@@ -23,7 +26,7 @@ jest.mock('../src/features/money/NativeMoneyMap', () => ({
 }));
 jest.mock('../src/features/money/hooks', () => ({
   ...jest.requireActual('../src/features/money/hooks'),
-  useFirstScreenReader: () => true,
+  useFirstScreenReader: () => false,
 }));
 jest.mock('react-native-gesture-handler', () => ({
   GestureHandlerRootView: jest.requireActual('react-native').View,
@@ -31,85 +34,213 @@ jest.mock('react-native-gesture-handler', () => ({
   Gesture: {},
 }));
 
-const app = inMemoryContext({
-  _layout: () => <Stack />,
-  '(tabs)/_layout': () => <Tabs />,
+const app = {
+  _layout: () => (
+    <Stack>
+      <Stack.Screen name="source" options={{ presentation: 'formSheet' }} />
+      <Stack.Screen
+        name="source-destination"
+        options={{ presentation: 'modal' }}
+      />
+    </Stack>
+  ),
+  source: () => <NativeText>Sources</NativeText>,
+  'source-destination': () => <NativeText>Original</NativeText>,
+  '(tabs)/_layout': () => (
+    <NativeTabs>
+      <NativeTabs.Trigger name="(today)" />
+    </NativeTabs>
+  ),
   '(tabs)/(today)/index': () => <NativeText>Today</NativeText>,
-  '(tabs)/(today)/_layout': () => <Stack />,
+  '(tabs)/(today)/_layout': () => <Stack>{filtersScreens()}</Stack>,
   '(tabs)/(today)/money': MoneyScreen,
-  '(tabs)/(today)/money-record': () => <NativeText>Money record</NativeText>,
+  '(tabs)/(today)/money-record': MoneyRecordScreen,
   '(tabs)/(today)/filters/_layout': FiltersLayout,
   '(tabs)/(today)/filters/[list]': FilterRoute,
   '(tabs)/(today)/filters/[list]/[facet]': FilterFacetRoute,
-});
+};
 
-let rendered: TestRenderer.ReactTestRenderer | undefined;
-afterEach(async () => {
-  await act(async () => rendered?.unmount());
-  rendered = undefined;
-});
+type RouteState = {
+  routes: readonly {
+    key?: string;
+    name: string;
+    params?: object;
+    state?: RouteState;
+  }[];
+};
+function findMoneyRoute(
+  state: RouteState | undefined,
+): RouteState['routes'][number] | undefined {
+  for (const route of state?.routes ?? []) {
+    if (route.name === 'money') return route;
+    if (route.state) {
+      const found = findMoneyRoute(route.state);
+      if (found) return found;
+    }
+  }
+}
 
-test('money filters apply behind their sheet and survive a record push and pop', async () => {
-  const setParams = jest.spyOn(router, 'setParams');
-  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
-    data: decode(pinned(path)),
-    stale: false,
-    asOf: '2026-09-21',
-    savedAt: 1,
-  }));
-  process.env.EXPO_ROUTER_IMPORT_MODE = 'sync';
-  await act(async () => {
-    rendered = TestRenderer.create(<ExpoRoot context={app} location="/" />);
-  });
-  await act(async () => router.push('/money'));
-  const map = () => rendered!.root.findByType(MoneyScreen);
-  const caption = () =>
-    map()
-      .findAllByType(Text)
-      .find((node) => node.props.testID === 'money-donor-caption')!.props
-      .children;
-  // Open the sheet through the map's registered owner, as the bar does.
+let rendered: ReturnType<typeof renderRouter>;
+const map = () => rendered.UNSAFE_root.findByType(MoneyScreen);
+const sheet = () => rendered.UNSAFE_root.findByType(FilterSheet);
+const moneyRoute = () => {
+  const route = findMoneyRoute(rendered.getRouterState());
+  if (!route) throw new Error('The money map route is missing');
+  return route;
+};
+const caption = () =>
+  map()
+    .findAllByType(Text)
+    .find((node) => node.props.testID === 'money-donor-caption')!.props
+    .children;
+// Jest renders the real native stack, but UIKit never sends onAppear. Drive
+// that native callback once for the map, including on its return from a record.
+async function mapAppeared() {
+  await act(async () =>
+    rendered.UNSAFE_root.find(
+      (node) =>
+        node.props.screenId === moneyRoute().key &&
+        typeof node.props.onAppear === 'function',
+    ).props.onAppear(),
+  );
+}
+async function openFilters() {
   const items = map()
     .findByType(RouteOptions)
     .props.options.unstable_headerRightItems();
   await act(async () =>
     items.find((item: { label: string }) => item.label === 'Filters').onPress(),
   );
-  expect(store.getRouteInfo().pathname).toBe('/filters/money');
-  const sheet = () => rendered!.root.findByType(FilterSheet);
-  await act(async () =>
-    sheet().props.onChange({
-      ...sheet().props.value,
-      from: 2024,
-      to: 2024,
-      industry: 'unions',
-      grants: false,
-      contracts: false,
-    }),
-  );
-  const expectedCaption =
-    'Largest in 2024–25 among the 250 largest donors since 1998–99';
-  expect(caption()).toBe(expectedCaption);
-  const expectedParams = {
-    from: '2024',
-    to: '2024',
-    industry: 'unions',
-    layers: 'donations',
-  };
-  expect(setParams).not.toHaveBeenCalled();
-  await act(async () => sheet().props.onDone());
-  expect(setParams).toHaveBeenLastCalledWith(
-    expect.objectContaining(expectedParams),
-  );
-  expect(store.getRouteInfo().params).toMatchObject(expectedParams);
-  const donor = map()
-    .findAllByType(MoneyRow)
-    .find((node) => /^money-donor-\d+$/.test(node.props.testID))!;
-  await act(async () => router.push(donor.props.href));
-  expect(store.getRouteInfo().pathname).toBe('/money-record');
-  await act(async () => router.back());
-  expect(store.getRouteInfo().pathname).toBe('/money');
-  expect(store.getRouteInfo().params).toMatchObject(expectedParams);
-  expect(caption()).toBe(expectedCaption);
-  setParams.mockRestore();
+  expect(rendered.getPathname()).toBe('/filters/money');
+}
+
+afterEach(async () => {
+  await act(async () => rendered?.unmount());
+  jest.useRealTimers();
 });
+
+test.each(['push', 'native link'] as const)(
+  'money filters survive a record, nested sheets, Back and native appearance after a %s',
+  async (entry) => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: false,
+      asOf: '2026-09-21',
+      savedAt: 1,
+    }));
+    rendered = renderRouter(app);
+    if (entry === 'push') {
+      await act(async () => router.push('/money'));
+    } else {
+      // Same action as useLinking.native dispatches for opax://money after
+      // +native-intent resolves it into the selected tab. router.push alone
+      // misses the nested NAVIGATE payload and its native animation param.
+      const linking = store.linking!;
+      const state = linking.getStateFromPath(
+        '/(tabs)/(today)/money',
+        linking.config,
+      )!;
+      const action = linking.getActionFromState!(state, linking.config)!;
+      await act(async () => store.navigationRef.current!.dispatch(action));
+    }
+    const key = moneyRoute().key;
+    await mapAppeared();
+    await openFilters();
+    const owner = sheet().props.owner;
+    // The facet is pushed inside the Filters form sheet, like the native UI.
+    await act(async () =>
+      router.push(filterFacetRoute('money', 'industry', owner)),
+    );
+    const facet = rendered.UNSAFE_root.findByType(FilterFacet);
+    await act(async () =>
+      facet.props.onChange({ ...facet.props.value, industry: 'unions' }),
+    );
+    await act(async () => facet.props.onBack());
+    await act(async () =>
+      sheet().props.onChange({
+        ...sheet().props.value,
+        from: 2024,
+        to: 2024,
+        grants: false,
+        contracts: false,
+        inflation: true,
+      }),
+    );
+    const expectedParams = {
+      from: '2024',
+      to: '2024',
+      industry: 'unions',
+      layers: 'donations',
+      inflation: '1',
+    };
+    // Updates belong to the map while the sheet owns global focus.
+    expect(moneyRoute().params).toMatchObject(expectedParams);
+    expect(rendered.getSearchParams()).not.toHaveProperty('industry');
+    await act(async () => sheet().props.onDone());
+    expect(rendered.getSearchParams()).toMatchObject(expectedParams);
+    expect(
+      map()
+        .findAllByType(Text)
+        .find((node) => node.props.testID === 'money-view-summary')!.props
+        .children,
+    ).toBe('Donations to parties in 2024–25, union donors only');
+    // Same onSelect callback as the native scene and the Labor journey action.
+    await act(async () =>
+      map().findByType(NativeMoneyMap).props.onSelect('party:Labor'),
+    );
+    expect(rendered.getPathname()).toBe('/money-record');
+    expect(rendered.getSearchParams()).toMatchObject({
+      ...expectedParams,
+      node: 'party:Labor',
+    });
+    await act(async () => router.push('/source'));
+    await act(async () => router.push('/source-destination'));
+    await act(async () => router.back());
+    expect(rendered.getPathname()).toBe('/source');
+    await act(async () => router.back());
+    expect(rendered.getPathname()).toBe('/money-record');
+    // Native Back dispatches POP with the record's source and stack target.
+    const recordKey = store.navigationRef.current!.getCurrentRoute()!.key;
+    await act(async () =>
+      rendered.UNSAFE_root.find(
+        (node) =>
+          node.props.screenId === recordKey &&
+          typeof node.props.onHeaderBackButtonClicked === 'function',
+      ).props.onHeaderBackButtonClicked(),
+    );
+    expect(rendered.getPathname()).toBe('/money');
+    await mapAppeared();
+    // A pop retains the map's route key. A stale URL or a remount must not
+    // overwrite the edited params when its native transition completes.
+    expect(moneyRoute().key).toBe(key);
+    expect(rendered.getSearchParams()).toMatchObject(expectedParams);
+    await act(async () =>
+      map().findByType(SegmentedPicker).props.onChange('list'),
+    );
+    expect(caption()).toBe(
+      'Largest in 2024–25 among the 250 largest donors since 1998–99',
+    );
+    const donor = map()
+      .findAllByType(MoneyRow)
+      .find((node) => node.props.testID === 'money-donor-0')!;
+    expect(donor.props.name).toBe('Mining and Energy Union');
+    expect(donor.props.detail).toContain('2024–25');
+    expect(donor.props.href.params).toMatchObject(expectedParams);
+    // Reopening and cancelling restores the opening route values, even after
+    // another facet push, with no pending focus-time commit.
+    await openFilters();
+    await act(async () =>
+      router.push(filterFacetRoute('money', 'industry', sheet().props.owner)),
+    );
+    const reopenedFacet = rendered.UNSAFE_root.findByType(FilterFacet);
+    await act(async () =>
+      reopenedFacet.props.onChange({
+        ...reopenedFacet.props.value,
+        industry: 'mining',
+      }),
+    );
+    await act(async () => reopenedFacet.props.onBack());
+    await act(async () => sheet().props.onCancel());
+    expect(rendered.getSearchParams()).toMatchObject(expectedParams);
+  },
+);
