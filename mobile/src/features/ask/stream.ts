@@ -126,8 +126,11 @@ export class AskStream {
     }
   }
   result() {
+    // "Stopped partway" only when words are on screen to have stopped.
     if (!this.completed)
-      throw new AskFailure('partial', 'The answer stream ended early.');
+      throw this.shown
+        ? new AskFailure('partial', 'The answer stream ended early.')
+        : new AskFailure('invalid', 'No answer came back.');
     return this.final;
   }
 }

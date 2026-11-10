@@ -447,3 +447,43 @@ test('a slow answer that keeps arriving is not cut off by the stall timeout', as
     jest.useRealTimers();
   }
 });
+
+test.each([
+  ['', 'invalid'],
+  ['event: delta\ndata: {"text":"Part of an answer"}\n\n', 'partial'],
+  [
+    'event: delta\ndata: {"text":"Withdrawn"}\n\nevent: retry\ndata: {}\n\n',
+    'invalid',
+  ],
+])(
+  'a stream that closes before done says partway only with words shown: %s',
+  async (prefix, code) => {
+    Object.assign(globalThis, { TextDecoder, TextEncoder });
+    const reader = {
+      read: jest
+        .fn()
+        .mockResolvedValueOnce({
+          value: new TextEncoder().encode(
+            `event: status\ndata: {"phase":"searching"}\n\n${prefix}`,
+          ),
+          done: false,
+        })
+        .mockResolvedValueOnce({ value: undefined, done: true }),
+      cancel: jest.fn().mockResolvedValue(undefined),
+      releaseLock: jest.fn(),
+    };
+    const t = jest.fn().mockResolvedValue(
+      response(200, payload, {
+        headers: { get: () => 'text/event-stream' },
+        body: { getReader: () => reader },
+      }),
+    );
+    await expect(
+      api(t).askPost('/api/ask?stream=1', {}, controller().signal, {
+        stage: jest.fn(),
+        delta: jest.fn(),
+        retry: jest.fn(),
+      }),
+    ).rejects.toMatchObject({ code });
+  },
+);
