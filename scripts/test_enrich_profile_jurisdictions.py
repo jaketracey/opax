@@ -21,6 +21,40 @@ class PinnedServiceTests(unittest.TestCase):
     def repair(self, rows):
         return profiles.repair(rows, self.reference, self.reviewed)
 
+    def test_senate_and_abolished_division_states_are_codes(self):
+        # members-electorates-010: 'QUEENSLAND' and a null state for Higgins, against 'NSW' elsewhere.
+        rows = [person('Matthew Canavan', ['federal'], ['senate'], first=2014),
+                person('Peter Costello', ['federal'], ['representatives'], last=2009),
+                person('Kim Beazley', ['federal'], ['representatives'], last=2007)]
+        members = [dict(full_name='Matthew Canavan', state='federal', chamber='senate', electorate='Queensland'),
+                   dict(full_name='Peter Costello', state='federal', chamber='representatives', electorate='Higgins'),
+                   dict(full_name='Kim Beazley', state='federal', chamber='representatives', electorate='Brand')]
+        profiles.enrich(rows, members, [dict(name='Brand', state='WA')], self.reference, self.reviewed)
+        self.assertEqual([r['representation'][0]['state'] for r in rows], ['QLD', 'VIC', 'WA'])
+        self.assertEqual(rows[0]['representation'][0]['electorate'], 'Queensland')
+
+    def test_a_division_name_two_divisions_held_gets_no_state_from_the_release(self):
+        states = profiles.division_states(self.reference)
+        self.assertEqual(states['higgins'], 'VIC')
+        self.assertNotIn('fraser', states)  # ACT (abolished) and Victoria (current)
+
+    def test_a_speech_label_becomes_the_party_only_inside_the_identitys_own_parliament(self):
+        # state-datasets-001: a weak print merged across parliaments ('Hughes': SA and federal speeches) took
+        # the federal namesake's 'Liberal' speech label as the SA identity's party.
+        from unittest import mock
+        own = [dict(name='Steve Hughes', jurisdiction='sa', chamber='sa_lc', electorate='South Australia',
+                    start='2002-03-09', end=None, identity='sa:steve-hughes')]
+        for states, expected in [(['sa', 'federal'], None), (['sa'], 'Liberal')]:
+            with self.subTest(states=states):
+                row = person('Hughes', states, ['sa_lc'], recorded_parties=['Liberal'])
+                with mock.patch.object(profiles, 'change_reason', return_value=('spans parliaments', '')), \
+                     mock.patch.object(profiles, 'witness_dominated', return_value=False), \
+                     mock.patch.object(profiles, 'weak', return_value=True), \
+                     mock.patch.object(profiles, 'print_identity', return_value=own):
+                    profiles.repair([row], self.reference, self.reviewed)
+                self.assertEqual(row.get('party'), expected)
+                self.assertNotIn('recorded_parties', row)
+
     def test_bob_and_melissa_keep_their_own_seats_and_parties_through_the_real_join(self):
         rows = [person('Bob Horne', ['federal'], ['representatives'], last=2001, party='Labor'),
                 person('Melissa Horne', ['vic'], ['vic_la'], first=2022)]
