@@ -94,9 +94,11 @@ export function WelcomePage({
   };
   // Two-finger Z, Escape and Android back: "Not now" (today.md 3.2). A
   // replay with a seat saved changes nothing; the short welcome declines
-  // nothing, so they act as its Continue.
-  const notNow = () =>
-    leave(!short && seat.status !== 'chosen' && seat.status !== 'loading');
+  // nothing, so they act as its Continue. Only a saved seat makes it a
+  // no-op: on a first launch the seat read can still be in flight, and a
+  // "Not now" then must still move Today's invitation (a replay's seat has
+  // long been read).
+  const notNow = () => leave(!short && seat.status !== 'chosen');
 
   useFocusEffect(() => {
     if (Platform.OS !== 'android') return;

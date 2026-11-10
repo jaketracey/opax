@@ -177,6 +177,13 @@ describe('the full welcome', () => {
     expect(closeWelcome).toHaveBeenCalledTimes(1);
     await act(async () => r.unmount());
   });
+  test('"Not now" before the seat read answers still records the decline', async () => {
+    mockSeat.current = { status: 'loading' };
+    const r = await render(<Welcome />);
+    act(() => host(r, 'welcome-screen').props.onAccessibilityEscape());
+    expect(markWelcomeSeen).toHaveBeenCalledWith({ declined: true });
+    await act(async () => r.unmount());
+  });
   test('a replay with a seat saved declines nothing', async () => {
     mockSeat.current = { status: 'chosen' };
     const r = await render(<Welcome />);
