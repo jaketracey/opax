@@ -182,17 +182,21 @@ export function DailyPair({
   const read = useTodayRead(
     'pictures',
     // The manifest is optional: a failed read collapses the archive card.
+    // The answer is wrapped so a failure (no manifest) is not mistaken for
+    // a read still in flight, which would keep the skeleton up for good.
     async () => {
       try {
-        return await explore.pictures();
+        return { manifest: await explore.pictures() };
       } catch {
-        return null;
+        return { manifest: null };
       }
     },
     attempt,
   );
   const loading = read === null && attempt === 0;
-  const archive = read ? archivePicture(read.data, today) : null;
+  const archive = read?.manifest
+    ? archivePicture(read.manifest.data, today)
+    : null;
   const question = dailyQuestion(today);
   if (!loading && !archive && !question) return null;
   return (

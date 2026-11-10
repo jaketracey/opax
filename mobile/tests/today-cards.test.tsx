@@ -239,6 +239,14 @@ describe('full-width daily cards', () => {
     expect(root.findAllByType(ArchiveCard)).toHaveLength(0);
     expect(root.findAllByType(QuestionCard)).toHaveLength(1);
   });
+  test('a failed archive read on the first launch ends its skeleton', async () => {
+    jest.mocked(explore.pictures).mockRejectedValue(new Error('offline'));
+    const { root } = await render(<DailyPair today={today} attempt={0} />);
+    expect(
+      root.findAll((node) => node.props.testID === 'today-archive-loading'),
+    ).toHaveLength(0);
+    expect(root.findAllByType(QuestionCard)).toHaveLength(1);
+  });
 });
 
 describe('neutral daily featured selection', () => {
