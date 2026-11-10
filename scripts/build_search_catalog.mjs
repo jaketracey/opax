@@ -7,6 +7,7 @@ import { personNameKey, personUrl } from '../portal/public/canonical-urls.js';
 import { recordPathIndex } from '../portal/public/record-paths.js';
 import { personSlug, personIndex } from '../portal/src/person-slug.ts';
 import {donorDisclosure,donorLookup} from '../portal/public/donor-disclosure.js';
+import {foldDonorName} from '../portal/public/donor-entity.js';
 import { moneyFlowType } from '../portal/public/money-records.js';
 import { auditComplete } from '../portal/public/audit.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
@@ -86,6 +87,16 @@ export function donorSearchRecord(jur, node) {
   extra:{aliases:[...(node.aliases||[]),...(node.lookup_names||[]),node.abn||''].join(' '),from:node.firstYear,to:node.lastYear,state:jur,source:jur==='federal'?'AEC disclosure records':`${jur.toUpperCase()} disclosure records`,dateLabel:period(node.firstYear,node.lastYear),url:disclosure.returns[0]?.url || null,...(node.source_note?{source_note:node.source_note}:{})}};
 }
 
+/** The donor page for an access-register organisation. donorLookup keys by foldDonorName, which keeps
+ *  punctuation ("mckinsey & company"), so that key is tried first; the punctuation-stripped key stays as
+ *  the fallback so a name that resolved before still does. A name neither key holds has no donor page,
+ *  and its row links to where the register entry is shown instead (search-hubs-005: 96 meetings for
+ *  names with "&", "(", "-" or "." had no link and opened /doc/catalog-N, a 404). */
+export function accessDonorHref(donorNames, name, fallback) {
+ const record=donorNames.get(foldDonorName(name)) || donorNames.get(normalize(name));
+ return (record && donorDisclosure(record).href) || fallback || null;
+}
+
 async function main() {
  const roster = await read('parliamentarians.json');
  const identity=personIndex(roster.people); canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.byFold].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
@@ -154,11 +165,14 @@ async function main() {
  const campaigners=await read('graph/campaigners.json');
  for(const e of campaigners.entities) add('campaigner:'+e.name,'campaigner',e.name,'/subject/campaigner/'+encodeURIComponent(e.name),`${e.kind.replaceAll('_',' ')}. ${(e.return_types||[]).join('; ')}. ${(e.associated_parties||[]).join(', ')}.`,{aliases:e.abn||'',from:year(e.years?.[0]?.[0]),to:year(e.latest_year),state:'federal',parties:e.associated_parties||[],source:'AEC annual returns',dateLabel:e.latest_year});
  const access=await read('access.json'),donorNames=donorLookup(donorRecords);
- const accessDonor=name=>donorDisclosure(donorNames.get(normalize(name)) || {label:name});
  for(const [name,d] of Object.entries(access.donors)) {
-  for(const [i,m] of (d.meetings||[]).entries()) add(`meeting:${name}:${i}`,'access',`${name} — meeting with ${m.minister}`,accessDonor(name).href,m.purpose||'Recorded ministerial meeting',{date:m.date,state:m.jurisdiction,speakers:[m.minister],source:'Ministerial diary'});
-  for(const [i,l] of (d.lobbyists||[]).entries()) add(`lobbyist:${name}:${i}`,'access',`${name} — ${l.firm}`,accessDonor(name).href,`Registered lobbying client. ${l.ceased?'Ceased':'Listed'} registration.`,{state:normalize(l.jurisdiction)==='federal'?'federal':normalize(l.jurisdiction),date:l.registered,source:'Lobbyist register'});
+  // A meeting is shown in the minister's diary on their profile; a lobbying registration only on the donor page.
+  for(const [i,m] of (d.meetings||[]).entries()) add(`meeting:${name}:${i}`,'access',`${name} — meeting with ${m.minister}`,accessDonorHref(donorNames,name,personHref(m.minister)),m.purpose||'Recorded ministerial meeting',{date:m.date,state:m.jurisdiction,speakers:[m.minister],source:'Ministerial diary'});
+  for(const [i,l] of (d.lobbyists||[]).entries()) add(`lobbyist:${name}:${i}`,'access',`${name} — ${l.firm}`,accessDonorHref(donorNames,name),`Registered lobbying client. ${l.ceased?'Ceased':'Listed'} registration.`,{state:normalize(l.jurisdiction)==='federal'?'federal':normalize(l.jurisdiction),date:l.registered,source:'Lobbyist register'});
  }
+ // Every access.json donor is a money-map donor (scripts/export_access.py), so an unlinked row is a lookup fault.
+ const unlinked=docs.filter(d=>d.record.kind==='access' && !d.record.href && /^(meeting|lobbyist):/.test(d.key)).length;
+ if(unlinked) throw new Error(`${unlinked} access-register search rows have no link (search-hubs-005)`);
  for(const [id,m] of Object.entries(access.ministers)) for(const [i,r] of (m.recent||[]).entries()) add(`minister-meeting:${id}:${i}`,'access',`${m.name} — ${r.org}`,personHref(m.page||m.name),r.purpose||'Recorded ministerial meeting',{date:r.date,state:m.jurisdiction,speakers:[m.name],source:'Ministerial diary'});
  const fits=await read('fits.json');
  for(const list of [...Object.values(fits.by_entity),...Object.values(fits.people)]) for(const r of list) add(`fits:${r.registrant}:${r.principal}:${r.from}`,'access',`${r.registrant} — ${r.principal}`,r.url,`${r.country}. ${(r.activities||[]).join('; ')}. ${r.status}.`,{date:r.from,state:'federal',source:'Foreign Influence Transparency Scheme',url:r.url});
