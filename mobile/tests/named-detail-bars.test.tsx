@@ -1,4 +1,5 @@
 import { act } from 'react';
+import { router, type NativeStackHeaderItem } from 'expo-router';
 import TestRenderer from 'react-test-renderer';
 import {
   Animated,
@@ -245,7 +246,7 @@ test('Agencies restores the system Government agencies title and its alias', asy
   });
 });
 
-test('Votes keeps its named back button and shows the inline title only after the heading scrolls away', async () => {
+test('Votes keeps Filters before More, its named back button and its scrolling title', async () => {
   jest.mocked(loadDivisionHistory).mockResolvedValue({
     rows: [],
     loaded: 0,
@@ -280,6 +281,39 @@ test('Votes keeps its named back button and shows the inline title only after th
     headerBackTitle: 'Bill text',
     headerBackButtonDisplayMode: 'default',
     headerBackButtonMenuEnabled: false,
+  });
+  const items = (
+    options.unstable_headerRightItems as () => NativeStackHeaderItem[]
+  )();
+  expect(items.map((item) => 'label' in item && item.label)).toEqual([
+    'Filters',
+    'More',
+  ]);
+  const filters = items[0] as Extract<
+    NativeStackHeaderItem,
+    { type: 'button' }
+  >;
+  expect(filters).toMatchObject({
+    accessibilityLabel: 'Filters',
+    disabled: false,
+    identifier: 'division-history-filters',
+  });
+  act(() => filters.onPress?.());
+  expect(router.push).toHaveBeenCalledWith(
+    expect.objectContaining({
+      pathname: '/filters/[list]',
+      params: expect.objectContaining({ list: 'divisions' }),
+    }),
+  );
+  expect(items[1]).toMatchObject({
+    type: 'menu',
+    accessibilityLabel: 'More for Votes in parliament',
+    menu: {
+      items: [
+        expect.objectContaining({ label: 'Copy link' }),
+        expect.objectContaining({ label: 'Open on opax.com.au' }),
+      ],
+    },
   });
   const inline = () => (options.headerTitle as () => React.ReactElement)();
   expect(inline().type).toBe(BarTitle);

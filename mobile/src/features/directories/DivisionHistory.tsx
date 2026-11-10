@@ -1,5 +1,4 @@
 import { RouteOptions } from '../../navigation/preview';
-import { type NativeStackHeaderItem } from 'expo-router';
 import {
   createContext,
   memo,
@@ -44,7 +43,7 @@ import { StatePageProvider } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Heading } from '../../design/text';
 import { colors, layout, rhythm } from '../../design/tokens';
-import { filtersItem, headerItems, pageMenu } from '../../navigation/chrome';
+import { headerItems, pageItems } from '../../navigation/chrome';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
 import { billRoute } from '../../navigation/routes';
 import { filtersRoute } from '../../navigation/routes/filters';
@@ -317,11 +316,7 @@ export default function DivisionHistory() {
     },
     onCancelButtonPress: () => setText(''),
   });
-  const filtersButton: NativeStackHeaderItem = {
-    ...(filtersItem({
-      active: on > 0,
-      href: filtersRoute('divisions', owner),
-    }) as Extract<NativeStackHeaderItem, { type: 'button' }>),
+  const filterState = {
     accessibilityLabel: on ? `Filters, ${on} on` : 'Filters',
     ...(loaded ? {} : { accessibilityHint: 'Available once votes load' }),
     disabled: !loaded,
@@ -461,10 +456,14 @@ export default function DivisionHistory() {
           headerLargeTitleEnabled: false,
           ...backOptions,
           headerSearchBarOptions: { ...searchBar, hideWhenScrolling: true },
-          ...headerItems(() => [
-            pageMenu({
+          ...headerItems(() =>
+            pageItems({
               name: TITLE,
-              items: [
+              filters: {
+                active: on > 0,
+                href: filtersRoute('divisions', owner),
+              },
+              menu: [
                 {
                   title: 'Copy link',
                   symbol: 'link',
@@ -480,9 +479,12 @@ export default function DivisionHistory() {
                   onPress: () => void openOnWeb(PATH, TITLE),
                 },
               ],
-            }),
-            filtersButton,
-          ]),
+            })().map((item) =>
+              item.type === 'button' && item.label === 'Filters'
+                ? { ...item, ...filterState }
+                : item,
+            ),
+          ),
         }}
       />
       {/* The iPad sidebar floats over a bare list; this keeps rows clear of

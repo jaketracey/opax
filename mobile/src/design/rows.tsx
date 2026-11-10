@@ -277,6 +277,53 @@ export function LinkRow({
   );
 }
 
+function ValueRowContent({
+  label,
+  value,
+  accessibilitySize,
+}: {
+  label: string;
+  value: string;
+  accessibilitySize: boolean;
+}) {
+  const [width, setWidth] = useState(0);
+  const [valueWidth, setValueWidth] = useState(0);
+  // Leave the label its 35% minimum and the gap. Measure the actual column,
+  // including narrower groups and the space reserved for a link's chevron.
+  const stacked =
+    accessibilitySize ||
+    (width > 0 && valueWidth + rhythm.tight > width * 0.65);
+  return (
+    <View
+      style={[styles.text, stacked ? styles.stacked : styles.inline]}
+      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+    >
+      <Text
+        wordSafe
+        variant="body"
+        style={stacked ? undefined : styles.valueLabel}
+      >
+        {label}
+      </Text>
+      <Text
+        wordSafe
+        variant="strong"
+        tabular
+        style={stacked ? styles.stackedValue : styles.value}
+        onTextLayout={(event) => {
+          const lines = event.nativeEvent.lines;
+          // A value wider than the whole column may arrive on several lines.
+          // Keep its combined width so stacking does not toggle on each layout.
+          if (lines.length)
+            setValueWidth(lines.reduce((sum, line) => sum + line.width, 0));
+        }}
+      >
+        {value}
+      </Text>
+    </View>
+  );
+}
+
 export function ValueRow({
   label,
   value,
@@ -289,28 +336,19 @@ export function ValueRow({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
+  const { fontScale } = useWindowDimensions();
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   useRowInset();
   const body = (
     <>
-      <View style={[styles.text, stacked ? styles.stacked : styles.inline]}>
-        <Text
-          wordSafe
-          variant="body"
-          style={stacked ? undefined : styles.valueLabel}
-        >
-          {label}
-        </Text>
-        <Text
-          wordSafe
-          variant="strong"
-          tabular
-          style={stacked ? undefined : styles.value}
-        >
-          {value}
-        </Text>
-      </View>
+      <ValueRowContent
+        // New text or Dynamic Type must start with fresh native measurements.
+        key={`${fontScale}:${value}`}
+        label={label}
+        value={value}
+        accessibilitySize={stacked}
+      />
       {href ? (
         <Icon name={chevron} size={13} maxScale={1.5} tone="inkSoft" />
       ) : null}
@@ -1044,15 +1082,15 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   grow: { flex: 1 },
-  // Both sides can wrap. Reserve enough label width for short words such
-  // as From, and retain a short figure's natural width beside long labels.
+  // Wrap the label while keeping the figure's natural width.
   valueLabel: {
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 'auto',
     minWidth: '35%',
   },
-  value: { flexShrink: 1, maxWidth: '65%', textAlign: 'right' },
+  value: { flexShrink: 0, textAlign: 'right' },
+  stackedValue: { flexShrink: 0 },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },
   line: {
     flexDirection: 'row',
