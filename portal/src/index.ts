@@ -4676,7 +4676,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const photos=await loadPhotos(env).catch(()=>null)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
         if(meta.jsonLd?.['@type']==='Person') {
-          const party=p.party_now || p.party
+          // The person's own party, else the one a verified seat roster records for them (seo-content personParty).
+          const party=p.party_now || p.party || content.party
           if(p.current===false || !party) delete meta.jsonLd.memberOf
           else meta.jsonLd.memberOf={'@type':'Organization',name:party}
         }

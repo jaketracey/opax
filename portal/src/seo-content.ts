@@ -4,6 +4,7 @@ import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../publ
 import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/canonical-urls.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
+import {rosterSeatParty, type RosterSeatParty} from '../public/roster-party.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
@@ -16,14 +17,18 @@ import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-car
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
-export interface RenderedContent { html: string; description?: string; prev?: string; next?: string; page?: number }
+export interface RenderedContent { html: string; description?: string; prev?: string; next?: string; page?: number; party?: string }
 interface Person {
   name: string; full?: string; pid?: string; party?: string | null; party_now?: string | null;
   current?: boolean; states: string[]; chambers: string[]; speeches?: number | null;
   speech_scope?: unknown;
   representation?: { electorate: string; jurisdiction: string; chamber: string }[];
 }
-interface Seat { slug: string; name: string; url: string; jurisdiction: string; chamber: string }
+interface Seat {
+  slug: string; name: string; url: string; jurisdiction: string; chamber: string
+  representation_status?: string; representation_as_of?: string
+  representatives?: { party?: string | null; person?: { name?: string; legacy_person_id?: string; aliases?: string[]; source_url?: string } }[]
+}
 interface Bill {
   key: string; title: string; short_title?: string; status?: string; status_as_of?: string;
   sponsor?: string; sponsor_person_id?: string; sponsor_party?: string; portfolio?: string; introduced?: string;
@@ -141,10 +146,22 @@ export function associationCaveat(body: string, facts: string): string {
   const line=`<p>${ASSOCIATION_CAVEAT}</p>`
   return /<\/section>\s*$/.test(body) ? body.replace(/<\/section>\s*$/,line+'</section>') : body+line
 }
-export function partyLine(p: Person): string {
+/** The party a person's own record carries, else the one a verified seat roster
+ *  records for them (public/roster-party.js), else nothing. */
+export function personParty(p: Person, seats?: readonly Seat[] | null): {party: string; roster: RosterSeatParty | null} | null {
+  const own = p.party_now || p.party
+  if (own) return {party: own, roster: null}
+  const roster = rosterSeatParty(p, seats)
+  return roster ? {party: roster.party, roster} : null
+}
+export function partyLine(p: Person, seats?: readonly Seat[] | null): string {
   // Preserve the roster's tri-state: false is former; missing is not evidence of retirement.
   const party = p.party_now || p.party
-  if (!party) return 'Party not recorded'
+  if (!party) {
+    // Said of the seat roster on its date, not of the person's career.
+    const roster = rosterSeatParty(p, seats)
+    return roster ? `${roster.party} (parliamentary roster as at ${shortDate(roster.as_of)})` : 'Party not recorded'
+  }
   if (p.current === false) return `Formerly ${party}`
   const former = p.party_now && p.party && fold(p.party_now) !== fold(p.party) ? `; formerly ${p.party}` : ''
   return `${party}${former}${p.current === undefined ? ' (recorded affiliation)' : ''}`
@@ -178,10 +195,11 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     optional<{videos: VideoRow[]}>(read,'/video/senate.json'),
   ])
   const display = p.full && p.speech_scope ? p.full : p.name
-  const description = `${display}. ${partyLine(p)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
+  const seatList = seats?.electorates || null
+  const description = `${display}. ${partyLine(p,seatList)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
   let body = heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts) + '<h2>Party and representation</h2><ul>'
-  const party = p.party_now || p.party
-  body += `<li>${party ? link(partyUrl(party),partyLine(p)) : 'Party not recorded'}</li>`
+  const party = personParty(p,seatList)?.party
+  body += `<li>${party ? link(partyUrl(party),partyLine(p,seatList)) : 'Party not recorded'}</li>`
   for (const r of p.representation || []) {
     const seat = seats?.electorates.find(e=>fold(e.name)===fold(r.electorate) && e.jurisdiction===r.jurisdiction && e.chamber===r.chamber)
     body += `<li>${seat ? link(seat.url,r.electorate) : escapeHtml(r.electorate)} — ${escapeHtml(chamber(r.chamber))}</li>`
@@ -227,7 +245,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
   if (owned.length) body += `<h2>Bills sponsored</h2><ul>${owned.slice(0,30).map(key=>`<li>${link(`/bill/${key}`,bills?.bills.find(b=>b.key===key)?.title || key)}</li>`).join('')}</ul>`
-  return {html:answerBlock(display,description,body),description}
+  return {html:answerBlock(display,description,body),description,party:party || undefined}
 }
 
 /** The roster row a bill's printed sponsor opens: public/sponsor-person.js, never a surname print. */
@@ -312,7 +330,10 @@ export function renderDivisionAnswer(d: Division, people: Person[], slugs: Map<s
 
 
 export async function renderDirectory(dir: string, url: URL, read: ReadAsset, people: Person[], slugs: Map<string,string>, topics: Record<string,string>): Promise<RenderedContent | null> {
-  if (dir==='person') return paginate(url,people.map(p=>({href:personHref(p,slugs),label:p.name,detail:partyLine(p)})),'Parliamentarians','Parliamentarians in the parliamentary record, with speeches, votes and declared interests.')
+  if (dir==='person') {
+    const seats = (await optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null))?.electorates
+    return paginate(url,people.map(p=>({href:personHref(p,slugs),label:p.name,detail:partyLine(p,seats)})),'Parliamentarians','Parliamentarians in the parliamentary record, with speeches, votes and declared interests.')
+  }
   if (dir==='topic') return paginate(url,Object.entries(topics).map(([slug,name])=>({href:`/subject/topic/${slug}`,label:name})),'Topics','Browse topics in the parliamentary record.')
   if (dir==='electorate') {
     const manifest = await read<{index_url: string}>('/electorates/manifest.json')
