@@ -47,6 +47,11 @@ way and every file that `git status` shows as changed or added must parse.
   discovery  discovery.json: signals, coverage, methodology, generated_at
   taxcharity entities/tax-charity: index.json (meta.counts, sources, caveats; the ABN counts held), names.json
              (by_name), and the <dd>.json shards by the last two digits of the ABN
+
+Not a nightly group (no refresh writes it; run it after a manual electorate export):
+
+  electorates electorates/manifest.json: every release file it lists exists with its sha256; no OPAX
+             person id is held by two people; every elected candidacy names its person
 """
 import datetime
 import importlib.util
@@ -1004,6 +1009,46 @@ def state_bill_shape_errors(hub):
     return errs[:20]
 
 
+def check_electorates() -> list[str]:
+    """The published electorate release (parli/ingest/electorates.py, scripts/export_electorates.py).
+
+    A service record filed under a second, id-less person is how Bill Shorten's 2019 and 2022
+    Maribyrnong candidacies came to name nobody (people.json had 'William Richard Shorten' with no
+    legacy_person_id beside 10580 'Bill Shorten'); the builder now joins by OpenAustralia id."""
+    import hashlib
+    errs = []
+    try:
+        manifest = json.loads((ROOT / PUBLIC / "electorates/manifest.json").read_text())
+        base = f"/electorates/releases/{manifest['release_id']}/"
+        for key in ("index_url", "people_url", "reference_url", "crosswalk_url"):
+            if not manifest[key].startswith(base):
+                errs.append(f"{key} is not in release {manifest['release_id']}")
+        release = ROOT / PUBLIC / base.strip("/")
+        for name, digest in manifest["files"].items():
+            path = release / name
+            if not path.is_file():
+                errs.append(f"{name} listed but missing")
+            elif hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+                errs.append(f"{name} differs from its manifest sha256")
+        people = json.loads((release / "people.json").read_text())["people"]
+        reference = json.loads((release / "reference.json").read_text())
+    except (OSError, KeyError, TypeError, ValueError) as error:
+        return errs + [f"unreadable release: {error}"]
+    held = {}
+    for person in reference["people"]:
+        legacy = person.get("legacy_person_id")
+        if legacy is not None and held.setdefault(str(legacy), person["person_id"]) != person["person_id"]:
+            errs.append(f"OPAX person id {legacy} is held by {held[str(legacy)]} and {person['person_id']}")
+    known = {p["person_id"] for p in people}
+    for contest in reference["contests"]:
+        for c in contest["candidates"]:
+            if c["elected"] and not c.get("person_id"):
+                errs.append(f"elected candidacy {c['candidate_id']} ({c['name']}) names no person")
+            elif c.get("person_id") and c["elected"] and c["person_id"] not in known:
+                errs.append(f"elected candidacy {c['candidate_id']} names {c['person_id']}, not in people.json")
+    return errs[:20]
+
+
 def check_promoted_hub(name):
     from scripts.promote_hub_data import ASSETS, validated_asset
     try:
@@ -1022,7 +1067,7 @@ CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,
           "people": check_people, "pay": check_pay, "discovery": check_discovery, "taxcharity": check_taxcharity,
-          "video": check_video}
+          "video": check_video, "electorates": check_electorates}
 
 
 def main() -> int:
