@@ -2,13 +2,17 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Keyboard } from 'react-native';
 import { catalogs } from '../src/api/runtime';
-import { InlineError, Skeleton } from '../src/design/primitives';
+import {
+  ContentUnavailable,
+  InlineError,
+  Skeleton,
+} from '../src/design/primitives';
 import { ResultsScreen } from '../src/features/search/ResultsScreen';
 import { ResultsView } from '../src/features/search/ResultsView';
 import { bills, index, roster } from './pinned';
 import { withNavigationOptions } from './navigation-options';
 
-let mockParams: Record<string, string> = {};
+let mockParams: Record<string, string | string[] | undefined> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual('react');
   return {
@@ -145,4 +149,18 @@ test('submitting the pushed results field dismisses the iOS keyboard', async () 
   } finally {
     dismiss.mockRestore();
   }
+});
+
+test('a repeated query parameter cannot crash a pushed results screen', async () => {
+  mockParams = { kind: 'people', q: ['housing', 'education'] };
+  jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue(ready());
+  let view!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    view = TestRenderer.create(
+      withNavigationOptions(<ResultsScreen />, () => {}),
+    );
+  });
+  expect(view.root.findByType(ContentUnavailable).props.title).toBe(
+    'No results',
+  );
 });

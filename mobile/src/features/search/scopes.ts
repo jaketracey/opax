@@ -117,7 +117,9 @@ export function targetForWebKind(
 }
 
 /** Link queries are untrusted: at most 100 characters, cut at a whole word. */
-export function capQuery(q: string, max = 100): string {
+export function capQuery(q: unknown, max = 100): string {
+  // A repeated `q=` arrives from expo-router as an array: not a query.
+  if (typeof q !== 'string') return '';
   const text = q.replace(/\s+/g, ' ').trim();
   if (text.length <= max) return text;
   const cut = text.slice(0, max + 1);

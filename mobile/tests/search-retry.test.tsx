@@ -39,7 +39,7 @@ jest.mock('../src/features/search/navigation', () => ({
   openSearchPerson: jest.fn(),
 }));
 const mockBar: { options?: Record<string, any> } = {};
-let mockParams: Record<string, string | undefined> = {};
+let mockParams: Record<string, string | string[] | undefined> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual('react');
   return {
@@ -157,6 +157,13 @@ test.each(['search-key', 'speech-suggestion'])(
     }
   },
 );
+
+test('a repeated linked query parameter returns to Browse without a request', async () => {
+  mockParams = { q: ['housing', 'education'], scope: 'speeches' };
+  const r = await mount();
+  expect(r.root.findAllByType(SearchIdle)).toHaveLength(1);
+  expect(recordSearch.search).not.toHaveBeenCalled();
+});
 
 test.each(['typing', 'results'])(
   'selecting Search from %s restores Browse with a fresh native scroll view and no keyboard',
