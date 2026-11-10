@@ -52,6 +52,53 @@ test('tax and advertising matches preserve accepted table filter parameter names
  assert.ok(new URL(advertising.href,'https://opax.com.au').searchParams.has('advertising.q'));
  assert.ok(rows.filter(r=>r.key.startsWith('sa-budget:')).every(r=>r.href==='/budget#sa-budget'));
 });
+test('advertising search preserves source amounts in dollars, reporting year and GST basis', async () => {
+ const hub=await read('gov-advertising/data.json');
+ const matches=rows.filter(r=>r.key.startsWith('advertising:'));
+ assert.ok(matches.length>0);
+ for(const record of matches){
+  const source=hub.rows.find(r=>'advertising:'+r.id===record.key);
+  if(source.total_cents!==null){
+   const amount=(source.total_cents/100).toLocaleString('en-AU',{style:'currency',currency:'AUD'});
+   assert.ok(record.snippet.startsWith(amount+' AUD.'),record.key);
+  }else{
+   assert.match(record.snippet,/^Amount not separately published/);
+   assert.doesNotMatch(record.snippet,/\$0\.00/);
+  }
+  assert.ok(record.snippet.includes(source.financial_year));
+  assert.equal(record.extra.dateLabel,source.financial_year);
+  assert.equal(record.extra.url,source.source_url);
+  assert.equal(record.extra.state,'vic');
+  assert.doesNotMatch(record.snippet,/\$\s*\(excluding GST\)/);
+ }
+ const safeScript=matches.find(r=>r.title==='SafeScript — Department of Health and Human Services' && r.extra.dateLabel==='2018-19');
+ assert.match(safeScript.snippet,/^\$802,200\.00 AUD\. 2018-19\. \(excluding GST\)/);
+ // The amount and its basis must survive find_records' 200-character summary limit.
+ assert.match(safeScript.snippet.slice(0,200),/\$802,200\.00.*2018-19.*excluding GST/);
+ const million=matches.find(r=>r.key==='advertising:vic-3a3b7b7702e19482:t1:r2:c2');
+ assert.match(million.snippet,/^\$76,300,000\.00 AUD/);
+});
+test('budget and tax register search preserves amounts with the published units and signs',async()=>{
+ const sa=await read('sa-budget/data.json');
+ const source=sa.rows[0],record=rows.find(r=>r.key==='sa-budget:0');
+ assert.match(record.snippet,/^-1,071 AUD million\./);
+ assert.equal(record.extra.dateLabel,source.fiscal_year);
+ assert.equal(record.extra.url,source.source_url);
+ assert.ok(rows.find(r=>r.key==='tax:A1:2021-22').snippet.startsWith('3 AUD million.'));
+ const federal=rows.find(r=>r.key==='budget:0');
+ assert.ok(federal.snippet.startsWith('15.8 AUD billion.'));
+});
+test('gift register mapping preserves supplied values and leaves absent values absent',async()=>{
+ const hub=await read('vic-gifts/data.json');
+ const item=hub.registers[0].rows[0];
+ const original=rows.find(r=>r.key==='gift:'+item.id);
+ assert.equal(item.estimated_value,null);
+ assert.ok(!original.snippet.includes('Estimated value'));
+ assert.equal(original.extra.dateLabel,item.period);
+ item.estimated_value='$2,500 (approximate)';
+ const changed=await collect(async path=>path==='vic-gifts/data.json'?hub:read(path));
+ assert.match(changed.find(r=>r.key===original.key).snippet,/Estimated value as published: \$2,500 \(approximate\)/);
+});
 test('incomplete instruments and closed optional pages remain absent from search', async () => {
  const hidden=await collect(async path=>path==='instruments/manifest.json'?{complete:false}:read(path),{reports:false,vicElection:false});
  assert.ok(!hidden.some(r=>r.kind==='instrument' || r.href==='/instruments'));

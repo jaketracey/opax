@@ -17,6 +17,7 @@ Output:
                         "from": 2017, "to": 2026,
                         "by_category": [["Domestic Travel", 9123456], ...],
                         "by_year": [[2017, 1234567], ...],
+                        "by_financial_year": [["2017-18", 1234567], ...],
                         "top": [{"date": "Apr-Jun 2025", "category": "Domestic Travel",
                                  "description": "Aggregated Total", "amount": 1178514}, ...]}}}
 
@@ -40,6 +41,9 @@ and repayments; they stay in the totals as published, but the category bar
 list only shows categories with a positive net and the top-five list only
 positive lines. by_year is keyed on the reporting quarter's calendar year
 (from_date is empty on 93% of rows), so 2017 and 2026 are partial years.
+by_financial_year groups the same unrounded lines by the reporting quarter's
+July to June year. meta.reporting_periods records the quarters actually held,
+so readers can distinguish a complete year from partial or missing coverage.
 
 Licence: meta.licence is parli.ingest.money_ipea.LICENCE. That loader will not
 load a quarter whose data.gov.au record names another licence (by license_id
@@ -58,6 +62,7 @@ import sqlite3
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -164,13 +169,15 @@ def main():
         p = people.get(pid)
         if p is None:
             p = people[pid] = {"total": 0.0, "lines": 0, "cats": defaultdict(float),
-                               "years": defaultdict(float), "top": []}
+                               "years": defaultdict(float), "financial_years": defaultdict(Decimal), "top": []}
         variants[pid].add(clean_name(member_name))
         year = int(period_start[:4])
         p["total"] += amount
         p["lines"] += 1
         p["cats"][category or "Uncategorised"] += amount
         p["years"][year] += amount
+        fy_start = year if int(period_start[5:7]) >= 7 else year - 1
+        p["financial_years"][f"{fy_start}-{(fy_start + 1) % 100:02d}"] += Decimal(str(amount))
         top = p["top"]
         if amount > 0 and (len(top) < TOP_ITEMS or amount > top[-1][0]):
             desc = (description or cat_minor or cat_major or "").strip()
@@ -196,6 +203,7 @@ def main():
             "to": y1,
             "by_category": [[k, round(v)] for k, v in cats],
             "by_year": [[y, round(p["years"].get(y, 0.0))] for y in range(y0, y1 + 1)],
+            "by_financial_year": [[fy, round(value)] for fy, value in sorted(p["financial_years"].items())],
             "top": [{"date": d, "category": c, "description": s, "amount": round(a)}
                     for a, d, c, s in p["top"]],
         }
@@ -219,6 +227,7 @@ def main():
             "attribution": ATTRIBUTION,
             "source_url": latest_url,
             "quarters": len(periods),
+            "reporting_periods": sorted(periods),
             "from": min(periods),
             "to": latest,
             "people": len(out_people),

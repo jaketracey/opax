@@ -1,8 +1,9 @@
 import { claimClauses, proseClaimKeys } from './research-claims'
-import { proseFallback, rawToolEcho, tokens, writingFacts } from './research-writing'
-import { plainAnswerPayload } from './research-language'
+import { appendWrittenPoints, proseFallback, rawToolEcho, tokens, writingFacts } from './research-writing'
+import { plainAnswerPayload, rewriteAnswerPayload } from './research-language'
 import { groundAnswerPayload } from './research-grounding'
 import {protectedDecision} from './research-coherence.mjs'
+import {sentenceParts} from './research-claim-audit.mjs'
 import type { QualitativeAnswer } from './research-types'
 import type { ResearchPayload } from './research-types'
 import type { researchEvalUsage } from './research-eval'
@@ -27,7 +28,12 @@ export async function withPlannerResearch(response: Response, previous?: Researc
 
 /** One guard covers JSON, streamed fallbacks and cached payloads. */
 export async function withAnswerLanguage(response: Response,question?:string,askedAs?:string): Promise<Response> {
-  return mapResearchResponse(response, payload=>{const out=question?groundAnswerPayload(payload,question):plainAnswerPayload(payload);return askedAs?{...out,asked_as:askedAs}:out}, true, true)
+  return mapResearchResponse(response, payload=>{
+    if(!question){const out=plainAnswerPayload(payload);return askedAs?{...out,asked_as:askedAs}:out}
+    const prepared=protectedDecision(payload)?payload:normaliseWrittenPayload(payload,question)
+    const out=normaliseCoveragePayload(groundAnswerPayload(prepared,question),question)
+    return askedAs?{...out,asked_as:askedAs}:out
+  }, true, true)
 }
 
 export async function withResearchEval(response: Response, usage: () => ReturnType<typeof researchEvalUsage> & { model?: string }): Promise<Response> {
@@ -106,7 +112,8 @@ export async function withFallbackPeriod(response: Response, period: import('./a
       payload={...payload,...written}
     }
     if (period.kind === 'all' || !period.since && !period.until) return payload
-    const coverage = payload.coverage as { matched?: boolean; since?: string; until?: string; requested_since?: string; requested_until?: string } | undefined
+    const coverage = payload.coverage as { matched?: boolean; since?: string; until?: string; requested_since?: string; requested_until?: string; as_of?: string; note?: string } | undefined
+    const periodCoverage=!!coverage&&['matched','since','until','requested_since','requested_until','as_of'].some(key=>Object.hasOwn(coverage,key))
     const within = (since?: string, until?: string) => !!(since || until) &&
       (!period.since || !!since && since >= period.since) && (!period.until || !!until && until <= period.until) &&
       (!period.until || !since || since <= period.until) && (!period.since || !until || until >= period.since)
@@ -115,14 +122,13 @@ export async function withFallbackPeriod(response: Response, period: import('./a
     const sources = Array.isArray(payload.sources) ? payload.sources as Record<string, unknown>[] : []
     const cited = sources.filter(s => s.cited === true)
     const outside = cited.find(s => typeof s.date === 'string' && (period.since && s.date.slice(0, 10) < period.since || period.until && s.date.slice(0, 10) > period.until))
-    if (!coverage && !outside && cited.length && cited.every(s => typeof s.date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(s.date))) return payload
+    if (!periodCoverage && !outside && cited.length && cited.every(s => typeof s.date === 'string' && /^\d{4}-\d{2}-\d{2}/.test(s.date))) return payload
     const requested = `${period.since ?? 'the start of the record'} to ${period.until ?? 'the present'}`
     // Figures cannot be sorted by period after the fact, so they stay out. Prose is kept with its dates stated.
     const answerText = String(payload.answer ?? '')
     if (answerText.trim() && cited.length && !tokens(answerText).some(n => !/^(?:19|20)\d{2}$/.test(n))) {
-      const lead = `These records may not cover ${requested}: ${outside ? `a returned source is dated ${String(outside.date).slice(0, 10)}.` : 'their dates could not be confirmed for that period.'}`, offset = Array.from(lead + '\n\n').length
-      const citations = Object.fromEntries(Object.entries((payload.citations ?? {}) as Record<string, number[][]>).map(([id, ranges]) => [id, ranges.map(([a, b]) => [a + offset, b + offset])]))
-      return { ...payload, answer: lead + '\n\n' + answerText, citations, answer_status: 'coverage_only', coverage: { requested_since: period.since ?? null, requested_until: period.until ?? null, as_of: outside?.date ?? null, matched: false } }
+      const note = `These records may not cover ${requested}: ${outside ? `a returned source is dated ${String(outside.date).slice(0, 10)}.` : 'their dates could not be confirmed for that period.'}`
+      return { ...payload, answer_status: 'coverage_only', coverage: { ...coverage, requested_since: period.since ?? null, requested_until: period.until ?? null, as_of: outside?.date ?? coverage?.as_of ?? null, matched: false, note:[coverage?.note,note].filter(Boolean).join(' ') } }
     }
     const text = `The returned records do not establish the requested answer for ${requested}. ${outside ? `A returned source is dated ${String(outside.date).slice(0, 10)}, outside that period.` : 'The returned evidence has no verified date coverage for that period.'} I have not substituted current figures. Please narrow the question or check the records linked here.`
     const url = String(outside?.href ?? outside?.url ?? cited[0]?.href ?? cited[0]?.url ?? 'https://opax.com.au/methods')
@@ -134,12 +140,142 @@ export async function withFallbackPeriod(response: Response, period: import('./a
   }, true)
 }
 
+type CoverageKind = 'title_search' | 'ranked_sample' | 'vote_reasons' | 'salary' | 'contracts' | 'topics' | 'receipts' | 'period' | 'selection'
+function incidentalCoverage(text:string):CoverageKind|undefined {
+  if(/^(?:(?:Divisions are|Those divisions were) matched (?:only )?by (?:a word|words) in (?:the division or bill title|their titles)|Title[- ]word matching can miss)/i.test(text))return 'title_search'
+  if(/^(?:(?:(?:That|The) count comes from|The matching figures here are|These are) ranked matching|The selected passages are a ranked sample)/i.test(text))return 'ranked_sample'
+  if(/^A recorded vote (?:is not a statement of reasons|does not establish why a member voted that way)/i.test(text))return 'vote_reasons'
+  if(/^(?:(?:OPAX's |The |These )?(?:federal )?(?:pay records|salary (?:records|entitlements|figures))\b.*\b(?:exclude|not payslips|outside income)|These (?:are|figures (?:are|cover)) salary entitlements\b|(?:Allowances|Expenses|Superannuation|Outside income) (?:are|is) (?:excluded|not included))/i.test(text))return 'salary'
+  if(/^(?:These (?:are|figures (?:are|represent)) (?:published )?contract values\b.*\b(?:payments|amendments)|(?:Published )?contract values\b.*\b(?:not|rather than) payments)/i.test(text))return 'contracts'
+  if(/^(?:(?:Topic[- ]labelled|Topic labels|Speech records|Hansard records)\b.*\b(?:incomplete|undercount|gaps|cover|exclude)|(?:Older years|Committee[- ]hearing turns)\b.*\b(?:undercount|excluded|incomplete))/i.test(text))return 'topics'
+  if(/^(?:(?:These |Disclosed )?(?:disclosed )?(?:party |federal )?(?:receipts|totals)\b.*\b(?:selection|threshold|lower bound|loans|non-gift|exhaustive|aggregation)|Disclosed party receipts can include\b|These (?:are party receipts|disclosed party receipts)\b|(?:These |The )?amounts are (?:lower bounds?|aggregated|disclosed receipts))/i.test(text))return 'receipts'
+  if(/^(?:OPAX could not confirm that these records fall in the requested period|Some selected records lack verified coverage for the requested scope|The (?:requested )?period (?:is|was) (?:unconfirmed|not confirmed)|These records (?:have no|lack) verified date coverage)/i.test(text))return 'period'
+}
+
+/** Search-method notes qualify aggregate findings, not the identity or outcome of one record. */
+export function normaliseCoveragePayload(payload:Record<string,unknown>,question?:string):Record<string,unknown> {
+  if(typeof payload.answer!=='string'||!payload.answer.trim())return payload
+  const original=payload.answer,parts=sentenceParts(original) as {text:string;at:number}[]
+  const sources=(Array.isArray(payload.sources)?payload.sources:[]) as Record<string,unknown>[]
+  const entries=payload.citations&&typeof payload.citations==='object'?Object.entries(payload.citations):[]
+  const cp=(at:number)=>Array.from(original.slice(0,at)).length
+  const kindOf=(part:{text:string;at:number}):CoverageKind|undefined=>{
+    const known=incidentalCoverage(part.text)
+    if(known)return known
+    // A source marked as coverage still cannot turn a factual lead or a dated scope into a caveat.
+    if(/[“”"]/.test(part.text))return
+    if(!/\b(?:exclude[sd]?|omitted|not included|incomplete|undercount\w*|gaps?|lower bounds?|partial|not (?:an? )?(?:complete|exhaustive)|outside (?:the|this) (?:selection|coverage|series))\b/i.test(part.text))return
+    const start=cp(part.at),end=cp(part.at+part.text.length)
+    const cited=entries.filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(range=>Array.isArray(range)&&range[0]<end&&range[1]>start)).map(([id])=>id)
+    if(!cited.length||!cited.every(id=>/^coverage(?:[-/]|$)|^period-coverage(?:\/|$)/.test(id)||sources.some(source=>source.coverage===true&&(id===source.resource||id.startsWith(String(source.resource)+'/')))))return
+    if(/salary|pay |office holders|allowances|superannuation|outside income/i.test(part.text))return 'salary'
+    if(/contract|amendments|payments/i.test(part.text))return 'contracts'
+    if(/speeches|speech count|Hansard|topic|committee[- ]hearing/i.test(part.text))return 'topics'
+    if(/receipts|donation|loans|disclosure threshold/i.test(part.text))return 'receipts'
+    return 'selection'
+  }
+  const classified=parts.map(part=>({...part,kind:kindOf(part)}))
+  const ordinary=classified.filter(part=>!part.kind),finding=ordinary.map(part=>part.text).join(' ')
+  const count='(?:\\d[\\d,]*|zero|one|two|three|four|five|six|seven|eight|nine|ten)'
+  const divisionCount=new RegExp('\\b'+count+' (?:matching |recorded |selected |Senate |House |chamber )*divisions?\\b|\\bin '+count+' divisions?\\b','i').test(finding)
+  const recordCount=new RegExp('\\b'+count+' (?:matching |recorded |selected |chamber |topic-labelled )*(?:records?|results?|matches|divisions?|speeches|bills?|contracts?|grants?)\\b','i').test(finding)||
+    !!question&&/\b(?:how many|number of|count)\b/i.test(question)&&tokens(finding).some(value=>! /^(?:19|20)\d{2}$/.test(value))&&!/\$/.test(finding)
+  const money=/\$\s*\d/.test(finding)
+  const salary=money&&/salary|annual pay|a year|earned|paid/i.test(finding)
+  const contracts=money&&/contract|awarded|supplier/i.test(finding)
+  const topics=recordCount&&/speeches|speech count|spoke|debates?|Hansard/i.test(finding+' '+(question??''))
+  const receipts=money&&/receipts?|donat\w*|received|gave|funding|donors?/i.test(finding)
+  const temporal=/\b(?:19|20)\d{2}\b|\b(?:since|before|after|between|during|today|yesterday|last|current|this (?:term|year|month)|period)\b/i.test(finding+' '+(question??''))
+  const reasons=!!question&&/\b(?:why|reasons?|motivat\w*)\b/i.test(question)&&/\b(?:votes?|voted|aye|noes|divisions?)\b/i.test(finding)
+  const relevant=(kind:CoverageKind)=>({title_search:divisionCount,ranked_sample:recordCount,vote_reasons:reasons,salary,contracts,topics,receipts,period:temporal||recordCount,selection:recordCount||money})[kind]
+  const notes:string[]=[],remove:string[]=[]
+  const add=(text:string,kind=incidentalCoverage(text))=>{
+    if(!kind){notes.push(text);return}
+    if(!relevant(kind))return
+    // Legacy combined notes also state that votes do not establish motives. Keep that part only for a reasons question.
+    if(kind==='title_search'&&/recorded vote/i.test(text)){
+      notes.push('Divisions are matched by words in their titles; divisions filed under other titles may be missed.')
+      if(reasons)notes.push('A recorded vote does not establish why a member voted that way.')
+    }else notes.push(text)
+  }
+  const coverage=payload.coverage&&typeof payload.coverage==='object'&&!Array.isArray(payload.coverage)?payload.coverage as Record<string,unknown>:undefined
+  if(typeof coverage?.note==='string')for(const part of sentenceParts(coverage.note) as {text:string}[])add(part.text)
+  // Passage-plus-list fallbacks retain explicit note sources even when their wrapper drops coverage metadata.
+  for(const source of sources)if(source.coverage===true&&source.cited===false&&typeof source.snippet==='string')for(const part of sentenceParts(source.snippet) as {text:string}[]){
+    let kind=incidentalCoverage(part.text)
+    if(!kind&&/\b(?:not|cannot|can't|only|exclude\w*|omitted|incomplete|gaps?|lower bounds?|partial|unconfirmed|outside)\b/i.test(part.text)){
+      kind=/salary|pay records|allowances|superannuation|outside income/i.test(part.text)?'salary':/contracts?|amendments/i.test(part.text)?'contracts':/topic|speeches|Hansard|committee[- ]hearing/i.test(part.text)?'topics':/receipts?|donations?|AEC|disclosure threshold/i.test(part.text)?'receipts':'selection'
+    }
+    if(kind)add(part.text,kind)
+  }
+  // A limitation is itself the answer. Its explanation must stay readable in the body.
+  const limitationOnly=ordinary.length>0&&ordinary.every(part=>/^(?:I (?:cannot|can't|could not)|Please\b|(?:(?:The|These|This)\b[^.!?]*|OPAX)\b[^.!?]*\b(?:cannot|can't|do(?:es)? not establish|could not|not establish))/.test(part.text))
+  if(!protectedDecision(payload)&&ordinary.length&&!limitationOnly)for(const part of classified)if(part.kind){remove.push(part.text);add(part.text,part.kind)}
+  const key=(text:string)=>text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim(),seen=new Set<string>(),kinds=new Set<CoverageKind>()
+  const note=notes.filter(text=>{const signature=key(text),kind=incidentalCoverage(text),equivalent=kind&&['title_search','ranked_sample','vote_reasons'].includes(kind);if(!signature||seen.has(signature)||equivalent&&kinds.has(kind))return false;seen.add(signature);if(equivalent)kinds.add(kind);return true}).join(' ')
+  let out=payload
+  if(remove.length)out=rewriteAnswerPayload(payload,replace=>{
+    for(const text of remove)replace(new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),'')
+    replace(/^[ \t]*[-*][ \t]*(?:\n|$)/gm,'')
+    replace(/[ \t]+\n/g,'\n')
+    replace(/\n(?:[ \t]*\n){2,}/g,'\n\n')
+    replace(/^[ \t]+|[ \t]+$/gm,'')
+    replace(/^\s+|\s+$/g,'')
+    replace(/[ \t]{2,}/g,' ')
+  })
+  if(note===coverage?.note)return out
+  if(!note){
+    if(!coverage||!('note'in coverage))return out
+    const {note:_note,...rest}=coverage
+    return {...out,coverage:rest}
+  }
+  return {...out,coverage:{...coverage,note}}
+}
+
 /** Keep the fallback model's prose, removing repeated claims and financial figure sets before replay. */
-export function normaliseWrittenPayload(payload: Record<string, unknown>): Record<string, unknown> {
-  payload=plainAnswerPayload(payload)
+export function normaliseWrittenPayload(payload: Record<string, unknown>,question?:string): Record<string, unknown> {
+  payload=plainAnswerPayload(normaliseCoveragePayload(payload,question))
   if (typeof payload.answer !== 'string' || !payload.answer.trim()) return payload
+  if(!protectedDecision(payload)&&rawToolEcho(payload.answer)){
+    const facts=writingFacts(payload as unknown as QualitativeAnswer),receiptRows=facts.filter(fact=>/^(?:Disclosed receipt|Donor):/i.test(fact.text))
+    const rawFacts=receiptRows.length?facts.filter(fact=>receiptRows.includes(fact)||fact.coverage||fact.metadata):facts
+    let written=proseFallback({question:question??'',period:{kind:'all',label:''},facts:rawFacts})
+    const chars=Array.from(payload.answer),removed:[number,number][]=[],sources=(Array.isArray(payload.sources)?payload.sources:[]) as Record<string,unknown>[]
+    const pointRanges=Object.entries((payload.citations??{}) as Record<string,unknown>).filter(([id])=>sources.some(source=>(id===source.resource||id.startsWith(String(source.resource)+'/'))&&!rawToolEcho(String(source.snippet??'')))).flatMap(([,ranges])=>Array.isArray(ranges)?ranges.filter((range):range is [number,number]=>Array.isArray(range)&&range.length===2&&range.every(Number.isSafeInteger)):[])
+    for(const line of payload.answer.matchAll(/[^\n]+/g))if(rawToolEcho(line[0])||/^\s*\|/.test(line[0])){
+      const from=Array.from(payload.answer.slice(0,line.index)).length,until=from+Array.from(line[0]).length
+      let cursor=from
+      // Remove the complete raw row, including trailing industry labels, while retaining separately cited prose on that line.
+      for(const [a,b]of pointRanges.filter(([a,b])=>a<until&&b>from).sort((a,b)=>a[0]-b[0])){
+        const start=Math.max(from,a),end=Math.min(until,b)
+        if(start>cursor)removed.push([cursor,start])
+        cursor=Math.max(cursor,end)
+      }
+      if(cursor<until)removed.push([cursor,until])
+    }
+    if(chars.some((char,index)=>/\S/.test(char)&&!removed.some(([from,until])=>index>=from&&index<until))){
+      const points=rewriteAnswerPayload(payload,replace=>{
+        for(const [from,until]of removed){const text=chars.slice(from,until).join('');if(text.trim())replace(new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),'')}
+        replace(/^\s+|\s+$/g,'')
+      })
+      written=appendWrittenPoints(written,points as unknown as QualitativeAnswer)
+    }
+    const prior=payload.coverage&&typeof payload.coverage==='object'?payload.coverage as Record<string,unknown>:undefined
+    const note=[prior?.note,written.coverage?.note].filter(value=>typeof value==='string'&&value.trim()).join(' ')
+    payload=normaliseCoveragePayload({...payload,...written,...(prior||written.coverage?{coverage:{...prior,...written.coverage,...(note?{note}:{})}}:{})},question)
+  }
+  if(typeof payload.answer!=='string')return payload
   const original = payload.answer, cp = (n: number) => Array.from(original.slice(0,n)).length
   const key = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim()
+  const sources=(Array.isArray(payload.sources)?payload.sources:[]) as Record<string,unknown>[]
+  const claimScope=(text:string,from:number,until:number)=>{
+    const ids=Object.entries((payload.citations??{}) as Record<string,unknown>).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(range=>Array.isArray(range)&&range[0]<until&&range[1]>from)).map(([id])=>id)
+    const selected=sources.filter(source=>ids.some(id=>id===source.resource||id.startsWith(String(source.resource)+'/')))
+    const receipt=selected.flatMap(source=>source.receipt&&typeof source.receipt==='object'?[source.receipt as Record<string,unknown>]:[]).map(receipt=>JSON.stringify(['receipt',receipt.source,receipt.party,receipt.period,receipt.jurisdiction])).sort()
+    const counterparty=/\b(?:received|gave|donated)\b/i.test(text)?/\b(?:from|to)\s+(.+?)(?=\s+(?:in|during|since|for)\s+(?:19|20)\d{2}\b|[.!?;]|$)/i.exec(text)?.[1]:undefined
+    const records=receipt.length?receipt:selected.map(source=>JSON.stringify([source.kind,source.title,source.slug,source.url??source.href,source.resource])).sort()
+    return records.join('|')+(counterparty?'|counterparty:'+key(counterparty):'')
+  }
   const seenText=new Set<string>(), seenClaims=new Set<string>()
   const kept: {text:string;from:number;until:number}[][]=[]
   let changed=false
@@ -149,7 +285,7 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>): Recor
     const parts:{text:string;from:number;until:number}[]=[]
     for(const clause of claimClauses(text)) {
       const connector=parts.length?/(?:,?\s+and\s+)$/.exec(text.slice(0,clause.start))?.[0]:undefined
-      const sentence=(connector?'and ':'')+clause.text, identities=proseClaimKeys(clause.text),signature=key(clause.text)
+      const sentence=(connector?'and ':'')+clause.text, scope=claimScope(clause.text,cp(base+clause.start),cp(base+clause.end)),identities=proseClaimKeys(clause.text).map(identity=>scope?identity+'|'+scope:identity),signature=key(clause.text)
       if(seenText.has(signature)||identities.length>0&&identities.every(id=>seenClaims.has(id))) {changed=true;continue}
       seenText.add(signature);identities.forEach(id=>seenClaims.add(id))
       parts.push({text:sentence,from:cp(base+clause.start-(connector?4:0)),until:cp(base+clause.end)})
@@ -179,6 +315,6 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>): Recor
     }
     if(from!==undefined && until!==undefined)(citations[id]??=[]).push([from,until])
   }
-  const sources=Array.isArray(payload.sources)?(payload.sources as Record<string,unknown>[]).map(s=>typeof s.resource==='string' && s.cited===true ? {...s,cited:Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))}:s):[]
-  return {...payload,answer,citations,sources,...(!Object.keys(citations).length?{answer_status:'uncited'}:{})}
+  const remainingSources=sources.map(s=>typeof s.resource==='string' && s.cited===true ? {...s,cited:Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))}:s)
+  return {...payload,answer,citations,sources:remainingSources,...(!Object.keys(citations).length?{answer_status:'uncited'}:{})}
 }

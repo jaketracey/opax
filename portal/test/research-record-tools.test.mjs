@@ -28,6 +28,7 @@ test.after(() => { globalThis.fetch = originalFetch; });
 
 // Invented people, agencies and suppliers only.
 const assets = {
+  '/expenses.json': {meta:{from:'2025Q01',to:'2025Q04',quarters:4},names:{'robin example':'P1'},people:{P1:{name:'Robin Example',total:999999,by_year:[[2025,123456]]}}},
   '/pay.json': { meta: { as_of: '2026-10-04', sources: [{ id: 'mp-determination', url: 'https://www.remtribunal.gov.au/fixture' }] }, base: [{ amount: 200000 }],
     offices: { cabinet: { label: 'Cabinet Minister', kind: 'ministerial', pct: 72.5 }, treasurer: { label: 'Treasurer', kind: 'ministerial', pct: 87.5 } },
     current: [{ name: 'Robin Example', party: 'Labor', chamber: 'senate', post: 'Minister for Fixtures (Cabinet)', pct: 72.5, salary: 345000 },
@@ -115,7 +116,7 @@ test('every record tool is on MCP with its registry schema, and bad input is -32
     ASSETS: { async fetch(req) { reads++; const body = assets[new URL(req.url).pathname]; return body ? Response.json(body) : new Response('missing', { status: 404 }); } } };
   const send = async (method, params) => (await api.communityMcp(new Request('https://opax.com.au/mcp', { method: 'POST', headers: { authorization: 'Bearer ' + token, accept: 'application/json, text/event-stream', 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) }), mcpEnv, async () => { throw Error('no public reads'); })).json();
   const listed = (await send('tools/list', {})).result.tools;
-  for (const name of ['find_records', 'parliamentary_pay', 'contracts', 'grants', 'declared_interests']) {
+  for (const name of ['find_records', 'parliamentary_pay', 'member_expenses', 'contracts', 'grants', 'declared_interests']) {
     const entry = listed.find(t => t.name === name);
     assert.ok(entry, name); assert.equal(entry.description, tool(name).description); assert.equal(entry.annotations.readOnlyHint, true);
     // The same tool, same schema, is on the Ask loop.
@@ -126,6 +127,12 @@ test('every record tool is on MCP with its registry schema, and bad input is -32
     assert.equal(rpc.error?.code, -32602, name + JSON.stringify(args));
   }
   assert.equal(reads, 0);
+  const expenses = await send('tools/call', {name:'member_expenses',arguments:{person:'Robin Example',year:2025}});
+  const expenseData = expenses.result.structuredContent;
+  const askExpenses = await api.TOOL_SPECS.find(t=>t.name==='member_expenses').run(env,{person:'Robin Example',year:2025});
+  assert.deepEqual(expenseData,askExpenses.data);
+  assert.equal(expenseData.rows[0].amount_aud,123456);
+  assert.match(expenseData.citations[0].text,/calendar year 2025/);
   const pay = await send('tools/call', { name: 'parliamentary_pay', arguments: { person: 'Robin Example' } });
   assert.match(pay.result.structuredContent.citations[0].text, /\$345,000 a year/);
 });
@@ -153,7 +160,8 @@ test('a qualitative answer leads with record facts rendered from tool rows and c
   assert.equal(lines[1], 'Sample Systems Ltd recorded $2,000,000,000 across 40 Department of Fixtures contracts.');
   const point=lines.find(line=>line.includes('Robin Example said'));
   assert.equal(point, '- Robin Example said the contracts must be published in full.');
-  assert.match(out.answer, /published contract values/);
+  assert.doesNotMatch(out.answer, /published contract values/);
+  assert.match(out.qualitative.coverage?.note??'', /published contract values/);
   assert.deepEqual(out.qualitative.citations['fact-2/t/body/0'], [[0, lines[0].length]]);
   const pointStart = Array.from(out.answer.slice(0,out.answer.indexOf(point)+2)).length;
   assert.deepEqual(out.qualitative.citations[passageId], [[pointStart, pointStart + Array.from(point.slice(2)).length]]);
@@ -162,7 +170,7 @@ test('a qualitative answer leads with record facts rendered from tool rows and c
   assert.match(JSON.stringify(m.doGenerateCalls[1].prompt).replace(/\\"/g, '"'), /"id":2,"text":"Example Shipyards/);
 });
 
-test('record facts obey the named scope: an overall count is refused for a named person; an unresolved person blocks facts', async () => {
+test('record facts obey the named scope: overall counts are refused and missing people state absence', async () => {
   const scope = { people: ['Robin Example'], parties: [], bills: [], ambiguous: false, unresolved: false };
   const named = await loop('What has Robin Example said about gambling, and how often?', [
     reply([call('count_speeches', { topic: 'gambling', group_by: 'none' }, 'a'), call('count_speeches', { topic: 'gambling', speaker: 'Robin Example', group_by: 'none' }, 'b')]),
@@ -173,7 +181,8 @@ test('record facts obey the named scope: an overall count is refused for a named
   const unresolved = await loop('What has Pat Unknownname said about contracts?', [
     reply([call('parliamentary_pay', { person: 'Robin Example' }, 'a')]), reply([call('answer', { facts: [1] }, 'b')]), reply([call('answer', { facts: [1] }, 'c')])],
     { people: [], parties: [], bills: [], ambiguous: false, unresolved: true });
-  assert.equal(unresolved.out.research.mode, 'planner'); assert.equal(unresolved.failures[0].reason, 'grounding');
+  assert.match(unresolved.out.answer, /^OPAX has no record of a parliamentarian named Pat Unknownname\./);
+  assert.equal(unresolved.out.qualitative.answer_decision, 'limitation'); assert.equal(unresolved.m.doGenerateCalls.length, 0); assert.deepEqual(unresolved.failures, []);
 });
 
 test('finish outside the numerical shapes answers with record facts only', async () => {

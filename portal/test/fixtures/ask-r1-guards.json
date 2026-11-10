@@ -1,0 +1,1026 @@
+{
+  "TT-SPCH-003": {
+    "question": "more speechse: Greens or Nationals?",
+    "payload": {
+      "answer": "This selection does not establish their position on that topic.",
+      "answer_decision": "limitation",
+      "citations": {}
+    }
+  },
+  "MN-CONT-018": {
+    "question": "which department gives Centorrino Technologies Pty Ltd the most contracts",
+    "payload": {
+      "answer": "No Commonwealth agency in the contract record matches \"Centorrino Technologies Pty Ltd\", so I cannot name the department that awards it the most contracts.\n\nWhat the records do show:\n\n- Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.\n\n- Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026).\n\n- Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303).\n\n- Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662).\n\n- Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497).\n\n- Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545).\n\n- Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845).",
+      "answer_decision": "limitation",
+      "citations": {
+        "coverage/t/body/0": [
+          [
+            0,
+            155
+          ]
+        ],
+        "fact-1/t/body/0": [
+          [
+            184,
+            326
+          ]
+        ],
+        "fact-5/t/body/0": [
+          [
+            328,
+            437
+          ]
+        ],
+        "fact-6/t/body/0": [
+          [
+            439,
+            591
+          ]
+        ],
+        "fact-7/t/body/0": [
+          [
+            593,
+            772
+          ]
+        ],
+        "fact-8/t/body/0": [
+          [
+            774,
+            947
+          ]
+        ],
+        "fact-9/t/body/0": [
+          [
+            949,
+            1143
+          ]
+        ],
+        "fact-10/t/body/0": [
+          [
+            1145,
+            1328
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "superlative": "highest",
+        "trend": false
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+          "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "snippet": "Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-5",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026)",
+          "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+          "snippet": "Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026)",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-6",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4266303",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4266303",
+          "snippet": "Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303)",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-7",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4196662",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4196662",
+          "snippet": "Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662)",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-8",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4145497",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4145497",
+          "snippet": "Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497)",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-9",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4118545",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4118545",
+          "snippet": "Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545)",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-10",
+          "slug": "",
+          "title": "Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845)",
+          "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4085845",
+          "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4085845",
+          "snippet": "Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845)",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "coverage-eb80683",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/money/contracts",
+          "url": "https://opax.com.au/money/contracts",
+          "snippet": "This is a list of what OPAX found, not a ranking.",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        },
+        {
+          "resource": "coverage",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/money/contracts",
+          "url": "https://opax.com.au/money/contracts",
+          "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. AusTender contract notices from Commonwealth agencies: values are contract values as published (including later amendments), not payments, and a supplier name follows the notice. No Commonwealth agency in the contract record matches \"Centorrino Technologies Pty Ltd\".",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        }
+      ],
+      "research": {
+        "mode": "loop",
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Supplier: Centorrino Technologies Pty Ltd — $14,178,599.19 in recorded contract awards across 24 contracts and 13 agencies. ABN 83606931524.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026)",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Centorrino Technologies Pty Ltd: $14,178,599 across 24 Commonwealth contracts with 13 agencies (2021–2026)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-6",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4266303",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4266303",
+            "snippet": "Centorrino Technologies Pty Ltd: $2,688,753 contract \"ICT Services\" with High Speed Rail Authority (2026-06-30 to 2028-06-29, open tender, CN4266303)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-7",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4196662",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4196662",
+            "snippet": "Centorrino Technologies Pty Ltd: $2,028,954 contract \"ICT Implementation and Managed Services\" with High Speed Rail Authority (2025-09-29 to 2026-06-29, open tender, CN4196662)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-8",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4145497",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4145497",
+            "snippet": "Centorrino Technologies Pty Ltd: $1,859,382 contract \"Cloud Hosting Platform\" with National Emergency Management Agency (2025-03-09 to 2027-06-29, open tender, CN4145497)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-9",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4118545",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4118545",
+            "snippet": "Centorrino Technologies Pty Ltd: $1,751,994 contract \"Provision of IT managed services (replaces CN4047905)\" with Australian Taxation Office (2024-11-19 to 2027-03-30, open tender, CN4118545)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-10",
+            "slug": "",
+            "title": "Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845)",
+            "href": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4085845",
+            "url": "https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN4085845",
+            "snippet": "Centorrino Technologies Pty Ltd: $1,467,388 contract \"Temporary Personnel\" with Department of Agriculture, Fisheries and Forestry (2024-06-30 to 2027-06-29, open tender, CN4085845)",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "url": "https://opax.com.au/subject/supplier/s-95b665fba91cc7eae5c6",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. AusTender contract notices from Commonwealth agencies: values are contract values as published (including later amendments), not payments, and a supplier name follows the notice. No Commonwealth agency in the contract record matches \"Centorrino Technologies Pty Ltd\".",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "NG-FUTR-002": {
+    "question": "What will Dan Tehan declare in the register of interests next year?",
+    "payload": {
+      "answer": "OPAX has no record yet of the requested future event. Its latest interests register snapshot is dated 2026-10-18.\n\nWhat the records do show:\n\n- OPAX has no record yet of the requested future event. Its latest interests register snapshot is dated 2026-10-18.",
+      "answer_decision": "limitation",
+      "citations": {
+        "exact-lookup/t/body/0": [
+          [
+            0,
+            113
+          ],
+          [
+            142,
+            257
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        }
+      },
+      "sources": [
+        {
+          "resource": "exact-lookup",
+          "slug": "",
+          "title": "Exact record lookup",
+          "href": "https://opax.com.au/interests/index.json",
+          "url": "https://opax.com.au/interests/index.json",
+          "snippet": "OPAX has no record yet of the requested future event. Its latest interests register snapshot is dated 2026-10-18.",
+          "cited": true,
+          "kind": "record"
+        }
+      ]
+    }
+  },
+  "NG-OFFS-007": {
+    "question": "what is the best treatmemt for a mgraine",
+    "payload": {
+      "answer": "- In a grievance debate on 23 March 1994, Liberal senator Michael Ronaldson said the drug Imigran, also called Sumatriptan, “provides extraordinary relief for migraine sufferers” but was not available at a reasonable price.\n- Labor's Dominic John Foreman asked in question time on 26 May 1993 whether the Minister for Health was aware of sumitriptan for treating migraine and when sufferers could get it at a sensible price.\n- On 10 June 2020 Labor's Chris Bowen said a new type of migraine medicine had let a chronic migraine sufferer return to work, while Emgality and AJOVY had been recommended for the PBS but not yet listed.\n- Labor's Amanda Rishworth told the House on 15 March 2021 that although the advisory committee recommended listing Emgality on the PBS in 2019, the government had failed to act for chronic migraine sufferers like Tina of Morphett Vale.\n- On 18 September 2019 Labor's Maria Vamvakinou described Sunshine Hospital neurology chief Professor Tissa Wijeratne's holistic approach to brain health and his aim of a national migraine research centre in Melbourne's west.\n- Labor's Steve Georganas said on 28 September 2022 that a medicines bill would cut costs for around 20,000 migraine sufferers among other patients.",
+      "answer_decision": "answer",
+      "citations": {
+        "c089b496ac99491383c880983a88a767/t/body/5736-6381": [
+          [
+            2,
+            223
+          ]
+        ],
+        "cb89e9325ad84e19bcca6f136ea1fbd3/t/body/0-232": [
+          [
+            226,
+            424
+          ]
+        ],
+        "9e7b31667b064e1e9c0edbbfe0b14fac/t/body/0-1522": [
+          [
+            427,
+            629
+          ]
+        ],
+        "ec8130b280684e1a923fa64c9a2d1dc7/t/body/0-1309": [
+          [
+            632,
+            866
+          ]
+        ],
+        "d31a5de8b8a54f83aa0c571a38f77c45/t/body/0-1566": [
+          [
+            869,
+            1092
+          ]
+        ],
+        "8c809a604b294e298754e2f1a5e13bc4/t/body/10137-10604": [
+          [
+            1095,
+            1241
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      }
+    }
+  },
+  "NG-OFFS-009": {
+    "question": "Who won the 2024 AFL grand final?",
+    "payload": {
+      "answer": "- In a 2024 constituency statement, Labor's Emma McBride congratulated the Central Coast Mariners on winning the A-League 2023-24 men's grand final, back-to-back premierships.\n- In March 2024, Labor's Anika Wells wished the Brisbane Lions luck against Collingwood, a regular-season match, not the grand final.",
+      "answer_decision": "answer",
+      "citations": {
+        "b03b9faa3814431b8d01570551d3b1af/t/body/0-1201": [
+          [
+            2,
+            175
+          ]
+        ],
+        "120aba4b2ee04547a8a8260ff66fa8e4/t/body/2504-2623": [
+          [
+            178,
+            309
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2024-01-01",
+          "until": "2024-12-31",
+          "label": "Records from 2024-01-01 to 2024-12-31."
+        },
+        "dated": true,
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      }
+    }
+  },
+  "MN-GRNT-001": {
+    "question": "Quick check before I quote this in a submission to my local member. What is the total value of federal grants to South Australian Department for Health and Wellbeing? If the record does not cover it, say so rather than guessing.",
+    "payload": {
+      "answer": "OPAX cannot establish the requested answer from the selected records.",
+      "answer_decision": "limitation",
+      "citations": {
+        "fact-2/t/body/0": [
+          [
+            0,
+            69
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "jurisdiction": "federal",
+        "people": [
+          "Harry Quick"
+        ],
+        "locationState": "sa",
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "sources": [
+        {
+          "resource": "fact-2",
+          "slug": "",
+          "title": "Grant: Country Health SA Local Health Network Incorporated — $38,179,086.00 across 25 grant records. Commonwealth Home Support Programme; Indigenous Comprehensive Primary Health Care; Rural Junior Doctor Training Innovation; National Jobs Creation Package; Soc…",
+          "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A96157660816",
+          "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A96157660816",
+          "snippet": "Grant: Country Health SA Local Health Network Incorporated — $38,179,086.00 across 25 grant records. Commonwealth Home Support Programme; Indigenous Comprehensive Primary Health Care; Rural Junior Doctor Training Innovation; National Jobs Creation Package; Soc…",
+          "cited": true,
+          "kind": "record"
+        }
+      ],
+      "research": {
+        "mode": "loop",
+        "pre_writer_sources": [
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "Grant: Country Health SA Local Health Network Incorporated — $38,179,086.00 across 25 grant records. Commonwealth Home Support Programme; Indigenous Comprehensive Primary Health Care; Rural Junior Doctor Training Innovation; National Jobs Creation Package; Soc…",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A96157660816",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A96157660816",
+            "snippet": "Grant: Country Health SA Local Health Network Incorporated — $38,179,086.00 across 25 grant records. Commonwealth Home Support Programme; Indigenous Comprehensive Primary Health Care; Rural Junior Doctor Training Innovation; National Jobs Creation Package; Soc…",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A96157660816",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A96157660816",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "DV-PRTY-009": {
+    "question": "In the House of Representatives on 4 December 2019, did the LNP vote for or against Fair Work (Registered Organisations) Amendment (Ensuring Integrity No. 2) Bill 2019 - Second Reading - Put the question?",
+    "payload": {
+      "answer": "OPAX has no record of a bill by that name: or against Fair Work (Registered Organisations) Amendment (Ensuring Integrity No. 2) Bill 2019.\n\nWhat the records do show:\n\n- OPAX has no record of a bill by that name: or against Fair Work (Registered Organisations) Amendment (Ensuring Integrity No. 2) Bill 2019.",
+      "answer_decision": "limitation",
+      "citations": {
+        "exact-lookup/t/body/0": [
+          [
+            0,
+            138
+          ],
+          [
+            167,
+            307
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2019-12-04",
+          "until": "2019-12-04",
+          "label": "Records from 2019-12-04 to 2019-12-04."
+        }
+      },
+      "sources": [
+        {
+          "resource": "exact-lookup",
+          "slug": "",
+          "title": "Exact record lookup",
+          "href": "https://opax.com.au/bills",
+          "url": "https://opax.com.au/bills",
+          "snippet": "OPAX has no record of a bill by that name: or against Fair Work (Registered Organisations) Amendment (Ensuring Integrity No. 2) Bill 2019.",
+          "cited": true,
+          "kind": "record"
+        }
+      ]
+    }
+  },
+  "DT-TERM-015": {
+    "question": "how many bills lapsed in the 47th parliament",
+    "payload": {
+      "answer": "There were 176 lapsed bill records by introduction date in federal parliament in the 47th Parliament.\n\nThere were 531 bill records in the introduction cohort in federal parliament in the 47th Parliament; 176 have snapshot status lapsed (33.15%).",
+      "answer_decision": "answer",
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            101
+          ]
+        ],
+        "fact-2/t/body/0": [
+          [
+            103,
+            245
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "176 lapsed bill records by introduction date in federal parliament in the 47th Parliament",
+          "href": "https://opax.com.au/bills",
+          "url": "https://opax.com.au/bills",
+          "snippet": "176 lapsed bill records by introduction date in federal parliament in the 47th Parliament",
+          "cited": true,
+          "kind": "count"
+        },
+        {
+          "resource": "fact-2",
+          "slug": "",
+          "title": "531 bill records in the introduction cohort in federal parliament in the 47th Parliament; 176 have snapshot status lapsed (33.15%)",
+          "href": "https://opax.com.au/bills",
+          "url": "https://opax.com.au/bills",
+          "snippet": "531 bill records in the introduction cohort in federal parliament in the 47th Parliament; 176 have snapshot status lapsed (33.15%)",
+          "cited": true,
+          "kind": "count"
+        },
+        {
+          "resource": "coverage",
+          "slug": "",
+          "title": "Coverage of the selected records",
+          "href": "https://opax.com.au/bills",
+          "url": "https://opax.com.au/bills",
+          "snippet": "Exact count of the full published bills index; not a ranked sample. Coverage in federal parliament: 2010-11-24 to 2026-09-17. This describes indexed records, not proof of complete parliamentary history. Published snapshot build date: 2026-10-04T16:27:54+00:00. This is a build stamp, not a live data currency guarantee. Latest indexed introduced date: 2026-09-17. Dates are introduction dates and chambers are originating chambers. A status filter gives the snapshot status of that cohort, not bills passing on those dates.",
+          "cited": false,
+          "kind": "record",
+          "coverage": true
+        }
+      ],
+      "research": {
+        "mode": "loop",
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "176 lapsed bill records by introduction date in federal parliament in the 47th Parliament",
+            "href": "https://opax.com.au/bills",
+            "url": "https://opax.com.au/bills",
+            "snippet": "176 lapsed bill records by introduction date in federal parliament in the 47th Parliament",
+            "cited": true,
+            "kind": "count"
+          },
+          {
+            "resource": "fact-2",
+            "slug": "",
+            "title": "531 bill records in the introduction cohort in federal parliament in the 47th Parliament; 176 have snapshot status lapsed (33.15%)",
+            "href": "https://opax.com.au/bills",
+            "url": "https://opax.com.au/bills",
+            "snippet": "531 bill records in the introduction cohort in federal parliament in the 47th Parliament; 176 have snapshot status lapsed (33.15%)",
+            "cited": true,
+            "kind": "count"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/bills",
+            "url": "https://opax.com.au/bills",
+            "snippet": "Exact count of the full published bills index; not a ranked sample. Coverage in federal parliament: 2010-11-24 to 2026-09-17. This describes indexed records, not proof of complete parliamentary history. Published snapshot build date: 2026-10-04T16:27:54+00:00. This is a build stamp, not a live data currency guarantee. Latest indexed introduced date: 2026-09-17. Dates are introduction dates and chambers are originating chambers. A status filter gives the snapshot status of that cohort, not bills passing on those dates.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "MN-GRNT-014": {
+    "question": "How much has The Trustee for Mantiyupwi Family Trust received in federal grants?",
+    "payload": {
+      "answer": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ….\n\n- Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities.\n\n- Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. Indigenous Employment and Business.\n\n; CJBF - Tiwi Islands Workforce Infrastructure and Employ….\n\nIndigenous Communities.",
+      "answer_decision": "answer",
+      "citations": {
+        "fact-3/t/body/0": [
+          [
+            0,
+            250
+          ],
+          [
+            685,
+            744
+          ]
+        ],
+        "fact-4/t/body/0": [
+          [
+            252,
+            462
+          ],
+          [
+            746,
+            769
+          ]
+        ],
+        "fact-5/t/body/0": [
+          [
+            464,
+            683
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "jurisdiction": "federal",
+        "people": [],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "sources": [
+        {
+          "resource": "fact-3",
+          "slug": "",
+          "title": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ…",
+          "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "snippet": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ…",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-4",
+          "slug": "",
+          "title": "Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities. .",
+          "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "snippet": "Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities. .",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-5",
+          "slug": "",
+          "title": "Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. . Indigenous Employment and Business. .",
+          "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+          "snippet": "Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. . Indigenous Employment and Business. .",
+          "cited": true,
+          "kind": "record"
+        }
+      ],
+      "research": {
+        "mode": "loop",
+        "pre_writer_sources": [
+          {
+            "resource": "fact-3",
+            "slug": "",
+            "title": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ…",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "snippet": "Grant: The Trustee for Mantiyupwi Family Trust — $5,941,767.00 across 4 grant records. Aboriginals Benefit Account; Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program; CJBF - Tiwi Islands Workforce Infrastructure and Employ…",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-4",
+            "slug": "",
+            "title": "Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities. .",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "snippet": "Grant: Tiwi Islands Visitor Welcome Centre Project — The Trustee for Mantiyupwi Family Trust — $4,092,000.00. Department of the Prime Minister and Cabinet. Aboriginals Benefit Account. Indigenous Communities. .",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-5",
+            "slug": "",
+            "title": "Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. . Indigenous Employment and Business. .",
+            "href": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "url": "https://opax.com.au/money/grants/federal/recipient/abn%3A26652290749",
+            "snippet": "Grant: Job Creation - Tiwi Islands Workforce Infrastructure and Employment Program — The Trustee for Mantiyupwi Family Trust — $1,330,664.00. National Indigenous Australians Agency. . Indigenous Employment and Business. .",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/subject/supplier/s-12cfad25aaf49c550fdc",
+            "url": "https://opax.com.au/subject/supplier/s-12cfad25aaf49c550fdc",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "NG-FALS-009": {
+    "question": "I am researching this for a community newsletter and want to get it right. As a Liberal senator, how has Vanessa Bleyer voted on climate legislation? A short answer with the source is fine.",
+    "payload": {
+      "answer": "Vanessa Bleyer is recorded as Greens, not Liberal.\n\nVanessa Bleyer voted in 1 divisions with \"climate\" in the title: aye 1, no 0.\n\nWhat the records do show:\n\n- Person: Vanessa Bleyer — Greens. federal. 6 speeches in the record. Recorded representation: Tasmania, TASMANIA, federal, senate. Roster affiliations may include past seats and do not establish current tenure.\n\n- Vanessa Bleyer served in the Senate for Tasmania from 20 August 2026, ongoing as at 19 October 2026.\n\n- Vanessa Bleyer voted in 1 divisions with \"climate\" in the title: aye 1, no 0.",
+      "answer_decision": "limitation",
+      "citations": {
+        "exact-lookup/t/body/0": [
+          [
+            0,
+            50
+          ]
+        ],
+        "fact-8/t/body/0": [
+          [
+            52,
+            129
+          ],
+          [
+            475,
+            554
+          ]
+        ],
+        "fact-1/t/body/0": [
+          [
+            158,
+            369
+          ]
+        ],
+        "fact-7/t/body/0": [
+          [
+            371,
+            473
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "chamber": "senate",
+        "people": [
+          "Vanessa Bleyer"
+        ],
+        "stateGovernment": false,
+        "recordKind": "division",
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "sources": [
+        {
+          "resource": "exact-lookup",
+          "slug": "",
+          "title": "Exact record lookup",
+          "href": "https://opax.com.au/subject/person/Vanessa%20Bleyer",
+          "url": "https://opax.com.au/subject/person/Vanessa%20Bleyer",
+          "snippet": "Vanessa Bleyer: Greens.",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "Person: Vanessa Bleyer — Greens. federal. 6 speeches in the record. Recorded representation: Tasmania, TASMANIA, federal, senate. Roster affiliations may include past seats and do not establish current tenure.",
+          "href": "https://opax.com.au/subject/person/vanessa-bleyer",
+          "url": "https://opax.com.au/subject/person/vanessa-bleyer",
+          "snippet": "Person: Vanessa Bleyer — Greens. federal. 6 speeches in the record. Recorded representation: Tasmania, TASMANIA, federal, senate. Roster affiliations may include past seats and do not establish current tenure.",
+          "cited": true,
+          "kind": "record"
+        },
+        {
+          "resource": "fact-7",
+          "slug": "",
+          "title": "Vanessa Bleyer served in the Senate for Tasmania from 20 August 2026, ongoing as at 19 October 2026.",
+          "href": "https://handbook.aph.gov.au/",
+          "url": "https://handbook.aph.gov.au/",
+          "snippet": "Vanessa Bleyer served in the Senate for Tasmania from 20 August 2026, ongoing as at 19 October 2026.",
+          "cited": true,
+          "kind": "record",
+          "entities": [
+            "person:Vanessa Bleyer"
+          ]
+        },
+        {
+          "resource": "fact-8",
+          "slug": "",
+          "title": "Divisions with \"climate\" in the title",
+          "href": "https://opax.com.au/search?kind=division&q=climate&mode=keyword",
+          "url": "https://opax.com.au/search?kind=division&q=climate&mode=keyword",
+          "snippet": "Vanessa Bleyer voted in 1 divisions with \"climate\" in the title: aye 1, no 0",
+          "cited": true,
+          "kind": "record",
+          "entities": [
+            "person:Vanessa Bleyer"
+          ]
+        },
+        {
+          "resource": "fact-8-record-1",
+          "slug": "",
+          "title": "2026-09-16: Documents — Climate Change; Order for the Production of Documents (voted aye)",
+          "href": "https://opax.com.au/doc/division-federal-senate-10799",
+          "url": "https://opax.com.au/doc/division-federal-senate-10799",
+          "snippet": "",
+          "cited": true,
+          "kind": "record"
+        }
+      ],
+      "research": {
+        "mode": "loop",
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "Person: Vanessa Bleyer — Greens. federal. 6 speeches in the record. Recorded representation: Tasmania, TASMANIA, federal, senate. Roster affiliations may include past seats and do not establish current tenure.",
+            "href": "https://opax.com.au/subject/person/vanessa-bleyer",
+            "url": "https://opax.com.au/subject/person/vanessa-bleyer",
+            "snippet": "Person: Vanessa Bleyer — Greens. federal. 6 speeches in the record. Recorded representation: Tasmania, TASMANIA, federal, senate. Roster affiliations may include past seats and do not establish current tenure.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "fact-7",
+            "slug": "",
+            "title": "Vanessa Bleyer served in the Senate for Tasmania from 20 August 2026, ongoing as at 19 October 2026.",
+            "href": "https://handbook.aph.gov.au/",
+            "url": "https://handbook.aph.gov.au/",
+            "snippet": "Vanessa Bleyer served in the Senate for Tasmania from 20 August 2026, ongoing as at 19 October 2026.",
+            "cited": true,
+            "kind": "record",
+            "entities": [
+              "person:Vanessa Bleyer"
+            ]
+          },
+          {
+            "resource": "fact-8",
+            "slug": "",
+            "title": "Divisions with \"climate\" in the title",
+            "href": "https://opax.com.au/search?kind=division&q=climate&mode=keyword",
+            "url": "https://opax.com.au/search?kind=division&q=climate&mode=keyword",
+            "snippet": "Vanessa Bleyer voted in 1 divisions with \"climate\" in the title: aye 1, no 0",
+            "cited": true,
+            "kind": "record",
+            "entities": [
+              "person:Vanessa Bleyer"
+            ]
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://opax.com.au/subject/person/vanessa-bleyer",
+            "url": "https://opax.com.au/subject/person/vanessa-bleyer",
+            "snippet": "Catalog hits are ranked matches, not complete totals; open the matching tool for figures. Use the name exactly as returned in speaker filters: it is the name the record indexes speeches under. Divisions are matched by words in their titles; divisions filed under other titles may be missed.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  },
+  "BL-INTR-024": {
+    "question": "My family were arguing about this over dinner and we want the actual record. When was the Foreign Acquisitions Amendment (Agricultural Land) Bill 2010 [2013] introduced? A short answer with the source is fine.",
+    "payload": {
+      "answer": "OPAX has no record of a bill by that name: Foreign Acquisitions Amendment (Agricultural Land) Bill 2010.\n\nWhat the records do show:\n\n- OPAX has no record of a bill by that name: Foreign Acquisitions Amendment (Agricultural Land) Bill 2010.",
+      "answer_decision": "limitation",
+      "citations": {
+        "exact-lookup/t/body/0": [
+          [
+            0,
+            104
+          ],
+          [
+            133,
+            239
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "2013-01-01",
+          "until": "2013-12-31",
+          "label": "Records from 2013-01-01 to 2013-12-31."
+        }
+      },
+      "sources": [
+        {
+          "resource": "exact-lookup",
+          "slug": "",
+          "title": "Exact record lookup",
+          "href": "https://opax.com.au/bills",
+          "url": "https://opax.com.au/bills",
+          "snippet": "OPAX has no record of a bill by that name: Foreign Acquisitions Amendment (Agricultural Land) Bill 2010.",
+          "cited": true,
+          "kind": "record"
+        }
+      ]
+    }
+  },
+  "NG-NREC-009": {
+    "question": "How did senators vote on the Native Title Bill on 2 July 1993?",
+    "payload": {
+      "answer": "OPAX has no record of a bill by that name: Native Title Bill.\n\nWhat the records do show:\n\n- OPAX has no record of a bill by that name: Native Title Bill.",
+      "answer_decision": "limitation",
+      "citations": {
+        "exact-lookup/t/body/0": [
+          [
+            0,
+            61
+          ],
+          [
+            90,
+            153
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "window",
+          "since": "1993-07-02",
+          "until": "1993-07-02",
+          "label": "Records from 1993-07-02 to 1993-07-02."
+        }
+      },
+      "sources": [
+        {
+          "resource": "exact-lookup",
+          "slug": "",
+          "title": "Exact record lookup",
+          "href": "https://opax.com.au/bills",
+          "url": "https://opax.com.au/bills",
+          "snippet": "OPAX has no record of a bill by that name: Native Title Bill.",
+          "cited": true,
+          "kind": "record"
+        }
+      ]
+    }
+  },
+  "NP-INTR-016": {
+    "question": "David Kempton shareholdings?",
+    "payload": {
+      "answer": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil and Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+      "answer_decision": "answer",
+      "citations": {
+        "fact-1/t/body/0": [
+          [
+            0,
+            270
+          ]
+        ]
+      },
+      "answer_scope": {
+        "period": {
+          "kind": "all",
+          "label": "Counting speeches across the whole record."
+        },
+        "dated": false,
+        "people": [
+          "Kempton",
+          "David"
+        ],
+        "stateGovernment": false,
+        "actUnfiltered": true,
+        "trend": false
+      },
+      "sources": [
+        {
+          "resource": "fact-1",
+          "slug": "",
+          "title": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+          "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+          "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+          "snippet": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+          "cited": true,
+          "kind": "record"
+        }
+      ],
+      "research": {
+        "mode": "loop",
+        "pre_writer_sources": [
+          {
+            "resource": "fact-1",
+            "slug": "",
+            "title": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+            "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "snippet": "David Kempton's Queensland register of interests as at 2026-10-16 records 4 shareholdings entries: Agrespond Pty Ltd; Mount Barker Mining Pty Ltd; Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd, exploration and mining, mining lease, mining equipment.",
+            "cited": true,
+            "kind": "record"
+          },
+          {
+            "resource": "coverage",
+            "slug": "",
+            "title": "Coverage of the selected records",
+            "href": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "url": "https://documents.parliament.qld.gov.au/Assembly/Procedures/MembersRegister.pdf",
+            "snippet": "Register entries include statements, additions and removals; an entry is not necessarily a current holding or evidence of a conflict of interest.",
+            "cited": true,
+            "kind": "record",
+            "coverage": true
+          }
+        ]
+      }
+    }
+  }
+}

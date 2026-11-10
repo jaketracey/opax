@@ -87,7 +87,10 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
   // 19 Oct plain-language sweep: count answers say "recorded under <party>", not "indexed under".
   // origin/main's body gets the same wording (with its citation spans moved to match) before
   // the byte comparison, so every other byte is still pinned. Drop once main carries the copy.
-  const COPY=[[' indexed under ',' recorded under ']];
+  const COPY=[[' indexed under ',' recorded under '],
+   ['A speaker name can be a surname-only record for some state members. Some federal debate records hold more than one speaker under one name (a known source fault being repaired).','Some state members are recorded by surname only, and some federal debate records group several speakers under one name.'],
+   ['Divisions are matched by a word in the division or bill title, so related divisions under other titles are missed.','Divisions are matched by words in their titles; divisions filed under other titles may be missed.'],
+   ['A recorded vote is not a statement of reasons; read the speeches for those.','A recorded vote does not establish why a member voted that way.']];
   const recopy=value=>typeof value==='string'?COPY.reduce((text,[from,to])=>text.split(from).join(to),value)
    :Array.isArray(value)?value.map(recopy):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([k,v])=>[k,recopy(v)])):value;
   const shift=(answer,at)=>COPY.reduce((n,[from,to])=>n+(answer.slice(0,at).split(from).length-1)*(to.length-from.length),at);

@@ -4,6 +4,7 @@ import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } f
 
 interface Agency { id: string; name: string; total: number; count: number; first_year?: number; last_year?: number }
 interface AgencyProfile extends Agency { suppliers?: { id: string; name: string; total: number; count: number }[] }
+interface SupplierProfile { id: string; name: string; total: number; count: number; agencies?: { name: string; total: number; count: number }[]; first_year?: number; last_year?: number }
 const NOTE = 'AusTender contract notices from Commonwealth agencies: values are contract values as published (including later amendments), not payments, and a supplier name follows the notice.'
 
 /** The agency a phrase names: exact name first, then every word, preferring the largest buyer ("Defence" is the Department of Defence). */
@@ -18,11 +19,13 @@ const contractCite = (env: ToolEnv, r: Record<string, unknown>): ToolCitation =>
 
 export const tool: ToolDefinition = {
   name: 'contracts',
-  description: 'Commonwealth government contracts (AusTender): who got a contract and supplier totals. With agency: the agency\'s contract total and its largest suppliers by total contract value. With supplier: that supplier\'s totals and largest contracts. With query: the largest contracts matching the words. Contract values as published, not payments.',
+  description: 'Commonwealth government contracts (AusTender): who got a contract and supplier totals. With agency: the agency\'s contract total and its largest suppliers by total contract value. To find which department gives a supplier the most contracts, pass supplier and group_by: agency, never the supplier name as agency. Returns buying agencies ranked by value or count, with ties. With supplier alone: totals, buying agencies and largest contracts. With query: the largest contracts matching the words. Contract values as published, not payments.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     agency: { type: 'string', minLength: 2, maxLength: 160, description: 'Buying agency, e.g. "Department of Defence" or "Defence".' },
     supplier: { type: 'string', minLength: 2, maxLength: 160, description: 'Supplier name, e.g. "Thales Australia".' },
     query: { type: 'string', minLength: 2, maxLength: 160, description: 'Words in the contract title, description, supplier or agency.' },
+    group_by: { type: 'string', enum: ['agency', 'contract'], description: 'For a supplier, agency returns the complete published buying-agency aggregates.' },
+    rank_by: { type: 'string', enum: ['value', 'count'], description: 'Agency ranking basis, default value. Use count for the number of contracts.' },
     limit: { type: 'integer', minimum: 1, maximum: 10, description: 'Rows (default 5).' },
   }, examples: [{ agency: 'Defence' }, { supplier: 'Thales Australia' }, { query: 'submarine maintenance' }, { agency: 'Department of Health', query: 'vaccine' }] },
   stepLabel: args => ({ label: 'Checking contracts', arg: clip(args.agency ?? args.supplier ?? args.query ?? '', 40) }),
@@ -42,9 +45,24 @@ export const tool: ToolDefinition = {
       return { rows, citations, notes }
     }
     if (supplier && !query && !agency) {
-      const found = await tableRows(env, 'suppliers', { q: supplier, sort: 'total:desc', pageSize: '3' })
+      const directory = await readToolAsset(env, '/suppliers.json') as { suppliers?: (SupplierProfile & { aliases?: string[]; agency_count?: number })[] } | null
+      const match = directory?.suppliers?.find(r => [r.name, r.id, ...r.aliases ?? []].some(name => fold(name) === fold(supplier)))
+      const found = match ? { rows: [match] } : await tableRows(env, 'suppliers', { q: supplier, sort: 'total:desc', pageSize: '3' })
       const top = found.rows.find(r => fold(r.name) === fold(supplier)) ?? found.rows[0]
       if (!top) return { rows: [], citations: [], notes: [`No supplier in the contract record matches "${clip(supplier, 60)}".`, NOTE] }
+      const id = String(top.id)
+      const profile = /^s-[a-f0-9]{20}$/.test(id) ? (await readToolAsset(env, `/suppliers/${id.slice(2, 4)}.json`) as { profiles?: Record<string, SupplierProfile> } | null)?.profiles?.[id] : undefined
+      if (profile?.id === id && profile.agencies?.length) {
+        const ranked = [...profile.agencies].sort((a, b) => args.rank_by === 'count' ? b.count - a.count || b.total - a.total : b.total - a.total || b.count - a.count)
+        const leaders = ranked.filter(a => args.rank_by === 'count' ? a.count === ranked[0].count : a.total === ranked[0].total)
+        const picked = [...new Set([...leaders, ...ranked.slice(0, limit)])]
+        const countLeaders = profile.agencies.filter(a => a.count === Math.max(...profile.agencies!.map(a => a.count)))
+        const href = siteUrl(env, `/subject/supplier/${id}`)
+        const agencyCitations = [...new Set([...picked, ...countLeaders])].map(a => ({ kind: 'record' as const, value: a.total, url: href,
+          text: `${a.name} awarded ${profile.name} ${aud(a.total)} across ${a.count.toLocaleString('en-AU')} Commonwealth contracts${leaders.includes(a) ? `, ${args.rank_by === 'count' ? 'the ' + (leaders.length > 1 ? 'joint ' : '') + 'highest contract count' : 'the largest total contract value'} for this supplier` : ''}${countLeaders.includes(a) && args.rank_by !== 'count' ? ', the ' + (countLeaders.length > 1 ? 'joint ' : '') + 'highest contract count for this supplier' : ''} (${profile.first_year} to ${profile.last_year}).` }))
+        if (args.group_by === 'agency' || !env.TABLE_DB) return { rows: picked.map(a => ({ agency: a.name, supplier: profile.name, total_aud: a.total, contracts: a.count })), citations: agencyCitations, notes: [NOTE, 'Agency totals cover the published supplier profile; value rankings and contract-count rankings can differ.'], group_by: 'agency', rank_by: args.rank_by ?? 'value' }
+        citations.push(...agencyCitations)
+      }
       citations.push({ kind: 'record', value: Number(top.total), url: siteUrl(env, `/subject/supplier/${top.id}`), text: `${top.name}: ${aud(top.total)} across ${Number(top.count).toLocaleString('en-AU')} Commonwealth contracts with ${top.agency_count} agencies (${top.first_year}–${top.last_year})` })
       const contracts = await tableRows(env, 'contracts', { 'f.supplier_id': JSON.stringify([top.id]), sort: 'amount:desc', pageSize: String(limit) })
       for (const r of contracts.rows) { citations.push(contractCite(env, r)); rows.push({ supplier: r.supplier, amount_aud: r.amount, title: clip(r.title, 90), agency: r.agency, start: r.start_date }) }

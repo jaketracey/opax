@@ -1,6 +1,8 @@
 import type { RecordQuestion } from './ask-records'
 import { isMoneyRanking } from './ask-money'
 import { isPositionDurationQuestion } from './position-evidence'
+import { isIdentityQuestion } from './ask-identity-intent'
+import { isRecordCountQuestion } from './ask-scope-intent'
 import { overviewSubject, isPersonOverviewCandidate } from './ask-person-overview'
 
 // Infer only an unambiguous political cohort, not arbitrary mentions of
@@ -143,6 +145,7 @@ function naturalScope(question: string, people: readonly { name: string }[]): As
 }
 
 export function resolveAskScope<T extends RecordQuestion>(input: T, people: readonly { name: string }[] = []): { input: T; scope?: AskScope } {
+  if (isIdentityQuestion(input.question ?? '')) return { input }
   if (input.kind && !['all', 'speech'].includes(input.kind)) return { input }
   const question = typeof input.question === 'string' ? input.question : ''
   let scope: AskScope = {}
@@ -171,7 +174,7 @@ export function resolveAskScope<T extends RecordQuestion>(input: T, people: read
 /** All resolved named speech questions get the original-turn attribution guard,
  * including ordinary "said" questions and referential follow-ups. */
 export function isNamedPositionQuestion(input: RecordQuestion): boolean {
-  return !!input.speaker && input.kind === 'speech' &&
+  return !isIdentityQuestion(input.question ?? '') && !isRecordCountQuestion(input.question ?? '') && !!input.speaker && input.kind === 'speech' &&
     (!!namedPositionRequest(input.question || '') || inheritsSubject(input.question || ''))
 }
 
@@ -217,6 +220,7 @@ function nextTopic(question: string, previous: string): string {
 /** Retrieval must understand a follow-up before generation sees the history. */
 export function askRetrievalQuery(input: RecordQuestion): string {
   const question = input.question || ''
+  if (isIdentityQuestion(question)) return question
   if (input.speaker && input.kind === 'speech') {
     let topic = ''
     for (const turn of [...userQuestions(input), question]) {

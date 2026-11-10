@@ -51,11 +51,15 @@ export function guardAnswerAttribution<T extends { answer: string; citations: Re
   payload = saDisplayPayload(payload, 'true')
   const points = Array.from(payload.answer)
   const bindings: { start: number; end: number; speaker?: string }[] = []
+  const countedNames: { start: number; end: number; text: string }[] = []
   const citationEnds = Object.values(payload.citations).flatMap(raw => Array.isArray(raw) ? raw.filter(range => Array.isArray(range) && Number.isSafeInteger(range[1])).map(range => range[1] as number) : [])
   const reject = (): T => ({ ...payload, answer: EVIDENCE_GAP_ANSWER, citations: {}, answer_status: 'evidence_gap',
     sources: payload.sources.map(raw => ({ ...raw as Record<string, unknown>, cited: false, answer_ranges: [] })) })
   for (const [id, rawRanges] of Object.entries(payload.citations)) {
-    const source = payload.sources.find(raw => (raw as { resource?: string }).resource === id.split('/')[0]) as { kind?: string; speaker?: string } | undefined
+    const source = payload.sources.find(raw => (raw as { resource?: string }).resource === id.split('/')[0]) as { kind?: string; speaker?: string; snippet?: string; title?: string } | undefined
+    if (source?.kind === 'count' && Array.isArray(rawRanges)) for (const range of rawRanges) {
+      if (Array.isArray(range) && range.length === 2 && range.every(Number.isSafeInteger)) countedNames.push({ start: range[0], end: range[1], text: normaliseQuestion([source.title,source.snippet].filter(Boolean).join(' ')) })
+    }
     if (!source || !['speech', 'hansard'].includes(source.kind ?? '') || !Array.isArray(rawRanges)) continue
     for (const range of rawRanges) {
       if (!Array.isArray(range) || !Number.isSafeInteger(range[0]) || !Number.isSafeInteger(range[1])) continue
@@ -75,6 +79,7 @@ export function guardAnswerAttribution<T extends { answer: string; citations: Re
   // that same subject; this never permits a second person or another speaker.
   const speakers = new Set(bindings.map(b => normaliseQuestion(b.speaker ?? '')).filter(Boolean))
   if (payload.sources.some(raw => ['speech','hansard'].includes((raw as { kind?: string }).kind ?? '')) && personMentions(payload.answer, roster).some(m =>
+    !countedNames.some(b => m.start >= b.start && m.end <= b.end && (' '+b.text+' ').includes(' '+normaliseQuestion(m.name)+' ')) &&
     !bindings.some(b => m.start >= b.start && m.end <= b.end && normaliseQuestion(m.name) === normaliseQuestion(b.speaker ?? '')) &&
     !(speakers.size === 1 && speakers.has(normaliseQuestion(m.name))))) return reject()
   return payload

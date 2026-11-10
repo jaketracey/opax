@@ -8,7 +8,13 @@ import {resolvedRankingScope,rankingScopeMatches} from '../src/research-ranking-
 const built=await build({stdin:{contents:"export * from './src/research-grounding';export * from './src/research-response';export * from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const hanson=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-pauline.json',import.meta.url))),golds=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-donor-golds.json',import.meta.url)))
-const shownUnranked=(out,figure)=>{assert.doesNotMatch(out.answer,/\b(?:most|largest|biggest|highest|top|leading|led|first)\b(?! years)/i);assert.doesNotMatch(out.answer,/unknown/i);assert.ok(out.answer.includes(figure));assert.match(out.answer,/\bThese (?:are|rows|records)\b|could not confirm|not a ranking|do not establish whether/);assert.ok(Object.keys(out.citations).length)}
+const shownUnranked=(out,figure)=>{
+ assert.doesNotMatch(out.answer,/\b(?:most|largest|biggest|highest|top|leading|led|first)\b(?! years)/i)
+ assert.doesNotMatch(out.answer,/unknown/i);assert.ok(out.answer.includes(figure))
+ const limit=/\bThese (?:are|rows|records)\b|could not confirm|not a ranking|do not establish whether/
+ assert.match(out.coverage?.note??'',limit);assert.doesNotMatch(out.answer,limit)
+ assert.ok(Object.keys(out.citations).length)
+}
 function synthetic(period='2019–20',entity_type='company'){
  return {resource:'fact-1',kind:'record',cited:true,url:'/money?jur=federal&party=party:One%20Nation',entity_type,receipt:{party:'One Nation',source:'Selected Company',amount:161787,period,jurisdiction:'federal'},snippet:`Selected Company: $161,787, 2 disclosed receipt records. Period: ${period}.`}
 }

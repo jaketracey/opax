@@ -56,7 +56,7 @@ for(const [label,question,decision] of cases)for(const sse of [false,true])for(c
  if(decision==='clarification'){
   assert.equal(out.answer,payload.answer);assert.equal(out.answer_decision,'clarification');assert.deepEqual(out.citations,{});assert.doesNotMatch(out.answer,/Westpac|161,787|provided the most/)
  }else if(decision==='person'){assert.equal(out.answer,payload.answer);assert.ok(out.citations['speech-1/t/body/0'])}
- else{assert.match(out.answer,/^Across disclosed returns.*Westpac.*\$161,787/);assert.ok(Object.keys(out.citations).length)}
+ else{assert.match(out.answer,/^Westpac Banking Corporation.*\$161,787.*1998-99 to 2025-26/);assert.ok(Object.keys(out.citations).length)}
 })
 for(const alias of ['Avery Example','Avery Display','avery-example'])test(`full roster name/display/slug resolves: ${alias}`,()=>{
  const r={people:[{name:'Avery Example',full:'Avery Display',slug:'avery-example',party_now:'Greens'}]}

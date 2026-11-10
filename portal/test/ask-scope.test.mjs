@@ -5,6 +5,14 @@ const bundle=await build({entryPoints:[new URL('../src/ask-scope.ts',import.meta
 const exports=await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
 const {resolveAskScope}=exports;
 const question='How have independant MPs described negative gearing over the years?';
+test('identity questions replace an earlier position subject and never inherit its speech scope',()=>{
+ const context=[{author:'user',text:'What would David Pocock say about housing?'}];
+ for(const question of ['Which party is Jacqui Lambie with?','When was Jacqui Lambie first elected?','Is Jacqui Lambie still in parliament?']){
+  const input={question,context};assert.equal(resolveAskScope(input,[{name:'David Pocock'},{name:'Jacqui Lambie'}]).input,input);
+  const explicit={...input,speaker:'Jacqui Lambie',kind:'speech'};
+  assert.equal(exports.isNamedPositionQuestion(explicit),false);assert.equal(exports.askRetrievalQuery(explicit),question);
+ }
+});
 test('the reported question retrieves independent speeches despite the misspelling',()=>{for(const q of [question,question.replace('independant','independent')]){const raw={question:q,kind:'all',from:'2000',to:'2026'};const out=resolveAskScope(raw);assert.equal(out.input.party,'Independent');assert.equal(out.input.kind,'speech');assert.equal(out.input.question,q);assert.equal(out.input.from,'2000');assert.equal(out.input.to,'2026');assert.equal(out.scope.party,'Independent');assert.equal(raw.party,undefined)}});
 test('unambiguous named political cohorts are supported',()=>{for(const [cohort,party] of [['Labor MPs','Labor'],['Liberal senators','Liberal'],['Greens members','Greens'],['One Nation senators','One Nation'],['LNP MPs','LNP']])assert.equal(resolveAskScope({question:`What have ${cohort} said about housing?`}).input.party,party)});
 test('explicit controls and named speakers take precedence',()=>{for(const extra of [{party:'Labor'},{speaker:'Example MP'},{kind:'legal'}]){const raw={question,...extra};assert.equal(resolveAskScope(raw).input,raw);assert.equal(resolveAskScope(raw).scope,undefined)}});

@@ -414,6 +414,31 @@ class PartyTimeline:
 # --- registry rows ----------------------------------------------------------
 
 
+_ASSENT_ACT_NUMBER = re.compile(
+    r"\bAct\s+(?:no\.?|number)\s*[:.]?\s*(\d+)"
+    r"(?:\s*(?:of|,|/)\s*((?:18|19|20)\d{2}))?\b", re.I)
+
+
+def lifecycle_fields(events: list[dict]) -> dict:
+    """Project explicit progress evidence. Missing events and Act numbers stay
+    null; neither a bill's status nor its dates supply an unrecorded fact."""
+    assent_events = [e for e in events if e.get("stage") == "royal_assent"]
+    assent_dates = {e["date"] for e in assent_events if e.get("date")}
+    passed_events = [e for e in events if e.get("stage") == "passed"]
+    passed_dates = {e["date"] for e in passed_events if e.get("date")}
+    numbers = set()
+    for event in assent_events:
+        for match in _ASSENT_ACT_NUMBER.finditer(event.get("event_raw") or ""):
+            number, year = match.groups()
+            numbers.add(f"{number} of {year}" if year else number)
+    return {
+        "passed_both_houses": True if passed_events else None,
+        "passed_both_houses_date": next(iter(passed_dates)) if len(passed_dates) == 1 else None,
+        "royal_assent": next(iter(assent_dates)) if len(assent_dates) == 1 else None,
+        "act_number": next(iter(numbers)) if len(numbers) == 1 else None,
+    }
+
+
 def load_legacy_bills(db: sqlite3.Connection) -> list[dict]:
     """`bills` + `bill_progress`. Keys are provisional (`au-federal-alrc-<id>`)
     because these rows carry no billhome id to key on."""
@@ -433,7 +458,7 @@ def load_legacy_bills(db: sqlite3.Connection) -> list[dict]:
         "ORDER BY bill_id"
     ):
         evs = events.get(r["bill_id"], [])
-        assent = max((e["date"] for e in evs if e["stage"] == "royal_assent" and e["date"]), default=None)
+        lifecycle = lifecycle_fields(evs)
         last = max((e["date"] for e in evs if e["date"]), default=None)
         bills.append({
             "key": f"au-federal-alrc-{r['bill_id']}",
@@ -455,9 +480,11 @@ def load_legacy_bills(db: sqlite3.Connection) -> list[dict]:
             "status": r["status"],
             "status_raw": r["status"],
             "status_as_of": last,
-            "assent": assent,
+            "assent": lifecycle["royal_assent"],
+            **lifecycle,
             "key_dates": [
-                {"stage": e["stage"], "date": e["date"], "house": e["house"], "url": e["url"]}
+                {"stage": e["stage"], "date": e["date"], "house": e["house"], "url": e["url"],
+                 "event_raw": e["event_raw"]}
                 for e in evs
             ],
         })
@@ -469,22 +496,19 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
     events: dict[str, list[dict]] = collections.defaultdict(list)
     if has_table(db, "bill_events"):
         for r in db.execute(
-            "SELECT bill_key, stage, date, house, source_url FROM bill_events "
+            "SELECT bill_key, stage, date, house, source_url, event_raw FROM bill_events "
             "ORDER BY bill_key, date"
         ):
             events[r["bill_key"]].append({
                 "stage": r["stage"], "date": r["date"],
                 "house": house_code(r["house"]), "url": r["source_url"],
+                "event_raw": r["event_raw"],
             })
     bills = []
     for r in db.execute("SELECT * FROM bills_v2 ORDER BY bill_key"):
         row = dict(r)
         evs = events.get(row["bill_key"], [])
-        assent = max(
-            (e["date"] for e in evs
-             if e["date"] and "assent" in (e["stage"] or "").lower()),
-            default=None,
-        )
+        lifecycle = lifecycle_fields(evs)
         # aliases_json is a list of alias titles per the contract, but the
         # registry currently writes an object of listing extras for ParlInfo
         # rows. Read either, and take the source's own sponsor party when the
@@ -526,9 +550,11 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
             "status": row.get("status"),
             "status_raw": row.get("status_raw"),
             "status_as_of": row.get("status_as_of") or max((e["date"] for e in evs if e["date"]), default=None),
-            "assent": assent,
+            "assent": lifecycle["royal_assent"],
+            **lifecycle,
             "key_dates": [
-                {"stage": e["stage"], "date": e["date"], "house": e["house"], "url": e["url"]}
+                {"stage": e["stage"], "date": e["date"], "house": e["house"], "url": e["url"],
+                 "event_raw": e["event_raw"]}
                 for e in evs
             ],
         })
@@ -948,6 +974,10 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
             "portfolio": b["portfolio"],
             "status": b["status"],
             "status_as_of": b["status_as_of"],
+            "passed_both_houses": b["passed_both_houses"],
+            "passed_both_houses_date": b["passed_both_houses_date"],
+            "royal_assent": b["royal_assent"],
+            "act_number": b["act_number"],
             "key_dates": b["key_dates"],
             "sources": sources.get(b["key"], []),
             "summary": summary,
@@ -994,6 +1024,9 @@ def index_row(d: dict) -> dict:
         "jurisdiction": d["jurisdiction"], "parliament": d["parliament"],
         "introduced": d["introduced"], "originating_house": d["originating_house"],
         "status": d["status"], "status_as_of": d["status_as_of"],
+        "passed_both_houses": d.get("passed_both_houses"),
+        "passed_both_houses_date": d.get("passed_both_houses_date"),
+        "royal_assent": d.get("royal_assent"), "act_number": d.get("act_number"),
         "sponsor": d["sponsor"], "sponsor_party": d["sponsor_party"],
         "sponsor_person_id": d.get("sponsor_person_id"),
         "portfolio": d["portfolio"],
@@ -1049,6 +1082,10 @@ def draft_doc(d: dict) -> dict:
         "portfolio": d.get("portfolio"),
         "status": DRAFT_STATUS,
         "status_as_of": d.get("status_as_of") or released,
+        "passed_both_houses": None,
+        "passed_both_houses_date": None,
+        "royal_assent": None,
+        "act_number": None,
         "key_dates": key_dates,
         "sources": d.get("sources") or [],
         "summary": d.get("summary"),
