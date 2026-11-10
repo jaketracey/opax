@@ -7,6 +7,7 @@ import shutil
 import signal
 import subprocess
 import tempfile
+import time
 import unittest
 import zipfile
 
@@ -14,7 +15,7 @@ SCRIPTS = Path(__file__).resolve().parent
 
 
 class AndroidHarnessTests(unittest.TestCase):
-    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920'):
+    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
             for name in ('e2e-android-device.sh','qa-env.sh','qa-maestro.sh','qa-flows.sh','maestro-watch.py','android-parity-results.py'):
@@ -22,7 +23,8 @@ class AndroidHarnessTests(unittest.TestCase):
             tools = root/'bin'; tools.mkdir(); out = root/'out'; out.mkdir()
             (out/'android-flows').mkdir()
             (out/'android-flows/01-launch.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
-            (out/'android-flows/suite.json').write_text(json.dumps([{'path':'01-launch.yaml','run':True}]))
+            (out/'android-flows/02-search.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
+            (out/'android-flows/suite.json').write_text(json.dumps([{'path':'01-launch.yaml','run':True},{'path':'02-search.yaml','run':True}]))
             (scripts/'prepare-android-flows.py').write_text('print("")\n')
             (mobile/'node_modules/.bin').mkdir(parents=True)
             with zipfile.ZipFile(mobile/'fixture.apk','w') as archive:
@@ -60,7 +62,7 @@ elif name=='git': print('a'*40)
                  'OPAX_ANDROID_SUITE_ONLY':'1','OPAX_ANDROID_CONTINUE_ON_FAILURE':'1','OPAX_EMULATOR_WAIT_SECONDS':'0',
                  'MOCK_ROOT':str(root),'MOCK_SERIAL':'emulator-'+port,'MOCK_FAIL':str(int(fail)), 'MOCK_EXISTING':str(existing)}
             for key in ('OPAX_PASTE_LOCK','OPAX_BUILD_GATE'): env.pop(key,None)
-            child=subprocess.Popen(['bash','scripts/e2e-android-device.sh',avd,str(out),'01'],cwd=mobile,env=env,
+            child=subprocess.Popen(['bash','scripts/e2e-android-device.sh',avd,str(out),'--all-android' if twice else '01'],cwd=mobile,env=env,
                                    stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
             try:
                 stdout, stderr=child.communicate(timeout=30)
@@ -100,6 +102,60 @@ elif name=='git': print('a'*40)
                 rc, log, commands, _=self.run_device(variant=variant,origin=origin)
                 self.assertNotEqual(rc,0,log)
                 self.assertFalse(any(c[0]=='emulator' or c[-2:]==['emu','kill'] for c in commands))
+
+
+    @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
+    def test_parent_resets_font_before_interrupt_fallback(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); mobile=root/'mobile'; scripts=mobile/'scripts'; scripts.mkdir(parents=True)
+            shutil.copyfile(SCRIPTS/'e2e-android.sh',scripts/'e2e-android.sh')
+            for name in ('qa-env.sh','qa-lock.sh'): (scripts/name).write_text('')
+            (scripts/'qa-java.sh').write_text('configure_java() { :; }\n')
+            (scripts/'prepare-android-flows.py').write_text('')
+            (scripts/'e2e-android-device.sh').write_text('''#!/bin/bash
+set -e
+out=$2
+{ echo $$; ps -o lstart= -p $$; } > "$out/device-runner"
+touch "$out/device-started"
+trap 'sleep 3; exit 143' TERM
+while :; do sleep 1; done
+''')
+            adb=root/'sdk/platform-tools/adb'; adb.parent.mkdir(parents=True)
+            adb.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$MOCK_ADB_LOG"\ncase "$*" in *"settings get"*) echo 1 ;; esac\n')
+            adb.chmod(0o755)
+            out=mobile/'private/qa/parent'
+            env={**os.environ,'ANDROID_HOME':str(root/'sdk'),'OPAX_QA_RUN':'parent',
+                 'OPAX_ANDROID_DEVICE_STOP_SECONDS':'1','MOCK_ADB_LOG':str(root/'adb.log')}
+            child=subprocess.Popen(['bash','scripts/e2e-android.sh','OPAX_API34','01'],cwd=mobile,env=env,
+                                   stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
+            try:
+                deadline=time.monotonic()+10
+                while not (out/'device-started').exists():
+                    self.assertLess(time.monotonic(),deadline)
+                    time.sleep(.05)
+                child.terminate()
+                stdout,stderr=child.communicate(timeout=12)
+                self.assertEqual(child.returncode,1,stdout+stderr)  # forced drain deadline expired
+                commands=(root/'adb.log').read_text().splitlines()
+                font=next(i for i,c in enumerate(commands) if 'font_scale 1.0' in c)
+                stop=next(i for i,c in enumerate(commands) if 'emu kill' in c)
+                self.assertLess(font,stop)
+                self.assertTrue(all(c.startswith('-s emulator-5602 ') for c in commands))
+                self.assertEqual((out/'parent-restore.log').read_text().strip(),'1')
+            finally:
+                if child.poll() is None:
+                    os.killpg(child.pid,signal.SIGKILL); child.wait()
+
+
+    @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
+    def test_second_journey_reuses_the_pinned_driver_after_a_successful_first(self):
+        rc,log,commands,results=self.run_device(twice=True)
+        self.assertEqual(rc,0,log)
+        maestro=[c for c in commands if c[0]=='maestro']
+        self.assertEqual(len(maestro),2,commands)
+        self.assertNotIn('--no-reinstall-driver',maestro[0])
+        self.assertIn('--no-reinstall-driver',maestro[1])
+        self.assertEqual(len(results.splitlines()),2)
 
 
 if __name__=='__main__': unittest.main()

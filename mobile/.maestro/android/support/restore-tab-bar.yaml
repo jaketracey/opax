@@ -1,7 +1,6 @@
 appId: au.com.opax.app
 name: Android return to the tab root and reveal its first content
 ---
-- hideKeyboard
 - repeat:
     times: 12
     while:

@@ -186,13 +186,17 @@ if [ "${OPAX_ANDROID_PRESERVE_STATE:-0}" = 1 ]; then
 else
   "${ADB[@]}" shell pm clear au.com.opax.app > "$OUT/e2e-clear.log"
 fi
+MAESTRO_DRIVER_READY=0
 android_flow() {
   local key=$1 size=$2 file=$3 rc=0
+  local driver_args=()
+  if [ "$HOST_OS" = Linux ] && [ "$MAESTRO_DRIVER_READY" = 1 ]; then driver_args+=(--no-reinstall-driver); fi
   assert_lock
-  qa_maestro_run "$OUT/$key-maestro.log" "$OUT/maestro/$key" --device "$SERIAL" test \
+  qa_maestro_run "$OUT/$key-maestro.log" "$OUT/maestro/$key" --device "$SERIAL" test "${driver_args[@]}" \
     --test-output-dir "$OUT/maestro/$key" --debug-output "$OUT/maestro/$key" \
     --format junit --output "$OUT/$key-report.xml" -e EVIDENCE=screenshots \
     -e CONTENT_SIZE=large -e FIXTURE_PORT="$PORT" "$OUT/android-flows/${file#.maestro/}" || rc=$?
+  if [ "$rc" = 0 ] || [ -s "$OUT/$key-report.xml" ]; then MAESTRO_DRIVER_READY=1; fi
   ./node_modules/.bin/tsx scripts/collect-screenshots.ts "$OUT/screenshots/$size" "$OUT/maestro/$key" > "$OUT/$key-captures.log"
   if [ "$rc" != 0 ]; then
     timed 15 "${ADB[@]}" exec-out screencap -p > "$OUT/maestro/$key/failure.png" || true

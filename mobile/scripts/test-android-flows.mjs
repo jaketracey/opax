@@ -157,3 +157,16 @@ test('prepared launch values retain string semantics in Maestro YAML 1.1', () =>
     );
   }
 });
+
+test('Android root restoration does not press Back through hideKeyboard and web path cases stay local', () => {
+  assert.notEqual(
+    read('support/restore-tab-bar.yaml')[1].toJS()[0],
+    'hideKeyboard',
+  );
+  const money = read('65-money-links.yaml')[1].toJS();
+  assert.ok(money.length > 20);
+  for (const step of money) {
+    const url = step.runFlow?.env?.URL;
+    if (url) assert.ok(url.startsWith('opax://'), url);
+  }
+});

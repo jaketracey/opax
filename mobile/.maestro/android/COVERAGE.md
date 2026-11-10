@@ -10,6 +10,7 @@ prepared variant: **87**; Android-only variant: **4**; held: map lane: **8**; no
 The full device set is selected with `scripts/e2e-android.sh OPAX_API34 --all-android`.
 The runner changes fixture variants per flow; 04 requires a saved-catalog warmup then the fixture stopped.
 Today/welcome launch flags require Android support in the app; assertions stay mandatory.
+Money web-path cases enter the shared resolver through opax://; Android verified HTTPS App Links remain navigation work and are not claimed by these fixture runs.
 Permission taps use Android permission-controller resource IDs across API 34/36: Only this time, While using the app/this app and Don’t allow. Precise/Approximate choices accept the location suffix.
 R8 mapping and native symbols are release checks only when enabled by the generated native build.
 

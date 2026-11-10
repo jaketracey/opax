@@ -65,6 +65,7 @@ const permission = {
 };
 const backSelector = { text: '^(Navigate up|Go back|Back|Back to .*)$' };
 function selector(v) {
+  if (v === 'Profile sources') return 'Sources';
   if (typeof v === 'string')
     return (
       permission[v] ??
@@ -88,6 +89,13 @@ function selector(v) {
     ]),
   );
 }
+function androidURL(value) {
+  // Deliver web route families to the app's shared resolver without opening
+  // a production browser. Android verified HTTPS App Links are separate work.
+  return typeof value === 'string'
+    ? value.replace(/^https:\/\/opax\.(?:com\.au|invalid)(?:\/|$)/, 'opax://')
+    : value;
+}
 function command(v, relative) {
   if (typeof v === 'string') {
     if (v === 'pressKey: Back') return 'back';
@@ -95,6 +103,15 @@ function command(v, relative) {
   }
   if (!v || typeof v !== 'object') return v;
   const out = structuredClone(v);
+  if (out.openLink) {
+    if (typeof out.openLink === 'string')
+      out.openLink = androidURL(out.openLink);
+    else out.openLink.link = androidURL(out.openLink.link);
+  }
+  if (out.runFlow?.env)
+    for (const key of ['URL', 'ROOT_URL'])
+      if (out.runFlow.env[key])
+        out.runFlow.env[key] = androidURL(out.runFlow.env[key]);
   if (out.pressKey === 'Back') return 'back';
   if (out.tapOn) {
     const tap = out.tapOn;
@@ -117,6 +134,13 @@ function command(v, relative) {
       return { runFlow: { commands: ['hideKeyboard', 'back'] } };
     if (text === 'Cancel' && relative === '22b-sources.yaml')
       return 'hideKeyboard';
+    if (text === 'Open' && tap.optional)
+      return {
+        runFlow: {
+          when: { visible: { text: '^Open$' } },
+          commands: [{ tapOn: { text: '^Open$' } }],
+        },
+      };
     out.tapOn =
       text === 'Select All' ? { text: '^Select (All|all)$' } : selector(tap);
     if (
@@ -140,6 +164,21 @@ function command(v, relative) {
       };
     if (out.tapOn?.id?.startsWith('tab-')) out.tapOn.retryTapIfNoChange = true;
   }
+  if (out.assertVisible?.id === 'search-scope.*')
+    return {
+      runFlow: {
+        commands: [
+          {
+            scrollUntilVisible: {
+              element: { id: 'search-scope.*' },
+              direction: 'UP',
+              timeout: 30000,
+            },
+          },
+          { assertVisible: out.assertVisible },
+        ],
+      },
+    };
   for (const key of [
     'assertVisible',
     'assertNotVisible',
@@ -359,6 +398,7 @@ if (argv.includes('--coverage')) {
     'The full device set is selected with `scripts/e2e-android.sh OPAX_API34 --all-android`.\n' +
     'The runner changes fixture variants per flow; 04 requires a saved-catalog warmup then the fixture stopped.\n' +
     'Today/welcome launch flags require Android support in the app; assertions stay mandatory.\n' +
+    'Money web-path cases enter the shared resolver through opax://; Android verified HTTPS App Links remain navigation work and are not claimed by these fixture runs.\n' +
     'Permission taps use Android permission-controller resource IDs across API 34/36: Only this time, While using the app/this app and Don’t allow. Precise/Approximate choices accept the location suffix.\n' +
     'R8 mapping and native symbols are release checks only when enabled by the generated native build.\n\n' +
     '| Shared flow | Android coverage | Prepared entry / reason |\n| --- | --- | --- |\n' +

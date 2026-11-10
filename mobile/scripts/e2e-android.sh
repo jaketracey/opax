@@ -46,7 +46,7 @@ finish() {
       started=$(sed -n '2p' "$OUT/device-runner")
       if [ -n "$started" ] && [ "$(/bin/ps -o lstart= -p "$device")" = "$started" ]; then
         kill -TERM "$device" 2>/dev/null || true
-        deadline=$((SECONDS + 60))
+        deadline=$((SECONDS + ${OPAX_ANDROID_DEVICE_STOP_SECONDS:-60}))
         while [ "$(/bin/ps -o lstart= -p "$device" 2>/dev/null)" = "$started" ]; do
           [ "$SECONDS" -lt "$deadline" ] || { rc=1; break; }
           sleep 0.1
