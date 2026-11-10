@@ -42,7 +42,9 @@ function AndroidPressable({
     (role) => colors[role] === resting?.backgroundColor,
   );
   const borderless = android_ripple?.borderless === true;
-  const minimum = androidControls.target;
+  // Absolutely positioned surfaces (chart bars, scrims) are sized by their
+  // parent; a minimum there would overlap neighbours instead of growing a row.
+  const minimum = resting?.position === 'absolute' ? 0 : androidControls.target;
   return (
     <NativePressable
       {...props}

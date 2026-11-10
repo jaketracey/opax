@@ -4,7 +4,7 @@ import type { SFSymbol as NativeSFSymbol } from 'expo-symbols';
  * Journey follow 13 retires bell.badge in favour of bell. */
 export const symbols = Object.freeze({
   selected: 'checkmark',
-  increment: 'plus',
+  increment: 'plus.circle',
   decrement: 'minus.circle',
   loading: 'ellipsis',
   photo: 'photo',

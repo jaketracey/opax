@@ -400,3 +400,16 @@ test('ripple state layers preserve AA text contrast on paper and every filled ca
     ).toBeGreaterThanOrEqual(4.5);
   }
 });
+test('absolutely positioned surfaces such as chart bars keep their parent-given size', () => {
+  const r = render(
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="2024, 12"
+      style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: 12 }}
+    />,
+  );
+  const style = styles(surface(r));
+  expect(style.width).toBe(12);
+  expect(style.minWidth).toBe(0);
+  expect(style.minHeight).toBe(0);
+});
