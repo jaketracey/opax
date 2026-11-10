@@ -4878,6 +4878,7 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   if(missingEntitySlug(path)) return path
   if(path==='/map.html') return '/map'
   if(path==='/community.html') return '/community'
+  if(path==='/press.html') return '/press'
   if(path==='/connections.html') return '/connections'
   // The contracts page's first address; its query (the table's state, a chosen comparison) goes with it.
   if(path==='/discover') return '/money/contracts'

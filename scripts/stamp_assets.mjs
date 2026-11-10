@@ -424,6 +424,11 @@ function stamp({ check }) {
   // The community page wears the site masthead, drawer and footer, synced from index.html as home.html's are.
   const communityAfter = syncHomeChrome(communityBefore, after).replace(/\/(style\.css|ui-controls\.css|nav\.css|community\.css|community\.js|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && communityAfter !== communityBefore) writeFileSync(communityPath, communityAfter)
+  // The press kit (/press) wears the same chrome, synced the same way.
+  const pressPath = join(PUBLIC, 'press.html')
+  const pressBefore = readFileSync(pressPath, 'utf8')
+  const pressAfter = syncHomeChrome(pressBefore, after).replace(/\/(style\.css|ui-controls\.css|nav\.css|navigation\.js|quick-search\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
+  if (!check && pressAfter !== pressBefore) writeFileSync(pressPath, pressAfter)
   const workbenchPath = join(PUBLIC, 'ui-workbench.html')
   const workbenchBefore = readFileSync(workbenchPath, 'utf8')
   const workbenchAfter = workbenchBefore.replace(/\/(style\.css|ui-controls\.css|ui-source\.css|ui-source\.js|ui-workbench\.css|ui-workbench\.js)\?v=[A-Za-z0-9._-]*/g, (_, file) => `/${file}?v=${hashOf(file)}`)
@@ -438,7 +443,7 @@ function stamp({ check }) {
   const mapBefore = readFileSync(mapPath, 'utf8')
   const mapAfter = mapBefore.replace(/\/(tokens\.css|ui-controls\.css|map-page\.js)(?:\?v=[A-Za-z0-9._-]*)?(?=")/g, (_, file) => `/${file}?v=${hashOf(file)}`)
   if (!check && mapAfter !== mapBefore) writeFileSync(mapPath, mapAfter)
-  const pagesStale = staleModules.length || homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || workbenchAfter !== workbenchBefore || mapAfter !== mapBefore
+  const pagesStale = staleModules.length || homeAfter !== homeBefore || after !== before || communityAfter !== communityBefore || pressAfter !== pressBefore || workbenchAfter !== workbenchBefore || mapAfter !== mapBefore
   if (check && pagesStale) {
     console.error('stamp_assets: entry-page stamps or shared chrome are stale — run `node scripts/stamp_assets.mjs`.')
     process.exit(1)
