@@ -213,6 +213,14 @@ def _shouting(word: str) -> bool:
     return len(core) > 4 and core.isupper()
 
 
+# "St Paul'S", "Kate'S Place": a str.title()-style source spelling (search-hubs-011).
+TITLECASE_POSSESSIVE = re.compile(r"[a-z]['\u2019]S\b")
+
+
+def fix_possessive(name: str) -> str:
+    return TITLECASE_POSSESSIVE.sub(lambda m: m[0][:-1] + "s", name)
+
+
 def display_name(spellings: Counter, abr_name: str | None) -> str:
     """The commonest spelling of the commonest form, preferring a variant that is
     not shouting ("University of NEW South Wales" loses to "University of New
@@ -226,18 +234,19 @@ def display_name(spellings: Counter, abr_name: str | None) -> str:
     def score(item):
         sp, n = item
         shout = sum(1 for w in sp.split() if _shouting(w))
-        return (0 if sp.isupper() else 1, -shout, n)
+        # a "Paul'S" spelling loses to any other mixed-case spelling of the same name
+        return (0 if sp.isupper() else 1, 0 if TITLECASE_POSSESSIVE.search(sp) else 1, -shout, n)
 
     variants.sort(key=score, reverse=True)
     best = variants[0][0] if variants else top
     clean = not best.isupper() and not any(_shouting(w) for w in best.split())
     if abr_name and norm_rule(abr_name) == norm_rule(best):
         if clean:
-            return best
+            return fix_possessive(best)
         return pretty(abr_name) if abr_name.isupper() else abr_name
     if looks_like_person(best):
-        return pretty_person(best)
-    return best if clean else pretty(best.upper())
+        return fix_possessive(pretty_person(best))
+    return fix_possessive(best) if clean else pretty(best.upper())
 
 
 def significant(key: str) -> list[str]:
