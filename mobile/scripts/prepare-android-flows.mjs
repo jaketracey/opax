@@ -533,6 +533,7 @@ if (argv.includes('--coverage')) {
     'One row per shared root flow; support helpers are exercised through their callers.\n' +
     'Prepared means the Android file is generated and audited; device pass/fail is recorded privately per API.\n' +
     'No shared iOS YAML is changed. Font-scale variants run at Android 2.0.\n\n' +
+    'The cold first-line flow (15) defaults to 2.0; OPAX_ANDROID_FONT_SCALE=1.0 runs its standard-size control. Other normal flows default to 1.0; named ax5 variants use 2.0. Each run records font-scales.tsv.\n\n' +
     Object.entries(counts)
       .map(([k, v]) => `${k}: **${v}**`)
       .join('; ') +

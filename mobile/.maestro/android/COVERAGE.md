@@ -5,6 +5,8 @@ One row per shared root flow; support helpers are exercised through their caller
 Prepared means the Android file is generated and audited; device pass/fail is recorded privately per API.
 No shared iOS YAML is changed. Font-scale variants run at Android 2.0.
 
+The cold first-line flow (15) defaults to 2.0; OPAX_ANDROID_FONT_SCALE=1.0 runs its standard-size control. Other normal flows default to 1.0; named ax5 variants use 2.0. Each run records font-scales.tsv.
+
 prepared variant: **87**; Android-only variant: **4**; held: map lane: **8**; not applicable: **7**. Total: **106**.
 
 The full device set is selected with `scripts/e2e-android.sh OPAX_API34 --all-android`.

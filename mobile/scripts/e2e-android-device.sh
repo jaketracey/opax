@@ -16,6 +16,9 @@ E2E_APK=${OPAX_ANDROID_E2E_APK:-build/android/e2e/opax-e2e.apk}
 DEBUG_APK=${OPAX_ANDROID_DEBUG_APK:-build/android/development/opax-debug.apk}
 PORT=${OPAX_FIXTURE_PORT:-8910}; export OPAX_FIXTURE_PORT=$PORT
 METRO_PORT=${OPAX_ANDROID_METRO_PORT:-8976}
+case "${OPAX_ANDROID_FONT_SCALE:-1.0}" in
+  1.0|2.0) ;; *) echo 'OPAX_ANDROID_FONT_SCALE must be 1.0 or 2.0' >&2; exit 2 ;;
+esac
 assert_lock() {
   [ "$HOST_OS" != Linux ] || return 0
   [ -n "${OPAX_PASTE_LOCK:-}" ] || { echo 'Android requires the shared device lock' >&2; return 1; }
@@ -133,6 +136,9 @@ assert_lock
 EMULATOR_ARGS=(-avd "$AVD" -port "${OPAX_ANDROID_EMULATOR_PORT:-5580}" -no-audio -no-snapshot -no-boot-anim)
 if [ "$HOST_OS" = Linux ]; then
   EMULATOR_ARGS+=(-gpu swiftshader_indirect -no-window)
+  # Keep Wi-Fi independent of the shared netsim lifetime. Its stream closed
+  # immediately before an SDK 37 abort; legacy virtio Wi-Fi stays local.
+  EMULATOR_ARGS+=(-feature -WiFiPacketStream)
   if [ "$AVD" = OPAX_Pixel_API36 ] || [ "${OPAX_ANDROID_READ_ONLY:-0}" = 1 ]; then EMULATOR_ARGS+=(-read-only); fi
 fi
 emulator "${EMULATOR_ARGS[@]}" > "$OUT/emulator.log" 2>&1 & EMULATOR_PID=$!
@@ -265,6 +271,7 @@ for flow in "${FLOWS[@]}"; do
 done
 [ "${#FILES[@]}" -gt 0 ] || { echo 'No Android journeys selected' >&2; exit 2; }
 : > "$OUT/flow-results.tsv"
+: > "$OUT/font-scales.tsv"
 for file in "${FILES[@]}"; do
   flow=$(basename "$file" .yaml)
   if [ "${OPAX_ANDROID_SUITE_ONLY:-0}" = 1 ]; then
@@ -283,16 +290,21 @@ for file in "${FILES[@]}"; do
       sleep 1
     done
   fi
-  scale=1.0
-  case "$flow" in *ax5*) scale=2.0 ;; esac
+  scale=${OPAX_ANDROID_FONT_SCALE:-1.0}
+  case "$flow" in
+    *ax5*) scale=2.0 ;;
+    15-cold-first-line) scale=${OPAX_ANDROID_FONT_SCALE:-2.0} ;;
+  esac
   "${ADB[@]}" shell settings put system font_scale "$scale"
+  printf '%s\t%s\n' "$file" "$scale" >> "$OUT/font-scales.tsv"
+  size=standard; [ "$scale" = 1.0 ] || size=font-2
   if [ "$flow" = 04-offline ]; then
     android_flow offline-warmup standard .maestro/android/offline-warmup.yaml || { failed=1; continue; }
     kill "$FIXTURE_PID"; wait "$FIXTURE_PID" 2>/dev/null || true; FIXTURE_PID=
     touch "$OUT/fixture-stopped"
   fi
   assert_lock
-  if ! android_flow "$flow" standard "$file"; then
+  if ! android_flow "$flow" "$size" "$file"; then
     failed=1
     if [ "${OPAX_ANDROID_CONTINUE_ON_FAILURE:-0}" != 1 ]; then exit 1; fi
   fi

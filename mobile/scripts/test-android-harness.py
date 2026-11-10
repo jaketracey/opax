@@ -15,7 +15,7 @@ SCRIPTS = Path(__file__).resolve().parent
 
 
 class AndroidHarnessTests(unittest.TestCase):
-    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False, local_avds=(), reader=False, bad_copy=False):
+    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False, local_avds=(), reader=False, bad_copy=False, font2=False):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
             for name in ('e2e-android-device.sh','qa-env.sh','qa-maestro.sh','qa-flows.sh','maestro-watch.py','android-parity-results.py'):
@@ -30,6 +30,7 @@ class AndroidHarnessTests(unittest.TestCase):
             (out/'android-flows').mkdir()
             (out/'android-flows/01-launch.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
             (out/'android-flows/02-search.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
+            (out/'android-flows/15-cold-first-line.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
             (out/'android-flows/android').mkdir()
             (out/'android-flows/android/32-record-reader.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
             (out/'android-flows/suite.json').write_text(json.dumps([{'path':'01-launch.yaml','run':True},{'path':'02-search.yaml','run':True},{'path':'android/32-record-reader.yaml','run':reader}]))
@@ -83,7 +84,7 @@ elif name=='git': print('a'*40)
                  'MOCK_ROOT':str(root),'MOCK_SERIAL':'emulator-'+port,'MOCK_FAIL':str(int(fail)), 'MOCK_EXISTING':str(existing)}
             env['MOCK_BAD_COPY']=str(int(bad_copy))
             for key in ('OPAX_PASTE_LOCK','OPAX_BUILD_GATE'): env.pop(key,None)
-            selector='.maestro/android/32-record-reader.yaml' if reader else '--all-android' if twice else '01'
+            selector='.maestro/15-cold-first-line.yaml' if font2 else '.maestro/android/32-record-reader.yaml' if reader else '--all-android' if twice else '01'
             child=subprocess.Popen(['bash','scripts/e2e-android-device.sh',avd,str(out),selector],cwd=mobile,env=env,
                                    stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
             try:
@@ -93,7 +94,7 @@ elif name=='git': print('a'*40)
                 except ProcessLookupError: pass
             commands=[json.loads(line) for line in (root/'commands.jsonl').read_text().splitlines()]
             if fail and any(c[0]=='maestro' for c in commands):
-                hierarchy=out/'maestro/01-launch/failure-ui.json'
+                hierarchy=next((out/'maestro').glob('*/failure-ui.json'))
                 self.assertEqual(json.loads(hierarchy.read_text())['attributes']['text'],'current failure')
                 self.assertFalse(any('uiautomator' in c for c in commands),'Reuse Maestro hierarchy rather than stale on-device XML')
             return child.returncode, stdout+stderr, commands, (out/'flow-results.tsv').read_text() if (out/'flow-results.tsv').exists() else ''
@@ -102,14 +103,20 @@ elif name=='git': print('a'*40)
     def test_scoped_serial_read_only_api36_and_cleanup_after_pass_or_failure(self):
         for avd, fail in [('OPAX_API34',False),('OPAX_Pixel_API36',True)]:
             with self.subTest(avd=avd):
-                rc, log, commands, results=self.run_device(avd,fail)
+                rc, log, commands, results=self.run_device(avd,fail,font2=fail)
                 self.assertEqual(rc,int(fail),log)
                 emulator=next(c for c in commands if c[0]=='emulator')
                 self.assertEqual('-read-only' in emulator,avd=='OPAX_Pixel_API36')
                 self.assertIn('-no-window',emulator); self.assertIn('-no-audio',emulator)
+                self.assertEqual(emulator[emulator.index('-feature')+1],'-WiFiPacketStream')
                 adb=[c for c in commands if c[0]=='adb']
                 self.assertTrue(any(c[-2:]==['emu','kill'] for c in adb),log)
                 self.assertTrue(any(c[-5:]==['settings','put','system','font_scale','1.0'] for c in adb),log)
+                if fail:
+                    self.assertTrue(any(c[-5:]==['settings','put','system','font_scale','2.0'] for c in adb),log)
+                    reset=max(i for i,c in enumerate(adb) if c[-5:]==['settings','put','system','font_scale','1.0'])
+                    stopped=next(i for i,c in enumerate(adb) if c[-2:]==['emu','kill'])
+                    self.assertLess(reset,stopped)
                 self.assertTrue(results.strip().endswith(str(int(fail))),results)
                 self.assertFalse(any(c[0]=='xcrun' for c in commands))
                 self.assertFalse(any(c[-3:]==['emu','avd','name'] for c in commands),'Do not query another emulator console')
@@ -117,6 +124,8 @@ elif name=='git': print('a'*40)
                 endpoint='5603' if avd=='OPAX_API34' else '5605'
                 self.assertEqual(maestro[maestro.index('--port')+1],endpoint)
                 self.assertEqual(maestro[maestro.index('--device')+1],'127.0.0.1:'+endpoint)
+                captures=next(c for c in commands if c[:2]==['tsx','scripts/collect-screenshots.ts'])
+                self.assertTrue(captures[2].endswith('/font-2' if fail else '/standard'))
 
     @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
     def test_three_emulator_cap_refuses_to_boot_or_stop_another_emulator(self):
