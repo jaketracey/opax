@@ -76,6 +76,21 @@ const hermesBuiltins = {
       'find',
     ]);
     const checkProperty = (node, receiver, name) => {
+      if (
+        ['Iterator', 'Float16Array', 'SharedArrayBuffer', 'Atomics'].includes(
+          name,
+        ) &&
+        ['globalThis', 'global', 'window'].includes(receiver.name)
+      ) {
+        report(
+          node,
+          name,
+          name === 'Iterator'
+            ? 'for...of loops and Array.from'
+            : 'ordinary ArrayBuffer storage and supported numeric arrays',
+        );
+        return;
+      }
       if (Object.hasOwn(missing, name))
         return report(node, name, missing[name]);
       if (
@@ -189,6 +204,12 @@ const hermesBuiltins = {
             'SharedArrayBuffer',
             'Atomics',
           ].includes(node.name)
+        )
+          return;
+        if (
+          ['TSTypeReference', 'TSTypeQuery', 'TSQualifiedName'].includes(
+            node.parent.type,
+          )
         )
           return;
         const variable =

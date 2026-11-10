@@ -92,6 +92,8 @@ test('the actual ESLint config rejects missing APIs, including aliases and compu
     'const xs = new Uint8Array(2); xs.with(0, 1)',
     'const xs = new Uint8Array(2); const { toReversed } = xs;',
     'Iterator.from([])',
+    'globalThis["Iterator"].from([])',
+    'const { Float16Array: Half } = globalThis; new Half(2)',
     '[1].values().map(x => x)',
     'const iterator = new Set([1]).values(); iterator.filter(x => x)',
     'const iterator = new Map().entries(); const { take } = iterator;',
@@ -135,6 +137,7 @@ test('the actual ESLint config rejects missing APIs, including aliases and compu
     'new RegExp("a", "du")',
     '/a/d',
     'const custom = { toArray: () => [] }; custom.toArray()',
+    'function next(iterator: Iterator<number>) { return iterator.next(); }',
   ];
   const script = `const { ESLint } = require('eslint'); (async () => {
     const lint = new ESLint();
