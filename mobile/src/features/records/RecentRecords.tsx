@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { NavigationContext } from 'expo-router/react-navigation';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import {
@@ -61,17 +61,30 @@ export default function RecentRecords() {
   const [fresh, setFresh] = useState<RecordResult<RecentFeed> | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<unknown>(null);
+  const refreshGeneration = useRef(0);
+  useEffect(
+    () => () => {
+      refreshGeneration.current += 1;
+    },
+    [],
+  );
   const value = fresh ?? first.value;
   const refresh = useCallback(() => {
+    const generation = ++refreshGeneration.current;
     setRefreshing(true);
     void records
       .recent({ fresh: true })
       .then((next) => {
+        if (generation !== refreshGeneration.current) return;
         setFresh(next);
         setRefreshError(null);
       })
-      .catch((error: unknown) => setRefreshError(error))
-      .finally(() => setRefreshing(false));
+      .catch((error: unknown) => {
+        if (generation === refreshGeneration.current) setRefreshError(error);
+      })
+      .finally(() => {
+        if (generation === refreshGeneration.current) setRefreshing(false);
+      });
   }, []);
   const rows = value?.data ?? [];
   const newest =
