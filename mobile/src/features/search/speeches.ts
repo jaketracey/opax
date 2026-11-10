@@ -113,6 +113,11 @@ export function speechSource(
   };
 }
 
+function uniqueBySlug(rows: SearchRecord[]): SearchRecord[] {
+  const seen = new Set<string>();
+  return rows.filter((row) => !seen.has(row.slug) && !!seen.add(row.slug));
+}
+
 export function useSpeechList(
   q: string,
   f: SpeechFilters,
@@ -137,9 +142,13 @@ export function useSpeechList(
   const results = reads.flatMap((read) =>
     read.status === 'ready' ? [read.result] : [],
   );
+  // Ranked pages can overlap when the index shifts between reads: a record
+  // already shown on an earlier page is not drawn twice.
   const rows = results.length
     ? roster
-      ? results.flatMap((result) => eligibleRows(result.data, roster) ?? [])
+      ? uniqueBySlug(
+          results.flatMap((result) => eligibleRows(result.data, roster) ?? []),
+        )
       : null
     : null;
   const lastResult = results.at(-1);
