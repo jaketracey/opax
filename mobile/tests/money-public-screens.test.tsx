@@ -1050,3 +1050,16 @@ test.each([
     await act(async () => r.unmount());
   },
 );
+
+test('the grants card keeps the register’s caveats, as the contracts card does', async () => {
+  const { SourceLine } = jest.requireActual('../src/design/source');
+  const r = await mount(Hub);
+  const notes = r.root
+    .findAllByType(SourceLine)
+    .find((x) => x.props.testID === 'money-card-grants-source')!.props
+    .notes as string[];
+  const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
+  expect(index.meta.caveats.length).toBeGreaterThan(0);
+  for (const caveat of index.meta.caveats) expect(notes).toContain(caveat);
+  await act(async () => r.unmount());
+});

@@ -277,7 +277,13 @@ export function GrantsCard() {
             originals: index.meta.sourceUrl
               ? [{ label: 'GrantConnect', url: index.meta.sourceUrl }]
               : [],
-            notes: [index.meta.coverage, GRANTS_CAVEAT, FUTURE_YEARS_NOTE],
+            notes: [
+              index.meta.coverage,
+              GRANTS_CAVEAT,
+              FUTURE_YEARS_NOTE,
+              index.meta.threshold,
+              ...index.meta.caveats,
+            ],
             licence: index.meta.licence,
           }),
         };
