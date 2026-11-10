@@ -1,4 +1,5 @@
 import { formatCount, formatMoney, formatPercent } from '../../design/format';
+import { partyFromCode } from '../bills/party-codes';
 import type { ElectorateView } from './model';
 
 /** One election as the electorate file holds it. */
@@ -28,6 +29,7 @@ export function electionTitle(
 
 export interface ElectionWinner {
   name: string;
+  /** The party's name; null when the result file records none. */
   party: string | null;
   personId: string | null;
 }
@@ -51,7 +53,12 @@ export function electionSummary(
     title: electionTitle(record.election, jurisdiction),
     date: record.election.poll_date,
     winner: one
-      ? { name: one.name, party: one.party, personId: one.person_id }
+      ? {
+          name: one.name,
+          // Result files carry codes ("ALP"): the party's name, never a code.
+          party: partyFromCode(one.party),
+          personId: one.person_id,
+        }
       : null,
   };
 }

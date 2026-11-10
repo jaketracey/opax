@@ -107,6 +107,17 @@ export default function Members() {
         />
       </Screen>
     );
+  // An old link or a removed seat: say so, never load for good.
+  if (failed === 'missing')
+    return (
+      <Screen testID="members-screen">
+        <ContentUnavailable
+          symbol="exclamationmark.triangle"
+          title="These members couldn't be found."
+          testID="members-missing"
+        />
+      </Screen>
+    );
   if (!loaded)
     return (
       <Screen testID="members-screen">

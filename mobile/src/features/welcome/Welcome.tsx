@@ -69,6 +69,7 @@ export function WelcomePage({
   const [laidOut, setLaidOut] = useState(false);
   const [covered, setCovered] = useState(launch);
   const leaving = useRef(false);
+  const advancing = useRef(false);
   const accessible = isAccessibilityCategory(fontScale);
   const pinned = continuePinned(fontScale);
   const wide = isPad && layout.regular;
@@ -84,14 +85,20 @@ export function WelcomePage({
     closeWelcome(navigation as Parameters<typeof closeWelcome>[0]);
   };
   const next = () => {
+    if (leaving.current || advancing.current) return;
     if (short) leave(false);
-    else router.push(welcomeSeatRoute());
+    else {
+      advancing.current = true;
+      router.push(welcomeSeatRoute());
+    }
   };
   // Two-finger Z, Escape and Android back: "Not now" (today.md 3.2). A
   // replay with a seat saved changes nothing; the short welcome declines
-  // nothing, so they act as its Continue.
-  const notNow = () =>
-    leave(!short && seat.status !== 'chosen' && seat.status !== 'loading');
+  // nothing, so they act as its Continue. Only a saved seat makes it a
+  // no-op: on a first launch the seat read can still be in flight, and a
+  // "Not now" then must still move Today's invitation (a replay's seat has
+  // long been read).
+  const notNow = () => leave(!short && seat.status !== 'chosen');
 
   useFocusEffect(() => {
     if (Platform.OS !== 'android') return;
@@ -104,7 +111,10 @@ export function WelcomePage({
   const [focused, setFocused] = useState(true);
   useEffect(() => {
     const blur = navigation.addListener('blur', () => setFocused(false));
-    const focus = navigation.addListener('focus', () => setFocused(true));
+    const focus = navigation.addListener('focus', () => {
+      advancing.current = false;
+      setFocused(true);
+    });
     return () => {
       blur();
       focus();

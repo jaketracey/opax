@@ -17,6 +17,7 @@ import {
   type YourMPView,
 } from './model';
 import { stateInRunningCopy } from './state-names';
+import { RepresentativeRows } from './RepresentativeRows';
 
 const PRECISE = new Set(['day', 'month', 'year']);
 
@@ -118,6 +119,14 @@ export function RepresentativesGroup({
             tenure={year ? `Member since ${year}` : null}
             official={officialPageFor(person?.source_url, seat.jurisdiction)}
             testID={`your-member-${profile.slug}`}
+          />
+        ) : member ? (
+          <RepresentativeRows
+            rows={[member]}
+            directory={directory}
+            id="your-member"
+            wrap={false}
+            detailFor={() => (year ? `Member since ${year}` : null)}
           />
         ) : (
           <Text

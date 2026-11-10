@@ -13,6 +13,7 @@ import { catalogs as runtime } from '../src/api/runtime';
 import { confirmAction } from '../src/design/menu';
 import { suggestFromLocation } from '../src/features/electorate-map/location';
 import { CHOSEN_MARK_MS, SeatChooser } from '../src/features/seat/SeatChooser';
+import { LocationRow } from '../src/features/seat/LocationRow';
 import {
   FieldClearance,
   bottomFieldClearance,
@@ -159,6 +160,20 @@ async function type(text: string) {
 }
 
 describe('the sheet', () => {
+  test('two row taps in one event batch save only the first choice and close once', async () => {
+    jest.useFakeTimers();
+    const r = await render(<SeatChooser presentation="sheet" />);
+    await type('Syd');
+    const row = one(r, `seat-row-${sydney.slug}`);
+    await act(async () => {
+      row.props.onPress();
+      row.props.onPress();
+    });
+    expect(choose).toHaveBeenCalledTimes(1);
+    await act(async () => jest.advanceTimersByTime(CHOSEN_MARK_MS));
+    expect(closeWelcome).toHaveBeenCalledTimes(1);
+    await act(async () => r.unmount());
+  });
   test('"Your electorate" with Cancel, the location row, Browse by state and the footnote', async () => {
     const r = await render(<SeatChooser presentation="sheet" />);
     expect(mockScreen.options.title).toBe('Your electorate');
@@ -246,6 +261,7 @@ describe('the sheet', () => {
       status: 'chosen',
       choice: { version: 1, seatId: grayndler.electorate_id, stateSeatIds: [] },
       choose,
+      forget: jest.fn(async () => undefined),
     };
     const r = await render(<SeatChooser presentation="sheet" />);
     expect(one(r, 'seat-saved-row').props.detail).toBe('Saved');
@@ -257,7 +273,9 @@ describe('the sheet', () => {
       destructive: true,
     });
     await act(async () => actions[0].onPress());
-    expect(forgetChoice).toHaveBeenCalledTimes(1);
+    // Through the seat's write queue, never straight to the store.
+    expect(mockSeat.current.forget).toHaveBeenCalledTimes(1);
+    expect(forgetChoice).not.toHaveBeenCalled();
     expect(closeWelcome).toHaveBeenCalledTimes(1);
     await act(async () => r.unmount());
   });
@@ -276,6 +294,26 @@ describe('the sheet', () => {
 });
 
 describe('location', () => {
+  test('cancelling before the directory answers prevents a later location permission request', async () => {
+    let finishSeats!: (seats: typeof index.electorates) => void;
+    const seats = () =>
+      new Promise<typeof index.electorates>((resolve) => {
+        finishSeats = resolve;
+      });
+    const r = await render(
+      <LocationRow
+        seats={seats}
+        onChoose={jest.fn()}
+        accessory={() => 'chevron'}
+      />,
+    );
+    await act(async () => one(r, 'use-my-location').props.onPress());
+    await act(async () => one(r, 'seat-location-finding').props.onPress());
+    await act(async () => finishSeats(index.electorates));
+    expect(suggestFromLocation).not.toHaveBeenCalled();
+    expect(byID(r, 'use-my-location')).not.toHaveLength(0);
+    await act(async () => r.unmount());
+  });
   test('one ordinary answer row: "From your location", no checkmark until chosen', async () => {
     (suggestFromLocation as jest.Mock).mockResolvedValue({
       kind: 'suggested',
@@ -506,6 +544,17 @@ describe('Browse by state', () => {
     await act(async () => jest.advanceTimersByTime(CHOSEN_MARK_MS));
     expect(closeWelcome).toHaveBeenCalledTimes(1);
     expect(markWelcomeSeen).not.toHaveBeenCalled();
+    await act(async () => r.unmount());
+  });
+  test('a failed save says so with Try again, and stays open', async () => {
+    choose.mockRejectedValueOnce(new Error('disk'));
+    const r = await render(<SeatStateList code="nsw" presentation="sheet" />);
+    await act(async () => one(r, `seat-row-${grayndler.slug}`).props.onPress());
+    expect(byID(r, 'seat-save-error')).not.toHaveLength(0);
+    expect(words(r)).toContain(
+      'Your electorate couldn’t be saved on this iPhone.',
+    );
+    expect(closeWelcome).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   });
 });

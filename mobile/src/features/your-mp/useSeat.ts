@@ -23,7 +23,8 @@ export interface SeatActions {
   retry(): void;
 }
 let snapshot: SeatState = { status: 'loading' };
-let rawChoice: SeatChoice | null = null;
+// Undefined means the initial read has not answered; null is a saved forget.
+let rawChoice: SeatChoice | null | undefined;
 let directory: Directory | null = null;
 let pending: Promise<void> | null = null;
 let removeSubscription: (() => void) | null = null;
@@ -63,13 +64,20 @@ function publish(choice: SeatChoice | null) {
 function initialise() {
   removeSubscription ??= subscribeChoice((choice) => {
     rawChoice = choice;
+    // A choice saved after the directory read failed (Today's invitation
+    // stays usable) would publish "chosen" with no directory, and screens
+    // that need both would wait for good. Read the directory again.
+    if (!directory && snapshot.status === 'error') {
+      actions.retry();
+      return;
+    }
     publish(choice);
   });
   pending ??= (async () => {
     try {
       const choice = await loadChoice();
       // A save while the initial read is in flight wins over that read.
-      if (rawChoice === null) rawChoice = choice;
+      if (rawChoice === undefined) rawChoice = choice;
       directory = await catalogs.directory();
       publish(rawChoice);
     } catch {
@@ -213,7 +221,7 @@ export function resetSeatForTests(): void {
   removeSubscription?.();
   removeSubscription = null;
   snapshot = { status: 'loading' };
-  rawChoice = null;
+  rawChoice = undefined;
   directory = null;
   pending = null;
   saving = Promise.resolve();
