@@ -163,7 +163,10 @@ test('More from the record: Topics inline, then rows that push the record lists;
   // One section each, never a section per row (pass 5, P2-1).
   expect(words(r).match(/More from the record/g)).toHaveLength(2);
   expect(peopleDepth.topics).toHaveBeenCalledTimes(1);
-  expect(peopleDepth.topics).toHaveBeenCalledWith('Anthony Albanese');
+  expect(peopleDepth.topics).toHaveBeenCalledWith(
+    'Anthony Albanese',
+    expect.any(AbortSignal),
+  );
   for (const fn of [
     peopleDepth.speeches,
     peopleDepth.mentions,

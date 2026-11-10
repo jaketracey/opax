@@ -127,10 +127,14 @@ export function PartyPage({
   // "Independent" is a label, not a party: no page, no read.
   const notAParty = !isPartyLabel(input) && /^independent/i.test(input);
   const load = useCallback(
-    (refresh: boolean, publish: (record: PartyPageRecord) => void) =>
+    (
+      refresh: boolean,
+      publish: (record: PartyPageRecord) => void,
+      signal?: AbortSignal,
+    ) =>
       notAParty
         ? new Promise<PartyPageRecord>(() => {})
-        : catalogs.partyPage(input, refresh, publish),
+        : catalogs.partyPage(input, refresh, publish, signal),
     [input, notAParty],
   );
   const { record, error, refresh, retry, refreshing } = useCatalogRecord(load);

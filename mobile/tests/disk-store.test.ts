@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 
 const mockWrite = jest.fn();
 const mockMove = jest.fn();
+const mockDelete = jest.fn();
 jest.mock('expo-file-system', () => ({
   Paths: { cache: 'file:///cache', availableDiskSpace: 10 * 1024 * 1024 },
   Directory: class {
@@ -15,6 +16,7 @@ jest.mock('expo-file-system', () => ({
     exists = false;
     write = mockWrite;
     move = mockMove;
+    delete = mockDelete;
   },
 }));
 
@@ -25,6 +27,32 @@ test('low storage preserves device space instead of saving an offline copy', asy
   );
   expect(mockWrite).not.toHaveBeenCalled();
   expect(mockMove).not.toHaveBeenCalled();
+});
+
+test('cancellation while writing temporary bytes never replaces the saved file', async () => {
+  (Paths as unknown as { availableDiskSpace: number }).availableDiskSpace =
+    10 * 1024 * 1024;
+  mockMove.mockClear();
+  mockDelete.mockClear();
+  let finish!: () => void;
+  mockWrite.mockImplementationOnce(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const controller = new AbortController();
+  const pending = new DiskStore().writeIndex([], controller.signal);
+  const outcome = pending.then(
+    () => null,
+    (error: unknown) => error,
+  );
+  await Promise.resolve();
+  controller.abort();
+  finish();
+  expect(await outcome).toMatchObject({ name: 'AbortError' });
+  expect(mockMove).not.toHaveBeenCalled();
+  expect(mockDelete).toHaveBeenCalledTimes(1);
 });
 
 test('with space available a temporary offline copy replaces the destination', async () => {

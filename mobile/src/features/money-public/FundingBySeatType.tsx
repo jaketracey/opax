@@ -49,7 +49,11 @@ const CPI = {
  * order. No colour, no bars, no ranking.
  */
 export default function FundingBySeatType() {
-  const load = useCallback((refresh: boolean) => money.allocation(refresh), []);
+  const load = useCallback(
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.allocation(refresh, signal),
+    [],
+  );
   const status = useCatalogRecord(load);
   const data = status.record?.data;
   const saved = recordSource(status.record);

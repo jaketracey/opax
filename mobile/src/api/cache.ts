@@ -1,3 +1,5 @@
+import { throwIfAborted } from './abort';
+
 export interface CacheEntry {
   url: string;
   body: unknown;
@@ -15,12 +17,13 @@ export interface CacheIndexEntry {
 }
 export interface CacheStore {
   readIndex(): Promise<CacheIndexEntry[]>;
-  writeIndex(entries: CacheIndexEntry[]): Promise<void>;
+  writeIndex(entries: CacheIndexEntry[], signal?: AbortSignal): Promise<void>;
   read(url: string): Promise<CacheEntry | undefined>;
-  write(entry: CacheEntry): Promise<void>;
+  write(entry: CacheEntry, signal?: AbortSignal): Promise<void>;
   remove(url: string): Promise<void>;
 }
 export interface WriteCondition {
+  signal?: AbortSignal;
   requestStartedAt: number;
   // Present only for a conditional 304; an absent ETag cannot validate a body.
   revalidatedETag?: string;
@@ -135,6 +138,7 @@ export class CatalogCache {
   // receives the retained entry when its response loses a validation/date race.
   put(entry: CacheEntry, condition?: WriteCondition): Promise<CacheEntry> {
     const task = this.queue.then(async () => {
+      throwIfAborted(condition?.signal);
       const group = bucket(entry.url);
       const memoryOnly = group === 'search';
       const index: CacheIndexEntry[] = memoryOnly
@@ -148,6 +152,7 @@ export class CatalogCache {
       const current = memoryOnly
         ? this.searches.get(entry.url)
         : await this.readCatalog(entry.url);
+      throwIfAborted(condition?.signal);
       if (current) {
         const currentDate = Date.parse(current.asOf ?? '');
         const incomingDate = Date.parse(entry.asOf ?? '');
@@ -183,7 +188,15 @@ export class CatalogCache {
           if (memoryOnly) this.searches.set(entry.url, expired);
           else {
             this.forget(entry.url);
-            await this.store.write(expired);
+            const signal = condition?.signal;
+            try {
+              if (signal) await this.store.write(expired, signal);
+              else await this.store.write(expired);
+              throwIfAborted(signal);
+            } catch (error) {
+              if (signal?.aborted) await this.store.write(current);
+              throw error;
+            }
           }
         }
         return entry;
@@ -212,14 +225,30 @@ export class CatalogCache {
         return entry;
       }
       this.forget(entry.url);
-      await this.store.write(entry);
       const next = [...kept, ...index.filter((item) => item.bucket !== group)];
-      for (const item of candidates)
-        if (!kept.includes(item)) {
-          this.forget(item.url);
-          await this.store.remove(item.url);
+      const signal = condition?.signal;
+      try {
+        if (signal) await this.store.write(entry, signal);
+        else await this.store.write(entry);
+        throwIfAborted(signal);
+        for (const item of candidates)
+          if (!kept.includes(item)) {
+            this.forget(item.url);
+            await this.store.remove(item.url);
+          }
+        if (signal) await this.store.writeIndex(next, signal);
+        else await this.store.writeIndex(next);
+        throwIfAborted(signal);
+      } catch (error) {
+        // A store may finish a write after cancellation. Keep its previous
+        // snapshot, including across relaunch, instead of retaining that read.
+        if (signal?.aborted) {
+          if (current) await this.store.write(current);
+          else await this.store.remove(entry.url);
+          await this.store.writeIndex(index);
         }
-      await this.store.writeIndex(next);
+        throw error;
+      }
       this.index = next;
       if (kept.some((item) => item.url === entry.url)) this.remember(entry);
       return entry;

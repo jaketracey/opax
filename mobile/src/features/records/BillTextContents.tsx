@@ -25,13 +25,17 @@ export default function BillTextContents() {
     version?: string;
   }>();
   const load = useCallback(
-    () =>
+    (signal?: AbortSignal) =>
       version
-        ? records.billVersion(key, version)
+        ? records.billVersion(key, version, signal)
         : records
-            .billManifest(key)
+            .billManifest(key, signal)
             .then((manifest) =>
-              records.billVersion(key, manifest.data.default_version_id),
+              records.billVersion(
+                key,
+                manifest.data.default_version_id,
+                signal,
+              ),
             ),
     [key, version],
   );

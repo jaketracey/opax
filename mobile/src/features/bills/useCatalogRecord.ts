@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
+import { isAbortError } from '../../api/abort';
 
 const dailyRefresh = 24 * 60 * 60 * 1000;
 
@@ -15,10 +16,15 @@ const dailyRefresh = 24 * 60 * 60 * 1000;
  * `load` receives `true` for a refresh (pull to refresh, Try again on a saved
  * copy, returning to the app): loaders forward it to the client, so the read
  * revalidates instead of returning a copy still within its max-age. The first
- * load and Try again after an error pass `false`.
+ * load and Try again after an error pass `false`. The third argument is the
+ * read's abort signal; loaders forward it through every nested request.
  */
 export function useCatalogRecord<R extends { stale: boolean }>(
-  load: (refresh: boolean, publish: (record: R) => void) => Promise<R>,
+  load: (
+    refresh: boolean,
+    publish: (record: R) => void,
+    signal?: AbortSignal,
+  ) => Promise<R>,
 ) {
   const [outcome, setOutcome] = useState<{
     load: typeof load;
@@ -32,28 +38,36 @@ export function useCatalogRecord<R extends { stale: boolean }>(
   // Only the latest request may write, so a slow first load never replaces
   // a newer refresh.
   const latest = useRef(0);
+  const requestController = useRef<AbortController | null>(null);
   const inFlight = useRef(false);
   const attemptedAt = useRef(0);
   // Starts a request; only its promise callbacks write state.
   const start = useCallback(
     (refresh = false) => {
       const id = ++latest.current;
+      requestController.current?.abort();
+      const controller = new AbortController();
+      requestController.current = controller;
       inFlight.current = true;
       attemptedAt.current = Date.now();
       const publish = (result: R) => {
-        if (id !== latest.current) return;
+        if (id !== latest.current || controller.signal.aborted) return;
         setOutcome({ load, record: result, error: null });
       };
       // The async boundary also catches a loader that throws before returning
       // its promise, keeping the screen's existing recovery controls usable.
-      const request = async () => load(refresh, publish);
+      const request = async () => load(refresh, publish, controller.signal);
       void request()
         .then((result) => {
-          if (id !== latest.current) return;
+          if (id !== latest.current || controller.signal.aborted) return;
           setOutcome({ load, record: result, error: null });
         })
         .catch((e: unknown) => {
-          if (id === latest.current)
+          if (
+            id === latest.current &&
+            !controller.signal.aborted &&
+            !isAbortError(e)
+          )
             setOutcome((previous) => ({
               load,
               record: previous?.load === load ? previous.record : null,
@@ -77,6 +91,8 @@ export function useCatalogRecord<R extends { stale: boolean }>(
     start();
     return () => {
       latest.current += 1;
+      requestController.current?.abort();
+      requestController.current = null;
       inFlight.current = false;
     };
   }, [start]);

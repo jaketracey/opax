@@ -1,3 +1,4 @@
+import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -131,8 +132,8 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
   } = params;
   const jur = input === 'qld' ? 'qld' : 'federal';
   const load = useCallback(
-    async (refresh: boolean) => {
-      const index = await money.grants(jur, refresh);
+    async (refresh: boolean, _publish: unknown, signal?: AbortSignal) => {
+      const index = await money.grants(jur, refresh, signal);
       const entry = index.data.programs.find(
         (p) =>
           p.id === id ||
@@ -142,8 +143,11 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
       );
       if (!entry) throw new ApiError('not-found', 'Program not found.');
       const [program, notes] = await Promise.all([
-        money.program(jur, entry.key, refresh),
-        money.notes(refresh).catch(() => null),
+        money.program(jur, entry.key, refresh, signal),
+        money.notes(refresh, signal).catch(() => {
+          throwIfAborted(signal);
+          return null;
+        }),
       ]);
       return combine(notes ? [index, program, notes] : [index, program], {
         index: index.data,
@@ -162,8 +166,9 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
   useEffect(() => {
     if (!program) return;
     let active = true;
+    const controller = new AbortController();
     money
-      .agencies()
+      .agencies(false, controller.signal)
       .then((r) => {
         const match = r.data.agencies.find(
           (a) => lower(a.name) === lower(program.agency),
@@ -173,6 +178,7 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
       .catch(() => undefined);
     return () => {
       active = false;
+      controller.abort();
     };
   }, [program]);
   const [view, setView] = useState<'recipients' | 'grants'>('recipients');

@@ -2,6 +2,7 @@ import { Directory, File, Paths } from 'expo-file-system';
 import { Platform } from 'react-native';
 import type { CacheEntry, CacheIndexEntry, CacheStore } from './cache';
 import { catalogWarning } from './validation';
+import { throwIfAborted } from './abort';
 // Stable compact filename; the full URL is checked in the body before reuse.
 // Two independent 32-bit hashes avoid OS filename limits on long search URLs.
 const key = (url: string) => {
@@ -34,7 +35,8 @@ export class DiskStore implements CacheStore {
     const legacy = new Directory(Paths.cache, 'opax-catalog-v1');
     if (legacy.exists) legacy.delete();
   }
-  private async atomic(file: File, value: unknown) {
+  private async atomic(file: File, value: unknown, signal?: AbortSignal) {
+    throwIfAborted(signal);
     const payload = JSON.stringify(value);
     // E174.1: retain free space for the user's device instead of saving an
     // offline copy that cannot fit. ApiClient still returns the online result.
@@ -44,6 +46,10 @@ export class DiskStore implements CacheStore {
     this.prepare();
     const temporary = new File(this.directory, `${file.name}.tmp`);
     await temporary.write(payload);
+    if (signal?.aborted) {
+      temporary.delete();
+      throwIfAborted(signal);
+    }
     const moved = temporary.move(file, { overwrite: true });
     // Android's native move is asynchronous. Keep serialized cache writes
     // ordered until the destination exists, including the shared index file.
@@ -87,8 +93,8 @@ export class DiskStore implements CacheStore {
           file.delete();
     return entries;
   }
-  async writeIndex(entries: CacheIndexEntry[]) {
-    await this.atomic(this.index, entries);
+  async writeIndex(entries: CacheIndexEntry[], signal?: AbortSignal) {
+    await this.atomic(this.index, entries, signal);
   }
   async read(url: string): Promise<CacheEntry | undefined> {
     const file = new File(this.directory, key(url));
@@ -104,7 +110,8 @@ export class DiskStore implements CacheStore {
       return;
     return entry;
   }
-  async write(entry: CacheEntry) {
+  async write(entry: CacheEntry, signal?: AbortSignal) {
+    throwIfAborted(signal);
     const file = new File(this.directory, key(entry.url));
     if (file.exists) {
       let existing;
@@ -116,7 +123,7 @@ export class DiskStore implements CacheStore {
       if (existing && existing.url !== entry.url)
         throw new Error('Cache key collision');
     }
-    await this.atomic(file, entry);
+    await this.atomic(file, entry, signal);
   }
   async remove(url: string) {
     const file = new File(this.directory, key(url));

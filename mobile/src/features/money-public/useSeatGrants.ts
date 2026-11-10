@@ -28,10 +28,14 @@ export function useSeatGrants(key: string | undefined) {
     async (
       refresh: boolean,
       publish: (record: SeatRead) => void,
+      signal?: AbortSignal,
     ): Promise<SeatRead> => {
       request.current?.controller.abort();
       if (request.current?.key !== key) expanded.current = false;
       const controller = new AbortController();
+      const abort = () => controller.abort();
+      signal?.addEventListener('abort', abort, { once: true });
+      if (signal?.aborted) abort();
       request.current = { controller, key };
       const pages: RecordResult<SeatGrantPage>[] = [];
       const result = (moreError: unknown = null): SeatRead => {
@@ -100,6 +104,7 @@ export function useSeatGrants(key: string | undefined) {
         }
         return result();
       } finally {
+        signal?.removeEventListener('abort', abort);
         if (request.current?.controller === controller) setLoadingMore(false);
       }
     },

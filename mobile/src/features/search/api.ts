@@ -1,3 +1,4 @@
+import { ReadSession } from '../../api/read-session';
 import type { ApiClient, RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import {
@@ -16,7 +17,7 @@ import {
 /** Session snapshots and in-flight coalescing: returning or tapping twice
  * cannot spend twice. A failed action is retried only by another explicit tap. */
 export class RecordSearch {
-  private session = new Map<string, Promise<RecordResult<unknown>>>();
+  private session = new ReadSession<RecordResult<unknown>>(128);
   constructor(private client: ApiClient) {}
   private read<T>(
     path: string,
@@ -24,23 +25,19 @@ export class RecordSearch {
     summaryStream = false,
     signal?: AbortSignal,
   ): Promise<RecordResult<T>> {
-    const cached = this.session.get(path);
-    if (cached) return cached as Promise<RecordResult<T>>;
-    const pending = path.startsWith('/api/brief?')
-      ? this.client.getForAction(path, decode)
-      : this.client.get(path, decode, false, {
-          retries: 0,
-          timeoutMs: summaryStream ? 85000 : 15000,
-          summaryStream,
-          signal,
-        });
-    while (this.session.size >= 128)
-      this.session.delete(this.session.keys().next().value!);
-    this.session.set(path, pending);
-    pending.catch(() => {
-      if (this.session.get(path) === pending) this.session.delete(path);
-    });
-    return pending;
+    return this.session.read(
+      path,
+      (requestSignal) =>
+        path.startsWith('/api/brief?')
+          ? this.client.getForAction(path, decode, { signal: requestSignal })
+          : this.client.get(path, decode, false, {
+              retries: 0,
+              timeoutMs: summaryStream ? 85000 : 15000,
+              summaryStream,
+              signal: requestSignal,
+            }),
+      { signal },
+    ) as Promise<RecordResult<T>>;
   }
   search(
     q: string,
@@ -63,26 +60,30 @@ export class RecordSearch {
       signal,
     );
   }
-  summary(q: string, f: SearchFilters) {
+  summary(q: string, f: SearchFilters, signal?: AbortSignal) {
     return this.read(
       `/api/search-summary?stream=1&${searchParams(q, f, 1, 'relevance')}`,
       decodeSummary,
       true,
+      signal,
     );
   }
-  briefs(resources: string[]) {
+  briefs(resources: string[], signal?: AbortSignal) {
     const ids = [...new Set(resources.filter((r) => /^[a-f0-9]{32}$/.test(r)))];
     if (!ids.length) return Promise.resolve(null);
     return this.read(
       '/api/brief?' + new URLSearchParams({ rids: ids.slice(0, 24).join(',') }),
       decodeBriefs,
+      undefined,
+      signal,
     );
   }
-  async suggestions(refresh = false) {
+  async suggestions(refresh = false, signal?: AbortSignal) {
     const manifest = await this.client.get(
       '/search-catalog/manifest.json',
       decodeManifest,
       refresh,
+      { signal },
     );
     return { manifest };
   }

@@ -1,3 +1,4 @@
+import { throwIfAborted } from '../../api/abort';
 import type { ApiClient } from '../../api/client';
 import {
   decodeAccess,
@@ -11,22 +12,25 @@ import {
 
 export class PeopleDepth {
   constructor(private client: Pick<ApiClient, 'get' | 'getForAction'>) {}
-  access() {
-    return this.client.get('/access.json', decodeAccess);
+  access(signal?: AbortSignal) {
+    return this.client.get('/access.json', decodeAccess, false, { signal });
   }
-  funding() {
-    return this.client.get('/graph/aec-extras.json', decodeFunding);
+  funding(signal?: AbortSignal) {
+    return this.client.get('/graph/aec-extras.json', decodeFunding, false, {
+      signal,
+    });
   }
-  topics(name: string) {
+  topics(name: string, signal?: AbortSignal) {
     return Promise.all([
       this.client.getForAction(
         '/api/person-topics?' + new URLSearchParams({ name }),
         decodePersonTopics,
+        { signal },
       ),
-      this.client.getForAction('/api/topics', decodeTopics),
+      this.client.getForAction('/api/topics', decodeTopics, { signal }),
     ]).then(([person, baseline]) => ({ person, baseline }));
   }
-  async speeches(name: string) {
+  async speeches(name: string, signal?: AbortSignal) {
     const records = await this.client.getForAction(
       '/api/search?' +
         new URLSearchParams({
@@ -37,25 +41,34 @@ export class PeopleDepth {
           sort: 'newest',
         }),
       decodeRecords,
+      { signal },
     );
-    const briefs = await this.briefs(records.data.results);
+    const briefs = await this.briefs(records.data.results, signal);
     return { records, briefs };
   }
-  async mentions(name: string, briefs = false) {
+  async mentions(name: string, briefs = false, signal?: AbortSignal) {
     const records = await this.client.getForAction(
       '/api/search?' + new URLSearchParams({ q: '"' + name + '"', top_k: '6' }),
       decodeRecords,
+      { signal },
     );
     return {
       records,
-      briefs: briefs ? await this.briefs(records.data.results.slice(0, 5)) : {},
+      briefs: briefs
+        ? await this.briefs(records.data.results.slice(0, 5), signal)
+        : {},
     };
   }
   /**
    * One page of a pushed record list, newest first: a person's speeches or
    * the record's mentions of a name (people.md 2.1, route 15).
    */
-  async list(name: string, kind: 'speeches' | 'mentions', page: number) {
+  async list(
+    name: string,
+    kind: 'speeches' | 'mentions',
+    page: number,
+    signal?: AbortSignal,
+  ) {
     const params: Record<string, string> =
       kind === 'speeches'
         ? {
@@ -74,15 +87,21 @@ export class PeopleDepth {
     const records = await this.client.getForAction(
       '/api/search?' + new URLSearchParams(params),
       decodeRecords,
+      { signal },
     );
-    const briefs = await this.briefs(records.data.results);
+    const briefs = await this.briefs(records.data.results, signal);
     return { records, briefs };
   }
-  async news() {
-    const result = await this.client.getForAction('/api/news', decodeNews);
+  async news(signal?: AbortSignal) {
+    const result = await this.client.getForAction('/api/news', decodeNews, {
+      signal,
+    });
     return { ...result, asOf: result.data.fetched_at ?? null };
   }
-  private async briefs(rows: ReturnType<typeof decodeRecords>['results']) {
+  private async briefs(
+    rows: ReturnType<typeof decodeRecords>['results'],
+    signal?: AbortSignal,
+  ) {
     const rids = [
       ...new Set(
         rows
@@ -96,9 +115,11 @@ export class PeopleDepth {
         await this.client.getForAction(
           '/api/brief?' + new URLSearchParams({ rids: rids.join(',') }),
           decodeBriefs,
+          { signal },
         )
       ).data.briefs;
     } catch {
+      throwIfAborted(signal);
       return {};
     } // An optional brief never hides the source passage.
   }

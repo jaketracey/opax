@@ -101,7 +101,8 @@ export default function Leads() {
   );
   const router = useRouter();
   const load = useCallback(
-    (refresh: boolean) => catalogs.discovery(refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      catalogs.discovery(refresh, signal),
     [],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);

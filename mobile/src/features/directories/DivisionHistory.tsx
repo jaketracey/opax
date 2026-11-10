@@ -258,8 +258,11 @@ let lists = 0;
 export default function DivisionHistory() {
   const backOptions = useNamedBackOptions();
   const load = useCallback(
-    (refresh: boolean, publish: Parameters<typeof loadDivisionHistory>[1]) =>
-      loadDivisionHistory(refresh, publish),
+    (
+      refresh: boolean,
+      publish: Parameters<typeof loadDivisionHistory>[1],
+      signal?: AbortSignal,
+    ) => loadDivisionHistory(refresh, publish, signal),
     [],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);

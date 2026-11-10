@@ -29,6 +29,31 @@ const record = (title: string): RecordResult<RecentFeed> => ({
   asOf: null,
 });
 
+test('closing Just added aborts a pending pull to refresh', async () => {
+  let signal: AbortSignal | undefined;
+  let finish!: (value: RecordResult<RecentFeed>) => void;
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record('Initial fixture'))
+    .mockImplementationOnce((_options, requestSignal) => {
+      signal = requestSignal;
+      return new Promise((resolve) => {
+        finish = resolve;
+      });
+    });
+  let view!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    view = TestRenderer.create(
+      withNavigationOptions(<RecentRecords />, () => {}),
+    );
+  });
+  await act(async () => view.root.findByType(RefreshControl).props.onRefresh());
+  expect(signal).toBeInstanceOf(AbortSignal);
+  act(() => view.unmount());
+  expect(signal!.aborted).toBe(true);
+  await act(async () => finish(record('Late fixture')));
+});
+
 test.each(['success', 'failure'])(
   'a late refresh %s cannot replace a newer record list or clear its spinner',
   async (outcome) => {

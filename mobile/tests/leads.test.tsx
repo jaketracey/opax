@@ -1600,7 +1600,7 @@ describe('a lead’s page', () => {
         true,
       ),
     ).toMatchObject({ stale: true, savedAt: 100, partial: true });
-    expect(mock.discovery).toHaveBeenLastCalledWith(true);
+    expect(mock.discovery).toHaveBeenLastCalledWith(true, undefined);
   });
   test('a contracts lead: its agency’s page, found in the agency directory by name', async () => {
     mockParams.id = signals[2]!.id;
@@ -1710,6 +1710,8 @@ describe('a lead’s page', () => {
     expect(apiClient.get).toHaveBeenCalledWith(
       '/graph/money.json',
       expect.any(Function),
+      false,
+      { signal: expect.any(AbortSignal) },
     );
     expect(hrefOf(renderer.root, 'lead-subject')).toMatchObject({
       pathname: '/money-record',
@@ -1931,10 +1933,16 @@ describe('pull to refresh', () => {
       mockParams.id = signals[1]!.id;
       const renderer = await render(screen());
       expect(mock[loader]).toHaveBeenCalledTimes(1);
-      expect(mock[loader]).toHaveBeenLastCalledWith(false);
+      expect(mock[loader]).toHaveBeenLastCalledWith(
+        false,
+        expect.any(AbortSignal),
+      );
       await pull(renderer.root);
       expect(mock[loader]).toHaveBeenCalledTimes(2);
-      expect(mock[loader]).toHaveBeenLastCalledWith(true);
+      expect(mock[loader]).toHaveBeenLastCalledWith(
+        true,
+        expect.any(AbortSignal),
+      );
       act(() => renderer.unmount());
     },
   );

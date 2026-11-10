@@ -89,7 +89,10 @@ export default function BillTextReader({
   const bills = useBillNavigation();
   const openAsk = useOpenAsk();
   const navigation = useContext(NavigationContext);
-  const loadManifest = useCallback(() => records.billManifest(key), [key]);
+  const loadManifest = useCallback(
+    (signal?: AbortSignal) => records.billManifest(key, signal),
+    [key],
+  );
   const manifestState = useRead(loadManifest);
   const manifest = manifestState.value?.data;
   const [chosen, setChosen] = useState<{ key: string; id: string } | null>(
@@ -103,7 +106,8 @@ export default function BillTextReader({
     null;
   const shown = manifest?.versions.find((row) => row.id === id) ?? null;
   const loadVersion = useCallback(
-    () => (id ? records.billVersion(key, id) : Promise.resolve(null)),
+    (signal?: AbortSignal) =>
+      id ? records.billVersion(key, id, signal) : Promise.resolve(null),
     [key, id],
   );
   const versionState = useRead(loadVersion);
@@ -112,7 +116,10 @@ export default function BillTextReader({
     versionState.value?.data.version.id === id ? versionState.value.data : null;
   // The bill page's summary and short title: read beside the text, drawn
   // only if it arrives within the window, so nothing above the text moves.
-  const loadSummary = useCallback(() => catalogs.billFor(key), [key]);
+  const loadSummary = useCallback(
+    (signal?: AbortSignal) => catalogs.billFor(key, undefined, signal),
+    [key],
+  );
   const summaryState = useRead(loadSummary);
   const summarySettled = !!(summaryState.value || summaryState.error);
   const [late, setLate] = useState<string | null>(null);

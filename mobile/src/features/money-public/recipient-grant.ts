@@ -20,6 +20,7 @@ export async function loadRecipientGrant(
   rid: string,
   award: string,
   refresh: boolean,
+  signal?: AbortSignal,
 ): Promise<RecordResult<MoneyItemView>> {
   const index = await apiClient.get(
     `/graph/grants.${jur}.json`,
@@ -35,6 +36,7 @@ export async function loadRecipientGrant(
       };
     },
     refresh,
+    { signal },
   );
   const recipient = index.data.recipients.find((row) => row.id === rid);
   if (!recipient)
@@ -87,6 +89,7 @@ export async function loadRecipientGrant(
       };
     },
     refresh,
+    { signal },
   );
   const grant = record.data;
   return {

@@ -124,7 +124,8 @@ export function SeatGrants({
   variant?: 'seat-home';
 }) {
   const load = useCallback(
-    (refresh: boolean) => money.grants('federal', refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      money.grants('federal', refresh, signal),
     [],
   );
   const status = useCatalogRecord(load),

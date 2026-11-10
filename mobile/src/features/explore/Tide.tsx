@@ -21,7 +21,10 @@ import { explore } from './runtime';
 export default function Tide() {
   const [scope, setScope] = useState<'federal' | 'all'>('federal'),
     [order, setOrder] = useState('rising');
-  const load = useCallback(() => explore.tide(scope), [scope]),
+  const load = useCallback(
+      (signal?: AbortSignal) => explore.tide(scope, signal),
+      [scope],
+    ),
     read = useRead(load);
   return (
     <>

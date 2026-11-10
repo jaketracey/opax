@@ -125,6 +125,22 @@ beforeEach(() => {
   jest.mocked(records.similar).mockResolvedValue(record([]) as never);
 });
 
+test('closing the document aborts its pending speaker directory read', async () => {
+  let finish!: () => void;
+  jest.mocked(catalogs.directory).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = () => resolve({} as never);
+      }),
+  );
+  const view = await mount(<DocumentReader />);
+  const signal = jest.mocked(catalogs.directory).mock.calls[0]![1];
+  expect(signal).toBeInstanceOf(AbortSignal);
+  await act(async () => view.unmount());
+  expect(signal!.aborted).toBe(true);
+  await act(async () => finish());
+});
+
 test('Ask about this is a row that drafts a question and never sends it', async () => {
   const view = await mount(<DocumentReader />);
   // iOS draws no bottom toolbar, which the floating tab bar would cover.

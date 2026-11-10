@@ -24,18 +24,29 @@ export const decodeDatedMatrix = (raw: unknown): Matrix => ({
 });
 export class ExploreRepository {
   constructor(private client: Pick<ApiClient, 'get' | 'getForAction'>) {}
-  year = (year: number) =>
-    this.client.get(`/years/${year}.json`, (raw) => decodeYear(raw, year));
-  pictures = () => this.client.get('/years/pictures.json', decodePictures);
-  tide = (scope: TideScope) =>
-    this.client.getForAction(`/api/tide?scope=${scope}`, (raw) => {
-      const data = decodeDatedTide(raw);
-      if (data.scope !== scope)
-        invalid('The returned tide does not match these parliaments.');
-      return data;
-    });
+  year = (year: number, signal?: AbortSignal) =>
+    this.client.get(
+      `/years/${year}.json`,
+      (raw) => decodeYear(raw, year),
+      false,
+      { signal },
+    );
+  pictures = (signal?: AbortSignal) =>
+    this.client.get('/years/pictures.json', decodePictures, false, { signal });
+  tide = (scope: TideScope, signal?: AbortSignal) =>
+    this.client.getForAction(
+      `/api/tide?scope=${scope}`,
+      (raw) => {
+        const data = decodeDatedTide(raw);
+        if (data.scope !== scope)
+          invalid('The returned tide does not match these parliaments.');
+        return data;
+      },
+      { signal },
+    );
   /** One paid read per session (the client keeps the promise). */
-  matrix = () => this.client.getForAction('/api/matrix', decodeDatedMatrix);
+  matrix = (signal?: AbortSignal) =>
+    this.client.getForAction('/api/matrix', decodeDatedMatrix, { signal });
 }
 
 /** Device-only conveniences: the last year and subject the reader chose. */

@@ -64,7 +64,11 @@ const sortWords: Record<Sort, string> = {
  * the caption line.
  */
 export default function Agencies() {
-  const load = useCallback((refresh: boolean) => money.agencies(refresh), []),
+  const load = useCallback(
+      (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+        money.agencies(refresh, signal),
+      [],
+    ),
     status = useCatalogRecord(load),
     data = status.record?.data;
   const search = useMoneySearch('Agencies');
@@ -224,7 +228,8 @@ export function Agency() {
 function AgencyRecord({ params }: { params: AgencyParams }) {
   const { id, section, name: routeName } = params;
   const load = useCallback(
-      (refresh: boolean) => money.agency(id, refresh),
+      (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+        money.agency(id, refresh, signal),
       [id],
     ),
     status = useCatalogRecord(load),
