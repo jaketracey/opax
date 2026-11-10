@@ -896,8 +896,12 @@ def dm(eid):
         d = donor_money[eid] = {"aec": {"total": 0.0, "count": 0, "party": Counter(), "py": defaultdict(Counter), "y0": None, "y1": None},
                                 "state": {}}
     return d
+# AEC Transparency Register rows only (scripts/donor_disclosure.py AEC_SOURCE_SQL; this program is streamed to
+# the DB host, so the predicate is a copy that tests/test_money_sources.py keeps in step): the table also holds a
+# third-party copy of AEC annual returns and Queensland ECQ disclosures (money-donations-001, -004).
 for r in q("SELECT donor_name, recipient_canonical, amount, financial_year, donation_type FROM donations "
-           "WHERE recipient_canonical IS NOT NULL AND amount > 0 AND donation_type NOT IN ('flagged_review')"):
+           "WHERE recipient_canonical IS NOT NULL AND amount > 0 AND donation_type NOT IN ('flagged_review') "
+           "AND source IN ('aec_annual','aec_election','aec_referendum')"):
     eid = alias_to_entity.get(r["donor_name"])
     if eid not in needed:
         continue
