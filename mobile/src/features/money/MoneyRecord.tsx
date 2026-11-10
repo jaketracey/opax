@@ -685,7 +685,7 @@ function NodeBody({
         onRefresh={refresh}
       >
         <Title meta={roleMeta(node)} name={node.label} party />
-        {record.stale && record.staleReason !== 'unreadable' ? (
+        {record.stale && !record.staleReason ? (
           <OfflineLine savedAt={record.savedAt} />
         ) : null}
         {note ? (
@@ -914,7 +914,7 @@ function NodeBody({
       onRefresh={refresh}
     >
       <Title meta={roleMeta(node)} name={node.label} />
-      {record.stale && record.staleReason !== 'unreadable' ? (
+      {record.stale && !record.staleReason ? (
         <OfflineLine savedAt={record.savedAt} />
       ) : null}
       {sections > 1 ? (
@@ -1138,7 +1138,7 @@ function RecipientBody({
           .join(' · ')}
         name={recipient.name}
       />
-      {record.stale && record.staleReason !== 'unreadable' ? (
+      {record.stale && !record.staleReason ? (
         <OfflineLine savedAt={record.savedAt} />
       ) : null}
       {donor ? (
