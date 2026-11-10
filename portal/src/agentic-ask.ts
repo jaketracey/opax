@@ -90,7 +90,7 @@ export function inferPeriod(question: string, override?: unknown): Period {
   if (override === 'current' || /\b(?:this|current) (?:term|parliament)\b/.test(q)) return { kind: 'current', since: TERMS['48th'][0], label: 'Counting speeches in the current parliament since July 2025.' }
   if (/\blast (?:term|parliament)\b/.test(q)) return { kind: 'window', since: TERMS['47th'][0], until: TERMS['47th'][1]!, label: 'Counting speeches in the previous parliament, July 2022 to March 2025.' }
   // A bill/statute title's year is not a date filter on its debate history.
-  const dated = q.replace(/\b(?:bill|act)(?:\s+\(no\.\s*\d+\))?\s+(?:19|20)\d{2}(?:[-–]\d{2,4})?\b/g, '')
+  const dated = q.replace(/\([^()]*\)(?=\s+(?:bill|act)\b)/g, '').replace(/\b(?:bill|act)(?:\s+\(no\.\s*\d+\))?\s+(?:19|20)\d{2}(?:[-–]\d{2,4})?\b/g, '')
   const tokens = periodTokens(dated)
   if (tokens.length) {
     const shift = (date: string, days: number) => new Date(Date.parse(date) + days * 86400000).toISOString().slice(0, 10)

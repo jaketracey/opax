@@ -16,7 +16,7 @@ import {recordAnswerLines,recordEvidenceText} from './research-record-answer'
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-17-records-summaries-money'
+export const ANSWER_WRITING_VERSION = 'written-answer-18-bill-speeches-money'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -71,8 +71,8 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     // A labelled copy keeps a tool's explicit owner/amount association readable by the final claim audit.
     const partyTotal=/^(.+?) received (\$[\d,.]+ in federal disclosed receipts[\s\S]*)$/.exec(text)
     if(partyTotal)source={...source,snippet:source.snippet+'\n'+partyTotal[1]+': '+partyTotal[2]}
-    const moneyRows=moneyEvidenceRows(text)
-    if(moneyRows.length)source={...source,snippet:[...new Set([source.snippet,...moneyRows])].join('\n')}
+    const moneyRows=moneyEvidenceRows(text,source.url)
+    if(moneyRows.length){source={...source,snippet:[...new Set([source.snippet,...moneyRows])].join('\n')};atoms=moneyRows.flatMap(row=>atomsFromText(row,evidenceId,source))}
     // The tool's own owner/amount/period association, never read back out of its wording.
     // An example annual-return reference is not the period or unit of its aggregate.
     const receipt=source.receipt
@@ -701,6 +701,6 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
     else for(const clause of kept){const from=Array.from(points.answer.slice(0,base+clause.start)).length;append(clause.text,from,from+Array.from(clause.text).length)}
   }
   const used=points.sources.filter(s=>Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))),sources=new Map<string,WritingFact['source']>()
-  for(const source of [...written.sources,...used]){const prior=sources.get(source.resource);sources.set(source.resource,prior?{...prior,snippet:[...new Set([prior.snippet,source.snippet])].join('\n')}:source)}
+  for(const source of [...written.sources,...used]){const prior=sources.get(source.resource);sources.set(source.resource,{...(prior??source),cited:Object.keys(citations).some(id=>id===source.resource||id.startsWith(source.resource+'/')),snippet:[...new Set([prior?.snippet,source.snippet].filter(Boolean))].join('\n')})}
   return distinctSummary({...written,...(emptyRecordRefusal?{answer_decision:'answer' as const}:{}),answer,citations,sources:[...sources.values()],...(points.answer_status?{answer_status:written.sources.length?'partly_cited' as const:points.answer_status}:{})})
 }

@@ -2,8 +2,10 @@ import type { NamedScope, Period } from './agentic-ask'
 import type { ToolDeps } from './agentic-tools'
 import type { QualitativeAnswer } from './research-types'
 import { resolvePersonName } from './person-name-matching'
-import { offScopeQuestion } from './ask-scope-intent'
+import { offScopeQuestion, isBillSpeechQuestion } from './ask-scope-intent'
 import { appendWrittenPoints } from './research-writing'
+import { normalBillTitle, billTitleMatches, requestedBillTitle } from './bill-title'
+export { normalBillTitle, billTitleMatches, requestedBillTitle } from './bill-title'
 
 type Row = Record<string, unknown>
 export interface LookupDecision { answer: QualitativeAnswer; terminal: boolean; correctedParty?: true }
@@ -13,23 +15,11 @@ const normal = (v: unknown) => String(v ?? '').normalize('NFKD').replace(/[\u030
 const day = (v: unknown) => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) ? v.slice(0, 10) : ''
 const latest = (dates: string[]) => dates.filter(Boolean).sort().at(-1)
 const voteQuestion = /\b(?:divisions?|vot(?:e|ed|es|ing))\b|\bwhy(?: did|['’]d)\b.{0,120}\bback\b/i
-export const normalBillTitle = (value: unknown): string => normal(String(value ?? '').replace(/\s*\[(?:19|20)\d{2}\]\s*$/, ''))
-export function billTitleMatches(recorded: unknown, requested: string): boolean {
-  const title = normalBillTitle(requested),candidate = normalBillTitle(recorded)
-  return candidate === title || !/\d{4}$/.test(requested) && candidate.replace(/ (?:19|20)\d{2}(?: \d{2,4})?$/, '') === title
-}
 
 function decision(text: string, path: string, deps: ToolDeps, terminal = true, recorded?: string): LookupDecision {
   const url = new URL(path, deps.origin ?? 'https://opax.com.au').href
   const source = { resource: 'exact-lookup', slug: '', title: 'Exact record lookup', href: url, url, snippet: recorded ?? text, cited: true, kind: 'record' }
   return { terminal, answer: { answer: text, answer_decision: terminal ? 'limitation' : 'answer', citations: { 'exact-lookup/t/body/0': [[0, Array.from(text).length]] }, sources: [source] } }
-}
-
-/** Only explicit title slots establish a missing bill, never a bag of subject words. */
-export function requestedBillTitle(question: string): string | null {
-  const prefix = /\b(?:who\s+(?:introduc\w*|sponsor\w*|wrote)|(?:status|sponsor|portfolio|text|history|details)\s+of|why\s+was|when\s+was|what\s+(?:happened|became)\s+(?:to|of)|tell me about|(?:vot(?:e|ed|ing)|said|say|debate[ds]?)\s+(?:on|for|against|about)|(?:say|said)\s+about)\s+(?:the\s+)?(.+?\bBill(?:\s+\(No\.\s*\d+\))?(?:\s+(?:19|20)\d{2}(?:[-–]\d{2,4})?)?)(?=\s|[?.!,]|$)/i.exec(question)
-  const title = prefix?.[1]?.replace(/^(?:(?:for|or|against|on|about|the)\s+)+/i, '').trim()
-  return title && title.length <= 220 && !/[?!]/.test(title) ? title : null
 }
 
 /** A name slot is different from an unknown topic. Keep collective questions out of the person lookup. */
@@ -125,6 +115,8 @@ export async function exactRecordLookup(question: string, deps: ToolDeps, period
     }
   }
 
+  // A lifecycle index cannot establish the absence of a member's Hansard words.
+  if (isBillSpeechQuestion(question)) return null
   const title = requestedBillTitle(question)
   if (title && !/\b(?:NSW|Victorian?|Queensland|Tasmanian?|South Australian|Western Australian|Northern Territory)\b/i.test(question)) {
     const index = await read('/bills/index.json'), bills = rows(index, 'bills')

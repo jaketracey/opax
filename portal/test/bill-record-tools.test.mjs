@@ -60,6 +60,7 @@ function fixture(detail = complete, catalogueRows = [catalogueBill], details = {
     async fetch(request) {
       const path = new URL(request.url).pathname;
       paths.push(path);
+      if (path === '/bills/index.json') return new Response('missing', { status: 404 });
       const selectedKey = /^\/bills\/(au-[a-z0-9-]+)\.json$/.exec(path)?.[1];
       assert.ok(selectedKey && Object.hasOwn(details, selectedKey), 'only the matched bill detail may be fetched');
       const selected = details[selectedKey];
@@ -112,7 +113,7 @@ test('bill discovery exposes the recorded lifecycle, sponsor, passage and Act de
   assert.equal(row.act_number, '71, 2026');
   assert.deepEqual(row.acts, complete.acts);
   assert.deepEqual(row.sponsors, ['Robin Example']);
-  assert.deepEqual(f.paths, ['/bills/' + key + '.json']);
+  assert.deepEqual(f.paths, ['/bills/index.json', '/bills/' + key + '.json']);
   const evidence = result.citations.map(citation => citation.text).join('\n');
   for (const value of ['14 July 2026', '4 September 2026', '8 September 2026', 'Robin Example', '71, 2026']) assert.ok(evidence.includes(value), value + ' reaches the model as a cited fact');
   assert.match(evidence, /representatives|House of Representatives/i);
@@ -305,7 +306,7 @@ test('non-bill catalogue rows remain discovery hits without bill lifecycle field
 test('a malformed bill link cannot choose an asset outside the bill directory', async () => {
   const f = fixture(complete, [{ ...catalogueBill, href: '/bill/../../private', slug: '../../private' }]);
   const result = await callTool(f.env, 'find_records', { query: title, kind: 'bill' });
-  assert.deepEqual(f.paths, []);
+  assert.deepEqual(f.paths, ['/bills/index.json']);
   assert.equal(result.rows[0].lifecycle_available, false);
   assert.equal(result.rows[0].introduced, null);
 });

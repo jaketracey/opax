@@ -19,3 +19,9 @@ export function offScopeQuestion(question: string): boolean {
     /\b(?:afl|nrl|soccer|football|cricket|tennis|rugby|grand final|world cup|premiership|olympics)\b/.test(q)
   return clinical || sport
 }
+
+/** Statements about legislation are answered by Hansard, including procedural remarks. */
+export function isBillSpeechQuestion(question: string): boolean {
+  return /\bbill\b/i.test(question) && /\b(?:say|said|think|thought|r(?:e)?ckon|speak\w*|speeches|speech|spoke|spoken|statements?|remarks?)\b/i.test(question) &&
+    !/\b(?:when|who)\b.{0,180}\b(?:introduc\w*|sponsor\w*|assent|first come in)\b/i.test(question)
+}

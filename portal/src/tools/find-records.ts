@@ -5,6 +5,8 @@ import { billCitations, billFields, billKey, clip, siteUrl } from './record-comm
 import type { ToolDefinition } from './types'
 import { recipientTotal } from './grants'
 import { campaignSpend } from './campaign-spend'
+import { readToolAsset } from './types'
+import { billTitleMatches, requestedBillTitle } from '../bill-title'
 
 const KINDS = [...CATALOG_KINDS].sort()
 const LABEL: Record<string, string> = { pay: 'Parliamentary pay', receipt: 'Disclosed receipt', interest: 'Declared interest', expense: 'Parliamentary expenses', access: 'Lobbying access', 'audit report': 'Audit report' }
@@ -31,13 +33,27 @@ export const tool: ToolDefinition = {
     if (!words.length) return { rows: [], citations: [], notes: ['No searchable words in the query.'] }
     const url = new URL('https://opax.com.au/api/search-all?' + new URLSearchParams({ q: words.join(' '), kind }))
     if (typeof args.jurisdiction === 'string') url.searchParams.set('state', args.jurisdiction)
-    let found = await searchCatalog(url, env.ASSETS, { perKind: 3 })
+    // The ranked catalogue omits single-character tokens. Resolve explicit bill
+    // titles and keys in the published index before numbers can be discarded.
+    let exact: CatalogRecord[] = []
+    if (['all', 'bill'].includes(kind) && (!args.jurisdiction || args.jurisdiction === 'federal')) {
+      const title = requestedBillTitle(query) ?? query
+      if (/\bbill\b/i.test(title) || /^au-[a-z0-9-]+$/.test(query)) {
+        try {
+          const index = await readToolAsset(env, '/bills/index.json') as { bills?: { key: string; title: string; short_title?: string; jurisdiction?: string }[] } | null
+          exact = (index?.bills ?? []).filter(b => b.key === query || [b.title, b.short_title].some(t => billTitleMatches(t, title)))
+            .map(b => ({ kind: 'bill', title: b.title, href: '/bill/' + b.key, slug: 'bill-' + b.key, resource: b.key, snippet: '', state: b.jurisdiction }))
+        } catch { env.signal?.throwIfAborted() }
+      }
+    }
+    let found = exact.length ? { results: exact, total: exact.length } : await searchCatalog(url, env.ASSETS, { perKind: 3 })
     // Every word must match first; then any longer word, so one unknown word does not hide the rest.
     if (!found.total) {
       const strong = words.filter((t: string) => t.length >= 4)
       if (strong.length) { url.searchParams.set('q', strong.join(' ')); found = await searchCatalog(url, env.ASSETS, { anyTerms: true, perKind: 3 }) }
     }
-    const hits = (found.results as CatalogRecord[]).slice(0, 8)
+    const number = /\bno\.?\s*(\d+)\b/i.exec(query)?.[1]
+    const hits = (found.results as CatalogRecord[]).filter(r => r.kind !== 'bill' || !number || /\bno\.?\s*(\d+)\b/i.exec(r.title)?.[1] === number).slice(0, 8)
     const enriched = await Promise.all(hits.map(async r => {
       const row = { kind: r.kind, title: r.kind === 'bill' ? r.title : clip(r.title, 120), summary: clip(r.snippet, 200), url: siteUrl(env, r.href || '/doc/' + r.slug), ...(r.dateLabel || r.date ? { period: r.dateLabel || r.date } : {}) }
       const recipient = r.kind === 'grant' && /across [\d,]+ grant records/.test(r.snippet) ? /^\/money\/grants\/(federal|qld)\/recipient\/([^?#]+)/.exec(r.href) : null

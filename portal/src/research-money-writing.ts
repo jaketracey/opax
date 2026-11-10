@@ -9,11 +9,14 @@ const donorTotal = (f: WritingFact) => /^(.+?): (\$[\d,.]+) in federal disclosed
 const donorName = (f: WritingFact) => f.source.receipt?.source ?? donorTotal(f)?.[1]
 
 /** Label both ends of an explicit award relation for the independent claim reader. */
-export function moneyEvidenceRows(text: string): string[] {
+export function moneyEvidenceRows(text: string, url = ''): string[] {
   const total = /^(.+?) received (\$[\d,.]+) in published (Queensland Government grant and assistance expenditure|federal grant award values), (.+?) \(([\d,]+) (?:expenditure rows?|award records?);/.exec(text)
   if (total) return [`${total[1]}: ${total[2]} in ${total[3]} across ${total[5]} records in ${total[4].replace(/^all published years, /, '')}.`]
-  const profile = /^Grant: (.+?) [—–] (\$[\d,.]+ across [\d,]+ grant records[\s\S]*)$/.exec(text)
-  if (profile) return [`${profile[1]}: ${profile[2]}`]
+  const profile = /^Grant: (.+?) [—–] (\$[\d,.]+ across [\d,]+ grant records)\./.exec(text)
+  if (profile) {
+    const jur = /\/money\/grants\/(federal|qld)\/recipient\//.exec(url)?.[1]
+    return [`${profile[1]}: ${profile[2]}${jur ? ` (${jur === 'qld' ? 'Queensland Government grant and assistance expenditure' : 'federal grants'})` : ''}.`]
+  }
   const grant = /^Grant: (.+?) [—–] (.+?) [—–] (\$[\d,.]+)\. ([\s\S]*)$/.exec(text)
   if (grant) return [`${grant[1]}: ${grant[3]} grant to ${grant[2]}. ${grant[4]}`, `${grant[2]}: ${grant[3]} grant for ${grant[1]}. ${grant[4]}`]
   const award = /^(.+?) was awarded (\$[\d,.]+) for (.+?)( from .+?)?( in financial year \d{4}-\d{2})? (\((?:Queensland Government expenditure line|federal grant award)\)\.)$/.exec(text)
