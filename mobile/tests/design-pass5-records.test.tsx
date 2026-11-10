@@ -14,7 +14,12 @@ import {
 // record rows grouped by the day they were added.
 import { NavigationContext } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { Text as NativeText, Platform, type View } from 'react-native';
+import {
+  Text as NativeText,
+  Platform,
+  RefreshControl,
+  type View,
+} from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { catalogs } from '../src/api/runtime';
@@ -135,6 +140,7 @@ const barLabels = () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.mocked(records.recent).mockReset();
   mockOptions = {};
   jest.mocked(catalogs.directory).mockResolvedValue({
     roster: record(roster),
@@ -713,6 +719,53 @@ test('Just added: a failed first read offers Try again', async () => {
   });
   await act(async () => failure.props.action.onPress());
   expect(records.recent).toHaveBeenCalledTimes(2);
+  await act(async () => view.unmount());
+});
+
+test('Just added starts only one refresh when pull events repeat before the next render', async () => {
+  let finish!: (value: Awaited<ReturnType<typeof records.recent>>) => void;
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record([]))
+    .mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    );
+  const view = await mount(<RecentRecords />);
+  await act(async () => {
+    const refresh = view.root.findByType(RefreshControl).props.onRefresh;
+    refresh();
+    refresh();
+  });
+  expect(records.recent).toHaveBeenCalledTimes(2);
+  await act(async () => finish(record(decodeRecent(responses['/api/recent']))));
+  expect(view.root.findByType(RefreshControl).props.refreshing).toBe(false);
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
+  await act(async () => view.unmount());
+});
+
+test('Just added explains a failed refresh of an empty feed and lets the reader retry', async () => {
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record([]))
+    .mockRejectedValueOnce(new Error('Unavailable'))
+    .mockResolvedValueOnce(record(decodeRecent(responses['/api/recent'])));
+  const view = await mount(<RecentRecords />);
+  await act(async () => view.root.findByType(RefreshControl).props.onRefresh());
+  const error = view.root.find(
+    (node) =>
+      node.props.testID === 'recent-refresh-error' && !!node.props.onRetry,
+  );
+  expect(
+    view.root.findAllByProps({ testID: 'recent-empty' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () => error.props.onRetry());
+  expect(
+    view.root.findAllByProps({ testID: 'recent-refresh-error' }).length,
+  ).toBe(0);
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
   await act(async () => view.unmount());
 });
 
