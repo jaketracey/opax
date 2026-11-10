@@ -243,7 +243,7 @@ while :; do sleep 1; done
                     self.assertLess(time.monotonic(),deadline)
                     time.sleep(.05)
                 child.terminate()
-                stdout,stderr=child.communicate(timeout=12)
+                stdout,stderr=child.communicate(timeout=60)  # bound only; a loaded desktop drains slowly
                 self.assertEqual(child.returncode,1,stdout+stderr)  # forced drain deadline expired
                 commands=(root/'adb.log').read_text().splitlines()
                 font=next(i for i,c in enumerate(commands) if 'font_scale 1.0' in c)
