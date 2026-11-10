@@ -18,25 +18,24 @@
     "hold_reason": "Non-commercial/no-derivatives Assembly grant does not clear third-party bill and explanatory bodies"
   },
   "counts": {
-    "bills": 262,
+    "bills": 261,
     "parliaments": {
       "11": 79,
-      "10": 183
+      "10": 182
     },
     "statuses": {
       "before_parliament": 22,
       "passed": 222,
       "withdrawn": 3,
       "negatived": 6,
-      "lapsed": 8,
-      "unknown": 1
+      "lapsed": 8
     },
-    "events": 941,
+    "events": 866,
     "document_links": 1804,
     "held_bodies": 1804,
     "linked_sponsors": 0,
-    "missing_sponsors": 3,
-    "gaps": 12
+    "missing_sponsors": 2,
+    "gaps": 11
   },
   "bills": [
     {
@@ -622,15 +621,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2026-06-12",
-          "date_raw": "12-06-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2026-06-12",
           "date_raw": "12-06-26",
@@ -724,15 +714,6 @@
       },
       "act_number": null,
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2026-06-12",
-          "date_raw": "12-06-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2026-06-12",
@@ -846,15 +827,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2026-06-11",
-          "date_raw": "11-06-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2026-06-11",
           "date_raw": "11-06-26",
@@ -958,15 +930,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2026-06-11",
-          "date_raw": "11-06-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2026-06-11",
           "date_raw": "11-06-26",
@@ -1060,15 +1023,6 @@
       },
       "act_number": "A2026-15",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2026-06-10",
-          "date_raw": "10-06-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2026-06-10",
@@ -1212,15 +1166,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2026-06-10",
-          "date_raw": "10-06-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2026-06-10",
           "date_raw": "10-06-26",
@@ -1343,15 +1288,6 @@
       },
       "act_number": null,
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2026-05-28",
-          "date_raw": "28-05-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2026-05-28",
@@ -1747,15 +1683,6 @@
       },
       "act_number": null,
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2026-05-06",
-          "date_raw": "06-05-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2026-05-06",
@@ -2317,15 +2244,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2026-03-24",
-          "date_raw": "24-03-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2026-03-24",
           "date_raw": "24-03-26",
@@ -2722,15 +2640,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2026-02-25",
-          "date_raw": "25-02-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2026-02-25",
           "date_raw": "25-02-26",
@@ -2858,15 +2767,6 @@
       },
       "act_number": null,
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2026-02-04",
-          "date_raw": "04-02-26",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2026-02-04",
@@ -3323,15 +3223,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2025-12-04",
-          "date_raw": "04-12-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2025-12-04",
           "date_raw": "04-12-25",
@@ -3612,15 +3503,6 @@
       },
       "act_number": null,
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2025-12-03",
-          "date_raw": "03-12-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2025-12-03",
@@ -4067,15 +3949,6 @@
       },
       "act_number": null,
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2025-10-30",
-          "date_raw": "30-10-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2025-10-30",
@@ -4866,15 +4739,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2025-10-21",
-          "date_raw": "21-10-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2025-10-21",
           "date_raw": "21-10-25",
@@ -5244,15 +5108,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2025-09-03",
-          "date_raw": "03-09-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2025-09-03",
           "date_raw": "03-09-25",
@@ -5538,7 +5393,7 @@
     {
       "key": "au-act-11-df8655e3901d233b",
       "jurisdiction": "act",
-      "source_id": null,
+      "source_id": "db_73335",
       "number": null,
       "title": "Workplace Legislation Amendment Bill 2025 (No 3)",
       "parliament": 11,
@@ -5695,8 +5550,10 @@
         "hold_reason": "Non-commercial/no-derivatives Assembly grant does not clear third-party bill and explanatory bodies"
       },
       "official": null,
-      "bill_url": null,
-      "source_notes": [],
+      "bill_url": "https://www.legislation.act.gov.au/b/db_73335",
+      "source_notes": [
+        "The summary of bills gives no presenter for this bill. It was originally Workplace Legislation Amendment Bill 2025 [No. 2], presented by Mr Pettersson (Minister for Skills, Training and Industrial Relations) on 2025-09-02, and divided by resolution of the Assembly."
+      ],
       "metadata_receipts": [
         {
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/bills/summary_of_bills",
@@ -5716,12 +5573,12 @@
     {
       "key": "au-act-11-3eba528a9f72fee3",
       "jurisdiction": "act",
-      "source_id": "db_73299",
+      "source_id": "db_73333",
       "number": null,
       "title": "Workplace Legislation Amendment Bill 2025 (No 2)",
       "parliament": 11,
       "session": null,
-      "sponsor_name": "Mr Pettersson (Minister for Skills, Training and Industrial Relations)",
+      "sponsor_name": null,
       "introduced_date": "2025-09-02",
       "introduction_basis": "Presented date in Assembly summary/status register",
       "originating_house": "Legislative Assembly",
@@ -5740,15 +5597,6 @@
       },
       "act_number": "A2025-27",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2025-09-02",
-          "date_raw": "02-09-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2025-09-02",
@@ -5871,8 +5719,9 @@
         "hold_reason": "Non-commercial/no-derivatives Assembly grant does not clear third-party bill and explanatory bodies"
       },
       "official": null,
-      "bill_url": "https://www.legislation.act.gov.au/b/db_73299",
+      "bill_url": "https://www.legislation.act.gov.au/b/db_73333",
       "source_notes": [
+        "The summary of bills gives no presenter for this bill. It was originally Workplace Legislation Amendment Bill 2025 [No. 2], presented by Mr Pettersson (Minister for Skills, Training and Industrial Relations) on 2025-09-02, and divided by resolution of the Assembly.",
         "Status-list title: Workplace Legislation Amendment Bill 2025 [No 2]"
       ],
       "metadata_receipts": [
@@ -5918,15 +5767,6 @@
       },
       "act_number": "A2025-34",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2025-06-26",
-          "date_raw": "26-06-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2025-06-26",
@@ -6345,15 +6185,6 @@
       },
       "act_number": "A2025-32",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2025-06-25",
-          "date_raw": "25-06-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2025-06-25",
@@ -7052,15 +6883,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2025-06-24",
-          "date_raw": "24-06-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2025-06-24",
           "date_raw": "24-06-25",
@@ -7227,15 +7049,6 @@
       },
       "act_number": "A2025-25",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2025-06-24",
-          "date_raw": "24-06-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2025-06-24",
@@ -7913,15 +7726,6 @@
       },
       "act_number": "A2025-24",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2025-04-10",
-          "date_raw": "10-04-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2025-04-10",
@@ -10226,15 +10030,6 @@
           "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
         },
         {
-          "stage": "Introduced",
-          "date": "2025-02-06",
-          "date_raw": "06-02-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2025-02-06",
           "date_raw": "06-02-25",
@@ -10700,15 +10495,6 @@
       },
       "act_number": "A2025-37",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2025-02-05",
-          "date_raw": "05-02-25",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0010/2624149/Report-Bills-List-18-1-October-2026.docx",
-          "snapshot": "2026-10-14T01:35:52.202174+00:00",
-          "sha256": "0b87fd04a7702ff080b99d6f4592088933f74e3222118a524e2dd145dc4caa4d"
-        },
         {
           "stage": "Introduced",
           "date": "2025-02-05",
@@ -12062,15 +11848,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2024-06-25",
-          "date_raw": "25-06-24",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2024-06-25",
           "date_raw": "25-06-24",
@@ -12224,15 +12001,6 @@
       },
       "act_number": "A2024-45",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2024-06-25",
-          "date_raw": "25-06-24",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2024-06-25",
@@ -16699,15 +16467,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2024-02-08",
-          "date_raw": "08-02-24",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2024-02-08",
           "date_raw": "08-02-24",
@@ -16894,15 +16653,6 @@
       },
       "act_number": "A2024-6",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2024-02-08",
-          "date_raw": "08-02-24",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2024-02-08",
@@ -17391,15 +17141,6 @@
       },
       "act_number": "A2024-5",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2024-02-08",
-          "date_raw": "08-02-24",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2024-02-08",
@@ -18252,15 +17993,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2024-02-06",
-          "date_raw": "06-02-24",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2024-02-06",
           "date_raw": "06-02-24",
@@ -18563,15 +18295,6 @@
       },
       "act_number": "A2024-36",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2023-11-30",
-          "date_raw": "30-11-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2023-11-30",
@@ -19279,15 +19002,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2023-11-02",
-          "date_raw": "02-11-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2023-11-02",
           "date_raw": "02-11-23",
@@ -19684,15 +19398,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2023-10-31",
-          "date_raw": "31-10-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2023-10-31",
           "date_raw": "31-10-23",
@@ -19966,15 +19671,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2023-10-31",
-          "date_raw": "31-10-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2023-10-31",
           "date_raw": "31-10-23",
@@ -20183,15 +19879,6 @@
       },
       "act_number": "A2024-12",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2023-10-26",
-          "date_raw": "26-10-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2023-10-26",
@@ -20533,15 +20220,6 @@
       },
       "act_number": "A2024-43",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2023-10-26",
-          "date_raw": "26-10-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2023-10-26",
@@ -21202,13 +20880,49 @@
       "introduced_date": "2023-09-20",
       "introduction_basis": "Presented date in Assembly summary/status register",
       "originating_house": "Legislative Assembly",
-      "status": "unknown",
+      "status": "passed",
       "status_as_of": "2024-10-18",
       "source_updated_date": null,
-      "stage": null,
-      "last_action": null,
-      "act_number": null,
-      "events": [],
+      "stage": "Notified on Legislation Register",
+      "last_action": {
+        "stage": "Notified on Legislation Register",
+        "date": "2023-11-15",
+        "date_raw": "15-11-23",
+        "house": "Legislative Assembly",
+        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
+        "snapshot": "2026-10-14T01:37:54.837666+00:00",
+        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+      },
+      "act_number": "A2023-47",
+      "events": [
+        {
+          "stage": "Introduced",
+          "date": "2023-09-20",
+          "date_raw": "20-09-23",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
+          "snapshot": "2026-10-14T01:37:54.837666+00:00",
+          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Passed",
+          "date": "2023-11-02",
+          "date_raw": "02-11-23",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
+          "snapshot": "2026-10-14T01:37:54.837666+00:00",
+          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        },
+        {
+          "stage": "Notified on Legislation Register",
+          "date": "2023-11-15",
+          "date_raw": "15-11-23",
+          "house": "Legislative Assembly",
+          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
+          "snapshot": "2026-10-14T01:37:54.837666+00:00",
+          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
+        }
+      ],
       "stage_values": [],
       "sources": [
         {
@@ -21293,7 +21007,9 @@
       },
       "official": null,
       "bill_url": "http://www.legislation.act.gov.au/b/db_68423",
-      "source_notes": [],
+      "source_notes": [
+        "Status-list title: Revenue Legislation Amendment Bill 2023 [No 2]"
+      ],
       "metadata_receipts": [
         {
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
@@ -21773,90 +21489,6 @@
       "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
       "snapshot": "2026-10-14T01:37:15.510429+00:00",
       "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
-    },
-    {
-      "key": "au-act-10-5d1254d1363a8a73",
-      "jurisdiction": "act",
-      "source_id": null,
-      "number": null,
-      "title": "Revenue Legislation Amendment Bill 2023 [No 2]",
-      "parliament": 10,
-      "session": null,
-      "sponsor_name": null,
-      "introduced_date": "2023-09-20",
-      "introduction_basis": "Presented date in Assembly summary/status register",
-      "originating_house": "Legislative Assembly",
-      "status": "passed",
-      "status_as_of": "2024-10-18",
-      "source_updated_date": null,
-      "stage": "Notified on Legislation Register",
-      "last_action": {
-        "stage": "Notified on Legislation Register",
-        "date": "2023-11-15",
-        "date_raw": "15-11-23",
-        "house": "Legislative Assembly",
-        "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-        "snapshot": "2026-10-14T01:37:54.837666+00:00",
-        "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-      },
-      "act_number": "A2023-47",
-      "events": [
-        {
-          "stage": "Introduced",
-          "date": "2023-09-20",
-          "date_raw": "20-09-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
-          "stage": "Passed",
-          "date": "2023-11-02",
-          "date_raw": "02-11-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
-          "stage": "Notified on Legislation Register",
-          "date": "2023-11-15",
-          "date_raw": "15-11-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        }
-      ],
-      "stage_values": [],
-      "sources": [],
-      "licence": {
-        "status": "metadata-only",
-        "name": "CC BY-NC-ND 4.0; third-party exceptions",
-        "policy_url": "https://www.parliament.act.gov.au/functions/footer/reuse-policy",
-        "policy_receipt": {
-          "source_url": "https://www.parliament.act.gov.au/functions/footer/reuse-policy",
-          "snapshot": "2026-10-14T01:34:27.668249+00:00",
-          "sha256": "ead09bacd42936c4added7b56b0ac18adeab9de916ed1cb38cbbecc426ab0ea9"
-        },
-        "text_allowed": false,
-        "metadata_basis": "Public registry facts and original document links; no summaries or document bodies reproduced",
-        "hold_reason": "Non-commercial/no-derivatives Assembly grant does not clear third-party bill and explanatory bodies"
-      },
-      "official": null,
-      "bill_url": null,
-      "version_index_missing": true,
-      "metadata_receipts": [
-        {
-          "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
-          "snapshot": "2026-10-14T01:37:35.530211+00:00",
-          "sha256": "ea67f46e541a255f53058b394ff0e141eeef3494e66d26c9ba82bb9bcdec4a22"
-        }
-      ],
-      "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-      "snapshot": "2026-10-14T01:37:54.837666+00:00",
-      "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
     },
     {
       "key": "au-act-10-23127cc17f6770d1",
@@ -22593,15 +22225,6 @@
       },
       "act_number": "A2024-1",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2023-08-31",
-          "date_raw": "31-08-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2023-08-31",
@@ -23720,15 +23343,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2023-06-29",
-          "date_raw": "29-06-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2023-06-29",
           "date_raw": "29-06-23",
@@ -24169,15 +23783,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2023-06-27",
-          "date_raw": "27-06-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2023-06-29",
           "date_raw": "29-06-23",
@@ -24564,15 +24169,6 @@
       },
       "act_number": "A2023-35",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2023-06-27",
-          "date_raw": "27-06-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2023-06-27",
@@ -25357,15 +24953,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2023-05-10",
-          "date_raw": "10-05-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2023-05-10",
           "date_raw": "10-05-23",
@@ -25541,15 +25128,6 @@
       },
       "act_number": "A2023-45",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2023-05-09",
-          "date_raw": "09-05-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2023-05-09",
@@ -26147,15 +25725,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2023-03-28",
-          "date_raw": "28-03-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2023-03-28",
           "date_raw": "28-03-23",
@@ -26657,15 +26226,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2023-02-09",
-          "date_raw": "09-02-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2023-02-09",
           "date_raw": "09-02-23",
@@ -27019,15 +26579,6 @@
       },
       "act_number": "A2023-9",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2023-02-09",
-          "date_raw": "09-02-23",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2023-02-09",
@@ -28236,15 +27787,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-11-30",
-          "date_raw": "30-11-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-11-30",
           "date_raw": "30-11-22",
@@ -28431,15 +27973,6 @@
       },
       "act_number": "A2023-13",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2022-11-24",
-          "date_raw": "24-11-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2022-11-24",
@@ -28637,15 +28170,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-11-23",
-          "date_raw": "23-11-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-11-23",
           "date_raw": "23-11-22",
@@ -28831,15 +28355,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-11-23",
-          "date_raw": "23-11-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-11-23",
           "date_raw": "23-11-22",
@@ -29004,15 +28519,6 @@
       },
       "act_number": "A2023-11",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2022-11-22",
-          "date_raw": "22-11-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2022-11-22",
@@ -29386,15 +28892,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-10-20",
-          "date_raw": "20-10-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-10-20",
           "date_raw": "20-10-22",
@@ -29635,15 +29132,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-10-20",
-          "date_raw": "20-10-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-10-20",
           "date_raw": "20-10-22",
@@ -29802,15 +29290,6 @@
       },
       "act_number": "A2023-15",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2022-10-11",
-          "date_raw": "11-10-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2022-10-11",
@@ -30496,15 +29975,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-09-21",
-          "date_raw": "21-09-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-09-21",
           "date_raw": "21-09-22",
@@ -31002,15 +30472,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-09-21",
-          "date_raw": "21-09-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-09-21",
           "date_raw": "21-09-22",
@@ -31177,15 +30638,6 @@
       },
       "act_number": "A2023-18",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2022-09-21",
-          "date_raw": "21-09-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2022-09-21",
@@ -31592,15 +31044,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-08-04",
-          "date_raw": "04-08-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-08-04",
           "date_raw": "04-08-22",
@@ -31964,15 +31407,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-08-04",
-          "date_raw": "04-08-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-08-04",
           "date_raw": "04-08-22",
@@ -32181,15 +31615,6 @@
       },
       "act_number": "A2023-14",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2022-08-03",
-          "date_raw": "03-08-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2022-08-03",
@@ -32429,15 +31854,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-08-02",
-          "date_raw": "02-08-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-08-02",
           "date_raw": "02-08-22",
@@ -32613,15 +32029,6 @@
       },
       "act_number": "A2022-18",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2022-08-02",
-          "date_raw": "02-08-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2022-08-02",
@@ -33776,15 +33183,6 @@
       },
       "act_number": "A2022-16",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2022-05-05",
-          "date_raw": "05-05-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2022-05-05",
@@ -35347,15 +34745,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2022-02-10",
-          "date_raw": "10-02-22",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2022-02-10",
           "date_raw": "10-02-22",
@@ -35763,15 +35152,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2021-12-02",
-          "date_raw": "02-12-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2021-12-02",
           "date_raw": "02-12-21",
@@ -36046,15 +35426,6 @@
       },
       "act_number": null,
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2021-12-02",
-          "date_raw": "02-12-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2021-12-02",
@@ -36398,15 +35769,6 @@
       },
       "act_number": "A2023-32",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2021-12-01",
-          "date_raw": "01-12-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2021-12-01",
@@ -36972,13 +36334,19 @@
         {
           "kind": "text",
           "label": "As presented",
-          "url": "https://www.legislation.act.gov.au/View/b/db_66952/20221130-80090/html/db_66952.html",
+          "url": "https://www.legislation.act.gov.au/View/b/db_65320/20211125-77887/html/db_65320.html",
           "document_date": null,
           "body_status": "held",
           "body_reason": "Document-level reuse rights not cleared; original link only",
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/bills_volume",
           "snapshot": "2026-10-14T01:37:15.510429+00:00",
-          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2"
+          "sha256": "4529037cf2a42c313892c64b71dd2c9b996e11a9178c31ee330653a3c97757f2",
+          "correction": {
+            "from": "https://www.legislation.act.gov.au/View/b/db_66952/20221130-80090/html/db_66952.html",
+            "evidence_url": "https://www.legislation.act.gov.au/b/db_65320",
+            "finding": "state-datasets-005",
+            "reviewed": "2026-11-10"
+          }
         },
         {
           "kind": "explanatory",
@@ -37030,7 +36398,8 @@
       "official": null,
       "bill_url": "https://www.legislation.act.gov.au/b/db_65320",
       "source_notes": [
-        "The source includes an action date later than its status-list heading date."
+        "The source includes an action date later than its status-list heading date.",
+        "Corrected link: the source links 'As presented' to db_66952, a different bill; the register page https://www.legislation.act.gov.au/b/db_65320 gives the link used here."
       ],
       "metadata_receipts": [
         {
@@ -37051,7 +36420,7 @@
     {
       "key": "au-act-10-cbe1c2240b79e712",
       "jurisdiction": "act",
-      "source_id": "db_64044",
+      "source_id": "db_65249",
       "number": null,
       "title": "Remuneration Tribunal Amendment Bill 2021",
       "parliament": 10,
@@ -37186,9 +36555,9 @@
         "hold_reason": "Non-commercial/no-derivatives Assembly grant does not clear third-party bill and explanatory bodies"
       },
       "official": null,
-      "bill_url": "https://www.legislation.act.gov.au/b/db_64044",
+      "bill_url": "https://www.legislation.act.gov.au/b/db_65249",
       "source_notes": [
-        "The source links this identifier from more than one bill title; bill records kept separate by title and Assembly."
+        "The summary of bills links this title to db_64044; the version index links db_65249, which is used."
       ],
       "metadata_receipts": [
         {
@@ -37932,12 +37301,12 @@
     {
       "key": "au-act-10-96972e0c91ac9f2a",
       "jurisdiction": "act",
-      "source_id": null,
+      "source_id": "db_65229",
       "number": null,
       "title": "Civil Law (Sale of Residential Property) Amendment Bill 2021 [No 2]",
       "parliament": 10,
       "session": null,
-      "sponsor_name": null,
+      "sponsor_name": "Mr Cain",
       "introduced_date": "2021-11-09",
       "introduction_basis": "Presented date in Assembly summary/status register",
       "originating_house": "Legislative Assembly",
@@ -38058,7 +37427,7 @@
         "hold_reason": "Non-commercial/no-derivatives Assembly grant does not clear third-party bill and explanatory bodies"
       },
       "official": null,
-      "bill_url": null,
+      "bill_url": "https://www.legislation.act.gov.au/b/db_65229",
       "source_notes": [],
       "metadata_receipts": [
         {
@@ -38079,12 +37448,12 @@
     {
       "key": "au-act-10-7e1c73d79e44b2c1",
       "jurisdiction": "act",
-      "source_id": "db_65229",
+      "source_id": "db_65228",
       "number": null,
       "title": "Civil Law (Sale of Residential Property) Amendment Bill 2021",
       "parliament": 10,
       "session": null,
-      "sponsor_name": "Mr Cain",
+      "sponsor_name": "Mr Rattenbury (Attorney-General)",
       "introduced_date": "2021-11-09",
       "introduction_basis": "Presented date in Assembly summary/status register",
       "originating_house": "Legislative Assembly",
@@ -38236,7 +37605,7 @@
         "hold_reason": "Non-commercial/no-derivatives Assembly grant does not clear third-party bill and explanatory bodies"
       },
       "official": null,
-      "bill_url": "https://www.legislation.act.gov.au/b/db_65229",
+      "bill_url": "https://www.legislation.act.gov.au/b/db_65228",
       "source_notes": [],
       "metadata_receipts": [
         {
@@ -38437,15 +37806,6 @@
       },
       "act_number": "A2021-29",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2021-10-06",
-          "date_raw": "06-10-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2021-10-06",
@@ -38886,15 +38246,6 @@
       },
       "act_number": "A2021-28",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2021-10-06",
-          "date_raw": "06-10-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2021-10-06",
@@ -39715,15 +39066,6 @@
       },
       "act_number": "A2022-3",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2021-08-05",
-          "date_raw": "05-08-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2021-08-05",
@@ -41002,15 +40344,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2021-06-23",
-          "date_raw": "23-06-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2021-06-23",
           "date_raw": "23-06-21",
@@ -41219,15 +40552,6 @@
       },
       "act_number": null,
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2021-06-22",
-          "date_raw": "22-06-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2021-06-22",
@@ -42643,9 +41967,7 @@
       },
       "official": null,
       "bill_url": "https://www.legislation.act.gov.au/b/db_64044",
-      "source_notes": [
-        "The source links this identifier from more than one bill title; bill records kept separate by title and Assembly."
-      ],
+      "source_notes": [],
       "metadata_receipts": [
         {
           "source_url": "https://www.parliament.act.gov.au/parliamentary-business/in-the-chamber/previous-assemblies/tenth-assembly/summary_of_bills",
@@ -42867,15 +42189,6 @@
       },
       "act_number": "A2022-20",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2021-02-11",
-          "date_raw": "11-02-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2021-02-11",
@@ -43315,15 +42628,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2021-02-09",
-          "date_raw": "09-02-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2021-02-09",
           "date_raw": "09-02-21",
@@ -43598,15 +42902,6 @@
       },
       "act_number": "A2021-7",
       "events": [
-        {
-          "stage": "Introduced",
-          "date": "2021-02-09",
-          "date_raw": "09-02-21",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
         {
           "stage": "Introduced",
           "date": "2021-02-09",
@@ -44479,15 +43774,6 @@
           "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
         },
         {
-          "stage": "Introduced",
-          "date": "2020-12-02",
-          "date_raw": "02-12-20",
-          "house": "Legislative Assembly",
-          "source_url": "https://www.parliament.act.gov.au/__data/assets/word_doc/0013/2406100/Report-Bills-List-34.docx",
-          "snapshot": "2026-10-14T01:37:54.837666+00:00",
-          "sha256": "ad7d36884e169559f94b2704ab1d65698910a07f0afed97152329800571acb9a"
-        },
-        {
           "stage": "Referred to committee",
           "date": "2020-12-02",
           "date_raw": "02-12-20",
@@ -44879,11 +44165,6 @@
     },
     {
       "title": "Building (Swimming Pool Safety) Legislation Amendment Bill 2023",
-      "reason": "Status-list bill absent from version index",
-      "parliament": 10
-    },
-    {
-      "title": "Revenue Legislation Amendment Bill 2023 [No 2]",
       "reason": "Status-list bill absent from version index",
       "parliament": 10
     }

@@ -13,13 +13,13 @@ const render=(query='',read=async j=>hubs[j])=>stateBillsPage(new URL('https://o
 
 test('reviewed state metadata renders with dates, source, snapshot and licence per bill',async()=>{
  const result=await render();assert.equal(result.status,200);assert.equal(result.noindex,false);
- assert.match(result.prerender,/419 registry entries/);const dom=new JSDOM(result.prerender);assert.equal(dom.window.document.querySelectorAll('[data-datatable] tbody tr').length,25);
+ assert.match(result.prerender,/418 registry entries/);const dom=new JSDOM(result.prerender);assert.equal(dom.window.document.querySelectorAll('[data-datatable] tbody tr').length,25);
  assert.equal(dom.window.document.querySelectorAll('.state-bill').length,0);
  assert.match(result.prerender,/ACT Legislative Assembly/);assert.match(result.prerender,/Parliament of Tasmania/);
  for(const row of dom.window.document.querySelectorAll('tbody tr'))assert.match(row.textContent,/ACT Legislative Assembly|Parliament of Tasmania/);
  assert.match(result.prerender,/SHA-256/);assert.match(result.prerender,/Copyright Parliament of Tasmania/);
  assert.match(result.prerender,/CC BY-NC-ND/);assert.match(result.prerender,/State bills/);
- assert.equal(clearedStateBills(hubs.tas).length,157);assert.equal(clearedStateBills(hubs.act).length,262);
+ assert.equal(clearedStateBills(hubs.tas).length,157);assert.equal(clearedStateBills(hubs.act).length,261);
 });
 test('shared table SSR retains jurisdiction/parliament bookmarks and pagination',async()=>{
  const result=await render('?jurisdiction=tas&parliament=52');assert.equal(result.status,200);
@@ -56,7 +56,7 @@ test('Worker routes and asset-first exclusions carry the state register without 
  const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(code.outputFiles[0].text).toString('base64'));let html='',head='',removed=false;
  globalThis.HTMLRewriter=class{handlers=[];on(s,h){this.handlers.push([s,h]);return this;}transform(response){for(const [s,h]of this.handlers){if(s==='main#main')h.element({setAttribute(){},setInnerContent(v){html=v;}});if(s==='head')h.element({append(v){head+=v;},prepend(v){head=v+head;}});if(s==='script[src]')h.element({getAttribute(){return '/app.js';},remove(){removed=true;}});}return response;}};
  const response=await worker.fetch(new Request('https://opax.com.au/register/state-bills'),{ASSETS:{async fetch(req){const p=new URL(req.url).pathname;const j=p==='/bills-tas/data.json'?'tas':p==='/bills-act/data.json'?'act':null;return new Response(j?JSON.stringify(hubs[j]):readFileSync(new URL('../public/index.html',import.meta.url),'utf8'));}}},{});
- assert.equal(response.status,200);assert.match(html,/419 registry entries/);assert.match(head,/state-bills.css/);assert.equal(removed,true);
+ assert.equal(response.status,200);assert.match(html,/418 registry entries/);assert.match(head,/state-bills.css/);assert.equal(removed,true);
  assert.match(readFileSync(new URL('../wrangler.jsonc',import.meta.url),'utf8'),/"\/register\/state-bills", "\/register\/state-bills\/"/);
 });
 

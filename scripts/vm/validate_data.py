@@ -635,12 +635,48 @@ def check_video() -> list[str]:
     return errs
 
 
+def state_bill_shape_errors(hub):
+    """Record-level defects a reviewed state bill projection must not carry (data cleanup,
+    10 Nov 2026, state-datasets-004/-005/-007/-010): one register identifier per bill, one
+    event per (stage, date, house), the shown stage is the last event, and same-day
+    Tasmanian stages keep the source table's row order."""
+    errs, owner = [], {}
+    for b in hub.get("bills", []):
+        key = b.get("key")
+        sid = b.get("source_id")
+        if sid and b.get("jurisdiction") == "act":
+            if sid in owner:
+                errs.append(f"{key} and {owner[sid]} share register identifier {sid}")
+            owner.setdefault(sid, key)
+        events = b.get("events") or []
+        seen = set()
+        for e in events:
+            ident = (e.get("stage"), e.get("date"), e.get("house"))
+            if ident in seen:
+                errs.append(f"{key} repeats event {ident}")
+            seen.add(ident)
+        if events and (b.get("last_action") != events[-1] or b.get("stage") != events[-1].get("stage")):
+            errs.append(f"{key} stage/last_action is not its last event")
+        rank = {}
+        for i, v in enumerate(b.get("stage_values") or []):
+            rank.setdefault((v.get("house"), v.get("stage"), v.get("value")), i)
+        ordered = [e for e in events if (e.get("house"), e.get("stage"), e.get("date_raw")) in rank]
+        for x, y in zip(ordered, ordered[1:]):
+            if (x["date"] == y["date"] and x["house"] == y["house"]
+                    and rank[(x["house"], x["stage"], x["date_raw"])] > rank[(y["house"], y["stage"], y["date_raw"])]):
+                errs.append(f"{key} lists same-day stages out of source order ({x['stage']!r} before {y['stage']!r})")
+                break
+    return errs[:20]
+
+
 def check_promoted_hub(name):
     from scripts.promote_hub_data import ASSETS, validated_asset
     try:
         expected, _ = validated_asset(name)
         if (ROOT / PUBLIC / ASSETS[name]).read_bytes() != expected:
             return ["public asset differs from reviewed staged projection"]
+        if name.startswith("bills-"):
+            return state_bill_shape_errors(json.loads(expected))
         return []
     except (ValueError, KeyError, OSError, TypeError) as error:
         return [str(error)]

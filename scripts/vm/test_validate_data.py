@@ -663,5 +663,41 @@ class SenateVideoTests(Base):
         self.assertFails("video", "not a first speech")
 
 
+class StateBillShapeTests(unittest.TestCase):
+    """state_bill_shape_errors: the record-level rules for bills-act and bills-tas."""
+
+    def bill(self, **kw):
+        ev = [{"stage": "First reading", "date": "2024-11-19", "house": "House of Assembly", "date_raw": "19/11/2024"},
+              {"stage": "2nd Reading moved", "date": "2024-11-21", "house": "House of Assembly", "date_raw": "21/11/2024"},
+              {"stage": "2nd Reading Agreed", "date": "2024-11-21", "house": "House of Assembly", "date_raw": "21/11/2024"}]
+        values = [{"house": e["house"], "stage": e["stage"], "value": e["date_raw"]} for e in ev]
+        b = {"key": "au-tas-2024-1", "jurisdiction": "tas", "source_id": "1 of 2024", "events": ev,
+             "stage_values": values, "stage": ev[-1]["stage"], "last_action": ev[-1]}
+        b.update(kw)
+        return b
+
+    def test_clean_projection_passes(self):
+        self.assertEqual(vd.state_bill_shape_errors({"bills": [self.bill()]}), [])
+
+    def test_same_day_stages_out_of_source_order_fail(self):
+        b = self.bill()
+        b["events"] = [b["events"][0], b["events"][2], b["events"][1]]
+        b["last_action"], b["stage"] = b["events"][-1], b["events"][-1]["stage"]
+        self.assertTrue(any("out of source order" in e for e in vd.state_bill_shape_errors({"bills": [b]})))
+
+    def test_repeated_event_and_stale_stage_fail(self):
+        b = self.bill()
+        b["events"] = b["events"] + [dict(b["events"][-1])]
+        errs = vd.state_bill_shape_errors({"bills": [b]})
+        self.assertTrue(any("repeats event" in e for e in errs))
+        b = self.bill(stage="Resumed")
+        self.assertTrue(any("not its last event" in e for e in vd.state_bill_shape_errors({"bills": [b]})))
+
+    def test_two_act_bills_sharing_a_register_identifier_fail(self):
+        one = {"key": "au-act-10-a", "jurisdiction": "act", "source_id": "db_64044", "events": []}
+        two = {**one, "key": "au-act-10-b"}
+        self.assertTrue(any("share register identifier db_64044" in e for e in vd.state_bill_shape_errors({"bills": [one, two]})))
+
+
 if __name__ == "__main__":
     unittest.main()
