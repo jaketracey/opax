@@ -201,4 +201,9 @@ test('Android root restoration does not press Back through hideKeyboard and web 
     const url = step.runFlow?.env?.URL;
     if (url) assert.ok(url.startsWith('opax://'), url);
   }
+  const invitation = JSON.stringify(
+    read('13e-today-invitation.yaml')[1].toJS(),
+  );
+  assert.ok(invitation.includes('seat-location-finding'));
+  assert.ok(!invitation.includes('use-my-location'));
 });

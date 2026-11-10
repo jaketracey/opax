@@ -319,6 +319,13 @@ function command(v, relative) {
         ],
       },
     };
+  if (
+    relative === '13e-today-invitation.yaml' &&
+    out.assertVisible?.id === 'use-my-location'
+  )
+    // The invitation starts locating immediately. Android exposes the busy
+    // row rather than an idle action while that request is outstanding.
+    out.assertVisible = { id: 'seat-location-finding' };
   for (const key of [
     'assertVisible',
     'assertNotVisible',
