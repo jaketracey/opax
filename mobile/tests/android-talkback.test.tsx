@@ -467,6 +467,33 @@ describe('Talk with TalkBack', () => {
       ]);
     }));
 
+  test('the bar’s Back cannot remove an active call without its leave confirmation', () =>
+    android(async (show) => {
+      mockCall = talk({ state: 'live', mode: 'listening', status: status() });
+      const shown = await show(talkScreen);
+      const core = jest.requireMock<{
+        usePreventRemove: jest.Mock;
+        useNavigation: jest.Mock;
+      }>('expo-router/react-navigation');
+      const [prevented, remove] = core.usePreventRemove.mock.lastCall!;
+      const navigation = core.useNavigation.mock.results.at(-1)!.value;
+      const action = { type: 'GO_BACK' };
+      expect(prevented).toBe(true);
+      shown.app.React.act(() => remove({ data: { action } }));
+      expect(navigation.dispatch).not.toHaveBeenCalled();
+      expect(shown.spies.alert).toHaveBeenLastCalledWith(
+        'End the call?',
+        undefined,
+        expect.any(Array),
+      );
+      const end = shown.spies.alert.mock.lastCall![2][1];
+      await shown.app.React.act(async () => {
+        end.onPress();
+      });
+      expect(mockCall.end).toHaveBeenCalledTimes(1);
+      expect(navigation.dispatch).toHaveBeenCalledWith(action);
+    }));
+
   test('Back during a call asks first; at rest it is left to the navigator', () =>
     android(async (show) => {
       mockCall = talk({ state: 'live', mode: 'listening', status: status() });

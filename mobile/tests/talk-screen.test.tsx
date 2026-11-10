@@ -2,6 +2,7 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { BackHandler } from 'react-native';
 import { useFocusEffect } from 'expo-router';
+import { usePreventRemove } from 'expo-router/react-navigation';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Button, IconButton, Text } from '../src/design/primitives';
 import TalkScreen from '../src/features/talk/TalkScreen';
@@ -13,6 +14,11 @@ import type { VoiceSnapshot, VoiceStatus } from '../src/voice';
 // the call controls are the shared round IconButton, and nothing starts a
 // call but Start.
 jest.mock('../src/features/talk/VoiceOrb', () => ({ VoiceOrb: () => null }));
+jest.mock('expo-router/react-navigation', () => ({
+  ...jest.requireActual('expo-router/react-navigation'),
+  usePreventRemove: jest.fn(),
+  useNavigation: jest.fn(() => ({ dispatch: jest.fn() })),
+}));
 jest.mock('../src/features/talk/useVoiceLevels', () => ({
   useVoiceLevels: () => ({}),
 }));
@@ -119,6 +125,7 @@ test('iOS keeps native Back handling while Talk is focused during a call', () =>
     });
     expect(blur).toBeUndefined();
     expect(back).not.toHaveBeenCalled();
+    expect(usePreventRemove).not.toHaveBeenCalled();
   } finally {
     back.mockRestore();
   }
