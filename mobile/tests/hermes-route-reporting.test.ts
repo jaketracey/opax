@@ -5,6 +5,7 @@ import TestRenderer from 'react-test-renderer';
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import Constants from 'expo-constants';
 import { cleanEvent, scrubEvent } from '../src/analytics/events';
+import { RouteErrorBoundary } from '../src/navigation/RouteErrorBoundary';
 
 const mockSegments = ['(tabs)', '(today)', 'person', '[slug]'];
 const mockCapture = jest.fn();
@@ -100,10 +101,6 @@ test('every route file has an explicitly allowlisted error pattern', () => {
 });
 
 test('the reporting boundary captures once per caught error, without error text or route params', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const {
-    RouteErrorBoundary,
-  } = require('../src/navigation/RouteErrorBoundary');
   const error = new TypeError(privateText);
   error.name = privateText;
   const retry = async () => {};
