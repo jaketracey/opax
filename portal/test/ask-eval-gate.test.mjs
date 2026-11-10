@@ -165,3 +165,18 @@ test('printed summaries include grade counts and matched diffs by stratum and fa
   assert.match(text, /Previous diff: 3 matching graded IDs; 1 improved, 1 regressed/)
   assert.match(text, /Family diff\tmatched\tpass delta/)
 })
+
+test('--model and --provider-sort send operator model headers and pin the checkpoint', async () => withDir(async out => {
+  const parsed = parseArgs([base, '--operator', '--model', 'anthropic/claude-haiku-5.5', '--provider-sort', 'latency'])
+  assert.equal(parsed.model, 'anthropic/claude-haiku-5.5')
+  assert.equal(parsed.providerSort, 'latency')
+  for (const args of [[base, '--model', 'anthropic/claude-haiku-5.5'], [base, '--operator', '--model', 'not a slug'], [base, '--operator', '--provider-sort', 'cheapest']]) assert.throws(() => parseArgs(args))
+  const seen = []
+  const fetchImpl = async (url, init) => { seen.push(init.headers); return mockFetch(url, init) }
+  const runOpts = { ...opts, out, operator: true, secret: 'test-secret', model: 'anthropic/claude-haiku-5.5' }
+  const report = await runGate({ ...runOpts, fetchImpl })
+  assert.equal(report.config.model, 'anthropic/claude-haiku-5.5')
+  assert.equal(seen.length, questions.length)
+  for (const h of seen) { assert.equal(h['x-opax-research-model'], 'anthropic/claude-haiku-5.5'); assert.equal(h['x-opax-research'], 'loop'); assert.equal(h['x-opax-research-provider'], undefined) }
+  await assert.rejects(runGate({ ...runOpts, model: 'deepseek/deepseek-v4-pro-0813', fetchImpl: () => assert.fail('changed model must not resume') }), /Checkpoint settings/)
+}))

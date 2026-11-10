@@ -4,6 +4,8 @@
 //   npm run research:local -- [questionIds...] [--model slug] [--port 8967] [--keep] [--json out.json]
 //
 // --serve starts the server without Asks; --portal PATH selects a detached baseline checkout.
+// --var KEY=VALUE (repeatable) overrides a wrangler var for this local server only, e.g.
+//   --var 'RESEARCH_LOOP_REASONING={"enabled":true,"effort":"low"}'. Never reaches a deployed Worker.
 // --local-data disables remote bindings and blocks outbound requests except the model provider.
 // Remote public D1/KV reads are retained; telemetry is local and KV writes are suppressed.
 // Starts `wrangler dev` from portal/ with a generated config whose D1 and KV bindings are
@@ -30,7 +32,12 @@ const port = Number(flag('--port', 8967));
 const model = flag('--model', 'deepseek/deepseek-v4.1-flash');
 const keep = args.includes('--keep'), reuse = args.includes('--reuse');
 const jsonOut = flag('--json', null);
-const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal'].includes(args[i - 1]));
+const varOverrides = Object.fromEntries(args.flatMap((a, i) => a === '--var' ? [args[i + 1]] : []).map(v => {
+  const m = /^([A-Z0-9_]+)=(.*)$/s.exec(v ?? '');
+  if (!m) { console.error(`--var needs KEY=VALUE, got ${v}`); process.exit(2); }
+  return [m[1], m[2]];
+}));
+const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal', '--var'].includes(args[i - 1]));
 const questions = JSON.parse(readFileSync(new URL('research_local_questions.json', import.meta.url), 'utf8'))
   .filter(q => !serveOnly && (!ids.length || ids.includes(q.id)));
 
@@ -84,7 +91,8 @@ export default { ...worker, fetch(request, env, ctx) {
   const slim = portal + '.research-assets/', skip = new Set(['divisions', 'bills', 'growth', 'photos', 'grants']);
   rmSync(slim, {recursive: true, force: true}); mkdirSync(slim);
   for (const name of readdirSync(portal + 'public')) if (!skip.has(name)) symlinkSync(portal + 'public/' + name, slim + name);
-  cfg.vars = {...cfg.vars, INDEXNOW_ENABLED: 'false', INDEXNOW_DRY_RUN: 'true'};
+  cfg.vars = {...cfg.vars, INDEXNOW_ENABLED: 'false', INDEXNOW_DRY_RUN: 'true', ...varOverrides};
+  for (const k of Object.keys(varOverrides)) if (k in vars) { console.error(`--var ${k} is shadowed by portal/.dev.vars`); process.exit(2); }
   cfg.assets = {...cfg.assets, directory: './.research-assets'};
   // Lives in portal/ (gitignored) so relative paths and .dev.vars resolve as for the real config.
   const path = portal + 'research-local.wrangler.jsonc';

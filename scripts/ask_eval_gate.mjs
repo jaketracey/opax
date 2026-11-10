@@ -27,6 +27,9 @@ const HELP = `Usage: node scripts/ask_eval_gate.mjs HOST [options]
   --interval MS         Delay between requests (0 to 10000, default: 0)
   --price-in USD        Input US$/million tokens for estimates (default: 0.44)
   --price-out USD       Output US$/million tokens for estimates (default: 1.32)
+  --model SLUG          With --operator: x-opax-research-model, one of the host's
+                        RESEARCH_LOOP_MODEL_ALLOW slugs (default: the host's model)
+  --provider-sort SORT  With --operator: x-opax-research-provider, throughput|latency|price
 Local HTTP or staging HTTPS only. Production is refused, including redirects.
 Results: results.json; atomic checkpoint: in-progress.json. Completed IDs are
 never retried. Resume requires the same host, mode, operator setting, questions
@@ -72,6 +75,8 @@ export function parseArgs(argv) {
     else if (a === '--interval') opts.intervalMs = Number(value())
     else if (a === '--price-in') opts.prices.input = Number(value())
     else if (a === '--price-out') opts.prices.output = Number(value())
+    else if (a === '--model') opts.model = value()
+    else if (a === '--provider-sort') opts.providerSort = value()
     else if (a.startsWith('-')) throw new Error(`Unknown flag ${a}`)
     else rest.push(a)
   }
@@ -90,6 +95,14 @@ function validateOptions(opts) {
   if (!Number.isFinite(opts.timeoutMs) || opts.timeoutMs < 1000 || opts.timeoutMs > 120000) throw new Error('--timeout must be between 1000 and 120000 ms.')
   if (!Number.isFinite(opts.intervalMs) || opts.intervalMs < 0 || opts.intervalMs > 10000) throw new Error('--interval must be between 0 and 10000 ms.')
   if (Object.values(opts.prices).some(n => !Number.isFinite(n) || n < 0)) throw new Error('Prices must be finite non-negative numbers.')
+  if (opts.model !== undefined && !/^[a-z0-9._-]+\/[a-z0-9._:-]+$/i.test(opts.model)) throw new Error('--model must be a model slug such as anthropic/claude-haiku-5.5.')
+  if (opts.providerSort !== undefined && !['throughput', 'latency', 'price'].includes(opts.providerSort)) throw new Error('--provider-sort must be throughput, latency or price.')
+  if ((opts.model !== undefined || opts.providerSort !== undefined) && !opts.operator) throw new Error('--model and --provider-sort need --operator.')
+}
+
+/** Per-request model selection headers. The host honours them only for operator evals and allowlisted slugs. */
+export function modelHeaders({ model, providerSort } = {}) {
+  return { ...(model ? { 'x-opax-research-model': model } : {}), ...(providerSort ? { 'x-opax-research-provider': providerSort } : {}) }
 }
 
 const gradeOf = row => typeof row?.grade === 'string' ? row.grade : row?.grade?.overall
@@ -201,6 +214,8 @@ export async function runGate(options) {
     base, mode: opts.mode, operator: opts.operator,
     questions_sha256: createHash('sha256').update(JSON.stringify(questions)).digest('hex'),
     prices: opts.prices, request_reserve_usd: opts.requestReserveUsd,
+    // Only present when set, so checkpoints written before these flags still resume.
+    ...(opts.model ? { model: opts.model } : {}), ...(opts.providerSort ? { provider_sort: opts.providerSort } : {}),
   }
   const out = resolve(opts.out), checkpointFile = resolve(out, 'in-progress.json')
   const saved = await readCheckpoint(checkpointFile)
@@ -226,7 +241,7 @@ export async function runGate(options) {
   const checkpoint = async (in_flight = null, stopped = null) => writeJson(checkpointFile, { schema: 1, config, generated, updated: new Date().toISOString(), rows, spent, in_flight, stopped })
   await checkpoint()
   const { roster, parties } = opts.roster ? { roster: opts.roster, parties: opts.parties ?? new Map() } : await loadRoster()
-  const pending = questions.filter(q => !completed.has(q.id))
+  const pending = questions.filter(q => !completed.has(q.id)), extraHeaders = modelHeaders(opts)
   let stopped = null
   for (const q of pending) {
     if (opts.shouldStop?.()) { stopped = 'interrupted'; break }
@@ -238,7 +253,7 @@ export async function runGate(options) {
       route: 'ask', operator: opts.operator, secret: opts.secret,
       prices: opts.prices, requestReserveUsd: opts.requestReserveUsd, timeoutMs: opts.timeoutMs, roster, parties,
       // Redirects cannot move a staging evaluation onto production.
-      fetchImpl: (url, init) => fetchImpl(url, { ...init, redirect: 'error' }),
+      fetchImpl: (url, init) => fetchImpl(url, { ...init, headers: { ...init?.headers, ...extraHeaders }, redirect: 'error' }),
     })
     const row = { ...result.rows[0], family: q.family, stratum: q.stratum, question: q.question }
     rows.push(row)
