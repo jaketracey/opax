@@ -88,7 +88,7 @@ export default function TopicPage() {
 function UnknownTopic() {
   return (
     <>
-      <RouteOptions options={{ title: 'Topic' }} />
+      <RouteOptions stableItems options={{ title: '' }} />
       <Screen testID="topic-screen">
         <ContentUnavailable
           symbol={symbols.topic}
@@ -272,6 +272,7 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
   return (
     <>
       <RouteOptions
+        stableItems
         options={{
           title,
           ...headerItems(

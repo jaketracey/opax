@@ -341,10 +341,10 @@ test('bill text opens on its text with the stage, one source line and the bar it
   await act(async () => view.unmount());
 });
 
-test('bill text keeps a named route title before its text loads', async () => {
+test('bill text has no generic title before its text loads', async () => {
   jest.mocked(records.billManifest).mockReturnValue(new Promise(() => {}));
   const view = await mount(<BillTextReader />);
-  expect(mockOptions.title).toBe('Bill text');
+  expect(mockOptions.title).toBe('');
   await act(async () => view.unmount());
 });
 
@@ -411,7 +411,7 @@ test('the reader reveals the short bill name after most of its heading leaves, w
 });
 
 test.each(['Synthetic short bill name', ''])(
-  'bill text shares one non-empty route and inline title when the short title is %j',
+  'bill text uses the actual short title, including an empty one, when it is %j',
   async (shortTitle) => {
     mockBillText();
     jest.mocked(catalogs.billFor).mockResolvedValue(
@@ -421,15 +421,18 @@ test.each(['Synthetic short bill name', ''])(
       }) as never,
     );
     const view = await mount(<BillTextReader />);
-    const expected = shortTitle || 'Bill text';
+    const expected = shortTitle;
     expect(view.root.findByType(RouteOptions).props.options.title).toBe(
       expected,
     );
     expect(mockOptions.title).toBe(expected);
-    expect(
-      (mockOptions.headerTitle as () => React.ReactElement<{ title: string }>)()
-        .props.title,
-    ).toBe(expected);
+    if (expected) {
+      expect(
+        (
+          mockOptions.headerTitle as () => React.ReactElement<{ title: string }>
+        )().props.title,
+      ).toBe(expected);
+    } else expect(mockOptions.headerTitle).toBeUndefined();
     await act(async () => view.unmount());
   },
 );

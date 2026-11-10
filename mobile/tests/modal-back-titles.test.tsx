@@ -35,9 +35,9 @@ test('Account is the root title and every direct push names Account, independent
   }
 });
 
-test('Licence uses its own dataset root rather than a tab title', () => {
+test('Licence starts without a dataset placeholder and uses Back for its unnamed root', () => {
   const [root, ...pushed] = licenceScreens();
-  expect(options(root!, '[id]', 0).title).toBe('Dataset');
+  expect(options(root!, '[id]', 0).title).toBe('');
   for (const screen of pushed)
-    expect(options(screen, '[id]', 1).headerBackTitle).toBe('Dataset');
+    expect(options(screen, '[id]', 1).headerBackTitle).toBe('Back');
 });
