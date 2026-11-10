@@ -7,6 +7,8 @@ No shared iOS YAML is changed. Font-scale variants run at Android 2.0.
 
 The cold first-line flow (15) defaults to 2.0; OPAX_ANDROID_FONT_SCALE=1.0 runs its standard-size control. Other normal flows default to 1.0; named ax5 variants use 2.0. Each run records font-scales.tsv.
 
+On Linux, OPAX_ANDROID_PRIVATE_ADB=1 uses a new owned Unix-socket server when shared adb is unavailable. Emulator scanning and wireless auto-connect are disabled; the USB filter accepts only the assigned emulator serial. Only that emulator is registered. Cleanup stops the owned server by PID and leaves shared adb untouched. See the [ADB socket options](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/docs/user/adb.1.md).
+
 prepared variant: **87**; Android-only variant: **4**; held: map lane: **8**; not applicable: **7**. Total: **106**.
 
 The full device set is selected with `scripts/e2e-android.sh OPAX_API34 --all-android`.

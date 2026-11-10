@@ -25,9 +25,16 @@ export OPAX_LOAD_LIMIT=140 OPAX_PASTE_WAIT_SECONDS=7200
 RUN=${OPAX_QA_RUN:-android-bringup}
 OUT="$PWD/private/qa/$RUN"
 mkdir -p "$OUT"
-/bin/rm -f "$OUT/exit-status" "$OUT/cancelled" "$OUT/device-runner" "$OUT/device-owner" "$OUT/device-shutdown" "$OUT/device-started"
+/bin/rm -f "$OUT/exit-status" "$OUT/cancelled" "$OUT/device-runner" "$OUT/device-owner" "$OUT/device-shutdown" "$OUT/device-started" "$OUT/private-adb.json"
 echo "$$" > "$OUT/device-run-pid"
 WAITER_PID=
+cleanup_adb_socket() {
+  local socket
+  if [ -f "$OUT/private-adb.json" ]; then
+    socket=$(python3 scripts/android-adb-socket.py socket "$OUT/private-adb.json") || return 1
+    export ADB_SERVER_SOCKET=$socket
+  fi
+}
 finish() {
   local rc=$? device= started= deadline serial=
   trap - EXIT
@@ -38,8 +45,10 @@ finish() {
       # Reset before interrupting a blocked driver. A later group fallback
       # must never kill our emulator while a font-2 run remains configured.
       serial=emulator-${OPAX_ANDROID_EMULATOR_PORT:-5602}
-      timeout 10 "$ANDROID_HOME/platform-tools/adb" -s "$serial" shell settings put system font_scale 1.0 >> "$OUT/parent-restore.log" 2>&1 || true
-      timeout 10 "$ANDROID_HOME/platform-tools/adb" -s "$serial" shell settings get system font_scale >> "$OUT/parent-restore.log" 2>&1 || true
+      if cleanup_adb_socket; then
+        timeout 10 "$ANDROID_HOME/platform-tools/adb" -s "$serial" shell settings put system font_scale 1.0 >> "$OUT/parent-restore.log" 2>&1 || true
+        timeout 10 "$ANDROID_HOME/platform-tools/adb" -s "$serial" shell settings get system font_scale >> "$OUT/parent-restore.log" 2>&1 || true
+      fi
     fi
     if [ -f "$OUT/device-runner" ]; then
       device=$(sed -n '1p' "$OUT/device-runner")
@@ -54,7 +63,7 @@ finish() {
       fi
     fi
     if [ "$(uname -s)" = Linux ] && [ -f "$OUT/device-started" ] && [ ! -f "$OUT/device-shutdown" ]; then
-      if timeout 20 "$ANDROID_HOME/platform-tools/adb" -s "$serial" emu kill >> "$OUT/parent-restore.log" 2>&1; then touch "$OUT/device-shutdown"; fi
+      if cleanup_adb_socket && timeout 20 "$ANDROID_HOME/platform-tools/adb" -s "$serial" emu kill >> "$OUT/parent-restore.log" 2>&1; then touch "$OUT/device-shutdown"; fi
     fi
     kill -TERM -- "-$WAITER_PID" 2>/dev/null || true
     wait "$WAITER_PID" 2>/dev/null || true

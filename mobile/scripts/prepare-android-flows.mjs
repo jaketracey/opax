@@ -534,6 +534,7 @@ if (argv.includes('--coverage')) {
     'Prepared means the Android file is generated and audited; device pass/fail is recorded privately per API.\n' +
     'No shared iOS YAML is changed. Font-scale variants run at Android 2.0.\n\n' +
     'The cold first-line flow (15) defaults to 2.0; OPAX_ANDROID_FONT_SCALE=1.0 runs its standard-size control. Other normal flows default to 1.0; named ax5 variants use 2.0. Each run records font-scales.tsv.\n\n' +
+    'On Linux, OPAX_ANDROID_PRIVATE_ADB=1 uses a new owned Unix-socket server when shared adb is unavailable. Emulator scanning and wireless auto-connect are disabled; the USB filter accepts only the assigned emulator serial. Only that emulator is registered. Cleanup stops the owned server by PID and leaves shared adb untouched. See the [ADB socket options](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/docs/user/adb.1.md).\n\n' +
     Object.entries(counts)
       .map(([k, v]) => `${k}: **${v}**`)
       .join('; ') +

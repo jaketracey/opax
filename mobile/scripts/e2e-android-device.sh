@@ -11,6 +11,8 @@ export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
 SERIAL=emulator-${OPAX_ANDROID_EMULATOR_PORT:-5580}
 ADB=(adb -s "$SERIAL")
 EMULATOR_PID=; FIXTURE_PID=; METRO_PID=; OWN_DEVICE=0
+PRIVATE_ADB_PID=; PRIVATE_ADB_START=; PRIVATE_ADB_PATH=; BOOT_LOCK_HELD=0
+ADB_EXECUTABLE=$(type -P adb)
 HOST_OS=$(uname -s)
 E2E_APK=${OPAX_ANDROID_E2E_APK:-build/android/e2e/opax-e2e.apk}
 DEBUG_APK=${OPAX_ANDROID_DEBUG_APK:-build/android/development/opax-debug.apk}
@@ -29,7 +31,21 @@ assert_lock() {
   group=$(/bin/ps -o pgid= -p $$ | tr -d ' ')
   [ "$owner" = "$group" ] || { echo 'Android is outside its shared device lock' >&2; return 1; }
 }
-timed() { perl -e 'alarm shift; exec @ARGV or die "exec: $!\n"' "$@" & wait $!; }
+private_adb_alive() {
+  [ -n "$PRIVATE_ADB_PID" ] || return 1
+  local raw fields
+  IFS= read -r raw < "/proc/$PRIVATE_ADB_PID/stat" 2>/dev/null || return 1
+  read -ra fields <<< "${raw##*) }"
+  [ "${fields[0]}" != Z ] || return 1
+  if [ -z "$PRIVATE_ADB_START" ]; then [ "${fields[1]}" = "$$" ]; else [ "${fields[19]}" = "$PRIVATE_ADB_START" ]; fi
+}
+adb_guard() {
+  [ -z "$PRIVATE_ADB_PID" ] || private_adb_alive || { echo 'Owned adb server exited; refusing to restart it' >&2; return 1; }
+}
+timed() {
+  [ "${2:-}" != adb ] || adb_guard || return 1
+  perl -e 'alarm shift; exec @ARGV or die "exec: $!\n"' "$@" & wait $!
+}
 cleanup() {
   local rc=$?
   trap - EXIT
@@ -46,6 +62,19 @@ cleanup() {
       rc=1
     fi
   fi
+  if [ -n "$PRIVATE_ADB_PID" ]; then
+    if private_adb_alive; then
+      kill -TERM "$PRIVATE_ADB_PID" 2>/dev/null || true
+      deadline=$((SECONDS + 5))
+      while private_adb_alive; do
+        [ "$SECONDS" -lt "$deadline" ] || { kill -KILL "$PRIVATE_ADB_PID" 2>/dev/null || true; break; }
+        sleep 0.1
+      done
+    fi
+    wait "$PRIVATE_ADB_PID" 2>/dev/null || true
+    /bin/rm -f "$PRIVATE_ADB_PATH"
+  fi
+  if [ "$BOOT_LOCK_HELD" = 1 ]; then flock -u 9 || true; exec 9>&-; fi
   if [ -n "${OPAX_ANDROID_RESULTS_ROOT:-}" ] && [ -f "$OUT/android-flows/suite.json" ]; then
     python3 scripts/android-parity-results.py "$OPAX_ANDROID_RESULTS_ROOT" "$OUT/android-flows" || rc=1
   fi
@@ -63,6 +92,25 @@ else
   /bin/cp -f "$OPAX_PASTE_LOCK/owner" "$OUT/device-owner"
 fi
 [ ! -e "$OUT/cancelled" ] || exit 143
+if [ "$HOST_OS" = Linux ] && [ "${OPAX_ANDROID_PRIVATE_ADB:-0}" = 1 ]; then
+  # Start a NEW owned server, never stop/restart shared 5037. No TCP listener,
+  # USB connections, emulator scanning or wireless auto-connections are used.
+  PRIVATE_ADB_PATH=/tmp/opax-adb-${PORT}-$$.sock
+  export ADB_SERVER_SOCKET=localfilesystem:$PRIVATE_ADB_PATH
+  adb() { adb_guard && "$ADB_EXECUTABLE" "$@"; }
+  (
+    umask 077
+    export ADB_LOCAL_TRANSPORT_MAX_PORT=0 ADB_MDNS_AUTO_CONNECT=0 ADB_MDNS_OPENSCREEN=0
+    exec "$ADB_EXECUTABLE" -L "$ADB_SERVER_SOCKET" --one-device "$SERIAL" server nodaemon
+  ) > "$OUT/private-adb.log" 2>&1 & PRIVATE_ADB_PID=$!
+  python3 scripts/android-adb-socket.py owner "$OUT/private-adb.json" "$PRIVATE_ADB_PID" "$ADB_SERVER_SOCKET" "$SERIAL"
+  PRIVATE_ADB_START=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["start_ticks"])' "$OUT/private-adb.json")
+  deadline=$((SECONDS + 15))
+  until [ -S "$PRIVATE_ADB_PATH" ]; do
+    private_adb_alive && [ "$SECONDS" -lt "$deadline" ] || { echo 'Owned adb socket did not become ready' >&2; exit 1; }
+    sleep 0.1
+  done
+fi
 # Inventory only: never adopt or shut down somebody else's device. Existing
 # booted devices mean the shared lock is not yet sufficient to start safely.
 if [ "$HOST_OS" = Darwin ]; then
@@ -74,6 +122,7 @@ else
   # is registered. This is separate from the desktop native build lock.
   exec 9>"${OPAX_EMULATOR_START_LOCK:-/tmp/opax-android-emulator-start.lock}"
   flock -w 600 9 || { echo 'Emulator boot lock wait expired' >&2; exit 1; }
+  BOOT_LOCK_HELD=1
   deadline=$((SECONDS + ${OPAX_EMULATOR_WAIT_SECONDS:-1800}))
   while :; do
     if ! devices=$(timed "$ADB_INVENTORY_SECONDS" adb devices); then
@@ -152,8 +201,16 @@ fi
 emulator "${EMULATOR_ARGS[@]}" > "$OUT/emulator.log" 2>&1 & EMULATOR_PID=$!
 OWN_DEVICE=1
 touch "$OUT/device-started"
+if [ -n "$PRIVATE_ADB_PID" ]; then
+  deadline=$((SECONDS + 240))
+  until [ "$(timed 5 "${ADB[@]}" get-state 2>/dev/null)" = device ]; do
+    private_adb_alive && kill -0 "$EMULATOR_PID" 2>/dev/null && [ "$SECONDS" -lt "$deadline" ] || { echo 'Owned emulator did not register with private adb' >&2; exit 1; }
+    python3 scripts/android-adb-socket.py notify "$ADB_SERVER_SOCKET" "$(( ${OPAX_ANDROID_EMULATOR_PORT:-5602} + 1 ))" || true
+    sleep 1
+  done
+fi
 timed 240 "${ADB[@]}" wait-for-device
-if [ "$HOST_OS" = Linux ]; then flock -u 9; exec 9>&-; fi
+if [ "$HOST_OS" = Linux ]; then flock -u 9; exec 9>&-; BOOT_LOCK_HELD=0; fi
 deadline=$((SECONDS + 240))
 until [ "$("${ADB[@]}" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = 1 ]; do
   [ "$SECONDS" -lt "$deadline" ] || { echo 'Android boot timed out' >&2; exit 1; }

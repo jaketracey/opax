@@ -15,10 +15,10 @@ SCRIPTS = Path(__file__).resolve().parent
 
 
 class AndroidHarnessTests(unittest.TestCase):
-    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False, local_avds=(), reader=False, bad_copy=False, font2=False, stalled_adb=False):
+    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False, local_avds=(), reader=False, bad_copy=False, font2=False, stalled_adb=False, private_adb=False):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
-            for name in ('e2e-android-device.sh','qa-env.sh','qa-maestro.sh','qa-flows.sh','maestro-watch.py','android-parity-results.py'):
+            for name in ('e2e-android-device.sh','qa-env.sh','qa-maestro.sh','qa-flows.sh','maestro-watch.py','android-parity-results.py','android-adb-socket.py'):
                 shutil.copyfile(SCRIPTS/name, scripts/name)
             tools = root/'bin'; tools.mkdir(); out = root/'out'; out.mkdir()
             (root/'proc').mkdir()
@@ -43,13 +43,32 @@ import json, os, pathlib, signal, sys, time
 root=pathlib.Path(os.environ['MOCK_ROOT']); name=pathlib.Path(sys.argv[0]).name; args=sys.argv[1:]
 with (root/'commands.jsonl').open('a') as log: log.write(json.dumps([name,*args])+'\\n')
 if name=='adb':
+    with (root/'adb-sockets.jsonl').open('a') as log:
+        log.write(json.dumps({'args':args,'socket':os.environ.get('ADB_SERVER_SOCKET'),'scan':os.environ.get('ADB_LOCAL_TRANSPORT_MAX_PORT'),'mdns':os.environ.get('ADB_MDNS_AUTO_CONNECT')})+'\\n')
+    if args[:1]==['-L']:
+        import socket
+        listener=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
+        listener.bind(args[1].removeprefix('localfilesystem:'));listener.listen()
+        while True:
+            connection,_=listener.accept()
+            with connection:
+                length=connection.recv(4)
+                if not length: continue
+                message=connection.recv(int(length,16)).decode()
+                (root/'registered').write_text(message)
     if args==['devices']:
         if os.environ.get('MOCK_STALLED_ADB')=='1': time.sleep(600)
-        print('List of devices attached'); print('\\n'.join('emulator-'+str(5500+i*2)+'\\tdevice' for i in range(int(os.environ['MOCK_EXISTING']))))
+        print('List of devices attached')
+        if os.environ.get('ADB_SERVER_SOCKET'):
+            if (root/'registered').exists(): print(os.environ['MOCK_SERIAL']+'\\tdevice')
+        else: print('\\n'.join('emulator-'+str(5500+i*2)+'\\tdevice' for i in range(int(os.environ['MOCK_EXISTING']))))
     else:
         if args[:2]!=['-s',os.environ['MOCK_SERIAL']] and args[2:]!=['emu','avd','name']: raise SystemExit('Unscoped or foreign adb action')
         command=args[2:]
-        if command==['emu','avd','name']: print('OPAX_Pixel_API36\\nOK')
+        if command==['get-state']:
+            if os.environ.get('ADB_SERVER_SOCKET') and not (root/'registered').exists(): raise SystemExit(1)
+            print('device')
+        elif command==['emu','avd','name']: print('OPAX_Pixel_API36\\nOK')
         elif command==['shell','getprop','sys.boot_completed']: print('1')
         elif command==['shell','getprop','ro.build.version.sdk']: print('34' if '5602' in args[1] else '36')
         elif command==['emu','kill']: os.kill(int((root/'emulator.pid').read_text()),signal.SIGTERM)
@@ -86,6 +105,7 @@ elif name=='git': print('a'*40)
             env['MOCK_BAD_COPY']=str(int(bad_copy))
             env['MOCK_STALLED_ADB']=str(int(stalled_adb))
             env['OPAX_ADB_INVENTORY_TIMEOUT_SECONDS']='1'
+            env['OPAX_ANDROID_PRIVATE_ADB']=str(int(private_adb))
             for key in ('OPAX_PASTE_LOCK','OPAX_BUILD_GATE'): env.pop(key,None)
             selector='.maestro/15-cold-first-line.yaml' if font2 else '.maestro/android/32-record-reader.yaml' if reader else '--all-android' if twice else '01'
             child=subprocess.Popen(['bash','scripts/e2e-android-device.sh',avd,str(out),selector],cwd=mobile,env=env,
@@ -96,6 +116,18 @@ elif name=='git': print('a'*40)
                 try: os.killpg(child.pid,signal.SIGTERM)
                 except ProcessLookupError: pass
             commands=[json.loads(line) for line in (root/'commands.jsonl').read_text().splitlines()]
+            if private_adb:
+                owner=json.loads((out/'private-adb.json').read_text())
+                self.assertFalse(Path(owner['socket'].removeprefix('localfilesystem:')).exists())
+                with self.assertRaises(ProcessLookupError): os.kill(owner['pid'],0)
+                calls=[json.loads(line) for line in (root/'adb-sockets.jsonl').read_text().splitlines()]
+                self.assertTrue(all(call['socket']==owner['socket'] for call in calls))
+                server=next(call for call in calls if call['args'][:1]==['-L'])
+                self.assertEqual(server['scan'],'0');self.assertEqual(server['mdns'],'0')
+                self.assertEqual(server['args'][2:4],['--one-device','emulator-'+port])
+                if any(c[0]=='emulator' for c in commands):
+                    self.assertEqual((root/'registered').read_text(),'host:emulator:'+str(int(port)+1))
+                else: self.assertFalse((root/'registered').exists())
             if fail and any(c[0]=='maestro' for c in commands):
                 hierarchy=next((out/'maestro').glob('*/failure-ui.json'))
                 self.assertEqual(json.loads(hierarchy.read_text())['attributes']['text'],'current failure')
@@ -141,7 +173,7 @@ elif name=='git': print('a'*40)
     def test_cap_ignores_known_foreign_avds_and_counts_opax_boots_before_adb_registration(self):
         rc, log, _, _=self.run_device(existing=3,local_avds=('gf-one','gf-two','gf-three'))
         self.assertEqual(rc,0,log)
-        rc, log, commands, _=self.run_device(existing=0,local_avds=('OPAX_API34','OPAX_Pixel_API36','OPAX_Pixel_API36'))
+        rc, log, commands, _=self.run_device(existing=0,local_avds=('OPAX_API34','OPAX_Pixel_API36','OPAX_Pixel_API36'),private_adb=True)
         self.assertNotEqual(rc,0,log)
         self.assertIn('Three-emulator capacity',log)
         self.assertFalse(any(c[0]=='emulator' for c in commands))
@@ -162,6 +194,13 @@ elif name=='git': print('a'*40)
         self.assertFalse(any(c[0]=='emulator' for c in commands))
         self.assertFalse(any('kill-server' in c or 'start-server' in c or 'reconnect' in c for c in commands))
 
+    @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
+    def test_private_socket_registers_only_the_owned_emulator_and_stops_its_server(self):
+        for fail in (False,True):
+            rc,log,commands,_=self.run_device(private_adb=True,fail=fail)
+            self.assertEqual(rc,int(fail),log)
+            self.assertFalse(any('kill-server' in c or 'start-server' in c for c in commands))
+
 
     @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
     def test_wrong_variant_or_fixture_origin_is_refused_before_boot(self):
@@ -177,6 +216,7 @@ elif name=='git': print('a'*40)
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); mobile=root/'mobile'; scripts=mobile/'scripts'; scripts.mkdir(parents=True)
             shutil.copyfile(SCRIPTS/'e2e-android.sh',scripts/'e2e-android.sh')
+            shutil.copyfile(SCRIPTS/'android-adb-socket.py',scripts/'android-adb-socket.py')
             for name in ('qa-env.sh','qa-lock.sh'): (scripts/name).write_text('')
             (scripts/'qa-java.sh').write_text('configure_java() { :; }\n')
             (scripts/'prepare-android-flows.py').write_text('')
@@ -184,12 +224,13 @@ elif name=='git': print('a'*40)
 set -e
 out=$2
 { echo $$; ps -o lstart= -p $$; } > "$out/device-runner"
+python3 scripts/android-adb-socket.py owner "$out/private-adb.json" "$$" localfilesystem:/tmp/opax-adb-parent-test.sock emulator-5602
 touch "$out/device-started"
 trap 'sleep 3; exit 143' TERM
 while :; do sleep 1; done
 ''')
             adb=root/'sdk/platform-tools/adb'; adb.parent.mkdir(parents=True)
-            adb.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$MOCK_ADB_LOG"\ncase "$*" in *"settings get"*) echo 1 ;; esac\n')
+            adb.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$MOCK_ADB_LOG"\nprintf "%s\\n" "$ADB_SERVER_SOCKET" >> "$MOCK_ADB_LOG.sockets"\ncase "$*" in *"settings get"*) echo 1 ;; esac\n')
             adb.chmod(0o755)
             out=mobile/'private/qa/parent'
             env={**os.environ,'ANDROID_HOME':str(root/'sdk'),'OPAX_QA_RUN':'parent',
@@ -210,6 +251,7 @@ while :; do sleep 1; done
                 self.assertLess(font,stop)
                 self.assertTrue(all(c.startswith('-s emulator-5602 ') for c in commands))
                 self.assertEqual((out/'parent-restore.log').read_text().strip(),'1')
+                self.assertEqual(set((root/'adb.log.sockets').read_text().splitlines()),{'localfilesystem:/tmp/opax-adb-parent-test.sock'})
             finally:
                 if child.poll() is None:
                     os.killpg(child.pid,signal.SIGKILL); child.wait()
