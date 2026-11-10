@@ -185,6 +185,36 @@ beforeEach(() => {
 });
 
 describe('profile', () => {
+  test('a member with one recorded division is counted in the singular', async () => {
+    mockParams.slug = 'penny-wong';
+    const person = c.joinPerson('penny-wong', slugs, roster, people, manifest);
+    const profile = c.profileFor(person.canonicalPersonId!, catalogs);
+    const votes = profile.blocks.votes;
+    mock.person.mockResolvedValue(result(person));
+    mock.profileFor.mockResolvedValue({
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        votes: { ...votes, data: { ...votes.data!, total: 1 } },
+      },
+    });
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<Person />);
+    });
+    expect(text(r)).toContain('Voted in 1 division');
+    expect(text(r)).not.toContain('1 divisions');
+    expect(
+      r.root.find(
+        (n) =>
+          typeof n.type !== 'string' &&
+          n.props.testID === 'person-figure-votes' &&
+          typeof n.props.label === 'string',
+      ).props.label,
+    ).toMatch(/^vote( since|$)/);
+    await act(async () => r.unmount());
+  });
+
   test('strip and sections agree: each tile reads its section’s selector', async () => {
     const { r, profile } = await wong();
     const votes = votesCount(profile)!;
@@ -521,6 +551,43 @@ describe('party', () => {
       labor.unmount();
       liberal.unmount();
     });
+  });
+
+  test('one sitting member and one receipt are counted in the singular', async () => {
+    const labor = views.Labor!;
+    const data = labor.data!;
+    views.Single = {
+      ...labor,
+      data: {
+        ...data,
+        members: {
+          ...data.members,
+          data: { ...data.members.data!, currentCount: 1 },
+        },
+        receipts: {
+          ...data.receipts,
+          data: {
+            ...data.receipts.data!,
+            node: { ...data.receipts.data!.node, count: 1 },
+          },
+        },
+      },
+    } as PartyView;
+    const r = await party('Single');
+    const words = text(r);
+    expect(words).toContain('1 sitting member');
+    expect(words).not.toContain('1 sitting members');
+    expect(words).toContain('from 1 donation or receipt');
+    expect(
+      r.root.find(
+        (n) =>
+          typeof n.type !== 'string' &&
+          n.props.testID === 'party-figure-members' &&
+          typeof n.props.label === 'string',
+      ).props.label,
+    ).toBe('sitting member');
+    delete views.Single;
+    await act(async () => r.unmount());
   });
 
   test('the strip has two tiles, each the figure its section draws', async () => {

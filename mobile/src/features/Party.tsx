@@ -374,7 +374,7 @@ function PartyContent({
   if (members && view.members.status !== 'error')
     tiles.push({
       value: formatCount(members.currentCount),
-      label: 'sitting members',
+      label: members.currentCount === 1 ? 'sitting member' : 'sitting members',
       onPress: () => jump('members'),
       testID: 'party-figure-members',
     });
@@ -448,7 +448,7 @@ function PartyContent({
       {(data) => (
         <View>
           <LinkRow
-            title={`${formatCount(data.currentCount)} sitting members`}
+            title={counted(data.currentCount, 'sitting member')}
             leading={
               <View style={styles.faces}>
                 {newMembers ? <NewDot testID="party-members-new" /> : null}
@@ -456,7 +456,7 @@ function PartyContent({
               </View>
             }
             href={partyMembersRoute(label)}
-            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}`}
+            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}${newMembers ? '. New' : ''}`}
             accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
             testID="party-current-count"
           />
@@ -524,7 +524,7 @@ function PartyContent({
             </Text>
             <Text wordSafe variant="secondary">
               {[
-                `disclosed, from ${formatCount(data.node.count)} donations and receipts`,
+                `disclosed, from ${formatCount(data.node.count)} ${data.node.count === 1 ? 'donation or receipt' : 'donations and receipts'}`,
                 data.node.firstYear !== undefined &&
                 data.node.lastYear !== undefined
                   ? data.node.firstYear === data.node.lastYear

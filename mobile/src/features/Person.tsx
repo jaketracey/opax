@@ -14,7 +14,7 @@ import { catalogs } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, ReadableColumn } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
-import { formatCount, formatMoney } from '../design/format';
+import { counted, formatCount, formatMoney } from '../design/format';
 import { Group, Screen, TitleAnchor } from '../design/layout';
 import { isPartyLabel } from '../design/party';
 import { phoneCopy } from '../design/phone-copy';
@@ -506,7 +506,7 @@ function ProfileContent({
   if (votes !== null && b.votes.status !== 'error')
     tiles.push({
       value: formatCount(votes),
-      label: since ? `votes since ${since}` : 'votes',
+      label: `${votes === 1 ? 'vote' : 'votes'}${since ? ` since ${since}` : ''}`,
       onPress: () => jump('votes'),
       testID: 'person-figure-votes',
     });
@@ -662,7 +662,7 @@ function ProfileContent({
           return (
             <Group gap={rhythm.tight}>
               <Text wordSafe variant="secondary" testID="person-votes-summary">
-                {`Voted in ${formatCount(v.total)} divisions${from && to ? `, ${from === to ? from : `${from} to ${to}`}` : ''}`}
+                {`Voted in ${counted(v.total, 'division')}${from && to ? `, ${from === to ? from : `${from} to ${to}`}` : ''}`}
               </Text>
               {rows.length ? (
                 <View testID="person-bill-votes">
