@@ -773,7 +773,8 @@ function PartyVoteRow({
     <View
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={[styles.voteTrack, stacked ? null : styles.trackInline]}
+      testID={`${testID}-bar`}
+      style={[styles.voteTrack, stacked ? styles.full : styles.trackInline]}
     >
       <View
         style={{
