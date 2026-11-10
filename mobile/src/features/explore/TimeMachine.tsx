@@ -20,7 +20,7 @@ import { YearBills } from './YearBills';
 import { YearBrief } from './YearBrief';
 import { YearGallery } from './YearGallery';
 import { YearHeader, YearPager } from './YearHeader';
-import { FIRST_YEAR, LAST_YEAR, useYearChoice } from './YearMenu';
+import { FIRST_YEAR, LAST_YEAR } from './YearMenu';
 import { YearVoices, type RosterLookup } from './YearVoices';
 
 /** The latest complete year: 2025 in November 2026. */
@@ -88,7 +88,6 @@ export default function TimeMachine() {
     saveExploreChoice({ year: next });
     scroll.current?.scrollTo({ y: 0, animated: false });
   }, []);
-  useYearChoice(setYear);
   const shown = year ?? defaultYear();
   return (
     <>
