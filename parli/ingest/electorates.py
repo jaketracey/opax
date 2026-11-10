@@ -42,6 +42,21 @@ def party(value):
             "KAP": "Katter's Australian Party", "Liberal Party": "Liberal", "The Australian Greens - Victoria": "Greens", "The Greens": "Greens"}.get(value, value or "Unknown")
 
 
+# An all-capitals run of two or more letters, which may hold an apostrophe or hyphen (O'BRIEN, SMITH-JONES).
+_CAPS_RUN = re.compile(r"[A-ZÀ-ÖØ-Þ][A-ZÀ-ÖØ-Þ'’\-]*[A-ZÀ-ÖØ-Þ]")
+
+
+def aec_surname(value: str) -> str:
+    """The AEC's surname with only its capitals run title-cased; the prefix the AEC prints is kept.
+
+    The AEC prints the family name in capitals after any mixed-case prefix: 'McINTOSH', 'MacDONALD',
+    'van der PLAAT', 'Van MANEN', 'O'BRIEN'. str.title() lowered the prefix too ('Mcintosh',
+    'Van Der Plaat'): members-electorates-007, 129 candidates. Source spelling, e.g.
+    https://results.aec.gov.au/31496/Website/Downloads/HouseCandidatesDownload-31496.csv
+    'NSW,128,Lindsay,LP,Liberal,41480,McINTOSH,Melissa,Y,Y'."""
+    return _CAPS_RUN.sub(lambda m: m.group(0).title(), str(value or "").strip())
+
+
 def csv_rows(raw: bytes, header: str) -> list[dict]:
     lines = raw.decode("utf-8-sig").splitlines()
     start = next((i for i, line in enumerate(lines) if line.startswith(header)), None)
@@ -179,7 +194,7 @@ class Builder:
                         if v:
                             votes.append({"kind": kind, "votes": int(v["TotalVotes"]), "denominator": totals[kind], "sources": [vsid]})
                     primary = vote_maps["primary"][0].get(c["CandidateID"], {})
-                    output.append({"candidate_id": f"aec-{event}-{c['CandidateID']}", "name": (c["GivenNm"] + " " + c["Surname"].title()).strip(),
+                    output.append({"candidate_id": f"aec-{event}-{c['CandidateID']}", "name": (c["GivenNm"] + " " + aec_surname(c["Surname"])).strip(),
                                    "party": party(c["PartyNm"]), "elected": c["Elected"] == "Y", "person_id": None,
                                    "ballot_position": int(primary.get("BallotPosition") or 0), "votes": votes})
                 self.put("contests", {"contest_id": contest_id, "electorate_id": eid, "election_id": event_id,
