@@ -224,6 +224,39 @@ test('a party record: originals last, the window figure, all years beside it, an
   await act(async () => r.unmount());
 });
 
+test.each([
+  [1, 'receipt'],
+  [2, 'receipts'],
+])('a party with %i receipts uses the matching count noun', async (count, noun) => {
+  jest.mocked(apiClient.get).mockImplementation(async (_path, decode) => ({
+    data: decode({
+      meta: { generated: '2026-11-10', coverage: '2024–25', source: 'AEC' },
+      nodes: [
+        {
+          id: 'party:fixture',
+          kind: 'party',
+          label: 'Fixture Party',
+          group: 'party',
+          industry: 'party',
+          total: 1000,
+          count,
+          firstYear: 2024,
+          lastYear: 2024,
+        },
+      ],
+      edges: [],
+    }),
+    stale: false,
+    asOf: '2026-11-10',
+    savedAt: 1,
+  }));
+  const r = await render({ node: 'party:fixture' });
+  expect(figure(r, 'money-focus-amount').props.label).toBe(
+    `in ${count} ${noun}, 2024–25`,
+  );
+  await act(async () => r.unmount());
+});
+
 test('node=party:{name} accepts the party by any of its names', async () => {
   const r = await render({ node: 'party:Labor' });
   // The figure proves the node resolved.

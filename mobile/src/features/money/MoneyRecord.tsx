@@ -676,7 +676,7 @@ function NodeBody({
   // ---- party
   if (node.kind === 'party') {
     const donors = flows.slice(0, 15);
-    const line = `in ${formatCount(node.count)} receipts, ${years}`;
+    const line = `in ${counted(node.count, 'receipt')}, ${years}`;
     return (
       <Page
         title={node.label}
