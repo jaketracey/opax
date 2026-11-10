@@ -857,6 +857,8 @@ paused_summary
 # ---- 6. commit -----------------------------------------------------------------------------------------------
 # Re-read HEAD after sync/validation; stage whole published directory roots,
 # including new chunks and deletions, without admitting untracked first exports.
+# The grants root includes seats/*.json and continuation pages. They validate,
+# publish and revert with graph/grants.federal.json through the grants group.
 mapfile -t DATA_PATHS < <(tracked_data_paths)
 if [ "${#DATA_PATHS[@]}" -gt 0 ]; then
   git add -A -- "${DATA_PATHS[@]}" || { fail "could not stage data changes"; finish; }

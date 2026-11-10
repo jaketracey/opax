@@ -32,6 +32,10 @@ Writes (default --out-dir portal/public):
                                       grants themselves (largest first, at most
                                       600). See docs/DATA-GRANTS.md "Program
                                       files" for the rules.
+    grants/federal/seats/<key>.json  every matched grant for one federal seat,
+                                      500 per page, then <key>-2.json etc.
+                                      Follow `next` until null. Totals and meta
+                                      match the index. See docs/DATA-GRANTS.md.
 
 The heavy lifting runs on the DB host: the REMOTE string below is streamed to
 `ssh desktop python3 -` (stdlib only there), and the JSON it prints is split
@@ -67,6 +71,7 @@ import subprocess
 import sys
 from collections import Counter, defaultdict
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -107,6 +112,7 @@ PARTY_ALIASES = {"A.L.P.": "Labor", "ALP": "Labor", "LP": "Liberal", "NAT": "Nat
                  "PHON": "One Nation"}
 PROGRAM_GRANTS_MAX = 600
 PROGRAM_RECIPIENTS_MAX = 60
+SEAT_GRANTS_MAX = 500
 SEAT_BLOCS = ("gov", "opp", "cross", "vacant", "unknown")
 MARGIN_TYPES = ("marginal", "fairly_safe", "safe", "unknown")
 APPROVAL_BUCKETS = ("before_approval", "0_30", "31_90", "91_365", "over_365")
@@ -563,6 +569,95 @@ def fy_key(fy):
     return int(fy[:4]) if fy and fy[:4].isdigit() else -1
 
 
+def build_seat_files(grants, recips, programs, index):
+    """Complete federal seat pages, independent of recipient/program listing caps.
+
+    Amounts retain source cents: rounding every award before adding would not
+    reconcile with the index, which rounds the seat's sum once.
+    """
+    by_seat = defaultdict(list)
+    for g in grants:
+        if g.get("el"):
+            by_seat[g["el"]].append(g)
+    pages = {}
+    indexed = {e["n"] for e in index["electorates"]}
+    if set(by_seat) - indexed:
+        raise ValueError("Matched grants have no seat index entry")
+    for e in index["electorates"]:
+        gs = by_seat[e["n"]]
+        total = sum((Decimal(str(g["v"])) for g in gs), Decimal(0))
+        if len(gs) != e["c"] or abs(total - Decimal(str(e["t"]))) > Decimal("0.5"):
+            raise ValueError(f"Seat {e['n']} grants do not match the index total/count")
+        key = e.get("key") or program_key(e["n"])
+        gs = sorted(gs, key=lambda g: (-g["v"], g["id"]))
+        rows = []
+        for g in gs:
+            rec = recips.get(g.get("rid")) or {}
+            pid = g["pid"]
+            rows.append({"id": g["id"], "rid": g.get("rid"),
+                         "rn": rec.get("canonical_name") or g.get("raw") or "Not disclosed",
+                         "k": rec.get("kind") or "unknown", "n": g.get("n"),
+                         "pid": pid, "pr": programs[pid], "v": g["v"],
+                         "fy": g.get("fy"), "s": iso_day(g.get("s")),
+                         "el": g["el"], "elst": g.get("elst"), "guid": g.get("guid")})
+        count = max(1, (len(rows) + SEAT_GRANTS_MAX - 1) // SEAT_GRANTS_MAX)
+        for page in range(1, count + 1):
+            fkey = key if page == 1 else f"{key}-{page}"
+            if fkey in pages:
+                raise ValueError(f"Duplicate seat file key: {fkey}")
+            pages[fkey] = {"meta": index["meta"], "jur": "federal", "key": key,
+                          "n": e["n"], "st": e["st"], "t": e["t"], "c": e["c"],
+                          "page": page, "next": f"/grants/federal/seats/{key}-{page + 1}.json" if page < count else None,
+                          "grants": rows[(page - 1) * SEAT_GRANTS_MAX:page * SEAT_GRANTS_MAX]}
+    return pages
+
+
+def complete_seat_index(index, current_states):
+    """Include current seats with no mapped awards, retaining historical matches."""
+    indexed = {program_key(e["n"]) for e in index["electorates"]}
+    for name, state in current_states.items():
+        key = program_key(name)
+        if key not in indexed:
+            index["electorates"].append({"n": name, "st": state, "t": 0, "c": 0,
+                                       "r": 0, "dt": 0, "dr": 0, "adhoc": 0,
+                                       "mps": [], "margin": {}})
+            indexed.add(key)
+    for e in index["electorates"]:
+        e["key"] = program_key(e["n"])
+    index["electorates"].sort(key=lambda e: (-e["t"], e["n"]))
+
+
+def resolve_programs(grants, jur):
+    """Assign all awards a program id and return weighted names for every program.
+
+    A missing GO id inherits the id used by at least 90% of awards with the
+    same fetched program name. Otherwise it keeps its activity fallback.
+    This includes programs outside the index's top-program cap.
+    """
+    name_gos = defaultdict(Counter)
+    if jur == "federal":
+        for g in grants:
+            if g.get("go") and g.get("pr"):
+                name_gos[" ".join(g["pr"].split()).lower()][g["go"]] += 1
+    go_by_name = {n: c.most_common(1)[0][0] for n, c in name_gos.items()
+                  if c.most_common(1)[0][1] >= 0.9 * sum(c.values())}
+    names = defaultdict(Counter)
+    for g in grants:
+        if jur == "federal":
+            key = g.get("go") or (go_by_name.get(" ".join(g["pr"].split()).lower()) if g.get("pr") else None)
+        else:
+            key = " ".join((g.get("pr") or "").split())
+        key = key or "activity:" + (g.get("n") or "")
+        g["pid"] = key
+        if g.get("pr"):
+            names[key][g["pr"]] += 3
+        if g.get("n"):
+            names[key][g["n"]] += 1
+        if not g.get("pr") and not g.get("n"):
+            names[key][key] += 1
+    return names
+
+
 def program_index_extras(pf, jur):
     """The fields a programs[] index row gains from its program file."""
     out = {"key": pf["key"], "cnc": pf["sel"].get("Closed Non-Competitive", [0, 0])[0], "selk": pf["sel_known"][0]}
@@ -743,9 +838,10 @@ def split_aliases(aliases, names):
 SHARED_FUNCTIONS = (iso_day, program_key, government_at, bloc_for, holder_at, canonical_party, pretty_name, release_holder,
                     seat_vacant, seat_holder,
                     margin_type_for, months_to_election_bucket, approval_bucket, build_program_file, fy_key,
-                    program_index_extras, program_name, unmangle, clean_row, source_title, award_value, split_aliases)
+                    program_index_extras, program_name, build_seat_files, complete_seat_index, resolve_programs,
+                    unmangle, clean_row, source_title, award_value, split_aliases)
 SHARED_CONSTANTS = ("GENERIC_NAME_WORDS", "LEGAL_NAME_WORDS", "ELECTIONS", "BLOCS", "GOVERNMENT", "BY_ELECTIONS", "PARTY_ALIASES", "PROGRAM_GRANTS_MAX",
-                    "PROGRAM_RECIPIENTS_MAX", "SEAT_BLOCS", "MARGIN_TYPES", "APPROVAL_BUCKETS", "ELECTION_BUCKETS")
+                    "PROGRAM_RECIPIENTS_MAX", "SEAT_GRANTS_MAX", "SEAT_BLOCS", "MARGIN_TYPES", "APPROVAL_BUCKETS", "ELECTION_BUCKETS")
 
 
 def current_seats_from_roster(path: Path) -> dict:
@@ -812,17 +908,31 @@ def seat_periods_from_release(public: Path) -> dict:
     return dict(sorted(out.items()))
 
 
-def remote_program(current_seats: dict | None = None, seat_periods: dict | None = None) -> str:
+def current_seat_states_from_roster(path: Path) -> dict:
+    """Current federal House seats and their state codes, including unmapped seats."""
+    if not path.exists():
+        return {}
+    people = json.loads(path.read_text(encoding="utf-8")).get("people", [])
+    return {r["electorate"]: r["state"].lower()
+            for p in people if p.get("current") for r in p.get("representation", [])
+            if r.get("jurisdiction") == "federal" and r.get("chamber") == "representatives"
+            and r.get("electorate") and r.get("state")}
+
+
+def remote_program(current_seats: dict | None = None, seat_periods: dict | None = None,
+                   current_states: dict | None = None) -> str:
     """The stdlib-only program streamed to the DB host: shared rules + REMOTE_BODY."""
     head = ["from __future__ import annotations",
             "import json, os, re, sqlite3, sys, zlib",
             "from collections import Counter, defaultdict",
             "from datetime import date, datetime, timezone",
+            "from decimal import Decimal",
             "ISO_DAY = re.compile(r'^\\d{4}-\\d{2}-\\d{2}')"]
     for name in SHARED_CONSTANTS:
         head.append(f"{name} = {globals()[name]!r}")
     head.append(f"CURRENT_SEATS = {current_seats or {}!r}")
     head.append(f"SEAT_PERIODS = {seat_periods or {}!r}")
+    head.append(f"CURRENT_SEAT_STATES = {current_states or {}!r}")
     return "\n".join(head) + "\n\n" + "\n\n".join(inspect.getsource(f) for f in SHARED_FUNCTIONS) + "\n" + REMOTE_BODY
 
 REMOTE_BODY = r'''
@@ -1192,26 +1302,12 @@ for rid, rec, gs, t in listed:
 # detail page names a program that only one GO id uses, the award files under
 # that GO id (GA34203, Community Development Grants -> GO3141). Otherwise an
 # award without a GO id is its own "activity:<title>" program, as before.
-go_by_name = {}
-if JUR == "federal":
-    name_gos = defaultdict(Counter)
-    for g in grants:
-        if g["go"] and g["pr"]:
-            name_gos[" ".join(g["pr"].split()).lower()][g["go"]] += 1
-    # A name maps to the GO id that holds nearly all of its awards: the harvest
-    # can tag a few awards of a sibling program with the same name (two GO6048
-    # awards say "Community Development Grants"), which must not orphan GA34203.
-    go_by_name = {n: c.most_common(1)[0][0] for n, c in name_gos.items()
-                  if c.most_common(1)[0][1] >= 0.9 * sum(c.values())}
+program_names = resolve_programs(grants, JUR)
 prog = defaultdict(lambda: {"t": 0.0, "c": 0, "r": set(), "dt": 0.0, "dr": set(), "adhoc": 0.0, "ag": Counter(), "names": Counter(), "fy": set(), "grants": []})
 for g in grants:
-    if JUR == "federal":
-        key = g["go"] or (go_by_name.get(" ".join(g["pr"].split()).lower()) if g["pr"] else None) or ""
-    else:
-        key = " ".join((g["pr"] or "").split())
-    if not key:
-        key = "activity:" + (g["n"] or "")
+    key = g["pid"]
     p = prog[key]
+    p["names"] = program_names[key]
     p["grants"].append(g)
     p["t"] += g["v"]; p["c"] += 1
     if g["rid"]:
@@ -1222,14 +1318,6 @@ for g in grants:
     if g["adhoc"]:
         p["adhoc"] += g["v"]
     p["ag"][agency_idx[agency_label(g["ag"])]] += g["v"]
-    # Program names outrank activity titles three to one; the titles are the
-    # fallback when every recorded program name reads as a sentence.
-    if g["pr"]:
-        p["names"][g["pr"]] += 3
-    if g["n"]:
-        p["names"][g["n"]] += 1
-    if not g["pr"] and not g["n"]:
-        p["names"][key] += 1
     if g["fy"]:
         p["fy"].add(g["fy"])
 programs = []
@@ -1369,6 +1457,10 @@ out = {
     "details": details_out,   # shard name -> {file key -> detail}
     "programs": programs_out,   # file key -> program file
 }
+if JUR == "federal":
+    complete_seat_index(out["index"], CURRENT_SEAT_STATES)
+    out["seats"] = build_seat_files(grants, recips,
+        {pid: program_name(p["names"]) or pid for pid, p in prog.items()}, out["index"])
 json.dump(out, sys.stdout, ensure_ascii=False, separators=(",", ":"))
 '''
 
@@ -1377,7 +1469,7 @@ INDEX_SIZE_LIMIT = 1_600_000   # bytes; over it the listed programs fall back to
 
 
 def write_outputs(data: dict, out: Path, jur: str) -> dict:
-    """Split the remote program's JSON into the index, the shards and the program files.
+    """Split the remote JSON into the index, recipient shards, programs and seat pages.
 
     Stale files (a recipient or program that fell off the list) are removed so
     each directory is exactly the listed set. Returns what was written.
@@ -1412,13 +1504,32 @@ def write_outputs(data: dict, out: Path, jur: str) -> dict:
         if p.name not in keep_programs:
             p.unlink()
             removed += 1
+    seat_files, seat_bytes, seat_removed = write_seat_outputs(data.get("seats", {}), out, jur)
+    removed += seat_removed
     return {
         "index_path": index_path, "index_size": index_path.stat().st_size,
         "shards": len(keep), "detail_files": sum(len(b) for b in data["details"].values()),
         "detail_bytes": sum((ddir / n).stat().st_size for n in keep),
         "program_files": len(keep_programs), "program_bytes": sum((pdir / n).stat().st_size for n in keep_programs),
+        "seat_files": seat_files, "seat_bytes": seat_bytes,
         "removed": removed,
     }
+
+
+def write_seat_outputs(pages: dict, out: Path, jur: str = "federal") -> tuple[int, int, int]:
+    """Write complete seat pages and remove stale pages after a seat shrinks."""
+    if jur != "federal":
+        return 0, 0, 0
+    sdir = out / "grants" / jur / "seats"
+    sdir.mkdir(parents=True, exist_ok=True)
+    keep = set()
+    for key, page in pages.items():
+        keep.add(f"{key}.json")
+        (sdir / f"{key}.json").write_text(json.dumps(page, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    stale = [p for p in sdir.glob("*.json") if p.name not in keep]
+    for p in stale:
+        p.unlink()
+    return len(keep), sum((sdir / n).stat().st_size for n in keep), len(stale)
 
 
 def noted_program_ids(out_dir: Path, jur: str) -> list[str]:
@@ -1442,13 +1553,14 @@ def run_remote(host: str | None, jur: str, top: int, cap: int, force_abns: list[
     """
     current = current_seats_from_roster(ROOT / "portal" / "public" / "parliamentarians.json")
     periods = seat_periods_from_release(ROOT / "portal" / "public")
+    states = current_seat_states_from_roster(ROOT / "portal" / "public" / "parliamentarians.json")
     argv = ["python3" if host else sys.executable, "-", jur, str(top), str(cap), ",".join(force_abns), str(programs),
             ",".join(force_programs or [])]
     if host:
         cmd, env = ["ssh", host, *argv], None
     else:
         cmd, env = argv, dict(os.environ, **({"OPAX_DB": local_db} if local_db else {}))
-    proc = subprocess.run(cmd, input=remote_program(current, periods), capture_output=True, text=True, timeout=3600, env=env)
+    proc = subprocess.run(cmd, input=remote_program(current, periods, states), capture_output=True, text=True, timeout=3600, env=env)
     if proc.returncode != 0:
         sys.stderr.write(proc.stderr[-4000:])
         return None
@@ -1503,6 +1615,7 @@ def main() -> int:
     c = data["index"]["meta"]["counts"]
     print(f"{w['index_path']} {w['index_size']/1024:.0f} KB; {w['detail_files']} recipient files in {w['shards']} shards "
           f"({w['detail_bytes']/1024/1024:.1f} MB); {w['program_files']} program files ({w['program_bytes']/1024/1024:.1f} MB); "
+          f"{w['seat_files']} seat pages ({w['seat_bytes']/1024/1024:.1f} MB); "
           f"{w['removed']} stale files removed")
     print(f"  {c['grants']:,} grants, ${c['dollars']/1e9:.2f}B, {c['recipients']:,} recipients "
           f"({c['recipients_listed']:,} listed), donors: {c['donor_recipients']:,} recipients / "

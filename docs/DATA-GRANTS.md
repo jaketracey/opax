@@ -132,6 +132,8 @@ writes:
   separately, and a pointer to its grants in the other jurisdiction.
 - `portal/public/grants/<jur>/programs/<key>.json`: one file per listed program (section
   3.2).
+- `portal/public/grants/federal/seats/<key>.json`: every matched award for a federal
+  seat, paged at 500 grants with `next` (section 3.3, mobile D5).
 
 ### 3.2 Program files (2026-09-13)
 
@@ -293,6 +295,110 @@ $70M); 27 of the Queensland map's donors received $334M (Ramsay $229M, Black & W
 Cabs $51M). The legend's "Public money" chip toggles the layer; donor cards gain "Public
 money received" with a deep link into the explorer (`/explore?game=grants&jur=..&open=..`).
 See `portal/graph/README.md`, "The grants layer". Never summed with donations.
+
+### 3.3 Per-seat files for the app (D5, 2026-11-10)
+
+Status: generated and validated locally, awaiting review and deployment.
+
+The app's `MoneyCatalogs.grants('federal')` reads `/graph/grants.federal.json`.
+Each `electorates[]` row now carries `key`; fetch
+`/grants/federal/seats/<key>.json`. The key uses the same slug rule as program
+files: lower case, runs of non-alphanumeric characters become `-`, maximum
+80 characters. For example, Maribyrnong is `maribyrnong` and Eden-Monaro is
+`eden-monaro`. Use the index key so source spellings such as `Mcpherson` remain
+consistent. The app lane can add a seat fetch beside `MoneyCatalogs.program()`;
+this web change does not change the app screen or its client.
+
+```json
+{
+  "meta": { "...": "identical to the grants index meta" },
+  "jur": "federal",
+  "key": "maribyrnong",
+  "n": "Maribyrnong",
+  "st": "vic",
+  "t": 71233482,
+  "c": 10,
+  "page": 1,
+  "next": null,
+  "grants": [{
+    "id": "GA172269",
+    "rid": "abn:50203962931",
+    "rn": "Centre of Perinatal Excellence",
+    "k": "association",
+    "n": "Perinatal MH Data and Screening Suprt",
+    "pid": "GO6809",
+    "pr": "Perinatal MH Data and Screening Suprt",
+    "v": 15918362.46,
+    "fy": "2020-21",
+    "s": "2021-06-17",
+    "el": "Maribyrnong",
+    "elst": "vic",
+    "guid": "3c91da88-5af6-425c-93da-bccf662cde5e"
+  }]
+}
+```
+
+The example shows Maribyrnong's largest matched award. `rn` and `k` are the recipient's canonical name and
+type; `n` is the activity title. `pid` is the resolved program id, including the
+existing `activity:<title>` fallback when there is no GO id, and `pr` is its
+name. Recipient ids, financial years, start dates and GUIDs can be null when
+the source does not record them. Start dates are ISO days. Values are AUD
+awarded amounts with source cents retained, including zero and negative values.
+Recipients are public GrantConnect records. Apply the app's existing recipient
+display policy when decoding, as for program grants.
+
+Every indexed seat has a file, including current seats with no mapped grants
+(`t: 0`, `c: 0`, `grants: []`). Historical seat names with matched grants remain
+in the index. A zero count means no awards matched by the existing postcode
+method, not that the electorate received no funding. These files use all
+matched awards before the recipient, program and program-grant listing caps.
+
+Rows sort by amount descending, then grant id for ties, across all pages.
+At most 500 rows are in each file. Page two is `<key>-2.json`, then
+`<key>-3.json`. Follow the root-relative `next` path until null. Every page
+repeats the whole seat's `t` and `c`, its identity, and the index's complete
+`meta`, including `source`, `sourceShort`, `source_url`, `licence`, caveats
+and `generated`. `t` is the index's whole-dollar total; add the unrounded
+grant values and allow only the final half-dollar rounding interval. Do not
+round individual rows before summing.
+
+The export writes these with the federal index and removes obsolete seat
+pages. `python3 scripts/vm/validate_data.py grants` fails the grants group for
+missing, extra or malformed pages, invalid page links, duplicate awards,
+wrong ordering, source/updated metadata differences, seat identity differences,
+or total/count mismatches. Each page's `t` and `c` must equal the index exactly;
+the rows must also reconcile across the complete chain.
+
+Normal regeneration, on a machine with the source database, is
+`python3 scripts/export_grants.py federal --local --db /path/to/parli.db`.
+This opens SQLite read-only. The nightly's existing daily `x_grants` export
+and `grants` group own both `graph/grants.federal.json` and the entire
+`grants/federal/` tree, so validation, staging, rollback and publication
+include new pages and deletions together. No separate nightly command is
+needed. The Worker's static assets binding serves these paths under the
+existing `/*.json` rule: `Cache-Control: public, max-age=0, must-revalidate`.
+There are still 100 `_headers` rules, with none added for the slice.
+Cloudflare documents the [static asset header rules](https://developers.cloudflare.com/workers/static-assets/headers/).
+
+Local generation on 10 November used a read-only public-source snapshot from
+the desktop database, passed through the shared `resolve_programs()`,
+`complete_seat_index()`, `build_seat_files()` and `write_seat_outputs()` rules.
+It reconciles all 7,906 mapped awards against the checked-in index. The index's
+source timestamp remains `2026-10-19T11:18:41Z`; this slice does not claim a new
+source refresh. All existing seat figures and metadata are retained. Fourteen
+current seats with no matched awards were added as zero rows.
+
+| Local check | Grants | Seat total (AUD) | Pages | Bytes across pages |
+|---|---:|---:|---:|---:|
+| Maribyrnong | 10 | $71,233,482 | 1 | 6,288 |
+| Melbourne | 566 | $13,550,986,379 | 2 | 201,567 |
+| Sydney | 511 | $10,142,777,193 | 2 | 181,124 |
+
+The slice has 153 seat records (150 current seats plus retained historical
+names), 155 JSON files and 3,251,602 bytes total. Melbourne is the largest seat
+at 201,567 bytes across both pages; its first page is the largest individual
+file at 176,043 bytes. Leichhardt's source sum is $3,055,693,008.50 and its
+existing index total is $3,055,693,009, within the final rounding interval.
 
 ## 4. Runbook
 
