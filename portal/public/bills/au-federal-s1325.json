@@ -65,7 +65,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-21",
+  "sentences": [
+   "The bill would prohibit discrimination based on COVID-19 vaccination status by governments, businesses and other covered bodies across employment, education, accommodation, sport and service provision.",
+   "Its definition would include requests for vaccination proof and unfavourable treatment connected with vaccination status, extending the restrictions to government funding and permission arrangements.",
+   "It would begin the day after royal assent, apply to external territories and override other Australian laws requiring or permitting the covered discrimination."
+  ],
+  "changes": [
+   "The Commonwealth could not enter specified arrangements with bodies reasonably likely to discriminate on vaccination grounds.",
+   "Federal agreements or permissions could not be conditional on people receiving a COVID-19 vaccination.",
+   "State and territory authorities would be expressly prohibited from vaccination status discrimination.",
+   "Businesses and voluntary bodies would face restrictions covering employment, goods and access to premises."
+  ],
+  "affected": "Individuals, employers, businesses, voluntary organisations and Commonwealth, state and territory governments and authorities would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:31.198830+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7505",

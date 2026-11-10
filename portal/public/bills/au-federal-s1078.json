@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-09",
+  "sentences": [
+   "The bill would require the Australian Broadcasting Corporation (ABC) to direct a minimum share of its annual spending to regional, rural and remote Australia.",
+   "At least 35 per cent of the ABC's money applied each financial year would have to fund payments to people in those areas.",
+   "The spending requirement and reporting changes would begin the day after Royal Assent, with a special rule for the first partial financial year."
+  ],
+  "changes": [
+   "The ABC's statutory rules for using its money would include a regional payment requirement.",
+   "Annual reports would have to disclose the amount paid to people in regional, rural and remote areas.",
+   "If commencement occurred during a financial year, the remaining period would count as a financial year for these provisions."
+  ],
+  "affected": "The ABC and people receiving its payments in regional, rural and remote Australia are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:17.239608+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

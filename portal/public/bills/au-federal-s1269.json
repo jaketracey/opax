@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-09-02",
+  "sentences": [
+   "The bill would increase the maximum membership of a self managed superannuation fund from four to six and align related small-fund provisions across several laws.",
+   "It would update the fund definition and adjust signing requirements so larger funds generally need at least half their trustees or directors to sign annual accounts.",
+   "The amendments would start from the first quarter after royal assent, with related thresholds also applying to small funds regulated by the prudential regulator."
+  ],
+  "changes": [
+   "The tax definition of a small superannuation fund would permit up to six members.",
+   "Related borrowing balance provisions would use the updated small-fund definition.",
+   "The small-fund exception from annual member meetings would have its membership threshold updated."
+  ],
+  "affected": "Self managed fund members, trustees, corporate trustee directors and members of small prudentially regulated superannuation funds are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:27.397301+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7647",

@@ -83,13 +83,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5046_ems_cf0bdbe2-1a57-4571-910c-7cc79a9d7e11%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5046%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00040",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would increase the Medicare levy component used to calculate tax on improper use of First Home Saver Accounts for a first-home purchase.",
+   "It would set that component at 2 per cent within the adjusted maximum tax rate, which also includes the maximum income tax rate.",
+   "The amendment would apply to account payments made from 1 July 2014 and form part of the broader DisabilityCare Australia tax amendment package."
+  ],
+  "changes": [
+   "The Medicare levy component of the misuse-tax calculation would increase to 2 per cent.",
+   "The definition of adjusted maximum tax rate would be amended.",
+   "The revised calculation would cover account payments made on or after 1 July 2014."
+  ],
+  "affected": "Individuals who improperly use a First Home Saver Account and receive payments to buy a first home are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:38.575391+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

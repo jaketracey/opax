@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-25",
+  "sentences": [
+   "The bill would prohibit Commonwealth, state and territory authorities from using or disclosing government COVID-19 check-in app data for enforcement activities, including policing and surveillance.",
+   "The restriction would cover information about people collected or generated through those apps, including data obtained indirectly and information recorded before the legislation began.",
+   "It would begin the day after royal assent, with exceptions for de-identified statistics and information obtained from sources independent of check-in apps."
+  ],
+  "changes": [
+   "Authorities would be barred from using covered check-in information to investigate offences or enforce penalties.",
+   "Disclosure of covered data for enforcement activities would also be prohibited.",
+   "The legislation would bind the Crown in every capacity."
+  ],
+  "affected": "People using government check-in apps, police, other enforcement bodies and Commonwealth, state and territory authorities holding covered data would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:06.431627+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

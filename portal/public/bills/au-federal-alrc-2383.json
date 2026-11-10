@@ -131,13 +131,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5043_ems_b5648495-b844-4a33-95a8-391484619787%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5043%22",
+   "document_date": "2013-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00109",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-14",
+  "sentences": [
+   "The bill would authorise funding from the Consolidated Revenue Fund for parliamentary departments through the appropriations set out in its schedule for 2013-2014.",
+   "It would provide separate spending authorities for departmental costs, administered expenses, administered assets and liabilities, and departmental equity injections used for investment in assets.",
+   "The authorities would begin on Royal Assent, with provisions allowing reductions in surplus funding and advances for urgent spending inadequately covered by the schedule."
+  ],
+  "changes": [
+   "Internal and inter-agency notional payments would debit the relevant appropriation as though they were actual payments.",
+   "The Finance Minister could reduce specified appropriations following a request from the responsible Presiding Officer.",
+   "Unused administered expense amounts would be reduced by reference to the department's annual report."
+  ],
+  "affected": "Parliamentary departments, their responsible Presiding Officers and the Finance Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:42.900626+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

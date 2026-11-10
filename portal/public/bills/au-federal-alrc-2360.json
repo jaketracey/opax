@@ -101,13 +101,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4988_ems_7125b777-162b-464f-8a75-46bcef572edb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4988%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00131",
    "document_date": "2013-07-01",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would revise national trade measurement rules by changing inspection powers, adding options for remedying minor breaches and clarifying existing offences and measurement requirements.",
+   "It would allow inspectors to make trial purchases without identifying themselves and issue reasonable directions to people in business vehicles during authorised inspections.",
+   "The amendments would start the day after Royal Assent, including temporary permission for non-compliant instruments or packaged goods where material detriment is avoided."
+  ],
+  "changes": [
+   "Failure to follow an inspector's reasonable vehicle direction would become an offence.",
+   "Repairing or adjusting an instrument without removing its verification mark would be distinguished from causing that work to be done.",
+   "The meaning of use for trade would expressly include measurement used to determine tax credits.",
+   "Sellers could provide a written measurement statement instead of making the instrument's display visible to the purchaser.",
+   "Remedy notices would require reasonable steps to fix the breach and compliance with any imposed conditions."
+  ],
+  "affected": "Trade measurement inspectors, business vehicle controllers, sellers, instrument users, repairers and consumers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:35.291298+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

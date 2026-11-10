@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-04",
+  "sentences": [
+   "The bill would require telecommunications standards for carriers owning or operating critical mobile base stations in bushfire risk areas to maintain standby power capability.",
+   "The Australian Communications and Media Authority would set a standard requiring at least 24 hours of standby power at all times for the covered stations.",
+   "Emergency Management Australia would identify high-risk communities using relevant state and territory planning laws, with the bill commencing on Royal Assent and standards to follow."
+  ],
+  "changes": [
+   "Industry codes and standards could expressly address standby power for mobile base stations in high-risk communities.",
+   "The authority would have to consult representative telecommunications bodies before determining the standards.",
+   "Standards would be determined by legislative instrument as soon as practicable after commencement.",
+   "Exercise of the new power would need to address public interests without undue industry financial or administrative burdens."
+  ],
+  "affected": "Telecommunications carriers, residents of identified bushfire risk communities and the responsible Commonwealth agencies would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:59.561909+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

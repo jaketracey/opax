@@ -101,13 +101,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5033_ems_18d39979-2eed-4a52-848f-f6a162a0584d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5033%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00081",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would increase the Medicare levy income thresholds for families, including the additional allowance for each dependent child or student, in line with inflation.",
+   "It would lift the base family threshold from $32,743 to $33,693 and the amount for each dependent child or student from $3,007 to $3,094.",
+   "The changes would apply to tax assessments for 2012-13 and subsequent income years, covering the family threshold and its dependent child-student component."
+  ],
+  "changes": [
+   "The family exemption threshold would increase to $33,693.",
+   "Each dependent child or student would add $3,094 to the family threshold.",
+   "The revised amounts would apply to assessments from the 2012-13 income year."
+  ],
+  "affected": "Families with low incomes, including taxpayers with dependent children or students, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:16.389411+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

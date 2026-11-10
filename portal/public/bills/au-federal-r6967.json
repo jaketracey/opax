@@ -161,7 +161,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-12-01",
+  "sentences": [
+   "The bill would require public notification of federal ministerial appointments, ministerial offices and Executive Council membership, including decisions ending those appointments or roles.",
+   "The Governor-General’s Official Secretary would publish notices as soon as reasonably practicable, identifying the person, relevant department or office and effective date.",
+   "The requirements would apply to decisions made after commencement, but a failure to publish a notice would leave the Governor-General’s underlying decision valid."
+  ],
+  "changes": [
+   "Notices would record when a person joins or leaves the Federal Executive Council.",
+   "Appointments to administer departments, and their revocation, would have to be disclosed.",
+   "Directions assigning ministerial offices, and their revocation, would also have to be disclosed."
+  ],
+  "affected": "Ministers, Executive Councillors, the Governor-General’s Official Secretary and members of the public seeking appointment information would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

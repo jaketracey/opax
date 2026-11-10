@@ -101,7 +101,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-25",
+  "sentences": [
+   "The bill would clarify which child care subsidy overpayment debts belong to providers and which remain the responsibility of families receiving the payments.",
+   "Providers would generally owe debts from incorrect attendance claims, but families would retain responsibility for withheld amounts subsequently paid directly to them after reconciliation.",
+   "The changes would start the day after Royal Assent and apply to care sessions occurring from commencement, covering Child Care Subsidy and Additional Child Care Subsidy."
+  ],
+  "changes": [
+   "Providers would owe subsidy debts for ineligible absences before a child's first physical attendance.",
+   "The same provider liability would cover ineligible absences after a child's last physical attendance.",
+   "Provider-fault debt calculations would exclude withholding components paid to individuals.",
+   "Rules would prevent charging providers twice for the same care session under overlapping debt provisions."
+  ],
+  "affected": "Approved child care providers, subsidy recipients and families whose children have attendance changes are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:51.645877+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

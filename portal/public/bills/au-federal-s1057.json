@@ -155,7 +155,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-22",
+  "sentences": [
+   "The bill would amend civil justice laws covering archives access, family proceedings, international arbitration, marriage administration and legislation management, and remove a Defence discrimination exemption.",
+   "It would lengthen standard archives response periods from 90 calendar days to 90 business days and create offences for wrongfully retaining children overseas.",
+   "The child retention offences would require unlawful retention after commencement, while other measures would clarify arbitration procedures, ministerial powers and court administration across several Acts."
+  ],
+  "changes": [
+   "Archives internal review timeframes would increase from 14 calendar days to 30 business days.",
+   "The exemption permitting sex discrimination against women in Defence combat roles would be repealed.",
+   "The Family Court's bankruptcy jurisdiction over trustee applications to set aside financial agreements would be clarified.",
+   "Parental consent provisions for minors' marriages would be updated to align with family law."
+  ],
+  "affected": "Archives applicants, families in court proceedings, arbitration parties, marriage celebrants, ministers and women seeking Defence combat positions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:38.436910+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

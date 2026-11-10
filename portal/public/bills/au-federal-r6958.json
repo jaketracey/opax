@@ -161,7 +161,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "The bill would amend the Commonwealth public sector whistleblowing framework, changing how agencies handle disclosures and extending protections for people involved in reporting suspected wrongdoing.",
+   "It would protect investigation witnesses, broaden reprisal protections and allow disclosures to be referred for investigation under other laws where that is more appropriate.",
+   "Personal workplace matters would generally be excluded unless they concern systemic wrongdoing or reprisals, while oversight and information-sharing arrangements would also change."
+  ],
+  "changes": [
+   "Agency heads would have express duties to support disclosers and witnesses.",
+   "The general secrecy offence would be replaced with provisions permitting information sharing between agencies.",
+   "The Attorney-General would report aggregated disclosure statistics to Parliament every six months."
+  ],
+  "affected": "Current and former public officials, investigation witnesses, Commonwealth agencies and oversight bodies would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-8087",

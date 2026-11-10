@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-11",
+  "sentences": [
+   "The bill would give Norfolk Island residents a capital gains tax (CGT) exemption for qualifying assets acquired before 24 October 2015.",
+   "From 1 July 2016, qualifying assets would receive the treatment generally given to assets acquired before 20 September 1985, including existing exceptions.",
+   "The exemption would exclude assets already subject to CGT under the earlier law, while assets bought from 24 October 2015 would follow ordinary rules."
+  ],
+  "changes": [
+   "Residents would no longer need to retain acquisition dates for assets covered by the exemption.",
+   "Residents would have to apply the exemption to both gains and losses, without a choice to opt out.",
+   "The bill would update cross-references in income tax legislation to point to the revised Norfolk Island rules."
+  ],
+  "affected": "Norfolk Island residents holding assets covered by the capital gains tax rules would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:14.097090+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

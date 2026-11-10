@@ -101,13 +101,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5105_ems_fa24a907-e8e7-4d49-b386-1a3682592618%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5105%22",
+   "document_date": "2013-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00116",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-19",
+  "sentences": [
+   "The bill would impose an excess concessional contributions charge on individuals who exceed their annual superannuation cap under the companion bill’s revised tax treatment.",
+   "The charge would use the shortfall interest rate, based on the 90-day bank accepted bill rate plus 3 per cent, with daily calculation and compounding.",
+   "It would accompany reforms applying from the 2013-14 income year, which include excess contributions in assessable income and allow members to release money from superannuation."
+  ],
+  "changes": [
+   "A separate statutory liability would be imposed for the excess contributions charge.",
+   "The charge would be calculated on the additional income tax liability after allowing for the contributions tax offset.",
+   "Within the companion framework, the charge would accrue from the income year’s first day until the day before the original assessment payment date."
+  ],
+  "affected": "Individuals with concessional superannuation contributions above their annual cap are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:01.019674+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

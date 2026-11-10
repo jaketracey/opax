@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5032_ems_1f59dbc6-376b-4605-bbcb-d77d3ec7f986%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5032%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would revise definitions used to identify hospitals, local hospital networks and primary health care organisations for reporting by the National Health Performance Authority.",
+   "It would expressly authorise ministerial instruments identifying covered organisations, while public hospital definitions would require state or territory consultation or written agreement, depending on the approach.",
+   "Where no public hospital instrument applied, the ordinary meaning would be used, and local hospital networks would follow the National Health Reform Agreement definition."
+  ],
+  "changes": [
+   "The two existing local hospital network definitions would be replaced with one shared definition.",
+   "Private hospital coverage would include entities determined to be private hospitals under private health insurance legislation.",
+   "An explicit power to make definition-related legislative instruments would be inserted.",
+   "Performance Authority reporting provisions would be updated to match the revised definitions."
+  ],
+  "affected": "Public and private hospitals, local hospital networks, primary health care organisations, health ministers and the National Health Performance Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:52.744914+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

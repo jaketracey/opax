@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-12",
+  "sentences": [
+   "The bill would create offences for adults who lie about their age in online messages to children to arrange a meeting or commit another offence.",
+   "It would cover senders over 18 communicating with recipients under 16, with imprisonment penalties of five years for encouraging meetings and eight for other offences.",
+   "The offences would also cover fictitious recipients used in undercover operations, with defences concerning the recipient’s age and reasonable conduct by specified officers."
+  ],
+  "changes": [
+   "Courts could consider appearance, medical opinions and official records when determining a person’s age.",
+   "A defendant relying on a belief that the recipient was at least 16 would carry an evidential burden.",
+   "The amendments would begin the day after Royal Assent."
+  ],
+  "affected": "Adult online message senders, children under 16 and law enforcement, intelligence and security officers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:22.823740+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

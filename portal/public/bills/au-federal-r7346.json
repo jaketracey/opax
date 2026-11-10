@@ -77,7 +77,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-28",
+  "sentences": [
+   "The bill would repeal the Climate Change Act 2022 and four other Acts to remove Australia's net zero targets and the association with the Paris Agreement.",
+   "It would also amend three further Acts to remove references to net zero and to remove the Safeguard Mechanism from the National Greenhouse and Energy Reporting Act 2007.",
+   "The Act would commence the day after Royal Assent, and clause 3 would give effect to the repeals and amendments through items 1 to 51 of Schedule 1."
+  ],
+  "changes": [
+   "The Climate Change Act 2022 would be repealed.",
+   "The Future Made in Australia (Guarantee of Origin) Act 2024 and the Future Made in Australia (Guarantee of Origin Charges) Act 2024 would be repealed.",
+   "The Net Zero Economy Authority Act 2024 and the New Vehicle Efficiency Standard Act 2024 would be repealed.",
+   "References to net zero would be removed from the Export Finance and Insurance Corporation Act 1991 and the Future Made in Australia Act 2024.",
+   "Items 27 to 51 would amend the National Greenhouse and Energy Reporting Act 2007 to remove the Safeguard Mechanism."
+  ],
+  "affected": "The Net Zero Economy Authority, whose Act would be repealed, and foreign investors in the renewable energy industry would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T10:02:00Z"
+ },
  "divisions": [],
  "speeches": [
   {

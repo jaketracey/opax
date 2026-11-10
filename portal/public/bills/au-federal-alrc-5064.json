@@ -45,8 +45,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s929_ems_0d9ded32-6bbe-4bd7-8fa1-3848a3c7433d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s929%22",
+   "document_date": "2013-06-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-27",
+  "sentences": [
+   "The bill would set minimum marine engineering and electro-technical certification standards and require marine regulations to conform to those training and examination requirements.",
+   "It would extend the specified standards to commercial vessels of at least 500 gross registered tonnes or propulsion power of at least 3000 kW.",
+   "The substantive rules would begin on proclamation or after 18 months if not proclaimed, with alternative training pathways and recognition requirements for overseas qualifications."
+  ],
+  "changes": [
+   "Engineering certification instruments would be confined to engineering certification and incidental matters.",
+   "Engineers in Classes 1, 2 and 3 would need to pass an oral examination.",
+   "Foreign qualification holders would face Australian examination requirements before receiving a competency certificate.",
+   "The Principal Examiner would personally audit training colleges and bodies, without delegating that power."
+  ],
+  "affected": "Marine engineers, electro-technical personnel, examiners, marine training providers and operators of covered commercial vessels are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:05.523237+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

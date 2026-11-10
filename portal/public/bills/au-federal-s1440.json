@@ -47,7 +47,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-28",
+  "sentences": [
+   "The bill would require the Future Fund and registered Australian charities to divest from, and stop investing in or supporting, companies on a United Nations (UN) database the bill describes as listing companies operating in illegal Israeli settlements on Palestinian land.",
+   "It would amend the Future Fund Act 2006 so the Board of Guardians must not invest in listed companies and must divest as soon as it becomes aware of such a holding.",
+   "Schedule 2 would extend the same restrictions to registered charities through the Income Tax Assessment Act 1997 and the Australian Charities and Not-for-profits Commission Act and Regulations, with a negligible expected budget impact."
+  ],
+  "changes": [
+   "The Future Fund Act 2006 and charities regulations would define the bill's terms 'illegal Israeli settlements' and 'UN database', published under Human Rights Council resolution 31/36; the Income Tax Assessment Act 1997 would define only the database.",
+   "The responsible Minister would have to consider the prohibition when giving investment directions under section 18 and could not direct the Board to invest in a listed company.",
+   "The Future Fund's annual report would have to include a statement of compliance confirming that no assets are invested in a listed company.",
+   "Registered charities could not use money or assets from their gift fund to fund, support or contribute to a listed company.",
+   "A new external conduct standard would direct registered charities not to fund, support, invest in or cooperate with listed companies or the settlements."
+  ],
+  "affected": "The Future Fund, registered Australian charities and companies listed on the UN database would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:18:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "The bill would revise child care subsidy eligibility, payments and provider approvals, including rules for vulnerable children, absences and help with fees from third parties.",
+   "It would remove the 50 per cent limit on providers certifying children for wellbeing assistance and extend enrolment cessation after non-attendance from eight to 14 weeks.",
+   "Measures would begin at different times after royal assent, including 13 January 2020 for the enrolment extension and 13 July 2020 for further subsidy amendments."
+  ],
+  "changes": [
+   "The Education Minister could allow specified third party fee contributions without reducing a family’s subsidy.",
+   "Ministerial rules could permit subsidy payments for specified absences before first attendance or after final attendance.",
+   "Loss or suspension of a service’s National Law approval would automatically cancel or suspend its subsidy access.",
+   "Providers could request voluntary suspension of their Commonwealth approval."
+  ],
+  "affected": "Families using subsidised child care, vulnerable children, approved child care providers and services, and the Education Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:29.339797+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5994",

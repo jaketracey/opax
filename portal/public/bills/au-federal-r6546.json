@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "The bill would update Commonwealth legislation to reflect Services Australia's establishment as an executive agency and consolidate several statutory service-delivery roles under its chief executive.",
+   "Its chief executive would also hold the Centrelink, Medicare and Child Support Registrar offices, with acting arrangements and delegation rules adjusted to support those responsibilities.",
+   "Reference changes would operate from 1 February 2020, while the separate governance amendments would commence on the day after the bill received royal assent."
+  ],
+  "changes": [
+   "References to the former department and its secretary would be replaced.",
+   "Existing secrecy protections would continue for information held before the agency change.",
+   "Unauthorised commercial use implying a connection with Services Australia would be restricted.",
+   "Delegates and subdelegates would have to follow the delegating office holder's directions."
+  ],
+  "affected": "Services Australia staff, statutory office holders, clients and businesses using the agency's name are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:38.606799+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6659",

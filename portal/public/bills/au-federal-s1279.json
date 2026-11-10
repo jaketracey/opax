@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-02",
+  "sentences": [
+   "The bill would change registered design protection by allowing certain earlier disclosures, protecting prior users and revising registration and infringement procedures for designs.",
+   "A 12-month grace period would let eligible disclosures be disregarded when assessing a design, while qualifying users who began earlier could avoid infringement liability.",
+   "The grace period would apply to disclosures after commencement, with official publication by Australian, foreign and international design offices excluded in the specified circumstances."
+  ],
+  "changes": [
+   "The option to publish a design without registering it would be removed.",
+   "Exclusive licensees would be able to bring infringement proceedings themselves.",
+   "Courts could grant relief for innocent infringement occurring between filing and registration."
+  ],
+  "affected": "Designers, registered owners, exclusive licensees, prior users and the Registrar of Designs are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:06.966020+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

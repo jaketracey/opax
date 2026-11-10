@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-13",
+  "sentences": [
+   "The bill would authorise additional funding from the Consolidated Revenue Fund for parliamentary departments, supplementing appropriations made through the original 2013-2014 Budget legislation.",
+   "It would make Schedule 1 amounts available for departmental operations, administered activities, assets and liabilities, and equity funding, subject to specified adjustment processes.",
+   "The funding would commence on Royal Assent and form part of the additional estimates package alongside separate bills for other Commonwealth annual expenditure."
+  ],
+  "changes": [
+   "Urgent advance capacity would reset to $300,000 each for the Senate and House departments and Parliamentary Budget Office, and $1 million for Parliamentary Services.",
+   "Amounts already advanced for the same expenditure would reduce the bill's appropriation.",
+   "The Finance Minister could reduce specified appropriations following a presiding officer's request.",
+   "Appropriated money could be credited to a Special Account with a matching purpose."
+  ],
+  "affected": "The Senate and House departments, Department of Parliamentary Services, Parliamentary Budget Office and responsible presiding officers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:09.298549+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

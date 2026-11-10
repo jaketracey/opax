@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "The bill would require the Australian Broadcasting Corporation and Special Broadcasting Service to publish individual pay details for their highest-paid employees and on-air contractors.",
+   "Annual reports would name people paid more than $200,000, list their remuneration and describe their positions or contracted services, with the threshold indexed later.",
+   "The requirements would apply to reporting periods starting after commencement, and employee remuneration calculations would exclude lump sums for unused leave paid on termination."
+  ],
+  "changes": [
+   "Employee disclosures would identify each person's role alongside their salary and allowances.",
+   "Payments under multiple on-air contracts with the same individual would be counted together.",
+   "Foreign-currency payments would be converted into Australian dollars using the exchange rate when paid."
+  ],
+  "affected": "Both national broadcasters, their boards, employees and individual on-air contractors would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:44.183036+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5319",

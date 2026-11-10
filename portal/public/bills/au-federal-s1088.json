@@ -65,7 +65,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-14",
+  "sentences": [
+   "The bill would require regulated superannuation trustee boards to have an independent chair and at least one-third independent directors, replacing statutory equal representation requirements.",
+   "A new independence test would examine ownership and business relationships, with the Australian Prudential Regulation Authority able to determine whether particular people qualify as independent.",
+   "Existing trustees meeting transition conditions would generally have three years to comply, while self-managed funds and funds under specified acting trustees would be excluded."
+  ],
+  "changes": [
+   "Groups of individual trustees would also need at least one-third independent members.",
+   "The independent chair would count towards the board's minimum number of independent directors.",
+   "Newly licensed trustees would have to meet the requirements when licensed.",
+   "The Commonwealth Superannuation Corporation's governance law would be amended to enable compliance with the independence requirements."
+  ],
+  "affected": "Regulated superannuation trustees, their directors, members and the Commonwealth Superannuation Corporation would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:10.578264+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

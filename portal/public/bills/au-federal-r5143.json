@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "The bill would separate the Anti-Dumping Commission from the Australian Customs and Border Protection Service so it could transfer to the Department of Industry.",
+   "It would place commission staff in the department and transfer remaining customs chief executive anti-dumping functions to the Commissioner, including approving application forms.",
+   "Existing appointments, applications and submissions would remain valid, while the commission could continue sharing relevant information with customs officials administering trade remedy measures."
+  ],
+  "changes": [
+   "The Commissioner could delegate anti-dumping powers to commission staff, subject to written directions.",
+   "The Commissioner would become a permanent International Trade Remedies Forum member and could convene and chair meetings.",
+   "Application lodgement locations for accelerated reviews and continuation requests would be published on the commission’s website."
+  ],
+  "affected": "The Commissioner, commission staff, customs officials, trade remedy applicants and International Trade Remedies Forum members are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:44.996580+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

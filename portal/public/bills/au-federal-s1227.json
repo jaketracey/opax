@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-17",
+  "sentences": [
+   "The bill would establish statutory conduct standards and interest registers for parliamentarians, supported by independent advice and a commissioner to examine alleged breaches of conduct codes.",
+   "It would create a Parliamentary Integrity Adviser for confidential guidance and a Parliamentary Standards Commissioner to assist with assessing, investigating and resolving alleged code breaches.",
+   "The main provisions would depend on funding being appropriated and commencement of the relevant integrity commission provision, while preserving parliamentary powers except where expressly changed."
+  ],
+  "changes": [
+   "Conduct duties would extend to staff employed under the parliamentary staffing legislation.",
+   "Members and senators would have statutory obligations to register their interests.",
+   "People facing critical findings in inquiry reports would receive an opportunity to respond.",
+   "Unauthorised recording, use or disclosure of protected integrity information would become an offence, subject to specified exceptions."
+  ],
+  "affected": "Parliamentarians, ministers, their staff, parliamentary committees and the proposed integrity adviser and standards commissioner are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:51.399489+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

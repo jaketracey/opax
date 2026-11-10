@@ -89,13 +89,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5053_ems_1afb7dda-26ae-4284-a56f-07041a591118%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5053%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00037",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would establish the DisabilityCare Australia Fund to hold revenue from the proposed Medicare levy increase and reimburse governments for disability scheme expenditure.",
+   "The Treasurer would determine credits based on tax office revenue advice, and the Future Fund Board would invest the money under ministerial directions.",
+   "State and territory reimbursements would require written agreements, while a separate transitional account would support the National Disability Insurance Scheme's initial implementation."
+  ],
+  "changes": [
+   "The state and territory allocation would start at $825 million in 2014-15 and rise by 3.5 per cent annually until 2023-24.",
+   "Investment and administration expenses would be paid from fund earnings rather than levy proceeds.",
+   "Ministers could not direct investment in a particular financial asset or support for a particular business.",
+   "Fund arrangements would require review before 30 June 2024 unless responsible Ministers agreed to a later date."
+  ],
+  "affected": "The Commonwealth, state and territory governments, responsible Ministers and the Future Fund Board of Guardians are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:19.362557+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

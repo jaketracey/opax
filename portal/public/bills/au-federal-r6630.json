@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-11-12",
+  "sentences": [
+   "The bill would implement financial services royal commission recommendations covering insurance sales, industry codes, superannuation oversight and the conduct of financial and credit licensees.",
+   "It would make selected code provisions enforceable, restrict unsolicited product offers, change consumer insurance duties and bring claims handling within financial services regulation.",
+   "The measures would commence in stages and sit alongside a separate fees bill dealing with applications for exemption from deferred insurance sales requirements."
+  ],
+  "changes": [
+   "A deferred sales model would apply to add-on insurance.",
+   "Commission caps would cover specified risk products sold with motor vehicles.",
+   "Licensees would face stronger breach reporting and misconduct remediation obligations.",
+   "The financial regulators would have new cooperation and information-sharing duties."
+  ],
+  "affected": "Insurance customers, financial advisers, mortgage brokers, superannuation trustees, licensees and financial regulators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:21.904394+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6832",

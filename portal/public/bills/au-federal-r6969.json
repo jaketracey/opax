@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-12-15",
+  "sentences": [
+   "The bill would create powers to regulate gas markets and fund temporary energy bill assistance for eligible households and small businesses through state and territory payments.",
+   "It would allow mandatory gas market codes and emergency pricing orders, alongside $1.5 billion in additional energy relief expenditure over two financial years.",
+   "An emergency price order would be repealed 12 months after the first such order commences, while the competition regulator would receive powers to investigate breaches and enforce the new framework."
+  ],
+  "changes": [
+   "Gas codes could set rules for contract negotiations, prices and dispute resolution.",
+   "Schemes designed to evade civil penalty provisions in gas market instruments would be prohibited.",
+   "The Australian Competition and Consumer Commission would have to be consulted before an emergency pricing order was made."
+  ],
+  "affected": "Gas suppliers and buyers, eligible households and small businesses, state and territory governments and the competition regulator would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7917",

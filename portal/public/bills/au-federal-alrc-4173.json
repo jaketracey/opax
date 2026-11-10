@@ -21,8 +21,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5098_ems_521be21b-7dc5-4cc7-8aea-ef4774a35bf1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5098%22",
+   "document_date": "2013-06-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-17",
+  "sentences": [
+   "The bill would create an Australian Reconstruction and Development Board within the Reserve Bank to restructure financial arrangements and provide finance for at-risk agricultural industries.",
+   "It would give the board responsibility for rural reconstruction and development policy, including research, tailored funding and use of the bank’s capital to implement policy.",
+   "The main amendments would begin on the 28th day after Royal Assent, and the Reserve Bank Board’s policy would take priority where their policies conflicted."
+  ],
+  "changes": [
+   "The bank would gain an express power to acquire, hold and dispose of property.",
+   "The board would include the Governor, a bank representative and seven members with rural or agricultural experience.",
+   "The board would report annually to the Treasurer on its actions, their effects and policy changes."
+  ],
+  "affected": "Agricultural enterprises, associated industries and infrastructure, sectors identified as needing reconstruction or development, and the Reserve Bank are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:54.939892+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

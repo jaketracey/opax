@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-04-02",
+  "sentences": [
+   "The bill would change the tax treatment of specified Queensland disaster assistance and fund loans supporting primary producers affected by the 2019 North Queensland floods.",
+   "It would exclude qualifying flood grants from taxable income, exempt specified storm assistance payments and appropriate $1.75 billion for loans through participating financial institutions.",
+   "Tax measures would apply from the 2018-19 income year, while the loan appropriation would commence the day after royal assent to support eligible flood-affected producers."
+  ],
+  "changes": [
+   "Category C and D grants for floods starting between 25 January and 28 February 2019 would receive non-assessable, non-exempt treatment.",
+   "Qualifying farm infrastructure, restocking and replanting grants would receive the same tax treatment.",
+   "Covered Fassifern Valley assistance for the October 2018 storm would be exempt income, but could affect tax losses.",
+   "The loan scheme would provide participating financial institutions with low-interest funding for up to three years."
+  ],
+  "affected": "Eligible flood-affected small businesses, primary producers and non-profit organisations, covered storm-affected producers, and participating financial institutions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:28.015882+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

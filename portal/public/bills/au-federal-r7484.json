@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-12",
+  "sentences": [
+   "The bill would authorise Commonwealth spending for services outside ordinary annual government operations in 2026-27, including capital items, corporate entities and payments to other governments.",
+   "It would allow Finance Minister advances totalling $3,600 million for urgent funding shortfalls, comprising $600 million for any purpose and $3,000 million restricted to fuel security.",
+   "The authority would start on 1 July 2026 or Royal Assent, whichever is later, and be repealed at the beginning of 1 July 2029."
+  ],
+  "changes": [
+   "The general purpose financial assistance debit limit would be $5,000 million for 2026-27.",
+   "The national partnership payments debit limit would be $40,000 million for that year.",
+   "Responsible ministers could set conditions, amounts and timing for scheduled payments to state, territory and local governments.",
+   "Unspent advance allocations would cease to be available to recipient entities on 1 July 2027."
+  ],
+  "affected": "Commonwealth departments, corporate entities and state, territory and local government recipients of scheduled assistance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:13.186051+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10648",

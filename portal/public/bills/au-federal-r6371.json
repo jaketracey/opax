@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-22",
+  "sentences": [
+   "The bill would establish the Future Drought Fund as an investment fund financing initiatives for drought resilience, preparedness and response across Australian farms and communities.",
+   "It would transfer uncommitted Building Australia Fund assets, estimated at approximately $3.9 billion, and provide $100 million annually for drought-related grants and arrangements.",
+   "Disbursements would begin from 1 July 2020, with investment managed by the Future Fund Board and spending subject to a Drought Resilience Funding Plan."
+  ],
+  "changes": [
+   "A separate Agriculture Future Drought Resilience Special Account would receive funding for grants and arrangements.",
+   "A consultative committee would advise on the funding plan and program design.",
+   "Grant agreements would need written terms, including repayment circumstances.",
+   "The Drought Minister would have to publish current information about grants and arrangements."
+  ],
+  "affected": "Farms, drought-affected communities, grant recipients, the Future Fund Board and ministers administering drought funding are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:02.371118+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5752",

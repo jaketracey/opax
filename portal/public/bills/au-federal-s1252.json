@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 14,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "The bill would expressly authorise aviation security systems testing and establish a framework for nationally specified training and qualification requirements for airport and seaport screening officers.",
+   "Inspectors could conduct covert tests at regulated aviation locations, while screening officers would need to meet requirements determined by the Secretary of Home Affairs.",
+   "Aircraft tests would require notice to operators and could not occur while passengers were aboard, boarding or disembarking, with limited immunity for inspectors."
+  ],
+  "changes": [
+   "Inspectors' testing powers would extend to aviation industry premises beyond airport boundaries.",
+   "Immunity would depend on good faith, no serious danger to people and no significant property loss or serious damage.",
+   "The secretary could exempt classes of screening officers from requirements in exceptional circumstances."
+  ],
+  "affected": "Aviation security inspectors, aviation businesses, airport and seaport screening officers and the Department of Home Affairs are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:18.676229+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

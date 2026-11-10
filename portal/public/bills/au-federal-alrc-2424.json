@@ -107,13 +107,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5094_ems_15ccb5f8-fe67-41ba-97ff-adb443f5c9aa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5094%22",
+   "document_date": "2013-06-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00115",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-05",
+  "sentences": [
+   "The bill would change sugar research levy arrangements and transfer the Sugar Research and Development Corporation's activities, assets and liabilities to an industry services body.",
+   "It would set the levy at 70 cents per tonne, shared equally by producers and processors, and broaden the circumstances attracting the levy.",
+   "The bill would support the companion sugar research services legislation, with levy instalment arrangements starting on 1 March 2014 and transitional provisions for winding up the corporation."
+  ],
+  "changes": [
+   "The levy rate could be varied by regulation without a statutory maximum.",
+   "Cane leaves purchased or processed separately would fall outside the levy.",
+   "Monthly levy liabilities would be split into a 60 per cent first instalment and a 40 per cent later instalment.",
+   "Transfers to the new body would be exempt from state and territory stamp duty and other taxes."
+  ],
+  "affected": "Sugar cane producers and processors, the Sugar Research and Development Corporation and the new industry services body are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:01.006731+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

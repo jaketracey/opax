@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-10",
+  "sentences": [
+   "The bill would make Council of Australian Governments Reform Fund grants conditional on states and territories not taxing electric vehicles more heavily than other vehicles.",
+   "It would require repayment or grant deductions matching the additional revenue collected, with the minister able to distribute recovered amounts among complying jurisdictions.",
+   "The condition would apply after 1 July 2021 and cover road vehicles powered by electric motors without an internal combustion engine as a power source."
+  ],
+  "changes": [
+   "The grant conditions would expressly cover discriminatory taxes, charges and levies.",
+   "Amounts owing after a breach could become debts payable to the Commonwealth.",
+   "Redistribution would use each complying jurisdiction's population as its basis."
+  ],
+  "affected": "State and territory governments receiving the grants and the Commonwealth minister administering them are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:58.285413+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7249",

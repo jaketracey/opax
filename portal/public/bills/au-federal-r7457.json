@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-25",
+  "sentences": [
+   "The bill would remove a minimum deductible gift amount, change trust tax reporting, exclude specified research activities from tax incentives and make technical Treasury law amendments.",
+   "It would permit deductions for eligible gifts below $2 from 1 July 2024 and move quoted beneficiary tax file number reporting into closely held trusts' annual return process.",
+   "For income years starting from 1 July 2025, tobacco and gambling research activities would be excluded from incentives unless conducted solely to minimise harm."
+  ],
+  "changes": [
+   "Trustee reporting would be due by the earlier of the return's lodgement date and due date, unless the Commissioner of Taxation allowed another date.",
+   "Providing a beneficiary's corrected tax file number to a trustee would require the Commissioner to consider disclosure reasonable.",
+   "Public Trustees could approve suitably qualified trustees or company directors for clients' self-managed superannuation funds and allow payment for their services.",
+   "The research exclusions would cover both core and supporting activities related to gambling-like practices."
+  ],
+  "affected": "Donors, deductible gift recipients, trust beneficiaries and trustees, Public Trustees, self-managed fund members and affected research companies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:52.534585+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10631",

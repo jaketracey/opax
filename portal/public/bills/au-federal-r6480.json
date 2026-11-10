@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "The bill would update the legal framework for export cost recovery charges that are customs duties, aligning it with proposed export control legislation.",
+   "It would preserve regulation-based charging for goods and related matters covered by the new framework, without itself setting charges or introducing financial impacts.",
+   "Commencement would coincide with the relevant provision of the Export Control Bill 2019, as part of a package containing three separate charging amendments."
+  ],
+  "changes": [
+   "The charging law's geographical reach would match the export control framework, including specified external territories and other areas.",
+   "Definitions referring to regulated goods and regulated matter would be removed.",
+   "Separate provisions identifying who must pay would be repealed as collection arrangements move into the export control framework."
+  ],
+  "affected": "Exporters and businesses dealing with exported goods are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:18.677086+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

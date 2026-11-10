@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-16",
+  "sentences": [
+   "The bill would transfer eligible existing radiation protection licences into the proposed naval nuclear safety licensing system when that new legislative framework begins.",
+   "Certain facility and source licences would be recognised under the new system to the extent that they authorise activities regulated by that framework.",
+   "The bill would commence alongside the Australian Naval Nuclear Power Safety Act 2023 and would not commence if that companion legislation does not begin."
+  ],
+  "changes": [
+   "Transferred licences would become subject to conditions under the naval nuclear safety framework.",
+   "Mixed licences would remain under existing radiation protection law for activities outside the new framework.",
+   "Regulations could address further matters arising from the transition between the two regulatory systems."
+  ],
+  "affected": "Holders of eligible facility and source licences and the radiation protection and naval nuclear safety regulators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:43.405259+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-04",
+  "sentences": [
+   "The bill would authorise additional Commonwealth funding for spending outside ordinary annual government services, supplementing appropriations made for the 2015-2016 Budget.",
+   "It would fund grants to state, territory and local governments, asset purchases, departmental capital injections and payments to corporate Commonwealth entities.",
+   "It would operate alongside Appropriation Bill (No. 3) 2015-2016, commence on Royal Assent and be repealed at the start of 1 July 2018."
+  ],
+  "changes": [
+   "The Finance Minister’s available advance for urgent, inadequately funded expenditure would be reset to $380 million.",
+   "Funding already advanced for the same expenditure would reduce the bill’s appropriation for it, without reducing that appropriation below zero.",
+   "Specified ministers would be empowered to set conditions, amounts and payment dates for financial assistance to state, territory and local governments.",
+   "Appropriated money could be credited to a special account where the appropriation and the account shared the same purpose."
+  ],
+  "affected": "Commonwealth entities, state and territory governments, local governments, the Finance Minister and other ministers responsible for the payments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:28.188510+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

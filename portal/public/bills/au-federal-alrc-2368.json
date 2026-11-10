@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5016_ems_8c4f3196-a814-4cca-ab8a-523ff5c60ad0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5016%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00129",
    "document_date": "2013-07-01",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would adjust the Public Order legislation to accompany a new security framework for federal courts and tribunals in the companion Court Security Bill.",
+   "It would remove overlapping court provisions and refocus the remaining framework on prescribed investigatory authorities, including the Integrity Commissioner and Australian Crime Commission.",
+   "The substantive amendments would start with the new court security legislation, while the remaining authority-premises rules would distinguish public hearings from other proceedings."
+  ],
+  "changes": [
+   "Specified Public Order offences would cease to cover Commonwealth premises used exclusively in connection with courts covered by the new framework.",
+   "A defendant relying on that court-premises exception would bear an evidential burden.",
+   "The existing Federal Court-specific provision would be repealed.",
+   "Rights to attend and remain for hearings at investigatory authority premises would be clarified as applying to public hearings."
+  ],
+  "affected": "Covered federal courts and tribunals, prescribed investigatory authorities and people attending their premises are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:51.732068+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

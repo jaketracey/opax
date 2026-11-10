@@ -155,7 +155,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-25",
+  "sentences": [
+   "The bill would continue the Australia Council as Creative Australia, with expanded responsibilities and a revised governing board for the national arts funding body.",
+   "It would establish Music Australia to support contemporary music and Creative Workplaces to promote fair, safe and respectful conditions for artists and arts workers.",
+   "Both new parts would operate within Creative Australia under board oversight, alongside a companion bill dealing with repeal of the former legislation and transitional matters."
+  ],
+  "changes": [
+   "The governing Australia Council Board would expand to a maximum of fourteen members.",
+   "Board appointments could last four years, with total service limited to nine years.",
+   "Separate councils would advise the board on Music Australia and Creative Workplaces.",
+   "The chief executive would chair the music council but could not chair the workplace council."
+  ],
+  "affected": "Australian artists, contemporary musicians, arts workers, arts organisations and Creative Australia's governing bodies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:25.148951+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

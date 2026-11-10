@@ -77,7 +77,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2012-03-22",
+  "sentences": [
+   "The bill would set national restrictions on poker machine betting, payouts and credit loading, backed by civil penalties and a staged timetable for compliance.",
+   "It would cap each spin's total wager at $1 and each winning payout at $500, while preventing machines from accepting banknotes worth more than $20.",
+   "Operating restrictions would apply to venues with more than 10 machines from 1 January 2017, and smaller venues would have until 31 December 2018."
+  ],
+  "changes": [
+   "From 1 January 2013, corporations could sell or lease only machines capable of operating within the proposed limits.",
+   "From 1 January 2017, corporations could sell or lease only machines complying with those limits.",
+   "Machines would reject additional credits whenever a player's existing balance was $20 or more.",
+   "Court-imposed civil penalties could reach 2,000 penalty units for each contravention.",
+   "The bill would also provide for uniform national harm minimisation standards effective from 1 January 2015 and a national poker machine monitoring network."
+  ],
+  "affected": "Corporations selling or leasing poker machines, licensed venues operating them, players, the responsible minister and the Federal Court are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:07.602520+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

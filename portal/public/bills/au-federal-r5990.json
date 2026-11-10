@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-19",
+  "sentences": [
+   "The bill would expand oversight of non-deposit-taking lenders, relax restrictions on banking terminology, add statutory banking objectives and change protections for credit card customers.",
+   "The Australian Prudential Regulation Authority could make lending rules where non-bank activity creates material financial stability risks, supported by broader registration and data collection.",
+   "Authorised deposit-taking institutions could generally use banking terms, while credit card reforms would include restrictions on unsolicited limit increases and ways to request cancellation online."
+  ],
+  "changes": [
+   "Non-bank lenders could be directed to comply with rules, with offences for contravening directions.",
+   "Non-bank lending rules would expire automatically after two years.",
+   "Credit card suitability assessments would consider capacity to repay the credit limit within a specified period.",
+   "Retrospective interest on balances that benefited from an interest-free period would be prohibited."
+  ],
+  "affected": "Non-bank lenders, deposit-taking institutions, credit card providers, customers and financial regulators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:53.750914+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

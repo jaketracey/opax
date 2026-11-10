@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-09",
+  "sentences": [
+   "The bill would replace quarterly superannuation guarantee administration with a system that calculates employers' obligations whenever they pay qualifying earnings, alongside a separate charge-imposition bill.",
+   "Employers would generally avoid a shortfall by ensuring contributions reach employees' funds within seven business days of payday, with notional earnings added for late payments.",
+   "The reforms would apply from 1 July 2026, with extended contribution periods in specified cases, including the first earnings day for a new employee."
+  ],
+  "changes": [
+   "The maximum contributions base would operate annually instead of quarterly.",
+   "Notional earnings on unpaid superannuation would compound daily using the general interest charge rate.",
+   "An initial administrative uplift of 60 per cent would apply to final shortfalls and notional earnings, subject to reductions under regulations.",
+   "Employers failing to pay an outstanding charge after a formal notice period would face a new penalty, with a higher rate for recent repeat defaults."
+  ],
+  "affected": "Employers, employees, payroll service providers, superannuation funds and the Australian Taxation Office are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:50.459914+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9805",

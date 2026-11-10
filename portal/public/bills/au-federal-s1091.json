@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-13",
+  "sentences": [
+   "The bill would narrow Commonwealth compulsory land acquisition powers by adding specific public purpose requirements to the existing framework for ministerial acquisition declarations under land legislation.",
+   "A declaration would need to serve the Australian public directly or enable an acquiring authority to provide necessary public services that otherwise would not be provided.",
+   "The bill would start on Royal Assent, with acquisitions already covered by earlier pre-acquisition declarations or certificates excluded from the new requirements under its application provision."
+  ],
+  "changes": [
+   "A new section 41A would set limits specifically for acquisition by compulsory process.",
+   "The existing declaration power would be made expressly subject to the new section as well as section 42.",
+   "The minister making a declaration would carry responsibility for satisfying the additional public purpose requirements."
+  ],
+  "affected": "Landholders, acquiring Commonwealth authorities and ministers responsible for compulsory acquisition declarations would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:35.075934+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

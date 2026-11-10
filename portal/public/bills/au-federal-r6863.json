@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-03-29",
+  "sentences": [
+   "The bill would authorise funding from the Consolidated Revenue Fund for government activities outside ordinary annual services, including capital spending and payments to other governments.",
+   "It would provide broadly seven months of annual funding, plus Budget measures, alongside supply legislation covering the earlier part of the financial year.",
+   "The appropriations would begin on 1 July 2022 or royal assent, whichever came later, and the legislation would expire on 1 July 2025."
+  ],
+  "changes": [
+   "The Finance Minister could allocate up to $3,600 million in urgent additional funding, including $3,000 million restricted to COVID-19 expenditure.",
+   "Responsible ministers could set payment conditions, amounts and timing for grants to states, territories and local governments.",
+   "Appropriated money could be transferred to special accounts where their purposes matched those of the appropriation."
+  ],
+  "affected": "Commonwealth departments, government entities, the Finance Minister and state, territory and local governments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:05:55.256361+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-19",
+  "sentences": [
+   "The bill would make paper the default form for consumer bills and transaction records, allowing electronic delivery only when the customer agrees to it.",
+   "It would prohibit charges for transaction records and other bills, and require other bills supplied to consumers to be clear, legible and in plain language.",
+   "The rules would apply to goods and services supplied from commencement, which would occur on the day after the bill received Royal Assent."
+  ],
+  "changes": [
+   "Proof of purchase would follow the paper default for transactions of $75 or more, and on request for smaller purchases.",
+   "Itemised bills would require customer consent before electronic delivery.",
+   "The delivery rules would override inconsistent provisions of the Electronic Transactions Act 1999.",
+   "Pecuniary penalty provisions would be updated to enforce the new obligations."
+  ],
+  "affected": "Suppliers of goods and services and consumers receiving bills, itemised accounts or transaction records are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:26.980979+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

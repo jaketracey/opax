@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-08-27",
+  "sentences": [
+   "The bill would change telecommunications interception and criminal procedure laws governing network warrant information, capability testing, international production orders and authorisation of controlled police operations.",
+   "Network warrant information could be disclosed to meet prosecution duties and admitted for a defendant's fair trial, with prosecution evidence allowed in response to defence evidence.",
+   "Stored communications could be accessed under development and testing authorisations, with information use confined to those purposes and subject to the interception framework's safeguards."
+  ],
+  "changes": [
+   "The Communications Access Coordinator role would move to the secretary of the department administering interception law, identified in the source as Home Affairs.",
+   "Communications providers could comply with relevant interception production orders by supplying copies of stored communications.",
+   "Security authorities would have to destroy stored communications information obtained through testing authorisations as soon as practicable.",
+   "Controlled-operation safety assessments would focus on direct, reasonably foreseeable consequences of participants' unlawful conduct."
+  ],
+  "affected": "Law enforcement and security agencies, telecommunications providers, prosecutors, defendants and officials administering interception authorisations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:11.980074+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

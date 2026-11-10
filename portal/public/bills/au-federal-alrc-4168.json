@@ -21,8 +21,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5089_ems_0ae1e4aa-58ba-4814-bc2a-7f082b4897e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5089%22",
+   "document_date": "2013-06-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-03",
+  "sentences": [
+   "The bill would restrict sports betting promotions on commercial television and radio and subscription television by adding conditions to broadcasters' licences.",
+   "It would ban advertisements containing numerical betting odds at any time and require other sports betting advertisements to be broadcast after 9pm.",
+   "The restrictions would also cover odds information near sports programs and paid promotion within editorial content, applying from the day of Royal Assent."
+  ],
+  "changes": [
+   "Odds information would be prohibited within a 30-minute window of sports events and sports-related programs.",
+   "Commentators and guests could not discuss betting services outside scheduled advertising breaks where the broadcaster received payment.",
+   "Commercial radio and subscription television licensees would face the same restrictions as commercial television licensees."
+  ],
+  "affected": "Commercial television and radio licensees, subscription television licensees, paid commentators and guests are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:26.799308+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

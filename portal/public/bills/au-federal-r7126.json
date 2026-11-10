@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-29",
+  "sentences": [
+   "The bill would restructure the Reserve Bank of Australia by replacing its existing Reserve Bank Board with separate boards for monetary policy and corporate governance.",
+   "The Monetary Policy Board would set monetary and financial stability policies, with price stability and full employment guiding its monetary policy decisions.",
+   "The bill would remove the government's power to override monetary policy decisions, while retaining the override mechanism for decisions of the Payments System Board."
+  ],
+  "changes": [
+   "The bank's unused power to direct private banks' lending policies would be repealed.",
+   "The Treasury Secretary would act independently on the Monetary Policy Board and could not take directions from the Treasurer.",
+   "External Monetary Policy Board members would face a seven-year limit on total service."
+  ],
+  "affected": "The Reserve Bank of Australia, its board members, the Treasurer, Treasury Secretary and private banks are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:26.002961+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9125",

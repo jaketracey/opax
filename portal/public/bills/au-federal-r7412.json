@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-26",
+  "sentences": [
+   "The bill would change superannuation choices during employee onboarding and make separate tax changes affecting rugby tournaments, Australia's treaty with Portugal, charities and wine producers.",
+   "Employers could obtain details of an employee's existing stapled super fund earlier, while certain targeted superannuation advertising during onboarding would be prohibited from 1 July 2026.",
+   "Advertising exceptions would include an employee's stapled fund, the employer's default fund and MySuper products meeting specified performance, disclosure and other conditions under the proposal."
+  ],
+  "changes": [
+   "Specified Rugby World Cup organisers would receive income tax and withholding tax exemptions relating to the men's 2027 and women's 2029 tournaments.",
+   "The Australia-Portugal tax convention would be given domestic legal effect, subject to its entry into force.",
+   "Deductible gift recipient listings would add six organisations, extend five listings, remove eight and update one name.",
+   "The annual wine equalisation tax rebate cap for eligible producers or associated groups would rise from $350,000 to $400,000 from 1 July 2026."
+  ],
+  "affected": "New employees, employers, onboarding providers, superannuation funds, tournament organisers, cross-border taxpayers, listed charities, donors and eligible wine producers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:16.557106+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9913",

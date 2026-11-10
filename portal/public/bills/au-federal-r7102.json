@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-10-19",
+  "sentences": [
+   "The bill would expand paid parental leave by gradually increasing the maximum entitlement to 26 weeks and changing how partnered parents can share payments.",
+   "It would increase entitlements by two weeks annually, reserve more leave for certain partnered claimants and allow more days to be claimed concurrently.",
+   "The legislation would commence on 26 March 2024 to accommodate early claims, with transitional arrangements for claims around the change to the scheme."
+  ],
+  "changes": [
+   "Fathers and partners prevented from meeting the work test by premature birth would gain access to its exception.",
+   "Eligibility rules would distinguish special claimants in exceptional circumstances from other claimants.",
+   "The minister would be able to make transitional rules."
+  ],
+  "affected": "Eligible working parents and carers, including adoptive parents and families experiencing premature birth, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:00.383546+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8648",

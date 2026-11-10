@@ -179,7 +179,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-20",
+  "sentences": [
+   "The bill would change gambling regulation and a wide range of social payments, including family assistance, student support, pensions and parental leave pay.",
+   "It would introduce income-contingent student start-up loans from 1 January 2014, capped at two annual loans of $1,025, while preserving grants for qualifying existing recipients.",
+   "Other measures would restrict some family payments, change pension calculations for overseas recipients and extend freezes on selected payment limits and supplements to 30 June 2017."
+  ],
+  "changes": [
+   "The National Gambling Regulator, related levies and mandatory pre-commitment trial provisions would be abolished.",
+   "Cape York income management would be extended through 2015.",
+   "Certain student payment debts would attract interest where an acceptable repayment arrangement was absent or not being honoured.",
+   "Parental leave pay would generally be paid directly to employees, with employer payment available by agreement.",
+   "Qualifying disability scheme funds held for participant supports would be protected from garnishee recovery."
+  ],
+  "affected": "Families, students, pensioners, employers, gambling operators, Cape York welfare reform participants and National Disability Insurance Scheme participants are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:14.223452+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3159",

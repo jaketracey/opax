@@ -155,7 +155,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-08",
+  "sentences": [
+   "The bill would amend foreign investment penalties, disaster-related tax information sharing, temporary document requirements, labour mobility taxation and performance testing for faith-based superannuation products.",
+   "It would combine stronger residential land penalties with new information-sharing permissions, extended pandemic flexibility and tax and superannuation arrangements for specified workers and products.",
+   "The measures would have different commencement rules, including retrospective labour mobility tax treatment from 1 July 2022 and residential land penalty changes from 1 January 2023."
+  ],
+  "changes": [
+   "Tax officials could share protected information with government agencies administering minister-approved major disaster support programs.",
+   "Temporary powers to modify information and document requirements would continue until 31 December 2023.",
+   "The 15 per cent final withholding tax framework would extend to eligible foreign resident Pacific Australia Labour Mobility workers.",
+   "Faith-based superannuation products failing the standard test would receive a supplementary performance assessment."
+  ],
+  "affected": "Foreign residential investors, disaster support agencies, affected workers and employers, and faith-based superannuation trustees and members would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7801",

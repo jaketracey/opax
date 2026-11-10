@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "The bill would remove the special rule treating leases of serial numbered goods lasting 90 days or more as personal property securities leases.",
+   "Leases exceeding 12 months or having no fixed end date would remain covered by the general deeming rules, regardless of the goods involved.",
+   "The amended rules would apply prospectively, with leases and bailments entered into before commencement continuing to be governed by the previous provisions."
+  ],
+  "changes": [
+   "It would remove the related provision in subparagraph 268(1)(a)(ii).",
+   "It would delete the associated example in subsection 268(1).",
+   "The amendments would start by proclamation, with a six-month fallback after Royal Assent."
+  ],
+  "affected": "Hire businesses, their customers and financiers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:12.447306+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

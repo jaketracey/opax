@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-06",
+  "sentences": [
+   "The bill would give courts an additional power to order corporations found to have misused market power to reduce their market share or power.",
+   "The Australian Competition and Consumer Commission or another person could seek an order within three years of a contravention, requiring a reduction within two years.",
+   "The changes would supplement existing court powers under competition law and would take effect on the day after the bill received Royal Assent."
+  ],
+  "changes": [
+   "A new divestiture provision would address breaches of the market power rules.",
+   "Courts could make consent orders without finding a contravention if all parties agreed.",
+   "Courts could accept a corporation's undertaking instead of issuing an order."
+  ],
+  "affected": "Corporations subject to market power rules, the Commission and people applying for orders are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:12.448118+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

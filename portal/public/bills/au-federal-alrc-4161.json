@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5060_ems_14c04072-1112-4767-a2e8-20bfd6d6c441%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5060%22",
+   "document_date": "2013-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-30",
+  "sentences": [
+   "The bill would authorise payments needed for Australia to join the African Development Bank and the African Development Fund, including share purchases and subscriptions.",
+   "The Minister could purchase 5,912 paid-up and 92,616 callable shares, with a maximum price of 10,000 special drawing rights per share.",
+   "The bill would begin the day after Royal Assent, while joining the institutions would also require approvals and completion of the relevant international agreements."
+  ],
+  "changes": [
+   "Bank share payments would be authorised from the Consolidated Revenue Fund.",
+   "Fund subscriptions would rely on appropriations provided through other legislation.",
+   "The Minister could issue securities to make payments to either institution.",
+   "Increasing Australia's shareholding beyond the specified shares would require amending the legislation."
+  ],
+  "affected": "The Australian Government, the African Development Bank and the African Development Fund are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:08.424725+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-13",
+  "sentences": [
+   "The bill would provide extra Commonwealth appropriations for services outside ordinary annual operations, including capital funding and financial assistance to states, territories and local governments.",
+   "It would fund scheduled expenditure and restore the Finance Minister's advance to $380 million, regardless of amounts issued before the legislation began operating.",
+   "The bill would begin on royal assent and accompany the additional estimates bill that provides funding for the Commonwealth's ordinary annual services in 2019-2020."
+  ],
+  "changes": [
+   "Responsible ministers could determine conditions, amounts and timing for payments to states, territories and local governments.",
+   "An appropriation would be reduced where the same expenditure had already been funded through a ministerial advance.",
+   "The legislation would repeal at the start of 1 July 2022."
+  ],
+  "affected": "Commonwealth entities, the Finance Minister and recipient state, territory and local governments are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:29.457824+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6282",

@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-14",
+  "sentences": [
+   "The bill would amend rules for financial advice qualifications, credit product intervention orders, clearing and settlement services and the First Home Super Saver Scheme.",
+   "It would prohibit schemes avoiding credit product intervention orders and give financial regulators rule-making and arbitration powers for clearing and settlement service access.",
+   "Qualifying experienced financial advisers would be exempt from further study to meet the qualifications standard, while still having to pass examinations and maintain professional development."
+  ],
+  "changes": [
+   "Home savers could generally amend or withdraw release applications before the tax commissioner begins paying them.",
+   "The post-contract deadline to request a home saver release authority would increase from 14 days to 90 days.",
+   "Registered tax agents who are financial advisers would avoid duplicated education requirements for tax advice.",
+   "Credit product intervention order avoidance would attract civil penalties and criminal offences."
+  ],
+  "affected": "Financial advisers, retail clients, credit providers, clearing and settlement operators and first home savers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:57.617250+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

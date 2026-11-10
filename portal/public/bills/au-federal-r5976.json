@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-14",
+  "sentences": [
+   "The bill would change child support assessments, agreements and debt recovery, and replace some end-of-year family tax benefit compliance penalties with reductions to fortnightly payments.",
+   "From 1 July 2018, families missing relevant child health checks or immunisation requirements would instead have approximately $28 per child withheld from fortnightly Part A payments.",
+   "Child support changes would distinguish court-ordered care from parenting plans and agreements, with interim assessment periods affected by the order's age and participation in dispute resolution."
+  ],
+  "changes": [
+   "Amended tax assessments could change child support liabilities in a wider range of circumstances.",
+   "Courts would have greater scope to set aside binding agreements carried over from before 1 July 2008.",
+   "Agreements could end or be suspended when the recipient ceases to qualify as the child's carer.",
+   "Recovery methods for overpaid child support would be aligned with those available for debts owed by paying parents."
+  ],
+  "affected": "Separated parents, children, family tax benefit recipients and the Child Support Registrar would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:02.356564+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5197",

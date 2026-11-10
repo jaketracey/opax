@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-02",
+  "sentences": [
+   "The bill would establish a serious incident reporting and management scheme for residential aged care, replacing existing rules for reportable assaults and unexplained absences.",
+   "Providers would need incident management systems and would report a broader range of abuse, neglect and other serious incidents to the aged care regulator.",
+   "The scheme would cover residential care and flexible care in residential settings, with stronger protections for qualifying disclosures by residents, staff and supporters."
+  ],
+  "changes": [
+   "The reporting exemption for assaults by residents with cognitive or mental impairment would be removed.",
+   "Victimising someone over a protected disclosure would attract a civil penalty.",
+   "The regulator would gain additional powers to obtain information and documents."
+  ],
+  "affected": "Residential aged care recipients, providers, staff, families, advocates and the Aged Care Quality and Safety Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:42.926788+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6888",

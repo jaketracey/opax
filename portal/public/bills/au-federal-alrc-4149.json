@@ -21,8 +21,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4998_ems_8692c89d-55e5-4cd3-9bd8-ad997b853189%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4998%22",
+   "document_date": "2013-03-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-18",
+  "sentences": [
+   "The bill would prohibit exports of coal mined in specified water catchment areas within Wyong Shire by adding restrictions to the Customs Act.",
+   "The initial prohibition would use the area identified by Wyong Shire Council as Water Catchment Valleys and District on 18 March 2013.",
+   "It would also let the Minister extend export prohibitions to other designated areas through legislative instruments, with the amendments applying prospectively rather than retrospectively."
+  ],
+  "changes": [
+   "An export prohibition would cover coal originating from the defined Wyong catchment area.",
+   "The Minister would gain power to designate additional areas for coal export prohibitions.",
+   "The amendments would operate prospectively."
+  ],
+  "affected": "Exporters of coal mined in the specified Wyong Shire area or other areas designated by the Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:01.836842+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-24",
+  "sentences": [
+   "The bill would extend the income management arrangements linked to Queensland's Family Responsibilities Commission for a further two years in specified Cape York communities and Doomadgee.",
+   "It would replace the deadline for commission decisions of 1 July 2017 with 1 July 2019, allowing referrals made before the later date.",
+   "The extension would cover Aurukun, Coen, Hope Vale, Mossman Gorge and Doomadgee, continuing the existing arrangement for directing part of welfare payments towards priority needs."
+  ],
+  "changes": [
+   "The decision cutoff in paragraph 123UF(1)(g) would move forward by two years.",
+   "The matching cutoff in paragraph 123UF(2)(h) would also move forward by two years.",
+   "Doomadgee's use of the commission referral pathway would continue for the additional period."
+  ],
+  "affected": "Welfare recipients subject to commission referrals in the five communities, their families and the Family Responsibilities Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:16.636290+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

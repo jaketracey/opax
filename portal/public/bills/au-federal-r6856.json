@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-17",
+  "sentences": [
+   "The bill would align specified Commonwealth superannuation arrangements with general fund choice rules, including use of an existing fund linked to a new employee.",
+   "It would allow alternative default funds when existing defaults could no longer accept new members after failing annual performance tests in two consecutive years.",
+   "New parliamentarians and relevant judges could receive contributions into an existing linked fund when they made no choice, with changes beginning after royal assent."
+  ],
+  "changes": [
+   "The Finance Minister would prescribe default fund selection methods through instruments that Parliament could disallow.",
+   "Default fund selection would have to consider fees, costs and investment returns, through assessment or publicly available rankings.",
+   "Employer contribution rates for an alternative public service default fund could not fall below the corresponding public service scheme rate."
+  ],
+  "affected": "New parliamentarians, public service employees, judges of the Federal Circuit and Family Court of Australia (Division 2), Commonwealth employers and superannuation funds would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:30.110646+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -155,7 +155,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-26",
+  "sentences": [
+   "The bill would set social security rules for Green Army participants, preventing simultaneous payment of the program allowance and a social security pension or benefit.",
+   "It would also specify how the allowance affects a partner's pension income test and clarify participants' status under certain Commonwealth workplace and compensation laws.",
+   "The rules would start on 1 July 2014, while eligible participants could continue receiving family assistance and child care payments under the existing eligibility rules."
+  ],
+  "changes": [
+   "Benefit suspension or cancellation decisions could be backdated to prevent overlapping payments.",
+   "For a pensioner's partner, only allowance above the applicable threshold would count as ordinary income.",
+   "Participation alone would not establish employee status under specified workplace safety, compensation and fair work laws.",
+   "The Secretary could exempt classes of people from the worker status exclusion by legislative instrument."
+  ],
+  "affected": "Green Army participants and their partners receiving social security pensions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:06.753883+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

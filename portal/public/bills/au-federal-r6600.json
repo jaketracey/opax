@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-07",
+  "sentences": [
+   "The bill would extend Commonwealth bankruptcy estate charges to Norfolk Island as part of a package extending the national personal insolvency framework to the island.",
+   "Removing the territorial exclusion would allow charges on insolvency realisations and interest earned on money held in personal insolvency accounts to apply there.",
+   "It would commence with Schedule 3 of the Territories Legislation Amendment Bill 2020, and would not commence if that companion schedule did not commence."
+  ],
+  "changes": [
+   "The express exclusion of Norfolk Island from the estate charges legislation would be repealed.",
+   "Realisations charges could be imposed on covered Norfolk Island insolvencies.",
+   "Interest charges could also be collected on those administrations."
+  ],
+  "affected": "Trustees, debt agreement administrators and people in covered Norfolk Island personal insolvency arrangements are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:41.844093+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

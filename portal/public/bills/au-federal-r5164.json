@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-13",
+  "sentences": [
+   "The bill would authorise additional Commonwealth spending outside the government's ordinary annual services, supplementing appropriations provided through the original 2013-2014 Budget legislation.",
+   "It would fund payments to states, territories and local governments, new administered activities, assets, liabilities and departmental equity, plus payments to Commonwealth authorities and companies.",
+   "The appropriations would begin on Royal Assent, alongside separate additional estimates legislation covering the government's ordinary annual services and funding for the parliamentary departments."
+  ],
+  "changes": [
+   "The Finance Minister's urgent advance capacity would reset to $380 million.",
+   "The Health and Hospitals Fund's drawing rights limit for the current year would be set at $810,307,940.",
+   "Responsible ministers could set conditions, amounts and timing for payments to states, territories and local governments.",
+   "The appropriation would be reduced where an advance had already covered the same expenditure."
+  ],
+  "affected": "Commonwealth agencies, funded authorities and companies, state and territory governments, local governments and responsible ministers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:58.705349+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

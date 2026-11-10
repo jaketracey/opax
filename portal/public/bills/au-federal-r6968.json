@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "The bill would change which named organisations can receive tax-deductible gifts, adding six recipients, extending two existing listings and removing one former business school.",
+   "It would make eligible donations deductible within specified periods for each organisation, including retrospective eligibility for some gifts already made before the changes begin.",
+   "The amendments would begin in the quarter after royal assent, with the removal of the Mt Eliza school’s listing applying from 1 January 2023."
+  ],
+  "changes": [
+   "Melbourne Business School Limited would receive a listing for gifts made from 1 July 2022.",
+   "Sydney Chevra Kadisha’s listing would extend to gifts made by 30 June 2024.",
+   "Australian Women Donors Network’s listing would extend to gifts made by 8 March 2028."
+  ],
+  "affected": "The named recipient organisations and taxpayers making qualifying donations to them would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:43.935615+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7937",

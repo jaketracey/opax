@@ -83,7 +83,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-30",
+  "sentences": [
+   "The bill would impose an additional tax on individuals with large superannuation balances, forming part of a package to reduce their tax concessions.",
+   "The package would apply a 15 per cent tax to the share of earnings corresponding to the proportion of a person's balance above $3 million.",
+   "The tax would apply from the 2025-26 income year, with assessment and payment rules supplied by the accompanying Treasury Laws Amendment bill."
+  ],
+  "changes": [
+   "The bill would establish Division 296 tax as a separate tax liability for individuals.",
+   "The tax would not apply where imposing it on an individual would exceed the Commonwealth's legislative power.",
+   "The bill would commence at the start of the next January, April, July or October following Royal Assent."
+  ],
+  "affected": "Individuals whose total superannuation balances exceed $3 million are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:07.701715+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9169",

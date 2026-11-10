@@ -89,13 +89,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5024_ems_da289a37-738b-476f-a9f8-5e7efee13ec3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5024%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00052",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would change cargo security controls, access to secure airport and seaport areas, and eligibility for a parliamentary law enforcement integrity committee.",
+   "It would enable suspension of aviation or maritime security cards, or processing of applications, when holders or applicants face prescribed serious security-related charges.",
+   "The card changes would apply to the aviation and maritime schemes only, while separate customs amendments would regulate cargo operators, handlers, information use and brokers."
+  ],
+  "changes": [
+   "Cargo terminal operators and handlers would face reporting, physical security and management suitability obligations.",
+   "Using Integrated Cargo System information to help a criminal organisation would become an offence.",
+   "Customs could impose new broker licence conditions and penalise breaches of specified conditions.",
+   "The Deputy Speaker and Deputy President would become eligible for the parliamentary committee overseeing the Australian Commission for Law Enforcement Integrity."
+  ],
+  "affected": "Cargo terminal operators, handlers, customs brokers, security-card holders and applicants, Customs, AusCheck and the specified parliamentary office holders are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:57.055304+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

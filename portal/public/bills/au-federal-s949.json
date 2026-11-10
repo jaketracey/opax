@@ -59,7 +59,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-13",
+  "sentences": [
+   "The bill would restrict port development affecting the Great Barrier Reef World Heritage Area and prohibit dumping dredged material within that protected area.",
+   "It would impose an approval moratorium from 13 February 2014 until a strategic assessment was completed and considered adequate by the World Heritage Committee.",
+   "The bill would commence on Royal Assent, with retrospective rules preventing permits or approvals after 31 December 2013 for the prohibited dredged material activities."
+  ],
+  "changes": [
+   "New ports would be prohibited outside existing port areas and in specified protected locations.",
+   "Existing port developments would be barred where individual or cumulative impacts affected the area's world heritage values.",
+   "Developments without a net benefit for the protected area could not be approved.",
+   "Dumping dredged material would attract up to 250 penalty units, 12 months' imprisonment, or both.",
+   "Knowingly or recklessly loading dredged material for dumping in the area would also be an offence."
+  ],
+  "affected": "People proposing port developments, dumping dredged material or loading it for dumping in the protected area are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:42.947179+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

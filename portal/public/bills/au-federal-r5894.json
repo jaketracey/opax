@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "The bill would change controls on imported food by requiring supply chain safety evidence, expanding intervention powers and introducing a wider range of enforcement measures.",
+   "Importers of specified foods would need recognised food safety management certificates where border testing alone could not provide assurance that the food was safe.",
+   "Equivalent overseas food safety systems could be recognised to reduce border intervention, while all food importers would need records enabling tracing to suppliers and customers."
+  ],
+  "changes": [
+   "Authorities could hold food where reasonable grounds suggested a serious health risk even before the safety issue was confirmed.",
+   "Monitoring and investigation powers, civil penalties, infringement notices and enforceable undertakings would be available under a standard regulatory framework.",
+   "The definition of food would be aligned with other Commonwealth legislation."
+  ],
+  "affected": "Food importers, overseas suppliers, Australian consumers and agencies responsible for imported food safety are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:00.718663+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

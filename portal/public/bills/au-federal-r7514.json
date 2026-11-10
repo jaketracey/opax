@@ -137,7 +137,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-07-02",
+  "sentences": [
+   "The bill would change tax practitioner regulation, foreign resident capital gains taxation, merger controls, competition policy references and rules for charitable giving and withholding credits.",
+   "Maximum civil penalties for tax practitioner misconduct would rise to 2,500 penalty units for individuals and 50,000 for companies and significant global entities.",
+   "Certain foreign investors selling Australian renewable energy assets would receive a transitional 50 per cent capital gains tax discount for events through 30 June 2030."
+  ],
+  "changes": [
+   "New criminal offences would cover unauthorised paid tax services, advertising and false claims of registration.",
+   "The Tax Practitioners Board could issue infringement notices and accept enforceable undertakings.",
+   "Completed acquisitions that should have been notified would become voidable by court order rather than automatically void.",
+   "Legislative references would be updated to the 2024 National Competition Policy Agreement.",
+   "Public and private ancillary funds would be renamed public and private giving funds.",
+   "Foreign resident capital gains withholding credits could be claimed in the transaction's income year where withholding had been paid to the Commissioner of Taxation."
+  ],
+  "affected": "Tax practitioners, taxpayers, foreign investors, merger parties, charities, giving funds and regulators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:46.873487+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

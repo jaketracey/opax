@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-06",
+  "sentences": [
+   "The bill would establish machinery for collecting quarantine charges imposed under companion legislation for indirect biosecurity services, including scientific analysis, intelligence and surveillance.",
+   "It would allow unpaid charges and late payment fees to be recovered through courts, withholding goods, detaining vessels and selling property under specified conditions.",
+   "The collection framework would begin the day after Royal Assent and operate alongside the separate general, excise and customs charge imposition bills."
+  ],
+  "changes": [
+   "Regulations could set payment deadlines and agents' liability.",
+   "Import approvals could be suspended or revoked for unpaid charges after written notice.",
+   "Ignoring a direction about withheld goods could attract two years' imprisonment, 120 penalty units, or both.",
+   "The Agriculture Minister could remit or refund fees in exceptional circumstances."
+  ],
+  "affected": "People owing quarantine charges, their agents, goods owners and vessel owners or operators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:16.736711+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

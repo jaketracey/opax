@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5047_ems_35d126c8-7fe6-4900-bd0f-5a6ee7af9207%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5047%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00045",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would increase the tax charged on excess untaxed superannuation roll-over amounts as part of the DisabilityCare Australia tax amendment package.",
+   "It would move the rate from 46.5 per cent to 47 per cent, reflecting the higher Medicare levy alongside the maximum income tax rate.",
+   "The increase would apply to excess untaxed roll-over amounts paid on or after 1 July 2014, as a consequential change linked to the levy package."
+  ],
+  "changes": [
+   "The tax rate on excess untaxed roll-over amounts would rise by half a percentage point.",
+   "The calculation would include a 2 per cent Medicare levy component.",
+   "Amounts paid on or after 1 July 2014 would attract the revised rate."
+  ],
+  "affected": "People liable for tax on excess untaxed superannuation roll-over amounts are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:38.536801+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

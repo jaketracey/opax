@@ -83,7 +83,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-27",
+  "sentences": [
+   "The bill would establish an independent National Commissioner for Defence and Veteran Suicide Prevention to investigate deaths, identify systemic issues and recommend changes to policy and services.",
+   "The commissioner could compel documents and witness evidence, conduct public or private hearings, and examine past deaths as well as deaths occurring after establishment.",
+   "The commissioner would follow trauma-informed principles, recognise families' contributions and report to Parliament, with the Commonwealth required to provide responses to those reports."
+  ],
+  "changes": [
+   "The commissioner could initiate inquiries without a referral.",
+   "Noncompliance with compulsory notices and summonses would be subject to criminal offences.",
+   "Employment retaliation against people giving evidence would be an offence.",
+   "Unauthorised use or disclosure of protected inquiry information would be an offence."
+  ],
+  "affected": "Defence members, veterans, bereaved families, inquiry witnesses, government agencies and support services are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:27.398006+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-6612",

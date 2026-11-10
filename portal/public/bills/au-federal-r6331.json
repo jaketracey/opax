@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would require certain superannuation members to choose insurance cover actively, restricting automatic cover for new members under 25 and specified low-balance products.",
+   "From 1 October 2019, the low-balance restriction would cover products below $6,000 that had not reached $6,000 since 1 July 2019.",
+   "Exceptions would include defined benefit and specified defence members, small funds, and insurance premiums fully covered by additional employer contributions that meet the notification requirements."
+  ],
+  "changes": [
+   "Trustees would have to allow affected members to direct that insurance be obtained or maintained.",
+   "One insurance election would satisfy both the age and low-balance opt-in requirements.",
+   "Trustees would have to identify affected low-balance products and notify relevant members about maintaining cover.",
+   "Mandatory MySuper default death and disability cover would resume when the restrictions no longer apply."
+  ],
+  "affected": "Young and low-balance superannuation members, fund trustees, contributing employers and insurance providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:34.120919+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5881",

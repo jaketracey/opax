@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-11",
+  "sentences": [
+   "The bill would extend federal offences for harming Australians overseas to conduct before 1 October 2002, allowing prosecutions concerning earlier incidents involving Australian citizens or residents.",
+   "It would remove the original commencement-date limit from the relevant offence provisions, covering murder, manslaughter and serious harm while retaining the division’s other criteria.",
+   "An application provision would expressly cover conduct before, on or after 1 October 2002, with the amendments starting the day after Royal Assent."
+  ],
+  "changes": [
+   "The murder offence’s temporal coverage would extend to earlier overseas incidents.",
+   "The manslaughter offence’s temporal coverage would likewise extend to earlier incidents.",
+   "Serious harm offences would also become available for conduct predating the division."
+  ],
+  "affected": "Australian citizens and residents harmed overseas and people suspected of committing those offences are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:06.422457+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

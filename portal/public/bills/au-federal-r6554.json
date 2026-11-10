@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "The bill would change compulsory questioning and surveillance powers of the Australian Security Intelligence Organisation (ASIO), expanding questioning grounds while replacing questioning and detention warrants.",
+   "The Attorney-General could issue questioning warrants directly for espionage, foreign interference and politically motivated violence, with oral applications and warrants available in an emergency.",
+   "Questioning could extend to minors from age 14 only when they were investigation targets for politically motivated violence, subject to safeguards and legal representation provisions."
+  ],
+  "changes": [
+   "Questioning and detention warrants would be removed.",
+   "A narrower apprehension framework would support attendance and protect information.",
+   "Police would gain search and seizure powers associated with questioning.",
+   "Some tracking devices could be used with internal authorisation instead of a warrant."
+  ],
+  "affected": "ASIO, the Attorney-General, police, questioning subjects, their lawyers and intelligence oversight officials are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:48.013314+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6867",

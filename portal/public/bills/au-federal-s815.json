@@ -95,7 +95,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2010-11-24",
+  "sentences": [
+   "The bill would expand scrutiny of foreign agricultural land acquisitions, put national interest criteria into legislation and require public information about proposed investments.",
+   "It would require applications to the Treasurer for covered foreign interests in agricultural land larger than 5 hectares, regardless of the purchase price.",
+   "The bill would cover land mainly used for primary production businesses, with acquisition exceptions for wills, loan security and transfers from specified public bodies."
+  ],
+  "changes": [
+   "The Treasurer could prohibit proposed acquisitions exceeding 5 hectares where they would be contrary to the national interest.",
+   "The Treasurer could order a foreign person to dispose of an interest acquired contrary to the national interest.",
+   "National interest decisions would have to consider security, competition, tax revenue, effects on the economy or community, and the investor's character.",
+   "Online disclosures would identify investors, residence or business location, investment amounts and agricultural sectors, with information updated as applications progress.",
+   "A foreign person entering a covered acquisition agreement without first notifying the Treasurer would face an offence punishable by a fine or imprisonment."
+  ],
+  "affected": "Foreign investors acquiring interests in Australian agricultural land and the Treasurer are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:18.550031+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

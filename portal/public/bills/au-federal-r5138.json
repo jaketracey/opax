@@ -125,7 +125,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "The bill would abolish the Clean Energy Finance Corporation by repealing its establishing Act and transfer its investments, other assets and liabilities to the Commonwealth.",
+   "The Commonwealth would receive powers to manage or dispose of the transferred investments, with a temporary special account meeting transfer costs and ongoing obligations.",
+   "Most provisions would begin 28 days after Royal Assent, but the corporation’s board, employees and consultants would not automatically transfer into Commonwealth employment."
+  ],
+  "changes": [
+   "The Commonwealth would replace the corporation in pending court proceedings.",
+   "Final annual and quarterly investment reports would be required.",
+   "Future annual funding appropriations to the corporation would lapse.",
+   "State and territory transfer taxes would not apply to the statutory transfer of assets and liabilities."
+  ],
+  "affected": "The corporation, its board, employees, consultants, financial partners and the Commonwealth are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:05.079468+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3081",

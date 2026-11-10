@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5048_ems_bfe1f099-b6d1-4cb5-8495-9ed5af1b6ac7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5048%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00042",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would increase withholding tax on employee share scheme income where an individual has not supplied a tax file number or Australian Business Number.",
+   "It would raise the applicable tax rate from 46.5 per cent to 47 per cent, incorporating the increase in the Medicare levy.",
+   "The change would cover share scheme interests provided from 1 July 2014 and accompany the wider package of DisabilityCare Australia tax amendments."
+  ],
+  "changes": [
+   "The statutory withholding rate would rise by half a percentage point.",
+   "The rate calculation would incorporate a Medicare levy component of 2 per cent.",
+   "The new rate would apply to employee share scheme interests provided on or after 1 July 2014."
+  ],
+  "affected": "Individuals receiving employee share scheme interests without quoting either tax identifier are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:38.497176+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

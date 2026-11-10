@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-08",
+  "sentences": [
+   "The bill would pause indexation of customs duty on eligible imported draught beer for two years, putting the temporary tariff arrangement into the Customs Tariff Act.",
+   "The pause would cover four scheduled increases: 1 August 2025 and 1 February 2026, then 1 August 2026 and 1 February 2027.",
+   "Coverage would include specified bulk beer containers, with the companion excise bill making corresponding changes to the duty on draught beer produced in Australia."
+  ],
+  "changes": [
+   "The customs tariff proposal tabled on 24 July 2025 would be incorporated into legislation.",
+   "Indexation would resume on 1 August 2027 using the rates fixed at 1 February 2025.",
+   "The customs amendments would apply retrospectively from 1 August 2025."
+  ],
+  "affected": "Importers of qualifying draught beer and pubs, clubs and other licensed venues serving that beer are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:34.838608+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-9847",

@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-24",
+  "sentences": [
+   "The bill would provide a one-off energy assistance payment to eligible pension and veterans' payment recipients and restore concession cards lost through the pension assets test changes.",
+   "The energy payment would generally be $75 for singles and $62.50 for each partnered recipient, with eligibility assessed by reference to 20 June 2017.",
+   "Concession cards would be restored from 9 October 2017 to eligible former pensioners whose payments ceased because of the assets test changes on 1 January 2017."
+  ],
+  "changes": [
+   "Energy assistance would be exempt from income tax and excluded from social security income tests.",
+   "Recipients would not need to lodge a separate claim for energy assistance.",
+   "Rules would prevent a person receiving multiple energy assistance payments.",
+   "Restored concession card holders could retain a Commonwealth seniors health card, while replacement health care cards would cease."
+  ],
+  "affected": "Eligible age and disability pensioners, single parents, veterans and former pensioners affected by the assets test rebalance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:16.636074+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

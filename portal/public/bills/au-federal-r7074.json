@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-07",
+  "sentences": [
+   "The bill would permanently allow Commonwealth statutory declarations to be signed electronically and witnessed by video link, alongside traditional paper declarations witnessed in person.",
+   "It would also create a witness-free digital option using an approved online platform and identity verification service, subject to regulatory safeguards and reporting.",
+   "The changes would commence on 1 January 2024 or Royal Assent, whichever occurs later, following the expiry of temporary remote witnessing arrangements."
+  ],
+  "changes": [
+   "Approved online platforms would be prohibited from keeping copies of declarations made through their services.",
+   "Platforms would report annually on declaration numbers, compliance with the retention ban and eligible data breaches.",
+   "The minister would arrange a review after two years of operation."
+  ],
+  "affected": "People making declarations, authorised witnesses, approved digital service providers and organisations relying on declarations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:21.989578+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8359",

@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5106_ems_01126153-1d3a-48fa-82f7-84f3a1c84e12%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5106%22",
+   "document_date": "2013-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00118",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-19",
+  "sentences": [
+   "The bill would replace the separate tax on excess concessional superannuation contributions with ordinary income tax treatment and allow members to release excess amounts.",
+   "Excess contributions would be taxed at the individual’s marginal rate with a 15 per cent offset, and up to 85 per cent could be released.",
+   "The changes would apply from the 2013-14 income year alongside a separate bill imposing a charge to account for the timing advantage from excess contributions."
+  ],
+  "changes": [
+   "The offset could not be refunded, carried forward or transferred.",
+   "Release elections would generally be due within 21 days of the notice and could not be revoked.",
+   "Providers could choose whether to release money from defined benefit interests, non-complying funds or interests supporting income streams.",
+   "Individuals could object to excess contribution determinations under the tax objection process."
+  ],
+  "affected": "Individuals exceeding their concessional superannuation contribution caps, superannuation providers and the Commissioner of Taxation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:01.019146+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "The bill would create a compulsory stewardship scheme for consumer packaging and certain single-use plastics, imposing recycling targets, product bans and responsibilities on industry.",
+   "It would target reusable, recyclable or compostable packaging by 2025, introduce a national 20c beverage container deposit by 2021 and phase in plastic bans.",
+   "The scheme would require reports from larger businesses and allow exemptions supplying plastic straws to people with disability where they provide convenience and reduce harm."
+  ],
+  "changes": [
+   "Lightweight plastic bags and microbeads would be banned by 1 January 2021.",
+   "Specified non-compostable plastic utensils and expanded polystyrene food containers would be banned by 1 January 2023.",
+   "Beverage container caps and lids would have to remain attached by 2023.",
+   "The Minister could direct scheme members whose progress towards targets is inadequate."
+  ],
+  "affected": "Packaging and plastics manufacturers, importers, distributors, scheme members and consumers using the covered products are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:09.679064+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

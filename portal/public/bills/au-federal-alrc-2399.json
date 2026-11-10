@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5050_ems_1137809b-ce52-4391-b218-ab60ad8beca4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5050%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00041",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would adjust tax calculations for superannuation contributions made without a tax file number to reflect the companion proposal to increase the Medicare levy.",
+   "It would raise the Medicare levy component within the relevant rate calculation from 1.5 to 2 per cent for contributions received without tax file numbers.",
+   "The amendment would apply to assessments for the 2014-15 income year and subsequent years, within a wider package of DisabilityCare Australia tax measures."
+  ],
+  "changes": [
+   "Paragraph 29(2)(a) of the Income Tax Rates Act 1986 would be amended.",
+   "The levy component used to calculate tax on contributions lacking a tax file number would increase by half a percentage point.",
+   "The revised calculation would first apply to the 2014-15 income year."
+  ],
+  "affected": "Trustees of complying and non-complying superannuation funds and retirement savings account providers receiving contributions without tax file numbers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:53.515410+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

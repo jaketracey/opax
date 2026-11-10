@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-08-25",
+  "sentences": [
+   "The bill would reduce maximum student contributions for higher education units classified as society and culture by moving them into a lower contribution category under higher education law.",
+   "It would transfer those subjects from the first contribution table item to the second, updating the entries for both grandfathered students and other students.",
+   "The amendments would cover units whose census dates fall on or after 1 January 2025, with the bill commencing the day after Royal Assent."
+  ],
+  "changes": [
+   "Society and culture would be removed from the higher contribution category, including its grandfathered student reference.",
+   "The lower category's entry for non-grandfathered students would expressly include society and culture.",
+   "The corresponding lower-category entry for grandfathered students would also be amended to include those subjects."
+  ],
+  "affected": "Students taking society and culture units, including grandfathered students, and tertiary institutions setting their student contributions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:37.736151+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

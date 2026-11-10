@@ -113,13 +113,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5063_ems_29015597-bd19-44bb-837a-8db43a1d80d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5063%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00095",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would change anti-dumping investigations, retrospective duty decisions and inquiries into practices that undermine duties, alongside companion amendments to duty-setting legislation.",
+   "A new circumvention category would cover importers' resale prices failing to rise with duties because of practices such as loss-making sales or exporter compensation.",
+   "The bill would begin on 1 January 2014, with the new circumvention provisions capable of covering conduct occurring before, after or across commencement."
+  ],
+  "changes": [
+   "The Minister could choose whether to consider lower duties when assessing undertakings in specified circumstances.",
+   "Importers would have to be consulted before retrospective countervailing duty decisions.",
+   "Retrospective dumping duties could not cover goods entered before the dumping investigation began.",
+   "Reports on the new circumvention activity would normally be due within 100 days, subject to extensions.",
+   "The Commissioner could terminate inquiries where satisfied no circumvention had occurred."
+  ],
+  "affected": "Importers, exporters, Australian producers, the Anti-dumping Commissioner and the Minister responsible for anti-dumping decisions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:22.121692+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2964",

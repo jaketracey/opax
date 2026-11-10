@@ -21,8 +21,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5055_ems_5c770bef-647c-4545-be61-bc77a8e973c7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5055%22",
+   "document_date": "2013-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-27",
+  "sentences": [
+   "The bill would end Australian exports of livestock for slaughter from 1 July 2017 and impose additional animal treatment requirements during the transition period.",
+   "Before the ban, exports would generally require the Secretary to be satisfied about holding, transport and slaughter conditions, including stunning immediately before slaughter.",
+   "Temporary exemptions could apply to contracts made before commencement, with different requirements for exports within three months and those between three and six months."
+  ],
+  "changes": [
+   "Export licence holders would have to take reasonable steps to secure compliance with the specified international animal health guidelines.",
+   "Licence holders discovering treatment breaches would need to notify the Secretary within 14 days.",
+   "Licences would cease authorising exports for slaughter after the specified end date.",
+   "The legislation would begin on Royal Assent."
+  ],
+  "affected": "Livestock export licence holders, exporters with existing contracts, farmers and the Secretary administering export approvals are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:50.694731+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

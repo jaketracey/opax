@@ -101,7 +101,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-07-01",
+  "sentences": [
+   "The bill would change Administrative Review Tribunal procedures and migration review in the Federal Circuit and Family Court of Australia's Division 2, including identity checks.",
+   "Regulations could require identity verification for specified migration reviews, with non-compliance requiring tribunal dismissal or court permission before judicial review proceedings could continue.",
+   "The identity requirements would exclude people in immigration detention and government officials bringing judicial review proceedings, with the court also able to waive or extend compliance."
+  ],
+  "changes": [
+   "The tribunal could give oral reasons with written reasons on request, except in specified social security, veterans, aged care and disability scheme reviews.",
+   "Authorised registrars could dismiss applications lacking reasonable prospects and reinstate matters within their authorised dismissal powers.",
+   "Migration and protection review applications would have to use an approved form.",
+   "A 28-day application period would apply to reviews of specified taxation extension-of-time refusals."
+  ],
+  "affected": "Tribunal applicants, migration litigants in the court's Division 2, registrars, members and original government decision makers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:36.913689+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -57,8 +57,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5076_ems_f4f4abb1-311d-4216-8b3b-0feee8b7deb4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5076%22",
+   "document_date": "2013-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-30",
+  "sentences": [
+   "The bill would change intellectual property laws covering government use of inventions, medicine exports, plant breeders' rights and patent processes shared with New Zealand.",
+   "Australian manufacturers could seek Federal Court licences to produce patented medicines for export to eligible developing countries, with compensation for patent holders.",
+   "Patent applications could be examined jointly across Australia and New Zealand, while each country would continue granting separate patents under its own laws."
+  ],
+  "changes": [
+   "Plant breeders could pursue infringement proceedings in the Federal Circuit Court.",
+   "Patent attorneys would be registered through a single trans-Tasman system with shared qualifications and disciplinary arrangements.",
+   "Specific document retention provisions would be repealed, leaving disposal governed by archives legislation.",
+   "Government use provisions in patent legislation would be clarified."
+  ],
+  "affected": "Patent applicants and holders, pharmaceutical manufacturers, plant breeders, patent attorneys and Australian and New Zealand patent authorities are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:08.372458+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1125",

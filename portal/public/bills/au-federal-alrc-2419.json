@@ -101,13 +101,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5085_ems_9ab6a6d8-080a-492f-97fe-06386a9c4fcf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5085%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00091",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would give the Cape Town Convention and its aircraft protocol legal effect in Australia, establishing an international framework for aircraft financing interests.",
+   "The framework would allow creditors to register interests internationally and use remedies following default, including repossession and aircraft deregistration and export.",
+   "The Convention and protocol would prevail over inconsistent Australian laws, with companion legislation adjusting aviation and personal property securities laws to accommodate them."
+  ],
+  "changes": [
+   "The scheme would apply in Australia's external territories and have effect for relevant matters occurring overseas.",
+   "Rules could give the Civil Aviation Safety Authority functions for recording and exercising aircraft deregistration and export authorisations.",
+   "The Minister could prescribe fees and circumstances in which fees were refunded, reduced or waived."
+  ],
+  "affected": "Aircraft financiers, Australian airlines, aircraft equipment manufacturers and the Civil Aviation Safety Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:32.352624+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5110_ems_d27ef263-918b-45a5-ad2e-2a4eaff67cfc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5110%22",
+   "document_date": "2013-06-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-26",
+  "sentences": [
+   "The bill would restrict access to research tax incentives, allow eligible businesses to receive quarterly research refunds and change rules for refunding overpaid goods and services tax.",
+   "Companies with aggregated assessable income of $20 billion or more would lose the research incentive for income years starting from 1 July 2013.",
+   "Quarterly credits would cover quarters from 1 January 2014; refunds of overpaid goods and services tax passed to customers would generally require reimbursement."
+  ],
+  "changes": [
+   "Quarterly credits would be reconciled against actual refund entitlements when annual income tax assessments were made.",
+   "Businesses could use standard quarterly amounts or vary them, with interest applying to excessive variations.",
+   "Companies excluded by the income threshold could claim ordinary tax treatment for research spending, including available deductions.",
+   "The Commissioner would retain discretion to refund excess tax in exceptional circumstances."
+  ],
+  "affected": "Research companies, businesses seeking refunds of overpaid goods and services tax, their customers and the Commissioner of Taxation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:07.117915+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

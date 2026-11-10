@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-09",
+  "sentences": [
+   "The bill would establish a planning authority to advise on and develop high speed rail along Australia’s east coast and arrange reservation of its corridor.",
+   "The authority would have eleven members drawn from ministerial appointments, state and territory nominees, local government and the rail industry, serving three-year appointment terms.",
+   "It would begin operating under the Act when a budget appropriation was made for the authority, and report annually to the Minister for presentation to Parliament."
+  ],
+  "changes": [
+   "The authority would receive powers to carry out land use planning and consult the public.",
+   "Staff and consultants could be engaged to support its work.",
+   "The Minister could require reports or information about matters within the authority’s functions."
+  ],
+  "affected": "The authority, participating governments, local government and rail industry bodies, and members of the public consulted on high speed rail are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:06.422745+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

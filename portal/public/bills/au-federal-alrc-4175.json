@@ -57,8 +57,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5102_ems_d40a8df4-cd7b-4a27-8d8a-50b664be1189%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5102%22",
+   "document_date": "2013-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-19",
+  "sentences": [
+   "The bill would remove product-specific statutory ceilings on primary industry research and marketing customs charges, allowing future rate changes to be made through regulations.",
+   "Regulated rates could not exceed recommendations from relevant industry bodies, with fallback research or marketing bodies required to consult charge payers before recommending rates.",
+   "It would sit alongside the rural research governance and excise levy bills, preserving existing operative charge rates while changing the machinery for future adjustments."
+  ],
+  "changes": [
+   "Buffalo research charge recommendations would be required from a declared body or the relevant research corporation.",
+   "Obsolete research council and fund definitions would be removed from the honey charge schedule.",
+   "The horticultural products schedule would replace incorrect references to leviable products with chargeable products."
+  ],
+  "affected": "Primary industry charge payers, including relevant exporters and producers, industry representative bodies and research and marketing corporations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:18.626875+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

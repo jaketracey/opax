@@ -69,8 +69,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5082_ems_12c426da-5d3e-4e2d-b8b3-f7290fe691cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5082%22",
+   "document_date": "2013-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-30",
+  "sentences": [
+   "The bill would create a permit framework for new non-Defence users of the Woomera Prohibited Area while retaining the area's primary role in defence testing.",
+   "The Defence Minister could make rules defining zones and exclusion periods, grant access permissions and suspend them when necessary for Australia's defence.",
+   "Existing users could retain their access arrangements or opt into the new system, while defence premises security powers would extend to all non-Defence users."
+  ],
+  "changes": [
+   "Unauthorised presence would carry a maximum of 120 penalty units, two years imprisonment, or both.",
+   "Breaching permission conditions would become a strict liability offence carrying up to 60 penalty units.",
+   "Rules could establish infringement notices and a demerit points system for permission holders.",
+   "Limits on compensation for testing-related loss would exclude death and personal injury."
+  ],
+  "affected": "New and existing non-Defence users, including mining operators, pastoralists and Indigenous groups, and Defence personnel are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:48.732265+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -173,7 +173,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-11",
+  "sentences": [
+   "The bill would progressively extend lower company tax rates to larger businesses, eventually reducing the general corporate tax rate to 25 per cent.",
+   "Turnover thresholds for the 27.5 per cent rate would rise in stages from 2019-20, with the turnover test removed for the 2023-24 income year.",
+   "The general rate would then fall in stages to 27 per cent, 26 per cent and 25 per cent, with adjustments to related tax provisions."
+  ],
+  "changes": [
+   "The statutory definition of a base rate entity would be removed when the turnover test ended.",
+   "Company imputation provisions would be changed to reflect a single corporate tax rate.",
+   "Tax offsets for ordinary life insurance policyholders would be adjusted with a one year delay after the company rate changes."
+  ],
+  "affected": "Corporate taxpayers, shareholders, life insurance policyholders, credit unions, non-profit companies and relevant trusts are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:06.333716+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4682",

@@ -71,7 +71,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-05",
+  "sentences": [
+   "The bill would prevent the Commonwealth from entering international agreements that include investor-state dispute settlement clauses, covering agreements with one or more foreign countries.",
+   "The restriction would target agreement clauses that allow corporations to sue foreign governments in specific circumstances through investor-state dispute settlement arrangements.",
+   "The prohibition would cover agreements involving one or more foreign countries and would begin on the day after the bill received Royal Assent."
+  ],
+  "changes": [
+   "The Commonwealth would be barred from entering agreements containing investor-state dispute settlement clauses.",
+   "The restriction would extend to agreements involving multiple foreign countries.",
+   "The restriction would take effect the day after Royal Assent."
+  ],
+  "affected": "The Commonwealth and corporations covered by the specified dispute settlement clauses are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:50.787065+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

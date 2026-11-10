@@ -57,8 +57,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5103_ems_f945dd7d-0bcd-4293-b57c-535525378836%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5103%22",
+   "document_date": "2013-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-19",
+  "sentences": [
+   "The bill would change the funding, marketing and governance arrangements for rural research and development corporations, including statutory corporations and organisations owned by industry.",
+   "It would permit industry-requested marketing by statutory corporations and government matching of voluntary research contributions, subject to existing caps and excluding marketing from matching funding.",
+   "The package sits alongside companion customs charge and excise levy bills, and would introduce published funding agreements for statutory corporations covering expenditure conditions."
+  ],
+  "changes": [
+   "Director selection committees would have at most five members and could operate for up to three years.",
+   "Lists of suitable candidates could be used to fill vacancies over the following 12 months.",
+   "Separately levied fisheries could receive matching funding capped by their own gross value of production.",
+   "Statutory corporations would no longer need ministerial approval for annual operating plans."
+  ],
+  "affected": "Rural research and development corporations, levy-paying industries, voluntary research contributors and separately levied fisheries are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:50.870865+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

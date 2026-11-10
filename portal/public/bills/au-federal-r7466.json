@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-04-01",
+  "sentences": [
+   "The bill would keep an existing Commonwealth secrecy offence operating for longer while Parliament considers broader changes to statutory duties not to disclose information.",
+   "It would move the expiry of section 122.4 of the Criminal Code from 29 June 2026 to 29 December 2026, extending its operation by six months.",
+   "General criminal law defences and the specific secrecy offence defences would remain available to people whose disclosure duties are covered by the extended provision."
+  ],
+  "changes": [
+   "The sunset date written into subsection 122.4(3) would be replaced with the December date.",
+   "Covered statutory duties would continue attracting criminal liability during the extension.",
+   "The amendment would begin on the day after Royal Assent."
+  ],
+  "affected": "Current and former Commonwealth officers and people engaged to work for Commonwealth entities are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:10.665417+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

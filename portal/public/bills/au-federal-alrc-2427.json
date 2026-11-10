@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5099_ems_0807394f-a27f-42ec-a890-9519fe3531e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5099%22",
+   "document_date": "2013-06-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00114",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-18",
+  "sentences": [
+   "The bill would broaden the sugar cane research levy and increase its rate as part of reforms funding an industry-owned research and development body.",
+   "The levy would rise from 14 to 70 cents per tonne, with producers and processors each responsible for half and regulations unable to change that split.",
+   "The changes would start on 1 July 2013 and cover sugar cane stalks, including stalks with leaves, while excluding leaves purchased or processed alone."
+  ],
+  "changes": [
+   "Sugar cane sales would be treated as occurring when the first payment was made.",
+   "The levy would also cover cane grown and processed by the same establishment, or processed for an owner under contract.",
+   "The maximum levy rate would be removed, allowing regulations to set higher or lower rates.",
+   "Obsolete provisions for the former retail-packaged sugar levy would be repealed."
+  ],
+  "affected": "Sugar cane growers, producers and processing businesses liable for the levy are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:30.178831+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

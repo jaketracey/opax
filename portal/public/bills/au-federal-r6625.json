@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-11-11",
+  "sentences": [
+   "The bill would change tax treatment of eligible pandemic business grants, enable direct transfers of unclaimed superannuation to KiwiSaver and recognise a deductible gift recipient.",
+   "Grant relief would require an eligible state or territory program declared by the minister and a business with aggregated turnover below $50 million.",
+   "Neighbourhood Watch Australasia would receive deductible gift recipient status for gifts from 1 July 2019, while KiwiSaver transfers would be subject to commencement arrangements."
+  ],
+  "changes": [
+   "Covered grant payments would be classified as non-assessable non-exempt income.",
+   "Individuals could direct the Taxation Commissioner to pay held superannuation amounts to a KiwiSaver provider.",
+   "Interest could be payable on amounts transferred to KiwiSaver."
+  ],
+  "affected": "Eligible businesses, people with unclaimed superannuation moving money to New Zealand, Neighbourhood Watch Australasia and its donors are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:21.905116+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

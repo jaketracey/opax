@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "The bill would amend social services offences and confidentiality rules, allowing Royal Commissions to compel protected information while removing obsolete provisions and correcting legislative errors.",
+   "Existing offences involving reckless false or misleading statements would extend to submissions assessed automatically by Services Australia, without communication to an individual officer.",
+   "Compelled disclosures would retain reasonable-excuse protections, including legal professional privilege and public interest immunity, with technical amendments commencing in stages alongside earlier welfare reforms."
+  ],
+  "changes": [
+   "Covered secrecy provisions would no longer prevent compliance with Royal Commission notices or summonses.",
+   "Obsolete Mature Age Allowance and Mature Age Partner Allowance provisions would be removed.",
+   "Provisions for one-off payments to older Australians in 2006, 2007 and 2008 would be repealed."
+  ],
+  "affected": "Social security claimants, Services Australia and departmental officers, Royal Commissions and people whose protected information is sought are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:26.080010+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

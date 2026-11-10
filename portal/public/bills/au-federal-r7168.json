@@ -47,7 +47,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-25",
+  "sentences": [
+   "The bill would amend the Commonwealth Electoral Act 1918 and related legislation to tighten donation disclosure, restrict some donations and government advertising, and let independent candidates register campaign entities.",
+   "It would lower the donation disclosure threshold from $16,300 to a fixed $1,000 and require recipients to disclose gifts within 7 days of the threshold being exceeded.",
+   "It would also bar donations from tobacco, fossil fuel, gambling and liquor businesses, substantial Commonwealth contractors and bidders, defining substantial contractors as those paid over $200,000 by the Commonwealth in the last 24 months."
+  ],
+  "changes": [
+   "Contributions by a person and associated entities over an election cycle would be capped at 2 per cent of public funding at the previous election.",
+   "Printing, publishing or distributing electoral or referendum matter with a materially misleading or deceptive statement of fact would be unlawful.",
+   "The definition of a gift would widen to cover fundraising dinners, paid business forums and membership fees benefiting a party or candidate.",
+   "An independent campaign entity, registered with nomination by at least 100 electors, would be treated like a registered political party for electoral roll access and disclosure deadlines.",
+   "Government advertising would be prohibited from 2 years after a general election until the next election unless the Independent Communications Committee determines it exempt.",
+   "Only the Australian Electoral Commission (AEC) postal vote application form could be used, and parties or candidates could not lodge it with the AEC for a voter."
+  ],
+  "affected": "Political parties, candidates, donors, independent candidates, tobacco, fossil fuel, gambling and liquor businesses, and substantial Commonwealth contractors and bidders are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:11:22Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

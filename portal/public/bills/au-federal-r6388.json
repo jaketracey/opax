@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-08-01",
+  "sentences": [
+   "The bill would end exemptions allowing older arrangements to continue paying conflicted remuneration and other banned fees connected with financial advice for retail clients.",
+   "It would enable regulations requiring amounts otherwise paid as conflicted remuneration to be returned to affected product holders through payments or other monetary benefits.",
+   "The changes would begin on 1 January 2021 and extend existing remuneration bans to previously exempt advice payments, shelf-space fees and asset-based fees on borrowings."
+  ],
+  "changes": [
+   "People holding a financial product on another person’s behalf could both be included as product holders.",
+   "Regulations could exclude specified classes of product holder from receiving rebates.",
+   "Civil penalties would apply for failing to provide rebates required by regulations.",
+   "Regulations could specify eligible product holders, rebate amounts and payment timeframes."
+  ],
+  "affected": "Retail financial advice clients, financial services licensees, their representatives, platform operators and entities required to rebate conflicted remuneration are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:19.201524+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5859",

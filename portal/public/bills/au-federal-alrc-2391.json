@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5039_ems_f9f3e09c-fc71-496e-86dc-582aa86e7fb6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5039%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00043",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would increase the Medicare levy on taxable income as part of a package intended to help fund DisabilityCare Australia, the National Disability Insurance Scheme.",
+   "It would raise the levy from 1.5 per cent to 2 per cent, with the new rate applying from the 2014-15 income year.",
+   "The existing exemptions and relief for low income earners would continue, while related bills would adjust other taxes that incorporate the Medicare levy."
+  ],
+  "changes": [
+   "The upper phase-in amount for specified trust income would increase from $490 to $520.",
+   "The levy formula for people with a spouse or dependants would be adjusted to use the higher rate.",
+   "The rate increase would also cover the specified trustee and trust beneficiary assessments."
+  ],
+  "affected": "Medicare levy payers, including people assessed on specified trust income and people with spouses or dependants, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:08.858653+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

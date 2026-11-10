@@ -71,7 +71,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2011-05-12",
+  "sentences": [
+   "The bill would remove the monetary ceiling on discretionary special circumstances payments under public service law, allowing agencies to consider compensation above the existing limit.",
+   "Agencies using section 73 could approve payments above $100,000, including for people seeking compensation after defective administration where a separate compensation scheme does not apply.",
+   "The proposal addresses compensation sought after defective administration at agencies such as Comcare, which is outside the existing scheme for that type of claim."
+  ],
+  "changes": [
+   "The bill would delete subsection 73(4) from the Public Service Act 1999.",
+   "Special circumstances payments would no longer be subject to that provision's $100,000 limit.",
+   "The amendment would take effect on the day following royal assent."
+  ],
+  "affected": "Comcare, other agencies able to make special circumstances payments and people seeking compensation for defective administration are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:04.108308+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

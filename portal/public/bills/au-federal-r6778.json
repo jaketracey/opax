@@ -125,7 +125,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-09-01",
+  "sentences": [
+   "The bill would introduce aged care funding, workforce, governance and regulatory changes responding to the Royal Commission into Aged Care Quality and Safety.",
+   "A new residential subsidy model would replace the existing funding instrument from 1 October 2022, combining funding linked to residents' needs and service characteristics.",
+   "Serious incident reporting would extend to home and community care from 1 July 2022, with protections for people reporting incidents in those settings."
+  ],
+  "changes": [
+   "Nationally consistent worker screening would replace existing police checking obligations.",
+   "A code of conduct would apply to providers, workers and governing persons, backed by enforcement and banning powers.",
+   "Providers would prepare public annual statements about their operations and notify changes to key personnel.",
+   "Commonwealth bodies could share more provider and worker compliance information across aged care, disability and veterans' services.",
+   "Liability for specified accommodation deposit misuse offences before insolvency would extend from two years to five years.",
+   "The renamed Independent Health and Aged Care Pricing Authority would gain aged care pricing and costing functions."
+  ],
+  "affected": "Aged care recipients and families, workers, providers, governing persons, borrowers of accommodation funds and Commonwealth care regulators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:22.278253+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7483",

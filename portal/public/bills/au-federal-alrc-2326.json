@@ -95,13 +95,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4951_ems_ebf278f8-9621-4566-b5b4-fb0c305cd9c2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4951%22",
+   "document_date": "2013-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00032",
    "document_date": "2013-03-30",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-06",
+  "sentences": [
+   "The bill would create an Anti-Dumping Commission within the Australian Customs and Border Protection Service, led by a Commissioner and supported by Customs staff.",
+   "It would transfer the Customs chief executive officer's existing anti-dumping responsibilities and powers to the Commissioner, with staff assisting under the Commissioner's direction.",
+   "Transitional rules would transfer relevant pending court and tribunal cases to the Commissioner, and the bill's proposed commencement date is 1 July 2013."
+  ],
+  "changes": [
+   "The minister could appoint a full-time or part-time Commissioner for a term of up to five years.",
+   "The Commissioner would have to report interests that conflict, or could conflict, with official functions to the minister in writing.",
+   "A full-time Commissioner would need ministerial approval for outside paid work, while a part-time Commissioner could not undertake work the minister considers conflicting.",
+   "The Commissioner could delegate functions and powers to Customs officers, who would have to follow the Commissioner's written directions.",
+   "The Commissioner would come under the oversight of the Integrity Commissioner and the Australian Commission for Law Enforcement Integrity."
+  ],
+  "affected": "The Commissioner, Customs staff, the responsible minister and the Australian Commission for Law Enforcement Integrity are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:08.340148+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

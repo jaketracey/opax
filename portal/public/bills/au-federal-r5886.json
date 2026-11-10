@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "The bill would create a conditional safe harbour from civil insolvent trading liability for company directors and restrict certain contract rights triggered by restructuring.",
+   "Directors developing and pursuing a course reasonably likely to improve on immediate administration or liquidation could avoid liability for debts connected with that course.",
+   "Safe harbour would begin after Royal Assent, while contract protections would commence later, apply to new contracts and cover specified formal restructuring processes."
+  ],
+  "changes": [
+   "Access to safe harbour would depend on compliance with employee entitlement payments and tax reporting obligations.",
+   "Directors withholding required company records from an administrator or liquidator could lose the ability to rely on those records.",
+   "Holding companies could receive protection where subsidiary directors qualified for safe harbour and the parent took reasonable supporting steps."
+  ],
+  "affected": "Company directors, holding companies, employees, creditors, contractual counterparties and insolvency practitioners are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:42.146714+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-4904",

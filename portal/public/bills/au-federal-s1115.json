@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "The bill would extend copyright safe harbour protections to eligible education, disability and cultural service providers, limiting remedies for infringements occurring through their systems.",
+   "Eligible providers would need to meet the scheme's conditions, including promptly removing infringing material after receiving a notice that meets the prescribed requirements.",
+   "Protection for bodies administering institutions would apply to relevant institutional activities, and the changes would start after a six-month period following Royal Assent."
+  ],
+  "changes": [
+   "Schools, universities and other defined educational institutions would become eligible through their administering bodies.",
+   "The scheme would cover public and parliamentary libraries, specified archives and key cultural institutions.",
+   "Organisations helping people with disability would be added to the definition of eligible service providers."
+  ],
+  "affected": "Eligible institutions, their administering bodies, disability organisations and copyright owners would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:44.182596+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -41,7 +41,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-12",
+  "sentences": [
+   "The bill would rename the War Precautions Act Repeal Act 1920 to identify its remaining role in authorising regulations that protect the word Anzac.",
+   "It would revise both the long and short titles and remove inoperative sections and headings left in the legislation from its earlier purposes.",
+   "It would commence on Royal Assent, leaving the Act’s remaining operative role as the statutory authority for regulations protecting the word Anzac."
+  ],
+  "changes": [
+   "The long title would describe protection of the word Anzac and related matters.",
+   "An explanatory note would accompany the change to the Act’s short title.",
+   "Section 2 and sections 11 to 13 would be repealed as unnecessary provisions."
+  ],
+  "affected": "The Act authorising the Protection of Word Anzac Regulations and its remaining inoperative provisions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:29.820435+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

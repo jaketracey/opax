@@ -89,13 +89,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5022_ems_14f10e1a-ee86-4ae7-85ab-f74975fd41ff%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5022%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00072",
    "document_date": "2013-06-27",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would repeal the existing Australia Council legislation and manage the organisation's transition to the structure proposed in the companion Australia Council Bill.",
+   "It would preserve specified leadership appointments, employee terms, assets, liabilities and legal proceedings, while ending other existing council, committee and artform board appointments.",
+   "The transitional provisions would depend on the companion legislation receiving Royal Assent, and the repeal would coincide with commencement of its replacement Council provisions."
+  ],
+  "changes": [
+   "The Chairperson and Deputy Chairperson would retain their appointments for the balance of their existing terms.",
+   "The General Manager would continue as chief executive until a new appointment is made.",
+   "The new board would prepare the old Council's final annual report, with civil penalties for serious reporting contraventions.",
+   "State and Territory taxes, including stamp duty, would be excluded from matters connected with the transition."
+  ],
+  "affected": "The Australia Council, its board and committee members, management and employees are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:14.089427+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2959",

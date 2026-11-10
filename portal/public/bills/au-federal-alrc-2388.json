@@ -95,13 +95,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5036_ems_ca0a8db7-852b-440a-8600-08dc7a6a2a38%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5036%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00119",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would change tax concession ownership tests, exempt specified disaster assistance from income tax and allow deductions for donations supporting eligible ethics education.",
+   "It would base relevant small business and share-exchange concession tests on ownership, while treating specified underlying owners as holding assets for tax purposes.",
+   "The disaster exemption would cover events from 3 January 2013 to 30 September 2013, and the ethics donation provisions would start on Royal Assent."
+  ],
+  "changes": [
+   "Life insurance companies, superannuation funds and trusts would be covered by revised ownership-based integrity tests.",
+   "Specified beneficiaries, bankrupt individuals, companies in liquidation and security providers would be treated as asset owners under the relevant rules.",
+   "The Disaster Income Recovery Subsidy would become exempt for the specified disasters.",
+   "Eligible ethics education public funds would gain a new deductible gift recipient category, subject to charitable registration and tax endorsement requirements."
+  ],
+  "affected": "Affected groups include the specified asset owners, life insurers, superannuation funds, trusts, disaster subsidy recipients, ethics education funds and their donors.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:45.028974+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1093",

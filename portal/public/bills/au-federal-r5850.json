@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "The bill would broaden access to earlier business losses after ownership changes and allow taxpayers to estimate the effective life of certain intangible assets.",
+   "A similar business test would supplement the existing same business test, comparing assets, activities, business identity and developments connected with the former business.",
+   "The loss changes would apply to income years starting from 1 July 2015, while depreciation choices would cover eligible assets first held from 1 July 2016."
+  ],
+  "changes": [
+   "The similar business test would also apply to listed widely held trusts.",
+   "The test could be used when determining deductions for debts written off as bad.",
+   "New business activities or transactions would not automatically disqualify a company under the similar business test.",
+   "Taxpayers could recalculate an intangible asset's effective life when changed use made their previous estimate inaccurate."
+  ],
+  "affected": "Companies and listed widely held trusts seeking loss or bad debt deductions, and taxpayers holding eligible intangible depreciating assets, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:59.705762+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4838",

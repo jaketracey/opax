@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "The bill would repeal two Acts relating to the former Commonwealth shipping company ANL Limited, removing protected-name restrictions and the Treasurer’s loan guarantee power.",
+   "It would remove offences restricting business use of those names, including domain names and intellectual property registrations, along with provisions about company operations.",
+   "Both repeals would begin the day after royal assent, removing the former company’s statutory framework without changing former employees’ rights or entitlements."
+  ],
+  "changes": [
+   "The protected-name provisions in the 1956 Act would be removed.",
+   "The Treasurer would lose the statutory power to guarantee loans for the former company.",
+   "The company’s former statutory staffing and taxation provisions would be repealed."
+  ],
+  "affected": "Businesses seeking to register names or intellectual property associated with the former shipping company, and the Treasurer, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:09.679296+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5900",

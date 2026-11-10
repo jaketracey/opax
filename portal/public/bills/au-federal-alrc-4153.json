@@ -69,8 +69,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5017_ems_6623c7af-842e-48ea-906a-03ad1bf36c7e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5017%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would refocus the Export Finance and Insurance Corporation on market gaps affecting smaller exporters and expand guarantees supporting eligible overseas subsidiaries.",
+   "Its Commercial Account would operate under a market failure test and focus on small and medium enterprises, with eligibility thresholds set by ministerial instruments.",
+   "The National Interest Account would be excluded from those mandate requirements, and guarantees for eligible foreign subsidiaries would require assurances about Australian employment."
+  ],
+  "changes": [
+   "Domestic supply-chain support would require the supported contract to be integral to exports.",
+   "Government member positions would be removed from the Corporation's board.",
+   "The Corporation would pay a debt neutrality charge or guarantee fees and a tax equivalent payment under ministerial arrangements.",
+   "The new mandate would apply only to contracts, guarantees and loans entered into or made from commencement."
+  ],
+  "affected": "Australian exporters, eligible smaller companies and their foreign subsidiaries, domestic suppliers and the Export Finance and Insurance Corporation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:40.835486+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

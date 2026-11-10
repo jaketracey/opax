@@ -77,7 +77,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2012-10-30",
+  "sentences": [
+   "The bill would bring specified poker machine payments under federal anti-money laundering reporting rules and require venues to pay amounts above $1,000 by cheque.",
+   "A payout over $1,000, or cashing a payout cheque transferred between people, would become a threshold transaction requiring a report in the approved form.",
+   "The cheque requirement would cover both winnings and unplayed credits, and the amendments would begin on the day following royal assent to the bill."
+  ],
+  "changes": [
+   "Controllers of eligible gaming machine venues would become designated service providers when making credit payments in the circumstances covered by the amendment.",
+   "Payout cheques would have to identify that they were issued for gaming machine winnings or credits.",
+   "Failure to follow the cheque payment requirement would carry a penalty of two years' imprisonment or 120 penalty units."
+  ],
+  "affected": "Controllers of eligible gaming machine venues, players receiving payouts and people cashing transferred payout cheques are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:33.550008+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

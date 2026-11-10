@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5044_ems_f3a3f8f7-aca8-41ff-bdb8-ecf5a3c8ab6c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5044%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00047",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would increase the tax rate applying to individuals whose concessional superannuation contributions exceed the relevant limits, reflecting the higher Medicare levy.",
+   "It would raise the excess contributions tax rate from 31.5 per cent to 32 per cent by increasing the Medicare levy component.",
+   "The increase would apply to assessments for the 2014-15 financial year onwards and accompany the wider package of DisabilityCare Australia tax amendments."
+  ],
+  "changes": [
+   "The rate charged on excess concessional contributions would rise by half a percentage point.",
+   "The calculation would use a Medicare levy component of 2 per cent.",
+   "The revised rate would cover assessments for 2014-15 and subsequent financial years."
+  ],
+  "affected": "Individuals making concessional superannuation contributions above the applicable thresholds are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:38.652581+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

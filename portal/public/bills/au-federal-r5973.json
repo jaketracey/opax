@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-13",
+  "sentences": [
+   "The bill would create offences for falsely presenting a person as a Commonwealth body or its authorised representative, and allow courts to restrain that conduct.",
+   "Reckless false representations would carry up to two years' imprisonment, rising to five years where the person intends gain, loss or influence over public duties.",
+   "The offences would cover real and plausibly fictitious Commonwealth bodies, while excluding conduct undertaken solely for genuine satirical, academic or artistic purposes under the definitions."
+  ],
+  "changes": [
+   "Affected people could seek injunctions to stop conduct contravening the new offences.",
+   "Commonwealth services, benefits, programs and facilities would fall within the protected body definition.",
+   "The offence provisions would be limited to preserve the implied constitutional freedom of political communication.",
+   "The amendments would begin the day after Royal Assent."
+  ],
+  "affected": "People and organisations making representations, Commonwealth bodies, affected recipients and courts would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:35.077996+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5209",

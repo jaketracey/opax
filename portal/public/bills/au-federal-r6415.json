@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "The bill would establish tuition protection for students using government study loans at private education providers and technical colleges when their course provider defaults.",
+   "It would provide replacement study arrangements or loan recredits, supported by separate protection funds, directors and annual levies on providers that are not exempt.",
+   "The new arrangements would start on 1 January 2020, excluding public universities as covered providers while allowing them to accept displaced students for replacement study."
+  ],
+  "changes": [
+   "Defaulting providers would have to notify affected students and the relevant protection director.",
+   "Replacement providers would have to recognise appropriate completed study credits and avoid charging again for the replacement component.",
+   "Higher education loan students could choose a replacement course or a recredit for affected units.",
+   "The departmental Secretary could refuse a provider’s request to revoke its approval while certain compliance action continues."
+  ],
+  "affected": "Students using covered government study loans, defaulting and replacement education providers, tuition protection directors and advisory boards are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:40.274726+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5951",

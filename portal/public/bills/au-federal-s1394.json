@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-12",
+  "sentences": [
+   "The bill would end the Regional Forest Agreements framework and remove its exemptions from federal environmental assessment and approval requirements for forestry operations.",
+   "It would repeal the Regional Forest Agreements Act 2002, terminate current agreements and require annual statements on native logging's effects on conservation commitments.",
+   "The main provisions would start the day after Royal Assent, with annual statement requirements applying from the first 30 June on or after commencement."
+  ],
+  "changes": [
+   "Export controls would apply to wood previously covered by regional agreements.",
+   "The Commonwealth would owe reasonable compensation for any acquisition of property otherwise than on just terms.",
+   "The minister would report on logging's effect on conserving at least 30 per cent of Australian land by 2030."
+  ],
+  "affected": "Native forest logging operators, state governments, the federal environment minister and the Threatened Species Commissioner are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:06.419964+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

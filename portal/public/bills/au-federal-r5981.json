@@ -101,7 +101,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-13",
+  "sentences": [
+   "The bill would change coastal trading licences, voyage reporting and consultation, while extending coverage to additional voyages and ships undergoing servicing in Australian waters.",
+   "Temporary licences could cover a single voyage, and permitted loading dates would expand to 30 days either side of the authorised date, replacing five days.",
+   "Coverage would extend to voyages returning to the same port, specified offshore fuel movements and dry-docking, with temporary licences replacing the separate emergency licence category."
+  ],
+  "changes": [
+   "Cargo and passenger tolerances would allow up to 200% more or 100% less than the authorised amount.",
+   "The minister could specify which cargo and passenger categories require consultation.",
+   "Voyage notifications would be unnecessary where complete details already supplied remain accurate.",
+   "Emergency temporary licences would run for 65 days.",
+   "Voyage reports would have to include the vessel's International Maritime Organization number."
+  ],
+  "affected": "Shipowners, charterers, vessel agents, shippers, passengers and coastal trading licence holders would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:35.076236+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4817",

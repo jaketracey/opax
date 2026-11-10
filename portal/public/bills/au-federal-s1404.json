@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-30",
+  "sentences": [
+   "The bill would create a legal framework for digital identity services, including accreditation of providers and expansion of the Australian Government Digital ID System.",
+   "It would add privacy safeguards and appoint the Australian Competition and Consumer Commission to regulate accreditation and participation in the government system.",
+   "People using government services through the system would generally have an alternative to digital identification, with exceptions for business representatives and people acting professionally."
+  ],
+  "changes": [
+   "Providers operating within the government system would need accreditation.",
+   "Accredited entities would need express consent before sharing personal information with organisations relying on their services.",
+   "The bill would prohibit profiling and using information for direct marketing."
+  ],
+  "affected": "Individuals verifying their identity, digital identity providers and government and business service providers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:07.700995+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-8558",

@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-03-23",
+  "sentences": [
+   "The bill would let the Commonwealth guarantee loans to small and medium enterprises where the minister considers this likely to address coronavirus economic impacts.",
+   "It would provide up to $20 billion from the Consolidated Revenue Fund to meet Commonwealth liabilities arising from guarantees given to financial institutions.",
+   "Rules made by the minister would define eligible enterprises and set guarantee requirements, with the legislation starting the day after royal assent."
+  ],
+  "changes": [
+   "Ministerial rules could specify lenders' eligibility, risk sharing, loan terms and maximum loan sizes.",
+   "Guarantees could cover loans issued before commencement but after the government's announcement.",
+   "The minister could delegate guarantee decisions to the departmental secretary or senior executive staff."
+  ],
+  "affected": "Small and medium enterprises, authorised deposit-taking institutions, non-bank lenders and the Commonwealth are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:32.365732+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

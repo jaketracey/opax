@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "speech",
+  "attribution": "Written by a model from a second reading speech; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2013-06-20",
+  "sentences": [
+   "The speakers said the bill would regulate tax advice across tax agents and financial services, make technical corrections and add two deductible gift recipients.",
+   "They described a new financial adviser regime starting on 1 July 2014, followed by a transition lasting three years to allow industry to prepare.",
+   "The proposed gift recipient additions would cover the Australian Council of Social Service and Make a Mark Australia, as identified in the debate."
+  ],
+  "changes": [
+   "The financial adviser exemption under the Tax Agent Services Act 2009 would extend to 30 June 2014, according to the speech.",
+   "The speech described corrections to technical issues within the Tax Agent Services Act 2009.",
+   "The speaker said gifts to the newly listed organisations could qualify for income tax deductions."
+  ],
+  "affected": "Tax agents, financial advisers, the two named organisations and taxpayers donating to them are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:22.613614+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2432",

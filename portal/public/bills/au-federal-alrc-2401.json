@@ -113,13 +113,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5052_ems_d0c4c2f1-9565-4bb5-ae52-35428eee2af7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5052%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00106",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would calculate private health insurance rebates using indexed base premiums rather than always using the full premium charged to policyholders by insurers.",
+   "From 1 April 2014, base premiums would be indexed annually by whichever is lower: consumer price growth or the relevant insurer premium increase.",
+   "For product subgroups available by 1 April 2013, that day's premium would provide the base, while existing rebate income tests would continue."
+  ],
+  "changes": [
+   "New product subgroups would use a weighted average ratio to establish their base premiums.",
+   "Base premiums would exclude lifetime health cover loadings and specified discounts.",
+   "Instalment payments would receive a proportionate base premium calculation.",
+   "Where multiple eligible people shared a policy, the base premium would be divided equally between them."
+  ],
+  "affected": "Private health insurers and policyholders eligible for the income-tested private health insurance rebate are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:29.129533+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

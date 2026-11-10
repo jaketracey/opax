@@ -57,8 +57,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5007_ems_0f2e5f92-2719-49a0-8b92-d9b841a47755%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5007%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would introduce a disclosure regime for eligible corporate bonds offered to retail investors and restrict the use of financial adviser and planner titles.",
+   "Eligible bond offers would use a prospectus combining a reusable base document with offer-specific details, alongside changes to directors' liability and due diligence rules.",
+   "The bond regime would have eligibility conditions, including a maximum term of 10 years and a face value no greater than $1,000."
+  ],
+  "changes": [
+   "The base prospectus could be used for three years.",
+   "Retail investors could trade eligible corporate bonds through depositary interests.",
+   "Directors would face the specified civil disclosure liability where involved in the contravention, rather than solely because they hold office.",
+   "Use of the restricted advice titles would require the relevant personal advice authorisation under an Australian financial services licence."
+  ],
+  "affected": "Corporate bond issuers, their directors, retail investors and people providing financial advice are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:09.776549+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

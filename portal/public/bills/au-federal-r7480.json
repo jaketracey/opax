@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-14",
+  "sentences": [
+   "The bill would strengthen director identification requirements and give the Australian Securities and Investments Commission (ASIC) broader powers to administer company and business registers.",
+   "Directors would provide their identification numbers to companies, which would report them during registration and updates, while new powers would support publication and correction of information.",
+   "New director number reporting duties would begin on 1 July 2027, while the bill would also prevent commencement of superseded business register modernisation legislation."
+  ],
+  "changes": [
+   "ASIC could disqualify directors for up to three years for failing to apply for a number when directed, subject to notice and hearing safeguards.",
+   "Company officers could nominate an alternative Australian service address while still supplying their residential address to ASIC.",
+   "ASIC could deregister a company if it had reason to believe the company supplied materially incomplete, misleading, false or deceptive information.",
+   "The Registrar's infringement notice power would be repealed, leaving ASIC as the intended sole enforcement agency for director numbers."
+  ],
+  "affected": "Directors, company officers, companies, other registrable bodies, ASIC and the business registers Registrar are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:57.374014+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

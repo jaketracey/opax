@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-24",
+  "sentences": [
+   "The bill would replace statewide Senate electorates with six electoral regions in each state, with each region represented by two senators in Parliament.",
+   "The minister would determine regional divisions, while half-Senate elections would elect senators for three regions rather than six senators across the whole state.",
+   "Transition rules would allow the President of the Senate to draw lots to select three regions if the first election were a half-Senate election."
+  ],
+  "changes": [
+   "A state's capital city area would have to fit wholly within one region.",
+   "No region could cover more than 30% of its state's geographical area.",
+   "Existing Senate representation requirements in the Representation Act would be removed."
+  ],
+  "affected": "State voters, senators, the responsible minister and the President of the Senate are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:29.456123+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

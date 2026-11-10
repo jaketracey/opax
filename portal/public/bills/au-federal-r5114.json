@@ -137,7 +137,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "The bill would cancel personal income tax changes scheduled for 1 July 2015 as part of the broader package to repeal the carbon tax.",
+   "It would retain the $18,200 tax-free threshold and 32.5 per cent second marginal rate, rather than the scheduled threshold increase and rate change.",
+   "The associated low-income tax offset changes would also be cancelled from the day after Royal Assent, while the earlier 2012 income tax cuts would remain."
+  ],
+  "changes": [
+   "The planned increase in the tax-free threshold to $19,400 would be repealed.",
+   "The maximum low-income tax offset would stay at $445 instead of falling to $300.",
+   "The offset’s withdrawal rate would remain 1.5 per cent, and its income threshold would remain $66,667."
+  ],
+  "affected": "Individual income taxpayers, including people eligible for the low-income tax offset, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:29.819907+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

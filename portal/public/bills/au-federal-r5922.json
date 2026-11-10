@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-22",
+  "sentences": [
+   "The bill would tighten eligibility for the wine equalisation tax (WET) producer rebate and provide tax relief for certain transfers to MySuper products.",
+   "It would lower the annual WET rebate ceiling from $500,000 to $350,000 for wine dealings from 1 July 2018 and introduce ownership and packaging conditions.",
+   "Separate provisions would allow asset roll-over relief for mandatory transfers within superannuation funds to MySuper products made between 29 June 2015 and 1 July 2017."
+  ],
+  "changes": [
+   "Wine producers would need to maintain ownership through production and satisfy a source product test, including specified deeming rules.",
+   "Rebate eligibility would require wine to be branded and packaged for retail sale.",
+   "The associated producers test would apply at any point during a financial year, rather than only at year end.",
+   "The earlier producer rebate rule and its related offence would be repealed, subject to transitional arrangements."
+  ],
+  "affected": "Wine producers, wine purchasers and superannuation entities involved in eligible MySuper transfers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:01.052399+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

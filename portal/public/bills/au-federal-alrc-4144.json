@@ -45,8 +45,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4974_ems_bccf8973-8955-44f0-b438-837d03c6ed3c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4974%22",
+   "document_date": "2013-03-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-18",
+  "sentences": [
+   "The bill would set minimum standards for marine engineering and electro-technical competency, requiring marine regulations to conform to its training, certification and examination requirements.",
+   "It would extend the specified engineering requirements to commercial vessels of at least 500 gross registered tonnes or propulsion power of 3000 kW.",
+   "The main provisions would start by proclamation, with a fallback after six months following Royal Assent, and inconsistent marine regulations would yield to the statutory standards."
+  ],
+  "changes": [
+   "Marine engineering certification instruments would be separated from unrelated regulatory matters.",
+   "Engineer Class 1, 2 and 3 certificates would require an oral examination.",
+   "People holding foreign engineering qualifications would have to satisfy Australian examination requirements before receiving a competency certificate.",
+   "The Principal Examiner would have to audit marine training colleges and bodies personally, without delegating that responsibility."
+  ],
+  "affected": "Marine engineers, holders of foreign engineering qualifications, examiners, marine training colleges and other training bodies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:28.710334+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2412",

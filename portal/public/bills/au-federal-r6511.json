@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-03-05",
+  "sentences": [
+   "The bill would establish international production orders allowing Australian law enforcement and security agencies to seek communications information directly from designated overseas providers.",
+   "Orders would cover interception, stored messages and telecommunications data under international agreements, with independent authorisation and an Australian authority checking compliance before transmission.",
+   "Australian providers could respond to incoming requests from agreement countries, but the bill would impose no Australian legal obligation to supply that information."
+  ],
+  "changes": [
+   "Law enforcement orders could support serious criminal investigations or monitoring people subject to control orders.",
+   "Designated overseas providers would face civil enforcement for non-compliance, subject to capability and an enforcement threshold.",
+   "Disclosure of information obtained through an order would be restricted to permitted circumstances."
+  ],
+  "affected": "Australian law enforcement and security agencies, communications providers and people whose communications information is sought are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:29.480170+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7335",

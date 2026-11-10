@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-05",
+  "sentences": [
+   "The bill would establish an Australian Reconstruction and Development Board within the Reserve Bank to develop rural financial policy and restructure financial arrangements threatening agricultural viability.",
+   "The new board would research risks, offer tailored finance and use the bank’s capital for reconstruction and development, including work involving associated industries and infrastructure.",
+   "The substantive amendments would start on the 28th day after Royal Assent, and the Reserve Bank Board’s policy would prevail where the boards’ policies conflicted."
+  ],
+  "changes": [
+   "The bank would gain an express power to acquire, hold and dispose of property.",
+   "The new board would include the Governor, a bank representative and seven members with relevant rural or agricultural experience.",
+   "Parliamentary chambers and committees could request consideration of matters or reports within the board’s functions."
+  ],
+  "affected": "Agricultural enterprises, associated industries and infrastructure, other sectors identified as at risk, and the Reserve Bank’s boards are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:28.141955+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

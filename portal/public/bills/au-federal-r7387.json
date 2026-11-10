@@ -41,7 +41,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "text",
+  "attribution": "Written by a model from the bill text as introduced; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2025-10-27",
+  "sentences": [
+   "The bill would amend federal sentencing law to add and increase mandatory minimum prison terms for specified offences and restrict recognizance release orders.",
+   "It would insert new minimum terms into one sentencing table and lengthen existing terms in another, while requiring exceptional circumstances for specified release orders.",
+   "The release restrictions would apply to sentences for Commonwealth child sex offences, and the bill would commence on the day following Royal Assent."
+  ],
+  "changes": [
+   "Six listed Criminal Code offences would receive minimum prison terms of five years.",
+   "Six listed terms in subsection 16AAB(2) would increase from four years to six years.",
+   "Courts would need exceptional circumstances to justify making either an initial or a new recognizance release order for a Commonwealth child sex offence."
+  ],
+  "affected": "Courts sentencing people for the listed offences and people sentenced for Commonwealth child sex offences are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:24.649454+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

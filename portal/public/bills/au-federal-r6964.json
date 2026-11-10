@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "The bill would update the Inspector-General of Intelligence and Security’s oversight powers, reporting arrangements and information access within the office’s existing intelligence agency jurisdiction.",
+   "It would authorise disclosures to oversight officials despite specified secrecy laws and allow information sharing and complaint transfers between the inspector and other integrity bodies.",
+   "An intelligence agency head or deputy could not move directly into the inspector’s role, and secrecy obligations would extend to contractors, consultants and secondees."
+  ],
+  "changes": [
+   "The inspector could consider employment grievances from staff engaged under the Office of National Intelligence legislation.",
+   "Officials conducting inspections would receive express access to agency information, documents and other property.",
+   "Additional exceptions to evidence-use immunity would cover false documents, forgery and obstruction offences connected with providing information."
+  ],
+  "affected": "Intelligence agencies, oversight officials, complainants and people supplying information to the inspector would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

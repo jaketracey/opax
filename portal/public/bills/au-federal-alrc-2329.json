@@ -83,13 +83,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s902_ems_bf15c0c2-46ab-4676-b5ed-edd71ca7b7a7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s902%22",
+   "document_date": "2013-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00126",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-06",
+  "sentences": [
+   "The bill would strengthen the Australian Sports Anti-Doping Authority's (ASADA) investigation powers, expand information sharing and change how possible doping violations are handled.",
+   "ASADA's chief executive officer could compel people reasonably believed to hold relevant material to attend interviews, answer questions, provide information and produce documents or other things.",
+   "Notices could reach people beyond athletes and their support personnel, while Australia Post information sharing would exclude intercepting mail or examining its contents."
+  ],
+  "changes": [
+   "Failing to meet a disclosure notice's requirements would carry a specified civil penalty of 30 penalty units.",
+   "Compelled material would be protected from use against its provider in criminal cases, except false or misleading information or document offences, and civil cases unrelated to the anti-doping legislation.",
+   "ASADA could keep documents and things supplied under notices for as long as necessary, and copy documents.",
+   "The existing eight-year deadline for starting anti-doping action would take priority over inconsistent state or territory laws.",
+   "The Anti-Doping Rule Violation Panel would stop recommending consequences to sporting tribunals and instead make findings about possible violations."
+  ],
+  "affected": "Athletes, athlete support personnel, other people holding relevant information, ASADA, Australia Post and the Anti-Doping Rule Violation Panel are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:18.550031+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

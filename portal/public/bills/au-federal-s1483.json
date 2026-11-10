@@ -41,7 +41,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-27",
+  "sentences": [
+   "The bill would establish a statutory commission to oversee prevention, investigation and responses to sexual violence within the Australian Defence Organisation, led by an independent commissioner.",
+   "Eligible adults could choose restricted reporting to access support without starting an investigation, or unrestricted reporting that triggers investigation, with confidentiality subject to specified limits.",
+   "The framework would cover permanent and reserve defence members, defence civilians, contractors and cadets, and extend to relevant conduct overseas under the proposed defence legislation."
+  ],
+  "changes": [
+   "The commissioner would establish round-the-clock response and support services wherever Defence has a presence.",
+   "Commanding officers would need mandatory briefings before taking each new command appointment.",
+   "A dedicated forensic evidence collection service would operate separately from the sexual assault investigation unit.",
+   "The commission would investigate allegations, while courts and military tribunals would determine guilt or wrongdoing."
+  ],
+  "affected": "Defence personnel, cadets, contractors, eligible dependants, people reporting sexual assault and officials responsible for support and investigations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:37.919144+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

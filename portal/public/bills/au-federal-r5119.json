@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "The bill would update excise levy legislation to support the proposed Australian Grape and Wine Authority, allowing collected levies to be paid to that authority.",
+   "It would replace references and definitions linked to the Wine Australia Corporation and remove its special process for recommending levy rates after annual general meetings.",
+   "The levy amendments would take effect with the main merger bill’s provisions on 1 July 2014, without altering the structure or amounts of existing levies."
+  ],
+  "changes": [
+   "The representative organisation definition for the grapes research levy would be aligned with the new authority’s legislation.",
+   "The old Corporation definition would be removed from the wine grapes levy schedule.",
+   "The declared winemakers’ organisation definition would refer to the new authority’s governing Act."
+  ],
+  "affected": "Grape growers and winemakers paying the relevant levies, their representative organisations and the Australian Grape and Wine Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:13.641981+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-13",
+  "sentences": [
+   "The bill would provide extra funding for the Commonwealth government's ordinary annual services, supplementing amounts authorised through the original 2013-2014 Budget appropriation legislation.",
+   "It would authorise Schedule 1 payments for departmental expenses, government-administered activities and Commonwealth authorities and companies, with processes for adjusting the available appropriations.",
+   "The appropriations would take effect on Royal Assent, alongside separate additional estimates bills for parliamentary departments and services outside the government's ordinary annual services."
+  ],
+  "changes": [
+   "The Finance Minister's urgent advance capacity would reset to $295 million.",
+   "The bill's appropriation would be reduced where an advance had already funded the same expenditure.",
+   "The Finance Minister could reduce departmental appropriations following specified requests.",
+   "The schedule would include the Asbestos Safety and Eradication Agency and National Disability Insurance Scheme Launch Transition Agency for the first time."
+  ],
+  "affected": "Commonwealth agencies, funded Commonwealth authorities and companies, and the Finance Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:26.505770+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

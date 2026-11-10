@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-12",
+  "sentences": [
+   "The bill would repeal the working Australians tax bonus scheme so the Commissioner of Taxation could no longer make payments for outstanding entitlements under it.",
+   "The payment ban would begin the day after Royal Assent, while taxpayers could still bank valid, non-stale cheques issued before Royal Assent.",
+   "Compliance checks and recovery of past overpayments would remain possible, with related income tax, social security and veterans’ provisions removed from 1 July 2016."
+  ],
+  "changes": [
+   "The Commissioner could no longer reissue bonus cheques that had been lost or become stale.",
+   "Bonus entitlements could no longer be used to offset a taxpayer’s other tax liabilities.",
+   "References to the scheme would be removed from tax collection and running balance account rules."
+  ],
+  "affected": "Taxpayers with unpaid bonus entitlements or previously issued cheques and the Commissioner of Taxation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:06.421622+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

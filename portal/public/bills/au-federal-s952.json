@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-05",
+  "sentences": [
+   "The bill would require the National Broadband Network company to use fibre to the premises for new fixed line connections it provides in Tasmania.",
+   "It would place a fibre-only rule and a minimum connection requirement in the company's governing legislation, expressly excluding technologies that are only partly fibre.",
+   "Existing connections would be excluded from the new provisions, which would begin operating on the day after the bill received Royal Assent."
+  ],
+  "changes": [
+   "The legislation would gain a new subdivision specifically governing Tasmanian fixed connections.",
+   "A partly fibre technology would not satisfy the fibre requirement.",
+   "An application provision would protect existing connections from retrospective coverage."
+  ],
+  "affected": "The National Broadband Network company and Tasmanian premises receiving its fixed connections are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:50.786400+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

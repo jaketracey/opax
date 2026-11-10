@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-04-02",
+  "sentences": [
+   "The bill would raise Medicare levy and surcharge low-income thresholds, including higher thresholds for eligible seniors and pensioners and additional amounts for dependent children.",
+   "It would increase individual and family exemption levels and related phase-in limits in line with consumer price movements, including the surcharge threshold for relevant family members.",
+   "The amendments would begin the day after royal assent and apply retrospectively to assessments for the 2018-19 income year and later income years."
+  ],
+  "changes": [
+   "The ordinary individual low-income threshold would rise from $21,980 to $22,398.",
+   "The ordinary family threshold would rise to $37,794, plus $3,471 for each dependent child or student.",
+   "Eligible seniors’ and pensioners’ thresholds would become $35,418 for individuals and $49,304 for families.",
+   "The ordinary individual levy phase-in limit would rise to $27,997."
+  ],
+  "affected": "Low-income individuals and families, eligible seniors and pensioners, taxpayers with dependants and family members subject to the Medicare levy surcharge are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:28.016150+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

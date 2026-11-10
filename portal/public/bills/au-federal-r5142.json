@@ -107,7 +107,29 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "The bill would repeal the minerals resource rent tax and unwind or revise associated measures covering business deductions, superannuation contributions and household support payments.",
+   "Mining tax liabilities would stop accruing from 1 July 2014, and the small business instant asset write-off threshold would fall from $6,500 to $1,000.",
+   "Existing mining tax obligations and administration would be preserved for earlier periods, while the linked savings measures would operate under their own application dates."
+  ],
+  "changes": [
+   "Company loss carry-back would end from the start of the 2013-14 income year.",
+   "Accelerated motor vehicle depreciation concessions for small businesses would be removed.",
+   "The dedicated deduction for geothermal exploration expenditure would be abolished.",
+   "Planned increases in the compulsory superannuation contribution rate would be delayed.",
+   "The low income superannuation contribution would end for contributions from 1 July 2013.",
+   "Future instalments of the income support bonus and schoolkids bonus would be abolished."
+  ],
+  "affected": "Iron ore and coal miners, small businesses, employers, superannuation members and recipients of the affected bonuses are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:37.308539+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3020",

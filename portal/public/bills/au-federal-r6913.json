@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-28",
+  "sentences": [
+   "The bill would revise how Animal Health Australia and Plant Health Australia receive and use industry levies, including funding for emergency biosecurity responses.",
+   "It would allow animal health funding priorities to cover additional emergency response deeds and broaden permitted plant levy spending to include maintaining or promoting plant health.",
+   "The amendments would begin after royal assent, replacing redundant funding arrangements and allowing departmental determinations to identify the industry bodies representing particular plant products."
+  ],
+  "changes": [
+   "Animal health legislation would gain a regulation-making power to prescribe additional eligible response deeds.",
+   "Obsolete honey levy provisions in animal health legislation would be repealed.",
+   "Plant Health Australia would receive total relevant levy receipts instead of excess amounts being redirected through the research funding mechanism."
+  ],
+  "affected": "Animal and plant industry levy payers, industry representative bodies, the two health organisations and Commonwealth administrators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

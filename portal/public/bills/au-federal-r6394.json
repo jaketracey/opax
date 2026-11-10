@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "The bill would broaden the paid parental leave work test for parents with employment gaps and pregnant workers who stop because their work is hazardous.",
+   "It would allow longer breaks between working days and let eligible birth mothers use an earlier assessment period when pregnancy-related work hazards prevent continued employment.",
+   "The changes would begin on 1 January 2020, with hazardous-work eligibility also subject to conditions prescribed in the paid parental leave rules."
+  ],
+  "changes": [
+   "Permitted gaps between working days would increase from 56 to 84 days.",
+   "Eligible hazardous-work claimants could use the 392 days immediately before stopping that work as their assessment period.",
+   "The amendments would cover children born or entrusted for adoption from commencement."
+  ],
+  "affected": "Parents claiming paid parental leave, particularly workers with irregular employment and pregnant workers without safe alternative duties, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:19.200543+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

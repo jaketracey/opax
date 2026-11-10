@@ -155,7 +155,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-22",
+  "sentences": [
+   "The bill would require Australian public companies to disclose subsidiary information and replace asset-based debt deduction limits with earnings-based tests for general class investors.",
+   "Its default test would cap net debt deductions at 30 per cent of tax earnings before interest, taxes, depreciation and amortisation, with alternative tests available.",
+   "Subsidiary disclosures would accompany annual financial reports for financial years starting from 1 July 2023, covering relevant listed and unlisted Australian public companies."
+  ],
+  "changes": [
+   "Consolidated entity statements would disclose entities' structures, incorporation locations, ownership percentages and tax residency.",
+   "Eligible deductions disallowed by the fixed ratio test could be carried forward for up to 15 years.",
+   "New debt creation rules would deny deductions linked to debt creation schemes."
+  ],
+  "affected": "Australian public companies and multinational investors subject to the revised thin capitalisation rules are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:41.839316+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8281",

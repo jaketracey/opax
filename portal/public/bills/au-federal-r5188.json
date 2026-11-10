@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "The bill would repeal over 1,000 Commonwealth Acts that amended or repealed other legislation and have already completed their substantive legislative work.",
+   "It would remove these spent Acts from the statute book while keeping their past amendments and any continuing transitional arrangements legally effective.",
+   "The measure would cover legislation from 1901 to 1969, with the repealed Acts remaining available on ComLaw for people consulting historical legislation."
+  ],
+  "changes": [
+   "Schedule 1 would repeal the listed amending and repeal Acts.",
+   "An express saving would preserve ongoing application, saving and transitional provisions.",
+   "The repeals would take effect 28 days after Royal Assent."
+  ],
+  "affected": "Businesses, individuals and private publishers accessing Commonwealth legislation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:12.447978+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

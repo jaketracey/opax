@@ -53,7 +53,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-25",
+  "sentences": [
+   "The bill would amend the Commonwealth Electoral Act 1918 and related legislation to tighten donation disclosure, restrict some donations and government advertising, and increase territory Senate representation.",
+   "It would lower the donation disclosure threshold from $16,300 to a fixed $1,000 and require recipients to disclose gifts within 7 days of the threshold being exceeded.",
+   "It would also bar donations from tobacco, fossil fuel, gambling and liquor businesses and substantial Commonwealth contractors and bidders, and give the Australian Capital Territory and the Northern Territory half a state's senators."
+  ],
+  "changes": [
+   "A person's contributions over an election cycle would be capped at 2 per cent of public funding at the previous election, with offences for exceeding it.",
+   "Printing, publishing or distributing electoral or referendum matter containing a statement of fact that is misleading or deceptive to a material extent would become an offence, with investigation powers for the Electoral Commissioner.",
+   "The definition of a gift would widen to cover fundraising dinners, paid business forums and other events, and membership fees benefiting a political entity or candidate.",
+   "Independent candidates could register an independent campaign entity, nominated by at least 100 electors, to be treated like a registered political party for electoral roll access and disclosure deadlines.",
+   "Government advertising would be prohibited from 2 years after a general election until the next election, unless the Independent Communications Committee determines it exempt."
+  ],
+  "affected": "Political parties, candidates, donors, tobacco, fossil fuel, gambling and liquor businesses, substantial Commonwealth contractors and bidders, independent candidates and territory voters are affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:11:22Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

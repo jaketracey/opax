@@ -830,6 +830,10 @@ def load_sources(db: sqlite3.Connection, bills: list[dict], legacy: bool) -> dic
 ATTRIBUTION = {
     "em": "Written by a model from the explanatory memorandum; not the record",
     "digest": "Written by a model from the Bills Digest; not the record",
+    # Bills with no memorandum (a lapsed private member's bill, say) are summarised
+    # from the bill text as introduced or, failing that, a second reading speech.
+    "text": "Written by a model from the bill text as introduced; not the record",
+    "speech": "Written by a model from a second reading speech; not the record",
 }
 
 

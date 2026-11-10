@@ -47,7 +47,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-19",
+  "sentences": [
+   "The bill would re-establish the Australian Building and Construction Commission (ABCC), which its explanatory material describes as having the powers it held under the Building and Construction Industry Improvement Act 2005.",
+   "It would rename the Office of the Fair Work Building Industry Inspectorate as the ABCC, prohibit unlawful industrial action, unlawful picketing and coercion over employment, contracting, superannuation and enterprise agreements, and let the Minister issue a Building Code by legislative instrument.",
+   "Coverage would exclude most single-dwelling housing work but extend to resource platforms in the exclusive economic zone, and commencement would be set by a table in clause 2."
+  ],
+  "changes": [
+   "The Australian Building and Construction Commissioner (ABC Commissioner) would be appointed for up to five years to monitor, investigate and enforce compliance with the Act, designated building laws and the Building Code.",
+   "Organising or engaging in unlawful industrial action or unlawful picketing would attract a Grade A civil penalty of up to 1,000 penalty units for a body corporate or 200 otherwise.",
+   "The ABC Commissioner could issue examination notices requiring information, documents or attendance, and failing to comply would be an offence carrying up to six months' imprisonment.",
+   "Coercion over engaging contractors or employees, superannuation fund choice and enterprise agreements would be prohibited, with a reversed onus requiring a respondent to disprove the alleged reason for action.",
+   "A Federal Safety Commissioner would run the Work Health and Safety Accreditation Scheme, and Commonwealth-funded building work would require accredited builders, subject to exceptions in the rules."
+  ],
+  "affected": "Building industry participants including contractors, employees, employers and unions would be affected.",
+  "model": "Claude Fable 5.1",
+  "generated_at": "2026-11-10T09:36:00Z"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

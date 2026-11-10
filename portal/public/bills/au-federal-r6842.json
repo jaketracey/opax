@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-10",
+  "sentences": [
+   "The bill would provide additional funding for government activities outside ordinary annual services, supplementing earlier appropriations for departments, capital expenditure and payments to other governments.",
+   "It would also restore the Finance Minister's urgent funding capacity and temporarily lift the national partnership payments limit from $25 billion to $35 billion.",
+   "It would begin on royal assent, sit alongside the ordinary services additional estimates bill, and expire at the start of 1 July 2024."
+  ],
+  "changes": [
+   "The available Advance to the Finance Minister would reset to $3,000 million regardless of earlier allocations.",
+   "Appropriations would be reduced where specified expenditure had already received an advance, preventing duplicate funding.",
+   "The higher national partnership payments limit would apply only until 30 June 2022.",
+   "Responsible ministers could determine conditions, amounts and timing for specified payments to states, territories and local governments."
+  ],
+  "affected": "Commonwealth entities, the Finance Minister, the Treasurer and state, territory and local governments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:01.950118+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

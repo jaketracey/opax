@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-24",
+  "sentences": [
+   "The bill would create and expand Commonwealth offences concerning child sexual exploitation, abuse material, forced marriage and failures by certain Commonwealth officers to protect or report.",
+   "It would criminalise possessing child-like sex dolls and abuse material obtained through telecommunications, and reduce the occasions needed to prove persistent overseas child sexual abuse.",
+   "Forced marriage provisions would expressly cover marriages involving children under 16, and marriage would cease to provide a defence to overseas sexual offences involving those children."
+  ],
+  "changes": [
+   "Relevant Commonwealth officers would commit an offence by negligently failing to reduce or remove known substantial sexual abuse risks.",
+   "Officers caring for or supervising children would have to report information indicating sexual abuse to police as soon as practicable.",
+   "Persistent overseas abuse would require two underlying occasions rather than three.",
+   "Commonwealth legislation would consolidate its terminology under child abuse material."
+  ],
+  "affected": "Children, relevant Commonwealth officers, people dealing with child abuse material, Australians offending overseas and investigating agencies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:32.240457+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

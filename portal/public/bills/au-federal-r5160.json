@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-24",
+  "sentences": [
+   "The bill would require employment targets in the Australian Public Service for people with disability and employees who come from a non-English speaking background.",
+   "The Commissioner would have to direct that the total number in each group double by 1 July 2019, using 1 July 2014 as the baseline.",
+   "The requirements would be inserted into the Public Service Act 1999 and would start on the day after the bill received Royal Assent."
+  ],
+  "changes": [
+   "Disability would take its meaning from the Disability Discrimination Act 1992.",
+   "A new subsection would require a written employment direction covering both groups.",
+   "The Commissioner's general employment direction powers would be subject to the new requirement."
+  ],
+  "affected": "The Commissioner and Australian Public Service employees with disability or from non-English speaking backgrounds are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:42.946998+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

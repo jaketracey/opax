@@ -143,7 +143,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-06",
+  "sentences": [
+   "The bill would authorise withdrawals from the Consolidated Revenue Fund for parliamentary departments, supplementing funding already provided for the 2020 to 2021 financial year.",
+   "It would allocate scheduled amounts for departmental operations, administered activities and assets, and allow limited additional allocations where urgent expenditure was not adequately funded.",
+   "The bill would commence on royal assent, with the resulting appropriation Act scheduled to repeal at the start of 1 July 2023."
+  ],
+  "changes": [
+   "Departmental items would provide funding for parliamentary departments' operating expenses.",
+   "Administered items would support the outcomes identified in the schedule.",
+   "Appropriated amounts could be credited to relevant special accounts."
+  ],
+  "affected": "The parliamentary departments, their Presiding Officers and the Parliamentary Budget Office are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:41.844731+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

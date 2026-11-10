@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would expand powers for conditional licensing exemptions when testing financial and credit products, and adjust venture capital and early stage investor tax concessions.",
+   "Regulations could set testing conditions, with the Australian Securities and Investments Commission able to stop exemptions or seek court orders requiring compliance.",
+   "Licensing amendments would apply the day after royal assent, while tax changes would generally apply from 1 July 2018, with specified earlier trust-investment provisions."
+  ],
+  "changes": [
+   "An independent review of the licensing exemption would start after 12 months and finish within six months.",
+   "Managed investment trusts could invest in Australian venture capital funds of funds.",
+   "The early stage investor offset’s $200,000 annual cap would cover direct and indirect investments together.",
+   "The pre-owned investment cap would apply to those investments rather than all partnership investments."
+  ],
+  "affected": "Financial technology businesses, credit providers, consumers, venture capital partnerships, managed investment trusts and early stage investors are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:34.120573+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5897",

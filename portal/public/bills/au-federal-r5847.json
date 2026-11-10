@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "The bill would amend Indigenous affairs administration, parliamentary audit reporting and royal commission powers, and repeal two redundant Acts within the Prime Minister and Cabinet portfolio.",
+   "Royal commissioners could compel written statements, while maximum imprisonment for specified failures to attend, produce documents or give evidence would increase from six months to two years.",
+   "The amendments would begin the day after Royal Assent, with defences and protections applying to compelled written evidence and changes to royal commission records custody."
+  ],
+  "changes": [
+   "Indigenous Business Australia's corporate plan would no longer require ministerial tabling.",
+   "Relevant authorities could waive consent requirements for disposal of land acquired with former Indigenous commission assistance.",
+   "The Auditor-General would table annual reports directly in Parliament.",
+   "Regulations could place royal commission records in the custody of the Attorney-General's Department secretary."
+  ],
+  "affected": "Indigenous organisations, Indigenous Business Australia, the Auditor-General, royal commissions and people required to provide evidence are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:59.705971+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

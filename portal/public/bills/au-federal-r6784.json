@@ -137,7 +137,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-20",
+  "sentences": [
+   "The bill would make permanent arrangements for companies and registered schemes to hold hybrid member meetings and sign, execute and send specified documents electronically.",
+   "Wholly virtual meetings would require express constitutional permission or a constitutional requirement, and members would need a reasonable opportunity to participate however meetings were held.",
+   "Meeting and document delivery rules would apply from 1 April 2022, while electronic execution provisions would apply to documents executed after royal assent."
+  ],
+  "changes": [
+   "Proprietary companies with a sole director and no secretary could use statutory document execution methods.",
+   "Company agents could execute deeds without being appointed by deed themselves.",
+   "Members could choose electronic or paper delivery for meeting documents.",
+   "Members holding at least 5 per cent of votes could require independent observation or reporting of a poll at a listed company or registered scheme."
+  ],
+  "affected": "Companies, registered schemes, their members, directors, agents and officers, and the corporate regulator would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:42.829915+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-7601",

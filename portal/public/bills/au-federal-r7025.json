@@ -137,7 +137,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-09",
+  "sentences": [
+   "The bill would authorise 2023-24 Commonwealth expenditure for services outside ordinary annual government operations, including capital funding and payments to other levels of government.",
+   "It would provide scheduled appropriations for intergovernmental assistance, new administered outcomes, assets and liabilities, equity injections and corporate entities, alongside separate ordinary services funding.",
+   "The legislation would commence on 1 July 2023 or Royal Assent, whichever is later, and separately set limits on specified federal financial relations payments."
+  ],
+  "changes": [
+   "The Finance Minister could allocate up to $600 million for urgent expenditure meeting the advance provisions.",
+   "General purpose financial assistance would have a $5,000 million annual debit limit.",
+   "National partnership payments would have a $35,000 million annual debit limit.",
+   "Responsible ministers could determine conditions, amounts and timing for specified intergovernmental payments.",
+   "The appropriation legislation would repeal at the start of 1 July 2026."
+  ],
+  "affected": "Commonwealth entities, funded companies, state and territory governments and local councils are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:09.933769+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

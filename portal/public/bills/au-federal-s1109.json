@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "The bill would change family law procedures and protections in cases involving violence, including the powers of state and territory courts handling related disputes.",
+   "It would permit prescribed courts to decide parenting matters, allow higher property jurisdiction limits through regulations, and make breaches of personal protection injunctions criminal offences.",
+   "The new offences would cover breaches occurring after commencement, including breaches of injunctions already in force, while other amendments would address court processes and orders."
+  ],
+  "changes": [
+   "Courts could set the duration of changes to family law orders accompanying interim violence orders, replacing the 21 day limit.",
+   "Self-induced intoxication could not be used as a defence to the new breach offences.",
+   "Courts would have clearer powers to dismiss meritless, frivolous, vexatious or abusive proceedings.",
+   "Judges could omit explanations to children about inconsistent orders where receiving them would conflict with the child's best interests."
+  ],
+  "affected": "Families experiencing violence, children, family law litigants and courts would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:17.942902+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

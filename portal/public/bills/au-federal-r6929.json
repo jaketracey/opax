@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-26",
+  "sentences": [
+   "The bill would increase disability compensation for severely incapacitated veterans, including linked payments under the veterans’ entitlements and military rehabilitation and compensation systems.",
+   "It would set the special rate payment at $1,595.66 a fortnight, an increase of $38.46 a fortnight for eligible veterans receiving the indexed rate.",
+   "The changes would apply from 1 January 2023, including backdating the higher amounts if royal assent caused the legislation to commence after that date."
+  ],
+  "changes": [
+   "The statutory special rate would be replaced with the higher fortnightly amount.",
+   "The Temporary Special Rate payment would rise through its legislative link to the special rate.",
+   "The Special Rate Disability Pension under military compensation legislation would also increase."
+  ],
+  "affected": "Veterans receiving the affected disability payments, future eligible veterans and their families would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

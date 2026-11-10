@@ -21,8 +21,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5088_ems_64b8dcc4-6fd3-4b96-9611-e1990500d0e4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5088%22",
+   "document_date": "2013-06-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-03",
+  "sentences": [
+   "The bill would limit foreign ownership of Australian agribusiness and land, giving the Treasurer powers to prohibit acquisitions and order interests to be sold.",
+   "It would generally cap foreign ownership at 49 per cent for covered agribusinesses and land parcels of at least 4 hectares, subject to an exception.",
+   "The Foreign Investment Review Board could permit holdings providing substantial national benefits, while arrangements already in place for at least 12 months would be unaffected."
+  ],
+  "changes": [
+   "The Board would assess covered investment proposals and recommend whether they were contrary to the national interest.",
+   "The Treasurer could require divestment when an acquisition continued contrary to a prohibition notice.",
+   "Anti-avoidance provisions would address multiple acquisitions and adjoining land purchases.",
+   "The bill would extend to external Territories."
+  ],
+  "affected": "Foreign persons and bodies, Australian agribusinesses, the Foreign Investment Review Board and the Treasurer are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:26.842334+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

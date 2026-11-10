@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5034_ems_8b9a14e2-880b-46a9-b664-b8559d37213a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5034%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00087",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would impose an additional tax on specified superannuation contributions of very high income earners, alongside a companion bill establishing the assessment rules.",
+   "It would charge 15 per cent of taxable contributions under Division 293, with the companion rules covering relevant income and contributions above $300,000.",
+   "The package would cover contributions from 2012-13, while this imposition bill would limit the tax to circumstances within the Commonwealth's constitutional powers."
+  ],
+  "changes": [
+   "A separate statutory charge would impose Division 293 tax on individuals with taxable contributions.",
+   "The rate of the charge would be fixed at 15 per cent.",
+   "An express safeguard would exclude any imposition beyond the Commonwealth's legislative power."
+  ],
+  "affected": "Individuals with taxable superannuation contributions under the Division 293 rules are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:56.453003+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

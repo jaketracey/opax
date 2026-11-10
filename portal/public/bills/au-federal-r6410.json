@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-19",
+  "sentences": [
+   "The bill would give Australia's tax convention with Israel domestic legal effect and introduce a general source rule supporting Australian taxing rights under future treaties.",
+   "The convention would allocate taxing rights over business profits, dividends, interest, royalties and pensions, and provide relief where both countries could tax the same income.",
+   "The amendments would commence the day after royal assent, but the convention would take effect only after both countries completed ratification procedures and exchanged instruments."
+  ],
+  "changes": [
+   "Convention provisions would take priority over inconsistent domestic tax provisions, with the general anti-avoidance rules excepted.",
+   "Income Australia could tax under this convention or future tax agreements would be deemed Australian-sourced.",
+   "The convention would enable greater cooperation between tax authorities, including information exchange."
+  ],
+  "affected": "Australian and Israeli residents with cross-border income, businesses, investors and the two countries' tax authorities are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:05.181760+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5953",

@@ -33,8 +33,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5090_ems_48276d29-7e44-41ce-b803-493eb2790653%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5090%22",
+   "document_date": "2013-06-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-17",
+  "sentences": [
+   "The bill would broaden misuse of market power rules to cover likely harm to competition across markets and the supply chains serving them.",
+   "It would give the Australian Competition and Consumer Commission investigation powers, including requiring documents, answers and a published statement about supply chain impacts.",
+   "The expanded test would cover conduct reasonably likely to damage competitors, prevent market entry or lessen competition, including effects beyond the market where conduct occurs."
+  ],
+  "changes": [
+   "The Commission could require a corporation to prepare a supply chain impact statement.",
+   "False or misleading responses to Commission investigations would be prohibited.",
+   "Most information supplied to the Commission would be protected, while supply chain impact statements would require publication."
+  ],
+  "affected": "Corporations with substantial market power, participants in affected supply chains and the Australian Competition and Consumer Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:21.211728+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

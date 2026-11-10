@@ -53,7 +53,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-22",
+  "sentences": [
+   "The bill would expand oversight by the Inspector-General of Intelligence and Security and Parliament's intelligence committee, and introduce limited immunity for defence cyber activities.",
+   "Oversight would extend to four additional agencies, while the parliamentary committee could initiate certain legislative reviews and ask the Inspector-General to conduct inquiries.",
+   "The cyber immunity would cover authorised defence activities undertaken with a reasonable belief that their computer-related effects would occur outside Australia, including mistaken location assessments."
+  ],
+  "changes": [
+   "Oversight would cover the Australian Criminal Intelligence Commission and intelligence functions of federal police, the financial intelligence agency and Home Affairs.",
+   "The parliamentary intelligence committee could review proposed national security reforms and expiring national security legislation on its own initiative.",
+   "The Inspector-General and national intelligence head would have to brief the parliamentary intelligence committee annually.",
+   "Secrecy law exceptions would permit relevant disclosures to officials carrying out intelligence oversight duties."
+  ],
+  "affected": "Intelligence agencies, oversight bodies, defence officials, complainants and people whose information is held by those agencies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:59.564553+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

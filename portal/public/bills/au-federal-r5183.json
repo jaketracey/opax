@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-06",
+  "sentences": [
+   "The bill would authorise quarantine cost recovery charges classified as duties of customs, covering indirect biosecurity services such as scientific analysis, intelligence and surveillance.",
+   "Regulations would determine the charge amounts and who must pay, with ministerial oversight to limit charges to the Commonwealth's likely costs.",
+   "Its charges would be limited to customs duties, alongside separate general taxation and excise measures and a companion bill authorising collection."
+  ],
+  "changes": [
+   "Previously charged fees that might have been invalid would be validated.",
+   "Amounts already paid or remitted would be credited against validated charges.",
+   "Regulations could exempt particular people or activities from charges.",
+   "The legislation would extend to Christmas Island and the Cocos (Keeling) Islands."
+  ],
+  "affected": "Users of biosecurity services and people made liable for charges by regulations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:44.141195+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

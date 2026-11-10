@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s917_ems_fcaeee69-9621-49e7-b665-7a3e5b9a8a89%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s917%22",
+   "document_date": "2013-06-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-26",
+  "sentences": [
+   "The bill would set a statutory timetable for increasing Australian overseas aid and establish an independent commissioner to assess how effectively development assistance was used.",
+   "Official development assistance would reach 0.5 per cent of Gross National Income by 2015-16 and 0.7 per cent by 2020-21 and subsequent years.",
+   "The Minister would report annually to Parliament on aid amounts and shortfalls, while the commissioner would assess relevance, impact, value for money and sustainability."
+  ],
+  "changes": [
+   "If aid fell short of the timetable, the Minister would have to explain how future goals would be met.",
+   "Commissioner recommendations and the Minister’s responses would be tabled in Parliament.",
+   "The Governor-General would appoint the commissioner full time for a term of up to five years.",
+   "Money would be appropriated for the commissioner’s appointment and the Act’s functions."
+  ],
+  "affected": "The Foreign Affairs and Trade Minister, the proposed commissioner and developing countries receiving Australian aid are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:30.765556+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

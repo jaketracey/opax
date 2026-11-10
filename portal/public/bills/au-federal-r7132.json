@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-29",
+  "sentences": [
+   "The bill would regulate access to free-to-air television on connected devices and extend restrictions on acquiring rights to listed events to online media.",
+   "Manufacturers would have to meet minimum requirements for displaying and accessing regulated television services, while streaming services would face restrictions on buying listed event rights.",
+   "The device obligations would apply to products manufactured and supplied from 18 months after the prominence provisions commence, with detailed requirements set by regulations."
+  ],
+  "changes": [
+   "Manufacturers would be barred from charging regulated television services for meeting prominence requirements.",
+   "Manufacturers would need reasonable steps to prevent interference with regulated services' audiovisual content.",
+   "Listed events would automatically leave the acquisition restriction list 12 months before they start."
+  ],
+  "affected": "Television audiences, connected device manufacturers, free-to-air broadcasters and online media services seeking event rights are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:07:00.774285+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8872",

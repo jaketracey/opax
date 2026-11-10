@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-25",
+  "sentences": [
+   "The bill would authorise funding and borrowing for Australia's new bilateral loan agreement with the International Monetary Fund (IMF), replacing the previous agreement.",
+   "It would support drawings up to Special Drawing Rights 4.61 billion, around A$8.39 billion, when the IMF's quota and other borrowing resources were insufficient.",
+   "The agreement would run until 31 December 2019, with a further year possible by Australia's consent, and funding authority would apply when it entered into force."
+  ],
+  "changes": [
+   "A standing appropriation would cover payments under the new loan agreement.",
+   "The Treasurer could borrow to meet Australia's obligations under the agreement.",
+   "Certain agreement amendments would require notification through a legislative instrument.",
+   "Authority for payments meeting commitments under the previous agreement would be preserved."
+  ],
+  "affected": "The Treasurer, the Australian Government and the IMF are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:16:16.635787+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

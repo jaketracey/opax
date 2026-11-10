@@ -95,13 +95,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5083_ems_614c0896-5314-4054-95a4-9fe725831ef7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5083%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00097",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would exclude parliamentary departments and office holders under the Parliamentary Service Act 1999 from the Commonwealth freedom of information regime.",
+   "It would specify that these departments and people are outside the definition of a prescribed authority, which determines coverage under the Freedom of Information Act 1982.",
+   "The exclusion would operate retrospectively as well as prospectively, while the Parliamentary Budget Office's existing exemption would remain unaffected by the proposed changes."
+  ],
+  "changes": [
+   "The Department of the Senate would be excluded from freedom of information coverage.",
+   "The departments of the House of Representatives and Parliamentary Services would also be excluded.",
+   "The amendments would begin on Royal Assent."
+  ],
+  "affected": "Parliamentary departments and people holding or performing duties of offices established under the Parliamentary Service Act 1999 are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:50.681788+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2940",

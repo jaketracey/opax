@@ -101,13 +101,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4953_ems_ac38b189-af58-4a5b-bb40-fc1b6fa30cec%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4953%22",
+   "document_date": "2013-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00009",
    "document_date": "2013-03-14",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-06",
+  "sentences": [
+   "The bill would let the Australian Maritime Safety Authority, acting as national marine safety regulator, reimburse states and the Northern Territory for infringement notice receipts.",
+   "It would enable regulations directing penalty payments to the regulator, replacing the Commonwealth as recipient under two provisions of the domestic commercial vessel safety law.",
+   "The changes would concern payments offered as alternatives to criminal prosecution or civil penalty proceedings, covering alleged breaches of the national law and its regulations."
+  ],
+  "changes": [
+   "Regulations under section 138 could allow an alleged offender to pay the regulator instead of facing prosecution.",
+   "Regulations under section 162 could allow payment to the regulator instead of civil penalty proceedings for an alleged regulatory breach.",
+   "The payment amendments would begin on royal assent or immediately after section 3 of the national law legislation commences, whichever occurs later."
+  ],
+  "affected": "The Australian Maritime Safety Authority, states, the Northern Territory and people facing infringement notices under domestic commercial vessel safety law are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:06.501698+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

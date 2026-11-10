@@ -95,7 +95,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-27",
+  "sentences": [
+   "The bill would broaden access to superannuation contributions and home purchase savings, change contribution and fund tax rules, and extend temporary business asset deductions.",
+   "It would remove the $450 monthly earnings threshold for compulsory employer superannuation and lift the First Home Super Saver contribution release limit from $30,000 to $50,000.",
+   "Related reforms would retain a work test for deductible personal contributions by older people while supporting separate regulatory changes for other voluntary contributions."
+  ],
+  "changes": [
+   "The minimum age for eligible home sale downsizer contributions would fall from 65 to 60.",
+   "Eligible people aged 67 to 74 could use the bring-forward arrangements for non-concessional contributions, subject to available cap space.",
+   "Superannuation trustees with mixed phases during part of a year could choose how to calculate exempt pension income.",
+   "Temporary full expensing of eligible depreciating assets would be extended until 30 June 2023."
+  ],
+  "affected": "Lower-paid employees, employers, first home buyers, older superannuation contributors, fund trustees and eligible businesses would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:43.075837+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

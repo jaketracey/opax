@@ -77,7 +77,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-05",
+  "sentences": [
+   "The bill would redesign the Research and Development Tax Incentive, changing offset rates and refund limits while revising the program's integrity and administration rules.",
+   "Smaller eligible businesses would generally receive their corporate tax rate plus 13.5 percentage points, while larger entities' premiums would depend on their research spending intensity.",
+   "The amendments would generally apply to income years starting on or after 1 July 2019, with some administrative changes applying from the legislation's commencement."
+  ],
+  "changes": [
+   "The annual expenditure threshold for receiving an incentive premium would rise from $100 million to $150 million and become permanent.",
+   "Refundable offsets would generally be capped at $4 million annually, with excess amounts carried forward as non-refundable offsets.",
+   "Offsets for qualifying registered clinical trial activities would be excluded from the refund cap."
+  ],
+  "affected": "Companies claiming research and development tax offsets, clinical trial operators and the agencies administering the incentive are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:37.611485+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

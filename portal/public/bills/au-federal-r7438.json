@@ -131,7 +131,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-11",
+  "sentences": [
+   "The bill would change appointment, suspension and dismissal rules for selected Commonwealth agency heads and parliamentary counsel, including grounds involving serious misconduct and unsatisfactory performance.",
+   "Ministers could suspend designated foreign affairs and trade agency heads initially for three months, with extensions to 12 months linked to specified inquiries.",
+   "New appointments and reappointments to specified offices would have shorter maximum terms, while existing procedural fairness requirements would continue to apply to dismissal decisions."
+  ],
+  "changes": [
+   "The agricultural research centre chief's maximum appointment term would fall from seven years to five.",
+   "First and Second Parliamentary Counsel would have maximum appointment terms of five years instead of seven.",
+   "The minister could issue general written directions about the Office of Parliamentary Counsel's functions.",
+   "The trade commission chief would need ministerial approval for paid work outside official duties, including self-employment."
+  ],
+  "affected": "The heads and staff of the Australian Centre for International Agricultural Research, Australian Trade and Investment Commission, Australian Safeguards Office and Office of Parliamentary Counsel are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:05:18.907311+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

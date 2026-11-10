@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-07",
+  "sentences": [
+   "The bill would change income and assets testing for pensioners and other eligible income support recipients selling their principal home and preparing to obtain another.",
+   "It would extend the usual assets test exemption for earmarked sale proceeds from 12 to 24 months and apply only the lower deeming rate.",
+   "The rules would cover social security and veterans’ payments, with a further extension available in particular circumstances and commencement subject to the bill’s timing provisions."
+  ],
+  "changes": [
+   "Exempt home sale proceeds would be assessed separately from other financial assets when calculating deemed income.",
+   "The maximum extended exemption would increase from 24 to 36 months.",
+   "Commencement would be the later of 1 January 2023 or one month after royal assent."
+  ],
+  "affected": "Pensioners, eligible income support recipients, their partners and administrators of social security and veterans’ payments would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

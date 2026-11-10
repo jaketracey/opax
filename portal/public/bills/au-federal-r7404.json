@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "text",
+  "attribution": "Written by a model from the bill text as introduced; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2025-11-06",
+  "sentences": [
+   "The bill would require major subscription video on demand services to spend minimum amounts on new eligible Australian programs, with reporting and enforcement arrangements.",
+   "The requirement would equal 10% of program expenditure for Australia, with an option to use 7.5% of revenue derived from Australia instead.",
+   "Coverage would require at least 1 million paying Australian subscribers and other tests, excluding services dominated by user-generated content or with specified limited appeal."
+  ],
+  "changes": [
+   "Eligible genres would include drama, documentaries, children’s, arts and educational programs, with qualifying New Zealand programs also included.",
+   "Services could carry surplus qualifying expenditure forward for up to two reporting years.",
+   "Providers of regulated services would have to submit annual compliance reports.",
+   "The Australian Communications and Media Authority could exempt classes of services from all or part of the scheme."
+  ],
+  "affected": "Providers of major subscription streaming services and the Australian Communications and Media Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:24.649000+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

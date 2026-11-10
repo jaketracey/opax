@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-10",
+  "sentences": [
+   "The bill would extend Australia's authority to fund International Monetary Fund (IMF) drawings under the renewed New Arrangements to Borrow for another five years.",
+   "It would preserve the standing appropriation and borrowing power for commitments capped at Special Drawing Rights 2.22 billion, approximately A$4.05 billion.",
+   "The changes would start on the later of 17 November 2017 and the day after Royal Assent, covering the renewal ending 16 November 2022."
+  ],
+  "changes": [
+   "The statutory definition of New Arrangements to Borrow would incorporate the IMF Executive Board's renewal decision of 4 November 2016.",
+   "Schedule 4, which reproduces the arrangement's text, would be repealed.",
+   "The Treasurer's authority to borrow for Australia's obligations would extend to the renewed arrangement."
+  ],
+  "affected": "The Treasurer, the Australian Government and the IMF are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:17.239344+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-4892",

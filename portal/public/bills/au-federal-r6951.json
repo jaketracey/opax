@@ -143,7 +143,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "The bill would revise export control information-sharing rules and administrative processes governing approvals, export licences and assessments of whether applicants are fit and proper.",
+   "It would authorise specified uses and disclosures of export information while establishing safeguards and penalties for unauthorised handling of information that requires protection.",
+   "The information reforms would start by proclamation or after six months, while administrative amendments would begin on the day following royal assent."
+  ],
+  "changes": [
+   "The departmental secretary could change conditions when approving variations to export approvals or licences.",
+   "Fit and proper person assessments would have to consider specified information received under agricultural levy collection legislation.",
+   "Officials could disclose relevant information to foreign governments for specified export, trade and international obligation purposes."
+  ],
+  "affected": "Exporters, approval and licence holders, export control officials and bodies receiving export information would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -101,13 +101,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5040_ems_670fd609-6177-4fdb-9872-3ed06aa5ad1d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5040%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00132",
    "document_date": "2013-07-01",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would repeal 84 old annual appropriation laws covering 1999-2000 to 2009-2010, removing spending authorities described as largely exhausted or redundant.",
+   "It would remove entire Acts dealing with ordinary government services, other government spending, parliamentary departments and supplementary estimates, without authorising any new expenditure.",
+   "The repeals would take effect on Royal Assent, while minor amounts still needed could be considered separately through the usual Budget appropriation process."
+  ],
+  "changes": [
+   "It would repeal 28 Acts for the Government's ordinary annual services and 28 for other services.",
+   "Fifteen Acts funding parliamentary departments would be removed.",
+   "Thirteen Acts relating to supplementary estimate appropriations would also be repealed."
+  ],
+  "affected": "The Government and parliamentary departments whose operations were covered by the old appropriation Acts are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:08.825704+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

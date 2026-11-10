@@ -149,7 +149,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-29",
+  "sentences": [
+   "The bill would amend the Clean Energy Regulator's legislation and greenhouse reporting laws to support administration of the proposed national voluntary biodiversity market.",
+   "It would authorise additional uses and disclosures of protected information, recognise biodiversity functions and extend the existing auditor framework to biodiversity projects.",
+   "Commencement would depend on the main Nature Repair Market legislation, occurring when both that framework and this bill have reached their required commencement points."
+  ],
+  "changes": [
+   "Agriculture and biological or ecological science would become recognised expertise fields for regulator appointments.",
+   "Relevant directions to the regulator would require consultation with the biodiversity minister when the ministerial roles are held separately.",
+   "The regulator could delegate powers to eligible senior officials assisting it from the biodiversity department."
+  ],
+  "affected": "The Clean Energy Regulator, biodiversity officials, project proponents and registered greenhouse and energy auditors are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:56.535473+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

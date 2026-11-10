@@ -137,7 +137,29 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-14",
+  "sentences": [
+   "The bill would change superannuation trustee duties, member disclosures and regulatory powers, including annual assessments of whether MySuper products promote their members' financial interests.",
+   "Trustees would compare MySuper products against others, publish their assessments and hold annual member meetings, while the Australian Prudential Regulation Authority would gain stronger oversight powers.",
+   "Most measures would start the day after Royal Assent, with ownership controls three months after assent and portfolio disclosure changes on 31 December 2018."
+  ],
+  "changes": [
+   "Directors breaching specified duties could face civil and criminal penalties.",
+   "Approval would be required before acquiring a stake exceeding 15 per cent in a corporate licensed superannuation trustee.",
+   "The regulator could issue directions in response to prudential concerns.",
+   "MySuper authorisations could be refused or cancelled where the regulator anticipates non-compliance.",
+   "Portfolio disclosures would cover underlying investments through associated entities and initial investments in unrelated entities.",
+   "Reporting powers would extend to expenses incurred in operating or managing funds."
+  ],
+  "affected": "Superannuation members, licensed trustees, directors, prospective owners and financial regulators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:10.577975+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

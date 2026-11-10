@@ -119,7 +119,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 14,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-03",
+  "sentences": [
+   "The bill would amend federal workplace laws governing Fair Work Commission procedures, enterprise bargaining, road transport contractors, construction industry bodies and Commonwealth procurement preferences.",
+   "It would permit the Commonwealth to prefer employers with enterprise agreements, including agreements covering employee organisations, when purchasing goods or services or providing financial assistance.",
+   "That discrimination exemption would be limited to Commonwealth funding and procurement, while existing protections would otherwise continue and employers would remain free to choose agreement coverage."
+  ],
+  "changes": [
+   "Specified contested dismissal and regulated worker cases could be decided on written material with the parties' consent.",
+   "A separate regulated road transport contractor income threshold could be prescribed for access to protections.",
+   "Subsequent supported bargaining authorisations would be streamlined for substantially the same employers and employees.",
+   "Road Transport Advisory Group members would become eligible for travel allowances.",
+   "A Full Bench could restrict specified repeat applications after dismissals for vexatious or frivolous claims, or claims with no reasonable prospect of success."
+  ],
+  "affected": "Workers, employers, unions, regulated road transport contractors, commission staff and Commonwealth procurement and grant administrators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:55.612963+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-10323",

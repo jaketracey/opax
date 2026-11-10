@@ -137,7 +137,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-26",
+  "sentences": [
+   "The bill would change child care assistance for vulnerable children and adjust subsidy reconciliation for families whose relationship status changes during an income year.",
+   "Additional Child Care Subsidy determinations could last up to 12 months for prescribed children, and exceptional circumstances could permit backdating for up to 13 weeks.",
+   "Separate reconciliation rules would assess single and partnered periods using the relevant fortnightly circumstances, without changing how estimated subsidies are paid during the year."
+  ],
+  "changes": [
+   "Providers could qualify for child wellbeing assistance for children in prescribed classes without first identifying an eligible individual.",
+   "That alternative provider eligibility would be limited to a combined certificate and determination period of 13 weeks.",
+   "The amendments would supply an omitted civil penalty amount of 50 penalty units."
+  ],
+  "affected": "Children at risk of serious abuse or neglect, their carers, child care providers and families with relationship changes are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:29.455320+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6472",

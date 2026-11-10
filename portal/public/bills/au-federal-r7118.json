@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-30",
+  "sentences": [
+   "The bill would incorporate earlier customs tariff proposals into legislation, covering Ukrainian, Russian and Belarusian imports, space cooperation goods and international sporting events.",
+   "It would extend reduced duties for Ukrainian goods to 3 July 2024 and the additional 35 per cent duty on Russian or Belarusian goods to 24 October 2025.",
+   "Separate concessions would cover prescribed space agreement and sporting event goods, while existing exceptions to the country-specific duties would continue to apply."
+  ],
+  "changes": [
+   "Eligible European Space Agency agreement goods would receive duty-free treatment retrospectively from 1 December 2022.",
+   "Prescribed international sporting event goods would qualify for a concession from 1 January 2022.",
+   "The Ukrainian concession's duration would increase from 12 months to 24 months."
+  ],
+  "affected": "Importers of relevant goods, the European Space Agency and importers of goods for prescribed international sporting events are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:46.619914+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-8857",

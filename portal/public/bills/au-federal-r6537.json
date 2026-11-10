@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "The bill would create a Veteran Family Advocate role, authorise civilian employment assistance for former defence members and extend energy supplement eligibility to specified Gold Card holders.",
+   "The advocate would represent families on two veterans' commissions, while regulations could provide transition assistance and benefits to former members entering civilian employment.",
+   "The energy supplement extension would cover eligible Gold Card holders under legislation for British nuclear test participants, occupation forces and special-access treatment benefits."
+  ],
+  "changes": [
+   "The Governor-General would appoint the advocate on ministerial advice.",
+   "The advocate would serve full time on the Repatriation Commission and part time on the compensation commission.",
+   "Regulations could establish pre-employment and post-employment transition assistance."
+  ],
+  "affected": "Veterans, their families, eligible former defence members, covered Gold Card holders and veterans' commissions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:38.608843+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

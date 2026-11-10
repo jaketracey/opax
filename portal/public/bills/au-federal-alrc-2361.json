@@ -89,13 +89,46 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5005_ems_c285500b-4fbc-4d70-ba9b-d0b88ff849e0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5005%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00062",
    "document_date": "2013-06-26",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would establish a Disaster Recovery Allowance providing temporary income support to eligible people who lose income because of disasters occurring within Australia.",
+   "It would provide fortnightly payments for up to 13 weeks, with maximum rates linked to Newstart Allowance or Youth Allowance and detailed eligibility rules.",
+   "From 1 October 2013, the Minister could activate payments for nationally significant disasters, specifying affected areas or industries within areas, subject to statutory criteria."
+  ],
+  "changes": [
+   "The allowance would be taxable income and included in the Beneficiary Tax Offset scheme.",
+   "People already receiving specified social security entitlements or other excluded payments would be ineligible.",
+   "Payments would be unavailable where an assurance of support is in force.",
+   "Claims would generally be due within six months of a disaster determination, with extensions for qualifying special circumstances.",
+   "Receipt would not automatically confer other benefits available to recipients of social security payments."
+  ],
+  "affected": "Australian residents and specified visa holders meeting the age, income-loss and other eligibility requirements are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:16.711140+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

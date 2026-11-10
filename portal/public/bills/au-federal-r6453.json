@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-28",
+  "sentences": [
+   "The bill would extend consumer protections for insurance and funeral expenses policies, introduce a best interests duty for mortgage brokers and restrict conflicted remuneration.",
+   "Unfair contract term rules would cover eligible standard form consumer and small business insurance contracts, with medical indemnity insurance excluded from this extension.",
+   "Insurance amendments would commence on 5 April 2021 and cover new, renewed or varied terms as specified, while the mortgage broker reforms concern consumer credit."
+  ],
+  "changes": [
+   "Insurance beneficiaries who are not contracting parties could challenge unfair terms.",
+   "Transparent terms setting an insurance excess or deductible would be excluded from unfair-term review.",
+   "Mortgage brokers would have to prioritise consumers' interests when interests conflict.",
+   "Brokers and mortgage intermediaries could not accept conflicted remuneration, with applicable circumstances set through regulations."
+  ],
+  "affected": "Consumers, small businesses buying insurance, insurers, funeral policy providers, mortgage brokers, intermediaries and lenders are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:27.638292+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

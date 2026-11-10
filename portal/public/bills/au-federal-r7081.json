@@ -161,7 +161,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-13",
+  "sentences": [
+   "The bill would introduce temporary business tax deductions, expand tax-deductible giving and amend rules for insurers, superannuation funds and financial complaints handling.",
+   "Businesses with aggregated annual turnover below $10 million could immediately deduct eligible assets costing under $20,000 first used or installed during 2023-24.",
+   "Other measures would align general insurance tax rules with updated accounting standards and continue an income tax exemption for Global Infrastructure Hub Ltd."
+  ],
+  "changes": [
+   "A 20 per cent energy investment bonus deduction would be available to eligible businesses with turnover below $50 million.",
+   "Community charity trusts and corporations would gain a new pathway to deductible gift recipient endorsement.",
+   "Specified deductible gift recipient listings would be added or extended.",
+   "General non-commercial superannuation expenses would trigger more limited non-arm's length income treatment.",
+   "The Australian Financial Complaints Authority would regain jurisdiction over superannuation-related complaints outside the statutory superannuation complaint definition."
+  ],
+  "affected": "Eligible businesses, charities, donors, general insurers, superannuation funds and financial services complainants are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:46.983782+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-8516",

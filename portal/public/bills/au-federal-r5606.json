@@ -113,7 +113,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-04",
+  "sentences": [
+   "The bill would let eligible small businesses defer recognising gains and losses for income tax when transferring assets between entities through genuine changes of legal structure.",
+   "The receiving entity would generally inherit the assets’ existing tax costs, with relief requiring the assets’ ultimate economic ownership to remain materially unchanged.",
+   "Relief would apply to eligible transfers or associated tax events from 1 July 2016, with a separate ownership test for certain family trusts."
+  ],
+  "changes": [
+   "Small businesses with combined annual turnover below $2 million, and certain related entities or partners, could qualify.",
+   "Both sides of a transfer would need to choose the relief and satisfy the residency test applicable to their entity type.",
+   "Transfers involving tax-exempt entities or complying superannuation entities would be excluded.",
+   "A three-year test would establish a genuine restructure if significant transferred assets, excluding trading stock, kept the same ultimate economic ownership, remained active business assets and had no significant or material private use.",
+   "Later capital losses on membership interests would be denied to the extent attributable to the restructure."
+  ],
+  "affected": "Small business owners, qualifying related entities, partners and holders of membership interests in entities involved in a restructure would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:42.066316+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-03-23",
+  "sentences": [
+   "The bill would provide interim Commonwealth funding for services outside ordinary annual government operations, including capital spending and financial assistance to other levels of government.",
+   "Funding would broadly equal seven twelfths of estimated annual appropriations, with larger allocations for selected coronavirus response needs and a $24 billion ministerial advance.",
+   "It would begin on 1 July 2020 or royal assent, whichever occurs later, alongside separate supply bills for ordinary services and parliamentary departments."
+  ],
+  "changes": [
+   "Responsible ministers could set conditions, amounts and timing for payments to states, territories and local governments.",
+   "The bill would set full-year debit limits for general financial assistance and national partnership payments.",
+   "Its appropriation authority would end through repeal at the start of 1 July 2023."
+  ],
+  "affected": "Commonwealth entities, the Finance Minister and state, territory and local governments receiving financial assistance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:32.366903+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

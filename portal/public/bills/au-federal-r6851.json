@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-17",
+  "sentences": [
+   "The bill would let state and territory corrective services authorities access telecommunications data under existing federal law after receiving a declaration from the Commonwealth minister.",
+   "A declaration would require a request from the relevant state or territory minister and could impose conditions limiting which data access powers an authority used.",
+   "Declared authorities would remain subject to existing access thresholds, reporting obligations and Commonwealth Ombudsman oversight, with the legislation beginning the day after royal assent."
+  ],
+  "changes": [
+   "A new declaration mechanism would give corrective services authorities enforcement agency status without the existing temporary declaration limit.",
+   "The Commonwealth minister would have to revoke a declaration when the relevant state or territory minister requested it.",
+   "The Commonwealth minister could also revoke access where an authority's compliance with the legislation was unsatisfactory."
+  ],
+  "affected": "State and territory corrective services authorities, telecommunications data subjects, responsible ministers and the Commonwealth Ombudsman would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:56.006813+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

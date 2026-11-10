@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5014_ems_2ec377e6-5eff-4986-bfcc-98a416c7b68f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5014%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00103",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would correct drafting and clerical errors across Commonwealth legislation, update technical language and repeal provisions and Acts that are spent or obsolete.",
+   "It would fix cross-references, numbering and misdescribed amendments, and replace redundant provisions with references to the general interpretation and legislative instruments frameworks.",
+   "Many corrections would start on Royal Assent, with some retrospective provisions aligned to earlier amendments and safeguards maintaining the validity of existing acting appointments."
+  ],
+  "changes": [
+   "Redundant acting-appointment validity provisions would be removed where general interpretation law already deals with them.",
+   "Social security cross-references would be corrected to point to the intended provisions.",
+   "Amendments incorrectly identifying their target provisions would be repaired.",
+   "Obsolete Acts and provisions would be repealed without changing the substance of the law."
+  ],
+  "affected": "Commonwealth and private publishers of legislation, and acting appointees covered by the saving provisions, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:27.763888+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

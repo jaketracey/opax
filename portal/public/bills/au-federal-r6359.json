@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-22",
+  "sentences": [
+   "The bill would require the Environment Minister to place a defined Great Australian Bight heritage area on the National Heritage List and record its heritage values.",
+   "It would establish a special listing process requiring consultation with affected Western Australian and South Australian communities before the Minister includes heritage values for the area.",
+   "The bill would begin on royal assent and cover the specified Southern Ocean area within Australia’s continental shelf, excluding areas belonging to external territories."
+  ],
+  "changes": [
+   "The Minister would have to publish the listing instrument in the Gazette.",
+   "The listed values could include heritage values the Minister considers the area may possess.",
+   "The heritage area could not subsequently be removed from the National Heritage List."
+  ],
+  "affected": "Communities in South Australia and Western Australia likely to be affected by the listing, and the Environment Minister, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:02.371596+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

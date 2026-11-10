@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "The bill would prevent the parliamentary broadcasting committee from imposing conditions that ban the use of footage of parliamentary proceedings for satire or ridicule.",
+   "It would add a specific limit to the committee’s existing power to set rebroadcasting conditions, allowing parliamentary excerpts to be used for those purposes.",
+   "The change would start the day after Royal Assent, while general requirements about context, fairness and accuracy could still apply to all rebroadcasts."
+  ],
+  "changes": [
+   "Committee conditions could no longer prohibit satirical rebroadcasts of parliamentary proceedings.",
+   "The same restriction would apply to conditions banning footage used for ridicule.",
+   "The new limit would take effect the day after Royal Assent."
+  ],
+  "affected": "The Joint Committee on the Broadcasting of Parliamentary Proceedings and people rebroadcasting parliamentary footage for satire or ridicule are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:40.021953+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

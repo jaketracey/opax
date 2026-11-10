@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-29",
+  "sentences": [
+   "The bill would allow four statutory rural research and development corporations to conduct marketing funded by voluntary contributions, without first needing a marketing levy.",
+   "Corporations could use gifts, grants and bequests for industry marketing and carry out related planning, consultation and scoping activities under the expanded definition.",
+   "The changes would apply to the Cotton, Grains, Fisheries and Rural Industries corporations, while research levies and matching Commonwealth funding would remain unavailable for marketing."
+  ],
+  "changes": [
+   "The corporations could enter marketing agreements without a levy containing a marketing component.",
+   "Annual reports would need to describe all marketing activities coordinated or funded wholly or partly by the corporation.",
+   "The amendments would commence the day after Royal Assent."
+  ],
+  "affected": "The four statutory corporations, primary industries and organisations or individuals providing voluntary marketing funds are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:18:44.405777+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

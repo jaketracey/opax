@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "The bill would change tax concessions, luxury car tax refunds, energy regulator governance, consumer data deletion rules and interest on reunited superannuation balances.",
+   "It would link eligible redundancy and early retirement tax treatment to pension age and raise eligible luxury car tax refunds to a $10,000 cap.",
+   "The tax changes would cover dismissals, retirements and eligible vehicle supplies or imports from 1 July 2019, with other measures following separate commencement arrangements."
+  ],
+  "changes": [
+   "The Australian Energy Regulator board would grow from three members to five.",
+   "A Deputy Chair could perform the energy regulator Chair’s duties during absences.",
+   "Consumer data rules would have to require accredited recipients to delete data when consumers request it.",
+   "Regulations would prescribe interest for inactive low balance superannuation accounts and amounts proactively reunited by the tax commissioner."
+  ],
+  "affected": "Older employees, eligible primary producers and tourism operators, consumer data recipients and users, superannuation members and energy regulator board members are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:40.274469+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5899",

@@ -113,7 +113,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-04-02",
+  "sentences": [
+   "The bill would provide interim Commonwealth funding for services outside ordinary annual government operations, including capital expenditure, corporate entities and assistance to other governments.",
+   "It would supply roughly five-twelfths of estimated 2019-20 annual appropriations in these categories, excluding Budget measures, with the balance proposed through a separate appropriation bill.",
+   "The bill would commence on 1 July 2019 or royal assent, whichever is later, and would automatically repeal on 1 July 2022."
+  ],
+  "changes": [
+   "A $380 million limit would apply across Finance Minister advances under this bill and the corresponding appropriation legislation.",
+   "The bill would set five-twelfths of estimated annual debit limits for specified intergovernmental payments.",
+   "Responsible ministers could set conditions and timing for payments to other governments.",
+   "Amounts could be moved into special accounts where the appropriation and account purposes coincide."
+  ],
+  "affected": "Commonwealth departments, corporate Commonwealth entities, state and territory governments, local governments and the Finance Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:17:28.015661+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

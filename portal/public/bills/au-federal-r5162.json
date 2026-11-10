@@ -47,7 +47,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-24",
+  "sentences": [
+   "The bill would phase out exports of live livestock for slaughter and impose a complete ban on that trade from 1 July 2017.",
+   "Before the ban, exports would generally require the Secretary to be satisfied about animal treatment, including holding conditions, transport, handling and slaughter standards.",
+   "The legislation would start on Royal Assent, with limited temporary exemptions for some export contracts made before commencement and no exemptions from the final ban."
+  ],
+  "changes": [
+   "Licence holders would have to make reasonable efforts to ensure compliance with international animal treatment guidelines.",
+   "Licence holders learning of breaches would have to notify the Secretary within 14 days.",
+   "The normal treatment test would require stunning immediately before slaughter.",
+   "Contract exemptions for exports three to six months after commencement would require reasonable renegotiation and welfare efforts."
+  ],
+  "affected": "Livestock export licence holders and people proposing live livestock exports for slaughter are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:42.946488+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5093_ems_cdac4662-424f-46f5-b6a6-9c98d738c7bc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5093%22",
+   "document_date": "2013-06-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00113",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-05",
+  "sentences": [
+   "The bill would establish a funding and accountability framework for an industry-owned company delivering research and development services for Australia's sugar industry.",
+   "The Minister could contract with a company, declare it the industry services body and fund its eligible work using levies and Commonwealth matching payments.",
+   "It would begin the day after Royal Assent, while companion legislation would handle changes to the levy and the existing research corporation's transition."
+  ],
+  "changes": [
+   "Annual matching payments would be limited to the lesser of half eligible research spending or 0.5 per cent of sugar cane production value.",
+   "Unmatched eligible research expenditure could be carried forward into later years.",
+   "The industry body would have to comply with ministerial directions responding to exceptional, urgent circumstances in the national interest.",
+   "New or varied funding contracts would require tabling in both Houses within 15 sitting days."
+  ],
+  "affected": "The industry services company, sugar cane growers and millers, and the Minister for Agriculture, Fisheries and Forestry are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:10.571724+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

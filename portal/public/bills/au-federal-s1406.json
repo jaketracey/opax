@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 10,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-29",
+  "sentences": [
+   "The bill would add the United Nations Declaration on the Rights of Indigenous Peoples to the human rights standards used for parliamentary scrutiny.",
+   "The Parliamentary Joint Committee on Human Rights could then assess proposed legislation and existing Acts against rights and freedoms set out in the declaration.",
+   "The changes would begin the day after Royal Assent and would operate through parliamentary scrutiny, rather than themselves incorporating the declaration into domestic law."
+  ],
+  "changes": [
+   "The statutory definition of human rights would gain an eighth international instrument.",
+   "The committee's examination of legislative instruments would also extend to the declaration.",
+   "An added explanatory note would direct readers to the declaration on the United Nations website."
+  ],
+  "affected": "First Peoples, parliamentarians, the Parliamentary Joint Committee on Human Rights and people developing federal legislation are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:46.620514+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-9606",

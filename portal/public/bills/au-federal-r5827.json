@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-01",
+  "sentences": [
+   "The bill would narrow which equipment leases and bailments are automatically treated as security interests under personal property securities law by extending the duration threshold.",
+   "Defined leases would generally need terms exceeding two years instead of one, while indefinite arrangements would qualify only after possession continued beyond two years.",
+   "The changes would begin the day after Royal Assent for new leases and bailments, preserving the existing treatment of leases that substantively secure obligations."
+  ],
+  "changes": [
+   "Renewable arrangements would use a two year combined term threshold when determining whether they were deemed security interests.",
+   "Leases extending beyond an agreed term would qualify once uninterrupted possession exceeded two years with the owner's consent.",
+   "Indefinite leases would no longer be deemed security interests simply because their end date was unspecified."
+  ],
+  "affected": "Hire and rental businesses, equipment owners, lessees, bailees and creditors holding competing interests in leased goods are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:58.963187+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -77,7 +77,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-21",
+  "sentences": [
+   "The bill would reduce higher education spending by ending upfront student payment discounts and voluntary loan repayment bonuses, and reducing Commonwealth contributions to universities.",
+   "It would remove the 10 per cent upfront discount for units with census dates from 1 January 2014 and the 5 per cent voluntary repayment bonus.",
+   "Commonwealth contributions would be reduced before indexation by 2 per cent for 2014 and 1.25 per cent for 2015, without reducing student contribution amounts."
+  ],
+  "changes": [
+   "Voluntary repayments from 1 January 2014 would lose the bonus even where the debt arose earlier.",
+   "Prepaid units with census dates from 1 January 2014 would receive no upfront discount.",
+   "The provider list would replace the University of Ballarat’s name with Federation University Australia."
+  ],
+  "affected": "Commonwealth-supported students, Higher Education Loan Program debtors, universities and Federation University Australia are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:28.142416+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3028",

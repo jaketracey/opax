@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-14",
+  "sentences": [
+   "The bill would retrospectively validate certain Australian Securities and Investments Commission (ASIC) employment and consultancy agreements and give affected staff a basis for exercising delegated powers.",
+   "Agreements purportedly made before the end of 9 March 2017 would be treated as valid, with the legislation taking effect retrospectively from 15 July 2001.",
+   "The changes would apply to new proceedings and unresolved cases, while completed court proceedings would remain closed unless an available appeal were later pursued."
+  ],
+  "changes": [
+   "Covered agreements would be valid even where their terms and conditions had not been validly determined.",
+   "Transitional rights and liabilities under corporations legislation would be adjusted as though the agreements had always been valid.",
+   "A compensation provision would address certain property acquisitions resulting from validation."
+  ],
+  "affected": "ASIC, affected employees and consultants, the Commonwealth and people involved in proceedings concerning their exercise of delegated powers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:09.311882+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

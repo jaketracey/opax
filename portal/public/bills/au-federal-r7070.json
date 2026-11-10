@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-07",
+  "sentences": [
+   "The bill would change how agencies share, use and record information obtained under foreign intelligence interception warrants, without expanding what those warrants can intercept.",
+   "It would replace mandatory approval of named recipients with discretion for the Attorney-General to specify purposes and conditions governing communication and use of information.",
+   "The changes would operate from Royal Assent and cover subsequent handling of information obtained through interceptions both before and after that commencement."
+  ],
+  "changes": [
+   "The Director-General of Security or authorised persons could share foreign intelligence information through additional statutory pathways.",
+   "Direct recipients under existing specified provisions would have to handle information in performing their functions, duties or powers.",
+   "Onward recipients would expressly be able to share, use and record the information."
+  ],
+  "affected": "Intelligence agencies, the Attorney-General, information recipients and people whose information is intercepted are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:13.067513+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-8282",

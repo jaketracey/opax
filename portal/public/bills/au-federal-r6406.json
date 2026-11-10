@@ -47,7 +47,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-16",
+  "sentences": [
+   "The bill would change payday lending and consumer lease rules by capping lease costs, regulating repayments and expanding obligations and penalties for providers.",
+   "Lease payments would be capped at the goods’ base price plus four per cent of that price per whole month, for up to 48 months.",
+   "The measures would start 12 months after royal assent, with specified delivery, installation and enforcement expenses excluded from the consumer lease payment cap."
+  ],
+  "changes": [
+   "Payday loans would generally require equal instalments at equal intervals.",
+   "Lenders could not charge unused monthly fees after a payday loan is fully repaid early.",
+   "Household goods lease providers would need to obtain and consider 90 days of income bank statements.",
+   "Door-to-door sales of household goods leases would require a prior arrangement with a resident.",
+   "Regulations could set repayment limits linked to consumers’ income."
+  ],
+  "affected": "Payday borrowers, consumer lease customers, small loan lenders, lessors and businesses providing credit assistance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:29.340079+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

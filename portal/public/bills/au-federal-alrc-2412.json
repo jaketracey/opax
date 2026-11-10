@@ -107,13 +107,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5073_ems_db803dd6-19fe-456e-b981-23ef4ac61c04%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5073%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00104",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would allow regulations to exempt specified price representations from the Australian Consumer Law requirement to display a single total price.",
+   "The intended regulation would cover restaurant and café menu surcharges on particular days, subject to conditions about how clearly the extra charges are disclosed.",
+   "The enabling amendment would start the day after Royal Assent, with the scope and conditions of any exemption to be prescribed through regulations."
+  ],
+  "changes": [
+   "A new regulation-making power would be inserted into the component pricing provision.",
+   "Regulations could identify classes of price representations qualifying for an exemption.",
+   "Regulations could impose conditions that businesses must meet to obtain the exemption."
+  ],
+  "affected": "Businesses making price representations, including restaurants and cafés displaying menu surcharges, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:29:14.271033+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

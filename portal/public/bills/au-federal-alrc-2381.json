@@ -125,13 +125,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5041_ems_47012e9f-1629-47b7-a388-f17c2d61f3dd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5041%22",
+   "document_date": "2013-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00108",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-14",
+  "sentences": [
+   "The bill would fund government expenditure outside ordinary annual services for 2013-2014, including financial assistance to State, Territory and local governments and capital-related spending.",
+   "It would authorise scheduled appropriations, provide a $380 million advance for urgent needs and set annual spending limits for specified funds and intergovernmental payments.",
+   "The authorities would begin on Royal Assent and accompany separate bills funding ordinary annual government services and the operations of parliamentary departments."
+  ],
+  "changes": [
+   "Responsible ministers could set conditions, amounts and timing for specified payments to State, Territory and local governments.",
+   "The Finance Minister could reduce surplus capital and other specified appropriations following authorised requests.",
+   "Unused administered and intergovernmental payment items would generally be reduced by reference to agency annual reports.",
+   "General drawing limits would be adjusted for qualifying goods and services tax amounts."
+  ],
+  "affected": "Australian Government agencies, Commonwealth authorities and companies, State, Territory and local governments, and responsible ministers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:11.864701+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

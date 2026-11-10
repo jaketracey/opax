@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5030_ems_569f9bf5-4b1e-4d25-90ce-f5075a753350%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5030%22",
+   "document_date": "2013-03-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00130",
    "document_date": "2013-07-01",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-21",
+  "sentences": [
+   "The bill would extend interim appointment and entitlement arrangements for the Chief Judge Advocate and one full time judge advocate in the Australian Defence Force.",
+   "It would add two years to the existing arrangements, allowing tenure of up to six years unless the Defence Minister specifies an earlier termination day.",
+   "Most provisions would start on Royal Assent, while appointment-limit clarifications would operate retrospectively from 22 September 2009 to address uncertainty about the existing appointments."
+  ],
+  "changes": [
+   "The statutory five-year appointment limit would be disapplied to the Chief Judge Advocate appointed under the interim legislation.",
+   "The three-year panel appointment limit would be disapplied to the judge advocate covered by the interim arrangements.",
+   "Associated payment rules would be updated to refer to the extended six-year period.",
+   "The Minister's window for declaring a termination day would extend from four years to six."
+  ],
+  "affected": "The Chief Judge Advocate, the covered full time judge advocate and the Minister for Defence are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:25.616096+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

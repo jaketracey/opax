@@ -89,13 +89,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4952_ems_1f6f0db5-00a8-49f0-a84f-5f4ecda285be%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4952%22",
+   "document_date": "2013-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00031",
    "document_date": "2013-03-30",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-02-06",
+  "sentences": [
+   "The bill would abolish the Commonwealth law covering the Koongarra project area as part of the process for including that land in Kakadu National Park.",
+   "Its repeal item would remove the entire 1981 Act, addressing land that was left outside the park to allow possible mining development in the area.",
+   "The proposal concerns Koongarra, which is surrounded by the park, where mining development had been pursued but no mining tenements had been granted."
+  ],
+  "changes": [
+   "The Koongarra Project Area Act 1981 would be repealed in full.",
+   "The repeal would provide a legislative step towards including Koongarra within Kakadu National Park.",
+   "The proposed incorporation would accord with the traditional owner's expressed wishes to protect Koongarra as part of Kakadu."
+  ],
+  "affected": "Koongarra's traditional owner is affected by the proposal to protect the area within Kakadu National Park.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:18.550031+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -59,7 +59,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-20",
+  "sentences": [
+   "The bill would link Australian trade agreements to labour protections in partner countries, requiring minimum workers’ rights standards to be included in their domestic law.",
+   "The benchmarks would draw on eight International Labour Organisation conventions covering association, collective bargaining, discrimination, child labour, working hours, safety and weekly rest.",
+   "It would cover agreements reducing or removing Australian tariffs or import charges, and require parliamentary explanation where an exemption from minimum wage standards was made."
+  ],
+  "changes": [
+   "The Minister would have to include minimum workers’ rights requirements in relevant trade agreements.",
+   "Partner countries would need domestic standards at least equivalent to the minimum wage fixing recommendation, unless an exemption was explained.",
+   "The legislation would begin on the day Royal Assent was given."
+  ],
+  "affected": "Workers and employers in Australia’s trading partner countries, those countries’ governments and the Australian Minister responsible for trade agreements are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:32:33.770828+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -119,7 +119,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "The bill would change patent, design and trade mark laws, phase out innovation patents and revise government use and compulsory licensing of protected inventions.",
+   "It would introduce a patent objects clause, require ministerial oversight for Crown use and replace the compulsory licensing test with a public interest test.",
+   "The innovation patent changes would begin 12 months after royal assent, preserving existing rights and certain applications derived from patents or applications filed before commencement."
+  ],
+  "changes": [
+   "Patent and trade mark offices could use electronic official seals.",
+   "The patents commissioner’s power to redact sensitive material would expressly include part or all of a document.",
+   "Unnecessary claims relying on descriptions or drawings could be removed after examination.",
+   "English translation verification certificates would generally no longer be required unless regulations require them."
+  ],
+  "affected": "Patent applicants and owners, registered design owners, trade mark applicants, government agencies and users seeking compulsory licences are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:51.151151+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-5933",

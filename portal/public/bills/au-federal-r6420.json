@@ -149,7 +149,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "The bill would prohibit specified misconduct in electricity retail, financial contract and wholesale markets, with enforcement powers for competition authorities and the Treasurer.",
+   "It would require reasonable retail price adjustments after sustained, substantial procurement cost reductions, and allow contracting or divestiture remedies for certain other misconduct.",
+   "The misconduct provisions would apply nationally from six months after royal assent until 31 December 2025, with separate regulator information powers starting on assent."
+  ],
+  "changes": [
+   "The competition regulator could issue public warnings and infringement notices for suspected prohibited conduct.",
+   "Courts could impose financial penalties or injunctions for prohibited conduct.",
+   "The Australian Energy Regulator could compel documents and evidence for its Commonwealth functions.",
+   "The retail price prohibition would exclude standing offers."
+  ],
+  "affected": "Electricity retailers, generators, financial contract participants, residential customers, small businesses and electricity regulators are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:40.274028+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-5950",

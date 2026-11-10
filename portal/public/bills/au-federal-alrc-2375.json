@@ -101,13 +101,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5009_ems_d0441433-854d-4ca1-8ee4-98acfb7d45b3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5009%22",
+   "document_date": "2013-03-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00050",
    "document_date": "2013-05-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-21",
+  "sentences": [
+   "The bill would let the Minister prohibit specified air cargo from entering Australian territory by aircraft, using an instrument that Parliament could disallow.",
+   "It would create a strict liability offence for non-compliance, carrying 200 penalty units for aircraft operators and 100 for other aviation industry participants.",
+   "The amendments would start on the twenty-eighth day after Royal Assent, and the Minister would need to consult foreign affairs and trade ministers before issuing prohibitions."
+  ],
+  "changes": [
+   "A new ministerial instrument could prohibit entry of specified kinds of air cargo.",
+   "The offence would allow a mistake-of-fact defence and would carry no imprisonment.",
+   "A technical correction would restore accredited air cargo agents to the intended category for regulation-making penalty limits."
+  ],
+  "affected": "Aircraft operators, other aviation industry participants and accredited air cargo agents are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:57.835256+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -57,8 +57,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5101_ems_8d9f5de7-4c6d-49dd-bfb0-779c3a9f9d5a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5101%22",
+   "document_date": "2013-06-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-19",
+  "sentences": [
+   "The bill would remove statutory maximum rates for primary industry research and marketing excise levies, allowing future rate adjustments through regulations without further primary legislation.",
+   "Regulations could not set rates above relevant industry recommendations, and designated research or marketing bodies would need to consult levy payers when making fallback recommendations.",
+   "It would accompany rural research governance and customs charge reforms, with contingent provisions coordinating sugar industry changes and existing operative levy rates remaining unchanged."
+  ],
+  "changes": [
+   "Grains Producers Australia would replace the former Grains Council in specified grower organisation definitions.",
+   "Dairy levy recommendations would be tied to the industry services body’s levy payer poll process.",
+   "Where honey industry bodies recommended different rates, the prescribed levy could not exceed the highest recommendation.",
+   "Obsolete research council and fund definitions would be repealed from relevant schedules."
+  ],
+  "affected": "Primary industry levy payers, producer organisations, research and marketing corporations and relevant industry services bodies are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:33:18.627379+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-29",
+  "sentences": [
+   "The bill would prohibit discrimination based on COVID-19 vaccination status by governments and other entities across employment, education, accommodation, sport and access to goods and services.",
+   "Its definition of discrimination would include demands for vaccination proof and unfavourable treatment linked to a person not having received a COVID-19 vaccination.",
+   "Exceptions would cover government-employed frontline health and care workers, while the prohibitions would override other Commonwealth, state or territory laws permitting vaccination-based discrimination."
+  ],
+  "changes": [
+   "Children under 18 could receive a vaccination only with permission from a parent or guardian.",
+   "The prohibitions would extend to businesses and voluntary bodies.",
+   "A review would be required as soon as possible after the legislation had operated for 12 months."
+  ],
+  "affected": "Governments, employers, businesses, voluntary organisations, service users and families considering childhood vaccination would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-9043",

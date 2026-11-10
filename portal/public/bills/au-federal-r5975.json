@@ -77,7 +77,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-14",
+  "sentences": [
+   "The bill would extend choice of superannuation fund to more employees and prevent salary sacrifice arrangements from reducing employers' compulsory contribution obligations for their workers.",
+   "Employers would calculate compulsory contributions using earnings before amounts sacrificed into superannuation, and could not count those sacrificed contributions towards their own minimum payments.",
+   "Fund choice changes would cover workplace determinations and enterprise agreements made from 1 July 2018, while existing exemptions for specified defined benefit members would remain."
+  ],
+  "changes": [
+   "New employees covered by the expanded choice rules would receive a standard choice form.",
+   "Existing employees could request a choice form when a new covered agreement or determination is made.",
+   "Terms restricting choice in covered new agreements could not prevent contributions to the employee's chosen fund.",
+   "Salary sacrificed contributions paid late could not offset an employer's superannuation guarantee charge."
+  ],
+  "affected": "Employees under covered industrial instruments, people salary sacrificing into superannuation, employers and superannuation funds would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:02.356853+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

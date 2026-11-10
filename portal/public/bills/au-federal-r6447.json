@@ -149,7 +149,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-27",
+  "sentences": [
+   "The bill would extend superannuation fund choice to employees covered by new enterprise agreements and workplace determinations, letting them direct compulsory employer contributions.",
+   "The change would apply to agreements and determinations made on or after 1 July 2020, with employers generally required to respect employees' chosen funds.",
+   "Earlier agreements would retain their treatment, default fund rules would continue, and existing exemptions affecting certain defined benefit scheme members would remain available."
+  ],
+  "changes": [
+   "New employees covered by the changes would receive a standard choice form.",
+   "Existing employees could request a choice form without employers having to issue forms automatically.",
+   "Employers would avoid an increased shortfall where defined benefit entitlements would not change if contributions went to another fund."
+  ],
+  "affected": "Employees under relevant workplace agreements or determinations, their employers and superannuation funds are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:28.607420+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6211",

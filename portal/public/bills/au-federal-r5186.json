@@ -125,7 +125,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-06",
+  "sentences": [
+   "The bill would enlarge the Civil Aviation Safety Authority board to allow two additional appointments, including people with technical or operational aviation experience.",
+   "It would amend the Civil Aviation Act 1988 to permit more appointments while adjusting the rules for meetings of the expanded board.",
+   "The changes would take effect on Royal Assent, with existing board members retaining their positions until their current terms came to an end."
+  ],
+  "changes": [
+   "The board's maximum membership would rise from five to seven.",
+   "Four board members would be needed for a meeting quorum.",
+   "At least three members would need to request an ad hoc meeting in writing."
+  ],
+  "affected": "The Authority and its board members are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:44.140363+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

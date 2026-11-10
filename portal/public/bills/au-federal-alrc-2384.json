@@ -95,13 +95,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5031_ems_30ba7f04-0fa5-408c-8929-8055d9465c92%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5031%22",
+   "document_date": "2013-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00069",
    "document_date": "2013-06-27",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-15",
+  "sentences": [
+   "The bill would require Australian Industry Participation plans for major projects, setting out how Australian businesses could compete for contracts supplying goods and services.",
+   "Public and private projects with capital spending of at least $500 million would need plans, overseen by a new Australian Industry Participation Authority.",
+   "For new facilities, plans would also cover the initial operating phase, while project proponents would retain the choice of suppliers under procurement principles."
+  ],
+  "changes": [
+   "The Authority would evaluate and approve participation plans and publish summaries.",
+   "Project procurement decision-makers would have to stay informed about Australian industry capabilities before tendering.",
+   "Plans would need to explain departures from Australian or international standards.",
+   "The Authority could respond to non-compliance through adverse publicity and applications for court injunctions."
+  ],
+  "affected": "Major project proponents, facility operators, Australian businesses seeking supply contracts and the new Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:16.423969+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1091",

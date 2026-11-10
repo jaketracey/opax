@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-06",
+  "sentences": [
+   "The bill would require flags flown, used or supplied by the Commonwealth to be made in Australia using materials that were also manufactured in Australia.",
+   "It would add this requirement to the Flags Act 1953 and define which flags and ensigns the Commonwealth's new manufacturing obligation would cover.",
+   "The requirement would cover flags and ensigns referred to or appointed under that Act, with commencement on a date to be set by proclamation."
+  ],
+  "changes": [
+   "Section 7 would be reorganised into numbered subsections.",
+   "The expression designated flag would replace the existing longer description in section 7.",
+   "A new subsection would impose the Australian manufacture and materials requirement on the Commonwealth."
+  ],
+  "affected": "The Commonwealth, when flying, using or supplying covered flags, is affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:24:12.448254+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

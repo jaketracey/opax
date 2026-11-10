@@ -101,7 +101,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-27",
+  "sentences": [
+   "The bill would let the Australian Communications and Media Authority set payment timing for transmitter licence tax on specified classes of licences lasting more than 12 months.",
+   "The authority could require tax upfront for the entire licence period or through annual instalments, replacing the licence holder's choice for those specified classes.",
+   "The changes would apply to licence applications made after commencement, including renewals, while excluding transmitter licences associated with commercial broadcasting from the new determinations."
+  ],
+  "changes": [
+   "The authority could create licence classes requiring full payment on issue.",
+   "Other specified classes could require payment on issue and each anniversary.",
+   "Licence holders outside the specified classes would retain their payment election."
+  ],
+  "affected": "Transmitter licence applicants, renewing licence holders and the Australian Communications and Media Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:27.398266+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

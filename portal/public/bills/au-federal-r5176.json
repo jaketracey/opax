@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-27",
+  "sentences": [
+   "The bill would set a new annual salary for the incoming Governor-General, General Peter Cosgrove, by amending the salary specified in existing legislation.",
+   "It would increase the statutory amount from $394,000 to $425,000, with the proposed figure calculated taking account of his Commonwealth-funded military pension.",
+   "The amendment would begin on Royal Assent, while a transitional provision would exclude the Governor-General holding office immediately before commencement for that person's remaining term."
+  ],
+  "changes": [
+   "The existing annual salary figure would be replaced in the Governor-General Act 1974.",
+   "A transitional rule would preserve the incumbent's salary while that person remained in office.",
+   "The salary amendment would operate from Royal Assent."
+  ],
+  "affected": "The incoming Governor-General and the Governor-General holding office immediately before commencement are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:25:50.787384+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

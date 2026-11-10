@@ -203,7 +203,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-22",
+  "sentences": [
+   "The bill would restructure working age income support, replace several payments with Jobseeker Payment, and change employment obligations, compliance rules and welfare administration.",
+   "Jobseeker Payment would replace Newstart Allowance from 20 March 2020, while other existing payments would close and recipients transfer according to their circumstances.",
+   "A separate measure would trial mandatory drug testing of 5,000 new Newstart Allowance and Youth Allowance (other) recipients across three regions for two years."
+  ],
+  "changes": [
+   "A new compliance framework would strengthen penalties for deliberate failures to meet participation requirements.",
+   "Claimants would generally receive payments from lodgement of a complete claim, replacing provisions recognising earlier contact.",
+   "The Department of Human Services could request tax file numbers as part of a claim and withhold payment until supplied.",
+   "Information gathered in welfare administration could be used in subsequent criminal investigations and proceedings."
+  ],
+  "affected": "Working age welfare recipients, social security claimants, employment services and the Department of Human Services are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:01.051897+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-4813",

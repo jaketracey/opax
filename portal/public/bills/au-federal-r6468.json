@@ -113,7 +113,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "The bill would transfer collection of business name registry fees to the appointed registrar as part of the wider Commonwealth business registers modernisation package.",
+   "It would change the government body receiving fees for registry functions, while retaining the existing fee arrangements and amounts charged for particular services.",
+   "It would accompany the Commonwealth Registers Bill and other registry amendments, which establish the wider system and allocate registry functions to an appointed registrar."
+  ],
+  "changes": [
+   "Business name registration fees associated with transferred registry functions would be collected by the registrar.",
+   "Business name renewal fees for those functions would also be collected by the registrar.",
+   "Collection of related late fees would move with the relevant registry functions."
+  ],
+  "affected": "Business name applicants and holders, the Australian Securities and Investments Commission and the appointed registrar are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:13:26.635732+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

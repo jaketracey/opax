@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-26",
+  "sentences": [
+   "The bill would increase customs duties on imported tobacco and change how those rates are indexed, alongside matching excise changes for Australian-made products.",
+   "It would provide four increases of 12.5 per cent, starting on 1 December 2013, with further rises on 1 September in 2014, 2015 and 2016.",
+   "Tobacco indexation would switch from the consumer price index to average weekly ordinary time earnings, with the first adjustment scheduled for 1 March 2014."
+  ],
+  "changes": [
+   "Regular tobacco indexation dates would move to 1 March and 1 September each year.",
+   "The indexation formula would prevent falling earnings figures from reducing duty rates.",
+   "Late earnings data would delay adjustments until the fifth day after publication.",
+   "Alcohol and tobacco indexation provisions would be set out directly in customs tariff legislation."
+  ],
+  "affected": "Tobacco companies and retailers are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:06.754062+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

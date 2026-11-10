@@ -69,8 +69,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5109_ems_e551efc1-83f8-4953-a034-1ea55607fc61%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5109%22",
+   "document_date": "2013-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-24",
+  "sentences": [
+   "The bill would amend customs charge legislation for the proposed grape and wine authority merger so levy receipts could be directed to the new authority.",
+   "It would replace the old corporation references and remove the special provision allowing Wine Australia to recommend levy rates after an annual general meeting.",
+   "The substantive amendments would begin alongside the main merger provisions on 1 July 2014, with the existing levy structure and amounts retained under the package."
+  ],
+  "changes": [
+   "The Corporation definition would be repealed from the relevant charge schedule.",
+   "The schedule’s definitions heading would become singular because only one definition would remain.",
+   "The statutory annual-meeting route for recommending changes to levy rates would be removed."
+  ],
+  "affected": "Wine industry levy payers, the Wine Australia Corporation and the proposed Australian Grape and Wine Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:43.644563+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

@@ -41,7 +41,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-05",
+  "sentences": [
+   "The bill would expand employees' access to flexible work requests and establish a specific right to ask to work from home up to two days weekly.",
+   "Employers could refuse these home-working requests only where the arrangement would make the job's inherent requirements impractical or impossible, rather than relying on broader business grounds.",
+   "The changes would apply prospectively, with the substantive schedule starting the day after Royal Assent and the Fair Work Commission able to resolve disputes."
+  ],
+  "changes": [
+   "Eligibility limits based on particular caring, disability or age-related circumstances would be removed.",
+   "Employers would have to explore reasonable adjustments before refusing a request for up to two home-working days.",
+   "Employers would need to genuinely engage with employees about requests.",
+   "The Fair Work Commission could make binding decisions on whether refusals meet the statutory test."
+  ],
+  "affected": "Employees seeking flexible working arrangements, their employers and the Fair Work Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:09:21.519118+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

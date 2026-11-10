@@ -47,7 +47,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "The bill would end indexation of specified education and training loans and raise the income level at which borrowers must start making compulsory repayments.",
+   "Indexation would be removed from the financial year starting 1 July 2022, with a median-wage repayment threshold applying from the 2023-24 income year.",
+   "The changes would cover higher education, vocational education, trade support and specified student assistance loans, including student start-up and financial supplement debts."
+  ],
+  "changes": [
+   "The minimum repayment income would be defined by reference to median earnings rather than the existing threshold.",
+   "Annual median wages would be calculated using 52 times the published weekly earnings figure.",
+   "The minister could determine an earnings figure if required statistics were delayed, with reasons explaining the calculation."
+  ],
+  "affected": "People with higher education, vocational training, trade support and specified student assistance loan debts would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:19:24.461697+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-8086",

@@ -41,7 +41,28 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-07-02",
+  "sentences": [
+   "The bill would require affordable rental housing conditions when Commonwealth land is sold or leased long term for residential development, subject to specified exemptions.",
+   "By default, at least 30% of dwellings would be affordable, with rent limited to the lower of 75% of market rent and 30% of household income.",
+   "Exemptions would cover small or significantly contaminated sites, prescribed remote or low-demand markets, specified Northern Territory land and land unsuitable for residential development."
+  ],
+  "changes": [
+   "Covered disposals would include leases lasting at least 50 years, counting renewal options.",
+   "A recognised instrument under local land law would have to be ready before a disposal could be completed.",
+   "Registered not-for-profit community housing providers would manage the affordable dwellings.",
+   "Material breaches of affordable housing conditions could attract a civil penalty of up to 10,000 penalty units.",
+   "Tenant income eligibility would be assessed at the start of a tenancy without ongoing reassessment."
+  ],
+  "affected": "Commonwealth landholding entities, developers, community housing providers and eligible renter households are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:06:46.872649+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

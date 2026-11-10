@@ -101,13 +101,44 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5081_ems_e426b9e5-dde4-4d25-b347-c85540c595ef%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5081%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00092",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would adjust aviation and personal property securities laws to support Australia's implementation of the Cape Town Convention and its aircraft protocol.",
+   "It would recognise qualifying Airservices Australia liens, enable aviation regulator functions for aircraft deregistration and export, and confirm the international framework's priority over inconsistent securities law.",
+   "Its substantive amendments would begin with the companion Act, while domestic personal property securities legislation would continue applying wherever there was no inconsistency."
+  ],
+  "changes": [
+   "An Airservices statutory lien for unpaid charges would outrank an international security interest if the lien had been registered first.",
+   "The Civil Aviation Safety Authority could record, remove and act on irrevocable deregistration and export request authorisations.",
+   "The companion Convention Act would be added to the list of laws prevailing over inconsistent personal property securities provisions."
+  ],
+  "affected": "Aircraft creditors and debtors, Airservices Australia and the Civil Aviation Safety Authority are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:12.980620+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

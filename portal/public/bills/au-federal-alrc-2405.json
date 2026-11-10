@@ -107,13 +107,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5062_ems_333bdb31-8ccb-42eb-b936-3331c0a1292e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5062%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00094",
    "document_date": "2013-06-28",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would remove mandatory consideration of lower anti-dumping or countervailing duties in specified circumstances, giving the Minister discretion when setting the amount of duty.",
+   "The Minister could impose the full permitted margin in those cases, while retaining the option of considering and applying a lower duty where appropriate.",
+   "The substantive changes would start with the companion Customs Amendment legislation on 1 January 2014 and apply to specified new notices and continued measures."
+  ],
+  "changes": [
+   "The discretion could apply where export-market conditions prevented normal value being based on domestic sales.",
+   "It could apply where the Australian industry producing like goods included at least two small or medium enterprises.",
+   "In subsidy cases, failure to meet subsidy notification obligations during the specified period could also trigger the discretion.",
+   "The changes would cover relevant third-country dumping and countervailing duties as well as ordinary notices."
+  ],
+  "affected": "Importers, exporters and Australian industries affected by dumping or subsidisation, including small and medium enterprises, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:22.167248+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2964",

@@ -107,7 +107,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-14",
+  "sentences": [
+   "The bill would amend powers for making Defence rules about inquiries, aviation hazards and public areas, allowing replacement instruments to use revised structures and enforcement arrangements.",
+   "The minister could declare defence aviation areas by legislative instrument, and public area by-laws could nominate strict liability offences for a standard infringement notice scheme.",
+   "Defence inquiry powers would be expressed generally, with inquiries conducted by specified tribunals and the defence inspector-general excluded because separate provisions already govern them."
+  ],
+  "changes": [
+   "Defence aviation inspectors would use standard monitoring powers, modified to allow necessary compliance action.",
+   "Aviation area declarations could specify height restrictions for buildings, structures and natural obstacles.",
+   "Maximum penalties permitted in public area by-laws would rise from 5 to 10 penalty units.",
+   "People receiving infringement notices could elect to have their matters decided by a court."
+  ],
+  "affected": "Defence personnel, landowners in aviation areas, public area visitors, inspectors and rangers would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:29.590045+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

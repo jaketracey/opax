@@ -27,8 +27,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s924_ems_272c57f5-9de8-4e21-aa97-a3b166d369b9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s924%22",
+   "document_date": "2013-06-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-18",
+  "sentences": [
+   "The bill would require warrant authorisation for law enforcement and intelligence agencies seeking telecommunications data, extending procedures used for stored communications to other information.",
+   "It would remove provisions allowing existing or prospective telecommunications information to be disclosed without a warrant, including specified sharing with federal police and foreign agencies.",
+   "The amendments would begin the day after Royal Assent, while retaining disclosures used to help locate missing people and extending the information covered by warrants."
+  ],
+  "changes": [
+   "The Australian Security Intelligence Organisation would need warrants for access to existing and prospective telecommunications information.",
+   "Issuing authorities would have to be satisfied of additional matters before granting warrants.",
+   "Warrants would authorise access to information sent or received during the period they specified."
+  ],
+  "affected": "Law enforcement and intelligence agencies and people whose telecommunications information is sought, including missing persons, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:34:30.178233+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

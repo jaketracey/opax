@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "The bill would extend access to the superannuation contribution bring-forward rule to people aged 65 and 66, increasing the age limit for eligible contributors.",
+   "Eligible people could combine up to three years of non-concessional contribution caps in one year, subject to the existing eligibility criteria for using that rule.",
+   "The measure would apply to contributions from 1 July 2020 and accompany separate regulations changing work-test ages and the age limit for spouse contributions."
+  ],
+  "changes": [
+   "The statutory age criterion would rise from under 65 to under 67.",
+   "The expanded eligibility would apply to contributions made from 1 July 2020.",
+   "Commencement would occur at the start of the first calendar quarter after royal assent."
+  ],
+  "affected": "People aged 65 and 66 making voluntary superannuation contributions and the funds receiving their contributions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:14:38.608685+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6512",

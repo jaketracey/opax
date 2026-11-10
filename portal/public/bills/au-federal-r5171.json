@@ -143,7 +143,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-27",
+  "sentences": [
+   "The bill would create a Job Commitment Bonus for eligible young job seekers and change benefit non-payment rules linked to relocation assistance for work.",
+   "Eligible recipients could receive $2,500 after 12 continuous months of work without income support, then another $4,000 after a further 12 months.",
+   "The bonus would cover qualifying work starting on or after 1 July 2014, while prior periods receiving the specified allowances could count towards eligibility."
+  ],
+  "changes": [
+   "The bonus would be exempt from income tax.",
+   "Claims would generally be due within 90 days, with specified exceptions for late or combined claims.",
+   "The non-payment period would rise from 12 to 26 weeks for new relocation assistance recipients who left work without good reason or through misconduct within six months of assistance.",
+   "Relocation assistance paid to another party for a job seeker's benefit would be expressly covered."
+  ],
+  "affected": "Job seekers aged 18 to 30 with at least 12 months of Newstart or specified Youth Allowance payments, and relocation assistance recipients, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:26.944842+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

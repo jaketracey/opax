@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-26",
+  "sentences": [
+   "The bill would bring digital asset platforms and tokenised custody platforms within the financial products framework, applying financial services laws with adjustments for these arrangements.",
+   "Relevant service providers would generally need an Australian financial services licence, while platform issuers would face additional tailored requirements under the financial services regime.",
+   "Targeted exemptions would apply to public digital token infrastructure and custodial staking arrangements, while existing financial product tests would continue to apply where relevant."
+  ],
+  "changes": [
+   "The financial services regulator could set minimum standards for holding assets and handling transactions and settlement.",
+   "Platform issuers would need rules governing users' activities and conduct on their platforms.",
+   "Clients would receive a tailored platform guide in place of a standard product disclosure statement.",
+   "The minister could prohibit specified licensed conduct from being provided through these platforms."
+  ],
+  "affected": "Digital asset platform operators, tokenised custody providers, their clients and the Australian Securities and Investments Commission are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:08:35.614095+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-10196",

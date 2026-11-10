@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-13",
+  "sentences": [
+   "The bill would provide additional appropriations for the Commonwealth's ordinary annual services in 2019-2020, supplementing funding already authorised through earlier appropriation and supply legislation.",
+   "Scheduled funding would cover departmental operations, administered programs and corporate entities, while the Finance Minister's available advance would be restored to $295 million.",
+   "It would start on royal assent, alongside a companion bill providing additional appropriations for services outside the government's ordinary annual operations in that financial year."
+  ],
+  "changes": [
+   "Amounts already advanced for the same expenditure would reduce the bill's corresponding appropriation, with a floor of zero.",
+   "The schedule would place funding for transferred functions with the Commonwealth entity that gained responsibility.",
+   "The appropriation legislation would repeal at the start of 1 July 2022."
+  ],
+  "affected": "Commonwealth departments, funded corporate entities and the Finance Minister are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:29.457113+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6257",

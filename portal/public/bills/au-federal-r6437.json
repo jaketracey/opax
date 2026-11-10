@@ -119,7 +119,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-24",
+  "sentences": [
+   "The bill would establish a standing appropriation for Australia's contributions to specified multilateral development, debt relief and environmental funds under its international replenishment commitments.",
+   "It would authorise payments from the Consolidated Revenue Fund and allow the Treasurer to issue promissory notes under approved commitments or contribution agreements.",
+   "The authority would cover the listed organisations' replenishments, while discretionary trust fund contributions and capital subscription increases would require appropriations through the annual budget process."
+  ],
+  "changes": [
+   "Payments could support the World Bank's International Development Association and specified debt relief schemes.",
+   "Promissory notes would be non-negotiable, carry no interest and be payable at face value on demand.",
+   "The special appropriation legislation would commence the day after royal assent."
+  ],
+  "affected": "The Commonwealth, the Treasurer and the specified multilateral development and environmental institutions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:47.724775+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6226",

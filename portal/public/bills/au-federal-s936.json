@@ -95,7 +95,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "The bill would create a National Integrity Commission combining oversight of Commonwealth corruption, federal law enforcement integrity and confidential ethics advice for ministers and parliamentarians.",
+   "It would establish a National Integrity Commissioner with powers to investigate corruption, require documents and evidence, and conduct hearings in public or private.",
+   "The commission would operate federally without displacing state laws, while territories could arrange for it to perform local integrity functions with the Prime Minister’s consent."
+  ],
+  "changes": [
+   "People could refer corruption allegations anonymously or on behalf of others.",
+   "The National Integrity Commissioner could investigate on their own initiative.",
+   "An Independent Parliamentary Advisor would advise on conflicts, entitlements and parliamentary codes of conduct.",
+   "The Commissioner could hold a public inquiry where satisfied that doing so served the public interest."
+  ],
+  "affected": "Commonwealth agencies and public officials, federal parliamentarians and their staff, ministers, law enforcement agencies and people referring corruption allegations are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:27:40.022469+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-3203",

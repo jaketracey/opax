@@ -95,13 +95,47 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5078_ems_6d21fff5-a89c-4347-9447-8dd5753f877c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5078%22",
+   "document_date": "2013-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00124",
    "document_date": "2013-06-29",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-29",
+  "sentences": [
+   "The bill would make a wide range of tax changes covering instalment payments, infrastructure investment, financial advice regulation, corporate tax disclosure and targeted concessions.",
+   "Large entities would progressively move to monthly pay as you go instalments, while eligible designated infrastructure projects would receive more favourable treatment of tax losses.",
+   "It would also change petroleum taxation and foreign residents' capital gains concessions, while exempting defence abuse reparation payments and certain disability supports from specified taxes."
+  ],
+  "changes": [
+   "Financial services entities giving covered tax advice would enter the Tax Practitioners Board's regulatory regime.",
+   "The Tax Commissioner would publish limited tax information about large corporate taxpayers.",
+   "Eligible infrastructure entities could uplift carried-forward tax losses using the long-term bond rate.",
+   "Foreign and temporary resident individuals would lose the capital gains discount for relevant gains accruing after 8 May 2012.",
+   "Payments under the Defence Abuse Reparation Scheme would be exempt from income tax.",
+   "Certain supports supplied under National Disability Insurance Scheme plans would be free of goods and services tax."
+  ],
+  "affected": "Large taxpayers, designated infrastructure project entities, financial advisers, foreign and temporary resident investors, defence reparation recipients and disability scheme participants are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:49.359855+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-1112",

@@ -35,7 +35,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "text",
+  "attribution": "Written by a model from the bill text as introduced; not the record",
+  "describes_version": "as introduced",
+  "as_of": "2026-06-29",
+  "sentences": [
+   "The bill would change Commonwealth procurement law to require rules favouring domestic manufacturing in specified projects and add an objective supporting Australian industry and jobs.",
+   "It would require procurement rules to give domestic manufacturers opportunities for earlier consideration and set a minimum domestic manufacturing share for goods used in specified projects.",
+   "The requirements would include limited exemptions with transparency, and the whole bill would commence on the day following Royal Assent under its commencement table."
+  ],
+  "changes": [
+   "At least 30% of the total goods value in specified projects would have to comprise domestically manufactured products.",
+   "Domestic manufacturers would receive opportunities for consideration before manufacturers from outside Australia when tendering for specified projects.",
+   "The rules would have to provide limited, transparent exemptions from both requirements."
+  ],
+  "affected": "Domestic and non-domestic manufacturers tendering for specified Commonwealth projects are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:19.352902+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

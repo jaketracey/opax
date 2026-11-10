@@ -131,7 +131,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-28",
+  "sentences": [
+   "The bill would extend customs and border controls to offshore electricity installations and adjust the administration of the offshore electricity licensing and regulatory framework.",
+   "It would require approval for installing overseas infrastructure and extend existing boarding, search, questioning and goods controls to facilities in the Commonwealth offshore area.",
+   "The framework would cover renewable energy and transmission infrastructure offshore, while allowing the registrar and supporting staff to come from different Commonwealth departments."
+  ],
+  "changes": [
+   "Unauthorised installation of overseas offshore electricity infrastructure would become an offence and could result in forfeiture.",
+   "Officers could frisk-search people on installations where the existing prohibited goods suspicion requirements were met.",
+   "The minister would determine prescribed financial security forms and amounts instead of the regulator."
+  ],
+  "affected": "Offshore electricity operators, people travelling to or working on installations, customs officers and offshore energy regulators would be affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:20:42.910599+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-7785",

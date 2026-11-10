@@ -27,8 +27,41 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s915_ems_dc247504-6d5a-461c-8330-a02a3cdd52c3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s915%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would restrict port development and other approvals affecting the Great Barrier Reef world heritage area through changes to national environmental protection law.",
+   "It would prohibit specified new ports and developments within existing ports that individually or cumulatively affect the Reef's world heritage values, and require net benefits.",
+   "It would also impose an approval moratorium from 20 March 2013 until a strategic assessment was complete and accepted as adequate by the World Heritage Committee."
+  ],
+  "changes": [
+   "New ports outside existing port areas along the Reef coastline would be prohibited.",
+   "New ports in designated locations identified for protection from industrial development would also be prohibited.",
+   "Approval would be barred for developments failing to deliver a net benefit to the world heritage area.",
+   "The legislation would commence on Royal Assent."
+  ],
+  "affected": "New port projects, developments within existing ports and other developments affecting the Great Barrier Reef world heritage area are covered.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:28:57.902393+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

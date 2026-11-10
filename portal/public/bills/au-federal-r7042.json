@@ -107,7 +107,26 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-01",
+  "sentences": [
+   "The bill would update Commonwealth statutory forms, replace outdated disability terminology, correct drafting errors and repeal legislation and provisions that no longer serve a purpose.",
+   "Many forms currently prescribed by regulations would instead use prescribed information requirements or approval by ministers and senior officials through publicly registered notifiable instruments.",
+   "Language updates would cover family law, social security and veterans' legislation without changing those provisions' meaning, and references to Northern Territory Acts would be modernised."
+  ],
+  "changes": [
+   "Nuclear safety inspectors' identity card forms could be approved by the agency head through a notifiable instrument.",
+   "Specified security assessment notices could use any format containing the information required by regulations.",
+   "An unused regulation-making power specifying media and forms for banks' unclaimed money statements would be repealed."
+  ],
+  "affected": "Commonwealth administrators, people using statutory forms, regulated businesses and people with disability referred to in the amended laws are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:12:11.829715+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": [

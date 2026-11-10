@@ -101,13 +101,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4987_ems_1d1f9ad1-067d-495f-979b-97aca63e548f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4987%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00065",
    "document_date": "2013-06-26",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would incorporate tariff concession amendments into customs legislation, covering batch repairs, industrial processing, representative samples and terminology used in specified goods descriptions.",
+   "It would expressly cover batch repairs and remove industrial processing from one concession, directing those processing imports towards the separate Tradex Goods Scheme.",
+   "The amendments would apply retrospectively from 1 March 2013 and cover certain earlier imports where the time for calculating their duty had not yet arrived."
+  ],
+  "changes": [
+   "References to value and amount would be removed from the representative samples concession.",
+   "By-laws could define the nature of samples eligible for the concession.",
+   "The vessel parts and materials concession would use gross construction tons as the measurement term.",
+   "Goods imported into warehouses before commencement could be covered if entered for home consumption after commencement."
+  ],
+  "affected": "Importers of goods covered by the amended repair, processing, sample and manufacturing-input concessions are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:35:01.804575+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

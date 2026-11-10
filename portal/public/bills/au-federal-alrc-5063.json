@@ -27,8 +27,40 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s928_ems_20133fec-3f91-44bc-b0a4-68b4a678462d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s928%22",
+   "document_date": "2013-06-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-06-27",
+  "sentences": [
+   "The bill would introduce a flexible fair use exception to copyright law, widen service provider protections and change rules for digital locks and geographic restrictions.",
+   "It would extend safe harbour arrangements beyond carriage service providers and permit visually impaired people and assisting institutions to bypass locks on lawfully purchased content.",
+   "The changes would begin the day after Royal Assent and address geographic controls that prevent Australians accessing legitimately acquired content or impose different prices."
+  ],
+  "changes": [
+   "A broader service provider definition would cover online services, network access and data transmission facilities.",
+   "Public and non-profit institutions’ copyright responsibilities would recognise limits on responsibility for users’ behaviour.",
+   "The existing section 200AB exception would be repealed and a new fair use provision inserted."
+  ],
+  "affected": "Visually impaired people, Australian consumers, educational and cultural institutions, libraries, service providers and copyright creators and holders are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:30:30.765071+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

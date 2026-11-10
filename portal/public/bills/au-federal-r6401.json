@@ -83,7 +83,27 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "The bill would tighten pension residence requirements, stop the basic pension supplement for longer overseas absences and extend waiting periods linked to liquid assets.",
+   "It would generally require stronger residence connections for new Age Pension and Disability Support Pension applicants and increase the maximum liquid-assets waiting period to 26 weeks.",
+   "Existing pension recipients and residence exemptions would retain protection, while the overseas supplement changes would cover absences beginning before, on or after commencement."
+  ],
+  "changes": [
+   "A ten-year continuous residence pathway would require five of those years during working life.",
+   "Alternative qualification pathways would use self-sufficiency tests or 15 years of continuous residence.",
+   "The basic pension supplement would stop after six weeks abroad temporarily, or immediately on permanent departure.",
+   "The longer liquid-assets waiting period would apply to new claims for specified student and working-age payments."
+  ],
+  "affected": "New pension applicants, pensioners travelling or living overseas, and people claiming the specified student and working-age payments are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:10:51.426458+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-6085",

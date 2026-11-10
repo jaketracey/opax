@@ -125,7 +125,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "The bill would impose an annual registration charge on people introducing industrial chemicals as part of a wider replacement of the Commonwealth chemicals regulatory scheme.",
+   "Regulations would set the charge or its calculation method, with the amount expected to reflect the value of chemicals introduced during the registration year.",
+   "This bill would cover charges that are neither customs nor excise duties, with commencement dependent on the main industrial chemicals legislation taking effect."
+  ],
+  "changes": [
+   "The charge could be set at nil for specified circumstances.",
+   "The legislation would extend to Australia's external territories.",
+   "State-owned property would be protected from taxation under the bill.",
+   "The Governor-General could make regulations administering the charge."
+  ],
+  "affected": "Industrial chemical importers and manufacturers, including relevant state and territory bodies, are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:28.580966+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

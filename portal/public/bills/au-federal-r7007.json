@@ -149,7 +149,27 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-29",
+  "sentences": [
+   "The bill would amend Commonwealth crime-related laws covering financial intelligence, bail, foreign evidence, prisoner transfers, international assistance, interception oversight and witness protection arrangements.",
+   "It would expressly allow automated financial intelligence regulatory decisions and broaden mandatory refusal of international assistance where there are substantial grounds to fear torture.",
+   "Witness protection participants could have assistance temporarily suspended when requested or when police capacity to protect them is limited, with provisions for later reinstatement."
+  ],
+  "changes": [
+   "The Attorney-General could refuse prisoner transfer consent before obtaining other parties' consent.",
+   "Bail authority references would replace a narrower judicial officer definition in federal investigation provisions.",
+   "Queensland and Victorian Public Interest Monitors could address additional interception warrant and international production order considerations.",
+   "The Commonwealth criminology advisory council representative could be appointed by designation of a position."
+  ],
+  "affected": "Law enforcement and financial intelligence agencies, regulated businesses, prisoners, witnesses and people involved in international criminal assistance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:15:13.484038+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-8311",

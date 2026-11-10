@@ -95,13 +95,45 @@
  ],
  "sources": [
   {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5021_ems_077c3af1-18c3-4984-8bdf-82838be989da%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5021%22",
+   "document_date": "2013-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
    "kind": "frl_act",
    "url": "https://www.legislation.gov.au/C2013A00071",
    "document_date": "2013-06-27",
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-03-20",
+  "sentences": [
+   "The bill would replace the Australia Council's governing framework, updating its arts support functions, decision-making structure, corporate planning requirements and reporting responsibilities.",
+   "It would introduce a board appointed for relevant skills and let the Council establish committees, including arrangements for assessing grant applications through peers.",
+   "The Council would continue as a statutory body, with the main provisions starting by proclamation or after a six-month fallback period following Royal Assent."
+  ],
+  "changes": [
+   "The Council would gain express functions to conduct arts research and publish evaluations of its support.",
+   "The Council could provide financial assistance and guarantees in carrying out its functions.",
+   "Australian artists would be defined by citizenship or permanent residency for the legislation's purposes.",
+   "The Minister could direct some Council activities but could not direct decisions on financial assistance or guarantees."
+  ],
+  "affected": "Australian artists, arts organisations, the Australia Council, its board, committees and staff are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:28.524708+00:00"
+ },
  "divisions": [
   {
    "key": "federal-senate-2959",

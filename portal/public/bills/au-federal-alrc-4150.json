@@ -21,8 +21,42 @@
    "url": null
   }
  ],
- "sources": [],
- "summary": null,
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r4999_ems_beb2b3ad-1a7c-4274-9241-49dbb9043667%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r4999%22",
+   "document_date": "2013-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-05-27",
+  "sentences": [
+   "The bill would require warning labels for regulated imported food, covering packaged imports and unpackaged or minimally packaged food displayed for retail sale.",
+   "The prescribed warning would identify food as imported and state that Australian growing or processing standards had not been followed and health harm was possible.",
+   "Labelling duties and related offences would begin six months after Royal Assent, while the remaining provisions would begin the day after Royal Assent."
+  ],
+  "changes": [
+   "Importing regulated packaged food without the warning would attract a $500,000 penalty.",
+   "Retail operators displaying regulated unpackaged food without the warning would face a $500,000 penalty.",
+   "Retail operators displaying regulated minimally packaged food without the warning would face a $500,000 penalty.",
+   "Unpackaged food warnings could be attached to the item or displayed prominently nearby.",
+   "Rules could prescribe label size and other display requirements."
+  ],
+  "affected": "Importers of regulated packaged food, operators of regulated retail food businesses and consumers buying imported food are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:31:22.589870+00:00"
+ },
  "divisions": [],
  "speeches": [
   {

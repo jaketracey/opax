@@ -53,7 +53,26 @@
    "licence": "CC BY-NC-ND 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-09",
+  "sentences": [
+   "The bill would retain the coronavirus supplement at $550 per fortnight for listed income support recipients and extend access to additional groups of pensioners.",
+   "It would extend eligibility to Disability Support Pension recipients and Age Pension recipients receiving Commonwealth Rent Assistance, with payments backdated to 25 September 2020.",
+   "The proposed payment period would run until 28 March 2021, with specified expanded payments also tied to continued payment of the supplement to JobSeeker recipients."
+  ],
+  "changes": [
+   "The minister could not use the existing modification power to reduce or remove the supplement.",
+   "Separate powers to reduce or remove the Parenting Payment supplement during the initial period would be repealed.",
+   "The initial Youth Allowance supplement period would be extended to 28 March 2021."
+  ],
+  "affected": "Listed allowance and payment recipients, Disability Support Pension recipients and Age Pension recipients receiving rent assistance are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:11:00.543775+00:00"
+ },
  "divisions": [],
  "speeches": [],
  "acts": []

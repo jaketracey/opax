@@ -143,7 +143,28 @@
    "licence": "CC BY 4.0"
   }
  ],
- "summary": null,
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-02-27",
+  "sentences": [
+   "The bill would update Commonwealth land transport funding rules and enable the Roads to Recovery program to continue beyond its existing funding period.",
+   "It would combine national and off-network investment arrangements, broaden research funding and expand the types of organisations eligible to receive certain transport grants.",
+   "The main changes would begin by proclamation, and the package would also repeal three spent Acts covering earlier transport funding and railway standardisation arrangements."
+  ],
+  "changes": [
+   "The funding Act would be renamed the National Land Transport Act 2014.",
+   "The Roads to Recovery funding period would be set in a ministerial list rather than the Act.",
+   "Partnerships would become eligible for transport development and research funding.",
+   "Non-corporate Commonwealth entities could receive land transport research funding.",
+   "Recipients would have to notify the Minister promptly when disposing of land acquired with funding."
+  ],
+  "affected": "State and territory governments, local authorities, corporate recipients, partnerships and eligible Commonwealth research entities are affected.",
+  "model": "GPT-6.1 (Codex)",
+  "generated_at": "2026-11-10T09:26:26.944337+00:00"
+ },
  "divisions": [
   {
    "key": "federal-representatives-3183",
