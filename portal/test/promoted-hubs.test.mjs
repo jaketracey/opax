@@ -27,7 +27,7 @@ test('promoted assets match Worker readers and every promoted row passes serving
   const registers = clearedGiftRegisters(g), rows = registers.flatMap(r => r.rows);
   assert.equal(registers.length, 3);
   assert.equal(rows.length, 282);
-  assert.equal(rows.filter(r => r.official).length, 275);
+  assert.equal(rows.filter(r => r.official).length, 282); // all rows link since interests-expenses-009
   for (const [name, hub] of [['budget', b], ['vic-gifts', g]]) {
     const staged = readFileSync(new URL(`../../data/staged/${name}/hub.json`, import.meta.url));
     assert.equal(createHash('sha256').update(staged).digest('hex'), hub.promotion.input_sha256);

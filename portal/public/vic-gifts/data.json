@@ -2669,7 +2669,12 @@
           "register_id": "vic-gifts-2025-07-01_2026-01-31",
           "period": "1 July 2025 to 31 January 2026",
           "role": "Minister",
-          "official": null,
+          "official": {
+            "name": "Lizzie Blandthorn",
+            "href": "/subject/person/lizzie-blandthorn",
+            "pid": null,
+            "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+          },
           "source_url": "https://www.vic.gov.au/ministerial-register-gifts-benefits-and-hospitality-july-2025-january-2026",
           "source_locator": "table-1/row-33",
           "source_table_id": "table-1",
@@ -6326,7 +6331,12 @@
           "register_id": "vic-gifts-2025-02-01_2025-06-30",
           "period": "1 February 2025 to 30 June 2025",
           "role": "Minister",
-          "official": null,
+          "official": {
+            "name": "Colin Brooks",
+            "href": "/subject/person/colin-brooks",
+            "pid": null,
+            "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+          },
           "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
           "source_locator": "table-1/row-32",
           "source_table_id": "table-1",
@@ -6564,7 +6574,12 @@
           "register_id": "vic-gifts-2025-02-01_2025-06-30",
           "period": "1 February 2025 to 30 June 2025",
           "role": "Minister",
-          "official": null,
+          "official": {
+            "name": "Steve Dimopoulos",
+            "href": "/subject/person/steve-dimopoulos",
+            "pid": null,
+            "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+          },
           "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
           "source_locator": "table-1/row-41",
           "source_table_id": "table-1",
@@ -6586,7 +6601,12 @@
           "register_id": "vic-gifts-2025-02-01_2025-06-30",
           "period": "1 February 2025 to 30 June 2025",
           "role": "Minister",
-          "official": null,
+          "official": {
+            "name": "Steve Dimopoulos",
+            "href": "/subject/person/steve-dimopoulos",
+            "pid": null,
+            "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+          },
           "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
           "source_locator": "table-1/row-42",
           "source_table_id": "table-1",
@@ -7283,7 +7303,12 @@
           "register_id": "vic-gifts-2025-02-01_2025-06-30",
           "period": "1 February 2025 to 30 June 2025",
           "role": "Minister",
-          "official": null,
+          "official": {
+            "name": "Vicki Ward",
+            "href": "/subject/person/vicki-ward",
+            "pid": null,
+            "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+          },
           "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
           "source_locator": "table-1/row-68",
           "source_table_id": "table-1",
@@ -7440,7 +7465,12 @@
           "register_id": "vic-gifts-2025-02-01_2025-06-30",
           "period": "1 February 2025 to 30 June 2025",
           "role": "Parliamentary secretary",
-          "official": null,
+          "official": {
+            "name": "Luba Grigorovitch",
+            "href": "/subject/person/luba-grigorovitch",
+            "pid": null,
+            "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+          },
           "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
           "source_locator": "table-2/row-5",
           "source_table_id": "table-2",
@@ -7462,7 +7492,12 @@
           "register_id": "vic-gifts-2025-02-01_2025-06-30",
           "period": "1 February 2025 to 30 June 2025",
           "role": "Parliamentary secretary",
-          "official": null,
+          "official": {
+            "name": "Luba Grigorovitch",
+            "href": "/subject/person/luba-grigorovitch",
+            "pid": null,
+            "method": "unique exact Victorian roster name after removing Hon title and the register's lodgement note or repeated title and name"
+          },
           "source_url": "https://www.vic.gov.au/2024-25-ministerial-register-gifts-benefits-and-hospitality",
           "source_locator": "table-2/row-6",
           "source_table_id": "table-2",
@@ -7730,19 +7765,19 @@
         "Minister": 235,
         "Parliamentary secretary": 47
       },
-      "linked_rows": 275,
-      "unlinked_rows": 7,
+      "linked_rows": 282,
+      "unlinked_rows": 0,
       "holds": 0,
       "source_receipts": 8
     },
     "snapshot_date": "2026-10-13",
-    "input_sha256": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
+    "input_sha256": "946ce59531f621f716125bed7eac250ac761f2828d300165fab1d939500f8023",
     "inputs": {
-      "inventory.json": "c60b5dbac4911ea009cd5e492d70ecf0dad1b370e58f57abe5710677885c6e54",
+      "inventory.json": "99dc7bfd5fbb209017526ffe99ee6b20e8c3ac58777f20868403934ac3cbd7fc",
       "receipts.json": "5791af1a4e4d20591b6a016eb8f5a409b12d0aba247cfca1f858d9c525746716",
-      "hub.json": "ef0b7067f69d949d4604478c77b33f408b2c977f31aafc83bd54ef31eafba404",
-      "registers/vic-gifts-2025-02-01_2025-06-30.json": "14af87a6342d394c2b69790f9de74db78e02f2f888a84a1ca9dd393046537f88",
-      "registers/vic-gifts-2025-07-01_2026-01-31.json": "f41b61c7a7404bd058d42d2022bdd62b0a3f3ad4c08de770124e54a6b21755e2",
+      "hub.json": "946ce59531f621f716125bed7eac250ac761f2828d300165fab1d939500f8023",
+      "registers/vic-gifts-2025-02-01_2025-06-30.json": "f04ad44206baf9f9282cfda458c1c34496b8585553829e8c8477fac14b5cab35",
+      "registers/vic-gifts-2025-07-01_2026-01-31.json": "69b64cb2d347e37de53a3bdf50163188e833deb9b8317c3bb36fa01d0413affd",
       "registers/vic-gifts-2026-02-01_2026-06-30.json": "fe0c4d75a8de7bf0d67f43b3e13c7d4d0edc6023761fe468c55940f354105f03"
     },
     "reviewed_commit": "874ed4a21"

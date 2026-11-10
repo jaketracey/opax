@@ -208,7 +208,7 @@ test('an inverted FITS interval keeps the register dates and is matched on its a
   const fixture = { ...env, asset: async path => path === '/fits.json' ? data : asset(path) };
   const hit = await api.callTool(fixture, 'access_registers', { register: 'fits', organisation: 'Richardson Coutts', since: '2023-10-01', until: '2023-10-31' }); cited(hit);
   assert.equal(hit.rows[0].from, '2024-03-06'); assert.equal(hit.rows[0].to, '2023-12-31');
-  assert.match(hit.citations.map(c => c.text).join(' '), /registered activities 2023-09-15 to 2023-12-31/);
+  assert.match(hit.citations.map(c => c.text).join(' '), /registered activities 15 September 2023 to 31 December 2023/);
   const miss = await api.callTool(fixture, 'access_registers', { register: 'fits', organisation: 'Richardson Coutts', since: '2024-06-01', until: '2024-06-30' });
   assert.equal(miss.rows.length, 0);
 });

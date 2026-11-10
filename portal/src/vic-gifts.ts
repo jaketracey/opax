@@ -5,7 +5,15 @@ import {PERSON_PATHS} from '../public/person-paths.js'
 const INDEX='https://www.vic.gov.au/ministerial-gifts-benefits-and-hospitality-register'
 const CC='https://creativecommons.org/licenses/by/4.0/'
 const esc=(value:unknown)=>String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!))
-const officialKey=(value:string)=>value.trim().replace(/\s+/g,' ').replace(/^(?:The\s+)?Hon\.?\s+/i,'').toLowerCase()
+// Mirrors scripts/vic_gifts/stage.py holder_name: only the register's trailing lodgement note
+// ("(via Material Change ...)") and a repeated "Hon <name>" are removed before the exact match.
+const holderName=(value:string)=>{
+  const out=value.trim().replace(/\s+/g,' ').replace(/\s*\(via\s[^()]*\)\s*$/i,'')
+  const rest=out.replace(/^(?:The\s+)?Hon\.?\s+/i,'')
+  const collapsed=rest.replace(/^(\S+(?:\s+\S+)*?)\s+(?:The\s+)?Hon\.?\s+\1\s+(?=\S)/i,'$1 ')
+  return collapsed===rest?out:out.slice(0,out.length-rest.length)+collapsed
+}
+const officialKey=(value:string)=>holderName(value).replace(/^(?:The\s+)?Hon\.?\s+/i,'').toLowerCase()
 const sourceURL=(url:string)=>/^https:\/\/www\.vic\.gov\.au\/(?:ministerial-register-gifts-benefits-and-hospitality-[a-z0-9-]+|2024-25-ministerial-register-gifts-benefits-and-hospitality)$/.test(url)
 type Receipt={sha256:string;snapshot:string}
 export interface GiftsRow {

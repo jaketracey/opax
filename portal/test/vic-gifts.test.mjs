@@ -88,7 +88,7 @@ test('givers remain source text and produce no name or description search hits',
 
 test('staged periods reconcile exactly and person sections use only staged roster matches',async()=>{
  const all=clearedGiftRegisters(staged);assert.equal(all.length,3);assert.deepEqual(all.map(r=>r.rows.length),[63,135,84]);assert.equal(all.flatMap(r=>r.rows).length,282);
- assert.equal(all.flatMap(r=>r.rows).filter(r=>r.official).length,275);
+ assert.equal(all.flatMap(r=>r.rows).filter(r=>r.official).length,282);
  for(const r of all){const p=await vicGiftsPage(new URL('https://opax.test/register/vic-gifts?period='+r.document.period.id),async()=>staged,block);assert.equal(p.status,200);assert.match(p.description,new RegExp('^'+r.rows.length+' '));}
  const href=all[0].rows[0].official.href,expected=all.flatMap(r=>r.rows).filter(r=>r.official?.href===href).length;
  const html=await vicGiftsPersonBlock(href,async()=>staged,new URL('https://opax.test'+href));assert.match(html,new RegExp(expected+' published entries'));assert.match(html,/Snapshot/);assert.match(html,/CC BY 4.0/);

@@ -5325,7 +5325,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=2c19935aac'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=b45a181d68'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -9567,7 +9567,7 @@ const GAMES = {
   grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=4552f7bee0", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=9552844be8", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=a587064c1f", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=c21c2cd22b", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
