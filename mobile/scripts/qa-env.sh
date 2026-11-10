@@ -23,8 +23,11 @@ android_build_command() {
   fi
   (
     set -euo pipefail
-    local lock=${OPAX_ANDROID_NATIVE_LOCK:-/tmp/opax-android-native.lock}
-    local deadline=$((SECONDS + ${OPAX_ANDROID_NATIVE_WAIT_SECONDS:-7200})) owner
+    # Plain assignments, not locals: the subshell already scopes them, and
+    # bash 3.2 unwinds locals before an errexit EXIT trap reads $lock.
+    lock=${OPAX_ANDROID_NATIVE_LOCK:-/tmp/opax-android-native.lock}
+    deadline=$((SECONDS + ${OPAX_ANDROID_NATIVE_WAIT_SECONDS:-7200}))
+    owner=
     until mkdir "$lock" 2>/dev/null; do
       # Serialize stale-owner retirement, then recheck before removing it.
       (
@@ -42,7 +45,8 @@ android_build_command() {
       }
       sleep 20
     done
-    printf '%s\n' "$BASHPID" > "$lock/pid"
+    # Bash 3.2 (macOS /bin/bash, used only by tests here) has no BASHPID.
+    printf '%s\n' "${BASHPID:-$(exec sh -c 'echo "$PPID"')}" > "$lock/pid"
     trap 'rm -f "$lock/pid"; rmdir "$lock"' EXIT
     trap 'exit 130' INT
     trap 'exit 143' TERM HUP

@@ -28,6 +28,10 @@ beforeEach(() => {
     'bin/uname',
     '#!/bin/sh\ncase "$1" in -s) echo "$TEST_OS";; -m) echo x86_64;; esac\n',
   );
+  // macOS has no flock(1); the Linux lock only needs it to serialise
+  // stale-owner reaping, so a no-op stands in when the host lacks it.
+  if (spawnSync('/bin/sh', ['-c', 'command -v flock']).status !== 0)
+    executable('bin/flock', '#!/bin/sh\nexit 0\n');
   executable(
     'node_modules/.bin/expo',
     '#!/bin/sh\n[ "$TEST_OS" != Linux ] || test -s "$OPAX_ANDROID_NATIVE_LOCK/pid"\n',
