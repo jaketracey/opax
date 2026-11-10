@@ -286,7 +286,7 @@ function GrantList({
                     onChange={(next) => {
                       setView(next);
                       setSeeded(false);
-                      search.setQuery('');
+                      search.clear();
                     }}
                     options={[
                       {

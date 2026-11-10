@@ -1018,3 +1018,35 @@ test.each([
     await act(async () => r.unmount());
   },
 );
+
+test.each([
+  ['Grants', Grants, { jur: 'federal' }, 'grants-view', 'recipients'],
+  [
+    'Program',
+    Program,
+    { jur: 'federal', id: 'GO3141' },
+    'program-view',
+    'grants',
+  ],
+] as const)(
+  '%s clears the native search field when the view changes',
+  async (_name, Page, params, picker, next) => {
+    const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+    Object.assign(mockParams, params);
+    const r = await mount(Page);
+    const search =
+      r.root.findByType(RouteOptions).props.options.headerSearchBarOptions;
+    const clearText = jest.fn();
+    search.ref.current = { clearText };
+    await act(async () => search.onChangeText({ nativeEvent: { text: 'zz' } }));
+    await act(async () => {
+      r.root
+        .findAllByType(SegmentedPicker)
+        .find((n) => n.props.testID === picker)!
+        .props.onChange(next);
+    });
+    expect(clearText).toHaveBeenCalled();
+    expect(r.root.findByType(MoneyList).props.rows.length).toBeGreaterThan(0);
+    await act(async () => r.unmount());
+  },
+);

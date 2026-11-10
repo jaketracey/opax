@@ -393,7 +393,7 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
                   value={view}
                   onChange={(next) => {
                     setView(next);
-                    search.setQuery('');
+                    search.clear();
                   }}
                   options={[
                     {

@@ -238,8 +238,8 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
     view === 'contracts' ? 'Contracts' : 'Suppliers',
     'button',
   );
-  const { setQuery } = search;
-  useEffect(() => setQuery(''), [view, setQuery]);
+  const { clear } = search;
+  useEffect(() => clear(), [view, clear]);
   const titleRef = useRef<View>(null);
   const name = profile?.name ?? routeName ?? '';
   const title = useTitleOnScroll(titleRef, name, {

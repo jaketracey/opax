@@ -1,5 +1,11 @@
 import { type Href } from 'expo-router';
-import { useEffect, useState, type ReactNode, type Ref } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useState,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import {
   AccessibilityInfo,
   FlatList,
@@ -233,6 +239,13 @@ export function useMoneySearch(
     onSearchButtonPress: setQuery,
     onCancelButtonPress: () => setQuery(''),
   });
+  const { ref } = bar;
+  // Changing views clears the field as well as the filter, so the bar never
+  // shows text the list no longer applies.
+  const clear = useCallback(() => {
+    setQuery('');
+    if (ref && typeof ref === 'object') ref.current?.clearText();
+  }, [ref]);
   const options: SearchBarProps =
     placement === 'button'
       ? {
@@ -241,7 +254,7 @@ export function useMoneySearch(
           allowToolbarIntegration: false,
         }
       : { ...bar, placement: 'stacked', hideWhenScrolling: appeared };
-  return { query, setQuery, options };
+  return { query, setQuery, clear, options };
 }
 /** Case-insensitive match of a query against a row's words. */
 export const matches = (
