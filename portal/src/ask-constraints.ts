@@ -2,11 +2,14 @@ import { scopeAfterStatutes } from './ask-statute-titles.mjs'
 import type { Period, NamedScope, PlanStep } from './agentic-ask'
 import type { ToolResult } from './agentic-tools'
 import { receiptYearWindow } from './receipt-period'
+import { requestedBillTitle } from './ask-exact-lookup'
 export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
   actUnfiltered?: true
   resolved_question?: string
+  recordKind?: 'bill' | 'division'
+  exactBillTitle?: string
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}, statuteTitles: ReadonlySet<string> | null = null): AskConstraints {
   question = named.resolvedQuestion ?? question
@@ -18,9 +21,9 @@ export function extractAskConstraints(question: string, period: Period, named: N
   const locationState = detected && detected !== 'federal' ? detected : undefined
   const stateGovernment = /\b(?:state|queensland|qld|victorian?|nsw|south australian?) (?:government|grants?)\b/.test(jurisdictionText)
   const chamber = String(filters.chamber || (/\bsenat(?:e|ors?)\b/.test(q) ? 'senate' : /house of representatives/.test(q) ? 'representatives' : '')) || undefined
-  const party = String(filters.party || (named.parties.length === 1 ? named.parties[0] : '')) || undefined
+  const party = named.correctedParty ? undefined : String(filters.party || (named.parties.length === 1 ? named.parties[0] : '')) || undefined
   const place = /\b(?:electorate|seat) of ([A-Z][\p{L}'-]*(?: [A-Z][\p{L}'-]*)*)/u.exec(question)?.[1]?.trim()
-  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
+  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, recordKind: /\b(?:divisions?|vot(?:e|ed|es|ing))\b/i.test(question) ? 'division' : /\bbill\b/i.test(question) ? 'bill' : undefined, exactBillTitle: requestedBillTitle(question) ?? undefined, ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
     superlative: /\b(?:lowest|least|fewest|smallest|youngest)\b/.test(q) ? 'lowest' : /\b(?:highest|most|largest|biggest|oldest|top)\b/.test(q) ? 'highest' : undefined,
     trend: /\b(?:trend|since|over time|each year|by year|changed?|increas\w*|decreas\w*)\b/.test(q) }
 }
@@ -85,6 +88,27 @@ export function periodMatches(c: AskConstraints, coverage: Coverage): boolean {
     (!(coverage.requested_since || coverage.requested_until) || within(coverage.requested_since, coverage.requested_until))
 }
 export const UNCONFIRMED_PERIOD = 'OPAX could not confirm that these records fall in the requested period, so check their dates.'
+/** Discovery is ranked and may fall back to any word. Its rows must still match the requested record. */
+export function guardExactLookupResult(result: ToolResult, c: AskConstraints): ToolResult {
+  if (!result.ok || result.tool !== 'find_records' || !Array.isArray(result.data?.rows) || !(c.exactBillTitle || c.recordKind === 'division' && c.dated)) return result
+  const normal = (s: unknown) => String(s ?? '').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+  const all = result.data.rows as Record<string, unknown>[]
+  const rows = all.filter(r => {
+    if (c.recordKind && r.kind !== c.recordKind) return false
+    if (c.recordKind === 'bill' && c.exactBillTitle && normal(r.title) !== normal(c.exactBillTitle) && normal(r.title).replace(/ (?:19|20)\d{2}$/, '') !== normal(c.exactBillTitle)) return false
+    if (c.recordKind === 'division' && c.exactBillTitle && !normal(r.title).includes(normal(c.exactBillTitle))) return false
+    if (c.recordKind === 'division' && c.dated) {
+      const date = /^(\d{4}-\d{2}-\d{2})(?:$|[T\s])/.exec(String(r.period ?? ''))?.[1]
+      if (!date || c.period.since && date < c.period.since || c.period.until && date > c.period.until) return false
+    }
+    return true
+  })
+  if (rows.length === all.length) return result
+  const urls = new Set(rows.map(r => r.url))
+  const cite = result.cite.filter(c => urls.has(c.url))
+  const message = `OPAX has no matching ${c.recordKind ?? 'public'} record for the requested ${c.recordKind === 'division' ? 'date' : 'title'} in this lookup.`
+  return { ...result, data: { ...result.data, rows, total: rows.length, ...(rows.length ? {} : { coverage_only: true }) }, cite: rows.length ? cite : [{ kind: 'record', label: message, url: c.recordKind === 'division' ? 'https://opax.com.au/divisions/index.json' : 'https://opax.com.au/bills' }], notes: rows.length ? result.notes : [] }
+}
 export function guardToolPeriod(result: ToolResult, step: PlanStep, c: AskConstraints): ToolResult {
   const coverage = resultCoverage(result, step)
   // Undated rows are not known to be wrong: they stand, marked, rather than becoming a refusal. A known mismatch is replaced below.

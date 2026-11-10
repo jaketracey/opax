@@ -5,7 +5,7 @@ import { createAnswerWriter } from './research-writer'
 import { electoratePlan } from './tools/electorates'
 import { divisionModelRows } from './tools/division'
 import { loadStatuteTitles } from './ask-statute-titles.mjs'
-import { extractAskConstraints, constrainStep, guardToolPeriod } from './ask-constraints'
+import { extractAskConstraints, constrainStep, guardToolPeriod, guardExactLookupResult } from './ask-constraints'
 import { calculatedLookup } from './research-calculated'
 import type { RecordQuestion } from './ask-records'
 import { generateText, jsonSchema, tool, isStepCount, ToolChoiceViolationError, type LanguageModel, type ToolSet } from 'ai'
@@ -154,7 +154,7 @@ export function createResearch(options: ResearchOptions): Research {
           }
           const scopedDeps = { ...deps, signal: controller.signal, ...(deps.withSignal?.(controller.signal) ?? {}) }
           const raw = await (action ? action(scopedDeps, step.args) : TOOL_SPECS.find(t => t.name === step.tool)!.run(scopedDeps, step.args))
-          return terminal ? raw : guardToolPeriod(raw, step, constraints)
+          return terminal ? raw : guardToolPeriod(guardExactLookupResult(raw, constraints), step, constraints)
         }, controller.signal)
         check()
         if (invalid) fail('malformed_args')
@@ -399,9 +399,19 @@ export function createResearch(options: ResearchOptions): Research {
         }, true)
       },
     })
-    tools.decline = tool({ description: 'Politely decline a question outside the Australian public record, private-person information, an unsupported causal allegation, or ask to clarify an ambiguous question. No free-form claims.',
-      inputSchema: jsonSchema<{ reason: string }>({ type: 'object', properties: { reason: { type: 'string', enum: ['out_of_scope', 'private_person', 'causation', 'ambiguous'] } }, required: ['reason'], additionalProperties: false }),
+    tools.decline = tool({ description: 'Politely decline a question outside the Australian public record, private-person information, an unsupported causal allegation, or ask to clarify an ambiguous question. Use no_record only after a person or record lookup returns no matching records. No free-form claims.',
+      inputSchema: jsonSchema<{ reason: string }>({ type: 'object', properties: { reason: { type: 'string', enum: ['out_of_scope', 'private_person', 'causation', 'ambiguous', 'no_record'] } }, required: ['reason'], additionalProperties: false }),
       execute: args => invoke({ tool: 'decline', args }, async () => {
+        if (args.reason === 'no_record') {
+          const normal = (v: unknown) => String(v ?? '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+          const relevant = (index: number) => { const args = steps[index]?.args; return args && [args.name, args.query].some(value => typeof value === 'string' && normal(question).includes(normal(value))) }
+          const found = results.some((r, i) => relevant(i) && r.ok && !r.data?.coverage_only && (r.tool === 'find_people' && Array.isArray(r.data?.people) && r.data.people.length || r.tool === 'find_records' && Array.isArray(r.data?.rows) && r.data.rows.length))
+          const empty = !found && results.find((r, i) => relevant(i) && r.ok && (r.tool === 'find_people' && Array.isArray(r.data?.people) && !r.data.people.length || r.tool === 'find_records' && Array.isArray(r.data?.rows) && !r.data.rows.length))
+          if (!empty) return errorResult('decline', 'no empty person or record lookup; check the exact name, title and date first')
+          const answer = empty.tool === 'find_people' ? 'OPAX has no record of a parliamentarian by that name.' : `OPAX has no matching ${constraints.recordKind ?? 'public'} record for the requested name, title or date in this lookup.`
+          qualitative = { answer, answer_decision: 'limitation', citations: {}, sources: [] }; finished = true
+          return { tool: 'decline', ok: true, data: {}, cite: [], notes: [] }
+        }
         const messages: Record<string, string> = { out_of_scope: 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.', private_person: 'I cannot provide private information about a private person. OPAX can help with public parliamentary and disclosure records.', causation: 'Public donation and voting records do not establish that money caused a vote. I can help compare the disclosed records without making that allegation.', ambiguous: 'Please name the person, place, period or public record you mean so I can answer the whole question.' }
         qualitative = { answer: messages[args.reason], answer_decision:args.reason==='ambiguous'?'clarification':'refusal', citations: {}, sources: [] }; finished = true
         return { tool: 'decline', ok: true, data: {}, cite: [], notes: [] }
@@ -412,6 +422,7 @@ export function createResearch(options: ResearchOptions): Research {
       'For any how-many, number-of, more-or-fewer or count comparison about divisions or bills, use count_records with record_type divisions or bills, the requested jurisdiction and chamber, and one date, month, year, financial_year or federal term, or inclusive since/until dates. Use group_by year or month for a series; retain every requested group. Pass bill for divisions linked to a named bill, and include_records true when the question asks which bills were introduced on a date. Use the returned status denominator and share for bill passage rates. find_records and search are ranked samples: never infer a total or a rate from their returned rows. For speech counts use count_speeches, and for speech trends use speech_trend. Select the count facts and snapshot/coverage facts that answer the requested scope. ' +
       'Speech-count rankings and trends end with finish (fact ids). Every other answer ends with answer: facts are ids of record facts that answer the question (their figures are rendered from the record, so never write figures yourself), and points are 2 to 6 short points about what was said: one complete sentence per passage, from different speeches where the record allows, each naming its speaker and period as the passage gives them, citing that passage id with a short quote copied exactly from it. The first point directly answers the question with the requested name, date or outcome; never restate the question or open with "The selected facts show" or other preambles. Do not force the passage year ahead of the answer. Write sentences in your own words, never paste raw tool rows, field labels or arrow-separated relationships. Select each fact once; never repeat a sentence or the same fact across points and selected facts. Each figure comes from one selected fact with its supporting citation. Describe a speaker by party only as the passage\'s party says; quotation marks only around words copied exactly. Give facts, points or both. When a tool says OPAX does not hold what was asked, include that fact. ' +
       'The question constraints are mandatory: preserve years, ranges, jurisdiction, chamber, party, person and place. Never substitute current data for a historical question. Coverage-only facts explain a data limit, not a ranking result. For pay rankings and comparisons prefer paid_answer for the complete original question; parliamentary_pay is for flexible person/office lookups. For summed federal receipts use money_totals: party or donor filters for totals, group_by party or donor for rankings by total, and group_by year for annual trends. Pass financial_year as YYYY-YY or from_year/to_year as financial-year starting years. State the total first with its period. Use party_receipts for donor breakdowns or industry breakdowns, and ranked_money for individual money records, state registers and other money overviews. For complete calculated answers select a single fact only if it fully answers the question as asked. Tools are evidence for you to decide, not automatic responses. For an ambiguous question ask for the missing scope. For out-of-scope/private-person/causal requests call decline. ' +
+      'For an exact person, bill, division or date, verify that exact record. A similar title or another date is not an answer. If an exact lookup finds nothing, open with "OPAX has no record" and use decline with no_record when there are no usable facts. Never use a neighbouring record as the requested one. If the premise gives the wrong party, date, vote or bill status, correct it in the first sentence using the recorded fact before explaining anything else. For a future event, say the record has nothing yet and give the latest recorded date; never predict or treat it as out of scope. ' +
       'Never count retrieved passages. Preserve attribution, dates, uncertainty and policy limits. Keep retrieval-method and coverage caveats out of answer points; the response coverage note carries relevant limitations, only when the answer depends on them. No claim that donations caused votes or speeches. No invented quotations. For speaker rankings check committee coverage when relevant. Finish within the remaining turns.'
     const salvage = async (): Promise<QualitativeAnswer | null> => {
       if (draft && draftRoster) {

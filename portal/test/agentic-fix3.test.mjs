@@ -11,10 +11,11 @@ const lower='How many housing speeches has morgan fiction made?';
 const upper='How many housing speeches has Morgan Fiction made?';
 const scope=(people=[],parties=[],bills=[])=>({people,parties,bills,ambiguous:false,unresolved:false});
 
-test('P1 lowercase unresolved speaker declines before any planner or count, including possessives and single names',async()=>{
+test('P1 unresolved speakers stop before planning or counting, with explicit absence for missing full names',async()=>{
  for(const q of [lower,upper,"How many of morgan fiction's housing speeches are recorded?",'How many housing speeches has morgan made?','How many housing speeches did morgan fiction give?','How many housing speeches by morgan fiction are recorded?','How many housing speeches did morgan fiction say?', 'Compare housing speeches by Taylor Example and morgan fiction']){
   let models=0,counts=0;const r=await ask.runAgentic(q,{...fixtureDeps,generate:async()=>{models++;return{text:plan()}},kb:async()=>{counts++;return{fulltext:{total:300}}}});
-  assert.equal(r.answered,false,q);assert.equal(r.reason,'declined');assert.equal(counts,0,q);assert.equal(models,0,q);
+  if(r.answered){assert.match(r.answer,/^OPAX has no record of a parliamentarian named /,q);assert.equal(r.qualitative.answer_decision,'limitation');assert.equal(r.qualitative.sources[0].url,'https://opax.com.au/parliamentarians.json')}
+  else assert.equal(r.reason,'declined');assert.equal(counts,0,q);assert.equal(models,0,q);
  }
 });
 

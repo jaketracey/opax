@@ -170,7 +170,7 @@ test('a qualitative answer leads with record facts rendered from tool rows and c
   assert.match(JSON.stringify(m.doGenerateCalls[1].prompt).replace(/\\"/g, '"'), /"id":2,"text":"Example Shipyards/);
 });
 
-test('record facts obey the named scope: an overall count is refused for a named person; an unresolved person blocks facts', async () => {
+test('record facts obey the named scope: overall counts are refused and missing people state absence', async () => {
   const scope = { people: ['Robin Example'], parties: [], bills: [], ambiguous: false, unresolved: false };
   const named = await loop('What has Robin Example said about gambling, and how often?', [
     reply([call('count_speeches', { topic: 'gambling', group_by: 'none' }, 'a'), call('count_speeches', { topic: 'gambling', speaker: 'Robin Example', group_by: 'none' }, 'b')]),
@@ -181,7 +181,8 @@ test('record facts obey the named scope: an overall count is refused for a named
   const unresolved = await loop('What has Pat Unknownname said about contracts?', [
     reply([call('parliamentary_pay', { person: 'Robin Example' }, 'a')]), reply([call('answer', { facts: [1] }, 'b')]), reply([call('answer', { facts: [1] }, 'c')])],
     { people: [], parties: [], bills: [], ambiguous: false, unresolved: true });
-  assert.equal(unresolved.out.research.mode, 'planner'); assert.equal(unresolved.failures[0].reason, 'grounding');
+  assert.match(unresolved.out.answer, /^OPAX has no record of a parliamentarian named Pat Unknownname\./);
+  assert.equal(unresolved.out.qualitative.answer_decision, 'limitation'); assert.equal(unresolved.m.doGenerateCalls.length, 0); assert.deepEqual(unresolved.failures, []);
 });
 
 test('finish outside the numerical shapes answers with record facts only', async () => {
