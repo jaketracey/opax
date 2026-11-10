@@ -15,7 +15,7 @@ SCRIPTS = Path(__file__).resolve().parent
 
 
 class AndroidHarnessTests(unittest.TestCase):
-    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False, local_avds=(), reader=False, bad_copy=False, font2=False):
+    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False, local_avds=(), reader=False, bad_copy=False, font2=False, stalled_adb=False):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
             for name in ('e2e-android-device.sh','qa-env.sh','qa-maestro.sh','qa-flows.sh','maestro-watch.py','android-parity-results.py'):
@@ -44,6 +44,7 @@ root=pathlib.Path(os.environ['MOCK_ROOT']); name=pathlib.Path(sys.argv[0]).name;
 with (root/'commands.jsonl').open('a') as log: log.write(json.dumps([name,*args])+'\\n')
 if name=='adb':
     if args==['devices']:
+        if os.environ.get('MOCK_STALLED_ADB')=='1': time.sleep(600)
         print('List of devices attached'); print('\\n'.join('emulator-'+str(5500+i*2)+'\\tdevice' for i in range(int(os.environ['MOCK_EXISTING']))))
     else:
         if args[:2]!=['-s',os.environ['MOCK_SERIAL']] and args[2:]!=['emu','avd','name']: raise SystemExit('Unscoped or foreign adb action')
@@ -83,6 +84,8 @@ elif name=='git': print('a'*40)
                  'OPAX_EMULATOR_START_LOCK':str(root/'start.lock'),
                  'MOCK_ROOT':str(root),'MOCK_SERIAL':'emulator-'+port,'MOCK_FAIL':str(int(fail)), 'MOCK_EXISTING':str(existing)}
             env['MOCK_BAD_COPY']=str(int(bad_copy))
+            env['MOCK_STALLED_ADB']=str(int(stalled_adb))
+            env['OPAX_ADB_INVENTORY_TIMEOUT_SECONDS']='1'
             for key in ('OPAX_PASTE_LOCK','OPAX_BUILD_GATE'): env.pop(key,None)
             selector='.maestro/15-cold-first-line.yaml' if font2 else '.maestro/android/32-record-reader.yaml' if reader else '--all-android' if twice else '01'
             child=subprocess.Popen(['bash','scripts/e2e-android-device.sh',avd,str(out),selector],cwd=mobile,env=env,
@@ -150,6 +153,14 @@ elif name=='git': print('a'*40)
             self.assertEqual(rc,int(bad_copy),log)
             self.assertTrue(any(c[:2]==['tsx','scripts/check-record-copy.ts'] for c in commands),log)
             self.assertTrue(results.strip().endswith(str(int(bad_copy))),results)
+
+    @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
+    def test_unresponsive_shared_adb_is_bounded_without_booting_or_restarting_it(self):
+        rc,log,commands,_=self.run_device(stalled_adb=True)
+        self.assertNotEqual(rc,0,log)
+        self.assertIn('Shared adb inventory wait expired',log)
+        self.assertFalse(any(c[0]=='emulator' for c in commands))
+        self.assertFalse(any('kill-server' in c or 'start-server' in c or 'reconnect' in c for c in commands))
 
 
     @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')

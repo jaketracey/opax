@@ -16,6 +16,8 @@ E2E_APK=${OPAX_ANDROID_E2E_APK:-build/android/e2e/opax-e2e.apk}
 DEBUG_APK=${OPAX_ANDROID_DEBUG_APK:-build/android/development/opax-debug.apk}
 PORT=${OPAX_FIXTURE_PORT:-8910}; export OPAX_FIXTURE_PORT=$PORT
 METRO_PORT=${OPAX_ANDROID_METRO_PORT:-8976}
+ADB_INVENTORY_SECONDS=${OPAX_ADB_INVENTORY_TIMEOUT_SECONDS:-10}
+[[ "$ADB_INVENTORY_SECONDS" =~ ^[1-9][0-9]?$ ]] && [ "$ADB_INVENTORY_SECONDS" -le 60 ] || { echo 'ADB inventory timeout must be between 1 and 60 seconds' >&2; exit 2; }
 case "${OPAX_ANDROID_FONT_SCALE:-1.0}" in
   1.0|2.0) ;; *) echo 'OPAX_ANDROID_FONT_SCALE must be 1.0 or 2.0' >&2; exit 2 ;;
 esac
@@ -74,10 +76,16 @@ else
   flock -w 600 9 || { echo 'Emulator boot lock wait expired' >&2; exit 1; }
   deadline=$((SECONDS + ${OPAX_EMULATOR_WAIT_SECONDS:-1800}))
   while :; do
+    if ! devices=$(timed "$ADB_INVENTORY_SECONDS" adb devices); then
+      [ "$SECONDS" -lt "$deadline" ] || { echo 'Shared adb inventory wait expired; no emulator was started.' >&2; exit 1; }
+      echo 'Shared adb inventory did not respond; waiting without restarting adb.' >&2
+      sleep 20
+      continue
+    fi
     # Inventory host process metadata, without querying another emulator's
     # console or printing its command line. Unknown adb devices count towards
     # the cap; known non-OPAX AVDs do not. Include boots not yet visible to adb.
-    inventory=$(python3 - "$SERIAL" "$(adb devices)" "$OUT/emulator-inventory.json" <<'PYINVENTORY'
+    inventory=$(python3 - "$SERIAL" "$devices" "$OUT/emulator-inventory.json" <<'PYINVENTORY'
 import json, os, pathlib, sys
 names={}
 for proc in pathlib.Path(os.environ.get('OPAX_EMULATOR_PROC_ROOT','/proc')).glob('[0-9]*'):
