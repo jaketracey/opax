@@ -30,6 +30,7 @@ way and every file that `git status` shows as changed or added must parse.
   money      graph/money.json, plus money.qld/vic/tas.json where they exist: meta, nodes, edges
   grants     graph/grants.federal.json: meta, agencies, programs, recipients; grants/federal
              shard-NN.json files match meta.shards, every listed program has its programs/ file,
+             each electorate has a positive grant count and complete seats/ pages matching its total/count and index metadata,
              and every federal id in grants/program-notes.json is still in programs[] (the rule
              portal/test/program-notes.test.mjs enforces)
   suppliers  suppliers.json and agencies.json; the suppliers/ and agencies/ shard directories
@@ -56,6 +57,7 @@ import re
 import subprocess
 import sys
 import tarfile
+from decimal import Decimal
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -67,7 +69,7 @@ PUBLIC = "portal/public"  # repo-relative, for git and for the helpers below
 # figure the group fails and the nightly reverts it. Tune here.
 MONEY_MIN_RATIO = 0.80         # nodes and edges in each graph/money*.json
 GRANTS_MIN_RATIO = 0.80        # programs, recipients, agencies in graph/grants.federal.json
-GRANTS_FILES_MIN_RATIO = 0.90  # shard-NN.json and programs/*.json files under grants/federal
+GRANTS_FILES_MIN_RATIO = 0.90  # shards and programs; seat pages reconcile exactly with the index
 SUPPLIERS_MIN_RATIO = 0.95     # suppliers in suppliers.json (supplier_count too)
 AGENCIES_MIN_RATIO = 0.90      # agencies in agencies.json
 SHARDS_MIN_RATIO = 0.90        # files under suppliers/ and agencies/
@@ -493,6 +495,7 @@ def check_grants() -> list[str]:
     if errs:
         return errs
     doc, _ = _load_json(index)
+    errs += _check_grant_seats(doc, fed)
     errs += _check_dir(fed, r"shard-\d+\.json", GRANTS_FILES_MIN_RATIO)
     errs += _check_dir(f"{fed}/programs", r"[^/]+\.json", GRANTS_FILES_MIN_RATIO)
     shards = len(list((ROOT / fed).glob("shard-*.json")))
@@ -526,6 +529,89 @@ def check_grants() -> list[str]:
     if gone:
         more = f" (+{len(gone) - 8} more)" if len(gone) > 8 else ""
         errs.append(f"program-notes.json names federal programs missing from {index}: {', '.join(gone[:8])}{more}")
+    return errs
+
+
+def _check_grant_seats(index: dict, fed: str) -> list[str]:
+    """D5: every indexed seat's complete page chain reconciles with its figures."""
+    seats = index.get("electorates")
+    if not isinstance(seats, list) or not seats:
+        return ["grants index has no electorates for the per-seat slice"]
+    errs, expected_files, award_ids = [], set(), set()
+    for seat in seats:
+        if not isinstance(seat, dict) or not isinstance(seat.get("n"), str):
+            errs.append("grants index has an invalid electorate")
+            continue
+        key = re.sub(r"[^a-z0-9]+", "-", seat["n"].lower()).strip("-")[:80].rstrip("-") or "x"
+        if seat.get("key") != key:
+            errs.append(f"seat {seat['n']} has an invalid file key")
+        c, t = seat.get("c"), seat.get("t")
+        if isinstance(c, bool) or not isinstance(c, int) or c < 0 or isinstance(t, bool) or not isinstance(t, (int, float)) or not math.isfinite(t):
+            errs.append(f"seat {seat['n']} has an invalid index total/count")
+            continue
+        if c == 0:
+            errs.append(f"seat {seat['n']} has 0 matched grants; omit it from the index")
+            continue
+        count, total, previous, complete = 0, Decimal(0), None, True
+        pages = max(1, (c + 499) // 500)
+        for page_no in range(1, pages + 1):
+            name = f"{key}.json" if page_no == 1 else f"{key}-{page_no}.json"
+            rel = f"{fed}/seats/{name}"
+            if name in expected_files:
+                errs.append(f"duplicate seat page {name}")
+            expected_files.add(name)
+            page, err = _load_json(rel)
+            if err or not isinstance(page, dict):
+                errs.append(f"{rel} unreadable or missing")
+                complete = False
+                continue
+            if any(page.get(k) != v for k, v in {"key": key, "n": seat["n"], "st": seat.get("st"),
+                                                "t": t, "c": c, "page": page_no, "jur": "federal"}.items()):
+                errs.append(f"{rel} identity or total/count does not match the seat index")
+            if page.get("meta") != index.get("meta"):
+                errs.append(f"{rel} source/updated metadata does not match the index")
+            next_path = f"/grants/federal/seats/{key}-{page_no + 1}.json" if page_no < pages else None
+            if "next" not in page or page["next"] != next_path:
+                errs.append(f"{rel} has an invalid next page")
+            rows = page.get("grants")
+            expected_count = min(500, c - (page_no - 1) * 500)
+            if not isinstance(rows, list):
+                errs.append(f"{rel} grants is not an array")
+                complete = False
+                continue
+            if len(rows) != expected_count:
+                errs.append(f"{rel} lists {len(rows)} grants, expected {expected_count}")
+            for g in rows:
+                fields = {"id", "rid", "rn", "k", "n", "pid", "pr", "v", "fy", "s", "el", "elst"}
+                if not isinstance(g, dict) or fields - g.keys():
+                    errs.append(f"{rel} grant is missing required fields")
+                    complete = False
+                    continue
+                gid, v = g["id"], g["v"]
+                if not all(isinstance(g[k], str) and g[k] for k in ("id", "rn", "k", "pid", "pr")):
+                    errs.append(f"{rel} grant has an invalid id, recipient or program")
+                elif gid in award_ids:
+                    errs.append(f"{rel} duplicates grant {gid}")
+                else:
+                    award_ids.add(gid)
+                if g["el"] != seat["n"] or g["elst"] != seat.get("st"):
+                    errs.append(f"{rel} grant {gid} does not match its seat/state")
+                if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v):
+                    errs.append(f"{rel} grant {gid} has no finite value")
+                    complete = False
+                    continue
+                if previous is not None and v > previous:
+                    errs.append(f"{rel} grants are not sorted by amount descending")
+                previous = v
+                total += Decimal(str(v))
+                count += 1
+        if complete and (count != c or abs(total - Decimal(str(t))) > Decimal("0.5")):
+            errs.append(f"seat {seat['n']} grants sum/count {total}/{count} does not match index {t}/{c}")
+        if len(errs) > 20:
+            return errs
+    extra = sorted(p.name for p in (ROOT / fed / "seats").glob("*.json") if p.name not in expected_files)
+    if extra:
+        errs.append(f"grants seat slice has unlinked pages: {', '.join(extra[:8])}")
     return errs
 
 
