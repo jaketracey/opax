@@ -257,3 +257,12 @@ test('the profile More menu Ask action accepts the Android person label', () => 
   );
   assert.ok(body.includes('^Ask about (their speeches|.+)$'));
 });
+
+test('an exact topic match may be promoted to the top suggestion', () => {
+  const body = fs.readFileSync(
+    path.join(out, '61-search-to-source.yaml'),
+    'utf8',
+  );
+  assert.ok(body.includes('search-(suggestion-topic-housing|top-suggestion)'));
+  assert.ok(!/id: search-suggestion-topic-housing\n/.test(body));
+});

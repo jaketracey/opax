@@ -105,6 +105,14 @@ function selector(v) {
   // and deliberately omits its duplicate from the People group.
   if (v.id === 'search-suggestion-person-.*')
     return { ...v, id: 'search-(suggestion-person-.*|top-suggestion)' };
+  // The same promotion applies to an exact topic match (61: "housing"); the
+  // promoted row must still name the topic.
+  if (v.id === 'search-suggestion-topic-housing')
+    return {
+      ...v,
+      id: 'search-(suggestion-topic-housing|top-suggestion)',
+      text: v.text ?? '^Housing(, .*)?$',
+    };
   if (v.id?.endsWith('-elected') && v.text === 'Elected')
     return { ...v, text: '^(Status: )?Elected$' };
   if (nativeSearchHints.has(v.text)) {
