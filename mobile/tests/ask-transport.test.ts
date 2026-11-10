@@ -311,14 +311,12 @@ test('timeout after words arrive preserves an explicitly partial answer', async 
     cancel: jest.fn().mockResolvedValue(undefined),
     releaseLock: jest.fn(),
   };
-  const t = jest
-    .fn()
-    .mockResolvedValue(
-      response(200, payload, {
-        headers: { get: () => 'text/event-stream' },
-        body: { getReader: () => reader },
-      }),
-    );
+  const t = jest.fn().mockResolvedValue(
+    response(200, payload, {
+      headers: { get: () => 'text/event-stream' },
+      body: { getReader: () => reader },
+    }),
+  );
   const on = { stage: jest.fn(), delta: jest.fn(), retry: jest.fn() };
   const pending = api(t)
     .askPost('/api/ask?stream=1', {}, controller().signal, on)
@@ -405,3 +403,47 @@ test.each([
     expect(t).toHaveBeenCalledTimes(1);
   },
 );
+
+test('a slow answer that keeps arriving is not cut off by the stall timeout', async () => {
+  jest.useFakeTimers();
+  Object.assign(globalThis, { TextDecoder, TextEncoder });
+  const later = (text: string) =>
+    new Promise((resolve) =>
+      setTimeout(
+        () => resolve({ value: new TextEncoder().encode(text), done: false }),
+        60_000,
+      ),
+    );
+  const reader = {
+    read: jest
+      .fn()
+      .mockImplementationOnce(() =>
+        later('event: delta\ndata: {"text":"Fixture "}\n\n'),
+      )
+      .mockImplementationOnce(() =>
+        later('event: delta\ndata: {"text":"slow answer"}\n\n'),
+      )
+      .mockImplementationOnce(() =>
+        later(`event: done\ndata: ${JSON.stringify(payload)}\n\n`),
+      ),
+    cancel: jest.fn().mockResolvedValue(undefined),
+    releaseLock: jest.fn(),
+  };
+  const t = jest.fn().mockResolvedValue(
+    response(200, payload, {
+      headers: { get: () => 'text/event-stream' },
+      body: { getReader: () => reader },
+    }),
+  );
+  const on = { stage: jest.fn(), delta: jest.fn(), retry: jest.fn() };
+  const pending = api(t)
+    .askPost('/api/ask?stream=1', {}, controller().signal, on)
+    .catch((error: unknown) => error);
+  try {
+    await jest.advanceTimersByTimeAsync(180_000);
+    expect(await pending).toMatchObject({ answer: 'Recorded answer' });
+    expect(on.delta).toHaveBeenCalledWith('slow answer');
+  } finally {
+    jest.useRealTimers();
+  }
+});

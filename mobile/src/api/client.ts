@@ -492,12 +492,21 @@ export class ApiClient {
       rejectInterrupted(new AskFailure('cancelled', 'Cancelled.'));
     };
     signal.addEventListener('abort', cancel, { once: true });
-    // The Worker has its own bounded retries. This also bounds a stalled
+    // The Worker has its own bounded retries. This bounds a stalled
     // connection, JSON body or reader, without issuing another paid request.
-    const timer = setTimeout(() => {
-      request.abort();
-      rejectInterrupted(new AskFailure('timeout', 'The answer took too long.'));
-    }, 120_000);
+    // It is a stall timer: every chunk that arrives restarts it, so a long
+    // answer that is still being written is never cut off.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const arm = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        request.abort();
+        rejectInterrupted(
+          new AskFailure('timeout', 'The answer took too long.'),
+        );
+      }, 120_000);
+    };
+    arm();
     const waiting = <T>(operation: Promise<T>) =>
       Promise.race([operation, interrupted]);
     let shown = false;
@@ -560,6 +569,7 @@ export class ApiClient {
         for (;;) {
           const { value, done } = await waiting(reader.read());
           if (done) break;
+          arm();
           stream.push(decoder.decode(value, { stream: true }));
           if (stream.done) break;
         }
