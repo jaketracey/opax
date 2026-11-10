@@ -39,8 +39,12 @@ jest.mock('react-native-gesture-handler', () => ({
   Gesture: {},
 }));
 const mockParams: Record<string, string> = {};
-const mockRouter = { push: jest.fn(), replace: jest.fn() };
-const mockNavigation = { setParams: jest.fn() };
+const mockRouter = {
+  push: jest.fn(),
+  replace: jest.fn(),
+  setParams: jest.fn(),
+};
+const mockNavigation = { setParams: jest.fn(), isFocused: () => true };
 let mockOptions: Record<string, unknown> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual<typeof import('react')>('react');
@@ -224,7 +228,7 @@ test('Filters open /filters/money and apply live through the params', async () =
   await act(async () =>
     store.set({ ...store.get(), from: 2024, to: 2024 } as never),
   );
-  expect(mockNavigation.setParams).toHaveBeenLastCalledWith(
+  expect(mockRouter.setParams).toHaveBeenLastCalledWith(
     expect.objectContaining({ from: '2024', to: '2024' }),
   );
   await act(async () => r.unmount());
@@ -235,7 +239,7 @@ test('the jurisdiction pop-up writes the jurisdiction and clears the window', as
   const popup = r.root.findByType(PopUpButton);
   expect(popup.props.testID).toBe('money-jurisdiction');
   await act(async () => popup.props.onChange('qld'));
-  expect(mockNavigation.setParams).toHaveBeenLastCalledWith(
+  expect(mockRouter.setParams).toHaveBeenLastCalledWith(
     expect.objectContaining({
       jurisdiction: 'qld',
       from: undefined,
@@ -250,7 +254,7 @@ test('test hooks write the year and push a party record with the window', async 
   const r = await render();
   const button = (id: string) => byTestID(r, Button, id)!;
   await act(async () => button('money-test-year').props.onPress());
-  expect(mockNavigation.setParams).toHaveBeenCalled();
+  expect(mockRouter.setParams).toHaveBeenCalled();
   await act(async () => button('money-test-focus').props.onPress());
   expect(mockRouter.push).toHaveBeenLastCalledWith(
     expect.objectContaining({
