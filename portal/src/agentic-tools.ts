@@ -317,7 +317,10 @@ export async function findPeople(deps: ToolDeps, input: { name: string; limit?: 
   // Existing callers use people[0] in subsequent filters. Only put a resolved
   // identity there, so an ambiguous lookup cannot silently select a stranger.
   const hits = resolution.status === 'matched' ? candidates.slice(0, 1) : []
-  const service = await personService(deps, hits)
+  const resolved = resolution.status === 'matched' ? resolution.candidates[0].person : undefined
+  // Keep the source ID for service joins and every chamber recorded by aliases of that identity.
+  const service = await personService(deps, resolved ? [{ ...resolved, chambers: [...new Set(data.people
+    .filter(p => p === resolved || resolved.pid && p.pid === resolved.pid).flatMap(p => p.chambers ?? []))] }] : [])
   const enriched = hits.map((person, i) => ({ ...person, service: service[i] }))
   const tied = candidates.filter(candidate => candidate.confidence === candidates[0]?.confidence)
   const clarification = resolution.status === 'ambiguous' ? `Which person do you mean: ${tied.map(p => `${p.name}${p.states.length ? ` (${p.states.join(', ')})` : ''}`).join(' or ')}?` : undefined

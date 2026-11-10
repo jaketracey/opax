@@ -64,6 +64,7 @@ test('nickname resolution uses given names and preserves roster spelling and met
   assert.deepEqual(result.data.people[0], {
     name: row.name, confidence: 0.98, party: row.party_now, states: row.states,
     chambers: row.chambers, years: [row.first, row.last], current: row.current, speeches_indexed: row.speeches,
+    representation: row.representation ?? [], service: [],
   });
 });
 

@@ -166,12 +166,40 @@ test('a checked party correction stays first after the writer and preserves cita
 
 const call = (toolName, args) => ({ type: 'tool-call', toolName, toolCallId: toolName, input: JSON.stringify(args) })
 const reply = content => ({ content, finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage: { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }, warnings: [] })
+const context = (q, d) => ({ deps: d, period: api.inferPeriod(q), named: emptyScope, signal: new AbortController().signal,
+  progress: async () => {}, scope: step => step, execute: (_step, _round, action) => action(d) })
 test('the loop can state a missing person after an empty lookup instead of asking for a known full name again', async () => {
   const model = new MockLanguageModelV4({ doGenerate: [reply([call('find_people', { name: 'Taylor Unrecorded' })]), reply([call('decline', { reason: 'no_record' })])] })
   const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) } }), { write: undefined })
   const q = 'Which electorate does Taylor Unrecorded MP represent?'
-  const run = await api.runAgentic(q, deps({ asset: async () => null, research }), async () => {}, 40_000, api.inferPeriod(q), {}, emptyScope)
-  assert.equal(run.answer, 'OPAX has no record of a parliamentarian by that name.')
+  // A missing roster is a tool failure, while an available empty roster establishes an empty lookup.
+  const run = await research(q, context(q, deps({ asset: async path => path === '/parliamentarians.json' ? { people: [] } : null })))
+  assert.equal(run.qualitative.answer, 'OPAX has no record of a parliamentarian by that name.')
   assert.equal(run.qualitative.answer_decision, 'limitation')
   assert.equal(model.doGenerateCalls.length, 2)
+})
+
+test('the exact absence check respects fuzzy names, ambiguous names and register-only members', async () => {
+  assert.equal(await lookup('Which electorate does Anthony Albanes MP represent?'), null)
+  const q = "What is on Bree James's interests register?"
+  const d = deps({ asset: async path => path === '/interests/index.json' ? { people: { 'n-bree-james': { name: 'Bree James' } } } : assets[path] ?? null })
+  assert.equal(await lookup(q, d), null)
+  const ambiguous = deps({ asset: async path => path === '/parliamentarians.json' ? { people: [{ name: 'John Smith', pid: '1' }, { name: 'Joan Smith', pid: '2' }] } : null })
+  assert.equal(await lookup('What did Jonn Smith say about housing?', ambiguous, emptyScope), null)
+})
+
+test('an ambiguous name cannot authorise a no-record terminal answer', async () => {
+  const model = new MockLanguageModelV4({ doGenerate: [reply([call('find_people', { name: 'Jonn Smith' })]), reply([call('decline', { reason: 'no_record' })]), reply([call('decline', { reason: 'ambiguous' })])] })
+  const research = api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) } })
+  const q = 'What did Jonn Smith say about housing?'
+  const d = deps({ asset: async path => path === '/parliamentarians.json' ? { people: [{ name: 'John Smith', pid: '1' }, { name: 'Joan Smith', pid: '2' }] } : null })
+  const run = await research(q, context(q, d))
+  assert.equal(run.qualitative.answer_decision, 'clarification')
+  assert.doesNotMatch(run.qualitative.answer, /no record/i)
+  assert.equal(model.doGenerateCalls.length, 3)
+})
+
+test('empty count windows within dated coverage remain available to count_records', async () => {
+  const d = deps({ asset: async path => path === '/divisions/index.json' ? { divisions: [{ key: 'federal-senate-1', date: '2025-07-30' }, { key: 'federal-senate-2', date: '2025-08-01' }] } : null })
+  assert.equal(await lookup('How many divisions did the Senate hold on 31 July 2025?', d, emptyScope), null)
 })

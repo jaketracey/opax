@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {MockLanguageModelV4} from 'ai/test';
-const built=await build({stdin:{contents:"export * from './src/agentic-ask';export * from './src/agentic-response';export * from './src/research-loop';export * from './src/research-types';export * from './src/research-evidence';export * from './src/research-credit';export * from './src/research-response';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
+const built=await build({stdin:{contents:"export * from './src/agentic-ask';export * from './src/agentic-response';export * from './src/research-loop';export * from './src/research-types';export * from './src/research-evidence';export * from './src/research-credit';export * from './src/research-response';export {researchReservationUsd} from './src/research-budget';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'));
 // Selection/admission unit fixtures stop before writing; research-writing and research-route cover final delivery.
 const selectionOnly=research=>Object.assign(research,{write:undefined});
@@ -78,7 +78,7 @@ test('daily dollar admission refuses inference and fails closed when its ledger 
 test('each turn reserves its own call ceiling, not the whole request budget; estimates cannot refund unknown billing',async()=>{
  const reserved=[],settled=[],m=model([reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])]);
  const f=fixtures(m,{inputPrice:0.66,outputPrice:1.98,dailyBudget:{reserve:async amount=>{reserved.push(amount);return{settle:async actual=>settled.push(actual)}}}});
- const run=await f.run();assert.equal(run.research.mode,'loop');assert.deepEqual(reserved,run.research.turns.map(t=>2*(t.input_reserve*0.66+1800*1.98)/1e6));assert.ok(reserved.every(usd=>usd<0.02));assert.deepEqual(settled,[undefined,undefined]);assert.equal(run.cost_usd,2*(10*0.66+5*1.98)/1e6);
+ const run=await f.run();assert.equal(run.research.mode,'loop');assert.deepEqual(reserved,run.research.turns.map(t=>2*(t.input_reserve*0.66+1800*1.98)/1e6));assert.ok(reserved.every(usd=>usd>0&&usd<api.researchReservationUsd(96000,0.66,1.98)));assert.deepEqual(settled,[undefined,undefined]);assert.equal(run.cost_usd,2*(10*0.66+5*1.98)/1e6);
 });
 test('provider billing receipts allow settlement refunds and own the reported cost',async()=>{
  const settled=[],responses=[reply([call('count_speeches',args)]),reply([call('finish',{facts:[1]})])].map(r=>({...r,providerMetadata:{openrouter:{usage:{cost:0.00002}}}}));

@@ -1,10 +1,11 @@
 import { aud, fold, siteUrl } from './record-common'
+import { receiptYearWindow } from '../receipt-period'
 import { readToolAsset, type StructuredToolResult, type ToolArgs, type ToolEnv } from './types'
 
 type YearTotals = Record<string, [number, number]>
 interface Entry { id: string; n: string; t: number; c: number; k?: string; sh?: number; key?: string; by?: (0 | [number, number])[]; y0?: string; y1?: string }
 interface GrantIndex {
-  meta?: { years?: string[]; counts?: { recipients?: number; recipients_listed?: number; programs_total?: number; programs_listed?: number } }
+  meta?: { years?: string[]; generated?: string; counts?: { recipients?: number; recipients_listed?: number; programs_total?: number; programs_listed?: number } }
   recipients: Entry[]; programs: Entry[]; years?: Record<string, { t: number; c: number }>
 }
 interface Summary { t: number; c: number; y0?: string; y1?: string; by?: YearTotals; grants?: Award[]; more?: number }
@@ -26,8 +27,23 @@ export async function grantTotals(env: ToolEnv, args: ToolArgs): Promise<Structu
   if (args.state || args.electorate) return unavailable('The published aggregates do not support complete totals filtered by electorate or state.')
   if (args.query && (args.recipient || args.program || args.group_by === 'year')) return unavailable('Use recipient or program to select a total. Free-text award filters cannot be applied to complete financial-year aggregates.')
   const jurisdiction = args.jurisdiction === 'qld' ? 'qld' : 'federal'
+  const limitation = (text: string): StructuredToolResult => ({ rows: [], coverage_only: true,
+    coverage: { since: null, until: null, as_of: null, matched: false, note: text },
+    citations: [{ kind: 'record', text, url: siteUrl(env, `/money/grants?jur=${jurisdiction}`) }], notes: [text] })
+  const dated = typeof args.since === 'string' || typeof args.until === 'string'
+  const window = dated ? receiptYearWindow(args.since as string | undefined, args.until as string | undefined) : undefined
+  if (window?.error) return limitation('Grant summaries are grouped by financial year (1 July to 30 June), so they cannot establish a total for the requested partial or calendar-year period.')
+  const year = args.financial_year ? Number(String(args.financial_year).slice(0, 4)) : undefined
+  // Exact dates take precedence over generic calendar-year arguments added by Ask.
+  const from = dated ? window?.from_year : year ?? args.from_year
+  const to = dated ? window?.to_year : year ?? args.to_year
+  args = { ...args, from_year: from, to_year: to }
   const index = await readToolAsset(env, `/graph/grants.${jurisdiction}.json`) as GrantIndex | null
   if (!index || !Array.isArray(index.recipients) || !Array.isArray(index.programs)) throw new Error('Grant aggregates unavailable')
+  const years = (index.meta?.years ?? []).map(y => Number(y.slice(0, 4))).sort((a, b) => a - b)
+  const first = from === undefined ? years[0] : Number(from), last = to === undefined ? years.at(-1) : Number(to)
+  if ((from !== undefined || to !== undefined) && years.length && (first! < years[0] || last! > years.at(-1)! || first! > last!)) return limitation('The published grant data cannot establish a complete total for the requested financial-year range.')
+  if ((from !== undefined || to !== undefined) && years.length) for (let y = first!; y <= last!; y++) if (!years.includes(y)) return limitation(`The published grant data has no financial-year bucket for ${y}-${String(y + 1).slice(-2)}, so it cannot establish the requested total.`)
   const group = String(args.group_by ?? (args.program && !args.recipient ? 'program' : 'recipient'))
   const unit = jurisdiction === 'qld' ? 'expenditure lines' : 'grant awards'
   const basis = jurisdiction === 'qld' ? 'Annual Queensland expenditure lines, including grants, service agreements and other assistance. A multi-year agreement can have one line per financial year; counts are lines, not distinct awards.' : 'Published federal award values, including variations, not payments received.'
@@ -117,5 +133,6 @@ export async function grantTotals(env: ToolEnv, args: ToolArgs): Promise<Structu
   if (!rows.length) notes.unshift('No published grant aggregate matches this selection.')
   if (rows.length > limit) notes.push(`Showing ${limit} of ${rows.length} aggregate rows. Each row is a complete total; the displayed rows are not a complete breakdown.`)
   // Limit the displayed rows after calculating complete totals; limits never change a total.
-  return { rows: ordered.slice(0, limit).map(item => item.row), total: rows.length, citations: ordered.slice(0, limit).map(item => item.citation), notes, group_by: group, jurisdiction, complete: true, truncated: rows.length > limit }
+  return { rows: ordered.slice(0, limit).map(item => item.row), total: rows.length, citations: ordered.slice(0, limit).map(item => item.citation), notes, group_by: group, jurisdiction, complete: true, truncated: rows.length > limit,
+    coverage: { since: first === undefined ? null : `${first}-07-01`, until: last === undefined ? null : `${last + 1}-06-30`, as_of: index.meta?.generated?.slice(0, 10) ?? null, note: 'Complete published aggregates, grouped by financial year.' } }
 }

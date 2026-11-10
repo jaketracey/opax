@@ -116,7 +116,8 @@ export const tool: ToolDefinition = {
     limit: { type: 'integer', minimum: 1, maximum: 10, description: 'Displayed rows (default 5). Totals are independent of this limit. Year breakdowns are chronological; rankings are largest first.' },
   }, examples: [{ operation: 'totals', recipient: 'Board Of The Queensland Museum', jurisdiction: 'qld' }, { operation: 'totals', program: 'GO6821', group_by: 'year' }, { state: 'wa' }, { operation: 'largest', query: 'University of Queensland', jurisdiction: 'qld' }] },
   validate: args => !(Number(args.from_year) > Number(args.to_year)) &&
-    (!(args.aggregation || args.financial_year || args.since || args.until) || !!args.recipient) &&
+    (!args.aggregation || !!args.recipient) &&
+    (!(args.financial_year || args.since || args.until) || !!(args.recipient || args.program || args.group_by || args.operation === 'totals')) &&
     (typeof args.recipient !== 'string' || !!args.recipient.trim()) &&
     (!args.recipient || !(args.query || args.state || args.electorate)) &&
     (args.financial_year === undefined || fyStart(args.financial_year) !== undefined &&

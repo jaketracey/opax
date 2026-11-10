@@ -160,7 +160,7 @@ export function createResearch(options: ResearchOptions): Research {
         if (invalid) fail('malformed_args')
         // A search or read that finds nothing usable is information for the model, not a failed run; so is any failed
         // record lookup outside the numerical shapes, whose answers never rest on a missing count.
-        if (!result.ok && !['search', 'read_passage'].includes(step.tool) && !(qualitativeRun && !terminal) && !(terminal && step.tool === 'answer' && (numericalAnswer || answerAttempts === 1))) fail(step.tool === 'answer' ? 'grounding' : 'error')
+        if (!result.ok && !['search', 'read_passage'].includes(step.tool) && !(qualitativeRun && !terminal) && !(terminal && step.tool === 'answer' && (numericalAnswer || answerAttempts === 1)) && !(terminal && step.tool === 'decline' && step.args.reason === 'no_record')) fail(step.tool === 'answer' ? 'grounding' : 'error')
         if (!terminal) { steps.push(step); results.push(result) }
         return output(result)
       })
@@ -410,7 +410,8 @@ export function createResearch(options: ResearchOptions): Research {
           const normal = (v: unknown) => String(v ?? '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
           const relevant = (index: number) => { const args = steps[index]?.args; return args && [args.name, args.query].some(value => typeof value === 'string' && normal(question).includes(normal(value))) }
           const found = results.some((r, i) => relevant(i) && r.ok && !r.data?.coverage_only && (r.tool === 'find_people' && Array.isArray(r.data?.people) && r.data.people.length || r.tool === 'find_records' && Array.isArray(r.data?.rows) && r.data.rows.length))
-          const empty = !found && results.find((r, i) => relevant(i) && r.ok && (r.tool === 'find_people' && Array.isArray(r.data?.people) && !r.data.people.length || r.tool === 'find_records' && Array.isArray(r.data?.rows) && !r.data.rows.length))
+          const ambiguous = results.some((r, i) => relevant(i) && r.ok && r.tool === 'find_people' && r.data?.match_status === 'ambiguous')
+          const empty = !found && !ambiguous && results.find((r, i) => relevant(i) && r.ok && (r.tool === 'find_people' && Array.isArray(r.data?.people) && !r.data.people.length || r.tool === 'find_records' && Array.isArray(r.data?.rows) && !r.data.rows.length))
           if (!empty) return errorResult('decline', 'no empty person or record lookup; check the exact name, title and date first')
           const answer = empty.tool === 'find_people' ? 'OPAX has no record of a parliamentarian by that name.' : `OPAX has no matching ${constraints.recordKind ?? 'public'} record for the requested name, title or date in this lookup.`
           qualitative = { answer, answer_decision: 'limitation', citations: {}, sources: [] }; finished = true

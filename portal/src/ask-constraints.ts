@@ -34,11 +34,12 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
   // Count selectors are exclusive. Preserve individual periods in comparisons;
   // the result's query window is checked by guardToolPeriod after the lookup.
   const countPeriod = step.tool === 'count_records' && ['date', 'month', 'year', 'financial_year', 'term'].some(key => a[key] !== undefined)
+  const grantList = step.tool === 'grants' && (a.operation === 'largest' || !(a.recipient || a.program || a.group_by || a.operation === 'totals'))
   if (c.dated && !countPeriod) {
     for (const key of ['since', 'from_year', 'from']) if (has(key) && !c.period.since) delete a[key]
     for (const key of ['until', 'to_year', 'to']) if (has(key) && !c.period.until) delete a[key]
-    if (has('since') && c.period.since && !(step.tool === 'grants' && !a.recipient)) a.since = c.period.since
-    if (has('until') && c.period.until && !(step.tool === 'grants' && !a.recipient)) a.until = c.period.until
+    if (has('since') && c.period.since && !grantList) a.since = c.period.since
+    if (has('until') && c.period.until && !grantList) a.until = c.period.until
     if (has('from_year') && c.period.since) a.from_year = Number(c.period.since.slice(0, 4))
     if (has('to_year') && c.period.until) a.to_year = Number(c.period.until.slice(0, 4))
     if (['party_receipts', 'money_totals'].includes(step.tool)) {

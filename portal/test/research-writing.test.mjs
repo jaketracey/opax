@@ -201,6 +201,26 @@ test('a selected-facts preamble is rejected and the writer contract asks for the
  assert.match(contract,/Each figure has one supporting fact id/)
 })
 
+test('full party receipt totals retain their own coverage rather than selected-donor boilerplate',()=>{
+ const text='Labor received $500 in federal disclosed receipts in financial years 2017-18.'
+ const note='Party aggregates cover all cleaned rows assigned to each party, including internal party transfers; identified public electoral funding is excluded.'
+ const fs=[{id:1,text,source:source('total',text)},{id:2,text:note,source:source('receipt-scope',note),coverage:true}]
+ const out=api.verifyWrittenAnswer({sentences:[{text,facts:[1]}]},{question:'What was Labor\'s total disclosed receipts in 2017-18?',period:{kind:'all',label:''},facts:fs})
+ assert.match(out.coverage.note,/all cleaned receipts.*internal party transfers.*exclude identified public electoral funding/)
+ assert.doesNotMatch(out.coverage.note,/published selection|lower bounds/)
+ assert.equal(out.answer,text)
+})
+
+test('exact record count coverage retains the snapshot and latest record date separately from the answer',()=>{
+ const text='12 recorded divisions in the Senate on 2025-07-31.'
+ const note='Exact count of the full published divisions index; not a ranked sample. Published snapshot build date: 2026-10-30T00:00:00Z. Latest indexed date date: 2026-10-29.'
+ const fs=[{id:1,text,source:source('count',text)},{id:2,text:note,source:source('count-scope',note),coverage:true}]
+ const out=api.verifyWrittenAnswer({sentences:[{text,facts:[1]}]},{question:'How many divisions did the Senate hold on 31 July 2025?',period:{kind:'all',label:''},facts:fs})
+ assert.match(out.coverage.note,/snapshot was built on 2026-10-30T00:00:00Z/)
+ assert.match(out.coverage.note,/latest indexed record is dated 2026-10-29/)
+ assert.doesNotMatch(out.answer,/snapshot|coverage|ranked sample/i)
+})
+
 test('overlapping source copies cite a figure once while distinct owners survive',()=>{
  const row=(id,name)=>({id,text:`${name} received $100,000.`,source:source('copy-'+id,`${name} received $100,000.`)})
  const fs=[row(1,'Robin Example'),row(2,'Robin Example'),row(3,'Casey Sample')]

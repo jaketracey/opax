@@ -147,3 +147,22 @@ test('dated largest-grant lists retain the existing calendar-year table filters'
   assert.equal(step.args.since, undefined); assert.equal(step.args.until, undefined);
   assert.equal(parseToolArgs('grants', step.args).query, 'health');
 });
+
+test('recipient, program and jurisdiction-year breakdowns preserve exact FY dates and reject partial years', async () => {
+  const f = data(), index = f.assets['/graph/grants.federal.json'];
+  index.programs = [{ id: 'GO1', key: 'go1', n: 'Example Program', t: 1200, c: 6 }];
+  index.years = Object.fromEntries(sourceYears.map((year, i) => [year, { t: [300, 700, 200][i], c: [2, 3, 1][i] }]));
+  f.assets['/grants/federal/programs/go1.json'] = { t: 1200, c: 6, by: summary.by };
+  const period = { kind: 'window', since: '2017-07-01', until: '2018-06-30' };
+  const constraints = { period, dated: true, people: [], trend: false };
+  for (const selection of [{ recipient: recipient.n }, { program: 'GO1' }, { operation: 'totals' }]) {
+    const step = constrainStep({ tool: 'grants', args: { ...selection, group_by: 'year' } }, constraints, tool.inputSchema.properties);
+    assert.equal(step.args.since, period.since); assert.equal(step.args.until, period.until);
+    const out = await f.run(step.args);
+    assert.deepEqual(out.rows.map(row => [row.financial_year, row.total_aud]), [['2017-18', 300]]);
+    assert.deepEqual([out.coverage.since, out.coverage.until], [period.since, period.until]);
+    const partial = await f.run({ ...selection, group_by: 'year', since: '2017-01-01', until: '2017-12-31' });
+    assert.equal(partial.coverage_only, true); assert.equal(partial.coverage.matched, false);
+    assert.deepEqual(partial.rows, []); assert.ok(partial.citations.every(cite => cite.value === undefined));
+  }
+});

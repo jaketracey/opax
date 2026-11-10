@@ -118,6 +118,7 @@ function coverageApplies(text:string,input:WritingInput):boolean {
   const tally=input.facts.some(f=>!f.coverage&&/\bin ([\d,]+) divisions\b/i.test(f.text)&&Number(/\bin ([\d,]+) divisions\b/i.exec(f.text)![1].replaceAll(',',''))>1)
   const divisionCount=tally||/\b(?:how many|count|number|total|most|all|every)\b/i.test(input.question)&&/\b(?:votes?|divisions?)\b/i.test(input.question)
   const speechCount=input.facts.some(f=>!f.coverage&&f.source.kind==='count')
+  if(/Exact count of the full published/i.test(text))return /\b(?:how many|number of|count|more|fewer|rate|trend)\b/i.test(input.question)
   if(/divisions are matched by (?:a word|words)/i.test(text))return divisionCount
   if(/recorded vote (?:is not a statement of reasons|does not establish why)/i.test(text))return /\b(?:why|reasons?)\b/i.test(input.question)
   if(/ranked (?:sample|matching)|topic|Hansard|committee|labelled speeches/i.test(text))return speechCount
@@ -138,6 +139,12 @@ function basisSentence(all:WritingFact[]):WrittenSentence|undefined {
     return {text:`OPAX's federal pay records${from ? ' start on '+from+' and' : ''} cover salary entitlements and exclude allowances, expenses, superannuation and outside income.`, facts:all.map(f=>f.id), coverage:true}
   }
   const ids=all.map(f=>f.id)
+  if(/Party aggregates cover all cleaned rows/i.test(text))return {text:'Party totals cover all cleaned receipts assigned to each party, including internal party transfers, and exclude identified public electoral funding. Disclosed receipts include more than gifts.',facts:ids,coverage:true}
+  if(/Exact count of the full published/i.test(text)) {
+    const snapshot=/Published snapshot build date: ([\dT:Z.-]+)/i.exec(text)?.[1]?.replace(/\.$/,'')
+    const latest=/Latest indexed (?:introduced|date) date: (\d{4}-\d{2}-\d{2})/i.exec(text)?.[1]
+    return {text:`Counts cover OPAX's published records, which may not include complete parliamentary history.${snapshot?` The snapshot was built on ${snapshot}.`:' The snapshot build date is not published.'}${latest?` The latest indexed record is dated ${latest}.`:''}`,facts:ids,coverage:true}
+  }
   if(/party receipts|donation|AEC|disclosed receipt|published map|published selection|industry total/i.test(text))return {text:'Disclosed party receipts can include loans and other non-gift amounts. These totals cover the published selection and are lower bounds because undisclosed receipts below the disclosure threshold are excluded.',facts:ids,coverage:true}
   if(/divisions are matched by (?:a word|words)|recorded vote (?:is not a statement of reasons|does not establish why)/i.test(text))return {text:[/divisions are matched/i.test(text)?'Divisions are matched by words in their titles; divisions filed under other titles may be missed.':'',/recorded vote/i.test(text)?'A recorded vote does not establish why a member voted that way.':''].filter(Boolean).join(' '),facts:ids,coverage:true}
   if(/contract/i.test(text))return {text:'These are published contract values, including amendments, rather than payments.',facts:ids,coverage:true}

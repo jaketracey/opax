@@ -28,6 +28,19 @@ test('find_people exposes historical House service, independently of speech cove
   assert.match(fact.cite.url, /^https:\/\/offline.test\/subject\/electorate\//);
 });
 
+test('surname-first roster aliases retain service through their resolved person ID', async () => {
+  const roster = await published('/parliamentarians.json');
+  const person = roster.people.find(p => p.name === 'Ralph Willis');
+  const manifest = await published('/electorates/manifest.json');
+  const history = await published(manifest.people_url);
+  const pid = history.people.find(p => p.name === person.name).legacy_person_id;
+  assert.ok(pid);
+  const out = await api.findPeople({ ...deps, asset: async path => path === '/parliamentarians.json' ? { people: [{ ...person, pid, name: 'Willis Ralph' }] } : published(path) }, { name: 'Willis Ralph' });
+  assert.equal(out.data.match_status, 'matched');
+  assert.equal(out.data.people[0].name, 'Willis Ralph');
+  assert.deepEqual(out.data.people[0].service.map(p => [p.electorate, p.start, p.end]), [['Gellibrand', '1972-12-02', '1998-08-31']]);
+});
+
 test('a service fact from find_people survives the research answer selection and reaches the answer with its source', async () => {
   const reply = (name, input) => ({ content: [{ type: 'tool-call', toolName: name, toolCallId: name, input: JSON.stringify(input) }], finishReason: { unified: 'tool-calls', raw: 'tool_calls' }, usage: { inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 }, outputTokens: { total: 5, text: 5, reasoning: 0 } }, warnings: [] });
   const model = new MockLanguageModelV4({ doGenerate: [reply('find_people', { name: 'Ralph Willis' }), reply('answer', { facts: [2] })] });
@@ -108,7 +121,7 @@ test('recipient totals include awards missing from the public detail list and do
   assert.equal(out.error, undefined);
   assert.deepEqual([out.rows[0].total_aud, out.rows[0].record_count], [249030307, 151]);
   assert.equal(out.rows[0].complete, true);
-  assert.match(out.citations[0].text, /\$249,030,307 across 151 federal grant awards/);
+  assert.match(out.citations[0].text, /received \$249,030,307 in published federal grant award values.*151 award records/);
   assert.match(out.citations[0].url, /\/money\/grants\/federal\/recipient\//);
   const partial = await api.callTool(env, 'grants', { recipient: 'WA Country Health Service', group_by: 'program' });
   assert.ok(partial.error); assert.match(partial.notes[0], /shortened/); assert.equal(partial.citations.length, 0);
@@ -119,7 +132,7 @@ test('Queensland totals count expenditure lines and accept long recipient names'
   const out = await api.callTool(env, 'grants', { recipient, jurisdiction: 'qld' });
   assert.equal(out.error, undefined);
   assert.deepEqual([out.rows[0].total_aud, out.rows[0].record_count, out.rows[0].from_financial_year, out.rows[0].to_financial_year], [1223278, 17, '2017-18', '2024-25']);
-  assert.match(out.citations[0].text, /Queensland expenditure lines/);
+  assert.match(out.citations[0].text, /Queensland Government grant and assistance expenditure.*17 expenditure rows/);
   assert.match(out.notes[0], /not distinct awards/);
 });
 
@@ -132,7 +145,9 @@ test('recipient totals can be filtered or grouped by complete financial-year agg
   assert.deepEqual(by.rows.map(r => r.financial_year), ['2018-19', '2020-21', '2023-24']);
   assert.equal(by.rows.reduce((n, r) => n + r.total_aud, 0), 26830093);
   const none = await api.callTool(env, 'grants', { ...args, from_year: 2000, to_year: 2000 });
-  assert.equal(none.rows[0].total_aud, 0); assert.equal(none.rows[0].record_count, 0);
+  assert.equal(none.coverage_only, true); assert.equal(none.coverage.matched, false);
+  assert.deepEqual(none.rows, []); assert.equal(none.total_aud, undefined);
+  assert.match(none.citations[0].text, /cannot establish a complete total/);
 });
 
 test('program and jurisdiction-year totals come from complete aggregates rather than top recipients or awards', async () => {
@@ -148,8 +163,7 @@ test('recipient and program intersections use full award lists or report that th
   const out = await api.callTool(env, 'grants', { recipient: 'South Australian Department for Health and Wellbeing', program: 'National Program' });
   assert.equal(out.error, undefined);
   assert.deepEqual([out.rows[0].total_aud, out.rows[0].record_count], [23940165, 3]);
-  const unsupported = await api.callTool(env, 'grants', { recipient: 'WA Country Health Service', state: 'wa' });
-  assert.ok(unsupported.error); assert.match(unsupported.notes[0], /filtered by electorate or state/);
+  await assert.rejects(() => api.callTool(env, 'grants', { recipient: 'WA Country Health Service', state: 'wa' }), /Invalid arguments/);
 });
 
 test('complete program totals are ranked by their sums; missing year fields and free-text filters cannot be silently dropped', async () => {
