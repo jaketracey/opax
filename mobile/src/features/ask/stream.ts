@@ -45,6 +45,7 @@ export class AskFailure extends Error {
       | 'rate-limited'
       | 'blocked'
       | 'offline'
+      | 'timeout'
       | 'partial'
       | 'empty'
       | 'cancelled'

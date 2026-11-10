@@ -2,6 +2,7 @@ import { TextDecoder, TextEncoder } from 'node:util';
 import { CatalogCache } from '../src/api/cache';
 import { ApiClient } from '../src/api/client';
 import { decodeAnswer } from '../src/features/ask/model';
+import { askErrorCopy } from '../src/features/ask/turn-copy';
 const origin = 'http://127.0.0.1:8940';
 const payload = { answer: 'Recorded answer', citations: {}, sources: [] };
 function response(status: number, raw: unknown = payload, extras: object = {}) {
@@ -165,7 +166,81 @@ test('offline and explicit cancel never retry', async () => {
   await expect(
     api(t).askPost('/api/ask?stream=1', {}, c.signal),
   ).rejects.toMatchObject({ code: 'cancelled' });
-  expect(t).toHaveBeenCalledTimes(2);
+  expect(t).toHaveBeenCalledTimes(1);
+});
+
+test.each(['headers', 'json', 'stream'] as const)(
+  'a stalled %s times out, aborts transport and permits manual retry',
+  async (phase) => {
+    jest.useFakeTimers();
+    Object.assign(globalThis, { TextDecoder, TextEncoder });
+    const never = new Promise<never>(() => {});
+    const reader = {
+      read: jest.fn(() => never),
+      cancel: jest.fn().mockResolvedValue(undefined),
+      releaseLock: jest.fn(),
+    };
+    const t = jest
+      .fn()
+      .mockImplementationOnce(() =>
+        phase === 'headers'
+          ? never
+          : Promise.resolve(
+              response(
+                200,
+                payload,
+                phase === 'json'
+                  ? { json: () => never }
+                  : {
+                      headers: { get: () => 'text/event-stream' },
+                      body: { getReader: () => reader },
+                    },
+              ),
+            ),
+      )
+      .mockResolvedValue(response(200));
+    const client = api(t);
+    const pending = client.askPost(
+      '/api/ask?stream=1',
+      {},
+      controller().signal,
+      { stage: jest.fn(), delta: jest.fn(), retry: jest.fn() },
+    );
+    const failure = expect(pending).rejects.toMatchObject({ code: 'timeout' });
+    try {
+      await jest.advanceTimersByTimeAsync(120_000);
+      await failure;
+      expect(t.mock.calls[0]![1].signal.aborted).toBe(true);
+      expect(t).toHaveBeenCalledTimes(1);
+      await expect(
+        client.askPost('/api/ask?stream=1', {}, controller().signal),
+      ).resolves.toEqual(payload);
+      expect(
+        askErrorCopy({ code: 'timeout' } as Parameters<typeof askErrorCopy>[0]),
+      ).toEqual({
+        message: 'This answer took too long. Please try again.',
+        retry: true,
+      });
+      expect(jest.getTimerCount()).toBe(0);
+      if (phase === 'stream')
+        expect(reader.releaseLock).toHaveBeenCalledTimes(1);
+    } finally {
+      jest.useRealTimers();
+    }
+  },
+);
+
+test('cancelling a stalled request settles immediately without sending a second request', async () => {
+  const t = jest.fn(() => new Promise<never>(() => {}));
+  const c = controller();
+  const pending = api(t).askPost('/api/ask?stream=1', {}, c.signal);
+  const cancelled = expect(pending).rejects.toMatchObject({
+    code: 'cancelled',
+  });
+  c.abort();
+  await cancelled;
+  expect(t.mock.calls[0]![1].signal.aborted).toBe(true);
+  expect(t).toHaveBeenCalledTimes(1);
 });
 
 test('done completes the answer without waiting for the server to close the stream', async () => {
