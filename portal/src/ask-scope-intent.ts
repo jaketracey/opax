@@ -1,7 +1,24 @@
+/** Interpret common record-word spelling slips consistently, without changing quoted source titles. */
+export const recordIntentText = (question: string): string => question.toLowerCase()
+  .replace(/\b(?:bils|bilks)\b/g, 'bills').replace(/\bdivisoons?\b/g, word => word.endsWith('s') ? 'divisions' : 'division')
+  .replace(/\bintroducd\b/g, 'introduced').replace(/\bdruing\b/g, 'during')
+
+export function billIntroductionListQuestion(question: string): boolean {
+  const q = recordIntentText(question)
+  const target = /\b(?:which|what|list|name|show)\s+(?:(?:were|was|are|me)\s+)?(?:(?:all|the|new|federal|commonwealth)\s+){0,4}(?:bills?|legislation)\b/.test(q)
+  return target && /\b(?:introduc\w*|came in|come in)\b/.test(q)
+}
+export function recordCountKind(question: string): 'bills' | 'divisions' | undefined {
+  const q = recordIntentText(question)
+  if (/\b(?:divisions?|votes?)\b/.test(q) && (isRecordCountQuestion(q) || /\bbill\b.+\bdivisions?\s*[?.!]*$/.test(q))) return 'divisions'
+  if (/\b(?:bills?|legislation)\b/.test(q) && (isRecordCountQuestion(q) || billIntroductionListQuestion(q))) return 'bills'
+}
+
 /** Record counts and comparisons do not ask for a documented political stance. */
 export function isRecordCountQuestion(question: string): boolean {
+  question = recordIntentText(question)
   const records='(?:speech(?:es|se)?|divisions?|bills?|grants?|contracts?|receipts?)'
-  const modifiers='(?:(?:all|the|federal|Commonwealth|parliamentary|chamber|Senate|House|labelled|recorded|published)\\s+){0,3}'
+  const modifiers='(?:(?:all|the|new|federal|Commonwealth|parliamentary|chamber|Senate|House|labelled|recorded|published)\\s+){0,4}'
   if (/\b(?:show|give|find|read|quote)\b.{0,20}\bmore\s+speech/i.test(question)) return false
   return new RegExp(`\\b(?:how many|number of|counts?(?: of)?|total(?: (?:number|value) of)?|more|fewer|most|least|fewest)\\s+${modifiers}${records}\\b`,'i').test(question) ||
     /\b(?:speech|division|bill|grant|contract|receipt) counts?\b/i.test(question)

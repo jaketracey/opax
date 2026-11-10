@@ -24,7 +24,7 @@ import type { ResearchDailyBudget, ResearchReservation } from './research-budget
 import { researchReservationUsd, researchTurnReservationUsd } from './research-budget'
 import { researchCreditCooldown, isResearchCreditError, type ResearchCreditCooldown } from './research-credit'
 import {answerDecision} from './research-coherence.mjs'
-import { isBillSpeechQuestion, isRecordCountQuestion } from './ask-scope-intent'
+import { isBillSpeechQuestion, isRecordCountQuestion, recordIntentText } from './ask-scope-intent'
 import { requestedPersonSlot } from './ask-person-slot'
 import { resolvePersonName } from './person-name-matching'
 import { recordAnswerLines } from './research-record-answer'
@@ -85,7 +85,8 @@ export function createResearch(options: ResearchOptions): Research {
     const steps: PlanStep[] = [], results: ToolResult[] = [], passages = new Map<string, Passage>()
     const cache = new Map<string, Promise<unknown>>()
     const observations: { step: PlanStep; result: ToolResult; round: number }[] = []
-    const emptyLookup = (r: ToolResult) => r.ok && (r.data?.coverage_only === true || !(typeof r.data?.total === 'number' && r.data.total > 0) && ['rows', 'people', 'passages'].some(key => Array.isArray(r.data?.[key]) && !(r.data![key] as unknown[]).length)) || !r.ok
+    const zeroCount = (r: ToolResult) => r.ok && r.data?.total === 0 && r.cite.some(c => c.kind === 'count' && c.value === 0)
+    const emptyLookup = (r: ToolResult) => r.ok && (zeroCount(r) || r.data?.coverage_only === true || !(typeof r.data?.total === 'number' && r.data.total > 0) && ['rows', 'people', 'passages'].some(key => Array.isArray(r.data?.[key]) && !(r.data![key] as unknown[]).length)) || !r.ok
     // A different call in a later turn proves the model observed the miss before recovering.
     const recoveryTried = () => observations.some((first, i) => emptyLookup(first.result) && observations.slice(i + 1).some(next => next.round > first.round && stable(next.step) !== stable(first.step)))
     const recoveryOwed = () => observations.some(o => emptyLookup(o.result)) && !recoveryTried()
@@ -314,7 +315,7 @@ export function createResearch(options: ResearchOptions): Research {
         for (let id = previous + 1; id <= next; id++) {
           // Dated service from find_people is a structured record, alongside its identity result.
           const service = result.tool === 'find_people' && all[id - 1]?.cite.kind === 'record'
-          if ((!PASSAGE_TOOLS.includes(result.tool) && getAskTool(result.tool)?.evidenceKind !== 'passages') || service) { tools.set(id, result.tool); if (result.data?.coverage_only || emptyLookup(result)) coverage.add(id) }
+          if ((!PASSAGE_TOOLS.includes(result.tool) && getAskTool(result.tool)?.evidenceKind !== 'passages') || service) { tools.set(id, result.tool); if (result.data?.coverage_only || emptyLookup(result) && !zeroCount(result)) coverage.add(id) }
         }
         previous = next
       }
@@ -324,7 +325,7 @@ export function createResearch(options: ResearchOptions): Research {
     const focussedIds = (): number[] | null => {
       if (classifyAgentic(question).shape === 'comparison' || isBillSpeechQuestion(question) || /\band (?:who|when|what|how)\b/i.test(question)) return null
       const { all, tools, coverage } = recordFacts()
-      const facts = all.filter(f => tools.has(f.id) && !coverage.has(f.id) && (!broadAbsenceQuestion(question, constraints) || !absenceClaim(f.text) || verifiedAbsenceCount(results))).map(f => ({ id: f.id, text: f.text,
+      const facts = all.filter(f => tools.has(f.id) && !coverage.has(f.id) && (!absenceClaim(f.text) || !recoveryOwed() && (!broadAbsenceQuestion(question, constraints) || verifiedAbsenceCount(results)))).map(f => ({ id: f.id, text: f.text,
         source: { resource: `fact-${f.id}`, slug: '', title: f.cite.label, href: f.cite.url, url: f.cite.url, snippet: f.text, kind: f.cite.kind, cited: true } }))
       const lines = recordAnswerLines({ question, period: context.period, constraints, facts })
       return lines?.length ? [...new Set(lines.flatMap(l => l.facts))] : null
@@ -340,8 +341,9 @@ export function createResearch(options: ResearchOptions): Research {
       const required = [...context.named.people.map(n => `person:${n}`), ...context.named.parties.map(n => `party:${n}`)]
       return ids.flatMap(id => {
         const fact = all.find(f => f.id === id), tool = tools.get(id)
-        if (tool === 'count_records' && !/\bbills?|divisions?|vot(?:e|ed|es|ing)\b/i.test(question) && !isRecordCountQuestion(question)) { why(`fact ${id}: count does not answer what was debated; use source passages`); return [] }
+        if (tool === 'count_records' && !/\b(?:bills?|legislation|divisions?|vot(?:e|ed|es|ing))\b/i.test(recordIntentText(question)) && !isRecordCountQuestion(question)) { why(`fact ${id}: count does not answer what was debated; use source passages`); return [] }
         if (!fact || !tool) { why(`fact ${id}: not a record fact`); return [] }
+        if (absenceClaim(fact.text) && recoveryOwed()) { why(`fact ${id}: recover with a distinct lookup before stating absence`); return [] }
         if (broadAbsenceQuestion(question, constraints) && absenceClaim(fact.text) && !verifiedAbsenceCount(results)) { why(`fact ${id}: a whole-year, chamber or party absence needs a complete count or list; an empty narrow search is not absence`); return [] }
         if (context.named.ambiguous || unresolvedPersonAsked(question, context.named)) { why(`fact ${id}: named_unresolved`); return [] }
         if (required.length && ['count_speeches', 'speech_trend', 'member_votes'].includes(tool) && !fact.entities?.some(e => required.includes(e))) { why(`fact ${id}: outside_named_scope`); return [] }
@@ -386,13 +388,14 @@ export function createResearch(options: ResearchOptions): Research {
       }
       // Record facts are always cited: uncited points beside them make the answer partly cited.
       const status = points?.answer_status === 'uncited' && facts.length ? 'partly_cited' : points?.answer_status
-      return { answer: text, answer_decision:!points&&facts.length&&facts.every(f=>f.coverage)?'limitation':points?.answer_decision??'answer', citations, sources, ...(status ? { answer_status: status } : {}) }
+      return { answer: text || 'The research did not produce usable evidence for an answer. Please try a more specific question.', answer_decision:!text||!points&&facts.length&&facts.every(f=>f.coverage)?'limitation':points?.answer_decision??'answer', citations, sources, ...(status ? { answer_status: status } : {}) }
     }
     // One answer call, checked: cited points, uncited points that failed only soft checks, record facts; else, with
     // nothing usable written, the best verified passages in their own words. Null when none of those exists.
     const draftAnswer = (args: Record<string, unknown>, roster: unknown, why: (reason: string) => void): QualitativeAnswer | null => {
       // Up to 15 record facts are rendered, in the order chosen.
       const focus = focussedIds()
+      if (constraints.listIntroductions && !focus) { why('Fetch the complete introduction list with count_records include_records, preserving the requested date and originating chamber'); return null }
       const facts = focus ? factLines(focus, why) : args.facts == null ? [] : idList(args.facts).length ? factLines(idList(args.facts).slice(0, 15), why) : (why('invalid fact ids'), [])
       const tally = stats.answer = emptyTally()
       const { named } = context
@@ -423,8 +426,9 @@ export function createResearch(options: ResearchOptions): Research {
       execute: args => invoke({ tool: 'finish', args }, async () => {
         const { all, tools, coverage } = recordFacts()
         const focus = focussedIds()
+        if (constraints.listIntroductions && !focus) return errorResult('finish', 'Fetch the complete introduction list with count_records include_records before answering')
         if (focus) args = { ...args, facts: focus }
-        if (recoveryOwed() && idList(args.facts).every(id => coverage.has(id))) return errorResult('finish', 'An empty lookup is not absence: recover with a different query, tool, record kind or resolved name first')
+        if (recoveryOwed() && (idList(args.facts).every(id => coverage.has(id)) || idList(args.facts).some(id => { const fact = all.find(f => f.id === id); return fact && (absenceClaim(fact.text) || fact.cite.kind === 'count' && fact.cite.value === 0) }))) return errorResult('finish', 'An empty lookup is not absence: recover with a different query, tool, record kind or resolved name first')
         if (!validIds(args.facts, 30) || args.facts.some(id => !tools.has(id))) return fail('grounding')
         // Outside the ranking and trend shapes, finish is an answer made only of record facts.
         if (qualitativeRun) {
@@ -446,7 +450,8 @@ export function createResearch(options: ResearchOptions): Research {
         return invoke({ tool: 'answer', args: { ...args } }, async deps => {
           if (!qualitativeRun) { numericalAnswer = true; return errorResult('answer', 'use finish for numerical facts') }
           if (!passages.size && !recordFacts().tools.size) return errorResult('answer', 'nothing retrieved yet: search or look up records first')
-          if (recoveryOwed() && !passages.size && [...recordFacts().tools.keys()].every(id => recordFacts().coverage.has(id))) return errorResult('answer', 'An empty lookup is not absence: recover with a different query, tool, record kind or resolved name first')
+          const records = recordFacts()
+          if (recoveryOwed() && !passages.size && [...records.tools.keys()].every(id => { const fact = records.all.find(f => f.id === id); return records.coverage.has(id) || !!fact && (absenceClaim(fact.text) || fact.cite.kind === 'count' && fact.cite.value === 0) })) return errorResult('answer', 'An empty lookup is not absence: recover with a different query, tool, record kind or resolved name first')
           answerAttempts++
           const roster = await (draftRoster ?? deps.asset('/parliamentarians.json'))
           const reasons: string[] = [], why = (reason: string) => { if (reasons.length < 12) reasons.push(reason) }
@@ -499,7 +504,8 @@ export function createResearch(options: ResearchOptions): Research {
         if (answer) return answer
       }
       const focus = focussedIds()
-      if (focus?.length) return compose(factLines(focus, () => {}), null)
+      if (focus?.length) { const lines = factLines(focus, () => {}); if (lines.length) return compose(lines, null) }
+      if (constraints.listIntroductions) return null
       const record = passages.size ? recordPassagesAnswer(passages, question, context.named, options.positionQuery) : null
       if (record) { stats.answer = { ...emptyTally(), mode: 'record_list' }; return compose([], record) }
       if (isBillSpeechQuestion(question)) return null
@@ -564,7 +570,7 @@ export function createResearch(options: ResearchOptions): Research {
           const late = Date.now() - started > limits.wallMs - REPAIR_MIN_MS
           const lastAffordableTurn = remaining < inputReserve + 2 * ASK_TURN_OUTPUT_TOKENS + 2048
           const forced = numericalAnswer ? 'finish'
-            : evidence && (focussedIds()?.length || round === limits.rounds || late || lastAffordableTurn || calls >= RESEARCH_MAX_CALLS || repeated && !recoveryOwed()) ? terminal : null
+            : evidence && !recoveryOwed() && (focussedIds()?.length || round === limits.rounds || late || lastAffordableTurn || calls >= RESEARCH_MAX_CALLS || repeated) ? terminal : null
           return { maxOutputTokens: reservedOutput, toolChoice: forced ? { type: 'tool' as const, toolName: forced } : 'required' as const,
             instructions }
         },

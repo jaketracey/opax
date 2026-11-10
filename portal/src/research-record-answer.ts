@@ -1,6 +1,7 @@
 import type { WritingFact, WritingInput, WrittenSentence } from './research-writing'
 import { decodeHTMLStrict } from 'entities'
 import { requestedBillTitle, billTitleMatches } from './bill-title'
+import { billIntroductionListQuestion, recordCountKind, recordIntentText } from './ask-scope-intent'
 
 /** Keep the requested bill fact ahead of supporting lifecycle dates, including misspelt introduction verbs. */
 export function billQuestionFocus(question: string): 'sponsor' | 'introduced' | 'assent' | 'status' | 'passed' | 'portfolio' {
@@ -52,6 +53,7 @@ export function recordEvidenceText(text: string, url: string): string {
 
 /** Render only facts that directly answer a record question. Counts and dates remain support for names. */
 export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null {
+  input = { ...input, question: recordIntentText(input.question) }
   const facts = input.facts.filter(f => !f.coverage && !f.metadata)
   const divisions = facts.flatMap(f => {
     const finding = /\/doc\/division-/.test(f.source.url) ? divisionFinding(f.text) : null
@@ -100,7 +102,16 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
     if (assent.length) return [line(assent[0].text, [assent[0]])]
   }
 
-  if (/\bhow many\b/i.test(input.question) && /\bdivisions?\b/i.test(input.question) && !/\b(?:by|each|per) (?:month|year)|trend\b/i.test(input.question)) {
+  if (recordCountKind(input.question) === 'divisions' && !/\b(?:by|each|per) (?:month|year)|trend\b/i.test(input.question)) {
+    const title = input.constraints?.exactBillTitle ?? requestedBillTitle(input.question)
+    const linked = title && facts.find(f => {
+      const m = /^(.+): ([\d,]+) matching recorded divisions\.$/.exec(f.text)
+      return m && billTitleMatches(m[1], title)
+    })
+    if (linked) {
+      const m = /^(.+): ([\d,]+) matching recorded divisions\.$/.exec(linked.text)!
+      return [line(`The ${m[1]} has ${m[2]} matching recorded divisions`, [linked])]
+    }
     const total = facts.find(f => f.source.kind === 'count' && /^\d[\d,]* recorded divisions .+ (?:since|from|on|in|up to) .+/.test(f.text) && !/ in \d{4}-(?:0[1-9]|1[0-2])$/.test(f.text))
     if (total) return [line(total.text, [total])]
   }
@@ -133,7 +144,7 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
     }
   }
 
-  if (!/\bbil(?:ls?|s|ks)\b/i.test(input.question)) return null
+  if (recordCountKind(input.question) !== 'bills') return null
   // The legacy count facts and the current prose facts represent the same exact index selection.
   const billCounts = facts.flatMap(f => {
     if (f.source.kind !== 'count') return []
@@ -151,10 +162,10 @@ export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null
       return [{ f, title: m[1] }]
     }).filter((row, i, all) => all.findIndex(other => other.f.source.url === row.f.source.url) === i)
     const lead = `${recordCount(count)} ${count === 1 ? 'bill was' : 'bills were'} introduced ${where} ${period}`
-    if (!/\bwhich\b|\b(?:name|list|show)\b/i.test(input.question)) return [line(lead, [f])]
+    if (!billIntroductionListQuestion(input.question)) return [line(lead, [f])]
     if (records.length === count && count > 0) return [line(`${lead}: ${records.map(r => r.title).join('; ')}`, [f, ...records.map(r => r.f)])]
-    if (!records.length && count > 0 && /\bwhich\b/i.test(input.question)) return null
-    return [line(lead, [f]), ...records.map(r => line(`- ${r.title}`, [r.f]))]
+    // A positive total alone, or a truncated list, does not answer a request for the names.
+    return count === 0 ? [line(lead, [f])] : null
   }
   return null
 }

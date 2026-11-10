@@ -3,6 +3,7 @@ export function requestedPersonSlot(question: string): string | null {
   const patterns = [
     /\b(?:did|does|has|have|will|how['’]d|what['’]d)\s+(.+?)\s+(?:vot\w*|say|said|speak\w*|spoken|declare\w*|represent)\b/i,
     /^\s*(.+?)\s+declare[ds]?\s+(?:real estate|interests?|gifts?|shareholdings)\b/i,
+    /^\s*(.+?)(?:['’]s)?\s+(?:shareholdings|directorships|register of interests)\s*[?!]*$/i,
     /\b(?:speeches|remarks|statements|votes)\s+(?:by|from|of)\s+(.+?)(?=\s+(?:about|on|in|since|until)\b|[?!]|$)/i,
   ]
   for (const pattern of patterns) {

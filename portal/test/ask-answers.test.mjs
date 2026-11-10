@@ -145,8 +145,9 @@ test('federal receipts are never called gifts or donations by the renderer',()=>
 })
 test('only an answer is cacheable',()=>{
  const cited={'fact-1/t/body/0':[[0,5]]}
- assert.equal(api.cacheableRoutedAnswer({answer_decision:'answer',citations:cited},true),true)
- for(const answer_decision of ['limitation','refusal','clarification','preserve'])assert.equal(api.cacheableRoutedAnswer({answer_decision,citations:cited},true),false,answer_decision)
+ assert.equal(api.cacheableRoutedAnswer({answer:'A verified public fact.',answer_decision:'answer',citations:cited},true),true)
+ for(const answer of ['', ' ', undefined])assert.equal(api.cacheableRoutedAnswer({answer,answer_decision:'answer',citations:cited},true),false)
+ for(const answer_decision of ['limitation','refusal','clarification','preserve'])assert.equal(api.cacheableRoutedAnswer({answer:'A verified public fact.',answer_decision,citations:cited},true),false,answer_decision)
  assert.equal(api.cacheableRoutedAnswer({answer_status:'coverage_only',citations:cited},true),false)
  assert.equal(api.cacheableRoutedAnswer({answer_decision:'answer',citations:{}},true),false)
 })
@@ -155,7 +156,7 @@ test('the production refusal cannot be cached, and its question now can be',()=>
  assert.equal(api.cacheableRoutedAnswer(before,true),false)
  assert.equal(api.cacheableRoutedAnswer(api.groundAnswerPayload(api.proseFallback(moneyInput(gambling,'Labor')),gambling),true),true)
 })
-test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-18-bill-speeches-money')})
+test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-19-complete-records')})
 
 // Review of 36bf23f48, each finding on its exact input. The rule: a generic refusal gives way to on-topic facts,
 // a specific limit stays first with the facts beside it, and typed decisions, causal asks and period guards are left alone.

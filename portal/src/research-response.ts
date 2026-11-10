@@ -7,6 +7,7 @@ import {sentenceParts} from './research-claim-audit.mjs'
 import type { QualitativeAnswer } from './research-types'
 import type { ResearchPayload } from './research-types'
 import type { researchEvalUsage } from './research-eval'
+import { inferPeriod } from './ask-period'
 
 function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPayload): Record<string, unknown> {
   if (payload.research) return payload
@@ -19,7 +20,24 @@ function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPay
 
 /** A stored answer replays for a week, so only an answer may be stored: never a refusal, limitation or clarification, which the next ask may better. */
 export const cacheableRoutedAnswer = (payload: Record<string, unknown>, requireCitation: boolean): boolean =>
-  !protectedDecision(payload) && (!requireCitation || Object.keys(payload.citations ?? {}).length > 0)
+  typeof payload.answer === 'string' && !!payload.answer.trim() && !protectedDecision(payload) && (!requireCitation || Object.keys(payload.citations ?? {}).length > 0)
+
+/** A successful response always has text, including old cached and streamed payloads. */
+export function ensureAnswerText(payload: Record<string, unknown>, question?: string): Record<string, unknown> {
+  if (typeof payload.answer === 'string' && payload.answer.trim() || payload.answered !== true && payload.answer_decision !== 'answer') return payload
+  if (question && !protectedDecision(payload)) {
+    const research = payload.research as ResearchPayload | undefined
+    const sources = research?.pre_writer_sources ?? []
+    const facts = writingFacts({ answer: '', citations: {}, sources: sources.map(s => ({ ...s, cited: true })) } as QualitativeAnswer)
+    // Reuse the writer's period, scope and grounding checks. A tool fact is never model-authored fallback text.
+    const period = inferPeriod(question), constraints = { ...(payload.answer_scope as import('./ask-constraints').AskConstraints | undefined), period }
+    const written = proseFallback({ question, period, constraints, facts })
+    const checked = groundAnswerPayload({ ...payload, ...written, answer_scope: constraints }, question)
+    if (written.answer_decision === 'answer' && typeof checked.answer === 'string' && checked.answer.trim() && !protectedDecision(checked) && Object.keys(checked.citations ?? {}).length) return { ...checked, answered: true }
+  }
+  return { ...payload, answered: false, answer_decision: 'refusal', answer_status: 'coverage_only',
+    answer: 'The research did not produce a usable answer. Please try a more specific question.', citations: {}, sources: [], claim_atoms: [] }
+}
 
 /** Add metadata only at the boundary. Existing JSON and SSE fields survive. */
 export async function withPlannerResearch(response: Response, previous?: ResearchPayload): Promise<Response> {
@@ -29,9 +47,10 @@ export async function withPlannerResearch(response: Response, previous?: Researc
 /** One guard covers JSON, streamed fallbacks and cached payloads. */
 export async function withAnswerLanguage(response: Response,question?:string,askedAs?:string): Promise<Response> {
   return mapResearchResponse(response, payload=>{
-    if(!question){const out=plainAnswerPayload(payload);return askedAs?{...out,asked_as:askedAs}:out}
+    payload=ensureAnswerText(payload,question)
+    if(!question){const out=ensureAnswerText(plainAnswerPayload(payload));return askedAs?{...out,asked_as:askedAs}:out}
     const prepared=protectedDecision(payload)?payload:normaliseWrittenPayload(payload,question)
-    const out=normaliseCoveragePayload(groundAnswerPayload(prepared,question),question)
+    const out=ensureAnswerText(normaliseCoveragePayload(groundAnswerPayload(prepared,question),question),question)
     return askedAs?{...out,asked_as:askedAs}:out
   }, true, true)
 }

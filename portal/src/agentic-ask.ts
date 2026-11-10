@@ -441,7 +441,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
 export async function resolveNamedScope(question: string, deps: ToolDeps, ms = 4_000, filters: Record<string, unknown> = {}): Promise<NamedScope> {
   return bounded(async signal => {
     const assets = deps.withSignal?.(signal) ?? deps
-    const [roster, bills, interests] = await Promise.all([assets.asset('/parliamentarians.json'), assets.asset('/bills/index.json'), /\b(?:declare\w*|interests?|real estate)\b/i.test(question) ? assets.asset('/interests/index.json').catch(() => null) : null])
+    const [roster, bills, interests] = await Promise.all([assets.asset('/parliamentarians.json'), assets.asset('/bills/index.json'), /\b(?:declare\w*|interests?|real estate|shareholdings|directorships)\b/i.test(question) ? assets.asset('/interests/index.json').catch(() => null) : null])
     const register = Object.values((interests as { people?: Record<string, { name: string }> } | null)?.people ?? {})
     const people = [...register, ...((roster as { people?: { name: string }[] } | null)?.people ?? [])]
     const combined = { people: [...new Map(people.map(p => [p.name, p])).values()] }
@@ -450,6 +450,7 @@ export async function resolveNamedScope(question: string, deps: ToolDeps, ms = 4
     const resolution = slot ? resolvePersonName(slot, combined.people) : null
     const corrected = slot && resolution?.status === 'matched' ? question.replace(slot, resolution.candidates[0].person.name) : question
     const scope = extractNamedScope(corrected + (filters.speaker ? ` speeches by ${filters.speaker}` : ''), combined, bills)
+    if (resolution?.status === 'matched') { scope.people = [resolution.candidates[0].person.name]; scope.ambiguous = false; scope.unresolved = false }
     if (corrected !== question) scope.resolvedQuestion = corrected
     if (!(bills as { bills?: unknown[] } | null)?.bills && /\bbill\b/i.test(question)) scope.unresolved = true
     return scope

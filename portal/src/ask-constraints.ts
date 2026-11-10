@@ -3,6 +3,7 @@ import type { Period, NamedScope, PlanStep } from './agentic-ask'
 import type { ToolResult } from './agentic-tools'
 import { receiptYearWindow } from './receipt-period'
 import { requestedBillTitle, billTitleMatches } from './bill-title'
+import { recordIntentText, recordCountKind, billIntroductionListQuestion } from './ask-scope-intent'
 export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
@@ -12,10 +13,12 @@ export interface AskConstraints {
   exactBillTitle?: string
   contractSupplier?: string
   grantRecipient?: string
+  recordCountKind?: 'bills' | 'divisions'
+  listIntroductions?: true
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}, statuteTitles: ReadonlySet<string> | null = null): AskConstraints {
   question = named.resolvedQuestion ?? question
-  const q = question.toLowerCase()
+  const q = recordIntentText(question)
   const { text, territory } = scopeAfterStatutes(question, statuteTitles), jurisdictionText = text.toLowerCase()
   const actUnfiltered = !statuteTitles?.size, state = actUnfiltered && filters.state === 'act' ? undefined : filters.state
   const detected = String(state || (/new south wales|\bnsw\b/.test(jurisdictionText) ? 'nsw' : /victoria|\bvic\b/.test(jurisdictionText) ? 'vic' : /queensland|\bqld\b/.test(jurisdictionText) ? 'qld' : /south australia|\bsa\b/.test(jurisdictionText) ? 'sa' : /western australia|\bwa\b/.test(jurisdictionText) ? 'wa' : /tasmania/.test(jurisdictionText) ? 'tas' : territory ? 'act' : /northern territory/.test(jurisdictionText) ? 'nt' : /federal|commonwealth/.test(jurisdictionText) ? 'federal' : '')) || undefined
@@ -28,13 +31,20 @@ export function extractAskConstraints(question: string, period: Period, named: N
   const contractSupplier = /\b(?:which|what)\s+(?:department|agency)\s+(?:gives?|awards?|awarded)\s+(.+?)\s+(?:(?:the\s+)?(?:most|more|largest)\s+)?contracts?\b/i.exec(question)?.[1]?.trim()
   const grantTotal = /\b(?:total|how much)\b/i.test(question) && !/\b(?:largest|biggest|single|individual)\s+(?:(?:federal|Commonwealth)\s+)?grant\b/i.test(question)
   const grantRecipient = grantTotal ? (/\bgrants?\s+to\s+(.+?)(?=[?!]|\.\s|\s+(?:in|during|since|from|between)\s+(?:\d|financial|FY)|$)/i.exec(question)?.[1] ?? /\bhow much has\s+(.+?)\s+(?:received|been awarded)\s+in\s+(?:(?:federal|Commonwealth|Queensland Government)\s+)?grants?\b/i.exec(question)?.[1])?.trim().replace(/\.$/,'') : undefined
-  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, ...(contractSupplier?{contractSupplier}:{}), ...(grantRecipient?{grantRecipient}:{}), recordKind: /\b(?:divisions?|vot(?:e|ed|es|ing))\b/i.test(question) ? 'division' : /\bbill\b/i.test(question) ? 'bill' : undefined, exactBillTitle: requestedBillTitle(question) ?? undefined, ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
+  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, ...(contractSupplier?{contractSupplier}:{}), ...(grantRecipient?{grantRecipient}:{}), recordKind: /\b(?:divisions?|vot(?:e|ed|es|ing))\b/i.test(q) ? 'division' : /\b(?:bills?|legislation)\b/i.test(q) ? 'bill' : undefined, exactBillTitle: requestedBillTitle(question) ?? undefined, ...(recordCountKind(q) ? { recordCountKind: recordCountKind(q) } : {}), ...(billIntroductionListQuestion(q) ? { listIntroductions: true as const } : {}), ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
     superlative: /\b(?:lowest|least|fewest|smallest|youngest)\b/.test(q) ? 'lowest' : /\b(?:highest|most|largest|biggest|oldest|top)\b/.test(q) ? 'highest' : undefined,
     trend: /\b(?:trend|since|over time|each year|by year|changed?|increas\w*|decreas\w*)\b/.test(q) }
 }
 /** Restrict model arguments using only parameters the tool actually supports. */
 export function constrainStep(step: PlanStep, c: AskConstraints, properties: Record<string, unknown>): PlanStep {
   const a = { ...step.args }, has = (k: string) => Object.hasOwn(properties, k)
+  if (step.tool === 'count_records') {
+    if (c.listIntroductions && a.record_type === 'bills') a.include_records = true
+    if (c.recordCountKind === 'divisions' && c.exactBillTitle && has('bill')) {
+      a.bill = c.exactBillTitle
+      if (!c.dated) for (const key of ['date', 'month', 'year', 'since', 'until']) delete a[key]
+    }
+  }
   if (step.tool === 'contracts' && c.contractSupplier && has('supplier')) {
     a.supplier = c.contractSupplier
     const words=(s:string):string[]=>s.toLowerCase().match(/[\p{L}\p{N}]+/gu)??[]
@@ -117,14 +127,17 @@ export function periodMatches(c: AskConstraints, coverage: Coverage): boolean {
 export const UNCONFIRMED_PERIOD = 'OPAX could not confirm that these records fall in the requested period, so check their dates.'
 /** Discovery is ranked and may fall back to any word. Its rows must still match the requested record. */
 export function guardExactLookupResult(result: ToolResult, c: AskConstraints): ToolResult {
-  if (!result.ok || result.tool !== 'find_records' || !Array.isArray(result.data?.rows) || !(c.exactBillTitle || c.recordKind === 'division' && c.dated)) return result
+  if (!result.ok || result.tool !== 'find_records' || !Array.isArray(result.data?.rows) || !(c.exactBillTitle || c.listIntroductions || c.recordKind === 'division' && c.dated)) return result
   const normal = (s: unknown) => String(s ?? '').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
   const all = result.data.rows as Record<string, unknown>[]
   const rows = all.filter(r => {
-    if (c.recordKind && r.kind !== c.recordKind) return false
+    const linkedBill = c.recordCountKind === 'divisions' && c.exactBillTitle && r.kind === 'bill'
+    if (c.recordKind && r.kind !== c.recordKind && !linkedBill) return false
+    if (linkedBill && !billTitleMatches(r.title, c.exactBillTitle!)) return false
+    if (c.listIntroductions && (typeof r.introduced !== 'string' || c.period.since && r.introduced < c.period.since || c.period.until && r.introduced > c.period.until || c.chamber && r.originating_house !== c.chamber)) return false
     if (c.recordKind === 'bill' && c.exactBillTitle && !billTitleMatches(r.title, c.exactBillTitle)) return false
     if (c.recordKind === 'division' && c.exactBillTitle && !normal(r.title).includes(normal(c.exactBillTitle))) return false
-    if (c.recordKind === 'division' && c.dated) {
+    if (c.recordKind === 'division' && c.dated && !linkedBill) {
       const date = /^(\d{4}-\d{2}-\d{2})(?:$|[T\s])/.exec(String(r.period ?? ''))?.[1]
       if (!date || c.period.since && date < c.period.since || c.period.until && date > c.period.until) return false
     }
@@ -133,7 +146,7 @@ export function guardExactLookupResult(result: ToolResult, c: AskConstraints): T
   if (rows.length === all.length) return result
   const urls = new Set(rows.map(r => r.url))
   const cite = result.cite.filter(c => urls.has(c.url))
-  const message = `OPAX has no matching ${c.recordKind ?? 'public'} record for the requested ${c.recordKind === 'division' ? 'date' : 'title'} in this lookup.`
+  const message = `OPAX has no matching ${c.recordKind ?? 'public'} record for the requested ${c.listIntroductions ? 'introduction date and originating chamber' : c.recordKind === 'division' ? 'date' : 'title'} in this lookup.`
   return { ...result, data: { ...result.data, rows, total: rows.length, ...(rows.length ? {} : { coverage_only: true }) }, cite: rows.length ? cite : [{ kind: 'record', label: message, url: c.recordKind === 'division' ? 'https://opax.com.au/divisions/index.json' : 'https://opax.com.au/bills' }], notes: rows.length ? result.notes : [] }
 }
 export function guardToolPeriod(result: ToolResult, step: PlanStep, c: AskConstraints): ToolResult {
