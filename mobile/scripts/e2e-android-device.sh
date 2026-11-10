@@ -67,17 +67,33 @@ if [ "$HOST_OS" = Darwin ]; then
 else
   # Serialize the inventory/boot decision, then release as soon as our emulator
   # is registered. This is separate from the desktop native build lock.
-  exec 9>/tmp/opax-android-emulator-start.lock
+  exec 9>"${OPAX_EMULATOR_START_LOCK:-/tmp/opax-android-emulator-start.lock}"
   flock -w 600 9 || { echo 'Emulator boot lock wait expired' >&2; exit 1; }
   deadline=$((SECONDS + ${OPAX_EMULATOR_WAIT_SECONDS:-1800}))
   while :; do
-    count=0
-    while read -r serial state; do
-      case "$serial" in emulator-*) ;; *) continue ;; esac
-      name=$(timed 10 adb -s "$serial" emu avd name 2>/dev/null | tr -d '\r' | head -n 1) || name=unknown
-      case "$name" in OPAX_*|unknown) count=$((count + 1)) ;; esac
-      [ "$serial" != "$SERIAL" ] || { echo "Assigned emulator $SERIAL is occupied" >&2; exit 1; }
-    done < <(adb devices)
+    # Inventory host process metadata, without querying another emulator's
+    # console or printing its command line. Unknown adb devices count towards
+    # the cap; known non-OPAX AVDs do not. Include boots not yet visible to adb.
+    inventory=$(python3 - "$SERIAL" "$(adb devices)" "$OUT/emulator-inventory.json" <<'PYINVENTORY'
+import json, os, pathlib, sys
+names={}
+for proc in pathlib.Path(os.environ.get('OPAX_EMULATOR_PROC_ROOT','/proc')).glob('[0-9]*'):
+    try:
+        if not (proc/'comm').read_text().strip().startswith(('qemu-system','emulator')): continue
+        if (proc/'stat').read_text().split(') ',1)[1].startswith('Z '): continue
+        args=(proc/'cmdline').read_bytes().decode(errors='replace').split('\0')
+        if '-avd' in args and '-port' in args:
+            names['emulator-'+args[args.index('-port')+1]]=args[args.index('-avd')+1]
+    except (OSError,IndexError): pass
+serials={line.split()[0] for line in sys.argv[2].splitlines() if line.startswith('emulator-')}
+serials.update(names)
+count=sum(names.get(serial,'unknown').startswith('OPAX_') or serial not in names for serial in serials)
+pathlib.Path(sys.argv[3]).write_text(json.dumps({'avds':names,'opax_or_unknown':count},indent=2)+'\n')
+print(count,int(sys.argv[1] in serials))
+PYINVENTORY
+)
+    read -r count occupied <<< "$inventory"
+    [ "$occupied" = 0 ] || { echo "Assigned emulator $SERIAL is occupied" >&2; exit 1; }
     [ "$count" -ge 3 ] || break
     [ "$SECONDS" -lt "$deadline" ] || { echo 'Three-emulator capacity wait expired' >&2; exit 1; }
     echo 'Three OPAX emulators are running; waiting for capacity.' >&2
@@ -190,9 +206,16 @@ MAESTRO_DRIVER_READY=0
 android_flow() {
   local key=$1 size=$2 file=$3 rc=0
   local driver_args=()
+  local connection_args=(--device "$SERIAL")
+  if [ "$HOST_OS" = Linux ]; then
+    # Maestro's global discovery asks every emulator for its AVD name. One
+    # unavailable console can hide all devices, even a healthy assigned one.
+    # Connect directly to this lane's adbd TCP endpoint instead.
+    connection_args=(--host 127.0.0.1 --port "$(( ${OPAX_ANDROID_EMULATOR_PORT:-5602} + 1 ))" --device "127.0.0.1:$(( ${OPAX_ANDROID_EMULATOR_PORT:-5602} + 1 ))")
+  fi
   if [ "$HOST_OS" = Linux ] && [ "$MAESTRO_DRIVER_READY" = 1 ]; then driver_args+=(--no-reinstall-driver); fi
   assert_lock
-  qa_maestro_run "$OUT/$key-maestro.log" "$OUT/maestro/$key" --device "$SERIAL" test "${driver_args[@]}" \
+  qa_maestro_run "$OUT/$key-maestro.log" "$OUT/maestro/$key" "${connection_args[@]}" test "${driver_args[@]}" \
     --test-output-dir "$OUT/maestro/$key" --debug-output "$OUT/maestro/$key" \
     --format junit --output "$OUT/$key-report.xml" -e EVIDENCE=screenshots \
     -e CONTENT_SIZE=large -e FIXTURE_PORT="$PORT" "$OUT/android-flows/${file#.maestro/}" || rc=$?

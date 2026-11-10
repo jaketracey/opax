@@ -15,12 +15,18 @@ SCRIPTS = Path(__file__).resolve().parent
 
 
 class AndroidHarnessTests(unittest.TestCase):
-    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False):
+    def run_device(self, avd='OPAX_API34', fail=False, existing=1, variant='e2e', origin='http://10.0.2.2:8920', twice=False, local_avds=()):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
             for name in ('e2e-android-device.sh','qa-env.sh','qa-maestro.sh','qa-flows.sh','maestro-watch.py','android-parity-results.py'):
                 shutil.copyfile(SCRIPTS/name, scripts/name)
             tools = root/'bin'; tools.mkdir(); out = root/'out'; out.mkdir()
+            (root/'proc').mkdir()
+            for index, name in enumerate(local_avds):
+                proc=root/'proc'/str(index+100);proc.mkdir()
+                (proc/'comm').write_text('qemu-system-x86\n')
+                (proc/'stat').write_text(f'{index+100} (qemu-system-x86) S 1 0 0\n')
+                (proc/'cmdline').write_bytes(f'qemu-system-x86_64\0-avd\0{name}\0-port\0{5500+index*2}\0'.encode())
             (out/'android-flows').mkdir()
             (out/'android-flows/01-launch.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
             (out/'android-flows/02-search.yaml').write_text('appId: au.com.opax.app\n---\n- launchApp\n')
@@ -65,6 +71,8 @@ elif name=='git': print('a'*40)
                  'OPAX_FIXTURE_PORT':'8920','OPAX_ANDROID_METRO_PORT':'8183','OPAX_ANDROID_EMULATOR_PORT':port,
                  'OPAX_ANDROID_SKIP_DEBUG_PROOF':'1','OPAX_ANDROID_E2E_APK':str(mobile/'fixture.apk'),
                  'OPAX_ANDROID_SUITE_ONLY':'1','OPAX_ANDROID_CONTINUE_ON_FAILURE':'1','OPAX_EMULATOR_WAIT_SECONDS':'0',
+                 'OPAX_EMULATOR_PROC_ROOT':str(root/'proc'),
+                 'OPAX_EMULATOR_START_LOCK':str(root/'start.lock'),
                  'MOCK_ROOT':str(root),'MOCK_SERIAL':'emulator-'+port,'MOCK_FAIL':str(int(fail)), 'MOCK_EXISTING':str(existing)}
             for key in ('OPAX_PASTE_LOCK','OPAX_BUILD_GATE'): env.pop(key,None)
             child=subprocess.Popen(['bash','scripts/e2e-android-device.sh',avd,str(out),'--all-android' if twice else '01'],cwd=mobile,env=env,
@@ -95,6 +103,11 @@ elif name=='git': print('a'*40)
                 self.assertTrue(any(c[-5:]==['settings','put','system','font_scale','1.0'] for c in adb),log)
                 self.assertTrue(results.strip().endswith(str(int(fail))),results)
                 self.assertFalse(any(c[0]=='xcrun' for c in commands))
+                self.assertFalse(any(c[-3:]==['emu','avd','name'] for c in commands),'Do not query another emulator console')
+                maestro=next(c for c in commands if c[0]=='maestro')
+                endpoint='5603' if avd=='OPAX_API34' else '5605'
+                self.assertEqual(maestro[maestro.index('--port')+1],endpoint)
+                self.assertEqual(maestro[maestro.index('--device')+1],'127.0.0.1:'+endpoint)
 
     @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
     def test_three_emulator_cap_refuses_to_boot_or_stop_another_emulator(self):
@@ -102,6 +115,15 @@ elif name=='git': print('a'*40)
         self.assertNotEqual(rc,0)
         self.assertIn('Three-emulator capacity',log)
         self.assertFalse(any(c[0]=='emulator' or c[-2:]==['emu','kill'] for c in commands))
+
+    @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
+    def test_cap_ignores_known_foreign_avds_and_counts_opax_boots_before_adb_registration(self):
+        rc, log, _, _=self.run_device(existing=3,local_avds=('gf-one','gf-two','gf-three'))
+        self.assertEqual(rc,0,log)
+        rc, log, commands, _=self.run_device(existing=0,local_avds=('OPAX_API34','OPAX_Pixel_API36','OPAX_Pixel_API36'))
+        self.assertNotEqual(rc,0,log)
+        self.assertIn('Three-emulator capacity',log)
+        self.assertFalse(any(c[0]=='emulator' for c in commands))
 
 
     @unittest.skipUnless(os.uname().sysname == 'Linux', 'Desktop harness branch')
