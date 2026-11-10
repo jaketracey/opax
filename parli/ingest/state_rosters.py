@@ -69,10 +69,21 @@ POSITIONS = {
 }
 
 # Wikidata party labels -> the corpus's canonical labels (parli.ingest.speech_hygiene).
+# A rule may only name a party the label itself states. Wikidata gives some NSW and
+# Victorian Coalition members the party "Liberal-National Coalition": that is two
+# parties in coalition, not a party, and it holds Nationals (Peter Walsh, Emma Kealy)
+# as well as Liberals, so it maps to no party. The member keeps a party only from
+# a source that states it (members.party, from the parliament's own site).
+NO_PARTY_RULES = [
+    re.compile(r"\bcoalition\b", re.I),
+]
 PARTY_RULES = [
+    (re.compile(r"liberal[\s-]+national party", re.I), "LNP"),
     (re.compile(r"liberal national", re.I), "LNP"),
     (re.compile(r"labor", re.I), "Labor"),
     (re.compile(r"country liberal", re.I), "Country Liberal Party"),
+    # The Liberal Democrats are not the Liberal Party: keep their own label.
+    (re.compile(r"liberal democrat", re.I), None),
     (re.compile(r"liberal", re.I), "Liberal"),
     (re.compile(r"national", re.I), "Nationals"),
     (re.compile(r"greens?", re.I), "Greens"),
@@ -96,11 +107,15 @@ def now_iso():
 
 
 def canonical_party(label: str | None) -> str | None:
-    if not label:
+    """The corpus label for a Wikidata party label, or None when the label names no
+    single party. A rule mapping to None keeps the source label unchanged."""
+    if not label or not label.strip():
+        return None
+    if any(rx.search(label) for rx in NO_PARTY_RULES):
         return None
     for rx, canon in PARTY_RULES:
         if rx.search(label):
-            return canon
+            return canon or label.strip()
     return label.strip()
 
 

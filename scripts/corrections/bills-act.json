@@ -1,0 +1,12 @@
+[
+  {
+    "id": "au-act-10-39000bfe24fb34ae",
+    "field": "sources[label=As presented].url",
+    "from": "https://www.legislation.act.gov.au/View/b/db_66952/20221130-80090/html/db_66952.html",
+    "to": "https://www.legislation.act.gov.au/View/b/db_65320/20211125-77887/html/db_65320.html",
+    "evidence_url": "https://www.legislation.act.gov.au/b/db_65320",
+    "evidence": "The ACT Legislation Register page for db_65320 is 'Corrections Management Amendment Bill 2021' (Private member's Bill, sponsor Elizabeth Kikkert, presented 25 November 2021, lapsed 19 October 2024); its 'As presented 25 November 2021' version links /View/b/db_65320/20211125-77887/html/db_65320.html. The 10th Assembly bills volume links this bill's 'As presented' to db_66952, which the register (https://www.legislation.act.gov.au/b/db_66952) titles 'Corrections and Sentencing Legislation Amendment Bill 2022'.",
+    "finding": "state-datasets-005",
+    "reviewed": "2026-11-10"
+  }
+]

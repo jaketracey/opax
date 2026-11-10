@@ -18,6 +18,7 @@ import zipfile
 
 from bs4 import BeautifulSoup
 
+from scripts.corrections import apply as corrections
 from scripts.state_bills.acquire import ROOT, ORIGINS
 
 ACT_BASE = ORIGINS["act"] + "/parliamentary-business/in-the-chamber/"
@@ -67,6 +68,24 @@ def document(label, url, source):
         "body_status": "held", "body_reason": "Document-level reuse rights not cleared; original link only", **provenance(source)}
 
 
+def tas_event_order(events):
+    """Chronological order without inventing times.
+
+    The source tables give a date but no time, so stages on the same day keep
+    the order of the source table's rows (a stable sort on date). Across the two
+    houses, the originating house's stages come first that day: a bill passes the
+    first house before the second house reads it. A lapse notice (no house) is
+    last on its day. Sorting on the stage name put "2nd Reading Agreed" before
+    "2nd Reading moved" and "Negatived" before "Resumed".
+    """
+    seq = {id(e): i for i, e in enumerate(events)}
+    firsts = sorted((e for e in events if e["house"] and e["stage"].lower() == "first reading"),
+                    key=lambda e: (e["date"], seq[id(e)]))
+    origin = firsts[0]["house"] if firsts else next((e["house"] for e in events if e["house"]), None)
+    rank = lambda e: 2 if e["house"] is None else 0 if e["house"] == origin else 1
+    return sorted(events, key=lambda e: (e["date"], rank(e), seq[id(e)]))
+
+
 def tas_bill(body, receipt, licence, current_urls):
     main = BeautifulSoup(body, "html.parser").find("main")
     if not main or not main.find("h1"):
@@ -114,7 +133,7 @@ def tas_bill(body, receipt, licence, current_urls):
     lapse = re.search(r"Bill lapsed at prorogation on (?:\w+ )?(\d+ \w+ \d{4})", content, re.I)
     if lapse:
         events.append({"stage": "Lapsed at prorogation", "date": date(lapse[1]), "date_raw": lapse[1], "house": None, **provenance(receipt)})
-    events.sort(key=lambda e: (e["date"], e["stage"]))
+    events = tas_event_order(events)
     first = [e for e in events if e["stage"].lower() == "first reading"]
     last = events[-1] if events else None
     if any(e["stage"].lower() == "royal assent" for e in events):
@@ -166,7 +185,12 @@ def title_key(title):
     aliases = {"officeofthelegislationassembly": "officeofthelegislativeassembly",
         "firearmsfirearmprohibitionorders": "firearmsfirearmsprohibitionorders",
         "monitoringofplacesofdetermination": "monitoringofplacesofdetention",
-        "evidencemiscellaneousprovisionamendment": "evidencemiscellaneousprovisionsamendment"}
+        "evidencemiscellaneousprovisionamendment": "evidencemiscellaneousprovisionsamendment",
+        # The 10th Assembly status list titles this bill "[No 2]"; its version-index
+        # heading, summary heading and register page (db_68423) do not. The Act it
+        # became is A2023-47, "Revenue Legislation Amendment Act 2023 [No 2]", and no
+        # other 2023 Revenue Legislation Amendment Bill exists in either Assembly.
+        "revenuelegislationamendmentbill2023no2": "revenuelegislationamendmentbill2023"}
     for source, target in aliases.items():
         key = key.replace(source, target)
     return key
@@ -200,6 +224,9 @@ def act_list(body, receipt):
             item = result.setdefault(key, {"title": cells[0], "events": [], "status": "unknown", "introduced_date": None, "act_number": None})
             if status:
                 item["status"] = status
+            # The committee table repeats the bill's Introduced date: one bill has one
+            # event per (stage, date, house), whichever table states it.
+            seen = {(e["stage"], e["date"], e["house"]) for e in item["events"]}
             for field, value in fields.items():
                 if field == "Introduced":
                     item["introduced_date"] = date(value)
@@ -208,6 +235,9 @@ def act_list(body, receipt):
                 parsed = date(value)
                 if parsed:
                     stage = {"Introduced": "Introduced", "Passed": "Passed", "LR": "Notified on Legislation Register", "Date Negatived": "Agreement in principle negatived", "Date Discharged / Withdrawn": "Discharged / withdrawn", "Date of Referral": "Referred to committee", "Report Presented": "Committee report presented"}.get(field, field)
+                    if (stage, parsed, "Legislative Assembly") in seen:
+                        continue
+                    seen.add((stage, parsed, "Legislative Assembly"))
                     item["events"].append({"stage": stage, "date": parsed, "date_raw": value, "house": "Legislative Assembly", **provenance(receipt)})
     if not result:
         raise ValueError("Empty ACT status list")
@@ -229,6 +259,45 @@ def act_version_events(nodes, receipt):
     return events
 
 
+ACT_REGISTER = "https://www.legislation.act.gov.au/b/"
+
+
+def act_bill_id(url):
+    """Register bill identifier of an ACT legislation register link, or None.
+
+    "/b/db_65228", "/View/b/db_65228/20211109-77760/html/db_65228.html" and
+    "/DownloadFile/b/db_65228/..." all name db_65228. Explanatory statements
+    ("/es/") and Acts ("/a/") are different register items.
+    """
+    match = re.search(r"legislation\.act\.gov\.au/(?:(?:View|DownloadFile)/)?b/(db_\d+)(?:[/?#]|$)", url or "", re.I)
+    return match[1] if match else None
+
+
+def act_summary_for(key, volume_id, summaries):
+    """The one summary heading for a version-index record, or (None, notes).
+
+    Same title and same register identifier first. A numbered sibling ("... Bill
+    2021 [No 2]") may take a heading the summary titles without its number, but
+    only through the identifier. A title alone joins only when the summary has
+    exactly one heading for it; a repeated title with no matching identifier
+    gives no sponsor rather than another bill's.
+    """
+    same = summaries.get(key, [])
+    if volume_id:
+        hits = [e for e in same if e["id"] == volume_id]
+        if not hits:
+            base = re.sub(r"no\d+$", "", key)
+            hits = [e for rows in summaries.values() for e in rows
+                    if e["id"] == volume_id and re.sub(r"no\d+$", "", e["key"]) == base]
+        if len(hits) == 1:
+            return hits[0], []
+    if len(same) == 1:
+        return same[0], []
+    if same:
+        return None, ["The summary of bills repeats this title for different bills and none links this bill's register identifier; no presenter is shown."]
+    return None, []
+
+
 def act_bills(volume, summary, listing, receipts, parliament, licence):
     with zipfile.ZipFile(io.BytesIO(listing)) as archive:
         header_text = " ".join("".join(ET.fromstring(archive.read(n)).itertext()) for n in archive.namelist() if n.startswith("word/header"))
@@ -236,14 +305,26 @@ def act_bills(volume, summary, listing, receipts, parliament, licence):
     if not list_date or not date(list_date[1]):
         raise ValueError("ACT list date unavailable")
     status_as_of = date(list_date[1])
+    # The summary can repeat one title for different bills (the 10th Assembly
+    # lists two "Civil Law (Sale of Residential Property) Amendment Bill 2021"
+    # headings, Mr Rattenbury's db_65228 and Mr Cain's db_65229). Keep every
+    # heading, with its register link, so a record is joined by identifier first.
     summaries = {}
     for heading, nodes in act_sections(summary):
         presented = next((text(n) for n in nodes if text(n).startswith("Presented by ")), None)
+        sponsor = introduced = None
         if presented:
             match = re.fullmatch(r"Presented by (.+?)\s*[—–]\s*(\d+ \w+ \d{4})", presented)
             if not match:
                 raise ValueError("Unrecognised ACT introduction: " + presented)
-            summaries[title_key(text(heading))] = (match[1], date(match[2]), heading.find("a")["href"] if heading.find("a") else None)
+            sponsor, introduced = match[1], date(match[2])
+        href = heading.find("a", href=True)["href"] if heading.find("a", href=True) else None
+        key = title_key(text(heading))
+        # A bill divided by the Assembly has no presenter of its own; its summary
+        # names the bill it came from. Only that title is kept, never the prose.
+        origin = next((m[1] for n in nodes for m in [re.search(r"\boriginally the (.+? Bill \d{4}(?: \[No\.? \d+\]| \(No\.? \d+\))?)", text(n))] if m), None)
+        summaries.setdefault(key, []).append({"key": key, "title": text(heading), "sponsor": sponsor, "date": introduced,
+                                              "href": href, "id": act_bill_id(href), "origin": origin})
     statuses = act_list(listing, receipts["list"])
     bills, matched, volume_seen = [], set(), {}
     for heading, nodes in act_sections(volume):
@@ -260,9 +341,26 @@ def act_bills(volume, summary, listing, receipts, parliament, licence):
                         volume_seen[key]["sources"].append(document(text(a), a["href"], receipts["volume"]))
                         existing_urls.add(a["href"])
             continue
-        sponsor, introduced, bill_url = summaries.get(key, (None, None, None))
+        heading_link = heading.find("a", href=True)
+        volume_id = act_bill_id(heading_link["href"]) if heading_link else None
+        if not volume_id:
+            volume_id = next((act_bill_id(a["href"]) for n in nodes for a in n.find_all("a", href=True) if act_bill_id(a["href"])), None)
+        entry, notes = act_summary_for(key, volume_id, summaries)
+        sponsor, introduced = (entry["sponsor"], entry["date"]) if entry else (None, None)
+        if entry and not sponsor and entry["origin"]:
+            parent = [e for rows in summaries.values() for e in rows if e["title"] == entry["origin"] and e["sponsor"]]
+            if len(parent) == 1:
+                notes.append(f"The summary of bills gives no presenter for this bill. It was originally {entry['origin']}, presented by {parent[0]['sponsor']} on {parent[0]['date']}, and divided by resolution of the Assembly.")
+        bill_url = None
+        if entry and entry["href"] and (not volume_id or entry["id"] == volume_id):
+            bill_url = entry["href"]
+        elif volume_id:
+            # The version index heading links the record's own register page. When
+            # the summary links a different bill there, the record keeps its own.
+            bill_url = ACT_REGISTER + volume_id
+            if entry and entry["id"] and entry["id"] != volume_id:
+                notes.append(f"The summary of bills links this title to {entry['id']}; the version index links {volume_id}, which is used.")
         status = statuses.get(key)
-        notes = []
         if status:
             matched.add(key)
             if re.sub(r"\s*\[Act Citation:.*?\]", "", status["title"]).strip() != title:
@@ -300,7 +398,8 @@ def act_bills(volume, summary, listing, receipts, parliament, licence):
     unmatched = sorted(set(statuses) - matched)
     for k in unmatched:
         s = statuses[k]
-        sponsor, introduced, bill_url = summaries.get(k, (None, None, None))
+        entry, _ = act_summary_for(k, None, summaries)
+        sponsor, introduced, bill_url = (entry["sponsor"], entry["date"], entry["href"]) if entry else (None, None, None)
         source_id = bill_url.rsplit("/", 1)[-1] if bill_url else None
         events = sorted(s["events"], key=lambda e: (e["date"], e["stage"]))
         last = events[-1] if events else None
@@ -315,6 +414,27 @@ def act_bills(volume, summary, listing, receipts, parliament, licence):
         if b["source_id"] and by_id[b["source_id"]] > 1:
             b.setdefault("source_notes", []).append("The source links this identifier from more than one bill title; bill records kept separate by title and Assembly.")
     return bills, [{"title": statuses[k]["title"], "reason": "Status-list bill absent from version index"} for k in unmatched]
+
+
+def apply_corrections(dataset, bills):
+    """Reviewed, evidenced one-off corrections (scripts/corrections/<dataset>.json).
+
+    Used only where the parliament's own page mislinks. Each corrected value is
+    marked on the record with its evidence, and the helper fails when the source
+    value has changed, so a fixed source forces a fresh review.
+    """
+    # Corrections are reviewed code-side inputs, read from this checkout like the
+    # projection code itself, whatever data root is being projected.
+    for entry in corrections.apply(dataset, bills, key="key"):
+        bill = next(b for b in bills if b["key"] == entry["id"])
+        match = re.fullmatch(r"sources\[label=(.+)\]\.url", entry["field"])
+        if match:
+            doc = next(d for d in bill["sources"] if d["label"] == match[1])
+            doc["correction"] = {k: entry[k] for k in ("from", "evidence_url", "finding", "reviewed")}
+        was = act_bill_id(entry["from"]) or entry["from"]
+        bill.setdefault("source_notes", []).append(
+            f"Corrected link: the source links '{match[1] if match else entry['field']}' to {was}, a different bill; "
+            f"the register page {entry['evidence_url']} gives the link used here.")
 
 
 def build(j, root=ROOT, write=False):
@@ -359,6 +479,7 @@ def build(j, root=ROOT, write=False):
             bills.extend(rows)
             gaps.extend({**g, "parliament": parliament} for g in holes)
         scope = "Current Eleventh and previous Tenth Assembly version indexes joined to published summaries and status lists. Source component dates differ; status dates are shown separately from acquisition."
+    apply_corrections("bills-" + j, bills)
     roster = json.loads((root / "portal/public/parliamentarians.json").read_bytes())["people"]
     paths = json.loads((root / "portal/public/person-paths.js").read_text().split("export const PERSON_PATHS = ", 1)[1].strip().rstrip(";"))["exact"]
     for bill in bills:

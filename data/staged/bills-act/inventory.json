@@ -3,25 +3,24 @@
   "jurisdiction": "act",
   "scope": "Current Eleventh and previous Tenth Assembly version indexes joined to published summaries and status lists. Source component dates differ; status dates are shown separately from acquisition.",
   "counts": {
-    "bills": 262,
+    "bills": 261,
     "parliaments": {
       "11": 79,
-      "10": 183
+      "10": 182
     },
     "statuses": {
       "before_parliament": 22,
       "passed": 222,
       "withdrawn": 3,
       "negatived": 6,
-      "lapsed": 8,
-      "unknown": 1
+      "lapsed": 8
     },
-    "events": 941,
+    "events": 866,
     "document_links": 1804,
     "held_bodies": 1804,
     "linked_sponsors": 0,
-    "missing_sponsors": 3,
-    "gaps": 12
+    "missing_sponsors": 2,
+    "gaps": 11
   },
   "licence": {
     "status": "metadata-only",
@@ -146,11 +145,6 @@
     },
     {
       "title": "Building (Swimming Pool Safety) Legislation Amendment Bill 2023",
-      "reason": "Status-list bill absent from version index",
-      "parliament": 10
-    },
-    {
-      "title": "Revenue Legislation Amendment Bill 2023 [No 2]",
       "reason": "Status-list bill absent from version index",
       "parliament": 10
     }
