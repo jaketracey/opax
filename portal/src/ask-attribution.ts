@@ -1,6 +1,7 @@
 import { extractNamedScope, normaliseQuestion } from './agentic-ask'
 import { EVIDENCE_GAP_ANSWER } from './ask-evidence'
 import { saDisplayPayload } from '../public/sa-hansard.js'
+import {guardClaimMeasures} from './ask-claim-measures'
 
 const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 // The export also has partial bylines ("Liddle", "David", "On"). They
@@ -46,6 +47,7 @@ export function claimMatchesSpeaker(claim: string, speaker: string | undefined |
 /** Footnote citations mark the end of a claim, often a single code point.
  * Check the paragraph leading to that marker, not just its final character. */
 export function guardAnswerAttribution<T extends { answer: string; citations: Record<string, unknown>; sources: unknown[] }>(payload: T, roster: unknown): T {
+  payload=guardClaimMeasures(payload)
   // The SA omission label is UI text, never evidence, even with full-text
   // permission. Remove it before storage as well as at the public boundary.
   payload = saDisplayPayload(payload, 'true')
