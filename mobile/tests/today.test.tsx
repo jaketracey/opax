@@ -22,7 +22,7 @@ import { invitationBody } from '../src/features/today/SeatInvitation';
 import { loadChoice } from '../src/features/your-mp/choice-store';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import { releaseSplash } from '../src/launch/splash';
-import { largeTitleBar, todayTitleBar } from '../src/navigation/chrome';
+import { largeTitleBar } from '../src/navigation/chrome';
 import { welcomeDeclinedThisLaunch } from '../src/onboarding/state';
 import { responseBytes } from './fixture-bytes';
 import {
@@ -284,9 +284,7 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
       expect(renderer.root.findByType(Screen).props.onScroll).toBeUndefined();
       const expanded = setOptions.mock.calls.at(-1)![0];
       const ground = expanded.contentStyle.backgroundColor;
-      expect(expanded).toEqual(
-        (name === 'index' ? todayTitleBar : largeTitleBar)(ground),
-      );
+      expect(expanded).toEqual(largeTitleBar(ground));
       expect(expanded.headerStyle).toEqual({});
       expect(expanded.headerLargeStyle).toEqual({});
       setOptions.mockClear();
@@ -295,19 +293,15 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
       expect(setOptions).not.toHaveBeenCalled();
       for (const height of [159, 120, 100])
         act(() => renderer.update(page(height)));
-      if (name === 'index') {
-        expect(setOptions).toHaveBeenCalledTimes(1);
-        expect(setOptions).toHaveBeenLastCalledWith(
-          todayTitleBar(ground, false, true),
-        );
-      } else expect(setOptions).not.toHaveBeenCalled();
-      act(() => renderer.update(page(68)));
+      expect(setOptions).toHaveBeenCalledTimes(1);
       expect(setOptions).toHaveBeenLastCalledWith(
-        (name === 'index' ? todayTitleBar : largeTitleBar)(ground, true),
+        largeTitleBar(ground, false, true),
       );
+      act(() => renderer.update(page(68)));
+      expect(setOptions).toHaveBeenLastCalledWith(largeTitleBar(ground, true));
       act(() => renderer.update(page(160)));
       expect(setOptions).toHaveBeenLastCalledWith(expanded);
-      const returnedCalls = name === 'index' ? 3 : 2;
+      const returnedCalls = 3;
       expect(setOptions).toHaveBeenCalledTimes(returnedCalls);
       for (const height of [192, 160]) act(() => renderer.update(page(height)));
       expect(setOptions).toHaveBeenCalledTimes(returnedCalls);

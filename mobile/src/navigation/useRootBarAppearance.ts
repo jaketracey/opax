@@ -14,13 +14,7 @@ import {
 } from 'react';
 import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import {
-  glassBar,
-  largeTitleBar,
-  opaqueBar,
-  tabRootGround,
-  todayTitleBar,
-} from './chrome';
+import { glassBar, largeTitleBar, opaqueBar, tabRootGround } from './chrome';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
 
@@ -72,7 +66,7 @@ export function useRootBarSearchOptions(
 /**
  * Screen supplies its ground. Bills and Ask use this from RouteOptions because
  * their FlatList/ScrollView does not use Screen. Only appearance transitions
- * change options, including Today's first shrink from its expanded height.
+ * change options, including each root's first shrink from its expanded height.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(
@@ -147,11 +141,10 @@ export function useRootBarAppearance(
     colour: ColorValue;
     collapsed: boolean;
     largeTitleEnabled: boolean;
-    todayScrolled: boolean;
+    scrolled: boolean;
   }>(undefined);
   const colour = ground ?? tabRootGround(root?.name ?? '');
   const rootKey = root?.key;
-  const today = root?.name === 'index';
   useLayoutEffect(() => {
     if (!rootKey) {
       applied.current = undefined;
@@ -186,8 +179,7 @@ export function useRootBarAppearance(
         headerHeight <= collapsedHeight);
     // Native layout reports the settled expanded height even if the last JS
     // scroll event was missed. Half a point ignores subpixel rounding at rest.
-    const todayScrolled =
-      today &&
+    const scrolled =
       expandedRoute.current?.key === rootKey &&
       expandedRoute.current.collapsedHeight === collapsedHeight &&
       expandedRoute.current.fontScale === frame.fontScale &&
@@ -201,14 +193,12 @@ export function useRootBarAppearance(
       previous.colour === colour &&
       previous.collapsed === collapsed &&
       previous.largeTitleEnabled === largeTitleEnabled &&
-      previous.todayScrolled === todayScrolled
+      previous.scrolled === scrolled
     )
       return;
     setOptions(
       largeTitleEnabled
-        ? today
-          ? todayTitleBar(colour, collapsed, todayScrolled)
-          : largeTitleBar(colour, collapsed)
+        ? largeTitleBar(colour, collapsed, scrolled)
         : opaqueBar(colour),
     );
     applied.current = {
@@ -217,7 +207,7 @@ export function useRootBarAppearance(
       colour,
       collapsed,
       largeTitleEnabled,
-      todayScrolled,
+      scrolled,
     };
   }, [
     rootKey,
@@ -227,7 +217,6 @@ export function useRootBarAppearance(
     collapsedHeight,
     landscapePhone,
     largeTitleEnabled,
-    today,
     frame.fontScale,
     frame.width,
     frame.height,
