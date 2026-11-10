@@ -67,7 +67,7 @@ test('saved year resolves before any year or shared catalogue starts loading', a
   ).not.toHaveLength(0);
   await act(async () => finishChoices({ year: 2008 }));
   expect(explore.year).toHaveBeenCalledTimes(1);
-  expect(explore.year).toHaveBeenCalledWith(2008);
+  expect(explore.year).toHaveBeenCalledWith(2008, expect.anything());
 });
 
 test('no saved choice loads the default year once after reading the device store', async () => {
@@ -75,7 +75,7 @@ test('no saved choice loads the default year once after reading the device store
   expect(explore.year).not.toHaveBeenCalled();
   await act(async () => finishChoices({}));
   expect(explore.year).toHaveBeenCalledTimes(1);
-  expect(explore.year).toHaveBeenCalledWith(defaultYear());
+  expect(explore.year).toHaveBeenCalledWith(defaultYear(), expect.anything());
 });
 
 test('a linked year takes precedence and starts without waiting for saved choices', async () => {
@@ -83,7 +83,7 @@ test('a linked year takes precedence and starts without waiting for saved choice
   await mount();
   expect(readExploreChoices).not.toHaveBeenCalled();
   expect(explore.year).toHaveBeenCalledTimes(1);
-  expect(explore.year).toHaveBeenCalledWith(2011);
+  expect(explore.year).toHaveBeenCalledWith(2011, expect.anything());
 });
 
 test('leaving before saved choices arrive starts no year read', async () => {
