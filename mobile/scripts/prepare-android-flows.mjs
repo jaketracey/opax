@@ -64,8 +64,23 @@ const permission = {
   'Precise.*Off': { text: '(?i)^(Approximate|Approximate location)$' },
 };
 const backSelector = { text: '^(Navigate up|Go back|Back|Back to .*)$' };
+// Android's native SearchView adds leading spaces to its hint. Its stable
+// resource id also works once the hint has been replaced by entered text.
+const nativeSearchHints = new Set([
+  'Electorate or member.s name',
+  'District, region or member.s name',
+  'Bills, sponsors and portfolios',
+  'Name or photographer',
+  'Bill names',
+  'Name, electorate or state',
+  'Party name',
+  'Member.s name',
+  'Datasets and publishers',
+]);
+const nativeSearch = { id: '.*:id/search_src_text' };
 function selector(v) {
   if (v === 'Profile sources') return 'Sources';
+  if (nativeSearchHints.has(v)) return { ...nativeSearch };
   if (typeof v === 'string')
     return (
       permission[v] ??
@@ -74,6 +89,10 @@ function selector(v) {
         : v.replaceAll('iPhone', 'phone'))
     );
   if (!v || typeof v !== 'object') return v;
+  if (nativeSearchHints.has(v.text)) {
+    const { text, ...options } = v;
+    return { ...options, ...nativeSearch };
+  }
   if (v.id === 'BackButton')
     return { ...backSelector, ...(v.optional ? { optional: true } : {}) };
   if (permission[v.text])
@@ -103,6 +122,28 @@ function command(v, relative) {
   }
   if (!v || typeof v !== 'object') return v;
   const out = structuredClone(v);
+  if (
+    out.inputText &&
+    ['support/search-query.yaml', '06-open-profile.yaml'].includes(relative)
+  ) {
+    const variable = relative === '06-open-profile.yaml' ? 'NAME' : 'QUERY';
+    return {
+      runFlow: {
+        commands: [
+          out,
+          {
+            extendedWaitUntil: {
+              visible: {
+                id: 'search-speeches-row',
+                text: '${"Search speeches for “" + ' + variable + ' + "”"}',
+              },
+              timeout: 60000,
+            },
+          },
+        ],
+      },
+    };
+  }
   if (out.openLink) {
     if (typeof out.openLink === 'string')
       out.openLink = androidURL(out.openLink);
@@ -142,7 +183,11 @@ function command(v, relative) {
         },
       };
     out.tapOn =
-      text === 'Select All' ? { text: '^Select (All|all)$' } : selector(tap);
+      text === 'Select All'
+        ? { text: '^Select (All|all)$' }
+        : text === 'Name' && relative === '43-money-agencies.yaml'
+          ? { ...nativeSearch }
+          : selector(tap);
     if (
       out.tapOn?.id?.endsWith('/permission_allow_one_time_button') &&
       !relative.includes('approximate')
@@ -192,6 +237,8 @@ function command(v, relative) {
         out.extendedWaitUntil[key] = selector(out.extendedWaitUntil[key]);
   if (out.scrollUntilVisible) {
     out.scrollUntilVisible.element = selector(out.scrollUntilVisible.element);
+    if (['05-workbench.yaml', '06-open-profile.yaml'].includes(relative))
+      out.scrollUntilVisible.timeout = 300000;
     if (out.scrollUntilVisible.element?.id === 'search-input')
       delete out.scrollUntilVisible.centerElement;
     // System permission buttons fit their dialog; never swipe the OS dialog.

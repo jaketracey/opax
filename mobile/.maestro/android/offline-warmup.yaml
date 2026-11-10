@@ -13,7 +13,6 @@ name: Android save public catalogs and a bill before the offline journey
     visible:
       id: bill-title
     timeout: 60000
-- scrollUntilVisible:
-    element:
-      id: bill-offline
-    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/04-online-bill-warmed

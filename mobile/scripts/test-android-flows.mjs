@@ -53,6 +53,21 @@ test('every shared flow has exactly one coverage row and runnable entries exist'
     assert.ok(plan.find((p) => p.shared === name).run);
 });
 
+test('native search selectors tolerate Android SearchView hint padding', () => {
+  for (const name of [
+    'support/location-manual-seat.yaml',
+    '07-state-seat.yaml',
+    '07-your-mp.yaml',
+    '09-electorate.yaml',
+    '22b-sources.yaml',
+    '43-money-agencies.yaml',
+  ]) {
+    const body = JSON.stringify(read(name)[1].toJS());
+    assert.ok(body.includes('.*:id/search_src_text'), name);
+    assert.ok(!body.includes('Electorate or member.s name'), name);
+  }
+});
+
 test('all prepared YAML parses as two documents, with bounded support references', () => {
   for (const name of JSON.parse(
     fs.readFileSync(path.join(out, 'prepared-files.json'), 'utf8'),

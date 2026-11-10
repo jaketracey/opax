@@ -32,6 +32,13 @@ def index(root, prepared, blocked_reason=''):
                 except ET.ParseError: step = 'See incomplete Maestro report'
             shot = path.parent/'maestro'/Path(file).stem/'failure.png'
             evidence = f'; [screenshot]({shot.relative_to(root)})' if shot.exists() else ''
+            # Maestro owns UIAutomation while its driver is reused. A second
+            # uiautomator dump may fail and leave an old XML file on-device;
+            # its own failure hierarchy is fresh and belongs to this step.
+            hierarchies = list((path.parent/'maestro'/Path(file).stem).glob('**/screen-hierarchy/*.json'))
+            if status != '0' and hierarchies:
+                hierarchy = max(hierarchies, key=lambda p: p.stat().st_mtime)
+                evidence += f'; [hierarchy]({hierarchy.relative_to(root)})'
             result = 'PASS' if status == '0' else 'FAIL'+evidence+'; '+step.replace('|','/').replace('\n',' ')[:350]
             runs[(name, api)] = result
     counts = {category:sum(p['category'] == category for p in plan) for category in sorted({p['category'] for p in plan})}
