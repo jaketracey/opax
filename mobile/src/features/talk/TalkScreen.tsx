@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type RefObject,
 } from 'react';
 import {
   AccessibilityInfo,
@@ -21,6 +22,7 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import { router, useFocusEffect, type Href } from 'expo-router';
+import { useNavigation, usePreventRemove } from 'expo-router/react-navigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
@@ -99,6 +101,27 @@ const ORB_MAX = 240;
 const ORB_AX = 120;
 const ORB_CALL = 72;
 const STATUS_LINE = 40;
+
+function AndroidCallGuard({
+  active,
+  permittedRef,
+  close,
+}: {
+  active: boolean;
+  permittedRef: RefObject<boolean>;
+  close: (finish: () => void) => void;
+}) {
+  const navigation = useNavigation();
+  useEffect(() => {
+    if (active) permittedRef.current = false;
+  }, [active, permittedRef]);
+  usePreventRemove(active, ({ data }) => {
+    const finish = () => navigation.dispatch(data.action);
+    if (permittedRef.current) finish();
+    else close(finish);
+  });
+  return null;
+}
 /** One question a day from the reviewed Ask starter list (7.3 item 3). */
 function exampleQuestion(): string | null {
   // The list is not shipped yet (DIR 9.D item D5): no hand-written fallback.
@@ -115,6 +138,7 @@ export default function TalkScreen({
   onReportAnswer = reportAnswer,
 }: { onReportAnswer?: ReportAnswer } = {}) {
   const call = useTalk();
+  const exitConfirmed = useRef(false);
   const { snapshot: s } = call;
   const insets = useSafeAreaInsets();
   const reduceMotion = useReduceMotion();
@@ -257,17 +281,21 @@ export default function TalkScreen({
       );
   }, [compact, reduceMotion]);
 
-  const close = () => {
+  const close = (finish: () => void = leaveTalk) => {
     if (active)
       Alert.alert(talkCopy.endConfirm.title, undefined, [
         { text: talkCopy.endConfirm.keep, style: 'cancel' },
         {
           text: talkCopy.endConfirm.end,
           style: 'destructive',
-          onPress: () => void call.end().then(leaveTalk),
+          onPress: () =>
+            void call.end().then(() => {
+              exitConfirmed.current = true;
+              finish();
+            }),
         },
       ]);
-    else leaveTalk();
+    else finish();
   };
   function openRecord(source: VoiceSource) {
     if (!webPageUrl(source.path)) return;
@@ -367,17 +395,19 @@ export default function TalkScreen({
   }, [s.sources, active, live, stateText, phase]);
   useEffect(() => resetTalk, []);
   // Android's Back is the sheet's Done: during a call it asks first.
-  useEffect(() => {
-    if (!android || !active) return;
-    const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        handlers.current.close();
-        return true;
-      },
-    );
-    return () => subscription.remove();
-  }, [active]);
+  useFocusEffect(
+    useCallback(() => {
+      if (!android || !active) return;
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          handlers.current.close();
+          return true;
+        },
+      );
+      return () => subscription.remove();
+    }, [active]),
+  );
   const menuTitle = timeLeft(live, s.remaining, s.status);
   const reportable = canReport(s.transcript);
   const records = useMemo(() => reportChoices(s.sources), [s.sources]);
@@ -473,6 +503,13 @@ export default function TalkScreen({
         if (live) void call.mute();
       }}
     >
+      {android ? (
+        <AndroidCallGuard
+          active={active}
+          permittedRef={exitConfirmed}
+          close={close}
+        />
+      ) : null}
       <RouteOptions options={screenOptions} />
       <View
         testID="talk-sheet"

@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import {
   EmptyState,
   InsetGroup,
@@ -34,15 +34,18 @@ export function TalkSourcesScreen() {
           {sources.map((source, index) => {
             const native = recordDestination(source.path) !== null;
             const meta = sourceMeta(source);
+            const metadata = (
+              <Text wordSafe variant="secondary" style={styles.meta}>
+                {meta}
+              </Text>
+            );
             return (
               <LinkRow
                 key={source.path}
                 title={source.title}
-                leading={
-                  <Text wordSafe variant="secondary" style={styles.meta}>
-                    {meta}
-                  </Text>
-                }
+                {...(Platform.OS === 'android'
+                  ? { aboveTitle: metadata }
+                  : { leading: metadata })}
                 external={!native}
                 testID={`talk-source-${index}`}
                 accessibilityLabel={`${meta}, ${source.title}`}
