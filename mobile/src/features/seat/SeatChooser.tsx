@@ -101,22 +101,27 @@ export function useChoose(
   const [chosenId, setChosenId] = useState<string | null>(null);
   const [failed, setFailed] = useState<Electorate | null>(null);
   const live = useRef(true);
+  const choosing = useRef(false);
   const closing = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    live.current = true;
+    return () => {
       live.current = false;
       if (closing.current) clearTimeout(closing.current);
-    },
-    [],
-  );
+    };
+  }, []);
   const choose = async (target: Electorate) => {
-    if (savingId || chosenId) return;
+    // React batches row updates. A ref also blocks another tap before the
+    // saving state has rendered, including taps on a different row.
+    if (choosing.current) return;
+    choosing.current = true;
     setFailed(null);
     setSavingId(target.electorate_id);
     try {
       await (write ? write(target, seat) : seat.choose(target));
     } catch {
       if (live.current) {
+        choosing.current = false;
         setSavingId(null);
         setFailed(target);
       }
