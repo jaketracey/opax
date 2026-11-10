@@ -47,7 +47,7 @@ export async function tableRows(root = defaultRoot, {moneyOnly = false, graphs: 
       if (type==='receipts') add('party-money',row);
     }
   }
-  for (const s of (await read('suppliers.json')).suppliers) add('suppliers', {id:s.id,name:s.name,abn:s.abn,jurisdiction:'federal',total:s.total,count:s.count,agency_count:s.agency_count,first_year:s.first_year,last_year:s.last_year});
+  for (const s of (await read('suppliers.json')).suppliers) if (s.count > 0) add('suppliers', {id:s.id,name:s.name,abn:s.abn,jurisdiction:'federal',total:s.total,count:s.count,agency_count:s.agency_count,first_year:s.first_year,last_year:s.last_year});
   const contractIds = new Set();
   for (const file of await files('suppliers')) for (const s of Object.values((await read('suppliers/' + file)).profiles)) for (const c of s.contracts || []) {
     if (contractIds.has(c.id) || placeholderContract(c)) continue;

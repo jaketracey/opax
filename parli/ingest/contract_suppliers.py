@@ -10,6 +10,12 @@ money maps' "public money" layer reads:
                           amendment lineage ("CN1234", "CN1234-A1", "CN1234-A2"
                           are one contract whose value is the last notice's).
                           Summing notices would count a varied contract twice.
+                          A notice AusTender marks cancelled never sets the
+                          figures; a lineage whose every notice is cancelled
+                          keeps status 'cancelled' and stays out of every
+                          total, never deleted (findings contracts-grants-004).
+                          review_note holds the reviewed reason a value is left
+                          out of totals (scripts/corrections/contracts.json).
   ext_contract_suppliers  one row per supplier: ABN when the feed gave one
                           (nearly always), else the name matched against the
                           ABN Bulk Extract, else the name; the ABR's legal name,
@@ -38,6 +44,11 @@ from pathlib import Path
 from parli.ingest import grant_recipients as gr
 from parli.ingest.abr_match import INDEX_NAME, Index, match_entity
 
+try:  # run from the repository root (the refresh scripts do), so scripts/ is importable
+    from scripts.corrections import apply as corrections
+except ImportError:  # pragma: no cover - a stripped checkout without scripts/
+    corrections = None
+
 SOURCE = "contract_suppliers"
 SUSPECT_FLOOR = 5_000_000_000
 SUSPECT_RATIO = 10
@@ -51,7 +62,8 @@ CREATE TABLE ext_contracts_current (
     supplier_name TEXT, supplier_abn TEXT, supplier_region TEXT, supplier_country TEXT,
     agency TEXT, agency_abn TEXT, title TEXT, description TEXT, unspsc TEXT, amount REAL,
     original_amount REAL, start_date TEXT, end_date TEXT, procurement_method TEXT,
-    procurement_method_details TEXT, atm_id TEXT, suspect INTEGER NOT NULL DEFAULT 0
+    procurement_method_details TEXT, atm_id TEXT, suspect INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'active', review_note TEXT
 );
 CREATE INDEX ix_ccur_abn ON ext_contracts_current (supplier_abn);
 CREATE INDEX ix_ccur_supplier ON ext_contracts_current (supplier_name);
@@ -107,40 +119,96 @@ class Sup:
         self.by_source: dict = defaultdict(lambda: [0.0, 0])
 
 
-def build_current(db: sqlite3.Connection) -> int:
+CANCELLED = "cancelled"
+# The reviewed list of values left out of totals: scripts/corrections/contracts.json. An entry's id is
+# "<base CN>@<amount to the cent>" and its field "counted_in_totals" goes from true to false, so it holds only
+# while AusTender still publishes that exact value: a corrected notice no longer matches, the entry lapses and
+# the contract counts again (logged, so the stale entry is removed on review).
+REVIEW_DATASET = "contracts"
+
+
+def review_key(base_cn: str, amount) -> str:
+    return f"{base_cn}@{float(amount or 0):.2f}"
+
+
+def latest_figures(rows: list) -> tuple[dict, str]:
+    """The notice whose figures a lineage carries, and the lineage's status.
+
+    `rows` are a lineage's notices in publication order. A notice AusTender marks cancelled never sets
+    the value: a cancelled amendment leaves the contract at the latest notice still active (AusTender
+    shows CN4206262 live at its last active value). Only when every notice is cancelled is the contract
+    cancelled; it then keeps its last notice's figures so a page can say what was withdrawn.
+    """
+    active = [r for r in rows if (r["status"] or "").lower() != CANCELLED]
+    return (active[-1], "active") if active else (rows[-1], CANCELLED)
+
+
+def build_current(db: sqlite3.Connection, review: list | None = None) -> int:
     """One row per contract, carrying the latest notice's figures."""
     rows = db.execute(
         "SELECT COALESCE(parent_cn, cn_id) AS base, cn_id, published, supplier_name, supplier_abn, supplier_region, "
         "supplier_country, agency, agency_abn, title, description, unspsc, amount, start_date, end_date, "
-        "procurement_method, procurement_method_details, atm_id FROM ext_contracts "
+        "procurement_method, procurement_method_details, atm_id, status FROM ext_contracts "
         "WHERE cn_id IS NOT NULL AND cn_id != '' ORDER BY base, published, cn_id").fetchall()
-    out = []
-    cur = None
+    lineages: list[list] = []
     for r in rows:
-        if cur is None or cur["base"] != r["base"]:
-            if cur is not None:
-                out.append(cur)
-            cur = {"base": r["base"], "notices": 0, "first_published": r["published"], "original_amount": r["amount"]}
-        cur["notices"] += 1
-        cur.update({k: r[k] for k in r.keys() if k not in ("base",)})
-    if cur is not None:
-        out.append(cur)
+        if not lineages or lineages[-1][0]["base"] != r["base"]:
+            lineages.append([])
+        lineages[-1].append(r)
+    out = []
+    for lineage in lineages:
+        latest, status = latest_figures(lineage)
+        c = {k: latest[k] for k in latest.keys()}
+        c.update(notices=len(lineage), first_published=lineage[0]["published"],
+                 original_amount=lineage[0]["amount"], status=status)
+        out.append(c)
     db.executemany(
-        "INSERT INTO ext_contracts_current VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0)",
+        "INSERT INTO ext_contracts_current VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?,NULL)",
         [(c["base"], c["cn_id"], c["notices"], c["published"], c["first_published"], c["supplier_name"],
           c["supplier_abn"], c["supplier_region"], c["supplier_country"], c["agency"], c["agency_abn"], c["title"],
           c["description"], c["unspsc"], c["amount"], c["original_amount"], c["start_date"], c["end_date"],
-          c["procurement_method"], c["procurement_method_details"], c["atm_id"]) for c in out])
+          c["procurement_method"], c["procurement_method_details"], c["atm_id"], c["status"]) for c in out])
     # AusTender carries a few keyed-in values that no contract can be: a $123B
     # recruitment contract, a $121B legal one. A notice of SUSPECT_FLOOR or more
     # that is also SUSPECT_RATIO times everything else its supplier ever held is
     # flagged and left out of the totals and the map, never deleted.
     db.execute("""
-        UPDATE ext_contracts_current SET suspect = 1 WHERE amount >= ? AND amount > ? * (
+        UPDATE ext_contracts_current SET suspect = 1 WHERE status = 'active' AND amount >= ? AND amount > ? * (
             SELECT COALESCE(SUM(o.amount), 0) FROM ext_contracts_current o
             WHERE COALESCE(o.supplier_abn, o.supplier_name) = COALESCE(ext_contracts_current.supplier_abn, ext_contracts_current.supplier_name)
-              AND o.base_cn != ext_contracts_current.base_cn)""", (SUSPECT_FLOOR, SUSPECT_RATIO))
+              AND o.base_cn != ext_contracts_current.base_cn AND o.status = 'active')""", (SUSPECT_FLOOR, SUSPECT_RATIO))
+    apply_review(db, review)
     return len(out)
+
+
+def apply_review(db: sqlite3.Connection, entries: list | None) -> dict:
+    """Mark the reviewed values (scripts/corrections/contracts.json) as left out of totals.
+
+    Only entries whose "<base CN>@<amount>" key matches a current, active contract apply; the rest have
+    lapsed (the source changed the value, or cancelled the notice) and are returned for the log.
+    """
+    if not entries:
+        return {"applied": [], "lapsed": []}
+    records = {}
+    for base, amount in db.execute("SELECT base_cn, amount FROM ext_contracts_current WHERE status = 'active'"):
+        records[review_key(base, amount)] = {"counted_in_totals": True}
+    live = [e for e in entries if e["id"] in records]
+    lapsed = [e["id"] for e in entries if e["id"] not in records]
+    applied = corrections.apply(REVIEW_DATASET, records, entries=live) if live else []
+    for e in applied:
+        base, _, amount = e["id"].rpartition("@")
+        db.execute("UPDATE ext_contracts_current SET review_note = ? WHERE base_cn = ? AND ROUND(amount, 2) = ?",
+                   (f"{e['evidence']} ({e['evidence_url']}; {e['finding']}, reviewed {e['reviewed']})", base, float(amount)))
+    return {"applied": [e["id"] for e in applied], "lapsed": lapsed}
+
+
+def load_review() -> list:
+    if corrections is None:
+        return []
+    return corrections.load(REVIEW_DATASET)
+
+
+COUNTED = "suspect = 0 AND status = 'active' AND review_note IS NULL"
 
 
 def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
@@ -152,9 +220,18 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
     cur = db.cursor()
     cur.execute("BEGIN")
     cur.executescript(DDL)   # executescript commits; fine, the tables are rebuilt whole
-    n_current = build_current(db)
+    review = load_review()
+    n_current = build_current(db, review)
     db.commit()
     stats["contracts"] = n_current
+    stats["cancelled_contracts"] = db.execute(
+        "SELECT COUNT(*) FROM ext_contracts_current WHERE status = 'cancelled'").fetchone()[0]
+    stats["review_excluded"] = db.execute(
+        "SELECT COUNT(*) FROM ext_contracts_current WHERE review_note IS NOT NULL").fetchone()[0]
+    stats["review_lapsed"] = len(review) - stats["review_excluded"]
+    if stats["review_lapsed"]:
+        log(f"  {stats['review_lapsed']} reviewed contract value(s) no longer match AusTender and count again; "
+            "review scripts/corrections/contracts.json")
     log(f"  {n_current:,} contracts from the notices ({time.time() - t0:.0f}s)")
 
     idx = Index(abr_dir / INDEX_NAME)
@@ -170,11 +247,15 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
     # Federal notices, then the state disclosure registers (parli.ingest.qld_contracts),
     # each group tagged with its source so the exporters can read one register at a time.
     stats["suspect_notices"] = db.execute("SELECT COUNT(*) FROM ext_contracts_current WHERE suspect = 1").fetchone()[0]
+    # Every contract gives its supplier an identity (so a page for a supplier whose only notices were
+    # cancelled, or are held for review, still resolves); only the counted ones add to its totals.
     groups = [dict(r, source="austender") for r in db.execute(
-        "SELECT supplier_abn, supplier_name, COUNT(*) n, SUM(amount) total, MIN(substr(start_date,1,4)) y0, "
-        "MAX(substr(start_date,1,4)) y1 FROM ext_contracts_current WHERE suspect = 0 GROUP BY 1, 2")]
+        "SELECT supplier_abn, supplier_name, SUM(counted) n, SUM(CASE WHEN counted THEN amount ELSE 0 END) total, "
+        "MIN(CASE WHEN dated THEN substr(start_date,1,4) END) y0, MAX(CASE WHEN dated THEN substr(start_date,1,4) END) y1 "
+        f"FROM (SELECT *, ({COUNTED}) AS counted, ({COUNTED}) AND substr(start_date,1,4) BETWEEN '1901' AND '2099' AS dated "
+        "FROM ext_contracts_current) GROUP BY 1, 2")]
     agency_rows = [dict(r, source="austender") for r in db.execute(
-        "SELECT supplier_abn, supplier_name, agency, SUM(amount) total FROM ext_contracts_current WHERE suspect = 0 GROUP BY 1, 2, 3")]
+        f"SELECT supplier_abn, supplier_name, agency, SUM(amount) total FROM ext_contracts_current WHERE {COUNTED} GROUP BY 1, 2, 3")]
     has_state = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ext_state_contracts_current'").fetchone()
     if has_state:
         groups += [dict(r, source=r["jurisdiction"]) for r in db.execute(
@@ -222,7 +303,8 @@ def build(db_path: str, abr_dir: Path, report_only: bool) -> dict:
         s.by_source[g["source"]][0] += total
         s.by_source[g["source"]][1] += n
         for y in (g["y0"], g["y1"]):
-            if y and str(y).isdigit():
+            # 1900 (and 0899) are AusTender's placeholders for a date it does not have
+            if y and str(y).isdigit() and 1901 <= int(y) <= 2099:
                 s.years.add(int(y))
         s.agencies.update(agencies_by[(g["source"], g["supplier_abn"], g["supplier_name"])])
         if g["supplier_abn"]:

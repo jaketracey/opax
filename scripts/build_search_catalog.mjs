@@ -17,6 +17,8 @@ const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
 const docs = [], ids = new Set(), counts = {};
 const cash = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:2});
+// A grant worth $0.00 at source is published as 0 (search-hubs-008): say so, and never print $NaN for a missing value.
+export const grantValue = v => v === 0 ? '$0 (as published)' : v == null || v === '' || !Number.isFinite(Number(v)) ? 'Value not recorded' : cash(v);
 let canonicalPeople=new Map(), canonicalAliases=new Map();
 const personHref = n => { const slug=canonicalPeople.get(n) || canonicalAliases.get(personNameKey(n)); return slug ? '/subject/person/'+slug : personUrl(n); };
 const supplierHref = n => '/subject/supplier/'+encodeURIComponent(n);
@@ -110,7 +112,8 @@ async function main() {
  }
  for(const node of (await read('graph/donor-index.json')).donors || []){const r=donorSearchRecord(node.jurisdiction || 'federal',node);add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);}
  const suppliers=await read('suppliers.json');
- for(const s of suppliers.suppliers) add('supplier:'+s.id,'supplier',s.name,supplierHref(s.id),`${cash(s.total)} in recorded contract awards across ${s.count} contracts and ${s.agency_count} agencies. ABN ${s.abn||'not recorded'}.`,{aliases:(s.aliases||[]).join(' ')+' '+(s.abn||''),from:s.first_year,to:s.last_year,state:'federal',source:'AusTender supplier profile',dateLabel:period(s.first_year,s.last_year)});
+ // a supplier with no counted contract (every notice cancelled at source or held for review) keeps its page, not a search entry
+ for(const s of suppliers.suppliers) if (s.count > 0) add('supplier:'+s.id,'supplier',s.name,supplierHref(s.id),`${cash(s.total)} in recorded contract awards across ${s.count} contracts and ${s.agency_count} agencies. ABN ${s.abn||'not recorded'}.`,{aliases:(s.aliases||[]).join(' ')+' '+(s.abn||''),from:s.first_year,to:s.last_year,state:'federal',source:'AusTender supplier profile',dateLabel:period(s.first_year,s.last_year)});
  for(const file of await files('suppliers')) for(const s of Object.values((await read('suppliers/'+file)).profiles)) {
   for(const c of s.contracts||[]) add('contract:'+c.id,'contract',`${c.title||c.id} — ${s.name}`,supplierHref(s.id)+'?'+new URLSearchParams({contract:c.id}),`${cash(c.amount)}. ${c.agency}. ${c.id}. ${c.description||''}`,{aliases:`${s.name} ${s.abn||''} ${(s.aliases||[]).join(' ')} ${c.reported_supplier||''} ${c.id}`,date:c.start_date||null,state:'federal',source:'AusTender contract award',url:c.url,record_id:c.id});
  }
@@ -121,7 +124,7 @@ async function main() {
    if (typeof r.id !== 'string' || !r.id.trim() || /^(null|undefined)$/i.test(r.id)) continue;
    const href='/money/grants/'+jur+'/recipient/'+encodeURIComponent(r.id);
    add(`${jur}:grant-recipient:${r.id}`,'grant',r.n,href,`${cash(r.t)} across ${r.c} grant records. ${(r.programs||[]).map(p=>p[0]).join('; ')}. ${(r.agencies||[]).map(a=>a[0]).join('; ')}.`,{aliases:[r.abn||'',...(r.aliases||[])].join(' '),from:year(r.y0),to:year(r.y1),state:jur,source:'Grant recipient profile',dateLabel:period(r.y0,r.y1)});
-   for(const g of r.grants||[]) add(`${jur}:grant:${r.id}:${g.id}:${g.fy}`,'grant',`${g.n||g.pr||g.id} — ${r.n}`,href,`${cash(g.v)}. ${g.ag||''}. ${g.pr||''}. ${g.cat||''}. ${g.desc||''} ${g.el||''}.`,{aliases:`${r.n} ${r.abn||''} ${g.id}`,date:g.s||null,from:year(g.fy)||year(g.s),to:year(g.fy)||year(g.s),state:jur,source:index.meta.sourceShort,record_id:g.id,dateLabel:g.s?undefined:g.fy,url:g.guid?`https://www.grants.gov.au/Ga/Show/${g.guid}`:index.meta.source_url});
+   for(const g of r.grants||[]) add(`${jur}:grant:${r.id}:${g.id}:${g.fy}`,'grant',`${g.n||g.pr||g.id} — ${r.n}`,href,`${grantValue(g.v)}. ${g.ag||''}. ${g.pr||''}. ${g.cat||''}. ${g.desc||''} ${g.el||''}.`,{aliases:`${r.n} ${r.abn||''} ${g.id}`,date:g.s||null,from:year(g.fy)||year(g.s),to:year(g.fy)||year(g.s),state:jur,source:index.meta.sourceShort,record_id:g.id,dateLabel:g.s?undefined:g.fy,url:g.guid?`https://www.grants.gov.au/Ga/Show/${g.guid}`:index.meta.source_url});
   }
  }
  for(const file of await files('bills')) {
@@ -182,7 +185,7 @@ async function main() {
   }
   for(const s of mlci.seats) add('aec-seat:'+s.name,'report',`${s.name} — 2025 seat baseline`,'/reports/grants-allocation?'+new URLSearchParams({seat:s.name}),`${s.state}. ${s.party}. ${s.margin.toFixed(2)} percentage-point margin. ${{M:'Marginal',FS:'Fairly safe',S:'Safe'}[s.status]}. AEC notional baseline before the 2025 election, not the election result or current incumbent.`,{date:'2025-05-03',state:'federal',source:'AEC pre-election seat status',url:mlci.sources.aec+'#page='+s.page});
  }
- for(const a of agencies.agencies) add('agency:'+a.id,'agency',a.name,'/subject/agency/'+encodeURIComponent(a.id),`${cash(a.total)} in recorded awards across ${a.count} contracts and ${a.supplier_count} suppliers.`,{from:a.first_year,to:a.last_year,state:'federal',source:'AusTender agency profile',dateLabel:period(a.first_year,a.last_year)});
+ for(const a of agencies.agencies) if (a.count > 0) add('agency:'+a.id,'agency',a.name,'/subject/agency/'+encodeURIComponent(a.id),`${cash(a.total)} in recorded awards across ${a.count} contracts and ${a.supplier_count} suppliers.`,{from:a.first_year,to:a.last_year,state:'federal',source:'AusTender agency profile',dateLabel:period(a.first_year,a.last_year)});
  // A few hundred title/metadata rows add under 1% to the existing catalogue.
  // Recommendation bodies are not name-indexed; no person entities are created.
  const audit = await read('audit/manifest.json').catch(e => { if(e.code==='ENOENT') return null; throw e; });

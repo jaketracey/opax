@@ -17,14 +17,26 @@ def agency_id(name):
     return "a-" + hashlib.sha256(name.encode()).hexdigest()[:20]
 
 
+CONTRACT_FIELDS = ("id", "title", "amount", "start_date", "end_date", "published", "procurement_method", "url", "link_scope")
+
+
 def build_agencies(profiles, meta):
     agencies = {}
+
+    def agency_for(contract):
+        name = contract.get("agency") or "Unspecified agency"
+        aid = agency_id(name)
+        return agencies.setdefault(aid, dict(id=aid, name=name, total=Decimal(0), count=0,
+            suppliers={}, years={}, undated=dict(total=Decimal(0), count=0), contracts=[], withheld=[]))
+
     for supplier in profiles:
+        # Contracts the supplier export left out of totals (cancelled at source, or a value held for review)
+        # stay listed on the agency page with their reason and never enter its totals (contracts-grants-001/004).
+        for contract in supplier.get("withheld") or []:
+            agency_for(contract)["withheld"].append({k: contract.get(k) for k in CONTRACT_FIELDS + ("status", "caveat")}
+                | dict(supplier_id=supplier["id"], supplier=supplier["name"]))
         for contract in supplier["contracts"]:
-            name = contract.get("agency") or "Unspecified agency"
-            aid = agency_id(name)
-            a = agencies.setdefault(aid, dict(id=aid, name=name, total=Decimal(0), count=0,
-                suppliers={}, years={}, undated=dict(total=Decimal(0), count=0), contracts=[]))
+            a = agency_for(contract)
             value = Decimal(str(contract["amount"]))
             a["total"] += value
             a["count"] += 1
@@ -42,8 +54,7 @@ def build_agencies(profiles, meta):
             y = a["years"].setdefault(year, dict(year=year, total=Decimal(0), count=0)) if year else a["undated"]
             y["total"] += value
             y["count"] += 1
-            a["contracts"].append({k: contract.get(k) for k in (
-                "id", "title", "amount", "start_date", "end_date", "published", "procurement_method", "url", "link_scope")}
+            a["contracts"].append({k: contract.get(k) for k in CONTRACT_FIELDS}
                 | dict(supplier_id=supplier["id"], supplier=supplier["name"]))
     directory = []
     for a in agencies.values():
@@ -51,10 +62,14 @@ def build_agencies(profiles, meta):
         a["years"] = sorted(a["years"].values(), key=lambda y: y["year"])
         for item in [a, *a["suppliers"], *a["years"], a["undated"]]: item["total"] = float(item["total"])
         a["contracts"].sort(key=lambda c: (c.get("start_date") or "", c["id"]), reverse=True)
+        a["withheld"].sort(key=lambda c: (-c["amount"], c["id"]))
+        if not a["withheld"]:
+            del a["withheld"]
         a["supplier_count"] = len(a["suppliers"])
         a["first_year"] = a["years"][0]["year"] if a["years"] else None
         a["last_year"] = a["years"][-1]["year"] if a["years"] else None
         directory.append({k: a[k] for k in ("id", "name", "total", "count", "supplier_count", "first_year", "last_year")}
+            | ({"withheld_count": len(a["withheld"])} if a.get("withheld") else {})
             | {"profile_path": "/agencies/" + a["id"] + ".json"})
     directory.sort(key=lambda a: (-a["total"], a["name"]))
     return {"meta": meta | {"agency_count": len(directory)}, "agencies": directory}, agencies

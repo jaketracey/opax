@@ -246,5 +246,67 @@ class SupplierExportTests(unittest.TestCase):
         self.assertEqual(result['index']['meta']['unresolved_contract_rows'], 1)
 
 
+    def withhold(self, cn, **cols):
+        for col, kind in (('suspect', 'INTEGER NOT NULL DEFAULT 0'), ('status', "TEXT NOT NULL DEFAULT 'active'"),
+                          ('review_note', 'TEXT')):
+            try:
+                self.db.execute(f'ALTER TABLE ext_contracts_current ADD COLUMN {col} {kind}')
+            except sqlite3.OperationalError:
+                pass
+        for col, value in cols.items():
+            self.db.execute(f'UPDATE ext_contracts_current SET {col} = ? WHERE base_cn = ?', (value, cn))
+
+    def test_cancelled_reviewed_and_suspect_contracts_are_listed_but_never_counted(self):
+        # contracts-grants-004 (cancelled at source) and -001 (a reviewed value, and the existing suspect flag)
+        self.add('CN1', value=100)
+        self.add('CN2', value=1016000000, notices=2)
+        self.add('CN3', value=9626000000)
+        self.add('CN4', value=7e9)
+        self.withhold('CN2', status='cancelled')
+        self.withhold('CN3', review_note='AusTender notice CN3-A7 lists $9,626,000,000.00 (https://www.tenders.gov.au/Cn/Show/x)')
+        self.withhold('CN4', suspect=1)
+        result = self.export()
+        entry = result['index']['suppliers'][0]
+        profile = result['shards'][entry['profile_path']]['profiles'][entry['id']]
+        self.assertEqual((profile['total'], profile['count'], entry['withheld_count']), (100, 1, 3))
+        self.assertEqual([c['id'] for c in profile['contracts']], ['CN1'])
+        self.assertEqual(sum(a['total'] for a in profile['agencies']), 100)
+        withheld = {c['base_id']: c for c in profile['withheld']}
+        self.assertEqual({k: c['status'] for k, c in withheld.items()},
+                         {'CN2': 'cancelled_at_source', 'CN3': 'value_under_review', 'CN4': 'suspect_value'})
+        self.assertIn('$9,626,000,000.00', withheld['CN3']['caveat'])
+        self.assertEqual(withheld['CN3']['amount'], 9626000000)  # shown as published, never capped
+        meta = result['index']['meta']
+        self.assertEqual((meta['total'], meta['contract_count'], meta['notice_count']), (100, 1, 1))
+        self.assertEqual(meta['withheld']['cancelled_at_source'], {'count': 1, 'total': 1016000000})
+        # agencies read the same split: the withheld rows are listed, never summed
+        _spec_a = importlib.util.spec_from_file_location('export_agencies', Path(__file__).resolve().parents[1] / 'scripts/export_agencies.py')
+        agencies_mod = importlib.util.module_from_spec(_spec_a)
+        _spec_a.loader.exec_module(agencies_mod)
+        directory, agencies = agencies_mod.build_agencies([profile], meta)
+        agency = next(iter(agencies.values()))
+        self.assertEqual((agency['total'], agency['count'], len(agency['withheld'])), (100, 1, 3))
+        self.assertEqual(directory['agencies'][0]['withheld_count'], 3)
+
+    def test_placeholder_dates_read_as_not_recorded_and_keep_the_published_value(self):
+        # search-hubs-003/-004: AusTender's 1900-01-01 and 0899-12-28 placeholders
+        self.add('CN1', start='0899-12-28')
+        result = self.export()
+        row = result['index']['suppliers'][0]
+        contract = result['shards'][row['profile_path']]['profiles'][row['id']]['contracts'][0]
+        self.assertIsNone(contract['start_date'])
+        self.assertEqual(contract['dates_as_published'], {'start': '0899-12-28', 'end': '2028-01-01'})
+        self.assertEqual(contract['end_date'], '2028-01-01')
+
+    def test_source_links_search_for_the_contract_notice(self):
+        # contracts-grants-007: not the AusTender home page
+        self.add('CN1', notices=2)
+        result = self.export()
+        row = result['index']['suppliers'][0]
+        contract = result['shards'][row['profile_path']]['profiles'][row['id']]['contracts'][0]
+        self.assertEqual(contract['url'], 'https://www.tenders.gov.au/Search/KeywordSearch?keyword=CN1-A1')
+        self.assertNotIn('withheld', result['shards'][row['profile_path']]['profiles'][row['id']])
+
+
 if __name__ == '__main__':
     unittest.main()
