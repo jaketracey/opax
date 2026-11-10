@@ -8,6 +8,10 @@ SCRATCH=$(mktemp -d "${TMPDIR:-/tmp}/opax-qa-lock-test.XXXXXX")
 LOCK="$SCRATCH/paste.lock"
 STATE="$LOCK.opax"
 WORKTREE=$(basename "$(cd "$SCRIPTS/../.." && pwd)")
+# These are observation bounds, rather than protocol timing assertions. WSL
+# can delay the sampled active clock while three Android devices are busy.
+WAIT_DEFAULT=15
+[ "$(uname -s)" != Linux ] || WAIT_DEFAULT=60
 LIVE=()
 cleanup() {
   for pid in "${LIVE[@]:-}"; do [ -n "$pid" ] && { kill "$pid"; wait "$pid"; } 2>/dev/null || true; done
@@ -89,14 +93,14 @@ run_locked() {
   LIVE+=("$!")
 }
 wait_for() {
-  local deadline=$((SECONDS + ${2:-15}))
+  local deadline=$((SECONDS + ${2:-$WAIT_DEFAULT}))
   until [ -e "$1" ]; do [ "$SECONDS" -lt "$deadline" ] || return 1; sleep 0.1; done
 }
 wait_for_line() {
-  local deadline=$((SECONDS + ${3:-15}))
+  local deadline=$((SECONDS + ${3:-$WAIT_DEFAULT}))
   until grep -q -- "$2" "$1" 2>/dev/null; do [ "$SECONDS" -lt "$deadline" ] || return 1; sleep 0.1; done
 }
-rc_of() { wait_for "$SCRATCH/$1.rc" "${2:-15}" || fail "$1 did not finish"; cat "$SCRATCH/$1.rc"; }
+rc_of() { wait_for "$SCRATCH/$1.rc" "${2:-$WAIT_DEFAULT}" || fail "$1 did not finish"; cat "$SCRATCH/$1.rc"; }
 dead_pid() { bash -c 'echo $$'; }
 no_litter() { [ -z "$(/bin/ls "$STATE" 2>/dev/null | grep -v '^reap$')" ]; }
 # in_leader '<code>': runs code in a new process-group leader with the library sourced.
