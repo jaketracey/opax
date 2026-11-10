@@ -7,6 +7,8 @@ export type ToolEnv = Partial<Pick<Env, 'ASSETS' | 'TABLE_DB' | 'COMMUNITY_ORIGI
   origin?: string
   signal?: AbortSignal
   asset?: (path: string) => Promise<unknown>
+  /** Read-only KB adapter; credentials remain outside tool handlers. */
+  kb?: (path: string, body?: unknown) => Promise<Record<string, unknown>>
 }
 export interface ToolCitation { text: string; url: string; value?: number | string; kind?: 'count' | 'record' | 'export' }
 export interface StructuredToolResult {

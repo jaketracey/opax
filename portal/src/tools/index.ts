@@ -10,15 +10,22 @@ import { tool as division } from './division'
 import { tool as countRecords } from './count-records'
 import { tool as moneyTotals } from './money-totals'
 import { tool as campaignSpend } from './campaign-spend'
+import { tool as corpusRecords } from './corpus-records'
+import { tool as legislation } from './legislation'
+import { tool as publicFinances } from './public-finances'
+import { tool as entityProfile } from './entity-profile'
+import { tool as accessRegisters } from './access-registers'
+import { tool as memberDivisions } from './member-divisions'
+import { tool as sponsoredBills } from './sponsored-bills'
 import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type StructuredToolResult } from './types'
 import type { ToolDeps, ToolSpec } from '../agentic-tools'
 export * from './types'
 import { validToolIdentifier } from './identifiers'
 export * from './identifiers'
 
-export const TOOL_REGISTRY_VERSION = 'structured-tools-6-money-summaries'
+export const TOOL_REGISTRY_VERSION = 'structured-tools-8-access-member-records'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
-export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend])
+export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills])
 const names = new Set<string>()
 for (const tool of tools) {
   if (!/^[a-z][a-z0-9_]*$/.test(tool.name) || names.has(tool.name)) throw new Error('Invalid or duplicate registry tool name')
@@ -65,7 +72,7 @@ const REGISTER_PAGES: Record<string, string> = { contracts: '/money/contracts', 
 export const askToolSpecs: ToolSpec[] = tools.map(tool => ({
   name: tool.askName ?? tool.name, description: tool.description, input: tool.inputSchema,
   async run(deps: ToolDeps, args: ToolArgs) {
-    const data = await callTool({ ...deps.toolEnv, asset: deps.asset, origin: deps.origin, signal: deps.signal }, tool.name, args)
+    const data = await callTool({ ...deps.toolEnv, asset: deps.asset, kb: deps.kb, origin: deps.origin, signal: deps.signal }, tool.name, args)
     return { tool: tool.askName ?? tool.name, ok: !data.error, ...(data.error ? { error: data.error } : {}), data,
       cite: data.citations.map(c => ({ kind: c.kind ?? 'record', label: c.text, url: c.url, ...(c.value === undefined ? {} : { value: c.value }) })),
       notes: data.notes, query: data.query,
