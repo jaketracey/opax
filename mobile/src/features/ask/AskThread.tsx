@@ -1,13 +1,14 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from '../../design/controls';
-import { InsetGroup, SectionHeader } from '../../design/layout';
-import { InlineError, Skeleton } from '../../design/states';
+import { InsetGroup } from '../../design/layout';
+import { InlineError } from '../../design/states';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { AnswerView, SearchOpaxRow, type LegacyDate } from './AnswerView';
 import { AskProgress, StreamedAnswer } from './AskProgress';
 import { AskSuggestionRow } from './AskRows';
+import { AskNext } from './AskNext';
 import { fillComposer } from './AskIdle';
 import type { AskState } from './controller';
 import type { Chat, Turn } from './model';
@@ -238,29 +239,11 @@ export function AskThread({
         !s.busy &&
         !failure &&
         (s.nextLoading || answer.next?.length) ? (
-          <View testID="ask-followups">
-            <SectionHeader title="Ask next" />
-            {s.nextLoading && !answer.next?.length ? (
-              <Skeleton
-                shape="rows"
-                count={2}
-                label="Loading questions to ask next"
-                testID="ask-next-loading"
-              />
-            ) : (
-              <InsetGroup>
-                {answer.next!.map((next, i) => (
-                  <AskSuggestionRow
-                    key={next.question}
-                    question={next.question}
-                    variant="send"
-                    onPress={() => onAsk(next.question, next)}
-                    testID={`ask-followup-${i}`}
-                  />
-                ))}
-              </InsetGroup>
-            )}
-          </View>
+          <AskNext
+            key={`${id}:${thread.length}`}
+            next={answer.next}
+            onAsk={onAsk}
+          />
         ) : null}
       </View>
     </View>

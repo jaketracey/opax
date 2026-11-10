@@ -86,6 +86,48 @@ export function focusFlows(model: MapModel, index: number) {
   });
 }
 
+export interface FlowGroup {
+  key: 'donations' | 'public';
+  title: string;
+  /** Rows keep their place in the strongest-first list, for their test ids. */
+  rows: (PanelFocus['flows'][number] & { index: number })[];
+  note?: string;
+}
+export const PUBLIC_MONEY_NOTE =
+  'A different register: grants and contracts are recorded apart and never added to donations.';
+/**
+ * The panel's flow sections. A party's flows are all donations and a hub's
+ * all public money; a donor's are split, so money it gave never sits under
+ * one heading with money it was paid.
+ */
+export function focusFlowGroups(
+  node: MapNode,
+  flows: PanelFocus['flows'],
+): FlowGroup[] {
+  const rows = flows.map((flow, index) => ({ ...flow, index }));
+  if (node.kind === 'hub')
+    return [{ key: 'public', title: 'Largest recipients on the map', rows }];
+  if (node.kind === 'party')
+    return [{ key: 'donations', title: 'Largest donors', rows }];
+  const donations = rows.filter((r) => r.edge.type === 'donations');
+  const publicMoney = rows.filter((r) => r.edge.type !== 'donations');
+  return [
+    ...(donations.length
+      ? [{ key: 'donations' as const, title: 'Where it went', rows: donations }]
+      : []),
+    ...(publicMoney.length
+      ? [
+          {
+            key: 'public' as const,
+            title: 'Public money received',
+            rows: publicMoney,
+            note: PUBLIC_MONEY_NOTE,
+          },
+        ]
+      : []),
+  ];
+}
+
 /**
  * The stage's bottom panel. At rest: the two totals and a Legend button.
  * With a focus: the disc's name, kind and figure, previous and next along
@@ -298,35 +340,39 @@ export function MoneyMapPanel({
                 href={focus.record}
                 testID="money-map-open-record"
               />
-              <SectionHeader
-                title={
-                  focus.node.kind === 'party'
-                    ? 'Largest donors'
-                    : focus.node.kind === 'hub'
-                      ? 'Largest recipients on the map'
-                      : 'Where it went'
-                }
-                level={3}
-              />
-              <View>
-                {focus.flows.map(({ edge, other }, index) => (
-                  <MoneyRow
-                    key={`${edge.index}`}
-                    name={other.label}
-                    detail={`${moneyYears(edge.firstYear, edge.lastYear)} · ${counted(
-                      edge.count,
-                      edge.type === 'donations'
-                        ? 'donation'
-                        : edge.type === 'grants'
-                          ? 'grant'
-                          : 'contract',
-                    )}`}
-                    amount={edge.amount}
-                    href={focus.flowRecord(other)}
-                    testID={`money-map-flow-${index}`}
-                  />
-                ))}
-              </View>
+              {focusFlowGroups(focus.node, focus.flows).map((group) => (
+                <View
+                  key={group.key}
+                  style={styles.block}
+                  testID={`money-map-flows-${group.key}`}
+                >
+                  <SectionHeader title={group.title} level={3} />
+                  <View>
+                    {group.rows.map(({ edge, other, index }) => (
+                      <MoneyRow
+                        key={`${edge.index}`}
+                        name={other.label}
+                        detail={`${moneyYears(edge.firstYear, edge.lastYear)} · ${counted(
+                          edge.count,
+                          edge.type === 'donations'
+                            ? 'donation'
+                            : edge.type === 'grants'
+                              ? 'grant'
+                              : 'contract',
+                        )}`}
+                        amount={edge.amount}
+                        href={focus.flowRecord(other)}
+                        testID={`money-map-flow-${index}`}
+                      />
+                    ))}
+                  </View>
+                  {group.note ? (
+                    <Text variant="footnote" wordSafe>
+                      {group.note}
+                    </Text>
+                  ) : null}
+                </View>
+              ))}
               {sourceLine}
             </View>
           ) : (
@@ -375,6 +421,8 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: rhythm.block,
+    // Air under the handle, so a figure never crowds it.
+    paddingTop: rhythm.tight,
     paddingBottom: rhythm.block,
     gap: rhythm.block,
   },
@@ -388,9 +436,12 @@ const styles = StyleSheet.create({
   restRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'flex-end',
+    // The figures share one top line whatever their captions wrap to.
+    alignItems: 'flex-start',
     gap: rhythm.block,
   },
-  figure: { gap: 2, minWidth: 120 },
-  legendButton: { marginLeft: 'auto' },
+  // The figures share the row and the Legend button hugs its end; only a
+  // large type size wraps them.
+  figure: { gap: 2, flexGrow: 1, flexShrink: 1, flexBasis: 120 },
+  legendButton: { marginLeft: 'auto', alignSelf: 'center' },
 });

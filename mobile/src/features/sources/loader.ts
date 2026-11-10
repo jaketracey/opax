@@ -1,3 +1,5 @@
+import { throwIfAborted } from '../../api/abort';
+import { ReadSession } from '../../api/read-session';
 import { useCallback, useEffect, useState } from 'react';
 import { apiClient, catalogs } from '../../api/runtime';
 import { ApiError } from '../../api/errors';
@@ -43,7 +45,7 @@ const summarised = [
 /** Datasets added from a read: when that read fails, the page says so. */
 export const loadedAdditions = ['lead-registers', 'release'] as const;
 
-async function read(refresh: boolean): Promise<Loaded> {
+async function read(refresh: boolean, signal?: AbortSignal): Promise<Loaded> {
   const settle = <T>(load: () => Promise<T>) =>
     load().then(
       (value) => ({ value, error: null as unknown }),
@@ -51,13 +53,14 @@ async function read(refresh: boolean): Promise<Loaded> {
     );
   const [expenses, categories, pay, directory, discovery, summary] =
     await Promise.all([
-      settle(() => catalogs.expenses()),
-      settle(() => catalogs.expenseCategories()),
-      settle(() => catalogs.pay()),
-      settle(() => catalogs.directory(refresh)),
-      settle(() => catalogs.discovery(refresh)),
-      settle(() => reference.summary(refresh)),
+      settle(() => catalogs.expenses(signal)),
+      settle(() => catalogs.expenseCategories(signal)),
+      settle(() => catalogs.pay(signal)),
+      settle(() => catalogs.directory(refresh, signal)),
+      settle(() => catalogs.discovery(refresh, signal)),
+      settle(() => reference.summary(refresh, signal)),
     ]);
+  throwIfAborted(signal);
   const partial = new Set<string>();
   if (expenses.error || categories.error) partial.add('ipea');
   if (pay.error) partial.add('pay');
@@ -113,15 +116,21 @@ async function read(refresh: boolean): Promise<Loaded> {
 }
 
 // One read a session, shared by the hub, the list and each dataset page.
-let session: Promise<Loaded> | null = null;
-export function loadSources(refresh = false): Promise<Loaded> {
-  if (!session || refresh) session = read(refresh);
-  return session;
+let session = new ReadSession<Loaded>();
+export function loadSources(
+  refresh = false,
+  signal?: AbortSignal,
+): Promise<Loaded> {
+  return session.read(
+    'sources',
+    (requestSignal) => read(refresh, requestSignal),
+    { fresh: refresh, signal },
+  );
 }
 /** Forget the session's reads (tests). */
 export function resetSources() {
-  session = null;
-  dateSession.clear();
+  session = new ReadSession<Loaded>();
+  dateSession = new ReadSession<string | null>();
 }
 
 /**
@@ -147,8 +156,8 @@ const dateOf =
   };
 const fileDate =
   (path: string, ...at: string[][]) =>
-  (refresh: boolean) =>
-    apiClient.get(path, dateOf(...at), refresh).then((r) => r.data);
+  (refresh: boolean, signal?: AbortSignal) =>
+    apiClient.get(path, dateOf(...at), refresh, { signal }).then((r) => r.data);
 const generated = ['meta', 'generated'];
 
 /**
@@ -160,12 +169,15 @@ const generated = ['meta', 'generated'];
  */
 const dateSources: Record<
   string,
-  [key: string, (refresh: boolean) => Promise<string | null>]
+  [
+    key: string,
+    (refresh: boolean, signal?: AbortSignal) => Promise<string | null>,
+  ]
 > = {};
 const source = (
   ids: string[],
   key: string,
-  load: (refresh: boolean) => Promise<string | null>,
+  load: (refresh: boolean, signal?: AbortSignal) => Promise<string | null>,
 ) => {
   for (const id of ids) dateSources[id] = [key, load];
 };
@@ -216,15 +228,22 @@ export const hasOwnDate = (id: string) => id in dateSources;
 export const ownDateIds = () => Object.keys(dateSources);
 
 // One read a session per file, shared by datasets that file dates.
-const dateSession = new Map<string, Promise<string | null>>();
-function loadDate(id: string, refresh: boolean): Promise<string | null> {
+let dateSession = new ReadSession<string | null>();
+function loadDate(
+  id: string,
+  refresh: boolean,
+  signal?: AbortSignal,
+): Promise<string | null> {
   const [key, load] = dateSources[id]!;
-  let pending = dateSession.get(key);
-  if (!pending || refresh) {
-    pending = load(refresh).catch(() => null);
-    dateSession.set(key, pending);
-  }
-  return pending;
+  return dateSession.read(
+    key,
+    (requestSignal) =>
+      load(refresh, requestSignal).catch(() => {
+        throwIfAborted(requestSignal);
+        return null;
+      }),
+    { fresh: refresh, signal },
+  );
 }
 
 /**
@@ -236,6 +255,7 @@ export function useOwnDates(ids: readonly string[], request = 0) {
   const [dates, setDates] = useState<Record<string, string | null>>({});
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     const wanted = key ? key.split(' ') : [];
     const refresh = request > 0;
     // A pull reads each file again once, however many datasets it dates.
@@ -244,12 +264,15 @@ export function useOwnDates(ids: readonly string[], request = 0) {
       const [file] = dateSources[id]!;
       const fresh = refresh && !reread.has(file);
       reread.add(file);
-      void loadDate(id, fresh).then((value) => {
-        if (active) setDates((d) => ({ ...d, [id]: value }));
-      });
+      void loadDate(id, fresh, controller.signal)
+        .then((value) => {
+          if (active) setDates((d) => ({ ...d, [id]: value }));
+        })
+        .catch(() => undefined);
     }
     return () => {
       active = false;
+      controller.abort();
     };
   }, [key, request]);
   return dates;
@@ -266,13 +289,17 @@ export function useSources() {
   const [request, setRequest] = useState(0);
   useEffect(() => {
     let active = true;
-    void loadSources(request > 0).then((value) => {
-      if (!active) return;
-      setLoaded(value);
-      setRefreshing(false);
-    });
+    const controller = new AbortController();
+    void loadSources(request > 0, controller.signal)
+      .then((value) => {
+        if (!active) return;
+        setLoaded(value);
+        setRefreshing(false);
+      })
+      .catch(() => undefined);
     return () => {
       active = false;
+      controller.abort();
     };
   }, [request]);
   const refresh = useCallback(() => {

@@ -179,10 +179,61 @@ export function cameraAt(
   return { k, tx: centre.x - x * k, ty: centre.y - y * k };
 }
 
+/**
+ * A double tap, told apart on JS: two taps within the window and the slop.
+ * (A native tap made to wait for a double tap to fail never fired at all on
+ * iOS, so the stage takes single taps and decides itself.)
+ */
+export interface TapPoint {
+  x: number;
+  y: number;
+  at: number;
+}
+export const DOUBLE_TAP_MS = 280;
+export const DOUBLE_TAP_SLOP = 24;
+export function isDoubleTap(
+  previous: TapPoint | null,
+  next: TapPoint,
+  window = DOUBLE_TAP_MS,
+  slop = DOUBLE_TAP_SLOP,
+) {
+  return (
+    previous !== null &&
+    next.at - previous.at < window &&
+    Math.hypot(next.x - previous.x, next.y - previous.y) < slop
+  );
+}
+
 /** Where a tap-to-focus flies: at least a readable zoom, never further out. */
 export function focusScale(current: number, fit: number) {
   'worklet';
   return Math.max(current, fit * 2.6);
+}
+
+/**
+ * Whether a disc (world centre and radius) lies wholly inside the viewport's
+ * insets, with a margin: what "in view" means when the chrome covers the
+ * edges of the stage.
+ */
+export function discInView(
+  camera: Camera,
+  x: number,
+  y: number,
+  r: number,
+  viewport: Viewport,
+  margin = 0,
+) {
+  'worklet';
+  const sx = x * camera.k + camera.tx;
+  const sy = y * camera.k + camera.ty;
+  const sr = r * camera.k;
+  const { width, height, insets } = viewport;
+  return (
+    sx - sr >= insets.left + margin &&
+    sx + sr <= width - insets.right - margin &&
+    sy - sr >= insets.top + margin &&
+    sy + sr <= height - insets.bottom - margin
+  );
 }
 
 function smooth(t: number) {
@@ -204,6 +255,7 @@ export function ramp(level: number, from: number, to: number) {
 export const LOD = {
   smallNodes: [0.7, 2.0] as const,
   thinEdges: [1.2, 2.6] as const,
+  publicEdges: [1.0, 2.4] as const,
   clusterLabels: [1.9, 3.0] as const,
   names: [2.1, 3.4] as const,
 };
@@ -214,6 +266,11 @@ export function smallNodeOpacity(level: number) {
 export function thinEdgeOpacity(level: number) {
   'worklet';
   return 0.25 + 0.75 * ramp(level, LOD.thinEdges[0], LOD.thinEdges[1]);
+}
+/** Public money lines: a haze at the overview, firm once the reader is closer. */
+export function publicEdgeOpacity(level: number) {
+  'worklet';
+  return 0.3 + 0.7 * ramp(level, LOD.publicEdges[0], LOD.publicEdges[1]);
 }
 export function clusterLabelOpacity(level: number) {
   'worklet';

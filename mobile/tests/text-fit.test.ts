@@ -225,6 +225,24 @@ test('new interface text omits fontFamily, uses explicit weight, and links rende
   act(() => renderer.unmount());
 });
 
+test('iOS citation code uses the requested monospace face and keeps Dynamic Type', () => {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      createElement(
+        Text,
+        { monospace: true },
+        '@misc{fixture,\n  title = {Fixture record}\n}',
+      ),
+    );
+  });
+  const native = renderer.root.findByType(NativeText);
+  expect(StyleSheet.flatten(native.props.style).fontFamily).toBe('Menlo');
+  expect(native.props.allowFontScaling).toBe(true);
+  expect(native.props.maxFontSizeMultiplier).toBe(0);
+  act(() => renderer.unmount());
+});
+
 test('Bold Text leaves SF native and steps only the bundled record face', () => {
   const bold = jest.spyOn(accessibility, 'useBoldText').mockReturnValue(true);
   try {

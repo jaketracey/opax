@@ -9,6 +9,7 @@ import { Text } from '../../design/text';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
 import {
   accessoryFor,
+  SeatSaveError,
   useChoose,
   useSeatDirectory,
   type SeatPresentation,
@@ -40,7 +41,7 @@ export function SeatStateList({
   const welcome = presentation === 'welcome';
   const { state, retry } = useSeatDirectory();
   const [query, setQuery] = useState('');
-  const { choose, savingId, chosenId } = useChoose(() => {
+  const { choose, savingId, chosenId, failed } = useChoose(() => {
     if (welcome) void markWelcomeSeen().catch(() => undefined);
     closeWelcome(navigation as Parameters<typeof closeWelcome>[0]);
   });
@@ -73,6 +74,10 @@ export function SeatStateList({
       />
       <FieldClearance>
         <Screen grouped testID={`seat-state-${code.toLowerCase()}`}>
+          {/* A failed write says so, as in the chooser, with Try again. */}
+          {failed ? (
+            <SeatSaveError onRetry={() => void choose(failed)} />
+          ) : null}
           {!valid ? (
             <ContentUnavailable
               symbol="map"

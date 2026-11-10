@@ -46,6 +46,8 @@ export function createRecentStore(
   let state: State = { ready: false, failed: false, items: [] };
   const listeners = new Set<() => void>();
   let loading: Promise<void> | null = null;
+  const removedBeforeLoad = new Set<string>();
+  let clearedBeforeLoad = false;
   const emit = (next: State) => {
     state = next;
     listeners.forEach((listener) => listener());
@@ -58,7 +60,14 @@ export function createRecentStore(
           ready: true,
           failed: false,
           // Anything added before the read finished stays on top.
-          items: merge(state.items, items ?? []),
+          items: merge(
+            state.items,
+            clearedBeforeLoad
+              ? []
+              : (items ?? []).filter(
+                  (item) => !removedBeforeLoad.has(fold(item.q)),
+                ),
+          ),
         }),
       )
       .catch(() => emit({ ready: true, failed: true, items: state.items })));
@@ -106,9 +115,11 @@ export function createRecentStore(
     },
     remove(q: string) {
       const key = fold(q);
+      if (!state.ready) removedBeforeLoad.add(key);
       write(state.items.filter((item) => fold(item.q) !== key));
     },
     clear() {
+      if (!state.ready) clearedBeforeLoad = true;
       write([]);
     },
   };

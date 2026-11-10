@@ -6,6 +6,7 @@ import {
 } from 'expo-router/react-navigation';
 import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
+import { isAbortError } from '../../api/abort';
 import { closeSheetItem, headerItems } from '../../navigation/chrome';
 import { canShare, shareHeaderItem } from '../../navigation/share';
 import { useSafeSetOptions } from '../../navigation/preview';
@@ -18,7 +19,7 @@ import { useSafeSetOptions } from '../../navigation/preview';
  * by an error).
  */
 export function useRead<T>(
-  load: (refresh: boolean) => Promise<RecordResult<T>>,
+  load: (refresh: boolean, signal?: AbortSignal) => Promise<RecordResult<T>>,
 ) {
   const [state, setState] = useState<{
     record: RecordResult<T> | null;
@@ -29,24 +30,29 @@ export function useRead<T>(
   const generation = useRef(0);
   useEffect(() => {
     const id = ++generation.current;
-    load(request.refresh)
+    const controller = new AbortController();
+    const read = async () => load(request.refresh, controller.signal);
+    void read()
       .then((record) => {
-        if (generation.current === id) setState({ record, error: null });
+        if (generation.current === id && !controller.signal.aborted)
+          setState({ record, error: null });
       })
       .catch((error: unknown) => {
-        if (generation.current === id)
+        if (
+          generation.current === id &&
+          !controller.signal.aborted &&
+          !isAbortError(error)
+        )
           setState((previous) => ({ record: previous.record, error }));
       })
       .finally(() => {
         if (generation.current === id) setRefreshing(false);
       });
-  }, [load, request]);
-  useEffect(
-    () => () => {
+    return () => {
       generation.current += 1;
-    },
-    [],
-  );
+      controller.abort();
+    };
+  }, [load, request]);
   const retry = useCallback(() => {
     setState((previous) => ({ ...previous, error: null }));
     setRequest((previous) => ({ n: previous.n + 1, refresh: true }));

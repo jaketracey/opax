@@ -243,6 +243,26 @@ test('the answer leads with one machine pill and its records, cited once each', 
   expect(words()).not.toMatch(/\[\d\] Synthetic|Also retrieved|retrieved/);
 });
 
+test("a cited row says the speaker's party and the party is not a separate link inside it", () => {
+  const { renderer } = draw();
+  const [row] = renderer.root.findAll(
+    (n) =>
+      typeof n.props.accessibilityLabel === 'string' &&
+      n.props.accessibilityLabel.startsWith('2.') &&
+      typeof n.type !== 'string',
+  );
+  expect(row!.props.accessibilityLabel).toMatch(
+    /Sam Placeholder, Example Party$/,
+  );
+  expect(
+    row!.findAll(
+      (n) =>
+        n.props.accessibilityRole === 'link' &&
+        n.props.accessibilityLabel !== row!.props.accessibilityLabel,
+    ),
+  ).toHaveLength(0);
+});
+
 test('adjacent citations merge into one mark that opens the first source beside its claim', () => {
   const { renderer, press } = draw();
   const marks = renderer.root.findAllByType(CitationMark);
@@ -510,9 +530,15 @@ test('the ready announcement counts cited records', () => {
 });
 
 describe('the iPad pane is never empty', () => {
-  function Pane({ thread }: { thread: Turn[] }) {
+  function Pane({
+    thread,
+    chat = 'fixture-chat',
+  }: {
+    thread: Turn[];
+    chat?: string;
+  }) {
     return useAskSources(thread, {
-      chat: 'fixture-chat',
+      chat,
       profiles,
       onAsk: mockAsk,
     }).pane;
@@ -570,5 +596,26 @@ describe('the iPad pane is never empty', () => {
     act(() => dispatchKeyCommand('list-up'));
     expect(citationSelection()?.n).toBe(1);
     expect(presentSheet).not.toHaveBeenCalled();
+  });
+  test('another conversation with the same number of turns starts at its first citation', () => {
+    const { words, press, renderer } = drawPane([question, answer()]);
+    act(() => press('ask-pane-source-3'));
+    const next = answer({ sources: [source(1, true)] });
+    act(() =>
+      renderer.update(<Pane chat="fixture-other" thread={[question, next]} />),
+    );
+    expect(words()).toContain('Synthetic passage 1 from the record.');
+    expect(citationSelection()).toBeNull();
+  });
+  test('an earlier citation stays available when another answer arrives in the same conversation', () => {
+    const { press, renderer } = drawPane([question, answer()]);
+    act(() => press('ask-pane-source-3'));
+    const selected = citationSelection();
+    act(() =>
+      renderer.update(
+        <Pane thread={[question, answer(), question, answer()]} />,
+      ),
+    );
+    expect(citationSelection()).toEqual(selected);
   });
 });

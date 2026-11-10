@@ -74,6 +74,30 @@ export function TodayEditionCard({
   );
 }
 
+/**
+ * One card's VoiceOver label: its place, the title, the line and the first
+ * paragraph, with no empty parts, and "Machine-written" as the card shows
+ * (the card's body is hidden from VoiceOver, so the label must carry it).
+ */
+export function featuredLabel(
+  person: Pick<FeaturedPerson, 'edition'>,
+  index: number,
+  total: number,
+): string {
+  const { edition } = person;
+  return [
+    `Featured parliamentarian, ${index + 1} of ${total}`,
+    edition.title,
+    edition.facts.line,
+    edition.machineWritten ? 'Machine-written' : null,
+    edition.paragraphs[0],
+  ]
+    .map((part) => part?.trim().replace(/\.$/, ''))
+    .filter(Boolean)
+    .join('. ')
+    .concat('.');
+}
+
 /** Native snapping, no auto-advance, and natural card heights at AX5. */
 export function FeaturedPeopleCarousel({
   people,
@@ -198,7 +222,11 @@ export function FeaturedPeopleCarousel({
                         : action,
                     ),
                   ]}
-                  accessibilityLabel={`Featured parliamentarian, ${index + 1} of ${people.length}. ${person.edition.title}. ${person.edition.facts.line ?? ''}. ${person.edition.paragraphs[0] ?? ''}`}
+                  accessibilityLabel={featuredLabel(
+                    person,
+                    index,
+                    people.length,
+                  )}
                   accessibilityHint="Opens this person’s parliamentary record"
                   accessibilityActions={[
                     {
@@ -240,9 +268,11 @@ export function FeaturedPeopleCarousel({
                           </Text>
                         </View>
                       ) : null}
-                      <Text wordSafe variant="body">
-                        {person.edition.paragraphs[0]}
-                      </Text>
+                      {person.edition.paragraphs[0] ? (
+                        <Text wordSafe variant="body">
+                          {person.edition.paragraphs[0]}
+                        </Text>
+                      ) : null}
                     </View>
                   </View>
                 </Card>

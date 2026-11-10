@@ -245,6 +245,7 @@ test('bill text switches chosen bytes and never presents the old version as the 
   expect(records.billVersion).toHaveBeenLastCalledWith(
     'au-federal-r7534',
     'r7534-first-reps',
+    expect.any(AbortSignal),
   );
   expect(records.billVersion).toHaveBeenCalledTimes(2);
   expect(

@@ -17,6 +17,7 @@ import { billRoute } from '../../navigation/routes';
 import { loadProfile, type Loaded } from '../Person';
 import { BlockSource, votesSource } from '../your-mp/Evidence';
 import { registerCategoryLabel, registerEntry } from '../your-mp/model';
+import type { EvidenceBlock } from '../your-mp/model';
 import { MemberVoteRow } from './MemberVoteRow';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
@@ -93,6 +94,46 @@ function Unavailable({
 
 type Side = 'all' | 'for' | 'against';
 
+/** A missing or unreadable file is not evidence of an empty public record. */
+function BlockUnavailable({
+  block,
+  retry,
+  subject,
+  missing,
+  testID,
+}: {
+  block: Pick<EvidenceBlock<unknown>, 'status' | 'partial'> | null;
+  retry: () => void;
+  subject: string;
+  missing: string;
+  testID: string;
+}) {
+  if (block?.status === 'error' || block?.status === 'loading')
+    return (
+      <Unavailable
+        load={{ status: block.status }}
+        retry={retry}
+        subject={subject}
+        testID={testID}
+      />
+    );
+  return (
+    <ContentUnavailable
+      symbol="doc.text"
+      title={
+        block?.status === 'unlinked'
+          ? 'These records couldn’t be matched to this person'
+          : missing
+      }
+      body={block?.partial ? 'Some records could not be read.' : undefined}
+      action={
+        block?.partial ? { label: 'Try again', onPress: retry } : undefined
+      }
+      testID={`${testID}-empty`}
+    />
+  );
+}
+
 /**
  * A member's whole voting record (`person/[slug]/votes`), pushed in the
  * readable column: every bill vote, newest first, searchable by bill and
@@ -133,13 +174,19 @@ export function PersonVotes() {
       <RouteOptions
         options={{ title: 'Voting record', headerSearchBarOptions: search }}
       />
-      {load.status !== 'ready' || !v || !votes ? (
+      {load.status !== 'ready' ||
+      !v ||
+      !votes ||
+      votes.status === 'error' ||
+      votes.status === 'loading' ? (
         <View style={styles.page} testID="person-votes-screen">
           {load.status === 'ready' ? (
-            <ContentUnavailable
-              symbol="doc.text"
-              title="No recorded votes yet"
-              testID="person-votes-list-empty"
+            <BlockUnavailable
+              block={votes}
+              retry={retry}
+              subject="votes"
+              missing="No voting summary is held for this person"
+              testID="person-votes-list"
             />
           ) : (
             <Unavailable
@@ -245,13 +292,19 @@ export function PersonInterests() {
   return (
     <>
       <RouteOptions options={{ title: 'Declared interests' }} />
-      {load.status !== 'ready' || !r || !interests ? (
+      {load.status !== 'ready' ||
+      !r ||
+      !interests ||
+      interests.status === 'error' ||
+      interests.status === 'loading' ? (
         <View style={styles.page} testID="person-interests-screen">
           {load.status === 'ready' ? (
-            <ContentUnavailable
-              symbol="doc.text"
-              title="No interests declared in the current register"
-              testID="person-interests-list-empty"
+            <BlockUnavailable
+              block={interests}
+              retry={retry}
+              subject="declared interests"
+              missing="No register file is held for this person"
+              testID="person-interests-list"
             />
           ) : (
             <Unavailable

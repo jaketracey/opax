@@ -1,7 +1,8 @@
 // Lane P, part 2 (people.md 2.1, 2.2): the person profile and the party
 // page on the shared templates. Each block holds one acceptance check.
 import { act } from 'react';
-import { ScrollView } from 'react-native';
+import * as Native from 'react-native';
+import { FlatList, Platform, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -14,6 +15,8 @@ import {
   moneyAccessibilityLabel,
 } from '../src/design/format';
 import { Section } from '../src/design/layout';
+import { useReduceMotion } from '../src/design/accessibility';
+import { rhythm } from '../src/design/tokens';
 import { partySlug } from '../src/design/party';
 import { Text } from '../src/design/primitives';
 import { followKey, useFollows } from '../src/features/follows/store';
@@ -23,6 +26,7 @@ import {
   annualPay,
   decodeAccess,
   decodeFunding,
+  decodeRecords,
   interestsCount,
   payRateLine,
   stripSources,
@@ -132,6 +136,14 @@ const result = <T,>(data: T) => ({
   asOf: null,
 });
 const mock = runtime as jest.Mocked<typeof runtime>;
+let mockHeaderBottom = 103;
+jest.mock('../src/design/useHeaderBottom', () => ({
+  useHeaderBottom: () => mockHeaderBottom,
+}));
+jest.mock('../src/design/accessibility', () => ({
+  ...jest.requireActual('../src/design/accessibility'),
+  useReduceMotion: jest.fn(() => false),
+}));
 const directory = {
   manifest: result(manifest),
   people: result(people),
@@ -159,6 +171,13 @@ const has = (r: TestRenderer.ReactTestRenderer, testID: string) =>
 const host = (r: TestRenderer.ReactTestRenderer, testID: string) =>
   r.root.find((n) => typeof n.type === 'string' && n.props.testID === testID);
 
+const viewportAt = (top: () => number) =>
+  jest.spyOn(ScrollView.prototype, 'getNativeScrollRef').mockReturnValue({
+    measureInWindow: (
+      done: (x: number, y: number, width: number, height: number) => void,
+    ) => done(0, top(), 390, 844),
+  } as never);
+
 async function wong() {
   mockParams.slug = 'penny-wong';
   const person = c.joinPerson('penny-wong', slugs, roster, people, manifest);
@@ -177,6 +196,8 @@ async function wong() {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockHeaderBottom = 103;
+  jest.mocked(useReduceMotion).mockReturnValue(false);
   delete mockParams.section;
   mock.directory.mockResolvedValue(directory as never);
   jest.mocked(useFollows).mockReturnValue([]);
@@ -184,6 +205,229 @@ beforeEach(() => {
 });
 
 describe('profile', () => {
+  afterEach(() => jest.restoreAllMocks());
+  test.each(['votes', 'interests', 'pay'] as const)(
+    '%s jumps to the measured heading below the current iOS bar at every text size',
+    async (section) => {
+      const scrollTo = jest
+        .spyOn(ScrollView.prototype, 'scrollTo')
+        .mockImplementation(() => {});
+      const inner = jest
+        .spyOn(ScrollView.prototype, 'getInnerViewNode')
+        .mockReturnValue(42);
+      let viewportTop = 0;
+      const viewport = viewportAt(() => viewportTop);
+      const { r } = await wong();
+      const dimensions = jest.spyOn(Native, 'useWindowDimensions');
+      const heading = () => host(r, `person-${section}-heading`);
+      const tap = () =>
+        r.root
+          .find(
+            (node) =>
+              node.props.testID === `person-figure-${section}` &&
+              typeof node.props.onPress === 'function',
+          )
+          .props.onPress();
+      let top = 900;
+      const measureLayout = jest.fn((_ancestor, done) => done(0, top, 300, 60));
+      // The section's outer position is deliberately different from its heading.
+      let holder = host(r, `person-${section}`).parent!;
+      while (typeof holder.props.onLayout !== 'function')
+        holder = holder.parent!;
+      await act(async () =>
+        holder.props.onLayout({ nativeEvent: { layout: { y: 740 } } }),
+      );
+      // xSmall through AX5: wrapping changes the heading's place and height.
+      const scales = [
+        0.823, 0.882, 0.941, 1, 1.118, 1.235, 1.353, 1.786, 2.143, 2.643, 3.143,
+        3.571,
+      ];
+      for (const [size, fontScale] of scales.entries()) {
+        dimensions.mockReturnValue({
+          width: 390,
+          height: 844,
+          scale: 3,
+          fontScale,
+        });
+        await act(async () => r.update(<Person />));
+        top = 900 + size * 80;
+        await act(async () =>
+          heading().props.onLayout({
+            currentTarget: { measureLayout },
+            nativeEvent: {
+              layout: { x: 0, y: size * 3, width: 300, height: 28 + size * 12 },
+            },
+          }),
+        );
+        await act(async () => tap());
+        expect(measureLayout).toHaveBeenLastCalledWith(
+          42,
+          expect.any(Function),
+        );
+        expect(scrollTo).toHaveBeenLastCalledWith({
+          y: top - mockHeaderBottom - rhythm.block,
+          animated: true,
+        });
+      }
+      // A large-title collapse changes the bar bottom, including its safe area.
+      mockHeaderBottom = 83;
+      await act(async () => r.update(<Person />));
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: top - 83 - rhythm.block,
+        animated: true,
+      });
+      // An opaque bar already moves the scroll view below its bottom.
+      viewportTop = mockHeaderBottom;
+      await act(async () => tap());
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: top - rhythm.block,
+        animated: true,
+      });
+      // Re-read the current native position on another tap, without animation.
+      jest.mocked(useReduceMotion).mockReturnValue(true);
+      await act(async () => r.update(<Person />));
+      await act(async () => tap());
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: top - rhythm.block,
+        animated: false,
+      });
+      await act(async () => r.unmount());
+      inner.mockRestore();
+      viewport.mockRestore();
+      scrollTo.mockRestore();
+    },
+  );
+
+  test('Android keeps its existing section offset', async () => {
+    jest.replaceProperty(Platform, 'OS', 'android');
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {});
+    const { r } = await wong();
+    let holder = host(r, 'person-interests').parent!;
+    while (typeof holder.props.onLayout !== 'function') holder = holder.parent!;
+    await act(async () =>
+      holder.props.onLayout({ nativeEvent: { layout: { y: 900 } } }),
+    );
+    await act(async () =>
+      r.root
+        .find(
+          (node) =>
+            node.props.testID === 'person-figure-interests' &&
+            typeof node.props.onPress === 'function',
+        )
+        .props.onPress(),
+    );
+    expect(scrollTo).toHaveBeenLastCalledWith({
+      y: 900 - rhythm.heading,
+      animated: true,
+    });
+    await act(async () => r.unmount());
+  });
+
+  test('a newer jump cancels an earlier native measurement', async () => {
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {});
+    jest.spyOn(ScrollView.prototype, 'getInnerViewNode').mockReturnValue(42);
+    viewportAt(() => 0);
+    const { r } = await wong();
+    const pending: ((x: number, y: number) => void)[] = [];
+    for (const section of ['interests', 'votes']) {
+      await act(async () =>
+        host(r, `person-${section}-heading`).props.onLayout({
+          currentTarget: {
+            measureLayout: (
+              _ancestor: number,
+              done: (x: number, y: number) => void,
+            ) => pending.push(done),
+          },
+          nativeEvent: { layout: { x: 0, y: 0, width: 300, height: 28 } },
+        }),
+      );
+      await act(async () =>
+        r.root
+          .find(
+            (node) =>
+              node.props.testID === `person-figure-${section}` &&
+              typeof node.props.onPress === 'function',
+          )
+          .props.onPress(),
+      );
+    }
+    await act(async () => pending[0]!(0, 900));
+    expect(scrollTo).not.toHaveBeenCalled();
+    await act(async () => pending[1]!(0, 500));
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenLastCalledWith({
+      y: 500 - 103 - rhythm.block,
+      animated: true,
+    });
+    await act(async () => r.unmount());
+  });
+
+  test('?section=interests waits for the heading and never animates its arrival', async () => {
+    mockParams.section = 'interests';
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {});
+    const inner = jest
+      .spyOn(ScrollView.prototype, 'getInnerViewNode')
+      .mockReturnValue(42);
+    const viewport = viewportAt(() => 0);
+    const { r } = await wong();
+    expect(scrollTo).not.toHaveBeenCalled();
+    await act(async () =>
+      host(r, 'person-interests-heading').props.onLayout({
+        currentTarget: {
+          measureLayout: (
+            _ancestor: number,
+            done: (x: number, y: number) => void,
+          ) => done(0, 1200),
+        },
+        nativeEvent: { layout: { x: 0, y: 7, width: 300, height: 90 } },
+      }),
+    );
+    expect(scrollTo).toHaveBeenLastCalledWith({
+      y: 1200 - 103 - rhythm.block,
+      animated: false,
+    });
+    await act(async () => r.unmount());
+    inner.mockRestore();
+    viewport.mockRestore();
+    scrollTo.mockRestore();
+  });
+
+  test('a member with one recorded division is counted in the singular', async () => {
+    mockParams.slug = 'penny-wong';
+    const person = c.joinPerson('penny-wong', slugs, roster, people, manifest);
+    const profile = c.profileFor(person.canonicalPersonId!, catalogs);
+    const votes = profile.blocks.votes;
+    mock.person.mockResolvedValue(result(person));
+    mock.profileFor.mockResolvedValue({
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        votes: { ...votes, data: { ...votes.data!, total: 1 } },
+      },
+    });
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<Person />);
+    });
+    expect(text(r)).toContain('Voted in 1 division');
+    expect(text(r)).not.toContain('1 divisions');
+    expect(
+      r.root.find(
+        (n) =>
+          typeof n.type !== 'string' &&
+          n.props.testID === 'person-figure-votes' &&
+          typeof n.props.label === 'string',
+      ).props.label,
+    ).toMatch(/^vote( since|$)/);
+    await act(async () => r.unmount());
+  });
+
   test('strip and sections agree: each tile reads its section’s selector', async () => {
     const { r, profile } = await wong();
     const votes = votesCount(profile)!;
@@ -387,6 +631,10 @@ describe('profile', () => {
     const scrollTo = jest
       .spyOn(ScrollView.prototype, 'scrollTo')
       .mockImplementation(() => undefined);
+    const inner = jest
+      .spyOn(ScrollView.prototype, 'getInnerViewNode')
+      .mockReturnValue(42);
+    const viewport = viewportAt(() => 0);
     const quiet = await wong();
     expect(has(quiet.r, 'person-added-since')).toBe(false);
     expect(scrollTo).not.toHaveBeenCalled();
@@ -432,7 +680,15 @@ describe('profile', () => {
     while (holder && typeof holder.props.onLayout !== 'function')
       holder = holder.parent;
     await act(async () =>
-      holder!.props.onLayout({ nativeEvent: { layout: { y: 900 } } }),
+      holder!.props.onLayout({
+        currentTarget: {
+          measureLayout: (
+            _ancestor: number,
+            done: (x: number, y: number) => void,
+          ) => done(0, 900),
+        },
+        nativeEvent: { layout: { y: 900 } },
+      }),
     );
     expect(scrollTo).toHaveBeenCalled();
     const target = scrollTo.mock.calls.at(-1)![0] as { y: number };
@@ -448,6 +704,8 @@ describe('profile', () => {
       .map((n) => n.props.testID);
     expect(order[0]).toBe('person-added-since');
     scrollTo.mockRestore();
+    inner.mockRestore();
+    viewport.mockRestore();
     await act(async () => r.unmount());
   });
 });
@@ -520,6 +778,43 @@ describe('party', () => {
       labor.unmount();
       liberal.unmount();
     });
+  });
+
+  test('one sitting member and one receipt are counted in the singular', async () => {
+    const labor = views.Labor!;
+    const data = labor.data!;
+    views.Single = {
+      ...labor,
+      data: {
+        ...data,
+        members: {
+          ...data.members,
+          data: { ...data.members.data!, currentCount: 1 },
+        },
+        receipts: {
+          ...data.receipts,
+          data: {
+            ...data.receipts.data!,
+            node: { ...data.receipts.data!.node, count: 1 },
+          },
+        },
+      },
+    } as PartyView;
+    const r = await party('Single');
+    const words = text(r);
+    expect(words).toContain('1 sitting member');
+    expect(words).not.toContain('1 sitting members');
+    expect(words).toContain('from 1 donation or receipt');
+    expect(
+      r.root.find(
+        (n) =>
+          typeof n.type !== 'string' &&
+          n.props.testID === 'party-figure-members' &&
+          typeof n.props.label === 'string',
+      ).props.label,
+    ).toBe('sitting member');
+    delete views.Single;
+    await act(async () => r.unmount());
   });
 
   test('the strip has two tiles, each the figure its section draws', async () => {
@@ -757,6 +1052,7 @@ describe('party', () => {
 });
 
 describe('record list', () => {
+  beforeEach(() => jest.mocked(peopleDepth.list).mockReset());
   afterEach(() => {
     delete mockParams.kind;
     delete mockParams.person;
@@ -772,6 +1068,68 @@ describe('record list', () => {
     });
     return r;
   }
+
+  const page = (start: number, count: number) => ({
+    records: result(
+      decodeRecords({
+        results: Array.from({ length: count }, (_, index) => ({
+          slug: `speech-fixture-${start + index}`,
+          title: `Fixture speech ${start + index}`,
+        })),
+      }),
+    ),
+    briefs: {},
+  });
+
+  test('a failed next page keeps loaded speeches and offers an explicit retry of that page', async () => {
+    jest
+      .mocked(peopleDepth.list)
+      .mockResolvedValueOnce(page(0, 20))
+      .mockRejectedValueOnce(new ApiError('server', 'Unavailable'))
+      .mockResolvedValueOnce(page(20, 1));
+    const r = await list('speeches');
+    await act(async () => r.root.findByType(FlatList).props.onEndReached());
+    expect(r.root.findByType(FlatList).props.data).toHaveLength(20);
+    const error = r.root.find(
+      (node) =>
+        node.props.testID === 'record-list-page-error' && !!node.props.onRetry,
+    );
+    // Scrolling again cannot repeatedly retry a failed paid read.
+    await act(async () => r.root.findByType(FlatList).props.onEndReached());
+    expect(peopleDepth.list).toHaveBeenCalledTimes(2);
+    await act(async () => error.props.onRetry());
+    expect(peopleDepth.list).toHaveBeenLastCalledWith(
+      'Penny Wong',
+      'speeches',
+      2,
+    );
+    expect(r.root.findByType(FlatList).props.data).toHaveLength(21);
+    expect(has(r, 'record-list-page-error')).toBe(false);
+    await act(async () => r.unmount());
+  });
+
+  test('repeated end events start one page read and overlapping pages draw each record once', async () => {
+    let finish!: (value: ReturnType<typeof page>) => void;
+    jest
+      .mocked(peopleDepth.list)
+      .mockResolvedValueOnce(page(0, 20))
+      .mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            finish = resolve;
+          }),
+      );
+    const r = await list('speeches');
+    await act(async () => {
+      const next = r.root.findByType(FlatList).props.onEndReached;
+      next();
+      next();
+    });
+    expect(peopleDepth.list).toHaveBeenCalledTimes(2);
+    await act(async () => finish(page(19, 2)));
+    expect(r.root.findByType(FlatList).props.data).toHaveLength(21);
+    await act(async () => r.unmount());
+  });
 
   test('news is not available yet: no read, and no Try again that cannot work', async () => {
     const r = await list('news');

@@ -5,7 +5,7 @@ import { useDerivedValue, type SharedValue } from 'react-native-reanimated';
 import { SizedCanvas } from '../../../design/canvas';
 import { paletteFor } from '../../../design/palette';
 import { colors, hairline, radii } from '../../../design/tokens';
-import type { Bounds } from './camera';
+import type { Bounds, Viewport } from './camera';
 import type { Centre } from './layout';
 import type { MapModel } from './model';
 import { paintOverview } from './scene';
@@ -15,8 +15,9 @@ export const MINI_WIDTH = 104;
 export const MINI_HEIGHT = 72;
 
 /**
- * The overview: every cluster as a soft disc, and the viewport as a frame
- * that follows the camera on the UI thread. A tap moves the view there.
+ * The overview: every cluster as a soft disc, and the part of the map the
+ * reader can see (the viewport inside the chrome's insets) as a frame that
+ * follows the camera on the UI thread. A tap moves the view there.
  */
 export function MiniMap({
   model,
@@ -25,7 +26,7 @@ export function MiniMap({
   tx,
   ty,
   k,
-  stage,
+  viewport,
   onJump,
 }: {
   model: MapModel;
@@ -34,7 +35,7 @@ export function MiniMap({
   tx: SharedValue<number>;
   ty: SharedValue<number>;
   k: SharedValue<number>;
-  stage: { width: number; height: number };
+  viewport: Viewport;
   onJump: (x: number, y: number) => void;
 }) {
   const palette = paletteFor('light');
@@ -66,15 +67,18 @@ export function MiniMap({
       ),
     [model, centres, bounds],
   );
-  // The stage's viewport in world units, drawn in the overview's units.
+  // The visible viewport in world units, drawn in the overview's units.
+  const { insets } = viewport;
+  const seenW = Math.max(1, viewport.width - insets.left - insets.right);
+  const seenH = Math.max(1, viewport.height - insets.top - insets.bottom);
   const frameX = useDerivedValue(
-    () => offset.x + ((0 - tx.value) / k.value) * scale,
+    () => offset.x + ((insets.left - tx.value) / k.value) * scale,
   );
   const frameY = useDerivedValue(
-    () => offset.y + ((0 - ty.value) / k.value) * scale,
+    () => offset.y + ((insets.top - ty.value) / k.value) * scale,
   );
-  const frameW = useDerivedValue(() => (stage.width / k.value) * scale);
-  const frameH = useDerivedValue(() => (stage.height / k.value) * scale);
+  const frameW = useDerivedValue(() => (seenW / k.value) * scale);
+  const frameH = useDerivedValue(() => (seenH / k.value) * scale);
   return (
     <Pressable
       accessibilityRole="button"

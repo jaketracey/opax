@@ -20,6 +20,7 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  type LayoutChangeEvent,
   type RefreshControlProps,
   type ViewProps,
 } from 'react-native';
@@ -320,6 +321,11 @@ export type SectionAction = {
   onPress?: () => void;
   testID?: string;
 };
+/** A section jump measures the heading text, including its inset within the row. */
+export const SectionHeadingLayoutContext = createContext<
+  ((testID: string, event: LayoutChangeEvent) => void) | null
+>(null);
+
 export function SectionHeader({
   title,
   action,
@@ -331,6 +337,7 @@ export function SectionHeader({
   testID?: string;
   level?: 2 | 3;
 }) {
+  const headingLayout = useContext(SectionHeadingLayoutContext);
   const stacked = useAccessibilitySize();
   const button = action ? (
     <Pressable
@@ -350,7 +357,16 @@ export function SectionHeader({
   ) : null;
   return (
     <View style={stacked ? styles.sectionHeadStacked : styles.sectionHead}>
-      <Heading level={level} style={styles.grow} testID={testID}>
+      <Heading
+        level={level}
+        style={styles.grow}
+        testID={testID}
+        onLayout={
+          headingLayout && testID
+            ? (event) => headingLayout(testID, event)
+            : undefined
+        }
+      >
         {title}
       </Heading>
       {action?.href && button ? (

@@ -5,7 +5,10 @@ import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
 import { index, manifest, people, roster, slugs, pinned } from './pinned';
-import Electorate, { identityLine } from '../src/features/Electorate';
+import Electorate, {
+  ElectorateScreen,
+  identityLine,
+} from '../src/features/Electorate';
 import { router } from 'expo-router';
 import { ContentUnavailable } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
@@ -23,6 +26,8 @@ import {
 } from '../src/features/directories/ElectorateHistory';
 import { CachedPortrait } from '../src/features/CachedPortrait';
 import { personRoute } from '../src/navigation/routes';
+import { grantsRoute } from '../src/navigation/routes/public-money';
+import { LinkRow } from '../src/design/rows';
 import {
   RepresentativeRows,
   sinceLine,
@@ -285,6 +290,9 @@ test('election rows push the election screen, newest first', async () => {
   const parties = firstRow.findAllByType(PartyLabel);
   expect(parties[0]!.props.party).toBe('Labor');
   expect(parties[0]!.props.dense).toBeUndefined();
+  // VoiceOver hears the party's name, as drawn, never the file's code.
+  expect(firstRow.props.accessibilityLabel).toMatch(/, Labor\./);
+  expect(firstRow.props.accessibilityLabel).not.toMatch(/\bALP\b/);
 
   expect(has(r, 'election-expand-0')).toBe(false);
   await act(async () => r.unmount());
@@ -348,6 +356,64 @@ test('a chosen date shows the members on that date and Back to today', async () 
       typeof n.props.onPress === 'function',
   )[0]!;
   await act(async () => back.props.onPress());
+  expect(text(r)).not.toContain('Member on');
+  await act(async () => r.unmount());
+});
+
+test('an abolished electorate still shows its recorded members on a chosen historical date', async () => {
+  load('Higgins');
+  const r = await render(<Electorate />);
+  await act(async () =>
+    chooseElectorateDate(seat('Higgins').electorate_id, '2015-06-01'),
+  );
+  expect(r.root.findAllByType(DatedMembers)).toHaveLength(1);
+  expect(text(r)).toContain('Member on 1 June 2015');
+  expect(has(r, 'electorate-date-latest')).toBe(true);
+  const back = r.root.findAll(
+    (node) =>
+      node.props.testID === 'electorate-date-latest' &&
+      typeof node.props.onPress === 'function',
+  )[0]!;
+  await act(async () => back.props.onPress());
+  expect(r.root.findAllByType(DatedMembers)).toHaveLength(0);
+  expect(text(r)).toContain('Past members');
+  await act(async () => r.unmount());
+});
+
+test('changing an embedded electorate clears the old seat and its chosen date while the new record loads', async () => {
+  load('Grayndler');
+  const r = await render(
+    <ElectorateScreen id={seat('Grayndler').electorate_id} embedded />,
+  );
+  await act(async () =>
+    chooseElectorateDate(seat('Grayndler').electorate_id, '1994-06-01'),
+  );
+  expect(text(r)).toContain('Member on 1 June 1994');
+  const sydney = seat('Sydney');
+  const next = result(
+    c.electorateFor(c.decodeElectorate(pinned(sydney.detail_url))),
+  );
+  let finish!: (value: typeof next) => void;
+  mock.electorateFor.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  await act(async () =>
+    r.update(
+      withNavigationOptions(
+        <ElectorateScreen id={sydney.electorate_id} embedded />,
+        (options) => mockOptions.push(options),
+      ),
+    ),
+  );
+  expect(has(r, 'electorate-loading')).toBe(true);
+  expect(has(r, 'electorate-name')).toBe(false);
+  await act(async () => finish(next));
+  expect(r.root.findByProps({ testID: 'electorate-name' }).props.children).toBe(
+    'Sydney',
+  );
   expect(text(r)).not.toContain('Member on');
   await act(async () => r.unmount());
 });
@@ -637,6 +703,30 @@ test('a followed electorate with no change draws no Added since group', async ()
   await act(async () => r.unmount());
 });
 
+test.each(['Grayndler', 'Ballarat'])('the electorate page links to grants in %s', async (name) => {
+  load(name);
+  const r = await render(<Electorate />);
+  const link = r.root
+    .findAllByType(LinkRow)
+    .find((n) => n.props.testID === 'seat-grants-all');
+  expect(link?.props.title).toBe(`Grants in ${name}`);
+  expect(link?.props.href).toEqual(
+    grantsRoute({ jur: 'federal', seat: name, state: seat(name).state_code }),
+  );
+  await act(async () => r.unmount());
+});
+
+test.each([
+  ['Richmond', 'vic'],
+  ['New South Wales', 'federal'],
+  ['Higgins', 'federal'],
+])('the electorate page has no seat grants link for %s', async (name, jurisdiction) => {
+  load(name, jurisdiction);
+  const r = await render(<Electorate />);
+  expect(has(r, 'seat-grants-all')).toBe(false);
+  await act(async () => r.unmount());
+});
+
 test('a Victorian district shows its region row and the authorisation foot, and no grants', async () => {
   load('Richmond', 'vic');
   const r = await render(<Electorate />);
@@ -760,5 +850,15 @@ test('the Members page uses the system page-heading role', async () => {
     .find((node) => node.props.testID === 'members-title')!;
   expect(heading.props.kind).toBe('page');
   expect(heading.props.children).toBe('Senators for New South Wales');
+  await act(async () => r.unmount());
+});
+
+test('a Members link to a seat not in the release says so, never loads for good', async () => {
+  load('New South Wales');
+  mockParams.seat = 'fixture-removed-seat';
+  const r = await render(<Members />);
+  expect(unavailable(r, 'members-missing')).toBe(
+    "These members couldn't be found.",
+  );
   await act(async () => r.unmount());
 });

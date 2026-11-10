@@ -32,6 +32,7 @@ import {
   type YourMPView,
 } from '../your-mp/model';
 import { senateSeatFor, tenureYear } from '../your-mp/RepresentativesGroup';
+import { RepresentativeRows } from '../your-mp/RepresentativeRows';
 import { stateInRunningCopy } from '../your-mp/state-names';
 import { isRegion } from '../your-mp/StateMembers';
 import type { SydneyDate } from './rules';
@@ -44,6 +45,14 @@ type Load<T> =
   | { status: 'loading' }
   | { status: 'error' }
   | { status: 'ready'; data: T };
+
+interface CardBills {
+  data: BillIndex;
+  asOf: string | null;
+  stale?: boolean;
+  savedAt?: number | null;
+  partial?: boolean;
+}
 
 /**
  * One read for the card, keyed by what it reads, so a new seat never shows
@@ -211,12 +220,15 @@ export function YourMPCard({
       }) as Promise<ProfileView>,
     attempt,
   );
-  const bills = useLoad<{ data: BillIndex; asOf: string | null }>(
+  const bills = useLoad<CardBills>(
     member ? 'bills' : null,
     async () => {
       const result = await catalogs.bills();
       return {
         data: result.data,
+        stale: result.stale,
+        savedAt: result.savedAt,
+        partial: result.partial,
         asOf:
           (result.data as { meta?: { generated?: string } }).meta?.generated ??
           null,
@@ -271,7 +283,7 @@ function YourMPGroup({
   view: YourMPView;
   electorate: ElectorateView | null;
   profile: Load<ProfileView>;
-  bills: { data: BillIndex; asOf: string | null } | null;
+  bills: CardBills | null;
 }) {
   const member = view.members.data?.length === 1 ? view.members.data[0]! : null;
   const identity = member
@@ -306,6 +318,14 @@ function YourMPGroup({
             tenure={year ? `Member since ${year}` : null}
             official={officialPageFor(person?.source_url, seat.jurisdiction)}
             testID="today-your-mp-member"
+          />
+        ) : member ? (
+          <RepresentativeRows
+            rows={[member]}
+            directory={directory}
+            id="today-your-mp-member"
+            wrap={false}
+            detailFor={() => (year ? `Member since ${year}` : null)}
           />
         ) : (
           <Text wordSafe testID="today-your-mp-none" style={styles.none}>
@@ -354,19 +374,16 @@ function YourMPGroup({
 export function yourMPSources(
   view: YourMPView,
   profile: Load<ProfileView>,
-  bills: { asOf: string | null } | null,
+  bills: Omit<CardBills, 'data'> | null,
 ) {
   const roster = [view.members, ...view.senators];
-  const rosterAsOf =
-    roster
-      .map((b) => b.asAt)
-      .filter((d): d is string => !!d)
-      .sort()
-      .at(-1) ?? null;
+  const rosterAsOf = oldestDate(roster.map((b) => b.asAt));
   const originals = roster
-    .flatMap((b) => b.sources)
-    .filter((s, i, all) => all.findIndex((o) => o.url === s.url) === i)
-    .map((s) => ({ label: s.label, url: s.url, asOf: rosterAsOf }));
+    .flatMap((b) => b.sources.map((s) => ({ ...s, asOf: b.asAt })))
+    .filter(
+      (s, i, all) =>
+        all.findIndex((o) => o.url === s.url && o.asOf === s.asOf) === i,
+    );
   const rosterName = originals[0]?.label ?? 'Parliament of Australia';
   const citation: SourceCitation[] = [{ label: rosterName, asOf: rosterAsOf }];
   const missing: string[] = [];
@@ -380,6 +397,17 @@ export function yourMPSources(
   } else if (profile.status === 'error')
     missing.push('votes', 'registers of interests');
   if (bills) citation.push({ label: 'ParlInfo', asOf: bills.asOf });
+  const checked = [
+    ...roster,
+    ...(profile.status === 'ready'
+      ? [profile.data.blocks.votes, profile.data.blocks.interests]
+      : []),
+    ...(bills ? [bills] : []),
+  ];
+  const saved = checked.filter((b) => b.stale);
+  const savedTimes = saved.flatMap((b) =>
+    b.savedAt == null ? [] : [b.savedAt],
+  );
   return {
     asOf: oldestDate(citation.map((c) => c.asOf as string | null)),
     citation,
@@ -388,10 +416,10 @@ export function yourMPSources(
       'Your member and senators from the parliament roster; their newest dated votes, register changes and bills, newest first.',
       missing.length ? `Not checked: ${missing.join(' and ')}.` : null,
     ],
-    savedAt: view.members.stale ? view.members.savedAt : null,
-    state: view.members.stale
+    savedAt: savedTimes.length ? Math.min(...savedTimes) : null,
+    state: saved.length
       ? ('saved' as const)
-      : view.members.partial
+      : checked.some((b) => b.partial)
         ? ('partial' as const)
         : null,
   };

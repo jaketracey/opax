@@ -1,6 +1,13 @@
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Platform,
   RefreshControl,
@@ -24,7 +31,7 @@ import {
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../design/format';
-import { Group, Screen, Section } from '../design/layout';
+import { Group, Screen, Section, TitleAnchor } from '../design/layout';
 import { isPartyLabel, partySlug } from '../design/party';
 import { FaceStack, PersonRow } from '../design/people';
 import { StatStrip, type StatTileProps } from '../design/record';
@@ -120,10 +127,14 @@ export function PartyPage({
   // "Independent" is a label, not a party: no page, no read.
   const notAParty = !isPartyLabel(input) && /^independent/i.test(input);
   const load = useCallback(
-    (refresh: boolean, publish: (record: PartyPageRecord) => void) =>
+    (
+      refresh: boolean,
+      publish: (record: PartyPageRecord) => void,
+      signal?: AbortSignal,
+    ) =>
       notAParty
         ? new Promise<PartyPageRecord>(() => {})
-        : catalogs.partyPage(input, refresh, publish),
+        : catalogs.partyPage(input, refresh, publish, signal),
     [input, notAParty],
   );
   const { record, error, refresh, retry, refreshing } = useCatalogRecord(load);
@@ -200,8 +211,11 @@ export function PartyPage({
         <Screen
           column="wide"
           testID="party-screen"
+          // "Not a party" makes no read, so a pull would spin forever.
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            notAParty ? undefined : (
+              <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+            )
           }
         >
           {pending}
@@ -374,7 +388,7 @@ function PartyContent({
   if (members && view.members.status !== 'error')
     tiles.push({
       value: formatCount(members.currentCount),
-      label: 'sitting members',
+      label: members.currentCount === 1 ? 'sitting member' : 'sitting members',
       onPress: () => jump('members'),
       testID: 'party-figure-members',
     });
@@ -448,7 +462,7 @@ function PartyContent({
       {(data) => (
         <View>
           <LinkRow
-            title={`${formatCount(data.currentCount)} sitting members`}
+            title={counted(data.currentCount, 'sitting member')}
             leading={
               <View style={styles.faces}>
                 {newMembers ? <NewDot testID="party-members-new" /> : null}
@@ -456,7 +470,7 @@ function PartyContent({
               </View>
             }
             href={partyMembersRoute(label)}
-            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}`}
+            accessibilityLabel={`${counted(data.currentCount, `sitting ${label} member`)}${newMembers ? '. New' : ''}`}
             accessibilityHint={`Opens Parliamentarians filtered to ${label}`}
             testID="party-current-count"
           />
@@ -508,7 +522,7 @@ function PartyContent({
           'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.',
           'Sources are the largest donor-to-party flows in the disclosure returns, largest first; they are not all of the party’s receipts. No sequence or causal link is inferred.',
           disclosureYearNote,
-          ...(fundingRecord ? fundingNotes(fundingRecord) : []),
+          ...(fundingRecord ? fundingNotes(fundingRecord, label) : []),
         ],
       })}
     >
@@ -524,7 +538,7 @@ function PartyContent({
             </Text>
             <Text wordSafe variant="secondary">
               {[
-                `disclosed, from ${formatCount(data.node.count)} donations and receipts`,
+                `disclosed, from ${formatCount(data.node.count)} ${data.node.count === 1 ? 'donation or receipt' : 'donations and receipts'}`,
                 data.node.firstYear !== undefined &&
                 data.node.lastYear !== undefined
                   ? data.node.firstYear === data.node.lastYear
@@ -587,9 +601,10 @@ function PartyContent({
       <Group>
         {funding.read.status === 'loading' ? (
           <FundingLoading />
-        ) : view.receipts.status === 'error' &&
-          funding.read.status === 'error' ? (
-          // The Receipts section is in error too: say it once here.
+        ) : funding.read.status === 'error' &&
+          (view.receipts.status === 'error' || view.receipts.data === null) ? (
+          // Receipts draws no funding error when it is in error itself or
+          // has nothing to show: say it once here.
           <FundingError retry={funding.retry} />
         ) : fundingRecord ? (
           <PartyDebts record={fundingRecord} name={label} />
@@ -763,6 +778,9 @@ function PartyContent({
       </ProfileBlock>
     ) : null;
 
+  // ProfileHeader owns the H1, so Screen cannot find it among its children.
+  // Match the person's measured title handover on iOS only.
+  const ProfileTitle = Platform.OS === 'ios' ? TitleAnchor : Fragment;
   return (
     <Screen
       column="wide"
@@ -774,16 +792,18 @@ function PartyContent({
       }
     >
       <View style={styles.top} testID={titleTiming ?? 'party'}>
-        <ProfileHeader
-          variant="party"
-          name={label}
-          follow={{ kind: 'party', id }}
-          testID="party"
-          titleTestID="party-title"
-          onTitleLayout={() => {
-            if (!titleTiming) setTitleTiming(partyTimingID());
-          }}
-        />
+        <ProfileTitle>
+          <ProfileHeader
+            variant="party"
+            name={label}
+            follow={{ kind: 'party', id }}
+            testID="party"
+            titleTestID="party-title"
+            onTitleLayout={() => {
+              if (!titleTiming) setTitleTiming(partyTimingID());
+            }}
+          />
+        </ProfileTitle>
         {tiles.length ? (
           <Group gap={rhythm.tight}>
             <StatStrip tiles={tiles} testID="party-figures" />

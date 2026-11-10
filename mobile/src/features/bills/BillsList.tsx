@@ -159,7 +159,11 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   const [owner] = useState(() => (pushed ? `list-${++pushedLists}` : 'tab'));
   const list = useBillListState(owner, initial);
   const { scope, setScope, filters } = list;
-  const load = useCallback((refresh: boolean) => catalogs.bills(refresh), []);
+  const load = useCallback(
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      catalogs.bills(refresh, signal),
+    [],
+  );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
   useRefreshCommand(refresh, refreshing);
   const [text, setText] = useState(initial.q);
@@ -349,9 +353,22 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <ContentUnavailable
         symbol="magnifyingglass"
         title={`No results for "${query}"`}
-        body="Check the spelling or try a new search."
+        body={
+          // The filters still apply to a search: say so, not "spelling".
+          on > 0
+            ? 'Filters are on. Clear them to search every bill.'
+            : 'Check the spelling or try a new search.'
+        }
         testID="bills-search-empty"
       />
+      {on > 0 ? (
+        <Button
+          label="Clear filters"
+          variant="secondary"
+          onPress={clear}
+          testID="bills-search-clear"
+        />
+      ) : null}
       {scope !== 'all' ? (
         <Button
           label="Search all bills"

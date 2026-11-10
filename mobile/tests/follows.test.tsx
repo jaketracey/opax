@@ -718,6 +718,65 @@ describe('Following', () => {
   const row = (r: TestRenderer.ReactTestRenderer, testID: string) =>
     r.root.find((n) => n.type === LinkRow && n.props.testID === testID);
 
+  test.each(['success', 'failure'] as const)(
+    'pull to refresh shows its spinner until the catalogue check finishes with %s',
+    async (outcome) => {
+      mock.followSources.mockResolvedValue(sources());
+      await follow({ kind: 'bill', id: BILL, title: 'Fixture bill' });
+      const r = await render();
+      let finish!: (next: FollowSources) => void;
+      let fail!: (error: Error) => void;
+      mock.followSources.mockReturnValueOnce(
+        new Promise((resolve, reject) => {
+          finish = resolve;
+          fail = reject;
+        }),
+      );
+      const control = () =>
+        r.root.findByType(ScrollView).props.refreshControl.props;
+      expect(control().refreshing).toBe(false);
+      act(() => control().onRefresh());
+      expect(control().refreshing).toBe(true);
+      expect(mock.followSources).toHaveBeenLastCalledWith(
+        expect.objectContaining({ bills: true }),
+        true,
+      );
+      await act(async () => {
+        if (outcome === 'success') finish(changedSources());
+        else fail(new Error('fixture check failed'));
+      });
+      expect(control().refreshing).toBe(false);
+      expect(has(r, `follows-row-bill-${BILL}`)).toBe(true);
+    },
+  );
+
+  test('an older refresh settling cannot stop the current pull to refresh spinner', async () => {
+    mock.followSources.mockResolvedValue(sources());
+    await follow({ kind: 'bill', id: BILL, title: 'Fixture bill' });
+    const r = await render();
+    let first!: (next: FollowSources) => void;
+    let second!: (next: FollowSources) => void;
+    mock.followSources
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          first = resolve;
+        }),
+      )
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          second = resolve;
+        }),
+      );
+    const control = () =>
+      r.root.findByType(ScrollView).props.refreshControl.props;
+    act(() => control().onRefresh());
+    act(() => control().onRefresh());
+    await act(async () => first(sources()));
+    expect(control().refreshing).toBe(true);
+    await act(async () => second(changedSources()));
+    expect(control().refreshing).toBe(false);
+  });
+
   test('with nothing followed: one ContentUnavailable, no Edit, no storage line', async () => {
     const r = await render();
     const empty = r.root.find(
@@ -735,6 +794,13 @@ describe('Following', () => {
         .flatMap((n) => n.props.children)
         .join(' '),
     ).not.toMatch(/Saved on this|backups/);
+    expect(mock.followSources).not.toHaveBeenCalled();
+    act(() =>
+      r.root.findByType(ScrollView).props.refreshControl.props.onRefresh(),
+    );
+    expect(
+      r.root.findByType(ScrollView).props.refreshControl.props.refreshing,
+    ).toBe(false);
     expect(mock.followSources).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   });

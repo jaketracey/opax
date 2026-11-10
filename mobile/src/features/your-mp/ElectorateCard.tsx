@@ -4,6 +4,7 @@ import { Card } from '../../design/card';
 import { Divider } from '../../design/controls';
 import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
+import { PARTY_NOT_RECORDED } from '../../design/party';
 import { PartyLabel } from '../../design/people';
 import { ValueRow } from '../../design/rows';
 import { SourceLine, type SourceDetails } from '../../design/source';
@@ -16,6 +17,7 @@ import { presentSource } from '../../navigation/sheets';
 import { hasOutline, OutlineMap } from '../electorate-map/OutlineMap';
 import {
   censusHeadline,
+  electionsNewestFirst,
   latestElection,
   newestCensus,
 } from './election-summary';
@@ -26,10 +28,16 @@ export function electorateCardSource(
   seat: Pick<Electorate, 'representation_as_of'>,
   view: ElectorateView,
 ): SourceDetails & { title: string } {
-  const census = view.census.find((b) => b.data) ?? null;
-  const election = view.elections
-    .filter((b) => b.data)
-    .sort((a, b) => (b.asAt ?? '').localeCompare(a.asAt ?? ''))[0];
+  const censusRecord = newestCensus(view);
+  const census = censusRecord
+    ? view.census.find((b) => b.data === censusRecord)
+    : null;
+  const electionRecord = electionsNewestFirst(
+    view.elections.flatMap((b) => (b.data ? [b.data] : [])),
+  )[0];
+  const election = electionRecord
+    ? view.elections.find((b) => b.data === electionRecord)
+    : null;
   const aecDate = election?.asAt ?? seat.representation_as_of ?? null;
   return {
     title: 'About your electorate',
@@ -83,7 +91,7 @@ export function ElectorateCard({
       ? `${census.label}: ${census.rows.map((r) => `${r.label} ${r.value}`).join(', ')}`
       : null,
     election
-      ? `${election.title}: ${election.winner?.name ?? ''}${election.winner?.party ? `, ${election.winner.party}` : ''}, ${formatDate(election.date)}`
+      ? `${election.title}: ${election.winner ? `${election.winner.name}, ${election.winner.party ?? PARTY_NOT_RECORDED}, ` : ''}${formatDate(election.date)}`
       : null,
   ]
     .filter(Boolean)

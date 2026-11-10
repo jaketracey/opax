@@ -2,9 +2,11 @@ import { act, useEffect, createElement, Fragment } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { catalogs } from '../src/api/runtime';
 import { loadChoice, saveChoice } from '../src/features/your-mp/choice-store';
+import * as choices from '../src/features/your-mp/choice-store';
 import {
   migrateSeatChoice,
   resetSeatForTests,
+  savedSeatDirectory,
   useSeat,
   type SeatActions,
   type SeatState,
@@ -85,6 +87,7 @@ afterEach(() => {
   act(() => renderer?.unmount());
   renderer = null;
   resetSeatForTests();
+  jest.restoreAllMocks();
 });
 async function mount() {
   await act(async () => {
@@ -195,10 +198,40 @@ test('a failed save changes no consumer and gives no haptic', async () => {
   expect(value.status).toBe('none');
   expect(haptic).not.toHaveBeenCalled();
 });
+test('a choice saved after the directory failed reads the directory again', async () => {
+  jest.mocked(catalogs.directory).mockRejectedValueOnce(new Error('Offline'));
+  await mount();
+  expect(value.status).toBe('error');
+  await act(async () => value.choose(seat('Grayndler')));
+  expect(catalogs.directory).toHaveBeenCalledTimes(2);
+  expect(value).toMatchObject({
+    status: 'chosen',
+    choice: choice(seat('Grayndler')),
+  });
+  expect(savedSeatDirectory()).not.toBeNull();
+});
 test('directory failure produces the typed error state', async () => {
   jest.mocked(catalogs.directory).mockRejectedValue(new Error('offline'));
   await mount();
   expect(value.status).toBe('error');
+});
+
+test('forgetting while the initial disk read is pending cannot revive the old choice', async () => {
+  const oldChoice = choice(seat('Grayndler'));
+  let finishRead!: (saved: SeatChoice | null) => void;
+  jest.spyOn(choices, 'loadChoice').mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finishRead = resolve;
+      }),
+  );
+  await mount();
+  expect(value.status).toBe('loading');
+  await act(async () => value.forget());
+  expect(value.status).toBe('none');
+  await act(async () => finishRead(oldChoice));
+  expect(value.status).toBe('none');
+  expect(await loadChoice()).toBeNull();
 });
 
 test('a migrated Victorian district survives the next Victorian federal choice', async () => {

@@ -15,6 +15,7 @@ import { releaseSplash } from '../src/launch/splash';
 import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
 
 const mockStack: { screenOptions?: unknown } = {};
+const mockFocusListeners = new Set<() => void>();
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   Stack: Object.assign(
@@ -33,7 +34,10 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn() },
   useNavigation: () => ({
     getParent: () => undefined,
-    addListener: () => () => {},
+    addListener: (event: string, callback: () => void) => {
+      if (event === 'focus') mockFocusListeners.add(callback);
+      return () => mockFocusListeners.delete(callback);
+    },
   }),
   useFocusEffect: () => {},
 }));
@@ -150,6 +154,19 @@ describe('the full welcome', () => {
     expect(markWelcomeSeen).not.toHaveBeenCalled();
     await act(async () => r.unmount());
   });
+  test('repeated Continue presses push one seat step, and returning allows Continue again', async () => {
+    const r = await render(<Welcome />);
+    const next = () => component(r, 'welcome-continue').props.onPress();
+    act(() => {
+      next();
+      next();
+    });
+    expect(router.push).toHaveBeenCalledTimes(1);
+    act(() => mockFocusListeners.forEach((focused) => focused()));
+    act(() => next());
+    expect(router.push).toHaveBeenCalledTimes(2);
+    await act(async () => r.unmount());
+  });
   test('two-finger Z is "Not now": it records the decline and closes', async () => {
     const r = await render(<Welcome />);
     act(() => host(r, 'welcome-screen').props.onAccessibilityEscape());
@@ -158,6 +175,13 @@ describe('the full welcome', () => {
     // Once only.
     act(() => host(r, 'welcome-screen').props.onAccessibilityEscape());
     expect(closeWelcome).toHaveBeenCalledTimes(1);
+    await act(async () => r.unmount());
+  });
+  test('"Not now" before the seat read answers still records the decline', async () => {
+    mockSeat.current = { status: 'loading' };
+    const r = await render(<Welcome />);
+    act(() => host(r, 'welcome-screen').props.onAccessibilityEscape());
+    expect(markWelcomeSeen).toHaveBeenCalledWith({ declined: true });
     await act(async () => r.unmount());
   });
   test('a replay with a seat saved declines nothing', async () => {

@@ -1,3 +1,4 @@
+import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -38,6 +39,7 @@ import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { combine } from './catalog';
 import { programRecipients, type Program as ProgramData } from './data';
+import { GRANTS_CAVEAT } from './HubCards';
 import {
   askAbout,
   counted,
@@ -100,7 +102,26 @@ export function programSeatFigure(
   };
 }
 
+type ProgramParams = {
+  jur?: string;
+  id?: string;
+  key?: string;
+  seat?: string;
+  state?: string;
+  name?: string;
+};
+
 export default function Program() {
+  const params = useLocalSearchParams<ProgramParams>();
+  return (
+    <ProgramRecord
+      key={JSON.stringify([params.jur, params.id, params.key])}
+      params={params}
+    />
+  );
+}
+
+function ProgramRecord({ params }: { params: ProgramParams }) {
   const {
     jur: input,
     id,
@@ -108,18 +129,11 @@ export default function Program() {
     seat,
     state,
     name: routeName,
-  } = useLocalSearchParams<{
-    jur?: string;
-    id?: string;
-    key?: string;
-    seat?: string;
-    state?: string;
-    name?: string;
-  }>();
+  } = params;
   const jur = input === 'qld' ? 'qld' : 'federal';
   const load = useCallback(
-    async (refresh: boolean) => {
-      const index = await money.grants(jur, refresh);
+    async (refresh: boolean, _publish: unknown, signal?: AbortSignal) => {
+      const index = await money.grants(jur, refresh, signal);
       const entry = index.data.programs.find(
         (p) =>
           p.id === id ||
@@ -129,8 +143,11 @@ export default function Program() {
       );
       if (!entry) throw new ApiError('not-found', 'Program not found.');
       const [program, notes] = await Promise.all([
-        money.program(jur, entry.key, refresh),
-        money.notes(refresh).catch(() => null),
+        money.program(jur, entry.key, refresh, signal),
+        money.notes(refresh, signal).catch(() => {
+          throwIfAborted(signal);
+          return null;
+        }),
       ]);
       return combine(notes ? [index, program, notes] : [index, program], {
         index: index.data,
@@ -149,8 +166,9 @@ export default function Program() {
   useEffect(() => {
     if (!program) return;
     let active = true;
+    const controller = new AbortController();
     money
-      .agencies()
+      .agencies(false, controller.signal)
       .then((r) => {
         const match = r.data.agencies.find(
           (a) => lower(a.name) === lower(program.agency),
@@ -160,6 +178,7 @@ export default function Program() {
       .catch(() => undefined);
     return () => {
       active = false;
+      controller.abort();
     };
   }, [program]);
   const [view, setView] = useState<'recipients' | 'grants'>('recipients');
@@ -228,7 +247,7 @@ export default function Program() {
           ? seatFigure.count && !seatGrants.length
             ? `None of the ${counted(seatFigure.count, 'grant')} in ${seat} is in the listed grants`
             : seatGrants.length < seatFigure.count
-              ? `${seatGrants.length.toLocaleString('en-AU')} of the ${counted(seatFigure.count, 'grant')} in ${seat} are listed, largest first`
+              ? `${seatGrants.length.toLocaleString('en-AU')} of the ${counted(seatFigure.count, 'grant')} in ${seat} ${seatGrants.length === 1 ? 'is' : 'are'} listed, largest first`
               : `${counted(seatGrants.length, 'grant')} in ${seat}, largest first`
           : `${counted(recipients.length, 'recipient')} in the listed grants in ${seat}, largest first`
         : view === 'recipients'
@@ -354,6 +373,8 @@ export default function Program() {
                         })),
                       ],
                       notes: [
+                        jur === 'federal' ? GRANTS_CAVEAT : null,
+                        ...data.index.meta.caveats,
                         seat
                           ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
                           : null,
@@ -378,7 +399,7 @@ export default function Program() {
                   value={view}
                   onChange={(next) => {
                     setView(next);
-                    search.setQuery('');
+                    search.clear();
                   }}
                   options={[
                     {

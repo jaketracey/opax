@@ -1,4 +1,6 @@
 import { fetch as expoFetch } from 'expo/fetch';
+import { throwIfAborted } from './abort';
+import { ReadSession } from './read-session';
 import { phoneCopy } from '../design/phone-copy';
 import {
   AskFailure,
@@ -80,12 +82,12 @@ function freezeSnapshot(...values: unknown[]) {
   }
 }
 export class ApiClient {
-  private actionReads = new Map<string, Promise<RecordResult<unknown>>>();
+  private actionReads = new ReadSession<RecordResult<unknown>>();
   /** Explicit actions only: one attempt, session memory, no disk or retry. */
   getForAction<T>(
     path: string,
     decode: Decoder<T>,
-    { fresh = false }: { fresh?: boolean } = {},
+    { fresh = false, signal }: { fresh?: boolean; signal?: AbortSignal } = {},
   ): Promise<RecordResult<T>> {
     const url = allowedURL(this.options.origin, path);
     if (
@@ -94,21 +96,21 @@ export class ApiClient {
       !isExplorePaidPath(path)
     )
       throw new ApiError('forbidden', 'Not an action read.');
-    const previous = this.actionReads.get(path);
-    if (previous && !fresh) return previous as Promise<RecordResult<T>>;
-    const pending = this.readAction(url, decode);
-    this.actionReads.set(path, pending);
-    // Failed actions can be retried explicitly; never retry automatically.
-    void pending.catch(() => {
-      if (this.actionReads.get(path) === pending) this.actionReads.delete(path);
-    });
-    return pending;
+    return this.actionReads.read(
+      path,
+      (requestSignal) => this.readAction(url, decode, requestSignal),
+      { fresh, signal },
+    ) as Promise<RecordResult<T>>;
   }
   private async readAction<T>(
     url: string,
     decode: Decoder<T>,
+    signal?: AbortSignal,
   ): Promise<RecordResult<T>> {
+    throwIfAborted(signal);
     const controller = new AbortController();
+    const abort = () => controller.abort();
+    signal?.addEventListener('abort', abort, { once: true });
     const timer = setTimeout(
       () => controller.abort(),
       this.options.timeoutMs ?? 8000,
@@ -139,15 +141,29 @@ export class ApiClient {
       if (!response.ok) throw httpError(response.status);
       let data: T;
       try {
-        data = this.decodeBody(await response.json(), decode);
+        const body = await response.json();
+        throwIfAborted(signal);
+        data = this.decodeBody(body, decode);
       } catch {
+        if (controller.signal.aborted)
+          throw new ApiError(
+            'timeout',
+            'The public record took too long to load.',
+          );
         throw new ApiError(
           'invalid-data',
           'The catalog response could not be read.',
         );
       }
+      throwIfAborted(signal);
+      if (controller.signal.aborted)
+        throw new ApiError(
+          'timeout',
+          'The public record took too long to load.',
+        );
       return { data, stale: false, savedAt: this.now(), asOf: dataAsOf(data) };
     } catch (e) {
+      throwIfAborted(signal);
       if (e instanceof ApiError) throw e;
       throw new ApiError(
         controller.signal.aborted ? 'timeout' : 'offline',
@@ -156,6 +172,7 @@ export class ApiClient {
           : 'This section is not saved for this session. It will load when you are back online.',
       );
     } finally {
+      signal?.removeEventListener('abort', abort);
       clearTimeout(timer);
     }
   }
@@ -231,6 +248,21 @@ export class ApiClient {
     const cancelled = () => {
       if (signal?.aborted)
         throw Object.assign(new Error('Cancelled'), { name: 'AbortError' });
+    };
+    const pause = async (ms: number) => {
+      if (!signal) return this.sleep(ms);
+      let abort!: () => void;
+      const cancellation = new Promise<never>((_resolve, reject) => {
+        abort = () =>
+          reject(Object.assign(new Error('Cancelled'), { name: 'AbortError' }));
+        signal.addEventListener('abort', abort, { once: true });
+        if (signal.aborted) abort();
+      });
+      try {
+        await Promise.race([this.sleep(ms), cancellation]);
+      } finally {
+        signal.removeEventListener('abort', abort);
+      }
     };
     cancelled();
     const requestStartedAt = this.now();
@@ -371,6 +403,12 @@ export class ApiClient {
             'The catalog response could not be read.',
           );
         }
+        cancelled();
+        if (controller.signal.aborted)
+          throw new ApiError(
+            'timeout',
+            'The public record took too long to load.',
+          );
         try {
           this.decodeBody(body, decode);
         } catch {
@@ -381,9 +419,16 @@ export class ApiClient {
         }
         const time = this.now();
         const control = response.headers.get('cache-control') ?? '';
+        const age = Number(response.headers.get('age') ?? 0);
         const ttl = /no-store|no-cache/.test(control)
           ? 0
-          : Math.min(Number(/max-age=(\d+)/.exec(control)?.[1] ?? 300), 86400);
+          : Math.max(
+              0,
+              Math.min(
+                Number(/max-age=(\d+)/.exec(control)?.[1] ?? 300),
+                86400,
+              ) - (Number.isFinite(age) && age > 0 ? age : 0),
+            );
         const entry: CacheEntry = {
           url,
           body,
@@ -395,15 +440,18 @@ export class ApiClient {
             response.headers.get('etag') ??
             (response.status === 304 ? cached?.etag : undefined),
         };
+        cancelled();
         // Persistence failure must not turn a successful network read into an error.
         const retained = await this.options.cache
           .put(entry, {
             requestStartedAt,
+            signal,
             ...(response.status === 304
               ? { revalidatedETag: cached?.etag }
               : {}),
           })
           .catch(() => entry);
+        cancelled();
         // A concurrent read can retain its freshly validated copy of this
         // exact ETag. A zero TTL requires the next read to revalidate; it
         // does not make this successful live validation an offline fallback.
@@ -448,10 +496,11 @@ export class ApiClient {
       }
       if (attempt < retries) {
         if (retryDelay >= deadline - this.now()) break;
-        await this.sleep(retryDelay);
+        await pause(retryDelay);
       }
     }
     const latest = await this.options.cache.get(url);
+    cancelled();
     if (latest) {
       try {
         this.decodeBody(latest.body, decode);
@@ -481,23 +530,53 @@ export class ApiClient {
   ): Promise<unknown> {
     assertAskPostPath(path);
     const url = allowedURL(this.options.origin, path);
+    if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
+    const request = new AbortController();
+    let rejectInterrupted!: (failure: AskFailure) => void;
+    const interrupted = new Promise<never>((_resolve, reject) => {
+      rejectInterrupted = reject;
+    });
+    const cancel = () => {
+      request.abort();
+      rejectInterrupted(new AskFailure('cancelled', 'Cancelled.'));
+    };
+    signal.addEventListener('abort', cancel, { once: true });
+    // The Worker has its own bounded retries. This bounds a stalled
+    // connection, JSON body or reader, without issuing another paid request.
+    // It is a stall timer: every chunk that arrives restarts it, so a long
+    // answer that is still being written is never cut off.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const arm = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        request.abort();
+        rejectInterrupted(
+          new AskFailure('timeout', 'The answer took too long.'),
+        );
+      }, 120_000);
+    };
+    arm();
+    const waiting = <T>(operation: Promise<T>) =>
+      Promise.race([operation, interrupted]);
     let shown = false;
     try {
-      const response = await this.transport(url, {
-        method: 'POST',
-        credentials: 'omit',
-        redirect: 'manual',
-        signal,
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: on ? 'text/event-stream' : 'application/json',
-          'User-Agent': catalogUserAgent(
-            this.options.version,
-            this.options.build,
-          ),
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await waiting(
+        this.transport(url, {
+          method: 'POST',
+          credentials: 'omit',
+          redirect: 'manual',
+          signal: request.signal,
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: on ? 'text/event-stream' : 'application/json',
+            'User-Agent': catalogUserAgent(
+              this.options.version,
+              this.options.build,
+            ),
+          },
+          body: JSON.stringify(body),
+        }),
+      );
       if (
         response.redirected ||
         (response.status >= 300 && response.status < 400) ||
@@ -518,8 +597,9 @@ export class ApiClient {
         !on ||
         !response.headers.get('content-type')?.includes('text/event-stream')
       )
-        return await response.json();
-      if (!response.body) throw new AskFailure('empty', 'No answer came back.');
+        return await waiting(response.json());
+      if (!response.body)
+        throw new AskFailure('invalid', 'No answer came back.');
       on.stage('Searching the record');
       const stream = new AskStream({
           ...on,
@@ -536,25 +616,39 @@ export class ApiClient {
         reader = response.body.getReader();
       try {
         for (;;) {
-          const { value, done } = await reader.read();
+          const { value, done } = await waiting(reader.read());
           if (done) break;
+          arm();
           stream.push(decoder.decode(value, { stream: true }));
+          if (stream.done) break;
         }
         stream.push(decoder.decode(), true);
         return stream.result();
       } finally {
-        await reader.cancel().catch(() => undefined);
+        void reader.cancel().catch(() => undefined);
         reader.releaseLock();
       }
     } catch (e) {
       if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
+      if (request.signal.aborted)
+        throw new AskFailure(
+          shown ? 'partial' : 'timeout',
+          shown
+            ? 'The answer stream ended early.'
+            : 'The answer took too long.',
+        );
       if (e instanceof AskFailure) throw e;
       if (shown)
         throw new AskFailure('partial', 'The answer stream ended early.');
+      if (e instanceof SyntaxError)
+        throw new AskFailure('invalid', 'The answer could not be read.');
       throw new AskFailure(
         'offline',
         'The record could not be reached. Check your connection and try again.',
       );
+    } finally {
+      clearTimeout(timer);
+      signal.removeEventListener('abort', cancel);
     }
   }
   private async readBytes(

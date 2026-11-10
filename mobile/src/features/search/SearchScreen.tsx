@@ -110,6 +110,10 @@ export function SearchScreen({
     fieldText(words);
     setEditing(false);
     setSubmitted({ q: words, scope: nextScope });
+    if (Platform.OS === 'ios') {
+      (search.ref as RefObject<SearchBarCommands | null>).current?.blur();
+      Keyboard.dismiss();
+    }
     // A query that arrived by link never enters Recent (4.5).
     if (!link) recentSearches.add(words, nextScope);
     scroll.current?.scrollTo({ y: 0, animated: false });

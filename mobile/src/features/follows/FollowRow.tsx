@@ -80,8 +80,11 @@ export function FollowRow({
         : changes[0]
           ? changeText(changes[0])
           : undefined;
+  // Your own MP's changes are on Today, not counted under a pointer to them.
   const more =
-    changes.length > 1 ? moreChangesText(changes.length - 1) : undefined;
+    !ownMP && changes.length > 1
+      ? moreChangesText(changes.length - 1)
+      : undefined;
   const detail = [line, more].filter(Boolean).join('\n');
   const route = followRoute(follow, state);
   const path =

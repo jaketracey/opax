@@ -32,7 +32,6 @@ import { useOpenAsk } from './ask/open';
 import { followKey, useFollows } from './follows/store';
 import { useSeenOnView } from './follows/useSeenOnView';
 import { SeatGrants } from './money-public/SeatGrants';
-import { forgetChoice as forgetSeat } from './your-mp/choice-store';
 import {
   ElectorateCard,
   ElectorateCardSkeleton,
@@ -182,7 +181,9 @@ export default function YourMP() {
     void seat.removeState().catch(() => undefined);
   }, [seat]);
   const forget = useCallback(() => {
-    const run = () => void forgetSeat().catch(() => undefined);
+    // Through the seat's write queue, so a state removal or save still in
+    // flight cannot land after the forget and bring the choice back.
+    const run = () => void seat.forget().catch(() => undefined);
     const title = 'Forget your electorate?';
     const message = 'Today and Your MP stop showing your representatives.';
     if (Platform.OS === 'ios')
@@ -206,7 +207,7 @@ export default function YourMP() {
         message,
       );
     else confirmAction(title, [{ title: 'Forget', onPress: run }]);
-  }, []);
+  }, [seat]);
   const menu = useMemo((): RowMenuAction[] => {
     if (!home || !federal) return [];
     const vic = federal.state_code.toLowerCase() === 'vic';
@@ -306,7 +307,11 @@ export default function YourMP() {
       grouped
       testID="your-mp-screen"
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={retry} />
+        <RefreshControl
+          refreshing={refreshing}
+          // A failed seat read has no blocks yet: a pull reads the seat again.
+          onRefresh={seat.status === 'error' ? seat.retry : retry}
+        />
       }
     >
       <RouteOptions
@@ -330,6 +335,8 @@ export default function YourMP() {
         <InlineError
           subject="Your electorate"
           message={`Your electorate couldn't be read on this ${thisDevice()}.`}
+          // The seat store reads the directory once: Try again reads it again.
+          onRetry={seat.retry}
           testID="your-mp-error"
         />
       ) : home && federal && directory ? (
@@ -369,7 +376,6 @@ export default function YourMP() {
             <StateMembers
               directory={directory}
               stateSeatIds={stateSeatIds}
-              view={view.status === 'ready' ? view.data : null}
               onRemove={removeState}
             />
           ) : null}
@@ -515,7 +521,6 @@ function NoSeat({
         <StateMembers
           directory={directory}
           stateSeatIds={stateSeatIds}
-          view={null}
           onRemove={onRemoveState}
         />
       ) : null}

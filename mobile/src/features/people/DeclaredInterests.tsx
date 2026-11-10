@@ -5,7 +5,7 @@ import { Disclosure } from '../../design/disclosure';
 import { counted, formatCount, formatDate } from '../../design/format';
 import { Group } from '../../design/layout';
 import { Text } from '../../design/text';
-import { colors, hairline, rhythm } from '../../design/tokens';
+import { colors, hairline, minimumTarget, rhythm } from '../../design/tokens';
 import { NewDot } from '../follows/NewDot';
 import { registerCategoryLabel, registerEntry } from '../your-mp/model';
 
@@ -58,8 +58,10 @@ function EntryText({ text }: { text: string }) {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="More"
-          hitSlop={8}
+          accessibilityHint="Shows the whole entry"
+          hitSlop={{ left: 8, right: 8 }}
           onPress={() => setOpen(true)}
+          style={styles.more}
         >
           <Text variant="strong" tone="navy">
             More
@@ -159,6 +161,8 @@ const styles = StyleSheet.create({
     paddingVertical: rhythm.tight,
   },
   entryText: { gap: rhythm.line, alignItems: 'flex-start' },
+  // One line of text is under 44 pt: the target keeps the full height.
+  more: { minHeight: minimumTarget, justifyContent: 'center' },
   grow: { flex: 1, gap: rhythm.line },
   inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
 });

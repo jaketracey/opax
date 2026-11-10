@@ -15,13 +15,16 @@ import { ValueRow } from '../../design/rows';
 import { topicRoute } from '../../navigation/routes/search';
 import { topicNames } from '../reports/model';
 import { ReadState, ShareBars } from '../reports/parts';
-import { TIDE_NOTE } from './model';
+import { tideNote } from './model';
 import { ExploreChrome } from './parts';
 import { explore } from './runtime';
 export default function Tide() {
   const [scope, setScope] = useState<'federal' | 'all'>('federal'),
     [order, setOrder] = useState('rising');
-  const load = useCallback(() => explore.tide(scope), [scope]),
+  const load = useCallback(
+      (signal?: AbortSignal) => explore.tide(scope, signal),
+      [scope],
+    ),
     read = useRead(load);
   return (
     <>
@@ -58,14 +61,7 @@ export default function Tide() {
           sheet={(data) => ({
             title: 'How to read the tide',
             coverage: scope === 'federal' ? 'Federal' : 'All five parliaments',
-            notes: [
-              TIDE_NOTE.replace(
-                'Federal parliament',
-                scope === 'federal'
-                  ? 'Federal parliament'
-                  : 'all five parliaments',
-              ),
-            ],
+            notes: [tideNote(scope)],
             extra: (
               <InsetGroup>
                 {data.decades
@@ -116,7 +112,13 @@ export default function Tide() {
                       <LinkRow
                         title={`${order === 'now' ? (metric(slug).now * 100).toFixed(1) + '%' : `${metric(slug).change >= 0 ? '+' : '−'}${Math.abs(metric(slug).change * 100).toFixed(1)} pp`}`}
                         onPress={() =>
-                          router.push(topicRoute(slug, {}, topicNames[slug]!))
+                          router.push(
+                            topicRoute(
+                              slug,
+                              scope === 'federal' ? { state: 'federal' } : {},
+                              topicNames[slug]!,
+                            ),
+                          )
                         }
                       />
                       <ShareBars

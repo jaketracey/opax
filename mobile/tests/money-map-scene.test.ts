@@ -1,7 +1,13 @@
 import { Skia } from '@shopify/react-native-skia';
+import { partyDot } from '../src/design/party';
+import { partyColors } from '../src/design/palette';
 import { decodeMoneyGraph, type MoneyGraph } from '../src/features/money/data';
 import { layoutBounds, layoutFor } from '../src/features/money/map/layout';
-import { buildModel, type MapModel } from '../src/features/money/map/model';
+import {
+  buildModel,
+  isPublicEdge,
+  type MapModel,
+} from '../src/features/money/map/model';
 import {
   countingPainter,
   paintEdges,
@@ -48,25 +54,49 @@ function recordingPainter() {
 }
 
 describe('paintEdges', () => {
-  test('draws exactly the thin or the thick tier, and the two tiers together are every edge', () => {
+  const donations = model.edges.filter((e) => !isPublicEdge(e));
+  const publicEdges = model.edges.filter(isPublicEdge);
+
+  test('draws exactly one tier, and the three tiers together are every edge', () => {
     const thin = countingPainter(),
-      thick = countingPainter();
+      thick = countingPainter(),
+      pub = countingPainter();
     const drawnThin = paintEdges(thin.painter, model, at, 'thin');
     const drawnThick = paintEdges(thick.painter, model, at, 'thick');
-    const expectedThin = model.edges.filter((e) => e.width < THIN_EDGE).length;
+    const drawnPublic = paintEdges(pub.painter, model, at, 'public');
+    const expectedThin = donations.filter((e) => e.width < THIN_EDGE).length;
     expect(drawnThin).toBe(expectedThin);
-    expect(drawnThick).toBe(model.edges.length - expectedThin);
-    expect(drawnThin + drawnThick).toBe(model.edges.length);
+    expect(drawnThick).toBe(donations.length - expectedThin);
+    expect(drawnPublic).toBe(publicEdges.length);
+    expect(drawnThin + drawnThick + drawnPublic).toBe(model.edges.length);
     expect(thin.counts).toEqual({ circles: 0, rings: 0, lines: drawnThin });
     expect(thick.counts).toEqual({ circles: 0, rings: 0, lines: drawnThick });
-    // The federal map has both tiers, so the split is a real one.
+    expect(pub.counts).toEqual({ circles: 0, rings: 0, lines: drawnPublic });
+    // The federal map has all three tiers, so the split is a real one.
     expect(drawnThin).toBeGreaterThan(0);
     expect(drawnThick).toBeGreaterThan(0);
+    expect(drawnPublic).toBeGreaterThan(0);
+  });
+
+  test('public money lines are the quieter register: beneath the donations, never as strong', () => {
+    const pub = recordingPainter(),
+      don = recordingPainter();
+    paintEdges(pub.painter, model, at, 'public');
+    paintEdges(don.painter, model, at, 'thick');
+    const publicAlpha = pub.calls[0]!.args[6] as number;
+    const donationAlpha = don.calls[0]!.args[6] as number;
+    expect(publicAlpha).toBeLessThan(donationAlpha);
+    for (const call of pub.calls) {
+      expect(call.args[6]).toBe(publicAlpha);
+      // Each public line is one of the public edges, at its own width.
+      const width = call.args[4] as number;
+      expect(publicEdges.some((e) => e.width === width)).toBe(true);
+    }
   });
 
   test('honours the skip set', () => {
-    const thick = model.edges.filter((e) => e.width >= THIN_EDGE);
-    const thin = model.edges.filter((e) => e.width < THIN_EDGE);
+    const thick = donations.filter((e) => e.width >= THIN_EDGE);
+    const thin = donations.filter((e) => e.width < THIN_EDGE);
     const skip = new Set([thick[0]!.index, thick[1]!.index, thin[0]!.index]);
     const a = countingPainter(),
       b = countingPainter();
@@ -81,7 +111,9 @@ describe('paintEdges', () => {
   test('draws each line between its two ends at its own width and colour', () => {
     const { painter, calls } = recordingPainter();
     paintEdges(painter, model, at, 'thick');
-    const first = model.edges.find((e) => e.width >= THIN_EDGE)!;
+    const first = model.edges.find(
+      (e) => !isPublicEdge(e) && e.width >= THIN_EDGE,
+    )!;
     const a = at(first.a),
       b = at(first.b);
     expect(calls[0]).toEqual({
@@ -262,4 +294,18 @@ test('a state map with no public money paints without hubs', () => {
   expect(drawn).toBe(tas.model.nodes.length);
   expect(tas.model.nodes.some((n) => n.kind === 'hub')).toBe(false);
   expect(counts.circles).toBe(tas.model.nodes.length);
+});
+
+test('party discs take their party colours (TestFlight AA8AR3Xv)', () => {
+  const graph = decodeMoneyGraph(pinned('/graph/money.json'));
+  const model = buildModel(moneyView(graph, defaultMoneyFilters(graph)));
+  const parties = model.nodes.filter((n) => n.kind === 'party');
+  expect(parties.length).toBeGreaterThan(0);
+  for (const party of parties) {
+    const dot = partyDot(party.label);
+    if (dot) expect(party.colour).toBe(dot);
+  }
+  const labor = parties.find((n) => /labor/i.test(n.label));
+  expect(labor?.colour).toBe(partyColors.labor);
+  expect(new Set(parties.map((n) => n.colour)).size).toBeGreaterThan(1);
 });

@@ -23,11 +23,6 @@ import { failureRecovery } from './recovery';
 import { summaryKey, summaryRequest, useRead } from './requests';
 import type { SpeechSort } from './speeches';
 
-const scopeWord: Record<SpeechSort, string> = {
-  relevance: 'top',
-  newest: 'newest',
-  oldest: 'oldest',
-};
 const machineNote = {
   title: 'Machine-written',
   body: [
@@ -44,7 +39,6 @@ const machineNote = {
 export function SummaryBlock({
   q,
   filters,
-  sort,
   roster,
 }: {
   q: string;
@@ -107,7 +101,7 @@ export function SummaryBlock({
     <Group gap={rhythm.block} testID="records-summary">
       <MachinePill note={machineNote} testID="records-summary-machine" />
       <Text variant="secondary" testID="summary-scope-line">
-        {`From the ${scopeWord[sort]} ${counted(Math.min(20, summary.data.reviewed_count || 20), 'speech', 'speeches')} for “${q.trim()}”`}
+        {`From the top ${counted(Math.min(20, summary.data.reviewed_count || 20), 'speech', 'speeches')} for “${q.trim()}”`}
       </Text>
       {summary.data.points.map((point, index) => {
         const numbers = point.source_ids

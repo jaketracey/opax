@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState, useSyncExternalStore } from 'react';
 import { View } from 'react-native';
-import { formatDate } from '../../design/format';
+import { counted, formatDate } from '../../design/format';
 import {
   Group,
   InlineError,
@@ -147,11 +147,17 @@ export function useGroupList(group: CatalogGroup, q: string) {
     next: pages > 1 ? last : null,
     rows: head ? rows : null,
     more,
+    nextCount: lastData
+      ? Math.max(
+          0,
+          Math.min(
+            lastData.per_page,
+            lastData.total - lastData.page * lastData.per_page,
+          ),
+        )
+      : 0,
     count: head
-      ? countLabel(head.data.total, [
-          groups[group].noun.replace(/s$/, ''),
-          groups[group].noun,
-        ])
+      ? countLabel(head.data.total, [groups[group].one, groups[group].noun])
       : null,
     source,
     load: () => {
@@ -280,7 +286,7 @@ export function GroupResults({
       ) : list.more ? (
         <InsetGroup>
           <LinkRow
-            title={`Show 20 more ${noun}`}
+            title={`Show ${counted(list.nextCount, `more ${groups[group].one}`, `more ${noun}`)}`}
             accessory="none"
             onPress={list.loadMore}
             testID="results-more"

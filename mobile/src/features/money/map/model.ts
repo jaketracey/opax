@@ -10,7 +10,9 @@ import {
   edgeWidth,
   PARTIES,
   PUBLIC_MONEY,
+  publicEdgeWidth,
 } from './scales';
+import { partyDot } from '../../../design/party';
 
 /**
  * The map's model: the graph as marks. Every number here is the record's
@@ -79,13 +81,23 @@ export {
   HUB_RADIUS,
   LEGEND_EDGES,
   LEGEND_NODES,
+  LEGEND_PUBLIC_EDGES,
   NODE_FLOOR,
   NODE_SCALE,
   nodeFloorAmount,
   nodeRadius,
   PARTIES,
+  PUBLIC_EDGE_CAP,
+  PUBLIC_EDGE_SCALE,
   PUBLIC_MONEY,
+  publicEdgeCapAmount,
+  publicEdgeEquivalent,
+  publicEdgeWidth,
 } from './scales';
+/** Whether an edge is public money (a hub's grants or contracts), not a donation. */
+export function isPublicEdge(edge: Pick<MapEdge, 'type'>) {
+  return edge.type !== 'donations';
+}
 export function clusterLabel(key: string) {
   return key === PARTIES
     ? 'Parties'
@@ -110,7 +122,10 @@ export function buildModel(view: MoneyGraph): MapModel {
       kind === 'hub'
         ? (n.colour ?? palette.moneyInk)
         : kind === 'party'
-          ? clusterColour(PARTIES).colour
+          ? // A party's disc takes its own colour (the app's party dots;
+            // TestFlight AA8AR3Xv). Labels keep the neutral ink, and the
+            // largest parties are named, so colour is never the only cue.
+            (partyDot(n.label) ?? clusterColour(PARTIES).colour)
           : (n.colour ?? clusterColour(n.group).colour);
     const ink =
       kind === 'hub'
@@ -156,7 +171,9 @@ export function buildModel(view: MoneyGraph): MapModel {
       b,
       amount: e.total,
       count: e.count,
-      width: edgeWidth(e.total),
+      // Donations on the map's scale; public money on its own, lighter one.
+      width:
+        type === 'donations' ? edgeWidth(e.total) : publicEdgeWidth(e.total),
       // A flow takes its source's colour: a donor's industry, or the hub's.
       colour: source.colour,
       type,

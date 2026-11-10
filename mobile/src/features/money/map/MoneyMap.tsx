@@ -15,8 +15,10 @@ import {
   type AccessibilityActionInfo,
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import {
+import Animated, {
   Easing,
+  FadeIn,
+  FadeOut,
   cancelAnimation,
   runOnJS,
   useAnimatedReaction,
@@ -37,9 +39,11 @@ import {
   ZOOM_STEP,
   cameraAt,
   clampCamera,
+  discInView,
   fitCamera,
   focusScale,
   placeCamera,
+  publicEdgeOpacity,
   smallNodeOpacity,
   thinEdgeOpacity,
   translationRange,
@@ -61,6 +65,7 @@ import type { MapModel } from './model';
 import { LABEL_HEIGHT, LABEL_WIDTH, MoneyMapLabels } from './MoneyMapLabels';
 import { paintEdges, paintFocus, paintNodes } from './scene';
 import { recordPicture } from './skia-painter';
+import { TapRouter } from './taps';
 
 /**
  * What the chrome asks the camera to do, as state (a new `seq` runs it):
@@ -106,7 +111,13 @@ const TICKS_PER_FRAME = 10;
 /** A tap allowance around a disc's rim, in points. */
 const TAP_SLACK = 14;
 const FLY_MS = motion.duration.launchLatest;
+/** How long after a fly the chrome's new insets may still re-aim it. */
+const FLY_SETTLE_MS = 1500;
+/** How far inside the chrome a focused disc must sit to count as in view. */
+const VIEW_MARGIN = 6;
 const DIM = 0.2;
+/** The overview appears once the reader is this far in from the fit. */
+const OVERVIEW_LEVEL = 1.15;
 const fill = {
   position: 'absolute',
   top: 0,
@@ -192,6 +203,7 @@ export function MoneyMap({
     const record = (paint: Parameters<typeof recordPicture>[1]) =>
       recordPicture(bounds, paint);
     return {
+      publicEdges: record((p) => paintEdges(p, model, at, 'public')),
       thinEdges: record((p) => paintEdges(p, model, at, 'thin')),
       thickEdges: record((p) => paintEdges(p, model, at, 'thick')),
       smallNodes: record((p) =>
@@ -245,6 +257,7 @@ export function MoneyMap({
   });
   const boundsSV = useSharedValue<Bounds>(bounds);
   const placed = useRef(false);
+  const pendingFly = useRef<{ id: string; at: number } | null>(null);
   const viewport: Viewport = useMemo(
     () => ({ width: size.width, height: size.height, insets }),
     [size.width, size.height, insets],
@@ -268,9 +281,10 @@ export function MoneyMap({
       viewport,
     );
     placed.current = next.placed;
-    tx.set(next.camera.tx);
-    ty.set(next.camera.ty);
-    k.set(next.camera.k);
+    // A set cuts a fly short: move only where the fit or the limits say to.
+    if (next.camera.tx !== tx.get()) tx.set(next.camera.tx);
+    if (next.camera.ty !== ty.get()) ty.set(next.camera.ty);
+    if (next.camera.k !== k.get()) k.set(next.camera.k);
   }, [
     bounds,
     viewport,
@@ -352,6 +366,7 @@ export function MoneyMap({
       const index = model.byId.get(id);
       if (index === undefined) return;
       const p = at(index);
+      pendingFly.current = { id, at: Date.now() };
       animateTo(
         cameraAt(
           current(),
@@ -364,6 +379,27 @@ export function MoneyMap({
     },
     [model, at, animateTo, current, viewportSV, k, fitK],
   );
+  // A focused disc stays in view. The panel grows for a focus, which moves
+  // the insets after the fly was aimed, so a recent fly is aimed again at
+  // the new centre; a disc focused by a tap or a link that the chrome
+  // covers is brought in at a readable zoom. One that is already in view
+  // stays where the reader left it.
+  useEffect(() => {
+    if (focusIndex === null || !placed.current) return;
+    const node = model.nodes[focusIndex];
+    if (!node) return;
+    const p = at(focusIndex);
+    const cam = current();
+    const fly = pendingFly.current;
+    const flying =
+      fly !== null && fly.id === node.id && Date.now() - fly.at < FLY_SETTLE_MS;
+    if (
+      !flying &&
+      discInView(cam, p.x, p.y, node.radius, viewport, VIEW_MARGIN)
+    )
+      return;
+    animateTo(cameraAt(cam, p.x, p.y, viewport, focusScale(cam.k, fitK.get())));
+  }, [focusIndex, model, at, viewport, settled, current, animateTo, fitK]);
   const centreOn = useCallback(
     (x: number, y: number) =>
       animateTo(cameraAt(current(), x, y, viewportSV.get())),
@@ -385,6 +421,30 @@ export function MoneyMap({
       onFocus(mi === null ? null : (model.nodes[mi]?.id ?? null));
     },
     [current, hit, model, onFocus],
+  );
+  // Taps are decided on JS (see TapRouter): a second tap inside the window
+  // zooms about the point; a lone tap picks once the window has passed.
+  const zoomAt = useCallback(
+    (sx: number, sy: number) =>
+      animateTo(
+        zoomAbout(
+          current(),
+          ZOOM_STEP,
+          sx,
+          sy,
+          fitK.get() * ZOOM_OUT,
+          fitK.get() * ZOOM_IN,
+        ),
+      ),
+    [animateTo, current, fitK],
+  );
+  const taps = useMemo(() => new TapRouter(pick, zoomAt), [pick, zoomAt]);
+  useEffect(() => () => taps.cancel(), [taps]);
+  const onTap = useCallback(
+    (sx: number, sy: number) => {
+      taps.tap(sx, sy);
+    },
+    [taps],
   );
 
   // ---- gestures (UI thread) ---------------------------------------------
@@ -532,49 +592,12 @@ export function MoneyMap({
     .onEnd(() => {
       finish();
     });
-  const doubleTap = Gesture.Tap()
-    .numberOfTaps(2)
-    .maxDuration(260)
-    .onEnd((e) => {
-      const kMin = fitK.get() * ZOOM_OUT,
-        kMax = fitK.get() * ZOOM_IN;
-      const target = clampCamera(
-        zoomAbout(
-          { tx: tx.get(), ty: ty.get(), k: k.get() },
-          ZOOM_STEP,
-          e.x,
-          e.y,
-          kMin,
-          kMax,
-        ),
-        boundsSV.get(),
-        viewportSV.get(),
-        kMin,
-        kMax,
-      );
-      if (reduced) {
-        tx.set(target.tx);
-        ty.set(target.ty);
-        k.set(target.k);
-      } else {
-        const config = {
-          duration: FLY_MS,
-          easing: Easing.bezier(...motion.easing.standard),
-        };
-        tx.set(withTiming(target.tx, config));
-        ty.set(withTiming(target.ty, config));
-        k.set(withTiming(target.k, config));
-      }
-    });
   const tap = Gesture.Tap()
     .maxDuration(260)
     .onEnd((e) => {
-      runOnJS(pick)(e.x, e.y);
+      runOnJS(onTap)(e.x, e.y);
     });
-  const composed = Gesture.Race(
-    Gesture.Exclusive(doubleTap, tap),
-    Gesture.Simultaneous(pan, pinch),
-  );
+  const composed = Gesture.Race(tap, Gesture.Simultaneous(pan, pinch));
 
   // ---- derived drawing values -------------------------------------------
   const transform = useDerivedValue(() => [
@@ -585,6 +608,7 @@ export function MoneyMap({
   const level = useDerivedValue(() => k.value / Math.max(1e-6, fitK.value));
   const smallOpacity = useDerivedValue(() => smallNodeOpacity(level.value));
   const thinOpacity = useDerivedValue(() => thinEdgeOpacity(level.value));
+  const publicOpacity = useDerivedValue(() => publicEdgeOpacity(level.value));
   const dim = useSharedValue(1);
   useEffect(() => {
     const target = focusIndex === null ? 1 : DIM;
@@ -609,6 +633,16 @@ export function MoneyMap({
       allowed.value = visibleLabels(slots, camera, viewportSV.value, box);
     },
     [slots, box],
+  );
+  // At the fit the whole map is in view, so the overview only earns its
+  // corner once the reader has come in closer.
+  const [zoomedIn, setZoomedIn] = useState(false);
+  useAnimatedReaction(
+    () => level.value > OVERVIEW_LEVEL,
+    (now, before) => {
+      if (now !== before) runOnJS(setZoomedIn)(now);
+    },
+    [],
   );
   // Reduce Motion stops the flick (no decay) and every fly is a cut; a pan
   // or pinch still follows the finger, as a scroll view does.
@@ -672,6 +706,9 @@ export function MoneyMap({
           >
             <Group transform={transform}>
               <Group opacity={dim}>
+                <Group opacity={publicOpacity}>
+                  <Picture picture={pictures.publicEdges} />
+                </Group>
                 <Group opacity={thinOpacity}>
                   <Picture picture={pictures.thinEdges} />
                 </Group>
@@ -697,8 +734,14 @@ export function MoneyMap({
           ) : null}
         </View>
       </GestureDetector>
-      {overview && size.width > 0 ? (
-        <View
+      {overview && zoomedIn && size.width > 0 ? (
+        <Animated.View
+          entering={
+            reduced ? undefined : FadeIn.duration(motion.duration.crossfade)
+          }
+          exiting={
+            reduced ? undefined : FadeOut.duration(motion.duration.crossfade)
+          }
           style={[
             styles.overview,
             { left: overview.left, bottom: overview.bottom },
@@ -712,10 +755,10 @@ export function MoneyMap({
             tx={tx}
             ty={ty}
             k={k}
-            stage={size}
+            viewport={viewport}
             onJump={centreOn}
           />
-        </View>
+        </Animated.View>
       ) : null}
       {perf}
       {children}

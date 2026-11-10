@@ -1316,3 +1316,34 @@ test('Android dock has a tonal raised surface and removable option chips; iOS ke
     Platform.OS = original;
   }
 });
+
+test('while an answer runs, Options and Clear are unavailable; an arrival waiting brings them back', async () => {
+  let finish: (v: unknown) => void = () => {};
+  jest.mocked(client.askPost).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  await mount();
+  act(() =>
+    askSession.options({ ...askSession.snapshot().options, kind: 'speech' }),
+  );
+  await type('A running question?');
+  await press('ask-submit');
+  const disabled = (id: string) =>
+    view!.root.findAll(
+      (n) =>
+        n.props.testID === id && n.props.accessibilityState?.disabled === true,
+    ).length > 0;
+  expect(askSession.snapshot().busy).toBe(true);
+  expect(disabled('ask-composer-options')).toBe(true);
+  expect(disabled('ask-options-line')).toBe(true);
+  expect(disabled('ask-options-clear')).toBe(true);
+  await act(async () =>
+    arriveInAsk({ question: 'A waiting fixture question?', kind: 'speech' }),
+  );
+  expect(disabled('ask-composer-options')).toBe(false);
+  expect(disabled('ask-options-clear')).toBe(false);
+  await act(async () => finish(answer));
+});

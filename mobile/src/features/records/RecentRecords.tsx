@@ -1,10 +1,12 @@
-import { useCallback, useContext, useState } from 'react';
+import { isAbortError } from '../../api/abort';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { NavigationContext } from 'expo-router/react-navigation';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import {
   ContentUnavailable,
   Heading,
   InsetGroup,
+  InlineError,
   RecordRow,
   Screen,
   SourceLine,
@@ -13,7 +15,7 @@ import {
   thisDevice,
   type RowMenuAction,
 } from '../../design/primitives';
-import { formatDate } from '../../design/format';
+import { calendarDate, formatDate } from '../../design/format';
 import { colors, rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes';
 import { records } from './runtime';
@@ -30,6 +32,17 @@ import {
 import type { RecordResult } from '../../api/client';
 
 /**
+ * The reader's own calendar day for a date added: a UTC timestamp such as
+ * 20:00Z is the next morning in Australia, as every other date here reads.
+ */
+function localDay(indexed: string | null | undefined): string | null {
+  const date = indexed ? calendarDate(indexed) : null;
+  if (!date) return null;
+  const two = (n: number) => String(n).padStart(2, '0');
+  return `${date.year}-${two(date.month + 1)}-${two(date.day)}`;
+}
+
+/**
  * Rows grouped by the day OPAX added them, newest first (the feed's order).
  * Rows without a date added follow in a final group with no header.
  */
@@ -37,7 +50,7 @@ function byDayAdded(rows: readonly RecentItem[]) {
   const groups: { day: string | null; rows: RecentItem[] }[] = [];
   const undated: RecentItem[] = [];
   for (const row of rows) {
-    const day = row.indexed?.slice(0, 10) ?? null;
+    const day = localDay(row.indexed);
     if (!day) {
       undated.push(row);
       continue;
@@ -56,22 +69,52 @@ function byDayAdded(rows: readonly RecentItem[]) {
  * refresh keeps the list and says it is saved.
  */
 export default function RecentRecords() {
-  const load = useCallback(() => records.recent(), []);
+  const load = useCallback(
+    (signal?: AbortSignal) => records.recent(undefined, signal),
+    [],
+  );
   const first = useRead(load);
   const [fresh, setFresh] = useState<RecordResult<RecentFeed> | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<unknown>(null);
+  const refreshGeneration = useRef(0);
+  const refreshController = useRef<AbortController | null>(null);
+  useEffect(
+    () => () => {
+      refreshGeneration.current += 1;
+      refreshController.current?.abort();
+    },
+    [],
+  );
   const value = fresh ?? first.value;
   const refresh = useCallback(() => {
+    const generation = ++refreshGeneration.current;
+    refreshController.current?.abort();
+    const controller = new AbortController();
+    refreshController.current = controller;
     setRefreshing(true);
-    void records
-      .recent({ fresh: true })
+    void Promise.resolve()
+      .then(() => records.recent({ fresh: true }, controller.signal))
       .then((next) => {
+        if (
+          generation !== refreshGeneration.current ||
+          controller.signal.aborted
+        )
+          return;
         setFresh(next);
         setRefreshError(null);
       })
-      .catch((error: unknown) => setRefreshError(error))
-      .finally(() => setRefreshing(false));
+      .catch((error: unknown) => {
+        if (
+          generation === refreshGeneration.current &&
+          !controller.signal.aborted &&
+          !isAbortError(error)
+        )
+          setRefreshError(error);
+      })
+      .finally(() => {
+        if (generation === refreshGeneration.current) setRefreshing(false);
+      });
   }, []);
   const rows = value?.data ?? [];
   const newest =
@@ -80,8 +123,12 @@ export default function RecentRecords() {
       .filter(Boolean)
       .sort()
       .at(-1) ?? null;
-  const saved = !!refreshError;
-  const offline = saved && isOffline(refreshError);
+  // A read that could not reach OPAX returns the saved copy marked stale
+  // rather than failing: say so, as a failed refresh does.
+  const saved = !!refreshError || !!value?.stale;
+  const offline =
+    (!!refreshError && isOffline(refreshError)) ||
+    (!!value?.stale && !value.staleReason);
   let body;
   if (!value && first.error)
     body = isOffline(first.error) ? (
@@ -187,6 +234,15 @@ export default function RecentRecords() {
           Just added
         </Heading>
       )}
+      {/* Offline, the screen's banner already says the copy is saved. */}
+      {value && refreshError && !offline ? (
+        <InlineError
+          subject="New records"
+          message="New records couldn't be refreshed. Showing the saved copy."
+          onRetry={refresh}
+          testID="recent-refresh-error"
+        />
+      ) : null}
       {body}
     </Screen>
   );

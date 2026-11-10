@@ -22,6 +22,7 @@ import type { RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
 import { copy } from '../../design/copy';
 import {
+  counted,
   formatCount,
   formatMoneyCompact,
   moneyAccessibilityLabel,
@@ -407,7 +408,7 @@ export default function MoneyScreen() {
           </>
         }
         offline={
-          record.stale && record.staleReason !== 'unreadable' ? (
+          record.stale && !record.staleReason ? (
             <OfflineLine savedAt={record.savedAt} testID="money-offline" />
           ) : null
         }
@@ -426,7 +427,7 @@ export default function MoneyScreen() {
         </>
       }
       offline={
-        record?.stale && record.staleReason !== 'unreadable' ? (
+        record?.stale && !record.staleReason ? (
           <OfflineLine savedAt={record.savedAt} testID="money-offline" />
         ) : null
       }
@@ -508,14 +509,18 @@ function MapMode({
   const [topHeight, setTopHeight] = useState(0);
   const [peek, setPeek] = useState(0);
   const window = useWindowDimensions();
+  // The stage runs under the tab bar and the home indicator; the panel host
+  // sits above them, so the band beneath it is measured from its layout and
+  // counted in the map's bottom inset with the panel's peek.
+  const [below, setBelow] = useState(0);
   const insets = useMemo(
     () => ({
       top: topHeight + rhythm.tight,
-      bottom: peek + rhythm.tight,
+      bottom: below + peek + rhythm.tight,
       left: rhythm.tight,
       right: 44 + rhythm.block * 2,
     }),
-    [topHeight, peek],
+    [topHeight, peek, below],
   );
   // Android's Back closes the search, then the panel, then the focus.
   useEffect(() => {
@@ -672,11 +677,17 @@ function MapMode({
           overview={
             large || searchOpen || expanded
               ? null
-              : { left: rhythm.block, bottom: peek + rhythm.block }
+              : {
+                  left: rhythm.block,
+                  bottom: below + peek + rhythm.block,
+                }
           }
         />
         <SafeAreaView
-          edges={['top', 'bottom']}
+          // The stack's opaque bar already sits above the stage: a top
+          // edge here would count the status bar twice and push the card
+          // down the map.
+          edges={['bottom']}
           pointerEvents="box-none"
           style={styles.chrome}
         >
@@ -700,7 +711,7 @@ function MapMode({
               </View>
             )}
           </View>
-          {searchOpen ? null : (
+          {searchOpen || expanded ? null : (
             <View
               style={[styles.controls, { top: topHeight + rhythm.block }]}
               pointerEvents="box-none"
@@ -717,6 +728,11 @@ function MapMode({
           <View
             style={[styles.panelHost, regular ? styles.panelRegular : null]}
             pointerEvents="box-none"
+            onLayout={(event) => {
+              const { y, height } = event.nativeEvent.layout;
+              const gap = Math.max(0, Math.round(stage.height - (y + height)));
+              setBelow((previous) => (previous === gap ? previous : gap));
+            }}
           >
             <MoneyMapPanel
               focus={panelFocus}
@@ -905,7 +921,7 @@ function ListBody({
     <PartyMoneyRow
       key={node.id}
       name={node.label}
-      detail={`${formatCount(node.count)} receipts · ${moneyYears(node.firstYear, node.lastYear)}`}
+      detail={`${counted(node.count, 'receipt')} · ${moneyYears(node.firstYear, node.lastYear)}`}
       amount={node.total}
       href={record_(node)}
       testID={`money-party-${index}`}
@@ -921,7 +937,7 @@ function ListBody({
             title="Donors"
             action={{
               label: copy.seeAll,
-              accessibilityLabel: `See all ${formatCount(named.length)} donors`,
+              accessibilityLabel: `See all ${counted(named.length, 'donor')}`,
               href: moneyDonorsRoute({
                 jurisdiction,
                 ...moneyWindowParams(filters),
@@ -996,7 +1012,7 @@ function ListBody({
                       {
                         value: formatMoneyCompact(grants.total),
                         label: 'in grants',
-                        testID: 'money-public-grants',
+                        testID: 'money-public-grants-total',
                       },
                     ]
                   : []),
@@ -1005,7 +1021,7 @@ function ListBody({
                       {
                         value: formatMoneyCompact(contracts.total),
                         label: 'in contracts',
-                        testID: 'money-public-contracts',
+                        testID: 'money-public-contracts-total',
                       },
                     ]
                   : []),
@@ -1044,6 +1060,8 @@ const styles = StyleSheet.create({
     padding: rhythm.block,
     gap: rhythm.tight,
   },
+  // Floating under the card (its `top` is the card's measured height), out
+  // of the column so the expanded panel keeps its share of the stage.
   controls: { position: 'absolute', right: rhythm.block },
   grow: { flex: 1 },
   panelHost: { width: '100%' },

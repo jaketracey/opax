@@ -30,7 +30,11 @@ import { answerBlocks } from './answer-markdown';
 import { openAnswerLink } from './AnswerBody';
 import { AskIdle } from './AskIdle';
 import { CitedRecordRow } from './AskRows';
-import { firstClaim, selectCitation } from './citation-state';
+import {
+  citationSelection,
+  firstClaim,
+  selectCitation,
+} from './citation-state';
 import {
   CitationContent,
   citationCopy,
@@ -87,13 +91,18 @@ export function useAskSources(
   const shown =
     active !== null && thread[active]?.role === 'answer' ? active : latest;
   // A new answer brings the pane to it, on citation 1.
-  const [seen, setSeen] = useState(latest);
-  if (seen !== latest) {
-    setSeen(latest);
+  const [seen, setSeen] = useState({ chat, latest });
+  if (seen.chat !== chat || seen.latest !== latest) {
+    setSeen({ chat, latest });
     setActive(null);
     setMark(null);
     setStack([]);
   }
+  useEffect(() => {
+    const selection = citationSelection();
+    if (selection && (!chat || !selection.turn.startsWith(`${chat}:`)))
+      selectCitation(null);
+  }, [chat]);
   const answers = useRef(new Map<number, RefObject<View | null>>());
   const { height } = useWindowDimensions();
   const measuring = useRef(false);

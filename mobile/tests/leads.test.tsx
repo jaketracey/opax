@@ -1255,6 +1255,27 @@ describe('the Leads screen', () => {
     expect(unavailable(renderer.root, 'leads-empty')).toBe('No leads yet');
     act(() => renderer.unmount());
   });
+  test('a kind with no leads in this export says so, not "0 leads"', async () => {
+    mockParams.category = 'companies_in_both';
+    mock.discovery.mockResolvedValueOnce({
+      data: {
+        ...shown,
+        signals: shown.signals.filter(
+          (signal: { category: string }) =>
+            signal.category !== 'donor_contract_overlap',
+        ),
+      },
+      asOf: null,
+      stale: false,
+      savedAt: 200,
+    });
+    const renderer = await render(<Leads />);
+    expect(unavailable(renderer.root, 'leads-kind-empty')).toBe(
+      'No company leads yet',
+    );
+    expect(has(renderer.root, 'leads-caption')).toBe(false);
+    act(() => renderer.unmount());
+  });
   test('a failed first load says so and retries; offline says nothing is saved', async () => {
     mock.discovery.mockRejectedValueOnce(
       new ApiError('invalid-data', 'This catalog could not be read.'),
@@ -1579,7 +1600,7 @@ describe('a lead’s page', () => {
         true,
       ),
     ).toMatchObject({ stale: true, savedAt: 100, partial: true });
-    expect(mock.discovery).toHaveBeenLastCalledWith(true);
+    expect(mock.discovery).toHaveBeenLastCalledWith(true, undefined);
   });
   test('a contracts lead: its agency’s page, found in the agency directory by name', async () => {
     mockParams.id = signals[2]!.id;
@@ -1689,6 +1710,8 @@ describe('a lead’s page', () => {
     expect(apiClient.get).toHaveBeenCalledWith(
       '/graph/money.json',
       expect.any(Function),
+      false,
+      { signal: expect.any(AbortSignal) },
     );
     expect(hrefOf(renderer.root, 'lead-subject')).toMatchObject({
       pathname: '/money-record',
@@ -1910,10 +1933,16 @@ describe('pull to refresh', () => {
       mockParams.id = signals[1]!.id;
       const renderer = await render(screen());
       expect(mock[loader]).toHaveBeenCalledTimes(1);
-      expect(mock[loader]).toHaveBeenLastCalledWith(false);
+      expect(mock[loader]).toHaveBeenLastCalledWith(
+        false,
+        expect.any(AbortSignal),
+      );
       await pull(renderer.root);
       expect(mock[loader]).toHaveBeenCalledTimes(2);
-      expect(mock[loader]).toHaveBeenLastCalledWith(true);
+      expect(mock[loader]).toHaveBeenLastCalledWith(
+        true,
+        expect.any(AbortSignal),
+      );
       act(() => renderer.unmount());
     },
   );

@@ -1,11 +1,18 @@
+import { partyMapColour } from '../ported/palette';
 import type { Centre } from './layout';
-import { otherEnd, PARTIES, type MapModel } from './model';
+import { otherEnd, PARTIES, PUBLIC_MONEY, type MapModel } from './model';
 
 /**
  * Which names the map draws, and where. Slots are chosen on JS when the
  * model or focus changes; the stage positions them on the UI thread.
  */
-export type LabelKind = 'cluster' | 'party' | 'name' | 'focus' | 'neighbour';
+export type LabelKind =
+  | 'cluster'
+  | 'hub'
+  | 'party'
+  | 'name'
+  | 'focus'
+  | 'neighbour';
 export interface LabelSlot {
   key: string;
   kind: LabelKind;
@@ -14,7 +21,11 @@ export interface LabelSlot {
   /** World position the label hangs from. */
   x: number;
   y: number;
-  /** World offset: the disc's radius, so the text sits beside its rim. */
+  /**
+   * World offset: the disc's radius, so the text sits beside its rim, or
+   * further when another disc covers the rim (parties crowd the centre, and
+   * a smaller party's name would otherwise start inside its neighbour).
+   */
   r: number;
   /** A node's model index, where the slot names one. */
   node?: number;
@@ -43,10 +54,11 @@ export function labelSlots(
       key: `${kind}:${node.id}`,
       kind,
       text: node.label,
-      ink: node.ink,
+      // A party's name is set in its colour, darkened to read on paper.
+      ink: node.kind === 'party' ? partyMapColour(node.label).ink : node.ink,
       x: p.x,
       y: p.y,
-      r: node.radius,
+      r: clearRim(model, at, index),
       node: index,
     };
   };
@@ -60,8 +72,17 @@ export function labelSlots(
     }
     for (const other of neighbours) slots.push(nodeSlot(other, 'neighbour'));
   }
+  // The public-money hubs are named at every zoom: the fan of lines starts
+  // there, and a reader should never have to guess where from. Their
+  // cluster then needs no second label.
+  const hubs = model.nodes
+    .filter((n) => n.kind === 'hub' && !named.has(n.index))
+    // The hubs share one spot, so the larger register keeps the name.
+    .sort((a, b) => b.amount - a.amount);
+  for (const hub of hubs) slots.push(nodeSlot(hub.index, 'hub'));
   for (const cluster of model.clusters) {
     if (cluster.key === PARTIES) continue;
+    if (cluster.key === PUBLIC_MONEY && hubs.length) continue;
     const centre = centres.get(cluster.key);
     if (!centre) continue;
     slots.push({
@@ -74,7 +95,7 @@ export function labelSlots(
       r: 0,
     });
   }
-  // Parties are drawn in one neutral grey: the largest are named beside
+  // Party discs carry party colours; the largest are also named beside
   // their discs, so no party is told apart by colour alone.
   const parties = model.nodes
     .filter((n) => n.kind === 'party' && !named.has(n.index))
@@ -90,6 +111,37 @@ export function labelSlots(
 }
 
 /**
+ * Where a disc's name begins, as a distance from its centre: the rim, pushed
+ * right past any other disc that covers the point where the name would start.
+ */
+export function clearRim(
+  model: MapModel,
+  at: (modelIndex: number) => { x: number; y: number },
+  index: number,
+): number {
+  const node = model.nodes[index]!;
+  const p = at(index);
+  let r = node.radius;
+  for (let pass = 0; pass < 4; pass++) {
+    let moved = false;
+    for (const other of model.nodes) {
+      if (other.index === index) continue;
+      const q = at(other.index);
+      const dy = q.y - p.y;
+      if (Math.abs(dy) >= other.radius) continue;
+      const half = Math.sqrt(other.radius * other.radius - dy * dy);
+      const start = p.x + r;
+      if (q.x - half <= start && q.x + half > start) {
+        r = q.x + half - p.x;
+        moved = true;
+      }
+    }
+    if (!moved) break;
+  }
+  return r;
+}
+
+/**
  * Greedy de-overlap for a camera: slots in priority order keep their place
  * when their box clears every box already kept and sits on screen. Runs on
  * the UI thread each time the camera moves, so it returns a plain record.
@@ -97,14 +149,22 @@ export function labelSlots(
 export function visibleLabels(
   slots: readonly LabelSlot[],
   camera: { tx: number; ty: number; k: number },
-  viewport: { width: number; height: number },
+  viewport: { width: number; height: number; insets?: { bottom: number } },
   box: { width: number; height: number },
 ): Record<string, 1> {
   'worklet';
   const shown: Record<string, 1> = {};
   const keptX: number[] = [];
   const keptY: number[] = [];
-  const order = ['focus', 'neighbour', 'party', 'cluster', 'name'];
+  const keptH: number[] = [];
+  // Nothing hangs under the panel or the tab bar: the map may run beneath
+  // them, but a name half under glass reads as a fault.
+  const bottom =
+    viewport.height - (viewport.insets ? viewport.insets.bottom : 0);
+  // A long name wraps inside the box: its height is counted in lines, as
+  // the stage lays it out (about 0.3 of the line height a character).
+  const perLine = Math.max(4, Math.floor(box.width / (box.height * 0.3)));
+  const order = ['focus', 'neighbour', 'hub', 'party', 'cluster', 'name'];
   for (let o = 0; o < order.length; o++) {
     const kind = order[o];
     for (let s = 0; s < slots.length; s++) {
@@ -115,22 +175,36 @@ export function visibleLabels(
       if (
         sx < -box.width ||
         sy < -box.height ||
-        sx > viewport.width + box.width ||
-        sy > viewport.height + box.height
+        sx > viewport.width + box.width
       )
         continue;
+      const lines = Math.min(3, Math.ceil(slot.text.length / perLine));
+      const h = box.height * (lines < 1 ? 1 : lines);
+      // The box as the stage lays it out: beside the rim for a disc, centred
+      // above the blob for a cluster, the text growing downward from its
+      // first line.
+      const left =
+        slot.kind === 'cluster'
+          ? sx - box.width / 2
+          : sx + slot.r * camera.k + 6;
+      const top =
+        slot.kind === 'cluster' ? sy - box.height - 4 : sy - box.height / 2;
+      // Its last line must clear the panel's edge, with a little air.
+      if (top + h > bottom - 6) continue;
+      const cy = top + h / 2;
       let clear = true;
       for (let i = 0; i < keptX.length; i++)
         if (
-          Math.abs(keptX[i]! - sx) < box.width &&
-          Math.abs(keptY[i]! - sy) < box.height
+          Math.abs(keptX[i]! - left) < box.width &&
+          Math.abs(keptY[i]! - cy) < (keptH[i]! + h) / 2
         ) {
           clear = false;
           break;
         }
       if (!clear) continue;
-      keptX.push(sx);
-      keptY.push(sy);
+      keptX.push(left);
+      keptY.push(cy);
+      keptH.push(h);
       shown[slot.key] = 1;
     }
   }

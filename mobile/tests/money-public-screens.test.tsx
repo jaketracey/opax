@@ -4,12 +4,14 @@ import { Animated, Dimensions, Platform, StyleSheet } from 'react-native';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MoneyCatalogs } from '../src/features/money-public/catalog';
+import { ApiError } from '../src/api/errors';
 import type { ApiClient, RecordResult } from '../src/api/client';
 import { assertAllowedPath } from '../src/api/policy';
 import { decodeDiscovery } from '../src/api/catalog-decoders';
 import { catalogs } from '../src/api/runtime';
 import { money } from '../src/features/money-public/runtime';
 import Hub from '../src/features/money-public/Hub';
+import { grantsFigure } from '../src/features/money-public/HubCards';
 import Grants from '../src/features/money-public/Grants';
 import Program from '../src/features/money-public/Program';
 import Largest from '../src/features/money-public/Largest';
@@ -31,7 +33,7 @@ import {
 } from 'expo-router/react-navigation';
 import { unnamedRecipient } from '../src/features/money-public/privacy';
 import { organisationHref } from '../src/features/money-public/routes';
-import { LinkRow } from '../src/design/rows';
+import { LinkRow, MoneyRow } from '../src/design/rows';
 import { Screen as PageScreen } from '../src/design/layout';
 import {
   MoneyList,
@@ -49,6 +51,10 @@ import {
   formatMoney,
   formatMoneyCompact,
 } from '../src/design/format';
+import { decodeSeatGrants } from '../src/features/money-public/seat-grants-data';
+import seatIndexFixture from './fixtures/money/seat-index.json';
+import seatFirstFixture from './fixtures/money/seat-maribyrnong.json';
+import seatSecondFixture from './fixtures/money/seat-maribyrnong-2.json';
 
 const mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => {
@@ -110,6 +116,7 @@ beforeEach(() => {
     'grants',
     'notes',
     'program',
+    'seat',
     'largest',
     'agencies',
     'agency',
@@ -151,6 +158,194 @@ const ids = (r: TestRenderer.ReactTestRenderer) =>
       .findAll((n) => typeof n.props.testID === 'string')
       .map((n) => n.props.testID as string),
   );
+
+test.each([
+  ['latest', 'No grant agreements to show.'],
+  ['2026-00', 'No grant agreements to show.'],
+  ['2026-13', 'No grant agreements to show.'],
+  ['2026-1', 'No grant agreements to show.'],
+  ['2026-10', 'No grant agreements started in October 2026.'],
+])('Largest grants has a complete empty-state title for latest=%s', async (latest, title) => {
+  money.largest = jest.fn(async () => ({
+    data: { asOf: '2026-11-10', latest, basis: [], months: {} },
+    stale: false,
+    savedAt: 10,
+    asOf: null,
+  }));
+  const r = await mount(Largest);
+  expect(r.root.findByType(MoneyList).props.empty.props.title).toBe(title);
+  await act(async () => r.unmount());
+});
+
+test('the all-years grant figure names the full recorded range, including future agreements', () => {
+  const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
+  index.meta.years = ['2023-24', '2024-25', '2026-27'];
+  index.meta.latestCompleteYear = '2024-25';
+  index.byYear = { '2024-25': { total: 20, count: 2 } };
+  index.counts.dollars = 60;
+  expect(grantsFigure(index)).toMatchObject({
+    value: 20,
+    line: 'in 2 Commonwealth grants in 2024–25',
+    allYears: { label: 'All years, 2023–24 to 2026–27', value: 60 },
+  });
+});
+
+test.each([
+  [
+    'grant',
+    {
+      kind: 'grant',
+      jur: 'federal',
+      program: 'go3141',
+      id: program.grants[0].id,
+    },
+  ],
+  [
+    'recipient',
+    {
+      kind: 'recipient',
+      jur: 'federal',
+      program: 'go3141',
+      recipient: program.grants[0].rid,
+    },
+  ],
+  ['award', { kind: 'award', id: raw('/research/mlci.json').awards[0].ga_id }],
+] as const)(
+  '%s details distinguish award values from payments',
+  async (_name, params) => {
+    const item = (await loadMoneyItem(params, false)).data;
+    expect(item.notes.join(' ')).toMatch(
+      /award value.*not payments|award values.*not amounts paid/i,
+    );
+  },
+);
+
+test('program sources retain the source caveats and explain award values', async () => {
+  Object.assign(mockParams, { jur: 'federal', id: 'GO3141' });
+  const rendered = await mount(Program);
+  const source = rendered.root.findByType(FigureBlock).props.citation;
+  expect(source.notes).toEqual(
+    expect.arrayContaining(
+      decodeGrantIndex(raw('/graph/grants.federal.json')).meta.caveats,
+    ),
+  );
+  expect(source.notes.join(' ')).toMatch(
+    /award value.*not payments|award values.*not amounts paid/i,
+  );
+});
+
+test('Queensland expenditure records do not acquire a federal award-value caveat', async () => {
+  const index = raw('/graph/grants.qld.json');
+  const entry = index.programs[0];
+  const first = raw(`/grants/qld/programs/${entry.key}.json`).grants[0];
+  const item = (
+    await loadMoneyItem(
+      {
+        kind: 'grant',
+        jur: 'qld',
+        program: entry.key,
+        id: first.id,
+      },
+      false,
+    )
+  ).data;
+  expect(item.notes.join(' ')).not.toMatch(/award values.*not amounts paid/i);
+});
+
+test('a venue overlay cannot re-identify an individual recipient in community funding or its record', async () => {
+  const allocation = await fixture.allocation();
+  const privateAward = {
+    ...allocation.data.awards[0]!,
+    title: 'Grant project',
+    recipient: unnamedRecipient,
+  };
+  money.allocation = jest.fn().mockResolvedValue({
+    ...allocation,
+    data: { ...allocation.data, awards: [privateAward] },
+  });
+  money.locations = jest.fn().mockResolvedValue({
+    stale: false,
+    savedAt: 10,
+    asOf: null,
+    data: {
+      asOf: allocation.data.asOf,
+      methodology: [],
+      records: [
+        {
+          id: privateAward.id,
+          kind: 'award',
+          verified: true,
+          title: 'Fixture Private Recipient venue',
+          sites: [
+            {
+              name: 'Fixture Private Recipient site',
+              address: '1 Fixture Street',
+              verified: true,
+              sourceUrl: 'https://example.org/fixture',
+            },
+          ],
+        },
+      ],
+    },
+  });
+  const record = await loadMoneyItem(
+    { kind: 'award', id: privateAward.id },
+    false,
+  );
+  expect(record.data.name).toBe('Grant project');
+  expect(record.data.facts.some((fact) => fact.label === 'Sites')).toBe(false);
+  const rendered = await mount(Allocation);
+  const list = rendered.root.findByType(MoneyList);
+  const row = list.props.render(list.props.rows[0], 0);
+  expect(row.props.name).toBe('Grant project');
+  expect(JSON.stringify(record.data)).not.toContain(
+    'Fixture Private Recipient',
+  );
+});
+
+test.each([
+  [
+    'Program',
+    Program,
+    { jur: 'federal', id: 'GO3141' },
+    'program-total',
+    'grants',
+  ],
+  ['Agency', Agency, { id: agencyId }, 'agency-total', 'agency'],
+  [
+    'Money item',
+    MoneyItem,
+    {
+      kind: 'grant',
+      jur: 'federal',
+      program: 'go3141',
+      id: program.grants[0].id,
+    },
+    'money-item-amount',
+    'program',
+  ],
+] as const)(
+  '%s clears the previous record while another identity loads or fails',
+  async (_name, Page, params, oldFigure, loader) => {
+    Object.assign(mockParams, params);
+    const rendered = await mount(Page);
+    expect(ids(rendered).has(oldFigure)).toBe(true);
+    let reject!: (error: Error) => void;
+    money[loader] = jest.fn(
+      () => new Promise((_resolve, fail) => (reject = fail)),
+    ) as never;
+    mockParams.id = 'fixture-missing-record';
+    await act(async () => rendered.update(<Page />));
+    expect(ids(rendered).has(oldFigure)).toBe(false);
+    await act(async () =>
+      reject(new Error('Fixture record could not be loaded')),
+    );
+    expect(ids(rendered).has(oldFigure)).toBe(false);
+    expect(
+      rendered.root.findAllByType(MoneyStatus)[0]!.props.status.error,
+    ).toBeInstanceOf(Error);
+  },
+);
 
 test('a lead example names its back destination and has no lead methodology in Notes', async () => {
   const lead = leadsFor(decodeDiscovery(raw('/discovery.json'))).find(
@@ -765,4 +960,445 @@ describe('a program, place or organisation', () => {
     ).toHaveLength(0);
     await act(async () => r.unmount());
   });
+});
+
+describe('the seat grant list', () => {
+  const record = <T,>(data: T, stale = false): RecordResult<T> => ({
+    data,
+    stale,
+    savedAt: 10,
+    asOf: null,
+  });
+  const byID = (r: TestRenderer.ReactTestRenderer, testID: string) =>
+    r.root.findAll(
+      (n) => n.props.testID === testID && typeof n.type !== 'string',
+    );
+  const list = (r: TestRenderer.ReactTestRenderer) =>
+    r.root.findByType(MoneyList);
+  const index = decodeGrantIndex(seatIndexFixture);
+  const first = decodeSeatGrants(seatFirstFixture);
+  const second = decodeSeatGrants(seatSecondFixture);
+  beforeEach(() => {
+    Object.assign(mockParams, { seat: 'Maribyrnong', state: 'vic' });
+    money.grants = jest.fn(async () => record(index));
+    money.seat = jest.fn(async (_jur, _key, _refresh, options) =>
+      record(options?.page ? second : first),
+    );
+  });
+
+  test('lists the first 25 grants under the exact index total, with the caveats, source and Originals last', async () => {
+    const r = await mount(Grants);
+    const page = list(r);
+    expect(page.props.rows).toHaveLength(25);
+    expect(money.seat).toHaveBeenCalledTimes(1);
+    const figure = byID(r, 'grants-seat-total')[0]!;
+    expect(figure.props.value).toBe(formatMoneyCompact(index.seats[0]!.total));
+    expect(figure.props.accessibilityLabel).toContain('28 Commonwealth grants');
+    expect(figure.props.caveat).toBe(
+      'Matched by postcode where one is recorded, so this is a minimum.',
+    );
+    expect(figure.props.citation.asOf).toBe(index.meta.asOf);
+    expect(byID(r, 'grants-seat-award-note')[0]!.props.children).toBe(
+      'An award is not a payment.',
+    );
+    expect(byID(r, 'grants-seat-caption')[0]!.props.children).toBe(
+      '25 of 28 grants, largest first',
+    );
+    expect(byID(r, 'grants-seat-show-all')[0]!.props.label).toBe('Show all 28');
+    const row = page.props.render(page.props.rows[0], 0);
+    expect(row.type).toBe(MoneyRow);
+    expect(row.props).toMatchObject({
+      name: 'Fixture Association 1',
+      detail: 'Fixture support program · 2020–21',
+      amount: seatFirstFixture.grants[0]!.v,
+      href: organisationHref(
+        seatFirstFixture.grants[0]!.rid,
+        'Fixture Association 1',
+        'federal',
+      ),
+    });
+    // Every rendered row speaks its recipient, program, year and amount.
+    for (const grant of first.grants.slice(0, 10)) {
+      const cell = r.root.findAll(
+        (n) =>
+          n.type === LinkRow &&
+          n.props.testID === `grants-seat-grant-${first.grants.indexOf(grant)}`,
+      )[0]!;
+      expect(cell.props.accessibilityLabel).toContain(grant.name);
+      expect(cell.props.accessibilityLabel).toContain(grant.program);
+      expect(cell.props.accessibilityLabel).toContain('2020–21');
+      expect(cell.props.accessibilityLabel).toContain('dollars');
+    }
+    const footer = page.props.footer.props.children.filter(Boolean);
+    expect(footer.at(-1).props.testID).toBe('grants-seat-originals');
+    expect(byID(r, 'grants-seat-original')[0]!.props.external.url).toBe(
+      index.meta.sourceUrl,
+    );
+  });
+
+  test('Show all loads continuation pages and exposes all grants once, preserving index figures', async () => {
+    const r = await mount(Grants);
+    await act(async () => byID(r, 'grants-seat-show-all')[0]!.props.onPress());
+    expect(list(r).props.rows.map((g: { id: string }) => g.id)).toEqual(
+      [...first.grants, ...second.grants].map((g) => g.id),
+    );
+    expect(jest.mocked(money.seat).mock.calls.at(-1)?.[3]?.page).toBe(
+      'maribyrnong-2.json',
+    );
+    expect(byID(r, 'grants-seat-show-all')).toHaveLength(0);
+    expect(byID(r, 'grants-seat-total')[0]!.props.value).toBe(
+      formatMoneyCompact(index.seats[0]!.total),
+    );
+  });
+
+  test('a private recipient is a plain row without exposing a private identity', async () => {
+    const privatePage = decodeSeatGrants({
+      ...seatFirstFixture,
+      grants: [
+        {
+          ...seatFirstFixture.grants[0],
+          rn: 'Fixture private recipient',
+          rid: 'person:fixture',
+          k: 'individual',
+          n: 'Fixture private purpose',
+        },
+      ],
+    });
+    money.seat = jest.fn(async () => record(privatePage));
+    const r = await mount(Grants);
+    const page = list(r),
+      row = page.props.render(page.props.rows[0], 0);
+    expect(row.props.name).toBe('Individual recipient');
+    expect(row.props.href).toBeUndefined();
+    expect(row.props.external).toBeUndefined();
+    const strings = r.root
+      .findAll(() => true)
+      .flatMap((n) => [
+        ...Object.values(n.props),
+        ...[n.props.children].flat(),
+      ])
+      .filter((v): v is string => typeof v === 'string');
+    expect(strings.join('\n')).not.toContain('Fixture private');
+  });
+
+  test.each([true, false])('an unlisted recipient stays plain with an award URL=%s', async (sourceUrl) => {
+    money.grants = jest.fn(async () => record({ ...index, recipients: [] }));
+    money.seat = jest.fn(async () =>
+      record({
+        ...first,
+        grants: first.grants.map((g) => ({
+          ...g,
+          sourceUrl: sourceUrl ? g.sourceUrl : null,
+        })),
+      }),
+    );
+    const r = await mount(Grants);
+    const page = list(r),
+      row = page.props.render(page.props.rows[0], 0);
+    expect(row.props.href).toBeUndefined();
+    expect(row.props.external).toBeUndefined();
+    expect(row.props.name).toBe('Fixture Association 1');
+    const cell = r.root.findAllByType(LinkRow).find(
+      (n) => n.props.testID === 'grants-seat-grant-0',
+    )!;
+    expect(cell.props.accessory).toBe('none');
+    expect(cell.findAll((n) => typeof n.props.onPress === 'function')).toHaveLength(0);
+  });
+
+  test.each([
+    [null, 'Unnamed recipient'],
+    ['', 'Unnamed recipient'],
+    ['   ', 'Unnamed recipient'],
+    ['Recipients not disclosed', 'Recipients not disclosed'],
+  ])('a nameless or undisclosed seat grant (%s) stays plain', async (rn, name) => {
+    const page = decodeSeatGrants({
+      ...seatFirstFixture,
+      grants: [{ ...seatFirstFixture.grants[0], rn, k: 'undisclosed' }],
+    });
+    money.seat = jest.fn(async () => record(page));
+    const r = await mount(Grants);
+    const cell = r.root.findAllByType(LinkRow).find(
+      (n) => n.props.testID === 'grants-seat-grant-0',
+    )!;
+    expect(cell.props.title).toBe(name);
+    expect(cell.props.href).toBeUndefined();
+    expect(cell.props.external).toBeUndefined();
+    expect(cell.props.accessory).toBe('none');
+    expect(cell.findAll((n) => typeof n.props.onPress === 'function')).toHaveLength(0);
+  });
+
+  test('an index entry without a public organisation page cannot back a seat recipient link', async () => {
+    money.grants = jest.fn(async () =>
+      record({
+        ...index,
+        recipients: index.recipients.map((r) => ({
+          ...r,
+          organisation: false,
+          name: 'Individual recipient',
+        })),
+      }),
+    );
+    const r = await mount(Grants);
+    const page = list(r);
+    const row = page.props.render(page.props.rows[0], 0);
+    expect(row.props.name).toBe('Fixture Association 1');
+    expect(row.props.href).toBeUndefined();
+    expect(row.props.external).toBeUndefined();
+  });
+
+  test.each(['no row', 'no key', '404'] as const)(
+    '%s says no grants are listed without claiming a zero total',
+    async (kind) => {
+      if (kind === '404') money.seat = jest.fn(async () => null);
+      else
+        money.grants = jest.fn(async () =>
+          record({
+            ...index,
+            seats:
+              kind === 'no row'
+                ? []
+                : index.seats.map((s) => ({ ...s, key: '' })),
+          }),
+        );
+      const r = await mount(Grants);
+      if (kind === 'no row') {
+        // The figure's own line says it once; no second empty message.
+        expect(byID(r, 'grants-seat-unmatched')[0]!.props.children).toBe(
+          'No grants are matched to Maribyrnong in the grant records. This is not a zero total.',
+        );
+        expect(byID(r, 'grants-seat-empty')).toHaveLength(0);
+      } else {
+        expect(byID(r, 'grants-seat-empty')[0]!.props.message).toBe(
+          "The individual grants for Maribyrnong aren't listed yet.",
+        );
+        expect(byID(r, 'grants-seat-total')[0]!.props.value).toBe(
+          formatMoneyCompact(index.seats[0]!.total),
+        );
+      }
+      expect(byID(r, 'grants-seat-records-error')).toHaveLength(0);
+      expect(byID(r, 'grants-seat-show-all')).toHaveLength(0);
+      expect(list(r).props.rows).toHaveLength(0);
+      if (kind !== '404') expect(money.seat).not.toHaveBeenCalled();
+      expect(
+        r.root.findAllByType(FigureBlock).every((n) => n.props.value !== '$0'),
+      ).toBe(true);
+    },
+  );
+
+  test('a seat page loads below the still-readable index figure', async () => {
+    money.seat = jest.fn(() => new Promise(() => {}));
+    const r = await mount(Grants);
+    expect(byID(r, 'grants-seat-records-loading').length).toBeGreaterThan(0);
+    expect(byID(r, 'grants-seat-total')[0]!.props.value).toBe(
+      formatMoneyCompact(index.seats[0]!.total),
+    );
+    expect(byID(r, 'grants-seat-empty')).toHaveLength(0);
+  });
+
+  test('an empty legacy index row never turns missing seat records into a $0 figure', async () => {
+    money.grants = jest.fn(async () =>
+      record({
+        ...index,
+        seats: index.seats.map((s) => ({ ...s, key: '', count: 0, total: 0 })),
+      }),
+    );
+    const r = await mount(Grants);
+    expect(byID(r, 'grants-seat-unmatched').length).toBeGreaterThan(0);
+    // A zero count renders no stray "0" in place of an empty state.
+    expect(list(r).props.empty).toBeNull();
+    expect(r.root.findAllByType(FigureBlock)).toHaveLength(0);
+  });
+
+  test.each(['offline', 'server'] as const)(
+    'a %s first read uses the shared money state and keeps the totals',
+    async (code) => {
+      money.seat = jest.fn(async () => {
+        throw new ApiError(code, 'Fixture failure');
+      });
+      const r = await mount(Grants);
+      expect(
+        byID(
+          r,
+          code === 'offline'
+            ? 'grants-seat-records-offline-uncached'
+            : 'grants-seat-records-error',
+        ).length,
+      ).toBeGreaterThan(0);
+      expect(byID(r, 'grants-seat-total').length).toBeGreaterThan(0);
+      expect(byID(r, 'grants-seat-empty')).toHaveLength(0);
+      if (code === 'server') {
+        money.seat = jest.fn(async () => record(first));
+        await act(async () =>
+          byID(r, 'grants-seat-records-retry')[0]!.props.onPress(),
+        );
+        expect(list(r).props.rows).toHaveLength(25);
+      }
+    },
+  );
+
+  test('a saved offline seat page stays readable with the shared offline line', async () => {
+    money.seat = jest.fn(async () => record(first, true));
+    const r = await mount(Grants);
+    expect(list(r).props.rows).toHaveLength(25);
+    expect(byID(r, 'grants-status-offline').length).toBeGreaterThan(0);
+    expect(byID(r, 'grants-seat-total')[0]!.props.citation.savedAt).toBe(10);
+  });
+
+  test('a later page failure keeps the loaded rows and Show all retries the continuation', async () => {
+    let fail = true;
+    money.seat = jest.fn(async (_jur, _key, _refresh, options) => {
+      if (options?.page && fail)
+        throw new ApiError('server', 'Fixture failure');
+      return record(options?.page ? second : first);
+    });
+    const r = await mount(Grants);
+    await act(async () => byID(r, 'grants-seat-show-all')[0]!.props.onPress());
+    expect(list(r).props.rows).toHaveLength(26);
+    expect(byID(r, 'grants-seat-more-error').length).toBeGreaterThan(0);
+    expect(byID(r, 'grants-seat-show-all')[0]!.props.loading).toBe(false);
+    fail = false;
+    await act(async () =>
+      byID(r, 'grants-seat-more-retry')[0]!.props.onPress(),
+    );
+    expect(list(r).props.rows).toHaveLength(28);
+    expect(byID(r, 'grants-seat-more-error')).toHaveLength(0);
+  });
+
+  test('electorate rows with keys still open the seat screen', async () => {
+    Object.assign(mockParams, { view: 'electorates' });
+    const r = await mount(Grants);
+    const page = list(r);
+    const row = page.props.render(page.props.rows[0], 0);
+    expect(row.props.href.params).toMatchObject({
+      seat: 'Maribyrnong',
+      state: 'vic',
+    });
+    expect(row.props.detail).toBe('Victoria · 28 grants');
+  });
+});
+
+test('a seat seeded from the link stops filtering once the view changes', async () => {
+  const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+  Object.assign(mockParams, {
+    jur: 'federal',
+    view: 'electorates',
+    seat: 'Melbourne',
+  });
+  const r = await mount(Grants);
+  const caption = () =>
+    r.root.find((n) => n.props.testID === 'grants-caption').props.children;
+  expect(caption()).toMatch(/^1 of /);
+  await act(async () => {
+    r.root
+      .findAllByType(SegmentedPicker)
+      .find((n) => n.props.testID === 'grants-view')!
+      .props.onChange('programs');
+  });
+  expect(caption()).toMatch(/programs, largest first$/);
+  await act(async () => {
+    r.root
+      .findAllByType(SegmentedPicker)
+      .find((n) => n.props.testID === 'grants-view')!
+      .props.onChange('electorates');
+  });
+  expect(caption()).toMatch(/electorates, largest first$/);
+  await act(async () => r.unmount());
+});
+
+test('a largest grant states the count of the recipient’s other awards that month, as its basis says', async () => {
+  const largest = raw('/social/grants-largest.json');
+  const rows = largest.months[largest.latest] as { id: string; more: number }[];
+  const withMore = rows.find((r) => r.more > 0)!;
+  const without = rows.find((r) => r.more === 0)!;
+  const fact = async (id: string) =>
+    (
+      await loadMoneyItem({ kind: 'largest', month: largest.latest, id }, false)
+    ).data.facts.find((f) => f.label === 'Other awards that month');
+  expect((await fact(withMore.id))?.value).toBe(String(withMore.more));
+  expect(await fact(without.id)).toBeUndefined();
+});
+
+test('a seat with one of its grants listed says it is listed', async () => {
+  Object.assign(mockParams, {
+    jur: 'federal',
+    id: 'GO6821',
+    seat: 'Bruce',
+    state: 'vic',
+  });
+  const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+  const r = await mount(Program);
+  await act(async () => {
+    r.root
+      .findAllByType(SegmentedPicker)
+      .find((n) => n.props.testID === 'program-view')!
+      .props.onChange('grants');
+  });
+  expect(
+    r.root.find((n) => n.props.testID === 'program-caption').props.children,
+  ).toBe('1 of the 3 grants in Bruce is listed, largest first');
+  await act(async () => r.unmount());
+});
+
+test.each([
+  ['offline', undefined, 1],
+  ['the server was unavailable', 'unavailable', 0],
+] as const)(
+  'funding by seat type says offline only when %s calls for it',
+  async (_name, staleReason, lines) => {
+    const { OfflineLine } = jest.requireActual('../src/design/states');
+    const read = money.allocation;
+    money.allocation = async (refresh?: boolean) => ({
+      ...(await read(refresh)),
+      stale: true,
+      ...(staleReason ? { staleReason } : {}),
+    });
+    const r = await mount(FundingBySeatType);
+    expect(r.root.findAllByType(OfflineLine)).toHaveLength(lines);
+    await act(async () => r.unmount());
+  },
+);
+
+test.each([
+  ['Grants', Grants, { jur: 'federal' }, 'grants-view', 'recipients'],
+  [
+    'Program',
+    Program,
+    { jur: 'federal', id: 'GO3141' },
+    'program-view',
+    'grants',
+  ],
+] as const)(
+  '%s clears the native search field when the view changes',
+  async (_name, Page, params, picker, next) => {
+    const { SegmentedPicker } = jest.requireActual('../src/design/controls');
+    Object.assign(mockParams, params);
+    const r = await mount(Page);
+    const search =
+      r.root.findByType(RouteOptions).props.options.headerSearchBarOptions;
+    const clearText = jest.fn();
+    search.ref.current = { clearText };
+    await act(async () => search.onChangeText({ nativeEvent: { text: 'zz' } }));
+    await act(async () => {
+      r.root
+        .findAllByType(SegmentedPicker)
+        .find((n) => n.props.testID === picker)!
+        .props.onChange(next);
+    });
+    expect(clearText).toHaveBeenCalled();
+    expect(r.root.findByType(MoneyList).props.rows.length).toBeGreaterThan(0);
+    await act(async () => r.unmount());
+  },
+);
+
+test('the grants card keeps the register’s caveats, as the contracts card does', async () => {
+  const { SourceLine } = jest.requireActual('../src/design/source');
+  const r = await mount(Hub);
+  const notes = r.root
+    .findAllByType(SourceLine)
+    .find((x) => x.props.testID === 'money-card-grants-source')!.props
+    .notes as string[];
+  const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
+  expect(index.meta.caveats.length).toBeGreaterThan(0);
+  for (const caveat of index.meta.caveats) expect(notes).toContain(caveat);
+  await act(async () => r.unmount());
 });

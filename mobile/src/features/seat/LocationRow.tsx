@@ -98,22 +98,23 @@ export function LocationRow({
     }, SLOW_LOCATE_MS);
     let result: Parameters<typeof locationAnswer>[0];
     try {
+      const electorates = await seats();
+      // The directory may finish after Cancel, typing or dismissal. Do not
+      // enter the location helper, which requests permission, once stopped.
+      if (controller.signal.aborted) return;
       result =
         scope === 'vic'
-          ? await suggestStateFromLocation(await seats(), controller.signal)
-          : await suggestFromLocation(
-              await seats(),
-              () => {},
-              controller.signal,
-            );
+          ? await suggestStateFromLocation(electorates, controller.signal)
+          : await suggestFromLocation(electorates, () => {}, controller.signal);
     } catch {
       result = { kind: 'unavailable' };
+    } finally {
+      clearTimeout(slow);
     }
-    clearTimeout(slow);
     const cancelled = controller.signal.aborted;
     if (pending.current === controller) pending.current = null;
     if (cancelled) return;
-    const next = locationAnswer(result, cancelled);
+    const next = locationAnswer(result, cancelled, scope);
     setAnswer(next);
     AccessibilityInfo.announceForAccessibility(spoken(next));
   }

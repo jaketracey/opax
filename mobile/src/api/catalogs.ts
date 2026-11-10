@@ -1,3 +1,5 @@
+import { ReadSession } from './read-session';
+import { throwIfAborted } from './abort';
 import { samePartyLabel } from '../design/party';
 import { decodePartyFile } from '../features/directories/party-file';
 import { publicDiscovery } from '../features/money-public/discovery';
@@ -143,7 +145,9 @@ const failedPartyBlock = (error: unknown): Block<never> => ({
       : new ApiError('invalid-data', 'This catalog could not be read.'),
 });
 export class Catalogs {
-  private suggestionData?: Promise<SuggestionSources>;
+  private suggestionReads = new ReadSession<SuggestionSources>();
+  private suggestionGeneration = 0;
+  private suggestionLoadedAt?: number;
   /** The last bills index read this session, for the bill page's party note. */
   private billIndex?: RecordResult<decode.BillIndex>;
   private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
@@ -152,6 +156,7 @@ export class Catalogs {
     input: string,
     refresh = false,
     publish?: (record: PartyPageRecord) => void,
+    signal?: AbortSignal,
   ): Promise<PartyPageRecord> {
     // Keep the complete shown record until a refresh replaces it atomically.
     const progress = refresh ? undefined : publish;
@@ -171,13 +176,16 @@ export class Catalogs {
           savedAt: r.savedAt,
         };
       } catch (e) {
+        throwIfAborted(signal);
         return failedPartyBlock(e);
       }
     };
     // Optional reads start after publishing the core; each settles independently.
     const readMoney = () =>
       read(
-        this.client.get('/graph/money.json', decode.decodeMoney, refresh),
+        this.client.get('/graph/money.json', decode.decodeMoney, refresh, {
+          signal,
+        }),
         'AEC disclosure returns, CC BY 4.0',
       );
     const readEntities = () =>
@@ -186,19 +194,22 @@ export class Catalogs {
           '/graph/aec-extras.json',
           decode.decodeAecExtras,
           refresh,
+          { signal },
         ),
         'AEC Transparency Register, CC BY 4.0',
       );
     const readVotes = () =>
       read(
         (async () => {
-          const index = await this.bills(refresh);
+          const index = await this.bills(refresh, signal);
           const files: RecordResult<decode.BillDetail>[] = [];
           const candidates = recentPartyBills(index.data);
           let failed = 0;
           for (let i = 0; i < candidates.length && files.length < 32; i += 8) {
             const batch = await Promise.allSettled(
-              candidates.slice(i, i + 8).map((b) => this.bill(b.key, refresh)),
+              candidates
+                .slice(i, i + 8)
+                .map((b) => this.bill(b.key, refresh, signal)),
             );
             for (const r of batch) {
               if (r.status === 'fulfilled') {
@@ -228,11 +239,11 @@ export class Catalogs {
       );
     const corePending = (async () => {
       const [roster, slugs, manifest] = await Promise.all([
-        this.roster(refresh),
-        this.slugs(refresh),
-        this.manifest(refresh),
+        this.roster(refresh, signal),
+        this.slugs(refresh, signal),
+        this.manifest(refresh, signal),
       ]);
-      const people = await this.people(manifest.data, refresh);
+      const people = await this.people(manifest.data, refresh, signal);
       // Membership counts and money ranks require a complete cohort.
       if (
         [roster, slugs, manifest, people].some(
@@ -285,8 +296,8 @@ export class Catalogs {
       label = resolveParty(input, labels);
       if (!label) {
         const stateParties = await Promise.allSettled([
-          this.partyFile('qld', refresh),
-          this.partyFile('vic', refresh),
+          this.partyFile('qld', refresh, signal),
+          this.partyFile('vic', refresh, signal),
         ]);
         label = resolveParty(
           input,
@@ -345,6 +356,7 @@ export class Catalogs {
         view.divisions,
       ].some((b) => b.stale),
     });
+    throwIfAborted(signal);
     progress?.(result());
     // Give React a turn to commit the title and Members before optional decode work.
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
@@ -360,10 +372,13 @@ export class Catalogs {
             },
             moneyMeta: block.data?.meta ?? null,
           };
+          throwIfAborted(signal);
           progress?.(result());
         })
         .catch((error: unknown) => {
+          throwIfAborted(signal);
           view = { ...view, receipts: failedPartyBlock(error) };
+          throwIfAborted(signal);
           progress?.(result());
         }),
       readEntities()
@@ -387,10 +402,13 @@ export class Catalogs {
               asAt: block.data?.meta.generated ?? null,
             },
           };
+          throwIfAborted(signal);
           progress?.(result());
         })
         .catch((error: unknown) => {
+          throwIfAborted(signal);
           view = { ...view, associated: failedPartyBlock(error) };
+          throwIfAborted(signal);
           progress?.(result());
         }),
       readVotes()
@@ -410,59 +428,75 @@ export class Catalogs {
               asAt: block.data?.index.generated_at ?? null,
             },
           };
+          throwIfAborted(signal);
           progress?.(result());
         })
         .catch((error: unknown) => {
+          throwIfAborted(signal);
           view = { ...view, divisions: failedPartyBlock(error) };
+          throwIfAborted(signal);
           progress?.(result());
         }),
     ]);
     return result();
   }
 
-  roster(refresh = false) {
+  roster(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/parliamentarians.json',
       decode.decodeRoster,
       refresh,
+      { signal },
     );
   }
-  partyFile(jurisdiction: 'federal' | 'qld' | 'vic', refresh = false) {
+  partyFile(
+    jurisdiction: 'federal' | 'qld' | 'vic',
+    refresh = false,
+    signal?: AbortSignal,
+  ) {
     return this.client.get(
       jurisdiction === 'federal'
         ? '/graph/money.json'
         : `/graph/money.${jurisdiction}.json`,
       decodePartyFile,
       refresh,
+      { signal },
     );
   }
-  slugs(refresh = false) {
-    return this.client.get('/api/person-slugs', decode.decodeSlugs, refresh);
+  slugs(refresh = false, signal?: AbortSignal) {
+    return this.client.get('/api/person-slugs', decode.decodeSlugs, refresh, {
+      signal,
+    });
   }
-  manifest(refresh = false) {
+  manifest(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/electorates/manifest.json',
       decode.decodeManifest,
       refresh,
+      { signal },
     );
   }
-  people(manifest: Manifest, refresh = false) {
-    return this.client.get(manifest.people_url, decode.decodePeople, refresh);
+  people(manifest: Manifest, refresh = false, signal?: AbortSignal) {
+    return this.client.get(manifest.people_url, decode.decodePeople, refresh, {
+      signal,
+    });
   }
-  electorates(manifest: Manifest, refresh = false) {
+  electorates(manifest: Manifest, refresh = false, signal?: AbortSignal) {
     return this.client.get(
       manifest.index_url,
       decode.decodeElectorateIndex,
       refresh,
+      { signal },
     );
   }
-  electorate(path: string) {
-    return this.client.get(path, decode.decodeElectorate);
+  electorate(path: string, signal?: AbortSignal) {
+    return this.client.get(path, decode.decodeElectorate, false, { signal });
   }
-  bills(refresh = false) {
+  bills(refresh = false, signal?: AbortSignal) {
     return this.client
-      .get('/bills/index.json', decode.decodeBillIndex, refresh)
+      .get('/bills/index.json', decode.decodeBillIndex, refresh, { signal })
       .then((index) => {
+        throwIfAborted(signal);
         this.billIndex = index;
         return index;
       });
@@ -475,66 +509,87 @@ export class Catalogs {
   billIndexRow(key: string): decode.Bill | null {
     return this.billIndex?.data.bills.find((row) => row.key === key) ?? null;
   }
-  bill(key: string, refresh = false) {
+  bill(key: string, refresh = false, signal?: AbortSignal) {
     return this.client.get(
       `/bills/${billKey(key)}.json`,
       decode.decodeBill,
       refresh,
+      { signal },
     );
   }
-  votes() {
-    return this.client.get('/votes.json', decode.decodeVotes);
+  votes(signal?: AbortSignal) {
+    return this.client.get('/votes.json', decode.decodeVotes, false, {
+      signal,
+    });
   }
-  interestIndex() {
-    return this.client.get('/interests/index.json', decode.decodeInterestIndex);
+  interestIndex(signal?: AbortSignal) {
+    return this.client.get(
+      '/interests/index.json',
+      decode.decodeInterestIndex,
+      false,
+      { signal },
+    );
   }
-  interests(key: string) {
+  interests(key: string, signal?: AbortSignal) {
     return this.client.get(
       `/interests/${interestKey(key)}.json`,
       decode.decodeInterest,
+      false,
+      { signal },
     );
   }
-  recentInterests() {
+  recentInterests(signal?: AbortSignal) {
     return this.client.get(
       '/interests/recent.json',
       decode.decodeRecentInterests,
+      false,
+      { signal },
     );
   }
-  pay() {
-    return this.client.get('/pay.json', decode.decodePay);
+  pay(signal?: AbortSignal) {
+    return this.client.get('/pay.json', decode.decodePay, false, { signal });
   }
-  expenses() {
-    return this.client.get('/expenses.json', decode.decodeExpenses);
+  expenses(signal?: AbortSignal) {
+    return this.client.get('/expenses.json', decode.decodeExpenses, false, {
+      signal,
+    });
   }
-  expenseCategories() {
+  expenseCategories(signal?: AbortSignal) {
     return this.client.get(
       '/expense-categories.json',
       decode.decodeExpenseCategories,
+      false,
+      { signal },
     );
   }
-  photoPeople(refresh = false) {
+  photoPeople(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/photos/people.json',
       decode.decodePhotoPeople,
       refresh,
+      { signal },
     );
   }
-  photoCredits(refresh = false) {
+  photoCredits(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/photos/credits.json',
       decode.decodePhotoCredits,
       refresh,
+      { signal },
     );
   }
-  corpus() {
-    return this.client.get('/corpus.json', decode.decodeCorpus);
+  corpus(signal?: AbortSignal) {
+    return this.client.get('/corpus.json', decode.decodeCorpus, false, {
+      signal,
+    });
   }
   /** Leads (P1): the static discovery export, decoded whole. */
-  discovery(refresh = false) {
+  discovery(refresh = false, signal?: AbortSignal) {
     return this.client.get(
       '/discovery.json',
       (v) => publicDiscovery(decode.decodeDiscovery(v)),
       refresh,
+      { signal },
     );
   }
   /**
@@ -544,14 +599,18 @@ export class Catalogs {
    * Portraits load per row (CachedPortrait). Joins are optional: without
    * them a row keeps its text and source, and shows no party or profile link.
    */
-  async declarations(refresh = false) {
+  async declarations(refresh = false, signal?: AbortSignal) {
     const record = await this.client.get(
       '/interests/recent.json',
       decode.decodeRecentInterests,
       refresh,
+      { signal },
     );
     const optional = <T>(path: string, decoder: Decoder<T>) =>
-      this.client.get(path, decoder, refresh).catch(() => null);
+      this.client.get(path, decoder, refresh, { signal }).catch(() => {
+        throwIfAborted(signal);
+        return null;
+      });
     const [roster, slugs, interestIndex, manifest] = await Promise.all([
       optional('/parliamentarians.json', decode.decodeRoster),
       optional('/api/person-slugs', decode.decodeSlugs),
@@ -602,21 +661,26 @@ export class Catalogs {
       meta: interests.meta,
     };
   }
-  async about(refresh = false) {
+  async about(refresh = false, signal?: AbortSignal) {
     const result = await this.client.get(
       '/corpus.json',
       decode.decodeCorpus,
       refresh,
+      { signal },
     );
     return { ...result, data: cached(coverageFor(result.data), [result]) };
   }
-  async billFor(key: string, refresh = false) {
+  async billFor(key: string, refresh = false, signal?: AbortSignal) {
     // The page needs only the bill's own file. The index adds the party
     // note under the votes: use the copy already in memory, and start
     // reading it for next time without waiting.
-    const bill = await this.bill(key, refresh);
+    const bill = await this.bill(key, refresh, signal);
     const index = this.billIndex;
-    if (!index || refresh) void this.bills(refresh).catch(() => undefined);
+    if (!index || refresh)
+      void this.bills(refresh, signal).catch(() => {
+        throwIfAborted(signal);
+        return undefined;
+      });
     const view = billFor(bill.data, index?.data ?? noBillIndex);
     for (const block of [
       view.identity,
@@ -634,14 +698,18 @@ export class Catalogs {
     view.divisions = cached(view.divisions, index ? [bill, index] : [bill]);
     return { ...bill, ...recordFlags([bill]), data: view };
   }
-  async billsFor(filter: Parameters<typeof billsFor>[1] = {}) {
-    const result = await this.bills();
+  async billsFor(
+    filter: Parameters<typeof billsFor>[1] = {},
+    signal?: AbortSignal,
+  ) {
+    const result = await this.bills(undefined, signal);
     return { ...result, data: cached(billsFor(result.data, filter), [result]) };
   }
   /** One Today feed in a Block, never rejecting: a failed read is an error. */
   private async todayBlock<T, V>(
     pending: Promise<RecordResult<T>>,
     select: (data: T) => Block<V>,
+    signal?: AbortSignal,
   ): Promise<Block<V>> {
     try {
       const record = await pending;
@@ -656,6 +724,7 @@ export class Catalogs {
             : Math.min(record.savedAt, selected.savedAt),
       };
     } catch (e) {
+      throwIfAborted(signal);
       return {
         data: null,
         status: 'error',
@@ -675,9 +744,16 @@ export class Catalogs {
    * bills from the bills index alone, so the block never waits for the
    * declarations or the roster.
    */
-  todayBills(limit = 3, kind: RecentBillsKind = 'new', refresh = false) {
-    return this.todayBlock(this.bills(refresh), (data) =>
-      recentBillsFor(data, limit, kind),
+  todayBills(
+    limit = 3,
+    kind: RecentBillsKind = 'new',
+    refresh = false,
+    signal?: AbortSignal,
+  ) {
+    return this.todayBlock(
+      this.bills(refresh, signal),
+      (data) => recentBillsFor(data, limit, kind),
+      signal,
     );
   }
   /**
@@ -685,14 +761,16 @@ export class Catalogs {
    * names, words and dates draw at once. Parties and places join in a second
    * pass (`todayDeclarationsJoined`), when the roster answers.
    */
-  todayDeclarations(limit = 3, refresh = false) {
+  todayDeclarations(limit = 3, refresh = false, signal?: AbortSignal) {
     return this.todayBlock(
       this.client.get(
         '/interests/recent.json',
         decode.decodeRecentInterests,
         refresh,
+        { signal },
       ),
       (interests) => recentDeclarationsFor(interests, limit),
+      signal,
     );
   }
   /**
@@ -703,19 +781,25 @@ export class Catalogs {
   async todayDeclarationsJoined(
     limit = 3,
     refresh = false,
-    metadata = this.client
-      .get('/parliamentarians.json', decode.decodeRoster, refresh)
-      .catch(() => null),
+    metadata?: Promise<RecordResult<decode.Roster> | null>,
+    signal?: AbortSignal,
   ) {
+    const rosterPending =
+      metadata ??
+      this.roster(refresh, signal).catch(() => {
+        throwIfAborted(signal);
+        return null;
+      });
     const pending = this.client.get(
       '/interests/recent.json',
       decode.decodeRecentInterests,
       refresh,
+      { signal },
     );
     // Attach the load handler immediately, including when the roster is slow.
     return this.todayBlock(
       pending.then(async (record) => {
-        const roster = await metadata;
+        const roster = await rosterPending;
         return { ...record, data: { interests: record.data, roster } };
       }),
       ({ interests, roster }) =>
@@ -723,6 +807,7 @@ export class Catalogs {
           recentDeclarationsFor(interests, limit, { roster: roster?.data }),
           roster ? [roster] : [],
         ),
+      signal,
     );
   }
   /**
@@ -731,8 +816,12 @@ export class Catalogs {
    * profile. The same reads as the feed (all cached for Today's other
    * blocks but the interest index), cut to `limit` rows.
    */
-  async todayDeclarationsProfiled(limit = 3, refresh = false) {
-    const feed = await this.declarations(refresh);
+  async todayDeclarationsProfiled(
+    limit = 3,
+    refresh = false,
+    signal?: AbortSignal,
+  ) {
+    const feed = await this.declarations(refresh, signal);
     return { ...feed, data: feed.data ? feed.data.slice(0, limit) : null };
   }
   /**
@@ -743,12 +832,14 @@ export class Catalogs {
    */
   async recentDivisions(
     refresh = false,
+    signal?: AbortSignal,
   ): Promise<Block<RecentDivisions> | { status: 'missing' }> {
     try {
       const record = await this.client.get(
         '/divisions/recent.json',
         decodeRecentDivisions,
         refresh,
+        { signal },
       );
       return {
         data: record.data,
@@ -765,6 +856,7 @@ export class Catalogs {
         savedAt: record.savedAt,
       };
     } catch (e) {
+      throwIfAborted(signal);
       if (
         e instanceof ApiError &&
         (e.code === 'not-found' || e.code === 'offline')
@@ -793,6 +885,7 @@ export class Catalogs {
    */
   async todayEdition(
     refresh: boolean | 'background' = false,
+    signal?: AbortSignal,
   ): Promise<Block<EditionView>> {
     const empty = { sources: [], asAt: null, stale: false, savedAt: null };
     try {
@@ -800,7 +893,7 @@ export class Catalogs {
         editionPath,
         decode.decodeEditionRead,
         refresh === true,
-        { absence: true, background: refresh === 'background' },
+        { signal, absence: true, background: refresh === 'background' },
       );
       if ('absent' in record.data)
         return {
@@ -817,6 +910,7 @@ export class Catalogs {
         savedAt: record.savedAt,
       };
     } catch (e) {
+      throwIfAborted(signal);
       return {
         ...empty,
         data: null,
@@ -846,6 +940,7 @@ export class Catalogs {
       parties?: boolean;
     },
     refresh = false,
+    signal?: AbortSignal,
   ) {
     const records: RecordResult<unknown>[] = [];
     const errors: ApiError[] = [];
@@ -856,7 +951,9 @@ export class Catalogs {
     ): Promise<T | null> => {
       if (!wanted) return null;
       try {
-        const record = await this.client.get(path, decoder, refresh);
+        const record = await this.client.get(path, decoder, refresh, {
+          signal,
+        });
         records.push(record);
         if (record.partial || isPartialCatalog(record.data)) {
           errors.push(
@@ -866,6 +963,7 @@ export class Catalogs {
         }
         return record.data;
       } catch (e) {
+        throwIfAborted(signal);
         errors.push(
           e instanceof ApiError
             ? e
@@ -947,15 +1045,15 @@ export class Catalogs {
       error: errors[0] ?? null,
     };
   }
-  async directory(refresh = false) {
+  async directory(refresh = false, signal?: AbortSignal) {
     const [manifest, roster, slugs] = await Promise.all([
-      this.manifest(refresh),
-      this.roster(refresh),
-      this.slugs(refresh),
+      this.manifest(refresh, signal),
+      this.roster(refresh, signal),
+      this.slugs(refresh, signal),
     ]);
     const [people, electorates] = await Promise.all([
-      this.people(manifest.data, refresh),
-      this.electorates(manifest.data, refresh),
+      this.people(manifest.data, refresh, signal),
+      this.electorates(manifest.data, refresh, signal),
     ]);
     if (
       people.data.meta.release_id !== manifest.data.release_id ||
@@ -967,8 +1065,12 @@ export class Catalogs {
       );
     return { manifest, roster, slugs, people, electorates };
   }
-  async yourMP(id: string, chosenStateSeats: string[] = []) {
-    const directory = await this.directory();
+  async yourMP(
+    id: string,
+    chosenStateSeats: string[] = [],
+    signal?: AbortSignal,
+  ) {
+    const directory = await this.directory(undefined, signal);
     const view = yourMPFor(
       id,
       directory.electorates.data,
@@ -984,8 +1086,8 @@ export class Catalogs {
     );
     return view;
   }
-  async electorateFor(path: string) {
-    const result = await this.electorate(path);
+  async electorateFor(path: string, signal?: AbortSignal) {
+    const result = await this.electorate(path, signal);
     const view = electorateFor(result.data);
     for (const block of [
       view.identity,
@@ -999,120 +1101,146 @@ export class Catalogs {
     }
     return { ...result, data: view };
   }
-  suggestionSources(refresh = false): Promise<SuggestionSources> {
-    if (!this.suggestionData || refresh) {
-      const pending = (async () => {
-        const [manifest, roster, bills, slugs] = await Promise.all([
-          this.client.get(
-            '/electorates/manifest.json',
-            decode.decodeManifest,
-            refresh,
-          ),
-          this.client
-            .get('/parliamentarians.json', decode.decodeRoster, refresh)
-            .catch(() => null),
-          this.bills(refresh),
-          this.client
-            .get('/api/person-slugs', decode.decodeSlugs, refresh)
-            .catch(() => null),
-        ]);
-        const [electorates, people] = await Promise.all([
-          this.client.get(
-            manifest.data.index_url,
-            decode.decodeElectorateIndex,
-            refresh,
-          ),
-          this.client
-            .get(manifest.data.people_url, decode.decodePeople, refresh)
-            .then((record) =>
-              record.data.meta.release_id === manifest.data.release_id
-                ? record
-                : null,
-            )
-            .catch(() => null),
-        ]);
-        if (electorates.data.meta.release_id !== manifest.data.release_id)
-          throw new ApiError(
-            'invalid-data',
-            'The electorate records are out of step. Try again shortly.',
-          );
-        const provenance = suggestionProvenanceFor({
-          people: roster?.asOf ?? null,
-          electorates: electorates.asOf ?? manifest.asOf,
-          bills: bills.asOf,
-        });
-        return {
-          roster: memberSuggestionRoster(
-            roster?.data ?? {
-              meta: { generated: '' },
-              people: [],
-            },
-            {
-              roster: roster?.data,
-              manifest: manifest.data,
-              slugs: slugs?.data,
-              people: people?.data,
-            },
-          ),
-          manifest: manifest.data,
-          slugs: slugs?.data,
-          people: people?.data,
-          electorates: electorates.data,
-          bills: bills.data,
-          provenance: {
-            people: cached(
-              {
-                ...provenance.people,
-                sources:
-                  roster && slugs && people
-                    ? [
-                        ...provenance.people.sources,
-                        ...provenance.electorates.sources,
-                      ]
-                    : provenance.people.sources,
-              },
-              [
-                ...(roster ? [roster] : []),
-                ...(roster && slugs && people ? [slugs, people, manifest] : []),
-              ],
+  suggestionSources(
+    refresh = false,
+    signal?: AbortSignal,
+  ): Promise<SuggestionSources> {
+    const now = Date.now();
+    const expired =
+      this.suggestionLoadedAt !== undefined &&
+      (now < this.suggestionLoadedAt ||
+        now - this.suggestionLoadedAt >= 86400000);
+    if (expired) this.suggestionIdentityRetry = 'unused';
+    if (refresh || expired) this.suggestionLoadedAt = undefined;
+    return this.suggestionReads.read(
+      'sources',
+      async (signal) => {
+        const generation = ++this.suggestionGeneration;
+        this.suggestionLoadedAt = undefined;
+        const sources = await (async () => {
+          const [manifest, roster, bills, slugs] = await Promise.all([
+            this.client.get(
+              '/electorates/manifest.json',
+              decode.decodeManifest,
+              refresh,
+              { signal },
             ),
-            electorates: cached(provenance.electorates, [
-              manifest,
-              electorates,
-            ]),
-            bills: cached(provenance.bills, [bills]),
-          },
-        };
-      })();
-      this.suggestionData = pending;
-      void pending.then(
-        (sources) => {
-          if (
-            this.suggestionData === pending &&
-            this.suggestionIdentityRetry !== 'used'
-          )
+            this.client
+              .get('/parliamentarians.json', decode.decodeRoster, refresh, {
+                signal,
+              })
+              .catch(() => {
+                throwIfAborted(signal);
+                return null;
+              }),
+            this.bills(refresh, signal),
+            this.client
+              .get('/api/person-slugs', decode.decodeSlugs, refresh, { signal })
+              .catch(() => {
+                throwIfAborted(signal);
+                return null;
+              }),
+          ]);
+          const [electorates, people] = await Promise.all([
+            this.client.get(
+              manifest.data.index_url,
+              decode.decodeElectorateIndex,
+              refresh,
+              { signal },
+            ),
+            this.client
+              .get(manifest.data.people_url, decode.decodePeople, refresh, {
+                signal,
+              })
+              .then((record) =>
+                record.data.meta.release_id === manifest.data.release_id
+                  ? record
+                  : null,
+              )
+              .catch(() => {
+                throwIfAborted(signal);
+                return null;
+              }),
+          ]);
+          if (electorates.data.meta.release_id !== manifest.data.release_id)
+            throw new ApiError(
+              'invalid-data',
+              'The electorate records are out of step. Try again shortly.',
+            );
+          const provenance = suggestionProvenanceFor({
+            people: roster?.asOf ?? null,
+            electorates: electorates.asOf ?? manifest.asOf,
+            bills: bills.asOf,
+          });
+          return {
+            roster: memberSuggestionRoster(
+              roster?.data ?? {
+                meta: { generated: '' },
+                people: [],
+              },
+              {
+                roster: roster?.data,
+                manifest: manifest.data,
+                slugs: slugs?.data,
+                people: people?.data,
+              },
+            ),
+            manifest: manifest.data,
+            slugs: slugs?.data,
+            people: people?.data,
+            electorates: electorates.data,
+            bills: bills.data,
+            provenance: {
+              people: cached(
+                {
+                  ...provenance.people,
+                  sources:
+                    roster && slugs && people
+                      ? [
+                          ...provenance.people.sources,
+                          ...provenance.electorates.sources,
+                        ]
+                      : provenance.people.sources,
+                },
+                [
+                  ...(roster ? [roster] : []),
+                  ...(roster && slugs && people
+                    ? [slugs, people, manifest]
+                    : []),
+                ],
+              ),
+              electorates: cached(provenance.electorates, [
+                manifest,
+                electorates,
+              ]),
+              bills: cached(provenance.bills, [bills]),
+            },
+          };
+        })();
+        throwIfAborted(signal);
+        if (generation === this.suggestionGeneration) {
+          this.suggestionLoadedAt = Date.now();
+          if (this.suggestionIdentityRetry !== 'used')
             this.suggestionIdentityRetry =
               sources.slugs && sources.people && sources.roster.people.length
                 ? 'unused'
                 : 'available';
-        },
-        () => {
-          if (this.suggestionData === pending) this.suggestionData = undefined;
-        },
-      );
-    }
-    return this.suggestionData;
+        }
+        return sources;
+      },
+      { fresh: refresh || expired, signal },
+    );
   }
   /** One automatic identity recovery per session, triggered by a later focus. */
-  suggestionSourcesOnFocus(): Promise<SuggestionSources> {
+  suggestionSourcesOnFocus(signal?: AbortSignal): Promise<SuggestionSources> {
     if (this.suggestionIdentityRetry === 'available') {
       this.suggestionIdentityRetry = 'used';
-      return this.suggestionSources(true);
+      return this.suggestionSources(true, signal);
     }
-    return this.suggestionSources();
+    return this.suggestionSources(undefined, signal);
   }
-  async suggestions(query: string) {
-    const sources = await this.suggestionSources();
+  async suggestions(query: string, signal?: AbortSignal) {
+    const sources = await this.suggestionSources(undefined, signal);
     return suggestionsFor(
       query,
       sources.roster,
@@ -1120,18 +1248,28 @@ export class Catalogs {
       sources.bills,
     );
   }
-  async profileFor(id: PersonId, options: { includeInterests?: boolean } = {}) {
+  async profileFor(
+    id: PersonId,
+    options: { includeInterests?: boolean } = {},
+    signal?: AbortSignal,
+  ) {
     personId(id);
-    return this.assembleProfile((data) => profileFor(id, data), options);
+    return this.assembleProfile(
+      (data) => profileFor(id, data),
+      options,
+      signal,
+    );
   }
   /** A former member outside the dated release, by their roster identity. */
   async rosterProfileFor(
     identity: PersonProfile,
     options: { includeInterests?: boolean } = {},
+    signal?: AbortSignal,
   ) {
     return this.assembleProfile(
       (data) => rosterProfileFor(identity, data),
       options,
+      signal,
     );
   }
   private async assembleProfile<
@@ -1141,8 +1279,9 @@ export class Catalogs {
   >(
     compute: (data: ProfileCatalogs) => P,
     options: { includeInterests?: boolean },
+    signal?: AbortSignal,
   ): Promise<P> {
-    const directory = await this.directory();
+    const directory = await this.directory(undefined, signal);
     const records = new Map<string, RecordResult<unknown>>(),
       errors: Record<string, ApiError> = {};
     const load = async <T>(
@@ -1154,6 +1293,7 @@ export class Catalogs {
         records.set(key, result);
         return result.data;
       } catch (e) {
+        throwIfAborted(signal);
         errors[key] =
           e instanceof ApiError
             ? e
@@ -1171,14 +1311,14 @@ export class Catalogs {
       photoPeople,
       photoCredits,
     ] = await Promise.all([
-      load('votes', this.votes()),
-      load('bills', this.bills()),
-      load('interestIndex', this.interestIndex()),
-      load('pay', this.pay()),
-      load('expenses', this.expenses()),
-      load('expenseCategories', this.expenseCategories()),
-      load('photoPeople', this.photoPeople()),
-      load('photoCredits', this.photoCredits()),
+      load('votes', this.votes(signal)),
+      load('bills', this.bills(undefined, signal)),
+      load('interestIndex', this.interestIndex(signal)),
+      load('pay', this.pay(signal)),
+      load('expenses', this.expenses(signal)),
+      load('expenseCategories', this.expenseCategories(signal)),
+      load('photoPeople', this.photoPeople(undefined, signal)),
+      load('photoCredits', this.photoCredits(undefined, signal)),
     ]);
     const data: ProfileCatalogs = {
       manifest: directory.manifest.data,
@@ -1197,7 +1337,7 @@ export class Catalogs {
     const initial = compute(data);
     const interest =
       options.includeInterests !== false && initial.interestKey
-        ? await load('interests', this.interests(initial.interestKey))
+        ? await load('interests', this.interests(initial.interestKey, signal))
         : undefined;
     const profile = compute({ ...data, interest });
     for (const [key, block] of Object.entries(profile.blocks)) {
@@ -1239,7 +1379,12 @@ export class Catalogs {
     );
     return profile;
   }
-  async search(query: string, kind: CatalogKind = 'person', page = 1) {
+  async search(
+    query: string,
+    kind: CatalogKind = 'person',
+    page = 1,
+    signal?: AbortSignal,
+  ) {
     const params = new URLSearchParams({
       q: query,
       kind,
@@ -1249,14 +1394,21 @@ export class Catalogs {
       per: kind === 'person' ? '200' : '20',
     });
     const [result, slugs] = await Promise.all([
-      this.client.get(`/api/search-all?${params}`, decode.decodeSearch),
-      this.slugs(),
+      this.client.get(`/api/search-all?${params}`, decode.decodeSearch, false, {
+        signal,
+      }),
+      this.slugs(undefined, signal),
     ]);
     const bridge =
       kind === 'interest'
-        ? await Promise.all([this.interestIndex(), this.manifest()])
+        ? await Promise.all([
+            this.interestIndex(signal),
+            this.manifest(undefined, signal),
+          ])
         : undefined;
-    const people = bridge ? await this.people(bridge[1].data) : undefined;
+    const people = bridge
+      ? await this.people(bridge[1].data, undefined, signal)
+      : undefined;
     if (people && people.data.meta.release_id !== bridge![1].data.release_id)
       throw new ApiError(
         'invalid-data',
@@ -1267,13 +1419,20 @@ export class Catalogs {
       result.data.results.some((row) =>
         ['person', 'interest', 'pay', 'expense'].includes(row.kind),
       )
-        ? await Promise.all([this.roster(), bridge?.[1] ?? this.manifest()])
+        ? await Promise.all([
+            this.roster(undefined, signal),
+            bridge?.[1] ?? this.manifest(undefined, signal),
+          ])
             .then(async ([roster, manifest]) => ({
               roster,
               manifest,
-              people: people ?? (await this.people(manifest.data)),
+              people:
+                people ?? (await this.people(manifest.data, undefined, signal)),
             }))
-            .catch(() => null)
+            .catch(() => {
+              throwIfAborted(signal);
+              return null;
+            })
         : null;
     const memberCatalogs = {
       roster: membership?.roster.data,
@@ -1365,8 +1524,11 @@ export class Catalogs {
       },
     };
   }
-  async person(slug: string): Promise<RecordResult<PersonProfile>> {
-    const directory = await this.directory();
+  async person(
+    slug: string,
+    signal?: AbortSignal,
+  ): Promise<RecordResult<PersonProfile>> {
+    const directory = await this.directory(undefined, signal);
     const { slugs, roster, manifest, people } = directory;
     // Identifier-only handoff to the profile lane. Keep the existing slug route
     // working while allowing callers to carry the canonical person ID.

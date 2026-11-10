@@ -647,6 +647,22 @@ describe('the bill page', () => {
     expect(host(root, 'bill-divisions-more')).toHaveLength(1);
   });
 
+  test('an opened vote says what its party rows rest on', async () => {
+    const record = await fixture.billFor('au-federal-r7520');
+    const { main } = orderDivisions(record.data.divisions.data!.rows);
+    const index = 0;
+    const target = main[index]!;
+    // A vote whose party rows fall short of its count, as the web notes it.
+    target.splits.notes = ['2 not placed with a party', '2 paired'];
+    jest.mocked(runtime.billFor).mockResolvedValue(record);
+    mockParams.key = 'au-federal-r7520';
+    mockParams.division = target.key;
+    const root = await render();
+    const notes = host(root, `bill-division-${index}-parties-notes`);
+    expect(notes).toHaveLength(1);
+    expect(texts(notes[0]!).join('')).not.toMatch(/ paired/);
+  });
+
   test('a procedural vote opens its group first', async () => {
     const { main, procedural } = orderDivisions(
       view('au-federal-r7520').divisions.data!.rows,
@@ -787,6 +803,15 @@ describe('the bill page', () => {
       )
       .map((node) => node.props.testID);
     expect(marked).toEqual([`bill-date-${last}-new`]);
+    // The row is one accessible element: its label must carry the dot's "New".
+    const spoken = (index: number) =>
+      root.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === `bill-date-${index}`,
+      ).props.accessibilityLabel as string;
+    expect(spoken(last)).toMatch(/\. New$/);
+    if (last > 0) expect(spoken(0)).not.toMatch(/New/);
   });
 
   const relatedLine = (root: ReactTestInstance) =>

@@ -99,10 +99,18 @@ test.each([
   async (_name, screen, loader, args) => {
     const renderer = await render(screen());
     expect(mock[loader]).toHaveBeenCalledTimes(1);
-    expect(mock[loader]).toHaveBeenLastCalledWith(...args, false);
+    expect(mock[loader]).toHaveBeenLastCalledWith(
+      ...args,
+      false,
+      expect.any(AbortSignal),
+    );
     await pull(renderer.root);
     expect(mock[loader]).toHaveBeenCalledTimes(2);
-    expect(mock[loader]).toHaveBeenLastCalledWith(...args, true);
+    expect(mock[loader]).toHaveBeenLastCalledWith(
+      ...args,
+      true,
+      expect.any(AbortSignal),
+    );
     act(() => renderer.unmount());
   },
 );

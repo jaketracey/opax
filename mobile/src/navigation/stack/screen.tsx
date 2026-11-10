@@ -29,6 +29,7 @@ const rootTitles: Record<string, string> = {
   bills: 'Bills',
   search: 'Search',
   ask: 'Ask',
+  money: 'Money map',
   'public-money': 'Public money',
   grants: 'Commonwealth grants',
   'largest-grants': 'Largest grants',
@@ -90,17 +91,23 @@ export function rootBackTitle(
   if (previous?.name && loadedTitleRoutes.has(previous.name)) {
     const name = previous.params?.name;
     return typeof name === 'string' && name.trim()
-      ? name
+      ? name.trim().replace(/\s+/g, ' ')
       : (rootTitles[previous.name] ?? 'Back');
   }
   return previous?.name ? rootTitles[previous.name] : undefined;
 }
 
-/** Match a detail's short back pill before its component can install options. */
+/**
+ * Install a named native back item before a detail mounts. The space-aware
+ * iOS back item can discard its label beside a custom (including empty)
+ * title view. Disabling its menu keeps the title and chevron in a static
+ * item, as the short Grants and Tools buttons already do.
+ */
 export function detailBackOptions(
   navigation: Parameters<typeof rootBackTitle>[0],
   key: string | undefined,
   name: string,
+  stackRootTitle?: string,
 ): NativeStackNavigationOptions {
   if (Platform.OS !== 'ios') return {};
   const routes = navigation?.getState?.()?.routes ?? [];
@@ -113,9 +120,14 @@ export function detailBackOptions(
           previous === 'explore/index'
         ? 'Tools'
         : undefined;
-  return short
+  const back =
+    short ??
+    (previous && loadedTitleRoutes.has(name)
+      ? rootBackTitle(navigation, key, stackRootTitle)
+      : undefined);
+  return back
     ? {
-        headerBackTitle: short,
+        headerBackTitle: back,
         headerBackButtonDisplayMode: 'default',
         headerBackButtonMenuEnabled: false,
       }
@@ -164,7 +176,7 @@ export function screen(
               ),
             }
           : {}),
-        ...detailBackOptions(navigation, route.key, name),
+        ...detailBackOptions(navigation, route.key, name, stackRootTitle),
         ...(doneWhenRoot && navigation?.getState().index === 0
           ? doneItems
           : {}),

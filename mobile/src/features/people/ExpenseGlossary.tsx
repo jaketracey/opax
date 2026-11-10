@@ -45,7 +45,10 @@ export default function ExpenseGlossary() {
   const person = one(params.person);
   const amount = Number(one(params.amount));
   const years = one(params.years);
-  const { read, retry } = useRead(() => catalogs.expenseCategories(), 'all');
+  const { read, retry } = useRead(
+    (signal?: AbortSignal) => catalogs.expenseCategories(signal),
+    'all',
+  );
   const scroll = useRef<ScrollView>(null);
   const listY = useRef<number | null>(null);
   const groupY = useRef<number | null>(null);

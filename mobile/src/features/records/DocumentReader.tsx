@@ -1,3 +1,4 @@
+import { isAbortError } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -143,8 +144,9 @@ function useSpeaker(doc: DocumentRecord | null) {
   const [late, setLate] = useState<string | null>(null);
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     void catalogs
-      .directory()
+      .directory(undefined, controller.signal)
       .then((found) => {
         arrived.current = true;
         if (active) setDirectory(found);
@@ -155,6 +157,7 @@ function useSpeaker(doc: DocumentRecord | null) {
       });
     return () => {
       active = false;
+      controller.abort();
     };
   }, []);
   const wanted = !!doc?.speaker && doc.labels.speaker_type !== 'witness';
@@ -268,7 +271,10 @@ export default function DocumentReader({
     passage?: string;
   }>();
   const slug = recordSlug ?? params.slug ?? '';
-  const load = useCallback(() => records.document(slug), [slug]);
+  const load = useCallback(
+    (signal?: AbortSignal) => records.document(slug, signal),
+    [slug],
+  );
   const { value, error, retry } = useRead(load);
   const doc = value?.data ?? null;
   const speaker = useSpeaker(doc);
@@ -541,6 +547,17 @@ function Bar({ width, height }: { width: `${number}%`; height: number }) {
   return <View style={[styles.bar, { width, height }]} />;
 }
 
+/** Metadata can be partial: blank strings and booleans are not zero votes. */
+function divisionCount(raw: unknown): number | null {
+  if (
+    typeof raw !== 'number' &&
+    (typeof raw !== 'string' || !/^\d+$/.test(raw.trim()))
+  )
+    return null;
+  const value = Number(raw);
+  return Number.isSafeInteger(value) && value >= 0 ? value : null;
+}
+
 function ReaderHeader({
   doc,
   headline,
@@ -561,15 +578,13 @@ function ReaderHeader({
   const meta = metaLine(doc, { date: false });
   const caveat = recordCaveat(doc);
   const organisation = organisationOf(doc);
-  const ayes = Number(doc.metadata.ayes_count);
-  const noes = Number(doc.metadata.noes_count);
+  const ayes = divisionCount(doc.metadata.ayes_count);
+  const noes = divisionCount(doc.metadata.noes_count);
   const day = recordDate(doc);
   const votes =
     doc.labels.kind === 'division' &&
-    Number.isFinite(ayes) &&
-    Number.isFinite(noes) &&
-    doc.metadata.ayes_count != null &&
-    doc.metadata.noes_count != null &&
+    ayes !== null &&
+    noes !== null &&
     // The split's spoken label names its date; an undated division has none.
     !!day;
   return (
@@ -626,7 +641,12 @@ function ReaderHeader({
       ) : null}
       {doc.summary ? (
         <View style={styles.block}>
-          <Disclosure label="In short" testID="doc-brief">
+          <Disclosure
+            key={doc.slug}
+            label="In short"
+            testID="doc-brief"
+            defaultOpen={doc.labels.kind === 'speech'}
+          >
             <View style={styles.brief}>
               <MachinePill
                 note={{ title: 'Machine-written', body: [machineNote(doc)] }}
@@ -833,6 +853,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
     doc.labels.kind === 'bill_text' && /^au-federal-[a-z0-9-]+$/.test(key);
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     const subject = textBill
       ? ''
       : metaString(doc, 'bill_ref') ||
@@ -841,7 +862,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
         titleSubject(doc);
     if (!textBill && !subject) return;
     void catalogs
-      .bills()
+      .bills(undefined, controller.signal)
       .then((result) => {
         const matches = result.data.bills.filter((entry) =>
           textBill
@@ -860,6 +881,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
       .catch(() => {});
     return () => {
       active = false;
+      controller.abort();
     };
   }, [doc, key, textBill]);
   if (!found && !textBill) return null;
@@ -904,16 +926,31 @@ function Similar({ doc }: { doc: DocumentRecord }) {
   const [error, setError] = useState<unknown>(null),
     [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const request = useRef<AbortController | null>(null);
+  useEffect(
+    () => () => {
+      request.current?.abort();
+    },
+    [doc.slug],
+  );
   const loadSimilar = () => {
     setOpen(true);
     if (value || loading) return;
     setError(null);
     setLoading(true);
+    const controller = new AbortController();
+    request.current = controller;
     void records
-      .similar(doc, topics)
-      .then(setValue)
-      .catch(setError)
-      .finally(() => setLoading(false));
+      .similar(doc, topics, controller.signal)
+      .then((next) => {
+        if (!controller.signal.aborted) setValue(next);
+      })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted && !isAbortError(error)) setError(error);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
   };
   const rows: ReactNode[] =
     value?.data.map((row, index) => {

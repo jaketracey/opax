@@ -11,6 +11,7 @@ import {
 } from '../../api/validation';
 import { formatDate } from '../../design/format';
 import type { MoneyItemView } from './MoneyItem';
+import { combine } from './catalog';
 import { privateNote, publicRecipient } from './privacy';
 
 /** One existing recipient award, reached without a program key. */
@@ -19,6 +20,7 @@ export async function loadRecipientGrant(
   rid: string,
   award: string,
   refresh: boolean,
+  signal?: AbortSignal,
 ): Promise<RecordResult<MoneyItemView>> {
   const index = await apiClient.get(
     `/graph/grants.${jur}.json`,
@@ -34,6 +36,7 @@ export async function loadRecipientGrant(
       };
     },
     refresh,
+    { signal },
   );
   const recipient = index.data.recipients.find((row) => row.id === rid);
   if (!recipient)
@@ -86,11 +89,11 @@ export async function loadRecipientGrant(
       };
     },
     refresh,
+    { signal },
   );
   const grant = record.data;
   return {
-    ...record,
-    stale: index.stale || record.stale,
+    ...combine([index, record], null),
     data: {
       meta: [
         'Grant agreement',
@@ -115,7 +118,7 @@ export async function loadRecipientGrant(
         { label: 'Register ID', value: grant.id },
       ].filter((row) => !!row.value),
       children: [],
-      originals: grant.guid
+      originals: grant.identity.organisation && grant.guid
         ? [
             {
               label: `GrantConnect · ${grant.id}`,

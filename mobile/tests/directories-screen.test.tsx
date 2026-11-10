@@ -329,7 +329,11 @@ test('a failed read is a whole-screen state with the plain reason and Try again'
   );
   expect(state.props.action.label).toBe('Try again');
   await act(async () => state.props.action.onPress());
-  expect(loadDirectory).toHaveBeenLastCalledWith('person', false);
+  expect(loadDirectory).toHaveBeenLastCalledWith(
+    'person',
+    false,
+    expect.any(AbortSignal),
+  );
   await act(async () => renderer.unmount());
 });
 

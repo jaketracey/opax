@@ -29,6 +29,7 @@ import {
   aboutLede,
   categoryFrom,
   categoryLabel,
+  categoryNone,
   categorySearch,
   categorySeeAll,
   categorySource,
@@ -100,7 +101,8 @@ export default function Leads() {
   );
   const router = useRouter();
   const load = useCallback(
-    (refresh: boolean) => catalogs.discovery(refresh),
+    (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
+      catalogs.discovery(refresh, signal),
     [],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
@@ -223,6 +225,15 @@ export default function Leads() {
         symbol="magnifyingglass"
         title="No leads yet"
         testID="leads-empty"
+      />
+    );
+  else if (category && !kindAll.length)
+    // A link to a kind the current export has none of.
+    body = (
+      <ContentUnavailable
+        symbol="magnifyingglass"
+        title={categoryNone(category)}
+        testID="leads-kind-empty"
       />
     );
   else if (category)

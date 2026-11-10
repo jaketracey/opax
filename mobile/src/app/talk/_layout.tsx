@@ -6,6 +6,8 @@ import { sheetOptions } from '../../navigation/stack/screen';
 import { colors } from '../../design/tokens';
 import { copy } from '../../design/copy';
 
+export { RouteErrorBoundary as ErrorBoundary } from '../../navigation/RouteErrorBoundary';
+
 // A cold `opax://talk/…` link opens with Talk beneath it (specs/account.md
 // 1.1).
 export const unstable_settings = { initialRouteName: 'index' };

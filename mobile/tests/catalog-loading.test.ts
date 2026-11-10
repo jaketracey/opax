@@ -418,3 +418,23 @@ async function readToday(catalogs: Catalogs, limit = 6, refresh = false) {
   ]);
   return { bills, declarations };
 }
+
+test('Search suggestion snapshots expire daily and concurrent readers share the reload', async () => {
+  let now = 1000;
+  const clock = jest.spyOn(Date, 'now').mockImplementation(() => now);
+  try {
+    const { catalogs, calls } = loader();
+    const first = await catalogs.suggestionSources();
+    const initialReads = calls.length;
+    now += 86400000 - 1;
+    expect(await catalogs.suggestionSourcesOnFocus()).toBe(first);
+    expect(calls).toHaveLength(initialReads);
+    now += 1;
+    const pending = catalogs.suggestionSourcesOnFocus();
+    expect(catalogs.suggestionSourcesOnFocus()).toBe(pending);
+    expect(await pending).not.toBe(first);
+    expect(calls).toHaveLength(initialReads * 2);
+  } finally {
+    clock.mockRestore();
+  }
+});

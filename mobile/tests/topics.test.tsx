@@ -318,6 +318,7 @@ describe('Topic page', () => {
       'gambling',
       expect.objectContaining({ state: 'federal' }),
       false,
+      expect.any(AbortSignal),
     );
     expect(host(page.root, 'topic-filters-line')).toHaveLength(1);
     expect(words(page)).toContain('Federal Parliament');
@@ -446,6 +447,7 @@ describe('Topic page', () => {
       'gambling',
       { from: '1998', to: '2004' },
       false,
+      expect.any(AbortSignal),
     );
     expect(words(page)).toContain('From 1998 to 2004');
   });

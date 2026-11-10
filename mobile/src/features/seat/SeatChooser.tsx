@@ -23,7 +23,6 @@ import { headerItems } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 import { seatStateRoute, welcomeSeatStateRoute } from '../../navigation/routes';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
-import { forgetChoice } from '../your-mp/choice-store';
 import type { Directory } from '../your-mp/model';
 import { migratedSeat, useSeat } from '../your-mp/useSeat';
 import { FieldClearance } from './FieldClearance';
@@ -79,9 +78,6 @@ const offlineOf = (state: DirectoryState) =>
     ? { savedAt: state.directory.electorates.savedAt ?? null }
     : null;
 
-/** Forget is a persisted tombstone, so an older slot cannot revive the choice. */
-export const forgetSeat = forgetChoice;
-
 /**
  * Saving a choice: the tapped row shows an indicator while the seat is
  * written, then a checkmark for 300 ms with the success haptic (useSeat),
@@ -101,22 +97,27 @@ export function useChoose(
   const [chosenId, setChosenId] = useState<string | null>(null);
   const [failed, setFailed] = useState<Electorate | null>(null);
   const live = useRef(true);
+  const choosing = useRef(false);
   const closing = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    live.current = true;
+    return () => {
       live.current = false;
       if (closing.current) clearTimeout(closing.current);
-    },
-    [],
-  );
+    };
+  }, []);
   const choose = async (target: Electorate) => {
-    if (savingId || chosenId) return;
+    // React batches row updates. A ref also blocks another tap before the
+    // saving state has rendered, including taps on a different row.
+    if (choosing.current) return;
+    choosing.current = true;
     setFailed(null);
     setSavingId(target.electorate_id);
     try {
       await (write ? write(target, seat) : seat.choose(target));
     } catch {
       if (live.current) {
+        choosing.current = false;
         setSavingId(null);
         setFailed(target);
       }
@@ -147,6 +148,23 @@ async function chooseVictorian(
     () => null,
   );
   return seat.chooseState(target, region ?? undefined);
+}
+
+/** A failed write: the line and Try again, above the seats (chooser and Browse by state). */
+export function SeatSaveError({ onRetry }: { onRetry: () => void }) {
+  return (
+    <View style={styles.error} testID="seat-save-error">
+      <Text wordSafe variant="body">
+        {seatCopy.saveFailed()}
+      </Text>
+      <Button
+        label={copy.tryAgain}
+        variant="plain"
+        size="compact"
+        onPress={onRetry}
+      />
+    </View>
+  );
 }
 
 /** The row accessory for a seat while a choice is being written. */
@@ -305,7 +323,9 @@ export function SeatChooser({
         title: seatCopy.remove,
         destructive: true,
         onPress: () => {
-          void forgetSeat().then(
+          // Through the seat's write queue, so a save still in flight
+          // cannot land after the forget and bring the choice back.
+          void seat.forget().then(
             () => close(false),
             () => undefined,
           );
@@ -385,17 +405,7 @@ export function SeatChooser({
     </InsetGroup>
   );
   const saveError = failed ? (
-    <View style={styles.error} testID="seat-save-error">
-      <Text wordSafe variant="body">
-        {seatCopy.saveFailed()}
-      </Text>
-      <Button
-        label={copy.tryAgain}
-        variant="plain"
-        size="compact"
-        onPress={() => void choose(failed)}
-      />
-    </View>
+    <SeatSaveError onRetry={() => void choose(failed)} />
   ) : null;
 
   return (

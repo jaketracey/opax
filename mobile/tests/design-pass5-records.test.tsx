@@ -14,8 +14,14 @@ import {
 // record rows grouped by the day they were added.
 import { NavigationContext } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { Text as NativeText, Platform, type View } from 'react-native';
+import {
+  Text as NativeText,
+  Platform,
+  RefreshControl,
+  type View,
+} from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { ApiError } from '../src/api/errors';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { catalogs } from '../src/api/runtime';
 import {
@@ -26,8 +32,10 @@ import {
   PersonRow,
   RecordRow,
   SourceLine,
+  VoteSplit,
 } from '../src/design/primitives';
 import BillTextReader from '../src/features/records/BillTextReader';
+import BillTextContents from '../src/features/records/BillTextContents';
 import { useBillTextPane } from '../src/features/records/billTextPane';
 import { ReaderList } from '../src/features/records/ReaderList';
 import DocumentReader from '../src/features/records/DocumentReader';
@@ -133,6 +141,7 @@ const barLabels = () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.mocked(records.recent).mockReset();
   mockOptions = {};
   jest.mocked(catalogs.directory).mockResolvedValue({
     roster: record(roster),
@@ -227,6 +236,41 @@ test('each record kind names its own source and only a verified licence', () => 
   expect(state.licence).toBeUndefined();
 });
 
+test.each(['', '  ', false, -1, 1.5, 'unavailable', null, undefined])(
+  'a division with an invalid count (%j) does not draw a vote split',
+  async (ayes) => {
+    const division = doc('/api/resource/division-federal-senate-10701');
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        ...division,
+        metadata: { ...division.metadata, ayes_count: ayes, noes_count: 20 },
+      }),
+    );
+    const view = await mount(<DocumentReader />);
+    expect(view.root.findAllByType(VoteSplit).length).toBe(0);
+    await act(async () => view.unmount());
+  },
+);
+
+test.each([0, '0', 42, '42'])(
+  'a division keeps a recorded integer count (%j), including zero',
+  async (ayes) => {
+    const division = doc('/api/resource/division-federal-senate-10701');
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        ...division,
+        metadata: { ...division.metadata, ayes_count: ayes, noes_count: '20' },
+      }),
+    );
+    const view = await mount(<DocumentReader />);
+    expect(view.root.findByType(VoteSplit).props).toMatchObject({
+      ayes: Number(ayes),
+      noes: 20,
+    });
+    await act(async () => view.unmount());
+  },
+);
+
 const textOfId = (view: TestRenderer.ReactTestRenderer, testID: string) =>
   view.root
     .findAll((node) => node.props.testID === testID)
@@ -276,6 +320,7 @@ test('bill text opens on its text with the stage, one source line and the bar it
   expect(records.billVersion).toHaveBeenCalledWith(
     'au-federal-r7534',
     'r7534-aspassed',
+    expect.any(AbortSignal),
   );
   expect(view.root.findAllByProps({ testID: 'bill-text-read' })).toHaveLength(
     0,
@@ -345,6 +390,39 @@ test('bill text has no generic title before its text loads', async () => {
   jest.mocked(records.billManifest).mockReturnValue(new Promise(() => {}));
   const view = await mount(<BillTextReader />);
   expect(mockOptions.title).toBe('');
+  await act(async () => view.unmount());
+});
+
+test('Contents announces its pending read and replaces it with the loaded section list', async () => {
+  mockBillText();
+  let finish!: (
+    value: Awaited<ReturnType<typeof records.billManifest>>,
+  ) => void;
+  jest.mocked(records.billManifest).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const view = await mount(<BillTextContents />);
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-contents-loading' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () =>
+    finish(
+      record(
+        decodeBillTextManifest(
+          responses['/bill-texts/au-federal-r7534/index.json'],
+        ),
+      ),
+    ),
+  );
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-contents-loading' }).length,
+  ).toBe(0);
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-section-0' }).length,
+  ).toBeGreaterThan(0);
   await act(async () => view.unmount());
 });
 
@@ -455,10 +533,45 @@ test('choosing another version from the bar menu loads it in place', async () =>
   expect(records.billVersion).toHaveBeenLastCalledWith(
     'au-federal-r7534',
     'r7534-first-reps',
+    expect.any(AbortSignal),
   );
   expect(textOfId(view, 'bill-text-stage')).toBe(
     'First reading: synthetic fixture',
   );
+  await act(async () => view.unmount());
+});
+
+test('In short retains the recorded version caveat when the reader changes bill text versions', async () => {
+  mockBillText();
+  const summary = Object.freeze({
+    sentences: Object.freeze(['Fixture summary sentence.']),
+    changes: Object.freeze(['Fixture change.']),
+    attribution: 'Fixture attribution.',
+    describes_version: 'as introduced',
+  });
+  jest.mocked(catalogs.billFor).mockResolvedValue(
+    record({
+      identity: { data: { shortTitle: 'Fixture bill' } },
+      summary: { data: summary },
+    }) as never,
+  );
+  const view = await mount(<BillTextReader />);
+  expect(textOfId(view, 'bill-text-summary-version')).toBe(
+    'Describes the bill as introduced.',
+  );
+  const version = (
+    mockOptions.unstable_headerRightItems as () => {
+      menu: { items: { onPress: () => void }[] };
+    }[]
+  )()[0]!;
+  await act(async () => version.menu.items[1]!.onPress());
+  expect(textOfId(view, 'bill-text-summary-version')).toBe(
+    'Describes the bill as introduced.',
+  );
+  expect(textOfId(view, 'bill-text-summary-text')).toBe(
+    'Fixture summary sentence.',
+  );
+  expect(summary.sentences).toEqual(['Fixture summary sentence.']);
   await act(async () => view.unmount());
 });
 
@@ -643,6 +756,69 @@ test('Just added: a failed first read offers Try again', async () => {
   });
   await act(async () => failure.props.action.onPress());
   expect(records.recent).toHaveBeenCalledTimes(2);
+  await act(async () => view.unmount());
+});
+
+// Repeated pulls each start a read and only the newest answer is kept
+// (recent-record-races.test.tsx owns the race rules); the spinner ends with it.
+test('Just added keeps the newest refresh when pull events repeat before the next render', async () => {
+  let finish!: (value: Awaited<ReturnType<typeof records.recent>>) => void;
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record([]))
+    .mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    );
+  const view = await mount(<RecentRecords />);
+  await act(async () => {
+    const refresh = view.root.findByType(RefreshControl).props.onRefresh;
+    refresh();
+    refresh();
+  });
+  expect(records.recent).toHaveBeenCalledTimes(3);
+  await act(async () => finish(record(decodeRecent(responses['/api/recent']))));
+  expect(view.root.findByType(RefreshControl).props.refreshing).toBe(false);
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
+  await act(async () => view.unmount());
+});
+
+test('Just added explains a failed refresh of an empty feed and lets the reader retry', async () => {
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record([]))
+    .mockRejectedValueOnce(new Error('Unavailable'))
+    .mockResolvedValueOnce(record(decodeRecent(responses['/api/recent'])));
+  const view = await mount(<RecentRecords />);
+  await act(async () => view.root.findByType(RefreshControl).props.onRefresh());
+  const error = view.root.find(
+    (node) =>
+      node.props.testID === 'recent-refresh-error' && !!node.props.onRetry,
+  );
+  expect(
+    view.root.findAllByProps({ testID: 'recent-empty' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () => error.props.onRetry());
+  expect(
+    view.root.findAllByProps({ testID: 'recent-refresh-error' }).length,
+  ).toBe(0);
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
+  await act(async () => view.unmount());
+});
+
+test('Just added offline: the saved-copy banner speaks once, with no second refresh error', async () => {
+  jest
+    .mocked(records.recent)
+    .mockResolvedValueOnce(record(decodeRecent(responses['/api/recent'])))
+    .mockRejectedValueOnce(new ApiError('offline', 'Offline'));
+  const view = await mount(<RecentRecords />);
+  await act(async () => view.root.findByType(RefreshControl).props.onRefresh());
+  expect(
+    view.root.findAllByProps({ testID: 'recent-refresh-error' }).length,
+  ).toBe(0);
+  expect(view.root.findAllByType(RecordRow)).toHaveLength(3);
   await act(async () => view.unmount());
 });
 

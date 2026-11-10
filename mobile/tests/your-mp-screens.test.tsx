@@ -47,6 +47,7 @@ import { officialPageFor } from '../src/features/your-mp/MemberHeroRow';
 import { resetSeatForTests } from '../src/features/your-mp/useSeat';
 import YourMP from '../src/features/YourMP';
 import { billRoute, seatRoute } from '../src/navigation/routes';
+import { grantsRoute } from '../src/navigation/routes/public-money';
 import * as external from '../src/navigation/external/sheets';
 import { canShare } from '../src/navigation/share';
 import { sheetPayload } from '../src/navigation/sheets';
@@ -956,6 +957,24 @@ describe('Your MP tab', () => {
     await act(async () => r.unmount());
   });
 
+  test.each(['Grayndler', 'Ballarat'])('Your MP links to grants in %s', async (name) => {
+    const seat = seatNamed(name);
+    choose(seat.electorate_id);
+    mock.yourMP.mockResolvedValue(
+      c.yourMPFor(seat.electorate_id, index, manifest),
+    );
+    mock.profileFor.mockImplementation(async (id) => c.profileFor(id, catalogs));
+    const r = await render(<YourMP />);
+    const link = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === 'seat-grants-all');
+    expect(link?.props.title).toBe(`Grants in ${name}`);
+    expect(link?.props.href).toEqual(
+      grantsRoute({ jur: 'federal', seat: name, state: seat.state_code }),
+    );
+    await act(async () => r.unmount());
+  });
+
   test('Lately loads the register with the profile and lists at most five records', async () => {
     const seat = seatNamed('Ballarat');
     choose(seat.electorate_id);
@@ -1003,6 +1022,15 @@ describe('Your MP tab', () => {
       ).toBe(true);
     // No vote split or score reads in Lately.
     expect(text(r)).not.toMatch(/\d+ ?(–|-|to) ?\d+/);
+    await act(async () => r.unmount());
+  });
+
+  test('a saved state seat no longer in the release does not hold the others on a skeleton', async () => {
+    const district = seatNamed('Wendouree');
+    choose(district.electorate_id, ['fixture-removed-region']);
+    const r = await render(<YourMP />);
+    expect(has(r, 'your-state')).toBe(true);
+    expect(ids(r, 'your-state-member-')).not.toHaveLength(0);
     await act(async () => r.unmount());
   });
 
@@ -1192,6 +1220,46 @@ describe('Your MP tab', () => {
     }
   });
 
+  test('Forget waits for a state removal still being written', async () => {
+    const seat = seatNamed('Ballarat'),
+      district = seatNamed('Wendouree');
+    mock.yourMP.mockImplementation(async (id, chosen) =>
+      c.yourMPFor(id, index, manifest, chosen),
+    );
+    mock.profileFor.mockImplementation(async (id) =>
+      c.profileFor(id, catalogs),
+    );
+    let written!: () => void;
+    (saveChoice as jest.Mock).mockImplementation(
+      () => new Promise<void>((resolve) => (written = resolve)),
+    );
+    jest.mocked(forgetChoice).mockClear();
+    const sheet = jest
+      .spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
+      .mockImplementation((_options, done) => done(0));
+    choose(seat.electorate_id, [district.electorate_id]);
+    mockOptions.length = 0;
+    const r = await render(<YourMP />);
+    const row = ids(r, 'your-state-member-')[0]!;
+    await act(async () => menuItems(row.props.menu).at(-1)!.onPress!());
+    expect(saveChoice).toHaveBeenCalledTimes(1);
+    type Row = { type: string; items?: Row[]; onPress?: () => void };
+    const header = mockOptions
+      .filter((o) => o.unstable_headerRightItems)
+      .at(-1)!.unstable_headerRightItems as () => {
+      type: string;
+      menu?: { items: Row[] };
+    }[];
+    const rows = header().find((i) => i.type === 'menu')!.menu!.items;
+    await act(async () => rows.at(-1)!.items![0]!.onPress!());
+    // The forget is queued behind the removal, so it lands last.
+    expect(forgetChoice).not.toHaveBeenCalled();
+    await act(async () => written());
+    expect(forgetChoice).toHaveBeenCalledTimes(1);
+    sheet.mockRestore();
+    await act(async () => r.unmount());
+  });
+
   test('a skeleton while the seat loads, then an error, never the chooser', async () => {
     let fail!: (e: Error) => void;
     (loadChoice as jest.Mock).mockResolvedValue(null);
@@ -1209,6 +1277,13 @@ describe('Your MP tab', () => {
     await act(async () => fail(new Error('Offline')));
     expect(has(r, 'your-mp-error')).toBe(true);
     expect(has(r, 'seat-search')).toBe(false);
+    // Try again reads the directory again; the page recovers.
+    const error = r.root.find(
+      (n) => n.props.testID === 'your-mp-error' && !!n.props.onRetry,
+    );
+    await act(async () => error.props.onRetry());
+    expect(has(r, 'your-mp-error')).toBe(false);
+    expect(has(r, 'your-invitation')).toBe(true);
     await act(async () => r.unmount());
   });
 });

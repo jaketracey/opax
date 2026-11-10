@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
 import type { Roster } from '../../api/catalog-decoders';
+import { counted } from '../../design/format';
 import {
   Group,
   InlineError,
@@ -15,7 +16,7 @@ import type { SearchRecord } from './decoders';
 import type { RecoveryHandlers } from './EmptyResults';
 import { EmptyResults } from './EmptyResults';
 import { excerptFor } from './Excerpt';
-import type { SpeechFilters } from './filters';
+import { filtersKey, type SpeechFilters } from './filters';
 import { searchPathRoute } from './navigation';
 import { resultMeta, resultTitle } from './present';
 import { failureRecovery } from './recovery';
@@ -99,18 +100,33 @@ export function SpeechResults({
   onRetrySources?: () => void;
   announce?: boolean;
 }) {
-  const announced = useRef<string | null>(null);
-  const noun = filters.kind === 'all' ? 'records' : 'speeches';
+  const announced = useRef<{ key: string; rows: number } | null>(null);
+  const noun = filters.kind !== 'speech' ? 'records' : 'speeches';
+  const announcementKey = JSON.stringify([q.trim(), filtersKey(filters), sort]);
   useEffect(() => {
-    if (!announce || !list.rows || announced.current === list.count) return;
-    if (announced.current !== null && list.pages > 1)
-      AccessibilityInfo.announceForAccessibility(`20 more ${noun} loaded`);
+    if (!announce || !list.rows || list.first?.status !== 'ready') return;
+    const previous = announced.current;
+    if (previous?.key === announcementKey && list.rows.length <= previous.rows)
+      return;
+    if (previous?.key === announcementKey && list.pages > 1)
+      AccessibilityInfo.announceForAccessibility(
+        `${counted(list.rows.length - previous.rows, noun === 'records' ? 'more record' : 'more speech', `more ${noun}`)} loaded`,
+      );
     else if (list.count)
       AccessibilityInfo.announceForAccessibility(
         `${list.count} for ${q.trim()}`,
       );
-    announced.current = list.count;
-  }, [announce, list.rows, list.count, list.pages, noun, q]);
+    announced.current = { key: announcementKey, rows: list.rows.length };
+  }, [
+    announce,
+    announcementKey,
+    list.first?.status,
+    list.rows,
+    list.count,
+    list.pages,
+    noun,
+    q,
+  ]);
   const first = list.first;
   // Speech rows are shown only for roster speakers, so they wait on the
   // roster; when it failed, say so with Try again rather than spin.
@@ -182,7 +198,7 @@ export function SpeechResults({
           <SpeechRow key={row.slug} row={row} q={q} index={index} />
         ))}
       </InsetGroup>
-      {head.length === SUMMARY_AFTER && filters.kind !== 'all' ? (
+      {head.length === SUMMARY_AFTER && filters.kind === 'speech' ? (
         <SummaryBlock q={q} filters={filters} sort={sort} roster={roster} />
       ) : null}
       {rest.length ? (
@@ -210,7 +226,7 @@ export function SpeechResults({
         <View>
           <InsetGroup>
             <LinkRow
-              title={`Show 20 more ${noun}`}
+              title={`Show ${counted(list.nextCount, noun === 'records' ? 'more record' : 'more speech', `more ${noun}`)}`}
               accessory="none"
               onPress={list.loadMore}
               testID="results-more"

@@ -275,6 +275,13 @@ describe('location', () => {
       locationAnswer({ kind: 'border', seats: [], vintage }, false),
     ).toMatchObject({ text: seatCopy.unavailable });
   });
+  test('outside every district, the Victorian chooser says Victorian district', () => {
+    expect(locationAnswer({ kind: 'no-match' }, false, 'vic')).toEqual({
+      kind: 'message',
+      text: 'Your location isn’t inside a Victorian district. Search by name instead.',
+      settings: false,
+    });
+  });
   test('a locate the reader stopped returns to idle silently', () => {
     expect(locationAnswer({ kind: 'unavailable' }, true)).toEqual({
       kind: 'idle',

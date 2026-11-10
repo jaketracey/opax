@@ -107,3 +107,22 @@ pixel count and samples the interval of every frame in which the camera
 moved, summarised each second as
 `money-map-frames-<n>-p50-<ms>-p95-<ms>-max-<ms>` (a hidden line). Production
 ships the stubs in `money-probe.production.ts`.
+
+## Open product decision: Community funding state captions (11 November 2026)
+
+`../money-public/Allocation.tsx` keeps the headline figure national: its
+value and count use every record in the selected stage (Awards, Invitations
+or Earlier grants). Choosing a state narrows the project rows and their list
+caption. For example, `state=vic` gives the list caption a Victoria scope
+while the figure and its caption still describe all states.
+
+The figure should stay national. Product needs to decide whether its caption
+should explicitly say “across Australia” when a state filter is active, or
+whether the existing separation between the figure and the state-scoped list
+caption is sufficient. This lane leaves that copy unchanged.
+
+After the copy decision, the implementation belongs in
+`../money-public/Allocation.tsx`, with coverage in
+`../../../tests/design-p5-C-money.test.tsx` for all three stages, both with and
+without a state filter. The test should keep the national value and count
+fixed and check the agreed scope wording independently of the filtered list.

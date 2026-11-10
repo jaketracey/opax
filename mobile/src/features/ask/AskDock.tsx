@@ -150,6 +150,9 @@ export function AskDock({
   ]
     .filter(Boolean)
     .join(', ');
+  // Options change only between answers, or for an arrival waiting to start
+  // its own conversation (AskController.options).
+  const locked = s.busy && !s.fresh;
   const trailing = s.busy ? (
     <IconButton
       symbol="stop.circle.fill"
@@ -254,6 +257,8 @@ export function AskDock({
             accessibilityRole="button"
             accessibilityLabel={spoken}
             accessibilityHint="Opens Options"
+            accessibilityState={locked ? { disabled: true } : undefined}
+            disabled={locked}
             // 28 tall plus 8 above and below: a 44 pt target that stops
             // short of Clear's own slop beside it.
             hitSlop={{ top: 8, bottom: 8 }}
@@ -268,6 +273,8 @@ export function AskDock({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={composerCopy.clear}
+            accessibilityState={locked ? { disabled: true } : undefined}
+            disabled={locked}
             hitSlop={8}
             onPress={() => {
               if (s.fresh) askSession.clearFresh();
@@ -301,6 +308,7 @@ export function AskDock({
               ? `${composerCopy.options}, ${tags.length} on`
               : composerCopy.options
           }
+          disabled={locked}
           onPress={onOptions}
           testID="ask-composer-options"
         />
