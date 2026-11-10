@@ -279,6 +279,27 @@ function command(v, relative) {
     relative === '24-electorate-map-cancel.yaml'
   )
     out.assertVisible = backSelector;
+  if (out.assertVisible?.id === 'today-bills' && /^(13b-|13c-)/.test(relative))
+    return {
+      runFlow: {
+        // Android exposes only the viewport in its accessibility hierarchy.
+        // Check the bills block, then restore the top for the no-edition and
+        // daily-pair checks, rather than assuming all three blocks fit.
+        commands: [
+          {
+            scrollUntilVisible: { element: out.assertVisible, timeout: 90000 },
+          },
+          { assertVisible: out.assertVisible },
+          {
+            scrollUntilVisible: {
+              element: { id: 'today-screen-message' },
+              direction: 'UP',
+              timeout: 90000,
+            },
+          },
+        ],
+      },
+    };
   if (out.assertVisible?.id === 'search-scope.*')
     return {
       runFlow: {

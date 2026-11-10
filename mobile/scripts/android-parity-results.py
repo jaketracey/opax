@@ -30,6 +30,8 @@ def index(root, prepared, blocked_reason=''):
                     failure = ET.parse(report).find('.//failure')
                     if failure is not None: step = failure.get('message') or failure.text or 'See Maestro report'
                 except ET.ParseError: step = 'See incomplete Maestro report'
+            elif status != '0':
+                step = 'Harness failed before a flow report was written; inspect '+Path(file).stem+'-maestro.log'
             shot = path.parent/'maestro'/Path(file).stem/'failure.png'
             evidence = f'; [screenshot]({shot.relative_to(root)})' if shot.exists() else ''
             # Maestro owns UIAutomation while its driver is reused. A second
@@ -38,8 +40,9 @@ def index(root, prepared, blocked_reason=''):
             hierarchies = list((path.parent/'maestro'/Path(file).stem).glob('**/screen-hierarchy/*.json'))
             if status != '0' and hierarchies:
                 hierarchy = max(hierarchies, key=lambda p: p.stat().st_mtime)
-                evidence += f'; [hierarchy]({hierarchy.relative_to(root)})'
-            result = 'PASS' if status == '0' else 'FAIL'+evidence+'; '+step.replace('|','/').replace('\n',' ')[:350]
+                evidence += f'; [hierarchy](<{hierarchy.relative_to(root)}>)'
+            failure_kind = 'FAIL' if report.exists() else 'HARNESS ERROR'
+            result = 'PASS' if status == '0' else failure_kind+evidence+'; '+step.replace('|','/').replace('\n',' ')[:350]
             runs[(name, api)] = result
     counts = {category:sum(p['category'] == category for p in plan) for category in sorted({p['category'] for p in plan})}
     text = '# and-b-pipeline Android parity results\n\n'
