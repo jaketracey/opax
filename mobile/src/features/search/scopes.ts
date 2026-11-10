@@ -21,20 +21,31 @@ export const scopeLabel = (scope: Scope) =>
  * groups name the one `/api/search-all` kind their single read uses.
  */
 export const groups = {
-  topics: { label: 'Topics', noun: 'topics' },
-  electorates: { label: 'Electorates', noun: 'electorates' },
-  parties: { label: 'Parties', noun: 'parties' },
+  topics: { label: 'Topics', noun: 'topics', one: 'topic' },
+  electorates: {
+    label: 'Electorates',
+    noun: 'electorates',
+    one: 'electorate',
+  },
+  parties: { label: 'Parties', noun: 'parties', one: 'party' },
   interests: {
     label: 'Declared interests',
     noun: 'declared interests',
+    one: 'declared interest',
     catalog: 'interest',
   },
-  pay: { label: 'Pay', noun: 'pay records', catalog: 'pay' },
-  expenses: { label: 'Expenses', noun: 'expense records', catalog: 'expense' },
-  grants: { label: 'Grants', noun: 'grants', catalog: 'grant' },
+  pay: { label: 'Pay', noun: 'pay records', one: 'pay record', catalog: 'pay' },
+  expenses: {
+    label: 'Expenses',
+    noun: 'expense records',
+    one: 'expense record',
+    catalog: 'expense',
+  },
+  grants: { label: 'Grants', noun: 'grants', one: 'grant', catalog: 'grant' },
   agencies: {
     label: 'Government agencies',
     noun: 'government agencies',
+    one: 'government agency',
     catalog: 'agency',
   },
 } as const;

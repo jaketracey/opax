@@ -3,7 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Keyboard, Platform, ScrollView, type TextInput } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
-import { formatCount } from '../../design/format';
+import { countLabel } from './present';
 import {
   ContentUnavailable,
   Field,
@@ -248,7 +248,9 @@ function LocalList({
   return (
     <Group gap={rhythm.block} testID={`results-${group}`}>
       <ResultsHeader
-        count={sources ? `${formatCount(rows.length)} ${noun}` : null}
+        count={
+          sources ? countLabel(rows.length, [groups[group].one, noun]) : null
+        }
         details={
           group === 'topics'
             ? null
