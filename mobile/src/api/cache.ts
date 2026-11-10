@@ -175,7 +175,19 @@ export class CatalogCache {
       const maxBytes = group === 'search' ? this.searchMaxBytes : this.maxBytes;
       const maxEntries =
         group === 'search' ? this.searchMaxEntries : this.maxEntries;
-      if (bytes > maxBytes) return entry;
+      if (bytes > maxBytes) {
+        // Keep the last saved copy for offline use, but never serve it as
+        // fresh after observing a newer response that cannot fit on disk.
+        if (current) {
+          const expired = { ...current, expiresAt: 0 };
+          if (memoryOnly) this.searches.set(entry.url, expired);
+          else {
+            this.forget(entry.url);
+            await this.store.write(expired);
+          }
+        }
+        return entry;
+      }
       const metadata: CacheIndexEntry = {
         url: entry.url,
         bytes,
