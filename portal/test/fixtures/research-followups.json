@@ -4,7 +4,7 @@
   "source_sha256": "ed267871f612004e354105ba2af250eb5b5a3cfbe86db12ea0325375c4aff861",
   "source_revision": "c6348c2213a65691555f241196c960d23ecd4671",
   "source_generated": "2026-10-18",
-  "donation_layer_sha256": "267545f25054e3b75b029b97cca3601660fac549ee2c0f4b054139792b54207b",
+  "donation_layer_sha256": "4bfbe0a13eec4628a097c8f0cb353591d978ded35cdbc6502c50536cb719926e",
   "guard": "donation layer of the money graph (test/money-guard.mjs): donor and party nodes without their contracts, grants and publicMoney totals, donor-to-party flows, and the meta rows describing them; the weekly public-money overlay is outside it. Pinned 2026-11-10 against the 2026-10-18 export, whose donation layer is unchanged.",
   "gold_method": "partyDonations tool, exact published selection, federal disclosed receipts; no inference of gifts or influence",
   "conversations": [

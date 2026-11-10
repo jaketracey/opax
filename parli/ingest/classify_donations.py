@@ -14,17 +14,22 @@ Usage:
 import argparse
 import json
 import os
+import re
 import time
 from collections import defaultdict
 
 from parli.schema import get_db, init_db
 
 # Keyword-to-industry mapping. Keywords are matched case-insensitively
-# against donor_name. Order within each industry does not matter.
+# against complete words in donor_name. Inflections and compound brand names
+# are explicit so short names such as ANZ, BP and Meta cannot match inside
+# unrelated words. Order within each industry does not matter.
 INDUSTRY_KEYWORDS: dict[str, list[str]] = {
     "gambling": [
         "tabcorp", "sportsbet", "clubs nsw", "clubs australia",
-        "star entertainment", "crown", "aristocrat", "gaming", "wagering",
+        "star entertainment", "crown resorts", "crown melbourne",
+        "crown perth", "crown sydney", "crown entertainment",
+        "aristocrat", "gaming", "wagering",
         "betting", "responsible wagering", "bet365", "entain", "flutter",
         "ladbrokes", "lotteries", "tatts", "pokies",
         "clubs association", "clubsnsw", "registered clubs",
@@ -32,7 +37,8 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
     ],
     "mining": [
         "bhp", "rio tinto", "glencore", "fortescue", "hancock",
-        "mineral", "coal", "iron ore", "queensland nickel",
+        "mineral", "minerals", "mineralogy", "coal", "coalmining", "coalmine",
+        "coalmines", "iron ore", "queensland nickel",
         "newcrest", "south32", "whitehaven", "yancoal",
         "mt thorley", "warkworth", "manildra", "hunter valley united",
         "saxonvale", "centennial coal", "peabody", "anglo american",
@@ -41,13 +47,14 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
     ],
     "fossil_fuels": [
         "woodside", "santos", "petroleum", "oil", "gas", "fossil",
-        "energy producers", "chevron", "shell", "bp",
+        "energy producers", "chevron", "shell", "bp", "oils", "oilsearch", "oil search",
+        "allgas", "elgas",
         "origin energy", "energy australia", "country energy",
         "agl energy", "stanwell", "ampol", "caltex",
         "appea", "senex energy", "arrow energy", "qgc",
     ],
     "property": [
-        "property", "developer", "real estate", "construction",
+        "property", "properties", "developer", "developers", "real estate", "construction",
         "lendlease", "meriton", "mirvac", "stockland",
         "leighton", "baulderstone", "thiess", "transurban",
         "plenary group", "westfield", "pratt holdings",
@@ -58,17 +65,18 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "watpac", "builders", "constructions", "urban development institute",
     ],
     "finance": [
-        "bank", "macquarie", "westpac", "commonwealth bank", "anz",
+        "bank", "banks", "banking", "macquarie", "westpac", "commonwealth bank", "anz",
         "nab", "insurance", "axa",
-        "financial", "investment", "capital", "superannuation",
+        "financial", "investment", "investments", "capital", "superannuation",
         "australian super", "pricewaterhousecoopers", "pwc",
-        "deloitte", "ernst & young", "kpmg", "accountant", "audit",
+        "deloitte", "ernst & young", "kpmg", "accountant", "accountants", "accounting",
+        "audit", "auditing", "auditors",
         "morgans", "rbs morgans", "coverforce", "u-cover",
-        "suncorp", "abn amro", "citibank", "hsbc", "zurich",
+        "suncorp", "abn amro", "citibank", "hsbc", "zurich", "allianz",
     ],
     "lobbying": [
         "government relations", "public affairs", "advocacy services",
-        "hawker britton", "lobbyist", "lobbying",
+        "hawker britton", "lobbyist", "lobbyists", "lobbying",
         "gra advisory", "capitalhill advisory",
         "barton deakin", "newgate", "crosby textor",
         "gci", "nexus apac", "capita", "public policy",
@@ -76,7 +84,7 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "govstrat", "sas consulting group", "sas group",
     ],
     "legal": [
-        "solicitor", "barrister", "law firm", "lawyers",
+        "solicitor", "solicitors", "barrister", "barristers", "law firm", "law firms", "lawyers",
         "clayton utz", "holding redlich", "maurice blackburn",
         "minter ellison", "allens", "ashurst", "king & wood",
         "herbert smith", "norton rose", "gilbert + tobin",
@@ -85,37 +93,40 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
     ],
     "hospitality": [
         "hotels association", "australian hotels",
-        "hotel", "pub", "restaurant", "catering",
+        "hotel", "hotels", "pub", "pubs", "pubco", "restaurant", "restaurants", "catering",
+        "hospitality tasmania",
         "star city", "merivale", "alo group",
     ],
     "media": [
         "news corp", "nine entertainment", "seven west", "foxtel",
-        "sky news", "village roadshow", "publishing", "broadcast",
+        "sky news", "village roadshow", "publishing", "broadcast", "broadcasting", "broadcasters",
         "stokes", "packer",
     ],
     "unions": [
-        "union", "actu", "cfmeu", "maritime", "workers",
+        "union", "unions", "actu", "cfmeu", "maritime", "workers",
         "staff association", "incolink",
         "nurses", "midwives", "teachers federation",
-        "firefighters", "ambulance", "police assoc",
-        "sda", "cepu", "amwu", "asu", "hsu", "usu",
+        "firefighters", "ambulance", "police assoc", "police association",
+        "sda", "sdae", "cepu", "amwu", "asu", "hsu", "usu",
         "electrical trades", "plumbing", "meat workers",
-        "textile", "shearers", "cpsu", "psu group",
+        "textile", "textiles", "shearers", "cpsu", "psu group",
         "united voice", "employees association", "employees' association",
         "together queensland", "shop, distributive", "shop distributive",
     ],
     "telecom": [
         "telstra", "optus", "singtel", "vodafone", "tpg telecom",
-        "nbn co", "telecommunications",
+        "nbn co", "telecommunications", "crown castle",
     ],
     "pharmacy": [
-        "pharmacy", "chemist", "pharmaceutical",
+        "pharmacy", "pharmacies", "chemist", "chemists", "pharmaceutical", "pharmaceuticals",
         "pfizer", "medicines australia",
         "medtronic", "sanofi", "novartis", "roche", "johnson & johnson",
-        "abbott lab", "astrazeneca", "merck", "gsk", "glaxosmith",
+        "abbott lab", "abbott labs", "abbott laboratories", "astrazeneca", "merck", "gsk",
+        "glaxosmith", "glaxosmithkline",
     ],
     "alcohol": [
-        "breweries", "liquor", "distill", "wine", "beer",
+        "brewery", "breweries", "liquor", "distill", "distiller", "distillers",
+        "distillery", "distilleries", "distilling", "wine", "wines", "winery", "wineries", "beer",
     ],
     "tobacco": [
         "philip morris", "tobacco", "british american",
@@ -127,13 +138,14 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "ecash", "pospoint",
     ],
     "health": [
-        "hospital", "medical", "health fund", "bupa", "medibank",
+        "hospital", "hospitals", "medical", "health fund", "bupa", "medibank",
         "health care", "healthcare", "dental", "pathology",
     ],
     "agriculture": [
-        "agri", "farm", "pastoral", "rural", "grain",
-        "meat", "wool", "dairy", "sugar", "cotton", "cattle",
-        "national farmers", "woolworths", "grazier",
+        "agri", "agriculture", "agricultural", "agribusiness", "agrifood", "agrifoods", "agriproducts",
+        "farm", "farms", "farmer", "farmers", "farming", "pastoral", "rural", "grain",
+        "meat", "meats", "wool", "dairy", "sugar", "cotton", "cattle", "graincorp",
+        "national farmers", "woolworths", "grazier", "graziers",
     ],
     "retail": [
         "coles", "wesfarmers", "retail guild",
@@ -160,12 +172,12 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "enterprise foundation", "free enterprise",
     ],
     "security": [
-        "prosegur", "armaguard", "securit", "linfox armaguard",
+        "prosegur", "armaguard", "securit", "security", "linfox armaguard",
         "brinks", "g4s",
     ],
     "transport": [
         "qantas", "virgin australia", "regional express",
-        "airline", "aviation", "airport", "toll holdings",
+        "airline", "airlines", "aviation", "airport", "airports", "toll holdings",
         "pacific national", "aurizon", "shipping", "freight",
         "linfox", "taxi council", "tourism and transport",
     ],
@@ -179,8 +191,8 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
         "remondis", "waste",
     ],
     "education": [
-        "university", "insearch", "education",
-        "tafe", "college", "school",
+        "university", "universities", "insearch", "education", "educational",
+        "tafe", "college", "colleges", "school", "schools",
     ],
     "adult_entertainment": [
         "eros association", "adult entertainment",
@@ -188,29 +200,44 @@ INDUSTRY_KEYWORDS: dict[str, list[str]] = {
 }
 
 
+# Both entry points use these escaped, case-insensitive patterns. The database
+# pass classifies distinct names in Python, then updates exact names in batches;
+# SQL LIKE '%keyword%' must not reintroduce matches inside unrelated words.
+INDUSTRY_PATTERNS = {
+    industry: re.compile(r"(?<!\w)(?:" + "|".join(map(re.escape, keywords)) + r")(?!\w)", re.I)
+    for industry, keywords in INDUSTRY_KEYWORDS.items()
+}
+
+
+def _matches_industry(industry: str, donor_name: str | None) -> bool:
+    return bool(donor_name and INDUSTRY_PATTERNS[industry].search(donor_name))
+
+
 def classify_donations(db) -> dict[str, int]:
     """Classify donations by industry. Returns {industry: count_updated}."""
     counts: dict[str, int] = defaultdict(int)
+    names_by_industry: dict[str, list[str]] = defaultdict(list)
+    for row in db.execute("SELECT DISTINCT donor_name FROM donations WHERE industry IS NULL").fetchall():
+        industry = classify_donor_name(row[0])
+        if industry in INDUSTRY_KEYWORDS:
+            names_by_industry[industry].append(row[0])
 
-    for industry, keywords in INDUSTRY_KEYWORDS.items():
-        # Build a single UPDATE with OR conditions for all keywords
-        conditions = " OR ".join(
-            ["LOWER(donor_name) LIKE ?" for _ in keywords]
-        )
-        params = [f"%{kw.lower()}%" for kw in keywords]
-
-        cursor = db.execute(
-            f"""
-            UPDATE donations
-            SET industry = ?
-            WHERE industry IS NULL
-              AND ({conditions})
-            """,
-            [industry] + params,
-        )
-        counts[industry] = cursor.rowcount
+    for industry in INDUSTRY_KEYWORDS:
+        counts[industry] = 0
+        names = names_by_industry[industry]
+        # Stay below SQLite's historical 999-variable limit, and avoid a
+        # SQLite-only regexp function so the PostgreSQL wrapper still works.
+        for offset in range(0, len(names), 500):
+            batch = names[offset:offset + 500]
+            placeholders = ",".join("?" for _ in batch)
+            cursor = db.execute(
+                f"UPDATE donations SET industry = ? WHERE industry IS NULL "
+                f"AND donor_name IN ({placeholders})",
+                [industry, *batch],
+            )
+            counts[industry] += cursor.rowcount
         db.commit()
-        print(f"  {industry:20s}: {cursor.rowcount:>6,} donations classified")
+        print(f"  {industry:20s}: {counts[industry]:>6,} donations classified")
 
     # Second pass: classify junk/placeholder donor names as 'unidentified'
     cursor = db.execute(
@@ -218,7 +245,7 @@ def classify_donations(db) -> dict[str, int]:
         UPDATE donations SET industry = 'unidentified'
         WHERE industry IS NULL
           AND (
-            donor_name IN ('0', '1', '2', '3', '-', '--', 'n/a', 'N/A', '')
+            TRIM(donor_name) IN ('0', '1', '2', '3', '-', '--', 'n/a', 'N/A', '')
             OR LENGTH(TRIM(donor_name)) <= 2
             OR donor_name IS NULL
           )
@@ -298,16 +325,14 @@ def classify_donor_name(donor_name: str | None) -> str | None:
     Returns an industry key, 'unidentified' for placeholder names, or None when
     no keyword matches (callers decide between 'individual' / 'other' / LLM).
     """
-    if donor_name is None or len(donor_name.strip()) <= 2 or donor_name.strip() in (
+    if donor_name is None or donor_name.strip() in (
         "0", "1", "2", "3", "-", "--", "n/a", "N/A", ""
     ):
         return "unidentified"
-    name = donor_name.lower()
-    for industry, keywords in INDUSTRY_KEYWORDS.items():
-        for kw in keywords:
-            if kw.lower() in name:
-                return industry
-    return None
+    for industry in INDUSTRY_KEYWORDS:
+        if _matches_industry(industry, donor_name):
+            return industry
+    return "unidentified" if len(donor_name.strip()) <= 2 else None
 
 
 def classify_donations_llm(db, batch_size: int = 100, max_batches: int = 0) -> dict[str, int]:
