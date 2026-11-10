@@ -408,7 +408,7 @@ export default function MoneyScreen() {
           </>
         }
         offline={
-          record.stale && record.staleReason !== 'unreadable' ? (
+          record.stale && !record.staleReason ? (
             <OfflineLine savedAt={record.savedAt} testID="money-offline" />
           ) : null
         }
@@ -427,7 +427,7 @@ export default function MoneyScreen() {
         </>
       }
       offline={
-        record?.stale && record.staleReason !== 'unreadable' ? (
+        record?.stale && !record.staleReason ? (
           <OfflineLine savedAt={record.savedAt} testID="money-offline" />
         ) : null
       }

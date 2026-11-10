@@ -999,3 +999,22 @@ test('a seat with one of its grants listed says it is listed', async () => {
   ).toBe('1 of the 3 grants in Bruce is listed, largest first');
   await act(async () => r.unmount());
 });
+
+test.each([
+  ['offline', undefined, 1],
+  ['the server was unavailable', 'unavailable', 0],
+] as const)(
+  'funding by seat type says offline only when %s calls for it',
+  async (_name, staleReason, lines) => {
+    const { OfflineLine } = jest.requireActual('../src/design/states');
+    const read = money.allocation;
+    money.allocation = async (refresh?: boolean) => ({
+      ...(await read(refresh)),
+      stale: true,
+      ...(staleReason ? { staleReason } : {}),
+    });
+    const r = await mount(FundingBySeatType);
+    expect(r.root.findAllByType(OfflineLine)).toHaveLength(lines);
+    await act(async () => r.unmount());
+  },
+);

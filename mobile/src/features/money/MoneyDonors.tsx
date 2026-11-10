@@ -135,7 +135,7 @@ export default function MoneyDonors() {
               )
             ) : (
               <Group>
-                {record.stale && record.staleReason !== 'unreadable' ? (
+                {record.stale && !record.staleReason ? (
                   <OfflineLine savedAt={record.savedAt} />
                 ) : null}
                 {window ? (

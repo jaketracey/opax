@@ -22,6 +22,7 @@ import {
   Button,
   LinkRow,
   MoneyRow,
+  OfflineLine,
   PopUpButton,
   SegmentedPicker,
   SourceLine,
@@ -428,3 +429,26 @@ test('the List view counts one receipt and one donor in the singular', async () 
   expect(all.props.action.accessibilityLabel).toBe('See all 1 donor');
   await act(async () => r.unmount());
 });
+
+test.each([
+  ['offline', undefined, 1],
+  ['the server was unavailable', 'unavailable', 0],
+  ['the latest copy was unreadable', 'unreadable', 0],
+] as const)(
+  'a saved donors list says offline only when %s calls for it',
+  async (_name, staleReason, lines) => {
+    jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+      data: decode(pinned(path)),
+      stale: true,
+      asOf: '2026-09-21',
+      savedAt: 1,
+      ...(staleReason ? { staleReason } : {}),
+    }));
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<MoneyDonors />);
+    });
+    expect(r.root.findAllByType(OfflineLine)).toHaveLength(lines);
+    await act(async () => r.unmount());
+  },
+);

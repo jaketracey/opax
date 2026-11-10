@@ -99,7 +99,7 @@ export default function FundingBySeatType() {
           type of seat received, and what it would have received if funding were
           shared by the number of seats.
         </Text>
-        {status.record?.stale ? (
+        {status.record?.stale && !status.record.staleReason ? (
           <OfflineLine savedAt={status.record.savedAt} />
         ) : null}
         {data ? (
