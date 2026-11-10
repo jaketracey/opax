@@ -63,7 +63,7 @@
 #   OPAX_EVIDENCE_READINESS_TIMEOUT input probe limit (default 60s, plus 5s kill grace; timeout waits)
 #   OPAX_EVIDENCE_SOURCE / LAYERS / PLACES / DECISIONS / ADDITIONAL  matching read-only SQLite inputs
 #   OPAX_TEST_GATE        0 = do not run the portal test suite against the new data before committing
-#   OPAX_GATE_BUDGET      time limit of the portal gate and its blame search, from its first run (default 45m);
+#   OPAX_GATE_BUDGET      time limit of the portal gate and its blame search, from its first run (default 75m);
 #                         groups not cleared by then are held, the ones proven green are published
 #   OPAX_FRL_DOW          ISO weekday of the FRL instrument night (default 4, Thursday)
 #   OPAX_UV_SYNC_TIMEOUT  time limit of the `uv sync --frozen` that starts the night (default 15m)
@@ -496,7 +496,7 @@ divisions_restore_dependencies
 # stamp in every importer), then the suite. Needs Node 24 and portal/node_modules (scripts/vm/bootstrap.sh installs
 # them); without them the gate is skipped and the deploy job is the only test.
 #
-# If it goes red, the groups to blame are found inside a time budget (OPAX_GATE_BUDGET, default 45m, counted from the
+# If it goes red, the groups to blame are found inside a time budget (OPAX_GATE_BUDGET, default 75m, counted from the
 # first run), never by re-running the whole suite group after group (18 Oct 2026: six identical full runs, the 6 h unit
 # limit, nothing published). Every changed group is backed up and put back to HEAD; the test files that failed are
 # re-run on that baseline (they must pass: otherwise main itself is red); then the groups are added back in halves,
@@ -552,6 +552,7 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
         rm -f "$GATE_JUNIT"
         if [ "${OPAX_GATE_BUILD:-1}" != 0 ]; then (cd "$REPO/portal" && gate_step "$NPM" run build:search) || rc=$?; fi
         [ "$rc" -ne 0 ] || (cd "$REPO" && gate_step "$NODE" scripts/stamp_assets.mjs) || rc=$?
+        BUILD_SECS=$(($(date +%s) - t0))
         if [ "$rc" -eq 0 ]; then
           if [ "$#" -gt 0 ]; then
             (cd "$REPO/portal" && gate_step "$NODE" --test --test-reporter=dot --test-reporter-destination=stdout \
@@ -561,7 +562,7 @@ if [ "${OPAX_TEST_GATE:-1}" != 0 ]; then
                --test-reporter=junit --test-reporter-destination="$GATE_JUNIT" test/*.test.mjs) || rc=$?
           fi
         fi
-        [ "$rc" != 124 ] || log "portal gate: a step was cut at the ${OPAX_GATE_BUDGET:-45m} budget"
+        [ "$rc" != 124 ] || log "portal gate: a step was cut at the $GATE_BUDGET_SPEC budget"
         SUITE_SECS=$(($(date +%s) - t0)); SUITE_RC=$rc
         return "$rc"
       }
@@ -582,6 +583,25 @@ for case in root.iter('testcase'):
 print('\n'.join(sorted(files)))
 PYEOF
       }
+      # seconds the failing files (FOCUS) took in the last run, rounded up, from its JUnit report; 0 when unreadable
+      focus_secs() {
+        "$PY" - "$GATE_JUNIT" "${FOCUS[@]+"${FOCUS[@]}"}" <<'PYEOF' 2>/dev/null || echo 0
+import math, sys, xml.etree.ElementTree as ET
+try:
+    root = ET.parse(sys.argv[1]).getroot()
+except (OSError, ET.ParseError):
+    print(0); sys.exit(0)
+focus, total = set(sys.argv[2:]), 0.0
+for case in root.iter('testcase'):
+    f = case.get('file') or ''
+    if '/test/' in f and 'test/' + f.rsplit('/test/', 1)[1] in focus:
+        try:
+            total += float(case.get('time') or 0)
+        except ValueError:
+            pass
+print(math.ceil(total))
+PYEOF
+      }
       # 0 when the tracked file $1 differs from HEAD in its `?v=<hash>` content stamps and nothing else
       stamp_only() {
         "$PY" - "$1" <<'PYEOF' 2>/dev/null
@@ -597,7 +617,8 @@ sys.exit(0 if head != now and strip(head) == strip(now) else 1)
 PYEOF
       }
       duration_secs() { local v=$1; case $v in *h) echo $((${v%h} * 3600)) ;; *m) echo $((${v%m} * 60)) ;; *s) echo "${v%s}" ;; *) echo "$v" ;; esac; }
-      GATE_BUDGET=$(duration_secs "${OPAX_GATE_BUDGET:-45m}")
+      GATE_BUDGET_SPEC="${OPAX_GATE_BUDGET:-75m}"
+      GATE_BUDGET=$(duration_secs "$GATE_BUDGET_SPEC")
       GATE_START=$(date +%s); GATE_DEADLINE=$((GATE_START + GATE_BUDGET))
       # 1 when the last build was made from exactly the data that stays (a green first run, or a green closing run);
       # otherwise every gate group is back at HEAD and so must be everything the trials' builds derived
@@ -605,8 +626,13 @@ PYEOF
       log "portal tests against the new data (${gate_groups[*]})"
       if ! run_suite; then
         GATE_REBUILT=0
-        FULL_SECS=$SUITE_SECS; LAST_SECS=$SUITE_SECS
+        FULL_SECS=$SUITE_SECS
         mapfile -t FOCUS < <(failing_files)
+        # A focused trial re-runs the build and stamp plus only the failing files (their times are in the JUnit
+        # report), not the whole suite again. Reserving two full runs before the first trial is what kept the
+        # 10 Nov 2026 blame search from ever starting (a 23 min suite inside a 45 min budget, eleven groups
+        # held). Later trials reserve their own measured time; any trial is still cut at the deadline.
+        if [ "${#FOCUS[@]}" -gt 0 ]; then LAST_SECS=$((${BUILD_SECS:-0} + $(focus_secs) + 60)); else LAST_SECS=$SUITE_SECS; fi
         log "portal tests red in ${FULL_SECS}s; failing files: ${FOCUS[*]:-unknown (every trial runs the whole suite)}; finding the groups to blame (budget ${GATE_BUDGET}s)"
         BK="$PIPE/gate-backup"; rm -rf "$BK"; mkdir -p "$BK"
         backup_group() {
@@ -653,7 +679,7 @@ PYEOF
             # reverted checked each group is exactly HEAD again (new files removed), so this is not tonight's data.
             fail "portal tests fail even with every changed group (${gate_groups[*]}) put back to HEAD and its new files removed: the suite is red on main itself (or a test too slow for this box); nothing published tonight except corpus.json"
           else
-            fail "portal tests red (${FOCUS[*]:-whole suite}) and no time left in the ${OPAX_GATE_BUDGET:-45m} gate budget to find out why: ${gate_groups[*]} held, not published tonight"
+            fail "portal tests red (${FOCUS[*]:-whole suite}) and no time left in the $GATE_BUDGET_SPEC gate budget to find out why: ${gate_groups[*]} held, not published tonight"
           fi
         else
           # Sets of groups still to try, each "u:" or "s:" plus a space-separated list. A red set splits into its first
@@ -688,7 +714,7 @@ PYEOF
           for group in "${culprits[@]+"${culprits[@]}"}"; do
             fail "portal tests failed against the new $group files (green without them, with ${kept[*]:-no other new group} kept): $group not published tonight"
           done
-          [ "${#untried[@]}" -eq 0 ] || fail "the portal-test blame ran out of its ${OPAX_GATE_BUDGET:-45m} budget: ${untried[*]} held untried, not published tonight"
+          [ "${#untried[@]}" -eq 0 ] || fail "the portal-test blame ran out of its $GATE_BUDGET_SPEC budget: ${untried[*]} held untried, not published tonight"
         fi
         if [ "${#kept[@]}" -gt 0 ]; then
           # the kept groups passed the failing files together; prove the whole suite and rebuild the derived files from
@@ -696,7 +722,7 @@ PYEOF
           left=$((GATE_DEADLINE - $(date +%s)))
           if [ "$left" -lt "$FULL_SECS" ]; then
             for group in "${kept[@]}"; do revert_group "$group"; done
-            fail "portal tests: no time left in the ${OPAX_GATE_BUDGET:-45m} budget for the closing full run (~${FULL_SECS}s, ${left}s left): ${kept[*]} held too, nothing new published tonight"
+            fail "portal tests: no time left in the $GATE_BUDGET_SPEC budget for the closing full run (~${FULL_SECS}s, ${left}s left): ${kept[*]} held too, nothing new published tonight"
           else
             log "portal tests: keeping ${kept[*]}; closing full run"
             if run_suite; then

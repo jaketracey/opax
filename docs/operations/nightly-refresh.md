@@ -55,7 +55,7 @@ The nightly only brings new records in and publishes them.
    4  validate_data.py: bills, votes.json, and every periodic group whose files changed (a failing group is
       reverted to HEAD, the rest goes on); then the portal test suite (search catalog rebuilt and content stamps
       refreshed first, as the deploy job does) against the new files: if it is red, the groups to blame are found
-      by halving inside a 45 min budget; only they are held back, so a data commit cannot block the deploy
+      by halving inside a 75 min budget; only they are held back, so a data commit cannot block the deploy
    5  update_corpus_manifest.py: corpus.json from the LIVE KB counts + daily.log; checked_at stamped
    6  bump_cache_epoch.py → CACHE_EPOCH "<date>-nightly" in both places, only if the KB changed
    7  git commit (data files only) as "OPAX nightly"; git push to main over SSH (deploy key),
@@ -578,12 +578,16 @@ credentials and can run only the public GET preview or an offline captured plan.
 catalog (`npm run build:search`, ~50 s), refreshes the content stamps (`scripts/stamp_assets.mjs`, as the deploy's
 `build:release` does: a rebuilt `person-paths.js` is a new `?v=` in `canonical-urls.js` and up the import chain) and runs
 `node --test test/*.test.mjs` against the new data. If it is red, the groups to blame are found inside `OPAX_GATE_BUDGET`
-(default 45 min, counted from the first run): every changed group is backed up and put back to HEAD, the test files that
+(default 75 min since 10 Nov 2026, counted from the first run): every changed group is backed up and put back to HEAD, the test files that
 failed (read from the run's JUnit report) are re-run on that baseline, and the groups are added back in halves, re-running
 only those files; a green half is kept, a red half is split until each culprit is alone. Culprits stay at HEAD; groups the
 budget did not reach are held too; the kept groups get a closing full run (which also rebuilds their derived files) and are
 published. If the failing files are red even with everything reverted, it is red on `main` itself: nothing but `corpus.json`
-is published and the deploy job will report it. The status names each held group. On 18 Oct 2026 the old loop (each group
+is published and the deploy job will report it. The status names each held group. Before each focused trial the gate reserves
+the trial's own cost plus the closing full run; the first trial's cost is estimated from the build and stamp time plus the
+failing files' times in the JUnit report, not another whole suite (until 10 Nov 2026 it reserved two full runs, so a 23 min
+suite inside the 45 min budget never started the search and held every group for a fingerprint test that one weekly export
+had tripped). On 18 Oct 2026 the old loop (each group
 alone, then cumulatively, the whole suite every time) re-ran six identical ~15 min suites until the 6 h unit limit, with two
 culprits (the roster export and the instruments test) and the divisions catch-up waiting behind them. Every tracked file a
 night writes belongs to one group (`scripts/vm/data_groups.sh`), including what the build derives from it: `person-paths.js`
@@ -875,7 +879,7 @@ remain with the orchestrator; no production export was run to validate this lane
 | Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
 | First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
 | Thursday: frl | `frl_instruments` (in-force instrument crawl, ≥10 s between requests) + `x_instruments` 12 s | 9,208 s measured on the box, 18 Oct 2026 (~2.6 h) |
-| Pre-commit test gate | search catalog build + stamps + the suite | ~15 min a full run on the box (18 Oct 2026); a red gate's blame search is capped by `OPAX_GATE_BUDGET` (45 min from the first run) |
+| Pre-commit test gate | search catalog build + stamps + the suite | ~15 min a full run on the box (18 Oct 2026); a red gate's blame search is capped by `OPAX_GATE_BUDGET` (75 min from the first run; the suite took 23 min on 10 Nov 2026) |
 
 A first-Sunday night conservatively budgets about 20 + 40 + 40 + 5 min plus a push of up to 2 h,
 and up to 45 min (plus 60-second kill grace) for interests: budget roughly 5 h, which is why the
