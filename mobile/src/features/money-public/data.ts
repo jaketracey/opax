@@ -308,6 +308,7 @@ export function largestFor(
       organisation: recipient.organisation,
       purpose: recipient.organisation ? r.purpose : '',
       recipientId: recipient.organisation ? r.recipientId : '',
+      sourceUrl: recipient.organisation ? r.sourceUrl : null,
     };
   });
 }

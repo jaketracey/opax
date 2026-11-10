@@ -114,6 +114,7 @@ describe('public-money privacy before presentation', () => {
     expect(safe.recipient).toBe(unnamedRecipient);
     expect(safe.purpose).toBe('');
     expect(safe.recipientId).toBe('');
+    expect(safe.sourceUrl).toBeNull();
   });
   test('a program filed under a sentence of description is named by its ID, and still joins on the filed name (money-08)', () => {
     const input = raw('/graph/grants.federal.json');
