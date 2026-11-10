@@ -8,7 +8,13 @@ import {rankingSourceMatches} from '../src/research-ranking-scope.mjs'
 const built=await build({stdin:{contents:"export * from './src/research-grounding';export * from './src/research-response';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const qld=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-lnp-qld.json',import.meta.url)))
-const shownUnranked=(out,figure)=>{assert.doesNotMatch(out.answer,/\b(?:most|largest|biggest|highest|top|leading|led|first)\b(?! years)/i);assert.doesNotMatch(out.answer,/unknown/i);assert.ok(out.answer.includes(figure));assert.match(out.answer,/\bThese (?:are|rows|records)\b|could not confirm|not a ranking|do not establish whether/);assert.ok(Object.keys(out.citations).length)}
+const shownUnranked=(out,figure)=>{
+ assert.doesNotMatch(out.answer,/\b(?:most|largest|biggest|highest|top|leading|led|first)\b(?! years)/i)
+ assert.doesNotMatch(out.answer,/unknown/i);assert.ok(out.answer.includes(figure))
+ const limit=/\bThese (?:are|rows|records)\b|could not confirm|not a ranking|do not establish whether/
+ assert.match(out.coverage?.note??'',limit);assert.doesNotMatch(out.answer,limit)
+ assert.ok(Object.keys(out.citations).length)
+}
 function source({jur='federal',party='LNP',period='2019–20',chamber,entity_type}={}){
  return {resource:'fact-1',kind:'record',title:'Selected donor ranking',url:`/money?jur=${jur}&party=party:${party}`,cited:true,...(chamber?{chamber}:{}),...(entity_type?{entity_type}:{}),...(jur?{receipt:{party,source:'Selected Company',amount:754314,period,jurisdiction:jur}}:{receipt:{party,source:'Selected Company',amount:754314,period}}),snippet:`Selected Company: $754,314, 2 disclosed receipt records. Period: ${period}.`}
 }

@@ -17,9 +17,10 @@ function check(body){
  assert.match(body.answer.split(/(?<=[.!?])\s/)[0],/Robin Example.*277,602.*288,990/)
  for(const amount of ['277,602','288,990'])assert.equal(body.answer.split(amount).length-1,1)
  assert.ok(Object.values(body.citations).flat().every(([a,b])=>a>=0&&a<b&&b<=Array.from(body.answer).length))
- assert.equal((body.answer.match(/exclude allowances/g)||[]).length,1)
+ assert.doesNotMatch(body.answer,/exclude allowances/)
+ assert.equal((body.coverage?.note.match(/exclude allowances/g)||[]).length,1)
 }
-test('model writes selected calculator facts with original citations and one coverage sentence',()=>{
+test('model writes selected calculator facts with original citations and a separate coverage note',()=>{
  const written=api.verifyWrittenAnswer(draft,input);check(written)
  assert.equal(written.answer.split('\n\n')[0],prose)
  assert.deepEqual(written.citations['pay-0/t/body/0'],[[0,Array.from(prose).length]])
@@ -59,7 +60,7 @@ test('same model and budget; failed, timed-out and unadmitted writing calls retu
  }
 })
 test('JSON, chunked SSE fallback and replay release only validated written text',async()=>{
- const written=api.proseFallback(input),payload={...written,coverage:{matched:true,since:'2005-01-01',until:'2005-12-31'}}
+ const written=api.proseFallback(input),payload={...written,coverage:{...written.coverage,matched:true,since:'2005-01-01',until:'2005-12-31'}}
  for(const stream of [false,true]){
   const wire='event: delta\ndata: '+JSON.stringify({text:texts.join('\n')})+'\n\nevent: done\ndata: '+JSON.stringify(payload)+'\n\n'
   const response=stream?new Response(new ReadableStream({start(c){const bytes=new TextEncoder().encode(wire);for(let i=0;i<bytes.length;i+=7)c.enqueue(bytes.slice(i,i+7));c.close()}}),{headers:{'content-type':'text/event-stream'}}):Response.json(payload)
@@ -144,4 +145,92 @@ test('ordinary fallback and its cached SSE replay remove repeated financial sets
  const wire=await(await api.withFallbackPeriod(stream,{kind:'all',label:''})).text()
  assert.doesNotMatch(wire,/event: delta/)
  assert.deepEqual(JSON.parse(wire.match(/^data: (.+)$/m)[1]),result)
+})
+
+test('catalogue receipt rows become prose with one cited figure and no repeated connection',()=>{
+ const text='Disclosed receipt: CSR Limited → Labor — $447,696.00 in disclosed political receipts; 74 records. Aggregated connection, not an individual gift. Mining.'
+ const sheet=api.writingFacts(undefined,[1,2].map(id=>({id,text,cite:{kind:'record',url:'https://example.org/receipt/'+id,label:text}})))
+ const query={question:'How much money has CSR Limited given Labor?',period:{kind:'all',label:''},facts:sheet}
+ assert.equal(api.rawToolEcho(text),true)
+ assert.equal(api.verifyWrittenAnswer({sentences:[{text,facts:[1]}]},query),null)
+ const out=api.proseFallback(query)
+ assert.equal(out.answer,'Labor disclosed $447,696.00 in receipts from CSR Limited.')
+ assert.equal(Object.keys(out.citations).length,1)
+ assert.deepEqual(Object.values(out.citations).flat(),[[0,Array.from(out.answer).length]])
+ assert.doesNotMatch(out.answer,/Disclosed receipt:|→|Aggregated connection|74 records/)
+})
+
+test('donor profile labels become sentences without inventing a recipient or year total',()=>{
+ const text='Donor: Fixture Holdings — $20,000.00 in disclosed political receipts; 2 records.'
+ const out=api.proseFallback({question:'What disclosed receipts are recorded for Fixture Holdings?',period:{kind:'all',label:''},facts:api.writingFacts(undefined,[{id:1,text,cite:{kind:'record',url:'https://example.org/donor',label:text}}])})
+ assert.equal(out.answer,'Fixture Holdings provided $20,000.00 in disclosed political receipts.')
+ assert.equal(api.rawToolEcho(out.answer),false)
+})
+
+test('aggregate division caveats use coverage.note and single-vote findings omit them',()=>{
+ const note='Divisions are matched by words in their titles; divisions filed under other titles may be missed.'
+ const reasons='A recorded vote does not establish why a member voted that way.'
+ for(const count of [1,10]){
+  const text=`Robin Example voted in ${count} divisions with "housing" in the title: aye ${count}, no 0`
+  const sheet=api.writingFacts(undefined,[{id:1,text,cite:{kind:'record',url:'https://example.org/divisions',label:'Housing votes'}}],[note,reasons])
+  const out=api.proseFallback({question:'How did Robin Example vote on housing?',period:{kind:'all',label:''},facts:sheet})
+  assert.doesNotMatch(out.answer,/matched by words|does not establish why/)
+  if(count===10)assert.match(out.coverage.note,/matched by words/)
+  else assert.equal(out.coverage,undefined)
+  assert.doesNotMatch(out.coverage?.note??'',/does not establish why/)
+ }
+})
+
+test('identity findings do not acquire ranked-count notes from unrelated selected metadata',()=>{
+ const text='Stirling Griff was a senator for South Australia.'
+ const fs=api.writingFacts(undefined,[{id:1,text,cite:{kind:'record',url:'https://example.org/person',label:text}}],['That count comes from ranked matching, so it is not a complete total.'])
+ const out=api.verifyWrittenAnswer({sentences:[{text,facts:[1]},{text:fs[1].text,facts:[2],coverage:true}]},{question:'Which state was Stirling Griff a senator for?',period:{kind:'all',label:''},facts:fs})
+ assert.equal(out.answer,text)
+ assert.equal(out.coverage,undefined)
+})
+
+test('a selected-facts preamble is rejected and the writer contract asks for the finding first',()=>{
+ const text='Robin Example declared a shareholding in Fixture Company.'
+ const query={question:'What interests did Robin Example declare?',period:{kind:'all',label:''},facts:[{id:1,text,source:source('interest',text)}]}
+ assert.equal(api.verifyWrittenAnswer({sentences:[{text:'The selected facts show that '+text,facts:[1]}]},query),null)
+ const out=api.verifyWrittenAnswer({sentences:[{text,facts:[1]}]},query)
+ assert.equal(out.answer,text)
+ const contract=JSON.parse(api.writingPrompt(query)).contract
+ assert.match(contract,/first sentence must answer.*name, figure, date or outcome/)
+ assert.match(contract,/coverage:true.*coverage.note/)
+ assert.match(contract,/Each figure has one supporting fact id/)
+})
+
+test('overlapping source copies cite a figure once while distinct owners survive',()=>{
+ const row=(id,name)=>({id,text:`${name} received $100,000.`,source:source('copy-'+id,`${name} received $100,000.`)})
+ const fs=[row(1,'Robin Example'),row(2,'Robin Example'),row(3,'Casey Sample')]
+ const out=api.verifyWrittenAnswer({sentences:[{text:fs[0].text,facts:[1,2]},{text:fs[2].text,facts:[3]}]},{question:'What did the two recipients receive?',period:{kind:'all',label:''},facts:fs})
+ assert.equal(out.answer,'Robin Example received $100,000.\n\nCasey Sample received $100,000.')
+ assert.equal(Object.keys(out.citations).length,2)
+ assert.equal(Object.values(out.citations).flat().length,2)
+})
+
+test('a substantive limitation retains the explanation in its body',()=>{
+ const text='The state salary records needed for this question are unavailable.'
+ const fs=[{id:1,text,source:source('state-pay',text),coverage:true}]
+ const out=api.verifyWrittenAnswer({answer_decision:'limitation',sentences:[{text,facts:[1],coverage:true}]},{question:'What was the state salary?',period:{kind:'all',label:''},facts:fs})
+ assert.equal(out.answer,text)
+ assert.equal(out.answer_decision,'limitation')
+ assert.equal(out.coverage,undefined)
+})
+
+test('equal receipts from distinct donors remain separate facts and citations',()=>{
+ const fs=['Company Alpha','Company Beta'].map((donor,i)=>{
+  const text=`Labor received $20,000 from ${donor} in 2024.`
+  return {id:i+1,text,source:source('receipt-'+i,text)}
+ })
+ const out=api.verifyWrittenAnswer({sentences:fs.map(f=>({text:f.text,facts:[f.id]}))},{question:'Which donors provided funding to Labor?',period:{kind:'all',label:''},facts:fs})
+ for(const donor of ['Company Alpha','Company Beta'])assert.ok(out.answer.includes(donor))
+ assert.equal(Object.keys(out.citations).length,2)
+ const combined=api.draftWrittenAnswer({answer_decision:'answer',sentences:[{text:fs.map(f=>f.text).join(' '),facts:[1,2]}]},{question:'Which donors provided funding to Labor?',period:{kind:'all',label:''},facts:fs})
+ assert.equal(Object.keys(combined.citations).length,2)
+ const [a,b]=fs.map(f=>({answer:f.text,citations:{[f.source.resource+'/t/body/0']:[[0,f.text.length]]},sources:[f.source]}))
+ const appended=api.appendWrittenPoints(a,b)
+ assert.equal(appended.answer,fs.map(f=>f.text).join('\n\n'))
+ assert.equal(Object.keys(appended.citations).length,2)
 })

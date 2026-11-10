@@ -18,6 +18,20 @@ function fixtures(m,options={}) {
  const deps={signal:options.signal,asset:async()=>null,kb:async()=>{lookups++;return {fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}}}},generate:async()=>{plannerCalls++;return {text:JSON.stringify(plan),tokens:{input:3,output:2}}},research:selectionOnly(api.createResearch({model:m,modelBudgetSpent:async()=>{turns++;return options.refuseAt===turns},dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),...options})),onResearchFailure:async e=>failures.push(e)};
  return {model:m,deps,events,failures,run:(q=question)=>api.runAgentic(q,deps,async(e,d)=>events.push(d),40_000,api.inferPeriod(q),{},emptyScope),get plannerCalls(){return plannerCalls},get lookups(){return lookups},get turns(){return turns}};
 }
+test('loop answer instructions require a direct first point, unique facts and separate coverage notes',async()=>{
+ const f=fixtures(model([reply([call('decline',{reason:'ambiguous'})])]));await f.run();
+ const generation=f.model.doGenerateCalls[0],instructions=JSON.stringify(generation.prompt.filter(p=>['system','developer'].includes(p.role)));
+ assert.match(instructions,/first point directly answers the question with the requested name, date or outcome/);
+ assert.match(instructions,/never restate the question/);
+ assert.match(instructions,/never paste raw tool rows/);
+ assert.match(instructions,/Select each fact once/);
+ assert.match(instructions,/Each figure comes from one selected fact with its supporting citation/);
+ assert.match(instructions,/response coverage note carries relevant limitations, only when the answer depends on them/);
+ assert.doesNotMatch(instructions,/opening with the passage year/);
+ const answer=generation.tools.find(t=>t.name==='answer');
+ assert.match(answer.description,/do not repeat it in points/);
+ assert.match(answer.description,/The first point directly answers the question/);
+});
 test('loop decisions carry a typed refusal or clarification through the response adapter',async()=>{
  for(const reason of ['ambiguous','causation']){
   const f=fixtures(model([reply([call('decline',{reason})])])),run=await f.run('How much money reached One Nation?'),payload=api.agenticAskPayload(run,'How much money reached One Nation?')
