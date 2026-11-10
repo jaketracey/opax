@@ -136,6 +136,36 @@ export function clampCamera(
   };
 }
 
+/**
+ * Where the stage puts the camera when the box, the viewport or the layout
+ * changes. Before the first placement the view follows the fit while the
+ * layout settles (its box grows as it does); once settled, the kept camera
+ * (clamped to the settled box) or the fit is placed, once. After that the
+ * current view is kept inside the limits.
+ */
+export function placeCamera(
+  state: { placed: boolean; settled: boolean },
+  cameras: { kept: Camera | null; current: Camera },
+  bounds: Bounds,
+  viewport: Viewport,
+): { camera: Camera; placed: boolean } {
+  const fit = fitCamera(bounds, viewport);
+  const kMin = fit.k * ZOOM_OUT,
+    kMax = fit.k * ZOOM_IN;
+  if (state.placed)
+    return {
+      camera: clampCamera(cameras.current, bounds, viewport, kMin, kMax),
+      placed: true,
+    };
+  if (!state.settled) return { camera: fit, placed: false };
+  return {
+    camera: cameras.kept
+      ? clampCamera(cameras.kept, bounds, viewport, kMin, kMax)
+      : fit,
+    placed: true,
+  };
+}
+
 /** The camera centred on a world point at scale `k` (the current one by default). */
 export function cameraAt(
   camera: Camera,

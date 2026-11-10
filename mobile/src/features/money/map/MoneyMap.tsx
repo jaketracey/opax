@@ -39,6 +39,7 @@ import {
   clampCamera,
   fitCamera,
   focusScale,
+  placeCamera,
   smallNodeOpacity,
   thinEdgeOpacity,
   translationRange,
@@ -254,31 +255,29 @@ export function MoneyMap({
     viewportSV.set(viewport);
     boundsSV.set(bounds);
     fitK.set(fit.k);
-    const kMin = fit.k * ZOOM_OUT,
-      kMax = fit.k * ZOOM_IN;
-    let next: Camera;
-    if (!placed.current) {
-      placed.current = true;
-      const kept = cameras.get(cacheKey);
-      next = kept ? clampCamera(kept, bounds, viewport, kMin, kMax) : fit;
-    } else
-      // The chrome or the window changed: keep the view, inside the limits.
-      next = clampCamera(
-        { tx: tx.get(), ty: ty.get(), k: k.get() },
-        bounds,
-        viewport,
-        kMin,
-        kMax,
-      );
-    tx.set(next.tx);
-    ty.set(next.ty);
-    k.set(next.k);
+    // The layout grows as it settles: the view follows the fit until then,
+    // and the kept camera (or the fit) is placed once it has. Afterwards a
+    // chrome or window change keeps the view, inside the limits.
+    const next = placeCamera(
+      { placed: placed.current, settled },
+      {
+        kept: cameras.get(cacheKey) ?? null,
+        current: { tx: tx.get(), ty: ty.get(), k: k.get() },
+      },
+      bounds,
+      viewport,
+    );
+    placed.current = next.placed;
+    tx.set(next.camera.tx);
+    ty.set(next.camera.ty);
+    k.set(next.camera.k);
   }, [
     bounds,
     viewport,
     size.width,
     size.height,
     cacheKey,
+    settled,
     tx,
     ty,
     k,

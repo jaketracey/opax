@@ -1,4 +1,6 @@
 import {
+  ZOOM_IN,
+  ZOOM_OUT,
   cameraAt,
   clampCamera,
   clusterLabelOpacity,
@@ -7,6 +9,7 @@ import {
   LOD,
   nameOpacity,
   onScreen,
+  placeCamera,
   ramp,
   screenToWorld,
   smallNodeOpacity,
@@ -268,4 +271,84 @@ test('onScreen tests a screen point against the viewport, with an optional margi
   expect(onScreen(10, viewport.height + 1, viewport)).toBe(false);
   expect(onScreen(-1, 10, viewport, 4)).toBe(true);
   expect(onScreen(viewport.width + 5, 10, viewport, 4)).toBe(false);
+});
+
+describe('placeCamera', () => {
+  // The layout's box while it is still settling: small, near the origin.
+  const early: Bounds = { minX: -40, minY: -30, maxX: 60, maxY: 50 };
+  const current: Camera = { tx: 1, ty: 2, k: 3 };
+
+  test('follows the fit while the layout settles and stays unplaced', () => {
+    const first = placeCamera(
+      { placed: false, settled: false },
+      { kept: current, current },
+      early,
+      viewport,
+    );
+    expect(first.placed).toBe(false);
+    expect(first.camera).toEqual(fitCamera(early, viewport));
+    // The box has grown: the view follows it rather than the early fit.
+    const later = placeCamera(
+      { placed: false, settled: false },
+      { kept: current, current },
+      bounds,
+      viewport,
+    );
+    expect(later.placed).toBe(false);
+    expect(later.camera).toEqual(fitCamera(bounds, viewport));
+    expect(later.camera.k).toBeLessThan(first.camera.k);
+  });
+
+  test('once settled, places the fit when nothing is kept', () => {
+    const placed = placeCamera(
+      { placed: false, settled: true },
+      { kept: null, current },
+      bounds,
+      viewport,
+    );
+    expect(placed.placed).toBe(true);
+    expect(placed.camera).toEqual(fitCamera(bounds, viewport));
+  });
+
+  test('once settled, places the kept camera inside the settled limits', () => {
+    const fit = fitCamera(bounds, viewport);
+    const kept: Camera = { tx: 10, ty: 20, k: fit.k * 2 };
+    const placed = placeCamera(
+      { placed: false, settled: true },
+      { kept, current },
+      bounds,
+      viewport,
+    );
+    expect(placed.placed).toBe(true);
+    expect(placed.camera).toEqual(
+      clampCamera(kept, bounds, viewport, fit.k * ZOOM_OUT, fit.k * ZOOM_IN),
+    );
+    // Far outside the limits, it is brought back in rather than taken as is.
+    const far = placeCamera(
+      { placed: false, settled: true },
+      { kept: { tx: 0, ty: 0, k: fit.k * 100 }, current },
+      bounds,
+      viewport,
+    );
+    expect(far.camera.k).toBe(fit.k * ZOOM_IN);
+  });
+
+  test('after the placement, a chrome change keeps the current view inside the limits', () => {
+    const fit = fitCamera(bounds, viewport);
+    const kept = placeCamera(
+      { placed: true, settled: true },
+      { kept: null, current: { tx: 0, ty: 0, k: fit.k * 1.5 } },
+      bounds,
+      viewport,
+    );
+    expect(kept.placed).toBe(true);
+    expect(kept.camera.k).toBe(fit.k * 1.5);
+    const tooFar = placeCamera(
+      { placed: true, settled: true },
+      { kept: null, current: { tx: 0, ty: 0, k: fit.k * 0.1 } },
+      bounds,
+      viewport,
+    );
+    expect(tooFar.camera.k).toBe(fit.k * ZOOM_OUT);
+  });
 });
