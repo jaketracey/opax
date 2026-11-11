@@ -25,7 +25,7 @@ test.each([
   ['e2e', 'light', false],
   ['production', 'automatic', false],
 ] as const)(
-  '%s %s generates launch colour assets from the page palette',
+  '%s %s generates launch colour assets from the brand navy',
   async (variant, appearance, hasDark) => {
     const config = JSON.parse(
       execFileSync(
@@ -98,10 +98,14 @@ test.each([
             .toUpperCase()
         );
       };
-      expect(hex(0)).toBe(light.paper);
+      // The launch field is brand artwork: navy in both appearances, like the
+      // icon. An automatic capture build carries the same navy in its dark
+      // slot (never the dark palette's navy, which is a pale link tint).
+      expect(hex(0)).toBe(light.navy);
       expect(asset.colors).toHaveLength(hasDark ? 2 : 1);
       if (hasDark) {
-        expect(hex(1)).toBe(dark.paper);
+        expect(hex(1)).toBe(light.navy);
+        expect(hex(1)).not.toBe(dark.navy);
         expect(asset.colors[1]!.appearances).toEqual([
           { appearance: 'luminosity', value: 'dark' },
         ]);

@@ -217,6 +217,10 @@ const config: ExpoConfig = {
     },
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      // Light status bar text over the navy launch screen. React Native's
+      // StatusBar takes over once the app draws (the root layout sets
+      // `auto`; the launch cover keeps `light` while it is up).
+      UIStatusBarStyle: 'UIStatusBarStyleLightContent',
       NSLocationWhenInUseUsageDescription:
         'OPAX uses your location once, on this iPhone, to find your electorate. It is not sent anywhere.',
       'NSLocationWhenInUseUsageDescription~ipad':
@@ -267,18 +271,20 @@ const config: ExpoConfig = {
     [
       'expo-splash-screen',
       {
-        // The star mark and the "OPAX" wordmark, centred on paper, with no
-        // other text. Rendered from assets/splash/*.svg by
+        // The gold star and the paper "OPAX" wordmark, centred on the brand
+        // navy, with no other text. Rendered from assets/splash/*.svg by
         // scripts/render-splash.swift. The lockup is 200pt wide;
-        // src/launch/LaunchHandoff.tsx draws the same image.
+        // src/launch/LaunchHandoff.tsx draws the same layers in the same
+        // place and then unfolds the name from them.
         //
-        // Only automatic-appearance captures get a dark launch background.
-        // A dark splash makes the plugin switch iOS to Automatic, so release
-        // and light-only builds must leave it unset.
-        backgroundColor: '#FAF9F6',
+        // The field is navy in both appearances, so one colour serves both.
+        // Setting a `dark` block makes the plugin switch iOS to Automatic,
+        // so release and light-only builds leave it unset; only
+        // automatic-appearance captures carry it, with the same navy.
+        backgroundColor: '#142A43',
         dark:
           variant !== 'production' && appearance === 'automatic'
-            ? { backgroundColor: '#161915' }
+            ? { backgroundColor: '#142A43' }
             : undefined,
         image: './assets/splash/splash@3x.png',
         imageWidth: 200,

@@ -274,8 +274,11 @@ export function WelcomePage({
         </View>
       ) : null}
       {covered ? (
+        // A first launch: the name unfolds here, over the welcome, since the
+        // root's cover sits under this full-screen modal.
         <LaunchHandoff
           ready={laidOut}
+          sequence="full"
           onDone={() => setCovered(false)}
           testID="welcome-launch-cover"
         />

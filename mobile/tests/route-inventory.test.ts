@@ -48,6 +48,7 @@ jest.mock('../src/navigation/KeyboardShortcuts', () => ({
   KeyboardShortcuts: () => null,
 }));
 jest.mock('../src/launch/splash', () => ({
+  decideLaunchSequence: jest.fn(async () => undefined),
   decideSplashPlain: jest.fn(),
   holdSplashForWelcome: jest.fn(),
 }));

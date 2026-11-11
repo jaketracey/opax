@@ -1,9 +1,10 @@
 import * as SplashScreen from 'expo-splash-screen';
-import { handoff } from './timing';
+import { chooseLaunchSequence } from './played';
+import { handoff, type SplashSequence } from './timing';
 
-// Keep the native splash until the handoff has drawn the same image on top of
-// it (src/launch/LaunchHandoff.tsx), so the swap has no seam. Imported once by
-// the root layout, before anything renders.
+// Keep the native splash until the handoff has drawn the same layers on top
+// of it (src/launch/LaunchHandoff.tsx), so the swap has no seam. Imported once
+// by the root layout, before anything renders.
 let hidden = false;
 void SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
@@ -67,10 +68,34 @@ export function subscribeSplash(listener: () => void) {
     listeners.delete(listener);
   };
 }
+/**
+ * Which sequence a plain (returning) cold launch plays (played.ts): read
+ * once per launch by the root layout, beside the first-launch check. The
+ * first frame is the same either way, so the cover draws at once and only
+ * motion waits on the answer. A read that fails plays the short sequence.
+ */
+export type LaunchSequence = 'pending' | SplashSequence;
+let sequence: LaunchSequence = 'pending';
+let choosing: Promise<void> | null = null;
+export function decideLaunchSequence(): Promise<void> {
+  choosing ??= chooseLaunchSequence()
+    .catch((): SplashSequence => 'short')
+    .then((chosen) => {
+      sequence = chosen;
+      emit();
+    });
+  return choosing;
+}
+export function launchSequence(): LaunchSequence {
+  return sequence;
+}
+
 /** Tests only. */
 export function resetSplashForTests() {
   phase = 'pending';
   signals.today = signals.welcome = signals.failsafe = false;
+  sequence = 'pending';
+  choosing = null;
   listeners.clear();
 }
 
