@@ -69,8 +69,15 @@ test('client: a party with no speech in the record draws no "Their speeches" (ro
   }
 });
 
+// The alias case needs a party listed under the division records' long spelling. Refreshed division exports can
+// fold that spelling into the indexed label (11 November 2026: "Pauline Hanson's One Nation Party" became
+// "One Nation"), so the page reads the published member index plus a snapshot of the long-spelling entry.
+const aliasEntry = JSON.parse(readFileSync(new URL('./fixtures/party-members-alias.json', import.meta.url), 'utf8'));
+const publishedMembers = JSON.parse(readFileSync(new URL('../public/graph/party-members.json', import.meta.url), 'utf8'));
+const aliasMembers = {...publishedMembers, parties: {...publishedMembers.parties, "Pauline Hanson's One Nation Party": aliasEntry["Pauline Hanson's One Nation Party"]}};
+
 test('client: a party with speeches links them under the indexed label (the alias case)', {timeout: 60000}, async () => {
-  const files = {'/graph/party-speeches.json': {version: 1, parties: {'One Nation': 7, Labor: 11}}};
+  const files = {'/graph/party-speeches.json': {version: 1, parties: {'One Nation': 7, Labor: 11}}, '/graph/party-members.json': aliasMembers};
   // The division records' spelling: the page keeps its title, the search gets the index's label.
   const alias = new JSDOM((await renderEntry("/subject/party/pauline-hansons-one-nation-party", files)).html).window.document;
   const button = [...alias.querySelectorAll('a')].find(a => a.textContent.trim() === 'Their speeches');

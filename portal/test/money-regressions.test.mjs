@@ -133,8 +133,16 @@ test('MN-DONR-016: the passing lifetime donor-to-party total and period remain i
   cited(out, '$143,410');
 });
 
+// MN-CONT-018 is about a count tie between two agencies; the live supplier file moves with every AusTender
+// refresh (on 11 November 2026 the refreshed file no longer had the tie), so the case is a snapshot.
+const supplierFixture = JSON.parse(await readFile(new URL('./fixtures/mn-cont-018-suppliers.json', import.meta.url), 'utf8'));
+const supplierAsset = async path => structuredClone(supplierFixture[path] ?? null);
+const supplierEnv = { origin: env.origin, asset: supplierAsset, ASSETS: { fetch: async request => {
+  const value = await supplierAsset(new URL(request.url).pathname);
+  return value ? Response.json(value) : new Response('', { status: 404 });
+} } };
 test('MN-CONT-018: complete supplier profiles rank agency totals and identify count ties separately', async () => {
-  const result = await api.callTool(env, 'contracts', { supplier: 'Centorrino Technologies Pty Ltd', group_by: 'agency' });
+  const result = await api.callTool(supplierEnv, 'contracts', { supplier: 'Centorrino Technologies Pty Ltd', group_by: 'agency' });
   assert.equal(result.rows[0].agency, 'High Speed Rail Authority');
   assert.equal(result.rows[0].total_aud, 4717706.19); assert.equal(result.rows[0].contracts, 2);
   const out = answer(toolInput('MN-CONT-018', result));
@@ -142,7 +150,7 @@ test('MN-CONT-018: complete supplier profiles rank agency totals and identify co
   assert.match(out.answer, /Department of Defence.*4 Commonwealth contracts/);
   assert.match(out.answer, /Department of the Prime Minister and Cabinet.*4 Commonwealth contracts/);
   cited(out, '$4,717,706');
-  const counted = await api.callTool(env, 'contracts', { supplier: 'Centorrino Technologies Pty Ltd', group_by: 'agency', rank_by: 'count', limit: 1 });
+  const counted = await api.callTool(supplierEnv, 'contracts', { supplier: 'Centorrino Technologies Pty Ltd', group_by: 'agency', rank_by: 'count', limit: 1 });
   assert.equal(counted.rows.length, 2, 'all leaders survive a display limit');
   assert.ok(counted.rows.every(r => r.contracts === 4));
 });
