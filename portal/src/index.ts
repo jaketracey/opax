@@ -5899,7 +5899,8 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
-  if (!(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)))
+  // Official report records quote a publisher's own document; they pair no records.
+  if (!(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // Every page prints its trail in the server HTML too (readers without
   // scripts, crawlers), from the menus' own list; the app's strip replaces it
