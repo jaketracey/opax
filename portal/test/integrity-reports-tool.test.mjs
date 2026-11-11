@@ -196,3 +196,42 @@ test('invalid input is rejected before any read', async () => {
   await invalid({ view: 'reports', report_type: 'media_release' });
   await invalid({ view: 'bodies', query: 'x y' });
 });
+
+test('transcripts: public hearing transcripts by body and operation, labelled evidence not findings', async () => {
+  assert.ok(index.transcripts.total >= 486);
+  const icac = await call({ view: 'transcripts', body: 'NSW ICAC', operation: 'Wyvern', limit: 8 }); cited(icac);
+  assert.ok(icac.total >= 100 && icac.next_offset === 8);
+  assert.ok(icac.rows.every(r => r.case === 'Operation Wyvern' && /^https:\/\//.test(r.pdf_url) && r.label === 'Hearing transcript: evidence, not findings'));
+  const dates = icac.rows.map(r => r.hearing_date);
+  assert.deepEqual(dates, [...dates].sort().reverse());
+  for (const c of icac.citations.slice(1)) assert.match(c.text, /Hearing transcript: evidence, not findings/);
+  assert.match(icac.notes.join(' '), /never a finding/);
+  // a body with transcripts but no loaded reports
+  const lecc = await call({ view: 'transcripts', body: 'NSW LECC' }); cited(lecc);
+  assert.equal(lecc.total, 24);
+  // the publisher's link label can name a witness; rows carry the neutral title only
+  const qld = await call({ view: 'transcripts', body: 'Qld CCC', operation: 'Belcarra', since: '2017-04-18', until: '2017-04-18' }); cited(qld);
+  assert.ok(qld.rows.length && qld.rows.every(r => r.title_as_listed === undefined && /^Operation Belcarra/.test(r.title)));
+  const ibac = await call({ view: 'transcripts', body: 'IBAC' }); cited(ibac);
+  assert.ok(ibac.rows.every(r => r.orders?.length));
+});
+
+test('a report whose operation had public hearings carries a transcript summary', async () => {
+  const out = await call({ view: 'report', record_id: 'act-ic-2026-07-23-operation-kingfisher' }); cited(out);
+  const t = out.rows[0].transcripts;
+  assert.equal(t.count, 17); assert.equal(t.label, 'Hearing transcript: evidence, not findings');
+  assert.deepEqual(t.follow_up, { view: 'transcripts', body: out.rows[0].body, operation: 'Operation Kingfisher' });
+  await invalid({ view: 'transcripts', subject: 'council' });
+  await invalid({ view: 'transcripts', record_id: 'act-ic-2026-07-23-operation-kingfisher' });
+});
+
+test('integrity transcript paging is stable at the edges', async () => {
+  const seen = [];
+  for (let offset = 0; offset !== null;) {
+    const out = await call({ view: 'transcripts', body: 'NSW LECC', limit: 8, offset }); cited(out);
+    assert.equal(out.total, 24); seen.push(...out.rows.map(r => r.title)); offset = out.next_offset;
+  }
+  assert.equal(new Set(seen).size, 24);
+  const past = await call({ view: 'transcripts', body: 'NSW LECC', offset: 99 });
+  assert.equal(past.rows.length, 0); assert.equal(past.total, 24); assert.equal(past.next_offset, null);
+});

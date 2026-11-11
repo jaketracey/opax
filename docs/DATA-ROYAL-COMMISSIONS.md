@@ -95,6 +95,37 @@ recommendations, Bushfires summary, Queensland report and the transcripts carry 
 notice in the document, and OPAX quotes recommendations with attribution and links the
 publisher's copy.
 
+### Hearing transcripts intake, 12 November 2026
+
+The OPAX maintainer supplied 216 more publisher hearing transcripts with a manifest
+(hash, size, page count and publisher URL for each). Every file was checked against
+the manifest before loading; none differed. They are manual documents
+(`source: manual`, `kind: hearing_transcript`), never fetched by the refresh, and each
+keeps the acquisition and rights notes recorded for it in the intake.
+
+| Inquiry | Transcripts | Reuse, as the publisher states it |
+| --- | --- | --- |
+| Royal Commission on Antisemitism and Social Cohesion (Cth) | 53 | CC BY 4.0 for Commonwealth material |
+| Royal Commission into the Robodebt Scheme (Cth) | 47 | CC BY 4.0 for Commonwealth material |
+| Special Commission of Inquiry into Healthcare Funding (NSW) | 71 | CC BY 4.0 (NSW Premier's Department site notice) |
+| Child Safety Commission of Inquiry (Qld) | 10 | Epiq transcript; review before republication |
+| Commission of Inquiry into Forensic DNA Testing in Queensland | 4 | Epiq transcript; review before republication |
+| Perth Casino Royal Commission (WA) | 10 | written consent required for reproduction |
+| Royal Commission into Domestic, Family and Sexual Violence (SA) | 10 | review before republication |
+| Tasmanian Commission of Inquiry (child sexual abuse in institutional settings) | 6 | non-commercial terms and publication orders |
+| Scientific Inquiry into Hydraulic Fracturing in the Northern Territory | 5 | hearing excerpts; review before republication |
+
+Each transcript's date is the one printed on it, checked verbatim on page 1
+(`date_quote`). One Antisemitism transcript prints "THURSDAY, AUGUST 2026" on its
+cover; its date is read from the page header "13/08/2026". Titles are the publisher's,
+with file-size suffixes such as "(PDF, 840KB)" removed and generic link text
+("Download transcript") replaced by "Hearing transcript, <date>".
+
+The `royal_commissions` tool's profile now carries a transcript summary (count, date
+range, newest three); `view=transcripts` pages through the rest, newest first, with
+`words`, `since` and `until`. Every transcript row and citation carries the label
+"Hearing transcript: evidence, not findings".
+
 ### Particular care
 
 * The ACT Board of Inquiry report: the ACT Government page states that "On 4 March 2024,
@@ -130,18 +161,23 @@ publisher's copy.
   `scripts/weekly_refresh.sh` (both STALE_OK). The `royal-commissions` data group is
   checked by `scripts/vm/validate_data.py`.
 
-## Coverage, 11 November 2026
+## Coverage, 12 November 2026
 
-18 bodies: 16 royal commissions, 1 commission of inquiry, 1 board of inquiry.
+23 bodies: 17 royal commissions, 5 commissions of inquiry, 1 board of inquiry.
 1,295 numbered recommendations from 12 of them; 227 carry a government-published status.
+218 hearing transcripts from 10 of them.
 
-| Jurisdiction | Bodies | Recommendations |
-| --- | --- | --- |
-| Commonwealth | 8 | 683 |
-| Victoria | 7 | 612 |
-| Queensland | 1 | 0 |
-| Western Australia | 1 | 0 |
-| ACT | 1 | 0 |
+| Jurisdiction | Bodies | Recommendations | Transcripts |
+| --- | --- | --- | --- |
+| Commonwealth | 8 | 683 | 100 |
+| Victoria | 7 | 612 | 2 |
+| New South Wales | 1 | 0 | 71 |
+| Queensland | 2 | 0 | 14 |
+| Western Australia | 1 | 0 | 10 |
+| South Australia | 1 | 0 | 10 |
+| Tasmania | 1 | 0 | 6 |
+| ACT | 1 | 0 | 0 |
+| Northern Territory | 1 | 0 | 5 |
 
 ## Gaps
 
@@ -151,14 +187,14 @@ publisher's copy.
   reports load only where the Parliament of Victoria, the Treasury or the manual
   supplement serves them. Remaining Commonwealth royal commission volumes and releases
   are open: <https://www.royalcommission.gov.au/reports>.
-* NSW Parliament answers OPAXBot with HTTP 403; no New South Wales body is loaded. The
-  NSW healthcare funding Special Commission of Inquiry is open:
+* NSW Parliament answers OPAXBot with HTTP 403. The NSW healthcare funding Special
+  Commission of Inquiry is loaded by its transcripts only; its report is open:
   <https://www.health.nsw.gov.au/Reports/Pages/special-commission-inquiry-funding.aspx>.
-* South Australia's Royal Commission into Domestic, Family and Sexual Violence and its
-  implementation plan:
+* South Australia's Royal Commission into Domestic, Family and Sexual Violence is
+  loaded by its transcripts only; its report and implementation plan are open:
   <https://dhs.sa.gov.au/how-we-help/domestic-family-and-sexual-violence/royal-commission-into-domestic-family-and-sexual-violence>.
-* Tasmania's Commission of Inquiry into child sexual abuse in institutional settings,
-  full volumes: <https://www.commissionofinquiry.tas.gov.au/report>.
+* Tasmania's Commission of Inquiry into child sexual abuse in institutional settings is
+  loaded by its transcripts only; its full volumes are open: <https://www.commissionofinquiry.tas.gov.au/report>.
 * The Victorian royal commission sites (rcfv.com.au, royalcommission.vic.gov.au) reset
   OPAXBot; Victorian reports come from the Parliament's tabled copies.
 * Not yet extracted: Financial Services final report, Trade Union volumes, Child

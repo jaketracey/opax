@@ -156,7 +156,8 @@ def test_registry_is_well_formed():
                 assert d["url"].startswith("https://")
             if d["source"] == "manual":
                 assert len(d["sha256"]) == 64 and d["title"] and d["document_kind"] and d["rights"]
-                assert d["acquisition"] == "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026"
+                assert d["acquisition"] in ("manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+                                            "manual publisher download supplied by the OPAX maintainer, 12 Nov 2026")
             if d["kind"] == "hearing_transcript":
                 assert "recommendations" not in d
             if "recommendations" in d:
@@ -211,3 +212,23 @@ def test_transcripts_are_documents_only_and_court_context_is_verbatim(tmp_path):
     entry["court_context"][0]["quote"] = "On 4 March 2024, the Court set the report aside."
     with pytest.raises(SystemExit):
         rc.build_commission(entry, run, rc.Texts(tmp_path), {})
+
+
+def test_iso_date_reads_a_numeric_transcript_header_only_whole():
+    from parli.ingest.royal_commissions import iso_date
+    assert iso_date("17 AUGUST 2026") == "2026-08-17"
+    assert iso_date("13/08/2026") == "2026-08-13"
+    assert iso_date("ASCRC – 13/08/2026") is None  # a numeric date is accepted only as the whole quote
+    assert iso_date("13/13/2026") is None
+
+
+def test_registry_transcripts_are_manual_dated_and_carry_rights():
+    import json
+    from parli.ingest.royal_commissions import REGISTRY
+    reg = json.loads(REGISTRY.read_text())
+    transcripts = [d for c in reg["commissions"] for d in c["documents"] if d["kind"] == "hearing_transcript"]
+    assert len(transcripts) >= 218
+    for d in transcripts:
+        assert d["source"] == "manual" and len(d["sha256"]) == 64
+        assert d["date_quote"] and d["date_page"] == 1 and d["rights"]
+        assert "(PDF" not in d["title"] and not d["title"].lower().startswith("download")
