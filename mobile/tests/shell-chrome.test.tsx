@@ -748,7 +748,7 @@ test('quiz and division history keep named native Back buttons and centred inlin
   )!;
   expect(resolve(quiz, 'explore/index', { tool: 'quiz' })).toMatchObject({
     title: 'The record quiz',
-    headerBackTitle: 'Quizzes and tools',
+    headerBackTitle: 'Tools',
     headerBackButtonDisplayMode: 'default',
     headerTitleAlign: 'center',
   });

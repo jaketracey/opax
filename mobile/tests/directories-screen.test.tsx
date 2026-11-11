@@ -17,6 +17,7 @@ import {
   type DirectoryRecord,
 } from '../src/features/directories/data';
 import { filterStore } from '../src/features/sheets/filter-model';
+import { peopleScreens } from '../src/navigation/stack/people';
 
 const mockParams: Record<string, string> = { kind: 'person' };
 const mockScreen: { options?: Record<string, unknown> } = {};
@@ -213,7 +214,7 @@ test.each([
     jest
       .mocked(loadDirectory)
       .mockReturnValue(new Promise<DirectoryRecord>(() => {}));
-    const route = { key: 'directory', name: 'subject/[kind]' };
+    const route = { key: 'directory', name: 'directory', params: { kind } };
     const navigation = {
       getState: () => ({
         index: 1,
@@ -225,6 +226,15 @@ test.each([
       isFocused: () => true,
       addListener: () => () => {},
     };
+    const registration = peopleScreens().find(
+      (screen) => screen.props.name === 'directory',
+    )!;
+    mockScreen.options = registration.props.options({ route, navigation });
+    expect(mockScreen.options).toMatchObject({
+      headerBackTitle: 'Search',
+      headerBackButtonDisplayMode: 'default',
+      headerBackButtonMenuEnabled: true,
+    });
     let renderer!: TestRenderer.ReactTestRenderer;
     await act(async () => {
       renderer = TestRenderer.create(
@@ -243,7 +253,7 @@ test.each([
       title,
       headerTitle,
       headerBackTitle: 'Search',
-      headerBackButtonMenuEnabled: false,
+      headerBackButtonMenuEnabled: true,
       headerBackButtonDisplayMode: 'default',
     });
     expect(byID(renderer, 'directory-title')).toHaveLength(0);

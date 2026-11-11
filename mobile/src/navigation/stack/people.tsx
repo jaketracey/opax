@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
-import { screen, sheetOptions, untitled } from './screen';
+import { detailBackOptions, screen, sheetOptions, untitled } from './screen';
+import { pendingHeaderOptions } from '../chrome';
 
 export function peopleScreens() {
   return [
@@ -14,19 +15,25 @@ export function peopleScreens() {
     <Stack.Screen
       key="directory"
       name="directory"
-      options={({ route }) => ({
-        title:
+      options={({ route, navigation }) => {
+        const kind =
+          (route.params as { kind?: string } | undefined)?.kind ?? 'person';
+        const title =
           (
             {
               person: 'Parliamentarians',
               party: 'Parties',
               electorate: 'Electorates',
             } as Record<string, string>
-          )[
-            (route.params as { kind?: string } | undefined)?.kind ?? 'person'
-          ] ?? 'Parliamentarians',
-        headerLargeTitleEnabled: false,
-      })}
+          )[kind] ?? 'Parliamentarians';
+        return {
+          title,
+          headerTitle: kind === 'person' ? 'People' : title,
+          headerLargeTitleEnabled: false,
+          ...detailBackOptions(navigation, route.key, 'directory'),
+          ...pendingHeaderOptions('directory'),
+        };
+      }}
     />,
   ];
 }

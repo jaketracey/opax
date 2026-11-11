@@ -1,11 +1,6 @@
 import { Stack } from 'expo-router';
-import {
-  detailBackOptions,
-  rootBackTitle,
-  screen,
-  sheetOptions,
-  untitled,
-} from './screen';
+import { detailBackOptions, screen, sheetOptions, untitled } from './screen';
+import { pendingHeaderOptions } from '../chrome';
 
 export function publicMoneyScreens() {
   return [
@@ -27,10 +22,8 @@ export function publicMoneyScreens() {
       options={({ route, navigation }) => ({
         title: '',
         ...untitled,
-        ...(rootBackTitle(navigation, route.key)
-          ? { headerBackTitle: rootBackTitle(navigation, route.key) }
-          : {}),
         ...detailBackOptions(navigation, route.key, 'money-item'),
+        ...pendingHeaderOptions('money-item', route.params),
         ...((route.params as { sheet?: string } | undefined)?.sheet === '1'
           ? sheetOptions
           : {}),

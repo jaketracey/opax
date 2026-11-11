@@ -1,4 +1,5 @@
 import { RouteOptions } from '../src/navigation/preview';
+import { billsScreens } from '../src/navigation/stack/bills';
 // Wave 4, lane B (specs/bills.md): the status event (2.1), the vote order
 // and words (4.2.5), the list's filter helpers (2.2), the bill page's
 // arrivals (`?division=`, 4.4) and Added since (4.2.1), the saved-seat line
@@ -270,6 +271,14 @@ describe('Votes in parliament: the votes sit under the bill title (6.1)', () => 
       addListener: () => () => {},
       getState: () => ({ routes: [{ key: 'root', name: 'bills' }, route] }),
     };
+    const registration = billsScreens().find(
+      (screen) => screen.props.name === 'division-history',
+    )!;
+    expect(registration.props.options({ route, navigation })).toMatchObject({
+      headerBackTitle: 'Bills',
+      headerBackButtonDisplayMode: 'default',
+      headerBackButtonMenuEnabled: true,
+    });
     await act(async () => {
       r = TestRenderer.create(
         <NavigationContext.Provider value={navigation as never}>
@@ -283,9 +292,8 @@ describe('Votes in parliament: the votes sit under the bill title (6.1)', () => 
     const root = r.root;
     expect(root.findByType(RouteOptions).props.options).toMatchObject({
       title: 'Votes in parliament',
-      headerBackTitle: 'Bills',
-      headerBackButtonDisplayMode: 'default',
     });
+    expect(root.findByType(RouteOptions).props.options).not.toHaveProperty('headerBackTitle');
     // The probe marks the top left of the bill header's text column.
     const probeAt = () =>
       root.findAll(

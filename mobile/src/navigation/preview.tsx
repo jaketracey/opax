@@ -3,8 +3,9 @@ import {
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
-import { useCallback, useContext, useLayoutEffect } from 'react';
+import { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
 import { useDetailRouteOptions } from './useDetailRouteOptions';
+import { headerItems, pendingHeaderItems } from './chrome';
 import {
   useRootBarAppearance,
   useRootBarSearchOptions,
@@ -56,7 +57,24 @@ export function RouteOptions({
   stableItems?: boolean;
 }) {
   const setOptions = useSafeSetOptions();
-  useDetailRouteOptions(setOptions, stableItems ? options : undefined);
+  const route = useContext(NavigationRouteContext);
+  const pending = useMemo(
+    () => pendingHeaderItems(route?.name, route?.params),
+    [route?.name, route?.params],
+  );
+  const resolvedOptions = useMemo(
+    () =>
+      options &&
+      pending &&
+      'unstable_headerRightItems' in options &&
+      !options.unstable_headerRightItems &&
+      !options.headerRight
+        ? { ...options, ...headerItems(() => pending) }
+        : options,
+    [options, pending],
+  );
+  const keepItems = stableItems || !!pending;
+  useDetailRouteOptions(setOptions, keepItems ? resolvedOptions : undefined);
   useRootBarSearchOptions(options);
   useRootBarAppearance(setOptions, {
     names: ['bills', 'ask'],
@@ -66,8 +84,8 @@ export function RouteOptions({
   // Install before paint so native items start in their final positions.
   useLayoutEffect(() => {
     // Match Expo Screen's empty-options guard (expo/router#452).
-    if (!stableItems && options && Object.keys(options).length)
-      setOptions(options);
-  }, [setOptions, options, stableItems]);
+    if (!keepItems && resolvedOptions && Object.keys(resolvedOptions).length)
+      setOptions(resolvedOptions);
+  }, [setOptions, resolvedOptions, keepItems]);
   return null;
 }

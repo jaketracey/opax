@@ -273,7 +273,7 @@ test.each(['(today)', '(your-mp)', '(bills)', '(search)', '(ask)'])(
         }),
       ).toMatchObject({
         headerBackTitle: label,
-        headerBackButtonMenuEnabled: false,
+        headerBackButtonMenuEnabled: true,
       });
     }
     const root = tabRootName(tab);

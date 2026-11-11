@@ -5,46 +5,31 @@ import {
 } from 'expo-router/react-navigation';
 import { useContext, useMemo } from 'react';
 import { Platform } from 'react-native';
-import { rootBackTitle } from './stack/screen';
-
-// Keep these destinations named beside fixed titles and trailing bar items.
-const shortBackTitles: Readonly<Record<string, string>> = {
-  'explore/index': 'Tools',
-};
+import { detailBackOptions } from './stack/screen';
 
 function useBackTitleResolution() {
   const navigation = useContext(NavigationContext);
   const route = useContext(NavigationRouteContext);
-  const routes = navigation?.getState?.()?.routes ?? [];
-  const at = routes.findIndex((item) => item.key === route?.key);
-  const previous = at > 0 ? routes[at - 1] : undefined;
-  const shortBack = previous && shortBackTitles[previous.name];
-  return {
-    back: shortBack ?? rootBackTitle(navigation, route?.key),
-    shortBack,
-  };
+  return detailBackOptions(navigation, route?.key, route?.name ?? '');
 }
 
 /** The short previous-route name used by the native back item. */
 export function useNamedBackTitle(): string | undefined {
-  return useBackTitleResolution().back;
+  return useBackTitleResolution().headerBackTitle;
 }
 
-/** Reapply the previous route's name when a screen installs its own bar. */
+/** The same back settings installed by the stack before the screen mounts. */
 export function useNamedBackOptions(): NativeStackNavigationOptions {
-  const { back, shortBack } = useBackTitleResolution();
+  const { headerBackTitle: back } = useBackTitleResolution();
   return useMemo(
     () =>
-      Platform.OS === 'ios'
+      Platform.OS === 'ios' && back
         ? {
             headerBackButtonDisplayMode: 'default',
-            ...(back ? { headerBackTitle: back } : {}),
-            // UIKit's space-aware default can discard even an explicit short
-            // title. A static native back item keeps these names beside the
-            // revealed title and trailing controls, without fixing its font.
-            ...(shortBack ? { headerBackButtonMenuEnabled: false } : {}),
+            headerBackTitle: back,
+            headerBackButtonMenuEnabled: true,
           }
         : {},
-    [back, shortBack],
+    [back],
   );
 }

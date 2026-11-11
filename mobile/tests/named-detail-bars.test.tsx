@@ -22,6 +22,8 @@ import Program from '../src/features/money-public/Program';
 import { MoneyList, TitleAlias } from '../src/features/money-public/parts';
 import { RouteOptions } from '../src/navigation/preview';
 import { rootBackTitle } from '../src/navigation/stack/screen';
+import { publicMoneyScreens } from '../src/navigation/stack/public-money';
+import { billsScreens } from '../src/navigation/stack/bills';
 import { catalogs } from '../src/api/runtime';
 import { Screen, TitleAnchor } from '../src/design/layout';
 import { Heading } from '../src/design/text';
@@ -41,6 +43,7 @@ import {
 
 const mockParams = { seat: 'federal-senate-nsw-new-south-wales' };
 jest.mock('expo-router', () => ({
+  Stack: { Screen: () => null },
   router: { push: jest.fn() },
   useLocalSearchParams: () => mockParams,
   useSegments: () => [],
@@ -101,7 +104,7 @@ test.each([
   [['index', 'leads', 'lead/[id]', 'money-item'], 'Back'],
   [['index', 'explore/[tool]'], 'Today'],
   [['bills', 'bill/[key]'], 'Bills'],
-  [['index', 'grants', 'grant-program'], 'Commonwealth grants'],
+  [['index', 'grants', 'grant-program'], 'Grants'],
   [['your-mp', 'members'], 'Your MP'],
   [['index', 'bill/[key]', 'bill-text/[key]'], 'Back'],
   [['index'], undefined],
@@ -124,13 +127,15 @@ test.each([
     );
   });
   expect(backTitle).toBe(title);
-  expect(options).toEqual({
-    headerBackButtonDisplayMode: 'default',
-    ...(title ? { headerBackTitle: title } : {}),
-    ...(['Tools'].includes(title ?? '')
-      ? { headerBackButtonMenuEnabled: false }
-      : {}),
-  });
+  expect(options).toEqual(
+    title
+      ? {
+          headerBackButtonDisplayMode: 'default',
+          headerBackTitle: title,
+          headerBackButtonMenuEnabled: true,
+        }
+      : {},
+  );
   const first = options;
   act(() => {
     view!.update(
@@ -208,7 +213,18 @@ test.each([
     previous,
     'grant-program',
   );
-  const options: Record<string, unknown> = {};
+  const registration = publicMoneyScreens().find(
+    (screen) => screen.props.name === 'grant-program',
+  )!;
+  const options: Record<string, unknown> = registration.props.options({
+    route,
+    navigation,
+  });
+  expect(options).toMatchObject({
+    headerBackTitle: backTitle,
+    headerBackButtonDisplayMode: 'default',
+    headerBackButtonMenuEnabled: true,
+  });
   navigation.setOptions.mockImplementation((next) =>
     Object.assign(options, next),
   );
@@ -225,11 +241,15 @@ test.each([
     headerBackTitle: backTitle,
     headerBackButtonDisplayMode: 'default',
   });
-  if (previous === 'grants')
-    expect(options.headerBackButtonMenuEnabled).toBe(false);
+  expect(
+    navigation.setOptions.mock.calls.every(
+      ([next]) =>
+        !Object.keys(next).some((key) => key.startsWith('headerBack')),
+    ),
+  ).toBe(true);
   // No subject has arrived, so the stack's empty title view remains installed.
   expect(options.title).toBe('');
-  expect(options.headerTitle).toBeUndefined();
+  expect(typeof options.headerTitle).toBe('function');
 });
 
 test('Agencies restores the system Government agencies title and its alias', async () => {
@@ -271,7 +291,18 @@ test('Votes keeps Filters before More, its named back button and its scrolling t
     'bill-text/[key]',
     'division-history',
   );
-  const options: Record<string, unknown> = {};
+  const registration = billsScreens().find(
+    (screen) => screen.props.name === 'division-history',
+  )!;
+  const options: Record<string, unknown> = registration.props.options({
+    route,
+    navigation,
+  });
+  expect(options).toMatchObject({
+    headerBackTitle: 'Back',
+    headerBackButtonDisplayMode: 'default',
+    headerBackButtonMenuEnabled: true,
+  });
   navigation.setOptions.mockImplementation((next) =>
     Object.assign(options, next),
   );
@@ -608,7 +639,7 @@ test('a shortened bar title exposes the full accessibility label', () => {
 });
 
 test.each([false, true])(
-  'an unknown back title leaves the title at its intrinsic width, shown=%s',
+  'a list back title reserves its named pill, shown=%s',
   (shown) => {
     const { route, navigation } = navigationFor('index', 'leads', 'lead/[id]');
     let backTitle: string | undefined;
@@ -632,7 +663,7 @@ test.each([false, true])(
         </NavigationContext.Provider>,
       );
     });
-    expect(backTitle).toBeUndefined();
+    expect(backTitle).toBe('Leads');
     const text = view!.root.findByType(Animated.Text);
     const style = StyleSheet.flatten(text.props.style);
     expect(style.width).toBeUndefined();

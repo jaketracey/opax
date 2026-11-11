@@ -141,6 +141,11 @@ export function useStackChrome() {
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
     headerBackButtonDisplayMode: 'default' as const,
+    // Keep UIKit's own item and its automatic shortening to Back. A disabled
+    // menu creates a custom back item on every native header update.
+    ...(Platform.OS === 'ios'
+      ? { headerBackTitle: 'Back', headerBackButtonMenuEnabled: true }
+      : {}),
     contentStyle: { backgroundColor: colors.paper },
   };
 }
@@ -425,6 +430,45 @@ export function headerItems(
       ? { headerRight: () => androidHeaderBar(visible?.() ?? []) }
       : {}),
   };
+}
+
+/** Space for data-dependent actions, present in the navigator's first layout. */
+export function pendingHeaderItems(
+  name: string | undefined,
+  params?: object,
+): NativeStackHeaderItem[] | undefined {
+  if (
+    Platform.OS !== 'ios' ||
+    (name === 'money-item' && (params as { sheet?: unknown })?.sheet === '1')
+  )
+    return undefined;
+  const alwaysTwo = name === 'directory' || name === 'division-history';
+  const moreOnly = name === 'money-record' || name === 'grant-program';
+  const shareAndMore = [
+    'electorate/[id]',
+    'person/[slug]',
+    'party/[slug]',
+    'bill/[key]',
+    'doc/[slug]',
+    'lead/[id]',
+    'topic/[slug]',
+    'agency',
+    'money-item',
+    'connection',
+    'grants',
+    'agencies',
+    'explore/index',
+    'explore/[tool]',
+  ].includes(name ?? '');
+  if (!alwaysTwo && !moreOnly && !shareAndMore) return undefined;
+  const count = alwaysTwo || (shareAndMore && canShare) ? 2 : 1;
+  // Match the 44 pt items and 16 pt group gap used by barTitleWidth.
+  return [{ type: 'spacing', spacing: 44 + 60 * (count - 1) }];
+}
+
+export function pendingHeaderOptions(name: string, params?: object) {
+  const items = pendingHeaderItems(name, params);
+  return items ? headerItems(() => items) : {};
 }
 
 /**
