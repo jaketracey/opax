@@ -120,8 +120,6 @@ const machineNote = (doc: DocumentRecord) =>
     : doc.labels.kind === 'speech'
       ? 'Written by a model from this speech. It is not part of the record.'
       : 'Written by a model. It is not part of the record.';
-/** A text this long (about 4,800 characters) repeats its source line at the end. */
-const LONG_TEXT_PARTS = 4;
 /** First paint waits this long for the speaker's roster match (records.md 2.3). */
 const SPEAKER_WINDOW = 400;
 const titleKey = (value: string) =>
@@ -424,15 +422,13 @@ export default function DocumentReader({
         footer={
           shown ? (
             <View>
-              {parts.length >= LONG_TEXT_PARTS ? (
-                <View style={styles.endSource}>
-                  <RecordSourceLine doc={shown} testID="doc-source-end" />
-                </View>
-              ) : null}
               <LinkedBill key={`bill-${shown.slug}`} doc={shown} />
               {shown.labels.kind === 'speech' ? (
                 <Similar key={`similar-${shown.slug}`} doc={shown} />
               ) : null}
+              <View style={styles.endSource}>
+                <RecordSourceLine doc={shown} testID="doc-source" />
+              </View>
               <View style={styles.after}>
                 <PageFoot variant="today" />
               </View>
@@ -596,9 +592,6 @@ function ReaderHeader({
         </Heading>
       </View>
       <Speaker doc={doc} row={speaker} />
-      <View style={styles.source}>
-        <RecordSourceLine doc={doc} testID="doc-source" />
-      </View>
       {caveat ? (
         <Text
           variant="footnote"

@@ -851,23 +851,7 @@ function PartyContent({
           />
         </ProfileTitle>
         {tiles.length ? (
-          <Group gap={rhythm.tight}>
-            <StatStrip tiles={tiles} testID="party-figures" />
-            <SourceLine
-              title="Party sources"
-              asOf={stripCitations[0]?.asOf ?? null}
-              citation={stripCitations}
-              state={
-                view.members.partial || view.receipts.partial ? 'partial' : null
-              }
-              notes={[
-                view.members.partial || view.receipts.partial
-                  ? 'Some records for this party could not be read.'
-                  : null,
-              ]}
-              testID="party-figures-source"
-            />
-          </Group>
+          <StatStrip tiles={tiles} testID="party-figures" />
         ) : null}
       </View>
       {follow && changes.length ? (
@@ -918,6 +902,22 @@ function PartyContent({
         kinds={['mentions']}
         testID="party-more"
       />
+      {tiles.length ? (
+        <SourceLine
+          title="Party sources"
+          asOf={stripCitations[0]?.asOf ?? null}
+          citation={stripCitations}
+          state={
+            view.members.partial || view.receipts.partial ? 'partial' : null
+          }
+          notes={[
+            view.members.partial || view.receipts.partial
+              ? 'Some records for this party could not be read.'
+              : null,
+          ]}
+          testID="party-figures-source"
+        />
+      ) : null}
       {/* The page's end, for journeys that scroll to it; nothing drawn. */}
       <View testID="party-end" collapsable={false} style={styles.end} />
     </Screen>

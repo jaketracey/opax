@@ -1424,7 +1424,6 @@ describe('party', () => {
     'party-figures',
     'party-figure-members',
     'party-figure-receipts',
-    'party-figures-source',
     'party-members',
     'party-members-all',
     'party-current-count',
@@ -1434,6 +1433,7 @@ describe('party', () => {
     'party-divisions',
     // Meetings and lobbying collapses when the snapshot has neither half.
     'party-more',
+    'party-figures-source',
     'party-end',
   ];
   const layout = (r: TestRenderer.ReactTestRenderer) =>

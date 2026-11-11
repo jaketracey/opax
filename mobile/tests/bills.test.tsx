@@ -18,7 +18,11 @@ import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { formatDate } from '../src/design/format';
 import { MachinePill } from '../src/design/labels';
-import { SourceLine, StatusCapsule } from '../src/design/primitives';
+import {
+  RegionProvider,
+  SourceLine,
+  StatusCapsule,
+} from '../src/design/primitives';
 import { bindRecordTitle } from '../src/design/record-title';
 import BillDetail from '../src/features/bills/BillDetail';
 import {
@@ -293,7 +297,9 @@ describe('Votes in parliament: the votes sit under the bill title (6.1)', () => 
     expect(root.findByType(RouteOptions).props.options).toMatchObject({
       title: 'Votes in parliament',
     });
-    expect(root.findByType(RouteOptions).props.options).not.toHaveProperty('headerBackTitle');
+    expect(root.findByType(RouteOptions).props.options).not.toHaveProperty(
+      'headerBackTitle',
+    );
     // The probe marks the top left of the bill header's text column.
     const probeAt = () =>
       root.findAll(
@@ -475,10 +481,16 @@ const mounted: TestRenderer.ReactTestRenderer[] = [];
 afterEach(() => {
   act(() => mounted.splice(0).forEach((tree) => tree.unmount()));
 });
-async function render() {
+async function render(embedded = false, paneWidth?: number) {
   let r!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    r = TestRenderer.create(<BillDetail />);
+    r = TestRenderer.create(
+      <RegionProvider
+        value={paneWidth ? { width: paneWidth, height: 874 } : null}
+      >
+        <BillDetail embedded={embedded} />
+      </RegionProvider>,
+    );
   });
   mounted.push(r);
   return r.root;
@@ -607,6 +619,144 @@ describe('loading a bill (4.3)', () => {
 });
 
 describe('the bill page', () => {
+  test.each([
+    ['introduced', '2025-08-26', '2025-08-26', null],
+    ['royal_assent', '2026-08-26', '2025-08-26', 'Royal Assent'],
+    ['passed_both_houses', '2026-08-26', '2025-08-26', 'Passed both houses'],
+    ['royal_assent', '2025-08-26', '2025-08-26', 'Royal Assent'],
+    ['introduced', '2026-08-26', '2025-08-26', 'Introduced'],
+    ['unrecognised', '2025-08-26', '2025-08-26', 'Status as at'],
+    ['introduced', '2026-08-26', null, 'Introduced'],
+  ])(
+    '%s on %s beside the status only repeats introduction when its date differs from %s',
+    async (stage, date, introduced, eventLabel) => {
+      const record = await fixture.billFor('au-federal-r7534');
+      const identity = record.data.identity.data!;
+      Object.assign(identity, {
+        introduced,
+        statusAsOf: date,
+        status: stage === 'introduced' ? 'before_parliament' : 'passed',
+        statusLabel: stage === 'introduced' ? 'Before parliament' : 'Passed',
+      });
+      record.data.keyDates.data = [
+        { ...record.data.keyDates.data![0]!, stage: stage!, date: date! },
+      ];
+      jest.mocked(runtime.billFor).mockResolvedValue(record);
+      const root = await render();
+      const status = host(root, 'bill-status')[0]!;
+      expect(status.props.accessibilityLabel).toBe(
+        `Status: ${identity.statusLabel}${eventLabel ? `. ${eventLabel}, ${formatDate(date!)}` : ''}`,
+      );
+      expect(root.findAllByType(StatusCapsule)[0]!.props.status).toBe(
+        identity.statusLabel,
+      );
+      expect(texts(status).join(' ').replace(/\s+/g, ' ')).toBe(
+        [
+          identity.statusLabel,
+          eventLabel ? `${eventLabel} ${formatDate(date!, 'short')}` : null,
+        ]
+          .filter(Boolean)
+          .join(' '),
+      );
+      const meta = host(root, 'bill-introduced');
+      if (introduced) {
+        expect(meta).toHaveLength(1);
+        expect(texts(meta[0]!).join('')).toContain(
+          `Introduced ${formatDate(introduced, 'short')}`,
+        );
+      } else expect(meta).toHaveLength(0);
+    },
+  );
+
+  test('a seeded introduction is said once before and after the bill arrives', async () => {
+    mockParams.key = 'au-federal-r7534';
+    const row = bills.bills.find((bill) => bill.key === mockParams.key)!;
+    const introduced = '2025-08-26';
+    jest.mocked(runtime.billIndexRow).mockReturnValue({
+      ...row,
+      status: 'before_parliament',
+      introduced,
+      status_as_of: introduced,
+      status_stage: 'introduced',
+    });
+    const record = await fixture.billFor(mockParams.key);
+    Object.assign(record.data.identity.data!, {
+      status: 'before_parliament',
+      statusLabel: 'Before parliament',
+      introduced,
+      statusAsOf: introduced,
+    });
+    record.data.keyDates.data = [
+      {
+        ...record.data.keyDates.data![0]!,
+        stage: 'introduced',
+        date: introduced,
+      },
+    ];
+    let arrive!: () => void;
+    jest.mocked(runtime.billFor).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          arrive = () => resolve(record);
+        }),
+    );
+    const root = await render();
+    for (const loaded of [false, true]) {
+      if (loaded) await act(async () => arrive());
+      expect(host(root, 'bill-status')[0]!.props.accessibilityLabel).toBe(
+        'Status: Before parliament',
+      );
+      expect(texts(host(root, 'bill-introduced')[0]!).join('')).toContain(
+        'Introduced 26 Aug 2025',
+      );
+      expect(
+        root
+          .findAllByType(SourceLine)
+          .filter((line) => line.props.testID === 'bill-source'),
+      ).toHaveLength(loaded ? 1 : 0);
+    }
+  });
+
+  test.each([
+    ['phone', 402, 1, false, undefined],
+    ['iPad', 1194, 1, false, undefined],
+    ['Duo detail pane at AX5', 1114, 3.1, true, 540],
+  ] as const)(
+    '%s places the page provenance after every section',
+    async (_label, width, fontScale, embedded, paneWidth) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ width, height: 874, scale: 3, fontScale });
+      const root = await render(embedded, paneWidth);
+      const lines = root.findAllByType(SourceLine);
+      expect(
+        lines.filter((line) => line.props.testID === 'bill-source'),
+      ).toHaveLength(1);
+      expect(lines.at(-1)!.props.testID).toBe('bill-source');
+      expect(
+        lines.some((line) => line.props.testID === 'bill-summary-source'),
+      ).toBe(true);
+      const target = host(root, 'bill-source')[0]!;
+      expect(target.props.accessibilityLabel).toContain('ParlInfo');
+      expect(target.props.accessibilityHint).toBe('Opens the sources');
+      const button = root.find(
+        (node) =>
+          node.props.testID === 'bill-source' &&
+          typeof node.props.onPress === 'function',
+      );
+      await act(async () => button.props.onPress());
+      expect(jest.mocked(router.push).mock.calls.at(-1)![0]).toMatchObject({
+        pathname: '/source',
+      });
+      const ids = root
+        .findAll((node) => typeof node.type === 'string' && node.props.testID)
+        .map((node) => node.props.testID);
+      expect(ids.indexOf('bill-source')).toBeGreaterThan(
+        ids.indexOf('bill-related'),
+      );
+    },
+  );
+
   test('iOS draws no bottom toolbar a tab bar would cover: Share is beside ⋯, Ask is a row', async () => {
     const root = await render();
     expect(root.findAllByType(Stack.Toolbar)).toHaveLength(0);
@@ -693,7 +843,7 @@ describe('the bill page', () => {
     expect(expandedVotes(root)).toHaveLength(0);
   });
 
-  test('a followed bill with changes shows Added since right after the header source line; its vote row opens the vote', async () => {
+  test('a followed bill with changes shows Added since after Follow; its vote row opens the vote', async () => {
     const { main } = orderDivisions(
       view('au-federal-r7520').divisions.data!.rows,
     );
@@ -721,7 +871,7 @@ describe('the bill page', () => {
         node.type === ('AddedSince' as never) &&
         node.props.testID === 'bill-added-since',
     );
-    // Directly after the header's source line, before In short.
+    // Directly after Follow, before In short. Page provenance is last.
     const ids = root
       .findAll(
         (node) =>
@@ -736,7 +886,8 @@ describe('the bill page', () => {
       )
       .filter((id) => !id.startsWith('bill-source-'));
     const at = ids.indexOf('added-since');
-    expect(ids.lastIndexOf('bill-source')).toBe(at - 1);
+    expect(ids.lastIndexOf('bill-follow-off')).toBeLessThan(at);
+    expect(ids.lastIndexOf('bill-source')).toBeGreaterThan(at);
     expect(ids.indexOf('bill-summary')).toBeGreaterThan(at);
     // The new vote carries the dot.
     expect(host(root, 'bill-division-7-new')).toHaveLength(0);

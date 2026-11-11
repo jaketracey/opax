@@ -964,25 +964,7 @@ function ProfileContent({
           />
         </TitleAnchor>
         {tiles.length ? (
-          <Group gap={rhythm.tight}>
-            <StatStrip tiles={tiles} testID="person-figures" />
-            <BlockSource
-              block={b.identity}
-              title="Profile sources"
-              citation={strip.citation}
-              line={{ asOf: strip.asOf, partial: stripPartial }}
-              notes={[
-                stripPartial
-                  ? 'Some records for this person could not be read.'
-                  : null,
-                profile.personId === null
-                  ? 'This person is matched by the parliamentary roster’s ID and name. More records may be on opax.com.au.'
-                  : null,
-                'These are dated public records. Representation may have changed since collection.',
-              ]}
-              testID="person-figures-source"
-            />
-          </Group>
+          <StatStrip tiles={tiles} testID="person-figures" />
         ) : null}
       </ReadableColumn>
       {follow && changes.length ? (
@@ -1033,6 +1015,26 @@ function ProfileContent({
           accessibilityHint="Opens in the in-app browser"
           testID="person-web-foot"
         />
+      ) : null}
+      {tiles.length ? (
+        <ReadableColumn>
+          <BlockSource
+            block={b.identity}
+            title="Profile sources"
+            citation={strip.citation}
+            line={{ asOf: strip.asOf, partial: stripPartial }}
+            notes={[
+              stripPartial
+                ? 'Some records for this person could not be read.'
+                : null,
+              profile.personId === null
+                ? 'This person is matched by the parliamentary roster’s ID and name. More records may be on opax.com.au.'
+                : null,
+              'These are dated public records. Representation may have changed since collection.',
+            ]}
+            testID="person-figures-source"
+          />
+        </ReadableColumn>
       ) : null}
       {/* The page's end, for journeys that scroll to it; nothing drawn. */}
       <View testID="person-end" collapsable={false} style={styles.end} />
