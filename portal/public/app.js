@@ -5657,15 +5657,42 @@ async function renderPartyMentions(label, sections, key) {
 /** Reuse the voting section for counts and the latest bill votes (up to six,
  *  newest first, tagged by jurisdiction), with one provenance line.
  *  A placeholder holds the section's place while votes.json loads. */
+// A profile reads its own buckets of votes.json (1.3 MB) and seo/recent-votes.json (3 MB), which
+// the release build splits by person key (recent-votes-buckets.js), and the whole files only when
+// a bucket is unreadable or the whole of votes.json is already loaded. The module is hand-versioned
+// (public/_headers has no rule left for another stamp); each bucket names its layout, so a cached
+// older copy that splits differently reads the whole files rather than the wrong bucket.
+const VOTE_BUCKETS_MODULE = "/recent-votes-buckets.js?v=1";
+let voteBucketsPromise = null;
+const voteBuckets = () => (voteBucketsPromise ??= import(VOTE_BUCKETS_MODULE).catch((error) => { voteBucketsPromise = null; throw error; }));
+const readVoteJson = (init) => (path) => fetch(path, init).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+async function loadPersonVotes(name, personId) {
+  if (votesData) return votesData;
+  try {
+    const [buckets] = await Promise.all([voteBuckets(), voteTablesReady]);
+    const slice = await buckets.votesSlice(readVoteJson({ cache: "no-cache" }), (names) => voteTables.personVoteKeys(name, personId, names));
+    if (slice) return slice;
+  } catch {}
+  await loadVotes();
+  return votesData;
+}
+async function loadPersonRecentVotes(keys) {
+  try {
+    const slice = await (await voteBuckets()).recentVotesSlice(readVoteJson(undefined), keys);
+    if (slice) return slice;
+  } catch {}
+  return fetch("/seo/recent-votes.json").then(r => r.ok ? r.json() : null).catch(() => null);
+}
+
 async function renderPersonVotes(name, personId, sections, onRecord = () => {}) {
   const key = currentSubjectKey;
   sections.insertAdjacentHTML("beforeend", `<div id="subject-votes"></div>`);
-  await loadVotes();
+  const votes = await loadPersonVotes(name, personId);
   if (currentSubjectKey !== key) return;
   const slot = $("subject-votes");
   if (!slot) return;
-  const keys = voteTables.personVoteKeys(name, personId, votesData);
-  const recs = keys.map((k) => votesData?.[k]).filter((r) => r && typeof r === "object");
+  const keys = voteTables.personVoteKeys(name, personId, votes);
+  const recs = keys.map((k) => votes?.[k]).filter((r) => r && typeof r === "object");
   if (!recs.length) { slot.remove(); return; }
   const sum = (field) => recs.reduce((a, r) => a + (Number(r[field]) || 0), 0);
   const years = recs.flatMap((r) => (Array.isArray(r.years) ? r.years : [])).map(Number).filter(Number.isFinite);
@@ -5678,9 +5705,9 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   if (currentSubjectKey !== key || !slot.isConnected) return;
   onRecord({votes: latestBills, bills: billIndex?.bills || []});
   Object.assign(slot.dataset, {module: "latest_bills", pageType: "person", modulePosition: "2"});
-  const recentData = await fetch("/seo/recent-votes.json").then(r => r.ok ? r.json() : null).catch(() => null);
+  const recentData = await loadPersonRecentVotes(keys);
   if (currentSubjectKey !== key || !slot.isConnected) return;
-  const recent = voteTables.personVoteRecords(keys, votesData, recentData);
+  const recent = voteTables.personVoteRecords(keys, votes, recentData);
   const rows = voteTables.votingRows(recent.rows, billIndex?.bills || []);
   const config = voteTables.voteTableConfig(keys, recent.recorded ? "Recorded votes" : "Latest bill votes");
   const total = sum("divisions_total");
@@ -5702,9 +5729,9 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
     <p class="votes-lede">${esc(ayePct)}% ayes${where ? ` in the ${where}` : ""}${span ? `, ${span}` : ""}.</p>` : ""}
     ${voteTables.voteTableHTML(config, voteTables.voteTablePage(rows, config))}
     ${sourceLineHTML({
-      updated: votesData?._meta?.content_changed_at || "",
+      updated: votes?._meta?.content_changed_at || "",
       source: federal ? "They Vote For You" : "State Hansard",
-      asAt: votesData?._meta?.latest_division_date ? `Latest division in the record: ${fmtDate(votesData._meta.latest_division_date)}.` : "",
+      asAt: votes?._meta?.latest_division_date ? `Latest division in the record: ${fmtDate(votes._meta.latest_division_date)}.` : "",
       originals: federal ? [{ label: "Full record on They Vote For You", href: `https://theyvoteforyou.org.au/search?query=${encodeURIComponent(name)}` }] : [],
       notes: [
         "Only formal divisions are counted; most questions are decided on the voices and leave no per-member record.",
