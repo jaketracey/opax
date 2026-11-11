@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   canonParty, partyGroup, governmentOn, seatTimelines, holderOn, houseShares, programSeatSplit, programEligible,
-  programEra, programRecord, monthComplete, largestByMonth, wholePercents, PARTY_GROUPS,
+  programEra, programRecord, monthComplete, largestByMonth, wholePercents, catalogAsOf, PARTY_GROUPS,
 } from '../../scripts/social_grants_lib.mjs';
 
 const blocs = { Liberal: 'Coalition', Nationals: 'Coalition', LNP: 'Coalition', 'Country Liberal Party': 'Coalition', Labor: 'Labor' };
@@ -154,4 +154,14 @@ test('a month is listed once its publication deadline has passed, one row per re
   assert.equal(months['2026-08'][1].selection, 'Open Competitive');
   assert.ok(!('electorate' in months['2026-08'][1]) && !('holder' in months['2026-08'][1]), 'no seats in the largest list');
   assert.deepEqual(wholePercents([2, 1, 1]), [50, 25, 25]);
+});
+
+test('the listings are as of the last GrantConnect load, so a stale re-export cannot list an unseen month', () => {
+  // Awards fetched on 9 October, re-exported on 19 October: September's deadline (21 October) passed after the
+  // last fetch, so September stays off even though the export itself ran later.
+  const stale = { generated: '2026-11-05T03:00:00Z', source_fetched: '2026-10-09T17:03:41Z' };
+  assert.equal(catalogAsOf(stale), '2026-10-09');
+  assert.equal(monthComplete('2026-09', catalogAsOf(stale)), false);
+  assert.equal(monthComplete('2026-09', catalogAsOf({ ...stale, source_fetched: '2026-11-11T01:00:19Z' })), true);
+  assert.equal(catalogAsOf({ generated: '2026-10-19T11:18:41Z' }), '2026-10-19', 'files written before the field existed keep their run date');
 });

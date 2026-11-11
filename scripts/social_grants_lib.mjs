@@ -270,6 +270,16 @@ export function splitPercents (split) {
 }
 
 /** A month is complete once every award in it must have been published: 21 days after its last day. */
+/**
+ * The date the catalog's listings are as of: the last GrantConnect load the export saw (meta.source_fetched),
+ * falling back to the export's own run date for files written before that field existed. A re-export of a
+ * register that has not been refreshed keeps the old date, so it cannot list a month whose deadline passed
+ * after the awards were last fetched.
+ */
+export function catalogAsOf (meta) {
+  return String(meta?.source_fetched || meta?.generated || '').slice(0, 10)
+}
+
 export function monthComplete (month, asOf, days = 21) {
   const [y, m] = month.split('-').map(Number)
   const lastDay = Date.UTC(y, m, 0)

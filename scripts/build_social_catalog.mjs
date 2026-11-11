@@ -10,13 +10,14 @@ import {foldDonorName} from '../portal/public/donor-entity.js';
 //                               and its page, /money/grants?jur=federal&largest=YYYY-MM)
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { seatTimelines, programSeatSplit, programEligible, programRecord, largestByMonth, PARTY_GROUPS } from './social_grants_lib.mjs';
+import { seatTimelines, programSeatSplit, programEligible, programRecord, largestByMonth, catalogAsOf, PARTY_GROUPS } from './social_grants_lib.mjs';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const publish = (file, value) => writeFileSync(root + file, JSON.stringify(value) + '\n');
 const read = (path) => JSON.parse(readFileSync(root + path.replace(/^\//, ''), 'utf8'));
 const graph = read('graph/grants.federal.json');
 const donors=donorLookup(read('graph/donor-index.json').donors || []);
-const asOf = graph.meta.generated.slice(0, 10);
+// As current as the last GrantConnect load, not as the export run that re-published it (catalogAsOf).
+const asOf = catalogAsOf(graph.meta);
 const until = Date.parse(asOf + 'T00:00:00Z');
 const grants = [];
 const awards = new Map();
