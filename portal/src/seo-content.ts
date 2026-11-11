@@ -15,6 +15,7 @@ import {divisionTableConfig, voteTableConfig, personVoteKeys, personVoteRecords,
 import type {Query} from '../public/datatable.js'
 import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-card.js'
 import {agencyTopRows, type AgencyTopRow} from '../public/agency-top-suppliers.js'
+import {recentVotesBucket, recentVotesBucketPath} from '../public/recent-votes-buckets.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -180,17 +181,27 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
 }
 const optional = async <T>(read: ReadAsset, path: string): Promise<T | null> => read<T>(path).catch(() => null)
 
+/**
+ * The recorded votes for these person keys: their buckets of /seo/recent-votes.json
+ * (public/recent-votes-buckets.js), or the whole file when a bucket is unreadable.
+ */
+async function recentVotesFor(read: ReadAsset, keys: string[]): Promise<RecentVotes | null> {
+  if (!keys.length) return null
+  const parts = await Promise.all([...new Set(keys.map(recentVotesBucket))].map(bucket => optional<RecentVotes>(read,recentVotesBucketPath(bucket))))
+  if (!parts.every(part => part?.people)) return optional<RecentVotes>(read,'/seo/recent-votes.json')
+  if (parts.length === 1) return parts[0]
+  return {_meta: parts[0]!._meta, people: Object.fromEntries(parts.flatMap(part => Object.entries(part!.people)))}
+}
 export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<string,string>, profileUrl?: string, tableState: URLSearchParams | Query = {}): Promise<RenderedContent> {
   const tableParams=tableState instanceof URLSearchParams ? tableState : new URLSearchParams(serializeQuery(tableState,'vr'))
   const tableQuery=parseQuery(tableParams,'vr')
   const registerHTML=(config:DataTableConfig)=>registerTableHTML(config,undefined,new URL('https://local.invalid/?'+tableParams))
-  const [voteData, interests, seats, bills, sponsored, recentData, heldBackCounts, chairRoleCounts, video] = await Promise.all([
+  const [voteData, interests, seats, bills, sponsored, heldBackCounts, chairRoleCounts, video] = await Promise.all([
     optional<Record<string, Votes | Record<string,string[]>>>(read,'/votes.json'),
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
     optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null),
     optional<{bills: Bill[]}>(read,'/bills/index.json'),
     optional<{sponsored: Record<string,string[]>}>(read,'/seo-links.json'),
-    optional<RecentVotes>(read,'/seo/recent-votes.json'),
     optional<Record<string, number>>(read,'/data/held-back-transcripts.json'),
     optional<Record<string, number>>(read,'/data/chair-role-transcripts.json'),
     optional<{videos: VideoRow[]}>(read,'/video/senate.json'),
@@ -210,7 +221,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
   if (!p.speech_scope) {
     const keys = personVoteKeys(p.name,p.pid,voteData)
-    const {rows, recorded: hasRecent} = personVoteRecords(keys,voteData,recentData)
+    const {rows, recorded: hasRecent} = personVoteRecords(keys,voteData,await recentVotesFor(read,keys))
     const votes = (rows as Vote[]).sort((a,b)=>String(b.date || '').localeCompare(String(a.date || '')))
     if (votes.length) {
       const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest bill votes')

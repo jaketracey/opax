@@ -81,7 +81,7 @@ test('growth summaries use detail identity even when the index drops or contradi
       'bills/index.json': {bills: records.map(({sponsor_person_id, ...bill}) => bill)},
       'parliamentarians.json': {people: [...campbells, ...people.filter(p => ['David Pocock', 'Barbara Pocock'].includes(p.name))]},
       'agencies.json': {agencies: []}, 'suppliers.json': {suppliers: []},
-      'access.json': {ministers: {}}, 'votes.json': {}, 'interests/index.json': {people: {}},
+      'access.json': {ministers: {}}, 'votes.json': {}, 'interests/index.json': {people: {}}, 'seo/recent-votes.json': {_meta: {}, people: {}},
       'graph/grants.federal.json': {meta: {}},
       ...Object.fromEntries(MONEY_GRAPHS.map(path => [path.slice(1), {nodes: [], edges: []}])),
       ...Object.fromEntries(records.map(bill => ['bills/' + bill.key + '.json', bill])),

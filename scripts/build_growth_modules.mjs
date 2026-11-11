@@ -6,12 +6,13 @@ import {sponsorPerson} from '../portal/public/sponsor-person.js';
 import {sponsorSummaryPath,growthSummaryPath,normalisedName,personQuestions,billQuestions,latestBillVotes} from '../portal/public/growth-modules.js';
 import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../portal/public/supplier-growth.js';
 import {AGENCY_TOP_SUPPLIERS_PATH,agencyTopRows} from '../portal/public/agency-top-suppliers.js';
+import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath} from '../portal/public/recent-votes-buckets.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url)), {read: sourceRead} = {}) {
  const read=async p=>sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p),'utf8'));
  const output=join(root,'growth');
  await rm(output,{recursive:true,force:true});
- for(const dir of ['sponsors','agencies','person-bills'])await mkdir(join(output,dir),{recursive:true});
+ for(const dir of ['sponsors','agencies','person-bills','recent-votes'])await mkdir(join(output,dir),{recursive:true});
  const sizes=[];
  const write=async (path,data)=>{
   const json=JSON.stringify(data)+'\n', bytes=Buffer.byteLength(json);
@@ -118,6 +119,13 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  }
  // Supplier pages read this instead of each agency's full file (portal/public/agency-top-suppliers.js).
  await write(AGENCY_TOP_SUPPLIERS_PATH,{agencies:agencyTop});
+ // Profiles read their own bucket of recorded votes (portal/public/recent-votes-buckets.js), not the 3 MB file.
+ const recent=await read('seo/recent-votes.json').catch(error=>{if(error.code==='ENOENT')return null;throw error});
+ if(recent?.people){
+  const buckets=Array.from({length:RECENT_VOTES_BUCKETS},()=>[]);
+  for(const entry of Object.entries(recent.people))buckets[recentVotesBucket(entry[0])].push(entry);
+  for(const [i,entries] of buckets.entries())await write(recentVotesBucketPath(i),{_meta:recent._meta,people:Object.fromEntries(entries)});
+ }
  console.log(JSON.stringify({files:sizes.length,largest:Math.max(...sizes.map(s=>s.bytes)),donorIndexBytes:sizes[0].bytes}));
  return sizes;
 }
