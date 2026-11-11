@@ -16,7 +16,7 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { Catalogs } from '../src/api/catalogs';
-import { catalogs as runtime } from '../src/api/runtime';
+import { apiClient, catalogs as runtime } from '../src/api/runtime';
 import { moneyAccessibilityLabel } from '../src/design/format';
 import { partyColors } from '../src/design/palette';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
@@ -25,6 +25,7 @@ import { ContentUnavailable } from '../src/design/states';
 import { textStyles } from '../src/design/tokens';
 import { DivisionSplits, RecordedParty } from '../src/features/bills/parts';
 import { PartyPage, faceCandidates, loadFaces } from '../src/features/Party';
+import { decodeMoneyGraph } from '../src/features/money/data';
 import {
   firstLineOffset,
   ProfileHeader,
@@ -35,7 +36,9 @@ import {
   moneyRecordRoute,
   partyRoute,
   personRoute,
+  resultsRoute,
 } from '../src/navigation/routes';
+import { LinkRow } from '../src/design/rows';
 import { pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
 jest.mock('expo-router', () => ({
@@ -51,6 +54,7 @@ jest.mock('expo-router', () => ({
   Stack: { Screen: () => null },
 }));
 jest.mock('../src/api/runtime', () => ({
+  apiClient: { get: jest.fn() },
   catalogs: { partyPage: jest.fn(), followSources: jest.fn() },
   peopleDepth: {
     access: jest.fn(async () => {
@@ -94,11 +98,17 @@ beforeEach(() => {
     .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
   jest.clearAllMocks();
   jest.mocked(runtime.partyPage).mockResolvedValue(view);
+  jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
+    data: decode(pinned(path)),
+    stale: false,
+    asOf: '2026-09-21',
+    savedAt: 1,
+  }));
 });
-async function render() {
+async function render(input = 'Labor') {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
-    renderer = TestRenderer.create(<PartyPage input="Labor" />);
+    renderer = TestRenderer.create(<PartyPage input={input} />);
   });
   return renderer;
 }
@@ -775,6 +785,84 @@ test('the Money map row opens the party in the public money record', async () =>
   );
   expect(has(r, 'party-public-money')).toBe(false);
   await act(async () => r.unmount());
+});
+
+test('associated entity rows open their own donor records or search, never grant records', async () => {
+  const liberal = await api.partyPage('Liberal');
+  const rows = liberal.data!.associated.data!.rows;
+  expect(rows.map((entity) => entity.name)).toEqual([
+    'Cormack Foundation Pty Ltd',
+    'Bunori Pty Limited',
+    'Vapold Pty Ltd',
+    'The Menzies Research Centre Limited',
+    'Parakeelia Pty Ltd',
+    'Liberal Asset Management (Custodians) Limited',
+  ]);
+  jest.mocked(runtime.partyPage).mockResolvedValueOnce(liberal);
+  const r = await render('Liberal');
+  for (const [index, entity] of rows.entries()) {
+    const row = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === `party-associated-${index}`)!;
+    expect(row.props.external).toBeUndefined();
+    expect(row.props.detail).toContain('receipts $');
+    // LinkRow's in-app accessory is a chevron when external is absent.
+    expect(row.props.accessibilityHint).not.toBe('Opens in the in-app browser');
+    await act(async () => row.props.onPress!());
+    expect(router.push).toHaveBeenLastCalledWith(
+      entity.name === 'Vapold Pty Ltd'
+        ? moneyRecordRoute(
+            { node: 'donor:vapold', jurisdiction: 'federal' },
+            'Vapold Pty Ltd',
+          )
+        : resultsRoute('all', { q: entity.name }),
+    );
+    const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      pathname: string;
+      params: Record<string, string>;
+    };
+    expect(route.pathname).not.toBe('/grants');
+    expect(route.params).not.toHaveProperty('rid');
+  }
+  expect(apiClient.get).toHaveBeenCalledWith(
+    '/graph/money.json',
+    decodeMoneyGraph,
+  );
+  expect(openOnWeb).not.toHaveBeenCalled();
+  act(() => r.unmount());
+});
+
+test('associated entities open name search when the donor index cannot be loaded', async () => {
+  const associated = structuredClone(view);
+  associated.data!.associated = {
+    ...associated.data!.associated,
+    status: 'ready',
+    data: {
+      rows: [
+        {
+          name: 'Cormack Foundation',
+          year: '2024-25',
+          receipts: 1000000,
+          payments: null,
+          debts: null,
+        },
+      ],
+      total: 1,
+      notes: [],
+    },
+  };
+  jest.mocked(runtime.partyPage).mockResolvedValueOnce(associated);
+  jest.mocked(apiClient.get).mockRejectedValueOnce(new Error('offline'));
+  const r = await render();
+  const row = r.root
+    .findAllByType(LinkRow)
+    .find((n) => n.props.testID === 'party-associated-0')!;
+  await act(async () => row.props.onPress!());
+  expect(router.push).toHaveBeenCalledWith(
+    resultsRoute('all', { q: 'Cormack Foundation' }),
+  );
+  expect(openOnWeb).not.toHaveBeenCalled();
+  act(() => r.unmount());
 });
 
 test('a total division scan failure is unavailable rather than no party votes', async () => {

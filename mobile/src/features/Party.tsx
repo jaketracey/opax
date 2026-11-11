@@ -18,7 +18,7 @@ import {
 import type { PartyPageRecord } from '../api/catalogs';
 import { nameKey } from '../api/ids';
 import type { PartyMember } from '../api/party-page';
-import { catalogs, portraits } from '../api/runtime';
+import { apiClient, catalogs, portraits } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, isPad, useLayout } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
@@ -66,6 +66,8 @@ import { NewDot } from './follows/NewDot';
 import { followKey, useFollows } from './follows/store';
 import { useFollowStates } from './follows/useFollowStates';
 import { ProfileBlock } from './people/Block';
+import { decodeMoneyGraph, moneyCatalogs, type MoneyGraph } from './money/data';
+import { associatedEntityRoute } from './money/record-routes';
 import { usePageActions } from './people/PageActions';
 import { partyTimingID } from './people/party-timing';
 import {
@@ -85,6 +87,17 @@ import { profileGrid } from './split/grid';
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 const partyArrival = (v: unknown): PartySection | undefined =>
   v === 'members' || v === 'receipts' || v === 'changes' ? v : undefined;
+
+async function openAssociatedEntity(name: string) {
+  let graph: MoneyGraph | null = null;
+  try {
+    graph = (await apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph))
+      .data;
+  } catch {
+    // A name search is still available when the donor index cannot be read.
+  }
+  router.push(associatedEntityRoute(name, graph));
+}
 
 /** The Parliamentarians directory filtered to a party's sitting members. */
 export const partyMembersRoute = (label: string, sitting = true): Href => ({
@@ -628,7 +641,7 @@ function PartyContent({
               Associated entities
             </Text>
             <View>
-              {associated.rows.slice(0, 8).map((entity) => (
+              {associated.rows.slice(0, 8).map((entity, index) => (
                 <LinkRow
                   key={entity.name}
                   title={entity.name}
@@ -640,14 +653,8 @@ function PartyContent({
                   ]
                     .filter(Boolean)
                     .join(' · ')}
-                  external
-                  onPress={() =>
-                    void openOnWeb(
-                      `/subject/campaigner/${encodeURIComponent(entity.name)}`,
-                      entity.name,
-                    )
-                  }
-                  accessibilityHint="Opens in the in-app browser"
+                  onPress={() => openAssociatedEntity(entity.name)}
+                  testID={`party-associated-${index}`}
                 />
               ))}
             </View>
