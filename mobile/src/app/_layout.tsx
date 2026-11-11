@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Linking, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { startAnalytics, useScreenTracking } from '../analytics';
-import { isPad } from '../design/adaptive';
+import { isPad, useWindowTraits } from '../design/adaptive';
 import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
 import { colors } from '../design/tokens';
@@ -38,6 +38,8 @@ export const unstable_settings = rootSettings;
 export { RouteErrorBoundary as ErrorBoundary } from '../design/route-error';
 
 export default function Layout() {
+  // Keep traits and adaptive-device detection live throughout this session.
+  useWindowTraits();
   const [loaded, error] = useFonts({
     [fonts.serif]: require('../../assets/fonts/Merriweather.ttf'),
     [fonts.serifBold]: require('../../assets/fonts/Merriweather-Bold.ttf'),
