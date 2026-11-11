@@ -1,8 +1,11 @@
 /**
- * The camera: world → screen is `s = w · k + t`. Every function here is pure
- * and worklet-safe, so the gesture handlers run them on the UI thread and
- * the tests run them on Node.
+ * The camera: world → screen is `s = w · k + t`. Transforms are pure and
+ * worklet-safe, so gesture handlers run them on the UI thread and tests on
+ * Node. Reserved-region geometry is resolved on JS before gestures read it.
  */
+import type { ReservedRegions } from '../../../design/fold';
+import { mapRegions } from './regions';
+
 export interface Camera {
   tx: number;
   ty: number;
@@ -24,6 +27,45 @@ export interface Viewport {
   width: number;
   height: number;
   insets: Insets;
+}
+
+/** Encode the clear viewing side as insets so every camera action shares it. */
+export function reservedViewport(
+  viewport: Viewport,
+  regions: ReservedRegions,
+): Viewport {
+  const { width, height, insets } = viewport;
+  const { scene } = mapRegions(
+    {
+      x: insets.left,
+      y: insets.top,
+      width: Math.max(1, width - insets.left - insets.right),
+      height: Math.max(1, height - insets.top - insets.bottom),
+    },
+    regions,
+  );
+  return {
+    width,
+    height,
+    insets: {
+      left: scene.x,
+      top: scene.y,
+      right: width - scene.x - scene.width,
+      bottom: height - scene.y - scene.height,
+    },
+  };
+}
+
+/** Keep zoom and the reader's world focus through a display or chrome resize. */
+export function resizeCamera(
+  camera: Camera,
+  previous: Viewport,
+  next: Viewport,
+  focus?: { x: number; y: number },
+): Camera {
+  const centre = viewportCentre(previous);
+  const point = focus ?? screenToWorld(camera, centre.x, centre.y);
+  return cameraAt(camera, point.x, point.y, next);
 }
 
 /** How far in and out of the fit a reader may go. */

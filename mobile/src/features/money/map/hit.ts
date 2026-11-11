@@ -2,6 +2,38 @@
  * Tap picking: a uniform grid over the discs. The pick radius grows as the
  * reader zooms out, so a small disc stays tappable at every zoom.
  */
+import type { ReservedRegions } from '../../../design/fold';
+import { screenToWorld, type Camera } from './camera';
+
+export function blockedMapPoint(
+  x: number,
+  y: number,
+  regions: ReservedRegions,
+) {
+  return [...regions.divisions, ...regions.occlusions].some(
+    (r) =>
+      r.active &&
+      x >= r.x &&
+      x <= r.x + r.width &&
+      y >= r.y &&
+      y <= r.y + r.height,
+  );
+}
+
+/** Reserved regions are screen points; disc picking remains in world points. */
+export function pickMapPoint(
+  hit: HitGrid,
+  camera: Camera,
+  x: number,
+  y: number,
+  slack: number,
+  regions: ReservedRegions,
+) {
+  if (blockedMapPoint(x, y, regions)) return null;
+  const world = screenToWorld(camera, x, y);
+  return hit.pick(world.x, world.y, slack / camera.k);
+}
+
 export class HitGrid {
   private readonly cells = new Map<number, number[]>();
   private largest = 0;

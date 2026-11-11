@@ -28,7 +28,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../../../design/accessibility';
+import { useAdaptiveDevice } from '../../../design/adaptive';
 import { SizedCanvas } from '../../../design/canvas';
+import { useReservedRegions } from '../../../design/fold-area';
+import { placeClear } from '../../../design/fold';
 import { paletteFor } from '../../../design/palette';
 import { motion } from '../../../design/tokens';
 import type { MoneyGraph } from '../data';
@@ -43,6 +46,8 @@ import {
   fitCamera,
   focusScale,
   placeCamera,
+  reservedViewport,
+  resizeCamera,
   publicEdgeOpacity,
   smallNodeOpacity,
   thinEdgeOpacity,
@@ -52,7 +57,7 @@ import {
   type Insets,
   type Viewport,
 } from './camera';
-import { HitGrid } from './hit';
+import { blockedMapPoint, HitGrid, pickMapPoint } from './hit';
 import { labelSlots, visibleLabels, type LabelSlot } from './labels';
 import {
   layoutBounds,
@@ -60,7 +65,7 @@ import {
   type Bounds,
   type ForceLayout,
 } from './layout';
-import { MiniMap } from './MiniMap';
+import { MINI_HEIGHT, MINI_WIDTH, MiniMap } from './MiniMap';
 import type { MapModel } from './model';
 import { LABEL_HEIGHT, LABEL_WIDTH, MoneyMapLabels } from './MoneyMapLabels';
 import { paintEdges, paintFocus, paintNodes } from './scene';
@@ -167,6 +172,8 @@ export function MoneyMap({
   command = null,
 }: MoneyMapProps) {
   const reduced = useReduceMotion();
+  const adaptive = useAdaptiveDevice();
+  const regions = useReservedRegions();
   const palette = paletteFor('light');
   const window = useWindowDimensions();
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -257,10 +264,16 @@ export function MoneyMap({
   });
   const boundsSV = useSharedValue<Bounds>(bounds);
   const placed = useRef(false);
+  const previousViewport = useRef<Viewport | null>(null);
+  const resizedCamera = useRef(false);
   const pendingFly = useRef<{ id: string; at: number } | null>(null);
   const viewport: Viewport = useMemo(
-    () => ({ width: size.width, height: size.height, insets }),
-    [size.width, size.height, insets],
+    () =>
+      reservedViewport(
+        { width: size.width, height: size.height, insets },
+        regions,
+      ),
+    [size.width, size.height, insets, regions],
   );
   useEffect(() => {
     if (!size.width || !size.height) return;
@@ -271,16 +284,42 @@ export function MoneyMap({
     // The layout grows as it settles: the view follows the fit until then,
     // and the kept camera (or the fit) is placed once it has. Afterwards a
     // chrome or window change keeps the view, inside the limits.
-    const next = placeCamera(
-      { placed: placed.current, settled },
-      {
-        kept: cameras.get(cacheKey) ?? null,
-        current: { tx: tx.get(), ty: ty.get(), k: k.get() },
-      },
-      bounds,
-      viewport,
-    );
+    const current = { tx: tx.get(), ty: ty.get(), k: k.get() };
+    const previous = previousViewport.current;
+    const resized =
+      placed.current &&
+      previous &&
+      (previous.width !== viewport.width ||
+        previous.height !== viewport.height ||
+        (adaptive &&
+          Object.keys(insets).some(
+            (key) =>
+              previous.insets[key as keyof Insets] !==
+              viewport.insets[key as keyof Insets],
+          )));
+    const next = resized
+      ? {
+          camera: resizeCamera(
+            current,
+            previous,
+            viewport,
+            focusIndex === null ? undefined : at(focusIndex),
+          ),
+          placed: true,
+        }
+      : placeCamera(
+          { placed: placed.current, settled },
+          {
+            kept: cameras.get(cacheKey) ?? null,
+            current,
+          },
+          bounds,
+          viewport,
+        );
+    resizedCamera.current = !!resized;
+    if (resized) pendingFly.current = null;
     placed.current = next.placed;
+    previousViewport.current = viewport;
     // A set cuts a fly short: move only where the fit or the limits say to.
     if (next.camera.tx !== tx.get()) tx.set(next.camera.tx);
     if (next.camera.ty !== ty.get()) ty.set(next.camera.ty);
@@ -298,6 +337,10 @@ export function MoneyMap({
     fitK,
     viewportSV,
     boundsSV,
+    focusIndex,
+    at,
+    insets,
+    adaptive,
   ]);
   // Keep the camera for the next visit.
   const remember = useCallback(() => {
@@ -384,8 +427,12 @@ export function MoneyMap({
   // the new centre; a disc focused by a tap or a link that the chrome
   // covers is brought in at a readable zoom. One that is already in view
   // stays where the reader left it.
+  const previousFocus = useRef<string | null>(null);
   useEffect(() => {
+    const changed = previousFocus.current !== focus;
+    previousFocus.current = focus;
     if (focusIndex === null || !placed.current) return;
+    if (!changed && resizedCamera.current) return;
     const node = model.nodes[focusIndex];
     if (!node) return;
     const p = at(focusIndex);
@@ -398,8 +445,28 @@ export function MoneyMap({
       discInView(cam, p.x, p.y, node.radius, viewport, VIEW_MARGIN)
     )
       return;
-    animateTo(cameraAt(cam, p.x, p.y, viewport, focusScale(cam.k, fitK.get())));
-  }, [focusIndex, model, at, viewport, settled, current, animateTo, fitK]);
+    // A geometry change retains the zoom; only a new focus asks to come closer.
+    animateTo(
+      cameraAt(
+        cam,
+        p.x,
+        p.y,
+        viewport,
+        flying || changed || !adaptive ? focusScale(cam.k, fitK.get()) : cam.k,
+      ),
+    );
+  }, [
+    focus,
+    focusIndex,
+    model,
+    at,
+    viewport,
+    settled,
+    current,
+    animateTo,
+    fitK,
+    adaptive,
+  ]);
   const centreOn = useCallback(
     (x: number, y: number) =>
       animateTo(cameraAt(current(), x, y, viewportSV.get())),
@@ -415,12 +482,12 @@ export function MoneyMap({
   }, [command, fit, zoom, flyTo]);
   const pick = useCallback(
     (sx: number, sy: number) => {
+      if (blockedMapPoint(sx, sy, regions)) return;
       const cam = current();
-      const world = { x: (sx - cam.tx) / cam.k, y: (sy - cam.ty) / cam.k };
-      const mi = hit.pick(world.x, world.y, TAP_SLACK / cam.k);
+      const mi = pickMapPoint(hit, cam, sx, sy, TAP_SLACK, regions);
       onFocus(mi === null ? null : (model.nodes[mi]?.id ?? null));
     },
-    [current, hit, model, onFocus],
+    [current, hit, model, onFocus, regions],
   );
   // Taps are decided on JS (see TapRouter): a second tap inside the window
   // zooms about the point; a lone tap picks once the window has passed.
@@ -438,7 +505,16 @@ export function MoneyMap({
       ),
     [animateTo, current, fitK],
   );
-  const taps = useMemo(() => new TapRouter(pick, zoomAt), [pick, zoomAt]);
+  const taps = useMemo(
+    () =>
+      new TapRouter(
+        pick,
+        zoomAt,
+        undefined,
+        (x, y) => !blockedMapPoint(x, y, regions),
+      ),
+    [pick, zoomAt, regions],
+  );
   useEffect(() => () => taps.cancel(), [taps]);
   const onTap = useCallback(
     (sx: number, sy: number) => {
@@ -671,6 +747,18 @@ export function MoneyMap({
     () => all.map(({ name, label }) => ({ name, label })),
     [all],
   );
+  const overviewFrame = overview
+    ? placeClear(
+        {
+          x: overview.left,
+          y: size.height - overview.bottom - MINI_HEIGHT,
+          width: MINI_WIDTH,
+          height: MINI_HEIGHT,
+        },
+        regions,
+        { x: 0, y: 0, ...size },
+      )
+    : null;
 
   return (
     <View
@@ -734,7 +822,7 @@ export function MoneyMap({
           ) : null}
         </View>
       </GestureDetector>
-      {overview && zoomedIn && size.width > 0 ? (
+      {overviewFrame && zoomedIn && size.width > 0 ? (
         <Animated.View
           entering={
             reduced ? undefined : FadeIn.duration(motion.duration.crossfade)
@@ -744,7 +832,7 @@ export function MoneyMap({
           }
           style={[
             styles.overview,
-            { left: overview.left, bottom: overview.bottom },
+            { left: overviewFrame.x, top: overviewFrame.y },
           ]}
           pointerEvents="box-none"
         >
