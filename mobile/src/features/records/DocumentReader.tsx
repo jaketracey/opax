@@ -635,12 +635,14 @@ function ReaderHeader({
             label="In short"
             testID="doc-brief"
             defaultOpen
-          >
-            <View style={styles.brief}>
+            accessory={
               <MachinePill
                 note={{ title: 'Machine-written', body: [machineNote(doc)] }}
                 testID="doc-brief-label"
               />
+            }
+          >
+            <View style={styles.brief}>
               <Text selectable variant="body">
                 {doc.summary}
               </Text>

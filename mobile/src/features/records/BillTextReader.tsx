@@ -1,4 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
+import { SectionHeader } from '../../design/layout';
 import {
   headerItems,
   pageMenu,
@@ -451,19 +452,18 @@ export default function BillTextReader({
               ) : null}
               {summary ? (
                 <View style={styles.block} testID="bill-text-summary">
-                  <Text
-                    wordSafe
-                    variant="subsectionTitle"
-                    accessibilityRole="header"
-                  >
-                    In short
-                  </Text>
-                  <MachinePill
-                    note={{
-                      title: 'Machine-written',
-                      body: [summary.attribution],
-                    }}
-                    testID="bill-text-summary-label"
+                  <SectionHeader
+                    title="In short"
+                    level={3}
+                    accessory={
+                      <MachinePill
+                        note={{
+                          title: 'Machine-written',
+                          body: [summary.attribution],
+                        }}
+                        testID="bill-text-summary-label"
+                      />
+                    }
                   />
                   {summary.describes_version ? (
                     <Text

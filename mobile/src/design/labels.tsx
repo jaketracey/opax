@@ -229,6 +229,7 @@ const styles = StyleSheet.create({
   // The pill is 32pt drawn; its row is the 44pt target.
   machineTarget: {
     minHeight: minimumTarget,
+    maxWidth: '100%',
     justifyContent: 'center',
     marginVertical: -rhythm.tight,
   },

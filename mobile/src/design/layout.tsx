@@ -329,11 +329,14 @@ export const SectionHeadingLayoutContext = createContext<
 export function SectionHeader({
   title,
   action,
+  accessory,
   testID,
   level = 2,
 }: {
   title: string;
   action?: SectionAction;
+  /** Independent control beside the heading, wrapping only when it cannot fit. */
+  accessory?: ReactNode;
   testID?: string;
   level?: 2 | 3;
 }) {
@@ -356,10 +359,18 @@ export function SectionHeader({
     </Pressable>
   ) : null;
   return (
-    <View style={stacked ? styles.sectionHeadStacked : styles.sectionHead}>
+    <View
+      style={
+        accessory
+          ? styles.sectionHeadWrapping
+          : stacked
+            ? styles.sectionHeadStacked
+            : styles.sectionHead
+      }
+    >
       <Heading
         level={level}
-        style={styles.grow}
+        style={accessory ? styles.sectionHeadTitle : styles.grow}
         testID={testID}
         onLayout={
           headingLayout && testID
@@ -374,6 +385,9 @@ export function SectionHeader({
       ) : (
         button
       )}
+      {accessory ? (
+        <View style={styles.sectionAccessory}>{accessory}</View>
+      ) : null}
     </View>
   );
 }
@@ -651,6 +665,19 @@ const styles = StyleSheet.create({
   sectionHeadStacked: {
     gap: rhythm.line,
     marginBottom: rhythm.heading - rhythm.block,
+  },
+  sectionHeadWrapping: {
+    minHeight: minimumTarget,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  sectionHeadTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
+  sectionAccessory: {
+    marginLeft: 'auto',
+    maxWidth: '100%',
+    paddingVertical: rhythm.tight,
   },
   grow: { flexGrow: 1, flexShrink: 1 },
 });

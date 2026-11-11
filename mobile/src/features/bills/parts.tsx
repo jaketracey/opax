@@ -7,6 +7,7 @@ import { Button } from '../../design/controls';
 import { counted, formatCount, formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
 import { MACHINE_LABEL, MachinePill } from '../../design/labels';
+import { SectionHeader } from '../../design/layout';
 import { isPartyLabel, partyDot, partyIdentity } from '../../design/party';
 import { PartyLabel } from '../../design/people';
 import {
@@ -393,8 +394,8 @@ export const BRIEF_EXPLANATION =
   'An automated summary written by a model; not the record.';
 
 /**
- * A bill's stored machine summary: one `MachinePill` (it opens how this was
- * written) before the sentences. `testID` prefixes the pill and the text.
+ * A bill's stored machine summary: its heading and provenance pill share a
+ * wrapping row before the sentences. `testID` prefixes the pill and the text.
  */
 export function MachineSummary({
   attribution,
@@ -407,15 +408,20 @@ export function MachineSummary({
 }) {
   return (
     <>
-      <MachinePill
-        note={{
-          title: MACHINE_LABEL,
-          body: [
-            'Written by a machine from the explanatory memorandum. Check the original before relying on it.',
-            attribution,
-          ].filter(Boolean),
-        }}
-        testID={`${testID}-label`}
+      <SectionHeader
+        title="In short"
+        accessory={
+          <MachinePill
+            note={{
+              title: MACHINE_LABEL,
+              body: [
+                'Written by a machine from the explanatory memorandum. Check the original before relying on it.',
+                attribution,
+              ].filter(Boolean),
+            }}
+            testID={`${testID}-label`}
+          />
+        }
       />
       <View style={styles.machineText} testID={`${testID}-text`}>
         {sentences.filter(Boolean).map((sentence, index) => (
