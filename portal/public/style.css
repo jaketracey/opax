@@ -2419,6 +2419,18 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .about-table .cell-token { white-space: nowrap; }
 .table-scroll.table-fits { overflow-x: clip; }
 .about-table .cell-num { text-align: right; font-variant-numeric: tabular-nums; }
+.coverage-table { table-layout: fixed; }
+.coverage-table th, .coverage-table td { vertical-align: top; overflow-wrap: anywhere; }
+.coverage-label { display: none; }
+/* Full coverage notes stack on a phone; explicit table roles keep the column
+   relationships available to assistive technology at either width. */
+@media (max-width: 700px) {
+  .coverage-table, .coverage-table tbody, .coverage-table tr, .coverage-table th, .coverage-table td { display: block; width: auto; }
+  .coverage-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .coverage-table tr { padding-block: var(--space-row); border-bottom: var(--border-hairline) solid var(--divider-default); }
+  .coverage-table th, .coverage-table td { padding: var(--space-tight) 0; border: 0; }
+  .coverage-label { display: block; margin-bottom: var(--space-tight); font: var(--type-label); color: var(--ink-soft); }
+}
 #mcp-docs pre { max-width: var(--size-readable); margin-block: var(--space-row); white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* ---- section rhythm on entry and report pages --------------------------- */

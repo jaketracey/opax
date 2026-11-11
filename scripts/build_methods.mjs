@@ -1,6 +1,7 @@
 import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
+import {renderCoverage} from './build_coverage.mjs';
 
 const portal = new URL('../portal/', import.meta.url);
 const require = createRequire(new URL('package.json', portal));
@@ -51,8 +52,8 @@ export function renderMethodsModels(html, config) {
 export function buildMethods({check = false} = {}) {
   const path = new URL('public/index.html', portal);
   const before = readFileSync(path, 'utf8');
-  const after = renderMethodsModels(before, configuredModels());
-  if (check && after !== before) throw Error('Methods model names are stale; run npm run build:methods and npm run stamp');
+  const after = renderCoverage(renderMethodsModels(before, configuredModels()));
+  if (check && after !== before) throw Error('Methods or coverage is stale; run npm run build:methods and npm run stamp');
   if (!check && after !== before) writeFileSync(path, after);
 }
 

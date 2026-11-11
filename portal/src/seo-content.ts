@@ -128,20 +128,28 @@ export function answerBlock(title: string, description: string, body = '', crumb
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
 }
 /** Pages whose whole text is served by the Worker, copied from their panel in index.html. */
-export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support', 'methods'])
+export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support', 'methods', 'about', 'stats'])
 /**
- * The server-rendered copy of a policy page (/privacy, /support): the inner
+ * The server-rendered copy of an information or policy page: the inner
  * markup of its panel in the shell (index.html), so the page a crawler or a
  * reader without scripts gets and the app's panel have one source. It keeps the
  * section anchors for readers without scripts; spa-shell.js drops the copy's
- * ids once the panel is back, and `.spa-ready #prerender` hides it. Null when
- * the panel is missing or holds a nested section the pattern cannot bound.
+ * ids once the panel is back, and `.spa-ready #prerender` hides it. Section
+ * depth keeps the nested coverage sections whole. Null for an unclosed panel.
  */
 export function panelPrerender(shell: string, name: string): string | null {
   if (!SERVER_PANELS.has(name)) return null
-  const m = new RegExp(`<section id="panel-${name}"[^>]*>([\\s\\S]*?)</section>`).exec(shell)
-  if (!m || /<section\b/.test(m[1])) return null
-  return `<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">${m[1]}</section>`
+  const start = new RegExp(`<section id="panel-${name}"[^>]*>`).exec(shell)
+  if (!start) return null
+  const bodyStart = start.index + start[0].length
+  let depth = 1
+  const tags = /<\/?section\b[^>]*>/g
+  tags.lastIndex = bodyStart
+  for (let tag; (tag = tags.exec(shell));) {
+    depth += tag[0].startsWith('</') ? -1 : 1
+    if (!depth) return `<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">${shell.slice(bodyStart, tag.index)}</section>`
+  }
+  return null
 }
 export const ASSOCIATION_CAVEAT = 'An association does not prove influence.'
 export function associationCaveat(body: string, facts: string): string {

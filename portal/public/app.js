@@ -15240,10 +15240,10 @@ function renderStatsHero() {
   const live = liveStats || {};
   const donations = (m.sources || []).find((s) => s.name.startsWith("AEC donations"));
   const tiles = [
-    { key: "speeches", value: live.kinds?.speech ?? m.collected_speeches ?? 0, label: "speeches in the record", live: live.kinds?.speech != null },
+    { key: "speeches", value: live.kinds?.speech ?? m.collected_speeches, label: "speeches in the record", live: live.kinds?.speech != null },
     { key: "documents", value: live.resources, label: "documents in the record", live: true },
     { key: "passages", value: live.paragraphs, label: "searchable passages", live: true },
-    { key: "parliaments", value: 5, label: "parliaments" },
+    { key: "parliaments", value: STATS_PARLIAMENTS.length, label: "parliaments" },
     donations ? { key: "donations", value: donations.docs, label: "donations classified" } : null,
     donations ? { key: "coverage", text: donations.coverage, label: "coverage" } : null,
   ].filter(Boolean);
@@ -15293,27 +15293,16 @@ fetch("/corpus.json").then((r) => r.json()).then((m) => {
   corpusManifest = m;
   renderCorpusMeter();
   renderStatsHero();
-  const statsBody = $("stats-sources");
-  if (statsBody && m.sources) {
-    statsBody.innerHTML = m.sources.map((s) =>
-      `<tr><td>${esc(s.name)}</td><td>${s.docs.toLocaleString()}</td><td>${esc(s.coverage)}</td></tr>`).join("");
-  }
   if (m.version) $("stats-version").textContent = `Corpus version ${m.version}.`;
-  // About: corpus table + Methods: known defects, from the manifest.
-  const tbody = $("about-sources");
-  if (tbody && m.sources) {
-    tbody.innerHTML = m.sources.map((s) =>
-      `<tr><td>${esc(s.name)}</td><td>${s.docs.toLocaleString()}</td><td>${esc(s.coverage)}</td></tr>`).join("");
-  }
+  // The coverage tables are generated from all published snapshots at release.
+  // Only the live index tiles and tables above them change in this session.
   const defects = $("methods-defects");
   if (defects && m.known_defects) {
     defects.innerHTML = m.known_defects.map((d) => `<li>${esc(d)}</li>`).join("");
   }
 }).catch(() => {
-  // Manifest unavailable: keep the page honest with order-of-magnitude copy.
-  $("stats-hero").innerHTML =
-    '<div class="ui-stat"><span class="ui-stat-value">Half a million</span><span class="ui-stat-label">speeches collected</span></div>' +
-    '<div class="ui-stat"><span class="ui-stat-value">5</span><span class="ui-stat-label">parliaments</span></div>';
+  $("stats-version").textContent = "Corpus manifest unavailable. Collection snapshots are listed below.";
+  renderStatsHero();
 });
 
 fetch("/suggestions.json").then((r) => r.json()).then((s) => {

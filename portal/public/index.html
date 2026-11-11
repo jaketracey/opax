@@ -64,7 +64,7 @@
 <script type="module" src="/register-tables-entry.js?v=f3a759c298"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=d727aad769">
 <script type="module" src="/vote-tables.js?v=92331d4c5c"></script>
-<link rel="stylesheet" href="/style.css?v=139db5f029">
+<link rel="stylesheet" href="/style.css?v=c86952ca52">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
@@ -996,36 +996,139 @@
       </section>
 
       <section class="ui-section" aria-labelledby="stats-sources-title">
-        <h2 class="ui-section-title" id="stats-sources-title">Sources</h2>
-        <div class="table-scroll"><table class="about-table">
-          <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
-          <tbody id="stats-sources"><!-- filled from corpus.json --></tbody>
-        </table></div>
-        <p><a href="/audit">Queensland Audit Office reports to Parliament</a> is a separate
-        catalogue of report metadata and HTML recommendations, with separate page and PDF rights reviews. Source: Queensland Audit Office,
-        <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, with State of Queensland
-        attribution and <a href="https://www.qao.qld.gov.au/copyright">per-report exceptions</a>.
-        Its report count is shown in the directory and is separate from the document totals above.</p>
+        <h2 class="ui-section-title" id="stats-sources-title">Sources and coverage by collection</h2>
+        <p>Counts below come from the published dataset snapshots and are regenerated at release.
+        Source records, searchable corpus resources, catalogue entries and matched profile slices
+        describe different populations. They overlap and must not be added together. A scheduled
+        refresh can retain an older snapshot when a source is unavailable.</p>
+        <p>Official report collections open in <a href="/ask?view=search&amp;kind=report">report search</a>.
+        Choose a result for its source-cited record, figures and any hearing transcript listings.</p>
+        <!-- coverage:begin -->
+<h3>Search corpus</h3>
+<div class="table-scroll"><table class="about-table coverage-table" role="table">
+<caption class="visually-hidden">Search corpus sources and coverage</caption>
+<thead role="rowgroup"><tr role="row"><th role="columnheader" scope="col">Collection and publisher</th><th role="columnheader" scope="col">Jurisdictions and years</th><th role="columnheader" scope="col">Records</th><th role="columnheader" scope="col">Reuse and refresh</th></tr></thead>
+<tbody role="rowgroup">
+<tr data-coverage="corpus-0" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=speech">Federal Hansard: House of Representatives (zenodo)</a><p class="fineprint">Parliament of Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 1998–2022</td><td role="cell" data-count="283020"><span class="coverage-label" aria-hidden="true">Records</span>283,020 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY-NC-ND 4.0; source exceptions apply.<p>Nightly checks where permitted.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-1" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=speech">NSW Parliament</a><p class="fineprint">Parliament of New South Wales</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>NSW; 2015–2026</td><td role="cell" data-count="114898"><span class="coverage-label" aria-hidden="true">Records</span>114,898 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Parliamentary copyright; consult the source terms.<p>Nightly checks where permitted.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-2" role="row"><th scope="row" role="rowheader"><a href="/estimates">Senate committee hearings</a><p class="fineprint">Parliament of Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2025–2026</td><td role="cell" data-count="127581"><span class="coverage-label" aria-hidden="true">Records</span>127,581 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Parliamentary copyright; CC BY-NC-ND 4.0, with source exceptions.<p>Automatic source paused; local Proof PDF supplements included.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-3" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=speech">Victorian Parliament</a><p class="fineprint">Parliament of Victoria</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Victoria; 2018–2026</td><td role="cell" data-count="50744"><span class="coverage-label" aria-hidden="true">Records</span>50,744 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Parliamentary copyright; specific permission for fair, accurate and free reuse.<p>Nightly checks where permitted.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-4" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=speech">SA Parliament</a><p class="fineprint">Parliament of South Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>South Australia; 2020–2024</td><td role="cell" data-count="37971"><span class="coverage-label" aria-hidden="true">Records</span>37,971 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Parliamentary copyright; consult the source terms.<p>Automatic acquisition paused; stored coverage retained.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-5" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=speech">Federal Hansard: Senate + recent House (openaustralia)</a><p class="fineprint">Parliament of Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2006–2026</td><td role="cell" data-count="110696"><span class="coverage-label" aria-hidden="true">Records</span>110,696 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY-NC-ND 4.0; source exceptions apply.<p>Nightly checks where permitted.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-6" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=speech">QLD Parliament</a><p class="fineprint">Queensland Parliament</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Queensland; 2024–2026</td><td role="cell" data-count="10228"><span class="coverage-label" aria-hidden="true">Records</span>10,228 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Parliamentary copyright; consult the source terms.<p>Automatic acquisition paused; stored coverage retained.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-7" role="row"><th scope="row" role="rowheader"><a href="/estimates">Joint committee hearings</a><p class="fineprint">Parliament of Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2025–2026</td><td role="cell" data-count="24956"><span class="coverage-label" aria-hidden="true">Records</span>24,956 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Parliamentary copyright; CC BY-NC-ND 4.0, with source exceptions.<p>Automatic source paused; local Proof PDF supplements included.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-8" role="row"><th scope="row" role="rowheader"><a href="/estimates">House committee hearings</a><p class="fineprint">Parliament of Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2025–2026</td><td role="cell" data-count="14257"><span class="coverage-label" aria-hidden="true">Records</span>14,257 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Parliamentary copyright; CC BY-NC-ND 4.0, with source exceptions.<p>Automatic source paused; local Proof PDF supplements included.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-9" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=speech">ACT Legislative Assembly</a><p class="fineprint">ACT Legislative Assembly</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>ACT; 2024–2026</td><td role="cell" data-count="9964"><span class="coverage-label" aria-hidden="true">Records</span>9,964 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY-NC-ND 4.0; source exceptions apply.<p>Nightly checks where permitted.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-10" role="row"><th scope="row" role="rowheader"><a href="/sitting">Recorded divisions (TheyVoteForYou + state Hansard)</a><p class="fineprint">They Vote For You and the publishing parliaments</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Federal, NSW, Victoria, Queensland; 1998–2026</td><td role="cell" data-count="14238"><span class="coverage-label" aria-hidden="true">Records</span>14,238 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>TVFY database: ODbL; parliamentary source terms also apply.<p>Nightly checks; state coverage differs.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-11" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=press_release">Prime Minister transcripts and releases (PM&amp;C)</a><p class="fineprint">Department of the Prime Minister and Cabinet</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2025–2026</td><td role="cell" data-count="721"><span class="coverage-label" aria-hidden="true">Records</span>721 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Open source grants recorded with each release; check its citation.<p>Nightly where permitted; dated supplement windows remain as listed.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-12" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=press_release">NSW Government ministerial releases</a><p class="fineprint">NSW Government</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>NSW; 2024–2026</td><td role="cell" data-count="5581"><span class="coverage-label" aria-hidden="true">Records</span>5,581 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Open source grants recorded with each release; check its citation.<p>Nightly where permitted; dated supplement windows remain as listed.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-13" role="row"><th scope="row" role="rowheader"><a href="/money">AEC donations (27+ industries classified)</a><p class="fineprint">Australian Electoral Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 1998–2026</td><td role="cell" data-count="199233"><span class="coverage-label" aria-hidden="true">Records</span>199,233 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0. Classified corpus records; current map rows are counted separately.<p>Reviewed AEC export; amended source rows await reconciliation.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-14" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=all">MLCI departmental invitation records</a><p class="fineprint">Department of Infrastructure; Department of Finance (GrantConnect); attributed research sources</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 14 Nov 2025 snapshot</td><td role="cell" data-count="227"><span class="coverage-label" aria-hidden="true">Records</span>227 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>GrantConnect CC BY 3.0 AU; other source terms and attributed notes.<p>Dated research intake and manual supplements; GrantConnect acquisition currently paused.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-15" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=all">MLCI GrantConnect award source records</a><p class="fineprint">Department of Infrastructure; Department of Finance (GrantConnect); attributed research sources</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 9 Sep 2026 snapshot</td><td role="cell" data-count="89"><span class="coverage-label" aria-hidden="true">Records</span>89 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>GrantConnect CC BY 3.0 AU; other source terms and attributed notes.<p>Dated research intake and manual supplements; GrantConnect acquisition currently paused.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-16" role="row"><th scope="row" role="rowheader"><a href="/subject/electorate">AEC notional seat baselines</a><p class="fineprint">Australian Electoral Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; Before the 2025 election</td><td role="cell" data-count="150"><span class="coverage-label" aria-hidden="true">Records</span>150 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0; notional baseline, not an election result.<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-17" role="row"><th scope="row" role="rowheader"><a href="/subject/person">Recorded parliamentary representation</a><p class="fineprint">Parliamentary rosters</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Federal and state; Historical roster; not current tenure</td><td role="cell" data-count="995"><span class="coverage-label" aria-hidden="true">Records</span>995 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Source terms; historical observations, not current tenure.<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-18" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=all">Grant research notes and source totals</a><p class="fineprint">Department of Infrastructure; Department of Finance (GrantConnect); attributed research sources</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2025–2026</td><td role="cell" data-count="2"><span class="coverage-label" aria-hidden="true">Records</span>2 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>GrantConnect CC BY 3.0 AU; other source terms and attributed notes.<p>Dated research intake and manual supplements; GrantConnect acquisition currently paused.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-19" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=press_release">Queensland Government ministerial statements</a><p class="fineprint">Queensland Government</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Queensland; 7–21 Sep 2026</td><td role="cell" data-count="269"><span class="coverage-label" aria-hidden="true">Records</span>269 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Open source grants recorded with each release; check its citation.<p>Nightly where permitted; dated supplement windows remain as listed.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-20" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=press_release">Victorian Premier releases</a><p class="fineprint">Premier of Victoria</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Victoria; 7–21 Sep 2026</td><td role="cell" data-count="264"><span class="coverage-label" aria-hidden="true">Records</span>264 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Open source grants recorded with each release; check its citation.<p>Nightly where permitted; dated supplement windows remain as listed.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-21" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=press_release">Australian Treasury ministerial releases</a><p class="fineprint">Australian Treasury</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 7–21 Sep 2026</td><td role="cell" data-count="194"><span class="coverage-label" aria-hidden="true">Records</span>194 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Open source grants recorded with each release; check its citation.<p>Nightly where permitted; dated supplement windows remain as listed.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-22" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=all">GrantConnect award notices (recent window)</a><p class="fineprint">Department of Infrastructure; Department of Finance (GrantConnect); attributed research sources</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 7–21 Sep 2026 publication window; awards, not payments</td><td role="cell" data-count="978"><span class="coverage-label" aria-hidden="true">Records</span>978 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>GrantConnect CC BY 3.0 AU; other source terms and attributed notes.<p>Dated research intake and manual supplements; GrantConnect acquisition currently paused.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-23" role="row"><th scope="row" role="rowheader"><a href="/bills">Federal bill records</a><p class="fineprint">Parliament of Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; Registry records; source versions counted separately</td><td role="cell" data-count="2994"><span class="coverage-label" aria-hidden="true">Records</span>2,994 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Source document terms; text and metadata are separate records.<p>Nightly pipeline; automatic bill acquisition currently paused.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="corpus-24" role="row"><th scope="row" role="rowheader"><a href="/bills">Original federal bill text versions</a><p class="fineprint">Parliament of Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; Complete source versions, checked against the originals</td><td role="cell" data-count="4747"><span class="coverage-label" aria-hidden="true">Records</span>4,747 source records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Source document terms; text and metadata are separate records.<p>Nightly pipeline; automatic bill acquisition currently paused.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+</tbody></table></div>
+<h3>Parliament</h3>
+<div class="table-scroll"><table class="about-table coverage-table" role="table">
+<caption class="visually-hidden">Parliament sources and coverage</caption>
+<thead role="rowgroup"><tr role="row"><th role="columnheader" scope="col">Collection and publisher</th><th role="columnheader" scope="col">Jurisdictions and years</th><th role="columnheader" scope="col">Records</th><th role="columnheader" scope="col">Reuse and refresh</th></tr></thead>
+<tbody role="rowgroup">
+<tr data-coverage="federal-bills" role="row"><th scope="row" role="rowheader"><a href="/bills">Federal bill registry</a><p class="fineprint">Parliament of Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2010 to 2026. Registry entries, distinct from corpus text versions.</td><td role="cell" data-count="2989"><span class="coverage-label" aria-hidden="true">Records</span>2,989 bills</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Source document terms; model summaries labelled.<p>Nightly pipeline; acquisition currently paused.</p><p class="fineprint">Snapshot: 2026-10-04. <a href="/bills/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="division-catalogue" role="row"><th scope="row" role="rowheader"><a href="/sitting">Recorded division catalogue</a><p class="fineprint">They Vote For You; Parliament of New South Wales; Parliament of Victoria; Queensland Parliament</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Federal, NSW, Victoria, Queensland; 2006 to 2026. Individual records available through bills and member pages.</td><td role="cell" data-count="11075"><span class="coverage-label" aria-hidden="true">Records</span>11,075 division records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>ODbL for TVFY database; parliamentary source terms.<p>Nightly checks; last good records retained.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/divisions/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="bills-tas" role="row"><th scope="row" role="rowheader"><a href="/register/state-bills">Tasmanian bill register</a><p class="fineprint">Parliament of Tasmania</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Tasmania; 2024 to 2026. Annual indexes 2024–2026; published Parliament/session identifiers retained. Current 52nd and previous 51st Parliament; no complete historical-series claim.</td><td role="cell" data-count="157"><span class="coverage-label" aria-hidden="true">Records</span>157 bill metadata records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Copyright Parliament of Tasmania; no open grant found. Registry facts and original links only; document bodies withheld.<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-10-14. <a href="/bills-tas/data.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="bills-act" role="row"><th scope="row" role="rowheader"><a href="/register/state-bills">ACT bill register</a><p class="fineprint">ACT Legislative Assembly</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>ACT; 2020 to 2026. Current Eleventh and previous Tenth Assembly version indexes joined to published summaries and status lists. Source component dates differ; status dates are shown separately from acquisition.</td><td role="cell" data-count="261"><span class="coverage-label" aria-hidden="true">Records</span>261 bill metadata records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY-NC-ND 4.0; third-party exceptions. Registry facts and original links only; document bodies withheld.<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-10-14. <a href="/bills-act/data.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="instruments" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=instrument">Federal legislative instruments</a><p class="fineprint">Office of Parliamentary Counsel, Federal Register of Legislation</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; in-force title listing at the snapshot, with bounded version dates. This is not a historical series.</td><td role="cell" data-count="24106"><span class="coverage-label" aria-hidden="true">Records</span>24,106 exported titles<p class="fineprint">24,113 titles listed by FRL; 7 unresolved at export.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0, with FRL exceptions; metadata only.<p>Thursday checks with completeness guards.</p><p class="fineprint">Snapshot: 2026-10-30. <a href="/instruments/manifest.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="senate-video" role="row"><th scope="row" role="rowheader"><a href="/video/senate">Senate video</a><p class="fineprint">AuSenate: The Senate Public Information Office</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2020 to 2026</td><td role="cell" data-count="411"><span class="coverage-label" aria-hidden="true">Records</span>411 video links<p class="fineprint">321 Question Time; 34 first speeches; 56 other.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Linked and embedded with the Senate&#39;s own YouTube player (youtube-nocookie.com, click to play). Never downloaded or re-hosted.<p>Nightly feed checks; back catalogue supplement.</p><p class="fineprint">Snapshot: 2026-11-10. <a href="/video/senate.json">Dataset and provenance</a>.</p></td></tr>
+</tbody></table></div>
+<h3>Official reports and inquiries</h3>
+<div class="table-scroll"><table class="about-table coverage-table" role="table">
+<caption class="visually-hidden">Official reports and inquiries sources and coverage</caption>
+<thead role="rowgroup"><tr role="row"><th role="columnheader" scope="col">Collection and publisher</th><th role="columnheader" scope="col">Jurisdictions and years</th><th role="columnheader" scope="col">Records</th><th role="columnheader" scope="col">Reuse and refresh</th></tr></thead>
+<tbody role="rowgroup">
+<tr data-coverage="royal-commissions" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=report">Royal commissions and comparable public inquiries</a><p class="fineprint">The named commissions; government response publishers; Parliament of Victoria tabled copies</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>All nine jurisdictions; loaded report dates 2014 to 2026. Some inquiries are listed by transcripts only.</td><td role="cell" data-count="23"><span class="coverage-label" aria-hidden="true">Records</span>23 inquiries<p class="fineprint">1,295 recommendations; 227 have a published government status. Inquiry types are retained.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Document-specific copyright and reuse terms; citations retain publisher links.<p>Weekly checks; last good snapshot kept when acquisition is held. Manual publisher supplements included.</p><p class="fineprint">Snapshot: 2026-11-11. <a href="/royal-commissions/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="integrity-reports" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=report">Integrity body reports</a><p class="fineprint">National Anti-Corruption Commission; Independent Commission Against Corruption; Independent Broad-based Anti-corruption Commission; Crime and Corruption Commission; Corruption and Crime Commission; Independent Commission Against Corruption (South Australia); Integrity Commission; ACT Integrity Commission; Independent Commissioner Against Corruption</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth and all states and territories; 1991 to 2026</td><td role="cell" data-count="738"><span class="coverage-label" aria-hidden="true">Records</span>738 reports from 9 bodies<p class="fineprint">314 quoted findings or opinions; 1,168 recommendations. Allegations are not findings.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Terms differ by body: NACC and Queensland CCC CC BY 4.0; other copyright and tabled-copy terms recorded per body/document.<p>Weekly checks; last good snapshot kept when acquisition is held. Manual publisher supplements included.</p><p class="fineprint">Snapshot: 2026-11-11. <a href="/integrity-reports/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="hearing-transcripts" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=report">Commission hearing transcripts</a><p class="fineprint">The listed inquiry and integrity commissions, including the Law Enforcement Conduct Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>All nine jurisdictions; 2018 to 2026. Selected hearings, not a complete hearing record.</td><td role="cell" data-count="704"><span class="coverage-label" aria-hidden="true">Records</span>704 transcripts listed<p class="fineprint">218 inquiry and 486 integrity transcript listings. Evidence, not findings; open the hearing section of a report record.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Publisher copyright, redactions and suppression orders retained. Integrity transcripts are linked, not republished.<p>Manual publisher intake.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/integrity-reports/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="transcript-text" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=report">Licensed hearing transcript text</a><p class="fineprint">Royal Commission on Antisemitism and Social Cohesion; Royal Commission into the Robodebt Scheme; Special Commission of Inquiry into Healthcare Funding</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth and NSW; 2022 to 2026</td><td role="cell" data-count="171"><span class="coverage-label" aria-hidden="true">Records</span>171 licensed transcript records<p class="fineprint">107 may be quoted; 64 remain page pointers without quotations.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0. Transcripts recording publication orders or pseudonymous witnesses are not quoted.<p>Manual publisher intake and checked text export.</p><p class="fineprint">Snapshot: 2026-11-11. <a href="/transcripts/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="annual-reports" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=report">Commonwealth annual report tables</a><p class="fineprint">Transparency Portal, Department of Finance</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2018-19 to 2025-26. Remuneration and bands from 2018-19; suppliers from 2020-21; headline figures from 2022-23. Latest year still being tabled.</td><td role="cell" data-count="1378"><span class="coverage-label" aria-hidden="true">Records</span>1,378 body-year report entries across 238 bodies<p class="fineprint">12,919 named remuneration rows; 10,452 band rows; 5,505 supplier rows; 646 headline rows.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Non-corporate Commonwealth entities CC BY 4.0; corporate entities and companies retain their copyright.<p>Weekly checks; last good snapshot kept when acquisition is held.</p><p class="fineprint">Snapshot: 2026-11-11. <a href="/annual-reports/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="agency-reports" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=report">Agency annual reports and quoted figures</a><p class="fineprint">The named Commonwealth, state and territory agencies; Parliament of Victoria tabled copies</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>All nine jurisdictions; 2024-25 to 2025-26. Selected intake, mainly Victoria and NSW.</td><td role="cell" data-count="235"><span class="coverage-label" aria-hidden="true">Records</span>235 documents from 233 agencies<p class="fineprint">4,063 quoted figures; 5 documents read with OCR.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Document-specific terms; verbatim figures and source page links. OCR is marked.<p>Manual publisher PDFs checked by SHA-256; dedicated figures tool available through MCP.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/agency-reports/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="qao" role="row"><th scope="row" role="rowheader"><a href="/audit">Queensland audit reports</a><p class="fineprint">Queensland Audit Office</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Queensland; 2008 to 2026-27</td><td role="cell" data-count="296"><span class="coverage-label" aria-hidden="true">Records</span>296 report records<p class="fineprint">647 HTML recommendations.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 with per-report exceptions. PDF bodies and responses remain held under document terms.<p>Weekly checks; last good snapshot kept when acquisition is held.</p><p class="fineprint">Snapshot: 2026-10-19. <a href="/audit/manifest.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="official-report-records" role="row"><th scope="row" role="rowheader"><a href="/ask?view=search&amp;kind=report">Official report record pages and JSON</a><p class="fineprint">Publishers of the four official-report collections above</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Coverage follows the inquiry, integrity, Commonwealth annual-report and agency-report collections. These records overlap those totals.</td><td role="cell" data-count="2368"><span class="coverage-label" aria-hidden="true">Records</span>2,368 searchable report records<p class="fineprint">One record per integrity report or agency document, per Commonwealth body-year, or per inquiry grouping its documents. Uncitable body-year stubs are excluded.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Source-cited records at /report/&lt;slug&gt;; JSON at /api/report/&lt;slug&gt;. Original document terms apply.<p>Rebuilt from the published collections at release.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/search-catalog/manifest.json">Dataset and provenance</a>.</p></td></tr>
+</tbody></table></div>
+<h3>Money</h3>
+<div class="table-scroll"><table class="about-table coverage-table" role="table">
+<caption class="visually-hidden">Money sources and coverage</caption>
+<thead role="rowgroup"><tr role="row"><th role="columnheader" scope="col">Collection and publisher</th><th role="columnheader" scope="col">Jurisdictions and years</th><th role="columnheader" scope="col">Records</th><th role="columnheader" scope="col">Reuse and refresh</th></tr></thead>
+<tbody role="rowgroup">
+<tr data-coverage="receipts-federal" role="row"><th scope="row" role="rowheader"><a href="/money/receipts">Commonwealth political receipts</a><p class="fineprint">Australian Electoral Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; financial years 1998-99 to 2025-26. Map and ledger are selected projections.</td><td role="cell" data-count="100622"><span class="coverage-label" aria-hidden="true">Records</span>100,622 source rows considered for the map<p class="fineprint">Disclosed receipts include categories other than donations. State and federal totals are never added.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 (Australian Electoral Commission).<p>Reviewed AEC export; amended source rows await reconciliation.</p><p class="fineprint">Snapshot: 2026-11-11. <a href="/graph/money.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="receipts-qld" role="row"><th scope="row" role="rowheader"><a href="/money/receipts?jur=qld">Queensland political receipts</a><p class="fineprint">Electoral Commission of Queensland</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Queensland; financial years 2012-13 to 2026-27. Map and ledger are selected projections.</td><td role="cell" data-count="22859"><span class="coverage-label" aria-hidden="true">Records</span>22,859 source rows considered for the map<p class="fineprint">Disclosed receipts include categories other than donations. State and federal totals are never added.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 (data.qld.gov.au dataset &#39;Electronic Disclosure System - State and Local Election Funding and Donations&#39;)<p>Weekly checks; last good snapshot kept when acquisition is held.</p><p class="fineprint">Snapshot: 2026-10-18. <a href="/graph/money.qld.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="receipts-vic" role="row"><th scope="row" role="rowheader"><a href="/money/receipts?jur=vic">Victoria political receipts</a><p class="fineprint">Victorian Electoral Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Victoria; financial years 2020-21 to 2026-27. Map and ledger are selected projections.</td><td role="cell" data-count="3990"><span class="coverage-label" aria-hidden="true">Records</span>3,990 source rows considered for the map<p class="fineprint">Disclosed receipts include categories other than donations. State and federal totals are never added.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Crown copyright (State of Victoria); published under Electoral Act 2002 s 217; no explicit open licence is stated on the portal<p>Weekly checks; last good snapshot kept when acquisition is held.</p><p class="fineprint">Snapshot: 2026-10-18. <a href="/graph/money.vic.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="receipts-tas" role="row"><th scope="row" role="rowheader"><a href="/money/receipts?jur=tas">Tasmania political receipts</a><p class="fineprint">Tasmanian Electoral Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Tasmania; financial years 2025-26 to 2026-27. Map and ledger are selected projections.</td><td role="cell" data-count="229"><span class="coverage-label" aria-hidden="true">Records</span>229 source rows considered for the map<p class="fineprint">Disclosed receipts include categories other than donations. State and federal totals are never added.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 (TEC copyright statement, tec.tas.gov.au/info/Copyright.html); attribute &#39;© Tasmanian Electoral Commission&#39;<p>Weekly checks; last good snapshot kept when acquisition is held.</p><p class="fineprint">Snapshot: 2026-10-18. <a href="/graph/money.tas.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="aec-returns" role="row"><th scope="row" role="rowheader"><a href="/subject/party">AEC annual return totals</a><p class="fineprint">Australian Electoral Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 1998-99 to 2024-25. Party pages show their published slices.</td><td role="cell" data-count="20983"><span class="coverage-label" aria-hidden="true">Records</span>20,983 source rows</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 (Australian Electoral Commission)<p>Reviewed source snapshot and derived export.</p><p class="fineprint">Snapshot: 2026-09-02. <a href="/graph/aec-extras.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="aec-debts" role="row"><th scope="row" role="rowheader"><a href="/subject/party">AEC disclosed debts</a><p class="fineprint">Australian Electoral Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2000-01 to 2024-25. Party pages show their published slices.</td><td role="cell" data-count="14680"><span class="coverage-label" aria-hidden="true">Records</span>14,680 source rows</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 (Australian Electoral Commission)<p>Reviewed source snapshot and derived export.</p><p class="fineprint">Snapshot: 2026-09-02. <a href="/graph/aec-extras.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="aec-benefits" role="row"><th scope="row" role="rowheader"><a href="/subject/party">AEC benefits and capital contributions</a><p class="fineprint">Australian Electoral Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; Benefits 2018-19 to 2024-25; capital contributions 2000-01 to 2024-25. Party pages show their published slices.</td><td role="cell" data-count="1102"><span class="coverage-label" aria-hidden="true">Records</span>1,102 source rows</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 (Australian Electoral Commission)<p>Reviewed source snapshot and derived export.</p><p class="fineprint">Snapshot: 2026-09-02. <a href="/graph/aec-extras.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="campaigners" role="row"><th scope="row" role="rowheader"><a href="/subject/campaigner">Campaigners, associated entities and third parties</a><p class="fineprint">Australian Electoral Commission</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; annual returns to 2024-25. Roster requires at least $100,000 in a reported year.</td><td role="cell" data-count="438"><span class="coverage-label" aria-hidden="true">Records</span>438 entities in the roster</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 (Australian Electoral Commission)<p>Reviewed source snapshot and derived export.</p><p class="fineprint">Snapshot: 2026-09-03. <a href="/graph/campaigners.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="grants-federal" role="row"><th scope="row" role="rowheader"><a href="/money/grants?jur=federal">Commonwealth grants</a><p class="fineprint">Department of Finance, GrantConnect</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2010-11 to 2027-28 (source-record years). Every Commonwealth grant award must be published on GrantConnect within 21 days of the agreement taking effect (mandatory since 31 December 2017). Aggregate awards bundle many small recipients and are shown as not disclosed.</td><td role="cell" data-count="369742"><span class="coverage-label" aria-hidden="true">Records</span>369,742 award records<p class="fineprint">Awards and annual funding lines are different measures; an award is not a payment. Source date anomalies remain visible.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 3.0 AU (GrantConnect, Department of Finance)<p>Scheduled checks; automatic acquisition paused, manual GrantConnect supplement included.</p><p class="fineprint">Snapshot: 2026-11-11. <a href="/graph/grants.federal.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="grants-qld" role="row"><th scope="row" role="rowheader"><a href="/money/grants?jur=qld">Queensland grants</a><p class="fineprint">Queensland Government Investment Portal</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Queensland; 2017-18 to 2024-25 (source-record years). Annual expenditure lines per funding agreement for grants, service agreements and other assistance; a multi-year agreement appears once per financial year it was paid. &#39;Multiple&#39; recipients are shown as not disclosed.</td><td role="cell" data-count="230007"><span class="coverage-label" aria-hidden="true">Records</span>230,007 annual funding lines<p class="fineprint">Awards and annual funding lines are different measures; an award is not a payment. Source date anomalies remain visible.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 (Queensland Government, data.qld.gov.au)<p>Retained source snapshot; guarded export.</p><p class="fineprint">Snapshot: 2026-09-13. <a href="/graph/grants.qld.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="contracts" role="row"><th scope="row" role="rowheader"><a href="/money/contracts">Commonwealth contracts</a><p class="fineprint">Department of Finance, AusTender</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; notice dates 2013-01-03 to 2026-11-11. Current collection window starts 2025-07-08; older records supplement missing notices.</td><td role="cell" data-count="108607"><span class="coverage-label" aria-hidden="true">Records</span>108,607 contracts at latest recorded value<p class="fineprint">22,153 suppliers; 164 agencies. Awards, not verified expenditure; amendments are not added together.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 3.0 AU<p>Nightly acquisition; monthly guarded supplier and agency exports.</p><p class="fineprint">Snapshot: 2026-11-11. <a href="/suppliers.json">Dataset and provenance</a>.</p></td></tr>
+</tbody></table></div>
+<h3>Registers and public finance</h3>
+<div class="table-scroll"><table class="about-table coverage-table" role="table">
+<caption class="visually-hidden">Registers and public finance sources and coverage</caption>
+<thead role="rowgroup"><tr role="row"><th role="columnheader" scope="col">Collection and publisher</th><th role="columnheader" scope="col">Jurisdictions and years</th><th role="columnheader" scope="col">Records</th><th role="columnheader" scope="col">Reuse and refresh</th></tr></thead>
+<tbody role="rowgroup">
+<tr data-coverage="budget" role="row"><th scope="row" role="rowheader"><a href="/budget">Federal Budget papers and figures</a><p class="fineprint">Australian Treasury; Department of Finance; publishing portfolios</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; Federal Budget Papers 1–4 and MYEFO, 2015–16 to 2026–27; Final Budget Outcomes for reported actuals; Treasury PBS documents and Budget-linked portfolio indexes</td><td role="cell" data-count="805"><span class="coverage-label" aria-hidden="true">Records</span>805 published fiscal aggregate cells<p class="fineprint">2,347 measure records; source document and portfolio indexes also listed. Estimates, projections and actuals retain their labels.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0, as recorded with each source document or row; exceptions retained.<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-10-12. <a href="/budget/data.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="sa-budget" role="row"><th scope="row" role="rowheader"><a href="/budget">South Australian historical budget tables</a><p class="fineprint">Department of Treasury and Finance, Government of South Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>South Australia; 2015-16 Budget vintage; 2013-14 to 2018-19</td><td role="cell" data-count="447"><span class="coverage-label" aria-hidden="true">Records</span>447 published cells</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0, as recorded with each source document or row; exceptions retained.<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-10-20. <a href="/sa-budget/data.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="sa-grants" role="row"><th scope="row" role="rowheader"><a href="/register/sa-grants">Grants SA historical funded projects</a><p class="fineprint">Department of Human Services, Government of South Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>South Australia; 2016-17 to 2017-18</td><td role="cell" data-count="677"><span class="coverage-label" aria-hidden="true">Records</span>677 project rows</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0, as recorded with each source document or row; exceptions retained.<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-10-20. <a href="/sa-grants/data.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="tax-expenditures" role="row"><th scope="row" role="rowheader"><a href="/register/tax-expenditures">Tax expenditures</a><p class="fineprint">Australian Treasury</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2025-26 statement; 2021-22 to 2028-29</td><td role="cell" data-count="2444"><span class="coverage-label" aria-hidden="true">Records</span>2,444 published estimate cells<p class="fineprint">Revenue forgone estimates against tax benchmarks; publisher-withheld cells are excluded. Estimates are not cash payments and must not be added as a spending total.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-10-17. <a href="/tax-expenditures/data.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="gov-advertising" role="row"><th scope="row" role="rowheader"><a href="/register/gov-advertising">Government advertising expenditure</a><p class="fineprint">Department of Premier and Cabinet, Victoria</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Victoria only; 2008-09 to 2024-25</td><td role="cell" data-count="1239"><span class="coverage-label" aria-hidden="true">Records</span>1,239 published table cells</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0, as recorded with each source document or row; exceptions retained.<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-10-18. <a href="/gov-advertising/data.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="government-finance" role="row"><th scope="row" role="rowheader"><a href="/register/government-finance">Government finance statistics</a><p class="fineprint">Australian Bureau of Statistics</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Australia; national, state and territory, local and consolidated government sectors as published; 2015-16 to 2024-25</td><td role="cell" data-count="8246"><span class="coverage-label" aria-hidden="true">Records</span>8,246 financial and function cells<p class="fineprint">Published sector totals and spending by function are kept separately; OPAX does not add government levels together.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-10-16. <a href="/government-finance/data.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="vic-gifts" role="row"><th scope="row" role="rowheader"><a href="/register/vic-gifts">Ministerial gifts, benefits and hospitality</a><p class="fineprint">Department of Premier and Cabinet, Victoria</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Victoria; 2025-02-01 to 2026-06-30. Ministers and parliamentary secretaries, not ordinary members&#39; returns.</td><td role="cell" data-count="282"><span class="coverage-label" aria-hidden="true">Records</span>282 register rows</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0, with website exceptions and attribution.<p>Reviewed snapshot; updated by manual intake or promotion.</p><p class="fineprint">Snapshot: 2026-10-13. <a href="/vic-gifts/data.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="act-invoices" role="row"><th scope="row" role="rowheader"><a href="/register/act-invoices">ACT notifiable invoices</a><p class="fineprint">ACT Government</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>ACT; July 2015 - September 2026. Some payment dates predate the stated register start.</td><td role="cell" data-count="127437"><span class="coverage-label" aria-hidden="true">Records</span>127,437 records in the approved snapshot<p class="fineprint">Invoices valued at $25,000 or more; individual payments can be smaller. Source rows are not a unique invoice count or all ACT spending.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0<p>Manual reviewed snapshot; not acquired nightly.</p><p class="fineprint">Snapshot: 2026-10-21. <a href="/register/act-invoices">Dataset and provenance</a>.</p></td></tr>
+</tbody></table></div>
+<h3>People and interests</h3>
+<div class="table-scroll"><table class="about-table coverage-table" role="table">
+<caption class="visually-hidden">People and interests sources and coverage</caption>
+<thead role="rowgroup"><tr role="row"><th role="columnheader" scope="col">Collection and publisher</th><th role="columnheader" scope="col">Jurisdictions and years</th><th role="columnheader" scope="col">Records</th><th role="columnheader" scope="col">Reuse and refresh</th></tr></thead>
+<tbody role="rowgroup">
+<tr data-coverage="people" role="row"><th scope="row" role="rowheader"><a href="/subject/person">Parliamentarian profiles</a><p class="fineprint">Publishing parliaments; OpenAustralia; verified roster sources</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Federal and state speech record since 1993-03-13; roster dates differ.</td><td role="cell" data-count="1618"><span class="coverage-label" aria-hidden="true">Records</span>1,618 profiles</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Source-specific terms; portraits individually credited.<p>Guarded exports from speech and roster records.</p><p class="fineprint">Snapshot: 2026-10-18. <a href="/parliamentarians.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="interests" role="row"><th scope="row" role="rowheader"><a href="/declared">Members&#39; and senators&#39; interests</a><p class="fineprint">Parliament of Australia; Queensland Parliament</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>House and Senate, 48th Parliament; Queensland, 58th Parliament. Entries as declared, not verified by OPAX.</td><td role="cell" data-count="10381"><span class="coverage-label" aria-hidden="true">Records</span>10,381 declared entries across 320 people</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Federal registers CC BY-NC-ND; Queensland reuse not verified. Source facts and page links, not rewritten declarations.<p>Federal acquisition paused; retained reviewed register snapshots.</p><p class="fineprint">Snapshot: 2026-10-18. <a href="/interests/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="pay" role="row"><th scope="row" role="rowheader"><a href="/subject/person">Parliamentary pay</a><p class="fineprint">Parliamentary Library; Federal Register of Legislation; Remuneration Tribunal; Parliament of Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 1999-12-07 to 2026-10-19. Calculated pay for recorded posts, not payslips.</td><td role="cell" data-count="700"><span class="coverage-label" aria-hidden="true">Records</span>700 people with pay records</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Published determinations and source terms; calculations identified.<p>Monthly checks and guarded export.</p><p class="fineprint">Snapshot: 2026-10-19. <a href="/pay.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="expenses" role="row"><th scope="row" role="rowheader"><a href="/subject/person">Parliamentarians&#39; work expenses</a><p class="fineprint">Independent Parliamentary Expenses Authority</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth; 2017Q02 to 2026Q02. Profile summaries retain adjustments.</td><td role="cell" data-count="1217969"><span class="coverage-label" aria-hidden="true">Records</span>1,217,969 source lines; 427 linked profiles</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 3.0 AU<p>Monthly checks for new quarterly releases; guarded export.</p><p class="fineprint">Snapshot: 2026-11-10. <a href="/expenses.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="diaries" role="row"><th scope="row" role="rowheader"><a href="/subject/donor">Ministerial diaries</a><p class="fineprint">The Cabinet Office, NSW; Queensland Cabinet Office</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>NSW and Queensland; dated meetings in retained diaries, including NSW from 2019 and the current Queensland government from November 2024. Profiles show matched slices.</td><td role="cell" data-count="65644"><span class="coverage-label" aria-hidden="true">Records</span>65,644 source meeting rows</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Source-specific terms; matched names and meetings do not establish influence.<p>NSW checked weekly; Queensland monthly. Matched slices exported weekly.</p><p class="fineprint">Snapshot: 2026-11-11. <a href="/access.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="lobbyists" role="row"><th scope="row" role="rowheader"><a href="/subject/donor">Lobbyist registers and Queensland contacts</a><p class="fineprint">Attorney-General&#39;s Department; NSW Electoral Commission; Queensland Integrity Commission; Victorian Public Sector Commission; Department of the Premier and Cabinet, South Australia; Public Sector Commission, Western Australia</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth, NSW, Queensland, Victoria, South Australia, Western Australia; register snapshots. Queensland contact disclosures from 2016. Profiles show matched slices.</td><td role="cell" data-count="1964"><span class="coverage-label" aria-hidden="true">Records</span>1,964 source firms<p class="fineprint">15,162 client links; 6,033 people; 8,368 Queensland contact disclosures.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Per-register terms; registration is a disclosure, not a finding.<p>Weekly checks; last good snapshot kept when acquisition is held.</p><p class="fineprint">Snapshot: 2026-11-12. <a href="/corpus.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="fits" role="row"><th scope="row" role="rowheader"><a href="/subject/donor">Foreign Influence Transparency Scheme</a><p class="fineprint">Attorney-General&#39;s Department</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Commonwealth public-register snapshot; current and ceased relationships. Entity profiles show matched slices.</td><td role="cell" data-count="146"><span class="coverage-label" aria-hidden="true">Records</span>146 registrants in the source snapshot<p class="fineprint">732 activities. Registration is not a finding of wrongdoing.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 4.0 (Attorney-General&#39;s Department, https://www.ag.gov.au/copyright-statement)<p>Weekly checks; last good snapshot kept when acquisition is held.</p><p class="fineprint">Snapshot: 2026-10-17. <a href="/fits.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="tax-charity-register" role="row"><th scope="row" role="rowheader"><a href="/subject/supplier">Registered charity status</a><p class="fineprint">Australian Charities and Not-for-profits Commission (ACNC)</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Australia; 2026-10-11. Matched by ABN to existing organisation profiles, not the whole source register.</td><td role="cell" data-count="4171"><span class="coverage-label" aria-hidden="true">Records</span>4,171 matched ABNs with data</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 3.0 AU<p>Weekly source checks; derived export after matching.</p><p class="fineprint">Snapshot: 2026-10-17. <a href="/entities/tax-charity/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="tax-charity-ais" role="row"><th scope="row" role="rowheader"><a href="/subject/supplier">Charity Annual Information Statements</a><p class="fineprint">Australian Charities and Not-for-profits Commission (ACNC)</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Australia; 2022 to 2024. Matched by ABN to existing organisation profiles, not the whole source register.</td><td role="cell" data-count="3483"><span class="coverage-label" aria-hidden="true">Records</span>3,483 matched ABNs with data</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 2.5 AU (2022); CC BY 3.0 AU (2023 and 2024).<p>Weekly source checks; derived export after matching.</p><p class="fineprint">Snapshot: 2026-10-17. <a href="/entities/tax-charity/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="tax-charity-ato" role="row"><th scope="row" role="rowheader"><a href="/subject/supplier">Corporate Tax Transparency</a><p class="fineprint">Australian Taxation Office (ATO)</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Australia; 2013-14 to 2024-25. Matched by ABN to existing organisation profiles, not the whole source register.</td><td role="cell" data-count="1111"><span class="coverage-label" aria-hidden="true">Records</span>1,111 matched ABNs with data</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>CC BY 3.0 AU. Tax payable is not tax paid.<p>Weekly source checks; derived export after matching.</p><p class="fineprint">Snapshot: 2026-10-17. <a href="/entities/tax-charity/index.json">Dataset and provenance</a>.</p></td></tr>
+<tr data-coverage="electorates" role="row"><th scope="row" role="rowheader"><a href="/subject/electorate">Electorates, elections and Census context</a><p class="fineprint">Australian Electoral Commission; Australian Bureau of Statistics; publishing parliaments</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>All nine jurisdictions for seat geography; federal results from 2019 and 2021 Census profiles. State results and verified roster coverage differ.</td><td role="cell" data-count="625"><span class="coverage-label" aria-hidden="true">Records</span>625 electorate records<p class="fineprint">459 federal contests; 151 federal demographic profiles.</p></td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Per-source terms; ABS data CC BY 4.0. Statistical geography is not exact address allocation.<p>Reviewed releases and roster corrections.</p><p class="fineprint">Snapshot: 2026-11-11. <a href="/electorates/manifest.json">Dataset and provenance</a>.</p></td></tr>
+</tbody></table></div>
+<h3>Derived collections</h3>
+<div class="table-scroll"><table class="about-table coverage-table" role="table">
+<caption class="visually-hidden">Derived collections sources and coverage</caption>
+<thead role="rowgroup"><tr role="row"><th role="columnheader" scope="col">Collection and publisher</th><th role="columnheader" scope="col">Jurisdictions and years</th><th role="columnheader" scope="col">Records</th><th role="columnheader" scope="col">Reuse and refresh</th></tr></thead>
+<tbody role="rowgroup">
+<tr data-coverage="connections" role="row"><th scope="row" role="rowheader"><a href="/connections">Programs and places connections</a><p class="fineprint">The publishers of speeches, official releases and grant records</p></th><td role="cell"><span class="coverage-label" aria-hidden="true">Jurisdictions and years</span>Collected source corpus; coverage differs from searchable records. Names and structured locations link to excerpts.</td><td role="cell" data-count="19481"><span class="coverage-label" aria-hidden="true">Records</span>19,481 entities with connections</td><td role="cell"><span class="coverage-label" aria-hidden="true">Reuse and refresh</span>Original source terms. Name or location links do not establish influence.<p>Rebuilt when reviewed evidence inputs are available.</p><p class="fineprint">Snapshot: 2026-09-08. <a href="/evidence/stats.json">Dataset and provenance</a>.</p></td></tr>
+</tbody></table></div>
+<!-- coverage:end -->
         <p class="fineprint">How the record is collected and what is known to be missing:
           <a href="/methods">Methods</a> · <a href="/about">About OPAX</a> · <a href="https://x.com/OpaxAustralia" target="_blank" rel="noopener noreferrer">OPAX on X</a> · <a href="https://www.facebook.com/OpaxAustralia/" target="_blank" rel="noopener noreferrer">OPAX on Facebook</a> · <a href="https://www.instagram.com/opaxaustralia/" target="_blank" rel="noopener noreferrer">OPAX on Instagram</a></p>
       </section>
     </section>
 
     <section id="panel-about" class="panel" hidden aria-label="About OPAX">
-      <!-- At regular width the page's sections are listed beside it (design
-           review: About keeps its prose and gains an index). -->
       <nav class="about-index" aria-labelledby="about-index-head">
         <p class="ui-toc-head" id="about-index-head">On this page</p>
         <ul class="ui-toc-list" role="list">
           <li><a href="#about-use">What you can do here</a></li>
-          <li><a href="#about-record">The record</a></li>
-          <li><a href="#about-money">The money</a></li>
-          <li><a href="#about-votes">Votes and bills</a></li>
-          <li><a href="#about-instruments">Federal legislative instruments</a></li>
-          <li><a href="#about-audit">Queensland audit reports</a></li>
-          <li><a href="#about-people">People</a></li>
-          <li><a href="#about-machines">Enrichments written by machines</a></li>
-          <li><a href="#about-limits">What this cannot prove</a></li>
+          <li><a href="#about-record">What OPAX holds</a></li>
+          <li><a href="#about-limits">Reading the record</a></li>
           <li><a href="#about-who">Who makes it</a></li>
           <li><a href="#about-licences">Licences and reuse</a></li>
           <li><a href="#about-contact">How to reach us</a></li>
@@ -1034,292 +1137,80 @@
       <div class="about-body policy-page">
       <div class="ui-page-head">
         <h1>What OPAX is</h1>
-        <p class="ui-lede">OPAX, the Open Parliamentary Accountability Exchange, has one intent: to put as much of
-        the open data about Australian politics as possible in one place, cross-referenced and
-        citable, so that the blind spots become findable. What a politician said on the record, how
-        they voted, what they declared, who gave money to their party, who lobbied whom, which
-        grants and contracts followed: each of these is published somewhere, in its own format,
-        under its own terms, and almost never beside the others. Put side by side, a politician who
-        gives two hundred speeches about a problem but votes against every reform, or an industry
-        that donates millions while its regulation stalls, leaves a paper trail. OPAX makes that
-        trail searchable and citable. It started as speeches and donations; it now also carries the
-        votes those speeches led to, the bills those votes decided, the government grants and
-        contracts that sometimes follow the same money, and the registers that record who lobbies
-        whom. Every claim on the site links back to the primary record it came from, because a
-        blind spot is only worth finding if someone else can check it.</p>
+        <p class="ui-lede">OPAX, the Open Parliamentary Accountability Exchange, brings together
+        public records about Australian politics and government. Parliamentary debate, public money,
+        disclosures and official reports can be read beside one another, with links to the publishers
+        so you can check the evidence.</p>
         <p class="fineprint">OPAX contains the names and images of people who have died.</p>
       </div>
 
       <h2 id="about-use">What you can do here</h2>
+      <p><a href="/ask">Ask a question</a> across the available records, or
+      <a href="/ask?view=search">search and filter them</a>. Answers cite the passages or structured
+      records used. Browse a bill, person, organisation or report to follow its sources. The
+      <a href="/money">money map</a>, <a href="/connections">Programs &amp; places</a> and
+      <a href="/explore">interactive tools</a> offer other ways into the record.</p>
+
+      <h2 id="about-record">What OPAX holds</h2>
       <ul class="about-list">
-        <li><strong>Ask</strong>: put a question to the speech record (widen it to the recorded
-        divisions with one checkbox) and get an answer written only from the passages retrieved
-        for it. Every claim is cited; every citation opens the actual speech at a stable, linkable
-        page; if the record is thin on a question, the answer says so.</li>
-        <li><strong>Search</strong>: hybrid semantic and keyword search with reranking, filterable
-        by speaker, party, parliament and year, with citation-ready exports.</li>
-        <li><strong>Money map</strong>: the largest disclosed donors in three dimensions, ringed
-        by industry around the parties they gave to, with a year range you can drag, a words layer
-        showing who speaks on each industry's debates, and a grants layer showing which of those
-        donors also collect government money.</li>
-        <li data-reports-only><strong>Reports</strong>: six standing investigations — climate &amp; energy, gambling,
-        housing, immigration, First Nations and media ownership — drawing on parliamentary debate,
-        government announcements, legislation and financial records, refreshed as the record grows.</li>
-        <li><strong>Explore</strong>: the Time Machine (dial up any year since 1998 and see what
-        parliament was arguing about), the tide (which debates are rising or fading), the record
-        quiz, the ledger (every disclosed receipt flow in one exportable table) and who gets the
-        grants.</li>
-        <li><strong>Bills</strong>: a registry of federal bills since 2013, each one linked to the
-        divisions that decided it and the speeches made about it, with a plain-English summary of
-        what its explanatory memorandum says.</li>
-        <li><strong>Encyclopedia</strong>: an entry for every parliamentarian, party, donor and
-        topic, with quick facts, voting record, declared interests, expenses and the money map
-        narrowed to that entity.</li>
+        <li><strong>Parliament.</strong> Hansard and committee evidence, recorded divisions,
+        <a href="/bills">federal bills and their original text versions</a>,
+        <a href="/sitting">sitting weeks</a>, <a href="/estimates">Senate estimates</a>, and
+        official government transcripts and releases. <a href="/video/senate">Senate video</a>
+        links Question Time, first speeches and other recordings from the Senate's own channel.</li>
+        <li><strong>Money.</strong> <a href="/money/receipts">Disclosed political receipts</a>,
+        <a href="/subject/campaigner">campaigners and associated entities</a>, party debts and
+        benefits, <a href="/money/grants">Commonwealth and Queensland grants</a>,
+        <a href="/money/contracts">Commonwealth contracts</a>, and
+        <a href="/budget">Budget papers and published figures</a>. Charity and tax transparency
+        data appear on matched organisation profiles.</li>
+        <li><strong>People and interests.</strong> <a href="/subject/person">Parliamentarians</a>,
+        <a href="/subject/party">parties</a> and <a href="/subject/electorate">electorates</a>,
+        with speeches, votes, federal pay and work expenses where held;
+        <a href="/declared">declared interests</a>; and matched ministerial diary, lobbyist and
+        Foreign Influence Transparency Scheme records. Election histories and Census context
+        have their own coverage limits.</li>
+        <li><strong>Official reports and inquiries.</strong>
+        <a href="/ask?view=search&amp;kind=report">Royal commissions and comparable inquiries,
+        integrity body reports, Commonwealth annual report tables and agency annual reports</a>.
+        Report records link findings, recommendations, published responses, hearing transcripts
+        and quoted figures to their sources. Agency figures retain PDF page numbers and mark OCR;
+        their dedicated research tool is available through <a href="/methods#mcp">MCP</a>.
+        <a href="/audit">Queensland audit reports</a> have a separate catalogue.</li>
+        <li><strong>Registers.</strong> <a href="/register/state-bills">Tasmanian and ACT bill metadata</a>,
+        <a href="/ask?view=search&amp;kind=instrument">federal legislative instrument metadata</a>,
+        <a href="/register/vic-gifts">Victorian ministerial gifts</a>,
+        <a href="/register/act-invoices">ACT notifiable invoices</a>,
+        <a href="/register/gov-advertising">Victorian government advertising</a>,
+        <a href="/register/tax-expenditures">Treasury tax expenditures</a>,
+        <a href="/register/government-finance">ABS government finance</a> and
+        <a href="/register/sa-grants">historical Grants SA projects</a>.</li>
       </ul>
+      <p>Coverage varies by collection, jurisdiction and year. Some collections contain selected
+      documents or metadata only. <a href="/stats">Sources &amp; coverage</a> gives counts,
+      publishers, dates, reuse terms and refresh arrangements.</p>
 
-      <h2 id="about-record">The record</h2>
-      <div class="table-scroll"><table class="about-table">
-        <thead><tr><th>Source</th><th>Documents</th><th>Coverage</th></tr></thead>
-        <tbody id="about-sources"><!-- filled from corpus.json --></tbody>
-      </table></div>
-      <p>The last two rows above are not speeches: recorded divisions and AEC donation returns
-      are searched and cited the same way as speeches, so they are counted here even though the
-      donations themselves are described in full below. The speech rows are filtered to the era of
-      currently serving parliamentarians (13 March 1993 onward), deduplicated across overlapping
-      sources, and stripped of procedural noise (division roll-calls, chair interjections, day
-      indexes). Federal Hansard is Commonwealth copyright, reproduced here under the CC BY-NC-ND
-      terms that cover the official transcript; each state parliament sets its own copyright terms,
-      and OPAX reproduces and cites speeches for research rather than republishing whole documents
-      commercially — check the source link on any document before quoting it commercially.</p>
-      <p class="fineprint">Full detail, model identity and known defects:
-      <a href="/methods">methods &amp; how to cite OPAX</a> · machine-readable source counts:
-      <a href="/corpus.json">corpus.json</a>.</p>
-
-      <h2 id="about-money">The money</h2>
-      <p>OPAX holds every federal donation disclosed to the AEC since 1998, 199,233 rows,
-      and the <a href="/money">money map</a> plots the 250 largest donors against 11 parties as
-      662 flows, built from 127,658 of those rows after excluding public funding, internal party
-      transfers and donations from government-linked entities. Queensland, Victoria and Tasmania
-      publish their own donation registers under an open licence, and OPAX runs the same map over
-      each: Queensland (250 donors, 402 flows from 22,703 gifts), Victoria (250 donors, 291 flows
-      from 3,416 donations) and Tasmania (166 donors, 172 flows from 221 donations, because its
-      disclosure scheme is only a year old). State and federal totals are never added together,
-      because AEC returns already fold in what a party's state branches raised.</p>
-      <p>The newest layer is government grants. Every Commonwealth grant award published on
-      GrantConnect since the register opened at the end of 2017 (360,058 awards, $235.5 billion,
-      CC BY 3.0 AU) and every Queensland Government funding line since 2017-18 (230,007 awards,
-      $85.7 billion, CC BY 4.0) are matched to the donor register by ABN wherever one is published:
-      763 Commonwealth recipients ($26.3 billion, 11% of the register) and 489 Queensland
-      recipients ($3.3 billion, 4%) are also donors. On the money map itself, 30 of the 250 largest
-      federal donors and 27 of the 250 largest Queensland donors also collected grants — $1.0
-      billion and $334 million between them — shown as a toggleable layer with its own flows from
-      a single grantor node. A donor receiving a grant is a fact on the public record, not a
-      finding; the grants explorer states plainly what share of a recipient's dollars arrived while
-      a party it had donated to held office, and nothing stronger.</p>
-      <p>Alongside the donations sit an uncapped roster of 438 associated entities, third parties,
-      significant third parties and political campaigners that raise or spend on politics without
-      being a party — everything above $100,000 in any year from the AEC's own annual returns —
-      and, separately, the parties' own lodged debts and discretionary benefits. Six lobbyist
-      registers (federal, New South Wales, Queensland, Victoria, South Australia and Western
-      Australia) are held in full: on the money map, 133 of the 250 largest federal donors also
-      show up as a registered lobbying client or a name in a ministerial diary — 102 as lobbying
-      clients, 92 in one of 61,499 disclosed meetings between ministers and everyone they met,
-      from the New South Wales Cabinet Office and the Queensland Cabinet Office. Queensland alone
-      also publishes who lobbied whom and when: 8,235 logged contacts since September 2016. A
-      separate federal register, the Foreign Influence Transparency Scheme, tracks who works in
-      Australia for a foreign government or political organisation for the purpose of political
-      influence; OPAX carries the whole public register (145 registrants, 728 declared activities)
-      and shows it on any donor, lobbying firm or parliamentarian page it matches, always with the
-      reminder that registering is a legal disclosure, not a finding of wrongdoing.</p>
-      <p class="fineprint">Every donation, meeting and grant figure here is a floor, not a
-      ceiling: disclosure schemes only require reporting above a threshold, so smaller gifts and
-      quieter meetings leave no public trace. New South Wales and South Australia's political
-      donations are not on OPAX at all — New South Wales' own terms forbid automated collection of
-      its disclosure portal, and South Australia banned political donations from 1 July 2025.
-      Western Australia, the ACT and the Northern Territory publish their donations, but under
-      terms that do not permit republishing them here; that data is held for internal research
-      only and nothing from those three jurisdictions appears on the site.</p>
-
-      <h2 id="about-votes">Votes and bills</h2>
-      <p>Every recorded division OPAX could get in a structured form — 13,867 of them, federal
-      divisions from TheyVoteForYou and state divisions read from New South Wales, Victorian and
-      Queensland Hansard, 1998 to today, is a citable, searchable document in its own
-      right, and 962 sitting and former parliamentarians (622 federal, 133 New South Wales, 122
-      Victorian, 85 Queensland) carry a voting record on their own page. Most questions in every
-      chamber are decided on the voices and leave no division at all, so "no recorded vote" never
-      means "did not vote".</p>
-      <p>A federal bill registry now covers every bill introduced from the 43rd Parliament (2013)
-      to today: 2,969 bills, 31,377 progress events and 19,958 links out to the divisions,
-      speeches and Acts that followed from them. 13,949 of those links are speeches that name the
-      bill on a day it was genuinely before the chamber — checked against the bill's own progress
-      record, not guessed from a topic string, because federal Hansard topics from 2013 on carry
-      only the bare word "Bills". 1,698 of the 2,969 bills carry a three-sentence, model-written
-      summary of what their explanatory memorandum or Bills Digest says, each one labelled
-      "written by a model from the explanatory memorandum; not the record" (a further 812 were
-      generated but held back after failing an automatic check, and are not shown).</p>
-      <p class="fineprint">Two gaps in the speech record shape what a bill or a division
-      page can show, and are worth stating plainly. There is no Senate Hansard on OPAX at all
-      for 2014 to 2022, so a bill whose real fight happened in the Senate in that window looks
-      quiet on OPAX no matter how contested it was. And 2024 is thin across the board — federal
-      chamber speeches drop to 82 for the whole year — so the 47th Parliament's bills (2022–2025)
-      reach a linked speech only 24% of the time, against 74–84% in every other parliament since
-      2013. Neither gap is a fault in the bill registry; both close only as more Hansard is added.</p>
-
-      <h2 id="about-instruments">Federal legislative instruments</h2>
-      <p>The instruments catalogue carries in-force title metadata
-      from the Office of Parliamentary Counsel's <a href="https://www.legislation.gov.au/">Federal
-      Register of Legislation</a>. OPAX shows titles, dates, departments, portfolios, status and
-      bounded version metadata, with FRL's current/latest flags retained verbatim. The returned
-      version may be earlier than the latest; every page links FRL's authoritative latest text.
-      No document bodies or model summaries appear in this catalogue.
-      Missing commencement dates stay unknown; FRL's in-force listing includes legislation made but
-      not yet commenced. Every detail page links the authoritative text on FRL. Names in instrument
-      titles remain authorised record text and create no person profiles or identity joins.</p>
-
-      <h2 id="about-audit">Queensland audit reports</h2>
-      <p><a href="/audit">Queensland audit reports</a> lists the Queensland Audit Office's
-      reports tabled in Parliament, with report numbers, years, tabled dates, sectors, public
-      bodies identified in the audit scope where their source is cleared, and full PDF links.
-      HTML recommendations use the report pages' CC BY 4.0 grant, with the two original
-      page exceptions retained. PDF bodies and entity responses remain held under each
-      document's own terms. Source recommendations retain
-      HTML or PDF page provenance. Responses are separate records attributed to public bodies,
-      with signatories only inside verbatim text. No person profiles or joins are created.</p>
-      <p>Source: Queensland Audit Office, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
-      © The State of Queensland (Queensland Audit Office) 2026. The website policy covers metadata
-      and separately reviewed HTML recommendations; the PDFs' own terms hold their bodies
-      and responses. Each report page and PDF is checked separately for
-      <a href="https://www.qao.qld.gov.au/copyright">copyright exceptions</a>; excepted bodies
-      are withheld. Metadata is arranged into a catalogue and HTML formatting is simplified.
-      No endorsement by the State of Queensland or QAO is implied.</p>
-
-      <h2 id="about-people">People</h2>
-      <p>1,557 names appear as speakers in the record since 1993; 313 of them currently sit in a
-      state or federal parliament. 829 portrait photographs cover just over a thousand of those
-      names: 551 official portraits from Parliament House, obtained through OpenAustralia because
-      the official image API blocks every identified research tool, reproduced under aph.gov.au's
-      site-wide CC BY-NC-ND 4.0 terms; and 277 from Wikimedia Commons for state parliamentarians
-      and pre-2006 federal members, each individually licensed — Creative Commons, public domain
-      or CC0 — and credited by name on the person page it appears on.</p>
-      <p>Declared shareholdings, real estate, directorships, gifts, travel and liabilities are
-      shown for 317 sitting members — every House member (151), all but one senator (73) and every
-      Queensland MP (93) — 10,052 declared entries in total, each one linking to the exact page of
-      the source PDF it was read from. They are not searchable through Ask or Search: the House and
-      Senate registers are licensed CC BY-NC-ND, Queensland's terms could not even be read (they
-      sit behind a firewall that blocked every request), and a rewritten version of a declared
-      interest would be a derivative work in a way a fact with a link back to the original PDF is
-      not.</p>
-
-      <h2 id="about-machines">Enrichments written by machines</h2>
-      <ul class="about-list">
-        <li><strong>Topic labels</strong>: every speech is, eventually, tagged against a fixed
-        taxonomy of 21 subjects — gambling, financial services, mining &amp; energy, climate &amp;
-        environment, property &amp; construction, housing, health, media &amp; communications,
-        hospitality &amp; alcohol, defence &amp; security, agriculture, unions &amp; the workplace,
-        immigration, First Nations affairs, tax &amp; the budget, education, welfare &amp; social
-        services, integrity &amp; democracy, infrastructure &amp; transport, justice &amp; law, and
-        foreign affairs — applied by a mix of the hosting platform's own labelling and separate
-        agents that read back over what it produced. Labelling is not finished: a speech with no
-        topic chip may simply not be labelled yet, rather than checked and found to have none.</li>
-        <li><strong>Machine briefs</strong>: many speeches and every topic page carry a short "In
-        brief" summary, written by a language model from that one passage alone and labelled as a
-        machine summary. It is a reading aid, not a replacement for the speech underneath it.</li>
-        <li data-reports-only><strong>Report essays</strong>: the six standing reports draw live on the record
-        for every section, and every factual claim is built to trace back to a real, quoted
-        passage — but the connecting prose (the opening summary, the era-by-era narrative) is a
-        model's synthesis of the report's own generated sections, written last. Read it as a guide
-        to where to look, not as the finding.</li>
-        <li><strong>Bill summaries</strong>: 1,698 federal bills carry a three-sentence,
-        plain-English account of what their explanatory memorandum or Bills Digest says, written
-        by a model and checked by a mechanical rule that rejects any sentence copying nine or more
-        consecutive words from the source. Every one carries its own attribution, because an
-        explanatory memorandum is a bill's own sponsor explaining their own bill, not a neutral
-        account of what it will do.</li>
-        <li><strong>Explain flow</strong>: the "Explain this money" walkthrough on a donor or party
-        page is not a language model at all — its sentences are assembled by ordinary code from the
-        same structured donation and grant figures the map itself draws on. It can still be wrong,
-        but only the way a mail-merge can be wrong: a bad number or a mis-filed category upstream,
-        never an invented claim.</li>
-      </ul>
-
-      <h2 id="about-limits">What this cannot prove</h2>
-      <p>OPAX puts the record and the money side by side. It does not draw a conclusion from
-      them, and neither should a reader without checking the primary source first.</p>
-      <ul class="about-list">
-        <li>Money near a decision is a pattern to investigate, not evidence of a favour.</li>
-        <li>A division is not the whole vote: most questions in every chamber are decided on the
-        voices, so a member with no recorded division on a bill did not necessarily do nothing.</li>
-        <li>Every donation, meeting and grant figure here is a floor. Amounts under a
-        jurisdiction's reporting threshold, and anything from a jurisdiction OPAX does not cover,
-        are invisible by construction, not because nothing happened.</li>
-        <li>Registration under the Foreign Influence Transparency Scheme, or an entry in a
-        lobbyist register, is a legal disclosure the law requires, not a finding of wrongdoing.</li>
-        <li>A donor receiving a grant, or a bill's sponsor sharing an industry with donors to their
-        party, is a fact on the public record. What it means is for the reader to weigh, with the
-        primary sources OPAX links to at every step.</li>
-      </ul>
-      <p class="fineprint">The record's own technical limits, such as what Hansard is and is not, where
-      coverage is thin and which members' records are unreliable, are on the
-      <a href="/methods">methods page</a>, not repeated here.</p>
+      <h2 id="about-limits">Reading the record</h2>
+      <p>A disclosed payment, shared name or meeting does not establish influence or misconduct.
+      Hearing evidence and allegations are not findings. A commission's findings are not criminal
+      convictions. A missing record does not establish that an event did not happen.</p>
+      <p>Machine summaries and generated answers are reading aids. Verify quotations and figures
+      against the linked primary source before publishing them. <a href="/methods">Methods</a>
+      explains extraction, source restrictions, known gaps and how to cite the record.</p>
 
       <h2 id="about-who">Who makes it</h2>
-      <p>OPAX is a side project of Jake Tracey, of <a href="https://noice.net.au"
-      rel="noopener">Noice</a>. It is independent and non-partisan, built outside working hours,
-      and the data it carries belongs to the public bodies that published it. Three things make
-      it possible.</p>
-      <p>Noice Pty Ltd publishes OPAX, including the iPhone and iPad app on the App Store.</p>
-      <ul class="about-list">
-        <li><strong>Noice</strong> (<a href="https://noice.net.au" rel="noopener">noice.net.au</a>)
-        is a Melbourne digital agency for the AI era, building digital experiences and AI
-        automation for government and large organisations. The craft OPAX runs on, from how a
-        page is built to how a model is kept honest, was learned there, and the tooling comes
-        with it.</li>
-        <li><strong>Progress Agentic RAG</strong> (<a
-        href="https://www.progress.com/agentic-rag?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=about"
-        rel="noopener">progress.com/agentic-rag</a>) holds the record. Every speech, bill,
-        division and statement is held in a knowledge box on the platform, which does the
-        retrieval, the reranking and the citation binding behind every answer on the Ask page.
-        OPAX writes the prompts and checks the answers; the platform finds the passages.</li>
-        <li><strong>CorpusKit</strong> (<a href="https://corpuskit.org?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=about"
-        rel="noopener">corpuskit.org</a>) is the open source research portal that grew alongside
-        OPAX: point it at an empty knowledge box and it reads the corpus, designs the taxonomy
-        and the knowledge graph around it, writes the questions worth asking and opens as a
-        branded portal. Much of what works here was built there first, and the parts that
-        generalise flow back to it. It is Apache 2.0, and any organisation with a body of
-        research can use it.</li>
-      </ul>
-      <p>If OPAX helps you find a blind spot, that is the point. If you find one in OPAX itself,
-      a missing source, a wrong number, a jurisdiction not yet covered, the fastest fix is an
-      issue on GitHub, below.</p>
+      <p>OPAX is an independent, non-partisan project of Jake Tracey, of
+      <a href="https://noice.net.au" rel="noopener">Noice</a>. Noice Pty Ltd publishes OPAX,
+      including the iPhone and iPad app. The speech retrieval uses
+      <a href="https://www.progress.com/agentic-rag" rel="noopener">Progress Agentic RAG</a>;
+      the portal shares work with <a href="https://corpuskit.org" rel="noopener">CorpusKit</a>.</p>
 
       <h2 id="about-licences">Licences and reuse</h2>
-      <p>Source: <a href="https://www.legislation.gov.au/">Federal Register of Legislation
-      (legislation.gov.au)</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
-      Instrument metadata is arranged into a catalogue with titles verbatim and
-      one API-returned version per title, which may be historical. Current/latest flags are retained
-      verbatim. OPAX shows metadata only. Each export carries FRL's dated attribution.
-      The Commonwealth Coat of Arms and content marked as third party are exceptions. See the
-      <a href="https://www.legislation.gov.au/terms-of-use">FRL terms of use</a>; no endorsement is implied.</p>
-      <p>OPAX's own code is open source under AGPL-3.0, at
-      <a href="https://github.com/jaketracey/opax" rel="noopener">github.com/jaketracey/opax</a>.
-      The data behind it is not ours, and it carries a patchwork of licences rather than one. The
-      Hansard record itself — however it reaches OPAX, through TheyVoteForYou, OpenAustralia or a
-      state Hansard feed — is Commonwealth or state parliamentary copyright, reproduced here under
-      CC BY-NC-ND terms (ACT Hansard is © ACT Legislative Assembly, used under CC BY-NC-ND 4.0
-      with attribution to the Assembly; its official portraits are excluded from that licence and
-      are not used here); TheyVoteForYou's own compiled division data carries a separate open
-      licence of its own (the Open Data Commons Open Database Licence). Most of the money data —
-      AEC returns, GrantConnect and the Queensland grants portal, the Queensland and Tasmanian
-      donation registers, the Foreign Influence Transparency Scheme register, and most lobbyist
-      registers — is Creative Commons Attribution, in one version or another. The House and Senate
-      registers of members' interests are licensed CC BY-NC-ND, which is why they appear on OPAX
-      as facts with a link to the source page rather than as reproduced text; Queensland's register
-      carries no verified licence at all, so it is treated the same cautious way. And a few sources
-      — Western Australian, ACT and Northern Territory donations among them — are held under
-      all-rights-reserved terms and are kept off the public site entirely; that data exists only
-      for internal research. Every page that carries licensed data names its source and, where one
-      applies, its licence; when the two disagree, trust the page, since licences and coverage
-      windows both move and this paragraph will not always be the first place they are updated.</p>
+      <p>OPAX's code is <a href="https://github.com/jaketracey/opax" rel="noopener">open source
+      under AGPL-3.0</a>. Source material keeps its publisher's terms. There is no single licence
+      covering the record: parliamentary copyright, Creative Commons grants, document exceptions
+      and publication orders differ. Check the source attribution and reuse note for the material
+      you intend to use. No publisher endorsement is implied.</p>
 
       <h2 id="about-contact">How to reach us</h2>
       <p>Email <a href="mailto:support@opax.com.au">support@opax.com.au</a> for help with OPAX, and
@@ -1361,8 +1252,9 @@
       presiding over proceedings and are not counted as that member's own speeches.</p>
 
       <h2>Retrieval and generation</h2>
-      <p>Search runs hybrid semantic + keyword retrieval with a reranking pass. Answers are
-      generated only from retrieved passages, with citations. Embeddings:
+      <p>Speech search combines semantic and keyword retrieval with reranking. Ask can also use
+      structured record tools for counts, financial tables, legislation, disclosures and official reports.
+      Answers cite the retrieved passages or records used; a ranked sample does not establish a total. Embeddings:
       <span id="methods-embeddings"><code>multilingual-2024-05-06</code></span>. Generation model (pinned):
       <span id="methods-generation"><code>DeepSeek V4 Pro</code> via OpenRouter preset <code>@preset/opax-pro</code> (<code>openai-compatible</code>)</span>. <span id="methods-research">The Ask research loop uses <code>deepseek/deepseek-v4.1-flash</code> via OpenRouter.</span> Model identity may change between corpus versions and
       is recorded in the manifest.</p>
@@ -1375,7 +1267,9 @@
 
       <h2>Citing instruments and audit reports</h2>
       <p>Federal legislative instruments are a separate metadata catalogue. Cite the FRL id and
-      the authoritative version linked on its page. OPAX shows metadata only; version start,
+      the authoritative version linked on its page. OPAX shows metadata only, with
+      one API-returned version per title, which may be historical. Current/latest flags are retained
+      as published; version start,
       registration and commencement are distinct dates. Source: Federal Register of Legislation
       (legislation.gov.au), <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
       <p><a href="/audit">Queensland audit reports</a> carries the report index and the Queensland
@@ -1384,6 +1278,69 @@
       <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, unless otherwise noted.
       © The State of Queensland (Queensland Audit Office) 2026. Copyright exceptions are recorded
       per report and their bodies withheld.</p>
+
+      <h2 id="official-reports">Official reports and inquiries</h2>
+      <p><a href="/ask?view=search&amp;kind=report">Official report search</a> brings together
+      inquiry, integrity, Commonwealth annual-report and agency-report records. Each document is
+      identified and cited to its publisher. An inquiry record groups its related documents;
+      Commonwealth annual reports have a record per body and reporting year. Other report records
+      represent individual documents. Records without a usable source citation are excluded.</p>
+      <p>Each record has a permanent <code>/report/&lt;slug&gt;</code> page and JSON at
+      <code>/api/report/&lt;slug&gt;</code>. Cite the document's title, publisher, reporting year or
+      date, and page or table locator, with the official URL. OPAX's record is a route to that
+      source. Findings and opinions keep the body's own wording and labels; allegations, submissions
+      and investigation scope are not findings. A commission's finding is not a criminal conviction.
+      Government responses and implementation statuses appear only where published, in the
+      publisher's own terms. An absent status means unknown.</p>
+
+      <h3 id="hearing-transcripts">Commission hearing transcripts</h3>
+      <p>Hearing transcripts are evidence, submissions and questioning, not findings. Listings
+      retain the publisher's hearing dates, page numbers, redacted editions and document links.
+      They cover the hearings supplied so far. Full text is available only for commissions whose
+      publisher permits it under CC BY 4.0: Robodebt, Antisemitism and Social Cohesion, and NSW
+      Healthcare Funding. Publisher restrictions and suppression or non-publication orders are
+      respected. A transcript recording such an order or a pseudonymous witness is linked by
+      hearing and page without quotations. Other transcripts remain metadata and publisher links.
+      Report pages show a hearing section where listed; their JSON provides paged transcript links.</p>
+
+      <h3 id="agency-figures">Quoted figures from agency reports</h3>
+      <p>Agency annual-report figures come from the publisher's PDF, checked against its SHA-256.
+      Each figure retains a verbatim quotation, PDF page number, reporting period, value, unit and
+      the body's own label. Staff headcount and full-time equivalent, remuneration bands and actual
+      amounts, and financial and operational measures remain distinct. Scanned documents read with
+      OCR are marked; check the page image before quoting. A missing or unreadable figure remains
+      unknown. The intake is a selection of reports, not every agency in each jurisdiction.</p>
+      <p>These figures can be browsed through report search and read with the
+      <code>agency_reports</code> MCP tool. That dedicated tool is not currently offered to Ask.
+      Commonwealth PDFs that identify a Transparency Portal body contribute operational figures here
+      so the structured pay, staffing and finance tables are not duplicated.</p>
+
+      <h3 id="annual-report-tables">Commonwealth annual report tables</h3>
+      <p>The Department of Finance's Transparency Portal supplies published tables. Earlier years
+      use the Portal's dated data files; later years use its structured annual-report tables. Rows
+      retain the body, reporting year, source table or CSV line and reuse terms. Non-corporate
+      Commonwealth entity material is CC BY 4.0; corporate entities and companies retain copyright.</p>
+      <p>Key management personnel remuneration is an accrual amount for the time in a role, not an
+      annual salary. Executive bands contain counts and averages, not named individuals; averages
+      are not added or multiplied across bands. Supplier figures retain the source unit, which can
+      be dollars or thousands of dollars depending on year. Headline expenses exclude administered
+      items, and staff tables report headcounts. OPAX does not audit or adjust the published figures.
+      <a href="/stats">Coverage</a> gives the different year ranges for each table series.</p>
+
+      <h2 id="register-methods">Registers and public finance</h2>
+      <p><a href="/register/state-bills">Tasmanian and ACT bills</a> and federal instruments
+      carry registry facts and original-version links. A registry stage is not a commencement date.
+      <a href="/video/senate">Senate videos</a> play from the Senate's YouTube channel after a
+      click; OPAX does not download or rehost them.</p>
+      <p><a href="/register/act-invoices">ACT invoice records</a> are paid-invoice disclosures
+      for invoices valued at $25,000 or more, not all spending or a count of unique invoices.
+      Contracts, grant awards and payments are different measures.
+      <a href="/register/gov-advertising">Advertising</a> retains published table bases and units;
+      <a href="/register/tax-expenditures">tax expenditures</a> are revenue forgone estimates, not
+      cash payments. <a href="/register/government-finance">ABS government finance</a> keeps
+      published sector totals and function tables separate to avoid double counting.
+      <a href="/budget">Budget figures</a> retain their vintage and estimate, projection or actual
+      labels. These reviewed snapshots are dated; a nightly build does not make them new source data.</p>
 
       <h2 id="vic-election">Victorian election 2026</h2>
       <p>The election pages bring together official election facts and the records OPAX already holds.
@@ -1425,10 +1382,14 @@
       over HTTP POST with <code>Content-Type: application/json</code> and
       <code>Accept: application/json, text/event-stream</code>. Use <code>tools/list</code> for
       the current schemas and <code>tools/call</code> to run a tool. All tools are read-only.</p>
-      <p>The record tools are <code>search_records</code>, <code>read_record</code>,
+      <p>The record tools include <code>search_records</code>, <code>read_record</code>,
       <code>find_connections</code> and <code>corpus_coverage</code>. Grant readers
       <code>read_grant_recipient</code> and <code>read_grant_program</code> open the IDs returned
-      by grant searches. Source URLs support every result; connections do not establish influence.</p>
+      by grant searches. The shared registry also includes <code>annual_reports</code>,
+      <code>royal_commissions</code>, <code>integrity_reports</code>, <code>public_finances</code>,
+      <code>legislation</code> and <code>access_registers</code>; <code>agency_reports</code> is
+      currently MCP-only. Use <code>tools/list</code> for the complete current list and schemas.
+      Source URLs support results; connections do not establish influence.</p>
       <h3><code>electorates_rank</code></h3>
       <p>Rank, filter or look up federal or state electorate demographics from the published
       <strong>2021 Census (ABS)</strong>. Ask and MCP use the same tool. Current federal House
@@ -2130,11 +2091,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=26fff5f8c0" defer></script>
+<script src="/spa-shell.js?v=54b440779d" defer></script>
 <script src="/navigation.js?v=988f40b0b5" defer></script>
 <script src="/quick-search.js?v=7f0d91ca48" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=df44229965" defer></script>
+<script src="/app.js?v=e6cb3df5c0" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=7a83ce20cf" defer></script>
 </body>
