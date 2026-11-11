@@ -74,6 +74,7 @@ import {
   textChunks,
   type DocumentRecord,
 } from './model';
+import { useSpeechSpeakers } from './speaker';
 import { useRecordNavigation } from './navigation';
 import {
   ReaderList,
@@ -912,6 +913,7 @@ function LinkedBill({ doc }: { doc: DocumentRecord }) {
 
 type SimilarResult = Awaited<ReturnType<Records['similar']>>;
 function Similar({ doc }: { doc: DocumentRecord }) {
+  const speakerFor = useSpeechSpeakers();
   const navigation = useRecordNavigation();
   const [value, setValue] = useState<SimilarResult | null>(null);
   const [error, setError] = useState<unknown>(null),
@@ -960,22 +962,17 @@ function Similar({ doc }: { doc: DocumentRecord }) {
           meta={metaLine(record)}
           title={recordHeadline(record)}
           excerpt={{ text: serverPassage(row.snippet) || '' }}
-          speaker={row.speaker ? { name: row.speaker, party: row.party } : null}
-          {...(navigation.inPane ? {} : { href: docRoute(row.slug) })}
+          speaker={speakerFor(row)}
+          href={docRoute(row.slug)}
+          onPress={
+            navigation.inPane
+              ? () => navigation.openDoc(row.slug, recordHeadline(record))
+              : undefined
+          }
           testID={`doc-similar-${index}`}
         />
       );
-      return navigation.inPane ? (
-        <Pressable
-          key={row.slug}
-          accessibilityRole="link"
-          onPress={() => navigation.openDoc(row.slug, recordHeadline(record))}
-        >
-          {drawn}
-        </Pressable>
-      ) : (
-        <View key={row.slug}>{drawn}</View>
-      );
+      return <View key={row.slug}>{drawn}</View>;
     }) ?? [];
   return (
     <View style={styles.after}>

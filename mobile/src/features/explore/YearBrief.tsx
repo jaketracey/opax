@@ -11,6 +11,7 @@ import {
 import { counted, formatDate } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes/records';
+import { useSpeechSpeakers } from '../records/speaker';
 import { partyName } from '../reports/model';
 import {
   cleanSpeechTitle,
@@ -52,7 +53,13 @@ export function yearSource(
     notes,
   };
 }
-function SpeechRow({ speech: source }: { speech: Source }) {
+function SpeechRow({
+  speech: source,
+  speakerFor,
+}: {
+  speech: Source;
+  speakerFor: ReturnType<typeof useSpeechSpeakers>;
+}) {
   const title = cleanSpeechTitle(source) ?? undefined;
   return (
     <RecordRow
@@ -60,21 +67,19 @@ function SpeechRow({ speech: source }: { speech: Source }) {
         .filter(Boolean)
         .join(' · ')}
       title={title}
-      speaker={
-        source.speaker
-          ? {
-              name: source.speaker,
-              party: source.party ? partyName(source.party) : null,
-            }
-          : null
-      }
+      speaker={speakerFor({
+        ...source,
+        party: source.party ? partyName(source.party) : null,
+      })}
       href={docRoute(source.slug, title)}
+      testID={`tm-speech-${source.slug}`}
     />
   );
 }
 
 /** The machine-written brief, its cited speeches and one OPAX source line. */
 export function YearBrief({ data, meta }: { data: Year; meta: YearMeta }) {
+  const speakerFor = useSpeechSpeakers();
   const prose = yearOpening(data.brief.answer);
   const cited = data.brief.sources.filter((s) => s.cited);
   const note = yearMachineNote(data);
@@ -102,7 +107,7 @@ export function YearBrief({ data, meta }: { data: Year; meta: YearMeta }) {
       {cited.length ? (
         <View testID="tm-records">
           {cited.slice(0, 3).map((s) => (
-            <SpeechRow key={s.slug} speech={s} />
+            <SpeechRow key={s.slug} speech={s} speakerFor={speakerFor} />
           ))}
           {cited.length > 3 ? (
             <Disclosure
@@ -110,7 +115,7 @@ export function YearBrief({ data, meta }: { data: Year; meta: YearMeta }) {
             >
               <View>
                 {cited.slice(3).map((s) => (
-                  <SpeechRow key={s.slug} speech={s} />
+                  <SpeechRow key={s.slug} speech={s} speakerFor={speakerFor} />
                 ))}
               </View>
             </Disclosure>

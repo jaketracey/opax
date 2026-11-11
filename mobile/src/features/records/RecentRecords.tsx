@@ -18,6 +18,7 @@ import {
 import { calendarDate, formatDate } from '../../design/format';
 import { colors, rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes';
+import { useSpeechSpeakers } from './speaker';
 import { records } from './runtime';
 import { useRead } from './useRead';
 import { citeItems } from './RecordActions';
@@ -69,6 +70,7 @@ function byDayAdded(rows: readonly RecentItem[]) {
  * refresh keeps the list and says it is saved.
  */
 export default function RecentRecords() {
+  const speakerFor = useSpeechSpeakers();
   const load = useCallback(
     (signal?: AbortSignal) => records.recent(undefined, signal),
     [],
@@ -183,11 +185,10 @@ export default function RecentRecords() {
                   key={row.slug}
                   meta={metaLine(record)}
                   title={title}
-                  speaker={
-                    record.speakerName
-                      ? { name: record.speakerName, party: record.party }
-                      : null
-                  }
+                  speaker={speakerFor({
+                    speaker: record.speakerName,
+                    party: record.party,
+                  })}
                   href={docRoute(row.slug)}
                   menu={menu}
                   testID={`recent-record-${index++}`}

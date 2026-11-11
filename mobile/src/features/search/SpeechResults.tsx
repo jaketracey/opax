@@ -2,20 +2,20 @@ import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
 import { router } from 'expo-router';
 import type { Roster, Slugs } from '../../api/catalog-decoders';
-import { catalogs, portraits } from '../../api/runtime';
+import { catalogs } from '../../api/runtime';
 import { counted } from '../../design/format';
 import {
   Group,
   InlineError,
   InsetGroup,
   LinkRow,
-  Portrait,
   RecordRow,
   Skeleton,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes/records';
 import { personRoute } from '../../navigation/routes/people';
+import { SpeakerPortrait } from '../records/speaker';
 import { openSource } from '../../navigation/external';
 import type { SearchRecord } from './decoders';
 import type { RecoveryHandlers } from './EmptyResults';
@@ -35,37 +35,6 @@ export const SUMMARY_AFTER = 3;
 export function speechRoute(row: SearchRecord, q: string) {
   const slug = speechSlug(row);
   return slug ? docRoute(slug, undefined, { q: q.trim() }) : null;
-}
-
-/** The same cached portrait as person rows, with no face when unavailable. */
-function SpeakerPortrait({ name, slug }: { name: string; slug: string }) {
-  const [photo, setPhoto] =
-    useState<Awaited<ReturnType<typeof portraits.get>>>(null);
-  useEffect(() => {
-    let active = true;
-    void portraits.get({ name, slug }).then(
-      (value) => {
-        if (active) setPhoto(value);
-      },
-      () => {
-        if (active) setPhoto(null);
-      },
-    );
-    return () => {
-      active = false;
-    };
-  }, [name, slug]);
-  return photo ? (
-    <Portrait
-      size="row"
-      name={name}
-      localURI={photo.localURI}
-      official={/^\d+$/.test(photo.info.key)}
-      onDisplay={(visible) => {
-        if (!visible) setPhoto(null);
-      }}
-    />
-  ) : null;
 }
 
 /** A speech or record as a `RecordRow` `compact`, opening the reader. */

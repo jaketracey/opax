@@ -25,6 +25,7 @@ import { canonicalUrl } from '../../navigation/external';
 import { fromWebPath } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { presentSource } from '../../navigation/sheets';
+import { useSpeechSpeakers } from '../records/speaker';
 import { useOpenAsk } from '../ask/open';
 import { askDraft, pageActions } from './PageActions';
 import { recordListTitle, type RecordListKind } from './Sections';
@@ -67,6 +68,7 @@ export default function RecordList({
   /** `/person/[slug]/speeches` fixes the kind; `record-list` reads it. */
   kind?: RecordListKind;
 } = {}) {
+  const speakerFor = useSpeechSpeakers();
   const params = useLocalSearchParams<{
     slug?: string;
     person?: string;
@@ -331,6 +333,7 @@ export default function RecordList({
               return (
                 <RecordRow
                   title={displayedRecordTitle(r)}
+                  speaker={kind === 'speeches' ? speakerFor(r) : undefined}
                   meta={[
                     kind === 'speeches' ? 'Speech' : r.speaker || 'Mention',
                     chamberName(r.chamber, r.state),
