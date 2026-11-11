@@ -667,7 +667,6 @@ function BillPage({
           titleRef={titleRef}
           onTitleLayout={onTitleLayout}
           directory={directory}
-          savedAt={savedAt}
         />
         {follow.group ? (
           <View ref={changesRef} collapsable={false} style={styles.added}>
@@ -719,13 +718,14 @@ function BillPage({
       />
       <Acts view={view} savedAt={savedAt} />
       <Related view={view} savedAt={savedAt} />
+      <BillSource view={view} identity={identity} savedAt={savedAt} />
     </>
   );
 }
 
 /**
  * The bill's identity, said once: status and its dated event, the title,
- * the meta line, who brought it, Follow, and the header's source line.
+ * the meta line, who brought it, and Follow.
  */
 function BillHead({
   view,
@@ -734,7 +734,6 @@ function BillHead({
   titleRef,
   onTitleLayout,
   directory,
-  savedAt,
 }: {
   view: BillView;
   identity: Identity;
@@ -742,9 +741,7 @@ function BillHead({
   titleRef?: RefObject<View | null>;
   onTitleLayout?: (event: LayoutChangeEvent) => void;
   directory: SponsorDirectory | null | undefined;
-  savedAt: number | null;
 }) {
-  const draft = identity.status === 'exposure_draft';
   const event = statusEvent({
     status: identity.status,
     status_as_of: identity.statusAsOf,
@@ -752,17 +749,13 @@ function BillHead({
     key_dates: view.keyDates.data ?? [],
   });
   const meta = metaLine(identity);
-  const sources = view.identity.sources;
-  const originals: SourceOriginal[] = sources.map((s) =>
-    s.label === billSourceLabel('billhome')
-      ? { label: 'Parliament of Australia', url: s.url, record: 'bill home' }
-      : { label: s.label, url: s.url },
-  );
-  const unsponsored = !identity.sponsorMembers.length && !identity.sponsorParty;
   return (
     <View style={styles.headBlock}>
       <View style={styles.titleBlock}>
-        <StatusLine status={identity.statusLabel} event={event} />
+        <StatusLine
+          status={identity.statusLabel}
+          event={headerEvent(event, identity)}
+        />
         <View ref={titleRef} collapsable={false} onLayout={onTitleLayout}>
           <Heading level={1} testID="bill-title">
             {identity.title}
@@ -786,25 +779,60 @@ function BillHead({
         title={name}
         testID="bill-follow"
       />
-      <View style={styles.source}>
-        <SourceLine
-          asOf={view.identity.asAt}
-          citation={draft ? unique(sources.map((s) => s.label)) : 'ParlInfo'}
-          savedAt={savedAt}
-          originals={originals}
-          licence={
-            unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') ||
-            null
-          }
-          notes={[
-            unsponsored && !draft ? 'Sponsor not recorded.' : null,
-            event && !event.resolved ? notes.status : null,
-          ]}
-          testID="bill-source"
-        />
-      </View>
     </View>
   );
+}
+
+/** Page provenance follows the last content section, including related bills. */
+function BillSource({
+  view,
+  identity,
+  savedAt,
+}: {
+  view: BillView;
+  identity: Identity;
+  savedAt: number | null;
+}) {
+  const draft = identity.status === 'exposure_draft';
+  const event = statusEvent({
+    status: identity.status,
+    status_as_of: identity.statusAsOf,
+    originating_house: identity.house,
+    key_dates: view.keyDates.data ?? [],
+  });
+  const sources = view.identity.sources;
+  const originals: SourceOriginal[] = sources.map((s) =>
+    s.label === billSourceLabel('billhome')
+      ? { label: 'Parliament of Australia', url: s.url, record: 'bill home' }
+      : { label: s.label, url: s.url },
+  );
+  const unsponsored = !identity.sponsorMembers.length && !identity.sponsorParty;
+  return (
+    <SourceLine
+      asOf={view.identity.asAt}
+      citation={draft ? unique(sources.map((s) => s.label)) : 'ParlInfo'}
+      savedAt={savedAt}
+      originals={originals}
+      licence={
+        unique(sources.map((s) => s.licence).filter(Boolean)).join(', ') || null
+      }
+      notes={[
+        unsponsored && !draft ? 'Sponsor not recorded.' : null,
+        event && !event.resolved ? notes.status : null,
+      ]}
+      testID="bill-source"
+    />
+  );
+}
+
+/** The meta line already dates introduction; later status events still show. */
+function headerEvent(
+  event: ReturnType<typeof statusEvent>,
+  bill: { introduced: string | null; introducedLabel: string },
+) {
+  return event?.label === bill.introducedLabel && event.date === bill.introduced
+    ? null
+    : event;
 }
 
 /**
@@ -908,7 +936,10 @@ function SeededHead({ row }: { row: IndexRow }) {
       <View style={styles.titleBlock}>
         <StatusLine
           status={status}
-          event={event}
+          event={headerEvent(event, {
+            introduced: row.introduced,
+            introducedLabel: display.introducedLabel,
+          })}
           pending={!event && !!row.status_as_of}
         />
         <TitleAnchor>
@@ -1982,7 +2013,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   capsule: { alignSelf: 'flex-start', maxWidth: '100%' },
-  source: { marginTop: rhythm.tight },
   added: { marginTop: rhythm.tight },
   bone: {
     backgroundColor: colors.sunken,

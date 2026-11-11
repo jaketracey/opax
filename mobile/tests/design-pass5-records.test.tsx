@@ -30,6 +30,7 @@ import {
   InsetGroup,
   MachinePill,
   PersonRow,
+  RegionProvider,
   RecordRow,
   SourceLine,
   VoteSplit,
@@ -185,22 +186,84 @@ test('the speaker is a person row with their party, opening their profile', asyn
   await act(async () => view.unmount());
 });
 
-test('the record has one source line, holding the original, notes and licence', async () => {
-  const view = await mount(<DocumentReader />);
-  const line = view.root
-    .findAllByType(SourceLine)
-    .find((node) => node.props.testID === 'doc-source')!;
-  expect(line.props).toMatchObject({
-    dateRole: 'recorded',
-    citation: [{ label: 'Hansard', title: 'Hansard' }],
-    licence: 'CC BY-NC-ND',
-    licenceDataset: 'hansard',
-    originals: [expect.objectContaining({ url: speech.url })],
-  });
-  await act(async () => view.unmount());
-});
+test.each([
+  [false, false],
+  [true, false],
+  [false, true],
+  [true, true],
+])(
+  'the record has one source line at the end, holding the original, notes and licence (embedded %s, long text %s)',
+  async (embedded, longText) => {
+    if (longText)
+      jest
+        .mocked(records.document)
+        .mockResolvedValue(record({ ...speech, text: speech.text.repeat(20) }));
+    const view = await mount(<DocumentReader embedded={embedded} />);
+    const line = view.root
+      .findAllByType(SourceLine)
+      .find((node) => node.props.testID === 'doc-source')!;
+    expect(line.props).toMatchObject({
+      dateRole: 'recorded',
+      citation: [{ label: 'Hansard', title: 'Hansard' }],
+      licence: 'CC BY-NC-ND',
+      licenceDataset: 'hansard',
+      originals: [expect.objectContaining({ url: speech.url })],
+    });
+    expect(
+      view.root
+        .findAllByType(SourceLine)
+        .filter((node) => node.props.testID === 'doc-source'),
+    ).toHaveLength(1);
+    expect(view.root.findAllByType(SourceLine).at(-1)).toBe(line);
+    const ids = view.root
+      .findAll((node) => typeof node.type === 'string' && node.props.testID)
+      .map((node) => node.props.testID);
+    expect(ids.indexOf('doc-source')).toBeGreaterThan(
+      ids.indexOf('reader-text-0'),
+    );
+    const target = view.root.find(
+      (node) =>
+        node.props.testID === 'doc-source' &&
+        typeof node.props.onPress === 'function',
+    );
+    expect(target.props.accessibilityLabel).toContain('Hansard');
+    expect(target.props.accessibilityHint).toBe('Opens the sources');
+    await act(async () => target.props.onPress());
+    expect(jest.mocked(router.push).mock.calls.at(-1)![0]).toMatchObject({
+      pathname: '/source',
+    });
+    await act(async () => view.unmount());
+  },
+);
 
-test('an embedded reader draws Ask about this as a row under the source line', async () => {
+test.each([false, true])(
+  'division provenance stays after the vote and text in a narrow pane (embedded %s)',
+  async (embedded) => {
+    const division = doc('/api/resource/division-federal-senate-10701');
+    jest.mocked(records.document).mockResolvedValue(record(division));
+    const view = await mount(
+      <RegionProvider value={{ width: 540, height: 800 }}>
+        <DocumentReader embedded={embedded} />
+      </RegionProvider>,
+    );
+    const lines = view.root.findAllByType(SourceLine);
+    expect(
+      lines.filter((node) => node.props.testID === 'doc-source'),
+    ).toHaveLength(1);
+    expect(lines.at(-1)!.props).toMatchObject({
+      testID: 'doc-source',
+      citation: [expect.objectContaining({ label: 'They Vote For You' })],
+    });
+    const ids = view.root
+      .findAll((node) => typeof node.type === 'string' && node.props.testID)
+      .map((node) => node.props.testID);
+    expect(ids.indexOf('doc-source')).toBeGreaterThan(ids.indexOf('doc-votes'));
+    expect(ids.indexOf('doc-source')).toBeGreaterThan(ids.indexOf('doc-title'));
+    await act(async () => view.unmount());
+  },
+);
+
+test('an embedded reader draws Ask about this in the header', async () => {
   const view = await mount(<DocumentReader embedded />);
   expect(
     view.root.findAllByProps({ testID: 'doc-ask' }).length,
@@ -340,6 +403,18 @@ test('bill text opens on its text with the stage, one source line and the bar it
     licenceDataset: 'bills',
   });
   expect(source.props.originals).toHaveLength(1);
+  expect(
+    view.root
+      .findAllByType(SourceLine)
+      .filter((node) => node.props.testID === 'bill-text-source'),
+  ).toHaveLength(1);
+  expect(view.root.findAllByType(SourceLine).at(-1)).toBe(source);
+  const ids = view.root
+    .findAll((node) => typeof node.type === 'string' && node.props.testID)
+    .map((node) => node.props.testID);
+  expect(ids.indexOf('bill-text-source')).toBeGreaterThan(
+    ids.indexOf('reader-text-0'),
+  );
   expect(barLabels()).toEqual(['As passed', 'More']);
   expect(
     (mockOptions.unstable_headerRightItems as () => object[])()[0],
@@ -383,6 +458,24 @@ test('bill text opens on its text with the stage, one source line and the bar it
       .findAllByType(MachinePill)
       .some((pill) => pill.props.testID === 'bill-text-overview-label'),
   ).toBe(true);
+  await act(async () => view.unmount());
+});
+
+test('bill text retains its source at the foot when the version cannot load', async () => {
+  mockBillText();
+  jest.mocked(records.billVersion).mockRejectedValue(new Error('unavailable'));
+  const view = await mount(<BillTextReader embedded />);
+  expect(
+    view.root.findAllByProps({ testID: 'bill-text-version-error' }).length,
+  ).toBeGreaterThan(0);
+  const lines = view.root.findAllByType(SourceLine);
+  expect(
+    lines.filter((line) => line.props.testID === 'bill-text-source'),
+  ).toHaveLength(1);
+  expect(lines.at(-1)!.props).toMatchObject({
+    testID: 'bill-text-source',
+    originals: [expect.objectContaining({ label: 'Original bill document' })],
+  });
   await act(async () => view.unmount());
 });
 

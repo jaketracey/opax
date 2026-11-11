@@ -433,13 +433,6 @@ export default function BillTextReader({
                   {stageText(shown.stage_label)}
                 </Text>
               ) : null}
-              <View style={styles.source}>
-                <VersionSourceLine
-                  version={shown}
-                  coverage={manifest.coverage_note}
-                  testID="bill-text-source"
-                />
-              </View>
               {askRow ? (
                 <View style={styles.rows}>
                   <LinkRow
@@ -550,15 +543,8 @@ export default function BillTextReader({
           )
         }
         footer={
-          ready && current ? (
+          ready && manifest ? (
             <View>
-              <View style={styles.endSource}>
-                <VersionSourceLine
-                  version={shown}
-                  coverage={manifest?.coverage_note ?? null}
-                  testID="bill-text-source-end"
-                />
-              </View>
               {paneRows ? (
                 <View style={styles.rows}>
                   <LinkRow
@@ -568,6 +554,13 @@ export default function BillTextReader({
                   />
                 </View>
               ) : null}
+              <View style={styles.endSource}>
+                <VersionSourceLine
+                  version={shown}
+                  coverage={manifest?.coverage_note ?? null}
+                  testID="bill-text-source"
+                />
+              </View>
               <View style={styles.after}>
                 <PageFoot variant="today" />
               </View>
@@ -719,7 +712,6 @@ function BillTextSkeleton() {
 const styles = StyleSheet.create({
   meta: { marginBottom: rhythm.line },
   stage: { marginTop: rhythm.line },
-  source: { marginTop: rhythm.tight },
   rows: { marginTop: rhythm.tight },
   block: { marginTop: rhythm.block, gap: rhythm.tight },
   brief: { gap: rhythm.tight },

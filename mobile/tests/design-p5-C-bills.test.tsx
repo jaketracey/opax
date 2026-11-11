@@ -215,14 +215,14 @@ describe('bill header (P1-3)', () => {
           (node) => node.type === Button && node.props.variant === 'primary',
         ),
       ).toHaveLength(0);
-      // "Bill text" is a navigation row, after the header's source line.
+      // "Bill text" is a navigation row, before the page's source line.
       const text = root.find(
         (node) =>
           node.type === LinkRow && node.props.testID === 'bill-read-text',
       );
       expect(text.props.title).toBe('Bill text');
       const ids = order(root);
-      expect(ids.indexOf('bill-read-text')).toBeGreaterThan(
+      expect(ids.indexOf('bill-read-text')).toBeLessThan(
         ids.indexOf('bill-source'),
       );
       act(() => text.props.onPress());

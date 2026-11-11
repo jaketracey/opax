@@ -3,20 +3,21 @@ import { sheetPayload } from '../src/navigation/sheets';
 // Design pass 5, lane B (docs/design/review-2026-10/pass5-app-critique.md):
 // profiles and places. Each test names the critique item it holds.
 import { act, type ReactElement } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as c from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import {
   Portrait,
   ReadableColumn,
+  RegionProvider,
   Section,
   SectionHeader,
   SourceLine,
   Text,
 } from '../src/design/primitives';
 import Electorate from '../src/features/Electorate';
-import Person from '../src/features/Person';
+import Person, { ProfileScreen } from '../src/features/Person';
 import { loadChoice } from '../src/features/your-mp/choice-store';
 import {
   BlockSource,
@@ -53,6 +54,10 @@ jest.mock('../src/features/your-mp/choice-store', () => ({
 }));
 jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
+}));
+jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
+  __esModule: true,
+  default: jest.fn(),
 }));
 const mockParams: { slug?: string; id?: string } = {};
 jest.mock('expo-router', () => ({
@@ -145,9 +150,70 @@ beforeEach(() => {
   jest.clearAllMocks();
   Object.values(mock).forEach((fn) => fn.mockReset());
   mock.directory.mockResolvedValue(directory);
+  jest
+    .mocked(useWindowDimensions)
+    .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
 });
 
 describe('profile', () => {
+  test.each([
+    ['phone', 390, 1, false, undefined],
+    ['iPad', 1194, 1, false, undefined],
+    ['Duo detail pane at AX5', 1114, 3.1, true, 540],
+  ] as const)(
+    '%s keeps profile provenance after all content and opens the same sources',
+    async (_label, width, fontScale, embedded, paneWidth) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ width, height: 844, scale: 3, fontScale });
+      const slug = 'malarndirri-mccarthy';
+      const identity = c.joinPerson(slug, slugs, roster, people, manifest);
+      mock.person.mockResolvedValue(result(identity));
+      mock.profileFor.mockResolvedValue(
+        c.profileFor(identity.canonicalPersonId!, catalogs),
+      );
+      const r = await render(
+        <RegionProvider
+          value={paneWidth ? { width: paneWidth, height: 844 } : null}
+        >
+          <ProfileScreen slug={slug} embedded={embedded} />
+        </RegionProvider>,
+      );
+      const pageSources = r.root
+        .findAllByType(SourceLine)
+        .filter((line) => line.props.testID === 'person-figures-source');
+      expect(pageSources).toHaveLength(1);
+      expect(r.root.findAllByType(SourceLine).at(-1)).toBe(pageSources[0]);
+      const header = r.root
+        .findAllByType(ReadableColumn)
+        .find((column) => column.props.testID === 'person')!;
+      expect(header.findAllByType(SourceLine)).toHaveLength(0);
+      const ids = r.root
+        .findAll((node) => typeof node.type === 'string' && node.props.testID)
+        .map((node) => node.props.testID);
+      expect(ids.indexOf('person-figures-source')).toBeGreaterThan(
+        ids.indexOf('person-more-anchor'),
+      );
+      expect(ids.indexOf('person-end')).toBeGreaterThan(
+        ids.indexOf('person-figures-source'),
+      );
+      const target = pressable(r, 'person-figures-source');
+      expect(target.props.accessibilityLabel).toContain(
+        'Parliamentary service records',
+      );
+      expect(target.props.accessibilityHint).toBe('Opens the sources');
+      await act(async () => target.props.onPress());
+      const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+        params: { key: string };
+      };
+      expect(sheetPayload(params.key, 'source')?.details).toMatchObject({
+        citation: pageSources[0]!.props.citation,
+        originals: pageSources[0]!.props.originals,
+      });
+      await act(async () => r.unmount());
+    },
+  );
+
   test('P1-4: the portrait wears no party ring; the colour is the PartyLabel dot', async () => {
     const r = await albanese();
     const portrait = r.root.findAllByType(Portrait)[0]!;

@@ -296,7 +296,7 @@ test('an unreadable directory leaves every sponsor plain, never a guessed link',
 test('a bill without a sponsor says so once, in its source sheet, and never loads the directory', async () => {
   const r = await render('au-federal-r7501');
   expect(r.root.findAllByType(PersonRow)).toHaveLength(0);
-  // No sponsor row and no fake party chip: the head's source line says it.
+  // No sponsor row and no fake party chip: the page's source line says it.
   expect(
     r.root.findAll(
       (node) =>

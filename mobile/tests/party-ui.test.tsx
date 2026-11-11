@@ -21,6 +21,9 @@ import { moneyAccessibilityLabel } from '../src/design/format';
 import { partyColors } from '../src/design/palette';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import { Screen, TitleAnchor } from '../src/design/layout';
+import { RegionProvider } from '../src/design/adaptive';
+import { SourceLine } from '../src/design/source';
+import { sheetPayload } from '../src/navigation/sheets';
 import { StatStrip } from '../src/design/record';
 import { ContentUnavailable } from '../src/design/states';
 import { textStyles } from '../src/design/tokens';
@@ -119,6 +122,59 @@ async function render(input = 'Labor') {
   });
   return renderer;
 }
+
+test.each([
+  ['phone', 390, 1, false, undefined],
+  ['iPad', 1194, 1, false, undefined],
+  ['Duo detail pane at AX5', 1114, 3.1, true, 540],
+] as const)(
+  '%s puts party provenance after all sections',
+  async (_label, width, fontScale, embedded, paneWidth) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width, height: 844, scale: 3, fontScale });
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(
+        <RegionProvider
+          value={paneWidth ? { width: paneWidth, height: 844 } : null}
+        >
+          <PartyPage input="Labor" embedded={embedded} />
+        </RegionProvider>,
+      );
+    });
+    const lines = r.root.findAllByType(SourceLine);
+    expect(
+      lines.filter((line) => line.props.testID === 'party-figures-source'),
+    ).toHaveLength(1);
+    expect(lines.at(-1)!.props.testID).toBe('party-figures-source');
+    expect(lines.length).toBeGreaterThan(1);
+    const ids = r.root
+      .findAll((node) => typeof node.type === 'string' && node.props.testID)
+      .map((node) => node.props.testID);
+    expect(ids.indexOf('party-figures-source')).toBeGreaterThan(
+      ids.indexOf('party-more'),
+    );
+    expect(ids.indexOf('party-end')).toBeGreaterThan(
+      ids.indexOf('party-figures-source'),
+    );
+    const target = r.root.find(
+      (node) =>
+        node.props.testID === 'party-figures-source' &&
+        typeof node.props.onPress === 'function',
+    );
+    expect(target.props.accessibilityLabel).toContain('Updated');
+    expect(target.props.accessibilityHint).toBe('Opens the sources');
+    await act(async () => target.props.onPress());
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    expect(sheetPayload(params.key, 'source')?.details).toMatchObject({
+      citation: lines.at(-1)!.props.citation,
+    });
+    act(() => r.unmount());
+  },
+);
 
 test.each([
   ['Animal Justice Party', 1],
