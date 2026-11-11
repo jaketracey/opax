@@ -142,8 +142,11 @@ test('recipient totals can be filtered or grouped by complete financial-year agg
   assert.deepEqual([out.rows[0].total_aud, out.rows[0].record_count], [10449419, 3]);
   assert.equal(out.rows[0].from_financial_year, '2020-21');
   const by = await api.callTool(env, 'grants', { ...args, group_by: 'year', limit: 10 });
-  assert.deepEqual(by.rows.map(r => r.financial_year), ['2018-19', '2020-21', '2023-24']);
-  assert.equal(by.rows.reduce((n, r) => n + r.total_aud, 0), 26830093);
+  // Settled years are pinned; a year a later GrantConnect load adds (2026-27 from the 11 November 2026 load) may follow.
+  const settled = by.rows.filter(r => r.financial_year <= '2025-26');
+  assert.deepEqual(settled.map(r => r.financial_year), ['2018-19', '2020-21', '2023-24']);
+  assert.equal(settled.reduce((n, r) => n + r.total_aud, 0), 26830093);
+  assert.ok(by.rows.every((r, i) => !i || by.rows[i - 1].financial_year < r.financial_year), 'years run in order');
   const none = await api.callTool(env, 'grants', { ...args, from_year: 2000, to_year: 2000 });
   assert.equal(none.coverage_only, true); assert.equal(none.coverage.matched, false);
   assert.deepEqual(none.rows, []); assert.equal(none.total_aud, undefined);
