@@ -391,6 +391,121 @@ test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
     if (version) Object.defineProperty(Platform, 'Version', version);
   }
 });
+
+test.each([
+  [26, true],
+  [26, false],
+  [27, true],
+  [27, false],
+] as const)(
+  'iOS %s edition owns an opaque bar on its grouped=%s ground during overscroll',
+  (version, grouped) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    const previousGrouped = mockFlags.groupedSurfaces;
+    mockFlags.groupedSurfaces = grouped;
+    const route = { key: 'edition-detail', name: 'edition', params: {} };
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'today-root', name: 'index' }, route],
+        routeNames: sharedScreens('(today)', false).map(
+          (entry) => entry.props.name,
+        ),
+      }),
+      setOptions: jest.fn(),
+    };
+    const entry = editionScreens()[0]!;
+    const options = entry.props.options({ route, navigation });
+    const ground = grouped ? colors.sunken : colors.paper;
+    let title!: ReturnType<typeof useTitleOnScroll>;
+    let headingY = 120;
+    const heading = {
+      current: {
+        measure: (callback: (...values: number[]) => void) =>
+          callback(0, 0, 300, 80, 0, headingY),
+      },
+    };
+    function Page() {
+      title = useTitleOnScroll(heading as never, 'Daily edition');
+      return (
+        <Screen grouped>
+          <View />
+        </Screen>
+      );
+    }
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    let background: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      expect(options).toMatchObject({
+        title: 'Daily edition',
+        headerBackTitle: 'Today',
+        headerBackButtonDisplayMode: 'default',
+        headerBackButtonMenuEnabled: true,
+        headerLargeTitleEnabled: false,
+        headerTransparent: false,
+        ...opaqueBar(ground),
+        contentStyle: { backgroundColor: ground },
+        scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
+      });
+      expect(options).not.toHaveProperty('headerBlurEffect');
+      background = tree(options.headerBackground!());
+      const backing = background.root.findByType(View);
+      expect(backing.props.pointerEvents).toBe('none');
+      expect(StyleSheet.flatten(backing.props.style)).toMatchObject({
+        flex: 1,
+        backgroundColor: ground,
+      });
+      renderer = tree(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route}>
+            <HeaderHeightContext.Provider value={100}>
+              <Page />
+            </HeaderHeightContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+      jest.mocked(RootBar!.update).mockClear();
+      navigation.setOptions.mockClear();
+      for (const [offset, y] of [
+        [0, 120],
+        [240, 40],
+        [-96, 216],
+        [0, 120],
+      ]) {
+        headingY = y!;
+        act(() => title.onScroll(offset!));
+        const resolved = Object.assign(
+          {},
+          options,
+          ...navigation.setOptions.mock.calls.map(([value]) => value),
+        );
+        expect(resolved).toMatchObject({
+          headerTransparent: false,
+          headerStyle: { backgroundColor: ground },
+          headerLargeStyle: { backgroundColor: ground },
+          contentStyle: { backgroundColor: ground },
+          headerBackground: options.headerBackground,
+        });
+      }
+      expect(navigation.setOptions).toHaveBeenCalledTimes(2);
+      for (const [update] of navigation.setOptions.mock.calls)
+        expect(Object.keys(update)).toEqual(['headerTitle']);
+      expect(RootBar!.update).not.toHaveBeenCalled();
+      expect(largeTitleBar(ground).headerTransparent).toBe(true);
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      if (background) act(() => background!.unmount());
+      mockFlags.groupedSurfaces = previousGrouped;
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
 test('40 scroll events past the title anchor set options only once, then once on return', () => {
   const setOptions = jest.fn();
   let hook!: ReturnType<typeof useTitleOnScroll>;
