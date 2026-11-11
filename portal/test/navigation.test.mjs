@@ -177,7 +177,7 @@ for (const [path, expected, env] of TRAILS) {
 // A division page's record is its bill, whatever its first speaker said: the
 // chair opening the question must not name the page.
 const CHAIR = 'Milton Dick In accordance with standing order 133, I shall now proceed to put the question';
-const divisionFixture = (bills) => ({ key: 'division-federal-representatives-99999', slug: 'division-federal-representatives-99999', jurisdiction: 'federal', house: 'representatives',
+const divisionFixture = (bills, slug = 'division-federal-representatives-99999') => ({ key: slug, slug, jurisdiction: 'federal', house: 'representatives',
   date: '2026-09-15', name: 'Bills — A Fixture Amendment Bill 2026; Second Reading', question: CHAIR, ayes: 80, noes: 50, result: 'Passed', members: [], bills });
 
 test('a division sits under its bill, not under the words its chair opened with', async () => {
@@ -192,7 +192,8 @@ test('a division sits under its bill, not under the words its chair opened with'
   const withBill = await serverTrail('/doc/division-federal-representatives-99999', {}, { [fixture]: divisionFixture([{ key: 'au-federal-r1', title: 'A Fixture Amendment Bill 2026' }]) });
   assert.equal(withBill.items.map(i => i.label).join(' › '), 'Home › Bills › A Fixture Amendment Bill 2026 › Division');
   assertSameTrail(withBill, 'a fixture division with a bill');
-  const noBill = await serverTrail('/doc/division-federal-representatives-99999', {}, { [fixture]: divisionFixture([]) });
+  // Its own address: published files never change under one deployment, so the Worker keeps a division file it has read.
+  const noBill = await serverTrail('/doc/division-federal-representatives-99998', {}, { '/divisions/division-federal-representatives-99998.json': divisionFixture([], 'division-federal-representatives-99998') });
   assert.equal(noBill.items.map(i => i.label).join(' › '), 'Home › Search › Division');
   assert.equal(noBill.items[1].href, '/ask?view=search');
   assertSameTrail(noBill, 'a fixture division without a bill');
