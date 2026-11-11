@@ -105,6 +105,9 @@ def registry(path: Path = REGISTRY):
 
 
 def iso_date(text):
+    n = re.fullmatch(r"\s*(\d{1,2})/(\d{1,2})/(\d{4})\s*", text or "")
+    if n and 1 <= int(n.group(2)) <= 12 and 1 <= int(n.group(1)) <= 31:
+        return f"{int(n.group(3)):04d}-{int(n.group(2)):02d}-{int(n.group(1)):02d}"  # dd/mm/yyyy, as a transcript header prints it
     m = re.search(r"(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})", text or "")
     if not m or m.group(2).lower() not in MONTHS:
         return None

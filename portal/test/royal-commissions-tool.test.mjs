@@ -104,8 +104,11 @@ test('a sitting commission lists hearing transcripts as documents, with no recom
   const out = await call({ view: 'profile', commission: 'vic-major-infrastructure' }); cited(out);
   const row = out.rows[0];
   assert.equal(row.reports.length, 0); assert.equal(row.recommendations, 0);
-  assert.equal(row.transcripts.length, 2);
-  for (const t of row.transcripts) { assert.equal(t.kind, 'hearing_transcript'); assert.ok(t.hearing); assert.equal(t.recommendations, undefined); }
+  assert.equal(row.transcripts.count, 2); assert.equal(row.transcripts.label, 'Hearing transcript: evidence, not findings');
+  assert.deepEqual(row.transcripts.follow_up, { view: 'transcripts', commission: 'vic-major-infrastructure' });
+  const listed = await call({ view: 'transcripts', commission: 'vic-major-infrastructure' }); cited(listed);
+  assert.equal(listed.rows.length, 2);
+  for (const t of listed.rows) { assert.ok(t.hearing); assert.equal(t.recommendations, undefined); assert.equal(t.label, 'Hearing transcript: evidence, not findings'); }
   assert.ok(row.reference_pages.some(p => p.url === 'https://www.rcimcp.vic.gov.au/hearing-block-1-9-20-november-2026'));
   assert.match(row.notes.join(' '), /evidence given to the commission, not findings/);
   assert.match(row.notes.join(' '), /Non-publication orders may be made/);
@@ -142,4 +145,36 @@ test('Ask and MCP run the same handler', async () => {
   assert.equal(ask.ok, true, JSON.stringify(ask).slice(0, 400));
   assert.ok(ask.cite.length >= 2);
   assert.ok(JSON.stringify(ask.data).includes(mcp.rows[0].text.slice(0, 60)));
+});
+
+test('a commission with many transcripts keeps its profile within the payload limit and pages its transcripts', async () => {
+  for (const id of ['cth-antisemitism', 'cth-robodebt', 'nsw-healthcare-funding']) {
+    const out = await call({ view: 'profile', commission: id }); cited(out);
+    assert.equal(out.truncated, undefined);
+    assert.ok(out.rows[0].transcripts.count >= 47, id);
+    assert.ok(out.rows[0].transcripts.newest.every(t => /^https:\/\//.test(t.pdf_url)));
+  }
+  const first = await call({ view: 'transcripts', commission: 'cth-robodebt', limit: 8 }); cited(first);
+  assert.equal(first.total, 47); assert.equal(first.next_offset, 8);
+  const dates = first.rows.map(r => r.date);
+  assert.deepEqual(dates, [...dates].sort().reverse());
+  const next = await call({ view: 'transcripts', commission: 'cth-robodebt', limit: 8, offset: 8 }); cited(next);
+  assert.ok(next.rows.every(r => !first.rows.some(f => f.key === r.key)));
+  for (const c of first.citations.slice(1)) assert.match(c.text, /Hearing transcript: evidence, not findings/);
+  const march = await call({ view: 'transcripts', commission: 'cth-robodebt', words: '2023-03' }); cited(march);
+  assert.ok(march.total >= 3 && march.rows.every(r => r.date.startsWith('2023-03')));
+});
+
+test('new inquiries load with their transcripts only, as listed documents', async () => {
+  for (const id of ['nsw-healthcare-funding', 'qld-child-safety', 'sa-domestic-family-sexual-violence', 'tas-institutional-child-sexual-abuse', 'nt-hydraulic-fracturing']) {
+    const c = (await asset(`/royal-commissions/commission-${id}.json`)).commission;
+    assert.ok(c.transcripts.length >= 5, id); assert.equal(c.recommendations.length, 0);
+    for (const t of c.transcripts) { assert.match(t.date, /^\d{4}-\d{2}-\d{2}$/); assert.equal(t.date_basis, 'stated'); assert.ok(t.date_quote); assert.ok(t.rights); assert.ok(!/\(PDF/.test(t.title), t.title); }
+  }
+});
+
+test('transcripts view needs a commission and rejects recommendation filters', async () => {
+  await invalid({ view: 'transcripts' });
+  await invalid({ view: 'transcripts', commission: 'robodebt', number: '1' });
+  await invalid({ view: 'transcripts', commission: 'robodebt', status: 'Implemented' });
 });

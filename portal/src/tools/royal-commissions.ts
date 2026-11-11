@@ -3,7 +3,8 @@ import { clip, fold, siteUrl } from './record-common'
 import { object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
 
-const VIEWS = ['list', 'profile', 'recommendations'] as const
+const VIEWS = ['list', 'profile', 'recommendations', 'transcripts'] as const
+const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
 const JURISDICTIONS = ['Cth', 'NSW', 'Vic', 'Qld', 'WA', 'SA', 'Tas', 'ACT', 'NT'] as const
 // The house codes other tools use (federal, nsw, vic ...) are accepted beside the dataset's own codes, so a
 // planner that writes "vic" is not refused as malformed.
@@ -58,6 +59,27 @@ function summaryCite(env: ToolEnv, c: RecordRow): ToolCitation {
 
 const courtFor = (c: RecordRow, key: unknown) => records(c.court_context).filter(x => x.applies_to === key).map(x => ({ text: x.text, source_url: sourceUrl(object(x.cite).url) }))
 
+const byDate = (ds: RecordRow[]) => [...ds].sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')))
+const latest = (c: RecordRow) => byDate(records(c.transcripts))
+
+/** A profile carries the count, date range and newest few; view=transcripts pages through the rest. */
+function transcriptSummary(c: RecordRow): RecordRow {
+  const all = latest(c), dates = all.map(d => d.date).filter(Boolean).map(String).sort()
+  return { label: TRANSCRIPT_LABEL, count: all.length, first_date: dates[0] ?? null, last_date: dates.at(-1) ?? null,
+    newest: all.slice(0, 3).map(d => ({ key: d.key, title: d.title, date: d.date ?? null, page_url: sourceUrl(d.page_url), pdf_url: sourceUrl(object(records(d.files)[0]).url) })),
+    ...(all.length ? { follow_up: { view: 'transcripts', commission: c.id } } : {}) }
+}
+
+function transcriptOut(c: RecordRow, d: RecordRow): RecordRow {
+  const file = object(records(d.files)[0])
+  return { commission: c.name, commission_id: c.id, label: TRANSCRIPT_LABEL, key: d.key, title: d.title, date: d.date ?? null, date_basis: BASIS[String(d.date_basis)] ?? d.date_basis ?? null,
+    hearing: d.hearing ?? null, page_url: sourceUrl(d.page_url), pdf_url: sourceUrl(file.url), pages: file.pages ?? null, rights: d.rights ?? null }
+}
+
+function transcriptCite(t: RecordRow): ToolCitation {
+  return { kind: 'record', url: String(t.pdf_url ?? t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${t.date})` : ''}${t.pages ? `, ${t.pages} pages` : ''}. ${TRANSCRIPT_LABEL}.`, 400) }
+}
+
 function recOut(c: RecordRow, r: RecordRow, reports: Map<string, RecordRow>): RecordRow {
   const report = reports.get(String(r.report)) ?? {}, cite = object(r.cite), status = r.status ? object(r.status) : null
   const court = courtFor(c, r.report)
@@ -76,7 +98,7 @@ function recCite(r: RecordRow): ToolCitation {
 
 export const tool: ToolDefinition = {
   name: 'royal_commissions',
-  description: 'Royal commissions and comparable public inquiries (Commonwealth and Victorian royal commissions, plus a Western Australian royal commission, a Queensland commission of inquiry and an ACT board of inquiry): establishment date, commissioners, interim and final report dates and links, numbered recommendations in the commission\'s own words with the report page, the official implementation status where a government publishes one for that recommendation (Victoria\'s Royal Commission into Family Violence tracker), government responses and implementation reports, hearing transcripts of a sitting commission (listed as documents; evidence, not findings), and court rulings on parts of a report quoted from the official page. view=list lists commissions (filter jurisdiction or words in the name); view=profile gives one commission\'s reports, responses, transcripts, court context and facts; view=recommendations searches recommendation text (words, number, status, report) within one commission or across all. Status is unknown unless a government publishes it.',
+  description: 'Royal commissions and comparable public inquiries in every jurisdiction: establishment date, commissioners, report dates and links, numbered recommendations in the commission\'s own words with the report page, official implementation status where a government publishes one (Victoria\'s Family Violence tracker), government responses, hearing transcripts (listed documents; evidence, not findings), and court rulings on parts of a report. view=list lists commissions (jurisdiction or name words); view=profile gives one commission\'s reports, responses, transcript count, court context and facts; view=transcripts pages one commission\'s transcripts newest first (words match title or date, e.g. "2023-03"); view=recommendations searches recommendation text (words, number, status, report) in one commission or all. Status is unknown unless a government publishes it.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
     commission: { type: 'string', minLength: 2, maxLength: 160, description: 'Commission id from a row, or words in its name, e.g. "family violence", "disability", "banking".' },
@@ -86,9 +108,10 @@ export const tool: ToolDefinition = {
     report: { type: 'string', pattern: '^[a-z0-9-]{2,40}$', description: 'Report key from a profile row (for commissions with several reports).' },
     status: { type: 'string', minLength: 2, maxLength: 60, description: 'Words in the published status, e.g. "Implemented".' },
     limit: { type: 'integer', minimum: 1, maximum: 8 }, offset: { type: 'integer', minimum: 0, maximum: 5000 },
-  }, required: ['view'], examples: [{ view: 'list' }, { view: 'profile', commission: 'family violence' }, { view: 'recommendations', commission: 'family violence', words: 'information sharing' }, { view: 'recommendations', words: 'National Disability Insurance Scheme', jurisdiction: 'Cth' }, { view: 'recommendations', commission: 'robodebt', number: '23.1' }] },
+  }, required: ['view'], examples: [{ view: 'list' }, { view: 'profile', commission: 'family violence' }, { view: 'recommendations', commission: 'family violence', words: 'information sharing' }, { view: 'recommendations', words: 'National Disability Insurance Scheme', jurisdiction: 'Cth' }, { view: 'recommendations', commission: 'robodebt', number: '23.1' }, { view: 'transcripts', commission: 'robodebt', words: '2023-03' }] },
   identifierFields: ['commission'],
   validate: args => (args.view === 'profile' ? !!args.commission && !args.words && !args.number && !args.status : true) &&
+    (args.view === 'transcripts' ? !!args.commission && !args.number && !args.status && !args.report : true) &&
     (args.view === 'list' ? !args.words && !args.number && !args.status && !args.report : true) &&
     (!args.number || !!args.commission) && (!args.report || !!args.commission) && (!args.commission || ID.test(String(args.commission)) || /\p{L}/u.test(String(args.commission))),
   stepLabel: args => ({ label: 'Checking royal commissions', arg: clip(args.words ?? args.commission ?? args.jurisdiction ?? args.view, 40) }),
@@ -97,7 +120,7 @@ export const tool: ToolDefinition = {
     const offset = Number(args.offset) || 0, limit = Number(args.limit) || 5
     const matched = match(ix, args.commission, args.jurisdiction)
     const coverage = `${ix.commissions.length} royal commissions are in the published projection (${Object.entries(object(object(ix.meta.counts).by_jurisdiction)).map(([j, v]) => `${j} ${object(v).commissions}`).join(', ')}).`
-    if (!matched.length) return { rows: [], citations: [{ kind: 'export', url: ix.url, text: coverage }], notes: ['No royal commission or inquiry in this projection matches. Coverage is mainly Commonwealth and Victorian commissions whose reports an official source served to OPAX, with one Western Australian, one Queensland and one ACT inquiry; New South Wales, South Australia and Tasmania are not loaded yet.'], total: 0, snapshot }
+    if (!matched.length) return { rows: [], citations: [{ kind: 'export', url: ix.url, text: coverage }], notes: ['No royal commission or inquiry in this projection matches. Coverage is mainly Commonwealth and Victorian commissions whose reports an official source served to OPAX, plus inquiries in the other states and territories, several listed by their hearing transcripts only.'], total: 0, snapshot }
     const several = args.commission && matched.length > 1 ? [`"${clip(args.commission, 60)}" matches ${matched.length} commissions: ${matched.slice(0, 5).map(c => c.name).join('; ')}. Use the id to narrow.`] : []
 
     if (args.view === 'list') {
@@ -115,7 +138,7 @@ export const tool: ToolDefinition = {
       const row: RecordRow = { id: c.id, name: c.name, inquiry_type: TYPES[String(c.inquiry_type)] ?? c.inquiry_type, jurisdiction: c.jurisdiction_name, site: c.site ?? null,
         established: est ? { date: est.date, instrument: est.instrument, quote: est.quote, source_url: sourceUrl(object(est.cite).url), page: object(est.cite).page ?? null } : null,
         commissioners: records(c.commissioners).map(x => ({ name: x.name, role: x.role, source_url: sourceUrl(object(x.cite).url), page: object(x.cite).page ?? null })),
-        reports: records(c.reports).map(doc), responses: records(c.responses).map(doc), transcripts: records(c.transcripts).map(doc),
+        reports: records(c.reports).map(doc), responses: records(c.responses).map(doc), transcripts: transcriptSummary(c),
         reference_pages: records(c.reference_pages).map(x => ({ title: x.title, url: sourceUrl(x.url) })), status_source: c.status_source ?? null,
         recommendations: records(c.recommendations).length, notes: c.notes, gaps: c.gaps, follow_up: { view: 'recommendations', commission: c.id } }
       const citations: ToolCitation[] = [summaryCite(env, matched[0])]
@@ -125,8 +148,19 @@ export const tool: ToolDefinition = {
       if (est) citations.push({ kind: 'record', url: String(object(est.cite).url), text: clip(`${c.name}: "${est.quote}" (${object(est.cite).document}, page ${object(est.cite).page}).`, 600) })
       for (const x of records(c.court_context)) citations.push({ kind: 'record', url: String(object(x.cite).url), text: clip(`Court context for ${c.name}, as ${object(x.cite).document} states it: "${x.text}"`, 900) })
       if (records(c.commissioners).length) citations.push({ kind: 'record', url: String(object(records(c.commissioners)[0].cite).url), text: clip(`${c.name} commissioners as ${object(records(c.commissioners)[0].cite).document ?? 'the cited document'} names them: ${people(c)}.`, 600) })
-      for (const d of [...records(c.reports), ...records(c.responses), ...records(c.transcripts)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${d.date})` : ''}${d.kind === 'hearing_transcript' ? '; hearing transcript, evidence not findings' : ''}.`, 400) })
+      for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${d.date})` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
       return publishedResult([row], citations, { view: 'profile', total: 1, offset: 0, next_offset: null, snapshot, notes: [...several, NOTE] })
+    }
+
+    if (args.view === 'transcripts') {
+      const c = await full(env, matched[0])
+      const all = byDate(records(c.transcripts))
+      const hits = all.filter(d => (!args.words || wordsMatch(args.words, [d.title, d.hearing, d.date])))
+      const picked = hits.slice(offset, offset + limit).map(d => transcriptOut(c, d))
+      const count = `${c.name}: ${all.length} hearing transcript${all.length === 1 ? '' : 's'} listed${hits.length !== all.length ? `; ${hits.length} match` : ''} (OPAX projection, snapshot ${snapshot}). ${TRANSCRIPT_LABEL}.`
+      return publishedResult(picked, [{ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: count }, ...picked.map(transcriptCite)],
+        { view: 'transcripts', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot,
+          notes: [...several, NOTE, 'Transcripts are listed newest first with the publisher\'s page and PDF. What a witness or counsel says in a hearing is evidence or submission, not a finding of the commission.', ...(hits.length ? [] : ['No listed transcript matches. Try fewer words.'])] })
     }
 
     // recommendations
