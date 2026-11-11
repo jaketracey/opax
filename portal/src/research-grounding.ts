@@ -76,6 +76,23 @@ function checkedClaims(payload:Record<string,unknown>,question:string,promote=tr
   return promote?leadWithFinding(plainAnswerPayload(out)):plainAnswerPayload(out)
 }
 
+const ORPHAN_LEAD=/^(?:(?:It|They)\s+(?:also\s+|further\s+)?(?=(?:found|formed|made|recommended|concluded|noted|reported|published|stated|determined|considered|identified)\b)|A further\s+(?:(finding|opinion|recommendation)s?\s+(?:was|is|were)\s+that\s+|(opinion|finding)\s+of\s+))/
+const BODY_WORDS=/\b(?:Commission|Commissioner|Ombudsman|Inspector|Office|Department|Authority|Tribunal|Court|Committee|Agency)\b/
+/** A lead left by a removed sentence ("It also found", "A further opinion of") takes the subject of the
+ * record it cites, when that record names an official body; otherwise it is left as written. */
+function orphanLead(payload:Record<string,unknown>):Record<string,unknown> {
+  const text=String(payload.answer??''),m=ORPHAN_LEAD.exec(text)
+  if(!m)return payload
+  const end=Array.from(text.slice(0,(/[.!?](?:\s|$)/.exec(text)?.index??text.length)+1)).length
+  const sources=(Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]
+  const cited=Object.entries((payload.citations??{}) as Record<string,unknown>).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&Number(r[0])<end)).flatMap(([id])=>sources.filter(s=>id===s.resource||id.startsWith(s.resource+'/')))
+  const name=cited.map(s=>/^(?:OPAX holds .*? from the )?([A-Z][\p{L}'’ -]{2,80}?)\s*\(/u.exec(String(s.snippet??''))?.[1]).find(n=>!!n&&BODY_WORDS.test(n))
+  if(!name)return payload
+  const subject=/^The\b/.test(name)?name:'The '+name
+  const lead=m[1]?`${subject} ${({finding:'found',opinion:'formed the opinion',recommendation:'recommended'} as Record<string,string>)[m[1]]} that `:m[2]?`${subject} ${m[2]==='opinion'?'formed an opinion':'made a finding'} of `:subject+' '
+  return rewriteAnswerPayload(payload,replace=>replace(new RegExp(`^[\\s\\S]{${m[0].length}}`,'g'),lead))
+}
+
 /** Remove empty paragraphs before remapping anchors; punctuation alone cannot carry a citation. */
 export function cleanAnswerShape(payload:Record<string,unknown>):Record<string,unknown> {
   const original=(Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]
@@ -95,6 +112,8 @@ export function cleanAnswerShape(payload:Record<string,unknown>):Record<string,u
     replace(/\n{3,}/g,'\n\n')
     replace(/^\s+|\s+$/g,'')
   })
+  const led=orphanLead(cleaned)
+  if(led!==cleaned)return cleanAnswerShape(led)
   const citations=Object.fromEntries(Object.entries(cleaned.citations??{}).flatMap(([id,ranges])=>{if(/^USER_CONTEXT_/i.test(id))return [];const kept=Array.isArray(ranges)?ranges.filter(range=>citationHasSentence(String(cleaned.answer??''),range)):[];return kept.length?[[id,kept]]:[]}))
   if(JSON.stringify(citations)===JSON.stringify(cleaned.citations??{}))return cleaned
   const sources=Array.isArray(cleaned.sources)?cleaned.sources.map(s=>s&&typeof s==='object'?{...s,cited:s.cited===true&&Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))}:s):[]

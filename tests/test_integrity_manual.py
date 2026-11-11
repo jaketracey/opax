@@ -31,6 +31,9 @@ def test_supplement_keeps_the_report_wording_and_status():
     by_id = {r["id"]: r for rs in json.loads(manual.SUPPLEMENT.read_text())["records"].values() for r in rs}
     myrtle = by_id["nacc-undated-operation-myrtleford"]
     assert myrtle["recommendations_status"] == "stated_none" and myrtle["date"] is None
+    # month only, from the publisher's own file path, and labelled as such
+    assert myrtle["period"]["value"] == "2026-03" and "/documents/2026-03/" in myrtle["pdf_url"]
+    assert "file path" in myrtle["period"]["basis"]
     assert [f["kind"] for f in myrtle["findings"]].count("no_finding") == 4
     king = by_id["nacc-2025-06-30-operation-kingscliff"]
     assert [x["number"] for x in king["recommendations"]] == ["1", "2", "3"]

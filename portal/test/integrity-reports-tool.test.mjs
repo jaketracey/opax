@@ -72,11 +72,14 @@ test('reports: body and date filters, newest first, follow-up opens the full rec
   const body = loaded[0];
   const out = await call({ view: 'reports', body: body.short, limit: 4 }); cited(out);
   assert.ok(out.rows.every(r => r.body === body.short));
-  for (let i = 1; i < out.rows.length; i++) assert.ok(String(out.rows[i - 1].date ?? '') >= String(out.rows[i].date ?? ''));
+  const when = r => String(r.date ?? r.period?.value ?? '');
+  for (let i = 1; i < out.rows.length; i++) assert.ok(when(out.rows[i - 1]) >= when(out.rows[i]));
   const detail = await call(out.rows[0].follow_up); cited(detail);
   assert.equal(detail.rows[0].record_id, out.rows[0].record_id);
   const since = await call({ view: 'reports', jurisdiction: body.jurisdiction, since: '2020-01-01', limit: 8 }); cited(since, false);
-  assert.ok(since.rows.every(r => r.date >= '2020-01-01' && r.jurisdiction === body.jurisdiction));
+  // an undated report matches by the month or year its source gives, and says so
+  assert.ok(since.rows.every(r => (r.date ?? r.period?.value) >= '2020' && (r.date ?? r.period?.value) && r.jurisdiction === body.jurisdiction));
+  if (since.rows.some(r => !r.date)) assert.ok(since.notes.some(n => /month or year/.test(n)));
 });
 
 test('report: findings are quoted with label, kind and page citation; parts page through long lists', async () => {

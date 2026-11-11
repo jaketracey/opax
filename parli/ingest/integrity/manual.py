@@ -170,6 +170,8 @@ NACC = {
                      (440, "With respect to the referral made by the Royal Commission in relation to Mr Morrison", "did not engage in corrupt conduct.", "Determination", "no_finding")],
         "recs_none": (8, "it has not made recommendations in this report."),
         "undated": "No signature date was found in the report text, so the record is undated.",
+        # month only, from the publisher's own upload path; the report cites submissions dated 27 January 2026
+        "period": {"value": "2026-03", "basis": "The NACC's file path for the report is /documents/2026-03/; the report itself carries no date."},
     },
     "Pelican": {
         "date": "2026-04-08", "subjects": [(1, "an employee of a Commonwealth company", "public_role")],
@@ -246,7 +248,7 @@ def build_nacc(intake: Path, cache: Path) -> list[dict]:
             type_as_published="Investigation Report", pdf_url=url,
             documents=[_doc("report", title, url, data, len(pages), item)], subjects=subjects,
             findings=findings, findings_status="extracted", recommendations=recs, recommendations_status=rec_status,
-            responses_status="not_checked", notes=notes, key=f"operation-{op}",
+            responses_status="not_checked", notes=notes, key=f"operation-{op}", period=spec.get("period"),
         )
         out.append(_finish(rec, item, {
             "statement": "Copyright Commonwealth of Australia; licensed under Creative Commons Attribution 4.0 International, "

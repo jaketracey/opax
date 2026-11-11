@@ -689,13 +689,19 @@ def pre2016_record(entry):
     mentions = re.findall(r"(?:made\s*public|released|furnished)(?:\s+to\s+(?:the\s+)?(?:Parliament|Presiding Officers))?"
                           r"\s*(on\s*|in\s*)?((?:\d{1,2}\s*)?" + month + r"\s*,?\s*\d{4})", text)
     notes = [NO_ONLINE]
-    date = None
+    date = period = None
     if mentions:
         prep, first = mentions[0]
         date = parse_date(first) if not prep.startswith("in") else None
         if not date:
             notes.append(f"The ICAC's summary says the report was made public in {first}; "
                          "it gives no day, so OPAX records no date.")
+            mon = re.match(r"(?:\d{1,2}\s*)?(" + month + r")\s*,?\s*(\d{4})", first)
+            if mon:
+                period = {"value": f"{mon.group(2)}-{MONTHS[mon.group(1).lower()[:3]]:02d}",
+                          "basis": f"The ICAC's summary says the report was made public in {mon.group(1)} {mon.group(2)}."}
+    if not date and not period:
+        period = {"value": entry["year"], "basis": f"Listed under {entry['year']} on the ICAC's pre-2016 investigations page."}
         if len(mentions) > 1:
             notes.append("The ICAC's summary describes more than one report; the date (or month) is the first one it gives.")
     url = PRE2016 + "#" + entry["year"]
@@ -705,7 +711,7 @@ def pre2016_record(entry):
         BODY, title=entry["title"], page_url=url, report_type="investigation_report", date=date,
         date_basis="published" if date else None, operation=operation_of(entry["title"]),
         type_as_published="Investigation report", subjects=subjects_from_title(entry["title"], citation),
-        summary=" ".join(outcome), notes=notes, responses_status="not_checked",
+        summary=" ".join(outcome), notes=notes, responses_status="not_checked", period=period,
         key=(operation_of(entry["title"]) or entry["title"]) + ("-" + entry["year"] if not date else ""))
 
 
