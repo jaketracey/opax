@@ -7,7 +7,20 @@ import {sponsorSummaryPath,growthSummaryPath,normalisedName,personQuestions,bill
 import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../portal/public/supplier-growth.js';
 import {AGENCY_TOP_SUPPLIERS_PATH,agencyTopRows} from '../portal/public/agency-top-suppliers.js';
 import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath} from '../portal/public/recent-votes-buckets.js';
+import {PARTY_MONEY_BUCKETS,partyFold,partyMoneyBucket,partyMoneyBucketPath} from '../portal/public/party-money-buckets.js';
+import {partyMoneyData} from '../portal/public/register-tables.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
+/** A money graph's party-receipt buckets as [path, contents] pairs (portal/public/party-money-buckets.js). */
+export function partyMoneyBucketFiles(path,graph){
+ const buckets=Array.from({length:PARTY_MONEY_BUCKETS},()=>Object.create(null));
+ // The first party node with a folded name is the one a profile matches.
+ for(const node of graph.nodes){
+  if(node.kind!=='party')continue;
+  const key=partyFold(node.label), bucket=buckets[partyMoneyBucket(key)];
+  if(!(key in bucket))bucket[key]={label:node.label,rows:partyMoneyData(graph,node.id).rows};
+ }
+ return buckets.map((parties,i)=>[partyMoneyBucketPath(path,i),{meta:graph.meta,parties}]);
+}
 export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url)), {read: sourceRead} = {}) {
  const read=async p=>sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p),'utf8'));
  const output=join(root,'growth');
@@ -125,6 +138,13 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   const buckets=Array.from({length:RECENT_VOTES_BUCKETS},()=>[]);
   for(const entry of Object.entries(recent.people))buckets[recentVotesBucket(entry[0])].push(entry);
   for(const [i,entries] of buckets.entries())await write(recentVotesBucketPath(i),{_meta:recent._meta,people:Object.fromEntries(entries)});
+ }
+ // Profiles read their party's receipt rows from these buckets (portal/public/party-money-buckets.js), not the graphs.
+ for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json']){
+  const graph=path==='/graph/money.json'?money:await read(path.slice(1)).catch(error=>{if(error.code==='ENOENT')return null;throw error});
+  if(!graph?.nodes)continue;
+  await mkdir(join(output,'party-money',path.split('/').pop().replace(/\.json$/,'')),{recursive:true});
+  for(const [file,data] of partyMoneyBucketFiles(path,graph))await write(file,data);
  }
  console.log(JSON.stringify({files:sizes.length,largest:Math.max(...sizes.map(s=>s.bytes)),donorIndexBytes:sizes[0].bytes}));
  return sizes;

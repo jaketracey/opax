@@ -60,6 +60,8 @@ portal/public/hubs/
 portal/public/growth/person-bills/
 # Recorded votes split by person for profile rendering (npm run build:growth).
 portal/public/growth/recent-votes/
+# Each party's receipt rows by money graph for profile rendering (npm run build:growth).
+portal/public/growth/party-money/
 # Local SEO HTML snapshots, CDP measurements and Wrangler state.
 portal/private/
 
