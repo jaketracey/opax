@@ -9,7 +9,7 @@ export const DONOR_INDEX='/graph/donor-index.json';
 export function donorIndexFile(publicRoot=PUBLIC) {
   const donors=MONEY_GRAPHS.flatMap(path=>{
     const graph=JSON.parse(readFileSync(join(publicRoot,path),'utf8'));
-    return graph.nodes.filter(n=>n.kind==='donor').map(n=>({jurisdiction:graph.meta?.jurisdiction || (path.endsWith('money.json')?'federal':path.split('.')[1]),...Object.fromEntries(['id','label','source_name','aliases','lookup_names','match'].filter(k=>n[k]!=null).map(k=>[k,n[k]])),returnReferences:(n.returnReferences || []).slice(0,1)}));
+    return graph.nodes.filter(n=>n.kind==='donor').map(n=>({jurisdiction:graph.meta?.jurisdiction || (path.endsWith('money.json')?'federal':path.split('.')[1]),...Object.fromEntries(['id','label','source_name','aliases','lookup_names','match','associatedTag','associatedWith'].filter(k=>n[k]!=null).map(k=>[k,n[k]])),returnReferences:(n.returnReferences || []).slice(0,1)}));
   });
   const sourcePath=join(publicRoot,'graph/donor-disclosures.json');
   let extra={donors:[],references:[]};

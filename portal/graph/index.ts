@@ -97,6 +97,10 @@ export type MoneyNode = DonorDisclosureRecord & {
   via?: string
   /** Contracts and grants dollars that brought a `via` donor onto the map. */
   publicMoney?: number
+  /** The AEC associated-entity register ties this donor to a party it gives to (export rule 9). */
+  associatedWith?: { party: string; registerParties: string[]; firstYear: string | null; lastYear: string | null; source: string; url: string }[]
+  /** The one line shown with the donor's name wherever it appears ("associated entity of …, per AEC register"). */
+  associatedTag?: string
 }
 
 export type MoneyEdge = {
@@ -235,6 +239,7 @@ const toMapNode = (n: MoneyNode): MapNode => ({
   firstYear: n.firstYear,
   lastYear: n.lastYear,
   ...(n.colour || n.kind === 'party' || n.kind === 'grantor' ? { colour: markColour(n) } : {}),
+  ...(n.associatedTag ? { associatedTag: n.associatedTag } : {}),
 })
 
 const toMapEdge = (e: MoneyEdge): MapEdge => ({
@@ -447,6 +452,9 @@ const CSS = `
 .mm-card h2 { margin: 0 var(--size-target) var(--space-line) 0; font: var(--type-subheading); color: var(--ink); }
 .mm-title-dot { display: inline-block; position: relative; top: -0.1em; margin-right: var(--space-tight); vertical-align: middle; }
 .mm-card-tag { margin-bottom: var(--space-tight); }
+.mm-card-assoc { margin: var(--space-tight) 0 var(--space-row); font: var(--type-fine); color: var(--ink-soft); }
+.mm-card-assoc a { color: inherit; text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 3px; }
+.mm-row-assoc { display: block; font: var(--type-fine); color: var(--ink-soft); white-space: normal; }
 .mm-card-total { font: var(--type-heading); font-variant-numeric: tabular-nums; color: var(--ink); }
 .mm-card-sub { margin: 0 0 var(--space-row); font: var(--type-fine); color: var(--ink-soft); }
 .mm-card-fine { margin: 0 0 var(--space-row); font: var(--type-fine); color: var(--ink-soft); }
@@ -1522,12 +1530,13 @@ export async function mountMoneyMap(
     amount: number,
     years: string,
     onClick: (() => void) | null,
+    note = '',
   ) => {
     const item = el('li', '', parent)
     const body = el('button', 'mm-row', item)
     body.type = 'button'
     // The row's pieces run together as one string otherwise ("Westpac$55.2m1998–2024").
-    body.setAttribute('aria-label', [name, formatMoney(amount), years].filter(Boolean).join(', '))
+    body.setAttribute('aria-label', [name, note, formatMoney(amount), years].filter(Boolean).join(', '))
     if (!onClick) body.disabled = true
     else body.addEventListener('click', onClick)
     if (colour) {
@@ -1536,6 +1545,7 @@ export async function mountMoneyMap(
     }
     const label = el('span', 'mm-row-name', body)
     label.textContent = name
+    if (note) el('span', 'mm-row-assoc', label).textContent = note
     const amt = el('span', 'mm-row-amt', body)
     amt.textContent = formatMoney(amount)
     if (years) {
@@ -1754,6 +1764,16 @@ export async function mountMoneyMap(
   const cardTag = (text: string) => {
     el('span', 'mm-card-tag ui-status', card).textContent = text
   }
+  /** The AEC associated-entity line under a donor's name, linked to the register. */
+  const associatedLine = (node: MoneyNode | undefined) => {
+    if (!node?.associatedTag) return
+    const line = el('p', 'mm-card-assoc', card)
+    const link = el('a', '', line) as HTMLAnchorElement
+    link.href = node.associatedWith?.[0]?.url ?? 'https://transparency.aec.gov.au/RegisterOfEntities?clientType=associatedentity'
+    link.rel = 'external noopener'
+    link.target = '_blank'
+    link.textContent = node.associatedTag.charAt(0).toUpperCase() + node.associatedTag.slice(1)
+  }
 
   const renderCard = (node: MoneyNode) => {
     card.innerHTML = ''
@@ -1786,6 +1806,7 @@ export async function mountMoneyMap(
     cardTag(node.kind === 'party'
       ? 'Political party'
       : node.kind === 'grantor' ? 'Public money' : sentence(node.industry.replace(/_/g, ' ')))
+    associatedLine(node)
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(node.total)
@@ -1877,6 +1898,7 @@ export async function mountMoneyMap(
           edge.total,
           yearSpan(edge.firstYear, edge.lastYear),
           () => setSelection(donor.id, { user: true }),
+          donor.associatedTag,
         )
       }
       const fine = el('p', 'mm-card-fine', card)
@@ -1904,6 +1926,7 @@ export async function mountMoneyMap(
           edge.total,
           yearSpan(edge.firstYear, edge.lastYear),
           () => setSelection(donor.id, { user: true }),
+          donor.associatedTag,
         )
       }
       renderActions(card, node, plan, { kind: 'party', to: node.label })
@@ -2026,6 +2049,7 @@ export async function mountMoneyMap(
 
     cardTitle(`${donor.label} → ${party.label}`)
     cardTag(`${sentence(donor.industry.replace(/_/g, ' '))} money`)
+    associatedLine(donor)
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(edge.total ?? 0)

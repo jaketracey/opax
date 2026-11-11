@@ -5,6 +5,8 @@ import type { ToolDeps, ToolResult } from './agentic-tools'
 /** One disclosed receipt as the tool holds it, so no reader of it has to parse the fact's wording. */
 export interface ReceiptFact {
   party: string; source: string; amount: number; period: string; jurisdiction?: string
+  /** The AEC register line when the source is an associated entity of this party; shown with its name. */
+  associated?: string
   /** The row's own industry, and the filter the tool ran with: a filtered list cannot answer an unfiltered question. */
   industry?: string; filter?: string
   /** A sum across many sources, not one source's receipts. */

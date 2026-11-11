@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=800932e746';
-import {loadDonorViewIndex} from './donor-views.js?v=f1a85f7a27';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
+import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph

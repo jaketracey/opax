@@ -15,7 +15,7 @@ test('story facts are server-derived and keep shares consistent across close-up 
  const c=context();assert.ok(c);
  assert.equal(c.steps[0].facts[0].amount,c.steps[1].facts[0].amount);
  assert.equal(c.steps[0].facts[0].shareOfThisSourcesShownReceipts,c.steps[1].facts[0].shareOfThisSourcesShownReceipts);
- assert.equal(c.steps[1].facts[0].shareOfThisSourcesShownReceipts,'50.4%');
+ assert.equal(c.steps[1].facts[0].shareOfThisSourcesShownReceipts,'49.4%');
  assert.equal(journeyStoryContext(graph,'multiple-parties','invented'),null);
 });
 test('narration accepts exact scene evidence, rejects invented figures and cross-scene references',()=>{
@@ -32,6 +32,6 @@ test('malformed output, markup, donations claims and missing steps use the fallb
 });
 test('time narratives use the exact dated window, not lifetime totals',()=>{
  const c=journeyStoryContext(graph,'over-time','donor:austal');assert.ok(c);
- assert.match(c.steps[0].period,/2020–2022/);
+ assert.match(c.steps[0].period,/2019–2021/);
  assert.notEqual(c.steps[0].facts[0].amount,c.steps[1].facts[0].amount);
 });

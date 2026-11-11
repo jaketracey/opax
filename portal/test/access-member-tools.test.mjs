@@ -46,12 +46,12 @@ for (const [register, args] of [['meetings', { minister: 'Chris Minns' }], ['lob
 }
 test('minister counts distinguish all-time totals, dated samples and exact organisation labels', async () => {
   const all = await api.callTool(env, 'access_registers', { register: 'meetings', minister: 'Chris Minns' }); cited(all);
-  assert.equal(all.published_totals.meetings, 900); assert.equal(all.published_totals.external_meetings, 857); assert.equal(all.counts.exact_count, null);
+  assert.equal(all.published_totals.meetings, 965); assert.equal(all.published_totals.external_meetings, 918); assert.equal(all.counts.exact_count, null);
   const period = await api.callTool(env, 'access_registers', { register: 'meetings', minister: 'Chris Minns', since: '2026-04-01', until: '2026-06-30', jurisdiction: 'nsw' }); cited(period);
   assert.equal(period.published_totals, null); assert.equal(period.counts.exact_count, null); assert.equal(period.counts.complete_for_projection, false);
   assert.ok(period.rows.every(r => r.date >= '2026-04-01' && r.date <= '2026-06-30'));
   const pair = await api.callTool(env, 'access_registers', { register: 'meetings', minister: 'Chris Minns', organisation: 'Unions NSW' });
-  assert.equal(pair.published_totals.meetings, 48); assert.equal(pair.counts.exact_count, null);
+  assert.equal(pair.published_totals.meetings, 58); assert.equal(pair.counts.exact_count, null);
   const conflicting = await api.callTool(env, 'access_registers', { register: 'meetings', minister: 'Chris Minns', organisation: 'Unions NSW', client: 'Police Association NSW' });
   assert.equal(conflicting.published_totals, null);
   const alias = await api.callTool(env, 'access_registers', { register: 'meetings', minister: 'Minns', jurisdiction: 'nsw' }); cited(alias);

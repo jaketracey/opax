@@ -5348,11 +5348,15 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   } else if (node) {
     const what = node.industry === 'individual' ? 'donor' : `${industryLabel(node.industry)} donor`
     facts = `${display}: disclosed political ${what}, ${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort}).`
+    // An AEC associated entity says so with its figures, the same way for every party (export rule 9).
+    const associated = donorDisclosure(node as DonorDisclosureRecord).associated
+    if (associated) facts += ` ${associated.charAt(0).toUpperCase()}${associated.slice(1)}.`
     tail = 'Which parties disclosed receipts from it.'
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,
-      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear,node.lastYear)} (${node.sourceShort})`],
+      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear,node.lastYear)} (${node.sourceShort})`,
+        ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {
     facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns outside the bounded money-map selection.`
