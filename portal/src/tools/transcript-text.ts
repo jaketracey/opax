@@ -9,7 +9,7 @@ const FILE = /^\/transcripts\/[a-z0-9-]+\/transcript-[a-z0-9-]+\.json$/
 const EXCERPT = 280
 
 export type TextIndex = { docs: RecordRow[], stop: Set<string>, common: Set<string>, shards: number, commissions: RecordRow }
-export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null }
+export type PageHit = { pdf_page: number, transcript_page: string | null, url: string, excerpt: string | null, speaker?: string, speaker_label?: string }
 export type TextHits = { file: string, quote_policy: string, attribution: string, licence_url: string, order_notice?: string, hits: PageHit[] }
 
 export async function textIndex(env: ToolEnv): Promise<TextIndex | null> {
@@ -50,18 +50,47 @@ export async function textMatches(env: ToolEnv, ix: TextIndex, commission: strin
   return { keys, terms }
 }
 
-function excerpt(text: string, terms: string[]): string {
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+/** "2022-09-27" as "27 September 2022"; anything else unchanged. */
+export function dayWords(iso: unknown): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso ?? ''))
+  return m && MONTHS[Number(m[2]) - 1] ? `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}` : String(iso ?? '')
+}
+/** A hearing date range in words: "27 September 2022 to 10 March 2023", or one day. */
+export const spanWords = (first: unknown, last: unknown) => first === last ? dayWords(first) : `${dayWords(first)} to ${dayWords(last)}`
+
+// A turn opens with the speaker's label in capitals: "MS HOGAN-DORAN:", "THE COMMISSIONER:", "MR LANCASTER SC:".
+const LABEL = /(?<=^|\s)((?:(?:THE|MR|MS|MRS|MISS|DR|PROF|UNCLE|AUNTY) )?[A-Z][A-Za-z'’.-]*[A-Z](?: [A-Z][A-Za-z'’.-]*[A-Z]){0,3}):(?=\s)/g
+const KEEP = new Set(['SC', 'KC', 'QC', 'AM', 'AO', 'AC', 'OAM', 'PSM', 'APM'])
+/** The label as a name: "MS HOGAN-DORAN" as "Ms Hogan-Doran", "McLEOD" as "McLeod". */
+export function speakerName(label: string): string {
+  return label.split(' ').map(word => KEEP.has(word) ? word
+    : word.replace(/^Mc(?=[A-Z])/, 'Mc\u0000').toLowerCase().replace(/(^|[-'’\u0000])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase()).replace('\u0000', '')).join(' ')
+}
+
+/** A verbatim excerpt around the first query word, kept within one speaker's turn. The turn's label is returned
+ * as the speaker rather than left in the text; a turn that began on an earlier page has no speaker here. */
+export function excerpt(text: string, terms: string[]): { excerpt: string, speaker?: string, speaker_label?: string } {
   const flat = text.replace(/\s+/g, ' ').trim()
   let at = -1
   for (const t of terms) {
     const m = new RegExp(`\\b${t.replace(/[^a-z0-9]/g, '')}`, 'i').exec(flat)
     if (m && (at < 0 || m.index < at)) at = m.index
   }
-  let start = Math.max(0, (at < 0 ? 0 : at) - 100)
-  if (start > 0) start = flat.indexOf(' ', start) + 1
-  let end = Math.min(flat.length, start + EXCERPT)
-  if (end < flat.length) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
-  return `${start > 0 ? '...' : ''}${flat.slice(start, end)}${end < flat.length ? '...' : ''}`
+  const point = at < 0 ? 0 : at
+  const labels = [...flat.matchAll(LABEL)].map(m => ({ at: m.index!, end: m.index! + m[0].length, label: m[1] }))
+  const turn = labels.filter(l => l.end <= point).at(-1) ?? (at < 0 ? labels.find(l => l.at === 0) : undefined)
+  let from = turn ? turn.end : 0
+  while (flat[from] === ' ') from++
+  const until = labels.find(l => l.at >= Math.max(from, point))?.at ?? flat.length
+  let start = Math.max(from, point - 100)
+  if (start > from) { const space = flat.indexOf(' ', start); if (space >= 0 && space < until) start = space + 1 }
+  while (flat[start] === ' ') start++
+  let end = Math.min(until, start + EXCERPT)
+  if (end < until) end = Math.max(start + 40, flat.lastIndexOf(' ', end))
+  const body = flat.slice(start, end).trim()
+  return { excerpt: `${start > from ? '...' : ''}${body}${end < flat.length && end < until ? '...' : ''}`,
+    ...(turn ? { speaker: speakerName(turn.label), speaker_label: turn.label } : {}) }
 }
 
 /** The pages of one transcript holding the most query words (all of them first), with a verbatim excerpt where
@@ -80,7 +109,7 @@ export async function pageHits(env: ToolEnv, ix: TextIndex, key: string, terms: 
   const hits = best.map(([n]) => {
     const page = pages.find(p => p.n === n) ?? {}
     return { pdf_page: n, transcript_page: (page.folio as string) ?? null, url: `${doc.pdf_url}#page=${n}`,
-      excerpt: quote && typeof page.text === 'string' ? excerpt(page.text, terms) : null }
+      ...(quote && typeof page.text === 'string' ? excerpt(page.text, terms) : { excerpt: null }) }
   })
   return { file, quote_policy: String(doc.quote_policy), attribution: String(doc.attribution), licence_url: String(doc.licence_url),
     ...(quote ? {} : { order_notice: String(doc.order_notice) }), hits }

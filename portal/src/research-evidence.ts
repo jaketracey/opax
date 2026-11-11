@@ -12,8 +12,13 @@ export interface AnswerDraft { text: string; citations: AnswerCitation[] }
 const normal = (text: string) => text.normalize('NFC').replace(/\s+/g, ' ').trim()
 const TITLE = /^(?:Mr|Mrs|Ms|Miss|Dr|Prof|Senator|Minister|Treasurer|Premier|Member|Hon)\.?$/
 const CLAIM_VERB = /\b(?:said|says|say|argued?|argues|supported?|supports|opposed?|opposes|voted?|votes|called|calls|proposed?|proposes|announced?|claimed?|claims|stated?|states|described?|describes|warned?|warns|critici[sz]ed?|backed|backs|rejected?|rejects|committed|promised?|promises|believes?|wants?|urged?|urges|is|was|were|are|has|had|have|will|would)\b/i
+// An inquiry named in the subject ("witnesses at the Robodebt Royal Commission") is a body, not a person.
+const INQUIRY = /(?:\b(?:at|of|before|to|in|from|for)\s+)?(?:\b[Tt]he\s+)?(?:\p{Lu}[\p{L}'’-]*\s+){0,6}(?:[Rr]oyal\s+[Cc]ommission|[Cc]ommission|[Ii]nquiry|[Ss]pecial\s+[Cc]ommission\s+of\s+[Ii]nquiry)\b(?:\s+(?:into|on|of)\s+(?:the\s+)?(?:\p{Lu}[\p{L}'’-]*\s*)+)?/gu
+const HEARING_ROLE = /^(?:(?:the|all|some|other|its)\s+)*(?:witnesses|counsel(?:\s+assisting)?|commissioners?)$/i
 function unresolvedPersonQuestion(question: string): boolean {
-  const subject = /\b(?:has|have|did|does|do)\s+([\p{L}'’-]+(?:\s+[\p{L}'’-]+){0,7})\s+(?:said|say|says|spoken|spoke|speak|propos\w*|argu\w*|voted?)\b/iu.exec(question)?.[1]
+  const asked = /\b(?:has|have|did|does|do)\s+([\p{L}'’-]+(?:\s+[\p{L}'’-]+){0,7})\s+(?:said|say|says|spoken|spoke|speak|propos\w*|argu\w*|voted?)\b/iu.exec(question)?.[1]
+  const subject = asked === undefined ? undefined : asked.replace(INQUIRY, ' ').replace(/\s+/g, ' ').trim()
+  if (asked !== undefined && asked !== subject && (!subject || HEARING_ROLE.test(subject))) return false
   const collective = /^(?:(?:the|all|these|those|australian|federal|state)\s+)*(?:records?|parliament|senate|house|committees?|government|opposition|members|mps|senators|politicians)$/i
   const groups = subject?.replace(/\b(?:the|and|or|party)\b/gi, ' ').trim().split(/\s+/).filter(Boolean)
   return !!subject && !collective.test(subject) && !groups?.every(word => collective.test(word)) || /\b(?:speeches|remarks|statements|votes)\s+(?:by|from|of)\s+(?!the\b|all\b)[\p{L}'’-]+/iu.test(question)
