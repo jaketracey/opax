@@ -5926,7 +5926,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   const imageAlt = meta.card && meta.status < 400 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
   const gates = navGates(env)
   const rewriter = new HTMLRewriter()
-    .on('html', { element(el) { if (gates) el.setAttribute('data-nav-gates', gates); if (route.kind === 'official-reports') el.setAttribute('data-colour-scheme', 'system') } })
+    .on('html', { element(el) { if (gates) el.setAttribute('data-nav-gates', gates) } })
     .on('title', new SetText(meta.title))
     .on('meta[name="description"]', new SetAttr('content', meta.description))
     .on('link[rel="canonical"]', { element(el) { if(meta.status>=400 || !meta.canonical) el.remove(); else el.setAttribute('href',meta.canonical) } })
@@ -5966,7 +5966,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   } })
   if (route.kind === 'official-reports') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
-  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/report-records.css"><link rel="stylesheet" href="/official-reports.css">' + (route.type ? '<script type="module" src="/official-reports.js"></script>' : ''), { html: true }) } })
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/official-reports.css">' + (route.type ? '<script type="module" src="/official-reports.js"></script>' : ''), { html: true }) } })
   if (route.kind === 'source-report') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/report-records.css">', { html: true }) } })

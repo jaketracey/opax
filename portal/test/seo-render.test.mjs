@@ -64,12 +64,12 @@ test('official report roots are public server HTML with clean canonicals, noinde
       assert.equal(response.status,200,path+query);const html=await response.text();
       assert.ok(html.includes('href="'+origin+path+'"'));
       assert.equal(/<meta name="robots" content="noindex">/.test(html),Boolean(query));
-      assert.match(html,/official-reports.css/);assert.match(html,/og:image[^>]+content="https:\/\/opax.com.au\/og\//);
+      assert.match(html,/official-reports.css/);assert.doesNotMatch(html,/data-colour-scheme|href="\/report-records\.css"/);assert.match(html,/og:image[^>]+content="https:\/\/opax.com.au\/og\//);
       assert.doesNotMatch(html,/<script[^>]+src="\/(?:app|spa-entry|spa-shell)\.js/);
       const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];
       assert.doesNotMatch(main,/An association does not prove influence/);
       if(!query) assert.match(main,path==='/official-reports' ? /or-collection/ : /href="\/report\//);
-      if(query.startsWith('?q=') && path!=='/official-reports') assert.match(main,/No matching/);
+      if(query.startsWith('?q=') && path!=='/official-reports') assert.match(main,/No (?:reports|inquiries) match/);
     }
   }
 });

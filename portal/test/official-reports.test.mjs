@@ -7,7 +7,7 @@ import { shortDate } from '../public/format.js';
 import { JSDOM } from 'jsdom';
 import { projectReports, projectReportIndexes, buildReportCatalog } from '../../scripts/build_report_catalog.mjs';
 import { officialReportsPage } from '../src/official-reports.ts';
-import { REPORT_COLLECTIONS, queryReports, reportOptions, reportState, reportRoot, reportResultsHTML, PAGE_SIZE } from '../public/official-reports-model.js';
+import { REPORT_COLLECTIONS, queryReports, reportOptions, reportState, reportRoot, reportResultsHTML, reportCount, reportFilterCount, PAGE_SIZE } from '../public/official-reports-model.js';
 const publicRoot = new URL('../public/', import.meta.url);
 const read = async path => JSON.parse(await readFile(new URL(path.replace(/^\//, ''), publicRoot), 'utf8'));
 const projected = await projectReports(read);
@@ -29,7 +29,7 @@ test('compact indexes reconcile all records, omit detail payloads and preserve t
     for (const row of index.rows) {
       for (const key of ['record','findings','recommendations','facts','tables','citation','items']) assert.ok(!(key in row));
       if (type === 'annual_report') {
-        for (const y of row.years) assert.ok(held.some(p => p.detail.slug === y.slug && p.detail.year === y.year && (p.detail.publisher.portfolio || '') === y.portfolio));
+        for (const y of row.years) assert.ok(held.some(p => p.detail.slug === y.slug && p.detail.year === y.year && String(p.detail.publisher.portfolio || '').replace(/\s*\[i\]/gi, '').trim() === y.portfolio));
       } else {
         const detail = held.find(p => p.detail.slug === row.slug).detail;
         if (type === 'royal_commission') assert.equal(row.transcripts, detail.record.transcripts.length);
@@ -84,7 +84,7 @@ test('each server page uses only its list index, contains record links and expos
       assert.match(page.prerender,/method="get"/);assert.match(page.prerender,/name="q"/);
       for(const [key] of REPORT_COLLECTIONS[type].filters) assert.ok(page.prerender.includes(`name="${key}"`));
       const filtered = await officialReportsPage(type,new URL('https://opax.com.au'+path+'?q=zzznomatchingreport'),assets);
-      assert.equal(filtered.noindex,true);assert.match(filtered.prerender,/No matching/);assert.match(filtered.prerender,/Clear search and filters/);
+      assert.equal(filtered.noindex,true);assert.match(filtered.prerender,/No (?:reports|inquiries) match/g);assert.match(filtered.prerender,/Clear search and filters/);
     }
     assert.doesNotMatch(page.prerender,/An association does not prove influence|—/);
   }
@@ -97,21 +97,59 @@ test('row text and query state are escaped, pagination carries filters', () => {
   const annual=queryReports(indexes.annual_report,state('annual_report',{sort:'title'}));
   assert.match(reportResultsHTML(annual,'annual_report',state('annual_report',{sort:'title'})),/sort=title&amp;page=2/);
 });
-test('browser enhancement filters instantly, updates URL, clears, paginates and restores history state', async () => {
-  const type='annual_report';const page=await officialReportsPage(type,new URL('https://opax.com.au'+reportRoot(type)),assets);
-  const dom=new JSDOM(page.prerender,{url:'https://opax.com.au'+reportRoot(type),runScripts:'outside-only',pretendToBeVisual:true});
-  const w=dom.window;w.shortDate=shortDate;w.fetch=async()=>Response.json(indexes[type]);w.HTMLElement.prototype.scrollIntoView=()=>{};
+const tick = ms => new Promise(r => setTimeout(r,ms));
+async function browserPage({type='annual_report',query='',mobile=true}={}) {
+  const url=new URL('https://opax.com.au'+reportRoot(type)+query);
+  const page=await officialReportsPage(type,url,assets);
+  const dom=new JSDOM(page.prerender,{url:url.href,runScripts:'outside-only',pretendToBeVisual:true});
+  const w=dom.window, calls=[];
+  w.matchMedia=()=>({matches:mobile});w.shortDate=shortDate;
+  w.fetch=async href=>{calls.push(href);return Response.json(indexes[type]);};
+  w.HTMLElement.prototype.scrollIntoView=()=>{};
   const model=(await readFile(new URL('official-reports-model.js',publicRoot),'utf8')).replace(/^import .*\n/gm,'').replaceAll('export ','');
   const client=(await readFile(new URL('official-reports.js',publicRoot),'utf8')).replace(/^import .*\n/,'');
-  w.eval(model+'\n'+client);await new Promise(r=>setTimeout(r,20));
-  const input=w.document.querySelector('[name=q]');input.value='Defence 2024-25';input.dispatchEvent(new w.Event('input',{bubbles:true}));await new Promise(r=>setTimeout(r,180));
+  w.eval(model+'\n'+client);await tick(20);
+  return {dom,w,calls,form:w.document.querySelector('form'),input:w.document.querySelector('[name=q]'),more:w.document.querySelector('.or-more')};
+}
+test('enhancement loads its index lazily, collapses unused mobile filters and counts active controls', async () => {
+  const {dom,w,calls,input,more,form}=await browserPage();
+  assert.equal(calls.length,0);assert.equal(more.open,false);
+  assert.ok(w.document.querySelector('.or-live'));
+  input.focus();await tick(20);assert.equal(calls.length,1);
+  form.dispatchEvent(new w.Event('pointerdown',{bubbles:true}));await tick(20);assert.equal(calls.length,1);
+  const year=form.querySelector('[name=year]');year.value='2024-25';year.dispatchEvent(new w.Event('change',{bubbles:true}));await tick(20);
+  const sort=form.querySelector('[name=sort]');sort.value='title';sort.dispatchEvent(new w.Event('change',{bubbles:true}));await tick(20);
+  assert.equal(more.querySelector('summary').textContent,'Filters and sort (2)');assert.equal(more.open,true);
+  dom.window.close();
+  for(const query of ['?q=Defence','?year=2024-25']) {
+    const b=await browserPage({query});assert.equal(b.calls.length,1);
+    assert.equal(b.more.open,query.includes('year'));b.dom.window.close();
+  }
+  const desktop=await browserPage({mobile:false});assert.equal(desktop.more.open,true);desktop.dom.window.close();
+});
+test('typing replaces history; changes, submit and pagination push; Escape clears; popstate restores', async () => {
+  const {dom,w,input,form,more}=await browserPage();
+  const history=[];
+  for(const method of ['pushState','replaceState']) {
+    const original=w.history[method].bind(w.history);
+    w.history[method]=(...args)=>{history.push(method);return original(...args);};
+  }
+  for(const q of ['Defence','Defence 2024-25']) {
+    input.value=q;input.dispatchEvent(new w.Event('input',{bubbles:true}));await tick(180);
+  }
+  assert.deepEqual(history,['replaceState','replaceState']);
   assert.match(w.location.search,/q=Defence/);assert.match(w.document.querySelector('[data-or-results]').textContent,/Department of Defence/);
   assert.ok(w.document.querySelector('meta[name=robots]'));
-  w.document.querySelector('[data-or-clear]').click();assert.equal(w.location.search,'');assert.equal(input.value,'');
-  w.document.querySelector('[data-or-page]').click();assert.match(w.location.search,/page=2/);
+  input.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true}));await tick(20);
+  assert.equal(input.value,'');assert.equal(w.location.search,'');assert.equal(history.at(-1),'replaceState');
+  form.querySelector('[name=year]').value='2024-25';form.querySelector('[name=year]').dispatchEvent(new w.Event('change',{bubbles:true}));await tick(20);
+  assert.equal(history.at(-1),'pushState');assert.equal(more.querySelector('summary').textContent,'Filters and sort (1)');
+  input.value='Defence';form.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await tick(20);assert.equal(history.at(-1),'pushState');
+  w.document.querySelector('[data-or-clear]').click();await tick(20);assert.equal(w.location.search,'');assert.equal(input.value,'');assert.equal(more.open,false);
+  w.document.querySelector('[data-or-page]').click();await tick(20);assert.match(w.location.search,/page=2/);assert.equal(history.at(-1),'pushState');
   assert.equal(w.document.activeElement.id,'or-results-title');
-  w.history.replaceState(null,'','?q=zzznomatch');w.dispatchEvent(new w.PopStateEvent('popstate'));
-  assert.equal(input.value,'zzznomatch');assert.match(w.document.querySelector('[data-or-results]').textContent,/No matching/);
+  w.history.replaceState(null,'','?q=zzznomatch');w.dispatchEvent(new w.PopStateEvent('popstate'));await tick(20);
+  assert.equal(input.value,'zzznomatch');assert.match(w.document.querySelector('[data-or-results]').textContent,/No reports match "zzznomatch"/);
   dom.window.close();
 });
 
@@ -120,12 +158,13 @@ test('header data and generated footer HTML carry every ungated official collect
   const nav=globalThis.OpaxNavigation;
   const column=nav.groups.find(g=>g.id==='research').columns.find(c=>c.heading==='Official reports');
   assert.equal(column.section.href,'/official-reports');assert.equal(column.more,'All official reports');
-  assert.deepEqual(column.links.map(l=>l.href),Object.keys(REPORT_COLLECTIONS).map(reportRoot));
+  assert.deepEqual(column.links.map(l=>l.href),[...Object.keys(REPORT_COLLECTIONS).map(reportRoot),'/audit']);
+  assert.ok(!nav.groups.find(g=>g.id==='research').columns.find(c=>c.heading==='Reports').links.some(l=>l.href==='/audit'));
   assert.ok(column.links.every(l=>!l.gate));assert.ok(!column.section.gate);
   for(const file of ['index.html','home.html','community.html','press.html']) {
     const html=await readFile(new URL(file,publicRoot),'utf8');
     const footer=html.split('<!-- nav:index:start -->')[1].split('<!-- nav:index:end -->')[0];
-    for(const path of ['/official-reports',...Object.keys(REPORT_COLLECTIONS).map(reportRoot)]) assert.ok(footer.includes('href="'+path+'"'),file+path);
+    for(const path of ['/official-reports',...Object.keys(REPORT_COLLECTIONS).map(reportRoot),'/audit']) assert.ok(footer.includes('href="'+path+'"'),file+path);
   }
 });
 
@@ -142,4 +181,67 @@ test('crawl sitemaps and the search catalogue publish all five official report r
     const results=await searchCatalog(new URL('https://opax.com.au/api/search-all?'+new URLSearchParams({q:title,kind:'page',per:'200'})),disk);
     assert.ok(results.results.some(r=>r.href===path),path);
   }
+});
+
+test('r1 server markup uses shared controls, linked cards, disclosure, sections and short dates', async () => {
+  const overview=await officialReportsPage(null,new URL('https://opax.com.au/official-reports'),assets);
+  const home=new JSDOM(overview.prerender).window.document;
+  assert.equal(home.querySelectorAll('a.ui-card.or-collection').length,4);
+  assert.equal(home.querySelectorAll('.or-collection h2.ui-card-title').length,4);
+  assert.equal(home.querySelectorAll('.or-collection a,.or-browse').length,0);
+  assert.match(home.querySelector('.or-source time').textContent,/\d{1,2} [A-Z][a-z]{2} 2026/);
+  for(const type of Object.keys(REPORT_COLLECTIONS)) {
+    const page=await officialReportsPage(type,new URL('https://opax.com.au'+reportRoot(type)),assets);
+    const d=new JSDOM(page.prerender).window.document;
+    assert.ok(d.querySelector('input.ui-input'));
+    assert.ok([...d.querySelectorAll('select')].every(s=>s.matches('.ui-input') && s.closest('label.ui-filter-field')?.querySelector('.ui-filter-key')));
+    assert.ok(d.querySelector('button.ui-button[data-variant="primary"]'));
+    assert.ok(d.querySelector('details.or-more[open] .or-filters'));
+    assert.ok(d.querySelector('section[data-or-results][aria-labelledby] ul.ui-list'));
+    assert.equal(d.querySelector('.or-head').nextElementSibling.className,'or-tabs');
+    if(type==='royal_commission') assert.equal(d.querySelector('.or-pagination'),null);
+    if(type==='annual_report') {
+      assert.ok([...d.querySelectorAll('[name=year] option')].some(o=>o.textContent==='2025–26' && o.value==='2025-26'));
+      assert.ok([...d.querySelectorAll('.or-years a')].every(a=>!a.hasAttribute('aria-label') && a.querySelector('.visually-hidden')?.textContent.endsWith('annual report ')));
+    }
+  }
+});
+test('r1 rows keep newest portfolio, compact metadata, escaped empty queries and filtered denominators', () => {
+  const index=structuredClone(indexes.annual_report);
+  index.rows=[{id:'example',title:'Example body',aliases:[],body_type:'Commonwealth Company',years:[{year:'2025-26',slug:'new',portfolio:'New portfolio'},{year:'2024-25',slug:'old',portfolio:'Old portfolio'}]}];index.count=2;
+  const s=state('annual_report');const result=queryReports(index,s);
+  const d=new JSDOM(reportResultsHTML(result,'annual_report',s)).window.document;
+  assert.equal(d.querySelector('.or-row-meta').textContent,'New portfolio · Commonwealth Company');
+  assert.equal(d.querySelector('.or-pagination'),null);
+  const royal=state('royal_commission',{q:'robodebt'}),r=queryReports(indexes.royal_commission,royal);
+  assert.equal(reportCount(r,'royal_commission'),'1 of 23 inquiries');
+  const integrity=state('integrity_report',{q:'Gloucester'}),i=queryReports(indexes.integrity_report,integrity);
+  assert.equal(reportCount(i,'integrity_report'),`${i.total} of 738 reports`);
+  const rows=reportResultsHTML(queryReports(indexes.royal_commission,state('royal_commission')),'royal_commission',state('royal_commission'));
+  assert.doesNotMatch(rows,/Jurisdiction:|Date:|Years:|Date not held/);assert.match(rows,/Commission of inquiry/);
+  const none=state('royal_commission',{q:'<img src=x>"&'});
+  const empty=reportResultsHTML(queryReports(indexes.royal_commission,none),'royal_commission',none);
+  assert.match(empty,/No inquiries match &quot;&lt;img src=x&gt;&quot;&amp;&quot;/);assert.doesNotMatch(empty,/<img/);
+  const middle=state('integrity_report',{page:'3',jurisdiction:'Vic'});
+  const pager=new JSDOM(reportResultsHTML(queryReports(indexes.integrity_report,middle),'integrity_report',middle)).window.document.querySelector('.or-pagination');
+  assert.deepEqual([...pager.querySelectorAll('a')].map(a=>a.textContent),['First','Previous','Next','Last']);
+  assert.ok([...pager.querySelectorAll('a')].every(a=>a.href.includes('jurisdiction=Vic')));
+  assert.equal(reportFilterCount(state('annual_report',{q:'Defence',year:'2024-25',sort:'title'}),'annual_report'),2);
+});
+test('r1 indexes remove footnote markers and slug aliases without changing source records', () => {
+  const annual=structuredClone(projected.find(p=>p.detail.report_type==='annual_report'));
+  annual.detail.publisher.portfolio='Defence [i]';annual.detail.body='Example [i]';
+  const cleaned=projectReportIndexes([annual]).annual_report.rows[0];
+  assert.equal(cleaned.title,'Example');assert.equal(cleaned.years[0].portfolio,'Defence');assert.equal(annual.detail.publisher.portfolio,'Defence [i]');
+  for(const index of Object.values(indexes)) for(const row of index.rows) {
+    const derived=row.slug?.replace(/^(?:royal-commission|integrity-report|agency-report)-/,'').replaceAll('-',' ');
+    assert.ok(!derived || !row.aliases.map(s=>s.toLowerCase()).includes(derived));
+    if(index.type==='annual_report') assert.ok(row.years.every(y=>!y.portfolio.includes('[i]')));
+  }
+});
+test('r1 catalogue CSS uses shared controls and tokens with no local dark theme or detail stylesheet', async () => {
+  const css=await readFile(new URL('official-reports.css',publicRoot),'utf8');
+  assert.doesNotMatch(css,/prefers-color-scheme|data-colour-scheme|var\(--[^,)]+,/);
+  assert.doesNotMatch(css,/(?:padding|margin|gap)(?:-[\w-]+)?\s*:[^;}]*\d(?:px|rem)/);
+  for(const file of ['tokens.css','style.css']) assert.doesNotMatch(await readFile(new URL(file,publicRoot),'utf8'),/data-colour-scheme="system"/);
 });

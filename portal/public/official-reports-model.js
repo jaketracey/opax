@@ -16,6 +16,13 @@ export const PAGE_SIZE = 24;
 export function reportState(params, type) {
   return Object.fromEntries(['q', ...REPORT_COLLECTIONS[type].filters.map(([key]) => key), 'sort', 'page'].map(key => [key, (params.get(key) || '').slice(0, 240)]));
 }
+export function reportFilterCount(state, type) {
+  return REPORT_COLLECTIONS[type].filters.filter(([key]) => state[key]).length + (state.sort && state.sort !== 'newest' ? 1 : 0);
+}
+export function reportFilterLabel(state, type) {
+  const count = reportFilterCount(state, type);
+  return `Filters and sort${count ? ` (${count})` : ''}`;
+}
 export function reportOptions(index, key) {
   const values = index.rows.flatMap(r => key === 'year' && index.type === 'annual_report' ? r.years.map(y => y.year) : key === 'portfolio' ? r.years.map(y => y.portfolio) : [r[key]]).filter(Boolean);
   return [...new Set(values)].sort((a, b) => key === 'year' ? b.localeCompare(a) : a.localeCompare(b));
@@ -41,29 +48,30 @@ export function queryReports(index, state) {
   const total = rows.length, reports = annual ? rows.reduce((sum, r) => sum + r.years.length, 0) : total;
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const page = Math.min(pages, Math.max(1, parseInt(state.page, 10) || 1));
-  return { rows: rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE), total, reports, pages, page };
+  const filtered = Boolean(state.q?.trim() || REPORT_COLLECTIONS[index.type].filters.some(([key]) => state[key]));
+  return { rows: rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE), total, reports, pages, page, filtered, available: index.rows.length, availableReports: index.count };
 }
 export function reportCount(result, type) {
   const n = value => value.toLocaleString('en-AU');
-  return type === 'annual_report' ? `${n(result.total)} ${result.total === 1 ? 'body' : 'bodies'}, ${n(result.reports)} ${result.reports === 1 ? 'report' : 'reports'}` : `${n(result.total)} ${type === 'royal_commission' ? (result.total === 1 ? 'inquiry' : 'inquiries') : (result.total === 1 ? 'report' : 'reports')}`;
+  const count = (value, all, singular, plural = singular + 's') => `${n(value)}${result.filtered ? ` of ${n(all)}` : ''} ${(result.filtered ? all : value) === 1 ? singular : plural}`;
+  return type === 'annual_report' ? `${count(result.total, result.available, 'body', 'bodies')}, ${count(result.reports, result.availableReports, 'report')}` : count(result.total, result.available, type === 'royal_commission' ? 'inquiry' : 'report', type === 'royal_commission' ? 'inquiries' : 'reports');
 }
 const day = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '') ? shortDate(value) : value;
-const field = (label, value) => value ? `<span><span class="or-meta-label">${label}</span> ${esc(value)}</span>` : '';
+const metaHTML = values => values.filter(Boolean).map(esc).join(' · ');
 function rowHTML(r, type) {
-  if (type === 'annual_report') return `<li class="or-row or-body"><h3>${esc(r.title)}</h3><p class="or-row-meta">${esc([...new Set(r.years.map(y => y.portfolio).filter(Boolean))].join('; '))}${r.body_type ? ` <span class="or-body-type">${esc(r.body_type)}</span>` : ''}</p><ul class="or-years" aria-label="Reporting years for ${esc(r.title)}" role="list">${r.years.map(y => `<li><a href="/report/${esc(y.slug)}" aria-label="${esc(r.title)} annual report ${esc(y.year)}">${esc(y.year.replace('-', '–'))}</a></li>`).join('')}</ul></li>`;
-  let meta = field('Jurisdiction:', jurisdictionName(r.jurisdiction));
+  if (type === 'annual_report') {
+    const newest = r.years.reduce((latest, y) => y.year > latest.year ? y : latest, r.years[0]);
+    return `<li class="or-row or-body"><h3>${esc(r.title)}</h3><p class="or-row-meta">${metaHTML([newest.portfolio, r.body_type])}</p><ul class="or-years" aria-label="Reporting years for ${esc(r.title)}" role="list">${r.years.map(y => `<li><a href="/report/${esc(y.slug)}"><span class="visually-hidden">${esc(r.title)} annual report </span>${esc(y.year.replace('-', '–'))}</a></li>`).join('')}</ul></li>`;
+  }
+  let meta;
   if (type === 'royal_commission') {
     const years = r.years.split(', ').filter(Boolean);
-    meta += field('Years:', years.length > 1 ? `${years[0]}–${years.at(-1)}` : years[0]);
-    meta += field('Final report:', day(r.final_date) || 'Date not held');
-    if (r.inquiry_type && r.inquiry_type !== 'royal_commission') meta += field('Inquiry type:', r.inquiry_type.replaceAll('_', ' '));
-    meta += field('Report status:', r.status);
+    const inquiry = r.inquiry_type && r.inquiry_type !== 'royal_commission' ? r.inquiry_type.replaceAll('_', ' ').replace(/^./, c => c.toUpperCase()) : '';
+    meta = [jurisdictionName(r.jurisdiction), years.length > 1 ? `${years[0]}–${years.at(-1)}` : years[0], r.final_date ? `Final report ${day(r.final_date)}` : r.status, inquiry];
   } else {
-    if (type === 'integrity_report') meta += field('Body:', r.body) + field('Case / operation:', r.operation);
-    else meta += field('Reporting year:', r.year);
-    meta += field('Date:', day(r.date) || 'Not held');
+    meta = [type === 'integrity_report' ? r.body : '', jurisdictionName(r.jurisdiction), r.year?.replace('-', '–'), r.date ? day(r.date) : '', r.operation ? `Case / operation: ${r.operation}` : ''];
   }
-  return `<li class="or-row"><h3><a href="/report/${esc(r.slug)}">${esc(r.title)}</a></h3><p class="or-row-meta">${meta}</p>${r.transcripts ? `<p class="or-transcripts">${r.transcripts.toLocaleString('en-AU')} hearing ${r.transcripts === 1 ? 'transcript' : 'transcripts'} held</p>` : ''}</li>`;
+  return `<li class="or-row"><h3><a href="/report/${esc(r.slug)}">${esc(r.title)}</a></h3><p class="or-row-meta">${metaHTML(meta)}</p>${r.transcripts ? `<p class="or-transcripts">${r.transcripts.toLocaleString('en-AU')} hearing ${r.transcripts === 1 ? 'transcript' : 'transcripts'} held</p>` : ''}</li>`;
 }
 export function reportPageHref(type, state, page) {
   const params = new URLSearchParams();
@@ -71,6 +79,8 @@ export function reportPageHref(type, state, page) {
   return reportRoot(type) + (params.size ? '?' + params : '');
 }
 export function reportResultsHTML(result, type, state) {
-  if (!result.total) return `<div class="or-empty"><h3>No matching ${type === 'royal_commission' ? 'inquiries' : 'reports'}</h3><p>Try a shorter name, another year or fewer filters.</p><a href="${reportRoot(type)}" data-or-clear>Clear search and filters</a></div>`;
-  return `<ul class="or-results" role="list">${result.rows.map(r => rowHTML(r, type)).join('')}</ul><nav class="or-pagination" aria-label="Report results pages">${result.page > 1 ? `<a href="${esc(reportPageHref(type, state, result.page - 1))}" data-or-page>Previous</a>` : ''}<span>Page ${result.page} of ${result.pages}</span>${result.page < result.pages ? `<a href="${esc(reportPageHref(type, state, result.page + 1))}" data-or-page>Next</a>` : ''}</nav>`;
+  if (!result.total) return `<div class="or-empty"><h3>No ${type === 'royal_commission' ? 'inquiries' : 'reports'} match ${state.q?.trim() ? `&quot;${esc(state.q.trim())}&quot;` : 'these filters'}</h3><p>Try a shorter name, another year or fewer filters.</p><a href="${reportRoot(type)}" data-or-clear>Clear search and filters</a></div>`;
+  const pageLink = (label, page) => `<a href="${esc(reportPageHref(type, state, page))}" data-or-page>${label}</a>`;
+  const pager = result.pages > 1 ? `<nav class="or-pagination" aria-label="Report results pages">${result.page > 1 ? pageLink('First', 1) + pageLink('Previous', result.page - 1) : ''}<span>Page ${result.page} of ${result.pages}</span>${result.page < result.pages ? pageLink('Next', result.page + 1) + pageLink('Last', result.pages) : ''}</nav>` : '';
+  return `<ul class="ui-list or-results" data-density="airy" role="list">${result.rows.map(r => rowHTML(r, type)).join('')}</ul>${pager}`;
 }

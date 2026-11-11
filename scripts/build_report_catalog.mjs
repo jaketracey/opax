@@ -135,19 +135,22 @@ export async function buildReportCatalog(root = publicRoot) {
  * Annual body-year links retain their own portfolio, including historical changes. */
 export function projectReportIndexes(reports) {
   const indexes = {};
+  const cleanAnnual = value => String(value || '').replace(/\s*\[i\]/gi, '').replace(/\s+/g, ' ').trim();
   for (const type of ['royal_commission', 'integrity_report', 'annual_report', 'agency_report']) {
     const held = reports.filter(r => r.detail.report_type === type);
     const annual = new Map();
     const list = [];
     for (const { detail: d, aliases } of held) {
       const c = d.record;
-      const alias = [...new Set(aliases.flat().filter(Boolean).map(String))].filter(a => a !== d.title && a !== d.body && a !== d.date && a !== d.year);
+      const id = d.slug.replace(/^(?:royal-commission|integrity-report|annual-report|agency-report)-/, '');
+      const derived = new Set([id, id.replace(/^[^-]+-/, '')].map(a => a.replace(/-/g, ' ')));
+      const alias = [...new Set(aliases.flat().filter(Boolean).map(String))].filter(a => a !== d.title && a !== d.body && a !== d.date && a !== d.year && !derived.has(a.toLowerCase()));
       if (type === 'annual_report') {
         const id = d.publisher.id;
-        if (!annual.has(id)) annual.set(id, { id, title: d.body, aliases: [], body_type: d.publisher.type_as_published || d.publisher.type || '', years: [] });
+        if (!annual.has(id)) annual.set(id, { id, title: cleanAnnual(d.body), aliases: [], body_type: cleanAnnual(d.publisher.type_as_published || d.publisher.type), years: [] });
         const group = annual.get(id);
-        group.aliases = [...new Set([...group.aliases, ...alias.map(a => a.replace(/\s+\d{4}\s+\d{2}$/, '')).filter(a => a && !/^[\d\s:-]+$/.test(a))])];
-        annual.get(id).years.push({ year: d.year, slug: d.slug, date: d.date, portfolio: d.publisher.portfolio || '' });
+        group.aliases = [...new Set([...group.aliases, ...alias.map(cleanAnnual).map(a => a.replace(/\s+\d{4}\s+\d{2}$/, '')).filter(a => a && !/^[\d\s:-]+$/.test(a))])];
+        annual.get(id).years.push({ year: d.year, slug: d.slug, date: d.date, portfolio: cleanAnnual(d.publisher.portfolio) });
       } else {
         const item = { slug: d.slug, title: d.title, body: d.body, jurisdiction: d.jurisdiction, date: d.date, year: d.year, aliases: alias };
         if (type === 'royal_commission') {

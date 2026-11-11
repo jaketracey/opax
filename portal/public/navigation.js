@@ -70,6 +70,7 @@
           page('/official-reports/integrity', 'Integrity reports', 'Published reports from Australian integrity bodies.'),
           page('/official-reports/annual-reports', 'Annual reports', 'Commonwealth bodies, grouped by reporting year.'),
           page('/official-reports/agency-reports', 'Agency reports', 'Commonwealth, state and territory agency reports.'),
+          page('/audit', 'Queensland audit reports', 'Queensland Audit Office reports tabled in Parliament.'),
         ] },
         // Each report keeps the title its own page gives it. The reports are
         // published only where the Worker marks them (REPORTS_ENABLED).
@@ -81,7 +82,6 @@
           page('/reports/immigration', 'Immigration', '', { record: true, gate: 'reports' }),
           page('/reports/indigenous', 'First Nations', '', { record: true, gate: 'reports' }),
           page('/reports/media', 'Media Ownership', '', { record: true, gate: 'reports' }),
-          page('/audit', 'Queensland audit reports'),
         ] },
       ] },
     { id: 'about', label: 'About', href: '/about', sub: 'Methods, sources and the project',
