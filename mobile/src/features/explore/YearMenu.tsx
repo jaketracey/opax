@@ -64,7 +64,7 @@ function useYearChoice(onChoose: (year: number) => void) {
 
 /**
  * The year as the page title and its own menu. The title is React Native
- * text, so it scales and wraps like every page title; on iOS a SwiftUI menu
+ * text, scaling down to keep its chevron inline; on iOS a SwiftUI menu
  * is laid exactly over it as its hit area. VoiceOver and Android activate the
  * title itself, which opens the same choice as a checkmark list sheet.
  */
@@ -107,9 +107,18 @@ export function YearMenu({
           testID="tm-year-menu"
           style={styles.title}
         >
-          <Heading level={1} kind="page" testID="tm-selected-year">
-            {String(year)}
-          </Heading>
+          <View style={styles.yearFrame}>
+            <Heading
+              level={1}
+              kind="page"
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={styles.year}
+              testID="tm-selected-year"
+            >
+              {String(year)}
+            </Heading>
+          </View>
           <Icon name={symbols.menu} size={17} tone="inkSoft" maxScale={2} />
         </Pressable>
       </TitleAnchor>
@@ -157,12 +166,14 @@ const styles = StyleSheet.create({
   wrap: { alignSelf: 'flex-start', maxWidth: '100%' },
   title: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     alignItems: 'center',
     gap: rhythm.tight,
     alignSelf: 'flex-start',
     maxWidth: '100%',
   },
+  yearFrame: { flexShrink: 1, minWidth: 0 },
+  year: { flexShrink: 0 },
   overlay: { position: 'absolute', left: 0, top: 0 },
 });
 
