@@ -1,5 +1,5 @@
 import { paletteFor } from '../../../design/palette';
-import type { MoneyGraph } from '../data';
+import type { MoneyGraph, MoneyNode } from '../data';
 import { clusterColour } from '../ported/palette';
 import { industryLabel } from '../records';
 import { moneyFlowType } from '../view';
@@ -21,7 +21,10 @@ import { partyDot } from '../../../design/party';
  */
 export type MapNodeKind = 'donor' | 'party' | 'hub';
 export type MapFlowType = 'donations' | 'grants' | 'contracts';
-export interface MapNode {
+export interface MapNode extends Pick<
+  MoneyNode,
+  'associatedTag' | 'associatedWith'
+> {
   index: number;
   id: string;
   label: string;
@@ -147,6 +150,12 @@ export function buildModel(view: MoneyGraph): MapModel {
       colour,
       ink,
       withheld: !!n.withheld,
+      ...(kind === 'donor' && !n.withheld
+        ? {
+            ...(n.associatedTag ? { associatedTag: n.associatedTag } : {}),
+            ...(n.associatedWith ? { associatedWith: n.associatedWith } : {}),
+          }
+        : {}),
       ...(kind === 'hub'
         ? { flow: n.flow === 'contracts' ? 'contracts' : 'grants' }
         : {}),

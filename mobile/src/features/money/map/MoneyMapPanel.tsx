@@ -1,3 +1,9 @@
+import {
+  associatedLine,
+  donorAssociated,
+  donorAssociatedTo,
+} from '../../../api/associated';
+import { AssociatedEntityLabel } from '../../../design/AssociatedEntityLabel';
 import type { Href } from 'expo-router';
 import {
   useCallback,
@@ -293,6 +299,14 @@ export function MoneyMapPanel({
                   testID="money-map-focus-clear"
                 />
               </View>
+              <AssociatedEntityLabel
+                associated={
+                  focus.node.kind === 'donor'
+                    ? donorAssociated(focus.node)
+                    : null
+                }
+                testID="money-map-focus-associated"
+              />
               <View
                 accessible
                 accessibilityLabel={`${moneyAccessibilityLabel(focus.node.amount, true)}, ${focusFigureLine(focus.node)}`}
@@ -381,14 +395,25 @@ export function MoneyMapPanel({
                       <MoneyRow
                         key={`${edge.index}`}
                         name={other.label}
-                        detail={`${moneyYears(edge.firstYear, edge.lastYear)} · ${counted(
-                          edge.count,
-                          edge.type === 'donations'
-                            ? 'donation'
-                            : edge.type === 'grants'
-                              ? 'grant'
-                              : 'contract',
-                        )}`}
+                        detail={[
+                          associatedLine(
+                            focus.node.kind === 'party'
+                              ? donorAssociatedTo(other, focus.node.label)
+                              : other.kind === 'donor'
+                                ? donorAssociated(other)
+                                : null,
+                          ),
+                          `${moneyYears(edge.firstYear, edge.lastYear)} · ${counted(
+                            edge.count,
+                            edge.type === 'donations'
+                              ? 'donation'
+                              : edge.type === 'grants'
+                                ? 'grant'
+                                : 'contract',
+                          )}`,
+                        ]
+                          .filter(Boolean)
+                          .join(' · ')}
                         amount={edge.amount}
                         href={focus.flowRecord(other)}
                         testID={`money-map-flow-${index}`}

@@ -1,3 +1,4 @@
+import { associatedLine, donorAssociatedTo } from '../api/associated';
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 import {
@@ -68,6 +69,7 @@ import { useFollowStates } from './follows/useFollowStates';
 import { ProfileBlock } from './people/Block';
 import { decodeMoneyGraph, moneyCatalogs, type MoneyGraph } from './money/data';
 import { associatedEntityRoute } from './money/record-routes';
+import { donorNodeFor } from './money/lookup';
 import { usePageActions } from './people/PageActions';
 import { partyTimingID } from './people/party-timing';
 import {
@@ -126,6 +128,58 @@ export default function Party() {
 }
 
 type View_ = NonNullable<PartyPageRecord['data']>;
+
+function AssociatedEntityRows({
+  rows,
+  party,
+}: {
+  rows: NonNullable<View_['associated']['data']>['rows'];
+  party: string;
+}) {
+  const [graph, setGraph] = useState<MoneyGraph | null>();
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve()
+      .then(() => apiClient.get(moneyCatalogs.federal.path, decodeMoneyGraph))
+      .then(
+        (record) => {
+          if (active) setGraph(record?.data ?? null);
+        },
+        () => {
+          if (active) setGraph(null);
+        },
+      );
+    return () => {
+      active = false;
+    };
+  }, [rows]);
+  return (
+    <View>
+      {rows.slice(0, 8).map((entity, index) => (
+        <LinkRow
+          key={entity.name}
+          title={entity.name}
+          detail={[
+            associatedLine(
+              donorAssociatedTo(
+                donorNodeFor({ name: entity.name }, graph ?? null),
+                party,
+              ),
+            ),
+            entity.year,
+            entity.receipts !== null
+              ? `receipts ${formatMoney(entity.receipts)}`
+              : null,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+          onPress={() => openAssociatedEntity(entity.name)}
+          testID={`party-associated-${index}`}
+        />
+      ))}
+    </View>
+  );
+}
 
 export function PartyPage({
   input,
@@ -571,6 +625,7 @@ function PartyContent({
               <MoneyRow
                 key={donor.id}
                 name={donor.name}
+                detail={donor.associated ?? undefined}
                 amount={donor.amount}
                 href={
                   donor.id.startsWith('donor:individual')
@@ -640,24 +695,7 @@ function PartyContent({
             <Text wordSafe variant="subsectionTitle" accessibilityRole="header">
               Associated entities
             </Text>
-            <View>
-              {associated.rows.slice(0, 8).map((entity, index) => (
-                <LinkRow
-                  key={entity.name}
-                  title={entity.name}
-                  detail={[
-                    entity.year,
-                    entity.receipts !== null
-                      ? `receipts ${formatMoney(entity.receipts)}`
-                      : null,
-                  ]
-                    .filter(Boolean)
-                    .join(' · ')}
-                  onPress={() => openAssociatedEntity(entity.name)}
-                  testID={`party-associated-${index}`}
-                />
-              ))}
-            </View>
+            <AssociatedEntityRows rows={associated.rows} party={label} />
             {associated.total > Math.min(8, associated.rows.length) ? (
               <Text wordSafe variant="footnote">
                 {`${formatCount(Math.min(8, associated.rows.length))} of ${formatCount(associated.total)} shown, largest receipts first.`}

@@ -1,3 +1,4 @@
+import { associatedLine, donorAssociated } from '../../api/associated';
 import { RouteOptions, useSafeSetOptions } from '../../navigation/preview';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import {
@@ -954,7 +955,12 @@ function ListBody({
               <MoneyRow
                 key={node.id}
                 name={node.label}
-                detail={donorDetail(node)}
+                detail={[
+                  associatedLine(donorAssociated(node)),
+                  donorDetail(node),
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
                 amount={node.total}
                 href={record_(node)}
                 testID={`money-donor-${index}`}

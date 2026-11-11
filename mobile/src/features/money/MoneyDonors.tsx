@@ -1,3 +1,4 @@
+import { associatedLine, donorAssociated } from '../../api/associated';
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
@@ -169,7 +170,9 @@ export default function MoneyDonors() {
           render={(node, index) => (
             <MoneyRow
               name={node.label}
-              detail={detail?.(node)}
+              detail={[associatedLine(donorAssociated(node)), detail?.(node)]
+                .filter(Boolean)
+                .join(' · ')}
               amount={node.total}
               href={moneyFocusRoute(
                 node.id,
