@@ -946,6 +946,15 @@ class BundleAttackTests(unittest.TestCase):
                 self.assertTrue(verify.has_analytics(entry))
         self.assertEqual(verify.ANALYTICS_CONFIG["host"], "https://opax.com.au/ingest")
 
+    def test_svg_amplitude_attribute_is_not_the_amplitude_sdk(self):
+        # react-native-svg's FeComponentTransferFunction ships the bare SVG
+        # attribute name; the SDK's markers and hosts are still refused.
+        self.assertFalse(verify.has_analytics(b"amplitude"))
+        for entry in (b"@amplitude/analytics-react-native", b"AmplitudeClient", b"amplitudeApiKey",
+                      b"https://api2.amplitude.com/2/httpapi", b"https://cdn.amplitude.com/libs/x.js"):
+            with self.subTest(entry=entry):
+                self.assertTrue(verify.has_analytics(entry))
+
     def test_analytics_check_reads_hermes_entries_and_still_refuses_sdk_and_host_plants(self):
         storage = b"ignoreAllLogsENTRY_EXIT"
         safe = hermes_bundle(storage, [packed(storage, entry) for entry in (b"ignoreAllLogs", b"ENTRY_EXIT")])

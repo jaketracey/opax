@@ -44,7 +44,10 @@ ANALYTICS_HOSTS = {"segment.io", "segment.com", "segmentapis.com", "posthog.com"
 POSTHOG_SDK_HOSTS = {"us.i.posthog.com", "eu.i.posthog.com", "us-assets.i.posthog.com", "eu-assets.i.posthog.com"}
 # Whole Hermes string entries that match SDK_PATTERN without being an SDK:
 # posthog-core's list of bot user agents names Sentry's uptime monitor.
-SDK_PATTERN_EXEMPT = {b"sentryuptimebot"}
+# Exact whole Hermes strings only: posthog-react-native's bot list entry, and
+# react-native-svg's feFunc "amplitude" attribute (SVG filter spec). The
+# Amplitude SDK is still refused by its hosts and any longer marker string.
+SDK_PATTERN_EXEMPT = {b"sentryuptimebot", b"amplitude"}
 POSTHOG_PACKAGES = {"node_modules/posthog-react-native", "node_modules/@posthog/core", "node_modules/@posthog/types"}
 ANALYTICS_CONFIG = {"host": "https://opax.com.au/ingest",
                     "projectToken": "phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr",
