@@ -1,3 +1,4 @@
+import { PadReading } from '../../design/adaptive';
 import { View } from 'react-native';
 import { InsetGroup, SectionHeader } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
@@ -24,23 +25,25 @@ export function AskBlock({ today }: { today: SydneyDate }) {
   const starters = todayStarters(today);
   if (!starters.length) return null;
   return (
-    <View testID="today-ask" style={{ gap: rhythm.heading }}>
-      <SectionHeader title="Ask about parliament" testID="today-ask-title" />
-      <InsetGroup>
-        {starters.map((question, i) => (
-          <LinkRow
-            key={question}
-            title={question}
-            symbol={symbols.ask}
-            onPress={() => {
-              track('opax_chip', { chip_kind: 'ask', placement: 'today' });
-              openAsk({ question });
-            }}
-            accessibilityHint="Opens Ask with this question"
-            testID={`today-ask-${i}`}
-          />
-        ))}
-      </InsetGroup>
-    </View>
+    <PadReading>
+      <View testID="today-ask" style={{ gap: rhythm.heading }}>
+        <SectionHeader title="Ask about parliament" testID="today-ask-title" />
+        <InsetGroup>
+          {starters.map((question, i) => (
+            <LinkRow
+              key={question}
+              title={question}
+              symbol={symbols.ask}
+              onPress={() => {
+                track('opax_chip', { chip_kind: 'ask', placement: 'today' });
+                openAsk({ question });
+              }}
+              accessibilityHint="Opens Ask with this question"
+              testID={`today-ask-${i}`}
+            />
+          ))}
+        </InsetGroup>
+      </View>
+    </PadReading>
   );
 }

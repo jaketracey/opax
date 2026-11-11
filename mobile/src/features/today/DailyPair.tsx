@@ -16,6 +16,7 @@ import { frontPageDeck } from '../explore/quiz/data';
 import { explore } from '../explore/runtime';
 import { archiveYear, questionIndex, type SydneyDate } from './rules';
 import { rules } from './sources';
+import { SurfaceGrid } from './SurfaceGrid';
 import { useTodayRead } from './TodayBlock';
 
 /** A licence that allows the photograph on the front page (no NC or ND terms). */
@@ -206,25 +207,27 @@ export function DailyPair({
   if (!loading && !archive && !question) return null;
   return (
     <View testID="today-pair" style={styles.pair}>
-      {loading ? (
-        <View style={[styles.cell, styles.loading]}>
-          <Skeleton
-            shape="card"
-            count={1}
-            label="Loading the archive photograph"
-            testID="today-archive-loading"
-          />
-        </View>
-      ) : archive ? (
-        <View style={styles.cell}>
-          <ArchiveCard year={archive.year} picture={archive.picture} />
-        </View>
-      ) : null}
-      {question ? (
-        <View style={styles.cell}>
-          <QuestionCard question={question} />
-        </View>
-      ) : null}
+      <SurfaceGrid testID="today-pair-grid" gap={12}>
+        {loading ? (
+          <View style={[styles.cell, styles.loading]}>
+            <Skeleton
+              shape="card"
+              count={1}
+              label="Loading the archive photograph"
+              testID="today-archive-loading"
+            />
+          </View>
+        ) : archive ? (
+          <View style={styles.cell}>
+            <ArchiveCard year={archive.year} picture={archive.picture} />
+          </View>
+        ) : null}
+        {question ? (
+          <View style={styles.cell}>
+            <QuestionCard question={question} />
+          </View>
+        ) : null}
+      </SurfaceGrid>
     </View>
   );
 }
