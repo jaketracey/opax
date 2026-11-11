@@ -58,6 +58,13 @@ test('list: commissions by jurisdiction with counts and citations', async () => 
   assert.ok(out.rows.some(r => r.id === 'vic-family-violence'));
 });
 
+test('house jurisdiction codes ("vic", "federal") are accepted as the dataset codes', async () => {
+  const vic = await call({ view: 'list', jurisdiction: 'vic', limit: 8 }); cited(vic);
+  assert.ok(vic.rows.every(r => r.jurisdiction === 'Victoria'));
+  const cth = await call({ view: 'list', jurisdiction: 'federal', limit: 8 }); cited(cth);
+  assert.ok(cth.rows.length && cth.rows.every(r => r.jurisdiction === 'Commonwealth'), JSON.stringify(cth.rows.map(r => r.jurisdiction)));
+});
+
 test('profile: one commission\'s reports, commissioners and responses, cited to the official copies', async () => {
   const out = await call({ view: 'profile', commission: 'family violence' }); cited(out);
   const row = out.rows[0];

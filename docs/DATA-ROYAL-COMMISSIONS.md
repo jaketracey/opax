@@ -107,7 +107,7 @@ publisher's copy.
 * The Victorian major infrastructure royal commission is still sitting. Its transcripts
   note that non-publication orders may be made; OPAX reproduces no evidence and links
   only the commission's published copies.
-* Robodebt: the report speaks of 57 recommendations; 56 are numbered. The unnumbered
+* Robodebt: the report refers to 57 recommendations; 56 are numbered. The unnumbered
   one, in the closing observations, is noted on the record and not loaded as numbered.
 * The Antisemitism interim report's recommendations 8 to 12 say they are contained in
   the confidential interim report; their text is loaded exactly as published.

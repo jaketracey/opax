@@ -8,6 +8,10 @@ const REPORT_TYPES = ['investigation_report', 'special_report', 'public_inquiry_
 const FINDING_KINDS = ['finding', 'opinion', 'no_finding', 'prosecution_statement', 'other'] as const
 const PARTS = ['findings', 'recommendations', 'responses', 'documents'] as const
 const JURISDICTIONS = ['Cth', 'NSW', 'Vic', 'Qld', 'WA', 'SA', 'Tas', 'ACT', 'NT'] as const
+// The house codes other tools use (federal, nsw, vic ...) are accepted beside the dataset's own codes, so a
+// planner that writes "vic" is not refused as malformed.
+const HOUSE_JURISDICTIONS: Record<string, string> = { federal: 'Cth', cth: 'Cth', nsw: 'NSW', vic: 'Vic', qld: 'Qld', wa: 'WA', sa: 'SA', tas: 'Tas', act: 'ACT', nt: 'NT' }
+const jurisdictionCode = (v: unknown): string | undefined => v == null || v === '' ? undefined : HOUSE_JURISDICTIONS[String(v).toLowerCase()] ?? String(v)
 const RECORD_ID = /^[a-z0-9][a-z0-9-]{2,200}$/
 const MANUAL_NOTE = 'Rows marked with an acquisition come from publisher PDFs that the OPAX maintainer downloaded by hand, because the commission\'s site does not answer OPAX\'s automated agent. They cite the publisher\'s own URL, and coverage for that commission is partial (view=bodies gives the gaps).'
 const NOTE = 'Quoted in each commission\'s own words, with the report\'s own labels. Allegations are not findings, and a finding or opinion of corrupt conduct or misconduct is not a finding of criminal guilt.'
@@ -36,7 +40,8 @@ async function bodyFile(env: ToolEnv, ix: Index, code: string): Promise<RecordRo
 
 /** Bodies matching the words or code: exact code, short name or name wins over a words match. */
 function matchBodies(ix: Index, query: unknown, jurisdiction: unknown): RecordRow[] {
-  let pool = jurisdiction ? ix.bodies.filter(b => b.jurisdiction === jurisdiction) : ix.bodies
+  const code = jurisdictionCode(jurisdiction)
+  let pool = code ? ix.bodies.filter(b => b.jurisdiction === code) : ix.bodies
   if (!query) return pool
   const q = norm(query)
   const exact = pool.filter(b => b.code === query || norm(b.code) === q || norm(b.short) === q || norm(b.name) === q)
@@ -67,7 +72,7 @@ function itemRow(ix: Index, r: RecordRow, part: 'findings' | 'recommendations' |
   const base: RecordRow = { record_id: r.id, body: b.short ?? r.body, jurisdiction: r.jurisdiction, report: r.title, operation: r.operation ?? null, date: r.date ?? null, ...(r.acquisition ? { acquisition: r.acquisition } : {}) }
   if (part === 'findings') return { ...base, n: item.n ?? i + 1, label: item.label, kind: item.kind, text: clip(item.text, 900), source: where(c), source_url: pageUrl(c), follow_up: { view: 'report', record_id: r.id, part: 'findings' } }
   if (part === 'recommendations') return { ...base, number: item.number ?? null, text: clip(item.text, 900), source: where(c), source_url: pageUrl(c), follow_up: { view: 'report', record_id: r.id, part: 'recommendations' } }
-  if (part === 'responses') return { ...base, kind: item.kind, title: item.title ?? null, date: item.date ?? null, recommendation: item.recommendation ?? null, status_as_published: item.status_as_published ?? null, text: item.text ? clip(item.text, 600) : null, source_url: sourceUrl(item.url) ?? pageUrl(c) }
+  if (part === 'responses') return { ...base, kind: item.kind, title: item.title ?? null, date: item.date ?? null, ...(item.publisher ? { publisher: item.publisher } : {}), ...(item.tabled_in ? { tabled_in: item.tabled_in } : {}), ...(item.acquisition ? { acquisition: item.acquisition } : {}), ...(item.note ? { note: clip(item.note, 300) } : {}), recommendation: item.recommendation ?? null, status_as_published: item.status_as_published ?? null, text: item.text ? clip(item.text, 600) : null, source_url: sourceUrl(item.url) ?? pageUrl(c) }
   return { ...base, role: item.role, title: item.title ?? null, url: sourceUrl(item.url), pages: item.pages ?? null, status: item.status ?? null }
 }
 
@@ -75,7 +80,7 @@ function itemCite(row: RecordRow, part: string): ToolCitation {
   const url = String(row.source_url ?? row.url ?? '')
   if (part === 'findings') return { kind: 'record', url, text: clip(`${row.body}, "${row.report}"${row.date ? ` (${row.date})` : ''}, ${row.source}: ${row.label} [${row.kind}]: "${row.text}"`, 900) }
   if (part === 'recommendations') return { kind: 'record', url, text: clip(`${row.body}, "${row.report}"${row.date ? ` (${row.date})` : ''}, ${row.source}: Recommendation ${row.number ?? ''}: "${row.text}"`, 900) }
-  if (part === 'responses') return { kind: 'record', url, text: clip(`${row.body} published ${String(row.kind).replace(/_/g, ' ')} "${row.title ?? 'untitled'}"${row.date ? ` dated ${row.date}` : ''} for "${row.report}"${row.status_as_published ? `; status as published: ${row.status_as_published}` : ''}.`, 600) }
+  if (part === 'responses') return { kind: 'record', url, text: clip(`${row.publisher ? `${row.publisher} published` : row.tabled_in ? `Tabled in the ${row.tabled_in}:` : `${row.body} published`} ${String(row.kind).replace(/_/g, ' ')} "${row.title ?? 'untitled'}"${row.date ? ` dated ${row.date}` : ''} for ${row.body}'s "${row.report}"${row.status_as_published ? `; status as published: ${row.status_as_published}` : ''}.`, 600) }
   return { kind: 'record', url, text: clip(`${row.body}, "${row.report}": ${row.role} document "${row.title ?? ''}"${row.pages ? `, ${row.pages} pages` : ''}.`, 400) }
 }
 
@@ -95,7 +100,7 @@ export const tool: ToolDefinition = {
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
     body: { type: 'string', minLength: 2, maxLength: 120, description: 'Commission, e.g. "NSW ICAC".' },
-    jurisdiction: { type: 'string', enum: [...JURISDICTIONS] },
+    jurisdiction: { type: 'string', enum: [...Object.keys(HOUSE_JURISDICTIONS), ...JURISDICTIONS] },
     query: { type: 'string', minLength: 2, maxLength: 200, description: 'Words in titles, or in finding or recommendation text.' },
     operation: { type: 'string', minLength: 2, maxLength: 120, description: 'e.g. "Operation Keppel".' },
     subject: { type: 'string', minLength: 2, maxLength: 160, description: 'Body or public role named, e.g. "council".' },
