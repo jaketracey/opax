@@ -90,11 +90,22 @@ export function guardClaimMeasures<T extends Record<string,unknown>>(payload:T):
   // check must still reject speech claims whose citations contain only money.
   if(!own.length&&!claims(text).has('money')&&(!sources.length||!sources.every(s=>evidenceMeasures(s).has('money'))))return
   if(claimMeasureConsistent(text,own))return
+  // A list item is one claim: cutting one sentence from it leaves a fragment,
+  // so a failing sentence inside a bullet removes the whole bullet line.
+  const lineStart=answer.lastIndexOf('\n',part.at-1)+1,lineBreak=answer.indexOf('\n',part.at)
+  if(/^\s*(?:[-*\u2022]|\d+[.)])\s/.test(answer.slice(lineStart,lineBreak<0?answer.length:lineBreak))){
+   const from=lineBreak<0&&lineStart>0?lineStart-1:lineStart,to=lineBreak<0?answer.length:lineBreak+1
+   cut.push({start:Array.from(answer.slice(0,from)).length,end:Array.from(answer.slice(0,to)).length})
+   return
+  }
   // Remove the sentence and the space up to the next sentence (or the end).
   const next=parts[index+1]
   cut.push({start,end:next?Array.from(answer.slice(0,next.at)).length:points.length})
  })
  if(!cut.length)return payload
+ // Overlapping cuts (two failing sentences in one bullet) must count once.
+ cut.sort((a,b)=>a.start-b.start)
+ for(let i=1;i<cut.length;)if(cut[i].start<=cut[i-1].end){cut[i-1].end=Math.max(cut[i-1].end,cut[i].end);cut.splice(i,1)}else i++
  const gap={...payload,answer:MEASURE_GAP,answer_status:'evidence_gap',answer_decision:'limitation',citations:{},sources:[],...(payload.research&&typeof payload.research==='object'?{research:{...payload.research,sources:[]}}:{})}
  const removed=(i:number)=>cut.some(c=>i>=c.start&&i<c.end)
  const shift=(i:number)=>{let n=0;for(const c of cut)n+=Math.max(0,Math.min(i,c.end)-c.start);return i-n}
