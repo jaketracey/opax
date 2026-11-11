@@ -1,5 +1,8 @@
 /** Shared URL spelling for browser renderers, exports and social publishers. */
 import { PERSON_PATHS } from './person-paths.js?v=3bce205606';
+// The Worker reads PERSON_PATHS through this module too, so its bundle holds one copy of the
+// table: importing person-paths bare from src and stamped from here made two modules of it.
+export { PERSON_PATHS };
 export const personNameKey = name => String(name ?? '').normalize('NFKD').replace(/\p{M}/gu, '')
   .replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 export function entitySlug(name) {

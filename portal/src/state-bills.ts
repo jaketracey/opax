@@ -1,6 +1,6 @@
 import {applyQuery,guardTableURL,type Row} from '../public/datatable.js'
 import {registerTableHTML,stateBillsTableConfig,stateBillsTableQuery} from '../public/register-tables.js'
-import {PERSON_PATHS} from '../public/person-paths.js'
+import {PERSON_PATHS} from '../public/canonical-urls.js'
 const esc=(v:unknown)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!))
 type Receipt={source_url:string;snapshot:string;sha256:string}
 type Licence={status:string;name:string;policy_url:string;policy_receipt:Receipt;text_allowed:boolean;hold_reason:string}
