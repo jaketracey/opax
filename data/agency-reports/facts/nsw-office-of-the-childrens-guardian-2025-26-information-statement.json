@@ -1,0 +1,162 @@
+{
+  "report_id": "nsw-office-of-the-childrens-guardian-2025-26-information-statement",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "executive_average_remuneration",
+    "staff_headcount",
+    "public_hearings",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses excluding losses",
+      "column_as_published": "Actual 2026",
+      "value": 73198,
+      "value_as_published": "73,198",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 45,
+      "quote": "Total expenses excluding losses 72,420 73,198 69,169"
+    },
+    {
+      "metric": "total_income",
+      "label_as_published": "Total Revenue",
+      "column_as_published": "Actual 2026",
+      "value": 78798,
+      "value_as_published": "78,798",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 45,
+      "quote": "Total Revenue 73,890 78,798 64,191"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result from continuing operations",
+      "column_as_published": "Actual 2026",
+      "value": 5600,
+      "value_as_published": "5,600",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 45,
+      "quote": "Net result from continuing operations 1,470 5,600 (4,980)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Total employee related expenses",
+      "value": 42111,
+      "value_as_published": "42,111",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 52,
+      "quote": "Total employee related expenses 42,111 40,630"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Consulting fees over $50,000",
+      "value": 389651,
+      "value_as_published": "$389,651",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 28,
+      "quote": "$79,701 $169,950 $140,000 $389,651"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "Notifications received",
+      "column_as_published": "2025-26",
+      "value": 3270,
+      "value_as_published": "3,270",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 86,
+      "quote": "Notifications received 2,412* 2,841* 3,270"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Matters reported",
+      "column_as_published": "2025-26",
+      "value": 5264,
+      "value_as_published": "5,264",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 86,
+      "quote": "Matters reported 4,384* 5,041* 5,264"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Complaints about relevant entities – total",
+      "column_as_published": "2025-26",
+      "value": 110,
+      "value_as_published": "110",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 86,
+      "quote": "Complaints about relevant entities – total 52 71* 110"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "direct investigations",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 80,
+      "quote": "We commenced 2 direct investigations into reportable allegations"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Working with Children Check applications",
+      "value": 500920,
+      "value_as_published": "500,920",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "Received 500,920 Working with Children Check applications."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Reportable Conduct Scheme notifications",
+      "value": 3188,
+      "value_as_published": "3,188",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "Finalised 3,188 Reportable Conduct Scheme notifications"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "WWCC compliance investigations",
+      "value": 166,
+      "value_as_published": "166",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "finalised 166 WWCC compliance investigations."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "formal complaints received",
+      "value": 16,
+      "value_as_published": "16",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 28,
+      "quote": "There were 16 formal complaints received during the reporting year."
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Number of full time equivelent (FTE) staff employed by the Office of the Children’s Guardian",
+      "column_as_published": "June 2026",
+      "value": 221,
+      "value_as_published": "221",
+      "unit": "fte",
+      "period": "June 2026",
+      "page": 27,
+      "quote": "Number of full time equivelent (FTE) staff employed by the Office of the Children’s Guardian June 2026 Ongoing Temporary Senior Executive 221 33 12"
+    }
+  ]
+}

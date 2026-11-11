@@ -124,7 +124,7 @@ export const tool: ToolDefinition = {
       return { rows: [], citations: [{ kind: 'export', url: indexUrl, text: `The published annual report projection covers reporting years ${ix.years.join(', ')}.` }], notes: [`No ${args.year} reports are in this projection. Coverage is ${fromTo(ix.years)}; the Portal holds no annual report data before 2018-19.`], total: 0, snapshot }
     }
     const bodies = matchBodies(ix, args.body), bodyIds = new Set(bodies.map(b => String(b.id)))
-    if (args.body && !bodies.length) return { rows: [], citations: [{ kind: 'export', url: indexUrl, text: `${ix.bodies.length} Commonwealth entities and companies are in the published Transparency Portal projection; none matches "${clip(args.body, 80)}".` }], notes: ['No Commonwealth entity or company on the Transparency Portal matches that name. State and territory agencies are not covered here.'], total: 0, snapshot }
+    if (args.body && !bodies.length) return { rows: [], citations: [{ kind: 'export', url: indexUrl, text: `${ix.bodies.length} Commonwealth entities and companies are in the published Transparency Portal projection; none matches "${clip(args.body, 80)}".` }], notes: ['No Commonwealth entity or company on the Transparency Portal matches that name. State and territory agencies are not covered by this tool; some of their annual report figures are in the agency_reports dataset.'], total: 0, snapshot }
     const bodyNote = args.body && bodies.length > 1 ? [`"${clip(args.body, 60)}" matches ${bodies.length} bodies: ${bodies.slice(0, 6).map(b => b.name).join('; ')}${bodies.length > 6 ? '…' : ''}. Use the exact name to narrow.`] : []
     const settled = ix.years.length > 1 ? ix.years[ix.years.length - 2] : latest
 

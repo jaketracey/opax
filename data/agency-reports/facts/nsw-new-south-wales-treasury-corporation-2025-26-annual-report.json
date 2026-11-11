@@ -1,0 +1,253 @@
+{
+  "report_id": "nsw-new-south-wales-treasury-corporation-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_average_remuneration",
+    "total_expenses",
+    "total_income",
+    "consultancy_total",
+    "matters_received"
+  ],
+  "facts": [
+    {
+      "metric": "executive_band",
+      "label_as_published": "Bands and gender of executive officers",
+      "column_as_published": "Female",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "people",
+      "period": "FY26",
+      "page": 59,
+      "quote": "Band FY26 FY25 FY24 Female Male Female Male Female Male Band 3 & 4 2 6 2 6 2 6 Band 2 0 0 0 0 0 0 Band 1 0 0 0 0 0 0",
+      "band": "Band 3 & 4"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Bands and gender of executive officers",
+      "column_as_published": "Male",
+      "value": 6,
+      "value_as_published": "6",
+      "unit": "people",
+      "period": "FY26",
+      "page": 59,
+      "quote": "Band FY26 FY25 FY24 Female Male Female Male Female Male Band 3 & 4 2 6 2 6 2 6 Band 2 0 0 0 0 0 0 Band 1 0 0 0 0 0 0",
+      "band": "Band 3 & 4"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Bands and gender of executive officers",
+      "column_as_published": "Female",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "people",
+      "period": "FY26",
+      "page": 59,
+      "quote": "Band FY26 FY25 FY24 Female Male Female Male Female Male Band 3 & 4 2 6 2 6 2 6 Band 2 0 0 0 0 0 0 Band 1 0 0 0 0 0 0",
+      "band": "Band 2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Bands and gender of executive officers",
+      "column_as_published": "Male",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "people",
+      "period": "FY26",
+      "page": 59,
+      "quote": "Band FY26 FY25 FY24 Female Male Female Male Female Male Band 3 & 4 2 6 2 6 2 6 Band 2 0 0 0 0 0 0 Band 1 0 0 0 0 0 0",
+      "band": "Band 2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Bands and gender of executive officers",
+      "column_as_published": "Female",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "people",
+      "period": "FY26",
+      "page": 59,
+      "quote": "Band FY26 FY25 FY24 Female Male Female Male Female Male Band 3 & 4 2 6 2 6 2 6 Band 2 0 0 0 0 0 0 Band 1 0 0 0 0 0 0",
+      "band": "Band 1"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Bands and gender of executive officers",
+      "column_as_published": "Male",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "people",
+      "period": "FY26",
+      "page": 59,
+      "quote": "Band FY26 FY25 FY24 Female Male Female Male Female Male Band 3 & 4 2 6 2 6 2 6 Band 2 0 0 0 0 0 0 Band 1 0 0 0 0 0 0",
+      "band": "Band 1"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Number of executive officers",
+      "column_as_published": "FY26",
+      "value": 8,
+      "value_as_published": "8",
+      "unit": "count",
+      "period": "FY26",
+      "page": 58,
+      "quote": "Number of executive officers 8 8 8"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "employee-related expenditure",
+      "value": 9.5,
+      "value_as_published": "9.5%",
+      "unit": "percent",
+      "period": "2025/26",
+      "page": 59,
+      "quote": "9.5% of TCorp’s employee-related expenditure in 2025/26 was related to senior executives, who represented 3.7% of full-time equivalent employees as at 30 June 2026."
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total",
+      "column_as_published": "FY26",
+      "value": 214,
+      "value_as_published": "214",
+      "unit": "people",
+      "period": "at 30 June 2026",
+      "page": 58,
+      "quote": "FY26 FY25 Headcount FTE Headcount FTE Chief executive 1 1 1 1 General managers 7 7 7 7 Professional employees 169 167.7 173 170 Support employees 37 36.4 39 38.4 Total 214 212.1 220 216.4"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total",
+      "column_as_published": "FY26",
+      "value": 212.1,
+      "value_as_published": "212.1",
+      "unit": "fte",
+      "period": "at 30 June 2026",
+      "page": 58,
+      "quote": "FY26 FY25 Headcount FTE Headcount FTE Chief executive 1 1 1 1 General managers 7 7 7 7 Professional employees 169 167.7 173 170 Support employees 37 36.4 39 38.4 Total 214 212.1 220 216.4"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Profit for the year",
+      "column_as_published": "2026",
+      "value": 164620,
+      "value_as_published": "164,620",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 102,
+      "quote": "Profit for the year 164,620 164,900"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total net income",
+      "column_as_published": "2026",
+      "value": 370955,
+      "value_as_published": "370,955",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 102,
+      "quote": "Total net income 370,955 368,860"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Fee income",
+      "column_as_published": "2026",
+      "value": 105804,
+      "value_as_published": "105,804",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 102,
+      "quote": "Fee income 4 105,804 98,562"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total operating and transaction costs",
+      "column_as_published": "2026",
+      "value": -135783,
+      "value_as_published": "(135,783)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 102,
+      "quote": "Total operating and transaction costs (135,783) (133,288)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Salaries and related costs",
+      "column_as_published": "2026",
+      "value": 65512,
+      "value_as_published": "65,512",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 112,
+      "quote": "Salaries and related costs 65,512 62,815"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Cost ($) (Inclusive of GST)",
+      "value": 214500,
+      "value_as_published": "214,500",
+      "unit": "dollars",
+      "period": "FY26",
+      "page": 62,
+      "quote": "Cutter Associates Investment Data & Analytics Roadmap 214,500",
+      "counterparty": "Cutter Associates",
+      "purpose": "Investment Data & Analytics Roadmap"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Cost ($) (Inclusive of GST)",
+      "value": 163350,
+      "value_as_published": "163,350",
+      "unit": "dollars",
+      "period": "FY26",
+      "page": 62,
+      "quote": "Publicis Sapient Australia Client experience review 163,350",
+      "counterparty": "Publicis Sapient Australia",
+      "purpose": "Client experience review"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Cost ($) (Inclusive of GST)",
+      "value": 155375,
+      "value_as_published": "155,375",
+      "unit": "dollars",
+      "period": "FY26",
+      "page": 62,
+      "quote": "Skylight Cyber Security Cyber security assessment 155,375",
+      "counterparty": "Skylight Cyber Security",
+      "purpose": "Cyber security assessment"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Cost ($) (Inclusive of GST)",
+      "value": 50787,
+      "value_as_published": "50,787",
+      "unit": "dollars",
+      "period": "FY26",
+      "page": 62,
+      "quote": "Scyne Advisory Cyber security assessment 50,787",
+      "counterparty": "Scyne Advisory",
+      "purpose": "Cyber security assessment"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Consultancies equal to or more than $50,000",
+      "value": 584012,
+      "value_as_published": "584,012",
+      "unit": "dollars",
+      "period": "FY26",
+      "page": 62,
+      "quote": "Consultancies equal to or more than $50,000 584,012"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Consultancies less than $50,000 (four engagements)",
+      "value": 99654,
+      "value_as_published": "99,654",
+      "unit": "dollars",
+      "period": "FY26",
+      "page": 62,
+      "quote": "Consultancies less than $50,000 (four engagements) 99,654"
+    }
+  ]
+}

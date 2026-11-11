@@ -1,0 +1,40 @@
+{
+ "report_id": "nsw-public-service-commissioner-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "staff_fte",
+  "staff_headcount",
+  "total_expenses",
+  "total_income",
+  "employee_expenses",
+  "net_result",
+  "consultancy_total",
+  "matters_received"
+ ],
+ "facts": [
+  {
+   "metric": "operational_other",
+   "label_as_published": "received 1 request for guidance under section 83B",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 33,
+   "quote": "the Commissioner received 1 request for guidance under section 83B"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "the OPSC has 19 roles across 3 teams",
+   "value": 19,
+   "value_as_published": "19",
+   "unit": "count",
+   "period": "as at 30 June 2026",
+   "page": 8,
+   "quote": "the OPSC has 19 roles across 3 teams"
+  }
+ ]
+}

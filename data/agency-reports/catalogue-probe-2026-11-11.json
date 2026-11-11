@@ -1,0 +1,110 @@
+[
+ {
+  "jurisdiction": "NSW",
+  "url": "https://www.parliament.nsw.gov.au/parliamentary-business/tabled-papers",
+  "result": "refused or failed: SourceRefused: 4",
+  "log": [],
+  "at": "2026-11-11T06:27:10+00:00"
+ },
+ {
+  "jurisdiction": "Vic",
+  "url": "https://www.parliament.vic.gov.au/tabled-documents-database",
+  "result": "answered",
+  "log": [
+   {
+    "url": "https://www.parliament.vic.gov.au/robots.txt",
+    "status": 200,
+    "at": "2026-11-11T06:27:12+00:00",
+    "bytes": 119
+   },
+   {
+    "url": "https://www.parliament.vic.gov.au/tabled-documents-database",
+    "status": 200,
+    "at": "2026-11-11T06:27:14+00:00",
+    "bytes": 71206
+   }
+  ],
+  "at": "2026-11-11T06:27:14+00:00"
+ },
+ {
+  "jurisdiction": "Qld",
+  "url": "https://www.parliament.qld.gov.au/Work-of-the-Assembly/Tabled-Papers/search?timeframeId=-1",
+  "result": "refused or failed: SourceRefused: 4",
+  "log": [],
+  "at": "2026-11-11T06:27:17+00:00"
+ },
+ {
+  "jurisdiction": "WA",
+  "url": "https://www.parliament.wa.gov.au/Test/Tables.nsf/ScreenLCTabledPapersByTabledPaperDate",
+  "result": "refused or failed: SourceRefused: 4",
+  "log": [],
+  "at": "2026-11-11T06:27:19+00:00"
+ },
+ {
+  "jurisdiction": "SA",
+  "url": "https://www.parliament.sa.gov.au/en/House-of-Assembly/Tabled-Papers-and-Petitions",
+  "result": "answered",
+  "log": [
+   {
+    "url": "https://www.parliament.sa.gov.au/robots.txt",
+    "status": 404,
+    "at": "2026-11-11T06:27:21+00:00",
+    "bytes": 103
+   },
+   {
+    "url": "https://www.parliament.sa.gov.au/en/House-of-Assembly/Tabled-Papers-and-Petitions",
+    "status": 200,
+    "at": "2026-11-11T06:27:24+00:00",
+    "bytes": 46986
+   }
+  ],
+  "at": "2026-11-11T06:27:24+00:00"
+ },
+ {
+  "jurisdiction": "Tas",
+  "url": "https://www.parliament.tas.gov.au/house-of-assembly/tabled-papers/house-of-assembly-tabled-papers-2026",
+  "result": "answered",
+  "log": [
+   {
+    "url": "https://www.parliament.tas.gov.au/robots.txt",
+    "status": 200,
+    "at": "2026-11-11T06:27:27+00:00",
+    "bytes": 381
+   },
+   {
+    "url": "https://www.parliament.tas.gov.au/house-of-assembly/tabled-papers/house-of-assembly-tabled-papers-2026",
+    "status": 200,
+    "at": "2026-11-11T06:27:30+00:00",
+    "bytes": 323206
+   }
+  ],
+  "at": "2026-11-11T06:27:30+00:00"
+ },
+ {
+  "jurisdiction": "ACT",
+  "url": "https://www.act.gov.au/open/annual_reports",
+  "result": "answered",
+  "log": [
+   {
+    "url": "https://www.act.gov.au/robots.txt",
+    "status": 200,
+    "at": "2026-11-11T06:27:33+00:00",
+    "bytes": 1045
+   },
+   {
+    "url": "https://www.act.gov.au/open/annual_reports",
+    "status": 200,
+    "at": "2026-11-11T06:27:53+00:00",
+    "bytes": 125230
+   }
+  ],
+  "at": "2026-11-11T06:27:53+00:00"
+ },
+ {
+  "jurisdiction": "NT",
+  "url": "https://parliament.nt.gov.au/business/tabled-papers",
+  "result": "refused or failed: SourceRefused: 4",
+  "log": [],
+  "at": "2026-11-11T06:27:55+00:00"
+ }
+]

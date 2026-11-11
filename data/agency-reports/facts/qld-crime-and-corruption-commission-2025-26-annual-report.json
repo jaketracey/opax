@@ -1,0 +1,255 @@
+{
+  "report_id": "qld-crime-and-corruption-commission-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "public_hearings",
+    "executive_band"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "complaints of suspected corruption",
+      "value": 5801,
+      "value_as_published": "5,801",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 37,
+      "quote": "we received 5,801 complaints of suspected corruption"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "commenced 20 investigations",
+      "value": 20,
+      "value_as_published": "20",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 37,
+      "quote": "we commenced 20 investigations and finalised 26 investigations"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "finalised 26 investigations",
+      "value": 26,
+      "value_as_published": "26",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 37,
+      "quote": "we commenced 20 investigations and finalised 26 investigations"
+    },
+    {
+      "metric": "referrals_to_prosecution",
+      "label_as_published": "Office of the Director of Public Prosecutions (ODPP)",
+      "value": null,
+      "value_as_published": "Five",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 38,
+      "quote": "Five investigations resulted in briefs of evidence relating to fraud and other offences being referred to the Office of the Director of Public Prosecutions (ODPP) for advice as to the suitability of a criminal prosecution"
+    },
+    {
+      "metric": "referrals_to_prosecution",
+      "label_as_published": "Office of the Commonwealth Director of Public Prosecutions (CDPP)",
+      "value": null,
+      "value_as_published": "One",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 38,
+      "quote": "One investigation resulted in a brief of evidence relating to Commonwealth criminal offences, including structuring and money laundering offences, being referred to the Office of the Commonwealth Director of Public Prosecutions (CDPP) for advice as to the suitability of a criminal prosecution"
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Prevention recommendations",
+      "value": 38,
+      "value_as_published": "38",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 38,
+      "quote": "Prevention recommendations 38"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "complaints of suspected corruption assessed",
+      "value": 6198,
+      "value_as_published": "6,198",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "6,198 complaints of suspected corruption assessed"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "complaints were triaged as meeting the criteria of serious, systemic and strategic",
+      "value": 657,
+      "value_as_published": "657",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 37,
+      "quote": "657 complaints were triaged as meeting the criteria of serious, systemic and strategic"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "crime investigations finalised",
+      "value": 28,
+      "value_as_published": "28",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "28 crime investigations finalised"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "days of hearings",
+      "value": 100,
+      "value_as_published": "100",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "100 days of hearings with 94 witnesses examined"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "witnesses examined",
+      "value": 94,
+      "value_as_published": "94",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "100 days of hearings with 94 witnesses examined"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "law enforcement crime intelligence and information disclosures",
+      "value": 241,
+      "value_as_published": "241",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "241 law enforcement crime intelligence and information disclosures"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "People charged",
+      "value": 6,
+      "value_as_published": "6",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 38,
+      "quote": "People charged 6 Charges laid 22"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Charges laid",
+      "value": 22,
+      "value_as_published": "22",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 38,
+      "quote": "People charged 6 Charges laid 22"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Recommendations for disciplinary action",
+      "value": 12,
+      "value_as_published": "12",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 38,
+      "quote": "Recommendations for disciplinary action 12 No. of people 11"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "full-time equivalent employees",
+      "value": 336.79,
+      "value_as_published": "336.79",
+      "unit": "fte",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "336.79 full-time equivalent employees / 358 people employed"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "people employed",
+      "value": 358,
+      "value_as_published": "358",
+      "unit": "people",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "336.79 full-time equivalent employees / 358 people employed"
+    },
+    {
+      "metric": "total_income",
+      "label_as_published": "Total Income from Continuing Operations",
+      "column_as_published": "2026",
+      "value": 79469,
+      "value_as_published": "79,469",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 82,
+      "quote": "Total Income from Continuing Operations 79,469 81,533 (2,064) 75,503"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total Expenses from Continuing Operations",
+      "column_as_published": "2026",
+      "value": 79163,
+      "value_as_published": "79,163",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 82,
+      "quote": "Total Expenses from Continuing Operations 79,163 81,533 (2,370) 74,347"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee expenses",
+      "column_as_published": "2026",
+      "value": 57113,
+      "value_as_published": "57,113",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 82,
+      "quote": "Employee expenses 3 57,113 57,255 (142) 55,874"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Operating Result from Continuing Operations",
+      "column_as_published": "2026",
+      "value": 306,
+      "value_as_published": "306",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 82,
+      "quote": "Operating Result from Continuing Operations 306 - 306 1,156"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "Chairperson",
+      "value": 669,
+      "value_as_published": "669",
+      "unit": "thousands_of_dollars",
+      "period": "1 July 2025 – 30 June 2026",
+      "page": 95,
+      "quote": "Chairperson 585 6 15 63 669"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "Chief Executive Officer",
+      "value": 385,
+      "value_as_published": "385",
+      "unit": "thousands_of_dollars",
+      "period": "1 July 2025 – 30 June 2026",
+      "page": 95,
+      "quote": "Chief Executive Officer 328 6 9 42 385"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total Remuneration",
+      "value": 2302,
+      "value_as_published": "2,302",
+      "unit": "thousands_of_dollars",
+      "period": "1 July 2025 – 30 June 2026",
+      "page": 95,
+      "quote": "Total Remuneration 1,964 36 51 251 2,302"
+    }
+  ]
+}

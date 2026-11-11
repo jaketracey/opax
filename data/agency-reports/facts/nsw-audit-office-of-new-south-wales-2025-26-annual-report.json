@@ -1,0 +1,178 @@
+{
+ "report_id": "nsw-audit-office-of-new-south-wales-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "consultancy_total",
+  "matters_received",
+  "investigations_commenced"
+ ],
+ "facts": [
+  {
+   "metric": "staff_fte",
+   "label_as_published": "full-time equivalent employees",
+   "value": 329,
+   "value_as_published": "329",
+   "unit": "fte",
+   "period": "at 30 June 2026",
+   "page": 31,
+   "quote": "At 30 June 2026, the number of full-time equivalent employees was 329"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Employee headcount",
+   "value": 340,
+   "value_as_published": "340",
+   "unit": "people",
+   "period": "at 30 June 2026",
+   "page": 31,
+   "quote": "Employee headcount was 340"
+  },
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "2025–26 Actual $’000",
+   "value": 85284,
+   "value_as_published": "85,284",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 65,
+   "quote": "Total revenue 85,284 91,349 88,818"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses",
+   "column_as_published": "2025–26 Actual $’000",
+   "value": 88239,
+   "value_as_published": "88,239",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 65,
+   "quote": "Total expenses 88,239 93,226 89,512"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee-related expenses",
+   "column_as_published": "2025–26 Actual $’000",
+   "value": 58280,
+   "value_as_published": "58,280",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 65,
+   "quote": "Employee-related expenses C2 58,280 61,093 57,329"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2025–26 Actual $’000",
+   "value": -2955,
+   "value_as_published": "(2,955)",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 65,
+   "quote": "Net result (2,955) (1,877) (694)"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026 $’000",
+   "value": 3767,
+   "value_as_published": "3,767",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 73,
+   "quote": "Total remuneration 3,767 3,747"
+  },
+  {
+   "metric": "executive_average_remuneration",
+   "label_as_published": "Band 4 (equivalent)",
+   "column_as_published": "2025–26",
+   "value": 604800,
+   "value_as_published": "604,800",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "Band 4 (equivalent) 581,740 604,800",
+   "band": "Band 4 (equivalent)"
+  },
+  {
+   "metric": "executive_average_remuneration",
+   "label_as_published": "Band 3 (equivalent)",
+   "column_as_published": "2025–26",
+   "value": 449823,
+   "value_as_published": "449,823",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "Band 3 (equivalent) 423,015 449,823",
+   "band": "Band 3 (equivalent)"
+  },
+  {
+   "metric": "executive_average_remuneration",
+   "label_as_published": "Band 2 (equivalent)",
+   "column_as_published": "2025–26",
+   "value": 370275,
+   "value_as_published": "370,275",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "Band 2 (equivalent) 350,421 370,275",
+   "band": "Band 2 (equivalent)"
+  },
+  {
+   "metric": "executive_average_remuneration",
+   "label_as_published": "Band 1 (equivalent)",
+   "column_as_published": "2025–26",
+   "value": 280433,
+   "value_as_published": "280,433",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "Band 1 (equivalent) 266,414 280,433",
+   "band": "Band 1 (equivalent)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "of state and university financial audit opinions issued within 4 months of agencies’ financial year end",
+   "value": 92,
+   "value_as_published": "92%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "92% of state and university financial audit opinions issued within 4 months of agencies’ financial year end"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "of our performance audit recommendations accepted or agreed in principle",
+   "value": 100,
+   "value_as_published": "100%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "100% of our performance audit recommendations accepted or agreed in principle"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "of our financial audit recommendations accepted",
+   "value": 96,
+   "value_as_published": "96%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "96% of our financial audit recommendations accepted"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "of local government financial audit opinions issued by 31 October 2025",
+   "value": 88,
+   "value_as_published": "88%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "88% of local government financial audit opinions issued by 31 October 2025"
+  }
+ ]
+}

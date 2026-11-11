@@ -1,0 +1,262 @@
+{
+ "report_id": "nsw-information-and-privacy-commission-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_count",
+  "staff_fte",
+  "staff_headcount",
+  "investigations_commenced",
+  "investigations_finalised",
+  "public_hearings",
+  "referrals_to_prosecution",
+  "recommendations_made"
+ ],
+ "facts": [
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses excluding losses",
+   "column_as_published": "Actual 2026",
+   "value": 8854475,
+   "value_as_published": "8,854,475",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Total expenses excluding losses 9,269,000 8,854,475 8,220,771"
+  },
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "Actual 2026",
+   "value": 9594183,
+   "value_as_published": "9,594,183",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Total revenue 9,154,000 9,594,183 8,131,119"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee-related expenses",
+   "column_as_published": "Actual 2026",
+   "value": 5843553,
+   "value_as_published": "5,843,553",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Employee-related expenses 2(a) 6,890,000 5,843,553 5,642,026"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result from continuing operations",
+   "column_as_published": "Actual 2026",
+   "value": 739708,
+   "value_as_published": "739,708",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Net result from continuing operations (115,000) 739,708 (89,652)"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Consultants",
+   "value": 308690,
+   "value_as_published": "$308,690",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 65,
+   "quote": "at a total cost of $308,690"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Band 3",
+   "column_as_published": "Female",
+   "value": 2,
+   "value_as_published": "2",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Band 3 2 - $373,951 to $527,050 446,721",
+   "band": "Band 3"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Band 1",
+   "column_as_published": "Female",
+   "value": 2,
+   "value_as_published": "2",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Band 1 2 1 $208,400 to $297,250 236,290",
+   "band": "Band 1"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Band 1",
+   "column_as_published": "Male",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Band 1 2 1 $208,400 to $297,250 236,290",
+   "band": "Band 1"
+  },
+  {
+   "metric": "executive_average_remuneration",
+   "label_as_published": "Band 3",
+   "column_as_published": "Average Range $",
+   "value": 446721,
+   "value_as_published": "446,721",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Band 3 2 - $373,951 to $527,050 446,721",
+   "band": "Band 3"
+  },
+  {
+   "metric": "executive_average_remuneration",
+   "label_as_published": "Band 1",
+   "column_as_published": "Average Range $",
+   "value": 236290,
+   "value_as_published": "236,290",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Band 1 2 1 $208,400 to $297,250 236,290",
+   "band": "Band 1"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "privacy reviews and complaints",
+   "value": 615,
+   "value_as_published": "615",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 14,
+   "quote": "The IPC received a total of 615 privacy reviews and complaints"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "information access complaints",
+   "value": 147,
+   "value_as_published": "147",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 37,
+   "quote": "The IPC received 147 information access complaints in 2025–26"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "applications for external review",
+   "value": 668,
+   "value_as_published": "668",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 38,
+   "quote": "The Information Commissioner received 668 applications for external review"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "privacy reviews",
+   "value": 406,
+   "value_as_published": "406",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 41,
+   "quote": "the Privacy Commissioner received 406 privacy reviews"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "notifications under the MNDB Scheme",
+   "value": 139,
+   "value_as_published": "139",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 42,
+   "quote": "the Privacy Commissioner received 139 notifications under the MNDB Scheme"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "reviews finalised",
+   "value": 262,
+   "value_as_published": "262",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 7,
+   "quote": "GIPA – 1,142 enquiries finalised / 119 advices finalised / 262 reviews finalised"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "complaints finalised",
+   "value": 98,
+   "value_as_published": "98",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 7,
+   "quote": "262 reviews finalised / 98 complaints finalised"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "reviews finalised",
+   "value": 376,
+   "value_as_published": "376",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 7,
+   "quote": "Privacy – 1,539 enquiries finalised / 204 advices finalised / 376 reviews finalised"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "complaints finalised",
+   "value": 114,
+   "value_as_published": "114",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 7,
+   "quote": "376 reviews finalised / 114 complaints finalised"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "enquiries finalised",
+   "value": 1142,
+   "value_as_published": "1,142",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 7,
+   "quote": "GIPA – 1,142 enquiries finalised"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "enquiries finalised",
+   "value": 1539,
+   "value_as_published": "1,539",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 7,
+   "quote": "Privacy – 1,539 enquiries finalised"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "instances of regulatory assistance",
+   "value": 33,
+   "value_as_published": "33",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 14,
+   "quote": "33 instances of regulatory assistance were initiated during the period"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "mandatory breach notifications",
+   "value": 139,
+   "value_as_published": "139",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 7,
+   "quote": "139 mandatory breach notifications were made to the Privacy Commissioner"
+  }
+ ]
+}

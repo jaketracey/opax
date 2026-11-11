@@ -1,0 +1,212 @@
+{
+  "report_id": "act-act-integrity-commission-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "public_hearings",
+    "investigations_finalised",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "corruption reports",
+      "value": 261,
+      "value_as_published": "261",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "the Commission received 261 corruption reports"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "Five investigations were new",
+      "value": null,
+      "value_as_published": "Five",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 37,
+      "quote": "Five investigations were new and 9 were carried forward from previous years"
+    },
+    {
+      "metric": "referrals_to_prosecution",
+      "label_as_published": "Investigations",
+      "value": null,
+      "value_as_published": "one",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 37,
+      "quote": "Of these investigations, one resulted in a brief of evidence being compiled and referred to the ACT Director of Public Prosecutions for possible criminal charges"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total number of reports received",
+      "value": 233,
+      "value_as_published": "233",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 42,
+      "quote": "The total number of reports received by the Commission in 2025–26 was a record number of 233, plus 2 own-initiative reports"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Information reports",
+      "value": 155,
+      "value_as_published": "155",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 44,
+      "quote": "There were 155 reports received during the year which were classified as information reports"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Assessments completed",
+      "column_as_published": "2025–26",
+      "value": 84,
+      "value_as_published": "84",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 45,
+      "quote": "the Commission completed assessments of 84 corruption complaints and mandatory corruption notifications"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "preliminary inquiries",
+      "value": 17,
+      "value_as_published": "17",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 48,
+      "quote": "The Commission worked on 17 preliminary inquiries during the reporting period"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Preliminary inquiries completed",
+      "value": 9,
+      "value_as_published": "9",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 48,
+      "quote": "Preliminary inquiries completed 9 Accepted for investigation"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Investigations worked on",
+      "value": 14,
+      "value_as_published": "14",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "14 Investigations worked on"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Examinations held",
+      "value": 32,
+      "value_as_published": "32",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "32 Examinations held"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Summonses issued",
+      "value": 71,
+      "value_as_published": "71",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "71 Summonses issued"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Finalised investigation report",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "1 Finalised investigation report"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total",
+      "column_as_published": "FTE",
+      "value": 29.4,
+      "value_as_published": "29.4",
+      "unit": "fte",
+      "period": "as at 30 June 2026",
+      "page": 14,
+      "quote": "Total 29.4 30"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total",
+      "column_as_published": "Headcount",
+      "value": 30,
+      "value_as_published": "30",
+      "unit": "people",
+      "period": "as at 30 June 2026",
+      "page": 14,
+      "quote": "Total 29.4 30"
+    },
+    {
+      "metric": "total_income",
+      "label_as_published": "Total Income",
+      "column_as_published": "Actual 2026",
+      "value": 8633,
+      "value_as_published": "8,633",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 98,
+      "quote": "Total Income 8,633 9,853 6,879"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total Expenses",
+      "column_as_published": "Actual 2026",
+      "value": 8639,
+      "value_as_published": "8,639",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 98,
+      "quote": "Total Expenses 8,639 10,152 7,301"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee Expenses",
+      "column_as_published": "Actual 2026",
+      "value": 5221,
+      "value_as_published": "5,221",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 98,
+      "quote": "Employee Expenses 3 5,221 5,883 5,009"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Operating Result",
+      "column_as_published": "Actual 2026",
+      "value": -5,
+      "value_as_published": "(5)",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 98,
+      "quote": "Operating Result (5) (299) (422)"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total Compensation by the Commission to KMP",
+      "column_as_published": "2026 $’000",
+      "value": 1056,
+      "value_as_published": "1,056",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 119,
+      "quote": "Total Compensation by the Commission to KMP 1,056 1,062"
+    }
+  ]
+}

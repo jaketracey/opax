@@ -1,0 +1,227 @@
+{
+  "report_id": "tas-integrity-commission-tasmania-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "public_hearings",
+    "referrals_to_prosecution",
+    "recommendations_made",
+    "staff_headcount",
+    "executive_band"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "Misconduct complaints received",
+      "value": 209,
+      "value_as_published": "209",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "209 Misconduct complaints received"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "Completed",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 24,
+      "quote": "we completed 2 investigations"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "TABLE 14. COMPLAINT INVESTIGATIONS",
+      "column_as_published": "2025-26",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 25,
+      "quote": "Commenced 0 2 4 Completed 2 5 1"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "TABLE 15. OWN-MOTION INVESTIGATIONS",
+      "column_as_published": "2025-26",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 25,
+      "quote": "Commenced 0 1 4 Completed 0 3 0"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Notifications (not including police notifications)",
+      "column_as_published": "2025-26",
+      "value": 72,
+      "value_as_published": "72",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 34,
+      "quote": "Notifications (not including police notifications) 72 82 113"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Police notifications",
+      "column_as_published": "2025-26",
+      "value": 29,
+      "value_as_published": "29",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 34,
+      "quote": "Police notifications 29 47 34"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Of the 11 assessments completed, we dismissed 10 and referred one for action.",
+      "value": 11,
+      "value_as_published": "11",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 23,
+      "quote": "Of the 11 assessments completed, we dismissed 10 and referred one for action"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Alleged misconduct matters referred to public authorities for action",
+      "value": 50,
+      "value_as_published": "50",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "50 Alleged misconduct matters referred to public authorities for action"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Occasions when statutory powers of investigation were used",
+      "value": 8,
+      "value_as_published": "8",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "8 Occasions when statutory powers of investigation were used"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Public reports released in the public interest",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "2 Public reports released in the public interest"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Ongoing investigations were carried over",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "5 Ongoing investigations were carried over, including 3 own motion investigations"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "recommendations made by the Board for which we were yet to receive a response",
+      "value": 23,
+      "value_as_published": "23",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 37,
+      "quote": "There were 23 recommendations made by the Board for which we were yet to receive a response as to any action taken"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "full-time equivalent officers",
+      "value": 16.9,
+      "value_as_published": "16.9",
+      "unit": "fte",
+      "period": "as at 30 June 2026",
+      "page": 41,
+      "quote": "At 30 June 2026, we employed 16.9 full-time equivalent officers"
+    },
+    {
+      "metric": "total_income",
+      "label_as_published": "Total income from continuing operations",
+      "column_as_published": "2026 Actual",
+      "value": 3688,
+      "value_as_published": "3,688",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 49,
+      "quote": "Total income from continuing operations 3,863 3,688 3,589"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from continuing operations",
+      "column_as_published": "2026 Actual",
+      "value": 3713,
+      "value_as_published": "3,713",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 49,
+      "quote": "Total expenses from continuing operations 4,100 3,713 3,553"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee benefits",
+      "column_as_published": "2026 Actual",
+      "value": 2448,
+      "value_as_published": "2,448",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 49,
+      "quote": "Employee benefits 4.1 2,874 2,448 2,371"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result",
+      "column_as_published": "2026 Actual",
+      "value": -25,
+      "value_as_published": "(25)",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 49,
+      "quote": "Net result (237) (25) 36"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "Robert Hay, Chief Commissioner (from 10 Nov 2025)",
+      "name": "Robert Hay",
+      "position": "Chief Commissioner",
+      "value": 114,
+      "value_as_published": "114",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26 (from 10 Nov 2025)",
+      "page": 58,
+      "quote": "Robert Hay, Chief Commissioner (from 10 Nov 2025) 102 – 12 – – 114"
+    },
+    {
+      "metric": "named_remuneration",
+      "label_as_published": "Ellen McKenzie, Chief Executive Officer",
+      "name": "Ellen McKenzie",
+      "position": "Chief Executive Officer",
+      "value": 307,
+      "value_as_published": "307",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 58,
+      "quote": "Ellen McKenzie, Chief Executive Officer 241 27 32 7 – 307"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total",
+      "column_as_published": "2026",
+      "value": 488,
+      "value_as_published": "488",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 58,
+      "quote": "Total 403 27 51 7 – 488"
+    }
+  ]
+}

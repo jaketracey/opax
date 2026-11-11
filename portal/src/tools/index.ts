@@ -24,15 +24,16 @@ import { tool as sponsoredBills } from './sponsored-bills'
 import { tool as annualReports } from './annual-reports'
 import { tool as royalCommissions } from './royal-commissions'
 import { tool as integrityReports } from './integrity-reports'
+import { tool as agencyReports } from './agency-reports'
 import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type StructuredToolResult } from './types'
 import type { ToolDeps, ToolSpec, ToolResult } from '../agentic-tools'
 export * from './types'
 import { validToolIdentifier } from './identifiers'
 export * from './identifiers'
 
-export const TOOL_REGISTRY_VERSION = 'structured-tools-14-annual-reports-year-range'
+export const TOOL_REGISTRY_VERSION = 'structured-tools-15-agency-reports'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
-export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions])
+export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions, agencyReports])
 const names = new Set<string>()
 for (const tool of tools) {
   if (!/^[a-z][a-z0-9_]*$/.test(tool.name) || names.has(tool.name)) throw new Error('Invalid or duplicate registry tool name')
@@ -41,7 +42,7 @@ for (const tool of tools) {
 // Schemas are immutable metadata, not request state. No env, response or asset is cached here.
 const schemas = new Map(tools.map(tool => [tool.name, z.fromJSONSchema(tool.inputSchema).meta(tool.inputSchema)]))
 export const getTool = (name: string) => tools.find(tool => tool.name === name)
-export const getAskTool = (name: string) => tools.find(tool => (tool.askName ?? tool.name) === name)
+export const getAskTool = (name: string) => tools.find(tool => !tool.mcpOnly && (tool.askName ?? tool.name) === name)
 export const toolSchema = (name: string) => schemas.get(name)!
 export const listTools = () => tools.map(({ name, description, inputSchema }) => ({ name, description, inputSchema }))
 export function parseToolArgs(name: string, args: unknown): ToolArgs {
@@ -76,7 +77,7 @@ export async function callTool(env: ToolEnv, name: string, args: unknown): Promi
 }
 const REGISTER_PAGES: Record<string, string> = { contracts: '/money/contracts', grants: '/money/grants' }
 /** Minimal adapter for the route lane's current ToolSpec/ToolResult contract. */
-export const askToolSpecs: ToolSpec[] = tools.map(tool => ({
+export const askToolSpecs: ToolSpec[] = tools.filter(tool => !tool.mcpOnly).map(tool => ({
   name: tool.askName ?? tool.name, description: tool.description, input: tool.inputSchema,
   async run(deps: ToolDeps, args: ToolArgs) {
     const data = await callTool({ ...deps.toolEnv, asset: deps.asset, kb: deps.kb, origin: deps.origin, signal: deps.signal }, tool.name, args)

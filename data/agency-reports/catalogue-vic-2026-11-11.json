@@ -1,0 +1,4202 @@
+{
+ "source": "https://www.parliament.vic.gov.au/api/search/tabledpapers",
+ "filter": {
+  "tabled-type": "49 (annual reports)",
+  "term": "2025-26"
+ },
+ "window": [
+  "2026-07-01",
+  "2026-11-11"
+ ],
+ "fetched_at": "2026-11-11T06:30:18+00:00",
+ "total_matching": 232,
+ "hits_read": 213,
+ "requests": 5,
+ "note": "Papers the database types as annual reports, titled for 2025-26, tabled or released in the window. Not a roster of every reporting body: an agency that tables late or under another title is not here.",
+ "rows": [
+  {
+   "paper_id": 10777,
+   "agency": "Victorian Institute of Forensic Medicine",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-11-02",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10777",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4aa6be/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    4106336,
+    266869
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10683,
+   "agency": "Victorian Pharmacy Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-11-02",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10683",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa6b9/globalassets/tabled-paper-documents/tabled-paper-10683/health-annual-reports---tabling-letter---batch-2.pdf",
+    "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    246780,
+    2062079
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10680,
+   "agency": "Victorian Health Promotion Foundation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-11-02",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10680",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa6b4/globalassets/tabled-paper-documents/tabled-paper-10680/health-annual-reports---tabling-letter---batch-2.pdf",
+    "https://www.parliament.vic.gov.au/4aa6b9/globalassets/tabled-paper-documents/tabled-paper-10680/victorian-health-promotion-foundation-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    246780,
+    18290939
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10677,
+   "agency": "Southern Metropolitan Cemeteries Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-11-02",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10677",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa6ae/globalassets/tabled-paper-documents/tabled-paper-10677/health-annual-reports---tabling-letter---batch-2.pdf",
+    "https://www.parliament.vic.gov.au/4aa6b3/globalassets/tabled-paper-documents/tabled-paper-10677/southern-metropolitan-cemeteries-trust-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    246780,
+    21389644
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10675,
+   "agency": "Remembrance Parks Central Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-11-02",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10675",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa6aa/globalassets/tabled-paper-documents/tabled-paper-10675/health-annual-reports---tabling-letter---batch-2.pdf",
+    "https://www.parliament.vic.gov.au/4aa6ad/globalassets/tabled-paper-documents/tabled-paper-10675/remembrance-parks-central-victoria-annual-report-2025-2026.pdf"
+   ],
+   "pdf_bytes": [
+    246780,
+    10143472
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10674,
+   "agency": "Greater Metropolitan Cemeteries Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-11-02",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10674",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa6a9/globalassets/tabled-paper-documents/tabled-paper-10674/greater-metropolitan-cemeteries-trust-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4aa6aa/globalassets/tabled-paper-documents/tabled-paper-10674/health-annual-reports---tabling-letter---batch-2.pdf"
+   ],
+   "pdf_bytes": [
+    3622068,
+    246780
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10673,
+   "agency": "Geelong Cemeteries Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-11-02",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10673",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa6a7/globalassets/tabled-paper-documents/tabled-paper-10673/geelong-cemeteries-trust-2025-2026-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4aa6a8/globalassets/tabled-paper-documents/tabled-paper-10673/health-annual-reports---tabling-letter---batch-2.pdf"
+   ],
+   "pdf_bytes": [
+    10979068,
+    246780
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10671,
+   "agency": "Ballarat General Cemeteries Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-11-02",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10671",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/ballarat-general-cemeteries-trust-annual-report-2025-2026.pdf",
+    "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/health-annual-reports---tabling-letter---batch-2.pdf"
+   ],
+   "pdf_bytes": [
+    7082908,
+    246780
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10663,
+   "agency": "Mildura Cemeteries Trust",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-11-02",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10663",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa6a2/globalassets/tabled-paper-documents/tabled-paper-10663/the-mildura-cemeteries-trust-annual-report-2025-26---receipting-letter.pdf"
+   ],
+   "pdf_bytes": [
+    206141
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10771,
+   "agency": "Yea and District Memorial Hospital",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10771",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab445/globalassets/tabled-paper-documents/tabled-paper-10771/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    4363985
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10770,
+   "agency": "Yarrawonga Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10770",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab442/globalassets/tabled-paper-documents/tabled-paper-10770/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab444/globalassets/tabled-paper-documents/tabled-paper-10770/yarrawonga-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    5281145
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10769,
+   "agency": "Yarram and District Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10769",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab43f/globalassets/tabled-paper-documents/tabled-paper-10769/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab441/globalassets/tabled-paper-documents/tabled-paper-10769/yarram-and-district-health-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    4963289
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10768,
+   "agency": "Western Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10768",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab43d/globalassets/tabled-paper-documents/tabled-paper-10768/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    2457023
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10767,
+   "agency": "Western District Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10767",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab437/globalassets/tabled-paper-documents/tabled-paper-10767/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    15040612
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10766,
+   "agency": "West Wimmera Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10766",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab431/globalassets/tabled-paper-documents/tabled-paper-10766/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    9711020
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10765,
+   "agency": "West Gippsland Healthcare Group",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10765",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10765/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab430/globalassets/tabled-paper-documents/tabled-paper-10765/west-gippsland-healthcare-group-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    2233781
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10764,
+   "agency": "Tweddle Child and Family Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10764",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab42d/globalassets/tabled-paper-documents/tabled-paper-10764/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    4824068
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10763,
+   "agency": "Timboon and District Healthcare Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10763",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab42b/globalassets/tabled-paper-documents/tabled-paper-10763/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab42c/globalassets/tabled-paper-documents/tabled-paper-10763/timboon-and-district-healthcare-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    1952998
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10762,
+   "agency": "Royal Women's Hospital",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10762",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab429/globalassets/tabled-paper-documents/tabled-paper-10762/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab42a/globalassets/tabled-paper-documents/tabled-paper-10762/the-royal-womens-hospital-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    5367778
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10761,
+   "agency": "Royal Victorian Eye and Ear Hospital",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10761",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab427/globalassets/tabled-paper-documents/tabled-paper-10761/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab428/globalassets/tabled-paper-documents/tabled-paper-10761/the-royal-victorian-eye-and-ear-hospital-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    2719923
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10760,
+   "agency": "Royal Children's Hospital",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10760",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab425/globalassets/tabled-paper-documents/tabled-paper-10760/the-royal-childrens-hospital-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab426/globalassets/tabled-paper-documents/tabled-paper-10760/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    3075720,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10759,
+   "agency": "The Queen Elizabeth Centre",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10759",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab423/globalassets/tabled-paper-documents/tabled-paper-10759/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10759/the-queen-elizabeth-centre-annual-report-2025-2026.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    1885991
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10758,
+   "agency": "Terang and Mortlake Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10758",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab41f/globalassets/tabled-paper-documents/tabled-paper-10758/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab422/globalassets/tabled-paper-documents/tabled-paper-10758/terang-and-mortlake-health-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    7327225
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10757,
+   "agency": "Tallangatta Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10757",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    1654174
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10756,
+   "agency": "Swan Hill District Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10756",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10756/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    6970623
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10755,
+   "agency": "St Vincent's Hospital Melbourne Ltd",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10755",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab418/globalassets/tabled-paper-documents/tabled-paper-10755/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    3863150
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10754,
+   "agency": "South West Healthcare",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10754",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab40d/globalassets/tabled-paper-documents/tabled-paper-10754/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    29688465
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10753,
+   "agency": "South Gippsland Hospital",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10753",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10753/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab431/globalassets/tabled-paper-documents/tabled-paper-10753/south-gippsland-hospital-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    3775172
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10752,
+   "agency": "Seymour Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10752",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab42d/globalassets/tabled-paper-documents/tabled-paper-10752/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab42e/globalassets/tabled-paper-documents/tabled-paper-10752/seymour-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    3667635
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10751,
+   "agency": "Rural Northwest Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10751",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10751/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab42c/globalassets/tabled-paper-documents/tabled-paper-10751/rural-northwest-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    87912832
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10750,
+   "agency": "Rochester and Elmore District Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10750",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab408/globalassets/tabled-paper-documents/tabled-paper-10750/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab40b/globalassets/tabled-paper-documents/tabled-paper-10750/rochester-and-elmore-district-health-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    7368742
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10749,
+   "agency": "Robinvale District Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10749",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab406/globalassets/tabled-paper-documents/tabled-paper-10749/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab408/globalassets/tabled-paper-documents/tabled-paper-10749/robinvale-district-health-services-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    4335850
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10748,
+   "agency": "Kerang District Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10748",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab404/globalassets/tabled-paper-documents/tabled-paper-10748/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    2355155
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10747,
+   "agency": "Portland District Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10747",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab402/globalassets/tabled-paper-documents/tabled-paper-10747/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab403/globalassets/tabled-paper-documents/tabled-paper-10747/portland-district-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    4222577
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10746,
+   "agency": "Inglewood and Districts Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10746",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3ff/globalassets/tabled-paper-documents/tabled-paper-10746/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    6362277
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10744,
+   "agency": "Heywood Rural Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10744",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10744/heywood-rural-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10744/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    13546373,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10743,
+   "agency": "Hesse Rural Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10743",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10743/hesse-rural-health-service-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3f6/globalassets/tabled-paper-documents/tabled-paper-10743/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    23245306,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10742,
+   "agency": "Parkville Youth Mental Health and Wellbeing Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10742",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab411/globalassets/tabled-paper-documents/tabled-paper-10742/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab412/globalassets/tabled-paper-documents/tabled-paper-10742/parkville-youth-mental-health-and-wellbeing-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    1670722
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10740,
+   "agency": "Health Purchasing Victoria (HealthShare)",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10740",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab40d/globalassets/tabled-paper-documents/tabled-paper-10740/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    2099177,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10739,
+   "agency": "Great Ocean Road Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10739",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab40a/globalassets/tabled-paper-documents/tabled-paper-10739/great-ocean-road-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab40b/globalassets/tabled-paper-documents/tabled-paper-10739/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    37888457,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10738,
+   "agency": "Grampians Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10738",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    4570662,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10737,
+   "agency": "Goulburn Valley Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10737",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3fa/globalassets/tabled-paper-documents/tabled-paper-10737/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    8572693,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10736,
+   "agency": "Echuca Regional Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10736",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3f5/globalassets/tabled-paper-documents/tabled-paper-10736/echuca-regional-health-annual-report-2025-2026.pdf",
+    "https://www.parliament.vic.gov.au/4ab3f6/globalassets/tabled-paper-documents/tabled-paper-10736/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    8580655,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10735,
+   "agency": "Orbost Regional Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10735",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3f0/globalassets/tabled-paper-documents/tabled-paper-10735/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10735/orbost-regional-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    4801144
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10734,
+   "agency": "Eastern Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10734",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3ef/globalassets/tabled-paper-documents/tabled-paper-10734/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    7336141,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10733,
+   "agency": "East Wimmera Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10733",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10733/east-wimmera-health-service-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10733/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    6876896,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10732,
+   "agency": "Oral Health Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10732",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3e7/globalassets/tabled-paper-documents/tabled-paper-10732/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10732/oral-health-victoria-annual-report-2025_26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    4370143
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10731,
+   "agency": "East Grampians Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10731",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3e6/globalassets/tabled-paper-documents/tabled-paper-10731/east-grampians-health-service-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3e6/globalassets/tabled-paper-documents/tabled-paper-10731/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    11079425,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10730,
+   "agency": "Omeo District Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10730",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10730/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    26095513
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10729,
+   "agency": "Dhelkaya Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10729",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3fb/globalassets/tabled-paper-documents/tabled-paper-10729/dhelkaya-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10729/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    4320377,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10728,
+   "agency": "Corryong Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10728",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10728/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    2799431,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10726,
+   "agency": "Northern Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10726",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10726/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10726/northern-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    8315579
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10725,
+   "agency": "Cohuna District Hospital",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10725",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/cohuna-district-hospital-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    6757294,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10724,
+   "agency": "Northeast Health Wangaratta",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10724",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3e9/globalassets/tabled-paper-documents/tabled-paper-10724/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3ea/globalassets/tabled-paper-documents/tabled-paper-10724/northeast-health-wangaratta-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    3886355
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10723,
+   "agency": "Central Highlands Rural Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10723",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3e7/globalassets/tabled-paper-documents/tabled-paper-10723/central-highlands-rural-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3e8/globalassets/tabled-paper-documents/tabled-paper-10723/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    8317182,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10722,
+   "agency": "NCN Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10722",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3e2/globalassets/tabled-paper-documents/tabled-paper-10722/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3e4/globalassets/tabled-paper-documents/tabled-paper-10722/ncn-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    4912802
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10721,
+   "agency": "Central Gippsland Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10721",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/central-gippsland-health-service-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    15407572,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10720,
+   "agency": "Moyne Health Services",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10720",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3d7/globalassets/tabled-paper-documents/tabled-paper-10720/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3db/globalassets/tabled-paper-documents/tabled-paper-10720/moyne-health-services-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    10992409
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10719,
+   "agency": "Calvary Health Care Bethlehem Limited",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10719",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3d6/globalassets/tabled-paper-documents/tabled-paper-10719/calvary-health-care-bethlehem-limited-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3d6/globalassets/tabled-paper-documents/tabled-paper-10719/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    42811882,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10718,
+   "agency": "Monash Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10718",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3ea/globalassets/tabled-paper-documents/tabled-paper-10718/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    2113851
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10717,
+   "agency": "Mildura Base Public Hospital",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10717",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3e3/globalassets/tabled-paper-documents/tabled-paper-10717/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3ea/globalassets/tabled-paper-documents/tabled-paper-10717/mildura-base-public-hospital-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    18318626
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10716,
+   "agency": "Boort District Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10716",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10716/boort-district-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3e2/globalassets/tabled-paper-documents/tabled-paper-10716/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    5207580,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10715,
+   "agency": "Mercy Hospitals Victoria Ltd",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10715",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3db/globalassets/tabled-paper-documents/tabled-paper-10715/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3df/globalassets/tabled-paper-documents/tabled-paper-10715/mercy-hospitals-victoria-ltd-annual-report-2025-2026.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    12140938
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10713,
+   "agency": "Melbourne Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10713",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3cd/globalassets/tabled-paper-documents/tabled-paper-10713/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3cf/globalassets/tabled-paper-documents/tabled-paper-10713/melbourne-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    4363506
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10712,
+   "agency": "Benalla Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10712",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3cb/globalassets/tabled-paper-documents/tabled-paper-10712/benalla-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10712/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    13541037,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10711,
+   "agency": "Beechworth Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10711",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/beechworth-health-service-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    3260252,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10709,
+   "agency": "Beaufort and Skipton Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10709",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3bc/globalassets/tabled-paper-documents/tabled-paper-10709/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    3622552,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10708,
+   "agency": "Mansfield District Hospital",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10708",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3b8/globalassets/tabled-paper-documents/tabled-paper-10708/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3b9/globalassets/tabled-paper-documents/tabled-paper-10708/mansfield-district-hospital-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    2070207
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10707,
+   "agency": "Bayside Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10707",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10707/bayside-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3b8/globalassets/tabled-paper-documents/tabled-paper-10707/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    15255522,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10706,
+   "agency": "Barwon Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10706",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3b1/globalassets/tabled-paper-documents/tabled-paper-10706/barwon-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3b1/globalassets/tabled-paper-documents/tabled-paper-10706/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    8464446,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10705,
+   "agency": "Mallee Track Health and Community Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10705",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10705/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    17017926
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10704,
+   "agency": "Latrobe Regional Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10704",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3ca/globalassets/tabled-paper-documents/tabled-paper-10704/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    3990143
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10703,
+   "agency": "Bairnsdale Regional Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10703",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3c9/globalassets/tabled-paper-documents/tabled-paper-10703/bairnsdale-regional-health-service-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3c9/globalassets/tabled-paper-documents/tabled-paper-10703/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    2514466,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10702,
+   "agency": "Kyabram District Health Service",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10702",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10702/hospitals-and-health-services-annual-reports---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3c8/globalassets/tabled-paper-documents/tabled-paper-10702/kyabram-district-health-service-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    1202223,
+    2920666
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10701,
+   "agency": "Austin Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10701",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    9142185,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10700,
+   "agency": "Ambulance Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10700",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3c0/globalassets/tabled-paper-documents/tabled-paper-10700/ambulance-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3c1/globalassets/tabled-paper-documents/tabled-paper-10700/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    16366603,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10698,
+   "agency": "Alexandra District Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10698",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10698/alexandra-district-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3b8/globalassets/tabled-paper-documents/tabled-paper-10698/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    3850095,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10697,
+   "agency": "Albury Wodonga Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10697",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3b6/globalassets/tabled-paper-documents/tabled-paper-10697/hospitals-and-health-services-annual-reports---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    19708854,
+    1202223
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10696,
+   "agency": "Victorian Institute of Forensic Mental Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10696",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health---signed-tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    385700,
+    1803688
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10695,
+   "agency": "Mental Health Tribunal",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10695",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal---signed-tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    390511,
+    3340954
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10694,
+   "agency": "Melbourne and Olympic Parks Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10694",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3a9/globalassets/tabled-paper-documents/tabled-paper-10694/joint-tabling-letter-melbourne-and-olympic-parks-trust-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3ab/globalassets/tabled-paper-documents/tabled-paper-10694/melbourne-and-olympic-parks-trust-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    880281,
+    4199110
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10693,
+   "agency": "Murray Valley Wine Grape Industry Development Committee",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10693",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3a9/globalassets/tabled-paper-documents/tabled-paper-10693/mbr-251200966r.pdf"
+   ],
+   "pdf_bytes": [
+    219446
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10692,
+   "agency": "Office of the Victorian Information Commissioner",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10692",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    1076268,
+    293579
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10691,
+   "agency": "Residential Tenancies Bond Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10691",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3a6/globalassets/tabled-paper-documents/tabled-paper-10691/2025-26-rtba-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10691/tabling-letter---2025-26-rtba-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    1050933,
+    335827
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10690,
+   "agency": "Consumer Affairs Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10690",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab3a6/globalassets/tabled-paper-documents/tabled-paper-10690/tabling-letter---2025-26-cav-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    1292268,
+    347729
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10689,
+   "agency": "Suburban Rail Loop Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10689",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/tabling-letter----suburban-rail-loop-authority-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    14368543,
+    298652
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10688,
+   "agency": "Melbourne Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10688",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3bd/globalassets/tabled-paper-documents/tabled-paper-10688/letter---mw-annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    195994,
+    16503891
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10687,
+   "agency": "Victorian Convention and Event Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10687",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3b0/globalassets/tabled-paper-documents/tabled-paper-10687/letter-to-the-legislative-assembly-and-legislative-council.pdf",
+    "https://www.parliament.vic.gov.au/4ab3bd/globalassets/tabled-paper-documents/tabled-paper-10687/vcet-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    48232,
+    34407890
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10686,
+   "agency": "Victorian Public Sector Commission",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10686",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/letter-to-clerks.pdf"
+   ],
+   "pdf_bytes": [
+    5350387,
+    247033
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10685,
+   "agency": "Greyhound Racing Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10685",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    11645467,
+    70048
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10684,
+   "agency": "Department of Jobs, Skills, Industry and Regions",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10684",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3a3/globalassets/tabled-paper-documents/tabled-paper-10684/djsir-annual-report-2025_26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3a3/globalassets/tabled-paper-documents/tabled-paper-10684/letter-from-minister-for-economic-development.pdf"
+   ],
+   "pdf_bytes": [
+    3779979,
+    46278
+   ],
+   "held": true
+  },
+  {
+   "paper_id": 10681,
+   "agency": "Australian Grand Prix Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10681",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab395/globalassets/tabled-paper-documents/tabled-paper-10681/agpc-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab396/globalassets/tabled-paper-documents/tabled-paper-10681/letter-to-the-legislative-council-and-the-legislative-assembly.pdf"
+   ],
+   "pdf_bytes": [
+    18149148,
+    48976
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10679,
+   "agency": "Victorian Curriculum and Assessment Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10679",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab38c/globalassets/tabled-paper-documents/tabled-paper-10679/tabling-letter---vcaa-annual-report-2025_26.pdf",
+    "https://www.parliament.vic.gov.au/4ab38e/globalassets/tabled-paper-documents/tabled-paper-10679/vcaa-annual-report-2025_26.pdf"
+   ],
+   "pdf_bytes": [
+    420876,
+    2541503
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10678,
+   "agency": "Docklands Studios Melbourne Pty Ltd",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10678",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10678/docklands_studios_melbourne_annual_report_2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab38b/globalassets/tabled-paper-documents/tabled-paper-10678/signed-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    7601730,
+    372854
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10676,
+   "agency": "Victorian Arts Centre Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10676",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3a2/globalassets/tabled-paper-documents/tabled-paper-10676/signed-tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10676/victorian_arts_centre_trust_annual_report_2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    372854,
+    6456336
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10672,
+   "agency": "Museums Board of Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10672",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab3a2/globalassets/tabled-paper-documents/tabled-paper-10672/signed-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    5969625,
+    372854
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10670,
+   "agency": "Melbourne Recital Centre",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10670",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10670/melbourne_recital_centre_annual_report_2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab39f/globalassets/tabled-paper-documents/tabled-paper-10670/signed-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    8624527,
+    372854
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10669,
+   "agency": "Melbourne Arts Precinct Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10669",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/melbourne_arts_precinct_corporation_annual_report_2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab39a/globalassets/tabled-paper-documents/tabled-paper-10669/signed-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    16054146,
+    372854
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10667,
+   "agency": "Library Board of Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10667",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab38b/globalassets/tabled-paper-documents/tabled-paper-10667/library_board_of_victoria_annual_report_2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab38b/globalassets/tabled-paper-documents/tabled-paper-10667/signed-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    4221662,
+    372854
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10666,
+   "agency": "Film Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10666",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/signed-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    9692390,
+    372854
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10665,
+   "agency": "National Gallery of Victoria Council of Trustees",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10665",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab385/globalassets/tabled-paper-documents/tabled-paper-10665/signed-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    11099433,
+    372854
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10662,
+   "agency": "Architects Registration Board of Victoria",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10662",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab37d/globalassets/tabled-paper-documents/tabled-paper-10662/report-of-receipt-architects-registration-board-of-victoria-annual-report-2025-26---ns-signed.pdf"
+   ],
+   "pdf_bytes": [
+    362788
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10661,
+   "agency": "Cladding Safety Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10661",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/tabling-letter-cladding-safety-victoria-annual-report-2025-26-.pdf"
+   ],
+   "pdf_bytes": [
+    8073124,
+    364394
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10660,
+   "agency": "Victorian Building Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10660",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf",
+    "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    8607297,
+    196670
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10659,
+   "agency": "Portable Long Service Benefits Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10659",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10659/tabling-letter---portable-long-service-authority---2025-26---annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    5152881,
+    272856
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10658,
+   "agency": "Labour Hire Licensing Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10658",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab372/globalassets/tabled-paper-documents/tabled-paper-10658/labour-hire-authority---annual-report---2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab372/globalassets/tabled-paper-documents/tabled-paper-10658/tabling-letter---labour-hire-authority---annual-report---2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    13684988,
+    272176
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10657,
+   "agency": "Department of Treasury and Finance",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10657",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/2025-26-dtf-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/tabling-letter---dtf-annual-report---2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    2632225,
+    269761
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10656,
+   "agency": "Infrastructure Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10656",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/tabling-letter--infrastructure-victoria---2025-26---annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    5718709,
+    275578
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10655,
+   "agency": "Victorian Early Childhood Regulatory Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10655",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab38c/globalassets/tabled-paper-documents/tabled-paper-10655/blandthorn_to_mcdonald_tabling_letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab38d/globalassets/tabled-paper-documents/tabled-paper-10655/vecra_annual_report.pdf"
+   ],
+   "pdf_bytes": [
+    301499,
+    1990461
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10654,
+   "agency": "Department of Health",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10654",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab38b/globalassets/tabled-paper-documents/tabled-paper-10654/department-of-health-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab38c/globalassets/tabled-paper-documents/tabled-paper-10654/tabling-letter---department-of-health-2025-26-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    3300297,
+    192829
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10653,
+   "agency": "Development Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10653",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    17249911,
+    197059
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10652,
+   "agency": "Victorian WorkCover Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10652",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab37d/globalassets/tabled-paper-documents/tabled-paper-10652/tabling-letter---worksafe-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    431382,
+    11190637
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10650,
+   "agency": "Transport Accident Commission",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10650",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab375/globalassets/tabled-paper-documents/tabled-paper-10650/tabling-letter---transport-accident-commission-2025-26-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10650/transport-accident-commission-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    455742,
+    7624251
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10649,
+   "agency": "SmartSense Agtech Pty Ltd",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10649",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10649/mbr-251201045r.pdf"
+   ],
+   "pdf_bytes": [
+    200905
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10648,
+   "agency": "Dairy Food Safety Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10648",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab373/globalassets/tabled-paper-documents/tabled-paper-10648/att-1-dfsv-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10648/mbr-260101183r.pdf"
+   ],
+   "pdf_bytes": [
+    7064886,
+    211698
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10647,
+   "agency": "Melbourne Market Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10647",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab370/globalassets/tabled-paper-documents/tabled-paper-10647/att-1---melbourne-market-authority---annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab371/globalassets/tabled-paper-documents/tabled-paper-10647/mbr-251201090r.pdf"
+   ],
+   "pdf_bytes": [
+    3713623,
+    193388
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10646,
+   "agency": "PrimeSafe",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10646",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab36e/globalassets/tabled-paper-documents/tabled-paper-10646/att-1-primesafe-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab36f/globalassets/tabled-paper-documents/tabled-paper-10646/mbr-260101201r.pdf"
+   ],
+   "pdf_bytes": [
+    2792394,
+    211183
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10645,
+   "agency": "Victorian Institute of Teaching",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10645",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/victorian-institute-of-teaching-2025-26-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/vit-annual-report-2025-26---tabling-letter_ome_signed.pdf"
+   ],
+   "pdf_bytes": [
+    16061480,
+    203687
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10644,
+   "agency": "Veterinary Practitioners Registration Board of Victoria",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10644",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab366/globalassets/tabled-paper-documents/tabled-paper-10644/mbr-251201071r.pdf"
+   ],
+   "pdf_bytes": [
+    200444
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10643,
+   "agency": "Phytogene Pty Ltd",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10643",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab366/globalassets/tabled-paper-documents/tabled-paper-10643/mbr-251201340r.pdf"
+   ],
+   "pdf_bytes": [
+    197683
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10641,
+   "agency": "Victorian Institute of Sport Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10641",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/2025-26-vis-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab35c/globalassets/tabled-paper-documents/tabled-paper-10641/signed---vis-ar---letter-to-the-legislative-assembly-and-the-legislative-council.pdf",
+    "https://www.parliament.vic.gov.au/4ab35d/globalassets/tabled-paper-documents/tabled-paper-10641/vis-2025-26-annual-report-financial-report.pdf"
+   ],
+   "pdf_bytes": [
+    11694483,
+    217804,
+    2400933
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10640,
+   "agency": "Victorian Law Reform Commission",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10640",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10640/victorian-law-reform-commission-annual-report-2025-2026---letter-of-receipt.pdf"
+   ],
+   "pdf_bytes": [
+    237207
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10639,
+   "agency": "Corangamite Catchment Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10639",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/coranagmite-cma-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/letter---corangamite-cma-annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    8215569,
+    201365
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10638,
+   "agency": "Agriculture Victoria Services Pty Ltd",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10638",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10638/attachment-1---avs-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab379/globalassets/tabled-paper-documents/tabled-paper-10638/mbr-251200999r.pdf"
+   ],
+   "pdf_bytes": [
+    6905297,
+    215045
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10636,
+   "agency": "Central Highlands Region Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10636",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/letter---central-highlands-water---annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    10155529,
+    195722
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10635,
+   "agency": "State Sport Centres Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10635",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab36f/globalassets/tabled-paper-documents/tabled-paper-10635/2025-26-ssct-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab370/globalassets/tabled-paper-documents/tabled-paper-10635/signed---tabling-letter-to-legislative-assembly-and-the-legislative-council---ssct.pdf"
+   ],
+   "pdf_bytes": [
+    8438048,
+    218732
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10634,
+   "agency": "Yarra Valley Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10634",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab368/globalassets/tabled-paper-documents/tabled-paper-10634/letter---yvw-annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10634/yarra-valley-water-annual-report-2025-26-.pdf"
+   ],
+   "pdf_bytes": [
+    195792,
+    11295528
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10632,
+   "agency": "North East Water",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10632",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10632/letter---north-east-water----annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab363/globalassets/tabled-paper-documents/tabled-paper-10632/north-east-water-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    196225,
+    5877397
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10631,
+   "agency": "South Gippsland Region Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10631",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10631/letter---south-gippsland-water----annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab360/globalassets/tabled-paper-documents/tabled-paper-10631/south-gippsland-water-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    196369,
+    22146962
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10630,
+   "agency": "Victorian Environmental Water Holder",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10630",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10630/letter---vewh-annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10630/victorian-environmental-water-holder-vewh-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    201408,
+    1613425
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10629,
+   "agency": "Barwon Region Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10629",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab355/globalassets/tabled-paper-documents/tabled-paper-10629/barwon-water-group--annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10629/letter---barwon-water---annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    7033340,
+    196719
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10628,
+   "agency": "Coliban Region Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10628",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab353/globalassets/tabled-paper-documents/tabled-paper-10628/coliban-water-annual-report-2025-26-.pdf",
+    "https://www.parliament.vic.gov.au/4ab353/globalassets/tabled-paper-documents/tabled-paper-10628/letter---coliban-water---annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    9982140,
+    196018
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10627,
+   "agency": "Kardinia Park Stadium Trust",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10627",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/2025-26-kpst-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10627/signed---letter-to-the-legislative-assembly-and-the-legislative-council---kpst.pdf"
+   ],
+   "pdf_bytes": [
+    9407978,
+    218007
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10626,
+   "agency": "Grampians Wimmera Mallee Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10626",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab34a/globalassets/tabled-paper-documents/tabled-paper-10626/grampians-wimmera-mallee-water-annual-repor-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab34b/globalassets/tabled-paper-documents/tabled-paper-10626/letter---grampians-wimmera-mallee---annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    7063127,
+    196202
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10625,
+   "agency": "Central Gippsland Region Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10625",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab347/globalassets/tabled-paper-documents/tabled-paper-10625/gippsland-water-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10625/letter---gippsland-water---annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    7354897,
+    196060
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10624,
+   "agency": "East Gippsland Region Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10624",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab344/globalassets/tabled-paper-documents/tabled-paper-10624/east-gippland-water-annual-report-2025-26-.pdf",
+    "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10624/letter---east-gippsland---annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    7004139,
+    194710
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10623,
+   "agency": "South East Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10623",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab33f/globalassets/tabled-paper-documents/tabled-paper-10623/letter---sew-annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf"
+   ],
+   "pdf_bytes": [
+    196375,
+    6531648
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10622,
+   "agency": "Goulburn Murray Rural Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10622",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf",
+    "https://www.parliament.vic.gov.au/4ab33f/globalassets/tabled-paper-documents/tabled-paper-10622/letter---gmw-annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    5372643,
+    195959
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10621,
+   "agency": "Greater Western Water Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10621",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/letter---gww-annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    3198192,
+    208453
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10618,
+   "agency": "Department of Premier and Cabinet",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10618",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab35a/globalassets/tabled-paper-documents/tabled-paper-10618/dpc-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab35a/globalassets/tabled-paper-documents/tabled-paper-10618/notice-letter---dpc-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    8236071,
+    492514
+   ],
+   "held": true
+  },
+  {
+   "paper_id": 10617,
+   "agency": "Safe Transport Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10617",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    14492491,
+    340214
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10616,
+   "agency": "Judicial College of Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10616",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab351/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    5230581,
+    270537
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10615,
+   "agency": "Victorian Registration and Qualifications Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10615",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf",
+    "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/tabling-letter_vrqa-annual-report_202526.pdf"
+   ],
+   "pdf_bytes": [
+    3172821,
+    328437
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10614,
+   "agency": "Triple Zero Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10614",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab34b/globalassets/tabled-paper-documents/tabled-paper-10614/triple-zero-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab34c/globalassets/tabled-paper-documents/tabled-paper-10614/triple-zero-victoria-annual-report-2025-26---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    4545110,
+    172079
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10613,
+   "agency": "Victoria State Emergency Service Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10613",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab349/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    6394051,
+    172180
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10612,
+   "agency": "Victoria Legal Aid",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10612",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab343/globalassets/tabled-paper-documents/tabled-paper-10612/victoria-legal-aid-2025-26-annual-report---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10612/victoria-legal-aid-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    394389,
+    4812629
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10611,
+   "agency": "Victorian Legal Services Board and Commissioner",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10611",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab343/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    30790291,
+    432620
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10610,
+   "agency": "Legal Practitioners' Liability Committee",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10610",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab337/globalassets/tabled-paper-documents/tabled-paper-10610/legal-practitioners_-liability-committee-annual-report-2025-2026.pdf",
+    "https://www.parliament.vic.gov.au/4ab337/globalassets/tabled-paper-documents/tabled-paper-10610/legal-practitioners-liability-committee-2025-26-annual-report---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    4489542,
+    362151
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10609,
+   "agency": "Melbourne Port Lessor Pty Ltd",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10609",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10609/attachment-1---melbourne-port-lessor-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab335/globalassets/tabled-paper-documents/tabled-paper-10609/melbourne-port-lessor-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    2372873,
+    336120
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10608,
+   "agency": "Port of Hastings Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10608",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    4398166,
+    341756
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10607,
+   "agency": "Trust for Nature (Victoria)",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10607",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/attachment-1---2025-26-trust-for-nature-annual-report---final.pdf",
+    "https://www.parliament.vic.gov.au/4ab331/globalassets/tabled-paper-documents/tabled-paper-10607/letter---consolidated-portfolio-annual-report---symes-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    8056945,
+    351007
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10605,
+   "agency": "SEC Victoria Pty Ltd",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10605",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab349/globalassets/tabled-paper-documents/tabled-paper-10605/letter---consolidated-portfolio-annual-report---symes-tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab32b/globalassets/tabled-paper-documents/tabled-paper-10605/sec-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    351007,
+    18566902
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10604,
+   "agency": "Commissioner for Environmental Sustainability",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10604",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab349/globalassets/tabled-paper-documents/tabled-paper-10604/letter---consolidated-portfolio-annual-report---symes-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    351007
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10603,
+   "agency": "Royal Botanic Gardens Board",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10603",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab346/globalassets/tabled-paper-documents/tabled-paper-10603/letter---consolidated-portfolio-annual-report---symes-tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf"
+   ],
+   "pdf_bytes": [
+    351007,
+    6393215
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10602,
+   "agency": "Phillip Island Nature Parks",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10602",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10602/letter---consolidated-portfolio-annual-report---symes-tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10602/phillip-island-nature-parks-2025-26-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    351007,
+    9100164
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10601,
+   "agency": "Parks Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10601",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10601/letter---consolidated-portfolio-annual-report---symes-tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    351007,
+    7058234
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10600,
+   "agency": "Energy Safe Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10600",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10600/letter---consolidated-portfolio-annual-report---symes-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    1269500,
+    351007
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10599,
+   "agency": "Victorian Veterans Council",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10599",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10599/letter-to-table-receipt---victorian-veterans-council-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    240712
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10598,
+   "agency": "Game Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10598",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/bmin-2-26-54595---attachment-1-gma-annual-report-25-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/signed---bmin-2-26-54595---attachment-3-letter---tabling_gma-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    2449841,
+    232986
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10597,
+   "agency": "Wimmera Catchment Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10597",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10597/letter---wimmera-cma---annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab33b/globalassets/tabled-paper-documents/tabled-paper-10597/wimmera-cma-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    208263,
+    7662655
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10596,
+   "agency": "North East Catchment Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10596",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab335/globalassets/tabled-paper-documents/tabled-paper-10596/letter---north-east-cma---annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10596/north-east-cma-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    199024,
+    7787251
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10595,
+   "agency": "West Gippsland Catchment Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10595",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10595/letter---west-gippsland-cma---annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    212577,
+    3656913
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10594,
+   "agency": "North Central Catchment Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10594",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10594/letter---north-central-cma---annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10594/north-central-cma-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    208053,
+    5425694
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10593,
+   "agency": "Mallee Catchment Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10593",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab32d/globalassets/tabled-paper-documents/tabled-paper-10593/letter---mallee-cma---annual-report---settle.pdf",
+    "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    220977,
+    7170909
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10592,
+   "agency": "Goulburn Broken Catchment Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10592",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/goulburn-broken-cma-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/letter---goulburn-broken-cma---annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    10515713,
+    208461
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10591,
+   "agency": "Ports Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10591",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    18047301,
+    338948
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10590,
+   "agency": "Glenelg Hopkins Catchment Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10590",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10590/glenelg-hopkins-cma-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab321/globalassets/tabled-paper-documents/tabled-paper-10590/letter---glenelg-hopkins-cma----annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    7909827,
+    208213
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10589,
+   "agency": "East Gippsland Catchment Management Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10589",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab31d/globalassets/tabled-paper-documents/tabled-paper-10589/east-gippsland-water-cma-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab31d/globalassets/tabled-paper-documents/tabled-paper-10589/letter---east-gippsland-cma---annual-report---settle.pdf"
+   ],
+   "pdf_bytes": [
+    5167882,
+    208123
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10588,
+   "agency": "V/Line Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10588",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10588/vline-annual-report-2025-26-tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    202463,
+    17758838
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10587,
+   "agency": "North East Link State Tolling Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10587",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    1107716,
+    218572
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10586,
+   "agency": "Rolling Stock Holdings (Victoria-VL) Pty Limited",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10586",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab311/globalassets/tabled-paper-documents/tabled-paper-10586/rolling-stock-victoria-_-vl-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab312/globalassets/tabled-paper-documents/tabled-paper-10586/rolling-stock-victoria-_-vl-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    2767773,
+    197774
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10585,
+   "agency": "Rolling Stock Holdings (Victoria) Pty Limited",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10585",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab310/globalassets/tabled-paper-documents/tabled-paper-10585/rolling-stock-holdings-victoria-pty-limited-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab310/globalassets/tabled-paper-documents/tabled-paper-10585/rolling-stock-holdings-victoria-pty-limited-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    1428367,
+    202071
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10584,
+   "agency": "Victorian Rail Track",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10584",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10584/victrack-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10584/victrack-annual-report-2025-26-tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    2652596,
+    196594
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10583,
+   "agency": "Shrine of Remembrance Trustees",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10583",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/shrine-of-remembrance-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10583/tabling-letter---shrine-of-remembrance-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    20249706,
+    232267
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10582,
+   "agency": "Cenitex",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10582",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab329/globalassets/tabled-paper-documents/tabled-paper-10582/cenitex-annual-report-2025-2026.pdf",
+    "https://www.parliament.vic.gov.au/4ab32a/globalassets/tabled-paper-documents/tabled-paper-10582/tabling-letter---cenitex-annual-report-2025-2026.pdf"
+   ],
+   "pdf_bytes": [
+    5946309,
+    334571
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10581,
+   "agency": "First Peoples' Assembly of Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Advancing the Treaty Process with Aboriginal Victorians Act 2018",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10581",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf"
+   ],
+   "pdf_bytes": [
+    21277514
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10580,
+   "agency": null,
+   "title": "Advancing the Victorian Treaty Process - Report 2025-26",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Advancing the Treaty Process with Aboriginal Victorians Act 2018",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10580",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10580/dpc-advancing-the-victorian-treaty-process-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    6467704
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10579,
+   "agency": "Department of Government Services",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10579",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/dgs-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/tabling-letter---dgs-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    2724398,
+    334812
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10576,
+   "agency": "Victoria Police",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10576",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab31a/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    5056046,
+    203635
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10575,
+   "agency": "AMES Australia",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-30",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10575",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab318/globalassets/tabled-paper-documents/tabled-paper-10575/letter-from-the-minister-for-skills-and-training---tabling-letter---ames-australia-annual-report-2025-26---bmin-2-26-54051.pdf"
+   ],
+   "pdf_bytes": [
+    6869692,
+    194601
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10578,
+   "agency": "Department of Justice and Community Safety",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-29",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10578",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aaee8/globalassets/tabled-paper-documents/tabled-paper-10578/department-of-justice-and-community-safety-2025-26-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    8703854
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10572,
+   "agency": "Department of Transport and Planning",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-28",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10572",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aace1/globalassets/tabled-paper-documents/tabled-paper-10572/dtp-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4aace1/globalassets/tabled-paper-documents/tabled-paper-10572/tabling-letter---dtp-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    9889002,
+    397727
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10571,
+   "agency": "Ombudsman",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-28",
+   "date_basis": "released",
+   "act": "Ombudsman Act 1973",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10571",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    6705129
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10569,
+   "agency": "Respect Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-28",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10569",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10569/respect-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4aacda/globalassets/tabled-paper-documents/tabled-paper-10569/tabling-letter---respect-victoria-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    823666,
+    305680
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10568,
+   "agency": "Integrity Oversight Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-28",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10568",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aacd7/globalassets/tabled-paper-documents/tabled-paper-10568/integrity-oversight-victoria-iov-annual-report-2025-26---tabling-letter.pdf",
+    "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    249486,
+    3342139
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10567,
+   "agency": "Victorian Gambling and Casino Control Commission",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-27",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10567",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aaac5/globalassets/tabled-paper-documents/tabled-paper-10567/victorian-gambling-and-casino-control-commission-2025-26-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4aaac7/globalassets/tabled-paper-documents/tabled-paper-10567/victorian-gambling-and-casino-control-commission-2025-26-annual-report---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    12457921,
+    259218
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10566,
+   "agency": "Essential Services Commission",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-23",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10566",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/tabling-letter--essential-services-commission-2025-26-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    1866120,
+    294691
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10565,
+   "agency": "Emergency Services Superannuation Scheme",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-23",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10565",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/esssuper-20025-26-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/tabling-letter---esssuper-20025-26-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    11531464,
+    335087
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10564,
+   "agency": "Victorian Managed Insurance Authority",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-23",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10564",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa28b/globalassets/tabled-paper-documents/tabled-paper-10564/tabling-letter---victorian-managed-insurance-authority---annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    352398,
+    8144775
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10563,
+   "agency": "Victorian Disability Worker Commission and Disability Worker Registration Board of Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-23",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10563",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa28a/globalassets/tabled-paper-documents/tabled-paper-10563/tabling-letter---victorian-disability-worker-commission-and-disability-worker-registration-board-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4aa28b/globalassets/tabled-paper-documents/tabled-paper-10563/victorian-disability-worker-commission-and-disability-worker-registration-board-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    437696,
+    1650293
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10562,
+   "agency": "Department of Families, Fairness and Housing",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-23",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10562",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa289/globalassets/tabled-paper-documents/tabled-paper-10562/department-of-families-fairness-and-housing-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4aa289/globalassets/tabled-paper-documents/tabled-paper-10562/tabling-letter---department-of-families-fairness-and-housing-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    4013564,
+    416273
+   ],
+   "held": true
+  },
+  {
+   "paper_id": 10561,
+   "agency": "Social Services Regulator",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-23",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10561",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4aa288/globalassets/tabled-paper-documents/tabled-paper-10561/tabling-letter---social-services-regulator-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    3383755,
+    404594
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10560,
+   "agency": "Disability Services Commissioner",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-23",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10560",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/tabling-letter---disability-services-commissioner-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    583323,
+    406711
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10558,
+   "agency": "Queen Victoria Women's Centre Trust",
+   "title": "Minister's report of receipt of 2025-26 report",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-21",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10558",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a9e62/globalassets/tabled-paper-documents/tabled-paper-10558/letter-to-table-by-receipt-for-the-queen-victoria-women_s-centre-trust-2025-26-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    289488
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10554,
+   "agency": "Commission for Children and Young People",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-16",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10554",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26---tabling-letter.pdf"
+   ],
+   "pdf_bytes": [
+    5876132,
+    428066
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10553,
+   "agency": "Victorian Funds Management Corporation",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-16",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10553",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a9414/globalassets/tabled-paper-documents/tabled-paper-10553/tabling-letter---victorian-funds-management-corporation-2025-26-annual-report.pdf",
+    "https://www.parliament.vic.gov.au/4a9414/globalassets/tabled-paper-documents/tabled-paper-10553/victorian-funds-management-corporation-2025-26-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    450950,
+    3437678
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10552,
+   "agency": "Treasury Corporation of Victoria",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-10-15",
+   "date_basis": "released",
+   "act": "Financial Management Act 1994",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10552",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a9410/globalassets/tabled-paper-documents/tabled-paper-10552/tabling-letter---treasury-corporation-of-victoria-annual-report-2025-26.pdf",
+    "https://www.parliament.vic.gov.au/4a9413/globalassets/tabled-paper-documents/tabled-paper-10552/treasury-corporation-of-victoria-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    271492,
+    8532880
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10525,
+   "agency": "Voluntary Assisted Dying Review Board",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-24",
+   "date_basis": "released",
+   "act": "Voluntary Assisted Dying Act 2017",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10525",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a751b/globalassets/tabled-paper-documents/tabled-paper-10525/attach-2---vad-annual-report.pdf"
+   ],
+   "pdf_bytes": [
+    2350090
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10519,
+   "agency": "Victoria Police",
+   "title": "Report 2025-26 under s 20R of the Witness Protection Act 1991",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-24",
+   "date_basis": "released",
+   "act": "Witness Protection Act 1991",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10519",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7515/globalassets/tabled-paper-documents/tabled-paper-10519/attachment-a-2025-26-annual-report-under-section-20r-of-the-witness-protection-act-1991.pdf"
+   ],
+   "pdf_bytes": [
+    161028
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10517,
+   "agency": "Victoria Police, Chief Commissioner",
+   "title": "Report 2025-26 under s 148R of the Liquor Control Reform Act 1998",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-24",
+   "date_basis": "released",
+   "act": null,
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10517",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7512/globalassets/tabled-paper-documents/tabled-paper-10517/tabling-copy---2025-26-annual-report-under-s148r-of-the-liquor-control-reform-act-1998.pdf"
+   ],
+   "pdf_bytes": [
+    270210
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10510,
+   "agency": "Victoria Police",
+   "title": "Report 2025-26 under s 37F of the Terrorism (Community Protection) Act 2003",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Terrorism (Community Protection) Act 2003",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10510",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7315/globalassets/tabled-paper-documents/tabled-paper-10510/victoria-police---2025-26-report-under-s-37f-of-the-terrorism-community-protection-act-2003.pdf"
+   ],
+   "pdf_bytes": [
+    347163
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10509,
+   "agency": "Victoria Police",
+   "title": "Report 2025-26 under s 42BI of the Evidence (Miscellaneous Provisions) Act 1958",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Evidence (Miscellaneous Provisions) Act 1958",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10509",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7315/globalassets/tabled-paper-documents/tabled-paper-10509/victoria-police----2025-26-report-under-s-42bi-of-the-evidence-miscellaneous-provisions-act-1958.pdf"
+   ],
+   "pdf_bytes": [
+    144300
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10508,
+   "agency": "Victorian Fisheries Authority",
+   "title": "Report 2025-26 under s 30L of the Surveillance Devices Act 1999",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Surveillance Devices Act 1999",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10508",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7315/globalassets/tabled-paper-documents/tabled-paper-10508/vfa---2025-26-report-under-s-30l-of-the-surveillance-devices-act-1999.pdf"
+   ],
+   "pdf_bytes": [
+    135485
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10507,
+   "agency": "Public Interest Monitor",
+   "title": "Report 2025-26 under s 62 of the Human Source Management Act 2023",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Human Source Management Act 2023",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10507",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7314/globalassets/tabled-paper-documents/tabled-paper-10507/pim---2025-26-report-under-s-62-of-the-human-source-management-act-2023.pdf"
+   ],
+   "pdf_bytes": [
+    1080832
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10506,
+   "agency": "Independent Broad-based Anti-corruption Commission",
+   "title": "Report 2025-26 under s 30L of the Surveillance Devices Act 1999",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Surveillance Devices Act 1999",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10506",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7313/globalassets/tabled-paper-documents/tabled-paper-10506/ibac---2025-26-report-under-s-30l-of-the-surveillance-devices-act-1999.pdf"
+   ],
+   "pdf_bytes": [
+    215508
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10505,
+   "agency": "Game Management Authority",
+   "title": "Report 2025-26 under s 30L of the Surveillance Devices Act 1999",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Surveillance Devices Act 1999",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10505",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7313/globalassets/tabled-paper-documents/tabled-paper-10505/gma---2025-26-report-under-s-30l-of-the-surveillance-devices-act-1999-.pdf"
+   ],
+   "pdf_bytes": [
+    235812
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10504,
+   "agency": "Department of Energy, Environment and Climate Action",
+   "title": "Report 2025-26 under s 30L of the Surveillance Devices Act 1999",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Surveillance Devices Act 1999",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10504",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7312/globalassets/tabled-paper-documents/tabled-paper-10504/deeca---2025-26-report-under-s-30l-of-the-surveillance-devices-act-1999.pdf"
+   ],
+   "pdf_bytes": [
+    136701
+   ],
+   "held": true
+  },
+  {
+   "paper_id": 10503,
+   "agency": "Australian Criminal Intelligence Commission",
+   "title": "Report 2025-26 under s 42BI of the Evidence (Miscellaneous Provisions) Act 1958",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Evidence (Miscellaneous Provisions) Act 1958",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10503",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7312/globalassets/tabled-paper-documents/tabled-paper-10503/acic---2025-26-report-under-s-42bi-of-the-evidence-miscellaneous-provisions-act-1958-vic.pdf"
+   ],
+   "pdf_bytes": [
+    312463
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10501,
+   "agency": "Australian Criminal Intelligence Commission",
+   "title": "Report 2025-26 under s 31 of the Crimes (Assumed Identities) Act 2004",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Crimes (Assumed Identities) Act 2004",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10501",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a7310/globalassets/tabled-paper-documents/tabled-paper-10501/acic---2025-26-report-under-s-31-of-the-crimes-assumed-identities-act-2004.pdf"
+   ],
+   "pdf_bytes": [
+    306349
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10499,
+   "agency": "Australian Criminal Intelligence Commission",
+   "title": "Report 2025-26 under s 30L of the Surveillance Devices Act 1999",
+   "kind": "statutory_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-22",
+   "date_basis": "released",
+   "act": "Surveillance Devices Act 1999",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10499",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a730f/globalassets/tabled-paper-documents/tabled-paper-10499/acic---2025-26-report-under-s-30l-of-the-surveillance-devices-act-1999.pdf"
+   ],
+   "pdf_bytes": [
+    298532
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10482,
+   "agency": "Local Jobs First",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-09-10",
+   "date_basis": "released",
+   "act": null,
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10482",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf"
+   ],
+   "pdf_bytes": [
+    2503844
+   ],
+   "held": false
+  },
+  {
+   "paper_id": 10394,
+   "agency": "Health Complaints Commissioner",
+   "title": "Report 2025-26",
+   "kind": "annual_report",
+   "reporting_year": "2025-26",
+   "date": "2026-08-25",
+   "date_basis": "released",
+   "act": "Health Complaints Act 2016",
+   "detail_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10394",
+   "pdf_urls": [
+    "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf"
+   ],
+   "pdf_bytes": [
+    2614136
+   ],
+   "held": false
+  }
+ ]
+}

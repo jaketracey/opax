@@ -1,0 +1,177 @@
+{
+  "report_id": "vic-department-of-jobs-skills-industry-and-regions-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "consultancy",
+    "executive_average_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "2026",
+      "value": 3973163,
+      "value_as_published": "3,973,163",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 79,
+      "quote": "Total revenue and income from transactions 3,973,163 3,764,306"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026",
+      "value": -3949366,
+      "value_as_published": "(3,949,366)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 79,
+      "quote": "Total expenses from transactions (3,949,366) (3,594,999)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee benefits",
+      "column_as_published": "2026",
+      "value": -327882,
+      "value_as_published": "(327,882)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 79,
+      "quote": "Employee benefits 3.3.1 (327,882) (349,007)"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result from continuing operations",
+      "column_as_published": "2026",
+      "value": 18703,
+      "value_as_published": "18,703",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 79,
+      "quote": "Net result from continuing operations 18,703 196,633"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total employees",
+      "column_as_published": "June 2026",
+      "value": 1586,
+      "value_as_published": "1,586",
+      "unit": "people",
+      "period": "last full pay period of June 2026",
+      "page": 195,
+      "quote": "Total employees 1,586 1,549.9 1,140 123 1,235.9 323 314.0"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total employees",
+      "column_as_published": "June 2026",
+      "value": 1549.9,
+      "value_as_published": "1,549.9",
+      "unit": "fte",
+      "period": "last full pay period of June 2026",
+      "page": 195,
+      "quote": "Total employees 1,586 1,549.9 1,140 123 1,235.9 323 314.0"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "Accountable Officer’s remuneration",
+      "value": null,
+      "value_as_published": "$640,000–$649,000",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 149,
+      "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of DJSIR during the reporting period was in the range: $640,000–$649,000"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 34662,
+      "value_as_published": "34,662",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 150,
+      "quote": "Total remuneration(i) 34,662 35,749"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives",
+      "column_as_published": "2026",
+      "value": 137,
+      "value_as_published": "137",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 150,
+      "quote": "Total number of executives(ii) 137 156"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total compensation",
+      "column_as_published": "2026",
+      "value": 4446,
+      "value_as_published": "4,446",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 152,
+      "quote": "Total compensation(i) 4,446 4,378"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES3",
+      "column_as_published": "All",
+      "value": 6,
+      "value_as_published": "6",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 199,
+      "quote": "SES3 6 0 5 0 1 0 0 0",
+      "band": "SES3"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES2",
+      "column_as_published": "All",
+      "value": 40,
+      "value_as_published": "40",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 199,
+      "quote": "SES2 40 0 24 3 16 -3 0 0",
+      "band": "SES2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES1",
+      "column_as_published": "All",
+      "value": 67,
+      "value_as_published": "67",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 199,
+      "quote": "SES1 67 -6 38 -6 29 0 0 0",
+      "band": "SES1"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total",
+      "column_as_published": "All",
+      "value": 113,
+      "value_as_published": "113",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 199,
+      "quote": "Total 113 -6 67 -3 46 -3 0 0"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+      "value": 4.8,
+      "value_as_published": "$4.8 million",
+      "unit": "millions_of_dollars",
+      "period": "2025-26",
+      "page": 171,
+      "quote": "The total expenditure incurred during 2025–26 in relation to these consultancies is $4.8 million (excluding GST)."
+    }
+  ]
+}

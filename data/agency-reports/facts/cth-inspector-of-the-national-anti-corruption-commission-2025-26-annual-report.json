@@ -1,0 +1,145 @@
+{
+  "report_id": "cth-inspector-of-the-national-anti-corruption-commission-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "staff_fte",
+    "recommendations_made",
+    "public_hearings",
+    "referrals_to_prosecution"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "Total complaints",
+      "column_as_published": "2025–26",
+      "value": 213,
+      "value_as_published": "213",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 27,
+      "quote": "The Inspector received 213 complaints in 2025–26"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "the Inspector finalised 210",
+      "value": 210,
+      "value_as_published": "210",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 27,
+      "quote": "Of the 213 complaints received in the reporting period, the Inspector finalised 210."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Enquiries",
+      "value": 4917,
+      "value_as_published": "4,917",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 26,
+      "quote": "Enquiries 4,917 Contacts from 20 individuals"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of mandatory referrals received regarding a NACC corruption issue under s 203 or 204",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 10,
+      "quote": "Number of mandatory referrals received regarding a NACC corruption issue under s 203 or 204 Reg 34(b) 1"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of NACC corruption issues that the Inspector referred to the NACC for investigation",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 10,
+      "quote": "Number of NACC corruption issues that the Inspector referred to the NACC for investigation Reg 35(2)(c) 1"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Audits undertaken during the reporting period",
+      "value": null,
+      "value_as_published": "Nil",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "Audits undertaken during the reporting period Reg 38 Nil"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "summonses",
+      "value": 73,
+      "value_as_published": "73",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 34,
+      "quote": "the NACC provided the Inspector with copies of 73 summonses"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "FOI requests were received",
+      "value": null,
+      "value_as_published": "Fifteen",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 37,
+      "quote": "Fifteen FOI requests were received during the reporting period"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "The median time taken to finalise a complaint",
+      "value": 15,
+      "value_as_published": "15",
+      "unit": "days",
+      "period": "2025–26",
+      "page": 27,
+      "quote": "The median time taken to finalise a complaint was 15 days, excluding the 102 defence-related conflict of interest complaints"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "complaint investigations",
+      "value": null,
+      "value_as_published": "two",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 20,
+      "quote": "the Inspector commenced and discontinued two complaint investigations"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "Number of NACC corruption investigations completed",
+      "value": null,
+      "value_as_published": "Nil",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 10,
+      "quote": "Number of NACC corruption investigations completed Reg 36(a) Nil"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "two full-time staff",
+      "value": null,
+      "value_as_published": "two",
+      "unit": "people",
+      "period": "2025–26",
+      "page": 39,
+      "quote": "The Inspector is assisted by two full-time staff"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "actual spend",
+      "value": 1292231,
+      "value_as_published": "$1,292,231",
+      "unit": "dollars",
+      "period": "2025–26",
+      "page": 40,
+      "quote": "The Inspector’s actual spend for 2025–26 was $1,292,231."
+    }
+  ]
+}

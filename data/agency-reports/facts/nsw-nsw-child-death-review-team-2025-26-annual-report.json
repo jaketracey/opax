@@ -1,0 +1,74 @@
+{
+ "report_id": "nsw-nsw-child-death-review-team-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "staff_fte",
+  "staff_headcount",
+  "total_expenses",
+  "total_income",
+  "employee_expenses",
+  "net_result",
+  "consultancy_total",
+  "matters_received",
+  "investigations_commenced",
+  "investigations_finalised",
+  "public_hearings",
+  "referrals_to_prosecution"
+ ],
+ "facts": [
+  {
+   "metric": "recommendations_made",
+   "label_as_published": "new recommendations during the 2025–26 reporting year",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 49,
+   "quote": "The CDRT made 7 new recommendations during the 2025–26 reporting year"
+  },
+  {
+   "metric": "recommendations_made",
+   "label_as_published": "new recommendations in this report",
+   "value": 2,
+   "value_as_published": "2",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 49,
+   "quote": "The CDRT has made 2 new recommendations in this report"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "The CDRT met formally on",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 13,
+   "quote": "The CDRT met formally on 4 occasions in 2025–26"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "submissions were provided in 2025–26",
+   "value": 8,
+   "value_as_published": "8",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 13,
+   "quote": "Complete – 8 submissions were provided in 2025–26"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "deaths of children and young people in NSW during 2022 and 2023",
+   "value": 885,
+   "value_as_published": "885",
+   "unit": "count",
+   "period": "2022 and 2023",
+   "page": 15,
+   "quote": "The report analysed the 885 deaths of children and young people in NSW during 2022 and 2023"
+  }
+ ]
+}

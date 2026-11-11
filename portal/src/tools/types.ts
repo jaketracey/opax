@@ -36,6 +36,8 @@ export interface ToolDefinition {
   evidenceKind?: 'passages'
   /** Temporary compatibility name for an existing Ask plan; never an extra MCP entry. */
   askName?: string
+  /** MCP and public JSON only: not offered to Ask's research loop (each Ask tool adds to every turn's reserved spend). */
+  mcpOnly?: boolean
 }
 export class ToolInputError extends Error {
   readonly code = -32602

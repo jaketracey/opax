@@ -1,0 +1,68 @@
+{
+ "report_id": "nsw-independent-biosecurity-commissioner-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "staff_fte",
+  "total_expenses",
+  "total_income",
+  "employee_expenses",
+  "net_result",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "recommendations_made",
+   "label_as_published": "recommendations",
+   "value": 20,
+   "value_as_published": "20",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 6,
+   "quote": "• 20 recommendations"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "employees",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 6,
+   "quote": "• 3 employees"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "meetings",
+   "value": 208,
+   "value_as_published": "208",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 6,
+   "quote": "• 208 meetings"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "submissions",
+   "value": 14,
+   "value_as_published": "14",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 6,
+   "quote": "• 14 submissions"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "The Department is addressing 37 recommendations from 4 reports",
+   "value": 37,
+   "value_as_published": "37",
+   "unit": "count",
+   "period": "1 July 2024 to 30 June 2026",
+   "page": 32,
+   "quote": "The Department is addressing 37 recommendations from 4 reports"
+  }
+ ]
+}

@@ -1,0 +1,65 @@
+{
+  "report_id": "sa-independent-commission-against-corruption-2025-26-financial-statements",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total income",
+      "column_as_published": "2026",
+      "value": null,
+      "value_as_published": "12 572",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 6,
+      "quote": "12 572 11 940"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses",
+      "column_as_published": "2026",
+      "value": null,
+      "value_as_published": "13 858",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 6,
+      "quote": "13 858 13 294"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result",
+      "column_as_published": "2026",
+      "value": null,
+      "value_as_published": "(1 286)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 6,
+      "quote": "(1 286) (1 354)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Total employee related expenses",
+      "column_as_published": "2026",
+      "value": 9170,
+      "value_as_published": "9170",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 14,
+      "quote": "9170 8153"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total compensation",
+      "column_as_published": "2026",
+      "value": null,
+      "value_as_published": "1 671",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 12,
+      "quote": "Total compensation 1 671 2 133"
+    }
+  ]
+}

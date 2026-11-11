@@ -1,0 +1,223 @@
+{
+  "report_id": "nsw-inspector-of-custodial-services-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "staff_fte",
+    "total_expenses",
+    "total_income",
+    "employee_expenses",
+    "net_result",
+    "consultancy_total",
+    "investigations_commenced",
+    "public_hearings"
+  ],
+  "facts": [
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of reports tabled",
+      "column_as_published": "2025-26",
+      "value": 8,
+      "value_as_published": "8",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "Number of reports tabled 7 8"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of centre inspections",
+      "column_as_published": "2025-26",
+      "value": 27,
+      "value_as_published": "27",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "Number of centre inspections 11 27"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of liaison visits conducted",
+      "column_as_published": "2025-26",
+      "value": 28,
+      "value_as_published": "28",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "Number of liaison visits conducted 61 28"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "% of recommendations accepted (adult)",
+      "column_as_published": "2025-26",
+      "value": 73,
+      "value_as_published": "73%",
+      "unit": "percent",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "% of recommendations accepted (adult) 75% 73%"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "% of recommendations accepted (youth)",
+      "value": 97,
+      "value_as_published": "97%",
+      "unit": "percent",
+      "period": "2025-26",
+      "page": 8,
+      "quote": "% of recommendations accepted (youth) N/A 97%"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "the Inspector had a budget of",
+      "value": 3525537,
+      "value_as_published": "$3,525,537",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 12,
+      "quote": "For the 2025-26 financial year, the Inspector had a budget of $3,525,537."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "enquiries",
+      "value": 29464,
+      "value_as_published": "29,464",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 27,
+      "quote": "Official Visitors reported receiving a total of 29,464 enquiries and 32,168 complaints in person."
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "complaints",
+      "value": 32168,
+      "value_as_published": "32,168",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 27,
+      "quote": "Official Visitors reported receiving a total of 29,464 enquiries and 32,168 complaints in person."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "enquiries",
+      "value": 792,
+      "value_as_published": "792",
+      "unit": "count",
+      "period": "12 months ending 30 June 2026",
+      "page": 32,
+      "quote": "the Official Visitors reported receiving a total of 792 enquiries and 561 complaints in person."
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "complaints",
+      "value": 561,
+      "value_as_published": "561",
+      "unit": "count",
+      "period": "12 months ending 30 June 2026",
+      "page": 32,
+      "quote": "the Official Visitors reported receiving a total of 792 enquiries and 561 complaints in person."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Inspection of South Coast Correctional Centre",
+      "value": 33,
+      "value_as_published": "33",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 15,
+      "quote": "The Inspection of South Coast Correctional Centre 2023 report was tabled in NSW Parliament and published in November 2025. The Inspector made 33 recommendations."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Inspection of the Long Bay Correctional Complex",
+      "value": 45,
+      "value_as_published": "45",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 16,
+      "quote": "The Inspection of the Long Bay Correctional Complex 2023-24 report was tabled in NSW Parliament and published in December 2025. The Inspector made 45 recommendations."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Inspection of Macquarie and Hunter Correctional Centres",
+      "value": 29,
+      "value_as_published": "29",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 16,
+      "quote": "The Inspection of Macquarie and Hunter Correctional Centres 2024 report was tabled in NSW Parliament and published in December 2025. The Inspector made 29 recommendations."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Inspection of Cooma Correctional Centre",
+      "value": 20,
+      "value_as_published": "20",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 16,
+      "quote": "The Inspection of Cooma Correctional Centre 2025 report was tabled in NSW Parliament and published in December 2025. The Inspector made 20 recommendations."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Inspection of Mary Wade Correctional Centre",
+      "value": 18,
+      "value_as_published": "18",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 16,
+      "quote": "The Inspection of Mary Wade Correctional Centre 2025 report was tabled in NSW Parliament and published in February 2026. The Inspector made 18 recommendations."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Review of segregation and other measures which confine and separate prisoners",
+      "value": 33,
+      "value_as_published": "33",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 16,
+      "quote": "This report was tabled in NSW Parliament and published in March 2026. The Inspector made 33 recommendations."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Inspection of Clarence Correctional Centre",
+      "value": 46,
+      "value_as_published": "46",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "The Inspection of Clarence Correctional Centre 2024 report was tabled in NSW Parliament and published in April 2026. The Inspector made 46 recommendations."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Unannounced Inspections of Six Youth Justice Centres",
+      "value": 33,
+      "value_as_published": "33",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "The Unannounced Inspections of Six Youth Justice Centres (2025) report was tabled in NSW Parliament and published in April 2026. The Inspector made 33 recommendations."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Inspection of Parklea Correctional Centre (transition of health services)",
+      "value": 13,
+      "value_as_published": "13",
+      "unit": "count",
+      "period": "report tabled in the 2026-27 reporting period",
+      "page": 17,
+      "quote": "The Inspection of Parklea Correctional Centre (transition of health services) 2025-2026 report was tabled in NSW Parliament and published in the 2026-27 reporting period. The Inspector made 13 recommendations."
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Inspection of Kariong Intake and Transit Centre, Amber Laurel Correctional Centre",
+      "value": null,
+      "value_as_published": "four",
+      "unit": "count",
+      "period": "report tabled in the 2026-27 reporting period",
+      "page": 17,
+      "quote": "The report was tabled in NSW Parliament and published in the 2026-27 reporting period. The Inspector made four recommendations."
+    }
+  ]
+}

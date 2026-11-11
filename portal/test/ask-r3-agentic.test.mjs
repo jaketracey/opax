@@ -102,7 +102,7 @@ test('an empty first result must recover after observing it, then refine and fet
   assert.equal(model.doGenerateCalls.length, 5);
   assert.match(JSON.stringify(model.doGenerateCalls[2].prompt), /empty lookup is not absence/i);
   assert.equal(model.doGenerateCalls[3].toolChoice.type, 'required', 'a third lookup turn remains available');
-  for (const tool of api.registry.filter(t => t.name !== 'find_quotes')) assert.ok(model.doGenerateCalls[0].tools.some(t => t.name === (tool.askName ?? tool.name)), tool.name);
+  for (const tool of api.registry.filter(t => t.name !== 'find_quotes' && !t.mcpOnly)) assert.ok(model.doGenerateCalls[0].tools.some(t => t.name === (tool.askName ?? tool.name)), tool.name);
   const begun = progress.filter(s => s.state === 'running'), ended = progress.filter(s => s.state !== 'running');
   assert.deepEqual(begun.map(s => s.id).sort(), ended.map(s => s.id).sort());
   assert.equal(new Set(begun.map(s => s.id)).size, begun.length);

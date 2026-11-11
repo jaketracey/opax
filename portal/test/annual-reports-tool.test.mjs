@@ -97,7 +97,7 @@ test('empty results never claim absence', async () => {
   const none = await call({ view: 'remuneration', person: 'Zqxv Nobody', year: latest });
   assert.equal(none.error, undefined); assert.deepEqual(none.rows, []); assert.match(none.notes.join(' '), /does not establish/);
   const state = await call({ view: 'profile', body: 'Victoria Police' });
-  assert.deepEqual(state.rows, []); assert.match(state.notes.join(' '), /State and territory agencies are not covered/);
+  assert.deepEqual(state.rows, []); assert.match(state.notes.join(' '), /State and territory agencies are not covered by this tool/);
   const old = await call({ view: 'remuneration', year: '2015-16' });
   assert.deepEqual(old.rows, []); assert.match(old.notes.join(' '), /no annual report data before 2018-19/);
   const noSuppliers = await call({ view: 'suppliers', organisation: 'Deloitte', year: '2019-20' });

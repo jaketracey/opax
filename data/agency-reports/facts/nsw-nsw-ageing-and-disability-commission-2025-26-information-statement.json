@@ -1,0 +1,184 @@
+{
+  "report_id": "nsw-nsw-ageing-and-disability-commission-2025-26-information-statement",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "consultancy_total",
+    "public_hearings",
+    "referrals_to_prosecution",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "statutory reports",
+      "value": 4313,
+      "value_as_published": "4,313",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 8,
+      "quote": "Handled 15,990 calls, received 4,313 statutory reports, and closed 4,342 reports"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "reports and enquiries",
+      "value": 6265,
+      "value_as_published": "6,265",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 14,
+      "quote": "the Helpline received 6,265 matters (reports and enquiries)"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "calls received by the Helpline",
+      "value": 15990,
+      "value_as_published": "15,990",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 14,
+      "quote": "In 2025-26, the Helpline received 15,990 calls"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "investigations commenced",
+      "value": 69,
+      "value_as_published": "69",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 22,
+      "quote": "the ADC commenced 69 investigations"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "Finalised 110 investigations",
+      "value": 110,
+      "value_as_published": "110",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 8,
+      "quote": "Finalised 110 investigations."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "matters of concern",
+      "value": 103,
+      "value_as_published": "103",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 8,
+      "quote": "Assisted OCVs to refer 103 matters of concern to appropriate bodies"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Number of full-time equivalent staff",
+      "column_as_published": "2025-26",
+      "value": 36.1,
+      "value_as_published": "36.1",
+      "unit": "fte",
+      "period": "30 June 2026",
+      "page": 34,
+      "quote": "Number of full-time equivalent staff 38.2 36.1"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "non-executive employees",
+      "value": 41,
+      "value_as_published": "41",
+      "unit": "people",
+      "period": "30 June 2026",
+      "page": 34,
+      "quote": "On 30 June 2026, 41 non-executive employees (36.1 full-time equivalent) worked for the ADC"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "substantive Senior Executives",
+      "value": null,
+      "value_as_published": "two",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 36,
+      "quote": "there were two substantive Senior Executives"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Of our employee-related expenditure, 7.8% was related to Senior Executives",
+      "value": 7.8,
+      "value_as_published": "7.8%",
+      "unit": "percent",
+      "period": "2025-26",
+      "page": 36,
+      "quote": "Of our employee-related expenditure, 7.8% was related to Senior Executives in comparison to 10.1% in 2024-25"
+    },
+    {
+      "metric": "executive_average_remuneration",
+      "label_as_published": "1 (Director)",
+      "column_as_published": "2025–26",
+      "value": 236630,
+      "value_as_published": "236,630",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 36,
+      "quote": "1 (Director) 230,222 228,626 236,630 201,350 – 287,200",
+      "band": "1 (Director)"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses excluding losses",
+      "column_as_published": "2026",
+      "value": 9053,
+      "value_as_published": "9,053",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 49,
+      "quote": "Total expenses excluding losses 9,053 8,664"
+    },
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue",
+      "column_as_published": "2026",
+      "value": 8507,
+      "value_as_published": "8,507",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 49,
+      "quote": "Total revenue 8,507 8,421"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Personnel services expenses",
+      "column_as_published": "2026",
+      "value": 6814,
+      "value_as_published": "6,814",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 49,
+      "quote": "Personnel services expenses 2(a) 6,814 6,570"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result from continuing operations",
+      "column_as_published": "2026",
+      "value": -546,
+      "value_as_published": "(546)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 49,
+      "quote": "Net result from continuing operations (546) (243)"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Ruth Kaye Consulting",
+      "value": 29040,
+      "value_as_published": "$29,040",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 36,
+      "quote": "Ruth Kaye Consulting drafted a report for the ADC on the state of safeguarding in NSW at a total cost of $29,040",
+      "counterparty": "Ruth Kaye Consulting",
+      "purpose": "drafted a report for the ADC on the state of safeguarding in NSW"
+    }
+  ]
+}

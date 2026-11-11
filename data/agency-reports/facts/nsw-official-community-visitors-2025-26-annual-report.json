@@ -1,0 +1,87 @@
+{
+  "report_id": "nsw-official-community-visitors-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "staff_fte",
+    "total_expenses",
+    "total_income",
+    "employee_expenses",
+    "net_result",
+    "investigations_commenced"
+  ],
+  "facts": [
+    {
+      "metric": "operational_other",
+      "label_as_published": "visits conducted",
+      "value": 3235,
+      "value_as_published": "3,235",
+      "unit": "count",
+      "period": "12 months to 30 June 2026",
+      "page": 11,
+      "quote": "3,235 visits conducted"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "issues raised and monitored",
+      "value": 6169,
+      "value_as_published": "6,169",
+      "unit": "count",
+      "period": "12 months to 30 June 2026",
+      "page": 11,
+      "quote": "6,169 issues raised and monitored, including:"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "matters of concern referred to relevant bodies",
+      "value": 103,
+      "value_as_published": "103",
+      "unit": "count",
+      "period": "12 months to 30 June 2026",
+      "page": 11,
+      "quote": "103 matters of concern referred to relevant bodies, including:"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "services visited",
+      "value": 2411,
+      "value_as_published": "2,411",
+      "unit": "count",
+      "period": "12 months to 30 June 2026",
+      "page": 11,
+      "quote": "2,411 services visited"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "visitable services in NSW known to the OCV scheme",
+      "value": 4145,
+      "value_as_published": "4,145",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 14,
+      "quote": "there were 4,145 visitable services in NSW known to the OCV scheme, accommodating 12,505 residents"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "residents",
+      "value": 12505,
+      "value_as_published": "12,505",
+      "unit": "people",
+      "period": "2025-26",
+      "page": 14,
+      "quote": "there were 4,145 visitable services in NSW known to the OCV scheme, accommodating 12,505 residents"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "one-off visits",
+      "value": 54,
+      "value_as_published": "54",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 16,
+      "quote": "OCVs conducted 54 one-off visits to services that had never been visited"
+    }
+  ]
+}

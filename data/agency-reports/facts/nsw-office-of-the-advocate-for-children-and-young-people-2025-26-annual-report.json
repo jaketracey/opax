@@ -1,0 +1,106 @@
+{
+ "report_id": "nsw-office-of-the-advocate-for-children-and-young-people-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "staff_fte",
+  "staff_headcount",
+  "total_expenses",
+  "total_income",
+  "net_result",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "consultancy",
+   "label_as_published": "Amount excl GST",
+   "value": 60278,
+   "value_as_published": "$60,278",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 47,
+   "quote": "Thirriwirri $60,278 Strategic Plan partnership",
+   "counterparty": "Thirriwirri",
+   "purpose": "Strategic Plan partnership to engage Aboriginal and Torres Strait Islander Communities"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Amount excl GST",
+   "value": 58007,
+   "value_as_published": "$58,007",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 47,
+   "quote": "Social Ventures Australia $58,007 Youth Advisory Council Evaluation",
+   "counterparty": "Social Ventures Australia",
+   "purpose": "Youth Advisory Council Evaluation"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Amount excl GST",
+   "value": 30520,
+   "value_as_published": "$30,520",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 47,
+   "quote": "Insight Centre $30,520 Youth Week Polling",
+   "counterparty": "Insight Centre",
+   "purpose": "Youth Week Polling"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Amount excl GST",
+   "value": 45455,
+   "value_as_published": "$45,455",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 47,
+   "quote": "Sequre Consulting $45,455 Pathways to Healing",
+   "counterparty": "Sequre Consulting",
+   "purpose": "Pathways to Healing Research Project"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Total number of children and young people engaged",
+   "value": 11641,
+   "value_as_published": "11,641",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Total number of children and young people engaged 11,641"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Total number of submissions made to Government",
+   "value": 20,
+   "value_as_published": "20",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Total number of submissions made to Government 20"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "core budget for the Advocate",
+   "value": 4.55,
+   "value_as_published": "$4.55 million",
+   "unit": "millions_of_dollars",
+   "period": "2025-26",
+   "page": 46,
+   "quote": "the core budget for the Advocate was $4.55 million"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Employment Related Expenses (ERE)",
+   "value": 3.38,
+   "value_as_published": "$3.38 million",
+   "unit": "millions_of_dollars",
+   "period": "2025-26",
+   "page": 46,
+   "quote": "which included $3.38 million in Employment Related Expenses (ERE)"
+  }
+ ]
+}

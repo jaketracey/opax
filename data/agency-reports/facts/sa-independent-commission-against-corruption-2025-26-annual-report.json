@@ -1,0 +1,186 @@
+{
+  "report_id": "sa-independent-commission-against-corruption-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "public_hearings",
+    "executive_remuneration_total"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "Investigations",
+      "value": 155,
+      "value_as_published": "155",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 16,
+      "quote": "ICAC received 155 referrals from the OPI under the ICAC and PCD Acts"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "General nature of investigations commenced",
+      "value": 58,
+      "value_as_published": "58",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "ICAC commenced 58 new corruption investigations"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "Investigations",
+      "value": 72,
+      "value_as_published": "72",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "ICAC closed 72 investigations"
+    },
+    {
+      "metric": "referrals_to_prosecution",
+      "label_as_published": "Investigations which have resulted in prosecutions or disciplinary action",
+      "value": null,
+      "value_as_published": "three",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 21,
+      "quote": "ICAC referred three matters to SAPOL for further investigation and potential prosecution"
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "Recommendations made to an inquiry agency or public authority",
+      "value": 96,
+      "value_as_published": "96",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 25,
+      "quote": "ICAC made 96 recommendations, including 61 general recommendations and 35 agency targeted recommendations"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "general recommendations",
+      "value": 61,
+      "value_as_published": "61",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 25,
+      "quote": "including 61 general recommendations and 35 agency targeted recommendations"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "agency targeted recommendations",
+      "value": 35,
+      "value_as_published": "35",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 25,
+      "quote": "including 61 general recommendations and 35 agency targeted recommendations"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "ICAC continued 43 corruption investigations that began in previous reporting periods",
+      "value": 43,
+      "value_as_published": "43",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "ICAC continued 43 corruption investigations that began in previous reporting periods"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "closed within nine months",
+      "value": 54,
+      "value_as_published": "54",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 18,
+      "quote": "Of these, 54 investigations (or 75%) were closed within nine months"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "ICAC investigated five matters in accordance with section 30 of the PCD Act",
+      "value": null,
+      "value_as_published": "five",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 19,
+      "quote": "ICAC investigated five matters in accordance with section 30 of the PCD Act"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "public statements",
+      "value": null,
+      "value_as_published": "five",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 22,
+      "quote": "ICAC issued five public statements"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "prevention letters",
+      "value": 11,
+      "value_as_published": "11",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 32,
+      "quote": "the Commissioner sent 11 prevention letters to public authorities"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "education sessions were delivered",
+      "value": 62,
+      "value_as_published": "62",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 29,
+      "quote": "62 education sessions were delivered by way of presentations and workshops to more than 2,000 attendees"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total number of employees (as at June 30)",
+      "column_as_published": "2025-26",
+      "value": 55,
+      "value_as_published": "55",
+      "unit": "people",
+      "period": "as at 30 June 2026",
+      "page": 33,
+      "quote": "Persons 55 63 -8"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Full Time Equivalent (FTEs)",
+      "column_as_published": "2025-26",
+      "value": 50,
+      "value_as_published": "50",
+      "unit": "fte",
+      "period": "as at 30 June 2026",
+      "page": 33,
+      "quote": "Full Time Equivalent (FTEs) 50 57.20 -7.2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Statutory appointments",
+      "band": "Statutory appointments",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 38,
+      "quote": "Statutory appointments 2 SAES1 2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SAES1",
+      "band": "SAES1",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 38,
+      "quote": "Statutory appointments 2 SAES1 2"
+    }
+  ]
+}

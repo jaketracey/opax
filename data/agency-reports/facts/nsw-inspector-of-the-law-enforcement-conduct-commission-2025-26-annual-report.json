@@ -1,0 +1,67 @@
+{
+  "report_id": "nsw-inspector-of-the-law-enforcement-conduct-commission-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "staff_fte",
+    "total_income",
+    "employee_expenses",
+    "net_result",
+    "consultancy_total",
+    "public_hearings"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "new complaints",
+      "value": 89,
+      "value_as_published": "89",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 35,
+      "quote": "89 new complaints were received, compared to the 72 complaints in the previous reporting period"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "contacts",
+      "value": 3161,
+      "value_as_published": "3161",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 8,
+      "quote": "3161 contacts were received by 113 members of the public"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "complaints were finalised",
+      "value": 102,
+      "value_as_published": "102",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 35,
+      "quote": "102 complaints were finalised during the reporting period, including the 14 complaints that were carried over"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "reports to Parliament",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 8,
+      "quote": "5 reports to Parliament"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "actual expenditure",
+      "value": 1141289.32,
+      "value_as_published": "$1,141,289.32",
+      "unit": "dollars",
+      "period": "1 July 2025 to 30 June 2026",
+      "page": 11,
+      "quote": "with actual expenditure amounting to $1,141,289.32"
+    }
+  ]
+}

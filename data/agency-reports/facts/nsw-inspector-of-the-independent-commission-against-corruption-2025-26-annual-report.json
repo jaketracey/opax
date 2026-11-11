@@ -1,0 +1,69 @@
+{
+  "report_id": "nsw-inspector-of-the-independent-commission-against-corruption-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "staff_fte",
+    "total_income",
+    "employee_expenses",
+    "net_result",
+    "consultancy_total",
+    "investigations_commenced",
+    "public_hearings",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "complaints and notifications",
+      "value": 69,
+      "value_as_published": "69",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 6,
+      "quote": "69 complaints and notifications were received compared with 46 complaints and notifications received in the previous reporting period"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "notifications",
+      "value": 29,
+      "value_as_published": "29",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 6,
+      "quote": "29 notifications were received from the ICAC compared with 28 in the previous reporting period"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "complaints were finalised",
+      "value": 68,
+      "value_as_published": "68",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 6,
+      "quote": "68 complaints were finalised including the 2 complaints which were carried over from the previous reporting year"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "contacts from the public",
+      "value": 1078,
+      "value_as_published": "1078",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 17,
+      "quote": "The Inspector received 1078 contacts from the public during the reporting period"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "actual expenditure for the reporting period",
+      "value": 435679.31,
+      "value_as_published": "$435,679.31",
+      "unit": "dollars",
+      "period": "2025-26 reporting period",
+      "page": 11,
+      "quote": "The Inspector’s actual expenditure for the reporting period was $435,679.31"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "report_id": "nsw-parliamentary-ethics-adviser-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "staff_fte",
+    "total_expenses",
+    "total_income",
+    "employee_expenses",
+    "net_result",
+    "matters_received"
+  ],
+  "facts": [
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of ethical matters raised",
+      "column_as_published": "Legislative Council",
+      "value": 6,
+      "value_as_published": "6",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 8,
+      "quote": "Number of ethical matters raised: Legislative Council - 6 Legislative Assembly - 10"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of ethical matters raised",
+      "column_as_published": "Legislative Assembly",
+      "value": 10,
+      "value_as_published": "10",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 8,
+      "quote": "Number of ethical matters raised: Legislative Council - 6 Legislative Assembly - 10"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Members",
+      "column_as_published": "Legislative Council",
+      "value": 4,
+      "value_as_published": "4",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 9,
+      "quote": "Legislative Council - Members - 4 Former Ministers - Nil"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Members",
+      "column_as_published": "Legislative Assembly",
+      "value": 6,
+      "value_as_published": "6",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 9,
+      "quote": "Legislative Assembly - Members - 6 Former Ministers - Nil"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of times advice given",
+      "column_as_published": "Legislative Council",
+      "value": 4,
+      "value_as_published": "4",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 9,
+      "quote": "Number of times advice given: Legislative Council - 4 Legislative Assembly - 6"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of times advice given",
+      "column_as_published": "Legislative Assembly",
+      "value": 6,
+      "value_as_published": "6",
+      "unit": "count",
+      "period": "2025-26 reporting period",
+      "page": 9,
+      "quote": "Number of times advice given: Legislative Council - 4 Legislative Assembly - 6"
+    }
+  ]
+}

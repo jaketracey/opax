@@ -1,0 +1,143 @@
+{
+  "report_id": "cth-australian-public-service-commission-and-merit-protection-commissioner-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "recommendations_made",
+    "investigations_commenced",
+    "public_hearings",
+    "referrals_to_prosecution"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "Applications received",
+      "value": 109,
+      "value_as_published": "109",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 152,
+      "quote": "Applications received Breach decisions reviewed Sanction decisions reviewed Number of agencies 109 43 25 35"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "Applications received",
+      "value": 199,
+      "value_as_published": "199",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 168,
+      "quote": "Applications received Reviews completed Complaints about final entitlements On hand at end of year 199 36 15 12"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "Applications received",
+      "value": 65,
+      "value_as_published": "65",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 165,
+      "quote": "Applications received 65 Applications closed 65"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "complaints about final entitlements",
+      "value": 15,
+      "value_as_published": "15",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 178,
+      "quote": "This year, we received 15 complaints about final entitlements."
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "requests to conduct an inquiry",
+      "value": 3,
+      "value_as_published": "3",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 178,
+      "quote": "In 2025–26, we received 3 requests to conduct an inquiry under this part of the Public Service Act."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total finalised during period",
+      "value": 113,
+      "value_as_published": "113",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 190,
+      "quote": "Total finalised during period 113 199 65 2 15 394"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Finalised",
+      "value": 199,
+      "value_as_published": "199",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 170,
+      "quote": "Finalised 89 128 136 151 199"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Applications closed",
+      "value": 65,
+      "value_as_published": "65",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 165,
+      "quote": "Applications closed 65"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total reviewed",
+      "value": 68,
+      "value_as_published": "68",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 155,
+      "quote": "Total reviewed 24 39 47 61 68"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Promotion reviews",
+      "value": 7,
+      "value_as_published": "7",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 161,
+      "quote": "Applications received Promotion reviews Own motions audits Agencies 65 7 2 5"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Completed audits",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 166,
+      "quote": "Own motion audits Number Completed audits 2"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "enquiries",
+      "value": 1051,
+      "value_as_published": "1051",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 150,
+      "quote": "we received and responded to 1051 enquiries"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Applications",
+      "value": 267,
+      "value_as_published": "267",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 175,
+      "quote": "This year we received 267 applications for review of a promotion decision."
+    }
+  ]
+}

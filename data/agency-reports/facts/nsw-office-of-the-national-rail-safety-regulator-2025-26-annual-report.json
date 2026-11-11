@@ -1,0 +1,120 @@
+{
+ "report_id": "nsw-office-of-the-national-rail-safety-regulator-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "staff_fte",
+  "staff_headcount",
+  "total_expenses",
+  "total_income",
+  "employee_expenses",
+  "consultancy_total",
+  "public_hearings",
+  "recommendations_made"
+ ],
+ "facts": [
+  {
+   "metric": "matters_received",
+   "label_as_published": "notifiable occurrences",
+   "value": 6751,
+   "value_as_published": "6751",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 22,
+   "quote": "ONRSR recorded 6751 notifiable occurrences in 2025-26"
+  },
+  {
+   "metric": "investigations_commenced",
+   "label_as_published": "Investigations initiated (2025-26)",
+   "value": 26,
+   "value_as_published": "26",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 23,
+   "quote": "Investigations initiated (2025-26) Investigations completed (2025-26) Total underway (as at 30 June 2026) Investigations where charges have been laid Successful prosecutions (to date) 33 26 24 35 5 2"
+  },
+  {
+   "metric": "investigations_finalised",
+   "label_as_published": "Investigations completed (2025-26)",
+   "value": 24,
+   "value_as_published": "24",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 23,
+   "quote": "Investigations initiated (2025-26) Investigations completed (2025-26) Total underway (as at 30 June 2026) Investigations where charges have been laid Successful prosecutions (to date) 33 26 24 35 5 2"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Total underway (as at 30 June 2026)",
+   "value": 35,
+   "value_as_published": "35",
+   "unit": "count",
+   "period": "as at 30 June 2026",
+   "page": 23,
+   "quote": "Investigations initiated (2025-26) Investigations completed (2025-26) Total underway (as at 30 June 2026) Investigations where charges have been laid Successful prosecutions (to date) 33 26 24 35 5 2"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Investigations where charges have been laid",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 23,
+   "quote": "Investigations initiated (2025-26) Investigations completed (2025-26) Total underway (as at 30 June 2026) Investigations where charges have been laid Successful prosecutions (to date) 33 26 24 35 5 2"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "enquiries",
+   "value": 324,
+   "value_as_published": "324",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 22,
+   "quote": "ONRSR conducted a total of 324 enquiries in 2025-26"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "operators accredited by ONRSR",
+   "value": 200,
+   "value_as_published": "200",
+   "unit": "count",
+   "period": "as at 30 June 2026",
+   "page": 20,
+   "quote": "As at 30 June 2026 there were 200 operators accredited by ONRSR"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "major rail projects",
+   "value": 10,
+   "value_as_published": "10",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 20,
+   "quote": "In 2025-26 ONRSR had regulatory oversight of 10 major rail projects across Australia"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "overall deficit position",
+   "value": 55,
+   "value_as_published": "$55k",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ending 30 June 2026",
+   "page": 32,
+   "quote": "ONRSR reports an overall deficit position of $55k"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "ONRSR generated",
+   "value": 1.5,
+   "value_as_published": "$1.5m",
+   "unit": "millions_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 32,
+   "quote": "ONRSR generated $1.5m in such funding"
+  }
+ ]
+}

@@ -1,0 +1,131 @@
+{
+  "report_id": "cth-national-anti-corruption-commission-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "recommendations_made",
+    "public_hearings"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "Referrals received in the reporting period",
+      "value": 2428,
+      "value_as_published": "2,428",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 51,
+      "quote": "the Commission received 2,428 referrals, made up of 2,319 voluntary referrals and 109 mandatory referrals"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "Investigations",
+      "value": 16,
+      "value_as_published": "16",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 63,
+      "quote": "the Commission commenced 16 corruption investigations, including 5 joint investigations"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "Investigations",
+      "value": 13,
+      "value_as_published": "13",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 63,
+      "quote": "Of these, 33 were ongoing and 13 were finalised at 30 June 2026"
+    },
+    {
+      "metric": "referrals_to_prosecution",
+      "label_as_published": "Investigations resulting in further activity",
+      "value": null,
+      "value_as_published": "Seven",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 66,
+      "quote": "Seven individuals were before the courts or referred to the CDPP in relation to 4 investigations"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "referral assessments",
+      "value": 2603,
+      "value_as_published": "2,603",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 37,
+      "quote": "The Commission finalised 2,603 referral assessments"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "KPI 1.1: Percentage of referrals assessed within 90 days",
+      "value": 68.5,
+      "value_as_published": "68.5%",
+      "unit": "percent",
+      "period": "2025-26",
+      "page": 37,
+      "quote": "1,782 referrals were finalised within 90 days of receipt, providing a result of 68.5% against the target"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "its own initiative power",
+      "value": 4,
+      "value_as_published": "4",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 51,
+      "quote": "the Commission assessed 4 matters under its own initiative power"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "preliminary investigations were on foot",
+      "value": 55,
+      "value_as_published": "55",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 56,
+      "quote": "In 2025–26, 55 preliminary investigations were on foot"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "preliminary investigations",
+      "value": 34,
+      "value_as_published": "34",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 56,
+      "quote": "During the reporting period, the Commission finalised 34 preliminary investigations"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "private hearings",
+      "value": 10,
+      "value_as_published": "10",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 46,
+      "quote": "conducted private hearings in 10 investigations, involving 65 witnesses"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "private hearings",
+      "value": 65,
+      "value_as_published": "65",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 46,
+      "quote": "conducted private hearings in 10 investigations, involving 65 witnesses"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "new requests for review",
+      "value": 85,
+      "value_as_published": "85",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 62,
+      "quote": "The Commission received 85 new requests for review and finalised 55.8% (53 of 95) of reviews on foot in 2025–26"
+    }
+  ]
+}

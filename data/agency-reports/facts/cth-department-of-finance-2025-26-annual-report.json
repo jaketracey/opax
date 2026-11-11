@@ -1,0 +1,108 @@
+{
+  "report_id": "cth-department-of-finance-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [],
+  "facts": [
+    {
+      "metric": "operational_other",
+      "label_as_published": "legislative amendments",
+      "value": 60,
+      "value_as_published": "60",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 14,
+      "quote": "we delivered 60 legislative amendments through the Regulatory Reform Omnibus Act 2025"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Chief AI Officers appointed",
+      "value": null,
+      "value_as_published": "more than 100",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 15,
+      "quote": "more than 100 Chief AI Officers appointed"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "APS officials participated in the GovAI Chat trial",
+      "value": null,
+      "value_as_published": "more than 1,700",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 15,
+      "quote": "more than 1,700 APS officials participated in the GovAI Chat trial"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "agencies used GovAI Hosting and Model Brokerage services",
+      "value": 12,
+      "value_as_published": "12",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 15,
+      "quote": "12 agencies used GovAI Hosting and Model Brokerage services"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "newly appointed accountable authorities",
+      "value": 41,
+      "value_as_published": "41",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 16,
+      "quote": "We provided guidance to all 41 newly appointed accountable authorities"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "tailored briefings",
+      "value": 19,
+      "value_as_published": "19",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 16,
+      "quote": "delivered 19 tailored briefings, including for governing boards"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "properties identified as surplus through the Defence Estate Audit",
+      "value": 58,
+      "value_as_published": "58",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 16,
+      "quote": "Finance would manage the divestment of 58 properties identified as surplus through the Defence Estate Audit"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "town halls, drop-in sessions and stakeholder roundtables",
+      "value": 29,
+      "value_as_published": "29",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 16,
+      "quote": "we supported 29 town halls, drop-in sessions and stakeholder roundtables across Australia"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "vehicles",
+      "value": 138,
+      "value_as_published": "138",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 18,
+      "quote": "By 30 June 2026, 138 vehicles made up about 88% of the operational fleet."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "new Commonwealth Parliament Offices",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 18,
+      "quote": "We opened 2 new Commonwealth Parliament Offices in Perth and Adelaide."
+    }
+  ]
+}

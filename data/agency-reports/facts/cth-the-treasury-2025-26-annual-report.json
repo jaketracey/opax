@@ -1,0 +1,98 @@
+{
+  "report_id": "cth-the-treasury-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [],
+  "facts": [
+    {
+      "metric": "operational_other",
+      "label_as_published": "Bills",
+      "value": 13,
+      "value_as_published": "13",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 12,
+      "quote": "We were responsible for 13 Bills containing 41 measures throughout 2025–26."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "measures",
+      "value": 41,
+      "value_as_published": "41",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 12,
+      "quote": "We were responsible for 13 Bills containing 41 measures throughout 2025–26."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "regulations",
+      "value": 8,
+      "value_as_published": "8",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 12,
+      "quote": "8 regulations and 33 non-tied legislative instruments were made and registered on the Federal Register of Legislation."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "non-tied legislative instruments",
+      "value": 33,
+      "value_as_published": "33",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 12,
+      "quote": "8 regulations and 33 non-tied legislative instruments were made and registered on the Federal Register of Legislation."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "members",
+      "value": null,
+      "value_as_published": "over 6,500",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 13,
+      "quote": "it had over 6,500 members by 30 June 2026"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "evaluation reports",
+      "value": null,
+      "value_as_published": "more than 200",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 17,
+      "quote": "The collection now contains more than 200 evaluation reports"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "commercial investment proposals approved",
+      "value": 1356,
+      "value_as_published": "1,356",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 248,
+      "quote": "There were 1,356 commercial investment proposals approved in 2025–26 (Table 47)."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "residential real estate proposals",
+      "value": 2979,
+      "value_as_published": "2,979",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 248,
+      "quote": "The ATO approved 2,979 residential real estate proposals valued at $4.7 billion in 2025–26."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "commercial investment proposals were decided within 30 days",
+      "value": 44,
+      "value_as_published": "44%",
+      "unit": "percent",
+      "period": "2025–26",
+      "page": 75,
+      "quote": "44% of commercial investment proposals were decided within 30 days."
+    }
+  ]
+}

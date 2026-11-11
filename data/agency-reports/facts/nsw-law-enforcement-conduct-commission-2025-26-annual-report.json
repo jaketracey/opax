@@ -1,0 +1,336 @@
+{
+ "report_id": "nsw-law-enforcement-conduct-commission-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "staff_fte",
+  "consultancy_total",
+  "investigations_commenced"
+ ],
+ "facts": [
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Chief Commissioner’s salary",
+   "value": 548490,
+   "value_as_published": "$548,490",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 97,
+   "quote": "the Chief Commissioner’s salary was $548,490 per annum"
+  },
+  {
+   "metric": "named_remuneration",
+   "label_as_published": "Commissioner’s salary",
+   "value": 411365,
+   "value_as_published": "$411,365",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 97,
+   "quote": "Anina Johnson was appointed as Commissioner effective from 16 May 2022. Her remuneration is set annually by the Statutory and Other Offices Remuneration Tribunal. For this reporting period, the Commissioner’s salary was $411,365 per annum.",
+   "name": "Anina Johnson",
+   "position": "Commissioner"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 132,
+   "value_as_published": "132",
+   "unit": "people",
+   "period": "2026",
+   "page": 97,
+   "quote": "Total 112 125 131 132"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses excluding losses",
+   "column_as_published": "Economic Entity (Consolidated)",
+   "value": 31396,
+   "value_as_published": "31,396",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 124,
+   "quote": "Total expenses excluding losses 31,300 27,677 32,723 31,396 27,765"
+  },
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "Economic Entity (Consolidated)",
+   "value": 31376,
+   "value_as_published": "31,376",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 124,
+   "quote": "Total revenue 31,280 26,577 32,652 31,376 26,665"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee related expenses",
+   "column_as_published": "Economic Entity (Consolidated)",
+   "value": 22401,
+   "value_as_published": "22,401",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 124,
+   "quote": "Employee related expenses 2(a) 1,076 971 25,072 22,401 20,149"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result from continuing operations",
+   "column_as_published": "Economic Entity (Consolidated)",
+   "value": 33,
+   "value_as_published": "33",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 124,
+   "quote": "Net result from continuing operations 33 (1,098) (56) 33 (1,098)"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 1764,
+   "value_as_published": "1,764",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 147,
+   "quote": "Total remuneration 1,764 1,698"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Band 2 (Executive Director)",
+   "column_as_published": "Female 2025–26",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Band 2 (Executive Director) 1 1",
+   "band": "Band 2 (Executive Director)"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Band 2 (Executive Director)",
+   "column_as_published": "Male 2025–26",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Band 2 (Executive Director) 1 1",
+   "band": "Band 2 (Executive Director)"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Band 1 (Director)",
+   "column_as_published": "Female 2025–26",
+   "value": 2,
+   "value_as_published": "2",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Band 1 (Director) 2 3",
+   "band": "Band 1 (Director)"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Band 1 (Director)",
+   "column_as_published": "Male 2025–26",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Band 1 (Director) 2 3",
+   "band": "Band 1 (Director)"
+  },
+  {
+   "metric": "executive_average_remuneration",
+   "label_as_published": "Band 2 (Executive Director)",
+   "column_as_published": "Average remuneration for 2025–26",
+   "value": 343950,
+   "value_as_published": "$343,950",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Band 2 (Executive Director) $297,251 pa to $373,950 pa $343,950 pa",
+   "band": "Band 2 (Executive Director)"
+  },
+  {
+   "metric": "executive_average_remuneration",
+   "label_as_published": "Band 1 (Director)",
+   "column_as_published": "Average remuneration for 2025–26",
+   "value": 280796,
+   "value_as_published": "$280,796",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Band 1 (Director) $208,400 pa to $297,250 pa $280,796 pa",
+   "band": "Band 1 (Director)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Cost ($)*",
+   "value": 77500,
+   "value_as_published": "$77,500",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Bendelta The Commission engaged Bendelta to assist with and facilitate development of the 2026–29 strategic plan. $77,500",
+   "counterparty": "Bendelta",
+   "purpose": "The Commission engaged Bendelta to assist with and facilitate development of the 2026–29 strategic plan."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Cost ($)*",
+   "value": 133842,
+   "value_as_published": "$133,842",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Nganya The Commission engaged Nganya to provide advice and guidance in implementing our First Nations Strategy and providing cultural intelligence training. $133,842",
+   "counterparty": "Nganya",
+   "purpose": "The Commission engaged Nganya to provide advice and guidance in implementing our First Nations Strategy and providing cultural intelligence training."
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "complaints",
+   "value": 7944,
+   "value_as_published": "7,944",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 33,
+   "quote": "During 2025–26, the Commission received 7,944 complaints."
+  },
+  {
+   "metric": "recommendations_made",
+   "label_as_published": "recommendations about handling of complaints under s 131(4)",
+   "value": 155,
+   "value_as_published": "155",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "We made 155 recommendations about handling of complaints under s 131(4)"
+  },
+  {
+   "metric": "recommendations_made",
+   "label_as_published": "recommendations relating to training",
+   "value": 6,
+   "value_as_published": "6",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 60,
+   "quote": "We made 6 recommendations relating to training"
+  },
+  {
+   "metric": "investigations_finalised",
+   "label_as_published": "matters were completed",
+   "value": 10,
+   "value_as_published": "10",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 63,
+   "quote": "Of these, 10 matters were completed and 35 were ongoing at 30 June 2026."
+  },
+  {
+   "metric": "public_hearings",
+   "label_as_published": "public examinations",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 63,
+   "quote": "the Commission conducted 102 private examinations and 4 public examinations."
+  },
+  {
+   "metric": "referrals_to_prosecution",
+   "label_as_published": "Full investigations referred to the Office of the Director of Public Prosecutions for consideration of prosecution action",
+   "value": 0,
+   "value_as_published": "0",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 66,
+   "quote": "Full investigations referred to the Office of the Director of Public Prosecutions for consideration of prosecution action 0"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "private examinations",
+   "value": 102,
+   "value_as_published": "102",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 63,
+   "quote": "the Commission conducted 102 private examinations and 4 public examinations."
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "investigations",
+   "value": 38,
+   "value_as_published": "38",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 63,
+   "quote": "the Commission undertook 7 preliminary enquiries and 38 investigations, comprising 30 full investigations and 8 preliminary investigations."
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "preliminary enquiries",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 63,
+   "quote": "the Commission undertook 7 preliminary enquiries and 38 investigations, comprising 30 full investigations and 8 preliminary investigations."
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "complaints",
+   "value": 8046,
+   "value_as_published": "8,046",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "We assessed 8,046 complaints"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "phone calls",
+   "value": 5282,
+   "value_as_published": "5,282",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "We answered 5,282 phone calls"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "directions to investigate under s 99(3)",
+   "value": 12,
+   "value_as_published": "12",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "We made 12 directions to investigate under s 99(3)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "requests for information under s 102",
+   "value": 266,
+   "value_as_published": "266",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 32,
+   "quote": "We issued 266 requests for information under s 102"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "voluntary PID matters",
+   "value": 34,
+   "value_as_published": "34",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 100,
+   "quote": "The Commission finalised 34 voluntary PID matters during the reporting period."
+  }
+ ]
+}

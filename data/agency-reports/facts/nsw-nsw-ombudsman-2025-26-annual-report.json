@@ -1,0 +1,343 @@
+{
+  "report_id": "nsw-nsw-ombudsman-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_count",
+    "public_hearings",
+    "referrals_to_prosecution",
+    "investigations_commenced"
+  ],
+  "facts": [
+    {
+      "metric": "executive_band",
+      "label_as_published": "Number of senior executives",
+      "column_as_published": "Female",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "people",
+      "period": "as of 30 June 2026",
+      "page": 59,
+      "quote": "2025 2026 Band Female Male Female Male Band 4 (equivalent) 0 1 0 1 Band 3 0 0 0 0 Band 2 0 2 2 1 Band 1 5 3 7 4*",
+      "band": "Band 4 (equivalent)"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Number of senior executives",
+      "column_as_published": "Male",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "people",
+      "period": "as of 30 June 2026",
+      "page": 59,
+      "quote": "2025 2026 Band Female Male Female Male Band 4 (equivalent) 0 1 0 1 Band 3 0 0 0 0 Band 2 0 2 2 1 Band 1 5 3 7 4*",
+      "band": "Band 4 (equivalent)"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Number of senior executives",
+      "column_as_published": "Female",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "people",
+      "period": "as of 30 June 2026",
+      "page": 59,
+      "quote": "2025 2026 Band Female Male Female Male Band 4 (equivalent) 0 1 0 1 Band 3 0 0 0 0 Band 2 0 2 2 1 Band 1 5 3 7 4*",
+      "band": "Band 3"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Number of senior executives",
+      "column_as_published": "Male",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "people",
+      "period": "as of 30 June 2026",
+      "page": 59,
+      "quote": "2025 2026 Band Female Male Female Male Band 4 (equivalent) 0 1 0 1 Band 3 0 0 0 0 Band 2 0 2 2 1 Band 1 5 3 7 4*",
+      "band": "Band 3"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Number of senior executives",
+      "column_as_published": "Female",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "people",
+      "period": "as of 30 June 2026",
+      "page": 59,
+      "quote": "2025 2026 Band Female Male Female Male Band 4 (equivalent) 0 1 0 1 Band 3 0 0 0 0 Band 2 0 2 2 1 Band 1 5 3 7 4*",
+      "band": "Band 2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Number of senior executives",
+      "column_as_published": "Male",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "people",
+      "period": "as of 30 June 2026",
+      "page": 59,
+      "quote": "2025 2026 Band Female Male Female Male Band 4 (equivalent) 0 1 0 1 Band 3 0 0 0 0 Band 2 0 2 2 1 Band 1 5 3 7 4*",
+      "band": "Band 2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Number of senior executives",
+      "column_as_published": "Female",
+      "value": 7,
+      "value_as_published": "7",
+      "unit": "people",
+      "period": "as of 30 June 2026",
+      "page": 59,
+      "quote": "2025 2026 Band Female Male Female Male Band 4 (equivalent) 0 1 0 1 Band 3 0 0 0 0 Band 2 0 2 2 1 Band 1 5 3 7 4*",
+      "band": "Band 1"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Number of senior executives",
+      "column_as_published": "Male",
+      "value": 4,
+      "value_as_published": "4",
+      "unit": "people",
+      "period": "as of 30 June 2026",
+      "page": 59,
+      "quote": "2025 2026 Band Female Male Female Male Band 4 (equivalent) 0 1 0 1 Band 3 0 0 0 0 Band 2 0 2 2 1 Band 1 5 3 7 4*",
+      "band": "Band 1"
+    },
+    {
+      "metric": "executive_average_remuneration",
+      "label_as_published": "Average $",
+      "column_as_published": "Average $",
+      "value": 538600,
+      "value_as_published": "538,600",
+      "unit": "dollars",
+      "period": "as of 30 June 2026",
+      "page": 60,
+      "quote": "Band 4 (equivalent) 509,251–588,250 520,385 509,251–588,250 538,600",
+      "band": "Band 4 (equivalent)"
+    },
+    {
+      "metric": "executive_average_remuneration",
+      "label_as_published": "Average $",
+      "column_as_published": "Average $",
+      "value": 335012,
+      "value_as_published": "335,012",
+      "unit": "dollars",
+      "period": "as of 30 June 2026",
+      "page": 60,
+      "quote": "Band 2 287,201–361,300 315,117 297,251–373,950 335,012",
+      "band": "Band 2"
+    },
+    {
+      "metric": "executive_average_remuneration",
+      "label_as_published": "Average $",
+      "column_as_published": "Average $",
+      "value": 269192,
+      "value_as_published": "269,192",
+      "unit": "dollars",
+      "period": "as of 30 June 2026",
+      "page": 60,
+      "quote": "Band 1 201,350–287,200 247,275 208,400–297,250 269,192",
+      "band": "Band 1"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total employee-related expenditure",
+      "column_as_published": "2026",
+      "value": 10.5,
+      "value_as_published": "10.5%",
+      "unit": "percent",
+      "period": "as of 30 June 2026",
+      "page": 60,
+      "quote": "Total employee-related expenditure 9.1% 10.5%"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total",
+      "column_as_published": "2026",
+      "value": 254.9,
+      "value_as_published": "254.9",
+      "unit": "fte",
+      "period": "as of 30 June 2026",
+      "page": 59,
+      "quote": "Total 250.1 254.9"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "employees",
+      "value": 264,
+      "value_as_published": "264",
+      "unit": "people",
+      "period": "as of 30 June 2026",
+      "page": 58,
+      "quote": "As of 30 June 2026, our workforce comprised 264 employees, representing 254.9 full-time equivalent roles"
+    },
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue",
+      "column_as_published": "2025–26",
+      "value": 60020,
+      "value_as_published": "60,020",
+      "unit": "thousands_of_dollars",
+      "period": "2025–26",
+      "page": 78,
+      "quote": "Total revenue 27,187 40,215 54,224 56,158 60,020"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses",
+      "column_as_published": "2025–26",
+      "value": 55953,
+      "value_as_published": "55,953",
+      "unit": "thousands_of_dollars",
+      "period": "2025–26",
+      "page": 78,
+      "quote": "Total expenses 26,019 37,949 50,849 57,039 55,953"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result",
+      "column_as_published": "2025–26",
+      "value": 3906,
+      "value_as_published": "3,906",
+      "unit": "thousands_of_dollars",
+      "period": "2025–26",
+      "page": 78,
+      "quote": "Net result 1,109 2,282 3,374 (883) 3,906"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee related expenses",
+      "column_as_published": "2026",
+      "value": 39421,
+      "value_as_published": "39,421",
+      "unit": "thousands_of_dollars",
+      "period": "2025–26",
+      "page": 87,
+      "quote": "Redundancy 105 232 39,421 39,127"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 4151,
+      "value_as_published": "4,151",
+      "unit": "thousands_of_dollars",
+      "period": "2025–26",
+      "page": 102,
+      "quote": "Total remuneration 4,151 3,549"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Consultancy expenses",
+      "value": 17100,
+      "value_as_published": "$17,100",
+      "unit": "dollars",
+      "period": "2025–26",
+      "page": 61,
+      "quote": "Consultancy expenses for 2025–26 were $17,100 (compared to $33,583 in 2024–25)"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "contacts made with our office",
+      "value": 37310,
+      "value_as_published": "37,310",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "37,310 contacts made with our office"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "actionable complaints received",
+      "value": 18380,
+      "value_as_published": "18,380",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "18,380 actionable complaints received"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "investigations finalised",
+      "value": 10,
+      "value_as_published": "10",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "10 investigations finalised"
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "recommendations",
+      "value": 85,
+      "value_as_published": "85",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "Recommendations made: 85 recommendations 58 from investigation reports 27 from systematic monitoring reports"
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "from investigation reports",
+      "value": 58,
+      "value_as_published": "58",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "Recommendations made: 85 recommendations 58 from investigation reports 27 from systematic monitoring reports"
+    },
+    {
+      "metric": "recommendations_made",
+      "label_as_published": "from systematic monitoring reports",
+      "value": 27,
+      "value_as_published": "27",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "Recommendations made: 85 recommendations 58 from investigation reports 27 from systematic monitoring reports"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "preliminary inquiries made",
+      "value": 2945,
+      "value_as_published": "2,945",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "2,945 preliminary inquiries made (16% of actionable complaints)"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "public reports tabled in NSW Parliament",
+      "value": 20,
+      "value_as_published": "20",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "20 public reports tabled in NSW Parliament"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "recommendations accepted",
+      "value": 67,
+      "value_as_published": "67",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 11,
+      "quote": "67 recommendations accepted (99% of those responded to)"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "requests for PID advice",
+      "value": 219,
+      "value_as_published": "219",
+      "unit": "count",
+      "period": "2025–26",
+      "page": 10,
+      "quote": "219 requests for PID advice responded to"
+    }
+  ]
+}
