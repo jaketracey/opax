@@ -1,16 +1,20 @@
 import UIKit
 
 // Like the foundation traits, the synchronous JS read never waits on UIKit.
+@MainActor
 final class VerticalBarObserver {
-  private let lock = NSLock()
-  private var edge = "unspecified"
+  // Read from the JavaScript thread through `snapshot()`, always under the lock.
+  nonisolated(unsafe) private let lock = NSLock()
+  nonisolated(unsafe) private var edge = "unspecified"
   private weak var window: UIWindow?
   private weak var preferredScene: UIWindowScene?
   private var registration: (any UITraitChangeRegistration)?
   private var notifications: [NSObjectProtocol] = []
   var emit: ((String) -> Void)?
 
-  func snapshot() -> String {
+  nonisolated init() {}
+
+  nonisolated func snapshot() -> String {
     lock.lock()
     defer { lock.unlock() }
     return edge
@@ -25,15 +29,20 @@ final class VerticalBarObserver {
     ]
     notifications = names.map { name in
       NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] note in
-        if let window = note.object as? UIWindow, window.isKeyWindow {
-          self?.preferredScene = window.windowScene
-        } else if let scene = note.object as? UIWindowScene,
-                  scene.activationState == .foregroundActive {
-          self?.preferredScene = scene
-        }
-        DispatchQueue.main.async { [weak self] in
-          guard let self, !self.notifications.isEmpty else { return }
-          self.refresh()
+        // Delivered on the main queue (queue: .main).
+        MainActor.assumeIsolated {
+          if let window = note.object as? UIWindow, window.isKeyWindow {
+            self?.preferredScene = window.windowScene
+          } else if let scene = note.object as? UIWindowScene,
+                    scene.activationState == .foregroundActive {
+            self?.preferredScene = scene
+          }
+          DispatchQueue.main.async { [weak self] in
+            MainActor.assumeIsolated {
+              guard let self, !self.notifications.isEmpty else { return }
+              self.refresh()
+            }
+          }
         }
       }
     }

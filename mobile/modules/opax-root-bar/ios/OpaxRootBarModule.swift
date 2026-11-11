@@ -31,10 +31,10 @@ public final class OpaxRootBarModule: Module {
     Name("OpaxRootBar")
     Events("onVerticalBarEdge")
 
-    OnCreate { DispatchQueue.main.async { self.verticalBar.refresh() } }
+    OnCreate { DispatchQueue.main.async { MainActor.assumeIsolated { self.verticalBar.refresh() } } }
     Function("getVerticalBarEdge") { () -> String in self.verticalBar.snapshot() }
     OnStartObserving {
-      DispatchQueue.main.async {
+      DispatchQueue.main.async { MainActor.assumeIsolated {
         self.verticalBar.emit = { [weak self] edge in
           guard let self else { return }
           if edge != "unspecified" {
@@ -43,9 +43,9 @@ public final class OpaxRootBarModule: Module {
           self.sendEvent("onVerticalBarEdge", ["edge": edge])
         }
         self.verticalBar.start()
-      }
+      } }
     }
-    OnStopObserving { DispatchQueue.main.async { self.verticalBar.stop() } }
+    OnStopObserving { DispatchQueue.main.async { MainActor.assumeIsolated { self.verticalBar.stop() } } }
 
     AsyncFunction("update") { (identifier: String, progress: Double, ground: UIColor, divider: UIColor) in
       guard #available(iOS 26, *) else { return }
@@ -64,10 +64,10 @@ public final class OpaxRootBarModule: Module {
     OnDestroy {
       let backings = Array(self.backings.values)
       self.backings.removeAll()
-      DispatchQueue.main.async {
+      DispatchQueue.main.async { MainActor.assumeIsolated {
         self.verticalBar.stop()
         backings.forEach { $0.removeFromSuperview() }
-      }
+      } }
     }
   }
 
