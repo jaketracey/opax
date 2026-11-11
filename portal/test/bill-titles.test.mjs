@@ -12,9 +12,9 @@ const pub = new URL('../public/', import.meta.url);
 const parsed = new Map();
 const readFile = path => { if (!parsed.has(path)) parsed.set(path, JSON.parse(readFileSync(new URL(path.slice(1), pub), 'utf8'))); return parsed.get(path); };
 
-test('bill titles: the four fields in index order, nothing else', () => {
+test('bill titles: the five fields in index order, nothing else', () => {
   const index = {generated_at: '2026-11-11', bills: [{key: 'au-federal-r1', title: 'A Bill', short_title: 'A', status: 'passed', jurisdiction: 'federal'}, {key: 'au-nsw-2', title: null, aliases: ['Other Bill'], jurisdiction: 'nsw', sponsor: 'X'}]};
-  assert.deepEqual(billTitlesFile(index), {generated_at: '2026-11-11', bills: [{key: 'au-federal-r1', title: 'A Bill', jurisdiction: 'federal'}, {key: 'au-nsw-2', title: null, aliases: ['Other Bill'], jurisdiction: 'nsw'}]});
+  assert.deepEqual(billTitlesFile(index), {generated_at: '2026-11-11', bills: [{key: 'au-federal-r1', title: 'A Bill', short_title: 'A', jurisdiction: 'federal'}, {key: 'au-nsw-2', title: null, aliases: ['Other Bill'], jurisdiction: 'nsw'}]});
   assert.throws(() => billTitlesFile({}));
 });
 
@@ -33,4 +33,49 @@ test('bill titles: profiles render the same from the titles file as from the who
     assert.ok(reads.includes(BILL_TITLES_PATH));
     assert.ok(!reads.includes('/bills/index.json'), p.name);
   }
+});
+
+test('bill titles: the app profile draws the same vote rows and questions from them as from the whole index', {skip: !['/votes.json', '/seo/recent-votes.json'].every(p => existsSync(new URL(p.slice(1), pub)))}, async () => {
+  const {votingRows, personVoteKeys, personVoteRecords} = await import('../public/vote-tables.js');
+  const {personQuestions, latestBillVotes} = await import('../public/growth-modules.js');
+  const index = readFile('/bills/index.json');
+  const [whole, titles] = [index.bills, billTitlesFile(index).bills];
+  const votes = readFile('/votes.json'), recent = readFile('/seo/recent-votes.json');
+  let compared = 0;
+  for (const p of readFile('/parliamentarians.json').people) {
+    const keys = personVoteKeys(p.name, p.pid ?? null, votes);
+    if (!keys.length) continue;
+    // As app.js renderPersonVotes builds them.
+    const records = keys.map(k => votes[k]).filter(r => r && typeof r === 'object');
+    const all = records.flatMap(r => ['for', 'against'].flatMap(field => (r[field] || []).map(d => ({...d, jur: d.jur || r.jurisdiction, vote: field === 'for' ? 'For the bill' : 'Against the bill'}))));
+    const latest = latestBillVotes(all);
+    assert.deepEqual(personQuestions({name: p.name, votes: latest, bills: titles}), personQuestions({name: p.name, votes: latest, bills: whole}), p.name);
+    const rows = personVoteRecords(keys, votes, recent).rows;
+    assert.deepEqual(votingRows(rows, titles), votingRows(rows, whole), p.name);
+    compared++;
+  }
+  assert.ok(compared > 100, `compared ${compared}`);
+});
+
+test('bill titles: the app loads the titles file for a profile, the whole index without it or once loaded', async () => {
+  const {default: ts} = await import('typescript');
+  const {runInNewContext} = await import('node:vm');
+  const src = readFileSync(new URL('app.js', pub), 'utf8');
+  const sf = ts.createSourceFile('app.js', src, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+  const want = new Set(['billsIndexPromise', 'loadBillsIndex', 'billTitlesPromise', 'loadBillTitles']);
+  const code = sf.statements.filter(n => ts.isFunctionDeclaration(n) ? want.has(n.name?.text) : ts.isVariableStatement(n) && n.declarationList.declarations.some(d => want.has(d.name.getText(sf)))).map(n => n.getText(sf)).join('\n');
+  const app = missing => {
+    const fetched = [];
+    const ctx = {fetch: async path => { fetched.push(path); return missing.has(path) ? new Response('x', {status: 404}) : new Response(JSON.stringify({bills: [{key: path}]})); }};
+    runInNewContext(code + '\nthis.api = {loadBillsIndex, loadBillTitles};', ctx);
+    return {...ctx.api, fetched};
+  };
+  const a = app(new Set());
+  assert.deepEqual((await a.loadBillTitles()).bills, [{key: '/growth/bill-titles.json'}]);
+  assert.deepEqual(a.fetched, ['/growth/bill-titles.json']);
+  await a.loadBillsIndex();
+  assert.deepEqual((await a.loadBillTitles()).bills, [{key: '/bills/index.json'}], 'the whole index once it is loaded');
+  const b = app(new Set(['/growth/bill-titles.json']));
+  assert.deepEqual((await b.loadBillTitles()).bills, [{key: '/bills/index.json'}]);
+  assert.deepEqual(b.fetched, ['/growth/bill-titles.json', '/bills/index.json']);
 });

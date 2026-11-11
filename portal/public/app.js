@@ -5701,7 +5701,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const all = recs.flatMap(r => ["for", "against"].flatMap(field => (r[field] || []).map(d => ({...d, jur: d.jur || r.jurisdiction, vote: field === "for" ? "For the bill" : "Against the bill"}))));
   if (currentSubjectKey !== key) return;
   const latestBills = growthModules.latestBillVotes(all);
-  const billIndex = await loadBillsIndex().catch(() => null);
+  const billIndex = await loadBillTitles().catch(() => null);
   if (currentSubjectKey !== key || !slot.isConnected) return;
   onRecord({votes: latestBills, bills: billIndex?.bills || []});
   Object.assign(slot.dataset, {module: "latest_bills", pageType: "person", modulePosition: "2"});
@@ -8349,6 +8349,18 @@ function loadBillsIndex() {
     .then((r) => (r.ok ? r.json() : null)).catch(() => null)
     .then((d) => { if (!d) billsIndexPromise = null; return d; });
   return billsIndexPromise;
+}
+/** A profile's bill fields (key, titles, aliases, jurisdiction) from /growth/bill-titles.json
+ *  (public/bill-titles.js), a third the size of /bills/index.json. The whole index when it is
+ *  already loaded, or when the titles file is unreadable. */
+let billTitlesPromise = null;
+function loadBillTitles() {
+  if (billsIndexPromise) return billsIndexPromise;
+  billTitlesPromise ??= fetch("/growth/bill-titles.json", { cache: "no-cache" })
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    .then((d) => (Array.isArray(d?.bills) ? d : loadBillsIndex()))
+    .then((d) => { if (!d) billTitlesPromise = null; return d; });
+  return billTitlesPromise;
 }
 
 /** One bill's full record; null when the projection has no such file (404). Any other

@@ -230,7 +230,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   const [interests, seats, bills, sponsored, heldBackCounts, chairRoleCounts, video] = await Promise.all([
     optional<{people: Record<string,unknown>; _by_name: Record<string,string>}>(read,'/interests/index.json'),
     optional<{index_url: string}>(read,'/electorates/manifest.json').then(m => m ? optional<{electorates: Seat[]}>(read,m.index_url) : null),
-    // The four fields profiles use (public/bill-titles.js), else the whole index.
+    // The bill fields profiles use (public/bill-titles.js), else the whole index.
     optional<{bills: Bill[]}>(read,BILL_TITLES_PATH).then(titles => Array.isArray(titles?.bills) ? titles : optional<{bills: Bill[]}>(read,'/bills/index.json')),
     optional<{sponsored: Record<string,string[]>}>(read,'/seo-links.json'),
     optional<Record<string, number>>(read,'/data/held-back-transcripts.json'),
