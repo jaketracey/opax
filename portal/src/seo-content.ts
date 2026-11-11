@@ -16,6 +16,7 @@ import type {Query} from '../public/datatable.js'
 import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-card.js'
 import {agencyTopRows, type AgencyTopRow} from '../public/agency-top-suppliers.js'
 import {recentVotesBucket, recentVotesBucketPath} from '../public/recent-votes-buckets.js'
+import {partyFold, partyMoneyBucket, partyMoneyBucketPath} from '../public/party-money-buckets.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -181,6 +182,19 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
 }
 const optional = async <T>(read: ReadAsset, path: string): Promise<T | null> => read<T>(path).catch(() => null)
 
+type PartyReceipts = { meta: MoneyGraph['meta']; label: string; rows: ReturnType<typeof partyMoneyData>['rows'] }
+/**
+ * A party's disclosed-receipt rows from one money graph: its bucket (public/party-money-buckets.js),
+ * or the whole graph when the bucket is unreadable. Null when the graph has no such party.
+ */
+async function partyReceipts(read: ReadAsset, path: string, party: string): Promise<PartyReceipts | null> {
+  const key = partyFold(party)
+  const bucket = await optional<{meta: MoneyGraph['meta']; parties: Record<string, {label: string; rows: PartyReceipts['rows']}>}>(read,partyMoneyBucketPath(path,partyMoneyBucket(key)))
+  if (bucket?.parties && bucket.meta) return Object.hasOwn(bucket.parties,key) ? {meta: bucket.meta, ...bucket.parties[key]} : null
+  const graph = await optional<MoneyGraph>(read,path)
+  const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
+  return graph && node ? {meta: graph.meta, label: node.label, rows: partyMoneyData(graph,node.id).rows} : null
+}
 /**
  * The recorded votes for these person keys: their buckets of /seo/recent-votes.json
  * (public/recent-votes-buckets.js), or the whole file when a bucket is unreadable.
@@ -246,14 +260,15 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     }
   }
   body += '<h2>Receipt sources to their party</h2><p>Receipts to a party are not personal payments to this member. An association does not prove influence.</p>'
-  if (party) for (const [path,source] of [['/graph/money.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']]) {
-    const graph = await optional<MoneyGraph>(read,path)
-    const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
-    if (!graph || !node) continue
-    const {rows} = partyMoneyData(graph,node.id)
-    const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',{party:node.label,jurisdiction:({AEC:'federal',ECQ:'qld',VEC:'vic'} as Record<string,string>)[source]})
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(graph.meta.coverage || '')}</p>${registerHTML(config)}`
-    body += `<p>Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(graph.meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
+  const graphs = [['/graph/money.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']] as const
+  const received = party ? await Promise.all(graphs.map(([path]) => partyReceipts(read,path,party))) : []
+  for (const [i,found] of received.entries()) {
+    const source = graphs[i][1]
+    if (!found) continue
+    const {meta, label, rows} = found
+    const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',{party:label,jurisdiction:({AEC:'federal',ECQ:'qld',VEC:'vic'} as Record<string,string>)[source]})
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(meta.coverage || '')}</p>${registerHTML(config)}`
+    body += `<p>Source: ${escapeHtml(meta.sourceShort || meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
   if (owned.length) body += `<h2>Bills sponsored</h2><ul>${owned.slice(0,30).map(key=>`<li>${link(`/bill/${key}`,bills?.bills.find(b=>b.key===key)?.title || key)}</li>`).join('')}</ul>`
