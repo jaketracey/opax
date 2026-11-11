@@ -5098,11 +5098,16 @@ async function pageAliasRedirect(request: Request, url: URL, env: Env): Promise<
   return new Response(null,{status:host && matchSeoRoute(destination)?.kind !== 'hub' ? 308 : 301,headers:{location,'cache-control':'public, max-age=86400','referrer-policy':'no-referrer',...(['/ask','/search'].includes(path) && url.search ? {'x-robots-tag':'noindex'} : {})}})
 }
 /** slug -> name for every person with a slug: how app.js writes and reads the addresses. */
+// The body depends only on the roster, so each isolate serialises it once per roster load.
+const personSlugsBody = new WeakMap<PeopleData, string>()
 async function apiPersonSlugs(env: Env): Promise<Response> {
   const people = await loadPeople(env)
-  const res = json({ generated: people.generated, slugs: Object.fromEntries([...people.bySlug].map(([slug, p]) => [slug, p.name])) })
-  res.headers.set('cache-control', 'public, max-age=3600')
-  return res
+  let body = personSlugsBody.get(people)
+  if (body === undefined) {
+    body = JSON.stringify({ generated: people.generated, slugs: Object.fromEntries([...people.bySlug].map(([slug, p]) => [slug, p.name])) })
+    personSlugsBody.set(people, body)
+  }
+  return new Response(body, { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
 }
 
 /** Lower-cased names and ids on a published register of interests (/interests/index.json). */
