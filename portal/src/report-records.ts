@@ -127,7 +127,10 @@ function items(part: 'findings' | 'recommendations', r: ReportDetail, mainDocume
     : state === 'no_report' ? 'No report is held for this inquiry, so no recommendations are reproduced.'
     : `No ${part} are reproduced in this record. This does not establish that the report contains none.`
   const partial = state === 'partial' ? `<p class="ui-section-note">Only some of the ${part} are reproduced here, from the official copies OPAX could read.</p>` : ''
-  const allegation = part === 'findings' ? r.caveats.find(x => /^Allegations are not findings/.test(x)) : undefined
+  // The record's own caveat for this list leads it: allegations for an integrity
+  // body's findings, liability for a commission's recommendations.
+  const allegation = part === 'findings' ? r.caveats.find(x => /^Allegations are not findings/.test(x))
+    : r.report_type === 'royal_commission' && held.length ? r.caveats.find(x => /not findings of criminal or civil liability/.test(x)) : undefined
   const note = allegation ? `<p class="ui-section-note rr-caveat-inline">${esc(allegation)}</p>` : ''
   const statuses = held.map(i => object(i.status).as_published).filter(Boolean)
   const list = held.length ? `<ol class="rr-items" role="list">${held.map((item, i) => {
@@ -211,7 +214,7 @@ function annualTable(t: RecordRow): string {
 }
 function annual(r: ReportDetail, parts: Part[]): Stat[] {
   const h = object(r.headline), stats: Stat[] = []
-  const tableLink = (v: RecordRow) => v.codename ? link(`https://previewapi.transparency.gov.au/delivery/items?system.codename=${encodeURIComponent(String(v.codename))}&depth=1`, 'Source table on the Transparency Portal', 'rr-cite') : ''
+  const tableLink = (v: RecordRow) => v.codename ? link(`https://previewapi.transparency.gov.au/delivery/items?system.codename=${encodeURIComponent(String(v.codename))}&depth=1`, 'Source table on the Transparency Portal (JSON)', 'rr-cite') : ''
   const thousands = (n: unknown) => finite(n) ? `${dollars(n * 1000)}` : ''
   const blocks: string[] = []
   const inc = object(h.income_statement)
@@ -275,7 +278,10 @@ function agency(r: ReportDetail, parts: Part[], mainDocument: string): Stat[] {
   const facts = r.facts, used = new Set<RecordRow>(), stats: Stat[] = []
   for (const metric of ['total_expenses', 'total_income', 'staff_headcount', 'staff_fte']) {
     const f = facts.find(x => x.metric === metric)
-    if (f) stats.push({ label: String(f.label), value: esc(factValue(f)), note: citeLink({ url: f.source_url, document: mainDocument, page: f.page }, mainDocument) })
+    if (!f) continue
+    const scale = f.unit === 'millions_of_dollars' ? 1e6 : f.unit === 'thousands_of_dollars' ? 1e3 : 0
+    const readable = scale && finite(f.value) ? dollars(f.value * scale) : factValue(f)
+    stats.push({ label: String(f.label), value: esc(readable), note: (readable !== factValue(f) ? `Printed as ${esc(factValue(f))} · ` : '') + citeLink({ url: f.source_url, document: mainDocument, page: f.page }, mainDocument) })
   }
   for (const [id, title, metrics] of FAMILIES) {
     const rows = facts.filter(f => metrics.includes(String(f.metric)))
@@ -298,7 +304,7 @@ export function renderReport(r: ReportDetail) {
   const c = r.record, type = r.report_type, parts: Part[] = []
   const mainDocument = r.citation?.document || ''
   const jurisdiction = String(r.publisher.jurisdiction_name || JURISDICTION[r.jurisdiction] || r.jurisdiction || '')
-  let stats: Stat[] = [], main: SourceDoc | null = null
+  let stats: Stat[] = [], main: SourceDoc | null = null, court: RecordRow[] = []
   const citeHref = url(r.citation?.url)
   const more: { href: unknown; label: string }[] = []
 
@@ -308,23 +314,27 @@ export function renderReport(r: ReportDetail) {
     : type === 'annual_report' ? `Annual report${r.year ? ' ' + r.year : ''}`
     : `${human(c.kind || 'report')}${r.year ? ' ' + r.year : ''}`
   const who = type === 'integrity_report' && r.publisher.short && r.publisher.short !== r.body ? `${r.body} (${r.publisher.short})` : r.body
-  const metaBits = [esc(kindLabel), r.body && r.body !== r.title ? esc(who) : '', esc(jurisdiction),
+  // A title that already names the body and kind (most annual and agency reports) is not
+  // repeated: the line says what the title does not.
+  const titled = (type === 'annual_report' || type === 'agency_report') && !!r.body && r.title.toLowerCase().includes(String(r.body).toLowerCase())
+  const metaBits = [titled ? esc(r.publisher.type_as_published || '') : esc(kindLabel), r.body && !titled ? esc(who) : '', esc(jurisdiction),
     r.date ? dated(r.date_basis, r.date) : 'No published or tabled day is recorded'].filter(Boolean)
 
   if (type === 'royal_commission') {
     const reports = records(c.reports), final = reports.find(d => d.kind === 'final_report') || reports[0]
     const file = records(final?.files).find(f => f.url === citeHref) || records(final?.files)[0]
     if (citeHref) main = { href: citeHref, label: mainDocument || 'Report', pages: file?.pages, size: file?.bytes }
-    for (const d of reports) if (url(d.page_url) && d.page_url !== citeHref) more.push({ href: d.page_url, label: d.title || human(d.kind) })
+    for (const d of reports) if (url(d.page_url) && d.page_url !== citeHref) more.push({ href: d.page_url, label: String(d.title || human(d.kind)) })
     if (c.site) more.push({ href: c.site, label: `Inquiry website (${host(String(c.site))})` })
     const recs = records(c.recommendations)
     if (recs.length) stats.push({ label: c.recommendations_status === 'partial' ? 'Recommendations reproduced' : 'Recommendations', value: figure(recs.length) })
-    if (c.final_report_date) stats.push({ label: 'Final report', value: time(c.final_report_date) })
-    else if (c.interim_report_date) stats.push({ label: 'Interim report', value: time(c.interim_report_date) })
+    // The meta line already carries the report's date; the glance adds what it does not.
+    if (c.final_report_date && c.final_report_date !== r.date) stats.push({ label: 'Final report', value: time(c.final_report_date) })
+    else if (!c.final_report_date && c.interim_report_date && c.interim_report_date !== r.date) stats.push({ label: 'Interim report', value: time(c.interim_report_date) })
     const est = object(c.established)
     if (est.date) stats.push({ label: 'Established', value: time(est.date) })
-    const court = records(c.court_context)
-    if (court.length) parts.push({ id: 'court', title: 'Court rulings on this report', html: court.map(x => `<div class="rr-court">${text(x.text)}${citeLine(x.cite)}</div>`).join('') })
+    if (finite(file?.pages)) stats.push({ label: 'Report length', value: esc(plural(file!.pages as number, 'page')) })
+    court = records(c.court_context)
     parts.push(items('recommendations', r, mainDocument))
     const commission = kv([
       ['Type of inquiry', esc(human(c.inquiry_type))],
@@ -349,14 +359,24 @@ export function renderReport(r: ReportDetail) {
     if (recs.length) stats.push({ label: 'Recommendations', value: figure(recs.length) })
     if (responses.length) stats.push({ label: 'Published responses', value: figure(responses.length) })
     if (finite(doc?.pages)) stats.push({ label: 'Report length', value: esc(plural(doc!.pages as number, 'page')) })
-    parts.push(items('findings', r, mainDocument), items('recommendations', r, mainDocument))
+    const unread = (k: string) => !records(c[k]).length && c[k + '_status'] !== 'stated_none'
+    if (unread('findings') && unread('recommendations')) {
+      // Nothing extracted: one plain statement, not two empty sections.
+      const allegation = r.caveats.find(x => /^Allegations are not findings/.test(x))
+      parts.push({ id: 'findings', title: 'Findings and recommendations', html: (allegation ? `<p class="ui-section-note rr-caveat-inline">${esc(allegation)}</p>` : '') +
+        text('No findings or recommendations are reproduced in this record. This does not establish that the report contains none.') +
+        (citeHref ? `<p class="rr-record-text">${link(citeHref, `Read the report${finite(doc?.pages) ? ` (${isPdf(citeHref) ? 'PDF, ' : ''}${plural(doc!.pages as number, 'page')})` : ''}`)}</p>` : '') })
+    } else parts.push(items('findings', r, mainDocument), items('recommendations', r, mainDocument))
     const responseNote = c.responses_status === 'none_found' ? 'No published response was found.' : c.responses_status === 'not_checked' ? 'Responses to this report have not been checked.' : ''
     if (responses.length || responseNote) parts.push({ id: 'responses', title: 'Published responses', count: responses.length || undefined, html: responses.length ? `<ul class="rr-docs" role="list">${responses.map(x => documentRow(x, mainDocument, kv([['Publisher', esc(x.publisher)], ['Tabled in', esc(x.tabled_in)], ['Recommendation', esc(x.recommendation)], ['Status as published', esc(x.status_as_published)]]))).join('')}</ul>` : text(responseNote) })
-    if (docs.length) parts.push({ id: 'documents', title: 'Official documents', count: docs.length, html: documentList(docs, mainDocument) })
-    const about = kv([['Type as published', esc(c.type_as_published)], ['Period', esc(c.period)], ['Date basis', esc(DATE_BASIS[String(c.date_basis)] || human(c.date_basis))]])
+    // A lone document that is the source card's own, with nothing more to say, is not listed twice.
+    const lone = docs.length === 1 && docs[0].url === citeHref && !docs[0].acquisition && !docs[0].note && !docs[0].rights
+    if (docs.length && !lone) parts.push({ id: 'documents', title: 'Official documents', count: docs.length, html: documentList(docs, mainDocument) })
+    const about = kv([['Period', esc(c.period)], ['How OPAX got it', esc(c.acquisition)], ['Rights', esc(typeof c.rights === 'object' ? object(c.rights).statement : c.rights)]])
     if (about) parts.push({ id: 'about', title: 'About the report', html: about })
   } else if (type === 'annual_report') {
-    if (citeHref) main = { href: citeHref, label: 'Transparency Portal record for this report' }
+    // The Portal's delivery API is the citable source the record holds; say plainly that it is data.
+    if (citeHref) main = { href: citeHref, label: 'Transparency Portal data for this report (JSON)' }
     more.push({ href: c.url, label: 'Annual report' })
     stats = annual(r, parts)
   } else {
@@ -377,5 +397,6 @@ export function renderReport(r: ReportDetail) {
   const caveats = r.caveats.length ? `<aside class="rr-caveats" aria-labelledby="rr-caveats-title"><h2 id="rr-caveats-title" class="rr-caveats-title">How to read this record</h2>${notes(r.caveats)}</aside>` : ''
   const toc = parts.length > 1 ? `<nav class="rr-toc" aria-labelledby="rr-toc-title"><p class="ui-toc-head" id="rr-toc-title">On this page</p><ul class="ui-toc-list" role="list">${parts.map(p => `<li><a href="#${p.id}"><span>${esc(p.title)}</span>${p.count != null ? `<span class="rr-toc-count">${figure(p.count)}</span>` : ''}</a></li>`).join('')}</ul></nav>` : ''
   const footer = `<p class="rr-footer">Record snapshot: ${time(r.snapshot_at)} · <a href="/api/report/${esc(r.slug)}">This record as JSON</a></p>`
-  return head + `<div class="wrap rr-record"><div class="rr-layout"><div class="rr-summary">${glance(stats)}${sourceCard(main, more)}${caveats}</div>${toc}<div class="rr-body">${parts.map(sectionHTML).join('')}${footer}</div></div></div>`
+  const courtNote = court.length ? `<section class="rr-court" aria-labelledby="rr-court-title"><h2 id="rr-court-title" class="rr-court-title">A court has ruled on parts of this report</h2>${court.map(x => `${text(x.text)}${citeLine(x.cite)}`).join('')}</section>` : ''
+  return head + `<div class="wrap rr-record"><div class="rr-layout"><div class="rr-summary">${glance(stats)}${courtNote}${sourceCard(main, more)}${caveats}</div>${toc}<div class="rr-body">${parts.map(sectionHTML).join('')}${footer}</div></div></div>`
 }

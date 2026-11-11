@@ -26,7 +26,12 @@
 .rr-glance .ui-stat { display: flex; flex-direction: column-reverse; justify-content: flex-end; margin: 0; }
 .rr-glance dd { margin: 0; }
 .rr-glance .ui-stat-label { margin-top: var(--space-line); }
-.rr-stat-note { font: var(--type-fine); color: var(--ink-soft); order: -1; }
+.rr-stat-note { margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); order: -1; }
+
+/* A court's ruling on the report travels with it, ahead of everything else. */
+.rr-court { margin: 0 0 var(--space-block); padding: var(--sp-16); border: var(--border-hairline) solid var(--divider-default); border-left: var(--sp-4) solid var(--ink-soft); border-radius: var(--radius-md); background: var(--paper-raised); }
+.rr-court-title { margin: 0 0 var(--space-tight); font: var(--type-strong); color: var(--ink); }
+.rr-court .rr-record-text { margin: 0; }
 
 /* The official document: one raised card, its link first. */
 .rr-source { margin: 0 0 var(--space-block); padding: var(--sp-16); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--radius-md); background: var(--paper-raised); }
