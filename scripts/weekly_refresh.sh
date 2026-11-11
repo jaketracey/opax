@@ -47,7 +47,7 @@ ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 # exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
 # quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
 # (periodic-refresh.md, exit codes)
-STALE_OK=",transparency_portal,transparency_legacy,x_annual_reports,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
+STALE_OK=",integrity_reports,x_integrity_reports,transparency_portal,transparency_legacy,x_annual_reports,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -117,6 +117,19 @@ if [ "$want_weekly" = 1 ]; then
       "$PY" scripts/export_annual_reports.py
   else
     log "[x_annual_reports] SKIP: Transparency Portal acquisition held; last good export kept"
+  fi
+  # Integrity commission reports (parli/ingest/integrity): each commission's own site, paced and robots-checked
+  # OPAXBot requests; listing pages each run, report PDFs fetched once into a raw cache outside git. One snapshot per
+  # body with completeness and shrink guards (exit 3 keeps that body's last good one; a refusing host pauses only that
+  # body, exit 4). The projection is rebuilt from the guarded snapshots either way, so one held or paused body does not
+  # freeze the others. No DB or KB writes. NACC is a documented gap (no response to the agent).
+  if [ -z "$(git ls-tree --name-only HEAD -- portal/public/integrity-reports 2>/dev/null)" ]; then
+    log "[integrity_reports/x_integrity_reports] SKIP: projection not yet tracked on main"
+  else
+    run_step integrity_reports "" "$PY" -m parli.ingest.integrity.run refresh || \
+      log "[integrity_reports] some bodies held or paused; their last good snapshots are exported"
+    run_step x_integrity_reports "" "$EXPORT" dir portal/public/integrity-reports -- \
+      "$PY" scripts/export_integrity_reports.py
   fi
   # QAO phase 1. Phase 2 is inert until its loader and phase-2 catalogue are tracked.
   if [ -z "$(git ls-tree --name-only HEAD -- portal/public/audit 2>/dev/null)" ]; then
