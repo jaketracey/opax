@@ -124,7 +124,11 @@ with file-size suffixes such as "(PDF, 840KB)" removed and generic link text
 The `royal_commissions` tool's profile now carries a transcript summary (count, date
 range, newest three); `view=transcripts` pages through the rest, newest first, with
 `words` and `offset`. Every transcript row and citation carries the label
-"Hearing transcript: evidence, not findings".
+"Hearing transcript: evidence, not findings". The count line opens the way the integrity
+tool's does: "OPAX lists 47 hearing transcripts from the Royal Commission into the
+Robodebt Scheme, dated 27 September 2022 to 10 March 2023". When every source an Ask
+answer cites is a hearing transcript, and the answer does not already carry the label, it
+ends with "These are from hearing transcripts: evidence, not findings."
 
 ### Transcript text for the CC BY commissions, 12 November 2026
 
