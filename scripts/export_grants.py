@@ -1010,6 +1010,14 @@ if JUR == "federal":
         "licence": "CC BY 3.0 AU (GrantConnect, Department of Finance)",
         "threshold": "Every Commonwealth grant award must be published on GrantConnect within 21 days of the agreement taking effect (mandatory since 31 December 2017). Aggregate awards bundle many small recipients and are shown as not disclosed.",
     }
+    # When the awards were last brought up to date: the newest applied GrantConnect load in ext_ingest_log
+    # (ext_apply logs a row only when a load changed the register, so this can lag a quiet day but never
+    # runs ahead of the data). A month is complete only once its publication deadline has passed by this
+    # date, so the social catalog dates its listings from here, not from when this export happened to run.
+    fetched = q("SELECT MAX(loaded_at) FROM ext_ingest_log WHERE table_name = 'ext_grants' AND source = 'grantconnect'") \
+        if q("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'ext_ingest_log'") else []
+    if fetched and fetched[0][0]:
+        src_meta["source_fetched"] = fetched[0][0]
 else:
     for row in q("SELECT grant_id, title, description, recipient, recipient_abn, amount, agency, program, electorate, "
                  "start_date, end_date, grant_type, source_url, category, recipient_type, financial_year "

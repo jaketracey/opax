@@ -119,6 +119,34 @@ about 4 November, which made the releases publication gate refuse every night
 after. The newest resources carry no processing summary, so the gate now proves
 behaviour as well as configuration (`scripts/publish_collected_bill_texts.py`).
 
+## Manual GrantConnect acquisition, 11 November 2026
+
+Jake Tracey downloaded three GrantConnect Grant Award List exports by hand in a
+browser on 11 November 2026, filtered by Publish Date. This was a manual
+acquisition, not a fetcher: the automated route (`grants_fetch`) is still paused,
+and `www.grants.gov.au` still answers the identifying agent with HTTP 403.
+
+| Publish dates | Source URL | Awards | SHA-256 |
+| --- | --- | --- | --- |
+| 1 to 30 Sep 2026 | `https://www.grants.gov.au/Ga/DownloadResult?Type=Ga&AgencyStatus=-1&KeywordTypeSearch=AllWord&DateType=Publish%20Date&DateStart=01-Sep-2026&DateEnd=30-Sep-2026` | 3,072 | `aa37197e3e9557c48bfd1bc448ce9711e6995c2316cf50e3950747e076663f3d` |
+| 1 to 31 Oct 2026 | `https://www.grants.gov.au/Ga/DownloadResult?Type=Ga&AgencyStatus=-1&KeywordTypeSearch=AllWord&DateType=Publish%20Date&DateStart=01-Oct-2026&DateEnd=31-Oct-2026` | 6,397 | `0e0bef48674d8efc48ecfb638fffc1fa4ce6d24c00c8f6d1a8f2fdb05b0124a8` |
+| 1 to 11 Nov 2026 | `https://www.grants.gov.au/Ga/DownloadResult?Type=Ga&AgencyStatus=-1&KeywordTypeSearch=AllWord&DateType=Publish%20Date&DateStart=01-Nov-2026&DateEnd=11-Nov-2026` | 375 | `69461011a54e6719ba640bfcd6cef78c9edba2bb068cc5ce5bb74a2dd3f19cae` |
+
+The workbooks were read from the local cache with every outbound request routed to
+a closed port, so nothing reached grants.gov.au (9,844 distinct awards, $2.49B,
+loaded in 0 seconds into a stage file). `ext_apply grants` then applied the stage
+from 10 October: 2,260 new awards, nothing deleted. For 1 September to 9 October
+the exports matched the stored awards id for id, except that 24 awards carry an
+amended value and six Attorney-General's Department awards published on 6 and 7
+October (recipient "n/a", $4,600 to $6,900) are absent from the export. Neither
+change was applied, so the stored rows for that window did not shrink; both are
+held for review.
+
+No award detail pages were fetched. Awards from this load have no ABN-derived
+location or electorate and no link to their GrantConnect page, so they appear on
+recipient and program pages but not in the largest-awards list, which lists only
+awards linked to their record.
+
 ## Review correction and rollback
 
 The review correction removes the remaining contact-log browser path, tightens
