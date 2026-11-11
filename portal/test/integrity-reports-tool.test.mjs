@@ -66,6 +66,18 @@ test('bodies: coverage and gaps by commission', async () => {
   assert.ok(out.rows.every(r => r.status === 'loaded' || r.gaps.length));
   const nacc = await call({ view: 'bodies', body: 'NACC' }); cited(nacc);
   assert.equal(nacc.rows[0].jurisdiction, 'Cth');
+  assert.equal(nacc.rows[0].reports.length, 8);
+  assert.deepEqual(nacc.rows[0].reports.find(r => r.operation === 'Operation Myrtleford').period.value, '2026-03');
+  const nsw = await call({ view: 'bodies', body: 'NSW ICAC' }); cited(nsw);
+  assert.equal(nsw.rows[0].reports, undefined);
+});
+
+test('WA opinions stated with a closing colon carry the matters that complete them', async () => {
+  const wa = files.wa_ccc.records.flatMap(r => r.findings ?? []);
+  assert.deepEqual(wa.filter(f => /:$/.test(f.text)).map(f => f.text), []);
+  const blaine = wa.find(f => /on two matters:/.test(f.text));
+  assert.match(blaine.text, /two matters: 1\. DSS Blaine's misuse of a State asset, a motor vehicle, in breach of policy; and 2\. DSS Blaine's repeated disclosure of confidential information\.$/);
+  assert.equal(blaine.cite.page, 11);
 });
 
 test('reports: body and date filters, newest first, follow-up opens the full record', async () => {
