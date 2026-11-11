@@ -43,7 +43,10 @@ the `annual_reports` tool.
     name matches exactly), reports by year, headline figures for each body and
     year, caveats and counts.
   * `remuneration-<year>.json`: key management personnel rows, table total lines
-    (kind `kmp_total`, never people), senior executive and highly paid bands.
+    (kind `kmp_total`, including "Grand Total" and footnoted "Total1"), lines that
+    name no one (kind `kmp_other`: a bare number or a band label inside a key
+    management personnel table), senior executive and highly paid bands. Neither
+    `kmp_total` nor `kmp_other` rows are people.
   * `suppliers-<year>.json`: organisations paid for consultancy and
     non-consultancy contracts, with ABN where published.
   * `manifest.json`: counts and file hashes.
@@ -54,6 +57,15 @@ the `annual_reports` tool.
 ## Figures shown as published
 
 OPAX does not adjust published figures. It flags them:
+
+* Names: a footnote reference that an entity attached to a person's name
+  ("Christine Holgate1", "Jane Cutler 1", "Nell Greenwood*", "Adrian Collette AM¹",
+  "Brian Hickey[1]", "Jenet Connell(d)") is removed from `name`, and the cell as
+  published is kept in `name_as_published` (`footnote_free_name` in
+  `parli/ingest/transparency_portal.py`, used by both loaders and the export).
+  Symbols, superscripts and bracketed references are always removed; plain trailing
+  digits only from a written name of two or more words, never from a numbered
+  placeholder such as "Name Withheld 5".
 
 * `components_do_not_sum_to_total`: the published components of a key management
   personnel row differ from its published total by more than half a per cent (smaller
@@ -74,8 +86,17 @@ OPAX does not adjust published figures. It flags them:
 `annual_reports` views: `remuneration` (people, by body, person, position,
 minimum total, year), `bands`, `profile` (headline figures for one body),
 `compare` (rank bodies on one metric in one year), `suppliers` (by organisation
-or ABN). Every row cites the original Portal item. State and territory agencies
+or ABN), `kmp_counts` (bodies ranked by how many key management personnel rows
+each published in one year; counts of published disclosure rows, not distinct
+people) and `top_by_year` (one body's largest key management personnel total in
+each year, oldest first, optionally by position, as one side-by-side comparison
+that is never added across years; bodies whose names extend the named body, such
+as "Department of Health and Aged Care", fill only the years it has no rows for,
+and the notes say the Portal lists them separately). Every row cites the original
+Portal item. State and territory agencies
 are not covered, and an empty result does not establish that a payment or
 person does not exist.
 
-Tests: `portal/test/annual-reports-tool.test.mjs` (contract and Ask/MCP parity).
+Tests: `portal/test/annual-reports-tool.test.mjs` (contract and Ask/MCP parity),
+`portal/test/annual-reports-answer.test.mjs` (the final claim audit over these rows)
+and `tests/test_transparency_names.py` (name footnotes).

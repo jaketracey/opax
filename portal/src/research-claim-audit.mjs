@@ -56,7 +56,7 @@ function figures(text){
   const n=words[raw.toLowerCase()]??number(raw.match(/[\d,.]+/)?.[0]??raw)
   const annual=/a year|per year|annually|AUD\/year/i.test(tail.slice(0,35))||/annual salary|annual pay|annual (?:salary )?(?:rates|entitlements)/i.test(text),weekly=/per week|weekly|AUD\/week/i.test(tail.slice(0,35));
   const unit=/^(?:half|quarter)$/i.test(raw)?'ratio':/^\s*decades?\b/i.test(tail)?'years':amount?(weekly?'AUD/week':annual?'AUD/year':'AUD'):percent?'%':/^\s*[- ]?years?\b/i.test(tail)?'years':/^\s*[- ]?months?\b/i.test(tail)?'months':/^\s*[- ]state/i.test(tail)?'states':/eighth/i.test(raw)?'rank':'count'
-  let metric=unit==='ratio'?'share':unit==='%'?(/loading|plus/i.test(head.slice(-35))?'loading':/\b(?:coverage|cover|covers)\b/i.test(text)&&!/\bshare\b/i.test(text)?'coverage':'share'):amount?(/salary|a year|annual pay|Prime Minister|per week|income|Treasurer/i.test(text)?'salary':/contract|supplier/i.test(text)?'contracts':/grant/i.test(text)?'grants':'receipts'):['years','months'].includes(unit)?'duration':unit==='rank'?'ranking':/topic-labelled speeches/i.test(tail.slice(0,45))?'topic_total':/^\s*(?:chamber |gambling |immigration )?speeches/i.test(tail)?'speeches':/^\s*(?:disclosed receipt )?records/i.test(tail)?'records':/^\s*(?:Defence )?contracts/i.test(tail)?'contracts_count':/^\s*donors/i.test(tail)?'donors':'count'
+  let metric=unit==='ratio'?'share':unit==='%'?(/loading|plus/i.test(head.slice(-35))?'loading':/\b(?:coverage|cover|covers)\b/i.test(text)&&!/\bshare\b/i.test(text)?'coverage':'share'):amount?(/salary|remuneration|a year|annual pay|Prime Minister|per week|income|Treasurer/i.test(text)?'salary':/contract|supplier/i.test(text)?'contracts':/grant/i.test(text)?'grants':'receipts'):['years','months'].includes(unit)?'duration':unit==='rank'?'ranking':/topic-labelled speeches/i.test(tail.slice(0,45))?'topic_total':/^\s*(?:chamber |gambling |immigration )?speeches/i.test(tail)?'speeches':/^\s*(?:disclosed receipt )?records/i.test(tail)?'records':/^\s*(?:Defence )?contracts/i.test(tail)?'contracts_count':/^\s*donors/i.test(tail)?'donors':'count'
   if(amount&&/\bbill\b[^.!?]*\bcosts?\b/i.test(head))metric='bill_cost'
   if(amount&&/^(?:\s*[- ]dollars?)?\s*(?:maximum )?bets\b/i.test(tail))metric='bet_limit'
   if(amount&&/\bbase\s*$/i.test(head))metric='base_salary'
@@ -96,7 +96,9 @@ function amountOwners(text,f,known=[]){
  }
  if(f.owner)return [f.owner]
  const actors=(known.length?exactNames(before):[...partyMentions(before),...nounPhrases(before)]).sort((a,b)=>a.at-b.at||b.end-a.end).filter((n,i,ns)=>!ns.some((x,j)=>j!==i&&x.at<=n.at&&x.end>=n.end&&(x.end-x.at>n.end-n.at)))
- const last=actors.at(-1)
+ // A name introduced by a preposition ("at the Commission", "of the Department") qualifies the subject; it does not own the amount.
+ const modifier=a=>/\b(?:at|of|for|with|in|on|within)\s+(?:the\s+)?$/i.test(before.slice(0,a.at))
+ const last=(known.length?actors.filter(a=>!modifier(a)).at(-1):undefined)??actors.at(-1)
  if(!last)return []
  // A person reporting a number is not thereby its recipient.
  if(reportingPredicate.test(before.slice(last.end))&&!financialPredicate.test(before.slice(last.end)))return []
@@ -144,10 +146,13 @@ function evidenceRows(payload){
    const receipt=/^Disclosed receipt: (.+?) → (.+?) [—–] \$/.exec(line),donor=/^Donor: (.+?) [—–]/.exec(line)
    const tableDonor=/\|\s*(?:Source|Donor)\s*\|/i.test(text)
    const current=/^(.+?) \([^)]+\), [^:]+: base salary/.exec(line)?.[1]
-   const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(receipt?.[2]??donor?.[1]??current??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
+   // Annual report remuneration rows: the person owns the figure and the reporting body published it.
+   const kmp=/^(.+?) \((?:[^()]|\([^()]*\))*\), (.+?), (?:19|20)\d{2}-\d{2} annual report\b[^:]*: (?:total remuneration )?\$[\d,]+(?: total remuneration)?\b/.exec(line)
+   const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(receipt?.[2]??donor?.[1]??current??kmp?.[1]??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
    const fiscal=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(text)?.[1];const period=periods(line);
    const values=figures(line);for(const f of values){if(['speech','bill'].includes(source.kind)&&f.metric==='receipts'&&!f.owner){const before=line.slice(Math.max(0,f.at-120),f.at),party=[...before.matchAll(/\b(Labor|Coalition|Liberal|ALP|Greens|Nationals)(?: Party)?\b[^.;]{0,70}\b(?:received|collected|accepted)\b[^$]*$/gi)].at(-1);if(party)f.owner=partyName(party[1])}if(source.date&&/^\s*last financial year\b/i.test(line.slice(f.end))){const year=Number(source.date.slice(0,4))-(Number(source.date.slice(5,7))>=7?1:2);f.period=periods(year+'-'+String((year+1)%100).padStart(2,'0'))}}
    for(const f of values){f.donor=givingActor(line,f,nounPhrases(line).map(n=>n.name),source.speaker);f.owners=['speech','bill'].includes(source.kind)?amountOwners(line,f):[f.owner??entity].filter(Boolean)}
+   if(kmp)for(const f of values)if(f.unit.startsWith('AUD')){f.owner=kmp[2];f.owners=[entity,kmp[2]]}
    for(const f of values)if(['speech','bill'].includes(source.kind)&&f.unit==='AUD'&&f.metric==='receipts'&&!financialPredicate.test(line.slice(0,f.at))&&!(label&&f.owners.some(n=>norm(n)===norm(label))))f.owners=[]
    for(const f of values)if(source.speaker&&!f.owners.length&&!quotationSpans(line).some(q=>f.at>=q.at&&f.end<=q.end)&&/\bI (?:was |have |had |have been |had been |am )?(?:paid|received|secured|got|won|earned|given)\s*(?:(?:about|almost|nearly|over|more than|at least)\s*)?$/i.test(line.slice(0,f.at)))f.owners=[source.speaker]
    for(const f of values.slice())if(!f.period.length&&!period.length&&!fiscal){
@@ -200,7 +205,7 @@ function metricSupported(claim,fact){
 export function auditPayload(question,payload,{roster=[]}={}){
  const rows=evidenceRows(payload),body=String(payload.answer??''),claims=[],findings=[]
  const personAliases=new Map();for(const full of new Set(rows.map(r=>r.speaker).filter(Boolean))){const parts=full.split(/\s+/);if(parts.length>2){const alias=parts[0]+' '+parts.at(-1);if(new Set(rows.map(r=>r.speaker).filter(n=>n&&n.split(/\s+/)[0]+' '+n.split(/\s+/).at(-1)===alias)).size===1)personAliases.set(alias,full)}}
- const roles=rows.flatMap(r=>{const role=/^.+? \([^)]+\), (.+?): base salary/.exec(r.text)?.[1]??/a year as (.+?), \d{4}/.exec(r.text)?.[1];return role?[role]:[]})
+ const roles=rows.flatMap(r=>{const role=/^.+? \([^)]+\), (.+?): base salary/.exec(r.text)?.[1]??/a year as (.+?), \d{4}/.exec(r.text)?.[1]??/^.+? \(((?:[^()]|\([^()]*\))*)\), .+?, (?:19|20)\d{2}-\d{2} annual report\b[^:]*: (?:total remuneration )?\$[\d,]+/.exec(r.text)?.[1];return role?[role]:[]})
  const speakers=rows.map(r=>r.speaker).filter(Boolean)
  const entities=[...new Set([...rows.map(r=>r.entity),...rows.flatMap(r=>r.figures.flatMap(f=>[f.owner,...(f.owners??[])])),...rows.map(r=>r.party),...rows.map(r=>r.donor),...rows.map(r=>r.speaker),...personAliases.keys(),...roster.filter(n=>/\s/.test(n)&&body.includes(n)),...body.matchAll(/\b\d+(?:st|nd|rd|th) Parliament\b/g)].map(n=>typeof n==='string'?n:n?.[0]).filter(Boolean))]
  const add=(atom,candidates,reason)=>{

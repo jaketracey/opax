@@ -186,6 +186,43 @@ def clean(value):
     return value
 
 
+# Footnote references that entities attach to a person's name in their tables: "Christine Holgate1",
+# "Jane Cutler 1", "Nell Greenwood*", "Adrian Collette AM\u00b9", "Brian Hickey[1]", "Jenet Connell(d)".
+FOOTNOTE_MARK = re.compile(r"[\s\ufeff]*(?:[*^#\u2020\u2021]+|[\u00b9\u00b2\u00b3\u2070\u2074-\u2079]+|\[\d{1,3}\]|\((?:\d{1,2}|[a-z])\))$")
+FOOTNOTE_DIGITS = re.compile(r"(?<=[A-Za-z\u00c0-\u024f).\u2019'])[\s\ufeff]*\d{1,3}$")
+# Placeholder labels whose trailing number tells rows apart ("Name withheld 5", "Executive 2"): those digits stay.
+NUMBERED_LABEL = re.compile(r"(?:^|[^a-z])(?:name\s*with+e?ld|withheld|executive|member|officer|employee|individual|person|kmp|position|role|staff|band|total)(?![a-z])", re.I)
+
+
+def footnote_free_name(name):
+    """(name, marker): a published person name without a trailing footnote reference, and the marker removed.
+
+    Symbols, superscripts and bracketed references are always footnotes. Plain trailing digits are removed
+    only from a written name of two or more words with lower-case letters that is not a numbered placeholder
+    label, so a name that genuinely ends in digits is returned unchanged (marker None). A marker of "" means
+    only an invisible byte-order mark was removed."""
+    if not isinstance(name, str):
+        return name, None
+    text = name.strip().strip("\ufeff").strip()
+    out = text
+    for _ in range(3):
+        before = out
+        m = FOOTNOTE_MARK.search(out)
+        if m and re.search(r"[^\W\d_]", out[:m.start()]):
+            out = out[:m.start()].rstrip()
+        m = FOOTNOTE_DIGITS.search(out)
+        rest = out[:m.start()].rstrip() if m else ""
+        if m and " " in rest and re.search(r"[a-z]", rest) and not NUMBERED_LABEL.search(rest):
+            out = rest
+        if out == before:
+            break
+    out = out.strip(" \ufeff")
+    if not out or out == name:
+        return name, None
+    # A stray byte-order mark is removed too; the marker is then empty but the published cell still differs.
+    return out, text[len(out):].strip(" \ufeff")
+
+
 def number(value):
     """A cell's number when the whole cell is a number as published; otherwise None."""
     text = clean(value)

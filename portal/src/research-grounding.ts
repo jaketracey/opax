@@ -26,6 +26,13 @@ function checkedClaims(payload:Record<string,unknown>,question:string,promote=tr
     const name=source.speaker.replace(/-/g,' ').replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
     out=rewriteAnswerPayload(out,replace=>replace(new RegExp('\\b(Labor|Liberal|Greens|Nationals|Coalition|Independent)(?:[’\']s)?\\s+(?='+name+'\\b)','gi'),match=>match.trim().replace(/[’']s$/,'').toLowerCase()===String(source.party).toLowerCase()?match:''))
   }
+  // "and" inside a name the selected evidence spells out ("Safety and Quality in Health Care") joins no clauses.
+  const evidenceText=((Array.isArray(out.sources)?out.sources:[]) as SelectedSource[]).map(s=>String(s.snippet??'')+'\n'+String(s.title??'')).join('\n')
+  const insideName=(text:string,at:number,match:string)=>{
+    if(!/^\s+and\s+$/.test(match))return false
+    const prev=/\p{Lu}[\p{L}'’-]*$/u.exec(text.slice(0,at)),next=/^(?:the\s+)?\p{Lu}[\p{L}'’-]*/u.exec(text.slice(at+match.length))
+    return !!prev&&!!next&&evidenceText.includes(text.slice(prev.index,at+match.length+next[0].length))
+  }
   for(let attempt=0;attempt<3;attempt++){
     const audit=auditFor(out)
     if(!audit.findings.length)return promote?leadWithFinding(out):out
@@ -47,7 +54,7 @@ function checkedClaims(payload:Record<string,unknown>,question:string,promote=tr
       const quotes=quotationSpans(text)
       const boundaries=[0]
       for(const m of text.matchAll(/;\s+|,?\s+(?:and|while|whereas|because|but)\s+(?=(?:the |a |an |that |their |no |full |more |said |[A-Z]))/g)){
-        if(quotes.some(q=>m.index!>q.at&&m.index!<q.end)||sentenceFragment(text.slice(boundaries.at(-1),m.index)))continue
+        if(quotes.some(q=>m.index!>q.at&&m.index!<q.end)||insideName(text,m.index!,m[0])||sentenceFragment(text.slice(boundaries.at(-1),m.index)))continue
         boundaries.push(m.index!)
       }
       boundaries.push(text.length)

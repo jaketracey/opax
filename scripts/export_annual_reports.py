@@ -30,7 +30,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from parli.ingest.transparency_portal import CACHE, LICENCE_NCE, LICENCE_OWN, SITE, number, clean  # noqa: E402
+from parli.ingest.transparency_portal import CACHE, LICENCE_NCE, LICENCE_OWN, SITE, number, clean, footnote_free_name  # noqa: E402
 from parli.ingest.transparency_legacy import DATASETS_PAGE, SNAPSHOT as LEGACY_SNAPSHOT  # noqa: E402
 
 OUT = ROOT / "portal" / "public" / "annual-reports"
@@ -52,12 +52,28 @@ CAVEATS = [
     "Staff numbers are headcounts as published in the all ongoing and all non-ongoing employee tables, not full-time equivalents.",
     "Key management personnel, band and supplier rows for 2018-19 to 2021-22 come from the files on the Portal's Data sets page; later years and all headline figures come from its structured annual report tables (2022-23 onward). 2025-26 reports are still being tabled.",
     "Supplier spend before 2022-23 is stated in each file's own unit: dollars for 2020-21 and thousands of dollars for 2021-22. Organisations paid were not published as a table before 2020-21.",
+    "A footnote reference attached to a person's name in the source table (for example a trailing 1, * or [2]) is removed from the name; the cell as published is kept in name_as_published. Lines in a key management personnel table that name no one are kept as kmp_total (the table's own total) or kmp_other (a bare number or a band label) rows, not as people.",
     "Older-year rows are matched to a body only where the published entity name, or one of the Portal's listed names for it, matches exactly. Other entity names are kept as published.",
 ]
 
 
 # Components may be rounded (often to the nearest thousand), so a gap within half a per cent is not flagged.
-TOTAL_ROW = re.compile(r"^\s*(sub-?\s*)?totals?\b", re.I)
+TOTAL_ROW = re.compile(r"^\s*(?:sub-?\s*|grand\s+)?totals?(?![a-z])", re.I)
+# A line in a key management personnel table that names no one: a bare number or a remuneration band label.
+NO_PERSON = re.compile(r"^\s*(?:\$|[\d\s,.]+$)")
+
+
+def kmp_kind(name):
+    if TOTAL_ROW.match(name or ""):
+        return "kmp_total"  # a table's own total line, not a person
+    return "kmp_other" if NO_PERSON.match(name or "") else "kmp"
+
+
+def kmp_name(name, published=None):
+    """The name without a trailing footnote reference, plus the cell as published when they differ."""
+    raw = published or name
+    plain, marker = footnote_free_name(raw)
+    return {"name": plain, **({"name_as_published": raw} if marker is not None else {})}
 # Average reportable contract value (in $'000) above which a published thousands-of-dollars
 # figure is flagged as possibly entered in dollars. Flagged figures are kept as published.
 SCALE_LIMIT = {"consultancy": 5_000, "non_consultancy": 50_000}
@@ -194,17 +210,14 @@ def main(argv=None):
             for r in t["rows"]:
                 c = r["cells"]
                 name = cell(c, "name_")
-                if TOTAL_ROW.match(name or ""):
-                    kind = "kmp_total"  # a table's own total line, not a person
-                else:
-                    kind = "kmp"
+                kind = kmp_kind(name)
                 cols = money_cols(c, KMP_COLUMNS)
                 parts = [cols.get(k) for k, _ in KMP_COLUMNS[:-1]]
                 checks = []
                 if cols.get("total") is not None and all(p is not None for p in parts) and abs(sum(parts) - cols["total"]) > max(2, 0.005 * abs(cols["total"])):
                     checks.append("components_do_not_sum_to_total")
                 remuneration[t["year"]].append({**base(t, r), "kind": kind, **({"checks": checks} if checks else {}), "record_id": f"tp-{t['year']}-" + r["id"].replace("-", ""),
-                    "name": name, "position": cell(c, "position_title"), "order": r["order"], **cols})
+                    **kmp_name(name), "position": cell(c, "position_title"), "order": r["order"], **cols})
         elif fam in ("senior_executives", "highly_paid"):
             count_key = "number_of_senior_executives" if fam == "senior_executives" else next(
                 (k for k in (r_ for row in t["rows"] for r_ in row["cells"]) if k.startswith("number_of")), "number_of_other_highly_paid_staff")
@@ -304,8 +317,8 @@ def main(argv=None):
             cols = {k: r.get(k) for k, _ in KMP_COLUMNS}
             parts = [cols.get(k) for k, _ in KMP_COLUMNS[:-1]]
             checks = ["components_do_not_sum_to_total"] if cols.get("total") is not None and all(p is not None for p in parts) and abs(sum(parts) - cols["total"]) > max(2, 0.005 * abs(cols["total"])) else []
-            remuneration[r["year"]].append({**legacy_table(r, "kmp"), "kind": "kmp_total" if TOTAL_ROW.match(r["name"] or "") else "kmp",
-                **({"checks": checks} if checks else {}), "record_id": f"tp-{r['year']}-{r['id']}", "name": r["name"], "position": r["position"],
+            remuneration[r["year"]].append({**legacy_table(r, "kmp"), "kind": kmp_kind(r.get("name_as_published") or r["name"]),
+                **({"checks": checks} if checks else {}), "record_id": f"tp-{r['year']}-{r['id']}", **kmp_name(r["name"], r.get("name_as_published")), "position": r["position"],
                 "order": r["source_row"], "source_row": r["source_row"], **cols, **({"as_published": r["as_published"]} if r.get("as_published") else {})})
         for r in legacy["bands"]:
             remuneration[r["year"]].append({**legacy_table(r, r["kind"]), "kind": r["kind"], "record_id": f"tp-{r['year']}-{r['id']}",
@@ -346,7 +359,9 @@ def main(argv=None):
         "kmp_rows": sum(1 for y in remuneration for r in remuneration[y] if r["kind"] == "kmp"),
         "kmp_total_rows": sum(1 for y in remuneration for r in remuneration[y] if r["kind"] == "kmp_total"),
         "kmp_component_mismatches": sum(1 for y in remuneration for r in remuneration[y] if r.get("checks")),
-        "band_rows": sum(1 for y in remuneration for r in remuneration[y] if r["kind"] not in ("kmp", "kmp_total")),
+        "kmp_other_rows": sum(1 for y in remuneration for r in remuneration[y] if r["kind"] == "kmp_other"),
+        "kmp_footnote_names": sum(1 for y in remuneration for r in remuneration[y] if r.get("name_as_published")),
+        "band_rows": sum(1 for y in remuneration for r in remuneration[y] if r["kind"].endswith("_band")),
         "scale_flags": sum(1 for h in headline_rows for k in SCALE_LIMIT if (h.get(k) or {}).get("scale_check")),
         "supplier_rows": sum(len(v) for v in suppliers.values()), "headline_rows": len(headline_rows),
         "by_year": {y: {"kmp_rows": sum(1 for r in remuneration.get(y, []) if r["kind"] == "kmp"),
