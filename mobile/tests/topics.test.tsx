@@ -20,6 +20,9 @@ import {
 } from '../src/features/reports/model';
 import TopicPage, { topicQuestion } from '../src/features/reports/TopicPage';
 import TopicsIndex from '../src/features/reports/TopicsIndex';
+import { ValueRow, LinkRow } from '../src/design/rows';
+import { partyRoute } from '../src/navigation/routes/people';
+import { topicRoute } from '../src/navigation/routes/search';
 
 let mockParams: Record<string, string> = {};
 const mockScreens: { options?: Record<string, unknown> }[] = [];
@@ -568,6 +571,24 @@ describe('Topic page', () => {
 });
 
 describe('Topics index', () => {
+  it('a topic with zero speeches still opens its existing topic screen', async () => {
+    const page = await render(<TopicsIndex />);
+    const row = page.root
+      .findAllByType(LinkRow)
+      .find((node) => node.props.testID === 'topic-unlabelled-housing')!;
+    expect(row.props.href).toEqual(topicRoute('housing'));
+  });
+
+  it('donations by party open each named party record', async () => {
+    mockParams.slug = 'gambling';
+    const page = await render(<TopicPage />);
+    const rows = page.root
+      .findAllByType(ValueRow)
+      .filter((node) => /^topic-money-party-/.test(node.props.testID ?? ''));
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows)
+      expect(row.props.href).toEqual(partyRoute(row.props.label));
+  });
   it('lists topics with counts, an order picker and no-label topics apart', async () => {
     const page = await render(<TopicsIndex />);
     expect(host(page.root, 'topics-screen')).toHaveLength(1);

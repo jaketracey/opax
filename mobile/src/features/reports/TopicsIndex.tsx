@@ -181,7 +181,7 @@ export default function TopicsIndex() {
                     key={t.slug}
                     title={t.title}
                     detail={t.description}
-                    accessory="none"
+                    href={topicRoute(t.slug)}
                     testID={`topic-unlabelled-${t.slug}`}
                   />
                 ))}
