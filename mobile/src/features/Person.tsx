@@ -2,6 +2,7 @@ import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
+  AccessibilityInfo,
   Platform,
   RefreshControl,
   StyleSheet,
@@ -407,6 +408,12 @@ function ProfileContent({
     Partial<Record<ProfileSection | 'changes', View | null>>
   >({});
   const headingY = useRef<Partial<Record<ProfileSection, number>>>({});
+  const headingHosts = useRef<
+    Partial<Record<ProfileSection, LayoutChangeEvent['currentTarget']>>
+  >({});
+  const focusAfterScroll = useRef<{ y: number; focus: () => void } | null>(
+    null,
+  );
   const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
   const yourMP = useIsMyMember(slug);
@@ -429,6 +436,7 @@ function ProfileContent({
     if (!view) return;
     let active = true;
     let finished = false;
+    let focusTimer: ReturnType<typeof setTimeout> | undefined;
     let overlay = Platform.OS === 'ios' ? headerBottom : 0;
     const inset = Platform.OS === 'ios' ? rhythm.block : rhythm.heading;
     const finish = (top: number) => {
@@ -436,10 +444,23 @@ function ProfileContent({
       finished = true;
       completedJump.current = goTo;
       clearTimeout(fallbackTimer);
+      const destination = Math.max(-overlay, top - overlay - inset);
+      const focus = () => {
+        if (!active || focusAfterScroll.current?.focus !== focus) return;
+        const heading = headingHosts.current[goTo.to as ProfileSection];
+        if (!heading) return;
+        focusAfterScroll.current = null;
+        clearTimeout(focusTimer);
+        AccessibilityInfo.sendAccessibilityEvent(heading, 'focus');
+      };
+      focusAfterScroll.current = { y: destination, focus };
       view.scrollTo({
-        y: Math.max(-overlay, top - overlay - inset),
+        y: destination,
         animated: goTo.animated,
       });
+      // onScroll focuses at arrival. Also cover an unchanged or clamped offset,
+      // which need not emit a scroll event, and honour Reduce Motion.
+      focusTimer = setTimeout(focus, goTo.animated ? 500 : 0);
     };
     const fallback = () => {
       const top = y.current[goTo.to];
@@ -454,7 +475,8 @@ function ProfileContent({
     const measure = () => {
       if (!active || finished) return;
       try {
-        const heading = headings.current[goTo.to];
+        const text = headingHosts.current[goTo.to as ProfileSection];
+        const heading = text ?? headings.current[goTo.to];
         // RN exposes the host ref at runtime; its TS declaration omits it.
         const inner =
           (
@@ -468,7 +490,12 @@ function ProfileContent({
           inner,
           (_x, top) => {
             if (Number.isFinite(top))
-              finish(top + (headingY.current[goTo.to as ProfileSection] ?? 0));
+              finish(
+                top +
+                  (text
+                    ? 0
+                    : (headingY.current[goTo.to as ProfileSection] ?? 0)),
+              );
             else fallback();
           },
           fallback,
@@ -497,6 +524,8 @@ function ProfileContent({
     return () => {
       active = false;
       clearTimeout(fallbackTimer);
+      clearTimeout(focusTimer);
+      focusAfterScroll.current = null;
     };
   }, [goTo, headerBottom]);
   // Arriving at a section (`?section=`): once, when its place is known.
@@ -521,7 +550,25 @@ function ProfileContent({
     const section = headingSections[testID];
     if (!section) return;
     headingY.current[section] = event.nativeEvent.layout.y;
+    // Capture the native heading during dispatch, not the pooled event or its
+    // numeric target. This also accounts for nested iPad grid containers.
+    const host = event.currentTarget;
+    const firstHeading =
+      !headingHosts.current[section] &&
+      host &&
+      typeof host.measureLayout === 'function';
+    if (host && typeof host.measureLayout === 'function')
+      headingHosts.current[section] = host;
     arrive(section);
+    // The heading can mount after the wrapper or the measurement timeout,
+    // including after a fallback scroll which is still waiting to focus it.
+    setGoTo((pending) =>
+      pending?.to === section &&
+      (pending !== completedJump.current ||
+        (firstHeading && focusAfterScroll.current !== null))
+        ? { ...pending }
+        : pending,
+    );
   };
 
   // What changed since the reader last looked, for a followed person.
@@ -607,7 +654,7 @@ function ProfileContent({
     tiles.push({
       value: formatCount(votes),
       label: `${votes === 1 ? 'vote' : 'votes'}${since ? ` since ${since}` : ''}`,
-      onPress: () => jump('votes'),
+      onPress: b.votes.status !== 'unlinked' ? () => jump('votes') : undefined,
       testID: 'person-figure-votes',
     });
   const interests = interestsCount(profile);
@@ -615,7 +662,8 @@ function ProfileContent({
     tiles.push({
       value: formatCount(interests),
       label: 'declared interests',
-      onPress: () => jump('interests'),
+      onPress:
+        b.interests.status !== 'unlinked' ? () => jump('interests') : undefined,
       testID: 'person-figure-interests',
     });
   const pay = annualPay(profile);
@@ -623,7 +671,7 @@ function ProfileContent({
     tiles.push({
       value: formatMoney(pay),
       label: 'a year in pay',
-      onPress: () => jump('pay'),
+      onPress: b.pay.status !== 'unlinked' ? () => jump('pay') : undefined,
       testID: 'person-figure-pay',
     });
   const strip = stripSources(profile);
@@ -878,6 +926,10 @@ function ProfileContent({
       column="wide"
       barTitle={identity.name}
       scrollRef={scroll}
+      onScroll={(offset) => {
+        const pending = focusAfterScroll.current;
+        if (pending && Math.abs(offset - pending.y) <= 1) pending.focus();
+      }}
       testID="person-screen"
       offline={
         b.identity.stale && b.identity.savedAt != null
