@@ -164,6 +164,11 @@ MANUAL_RESPONSES = {
 }
 
 
+def tabled_responder(paper):
+    """Who a tabled response is from: the author the Parliament records, else only that it was tabled."""
+    return {"publisher": paper["author"]} if paper["author"] else {"tabled_in": "Parliament of Victoria"}
+
+
 def manual_responses(op):
     out = []
     for m in MANUAL_RESPONSES.get(op, []):
@@ -275,6 +280,7 @@ def collect(client: common.Client):
                 responses_by_op.setdefault(op, []).append(common.response(
                     "agency_response", p["title"], p["docs"][0]["url"] if p["docs"] else p["page_url"], date,
                     citation=common.cite(p["page_url"], "Parliament of Victoria tabled documents database, tabled paper " + str(p["pid"]))))
+                responses_by_op[op][-1].update(tabled_responder(p))
     progress_by_op = {}
     for p in papers:
         if p["kind"] == "report" and re.search(r"\bprogress report\b", p["title"], re.I):
@@ -283,6 +289,7 @@ def collect(client: common.Client):
                     "progress_report", p["title"], p["docs"][0]["url"] if p["docs"] else p["page_url"],
                     p["detail"]["released"] or p["detail"]["tabled_la"] or p["released_listed"],
                     citation=common.cite(p["page_url"], "Parliament of Victoria tabled documents database, tabled paper " + str(p["pid"]))))
+                progress_by_op[op][-1].update(tabled_responder(p))
 
     records = []
     for p in papers:

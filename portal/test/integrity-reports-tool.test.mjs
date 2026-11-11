@@ -163,6 +163,15 @@ test('record_id with view=findings or recommendations opens that report', async 
   assert.equal(out.rows[0].recommendations[0].text.slice(0, 80), r.recommendations[0].text.slice(0, 80));
 });
 
+test('IBAC: house code "vic" is accepted; Sandon carries the Government progress report as a response, not an IBAC report', async () => {
+  const out = await call({ view: 'reports', operation: 'Operation Sandon', jurisdiction: 'vic' }); cited(out);
+  assert.equal(out.rows.length, 1); assert.equal(out.rows[0].body, 'IBAC'); assert.equal(out.rows[0].report_type, 'special_report');
+  assert.equal(out.rows[0].counts.responses, 1); assert.equal(out.rows[0].findings_status, 'not_extracted');
+  const resp = await call({ view: 'report', record_id: out.rows[0].record_id, part: 'responses' }); cited(resp, false);
+  assert.match(JSON.stringify(resp), /progress_report/); assert.match(JSON.stringify(resp), /manual publisher download/);
+  assert.ok(resp.citations.some(c => /^Victorian Government published progress report/.test(c.text)), JSON.stringify(resp.citations));
+});
+
 test('invalid input is rejected before any read', async () => {
   await invalid({ view: 'report' });
   await invalid({ view: 'reports', record_id: 'nsw-icac-x' });

@@ -160,7 +160,7 @@
     }
    ],
    "notes": [
-    "The report's list of recommendations (page 19) speaks of 57 recommendations; 56 are numbered there. The other, in the report's closing observations, reads \"Section 34 of the Cth FOI Act should be repealed\" and has no number, so it is not loaded as a numbered recommendation."
+    "The report's list of recommendations (page 19) refers to 57 recommendations; 56 are numbered there. The other, in the report's closing observations, reads \"Section 34 of the Cth FOI Act should be repealed\" and has no number, so it is not loaded as a numbered recommendation."
    ],
    "gaps": [
     "royalcommission.gov.au and the other Commonwealth royal commission hosts refuse OPAXBot, so the weekly refresh cannot re-read this document; it is a manual supplement and its record is carried forward unchanged where the PDF is absent."

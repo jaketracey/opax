@@ -12,9 +12,18 @@ export function validToolArgs(name: string, args: unknown): args is Json {
   return toolArgProblem(name, args) === null
 }
 /** The first invalid argument as a short repair hint for the model, or null when the arguments are valid. */
+/** Names the first unknown argument or enum miss, so a model's one repair turn can correct it. */
+function registeredArgProblem(schema: unknown, args: unknown): string {
+  const props = (schema as { properties?: Record<string, { enum?: unknown[] }> })?.properties ?? {}
+  if (args && typeof args === 'object' && !Array.isArray(args)) for (const [k, v] of Object.entries(args)) {
+    if (!Object.hasOwn(props, k)) return `unknown argument ${k}; this tool takes ${Object.keys(props).join(', ')}`
+    if (props[k].enum && !props[k].enum!.includes(v)) return `${k} must be one of ${props[k].enum!.join(', ')}`
+  }
+  return 'arguments do not match the tool schema; check the fields this view requires or forbids'
+}
 export function toolArgProblem(name: string, args: unknown): string | null {
   const registered = getAskTool(name)
-  if (registered && registered.askFactStyle !== 'legacy') return validRegisteredArgs(registered.name, args) ? null : 'arguments do not match the tool schema'
+  if (registered && registered.askFactStyle !== 'legacy') return validRegisteredArgs(registered.name, args) ? null : registeredArgProblem(registered.inputSchema, args)
   const spec = TOOL_SPECS.find(t => t.name === name)
   if (!spec) return `unknown tool ${name}`
   if (!args || typeof args !== 'object' || Array.isArray(args)) return 'arguments must be an object'

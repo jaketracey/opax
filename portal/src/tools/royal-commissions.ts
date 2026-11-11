@@ -5,6 +5,10 @@ import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } f
 
 const VIEWS = ['list', 'profile', 'recommendations'] as const
 const JURISDICTIONS = ['Cth', 'NSW', 'Vic', 'Qld', 'WA', 'SA', 'Tas', 'ACT', 'NT'] as const
+// The house codes other tools use (federal, nsw, vic ...) are accepted beside the dataset's own codes, so a
+// planner that writes "vic" is not refused as malformed.
+const HOUSE_JURISDICTIONS: Record<string, string> = { federal: 'Cth', cth: 'Cth', nsw: 'NSW', vic: 'Vic', qld: 'Qld', wa: 'WA', sa: 'SA', tas: 'Tas', act: 'ACT', nt: 'NT' }
+const jurisdictionCode = (v: unknown): string | undefined => v == null || v === '' ? undefined : HOUSE_JURISDICTIONS[String(v).toLowerCase()] ?? String(v)
 const ID = /^[a-z0-9]+(?:-[a-z0-9]+){1,8}$/
 const NOTE = 'Recommendations are the commission\'s own words with the report page each was read from. A status appears only where a government publishes one for that recommendation, in its own words; otherwise the status is unknown, not unimplemented. Findings and recommendations of a royal commission or inquiry are not findings of criminal or civil liability. Hearing transcripts are evidence, not findings.'
 const TYPES: Record<string, string> = { royal_commission: 'royal commission', commission_of_inquiry: 'commission of inquiry', board_of_inquiry: 'board of inquiry' }
@@ -20,7 +24,8 @@ type Index = Awaited<ReturnType<typeof index>>
 
 /** Commissions matching an id or words in the name; an exact id or name wins. */
 function match(ix: Index, query: unknown, jurisdiction: unknown): RecordRow[] {
-  const pool = ix.commissions.filter(c => !jurisdiction || c.jurisdiction === jurisdiction)
+  const code = jurisdictionCode(jurisdiction)
+  const pool = ix.commissions.filter(c => !code || c.jurisdiction === code)
   if (!query) return pool
   const q = fold(query).replace(/^the\s+/, '')
   const exact = pool.filter(c => c.id === query || fold(c.name).replace(/^the\s+/, '') === q)
@@ -75,7 +80,7 @@ export const tool: ToolDefinition = {
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
     commission: { type: 'string', minLength: 2, maxLength: 160, description: 'Commission id from a row, or words in its name, e.g. "family violence", "disability", "banking".' },
-    jurisdiction: { type: 'string', enum: [...JURISDICTIONS] },
+    jurisdiction: { type: 'string', enum: [...Object.keys(HOUSE_JURISDICTIONS), ...JURISDICTIONS] },
     words: { type: 'string', minLength: 2, maxLength: 160, description: 'Words that must all appear in the recommendation text.' },
     number: { type: 'string', pattern: '^\\d{1,3}(?:\\.\\d{1,3})?$', description: 'Recommendation number as the report numbers it, e.g. "12" or "4.1".' },
     report: { type: 'string', pattern: '^[a-z0-9-]{2,40}$', description: 'Report key from a profile row (for commissions with several reports).' },
@@ -114,6 +119,9 @@ export const tool: ToolDefinition = {
         reference_pages: records(c.reference_pages).map(x => ({ title: x.title, url: sourceUrl(x.url) })), status_source: c.status_source ?? null,
         recommendations: records(c.recommendations).length, notes: c.notes, gaps: c.gaps, follow_up: { view: 'recommendations', commission: c.id } }
       const citations: ToolCitation[] = [summaryCite(env, matched[0])]
+      // The record's own notes (whether it has reported, how its recommendations are counted, publication orders)
+      // travel as facts, so a sitting commission is described as sitting rather than inferred from other sources.
+      for (const n of (Array.isArray(c.notes) ? c.notes as unknown[] : []).map(String).slice(0, 3)) citations.push({ kind: 'record', url: siteUrl(env, String(matched[0].file)), text: clip(`${c.name} (OPAX note): ${n}`, 600) })
       if (est) citations.push({ kind: 'record', url: String(object(est.cite).url), text: clip(`${c.name}: "${est.quote}" (${object(est.cite).document}, page ${object(est.cite).page}).`, 600) })
       for (const x of records(c.court_context)) citations.push({ kind: 'record', url: String(object(x.cite).url), text: clip(`Court context for ${c.name}, as ${object(x.cite).document} states it: "${x.text}"`, 900) })
       if (records(c.commissioners).length) citations.push({ kind: 'record', url: String(object(records(c.commissioners)[0].cite).url), text: clip(`${c.name} commissioners as the report names them: ${people(c)}.`, 600) })
@@ -124,6 +132,7 @@ export const tool: ToolDefinition = {
     // recommendations
     const pool = args.commission ? matched.slice(0, args.number || args.report ? 1 : matched.length) : matched
     const hits: RecordRow[] = []
+    let single: RecordRow | null = null
     for (const row of pool) {
       if (!object(row.counts).recommendations) continue
       const c = await full(env, row), reports = new Map(records(c.reports).map(r => [String(r.key), r]))
@@ -134,6 +143,7 @@ export const tool: ToolDefinition = {
         if (args.status && !(r.status && wordsMatch(args.status, [object(r.status).as_published]))) continue
         hits.push(recOut(c, r, reports))
       }
+      if (pool.length === 1) single = c
     }
     const picked = hits.slice(offset, offset + limit)
     const scope = ['commission', 'jurisdiction', 'words', 'number', 'report', 'status'].filter(k => args[k] !== undefined).map(k => `${k} ${args[k]}`).join(', ') || 'all commissions'
@@ -141,7 +151,16 @@ export const tool: ToolDefinition = {
     const withoutRecs = pool.filter(c => !object(c.counts).recommendations)
     if (withoutRecs.length) notes.push(`Recommendations are not loaded for ${withoutRecs.length} matching commission${withoutRecs.length > 1 ? 's' : ''} (${withoutRecs.slice(0, 4).map(c => c.name).join('; ')}); no match there does not mean no such recommendation.`)
     if (!hits.length) notes.push('No loaded recommendation matches. Try fewer words, or view=profile for the commission\'s reports.')
-    return publishedResult(picked, [{ kind: 'count', url: ix.url, text: `${hits.length} recommendations match ${scope} in the published royal commissions projection (snapshot ${snapshot}).` }, ...picked.map(recCite)],
+    // For one commission the count states its loaded total, so "how many recommendations" is answered by the
+    // commission's own numbering, not by the number of rows a filter matched.
+    const loaded = single ? records(single.recommendations).length : 0
+    const filtered = ['words', 'number', 'report', 'status'].some(k => args[k] !== undefined)
+    const countText = single
+      ? `${single.name}: ${loaded} numbered recommendations loaded from its published report${records(single.reports).length > 1 ? 's' : ''}${filtered ? `; ${hits.length} match ${scope}` : ''} (OPAX projection, snapshot ${snapshot}).`
+      : `${hits.length} recommendations match ${scope} in the published royal commissions projection (snapshot ${snapshot}).`
+    const countNotes = single && Array.isArray(single.notes) ? (single.notes as unknown[]).map(String).filter(n => /\brecommendations?\b/i.test(String(n))).slice(0, 2) : []
+    return publishedResult(picked, [{ kind: 'count', url: single ? siteUrl(env, String(pool[0].file)) : ix.url, text: countText },
+      ...countNotes.map(n => ({ kind: 'record' as const, url: siteUrl(env, String(pool[0].file)), text: clip(`${single!.name} (OPAX note): ${n}`, 600) })), ...picked.map(recCite)],
       { view: 'recommendations', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot, notes })
   },
 }
