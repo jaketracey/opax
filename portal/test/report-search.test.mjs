@@ -69,7 +69,9 @@ test('warm searches read catalogue assets only, with no report detail or dataset
   assert.ok(Array.isArray((await find('constructor', {kind:'all'})).results));
 });
 // The body's words stay verbatim in the page's text; inline list runs are only set one to a line.
-const visible = html => html.replace(/<[^>]+>/g, '');
+// Visible text for assertions: strip tags until none remain (a single pass can leave a rebuilt tag).
+const stripTags = html => { let prev; do { prev = html; html = html.replace(/<[^<>]*>/g, ''); } while (html !== prev); return html; };
+const visible = html => stripTags(html);
 test('record pages retain full numbered recommendations, findings labels, court context and source pages', () => {
   const royal = projected.find(r => r.detail.slug === 'royal-commission-cth-robodebt').detail;
   let html = renderReport(royal);
