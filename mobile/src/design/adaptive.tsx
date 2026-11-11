@@ -111,7 +111,11 @@ const traitsRegular = (traits: WindowTraits | null) =>
   traits?.horizontal === 'regular' && traits.vertical === 'regular';
 let nativeTraits = OpaxDuo?.getWindowTraits() ?? null;
 let traitsOverride: WindowTraits | null | undefined;
-let adaptivePhone = !!nativeTraits?.foldable || traitsRegular(nativeTraits);
+// A phone is adaptive once it shows a fold region, a regular/regular window
+// or vertical bars (the closed iPhone Duo: its outer display has no fold).
+const traitsAdaptive = (traits: WindowTraits | null) =>
+  !!traits?.foldable || !!traits?.verticalBars || traitsRegular(traits);
+let adaptivePhone = traitsAdaptive(nativeTraits);
 let traitsSnapshot = { traits: nativeTraits, adaptive: isPad || adaptivePhone };
 const traitsListeners = new Set<() => void>();
 let nativeSubscription: { remove(): void } | undefined;
@@ -123,13 +127,14 @@ function publishTraits() {
         ? nativeTraits
         : traitsOverride
       : null;
-  adaptivePhone ||= !!traits?.foldable || traitsRegular(traits);
+  adaptivePhone ||= traitsAdaptive(traits);
   const adaptive = isPad || (Platform.OS === 'ios' && adaptivePhone);
   const previous = traitsSnapshot.traits;
   if (
     previous?.horizontal === traits?.horizontal &&
     previous?.vertical === traits?.vertical &&
     previous?.foldable === traits?.foldable &&
+    previous?.verticalBars === traits?.verticalBars &&
     traitsSnapshot.adaptive === adaptive
   )
     return;

@@ -16,7 +16,7 @@ private func onMain(_ body: @escaping @MainActor () -> Void) {
 private final class TraitsCache {
   static let shared = TraitsCache()
   private let lock = NSLock()
-  private var value: [String: Any] = ["horizontal": "compact", "vertical": "compact", "foldable": false]
+  private var value: [String: Any] = ["horizontal": "compact", "vertical": "compact", "foldable": false, "verticalBars": false]
   func get() -> [String: Any] { lock.lock(); defer { lock.unlock() }; return value }
   func set(_ next: [String: Any]) { lock.lock(); value = next; lock.unlock() }
 }
@@ -25,9 +25,10 @@ private struct WindowTraits: Equatable {
   var horizontal = "compact"
   var vertical = "compact"
   var foldable = false
+  var verticalBars = false
 
   var payload: [String: Any] {
-    ["horizontal": horizontal, "vertical": vertical, "foldable": foldable]
+    ["horizontal": horizontal, "vertical": vertical, "foldable": foldable, "verticalBars": verticalBars]
   }
 }
 
@@ -84,6 +85,7 @@ private final class WindowTraitsObserver {
   private weak var preferredScene: UIWindowScene?
   private var observing = false
   private var registration: (any UITraitChangeRegistration)?
+  private var barRegistration: (any UITraitChangeRegistration)?
   private var notifications: [NSObjectProtocol] = []
   private var last: WindowTraits?
   private var foldable = false
@@ -140,6 +142,8 @@ private final class WindowTraitsObserver {
   private func detach() {
     if let registration { window?.unregisterForTraitChanges(registration) }
     registration = nil
+    if let barRegistration { window?.unregisterForTraitChanges(barRegistration) }
+    barRegistration = nil
 #if OPAX_RESERVED_REGIONS
     rootObserver?.removeFromSuperview()
     rootObserver = nil
@@ -165,6 +169,15 @@ private final class WindowTraitsObserver {
       ]) { [weak self] (_: UIWindow, _: UITraitCollection) in
         _ = self?.refresh()
       }
+#if OPAX_RESERVED_REGIONS
+      if #available(iOS 27.1, *) {
+        barRegistration = key?.registerForTraitChanges(
+          UITraitCollection.systemTraitsAffectingVerticalBarEdge
+        ) { [weak self] (_: UIWindow, _: UITraitCollection) in
+          _ = self?.refresh()
+        }
+      }
+#endif
     }
 #if OPAX_RESERVED_REGIONS
     // The observer sits on the window itself, behind the root view: React
@@ -193,10 +206,20 @@ private final class WindowTraitsObserver {
   }
 
   private func publish() -> [String: Any] {
+    // Vertical bars (iPhone Duo's outer display, or its inner display in
+    // landscape) mark an adaptive phone too: the closed Duo's outer display
+    // has no fold region, so `foldable` alone is false there at launch.
+    var verticalBars = false
+#if OPAX_RESERVED_REGIONS
+    if #available(iOS 27.1, *), let window {
+      verticalBars = window.traitCollection.verticalBarEdge != .unspecified
+    }
+#endif
     let traits = WindowTraits(
       horizontal: window?.traitCollection.horizontalSizeClass == .regular ? "regular" : "compact",
       vertical: window?.traitCollection.verticalSizeClass == .regular ? "regular" : "compact",
-      foldable: foldable
+      foldable: foldable,
+      verticalBars: verticalBars
     )
     if traits != last {
       last = traits

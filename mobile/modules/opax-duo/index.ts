@@ -7,6 +7,8 @@ export interface WindowTraits {
   horizontal: 'compact' | 'regular';
   vertical: 'compact' | 'regular';
   foldable: boolean;
+  /** UIKit lays bars out vertically beside the content (iOS 27.1 SDK). */
+  verticalBars?: boolean;
 }
 
 export interface OpaxDuoModule {

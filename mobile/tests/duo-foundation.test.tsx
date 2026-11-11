@@ -280,6 +280,18 @@ describe('session device detection and the traits store', () => {
     traits(compact);
     expect(probe.adaptive()).toBe(true);
   });
+  test('vertical bars make a closed Duo adaptive while it stays compact', () => {
+    // The closed Duo's outer display has no fold region and compact traits;
+    // its vertical bars are the signal (seen on the Duo simulator).
+    traits(compact);
+    const probe = captureLayout();
+    traits({ ...compact, verticalBars: true });
+    expect(probe.adaptive()).toBe(true);
+    expect(probe.layout().rule).toBe('phone');
+    expect(probe.layout().regular).toBe(false);
+    traits(compact);
+    expect(probe.adaptive()).toBe(true);
+  });
   test('iPad is adaptive without window traits, even in a compact region', () => {
     const react = jest.requireActual('react');
     jest.doMock('react', () => react);
