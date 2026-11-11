@@ -10,6 +10,7 @@ import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath,votesBucket
 import {PARTY_MONEY_BUCKETS,partyFold,partyMoneyBucket,partyMoneyBucketPath} from '../portal/public/party-money-buckets.js';
 import {SUPPLIER_ID_RE,supplierRowsPath,SUPPLIERS_META_PATH} from '../portal/public/supplier-row-buckets.js';
 import {MONEY_GRAPH_PATHS,MONEY_PARTIES_PATH,moneyPartiesFile} from '../portal/public/money-parties.js';
+import {BILL_TITLES_PATH,billTitlesFile} from '../portal/public/bill-titles.js';
 import {partyMoneyData} from '../portal/public/register-tables.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 /** A money graph's party-receipt buckets as [path, contents] pairs (portal/public/party-money-buckets.js). */
@@ -173,6 +174,8 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  // A missing graph writes no file: the Worker then reads the graphs, as before.
  const moneyGraphs=await Promise.all(MONEY_GRAPH_PATHS.map(path=>path==='/graph/money.json'?money:read(path.slice(1)).catch(error=>{if(error.code==='ENOENT')return null;throw error})));
  if(moneyGraphs.every(graph=>Array.isArray(graph?.nodes)))await write(MONEY_PARTIES_PATH,moneyPartiesFile(moneyGraphs));
+ // Profiles link votes to bills and title sponsored bills from these fields, not the whole index (portal/public/bill-titles.js).
+ await write(BILL_TITLES_PATH,billTitlesFile(index));
  console.log(JSON.stringify({files:sizes.length,largest:Math.max(...sizes.map(s=>s.bytes)),donorIndexBytes:sizes[0].bytes}));
  return sizes;
 }
