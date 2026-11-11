@@ -541,36 +541,43 @@ export function PersonRow({
               Your MP
             </Text>
           ) : null}
-          {context ? (
-            <View style={styles.personParty}>
-              <PartyLabel
-                {...context}
-                linked
-                nested
-                compact
-                href={partyHref}
-                testID={testID && `${testID}-party`}
-              />
-            </View>
-          ) : null}
-          {former ? (
-            <Text
-              wordSafe
-              variant="secondary"
-              testID={testID && `${testID}-former`}
+          {context || former || place || detail ? (
+            <View
+              style={[
+                styles.personDetails,
+                context ? styles.personParty : null,
+              ]}
             >
-              {former}
-            </Text>
-          ) : null}
-          {place ? (
-            <Text wordSafe variant="secondary">
-              {place}
-            </Text>
-          ) : null}
-          {detail ? (
-            <Text wordSafe variant="secondary">
-              {detail}
-            </Text>
+              {context ? (
+                <PartyLabel
+                  {...context}
+                  linked
+                  nested
+                  compact
+                  href={partyHref}
+                  testID={testID && `${testID}-party`}
+                />
+              ) : null}
+              {former ? (
+                <Text
+                  wordSafe
+                  variant="secondary"
+                  testID={testID && `${testID}-former`}
+                >
+                  {former}
+                </Text>
+              ) : null}
+              {place ? (
+                <Text wordSafe variant="secondary">
+                  {place}
+                </Text>
+              ) : null}
+              {detail ? (
+                <Text wordSafe variant="secondary">
+                  {detail}
+                </Text>
+              ) : null}
+            </View>
           ) : null}
         </View>
       </View>
@@ -735,7 +742,9 @@ const styles = StyleSheet.create({
   personText: { gap: rhythm.line, alignSelf: 'stretch' },
   personTextInline: { flex: 1 },
   personName: { flexShrink: 0 },
-  // The label hugs the name; space below holds its expanded hit target.
+  personDetails: { gap: rhythm.line },
+  // Seat and role sit within the compact party link's expanded hit target,
+  // so only a stack without those lines needs blank space below the party.
   personParty: { minHeight: minimumTarget },
 });
 
