@@ -1,5 +1,5 @@
 /** Receipt aggregates from the published money graph, preserving its distinct party and donor scopes. */
-import { donorDisclosure, type DonorDisclosureRecord } from '../../public/donor-disclosure.js'
+import { donorAssociatedTo, donorDisclosure, type DonorDisclosureRecord } from '../../public/donor-disclosure.js'
 import { receiptYearWindow } from '../receipt-period'
 import { aud, clip, fold, siteUrl } from './record-common'
 import { readToolAsset, type StructuredToolResult, type ToolArgs, type ToolDefinition, type ToolEnv } from './types'
@@ -9,7 +9,7 @@ interface ReceiptSeries { total: number; count: number; byYear?: Record<string, 
 type MoneyNode = DonorDisclosureRecord & ReceiptSeries & { id: string; label: string; kind: string }
 interface MoneyEdge extends ReceiptSeries { source: string; target: string }
 interface MoneyGraph { nodes: MoneyNode[]; edges: MoneyEdge[]; meta?: { generated?: string; coverage?: string } }
-interface TotalRow { party?: string; donor?: string; year?: number; total_aud: number; receipts: number; period: string }
+interface TotalRow { party?: string; donor?: string; associated_entity?: string; year?: number; total_aud: number; receipts: number; period: string }
 const fy = (year: number) => `${year}-${String(year + 1).slice(-2)}`
 const span = (from: number, to: number) => from === to ? fy(from) : `${fy(from)} to ${fy(to)}`
 const key = (value: unknown) => fold(value).replace(/&/g, 'and').replace(/[^\p{L}\p{N}]/gu, '')
@@ -109,6 +109,8 @@ export const tool: ToolDefinition = {
         if (!entry) {
           entry = { row: { ...(source.party && (group !== 'year' || party) ? { party: source.party.label } : {}),
             ...(source.donor && (group !== 'year' || donor) ? { donor: donorDisclosure(source.donor).name } : {}),
+            // An AEC associated entity of the recipient party carries the register's line (export rule 9).
+            ...(source.donor && source.party && (group !== 'year' || donor) && donorAssociatedTo(source.donor, source.party.label) ? { associated_entity: donorAssociatedTo(source.donor, source.party.label) } : {}),
             ...(year !== undefined ? { year } : {}), total_aud: 0, receipts: 0, period: year !== undefined ? fy(year) : period }, node: source.donor }
           buckets.set(bucket, entry)
         }
@@ -128,7 +130,7 @@ export const tool: ToolDefinition = {
       if (p) params.set('party', p.id)
       const d = links.get(row)
       if (d) params.set('focus', d.id)
-      const who = row.donor ? `${row.donor}: ${aud(row.total_aud)} in federal disclosed receipts to ${row.party ?? 'all recipient parties'}`
+      const who = row.donor ? `${row.donor}${row.associated_entity ? ` (${row.associated_entity})` : ''}: ${aud(row.total_aud)} in federal disclosed receipts to ${row.party ?? 'all recipient parties'}`
         : `${row.party ?? 'Federal parties'}: ${aud(row.total_aud)} in federal disclosed receipts`
       // Human-readable dates survive clients that remove ISO dates from source titles.
       // ISO boundaries remain in coverage; the basis travels with each selected citation.

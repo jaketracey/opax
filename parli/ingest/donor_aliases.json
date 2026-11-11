@@ -3125,6 +3125,12 @@
         "Wall OAM, Pamela"
       ],
       "notes": "One donor filed three ways. 'Pam' is a given-name short form no automatic tier equates. All four 'Pam Wall' rows in 2024-25 repeat a 'Wall, Pamela' row on recipient, amount and year (donor-side and party-side returns of the same gifts), so the merged total shows that double count on one row until receipts are de-duplicated."
+    },
+    {
+      "canonical": "Credit Suisse",
+      "kind": "company",
+      "aliases": [],
+      "notes": "The AEC returns give the payer only as 'Credit Suisse'. The name heuristic had typed it an individual; the ABN Bulk Extract (data.gov.au, built 2026-09-02) lists 84 names beginning 'Credit Suisse', all companies, trusts or funds and none an individual. Repaired 11 November 2026 (donations 650368, 662847, 669221; amounts unchanged); this pin keeps a rebuild from reverting it. Kept apart from Credit Suisse Australia and Credit Suisse First Boston, which file separately."
     }
   ]
 }

@@ -12,7 +12,9 @@ test('the published donor index carries source names, return references and matc
  assert.equal(Object.hasOwn(published,'withheld'),false);
  const index=donorLookup(expected.donors);
  for(const donor of expected.donors){
-  assert.equal(donor.label,donor.source_name);
+  // Since d786784a2 a rolled-up entity is labelled by its canonical name; source_name keeps the disclosure spelling.
+  assert.ok(donor.label&&donor.source_name,donor.id);
+  assert.ok(index.has(foldDonorName(donor.source_name)),donor.source_name);
   assert.ok(donor.returnReferences.length);
   assert.ok(index.has(foldDonorName(donor.label)));
   const view=donorDisclosure(donor);

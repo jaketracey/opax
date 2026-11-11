@@ -392,13 +392,13 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
     const selected=selectedDonorFacts(input.question,input.facts.map(f=>f.source),input.constraints)
     const named=selected.filter(r=>{const first=r.name.split(/\s+/)[0];return key(input.question).includes(key(r.name))||first.length>=4&&new RegExp('\\b'+first.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','i').test(input.question)&&selected.filter(x=>x.name.split(/\s+/)[0].toLowerCase()===first.toLowerCase()).length===1})
     if(named.length===1&&named[0].period){
-      const row=named[0],text=`${row.name} provided ${row.amount} in disclosed funding to ${row.party} across financial years ${row.period} in OPAX’s published selection.`,line={text,facts:input.facts.filter(f=>f.source.resource===row.source.resource).map(f=>f.id)},coverage=coverageSentence(input)
+      const row=named[0],text=`${row.name}${row.associated?` (${row.associated})`:''} provided ${row.amount} in disclosed funding to ${row.party} across financial years ${row.period} in OPAX’s published selection.`,line={text,facts:input.facts.filter(f=>f.source.resource===row.source.resource).map(f=>f.id)},coverage=coverageSentence(input)
       return assemble([line,...(coverage?[coverage]:[])],input)
     }
     // How much, with no one source named: the figures found, largest first, never a sum OPAX did not publish.
     const listed=selected.filter(r=>r.period)
     if(listed.length){
-      const lines:WrittenSentence[]=listed.slice(0,8).map((r,i)=>({text:`${i?'- ':''}${r.party} disclosed ${r.amount} in receipts from ${r.name}${i===0?' across financial years '+r.period+' in OPAX’s published selection':''}.`,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}))
+      const lines:WrittenSentence[]=listed.slice(0,8).map((r,i)=>({text:`${i?'- ':''}${r.party} disclosed ${r.amount} in receipts from ${r.name}${r.associated?` (${r.associated})`:''}${i===0?' across financial years '+r.period+' in OPAX’s published selection':''}.`,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}))
       if(listed.length>1)lines.push({text:'OPAX lists the sources it found here rather than one combined total.',facts:listed.flatMap(r=>input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id))})
       const coverage=coverageSentence(input);if(coverage)lines.push(coverage)
       return assemble(lines,input)
@@ -407,7 +407,7 @@ export function proseFallback(input: WritingInput): QualitativeAnswer {
   if(donors.length && donors.every(r=>r.period)) {
     const resources=new Set(donors.map(row=>row.source.resource))
     input={...input,facts:input.facts.filter(f=>resources.has(f.source.resource)||f.coverage&&rankingCoverageMatches(input.question,f.source,donors,input.constraints))}
-    const lines:WrittenSentence[]=donors.slice(0,5).map((r,i)=>({text:`${i===0?'':'- '}${/\.(?=\s+[A-Z])|\b[A-Z]\.[A-Z]\./.test(r.name)?'“'+r.name+'”':r.name} ${i===0?'provided the most disclosed funding'+(new RegExp('\\b'+r.party+'\\b','i').test(r.source.snippet??'')?' to '+r.party:''):'provided disclosed funding'}: ${r.amount}${i===0?' across financial years '+r.period+' in OPAX’s published selection':''}.`,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}))
+    const lines:WrittenSentence[]=donors.slice(0,5).map((r,i)=>({text:`${i===0?'':'- '}${/\.(?=\s+[A-Z])|\b[A-Z]\.[A-Z]\./.test(r.name)?'“'+r.name+'”':r.name}${r.associated?` (${r.associated})`:''} ${i===0?'provided the most disclosed funding'+(new RegExp('\\b'+r.party+'\\b','i').test(r.source.snippet??'')?' to '+r.party:''):'provided disclosed funding'}: ${r.amount}${i===0?' across financial years '+r.period+' in OPAX’s published selection':''}.`,facts:input.facts.filter(f=>f.source.resource===r.source.resource).map(f=>f.id)}))
     const coverage=coverageSentence(input);if(coverage)lines.push(coverage)
     return assemble(lines,input)
   }

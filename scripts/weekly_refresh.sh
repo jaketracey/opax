@@ -47,7 +47,7 @@ ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 # exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
 # quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
 # (periodic-refresh.md, exit codes)
-STALE_OK=",transparency_portal,x_annual_reports,royal_commissions,x_royal_commissions,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
+STALE_OK=",integrity_reports,x_integrity_reports,transparency_portal,transparency_legacy,x_annual_reports,royal_commissions,x_royal_commissions,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -107,14 +107,29 @@ if [ "$want_weekly" = 1 ]; then
   # --- loaders ------------------------------------------------------------------------------------------
   # Commonwealth annual reports from the Transparency Portal's public delivery API (parli/ingest/transparency_portal.py):
   # ~75 paced requests into a raw cache outside git, a snapshot with completeness and shrink guards (exit 3 keeps the
-  # last good one), then the public projection. No DB or KB writes. Most reports are tabled September to November.
+  # last good one), then the 2018-19 to 2021-22 data files (pinned assets, downloaded once into the same cache) and the
+  # public projection. No DB or KB writes. Most reports are tabled September to November.
   if [ -z "$(git ls-tree --name-only HEAD -- portal/public/annual-reports 2>/dev/null)" ]; then
     log "[transparency_portal/x_annual_reports] SKIP: projection not yet tracked on main"
-  elif run_step transparency_portal "" "$PY" -m parli.ingest.transparency_portal refresh; then
+  elif run_step transparency_portal "" "$PY" -m parli.ingest.transparency_portal refresh && \
+       run_step transparency_legacy "" "$PY" -m parli.ingest.transparency_legacy refresh; then
     run_step x_annual_reports "" "$EXPORT" dir portal/public/annual-reports -- \
       "$PY" scripts/export_annual_reports.py
   else
     log "[x_annual_reports] SKIP: Transparency Portal acquisition held; last good export kept"
+  fi
+  # Integrity commission reports (parli/ingest/integrity): each commission's own site, paced and robots-checked
+  # OPAXBot requests; listing pages each run, report PDFs fetched once into a raw cache outside git. One snapshot per
+  # body with completeness and shrink guards (exit 3 keeps that body's last good one; a refusing host pauses only that
+  # body, exit 4). The projection is rebuilt from the guarded snapshots either way, so one held or paused body does not
+  # freeze the others. No DB or KB writes. NACC is a documented gap (no response to the agent).
+  if [ -z "$(git ls-tree --name-only HEAD -- portal/public/integrity-reports 2>/dev/null)" ]; then
+    log "[integrity_reports/x_integrity_reports] SKIP: projection not yet tracked on main"
+  else
+    run_step integrity_reports "" "$PY" -m parli.ingest.integrity.run refresh || \
+      log "[integrity_reports] some bodies held or paused; their last good snapshots are exported"
+    run_step x_integrity_reports "" "$EXPORT" dir portal/public/integrity-reports -- \
+      "$PY" scripts/export_integrity_reports.py
   fi
   # Royal commissions (parli/ingest/royal_commissions.py): tabled reports from the Parliament of Victoria's tabled
   # documents database, vic.gov.au response and status pages and treasury.gov.au, as the registry names them. ~300

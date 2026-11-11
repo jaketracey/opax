@@ -88,7 +88,7 @@ test('declared_interests resolves Queensland members from the register directory
   assert.ok(out.rows.every(r => r.name === 'Bree James' && r.jurisdiction === 'qld'));
   assert.ok(out.register_date); assert.ok(out.rows.every(r => r.register_date === out.register_date));
   assert.match(out.citations[0].text, /4 real estate entries.*Westcourt.*Manunda.*Brinsmead/);
-  assert.match(out.citations[0].url, /parliament.qld.gov.au/);
+  assert.match(out.citations[0].url, /parliament\.qld\.gov\.au/);
   const unknown = await api.callTool(env, 'declared_interests', { person: 'Unknown Madeup Member', category: 'real_estate' });
   assert.deepEqual(unknown.rows, []); assert.match(unknown.notes[0], /No published register member matches/);
 });

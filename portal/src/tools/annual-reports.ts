@@ -25,13 +25,17 @@ const NOTE = 'As published by each entity on the Transparency Portal (Department
 const norm = (v: unknown) => fold(v).replace(/&/g, ' and ').replace(/^the\s+/, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
 const num = (v: unknown): number | null => typeof v === 'number' && Number.isFinite(v) ? v : null
 const money = (v: unknown) => num(v) == null ? 'not published as a number' : '$' + Math.round(Number(v)).toLocaleString('en-AU')
+const fromTo = (ys: string[]) => ys.length ? `${ys[0]} to ${ys[ys.length - 1]}` : 'no years'
 const apiUrl = (codename: unknown) => typeof codename === 'string' && /^[a-z0-9_]+$/.test(codename) ? `${API}?system.codename=${codename}&depth=1` : null
 
 async function index(env: ToolEnv) {
   const data = object(await readToolAsset(env, '/annual-reports/index.json')), meta = object(data.meta)
   const bodies = records(data.bodies), headline = records(data.headline), years = Array.isArray(object(meta.counts).years) ? (object(meta.counts).years as unknown[]).filter((y): y is string => typeof y === 'string') : []
   if (!bodies.length || !years.length || typeof meta.snapshot_at !== 'string') throw new Error('Annual report projection unavailable')
-  return { meta, bodies, headline, years, byId: new Map(bodies.map(b => [String(b.id), b])) }
+  const cov = object(object(meta.counts).coverage)
+  const span = (k: string) => { const v = Array.isArray(cov[k]) ? (cov[k] as unknown[]).filter((y): y is string => typeof y === 'string') : []; return v.length ? v : years }
+  const coverage = { remuneration: span('remuneration'), bands: span('bands'), suppliers: span('suppliers'), headline: span('headline') }
+  return { meta, bodies, headline, years, coverage, byId: new Map(bodies.map(b => [String(b.id), b])) }
 }
 type Index = Awaited<ReturnType<typeof index>>
 
@@ -49,24 +53,27 @@ function reportUrl(body: RecordRow, year: unknown): string | null {
 
 function rowOut(env: ToolEnv, ix: Index, file: RecordRow, r: RecordRow, detail: boolean): RecordRow {
   const t = object(object(file.tables)[String(r.table_id)]), body = ix.byId.get(String(t.body_id)) ?? {}
-  const source = apiUrl(t.codename)
+  const source = sourceUrl(t.source_url) ?? apiUrl(t.codename)
   const base: RecordRow = { record_id: r.record_id, kind: r.kind, body: t.body ?? body.name, body_type: t.body_type ?? body.type, year: file.year, table: t.title,
     report_url: reportUrl(body, file.year), source_url: source, licence: t.licence, follow_up: { view: r.kind === 'kmp' ? 'remuneration' : r.kind === 'consultancy' || r.kind === 'non_consultancy' ? 'suppliers' : 'bands', record_id: r.record_id } }
   if (r.kind === 'kmp') Object.assign(base, { name: r.name, position: r.position, ...Object.fromEntries(COMPONENTS.map(c => [c, r[c] ?? null])), unit: 'dollars' })
-  else if (r.kind === 'consultancy' || r.kind === 'non_consultancy') Object.assign(base, { organisation: r.organisation, abn: r.abn ?? null, expenditure_thousands: r.expenditure_thousands ?? null, unit: "$'000 GST inclusive" })
+  else if (r.kind === 'consultancy' || r.kind === 'non_consultancy') Object.assign(base, { organisation: r.organisation, abn: r.abn ?? null,
+    ...('expenditure_dollars' in r ? { expenditure_dollars: r.expenditure_dollars ?? null, unit: 'dollars GST inclusive' } : { expenditure_thousands: r.expenditure_thousands ?? null, unit: "$'000 GST inclusive" }) })
   else Object.assign(base, { band: r.band, count: r.count ?? null, averages: detail ? r.averages : { total: object(r.averages).total ?? null, base_salary: object(r.averages).base_salary ?? null }, unit: 'dollars (averages per person in the band)' })
   if (Array.isArray(r.checks) && r.checks.length) base.checks = r.checks.map(c => c === 'components_do_not_sum_to_total' ? 'The published components do not add up to the published total; both are shown as published.' : String(c))
   if (r.as_published || r.count_as_published || r.expenditure_as_published) base.as_published = r.as_published ?? r.count_as_published ?? r.expenditure_as_published
-  if (detail) Object.assign(base, { source_table_last_modified: t.last_modified, row_order: r.order, caveats: Array.isArray(ix.meta.caveats) ? ix.meta.caveats : [] })
+  if (t.source_file) Object.assign(base, { source_file: t.source_file, source_row: r.source_row ?? null, ...(r.source_column ? { source_column: r.source_column } : {}), ...(t.entity_as_published !== base.body ? { entity_as_published: t.entity_as_published } : {}) })
+  if (detail) Object.assign(base, { ...(t.source_file ? { source_page: t.source_page } : { source_table_last_modified: t.last_modified }), row_order: r.order, caveats: Array.isArray(ix.meta.caveats) ? ix.meta.caveats : [] })
+  if (r.organisation_as_published) base.organisation_as_published = r.organisation_as_published
   base.full_record_url = base.report_url ?? source ?? siteUrl(env, `/annual-reports/remuneration-${file.year}.json`)
   return base
 }
 
 function citeRow(r: RecordRow): ToolCitation {
   const url = String(r.report_url ?? r.source_url ?? r.full_record_url)
-  const where = `${r.body}, ${r.year} annual report on the Transparency Portal`
+  const where = r.source_file ? `${r.body}, ${r.year} annual report data (Transparency Portal data file "${r.source_file}", row ${r.source_row})` : `${r.body}, ${r.year} annual report on the Transparency Portal`
   if (r.kind === 'kmp') return { kind: 'record', url, value: num(r.total) ?? undefined, text: clip(`${r.name ?? 'Unnamed'} (${r.position ?? 'position not published'}), ${where}: total remuneration ${money(r.total)} (base salary ${money(r.base_salary)}, bonuses ${money(r.bonuses)}, superannuation ${money(r.superannuation)}, termination ${money(r.termination)}). Reported for the period the person held the role.`, 600) }
-  if (r.kind === 'consultancy' || r.kind === 'non_consultancy') return { kind: 'record', url, text: clip(`${r.organisation}${r.abn ? ' (ABN ' + r.abn + ')' : ''} received ${num(r.expenditure_thousands) == null ? 'an amount not published as a number' : '$' + Number(r.expenditure_thousands).toLocaleString('en-AU') + ",000"} (GST inclusive) of ${r.kind === 'consultancy' ? 'reportable consultancy' : 'reportable non-consultancy'} contract expenditure, ${where}.`, 600) }
+  if (r.kind === 'consultancy' || r.kind === 'non_consultancy') return { kind: 'record', url, text: clip(`${r.organisation}${r.abn ? ' (ABN ' + r.abn + ')' : ''} received ${'expenditure_dollars' in r ? (num(r.expenditure_dollars) == null ? 'an amount not published as a number' : '$' + Number(r.expenditure_dollars).toLocaleString('en-AU')) : num(r.expenditure_thousands) == null ? 'an amount not published as a number' : '$' + Number(r.expenditure_thousands).toLocaleString('en-AU') + ",000"} (GST inclusive) of ${r.kind === 'consultancy' ? 'reportable consultancy' : 'reportable non-consultancy'} contract expenditure, ${where}.`, 600) }
   return { kind: 'record', url, text: clip(`${r.kind === 'senior_executive_band' ? 'Senior executives' : 'Other highly paid staff'} in the ${r.band} band, ${where}: ${r.count ?? 'count not published'} people, average total remuneration ${money(object(r.averages).total)}.`, 600) }
 }
 
@@ -78,7 +85,7 @@ async function yearFile(env: ToolEnv, kind: 'remuneration' | 'suppliers', year: 
 
 export const tool: ToolDefinition = {
   name: 'annual_reports',
-  description: 'Commonwealth entity and company annual report disclosures from the Transparency Portal (Department of Finance), 2022-23 reports onward: key management personnel remuneration by name and position (base salary, bonuses, super, long service leave, termination, total), senior executive and other highly paid staff remuneration bands, staff headcounts, reportable consultancy and non-consultancy contract spend (with the organisations paid, by ABN), and departmental total expenses. view=remuneration finds named people (filter body, person, position, year, min_total); view=bands lists bands for a body; view=profile gives one body\'s headline figures by year; view=compare ranks bodies by a metric in one year; view=suppliers lists organisations paid (filter organisation, abn, body). Follow record_id from any row for its full detail. Amounts are as published: remuneration in dollars for the period each person held the role (part-year amounts are not annual salaries); spend and expenses in thousands of dollars. Never add totals across bodies, tables, bands or years.',
+  description: 'Commonwealth entity and company annual report disclosures from the Transparency Portal (Department of Finance): key management personnel and remuneration bands from 2018-19 reports, organisations paid from 2020-21, headline figures from 2022-23. Covers key management personnel remuneration by name and position (base salary, bonuses, super, long service leave, termination, total), senior executive and other highly paid staff remuneration bands, staff headcounts, reportable consultancy and non-consultancy contract spend (with the organisations paid, by ABN), and departmental total expenses. view=remuneration finds named people (filter body, person, position, year, min_total); view=bands lists bands for a body; view=profile gives one body\'s headline figures by year; view=compare ranks bodies by a metric in one year; view=suppliers lists organisations paid (filter organisation, abn, body). Follow record_id from any row for its full detail. Amounts are as published: remuneration in dollars for the period each person held the role (part-year amounts are not annual salaries); spend and expenses in each row\'s stated unit (thousands of dollars, except 2020-21 supplier rows in dollars). Never add totals across bodies, tables, bands or years.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
     body: { type: 'string', minLength: 2, maxLength: 160, description: 'Entity or company name or acronym, e.g. "Department of Finance", "CSIRO", "NBN Co".' },
@@ -108,7 +115,7 @@ export const tool: ToolDefinition = {
     const snapshot = ix.meta.snapshot_at, indexUrl = siteUrl(env, '/annual-reports/index.json')
     const latest = ix.years[ix.years.length - 1]
     if (args.year && !ix.years.includes(String(args.year))) {
-      return { rows: [], citations: [{ kind: 'export', url: indexUrl, text: `The published annual report projection covers reporting years ${ix.years.join(', ')}.` }], notes: [`No ${args.year} reports are in this projection. Coverage is ${ix.years.join(', ')}; earlier years were published on the Portal only as files and are not yet loaded.`], total: 0, snapshot }
+      return { rows: [], citations: [{ kind: 'export', url: indexUrl, text: `The published annual report projection covers reporting years ${ix.years.join(', ')}.` }], notes: [`No ${args.year} reports are in this projection. Coverage is ${fromTo(ix.years)}; the Portal holds no annual report data before 2018-19.`], total: 0, snapshot }
     }
     const bodies = matchBodies(ix, args.body), bodyIds = new Set(bodies.map(b => String(b.id)))
     if (args.body && !bodies.length) return { rows: [], citations: [{ kind: 'export', url: indexUrl, text: `${ix.bodies.length} Commonwealth entities and companies are in the published Transparency Portal projection; none matches "${clip(args.body, 80)}".` }], notes: ['No Commonwealth entity or company on the Transparency Portal matches that name. State and territory agencies are not covered here.'], total: 0, snapshot }
@@ -149,7 +156,8 @@ export const tool: ToolDefinition = {
       }
       const citations: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: countText }, ...picked.map(r => ({ kind: 'record' as const, url: String(r.full_record_url),
         text: clip(r.metric ? `${r.body}, ${r.year}: ${METRIC[r.metric as Metric].label} ${r.value} (${r.unit}), as published in its annual report.` : `${r.body}, ${r.year} annual report: departmental total expenses ${object(r.income_statement).total_expenses ?? 'not published'} ($'000); ongoing staff ${r.ongoing_staff ?? 'not published'}, non-ongoing ${r.non_ongoing_staff ?? 'not published'} (headcount); consultancy spend ${object(r.consultancy).expenditure_thousands ?? 'not published'} ($'000 GST inc).`, 600) }))]
-      if (!picked.length) notes.push('No matching record. This does not establish that the entity published no such figure: coverage starts with 2022-23 reports and some reports are still being tabled.')
+      if (args.year && !ix.coverage.headline.includes(String(args.year))) notes.push(`Headline figures (expenses, staff numbers, contract spend) are loaded for ${fromTo(ix.coverage.headline)} only; earlier years were published as wide data files that are not yet loaded.`)
+      if (!picked.length) notes.push(`No matching record. This does not establish that the entity published no such figure: headline coverage is ${fromTo(ix.coverage.headline)} and some reports are still being tabled.`)
       return publishedResult(picked, citations, { view: args.view, total, offset, next_offset: offset + picked.length < total ? offset + picked.length : null, snapshot, notes: [...bodyNote, ...notes] })
     }
 
@@ -180,15 +188,19 @@ export const tool: ToolDefinition = {
       }
     }
     if (args.view === 'remuneration' && !args.record_id) matches.sort((a, b) => (num(b.row.total) ?? -1) - (num(a.row.total) ?? -1))
-    if (args.view === 'suppliers' && !args.record_id && !args.body) matches.sort((a, b) => (num(b.row.expenditure_thousands) ?? -1) - (num(a.row.expenditure_thousands) ?? -1))
+    // Ordering only: each row is still shown in its own published unit.
+    const dollars = (r: RecordRow) => num(r.expenditure_dollars) ?? (num(r.expenditure_thousands) == null ? -1 : Number(r.expenditure_thousands) * 1000)
+    if (args.view === 'suppliers' && !args.record_id && !args.body) matches.sort((a, b) => dollars(b.row) - dollars(a.row))
     const picked = matches.slice(offset, offset + limit).map(m => rowOut(env, ix, m.file, m.row, !!args.record_id))
     const scope = ['body', 'person', 'position', 'year', 'organisation', 'abn', 'min_total', 'band_kind'].filter(k => args[k] !== undefined).map(k => `${k} ${args[k]}`).join(', ') || 'all bodies'
     const what = args.view === 'remuneration' ? 'key management personnel rows' : args.view === 'bands' ? 'remuneration band rows' : 'supplier rows'
     const count: ToolCitation = { kind: 'count', url: indexUrl, text: `${matches.length} ${what} match ${scope} in reporting years ${years.join(', ') || 'none'} of the published Transparency Portal projection (snapshot ${snapshot}).` }
     if (args.view === 'remuneration') notes.push('One row per person per reporting year as the entity published it; a person who held a role for part of the year shows the part-year amount, and a person can appear for more than one body or year. Sorted by total remuneration, highest first.')
     if (args.view === 'bands') notes.push('Each band row is a count of people and their average remuneration components. The averages are per person in that band.')
-    if (args.view === 'suppliers') notes.push('Organisations receiving a share of reportable contract expenditure, in thousands of dollars GST inclusive, as each entity listed them (entities list their largest recipients, not all of them). A row does not show what the work was.')
-    if (!matches.length) notes.push('No matching row in this projection. This does not establish that no such person, band or payment exists: coverage starts with 2022-23 reports, 2025-26 reports are still being tabled, and earlier years are not yet loaded.')
+    if (args.view === 'suppliers') notes.push('Organisations receiving a share of reportable contract expenditure, GST inclusive, in each row\'s stated unit (2020-21 rows are in dollars, later years in thousands of dollars), as each entity listed them (entities list their largest recipients, not all of them). A row does not show what the work was. Never add amounts across rows with different units.')
+    const span = args.view === 'suppliers' ? ix.coverage.suppliers : args.view === 'bands' ? ix.coverage.bands : ix.coverage.remuneration
+    if (args.year && !span.includes(String(args.year))) notes.push(`${args.view === 'suppliers' ? 'Organisations paid' : args.view === 'bands' ? 'Remuneration bands' : 'Key management personnel'} are covered for ${fromTo(span)}; the Portal published no such table for ${args.year}.`)
+    if (!matches.length) notes.push(`No matching row in this projection. This does not establish that no such person, band or payment exists: coverage is ${fromTo(span)}, the latest year's reports are still being tabled, and an entity that did not publish a table is not listed.`)
     return publishedResult(picked, [count, ...picked.map(citeRow)], { view: args.view, total: matches.length, offset,
       next_offset: offset + picked.length < matches.length ? offset + picked.length : null, years, snapshot, notes: [...bodyNote, ...notes] })
   },

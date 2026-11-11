@@ -34,14 +34,15 @@ async function invalid(args) {
 }
 
 test('registry lists annual_reports under the bumped version', () => {
-  assert.ok(Number(/^structured-tools-(\d+)-/.exec(api.TOOL_REGISTRY_VERSION)?.[1]) >= 10, api.TOOL_REGISTRY_VERSION);
+  assert.match(api.TOOL_REGISTRY_VERSION, /^structured-tools-\d+-/);
   const tool = api.listTools().find(t => t.name === 'annual_reports');
   assert.ok(tool); assert.ok(tool.inputSchema.examples.length >= 3);
 });
 
 test('export shape: every KMP row resolves to a table with a body, licence and source codename', () => {
   assert.ok(index.bodies.length > 150); assert.ok(index.meta.counts.kmp_rows > 4000);
-  for (const b of index.bodies) assert.ok(['NCE', 'CCE', 'CC'].includes(b.type), b.name);
+  for (const b of index.bodies) assert.ok(['NCE', 'CCE', 'CC'].includes(b.type) || b.id.startsWith('legacy_') && b.type === null, b.name);
+  assert.ok(index.meta.counts.coverage.remuneration.includes('2018-19') && index.meta.counts.coverage.headline[0] === '2022-23');
 });
 
 test('remuneration: a department\'s key management personnel, highest first, with citations and detail', async () => {
@@ -98,7 +99,26 @@ test('empty results never claim absence', async () => {
   const state = await call({ view: 'profile', body: 'Victoria Police' });
   assert.deepEqual(state.rows, []); assert.match(state.notes.join(' '), /State and territory agencies are not covered/);
   const old = await call({ view: 'remuneration', year: '2015-16' });
-  assert.deepEqual(old.rows, []); assert.match(old.notes.join(' '), /not yet loaded/);
+  assert.deepEqual(old.rows, []); assert.match(old.notes.join(' '), /no annual report data before 2018-19/);
+  const noSuppliers = await call({ view: 'suppliers', organisation: 'Deloitte', year: '2019-20' });
+  assert.deepEqual(noSuppliers.rows, []); assert.match(noSuppliers.notes.join(' '), /covered for 2020-21 to/);
+  const noHeadline = await call({ view: 'profile', body: 'Department of Finance', year: '2019-20' });
+  assert.deepEqual(noHeadline.rows, []); assert.match(noHeadline.notes.join(' '), /Headline figures .* 2022-23 to/);
+});
+
+test('older years come from the Portal data files, cited to the file and row, in each file\'s own unit', async () => {
+  const out = await call({ view: 'remuneration', body: 'Department of Finance', year: '2020-21', limit: 2 }); cited(out);
+  const row = out.rows[0];
+  assert.match(row.source_url, /^https:\/\/previewapi\.transparency\.gov\.au\/delivery\/assets\/.+\.zip$/);
+  assert.match(row.source_file, /key management personnel/i); assert.ok(Number.isInteger(row.source_row) && row.source_row > 2);
+  assert.match(out.citations[1].text, /data file ".+", row \d+/);
+  const detail = await call(row.follow_up); cited(detail); assert.equal(detail.rows[0].record_id, row.record_id); assert.equal(detail.rows[0].total, row.total);
+  const dollars = await call({ view: 'suppliers', organisation: 'KPMG', year: '2020-21', limit: 2 }); cited(dollars);
+  assert.ok(dollars.rows.every(r => r.unit === 'dollars GST inclusive' && 'expenditure_dollars' in r && !('expenditure_thousands' in r)));
+  const thousands = await call({ view: 'suppliers', organisation: 'KPMG', year: '2021-22', limit: 2 }); cited(thousands);
+  assert.ok(thousands.rows.every(r => r.unit === "$'000 GST inclusive" && 'expenditure_thousands' in r));
+  const bands = await call({ view: 'bands', body: 'Department of Finance', year: '2018-19', band_kind: 'senior_executives', limit: 2 }); cited(bands);
+  assert.ok(bands.rows.every(r => r.kind === 'senior_executive_band' && r.source_column > 1));
 });
 
 test('invalid inputs are refused before any read', async () => {

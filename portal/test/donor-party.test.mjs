@@ -36,7 +36,9 @@ async function donorsDirectory(files, indexRecords) {
 }
 // One fragment parse per row and per page: a JSDOM window each (1,940 rows, ~200 pages) took 8 s
 // of this file on the Mac and 44-103 s on the refresh box, past the old 60 s timeout (17 Oct).
-const rowLinks = html => [...JSDOM.fragment(html).querySelectorAll('.dir-name a[href]')].map(a => a.getAttribute('href'));
+// The donor's own page link; an AEC associated entity also carries one link to the register, counted apart.
+const rowLinks = html => [...JSDOM.fragment(html).querySelectorAll('.dir-name a[href]')].filter(a => !a.closest('.donor-assoc')).map(a => a.getAttribute('href'));
+const registerLinks = html => [...JSDOM.fragment(html).querySelectorAll('.dir-name .donor-assoc a[href]')].map(a => a.getAttribute('href'));
 
 test('directory: every row links to its donor page, whatever the match evidence', async () => {
   const ref = {return_type: 'AEC annual return', year: '2024-25', url: 'https://example.test/r'};
@@ -71,6 +73,9 @@ test('directory over the published data: every row links, and names with &, comm
   const hrefs = directory.items.map(item => [item, rowLinks(directory.row(item))]);
   const unlinked = hrefs.filter(([, links]) => links.length !== 1).map(([item]) => item.label);
   assert.equal(unlinked.length, 0, `${unlinked.length} directory rows have no donor link`);
+  const tagged = directory.items.filter(item => registerLinks(directory.row(item)).length);
+  assert.ok(tagged.length >= 2, 'AEC associated entities carry the register link');
+  for (const item of tagged) assert.deepEqual(registerLinks(directory.row(item)), ['https://transparency.aec.gov.au/RegisterOfEntities?clientType=associatedentity'], item.label);
   // The Worker answers each page: awkward spellings in full, and a spread of the rest.
   const awkward = hrefs.filter(([item]) => /[&,'’/+]|pty limited/i.test(item.label));
   const sample = [...awkward, ...hrefs.filter((_, i) => i % 40 === 0)];

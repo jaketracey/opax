@@ -1021,6 +1021,9 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
 button.link.source-title { font: var(--weight-strong) var(--text-16)/var(--leading-snug) var(--serif); }
 .source-title, button.link.source-title, a.source-title { text-decoration: none; }
 .source-title:hover, button.link.source-title:hover, a.source-title:hover { color: var(--bronze-ink); }
+/* An AEC associated entity's register line, shown with the donor's name (donor-disclosure.js). */
+.donor-assoc { display: block; font: var(--type-fine); color: var(--ink-soft); }
+.donor-assoc a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 /* Document titles in list rows: some ingested titles run to a paragraph
    (every bill in a cognate debate), so a row shows three lines at most. The
    full title is still the link's text and waits on the document page. */

@@ -1002,6 +1002,48 @@ def check_annual_reports() -> list[str]:
     return errs
 
 
+def check_integrity_reports() -> list[str]:
+    """Integrity commission reports: the index keeps its bodies and report rows (90% of HEAD), every loaded
+    body's file parses, keeps 90% of its HEAD records and matches the index count, every finding and
+    recommendation carries text and a citation, and no body file is named without being loaded."""
+    rel = PUBLIC + "/integrity-reports"
+    errs = _check_json(rel + "/index.json", keys=("meta.snapshot_at", "meta.counts.records", "meta.caveats"),
+                       counts=("bodies", "reports"), ratio=0.9)
+    errs += _check_json(rel + "/manifest.json", keys=("counts.records", "files"), counts=(), ratio=0.9)
+    doc, err = _load_json(rel + "/index.json")
+    if err:
+        return errs
+    rows = doc.get("reports") or []
+    ids = [r.get("id") for r in rows]
+    if len(ids) != len(set(ids)):
+        errs.append(f"{rel}/index.json has duplicate report ids")
+    for body in doc.get("bodies") or []:
+        if body.get("status") != "loaded":
+            if body.get("file") or not body.get("gaps"):
+                errs.append(f"{rel}/index.json: {body.get('code')} is not loaded but names a file or no gap")
+            continue
+        name = str(body.get("file") or "").rsplit("/", 1)[-1]
+        if not re.fullmatch(r"reports-[a-z0-9-]+\.json", name):
+            errs.append(f"{rel}/index.json: {body.get('code')} names an invalid file {name!r}")
+            continue
+        errs += _check_json(f"{rel}/{name}", keys=("records", "snapshot_at"), counts=("records",), ratio=0.9)
+        data, err = _load_json(f"{rel}/{name}")
+        if err:
+            continue
+        records = data.get("records") or []
+        if len(records) != (body.get("counts") or {}).get("records"):
+            errs.append(f"{rel}/{name} has {len(records)} records but the index says {(body.get('counts') or {}).get('records')}")
+        for r in records:
+            for item in (r.get("findings") or []) + (r.get("recommendations") or []):
+                cite = item.get("cite") or {}
+                if not item.get("text") or not str(cite.get("url", "")).startswith("https://"):
+                    errs.append(f"{rel}/{name}: {r.get('id')} has a finding or recommendation without text or citation")
+                    break
+            if r.get("findings") and r.get("findings_status") != "extracted":
+                errs.append(f"{rel}/{name}: {r.get('id')} has findings but status {r.get('findings_status')}")
+    return errs
+
+
 def check_royal_commissions() -> list[str]:
     """Royal commissions projection: the index keeps 90% of its commissions and recommendations against HEAD,
     and every commission file the index names parses; one with recommendations keeps 90% of its HEAD count."""
@@ -1168,7 +1210,7 @@ def check_promoted_hub(name):
         return [str(error)]
 
 
-CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "annual-reports": check_annual_reports, "royal-commissions": check_royal_commissions, "budget": lambda: check_promoted_hub("budget"), "vic-gifts": lambda: check_promoted_hub("vic-gifts"), "bills-tas": lambda: check_promoted_hub("bills-tas"), "bills-act": lambda: check_promoted_hub("bills-act"), "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
+CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "annual-reports": check_annual_reports, "integrity-reports": check_integrity_reports, "royal-commissions": check_royal_commissions, "budget": lambda: check_promoted_hub("budget"), "vic-gifts": lambda: check_promoted_hub("vic-gifts"), "bills-tas": lambda: check_promoted_hub("bills-tas"), "bills-act": lambda: check_promoted_hub("bills-act"), "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
           "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,

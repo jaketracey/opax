@@ -1,5 +1,5 @@
 import {FEDERAL_RECEIPTS_NOTE} from '../receipt-copy'
-import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../../public/donor-disclosure.js'
+import {donorAssociatedTo,donorDisclosure,returnReference,type DonorDisclosureRecord} from '../../public/donor-disclosure.js'
 /**
  * Structured tools for Ask (docs/design/agentic-ask-2026-10.md).
  *
@@ -374,13 +374,15 @@ export async function partyDonations(deps: ToolDeps, input: { party?: string | n
     const rows = ranked.slice(0,limit).map(({e,v})=>{
       const donor=node.get(e.source)!,view=donorDisclosure(donor)
       const reference=(donor.returnReferences || []).find(ref=>(!from || Number(String(ref.year).slice(0,4))>=from) && (!to || Number(String(ref.year).slice(0,4))<=to))
-      return {donor:view.name,href:view.href,id:e.source,return_reference:reference ? returnReference(reference) : view.reference,industry:donor.industry ?? null,total_aud:v[0],receipts:v[1]}
+      // An AEC associated entity of this party keeps its rank and carries the register's line (export rule 9).
+      const associated=donorAssociatedTo(donor,input.party!)
+      return {donor:view.name,...(associated?{associated_entity:associated}:{}),href:view.href,id:e.source,return_reference:reference ? returnReference(reference) : view.reference,industry:donor.industry ?? null,total_aud:v[0],receipts:v[1]}
     })
     return {
       tool: 'party_receipts', ok: true,
       data: {party:input.party,industry:input.industry ?? null,years:[from ?? null,to ?? null],rows:rows.map(({id:_id,...row})=>row),coverage},
       // A source with no public donor page opens the same map focused on it, never the AEC home page.
-      cite: [{kind:'export',label:`Disclosed receipts to ${input.party} (AEC returns)`,url:mapUrl(input.party)},...rows.map(r=>({kind:'export' as const,label:`${r.donor} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : mapUrl(input.party!,{focus:r.id})}))],
+      cite: [{kind:'export',label:`Disclosed receipts to ${input.party} (AEC returns)`,url:mapUrl(input.party)},...rows.map(r=>({kind:'export' as const,label:`${r.donor}${r.associated_entity ? ` (${r.associated_entity})` : ''} to ${input.party} — ${r.return_reference}`,value:r.total_aud,url:r.href ? new URL(r.href,origin).href : mapUrl(input.party!,{focus:r.id})}))],
       list: mapUrl(input.party),
       query: { file: '/graph/money.json', party: input.party, industry: input.industry ?? null, from, to }, notes,
     }

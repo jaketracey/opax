@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=800932e746';
-import {loadDonorViewIndex} from './donor-views.js?v=f1a85f7a27';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
+import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 /**
  * OPAX Words per dollar — the site's thesis in one view: per industry, who
  * takes the money and who does the talking.

@@ -1597,7 +1597,7 @@ export class KnowledgeMapEngine {
       name = node.label
       dot.style.background = `#${visual.colour.getHexString()}`
       const kind = node.kind === 'party' ? 'political party' : (node.industry ?? node.group).replace(/_/g, ' ')
-      this.popupMeta.textContent = kind.charAt(0).toUpperCase() + kind.slice(1)
+      this.popupMeta.textContent = kind.charAt(0).toUpperCase() + kind.slice(1) + (node.associatedTag ? ` · ${node.associatedTag}` : '')
       const links = visual.degree === 1 ? '1' : `${visual.degree}`
       const who = node.kind === 'agency' || node.kind === 'supplier'
         ? `${links} contract relationship${visual.degree === 1 ? '' : 's'}`

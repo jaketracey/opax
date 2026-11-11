@@ -13,8 +13,14 @@ the `annual_reports` tool.
   seconds apart, with a 1,500-request ceiling for each run. A 403 or challenge
   pauses the source (exit 4) and the last good export stays in place.
 * Only items whose `workflow_step` is `published` are used.
-* Typed tables cover **2022-23 to 2025-26**. The Portal publishes 2018-19 to 2021-22
-  only as CSV and ZIP files on its Data sets page. Those years are not loaded yet.
+* Typed tables cover **2022-23 to 2025-26**. For **2018-19 to 2021-22** the Portal
+  published the same tables only as files on its Data sets page: one ZIP per year
+  for 2018-19 to 2020-21 and one CSV per table for 2021-22. Those files are pinned
+  in `parli/ingest/transparency_legacy.py`; key management personnel, senior
+  executive and highly paid bands, and (2020-21 and 2021-22 only) organisations paid
+  are loaded from them, cited to the asset URL, the CSV name and the line number.
+  Headline figures (expenses, staff numbers, contract totals) for those years sit in
+  wide files with mixed units and are not loaded.
 * Licence: Non-corporate Commonwealth entity material is CC BY 4.0 (Department of
   Finance attribution). Corporate entities and companies keep copyright in their
   own material. Each table carries its licence and the original API item URL.
@@ -26,6 +32,12 @@ the `annual_reports` tool.
   `OPAX_TRANSPARENCY_CACHE`). `build` writes `snapshot.json` and refuses to
   publish when the body count or the key management personnel row count falls
   more than 10% against the previous snapshot.
+* `parli/ingest/transparency_legacy.py fetch|build|refresh`: downloads any pinned
+  data file not yet in `~/.cache/autoresearch/transparency/legacy/` (8 files, once),
+  then writes `legacy-snapshot.json`. Placeholder lines, notes and sub-headings
+  inside a table are skipped, as is the list of entities that published no table.
+  Older entity names are matched to a Portal body only on an exact name, the name
+  without a trailing bracket, or a listed alternative name; 7 names stay as published.
 * `scripts/export_annual_reports.py` writes `portal/public/annual-reports/`:
   * `index.json`: bodies (type, portfolio by year, AusTender agency ID where the
     name matches exactly), reports by year, headline figures for each body and
@@ -35,7 +47,7 @@ the `annual_reports` tool.
   * `suppliers-<year>.json`: organisations paid for consultancy and
     non-consultancy contracts, with ABN where published.
   * `manifest.json`: counts and file hashes.
-* Weekly refresh: the `transparency_portal` and `x_annual_reports` steps in
+* Weekly refresh: the `transparency_portal`, `transparency_legacy` and `x_annual_reports` steps in
   `scripts/weekly_refresh.sh` (both STALE_OK). The `annual-reports` data group is
   checked by `scripts/vm/validate_data.py`.
 
@@ -44,12 +56,14 @@ the `annual_reports` tool.
 OPAX does not adjust published figures. It flags them:
 
 * `components_do_not_sum_to_total`: the published components of a key management
-  personnel row do not add to its published total.
+  personnel row differ from its published total by more than half a per cent (smaller
+  gaps are rounding, often to the nearest thousand).
 * `scale_check`: a spend figure looks as if it was entered in dollars in a
   thousands-of-dollars field (average per contract over $5m for consultancy or
   $50m for non-consultancy, or 100 times the body's own figure in another year).
   Flagged rows are left out of `compare` rankings and named in the notes.
-* Contract spend is in $'000 GST inclusive. Income statement figures are in
+* Contract spend is in $'000 GST inclusive, except the 2020-21 organisations-paid
+  file, which states dollars; those rows carry `expenditure_dollars` instead. Income statement figures are in
   $'000. The 2024 non-corporate income table states no unit; it is taken as
   $'000 from the template and marked `unit_basis`.
 * Spend above departmental expenses is not always an error, because

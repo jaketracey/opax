@@ -264,7 +264,7 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   const donorIntent = !/\b(?:receiv\w*|takes?|gets?)\b/i.test(query) && (/\b(?:biggest|largest|top)\b[^?.]{0,60}\bdonors?\b/i.test(query) || (/^who\s+donat\w*\b/i.test(query) && !/\bto who(?:m)?\b/i.test(query)))
   const fromDonors=result.selected_parties.length>0 || donorIntent
   const allFlows=!result.selected_parties.length && !result.selected_industries.length && !result.selected_donors.length && !fromDonors
-  const rows=(allFlows ? result.flows.map(r=>({name:`${r.donor} → ${r.party}`,donor:r.donor,total_aud:r.total_aud,receipts:r.receipts,id:r.donor_id,party:r.party}))
+  const rows=(allFlows ? result.flows.map(r=>({name:`${r.donor} → ${r.party}`,donor:r.donor,total_aud:r.total_aud,receipts:r.receipts,id:r.donor_id,party:r.party,associated:r.associated}))
     : (fromDonors?result.by_donor:result.by_party).map(r=>({...r,party:fromDonors?result.selected_parties[0]:r.name}))).slice(0,5)
   if(!rows.length){
     if(jurisdiction==='federal'&&federalPartyRankingQuestion(input.question??'')&&result.selected_parties.length===1){
@@ -276,8 +276,10 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
     return {answer:result.answer,coverage:result.period_coverage,citations:{},sources:[],answer_status:'evidence_gap',money_ranking:true}
   }
   const who=rows[0], recipient=result.selected_parties.join(' and '), sector=result.selected_industries.map(i=>i.replaceAll('_',' ')).join(' and ')
-  const lead=who ? allFlows ? `The largest source-to-party receipt connection in this published selection is **${plain(who.name)}: ${aud(who.total_aud)}**.`
-    : fromDonors ? `The largest disclosed receipts${recipient?` to ${plain(recipient)}`:''}${sector?` among ${plain(sector)} sources`:''} in this published selection are from **${plain(who.name)}: ${aud(who.total_aud)}** across ${who.receipts.toLocaleString('en-AU')} records.`
+  // An AEC associated entity keeps its rank and is named with the register's own line (export rule 9).
+  const tag=(row:object)=>{const associated=(row as {associated?:string}).associated;return associated?` (${plain(associated)})`:''}
+  const lead=who ? allFlows ? `The largest source-to-party receipt connection in this published selection is **${plain(who.name)}: ${aud(who.total_aud)}**${tag(who)}.`
+    : fromDonors ? `The largest disclosed receipts${recipient?` to ${plain(recipient)}`:''}${sector?` among ${plain(sector)} sources`:''} in this published selection are from **${plain(who.name)}: ${aud(who.total_aud)}**${tag(who)} across ${who.receipts.toLocaleString('en-AU')} records.`
     : `**${plain(who.name)}** received the most disclosed receipts${sector?` from donors OPAX groups under ${plain(sector)}`:` from ${plain(result.subject)}`} in this published selection: **${aud(who.total_aud)}**.`
     : result.answer
   const sources: {resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string;receipt?:ReceiptFact;coverage?:boolean}[]=[]
@@ -298,7 +300,7 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
     for(const row of rows){
       const identity=result.by_donor.find(d=>d.id===row.id);
       const donorName=identity ? (identity.href ? `[${plain(row.name)}](${identity.href})` : plain(row.name)) : plain(row.name);
-      answer+=`\n| ${donorName} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
+      answer+=`\n| ${donorName}${tag(row)} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
       const params=new URLSearchParams(new URL(result.sources[0].url).search)
       if(row.party)params.set('party',graph.nodes.find(n=>n.kind==='party'&&n.label===row.party)?.id||row.party)
       if(fromDonors||allFlows)params.set('focus',row.id)

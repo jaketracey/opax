@@ -32,7 +32,8 @@ async function invalid(args) {
 }
 
 test('registry lists royal_commissions under the bumped version', () => {
-  assert.match(api.TOOL_REGISTRY_VERSION, /royal-commissions/);
+  assert.ok(Number(/^structured-tools-(\d+)-/.exec(api.TOOL_REGISTRY_VERSION)?.[1]) >= 12, api.TOOL_REGISTRY_VERSION);
+  assert.ok(api.listTools().some(t => t.name === 'integrity_reports'));
   const tool = api.listTools().find(t => t.name === 'royal_commissions');
   assert.ok(tool); assert.ok(tool.inputSchema.examples.length >= 3);
   assert.ok(api.TOOL_SPECS.some(t => (t.name ?? t.function?.name) === 'royal_commissions'));

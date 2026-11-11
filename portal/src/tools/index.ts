@@ -23,6 +23,7 @@ import { tool as memberDivisions } from './member-divisions'
 import { tool as sponsoredBills } from './sponsored-bills'
 import { tool as annualReports } from './annual-reports'
 import { tool as royalCommissions } from './royal-commissions'
+import { tool as integrityReports } from './integrity-reports'
 import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type StructuredToolResult } from './types'
 import type { ToolDeps, ToolSpec, ToolResult } from '../agentic-tools'
 export * from './types'
@@ -31,7 +32,7 @@ export * from './identifiers'
 
 export const TOOL_REGISTRY_VERSION = 'structured-tools-12-royal-commissions'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
-export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, royalCommissions])
+export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions])
 const names = new Set<string>()
 for (const tool of tools) {
   if (!/^[a-z][a-z0-9_]*$/.test(tool.name) || names.has(tool.name)) throw new Error('Invalid or duplicate registry tool name')

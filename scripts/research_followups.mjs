@@ -19,7 +19,9 @@ export function gradeFollowUp(turn,payload,options={}) {
  const ranking=/provided the most|received the most|largest disclosed|led the selected ranking/i.test(text)
  const matches=row=>{
    const line=text.split(/\n|(?<=[.!?])\s+(?=[A-Z])/).find(s=>fold(s).includes(fold(row.donor)))
-   return !!line&&amounts(line).some(a=>Math.abs(a.v-row.total_aud)<0.51)
+   // An AEC associated entity is ranked like any donor but must be named with the register's line.
+   const tagged=!row.associated_entity||/associated entity of/i.test(line??'')
+   return !!line&&tagged&&amounts(line).some(a=>Math.abs(a.v-row.total_aud)<0.51)
  }
  const figures=turn.novel_from_previous?(turn.eligible_rows??[]).some(row=>matches(row)&&!fold(options.previousAnswer??'').includes(fold(row.donor))):turn.rows.every(matches)
  const decline=turn.decision==='decline'?refusal&&!ranking:turn.decision==='clarify'?/please.*(?:name|specify|which|clarify)|which.*(?:Smith|person)|ambiguous/i.test(text)&&!ranking:turn.decision==='limited_or_years'?!ranking:!refusal
