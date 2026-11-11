@@ -6,6 +6,7 @@ import {
   isValidElement,
   useCallback,
   useContext,
+  useImperativeHandle,
   useLayoutEffect,
   useRef,
   useState,
@@ -21,6 +22,8 @@ import {
   StyleSheet,
   View,
   type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   type RefreshControlProps,
   type ViewProps,
 } from 'react-native';
@@ -118,6 +121,7 @@ export function Screen({
   onLayout: onPageLayout,
   maintainVisibleContentPosition,
   contentInsetAdjustmentBehavior = 'automatic',
+  clampScrollOnContentChange = false,
 }: {
   onLayout?: ViewProps['onLayout'];
   maintainVisibleContentPosition?: React.ComponentProps<
@@ -126,6 +130,8 @@ export function Screen({
   contentInsetAdjustmentBehavior?: React.ComponentProps<
     typeof ScrollView
   >['contentInsetAdjustmentBehavior'];
+  /** Async front pages may lose blocks while the reader is at the end. */
+  clampScrollOnContentChange?: boolean;
   testID?: string;
   grouped?: boolean;
   barTitle?: string;
@@ -177,11 +183,12 @@ export function Screen({
     refreshControl?.props.onRefresh,
     !!refreshControl?.props.refreshing,
   );
+  const bounds = useScrollBounds(clampScrollOnContentChange, scrollRef);
   return (
     <StatePageProvider refreshing={!!refreshControl?.props.refreshing}>
       <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
         <ScrollView
-          ref={scrollRef}
+          ref={clampScrollOnContentChange ? bounds.ref : scrollRef}
           testID={testID}
           style={[styles.screen, { backgroundColor: colors[ground] }]}
           contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
@@ -195,16 +202,27 @@ export function Screen({
             regular ? { gap: rhythmRegular.section } : null,
           ]}
           maintainVisibleContentPosition={maintainVisibleContentPosition}
+          onContentSizeChange={
+            clampScrollOnContentChange ? bounds.onContentSizeChange : undefined
+          }
           onLayout={(event) => {
             onLayout(event);
             onPageLayout?.(event);
+            if (clampScrollOnContentChange) bounds.onLayout(event);
           }}
           onScroll={(event) => {
+            if (clampScrollOnContentChange) bounds.onScroll(event);
             const y = event.nativeEvent.contentOffset.y;
             if (titleScroll.current) titleScroll.current(y, anchorBottom);
             else if (!inPane && barTitle) nativeTitle.onScroll(y);
             onScroll?.(y);
           }}
+          onScrollEndDrag={
+            clampScrollOnContentChange ? bounds.onScroll : undefined
+          }
+          onMomentumScrollEnd={
+            clampScrollOnContentChange ? bounds.onScroll : undefined
+          }
           scrollEventThrottle={16}
         >
           <RegionProvider value={inner}>
@@ -238,6 +256,69 @@ export function Screen({
       </SidebarSafe>
     </StatePageProvider>
   );
+}
+
+/**
+ * Fabric preserves the offset during a gesture, even when content collapses.
+ * Repair only a changed scroll range, leaving pull-to-refresh and ordinary
+ * rubber-banding to UIKit. Keep repairing late momentum events until the
+ * native view acknowledges an offset inside the new range.
+ */
+function useScrollBounds(
+  enabled: boolean,
+  forwardedRef: Ref<ScrollView> | undefined,
+) {
+  const scroll = useRef<ScrollView | null>(null);
+  const metrics = useRef({
+    height: null as number | null,
+    viewport: 0,
+    y: 0,
+    top: 0,
+    bottom: 0,
+    changed: false,
+  });
+  useImperativeHandle(
+    enabled ? forwardedRef : undefined,
+    () => scroll.current!,
+    [],
+  );
+  const clamp = () => {
+    const m = metrics.current;
+    if (!enabled || !m.changed || m.height === null || m.viewport <= 0) return;
+    const end = Math.max(-m.top, m.height - m.viewport + m.bottom);
+    // Never cancel a pull or force a reader further down the page.
+    if (m.y > end) scroll.current?.scrollTo({ y: end, animated: false });
+  };
+  return {
+    ref: scroll,
+    onContentSizeChange: (_width: number, height: number) => {
+      const m = metrics.current;
+      if (m.height === null || height < m.height) m.changed = true;
+      m.height = height;
+      clamp();
+    },
+    onLayout: (event: LayoutChangeEvent) => {
+      const m = metrics.current;
+      if (event.nativeEvent.layout.height > m.viewport) m.changed = true;
+      m.viewport = event.nativeEvent.layout.height;
+      clamp();
+    },
+    onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const m = metrics.current;
+      const { contentOffset, contentInset, layoutMeasurement } =
+        event.nativeEvent;
+      m.y = contentOffset.y;
+      m.top = contentInset.top;
+      m.bottom = contentInset.bottom;
+      m.viewport = layoutMeasurement.height;
+      if (
+        m.height !== null &&
+        m.y <= Math.max(-m.top, m.height - m.viewport + m.bottom)
+      )
+        m.changed = false;
+      clamp();
+    },
+  };
 }
 
 /** The form owns keyboard space; UIKit retains navigation/tab insets. */

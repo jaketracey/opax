@@ -214,7 +214,14 @@ function DotField({
   const position = useAnimatedStyle(() => ({
     top: 30 - expandedHeader.value - rhythm.block,
     // The art lives in scroll content: give back 55% for a net 0.45 drift.
-    transform: [{ translateY: calm.value ? 0 : scroll.value * 0.55 }],
+    transform: [
+      // Invisible after the fade: its bounds must stop travelling down Today.
+      {
+        translateY: calm.value
+          ? 0
+          : Math.min(scroll.value, dotFadeDistance) * 0.55,
+      },
+    ],
   }));
   return (
     <Animated.View

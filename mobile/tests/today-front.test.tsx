@@ -10,6 +10,7 @@ import {
 import { ApiError } from '../src/api/errors';
 import { formatDate } from '../src/design/format';
 import { InsetGroup } from '../src/design/layout';
+import { SurfaceContext } from '../src/design/row-padding';
 import { Icon } from '../src/design/icon';
 import { PersonRow } from '../src/design/people';
 import { symbols } from '../src/design/symbols';
@@ -22,6 +23,7 @@ import { Text } from '../src/design/text';
 import { BillFeed, billRowText } from '../src/features/today/BillFeed';
 import {
   DeclarationGroup,
+  DeclarationEntry,
   LONG_ENTRY,
   declarationsForRoute,
   entryPreview,
@@ -401,6 +403,45 @@ describe('Just declared', () => {
       expect(router.push).toHaveBeenLastCalledWith(
         declarationsForRoute(item.name),
       );
+    },
+  );
+  test.each([1, 3.571])(
+    'every grouped row keeps both insets when its meta wraps at font scale %s',
+    (fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ ...standard, fontScale });
+      const { root } = render(
+        <SurfaceContext.Provider value="sunken">
+          <InsetGroup>
+            {items.map((entry, index) => (
+              <DeclarationEntry key={entry.id} item={entry} index={index} />
+            ))}
+          </InsetGroup>
+        </SurfaceContext.Provider>,
+      );
+      for (const index of items.keys()) {
+        const meta = host(root, `today-declaration-change-${index}`)[0]!;
+        // Two measured lines must grow the content, without a fixed row height.
+        act(() =>
+          meta.props.onLayout({
+            nativeEvent: { layout: { x: 0, y: 100, width: 240, height: 40 } },
+          }),
+        );
+        const row = host(root, `today-declaration-${index}`)[0]!;
+        const pressable = row.find(
+          (node) =>
+            node.type === 'View' &&
+            node.props.accessible === false &&
+            node.props.accessibilityRole === 'link',
+        );
+        const style = StyleSheet.flatten(pressable.props.style);
+        expect(style.paddingVertical).toBe(rhythm.row);
+        expect(style.height).toBeUndefined();
+        expect(style.maxHeight).toBeUndefined();
+        expect(StyleSheet.flatten(meta.props.style).minHeight).toBe(41);
+        expect(meta.props.numberOfLines).toBeUndefined();
+      }
     },
   );
   test('a long entry shows its opening, cut at a word, in the record’s words', () => {

@@ -183,6 +183,12 @@ test('Today holds, crossfades and stops its actual frame callback at each visibi
     expect(drive()).toBe(true);
     scroll.value = 90;
     expect(drive()).toBe(false);
+    const fadedPosition = StyleSheet.flatten(art().props.style).transform;
+    scroll.value = 10000;
+    expect(StyleSheet.flatten(art().props.style).transform).toEqual(
+      fadedPosition,
+    );
+    expect(drive()).toBe(false);
     scroll.value = 40;
     expect(drive()).toBe(true);
     expect(StyleSheet.flatten(art().props.style).transform).toEqual([
