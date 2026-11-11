@@ -20,6 +20,10 @@ import { files, pinned, servedFiles } from './pinned';
 let child: ChildProcess;
 let output = '';
 let port = 0; // Each unit-test fixture reserves its own loopback port atomically.
+// Concurrent mobile lanes can spend most of 15 seconds loading the fixture.
+// Give process readiness headroom; HTTP limits and response assertions stay fixed.
+const fixtureStartupTimeout = 30_000;
+const fixtureTestTimeout = 40_000;
 // HTTP completion and the child process's stderr pipe are independent. Wait
 // for the actual refusal log rather than assuming it reached Jest first.
 function waitForOutput(expected: string): Promise<void> {
@@ -85,7 +89,7 @@ beforeAll(async () => {
   await new Promise<void>((resolve, reject) => {
     const timer = setTimeout(
       () => reject(new Error('Fixture startup timeout')),
-      15000,
+      fixtureStartupTimeout,
     );
     const receive = (chunk: Buffer) => {
       output += chunk.toString();
@@ -104,7 +108,7 @@ beforeAll(async () => {
       reject(new Error(`Fixture exited ${code}: ${output}`));
     });
   });
-}, 20000);
+}, fixtureTestTimeout);
 afterAll(async () => {
   if (child && child.exitCode === null) {
     await new Promise<void>((resolve) => {
@@ -354,7 +358,7 @@ function startFixture(
   const ready = new Promise<void>((resolve, reject) => {
     const timer = setTimeout(
       () => reject(new Error('Fixture startup timeout')),
-      15000,
+      fixtureStartupTimeout,
     );
     const receive = (chunk: Buffer) => {
       log += chunk.toString();
@@ -437,14 +441,14 @@ test('Android opts into only its emulator host alias and keeps the path boundary
   } finally {
     await fixture.stop();
   }
-}, 20000);
+}, fixtureTestTimeout);
 
 describe('the no-edition fixture', () => {
   let fixture: ReturnType<typeof startFixture>;
   beforeAll(() => {
     fixture = startFixture('absent');
     return fixture.ready;
-  }, 20000);
+  }, fixtureTestTimeout);
   afterAll(() => fixture?.stop());
   test('answers the edition as the Worker does when none is posted, without a boundary alarm', async () => {
     expect(fixture.log()).toContain('edition=absent');
@@ -468,7 +472,7 @@ describe('the withdrawn-edition fixture', () => {
   beforeAll(() => {
     fixture = startFixture('withdrawn');
     return fixture.ready;
-  }, 20000);
+  }, fixtureTestTimeout);
   afterAll(() => fixture?.stop());
   test('serves the edition until the app revalidates it, then 404s for good', async () => {
     expect(fixture.log()).toContain('edition=withdrawn');
@@ -498,7 +502,7 @@ test('the fixture refuses an unknown edition mode at startup', async () => {
   } finally {
     await fixture.stop();
   }
-}, 20000);
+}, fixtureTestTimeout);
 
 // Journey 26: the follows fixture moves one declaration and one bill stage.
 describe('the changed-data fixture', () => {
@@ -507,7 +511,7 @@ describe('the changed-data fixture', () => {
   beforeAll(() => {
     fixture = startFixture('pinned', 0, { OPAX_FIXTURE_DATA: 'changed' });
     return fixture.ready;
-  }, 20000);
+  }, fixtureTestTimeout);
   afterAll(() => fixture?.stop());
   test('serves pinned bytes with a long max-age until a revalidation, then the bumped catalogs', async () => {
     expect(fixture.log()).toContain('data=changed');
@@ -560,7 +564,7 @@ test('the fixture refuses an unknown data mode at startup', async () => {
   } finally {
     await fixture.stop();
   }
-}, 20000);
+}, fixtureTestTimeout);
 
 test('null-optional roster mode changes one field and preserves the People record', async () => {
   const fixture = startFixture('pinned', 0, {
@@ -587,7 +591,7 @@ test('null-optional roster mode changes one field and preserves the People recor
   } finally {
     await fixture.stop();
   }
-}, 20000);
+}, fixtureTestTimeout);
 
 test('the fixture refuses an unknown roster mode at startup', async () => {
   const fixture = startFixture('pinned', 0, { OPAX_FIXTURE_ROSTER: 'live' });
@@ -598,7 +602,7 @@ test('the fixture refuses an unknown roster mode at startup', async () => {
   } finally {
     await fixture.stop();
   }
-}, 20000);
+}, fixtureTestTimeout);
 
 test('search results open matching native excerpt resources and preserve related-speech fixtures', async () => {
   const response = await request(
