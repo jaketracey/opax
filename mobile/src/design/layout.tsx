@@ -221,12 +221,15 @@ export function Screen({
           testID={testID}
           style={[styles.screen, { backgroundColor: colors[ground] }]}
           contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
+          alwaysBounceVertical={Platform.OS === 'ios'}
           keyboardShouldPersistTaps="handled"
           automaticallyAdjustKeyboardInsets
           keyboardDismissMode="on-drag"
           refreshControl={refreshControl}
           contentContainerStyle={[
             styles.content,
+            // Blank space on short pages must accept drags and refresh pulls.
+            { flexGrow: 1 },
             content,
             regular ? { gap: rhythmRegular.section } : null,
           ]}
