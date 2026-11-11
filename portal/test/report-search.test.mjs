@@ -68,11 +68,13 @@ test('warm searches read catalogue assets only, with no report detail or dataset
   assert.ok(requests.filter(p => p.endsWith('/report-names.json')).length <= 1);
   assert.ok(Array.isArray((await find('constructor', {kind:'all'})).results));
 });
+// The body's words stay verbatim in the page's text; inline list runs are only set one to a line.
+const visible = html => html.replace(/<[^>]+>/g, '');
 test('record pages retain full numbered recommendations, findings labels, court context and source pages', () => {
   const royal = projected.find(r => r.detail.slug === 'royal-commission-cth-robodebt').detail;
   let html = renderReport(royal);
   for (const rec of royal.record.recommendations) {
-    assert.ok(html.includes(escapeHtml(rec.text)));
+    assert.ok(visible(html).includes(escapeHtml(rec.text)));
     assert.ok(html.includes('Recommendation ' + rec.number));
     assert.ok(html.includes('page ' + rec.cite.page));
   }
@@ -82,13 +84,23 @@ test('record pages retain full numbered recommendations, findings labels, court 
     assert.match(html, /Allegations are not findings/);
     assert.match(html, /not a finding that a person is guilty of a criminal offence/);
     for (const item of detail.record.findings) {
-      assert.ok(html.includes(escapeHtml(item.text)));
+      assert.ok(visible(html).includes(escapeHtml(item.text)));
       assert.ok(html.includes(escapeHtml(item.label)));
     }
   }
   const court = projected.find(r => r.detail.record.court_context?.length).detail;
   html = renderReport(court);
   for (const item of court.record.court_context) assert.ok(html.includes(escapeHtml(item.text)));
+});
+test('inline list runs are set one to a line without changing a character', () => {
+  const royal = structuredClone(projected.find(r => r.detail.slug === 'royal-commission-cth-robodebt').detail);
+  const words = 'Services Australia should: • avoid stigma • explain processes ◦ in plain language';
+  royal.record.recommendations = [{ number: '1.1', text: words, cite: { url: 'https://example.gov.au/r.pdf', page: 3 } }];
+  const html = renderReport(royal);
+  assert.equal((html.match(/class="rr-line"/g) || []).length, 2);
+  assert.equal((html.match(/class="rr-line rr-line-sub"/g) || []).length, 1);
+  assert.ok(visible(html).includes(escapeHtml(words)));
+  assert.match(html, /href="https:\/\/example\.gov\.au\/r\.pdf#page=3"[^>]*>Report, page 3</);
 });
 test('agency facts and annual disclosures retain labels, units and per-row official sources', () => {
   const agency = projected.find(r => r.detail.facts.length).detail;

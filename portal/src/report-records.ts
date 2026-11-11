@@ -78,6 +78,14 @@ function citeLink(raw: unknown, mainDocument = ''): string {
 }
 const citeLine = (raw: unknown, mainDocument = '') => { const a = citeLink(raw, mainDocument); return a ? `<p class="rr-cite-line">${a}</p>` : '' }
 const text = (value: unknown, cls = 'rr-record-text') => `<p class="${cls}">${esc(value)}</p>`
+/** A body's words with its inline list runs (" • item", " ◦ sub-item") set one to a
+ *  line. Every character stays: the spans only break the line, so the text with the
+ *  tags removed is the source text exactly. */
+function prose(value: unknown, cls: string): string {
+  const s = String(value ?? ''), runs = s.split(/(?= [•◦▪●] )/)
+  if (runs.length < 2) return `<p class="${cls}">${esc(s)}</p>`
+  return `<p class="${cls}">${esc(runs[0])}${runs.slice(1).map(x => `<span class="rr-line${/^ [◦▪]/.test(x) ? ' rr-line-sub' : ''}">${esc(x)}</span>`).join('')}</p>`
+}
 const notes = (values: unknown) => Array.isArray(values) && values.length ? `<ul class="rr-notes" role="list">${values.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''
 /** Key and value rows for the fields a record holds, keys in words. */
 function kv(pairs: [string, string][]): string {
@@ -128,8 +136,8 @@ function items(part: 'findings' | 'recommendations', r: ReportDetail, mainDocume
     const from = reports.length > 1 ? reports.find(d => d.key === item.report) : null
     const itemId = part === 'recommendations' && item.number != null ? `recommendation-${anchor(item.number)}` : `${part}-${i + 1}`
     const kind = part === 'findings' && item.kind ? `<span class="ui-status rr-kind">${esc(human(item.kind))}</span>` : ''
-    return `<li class="rr-item" id="${esc(itemId)}"><h3 class="rr-item-label">${esc(label)}</h3>${kind || from ? `<p class="rr-item-meta">${kind}${from ? `<span>${esc(from.title)}</span>` : ''}</p>` : ''}` +
-      `${text(item.text, 'rr-item-text')}${citeLine(item.cite, mainDocument)}` +
+    return `<li class="rr-item" id="${esc(itemId)}"><div class="rr-item-head"><h3 class="rr-item-label">${esc(label)}</h3>${kind}</div>${from ? `<p class="rr-item-meta">${esc(from.title)}</p>` : ''}` +
+      `${prose(item.text, 'rr-item-text')}${citeLine(item.cite, mainDocument)}` +
       (status ? `<div class="rr-status"><h4 class="rr-status-title">Government-published status</h4><p class="rr-status-value"><span class="ui-status">${esc(status.as_published)}</span></p>${kv([['Lead', esc(status.lead)], ['Updated', status.updated ? time(status.updated) : '']])}${citeLine(status.cite)}</div>` : '') + `</li>`
   }).join('')}</ol>` : text(empty)
   const jump = part === 'recommendations' && held.length > 12 && held.every(x => x.number != null)
@@ -166,6 +174,7 @@ const documentList = (docs: RecordRow[], mainDocument: string) => `<ul class="rr
 
 // ---- annual reports (Transparency Portal body-years)
 const TABLE_KIND: Record<string, string> = { kmp: 'Key management personnel', senior_executive_band: 'Senior executives', highly_paid_band: 'Other highly paid staff', consultancy: 'Consultancy contracts', non_consultancy: 'Non-consultancy contracts' }
+const LICENCE: Record<string, string> = { 'cc-by-4.0': 'CC BY 4.0', 'cc-by-3.0-au': 'CC BY 3.0 AU' }
 const PAY = ['base_salary', 'bonuses', 'other_benefits', 'superannuation', 'long_service_leave', 'other_long_term', 'termination', 'total']
 const CHECKS: Record<string, string> = { components_do_not_sum_to_total: 'As published, the parts do not add up to the total.' }
 function cell(row: RecordRow, key: string, numeric = true): string {
@@ -195,8 +204,8 @@ function annualTable(t: RecordRow): string {
     body = rows.map(x => `<tr><th scope="row">${esc(x.band)}</th>${cell(x, 'count')}${PAY.map(k => cell({ ...object(x.averages), as_published: object(object(x.as_published).averages) }, k)).join('')}${ref(x)}</tr>`).join('')
   } else {
     const amount = rows.some(x => x.expenditure_thousands != null) ? 'expenditure_thousands' : 'expenditure_dollars'
-    head = `<tr><th scope="col">Organisation</th><th scope="col">ABN</th><th scope="col" class="ui-num">Expenditure</th>${refHead}</tr>`
-    body = rows.map(x => `<tr><th scope="row">${esc(x.organisation)}${x.organisation_as_published && x.organisation_as_published !== x.organisation ? `<span class="rr-cell-note">As published: ${esc(x.organisation_as_published)}</span>` : ''}</th>${cell(x, 'abn', false)}${x.expenditure_as_published != null ? `<td class="ui-num">${esc(x.expenditure_as_published)}</td>` : cell(x, amount)}${ref(x)}</tr>`).join('')
+    head = `<tr><th scope="col">Organisation</th><th scope="col" class="ui-num">Expenditure${t.unit ? `<span class="rr-cell-note">${esc(t.unit)}</span>` : ''}</th>${refHead}</tr>`
+    body = rows.map(x => `<tr><th scope="row">${esc(x.organisation)}${x.organisation_as_published && x.organisation_as_published !== x.organisation ? `<span class="rr-cell-note">As published: ${esc(x.organisation_as_published)}</span>` : ''}${x.abn ? `<span class="rr-cell-note">ABN ${esc(x.abn)}</span>` : ''}</th>${x.expenditure_as_published != null ? `<td class="ui-num">${esc(x.expenditure_as_published)}</td>` : cell(x, amount)}${ref(x)}</tr>`).join('')
   }
   return `<div class="rr-table-scroll" role="region" aria-label="${esc(t.title)}" tabindex="0"><table class="ui-table rr-table"><thead>${head}</thead><tbody>${body}</tbody></table></div>`
 }
@@ -208,12 +217,12 @@ function annual(r: ReportDetail, parts: Part[]): Stat[] {
   const inc = object(h.income_statement)
   if (Object.keys(inc).length) {
     const unit = String(inc.unit || '')
-    const k = (n: unknown) => finite(n) ? (unit === "$'000" ? thousands(n) : figure(n)) : ''
-    if (finite(inc.total_expenses)) stats.push({ label: 'Total expenses', value: esc(k(inc.total_expenses)) })
+    const k = (n: unknown) => !finite(n) ? '' : unit === "$'000" ? `${esc(thousands(n))} <span class="rr-as-published">(${figure(n)} in $'000)</span>` : `${figure(n)} <span class="rr-as-published">(${esc(unit || 'unit not stated')})</span>`
+    if (finite(inc.total_expenses)) stats.push({ label: 'Total expenses', value: esc(unit === "$'000" ? thousands(inc.total_expenses) : figure(inc.total_expenses)) })
     blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">Income statement extract</h3>${kv([
       ['Total expenses', k(inc.total_expenses)], ['Employee benefits', k(inc.employee_benefits)], ['Suppliers', k(inc.suppliers)],
-      ['Revenue from government', k(inc.revenue_from_government)], ['Own-source income', k(inc.own_source_income)]].map(([a, b]) => [a, esc(b)]))}` +
-      `<p class="rr-figure-note">As published in ${esc(unit || 'the unit stated')}${inc.unit_basis ? `. Unit: ${esc(inc.unit_basis)}` : ''}. Rounded here for reading; ${[['total expenses', inc.total_expenses], ['employee benefits', inc.employee_benefits], ['suppliers', inc.suppliers], ['revenue from government', inc.revenue_from_government], ['own-source income', inc.own_source_income]].filter(([, v]) => finite(v)).map(([a, v]) => `${a} ${figure(v as number)}`).join(', ')}.</p>${tableLink(inc)}</div>`)
+      ['Revenue from government', k(inc.revenue_from_government)], ['Own-source income', k(inc.own_source_income)]])}` +
+      (inc.unit_basis ? `<p class="rr-figure-note">Unit: ${esc(inc.unit_basis)}.</p>` : '') + `${tableLink(inc)}</div>`)
   }
   const staff = [['Ongoing staff', object(h.ongoing_staff)], ['Non-ongoing staff', object(h.non_ongoing_staff)]] as const
   if (staff.some(([, v]) => finite(v.headcount))) {
@@ -235,7 +244,7 @@ function annual(r: ReportDetail, parts: Part[]): Stat[] {
     const meta = [plural(rows.length, 'row'), t.unit ? `Unit: ${t.unit}` : ''].filter(Boolean).join(' · ')
     return `<details class="ui-disclosure rr-table-block"${rows.length <= 8 ? ' open' : ''}><summary><span>${esc(t.title)}<span class="rr-summary-meta">${esc(meta)}</span></span></summary><div class="ui-disclosure-body">` +
       `<p class="rr-cite-line">${link(t.source_url, t.source_file ? `Data file: ${t.source_file}` : 'Source table on the Transparency Portal', 'rr-cite')}</p>` +
-      kv([['Unit', esc(t.unit)], ['Entity as published', t.entity_as_published && t.entity_as_published !== r.body ? esc(t.entity_as_published) : ''], ['Data file page', t.source_page ? link(t.source_page, host(String(t.source_page))) : ''], ['Licence', esc(t.licence)]]) +
+      kv([['Entity as published', t.entity_as_published && t.entity_as_published !== r.body ? esc(t.entity_as_published) : ''], ['Data file page', t.source_page ? link(t.source_page, host(String(t.source_page))) : ''], ['Licence', esc(LICENCE[String(t.licence)] || t.licence)]]) +
       annualTable(t) + `</div></details>`
   }).join('') : text('No disclosure tables are loaded for this body and year.') })
   return stats

@@ -52,7 +52,7 @@ test('official report page and API share the schema 1 record, independent of res
     assert.match(html,/href="https:\/\/opax.com.au\/report\/royal-commission-cth-robodebt"/);
     assert.match(html,/href="\/api\/report\/royal-commission-cth-robodebt"/);
     assert.doesNotMatch(html,/<script[^>]+src="\/(?:app|spa-entry|spa-shell)\.js/);
-    for(const rec of data.record.recommendations)assert.ok(html.includes(escapeHtml(rec.text)));
+    const text=html.replace(/<[^>]+>/g,'');for(const rec of data.record.recommendations)assert.ok(text.includes(escapeHtml(rec.text)));
   }
 });
 test('search-all returns official report rows for web and native API consumers',async()=>{
