@@ -4522,7 +4522,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
           prerender: prerenderBlock('Report not found', 'No report record is available at this address.', '') })
         return base({ title: record.title + ' · OPAX', description: record.snippet, ogType: 'article',
           canonical: `${SITE_ORIGIN}/report/${record.slug}`, trail: [{ label: 'Search', href: '/ask?view=search' }, { label: record.title }],
-          prerender: prerenderBlock(record.title, record.body, '') + renderReport(record) })
+          prerender: renderReport(record) })
       } catch {
         return base({ title: 'Report temporarily unavailable · OPAX', description: 'This report record is temporarily unavailable.', status: 503,
           prerender: prerenderBlock('Report temporarily unavailable', 'Please try again shortly.', '') })

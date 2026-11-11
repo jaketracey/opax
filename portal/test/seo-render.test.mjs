@@ -89,7 +89,7 @@ test('annual, agency and integrity report pages and JSON routes expose the same 
     const html=await get('/report/'+slug);
     assert.ok(html.includes(escapeHtml(record.title)));assert.ok(html.includes(escapeHtml(record.body)));
     assert.ok(html.includes(escapeHtml(record.citation.url)));
-    assert.ok(html.includes('Record snapshot: '+record.snapshot_at));
+    assert.ok(html.includes('Record snapshot: <time datetime="'+record.snapshot_at.replace(/^(\d{4})-?(\d{2})-?(\d{2}).*$/,'$1-$2-$3')+'">'),slug);
     assert.equal(record.schema,1);assert.equal(record.kind,'report');
     for(const key of ['record','publisher','caveats','facts','tables','headline','date_basis','year'])assert.ok(Object.hasOwn(record,key),key);
   }
