@@ -12174,13 +12174,13 @@ const FILTER_KIND_LABELS = {
   person: "Person", party: "Political party", donor: "Receipt source", receipt: "Political receipts",
   agency: "Government agency", supplier: "Supplier", contract: "Government contract", grant: "Grant", bill: "Bill", bill_text: "Bill text",
   interest: "Declared interest", expense: "Parliamentary expenses", pay: "Parliamentary pay", access: "Meeting or lobbying register",
-  campaigner: "Campaigner or associated entity", report: "Research report", 'audit report': "Audit report",
+  campaigner: "Campaigner or associated entity", report: "Report", 'audit report': "Audit report",
 };
 // A document kind narrows the search in hand: the query and filters travel
 // with it, so "Speeches" on a row is the same search, speeches only, rather
 // than an empty form. Dataset kinds go to their own hubs.
 function recordTypeHref(kind, q = "", f = {}) {
-  const roots = { electorate:'/subject/electorate', topic:'/subject/topic', instrument:'/instruments', sitting:'/sitting', estimates:'/estimates', video:'/video/senate', person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/money/contracts', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', report:'/reports', 'audit report':'/audit' };
+  const roots = { electorate:'/subject/electorate', topic:'/subject/topic', instrument:'/instruments', sitting:'/sitting', estimates:'/estimates', video:'/video/senate', person:'/subject/person', party:'/subject/party', donor:'/subject/donor', agency:'/subject/agency', supplier:'/subject/supplier', receipt:'/money/receipts', contract:'/money/contracts', grant:'/money/grants', bill:'/bills', bill_text:'/bills', interest:'/declared', campaigner:'/subject/campaigner', 'audit report':'/audit' };
   if (roots[kind]) return roots[kind];
   const p = new URLSearchParams();
   if (q) p.set("q", q);

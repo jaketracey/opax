@@ -36,6 +36,7 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
+import { readReport, renderReport } from './report-records'
 import { vicGiftsPage, vicGiftsReader, vicGiftsPersonBlock, vicGiftsResponse } from './vic-gifts'
 import { stateBillsPage, stateBillsReader } from './state-bills'
 import { governmentFinancePage, governmentFinanceReader } from './government-finance'
@@ -3873,6 +3874,7 @@ type SeoRoute =
   | { kind: 'sa-grants' }
   | { kind: 'act-invoices' }
   | { kind: 'audit'; id: string | null }
+  | { kind: 'source-report'; slug: string }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
   | { kind: 'index'; dir: DirectoryKind }
@@ -3919,6 +3921,10 @@ const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
   const path = url.pathname.replace(/\/+$/, '') || '/'
+  if (path.startsWith('/report/')) {
+    try { return { kind: 'source-report', slug: decodeURIComponent(path.slice('/report/'.length)) } }
+    catch { return { kind: 'source-report', slug: '' } }
+  }
   if (path === '/sitting' || path.startsWith('/sitting/')) return {kind:'hub',hub:'sitting',id:path === '/sitting' ? null : path.slice('/sitting/'.length)}
   if (path === '/vic-election-2026' || path.startsWith('/vic-election-2026/')) return {kind:'hub',hub:'vic-election',id:path === '/vic-election-2026' ? null : path.slice('/vic-election-2026/'.length)}
   if (path === '/estimates' || path.startsWith('/estimates/')) return {kind:'hub',hub:'estimates',id:path === '/estimates' ? null : path.slice('/estimates/'.length)}
@@ -4509,6 +4515,19 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   if ((route.kind === 'report' || route.kind === 'static' && route.page === 'reports') && !reportsEnabled(env.REPORTS_ENABLED)) route = { kind: 'notfound' }
 
   switch (route.kind) {
+    case 'source-report': {
+      try {
+        const record = await readReport(env.ASSETS, route.slug)
+        if (!record) return base({ title: 'Report not found · OPAX', description: 'No report record is available at this address.', status: 404,
+          prerender: prerenderBlock('Report not found', 'No report record is available at this address.', '') })
+        return base({ title: record.title + ' · OPAX', description: record.snippet, ogType: 'article',
+          canonical: `${SITE_ORIGIN}/report/${record.slug}`, trail: [{ label: 'Search', href: '/ask?view=search' }, { label: record.title }],
+          prerender: prerenderBlock(record.title, record.body, '') + renderReport(record) })
+      } catch {
+        return base({ title: 'Report temporarily unavailable · OPAX', description: 'This report record is temporarily unavailable.', status: 503,
+          prerender: prerenderBlock('Report temporarily unavailable', 'Please try again shortly.', '') })
+      }
+    }
     case 'hub': {
       if (route.hub === 'vic-election') {
         // ?place= is the seat finder: a search result, never indexed; its canonical is the hub.
@@ -5933,6 +5952,9 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (route.kind === 'notfound') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } })
+  if (route.kind === 'source-report') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/report-records.css">', { html: true }) } })
   if (route.kind === 'instruments' || route.kind === 'audit' || route.kind === 'budget') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('a[href^="/subject/person"]', { element(el) { el.remove() } })
@@ -7123,6 +7145,21 @@ export default {
     if (url.pathname === '/api/display-policy' && request.method === 'GET') return communityResponse(new Response(JSON.stringify({SA_HANSARD_FULL_TEXT:saFullText(env.SA_HANSARD_FULL_TEXT) ? 'true' : 'false'}), {headers:{'content-type':'application/json','cache-control':'no-store'}}))
     if (url.pathname === '/table-index' || url.pathname.startsWith('/table-index/')) return communityResponse(new Response(null, {status:404,headers:{'cache-control':'no-store','x-robots-tag':'noindex'}}))
     if (url.pathname.startsWith('/api/table/')) return communityResponse(await tableApi(request, env, ctx))
+    if (url.pathname.startsWith('/api/report/')) {
+      if (!['GET', 'HEAD'].includes(request.method)) return communityResponse(new Response(null, { status: 405, headers: { allow: 'GET, HEAD' } }))
+      let slug: string
+      try { slug = decodeURIComponent(url.pathname.slice('/api/report/'.length)) }
+      catch { return communityResponse(json({ error: 'Report not found' }, 404)) }
+      try {
+        const record = await readReport(env.ASSETS, slug)
+        const response = record ? json(record) : json({ error: 'Report not found' }, 404)
+        response.headers.set('cache-control', record ? 'public, max-age=300' : 'no-store')
+        return communityResponse(request.method === 'HEAD' ? new Response(null, response) : response)
+      } catch { return communityResponse(json({ error: 'Report record is temporarily unavailable' }, 503)) }
+    }
+    const reportRoute = matchSeoRoute(url)
+    if (reportRoute?.kind === 'source-report' && ['GET', 'HEAD'].includes(request.method))
+      return communityResponse(await serveSeoPage(reportRoute, url, request, env, ctx))
     // Public app adapters use this Worker's journal/assets, before any staging
     // proxy or general retrieval dispatch. No composition callback is supplied.
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))

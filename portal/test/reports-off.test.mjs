@@ -247,7 +247,7 @@ test('off: the app shell and the home page drop the reports-only copy and draw n
   assert.equal(app.published, false);
   assert.deepEqual(app.links, [], 'menus, sheet, footer and the restored panels');
   assert.equal(app.reportsOnly, 0, 'About copy and the Research reports search filter');
-  assert.equal(app.researchOption, false, 'no catalogue row has the report kind any more');
+  assert.equal(app.researchOption, true, 'official reports remain searchable while research essays are off');
   assert.equal(app.trail, 'Page not found');
   assert.equal(app.grants, 'Page not found');
   const home = await probe('/');
@@ -257,7 +257,7 @@ test('off: the app shell and the home page drop the reports-only copy and draw n
   const on = await probe('/about', ON);
   assert.equal(on.gates, 'vic-election reports');
   assert.deepEqual(on.links, ['/reports', ...SEVEN.map(s => `/reports/${s}`)].sort());
-  assert.equal(on.reportsOnly, 3);
+  assert.equal(on.reportsOnly, 2);
   assert.equal(on.researchOption, true);
   assert.equal(on.grants, 'Reports › Where community funding goes');
   const homeOn = await probe('/', ON);
@@ -268,7 +268,7 @@ test('off: search catalogue, sitemap, llms.txt and IndexNow carry no withheld re
   const manifest = JSON.parse(read('search-catalog/manifest.json'));
   const dir = new URL(`../public/search-catalog/${manifest.version}/`, import.meta.url);
   for (const file of readdirSync(dir)) assert.doesNotMatch(readFileSync(new URL(file, dir), 'utf8'), /"\/reports/, file);
-  assert.equal(manifest.counts.report, undefined, 'no row of the report kind');
+  assert.ok(manifest.counts.report > 0, 'official report records remain published');
   const crawl = new URL('../public/crawl/', import.meta.url);
   for (const file of ['sitemap.xml', ...readdirSync(new URL('sitemaps/', crawl)).map(f => 'sitemaps/' + f)]) {
     const xml = readFileSync(new URL(file, crawl), 'utf8');

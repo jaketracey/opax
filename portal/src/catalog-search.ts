@@ -6,6 +6,9 @@ export interface CatalogRecord {
   date?: string | null; dateLabel?: string; source?: string; url?: string; record_id?: string; score?: number; sort_date?: string
   /** The snippet carries model-written text (a bill's summary sentences). */
   machine?: boolean
+  report_type?: 'royal_commission' | 'integrity_report' | 'annual_report' | 'agency_report'
+  body?: string; jurisdiction?: string; year?: string | null
+  citation?: { url: string; document: string; page?: number }
 }
 type Meta = [string, number, number, string, string, string, string]
 /** meta-core.json: each record's kind (an index into `kinds`) and closing year, all an unfiltered search reads. */
@@ -15,7 +18,7 @@ interface CatalogMeta { length: number; kind(id: number): string; year(id: numbe
 // Filters that read more than a record's kind. Without any of them a search needs only
 // meta-core.json (2 MB) rather than meta.json (13 MB, about 38 MB once parsed).
 const FULL_META_FILTERS = ['state','party','speaker','topic','from','to']
-interface Manifest { version: string; count: number; counts: Record<string,number>; coverage: string; recordShardSize: number }
+interface Manifest { version: string; count: number; counts: Record<string,number>; coverage: string; recordShardSize: number; reportNames?: boolean }
 // Bounded isolate cache: metadata plus at most eight token partitions. Record
 // shards live only for their request, so browsing cannot grow memory forever.
 const cached = new Map<string, Promise<unknown>>()
@@ -91,6 +94,13 @@ async function rankCatalog(url: URL, assets: Fetcher, options: { anyTerms?: bool
     if(scores)for(let id=0;id<hits.length;id++)if(options.anyTerms || hits[id])hits[id]+=scores[id]
     scores=hits
     if(!count && !options.anyTerms)break
+  }
+  // A report named exactly by title, body or short name wins within its kind.
+  // This small precomputed lookup is parsed once per isolate, like token partitions.
+  if(scores && manifest.reportNames) {
+    const names=await asset<Record<string,number[]>>(assets,base+'report-names.json',true)
+    const key=[...terms].sort().join(' ')
+    for(const id of Object.hasOwn(names,key) ? names[key] : [])if(scores[id] && meta.kind(id)==='report')scores[id]+=1000
   }
   // Keep only the best 200 IDs in a min-heap. Broad words must not allocate
   // hundreds of thousands of Map entries or result objects per request.
