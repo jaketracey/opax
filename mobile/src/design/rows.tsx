@@ -20,6 +20,10 @@ import {
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { StatusCapsule } from './labels';
 import { PartyLabel, Portrait } from './people';
+import { isPartyLabel } from './party';
+import { partyRoute } from '../navigation/routes/people';
+import { router } from 'expo-router';
+import { partyFromCode } from '../features/bills/party-codes';
 import {
   RowLink,
   menuLeaves,
@@ -490,6 +494,20 @@ export function BillRow({
       }
       accessibilityHint={accessibilityHint}
       accessibilityState={selected !== undefined ? { selected } : undefined}
+      accessibilityActions={
+        affiliation && isPartyLabel(affiliation.party)
+          ? [
+              {
+                name: 'openParty',
+                label: `Open ${affiliation.party} party page`,
+              },
+            ]
+          : undefined
+      }
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'openParty' && affiliation?.party)
+          router.push(partyRoute(partyFromCode(affiliation.party)));
+      }}
       testID={testID}
       onPress={select ?? onPress}
       style={({ pressed }) => [
@@ -524,7 +542,12 @@ export function BillRow({
               </Text>
             ) : null}
             {affiliation ? (
-              <PartyLabel {...affiliation} linked={false} nested />
+              <PartyLabel
+                {...affiliation}
+                linked
+                nested
+                testID={testID && `${testID}-party`}
+              />
             ) : null}
           </View>
         ) : null}

@@ -5,6 +5,8 @@ import { Link, router } from 'expo-router';
 import { LinkRow, BillRow } from '../src/design/rows';
 import { Tile } from '../src/design/card';
 import { RowLink } from '../src/design/row-link';
+import { PartyLabel, PersonRow } from '../src/design/people';
+import { partyRoute, personRoute } from '../src/navigation/routes/people';
 
 jest.mock('../src/features/follows/store', () => ({
   useFollows: () => [],
@@ -149,6 +151,125 @@ function expectAccessibleLink(
 describe.each(['ios', 'android'] as const)('%s linking rows', (platform) => {
   beforeEach(() => {
     Platform.OS = platform;
+  });
+  test.each(['person', 'bill'])(
+    'a %s party name opens only the party, retaining the row accessibility action',
+    (kind) => {
+      const select = jest.fn();
+      const root = render(
+        kind === 'person' ? (
+          <PersonRow
+            name="Anthony Albanese"
+            party="ALP"
+            href={personRoute('anthony-albanese')}
+            select={select}
+            testID="record"
+          />
+        ) : (
+          <BillRow
+            title="Interactive Gambling Amendment Bill 2026"
+            status="Introduced"
+            meta={{ sponsor: 'Andrew Wilkie', party: 'ALP' }}
+            href="/bill/au-federal-interactive-gambling-amendment-2026"
+            select={select}
+            testID="record"
+          />
+        ),
+      );
+      const link = root
+        .findByType(PartyLabel)
+        .findAllByType(Text)
+        .find((node) => node.props.onPress)!;
+      expect(link.props).toMatchObject({
+        accessibilityRole: 'link',
+        accessibilityLabel: 'Open ALP party page',
+      });
+      let stopped = false;
+      act(() => {
+        link.props.onPress({
+          stopPropagation: () => {
+            stopped = true;
+          },
+        });
+        // Model the native bubbling boundary without running a simulator.
+        if (!stopped) pressable(root).props.onPress();
+      });
+      expect(stopped).toBe(true);
+      expect(select).not.toHaveBeenCalled();
+      expect(router.push).toHaveBeenCalledTimes(1);
+      expect(router.push).toHaveBeenCalledWith(partyRoute('Labor'));
+      const actionHost = hosts(root).find(
+        (node) => node.props.accessible && node.props.testID === 'record',
+      )!;
+      expect(actionHost.props.accessibilityActions).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ name: 'openParty' }),
+        ]),
+      );
+      jest.clearAllMocks();
+      act(() =>
+        actionHost.props.onAccessibilityAction({
+          nativeEvent: { actionName: 'openParty' },
+        }),
+      );
+      expect(router.push).toHaveBeenCalledWith(partyRoute('Labor'));
+    },
+  );
+
+  test('the previous party is a separate link and never opens the current party', () => {
+    const root = render(
+      <PersonRow
+        name="Barnaby Joyce"
+        party="One Nation"
+        formerly="Nationals"
+        href={personRoute('barnaby-joyce')}
+        testID="record"
+      />,
+    );
+    const previous = root
+      .findByType(PartyLabel)
+      .findAllByType(Text)
+      .find(
+        (node) => node.props.accessibilityLabel === 'Open Nationals party page',
+      )!;
+    const stopPropagation = jest.fn();
+    act(() => previous.props.onPress({ stopPropagation }));
+    expect(stopPropagation).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledWith(partyRoute('Nationals'));
+  });
+
+  test('a person without a profile link retains its grouped label and exposes the party action', () => {
+    const root = render(
+      <PersonRow
+        name="Mehreen Faruqi"
+        party="Greens"
+        detail="Sponsor"
+        testID="unlinked"
+      />,
+    );
+    const group = hosts(root).find((node) => node.props.testID === 'unlinked')!;
+    expect(group.props).toMatchObject({
+      accessible: true,
+      accessibilityLabel: 'Mehreen Faruqi, Greens, Sponsor',
+    });
+    expect(group.props.accessibilityRole).toBeUndefined();
+    const label = root
+      .findByType(PartyLabel)
+      .findAllByType(Text)
+      .find((node) => node.props.onPress)!;
+    const stopPropagation = jest.fn();
+    act(() => label.props.onPress({ stopPropagation }));
+    expect(stopPropagation).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledWith(partyRoute('Greens'));
+    jest.clearAllMocks();
+    act(() =>
+      group.props.onAccessibilityAction({
+        nativeEvent: { actionName: 'openParty' },
+      }),
+    );
+    expect(router.push).toHaveBeenCalledTimes(1);
+    expect(router.push).toHaveBeenCalledWith(partyRoute('Greens'));
   });
   test('a bill is one accessible link with its label and ID', () => {
     const root = render(
