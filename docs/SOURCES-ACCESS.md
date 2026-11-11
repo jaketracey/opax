@@ -147,6 +147,25 @@ location or electorate and no link to their GrantConnect page, so they appear on
 recipient and program pages but not in the largest-awards list, which lists only
 awards linked to their record.
 
+## Royal commission documents, 11 November 2026
+
+The royal commissions ingest (`parli/ingest/royal_commissions.py`) fetches only with
+the OPAXBot identity. These hosts refused it while the ingest was built and are
+recorded as gaps; the weekly refresh does not try them by any other route:
+royalcommission.gov.au and the per-commission Commonwealth hosts, ag.gov.au and other
+Commonwealth department hosts (connection reset or tarpit), pmc.gov.au (bot
+challenge), the NSW Parliament (HTTP 403), rcfv.com.au and royalcommission.vic.gov.au
+(connection reset). The IBAC site (ibac.vic.gov.au) answers HTTP 403, so IBAC reports
+come from the Parliament of Victoria's tabled copies.
+
+On 11 November 2026 the OPAX maintainer supplied nine publisher PDFs downloaded in a
+browser from the publishers' own sites (royalcommission.gov.au, wa.gov.au,
+health.qld.gov.au, act.gov.au, ffm.vic.gov.au, rcimcp.vic.gov.au), with a manifest of
+source URLs and SHA-256 checksums. They are recorded as "manual publisher download
+supplied by the OPAX maintainer, 11 Nov 2026", distinct from OPAXBot fetches, cited
+to the publisher's URL, kept outside git and never fetched by the refresh. No source
+setting changed. The list is in [royal commissions data](DATA-ROYAL-COMMISSIONS.md).
+
 ## Review correction and rollback
 
 The review correction removes the remaining contact-log browser path, tightens

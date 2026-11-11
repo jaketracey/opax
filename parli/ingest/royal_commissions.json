@@ -1,0 +1,986 @@
+{
+ "schema": 1,
+ "about": "Royal commissions and comparable public inquiries OPAX loads, the official documents each record is read from, and how numbered recommendations are cut from those documents. Every fact that is not a URL or a parsing rule carries a quote the build checks is verbatim on the cited page. Documents with source manual are publisher PDFs supplied by the OPAX maintainer for hosts that refuse OPAXBot; they are cited to the publisher's own URL and never fetched by the refresh.",
+ "gaps": [
+  "Commonwealth royal commission sites (royalcommission.gov.au and the per-commission hosts), the Attorney-General's Department, other Commonwealth department hosts and pmc.gov.au refused OPAXBot (connection reset, tarpit or bot challenge). Commonwealth reports load only where the Parliament of Victoria, the Treasury or a maintainer-supplied publisher copy serves them. Remaining Commonwealth royal commission volumes and releases are open: https://www.royalcommission.gov.au/reports",
+  "NSW Parliament refused OPAXBot (HTTP 403); no New South Wales commission is loaded. The NSW healthcare funding Special Commission of Inquiry is open: https://www.health.nsw.gov.au/Reports/Pages/special-commission-inquiry-funding.aspx",
+  "South Australia's Royal Commission into Domestic, Family and Sexual Violence and its implementation plan are not loaded: https://dhs.sa.gov.au/how-we-help/domestic-family-and-sexual-violence/royal-commission-into-domestic-family-and-sexual-violence",
+  "The full volumes of Tasmania's Commission of Inquiry into the Tasmanian Government's Responses to Child Sexual Abuse in Institutional Settings are not loaded: https://www.commissionofinquiry.tas.gov.au/report",
+  "The Victorian royal commission sites (rcfv.com.au, royalcommission.vic.gov.au) reset OPAXBot connections; Victorian reports load from the Parliament of Victoria's tabled copies.",
+  "Only Victoria's Royal Commission into Family Violence has a government-published, per-recommendation implementation status that OPAX reads. Other trackers (for example the Commonwealth's) are on hosts that refuse OPAXBot."
+ ],
+ "commissions": [
+  {
+   "id": "cth-antisemitism",
+   "name": "Royal Commission on Antisemitism and Social Cohesion",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Cth",
+   "documents": [
+    {
+     "key": "interim",
+     "kind": "interim_report",
+     "source": "parliament_vic",
+     "tabled_paper": 10157,
+     "files": "interim",
+     "recommendations": {
+      "count": 14,
+      "heading": "^Recommendation\\s+(\\d{1,2})\\s*\\.{5,}\\s*\\d*()()$",
+      "first_page": 18,
+      "last_page": 20
+     }
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2026-01-09",
+     "doc": "interim",
+     "page": 10,
+     "quote": "On 9 January 2026, the Governor-General signed the Letters Patent establishing this Royal Commission",
+     "instrument": "Letters Patent"
+    }
+   ],
+   "notes": [
+    "Recommendations 8 to 12 read, in the interim report's own words, \"This recommendation is contained in the confidential Interim Report.\""
+   ]
+  },
+  {
+   "id": "cth-defence-veteran-suicide",
+   "name": "Royal Commission into Defence and Veteran Suicide",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Cth",
+   "documents": [
+    {
+     "key": "final-volume-1",
+     "kind": "final_report",
+     "source": "manual",
+     "url": "https://www.royalcommission.gov.au/system/files/2024-09/dvsrc-final-report-volume-1.pdf",
+     "sha256": "5efee4f27059ed249c5b75bb28738dc315d8af315d0cb093c1a1130bc266e038",
+     "title": "Royal Commission into Defence and Veteran Suicide, Final Report, Volume 1: Executive summary and recommendations",
+     "document_kind": "final report volume 1, executive summary and recommendations",
+     "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+     "rights": "© Commonwealth of Australia 2024. With the exception of the Coat of Arms and where otherwise stated, all material presented in this publication is provided under a Creative Commons Attribution 4.0 International licence (imprint, page 2).",
+     "date": "2024-09-09",
+     "date_quote": "9 September 2024 Her Excellency the Honourable Ms Sam Mostyn AC",
+     "date_page": 7,
+     "recommendations": {
+      "count": 122,
+      "heading": "^Recommendation\\s+(\\d{1,3})\\s*:()().*$",
+      "title_size": 12.5,
+      "heading_size": 12.5,
+      "noise": [
+       "^\\((?:Chapter|Volume)\\s+\\d+[^)]*\\)?$"
+      ]
+     }
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2021-07-08",
+     "doc": "final-volume-1",
+     "page": 13,
+     "quote": "formally established by Letters Patent issued on 8 July 2021",
+     "instrument": "Letters Patent"
+    },
+    {
+     "field": "commissioner",
+     "value": "Mr Nick Kaldas APM",
+     "role": "Chair",
+     "doc": "final-volume-1",
+     "page": 7,
+     "quote": "Mr Nick Kaldas APM Chair The Hon James Douglas KC Commissioner Dr Peggy Brown AO Commissioner"
+    },
+    {
+     "field": "commissioner",
+     "value": "The Hon James Douglas KC",
+     "role": "Commissioner",
+     "doc": "final-volume-1",
+     "page": 7,
+     "quote": "Mr Nick Kaldas APM Chair The Hon James Douglas KC Commissioner Dr Peggy Brown AO Commissioner"
+    },
+    {
+     "field": "commissioner",
+     "value": "Dr Peggy Brown AO",
+     "role": "Commissioner",
+     "doc": "final-volume-1",
+     "page": 7,
+     "quote": "Mr Nick Kaldas APM Chair The Hon James Douglas KC Commissioner Dr Peggy Brown AO Commissioner"
+    }
+   ],
+   "gaps": [
+    "Only volume 1 of the final report is loaded. royalcommission.gov.au and the other Commonwealth royal commission hosts refuse OPAXBot, so the weekly refresh cannot re-read this document; it is a manual supplement and its record is carried forward unchanged where the PDF is absent."
+   ]
+  },
+  {
+   "id": "cth-robodebt",
+   "name": "Royal Commission into the Robodebt Scheme",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Cth",
+   "documents": [
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "manual",
+     "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+     "sha256": "9837ca00ecf7022694abb9eae1be57f49a8a791d4df8951339be282a2c76cf42",
+     "title": "Report of the Royal Commission into the Robodebt Scheme",
+     "document_kind": "full final report",
+     "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+     "rights": "© Commonwealth of Australia 2023. With the exception of the Coat of Arms and where otherwise stated, all material presented in this publication is provided under a Creative Commons Attribution 4.0 International licence (imprint, page 2).",
+     "date": "2023-07-07",
+     "date_quote": "7 July 2023 His Excellency General the Honourable David Hurley",
+     "date_page": 3,
+     "recommendations": {
+      "count": 56,
+      "heading": "^Recommendation\\s+(\\d{1,2}\\.\\d{1,2}):()().*$",
+      "first_page": 19,
+      "last_page": 32,
+      "title_size": 11.2,
+      "heading_size": 11.2
+     }
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2022-08-18",
+     "doc": "final",
+     "page": 11,
+     "quote": "established by Letters Patent on 18 August 2022",
+     "instrument": "Letters Patent"
+    },
+    {
+     "field": "commissioner",
+     "value": "Catherine Holmes AC SC",
+     "role": "Royal Commissioner",
+     "doc": "final",
+     "page": 3,
+     "quote": "Catherine Holmes AC SC Royal Commissioner"
+    }
+   ],
+   "notes": [
+    "The report's list of recommendations (page 19) speaks of 57 recommendations; 56 are numbered there. The other, in the report's closing observations, reads \"Section 34 of the Cth FOI Act should be repealed\" and has no number, so it is not loaded as a numbered recommendation."
+   ],
+   "gaps": [
+    "royalcommission.gov.au and the other Commonwealth royal commission hosts refuse OPAXBot, so the weekly refresh cannot re-read this document; it is a manual supplement and its record is carried forward unchanged where the PDF is absent."
+   ]
+  },
+  {
+   "id": "cth-disability",
+   "name": "Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Cth",
+   "documents": [
+    {
+     "key": "interim",
+     "kind": "interim_report",
+     "source": "parliament_vic",
+     "tabled_paper": 5078,
+     "files": "^$"
+    },
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 7599,
+     "files": "executive-summary",
+     "date": "2023-09-28",
+     "date_quote": "28 September 2023 His Excellency General the Honourable David Hurley",
+     "date_page": 5,
+     "recommendations": {
+      "count": 222,
+      "heading": "^Recommendation\\s+(\\d{1,2}\\.\\d{1,2})\\b()().*$",
+      "first_page": 213,
+      "title_size": 12.5,
+      "heading_size": 12.5
+     }
+    }
+   ],
+   "tracker": {
+    "kind": "vic_gov_pages",
+    "prefix": "disability-royalcommission-response",
+    "min_pages": 10,
+    "name": "Victorian Government response pages (Victoria's own response, listed as published pages)",
+    "url": "https://www.vic.gov.au/disability-royalcommission-response"
+   },
+   "facts": [
+    {
+     "field": "established",
+     "value": "2019-04-04",
+     "doc": "final",
+     "page": 5,
+     "quote": "In accordance with the letters patent issued on 4 April 2019",
+     "instrument": "letters patent"
+    }
+   ],
+   "notes": [
+    "Recommendation 7.12 ends without a full stop in the report."
+   ]
+  },
+  {
+   "id": "cth-natural-disasters",
+   "name": "Royal Commission into National Natural Disaster Arrangements",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Cth",
+   "documents": [
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 5052,
+     "files": "volume_1",
+     "recommendations": {
+      "count": 80,
+      "heading": "^Recommendation\\s+(\\d{1,2}\\.\\d{1,2})()\\s+(.*?)(?:\\s+\\d{2,3})?$",
+      "first_page": 34,
+      "last_page": 46,
+      "noise": [
+       "^Chapter \\d+\\b.*$",
+       "^\\d{1,3}$",
+       "^\\d{1,2} [A-Z][a-z].*$"
+      ]
+     }
+    }
+   ],
+   "notes": [
+    "Recommendations are read from the report's list of recommendations; each text begins with the recommendation's own heading."
+   ]
+  },
+  {
+   "id": "cth-financial-services",
+   "name": "Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Cth",
+   "documents": [
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "url",
+     "url": "https://treasury.gov.au/sites/default/files/2019-03/fsrc-volume1.pdf",
+     "title": "Final Report, Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry, Volume 1",
+     "date": "2019-02-01",
+     "date_quote": "1 February 2019 His Excellency General the Honourable Sir Peter Cosgrove",
+     "date_page": 3
+    },
+    {
+     "key": "response",
+     "kind": "government_response",
+     "source": "url",
+     "url": "https://treasury.gov.au/sites/default/files/2019-03/FSRC-Government-Response-1.pdf",
+     "title": "Restoring trust in Australia’s financial system: The Government response to the Royal Commission into Misconduct in the Banking, Superannuation and Financial Services Industry"
+    },
+    {
+     "key": "hub",
+     "kind": "implementation_progress",
+     "source": "url",
+     "url": "https://treasury.gov.au/policy-topics/banking-and-finance/fsrc"
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2017-12-14",
+     "doc": "final",
+     "page": 3,
+     "quote": "In accordance with the Letters Patent issued to me on 14 December 2017",
+     "instrument": "Letters Patent"
+    },
+    {
+     "field": "commissioner",
+     "value": "Kenneth M Hayne",
+     "role": "Commissioner",
+     "doc": "final",
+     "page": 3,
+     "quote": "Kenneth M Hayne Commissioner"
+    }
+   ],
+   "gaps": [
+    "Recommendations are not yet loaded from the final report: its list of recommendations is set out in a form OPAX does not yet read reliably."
+   ]
+  },
+  {
+   "id": "cth-trade-union",
+   "name": "Royal Commission into Trade Union Governance and Corruption",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Cth",
+   "documents": [
+    {
+     "key": "final-1",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 2248,
+     "files": "volume-1",
+     "date": "2015-12-28",
+     "date_quote": "28 December 2015 His Excellency General the Honourable Sir Peter Cosgrove",
+     "date_page": 9
+    },
+    {
+     "key": "final-2",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 2249,
+     "files": "volume-5"
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2014-03-13",
+     "doc": "final-1",
+     "page": 9,
+     "quote": "In accordance with the Letters Patent issued to me on 13 March 2014",
+     "instrument": "Letters Patent"
+    },
+    {
+     "field": "commissioner",
+     "value": "J D Heydon",
+     "role": "Commissioner",
+     "doc": "final-1",
+     "page": 9,
+     "quote": "J D Heydon Commissioner"
+    }
+   ]
+  },
+  {
+   "id": "cth-child-sexual-abuse",
+   "name": "Royal Commission into Institutional Responses to Child Sexual Abuse",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Cth",
+   "documents": [
+    {
+     "key": "interim",
+     "kind": "interim_report",
+     "source": "parliament_vic",
+     "tabled_paper": 1412,
+     "files": "volume-1",
+     "date": "2014-06-30",
+     "date_quote": "30 June 2014 His Excellency General the Honourable Sir Peter Cosgrove",
+     "date_page": 5
+    },
+    {
+     "key": "final-recommendations",
+     "kind": "final_report",
+     "source": "manual",
+     "url": "https://www.royalcommission.gov.au/system/files/2021-08/final_report_-_recommendations.pdf",
+     "sha256": "8a3f627e17fa02f73ddf3782e89abafb3126176e9a731174cec587f035112f4c",
+     "title": "Royal Commission into Institutional Responses to Child Sexual Abuse, Final Report: Recommendations",
+     "document_kind": "final report recommendations",
+     "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+     "rights": "The document carries no reuse notice. Its publisher's site (royalcommission.gov.au) refuses OPAXBot, so the site's copyright terms could not be read; OPAX quotes the recommendations with attribution and links to the publisher's copy.",
+     "recommendations": {
+      "count": 189,
+      "heading": "^Recommendation\\s+(\\d{1,2}\\.\\d{1,3})()()$",
+      "last_page": 62
+     }
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2013-01-11",
+     "doc": "interim",
+     "page": 5,
+     "quote": "In accordance with the Letters Patent issued on 11 January 2013",
+     "instrument": "Letters Patent"
+    }
+   ],
+   "notes": [
+    "The final report recommendations are loaded from the commission's recommendations volume (pages 3 to 62). Its pages 63 onwards restate the recommendations of the commission's earlier reports (Working With Children Checks, Redress and civil litigation, Criminal justice), which are not loaded."
+   ],
+   "gaps": [
+    "royalcommission.gov.au and the other Commonwealth royal commission hosts refuse OPAXBot, so the weekly refresh cannot re-read this document; it is a manual supplement and its record is carried forward unchanged where the PDF is absent."
+   ]
+  },
+  {
+   "id": "vic-major-infrastructure",
+   "name": "Royal Commission into the Integrity of Major Public and Civil Infrastructure Construction Projects in Victoria",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Vic",
+   "site": "https://www.rcimcp.vic.gov.au/",
+   "documents": [
+    {
+     "key": "transcript-2026-11-09",
+     "kind": "hearing_transcript",
+     "source": "manual",
+     "url": "https://www.rcimcp.vic.gov.au/sites/default/files/2026-11/Transcript-9-November-2026.pdf",
+     "sha256": "ea13842bcae34ebea89de8a7c61aacd58b9a334ba67683f88b316290cf99cb2a",
+     "title": "Public hearing transcript, Monday 9 November 2026 (Day 2)",
+     "document_kind": "public hearing transcript, 9 November 2026",
+     "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+     "rights": "Transcript produced by Epiq for the Royal Commission; the document carries no reuse notice. OPAX links to the publisher's copy and does not reproduce evidence.",
+     "page": "https://www.rcimcp.vic.gov.au/hearing-block-1-9-20-november-2026",
+     "date": "2026-11-09",
+     "date_quote": "On Monday, 9 November 2026 at 10.00 am",
+     "date_page": 1,
+     "hearing": "Hearing block 1, 9 to 20 November 2026"
+    },
+    {
+     "key": "transcript-2026-11-10",
+     "kind": "hearing_transcript",
+     "source": "manual",
+     "url": "https://www.rcimcp.vic.gov.au/sites/default/files/2026-11/Transcript-10-November-2026.pdf",
+     "sha256": "152303f88aeb6cf2773f296ea0234548fea04bb343e00f70f057d52f9cffb431",
+     "title": "Public hearing transcript, Tuesday 10 November 2026 (Day 3)",
+     "document_kind": "public hearing transcript, 10 November 2026",
+     "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+     "rights": "Transcript produced by Epiq for the Royal Commission; the document carries no reuse notice. OPAX links to the publisher's copy and does not reproduce evidence.",
+     "page": "https://www.rcimcp.vic.gov.au/hearing-block-1-9-20-november-2026",
+     "date": "2026-11-10",
+     "date_quote": "On Tuesday, 10 November 2026 at 10.00 am",
+     "date_page": 1,
+     "hearing": "Hearing block 1, 9 to 20 November 2026"
+    }
+   ],
+   "reference_pages": [
+    {
+     "url": "https://www.rcimcp.vic.gov.au/hearing-block-1-9-20-november-2026",
+     "title": "Hearing block 1: 9 to 20 November 2026"
+    }
+   ],
+   "facts": [
+    {
+     "field": "commissioner",
+     "value": "The Honourable Chris Kourakis AC SC",
+     "role": "Commissioner",
+     "doc": "transcript-2026-11-09",
+     "page": 1,
+     "quote": "Commissioner: The Honourable Chris Kourakis AC SC"
+    }
+   ],
+   "notes": [
+    "The commission is still sitting and has published no report. Hearing transcripts are evidence given to the commission, not findings; OPAX lists them as documents only and extracts nothing from them.",
+    "The commission's opening remarks on 9 November 2026 state \"Non-publication orders may be made\" (transcript page 30). OPAX does not reproduce evidence and follows any such orders by linking only to the commission's published copy.",
+    "The Commissioner stated on 9 November 2026 (transcript page 33): \"The Letters Patent require the Commission to deliver its final report by 20 August 2027.\""
+   ],
+   "gaps": [
+    "The commission's letters patent are not loaded, so no establishment date is recorded. Transcripts are a manual supplement supplied by the OPAX maintainer; the refresh does not fetch the commission's site."
+   ]
+  },
+  {
+   "id": "vic-yoorrook",
+   "name": "Yoorrook Justice Commission",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Vic",
+   "documents": [
+    {
+     "key": "interim",
+     "kind": "interim_report",
+     "source": "parliament_vic",
+     "tabled_paper": 6523,
+     "files": "."
+    },
+    {
+     "key": "justice",
+     "kind": "interim_report",
+     "source": "parliament_vic",
+     "tabled_paper": 7455,
+     "files": "."
+    },
+    {
+     "key": "transformation",
+     "kind": "interim_report",
+     "source": "parliament_vic",
+     "tabled_paper": 9287,
+     "files": "summaryreport",
+     "date": "2025-06-18",
+     "date_quote": "18 June 2025 Your Excellency, Ms Murray and Mr Berg",
+     "date_page": 3,
+     "recommendations": {
+      "count": 100,
+      "noise": [
+       "^Chapter \\d+: .+$",
+       "^Urgent reforms\\b.*$",
+       "^Endnotes$"
+      ]
+     }
+    },
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 9333,
+     "files": "^$"
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2021-05-12",
+     "doc": "interim",
+     "page": 2,
+     "quote": "In accordance with the Letters Patent dated 12 May 2021",
+     "instrument": "Letters Patent"
+    }
+   ],
+   "notes": [
+    "Recommendations of the first two interim reports and the final report are not loaded: their layout could not be read reliably into numbered recommendations."
+   ]
+  },
+  {
+   "id": "vic-casino-operator",
+   "name": "Royal Commission into the Casino Operator and Licence",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Vic",
+   "documents": [
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 5835,
+     "files": ".",
+     "recommendations": {
+      "count": 33,
+      "heading": "^RECOMMENDATION\\s+(\\d{1,2}):()().*$",
+      "first_page": 27,
+      "last_page": 44,
+      "any_order": true,
+      "noise": [
+       "(?-i:^[^a-z]+$)"
+      ],
+      "max_chars": 8000
+     }
+    },
+    {
+     "key": "response-tabled",
+     "kind": "government_response",
+     "source": "parliament_vic",
+     "tabled_paper": 5838,
+     "files": "."
+    },
+    {
+     "key": "response",
+     "kind": "government_response",
+     "source": "url",
+     "url": "https://www.vic.gov.au/victorian-government-response-royal-commission-casino-operator-and-licence-report"
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2021-02-22",
+     "doc": "final",
+     "page": 6,
+     "quote": "In accordance with the Letters Patent dated 22 February 2021",
+     "instrument": "Letters Patent"
+    },
+    {
+     "field": "commissioner",
+     "value": "The Honourable Ray Finkelstein, AO, QC",
+     "role": "Commissioner",
+     "doc": "final",
+     "page": 6,
+     "quote": "Yours sincerely The Honourable Ray Finkelstein, AO, QC Commissioner"
+    }
+   ],
+   "notes": [
+    "The report lists its recommendations by topic rather than in number order; OPAX keeps the report's numbers."
+   ]
+  },
+  {
+   "id": "vic-mental-health",
+   "name": "Royal Commission into Victoria's Mental Health System",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Vic",
+   "documents": [
+    {
+     "key": "interim",
+     "kind": "interim_report",
+     "source": "parliament_vic",
+     "tabled_paper": 4631,
+     "files": "execsummary",
+     "recommendations": {
+      "count": 9
+     }
+    },
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 5420,
+     "files": "execsummary",
+     "recommendations": {
+      "count": 65
+     }
+    }
+   ]
+  },
+  {
+   "id": "vic-police-informants",
+   "name": "Royal Commission into the Management of Police Informants",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Vic",
+   "documents": [
+    {
+     "key": "progress-2019",
+     "kind": "progress_report",
+     "source": "parliament_vic",
+     "tabled_paper": 4249,
+     "files": "^$"
+    },
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 5102,
+     "files": "summary",
+     "recommendations": {
+      "count": 111,
+      "heading": "^R\\s*E\\s*C\\s*O\\s*M\\s*M\\s*E\\s*N\\s*D\\s*A\\s*T\\s*I\\s*O\\s*N\\s+((?:\\d\\s*){1,3})()()$"
+     }
+    },
+    {
+     "key": "response",
+     "kind": "government_response",
+     "source": "url",
+     "url": "https://www.vic.gov.au/royal-commission-management-police-informants-victorian-government-response-and-implementation-plan"
+    },
+    {
+     "key": "progress-2020-21",
+     "kind": "implementation_progress",
+     "source": "parliament_vic",
+     "tabled_paper": 6193,
+     "files": "^$"
+    },
+    {
+     "key": "progress-2021-22",
+     "kind": "implementation_progress",
+     "source": "parliament_vic",
+     "tabled_paper": 6816,
+     "files": "^$"
+    },
+    {
+     "key": "progress-2022-23",
+     "kind": "implementation_progress",
+     "source": "parliament_vic",
+     "tabled_paper": 7935,
+     "files": "^$"
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2018-12-13",
+     "doc": "final",
+     "page": 6,
+     "quote": "The Victorian Government established the Royal Commission on 13 December 2018"
+    }
+   ]
+  },
+  {
+   "id": "vic-family-violence",
+   "name": "Royal Commission into Family Violence",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Vic",
+   "documents": [
+    {
+     "key": "report-1",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 2291,
+     "files": "summaryrecommendations",
+     "recommendations": {
+      "count": 227
+     }
+    },
+    {
+     "key": "report-2",
+     "kind": "final_report",
+     "source": "parliament_vic",
+     "tabled_paper": 2292,
+     "files": "^$"
+    }
+   ],
+   "tracker": {
+    "kind": "vic_gov_pages",
+    "prefix": "family-violence-recommendations",
+    "min_pages": 220,
+    "format": "fv_status",
+    "report": "report-1",
+    "min_matched": 200,
+    "name": "Victorian Government, Family violence recommendations (implementation status)",
+    "url": "https://www.vic.gov.au/family-violence-recommendations"
+   },
+   "notes": [
+    "The 227 recommendations are loaded from the summary and recommendations volume tabled with Part 1 of the report; the report's other volumes set out the same recommendations chapter by chapter."
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2015-02-22",
+     "doc": "report-1",
+     "page": 9,
+     "quote": "resulted in the establishment of this Royal Commission into Family Violence on 22 February 2015"
+    },
+    {
+     "field": "commissioner",
+     "value": "The Hon. Marcia Neave AO",
+     "role": "Commissioner",
+     "doc": "report-1",
+     "page": 3,
+     "quote": "The Hon. Marcia Neave AO – Commissioner Patricia Faulkner AO – Deputy Commissioner Tony Nicholson – Deputy Commissioner"
+    },
+    {
+     "field": "commissioner",
+     "value": "Patricia Faulkner AO",
+     "role": "Deputy Commissioner",
+     "doc": "report-1",
+     "page": 3,
+     "quote": "The Hon. Marcia Neave AO – Commissioner Patricia Faulkner AO – Deputy Commissioner Tony Nicholson – Deputy Commissioner"
+    },
+    {
+     "field": "commissioner",
+     "value": "Tony Nicholson",
+     "role": "Deputy Commissioner",
+     "doc": "report-1",
+     "page": 3,
+     "quote": "The Hon. Marcia Neave AO – Commissioner Patricia Faulkner AO – Deputy Commissioner Tony Nicholson – Deputy Commissioner"
+    }
+   ]
+  },
+  {
+   "id": "vic-bushfires-2009",
+   "name": "2009 Victorian Bushfires Royal Commission",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "Vic",
+   "documents": [
+    {
+     "key": "final-summary",
+     "kind": "final_report",
+     "source": "manual",
+     "url": "https://www.ffm.vic.gov.au/__data/assets/pdf_file/0018/531225/Final-2009-Victorian-Bushfires-Royal-Commission-report.pdf",
+     "sha256": "a58888e40660967c293bb7562d8b23afd480127546fe66ecfff8483feae68413",
+     "title": "2009 Victorian Bushfires Royal Commission, Final Report: Summary",
+     "document_kind": "final report summary",
+     "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+     "rights": "Published by the Parliament of Victoria (imprint, page 4); the document carries no reuse notice. OPAX quotes the recommendations with attribution and links to the publisher's copy.",
+     "recommendations": {
+      "count": 67,
+      "heading": "^RECOMMENDATION\\s+(\\d{1,2})()()$",
+      "first_page": 33
+     }
+    },
+    {
+     "key": "monitor-final",
+     "kind": "implementation_progress",
+     "source": "parliament_vic",
+     "tabled_paper": 139,
+     "files": "^$"
+    },
+    {
+     "key": "monitor-2013",
+     "kind": "implementation_progress",
+     "source": "parliament_vic",
+     "tabled_paper": 677,
+     "files": "^$"
+    },
+    {
+     "key": "monitor-2014",
+     "kind": "implementation_progress",
+     "source": "parliament_vic",
+     "tabled_paper": 1386,
+     "files": "^$"
+    },
+    {
+     "key": "igem-2015",
+     "kind": "implementation_progress",
+     "source": "parliament_vic",
+     "tabled_paper": 2087,
+     "files": "^$"
+    },
+    {
+     "key": "igem-2016",
+     "kind": "implementation_progress",
+     "source": "parliament_vic",
+     "tabled_paper": 2825,
+     "files": "^$"
+    }
+   ],
+   "facts": [
+    {
+     "field": "established",
+     "value": "2009-02-16",
+     "doc": "final-summary",
+     "page": 11,
+     "quote": "issued the letters patent, setting out the Commission’s terms of reference, on 16 February 2009",
+     "instrument": "letters patent"
+    },
+    {
+     "field": "commissioner",
+     "value": "The Hon. Bernard Teague AO",
+     "role": "Chairperson",
+     "doc": "final-summary",
+     "page": 1,
+     "quote": "The Hon. Bernard Teague AO – ChairPERSON Ronald McLeod AM – Commissioner Susan Pascoe AM – Commissioner"
+    },
+    {
+     "field": "commissioner",
+     "value": "Ronald McLeod AM",
+     "role": "Commissioner",
+     "doc": "final-summary",
+     "page": 1,
+     "quote": "The Hon. Bernard Teague AO – ChairPERSON Ronald McLeod AM – Commissioner Susan Pascoe AM – Commissioner"
+    },
+    {
+     "field": "commissioner",
+     "value": "Susan Pascoe AM",
+     "role": "Commissioner",
+     "doc": "final-summary",
+     "page": 1,
+     "quote": "The Hon. Bernard Teague AO – ChairPERSON Ronald McLeod AM – Commissioner Susan Pascoe AM – Commissioner"
+    }
+   ],
+   "notes": [
+    "The final report summary is dated July 2010 by its imprint (\"ORDERED TO BE PRINTED July 2010\"), with no day, so no report date is recorded."
+   ],
+   "gaps": [
+    "The final report summary is a manual supplement supplied by the OPAX maintainer; its record is carried forward unchanged where the PDF is absent."
+   ]
+  },
+  {
+   "id": "qld-forensic-dna",
+   "name": "Commission of Inquiry into Forensic DNA Testing in Queensland",
+   "inquiry_type": "commission_of_inquiry",
+   "jurisdiction": "Qld",
+   "documents": [
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "manual",
+     "url": "https://www.health.qld.gov.au/__data/assets/pdf_file/0036/1196685/final-report-coi-dna-testing-qld-dec-2022.pdf",
+     "sha256": "848610463c0724acbc16eaa757f820e1c3ca4a68dbda10c315c76ec3c8ecd2c5",
+     "title": "Final Report, Commission of Inquiry into Forensic DNA Testing in Queensland",
+     "document_kind": "commission of inquiry final report",
+     "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+     "rights": "The document carries no reuse notice; OPAX links to the publisher's copy.",
+     "date": "2022-12-13",
+     "date_quote": "Walter Sofronoff KC 13 December 2022",
+     "date_page": 1
+    }
+   ],
+   "facts": [
+    {
+     "field": "commissioner",
+     "value": "Walter Sofronoff KC",
+     "role": "Commissioner",
+     "doc": "final",
+     "page": 2,
+     "quote": "Walter Sofronoff KC Commissioner Commission of Inquiry into Forensic DNA Testing in Queensland"
+    }
+   ],
+   "notes": [
+    "A commission of inquiry under Queensland's Commissions of Inquiry Act 1950, not a royal commission; listed here as a comparable public inquiry."
+   ],
+   "gaps": [
+    "Recommendations are not yet loaded from this report. The report is a manual supplement supplied by the OPAX maintainer."
+   ]
+  },
+  {
+   "id": "wa-perth-casino",
+   "name": "Perth Casino Royal Commission",
+   "inquiry_type": "royal_commission",
+   "jurisdiction": "WA",
+   "documents": [
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "manual",
+     "url": "https://www.wa.gov.au/system/files/2022-03/PCRC%20Final%20Report%20Digital_FINAL%20%28Master%29_0.pdf",
+     "sha256": "321e3003e3fd1df86d1f2966c9dd686fd886c4a871cfaf1bcffa63f0958c4cd9",
+     "title": "Perth Casino Royal Commission, Final Report",
+     "document_kind": "final report",
+     "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+     "rights": "© Government of Western Australia. Copyright in this document is reserved to the Government for the State of Western Australia. Reproduction of this document (or part thereof, in any format) is prohibited except with the prior written consent of the Perth Casino Royal Commission or the Department of Premier and Cabinet or as permitted by the Copyright Act 1968 (Cth) (imprint, page 2). OPAX links to the publisher's copy and does not reproduce the report.",
+     "date": "2022-03-04",
+     "date_quote": "4 March 2022 The Honourable Kim Beazley AC",
+     "date_page": 4
+    }
+   ],
+   "facts": [
+    {
+     "field": "commissioner",
+     "value": "NJ Owen",
+     "role": "Commissioner",
+     "doc": "final",
+     "page": 13,
+     "quote": "Commissioner NJ Owen Commissioner CF Jenkins Commissioner CP Murphy"
+    },
+    {
+     "field": "commissioner",
+     "value": "CF Jenkins",
+     "role": "Commissioner",
+     "doc": "final",
+     "page": 13,
+     "quote": "Commissioner NJ Owen Commissioner CF Jenkins Commissioner CP Murphy"
+    },
+    {
+     "field": "commissioner",
+     "value": "CP Murphy",
+     "role": "Commissioner",
+     "doc": "final",
+     "page": 13,
+     "quote": "Commissioner NJ Owen Commissioner CF Jenkins Commissioner CP Murphy"
+    }
+   ],
+   "gaps": [
+    "Recommendations are not loaded: the report reserves reproduction, so OPAX lists the report and links to it. The report is a manual supplement supplied by the OPAX maintainer."
+   ]
+  },
+  {
+   "id": "act-criminal-justice",
+   "name": "Board of Inquiry into the Criminal Justice System",
+   "inquiry_type": "board_of_inquiry",
+   "jurisdiction": "ACT",
+   "documents": [
+    {
+     "key": "final",
+     "kind": "final_report",
+     "source": "manual",
+     "url": "https://www.act.gov.au/__data/assets/pdf_file/0020/2570060/ACT-Board-of-Inquiry-Criminal-justice-System-Final-Report.pdf",
+     "sha256": "5b65a5abef0a8ee96119b06519a466373fbdf432d142117e4e1a554953208546",
+     "title": "Final Report, Board of Inquiry: Criminal Justice System",
+     "document_kind": "board of inquiry final report",
+     "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+     "rights": "© Australian Capital Territory, Canberra 2023. This work is subject to copyright. Apart from any use permitted under the Copyright Act 1968, no part may be reproduced by any process without written permission from the Territory Records Office (imprint, page 2). OPAX links to the publisher's copy and does not reproduce the report.",
+     "page": "https://www.act.gov.au/open/board-of-inquiry-into-the-criminal-justice-system",
+     "date": "2023-07-31",
+     "date_quote": "31 July 2023 Mr Andrew Barr MLA",
+     "date_page": 3
+    }
+   ],
+   "reference_pages": [
+    {
+     "url": "https://www.act.gov.au/open/board-of-inquiry-into-the-criminal-justice-system",
+     "title": "ACT Government, Board of Inquiry into the Criminal Justice System",
+     "fetch": true
+    }
+   ],
+   "court_context": [
+    {
+     "url": "https://www.act.gov.au/open/board-of-inquiry-into-the-criminal-justice-system",
+     "document": "ACT Government, Board of Inquiry into the Criminal Justice System",
+     "applies_to": "final",
+     "quote": "On 4 March 2024, the ACT Supreme Court handed down its judgment in Drumgold v Board of Inquiry & Ors (No. 3) , which decided an application by Mr Drumgold for judicial review of findings of the Final Report of the Board of Inquiry – Criminal Justice System, dated 31 July 2023 that were adverse to him. Following that judgment, the Court made orders including three declarations favourable to Mr Drumgold in relation to findings adverse to him set out in Chapters 4, 5 and 6 of the Final Report."
+    }
+   ],
+   "facts": [
+    {
+     "field": "commissioner",
+     "value": "Walter Sofronoff KC",
+     "role": "Chair",
+     "doc": "final",
+     "page": 3,
+     "quote": "Walter Sofronoff KC Chair Board of Inquiry – Criminal Justice System"
+    }
+   ],
+   "notes": [
+    "A board of inquiry under the Inquiries Act 1991 (ACT), not a royal commission; listed here as a comparable public inquiry.",
+    "The ACT Supreme Court has ruled on findings in Chapters 4, 5 and 6 of the final report (see court_context). OPAX presents no finding from this report without that context.",
+    "The ACT Government page linked as a reference also records later matters concerning the Inquiry; read it there."
+   ],
+   "gaps": [
+    "Recommendations and findings are not loaded from this report. The report is a manual supplement supplied by the OPAX maintainer; the ACT Government page is fetched by OPAXBot."
+   ]
+  }
+ ]
+}
