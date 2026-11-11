@@ -28,6 +28,7 @@ import { tool as divisionTool } from './division'
 import { tool as corpusTool } from './corpus-records'
 import { validWindow } from './published-records'
 import { personService } from '../person-service'
+import { countedMember, type CountedMember } from '../ask-member-label'
 
 export const TOPICS = [
   'gambling', 'financial-services', 'mining-energy', 'climate-environment', 'property-construction', 'housing', 'health',
@@ -225,7 +226,14 @@ export async function countSpeeches(deps: ToolDeps, input: CountInput): Promise<
     method = `exact window counts for the top ${k} ${group === 'speaker' ? 'speakers' : 'parties'} by decade`
   }
   const total = await countOne(deps, f)
-  const top = rows.filter((r) => r.count > 0).slice(0, limit)
+  const top: { name: string; count: number; member?: CountedMember }[] = rows.filter((r) => r.count > 0).slice(0, limit)
+  if (group === 'speaker') {
+    const roster = await deps.asset('/parliamentarians.json').catch(() => null)
+    for (const row of top) {
+      const member = countedMember(row.name, roster, f.chamber)
+      if (member) row.member = member
+    }
+  }
   if (!exact) notes.push('The date-window candidate bound does not prove the complete ranking; these are counts for the leading decade candidates.')
   const cite: Cite[] = top.map((r) => ({
     kind: 'count', label: `${describe({ ...f, ...(group === 'speaker' ? { speaker: r.name } : { party: r.name }) })}`, value: r.count,

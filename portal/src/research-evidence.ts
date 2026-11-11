@@ -6,6 +6,7 @@ import { claimMatchesSpeaker, personMentions } from './ask-attribution'
 import { withoutSaPlaceholder } from '../public/sa-hansard.js'
 import type { Passage, QualitativeAnswer } from './research-types'
 import {isPlaceNameMention} from './ask-person-slot'
+import { broadTopicOverview } from './ask-answer-grain'
 
 export interface AnswerCitation { id: string; quote: string; start: number; end: number }
 export interface AnswerDraft { text: string; citations: AnswerCitation[] }
@@ -128,6 +129,10 @@ export function claimAttributionOk(claim: string, speaker: string | undefined, r
 /** The claim's speaking subject is rewritten to the cited passage's speaker. Quoted words put in another named
  * person's mouth are not rewritten: the point is dropped. */
 export function repairAttribution(claim: string, speaker: string | undefined, roster: unknown, note: (label: string) => void): string | null {
+  if (speaker?.trim() && /^(?:(?:In|On|At|During) [^,]{1,60},? )?[Aa] speaker\b/.test(claim)) {
+    claim = claim.replace(/\b[Aa] speaker\b/, speaker.trim())
+    note('speaker_named')
+  }
   if (claimAttributionOk(claim, speaker, roster)) return claim
   const self = normaliseQuestion(speaker ?? '')
   const others = personMentions(claim, roster).filter(m => normaliseQuestion(m.name) !== self).sort((a, b) => a.start - b.start)
@@ -342,6 +347,7 @@ export function verifyResearchPoints(points: unknown, passages: Map<string, Pass
     const party = repairParty(claim, speaker, passage.party, note)
     if (party === null) soft ??= 'claim_party_mismatch'
     else claim = party
+    if (broadTopicOverview(question) && passage.kind === 'speech' && !speaker?.trim() && /\b(?:a speaker|a member|a senator|an? (?:unnamed|unidentified) (?:speaker|member|senator))\b/i.test(claim)) return drop('speaker_not_recorded')
     // A point repeating one already kept from the same passage adds nothing.
     const key = normal(claim).toLowerCase()
     if (seen.has(key)) return drop('duplicate')

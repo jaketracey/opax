@@ -156,7 +156,7 @@ test('the production refusal cannot be cached, and its question now can be',()=>
  assert.equal(api.cacheableRoutedAnswer(before,true),false)
  assert.equal(api.cacheableRoutedAnswer(api.groundAnswerPayload(api.proseFallback(moneyInput(gambling,'Labor')),gambling),true),true)
 })
-test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-21-depth-and-grain')})
+test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-22-ranking-wording')})
 
 // Review of 36bf23f48, each finding on its exact input. The rule: a generic refusal gives way to on-topic facts,
 // a specific limit stays first with the facts beside it, and typed decisions, causal asks and period guards are left alone.

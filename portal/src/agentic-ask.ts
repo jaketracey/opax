@@ -10,6 +10,7 @@ import { isRecordCountQuestion } from './ask-scope-intent'
 import { requestedPersonSlot } from './ask-person-slot'
 import { resolvePersonName } from './person-name-matching'
 import { serviceText, type ServicePeriod } from './person-service'
+import { speechRankingGrain } from './ask-answer-grain'
 /**
  * OPAX-owned Ask orchestration in the Worker
  * (docs/design/agentic-ask-2026-10.md). /api/ask uses AGENTIC_ASK_MODE;
@@ -187,6 +188,7 @@ export function resolveArgs(args: Record<string, unknown>, results: ToolResult[]
 
 // ---------------------------------------------------------------- bound facts
 export interface Fact { id: number; text: string; cite: Cite; entities?: string[]
+  member?: import('./ask-member-label').CountedMember
   /** Rows of one ranking or trend share a lead line ("Chamber speeches labelled gambling since 2015, by year") and render as short rows. */
   group?: string; row?: string
   /** Counting basis of a speech count (chamber, committee or all): one answer shows one basis. */
@@ -210,7 +212,7 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
   const facts: Fact[] = []
   const notes = new Set<string>()
   let entities: string[] = []
-  const add = (text: string, cite: Cite, bound = entities, layout: Pick<Fact, 'group' | 'row' | 'basis' | 'receipt'> = {}) => facts.push({ id: facts.length + 1, text, cite, entities: bound, ...layout })
+  const add = (text: string, cite: Cite, bound = entities, layout: Pick<Fact, 'group' | 'row' | 'basis' | 'receipt' | 'member'> = {}) => facts.push({ id: facts.length + 1, text, cite, entities: bound, ...layout })
   for (const r of results) {
     if (!r.ok) continue
     r.notes.forEach((n) => notes.add(n))
@@ -237,10 +239,10 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
     } else if (getAskTool(r.tool) && getAskTool(r.tool)?.askFactStyle !== 'legacy') {
       r.cite.forEach(cite => add(cite.label, cite))
     } else if (r.tool === 'count_speeches') {
-      const rows = (d.rows as { name: string; count: number }[] | undefined)
+      const rows = (d.rows as { name: string; count: number; member?: Fact['member'] }[] | undefined)
       if (d.committeeSupplement && rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} committee-hearing turns`, r.cite[i]))
       else if (rows?.length) rows.forEach((row, i) => add(`${row.name}: ${row.count} ${d.described}`, r.cite[i], [...entities, `${d.group_by === 'party' ? 'party' : 'person'}:${row.name}`],
-        { group: countLead(filter, d.group_by === 'party' ? 'party' : 'speaker'), row: `${row.name}: ${n(row.count)}`, basis: String(filter.venue ?? 'chamber') }))
+        { group: countLead(filter, d.group_by === 'party' ? 'party' : 'speaker'), row: `${row.name}: ${n(row.count)}`, basis: String(filter.venue ?? 'chamber'), ...(row.member ? { member: row.member } : {}) }))
       else if (d.unanswerable) notes.add('The record cannot rank these speeches by party.')
       else if ((!Array.isArray(rows) || !['speaker', 'party'].includes(String(d.group_by))) && typeof d.total === 'number' && r.cite[0]) add(`${d.total} ${d.described}`, r.cite[0], entities, { basis: String(filter.venue ?? 'chamber') })
     } else if (r.tool === 'speech_trend') {
@@ -506,7 +508,7 @@ export interface AgenticPayload {
   answer_source: 'model' | 'template' | 'none'
   shape: Plan['shape'] | null
   period: Period
-  facts: { id: number; text: string; url: string; kind: string; value?: number | string; receipt?: ReceiptFact; entities?: string[] }[]
+  facts: { id: number; text: string; url: string; kind: string; value?: number | string; receipt?: ReceiptFact; entities?: string[]; member?: Fact['member'] }[]
   notes: string[]
   steps: { tool: string; args: unknown; ok: boolean; error?: string; ms?: number; label?: string }[]
   events: StepEvent[]
@@ -607,7 +609,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
-    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind as Fact['cite']['kind'],url:f.url,label:f.text,value:f.value},...(f.receipt?{receipt:f.receipt}:{}),...(f.entities?.length?{entities:f.entities}:{})}))
+    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind as Fact['cite']['kind'],url:f.url,label:f.text,value:f.value},...(f.receipt?{receipt:f.receipt}:{}),...(f.entities?.length?{entities:f.entities}:{}),...(f.member?{member:f.member}:{})}))
     // Passage points have already been written and checked by the model; retain the 16 Oct loose-point contract.
     if (run.qualitative && !run.qualitative.sources.some(s=>!['speech','bill'].includes(s.kind))) return run
     const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
@@ -876,7 +878,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   timings.tools_ms = Date.now() - tTools
   const { facts } = factSheet(results)
   const { notes } = factSheet(researched ? results.filter(r => !['search', 'read_passage'].includes(r.tool)) : results)
-  const factOut = facts.map(f => ({ id: f.id, text: f.text, url: f.cite?.url ?? '', kind: f.cite?.kind ?? 'count', value: f.cite?.value, ...(f.receipt ? { receipt: f.receipt } : {}), ...(f.entities?.length ? { entities: f.entities } : {}) }))
+  const factOut = facts.map(f => ({ id: f.id, text: f.text, url: f.cite?.url ?? '', kind: f.cite?.kind ?? 'count', value: f.cite?.value, ...(f.receipt ? { receipt: f.receipt } : {}), ...(f.entities?.length ? { entities: f.entities } : {}), ...(f.member ? { member: f.member } : {}) }))
   if (!facts.length) return base({ reason: 'no_supported_claim', notes })
   await progress('status', { phase: 'writing' })
   const tCompose = Date.now()
@@ -885,7 +887,13 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   if (peakYear) mainFacts.sort((a, b) => Number(b.cite.value ?? 0) - Number(a.cite.value ?? 0))
   // Select deterministically before the writing stage. Figures, metric labels,
   // entities and counting basis remain attached to their original tool rows.
-  const chosen = oneBasis(researched ? mainFacts.filter(f => researched!.selected.includes(f.id)) : mainFacts)
+  let chosen = oneBasis(researched ? mainFacts.filter(f => researched!.selected.includes(f.id)) : mainFacts)
+  if (researched && speechRankingGrain(question) === 'speaker' && /\b(?:members|mps|senators|politicians|speakers)\b/i.test(question)) {
+    // Selecting a member ranking selects its ranked cohort, including surname-only rows.
+    // Complete only a selected lookup's exact scope and basis, never an unrelated exploratory count.
+    const anchor = chosen.find(f => f.group?.endsWith(', by speaker') && f.entities?.some(e => e.startsWith('person:')))
+    if (anchor) chosen = mainFacts.filter(f => f.group === anchor.group && f.basis === anchor.basis && f.entities?.some(e => e.startsWith('person:')))
+  }
   // The loop's finish already bounds its own selection (30 ids): a year-by-year trend keeps every year it chose.
   const selected = electorateData ? chosen : selectAnswerFacts(chosen, named, peakYear, researched ? 30 : 8)
   if (!selected?.length) return base({ reason: 'no_supported_claim' })
