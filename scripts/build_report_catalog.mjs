@@ -13,6 +13,16 @@ const codes = { Cth: 'federal', NSW: 'nsw', Vic: 'vic', Qld: 'qld', WA: 'wa', SA
 const abbreviate = name => String(name).split(/\s+/).filter(w => !/^(of|and|the|for|new|south|wales)$/i.test(w)).map(w => w[0]).join('');
 const cite = (url, document, extra = {}) => official(url) ? { url, document, ...extra } : null;
 
+/** An integrity report whose case has public hearing transcripts carries them as `transcripts.items` (additive),
+ * so the page and /api/report/<slug>/transcripts read the same rows. */
+async function withTranscripts(r, read) {
+  const t = r.transcripts;
+  if (!t?.file || !/^\/integrity-reports\/transcripts-[a-z-]+\.json$/.test(t.file)) return r;
+  const items = rows((await read(t.file)).transcripts).filter(x => x.case === t.case);
+  if (items.length !== t.count) throw new Error(`Transcript count mismatch for ${r.id}: ${items.length} against ${t.count}`);
+  return { ...r, transcripts: { ...t, items } };
+}
+
 /** Shared page/API projection. `record`, `facts`, `headline` and each table's
  * `rows` retain the dataset's values, labels, units, citations and status fields.
  * One annual_report record is one Commonwealth body and reporting year. */
@@ -47,7 +57,7 @@ export async function projectReports(read) {
   for (const b of integrity.bodies.filter(b => b.status === 'loaded')) {
     const file = await read(b.file || `/integrity-reports/reports-${b.code.replace(/_/g, '-')}.json`);
     for (const r of file.records) add('integrity_report', r.id, r.title, b.name, r.jurisdiction, r.date, r.date_basis,
-      r.period?.value || null, r.title, cite(r.pdf_url || r.page_url, r.title), r, integrity.meta, b);
+      r.period?.value || null, r.title, cite(r.pdf_url || r.page_url, r.title), await withTranscripts(r, read), integrity.meta, b);
   }
 
   const annual = await read('/annual-reports/index.json');

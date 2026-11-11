@@ -96,6 +96,22 @@ test('annual, agency and integrity report pages and JSON routes expose the same 
     for(const key of ['record','publisher','caveats','facts','tables','headline','date_basis','year'])assert.ok(Object.hasOwn(record,key),key);
   }
 });
+test('report transcripts API pages the same rows the page lists, newest first, with stable offsets',async()=>{
+  const fetchJson=async(path,status=200)=>{const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,status,path);return r.json();};
+  for(const [slug,total] of [['royal-commission-nsw-healthcare-funding',71],['royal-commission-cth-robodebt',47]]){
+    const keys=[];
+    for(let offset=0;offset!==null;){const page=await fetchJson(`/api/report/${slug}/transcripts?limit=20&offset=${offset}`);assert.equal(page.total,total);assert.equal(page.label,'Hearing transcript: evidence, not findings');keys.push(...page.items.map(i=>i.key));offset=page.next_offset;}
+    assert.equal(keys.length,total);assert.equal(new Set(keys).size,total);
+    const dates=(await fetchJson(`/api/report/${slug}/transcripts?limit=100`)).items.map(i=>i.date);assert.deepEqual(dates,[...dates].sort().reverse());
+    const past=await fetchJson(`/api/report/${slug}/transcripts?offset=500`);assert.equal(past.items.length,0);assert.equal(past.next_offset,null);assert.equal(past.total,total);
+  }
+  const last=await fetchJson('/api/report/royal-commission-nsw-healthcare-funding/transcripts?offset=60&limit=20');assert.equal(last.items.length,11);assert.equal(last.next_offset,null);
+  const index=await read('/integrity-reports/reports-qld-ccc.json');const belcarra=index.records.find(r=>r.transcripts?.case?.startsWith('Operation Belcarra'));
+  const ccc=await fetchJson(`/api/report/integrity-report-${belcarra.id}/transcripts?limit=5`);assert.equal(ccc.total,39);assert.ok(ccc.items.every(i=>i.case===belcarra.transcripts.case&&i.hearing_date&&/^https:\/\//.test(i.url)));
+  const none=await fetchJson('/api/report/integrity-report-'+(await read('/integrity-reports/index.json')).reports[0].id+'/transcripts');assert.equal(none.total,0);
+  await fetchJson('/api/report/royal-commission-cth-robodebt/transcripts?limit=0',400);await fetchJson('/api/report/royal-commission-cth-robodebt/transcripts?offset=-1',400);
+  await fetchJson('/api/report/royal-commission-unknown/transcripts',404);
+});
 const prerenderBody = html => html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</main>'));
 function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.doesNotMatch(html,/id="panel-ask"|id="panel-privacy"|Ask &amp; search the record/);const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1]);assert.ok(graph['@graph'].some(n=>n['@type']==='BreadcrumbList'));return graph['@graph'];}
 

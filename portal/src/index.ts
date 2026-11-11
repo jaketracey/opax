@@ -36,7 +36,7 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
-import { readReport, renderReport } from './report-records'
+import { readReport, renderReport, reportTranscriptPage } from './report-records'
 import { vicGiftsPage, vicGiftsReader, vicGiftsPersonBlock, vicGiftsResponse } from './vic-gifts'
 import { stateBillsPage, stateBillsReader } from './state-bills'
 import { governmentFinancePage, governmentFinanceReader } from './government-finance'
@@ -7145,6 +7145,19 @@ export default {
     if (url.pathname === '/api/display-policy' && request.method === 'GET') return communityResponse(new Response(JSON.stringify({SA_HANSARD_FULL_TEXT:saFullText(env.SA_HANSARD_FULL_TEXT) ? 'true' : 'false'}), {headers:{'content-type':'application/json','cache-control':'no-store'}}))
     if (url.pathname === '/table-index' || url.pathname.startsWith('/table-index/')) return communityResponse(new Response(null, {status:404,headers:{'cache-control':'no-store','x-robots-tag':'noindex'}}))
     if (url.pathname.startsWith('/api/table/')) return communityResponse(await tableApi(request, env, ctx))
+    if (url.pathname.startsWith('/api/report/') && url.pathname.endsWith('/transcripts')) {
+      if (!['GET', 'HEAD'].includes(request.method)) return communityResponse(new Response(null, { status: 405, headers: { allow: 'GET, HEAD' } }))
+      let slug: string
+      try { slug = decodeURIComponent(url.pathname.slice('/api/report/'.length, -'/transcripts'.length)) }
+      catch { return communityResponse(json({ error: 'Report not found' }, 404)) }
+      try {
+        const record = await readReport(env.ASSETS, slug)
+        const page = record ? reportTranscriptPage(record, url.searchParams) : null
+        const response = !record ? json({ error: 'Report not found' }, 404) : 'error' in page! ? json(page, 400) : json(page)
+        response.headers.set('cache-control', response.status === 200 ? 'public, max-age=300' : 'no-store')
+        return communityResponse(request.method === 'HEAD' ? new Response(null, response) : response)
+      } catch { return communityResponse(json({ error: 'Report record is temporarily unavailable' }, 503)) }
+    }
     if (url.pathname.startsWith('/api/report/')) {
       if (!['GET', 'HEAD'].includes(request.method)) return communityResponse(new Response(null, { status: 405, headers: { allow: 'GET, HEAD' } }))
       let slug: string
