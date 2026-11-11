@@ -62,9 +62,10 @@ test('captions carry no report control and name their speaker', () => {
   });
   expect(renderer.root.findAllByType(Button)).toHaveLength(0);
   expect(
-    renderer.root.findByProps({ testID: 'talk-turn-agent' }).props
-      .accessibilityLabel,
-  ).toBe('OPAX said First synthetic answer');
+    renderer.root.findByProps({
+      accessibilityLabel: 'OPAX said First synthetic answer',
+    }).props.children,
+  ).toBe('First synthetic answer');
   act(() => renderer.unmount());
 });
 

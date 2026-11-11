@@ -55,6 +55,8 @@ import {
 import { recordDestination } from './sources';
 import { useTalk } from './useTalk';
 import { AnswerCaption } from './AnswerCaption';
+import { workingCaption } from './caption-text';
+import { TranscriptEdge, TRANSCRIPT_EDGE_HEIGHT } from './TranscriptEdge';
 import { reportAnswer, reportChoices, type ReportAnswer } from './reportAnswer';
 import { VoiceOrb, type OrbPhase } from './VoiceOrb';
 import { useVoiceLevels } from './useVoiceLevels';
@@ -163,6 +165,8 @@ export default function TalkScreen({
             ? failureCopy[blocked]
             : null));
   const lastTurn = s.transcript[s.transcript.length - 1];
+  const working =
+    active && s.state !== 'ending' ? workingCaption(lastTurn) : null;
   const phase: OrbPhase = !active
     ? 'rest'
     : s.state === 'ending'
@@ -512,31 +516,59 @@ export default function TalkScreen({
           </View>
         ) : null}
         {showTranscript ? (
-          <ScrollView
-            ref={captionsList}
-            testID="talk-captions-list"
-            style={styles.transcript}
-            contentContainerStyle={styles.transcriptContent}
-            keyboardShouldPersistTaps="handled"
-            onContentSizeChange={() => {
-              // Pinned to the newest turn unless the reader scrolled up.
-              if (pinned.current)
-                captionsList.current?.scrollToEnd({ animated: !reduceMotion });
-            }}
-            onScroll={(event) => {
-              const { contentOffset, contentSize, layoutMeasurement } =
-                event.nativeEvent;
-              pinned.current =
-                contentOffset.y + layoutMeasurement.height >=
-                contentSize.height - 24;
-            }}
-            scrollEventThrottle={32}
-          >
-            <MachinePill note={talkMachineNote} testID="talk-machine" />
-            {s.transcript.map((turn) => (
-              <AnswerCaption key={`${turn.role}-${turn.id}`} turn={turn} />
-            ))}
-          </ScrollView>
+          <View style={styles.transcript}>
+            <ScrollView
+              ref={captionsList}
+              testID="talk-captions-list"
+              style={styles.transcript}
+              contentContainerStyle={styles.transcriptContent}
+              keyboardShouldPersistTaps="handled"
+              onContentSizeChange={() => {
+                // Pinned to the newest turn unless the reader scrolled up.
+                if (pinned.current)
+                  captionsList.current?.scrollToEnd({
+                    animated: !reduceMotion,
+                  });
+              }}
+              onScroll={(event) => {
+                const { contentOffset, contentSize, layoutMeasurement } =
+                  event.nativeEvent;
+                pinned.current =
+                  contentOffset.y + layoutMeasurement.height >=
+                  contentSize.height - 24;
+              }}
+              scrollEventThrottle={32}
+            >
+              <MachinePill note={talkMachineNote} testID="talk-machine" />
+              {s.transcript.map((turn) => (
+                <AnswerCaption
+                  key={`${turn.role}-${turn.id}`}
+                  turn={turn}
+                  sources={
+                    turn.role === 'agent'
+                      ? sources.filter(
+                          (source) => s.sourceTurns?.[source.path] === turn.id,
+                        )
+                      : undefined
+                  }
+                  onOpenSource={openRecord}
+                  onMoreSources={() => router.push(talkSourcesRoute)}
+                />
+              ))}
+              {working ? (
+                <Text
+                  wordSafe
+                  variant="body"
+                  tone="inkSoft"
+                  testID="talk-working"
+                  accessibilityLabel={talkCopy.opaxSaid(working)}
+                >
+                  {working}
+                </Text>
+              ) : null}
+            </ScrollView>
+            <TranscriptEdge />
+          </View>
         ) : (
           <View style={styles.stage} onLayout={onStage}>
             {/* Absolute, so the orb never props the stage open. */}
@@ -864,7 +896,11 @@ const styles = StyleSheet.create({
   callRowStacked: { flexDirection: 'column', gap: rhythm.tight },
   callOrb: { width: ORB_CALL, height: ORB_CALL },
   transcript: { flex: 1 },
-  transcriptContent: { gap: rhythm.block, paddingVertical: rhythm.tight },
+  transcriptContent: {
+    gap: rhythm.block,
+    paddingTop: TRANSCRIPT_EDGE_HEIGHT + rhythm.tight,
+    paddingBottom: rhythm.tight,
+  },
   dockScroll: { flexGrow: 0, flexShrink: 1 },
   dock: { gap: rhythm.tight, alignItems: 'stretch' },
   centre: { textAlign: 'center' },
