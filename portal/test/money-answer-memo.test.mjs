@@ -16,7 +16,7 @@ const published=path=>JSON.parse(readFileSync(new URL('../public'+path,import.me
 test('the money summary renders once per title per isolate, matches a fresh render, and retries after a failure',async()=>{
  const shared=runInNewContext(code+';sharedMoneyAnswer',{Map,renderMoneyAnswer});
  const reads=[];let fail=true;
- const read=async path=>{reads.push(path);if(fail&&path==='/suppliers.json'){fail=false;throw Error('unavailable')}return published(path)};
+ const read=async path=>{reads.push(path);if(fail&&path==='/graph/money.json'){fail=false;throw Error('unavailable')}return published(path)};
  await assert.rejects(shared('Public money',read));
  const first=await shared('Public money',read), count=reads.length;
  assert.equal((await shared('Public money',read)).html,first.html);

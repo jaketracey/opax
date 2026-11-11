@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {renderSupplierAnswer} from '../src/seo-content.ts';
-import {SUPPLIER_ID_RE,supplierRowsPath} from '../public/supplier-row-buckets.js';
+import {renderSupplierAnswer,renderMoneyAnswer} from '../src/seo-content.ts';
+import {SUPPLIER_ID_RE,supplierRowsPath,SUPPLIERS_META_PATH} from '../public/supplier-row-buckets.js';
 
 const id='s-0123456789abcdef0123', other='s-ab0000000000000000cd';
 const index={meta:{generated_at:'2026-11-08T16:38:07Z',source:'AusTender',caveats:['x']},suppliers:[id,other].map(s=>({id:s,name:'Supplier '+s,profile_path:'/suppliers/'+s.slice(2,4)+'.json'}))};
@@ -35,4 +35,17 @@ test('a supplier page reads its bucket, not the whole index, and renders the sam
  assert.equal(stale.html,(await render(fixed,id)).html);assert.ok(stale.reads.includes('/suppliers.json'));
  const noMeta=await render({...fixed,[supplierRowsPath(other)]:{suppliers:buckets[supplierRowsPath(other)].suppliers}},other);
  assert.equal(noMeta.html,(await render(fixed,other)).html);assert.ok(noMeta.reads.includes('/suppliers.json'));
+});
+
+test('the money summary prints the supplier totals from the meta file, not the whole index',async()=>{
+ const graph=label=>({meta:{generated:'2026-11-01',coverage:'2019 to 2025',sourceShort:label},nodes:[{id:'d1',kind:'donor',label:'Donor'},{id:'p1',kind:'party',label:'Party '+label}],edges:[{source:'d1',target:'p1',total:500}]});
+ const meta={generated_at:'2026-11-08T16:38:07Z',total:371954331888.65,contract_count:110226,source:'AusTender',published_from:'2013-01-03',published_to:'2026-11-06',caveats:['x']};
+ const files={'/graph/money.json':graph('AEC'),'/graph/money.qld.json':graph('ECQ'),'/graph/money.vic.json':graph('VEC'),'/suppliers.json':{meta,suppliers:[{id:id}]}};
+ const render=async extra=>{const reads=[];const read=async path=>{reads.push(path);const f={...files,...extra}[path];if(f)return f;throw Error('asset 404 '+path)};return {html:(await renderMoneyAnswer('Public money',read)).html,reads}};
+ const whole=await render({}), small=await render({[SUPPLIERS_META_PATH]:{meta}});
+ assert.equal(small.html,whole.html);
+ assert.ok(!small.reads.includes('/suppliers.json') && whole.reads.includes('/suppliers.json'));
+ assert.match(small.html,/110,226 contracts/);
+ const empty=await render({[SUPPLIERS_META_PATH]:{}});
+ assert.equal(empty.html,whole.html);assert.ok(empty.reads.includes('/suppliers.json'),'a meta file without meta defers to the index');
 });
