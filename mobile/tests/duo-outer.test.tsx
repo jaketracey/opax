@@ -444,7 +444,7 @@ describe('compact outer surfaces', () => {
     });
   });
   test.each([Screen, KeyboardStableScreen])(
-    'scroll screens let UIKit inset each side once and report the usable column',
+    'scroll screens sit in a side safe area and report the usable column',
     (Component) => {
       let width = 0;
       function Probe() {
@@ -456,9 +456,23 @@ describe('compact outer surfaces', () => {
           <Probe />
         </Component>,
       );
+      // Seen on the iPhone Duo simulator (11 Nov 2026): UIKit's automatic
+      // adjustment insets scroll content vertically only, so content ran
+      // under a trailing vertical tab bar. SidebarSafe now pads each side by
+      // the screen's own insets on an adaptive iPhone, and the scroll view
+      // measures the 320pt left inside a 380pt window with a 60pt bar.
+      expect(
+        tree.root.findAll(
+          (node) =>
+            Array.isArray(node.props.edges) &&
+            node.props.edges.includes('left') &&
+            node.props.edges.includes('right') &&
+            node.props.mode === 'padding',
+        ).length,
+      ).toBeGreaterThan(0);
       act(() =>
         host(tree, 'outer-scroll').props.onLayout({
-          nativeEvent: { layout: { x: 0, y: 0, width: 380, height: 560 } },
+          nativeEvent: { layout: { x: 0, y: 0, width: 320, height: 560 } },
         }),
       );
       expect(width).toBe(288);

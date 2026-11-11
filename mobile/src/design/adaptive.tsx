@@ -622,7 +622,13 @@ export function useHover() {
  * not. This native safe-area view pads its leading and trailing edges by the
  * insets of the screen it sits in; nested ones defer to the outermost. `Screen`, `KeyboardStableScreen`, the
  * reader and the Bills split already use it; wrap any other full-screen
- * FlatList in it. On iPhone and Android it renders its child alone.
+ * FlatList in it. On an iPhone that can draw regular layouts (iPhone Duo,
+ * `useAdaptiveDevice()`) it is on as well: there the tab bar and toolbar sit
+ * vertically beside the content (the outer display, landscape) and report
+ * themselves as leading or trailing safe-area insets, which a scroll view's
+ * content also ignores. It stays on in every pose, so folding never remounts
+ * a screen; with no side insets it pads nothing. On other iPhones and Android
+ * it renders its child alone.
  */
 // The native view pads by its screen's insets, not by its own overlap with
 // them, so only the outermost one applies (a pane inside the Bills split).
@@ -635,7 +641,9 @@ export function SidebarSafe({
   style?: StyleProp<ViewStyle>;
 }) {
   const inside = useContext(SidebarSafeContext);
-  if (!isPad || inside) return <>{children}</>;
+  const adaptive = useAdaptiveDevice();
+  if (!(isPad || (Platform.OS === 'ios' && adaptive)) || inside)
+    return <>{children}</>;
   return (
     <SafeAreaView
       edges={['left', 'right']}

@@ -95,11 +95,15 @@ export function useScreenColumn(
   const adaptive = useAdaptiveDevice();
   // SidebarSafe and split panes already own their horizontal safe area.
   // UIKit adjusts a phone scroll view on each side, including a vertical bar.
+  // On an adaptive iPhone (Duo) Screen's SidebarSafe already pads each side
+  // by the screen's own insets, vertical bars included (the window-level
+  // insets here do not see them), so this applies only to other phones.
   const nativeSides =
     Platform.OS === 'ios' &&
     outer.rule !== 'pad' &&
     !inPane &&
-    (adaptive || insets?.left !== insets?.right);
+    !adaptive &&
+    insets?.left !== insets?.right;
   const left = nativeSides ? (insets?.left ?? 0) : 0;
   const right = nativeSides ? (insets?.right ?? 0) : 0;
   const width = Math.max(0, (region?.width ?? outer.width) - left - right);
