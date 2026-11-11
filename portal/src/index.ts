@@ -129,7 +129,7 @@ import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
-import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
@@ -4063,7 +4063,7 @@ interface BillRow {
   acts: number
 }
 /** `redirects`: a suppressed duplicate's key -> the bill it duplicates (bills-008). */
-interface BillsData { generated: string; byKey: Map<string, BillRow>; redirects: Map<string, string> }
+interface BillsData { generated: string; byKey: Map<string, BillRow>; redirects: Map<string, string>; file: { generated_at?: string; bills: BillRow[]; redirects?: Record<string, string> } }
 
 /** Reader-facing names for the four AEC registration classes. */
 const CAMPAIGNER_LABELS: Record<string, string> = {
@@ -4271,8 +4271,19 @@ interface SuppliersData {
 }
 const supplierNameKey = (name: string): string => name.trim().toLowerCase()
 let suppliersMemo: Promise<SuppliersData> | null = null
+type SuppliersFile = { meta?: { generated_at?: string; generated?: string }; suppliers: SupplierRow[] }
+let suppliersFileMemo: Promise<SuppliersFile> | null = null
+/**
+ * The parsed /suppliers.json (7.6 MB), once per isolate. The supplier directory and the
+ * server-rendered supplier pages read the same file; parsing it on every crawl of a
+ * supplier page was most of that page's CPU time. Readers never modify it.
+ */
+function loadSuppliersFile(env: Env): Promise<SuppliersFile> {
+  suppliersFileMemo ??= assetJson<SuppliersFile>(env, '/suppliers.json').catch((error) => { suppliersFileMemo = null; throw error })
+  return suppliersFileMemo
+}
 function loadSuppliers(env: Env): Promise<SuppliersData> {
-  suppliersMemo ??= assetJson<{ meta?: { generated_at?: string; generated?: string }; suppliers: SupplierRow[] }>(env, '/suppliers.json')
+  suppliersMemo ??= loadSuppliersFile(env)
     .then((raw) => {
       if (!Array.isArray(raw.suppliers)) throw new Error('Invalid supplier index')
       const byId = new Map<string, SupplierRow>()
@@ -4291,16 +4302,16 @@ function loadSuppliers(env: Env): Promise<SuppliersData> {
         }
       }
       return { generated: raw.meta?.generated_at ?? raw.meta?.generated ?? '', suppliers: raw.suppliers, byId, byName }
-    }).catch((error) => { suppliersMemo = null; throw error })
+    }).catch((error) => { suppliersMemo = null; suppliersFileMemo = null; throw error })
   return suppliersMemo
 }
 
 let billsMemo: Promise<BillsData> | null = null
 /**
- * The bill index, keyed. Only /bill/<key> reads it, and only for a title and a
- * one-line description, so the isolate holds a Map rather than the parsed file:
- * the per-bill files carry the divisions, speeches and summary the page needs,
- * and the front end fetches the one it is showing.
+ * The bill index, keyed, plus the parsed file for the related-bills lists that
+ * server-rendered bill pages build from it (sharedAssetJson). The per-bill files
+ * carry the divisions, speeches and summary the page needs, and the front end
+ * fetches the one it is showing.
  */
 function loadBills(env: Env): Promise<BillsData> {
   billsMemo ??= assetJson<{ generated_at?: string; bills: BillRow[]; redirects?: Record<string, string> }>(env, '/bills/index.json')
@@ -4308,6 +4319,7 @@ function loadBills(env: Env): Promise<BillsData> {
       generated: raw.generated_at ?? '',
       byKey: new Map(raw.bills.map((b) => [b.key, b])),
       redirects: new Map(Object.entries(raw.redirects ?? {})),
+      file: raw,
     }))
     .catch((err) => {
       billsMemo = null
@@ -4655,10 +4667,35 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   }
 }
 
+/**
+ * Asset reads for server rendering. The two large indexes an isolate already holds come from
+ * memory instead of being fetched and parsed again on every page: /suppliers.json (supplier
+ * pages) and /bills/index.json (related bills on every bill page). Renderers only read them.
+ */
+function sharedAssetJson<T>(env: Env, path: string): Promise<T> {
+  if (path === '/suppliers.json') return loadSuppliersFile(env) as Promise<T>
+  if (path === '/bills/index.json') return loadBills(env).then((bills) => bills.file as T)
+  return assetJson<T>(env, path)
+}
+
+/**
+ * Each agency's largest suppliers for the "Other suppliers" lists on supplier pages, kept per
+ * isolate. The agency files run to 13.6 MB (Defence), and one supplier page reads up to ten.
+ */
+const agencyTopMemo = new Map<string, ReturnType<AgencyTopSuppliers>>()
+const sharedAgencyTopSuppliers = (env: Env): AgencyTopSuppliers => (path) => {
+  let top = agencyTopMemo.get(path)
+  if (!top) {
+    top = agencyTopSuppliers(<T>(p: string) => assetJson<T>(env, p))(path).then((rows) => { if (!rows) agencyTopMemo.delete(path); return rows })
+    agencyTopMemo.set(path, top)
+  }
+  return top
+}
+
 /** Shared exported-data rendering also supplies the head's factual identity. */
 async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<PageMeta> {
   const meta = await buildRouteMeta(route,url,request,env,ctx)
-  const read: ReadAsset = <T>(path: string) => assetJson<T>(env,path)
+  const read: ReadAsset = <T>(path: string) => sharedAssetJson<T>(env,path)
   const needsPeople=route.kind==='bill' || route.kind==='index' && route.dir==='person' || route.kind==='subject' && route.dir==='person'
   const people = needsPeople ? await loadPeople(env).catch(()=>null) : null
   let personIdentity: Parameters<typeof buildSchemaGraph>[0]['person']
@@ -4689,7 +4726,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           const query = guardTableURL(divisionTableConfig({bill:bill.key}),url).query
         meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
-      const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams)
+      const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,sharedAgencyTopSuppliers(env))
       if(content) meta.prerender=content.html
     } else if(route.kind==='index' && route.dir==='supplier') {
       const params=new URLSearchParams(url.searchParams)

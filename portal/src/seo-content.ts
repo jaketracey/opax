@@ -373,7 +373,14 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
 interface Contract { id: string; title?: string; description?: string; agency?: string; amount: number; start_date?: string; published?: string; url?: string; link_scope?: string }
 interface SupplierProfile { id: string; name: string; total: number; count: number; agencies: {name:string;total:number;count:number}[]; contracts: Contract[] }
 interface AgencyProfile { id: string; name: string; profile_path: string }
-export async function renderSupplierAnswer(id: string, read: ReadAsset, params = new URLSearchParams()): Promise<RenderedContent | null> {
+type AgencySupplier = {id:string;name:string;total:number}
+/** An agency's largest suppliers, largest first (stable), enough to fill "Other suppliers" after removing the page's own supplier. */
+export type AgencyTopSuppliers = (path: string) => Promise<AgencySupplier[] | null>
+export const agencyTopSuppliers = (read: ReadAsset): AgencyTopSuppliers => async path => {
+  const data=await optional<{suppliers:AgencySupplier[]}>(read,path)
+  return data ? [...(data.suppliers || [])].sort((a,b)=>b.total-a.total).slice(0,32) : null
+}
+export async function renderSupplierAnswer(id: string, read: ReadAsset, params = new URLSearchParams(), topSuppliers: AgencyTopSuppliers = agencyTopSuppliers(read)): Promise<RenderedContent | null> {
   const [index,agencies] = await Promise.all([
     read<{meta:{generated_at:string;source:string};suppliers:{id:string;profile_path:string}[]}>('/suppliers.json'),
     read<{agencies:AgencyProfile[]}>('/agencies.json'),
@@ -394,8 +401,7 @@ export async function renderSupplierAnswer(id: string, read: ReadAsset, params =
   }).join('')+'</ol></details><h2>Other suppliers to these agencies</h2>'
   for(const {a,record} of matches.slice(0,10)) {
     if(!record) continue
-    const data=await optional<{suppliers:{id:string;name:string;total:number}[]}>(read,record.profile_path)
-    const rows=(data?.suppliers || []).filter(s=>s.id!==id).sort((a,b)=>b.total-a.total).slice(0,10)
+    const rows=((await topSuppliers(record.profile_path)) || []).filter(s=>s.id!==id).slice(0,10)
     body+=`<h3>${escapeHtml(a.name)}</h3><ul>${rows.map(s=>`<li>${link(`/subject/supplier/${s.id}`,s.name)} — ${currency(s.total)} in recorded awards from this agency</li>`).join('')}</ul>`
   }
   body+=`<p>An association does not prove influence.</p><p>${link('/subject/supplier','Browse suppliers')} · ${link('/methods','Sources and methods')}</p>`
