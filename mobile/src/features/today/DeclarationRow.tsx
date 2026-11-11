@@ -10,7 +10,7 @@ import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
 import { chamberName } from '../../design/parliament';
 import { partyText } from '../../design/party';
-import { PersonRow, type PersonRowProps } from '../../design/people';
+import { PartyLabel, type PersonRowProps } from '../../design/people';
 import { RowLink, type RowMenuAction } from '../../design/row-link';
 import {
   ownsRowPadding,
@@ -22,8 +22,7 @@ import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
-import { declarationsRoute, personRoute } from '../../navigation/routes';
-import { personRuns } from '../declarations/model';
+import { declarationsRoute } from '../../navigation/routes';
 import { declarationsSources } from './sources';
 import { blockState, reportOf, TodayBlock, useTodayRead } from './TodayBlock';
 import { shareRecord } from '../../navigation/share';
@@ -106,40 +105,20 @@ export const declarationsForRoute = (name: string) => ({
 });
 
 /**
- * Consecutive declarations by one member under one PersonRow, which opens
- * the profile for a roster member (plain text, no chevron, otherwise). The
- * entries line up with the name; at accessibility sizes, under the portrait.
- * The person and each entry are separate links: two tap targets per member.
+ * A run of declarations, each with its own identity and single tap target.
  */
 export function DeclarationGroup({ entries }: { entries: DeclarationEntries }) {
-  const stacked = useAccessibilitySize();
-  const first = entries[0]!;
-  const slug = first.item.profileSlug ?? null;
   return (
-    <View style={styles.group}>
-      <PersonRow
-        {...declarantRow(
-          first.item,
-          `today-declaration-person-${first.index}`,
-          `today-declaration-portrait-${first.index}`,
-        )}
-        href={slug ? personRoute(slug, first.item.name) : undefined}
-        menu={slug ? 'person' : []}
-      />
-      <View
-        testID={`today-declaration-entries-${first.index}`}
-        style={[styles.entries, stacked ? null : styles.indent]}
-      >
-        {entries.map(({ item, index }) => (
-          <DeclarationEntry key={item.id} item={item} index={index} />
-        ))}
-      </View>
-    </View>
+    <>
+      {entries.map(({ item, index }) => (
+        <DeclarationEntry key={item.id} item={item} index={index} />
+      ))}
+    </>
   );
 }
 
 /**
- * One register entry as one link with a chevron: the member's words in the
+ * One register entry as one link with a chevron: the member, their words in the
  * record's serif, previewed to 140 characters, then "{Category} · added
  * {d MMM}". It opens Just declared filtered to the member, where the entry
  * is in full. No "More" here. Touch and hold: Open the register, Share.
@@ -151,9 +130,15 @@ export function DeclarationEntry({
   item: Declaration;
   index: number;
 }) {
+  const stacked = useAccessibilitySize();
   const cellStyle = useRowCellStyle();
   const highlight = useRowHighlight();
-  useRowInset();
+  useRowInset(stacked ? 16 : 16 + PORTRAIT_COLUMN);
+  const person = declarantRow(
+    item,
+    `today-declaration-person-${index}`,
+    `today-declaration-portrait-${index}`,
+  );
   const preview = item.description ? entryPreview(item.description) : null;
   const change = `${item.category} · ${registerChangeLabel(item.kind)} ${changeDate(item.date)}`;
   const spokenChange = `${item.category}, ${registerChangeLabel(item.kind)} ${formatDate(item.date, 'long')}`;
@@ -181,7 +166,9 @@ export function DeclarationEntry({
       <Pressable
         accessible
         accessibilityRole="link"
-        accessibilityLabel={[preview, spokenChange].filter(Boolean).join('. ')}
+        accessibilityLabel={[person.accessibilityLabel, preview, spokenChange]
+          .filter(Boolean)
+          .join('. ')}
         accessibilityHint="Opens Just declared for this member"
         testID={`today-declaration-${index}`}
         onPress={() => router.push(href)}
@@ -191,23 +178,47 @@ export function DeclarationEntry({
           pressed ? { backgroundColor: highlight } : null,
         ]}
       >
-        <View style={styles.words}>
-          {preview ? (
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={[styles.content, stacked ? styles.stacked : null]}
+        >
+          {person.portrait}
+          <View style={[styles.words, stacked ? null : styles.inlineWords]}>
             <Text
               wordSafe
-              variant="recordText"
-              testID={`today-declaration-text-${index}`}
+              variant="name"
+              testID={`${person.testID}-name`}
+              style={styles.name}
             >
-              {preview}
+              {item.name}
             </Text>
-          ) : null}
-          <Text
-            wordSafe
-            variant="secondary"
-            testID={`today-declaration-change-${index}`}
-          >
-            {change}
-          </Text>
+            {item.party ? (
+              <PartyLabel
+                party={item.party}
+                status={item.partyStatus}
+                formerly={item.formerly}
+                linked={false}
+                nested
+              />
+            ) : null}
+            {preview ? (
+              <Text
+                wordSafe
+                variant="recordText"
+                testID={`today-declaration-text-${index}`}
+              >
+                {preview}
+              </Text>
+            ) : null}
+            <Text
+              wordSafe
+              variant="secondary"
+              testID={`today-declaration-change-${index}`}
+            >
+              {change}
+            </Text>
+          </View>
         </View>
         <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
       </Pressable>
@@ -217,27 +228,33 @@ export function DeclarationEntry({
 ownsRowPadding(DeclarationEntry);
 
 // The portrait column: the row portrait's 44 pt and the row's gap.
-const PORTRAIT_COLUMN = 44 + rhythm.tight;
+const PORTRAIT_COLUMN = 44 + rhythm.heading;
 
 const styles = StyleSheet.create({
-  group: { gap: rhythm.line },
-  entries: { gap: rhythm.row },
-  indent: { marginLeft: PORTRAIT_COLUMN },
   entry: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: rhythm.tight,
+    gap: rhythm.heading,
     minHeight: minimumTarget,
+    paddingVertical: rhythm.row,
   },
-  words: { flex: 1, gap: rhythm.line },
+  content: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.heading,
+  },
+  stacked: { flexDirection: 'column', gap: rhythm.tight },
+  words: { gap: rhythm.line, alignSelf: 'stretch' },
+  inlineWords: { flex: 1 },
+  name: { flexShrink: 0 },
 });
 
 type DeclarationsBlockData = Block<Declaration[]>;
 /**
- * Just declared (today.md 5.9): up to three entries, newest first, grouped
- * by member, with the line after the group. Entries draw from the recent
- * file at once; parties and profile links join when the roster answers
- * (the same rows, so nothing moves).
+ * Just declared (today.md 5.9): up to three entries, newest first, with a
+ * divider at each entry's text column. Entries draw from the recent
+ * file at once; party identities join when the roster answers.
  */
 export function DeclarationsBlock({
   attempt,
@@ -295,8 +312,8 @@ export function DeclarationsBlock({
     >
       {(declarations) => (
         <InsetGroup testID="today-declarations-group">
-          {personRuns(declarations).map((run) => (
-            <DeclarationGroup key={run.key} entries={run.entries} />
+          {declarations.map((item, index) => (
+            <DeclarationEntry key={item.id} item={item} index={index} />
           ))}
         </InsetGroup>
       )}
