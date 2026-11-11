@@ -138,7 +138,7 @@ test('kmp_counts: bodies ranked by published key management personnel rows, labe
 });
 
 test('top_by_year: one largest row per year, oldest first, compared and never added', async () => {
-  const out = await call({ view: 'top_by_year', body: 'Department of Health', from_year: '2018-19', to_year: '2024-25' }); cited(out);
+  const out = await call({ view: 'top_by_year', body: 'Department of Health', first_year: '2018-19', last_year: '2024-25' }); cited(out);
   assert.deepEqual(out.rows.map(r => r.year), ['2018-19', '2019-20', '2020-21', '2021-22', '2022-23', '2023-24', '2024-25']);
   for (const r of out.rows) {
     const file = JSON.parse(await readFile(new URL(`../public/annual-reports/remuneration-${r.year}.json`, import.meta.url), 'utf8'));
@@ -182,8 +182,8 @@ test('names lose source footnote markers but keep the cell as published; band co
 test('invalid inputs are refused before any read', async () => {
   await invalid({ view: 'top_by_year' });
   await invalid({ view: 'top_by_year', body: 'Department of Health', year: '2018-19' });
-  await invalid({ view: 'top_by_year', body: 'Department of Health', from_year: '2024-25', to_year: '2018-19' });
-  await invalid({ view: 'remuneration', from_year: '2018-19' });
+  await invalid({ view: 'top_by_year', body: 'Department of Health', first_year: '2024-25', last_year: '2018-19' });
+  await invalid({ view: 'remuneration', first_year: '2018-19' });
   await invalid({ view: 'kmp_counts', person: 'Jenny Wilkinson' });
   await invalid({ view: 'kmp_counts', metric: 'total_expenses' });
   await invalid({ view: 'remuneration', year: '2024-26' });
