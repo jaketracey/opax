@@ -1,4 +1,5 @@
-import { PARTY_NOT_RECORDED } from '../design/party';
+import { PARTY_NOT_RECORDED, isPartyLabel } from '../design/party';
+import { RecordNameLink } from '../design/record';
 import { RouteOptions } from '../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -57,6 +58,8 @@ import {
   electorateDateRoute,
   electorateRoute,
   membersRoute,
+  partyRoute,
+  personRoute,
 } from '../navigation/routes';
 import { copyRecordLink, shareRecord } from '../navigation/share';
 import { presentSource } from '../navigation/sheets';
@@ -626,6 +629,7 @@ function ElectoratePage({
             <ElectionRow
               key={e.election_id}
               record={e}
+              directory={loaded.directory}
               seatId={identity.id}
               jurisdiction={identity.jurisdiction}
               testID={`election-row-${i}`}
@@ -809,11 +813,13 @@ function MembersSection({
 /** One election, closed: its title, winner, party and date. */
 function ElectionRow({
   record,
+  directory,
   seatId,
   jurisdiction,
   testID,
 }: {
   record: ElectionRecord;
+  directory: Directory;
   seatId: string;
   jurisdiction: string;
   testID: string;
@@ -821,6 +827,13 @@ function ElectionRow({
   const cellStyle = useRowCellStyle();
   useRowInset(0);
   const summary = electionSummary(record, jurisdiction);
+  const winner = summary.winner;
+  const profile = winner?.personId
+    ? representativeProfile(winner.personId, directory)
+    : null;
+  const winnerHref = profile
+    ? personRoute(profile.slug, winner!.name)
+    : undefined;
   const href = electionRoute(seatId, summary.key);
   const date = formatDate(summary.date, 'short');
   const label = [
@@ -847,6 +860,20 @@ function ElectionRow({
         accessibilityRole="link"
         accessibilityLabel={label}
         accessibilityHint="Opens the election"
+        accessibilityActions={[
+          ...(winnerHref
+            ? [{ name: 'winner', label: `Open ${winner!.name}` }]
+            : []),
+          ...(isPartyLabel(winner?.party)
+            ? [{ name: 'party', label: `Open ${winner!.party} party page` }]
+            : []),
+        ]}
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === 'winner' && winnerHref)
+            router.push(winnerHref);
+          if (event.nativeEvent.actionName === 'party' && winner?.party)
+            router.push(partyRoute(winner.party));
+        }}
         onPress={() => router.push(href)}
         style={({ pressed }) => [
           styles.electionRow,
@@ -860,14 +887,16 @@ function ElectionRow({
           </Text>
           {summary.winner ? (
             <>
-              <Text wordSafe variant="body">
-                {summary.winner.name}
-              </Text>
+              <RecordNameLink
+                name={summary.winner.name}
+                href={winnerHref}
+                testID={`${testID}-winner`}
+              />
               <PartyLabel
                 party={summary.winner.party}
                 status="unknown"
                 nested
-                linked={false}
+                linked
               />
             </>
           ) : null}

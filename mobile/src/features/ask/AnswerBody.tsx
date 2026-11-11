@@ -12,6 +12,7 @@ import type { Block, Inline } from './answer-markdown';
 
 /** Opens a link in an answer: native pages in the Ask stack, else the browser. */
 export function openAnswerLink(path: string) {
+  if (!path.trim()) return;
   try {
     const url = new URL(path, webOrigin);
     if (url.protocol !== 'https:' || url.username || url.password) return;

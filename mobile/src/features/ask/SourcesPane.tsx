@@ -29,17 +29,13 @@ import { RecordDetail, RecordShare } from '../split/RecordDetail';
 import { answerBlocks } from './answer-markdown';
 import { openAnswerLink } from './AnswerBody';
 import { AskIdle } from './AskIdle';
-import { CitedRecordRow } from './AskRows';
+import { CitedRecordRow, sourcePath } from './AskRows';
 import {
   citationSelection,
   firstClaim,
   selectCitation,
 } from './citation-state';
-import {
-  CitationContent,
-  citationCopy,
-  citationPassage,
-} from './CitationContent';
+import { CitationContent, citationCopy } from './CitationContent';
 import { askGround } from './ground';
 import { turnKey, type Turn } from './model';
 import type { AskPerson } from './people';
@@ -313,7 +309,7 @@ function SourceList({
     ordered.map((s) => s.resource),
     (key) => {
       const s = ordered.find((item) => item.resource === key);
-      if (s) open(s.href, sourceTitle(s));
+      if (s) open(sourcePath(s), sourceTitle(s));
     },
     () => undefined,
   );
@@ -356,14 +352,7 @@ function SourceList({
             n={marked}
             profiles={profiles}
             focusKey={`${answer.at ?? ''}:${marked}`}
-            onOpenRecord={() =>
-              open(
-                source.slug && citationPassage(source)
-                  ? `/doc/${source.slug}?${new URLSearchParams({ passage: citationPassage(source)!.slice(0, 4000) })}`
-                  : source.href,
-                sourceTitle(source),
-              )
-            }
+            onOpenRecord={() => open(sourcePath(source), sourceTitle(source))}
             onOpenPerson={(person) =>
               open(`/subject/person/${person.slug}`, person.name)
             }
@@ -382,10 +371,11 @@ function SourceList({
               <CitedRecordRow
                 key={s.resource}
                 record={s}
+                profiles={profiles}
                 n={numbered ? i + 1 : undefined}
                 selected={numbered ? marked === i + 1 : cursor === s.resource}
                 onPress={() =>
-                  numbered ? move(i + 1) : open(s.href, sourceTitle(s))
+                  numbered ? move(i + 1) : open(sourcePath(s), sourceTitle(s))
                 }
                 testID={`ask-pane-source-${i + 1}`}
               />
@@ -401,8 +391,9 @@ function SourceList({
               <CitedRecordRow
                 key={s.resource}
                 record={s}
+                profiles={profiles}
                 selected={cursor === s.resource}
-                onPress={() => open(s.href, sourceTitle(s))}
+                onPress={() => open(sourcePath(s), sourceTitle(s))}
               />
             ))}
           </InsetGroup>

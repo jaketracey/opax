@@ -1,18 +1,24 @@
 import { StyleSheet, View } from 'react-native';
+import { router } from 'expo-router';
 import type { Electorate } from '../../api/catalogs';
 import { Card } from '../../design/card';
 import { Divider } from '../../design/controls';
 import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
-import { PARTY_NOT_RECORDED } from '../../design/party';
+import { PARTY_NOT_RECORDED, isPartyLabel } from '../../design/party';
 import { PartyLabel } from '../../design/people';
 import { ValueRow } from '../../design/rows';
+import { RecordNameLink } from '../../design/record';
 import { SourceLine, type SourceDetails } from '../../design/source';
 import { Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, hairline, radii, rhythm } from '../../design/tokens';
-import { electorateRoute } from '../../navigation/routes';
+import {
+  electorateRoute,
+  personRoute,
+  partyRoute,
+} from '../../navigation/routes';
 import { presentSource } from '../../navigation/sheets';
 import { hasOutline, OutlineMap } from '../electorate-map/OutlineMap';
 import {
@@ -21,7 +27,11 @@ import {
   latestElection,
   newestCensus,
 } from './election-summary';
-import type { ElectorateView } from './model';
+import {
+  representativeProfile,
+  type Directory,
+  type ElectorateView,
+} from './model';
 
 /** The card's sources: AEC and ABS as separate originals, each with its date. */
 export function electorateCardSource(
@@ -77,12 +87,22 @@ export function ElectorateCardSkeleton() {
 export function ElectorateCard({
   seat,
   view,
+  directory,
 }: {
   seat: Electorate;
   view: ElectorateView;
+  directory?: Directory;
 }) {
   const census = censusHeadline(newestCensus(view));
   const election = latestElection(view, seat.jurisdiction);
+  const winner = election?.winner;
+  const winnerProfile =
+    winner?.personId && directory
+      ? representativeProfile(winner.personId, directory)
+      : null;
+  const winnerHref = winnerProfile
+    ? personRoute(winnerProfile.slug, winner!.name)
+    : undefined;
   const outline = hasOutline(view.boundaries);
   const source = electorateCardSource(seat, view);
   const label = [
@@ -106,6 +126,24 @@ export function ElectorateCard({
         accessibilityHint="Opens the electorate"
         style={styles.top}
         accessibilityActions={[
+          ...(winnerHref
+            ? [
+                {
+                  name: 'winner',
+                  label: `Open ${winner!.name}`,
+                  onAction: () => router.push(winnerHref),
+                },
+              ]
+            : []),
+          ...(isPartyLabel(winner?.party)
+            ? [
+                {
+                  name: 'party',
+                  label: `Open ${winner!.party} party page`,
+                  onAction: () => router.push(partyRoute(winner!.party!)),
+                },
+              ]
+            : []),
           {
             name: 'sources',
             label: 'Sources',
@@ -143,12 +181,12 @@ export function ElectorateCard({
                 <Text variant="subsectionTitle">{election.title}</Text>
                 {election.winner ? (
                   <>
-                    <Text wordSafe>{election.winner.name}</Text>
-                    <PartyLabel
-                      party={election.winner.party}
-                      linked={false}
-                      nested
+                    <RecordNameLink
+                      name={election.winner.name}
+                      href={winnerHref}
+                      testID="your-electorate-winner"
                     />
+                    <PartyLabel party={election.winner.party} linked nested />
                   </>
                 ) : null}
                 <Text variant="secondary">

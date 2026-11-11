@@ -9,7 +9,7 @@ import { useAccessibilitySize } from '../../design/accessibility';
 import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
 import { chamberName } from '../../design/parliament';
-import { partyText } from '../../design/party';
+import { partyText, isPartyLabel } from '../../design/party';
 import { PartyLabel, type PersonRowProps } from '../../design/people';
 import { RowLink, type RowMenuAction } from '../../design/row-link';
 import {
@@ -20,15 +20,21 @@ import {
 } from '../../design/row-padding';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
+import { RecordNameLink } from '../../design/record';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
-import { declarationsRoute } from '../../navigation/routes';
+import {
+  declarationsRoute,
+  personRoute,
+  partyRoute,
+} from '../../navigation/routes';
 import { declarationsSources } from './sources';
 import { blockState, reportOf, TodayBlock, useTodayRead } from './TodayBlock';
 import { shareRecord } from '../../navigation/share';
 import { CachedPortrait } from '../CachedPortrait';
 import { changeDate } from '../follows/changes';
 import { registerChangeLabel } from '../your-mp/model';
+import { partyFromCode } from '../bills/party-codes';
 
 type Declaration = NonNullable<
   ReturnType<typeof recentDeclarationsFor>['data']
@@ -170,6 +176,20 @@ export function DeclarationEntry({
           .filter(Boolean)
           .join('. ')}
         accessibilityHint="Opens Just declared for this member"
+        accessibilityActions={[
+          ...(item.profileSlug
+            ? [{ name: 'person', label: `Open ${item.name}` }]
+            : []),
+          ...(isPartyLabel(item.party)
+            ? [{ name: 'party', label: `Open ${item.party} party page` }]
+            : []),
+        ]}
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === 'person' && item.profileSlug)
+            router.push(personRoute(item.profileSlug, item.name));
+          if (event.nativeEvent.actionName === 'party' && item.party)
+            router.push(partyRoute(partyFromCode(item.party)));
+        }}
         testID={`today-declaration-${index}`}
         onPress={() => router.push(href)}
         style={({ pressed }) => [
@@ -185,20 +205,23 @@ export function DeclarationEntry({
         >
           {person.portrait}
           <View style={[styles.words, stacked ? null : styles.inlineWords]}>
-            <Text
-              wordSafe
+            <RecordNameLink
+              name={item.name}
+              href={
+                item.profileSlug
+                  ? personRoute(item.profileSlug, item.name)
+                  : undefined
+              }
               variant="name"
               testID={`${person.testID}-name`}
               style={styles.name}
-            >
-              {item.name}
-            </Text>
+            />
             {item.party ? (
               <PartyLabel
                 party={item.party}
                 status={item.partyStatus}
                 formerly={item.formerly}
-                linked={false}
+                linked
                 nested
               />
             ) : null}

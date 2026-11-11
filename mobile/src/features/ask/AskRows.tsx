@@ -4,7 +4,7 @@ import { useAccessibilitySize } from '../../design/accessibility';
 import { CitationBadge } from '../../design/citation-mark';
 import { Icon } from '../../design/icon';
 import { confirmAction } from '../../design/menu';
-import { partyText } from '../../design/party';
+import { partyText, isPartyLabel } from '../../design/party';
 import { PartyLabel } from '../../design/people';
 import { RowLink, type RowMenuAction } from '../../design/row-link';
 import {
@@ -16,13 +16,17 @@ import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
-import { fromWebPath } from '../../navigation/routes';
 import { docRoute } from '../../navigation/routes/records';
 import { shareRecord } from '../../navigation/share';
 import { citationPassage } from './CitationContent';
 import { citeStyles, copyCitation } from './cite';
 import type { Source } from './model';
 import { personName, sourceMeta, sourceTitle } from './source-present';
+import { recordRoute } from '../records/route';
+import { openAnswerLink } from './AnswerBody';
+import type { AskPerson } from './people';
+import { partyRoute, personRoute } from '../../navigation/routes/people';
+import { partyFromCode } from '../bills/party-codes';
 
 /** A source's long-press menu, the same in Records cited, the sheet and the pane. */
 export function sourceMenu(
@@ -65,20 +69,24 @@ export function sourceMenu(
   ];
 }
 export function sourceRoute(source: Source): Href | null {
-  if (!source.href.startsWith('/')) return null;
-  try {
-    // A relative href needs no origin: retry its path without the query
-    // or fragment (origins belong in build config, qa-static).
-    const route =
-      fromWebPath(source.href) ?? fromWebPath(source.href.split(/[?#]/)[0]!);
-    return route?.pathname === '/doc/[slug]' && source.slug
-      ? docRoute(source.slug, sourceTitle(source), {
-          passage: citationPassage(source) ?? undefined,
-        })
-      : route;
-  } catch {
-    return null;
-  }
+  const route = recordRoute(source);
+  return route?.pathname === '/doc/[slug]'
+    ? docRoute(route.params.slug, sourceTitle(source), {
+        passage: citationPassage(source) ?? undefined,
+      })
+    : route;
+}
+/** The pane and the phone use the same repaired document destination. */
+export function sourcePath(source: Source): string {
+  const route = sourceRoute(source);
+  if (typeof route !== 'object' || route?.pathname !== '/doc/[slug]')
+    return source.href || source.url || '';
+  const passage = citationPassage(source);
+  return `/doc/${route.params?.slug}${
+    passage
+      ? `?${new URLSearchParams({ passage: passage.slice(0, 4000) })}`
+      : ''
+  }`;
 }
 /**
  * One cited record: the numeral badge (as in the text), one meta line, the
@@ -91,6 +99,7 @@ export function CitedRecordRow({
   onPress,
   onShowPassage,
   selected = false,
+  profiles,
   testID,
 }: {
   record: Source;
@@ -100,6 +109,7 @@ export function CitedRecordRow({
   onPress?: () => void;
   onShowPassage?: () => void;
   selected?: boolean;
+  profiles?: Map<string, AskPerson>;
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
@@ -109,18 +119,19 @@ export function CitedRecordRow({
   const title = sourceTitle(source);
   const meta = sourceMeta(source);
   const speaker = source.speaker ? personName(source.speaker) : null;
+  const person = source.speaker
+    ? (profiles?.get(source.speaker) ?? profiles?.get(speaker ?? ''))
+    : undefined;
   const href = sourceRoute(source);
   const open = () =>
     onPress
       ? onPress()
       : href
         ? router.push(href)
-        : source.url
-          ? void openSource(source.url, title)
-          : undefined;
+        : openAnswerLink(source.url || source.href || '');
   const row = (
     <Pressable
-      accessibilityRole="button"
+      accessibilityRole={onPress ? 'button' : 'link'}
       accessibilityLabel={[
         n ? `${n}.` : null,
         meta,
@@ -133,6 +144,20 @@ export function CitedRecordRow({
         .filter(Boolean)
         .join(', ')}
       accessibilityState={selected ? { selected } : undefined}
+      accessibilityActions={[
+        ...(person
+          ? [{ name: 'openSpeaker', label: `Open ${person.name}` }]
+          : []),
+        ...(isPartyLabel(source.party)
+          ? [{ name: 'openParty', label: `Open ${source.party} party page` }]
+          : []),
+      ]}
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'openSpeaker' && person)
+          router.push(personRoute(person.slug, person.name));
+        if (event.nativeEvent.actionName === 'openParty' && source.party)
+          router.push(partyRoute(partyFromCode(source.party)));
+      }}
       onPress={open}
       testID={testID}
       style={({ pressed }) => [
@@ -152,10 +177,25 @@ export function CitedRecordRow({
         </Text>
         {speaker ? (
           <View style={styles.speaker}>
-            <Text variant="secondary">{speaker}</Text>
+            <Text
+              variant="secondary"
+              tone={person ? 'link' : undefined}
+              accessibilityRole={person ? 'link' : undefined}
+              accessibilityLabel={person ? `Open ${person.name}` : undefined}
+              onPress={
+                person
+                  ? (event) => {
+                      event.stopPropagation();
+                      router.push(personRoute(person.slug, person.name));
+                    }
+                  : undefined
+              }
+              testID={testID && `${testID}-speaker`}
+            >
+              {speaker}
+            </Text>
             {source.party ? (
-              // The row says the party; a link inside it would steal the tap.
-              <PartyLabel party={source.party} linked={false} nested />
+              <PartyLabel party={source.party} linked nested />
             ) : null}
           </View>
         ) : null}

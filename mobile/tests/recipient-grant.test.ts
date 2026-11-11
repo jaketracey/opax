@@ -1,6 +1,7 @@
 import { apiClient } from '../src/api/runtime';
 import { loadRecipientGrant } from '../src/features/money-public/recipient-grant';
 import { pinned } from './pinned';
+import { organisationHref } from '../src/features/money-public/routes';
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
 const index = pinned('/graph/grants.federal.json') as any;
@@ -27,6 +28,13 @@ test('a recipient award without a program key retains its own value and GrantCon
   );
   expect(record.data.amount).toBe(grant.v);
   expect(record.data.name).toBe('Fraser Coast Regional Council');
+  expect(record.data.onward).toEqual([
+    {
+      key: 'organisation',
+      title: 'Open Fraser Coast Regional Council',
+      href: organisationHref(recipient.id, recipient.n, 'federal'),
+    },
+  ]);
   expect(record.data.originals[0]?.url).toBe(
     `https://www.grants.gov.au/Ga/Show/${grant.guid}`,
   );
@@ -71,7 +79,9 @@ test('an individual recipient has no identifying original link through the recip
     k: 'individual',
   };
   jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
-    data: decode(path.startsWith('/graph/') ? index : { fixture: privateRecipient }),
+    data: decode(
+      path.startsWith('/graph/') ? index : { fixture: privateRecipient },
+    ),
     asOf: null,
     savedAt: 1000,
     stale: false,
@@ -84,6 +94,9 @@ test('an individual recipient has no identifying original link through the recip
   );
   expect(record.data.name).toBe('Individual recipient');
   expect(record.data.originals).toEqual([]);
+  expect(record.data.onward).toEqual([]);
   expect(record.data.path).toBeNull();
-  expect(JSON.stringify(record.data)).not.toContain('Fixture Private Recipient');
+  expect(JSON.stringify(record.data)).not.toContain(
+    'Fixture Private Recipient',
+  );
 });

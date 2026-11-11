@@ -378,7 +378,11 @@ export default function YourMP() {
               {electorate.status === 'loading' ? (
                 <ElectorateCardSkeleton />
               ) : (
-                <ElectorateCard seat={federal} view={electorate.data} />
+                <ElectorateCard
+                  seat={federal}
+                  view={electorate.data}
+                  directory={directory}
+                />
               )}
             </View>
           )}

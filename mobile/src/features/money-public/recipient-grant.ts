@@ -13,6 +13,7 @@ import { formatDate } from '../../design/format';
 import type { MoneyItemView } from './MoneyItem';
 import { combine } from './catalog';
 import { privateNote, publicRecipient } from './privacy';
+import { organisationHref } from './routes';
 
 /** One existing recipient award, reached without a program key. */
 export async function loadRecipientGrant(
@@ -118,15 +119,24 @@ export async function loadRecipientGrant(
         { label: 'Register ID', value: grant.id },
       ].filter((row) => !!row.value),
       children: [],
-      originals: grant.identity.organisation && grant.guid
+      originals:
+        grant.identity.organisation && grant.guid
+          ? [
+              {
+                label: `GrantConnect · ${grant.id}`,
+                url: `https://www.grants.gov.au/Ga/Show/${grant.guid}`,
+              },
+            ]
+          : [],
+      onward: grant.identity.organisation
         ? [
             {
-              label: `GrantConnect · ${grant.id}`,
-              url: `https://www.grants.gov.au/Ga/Show/${grant.guid}`,
+              key: 'organisation',
+              title: `Open ${grant.identity.name}`,
+              href: organisationHref(rid, grant.identity.name, jur),
             },
           ]
         : [],
-      onward: [],
       notes: [
         'Values are the latest published award value, not payments made.',
         ...(!grant.identity.organisation ? [privateNote] : []),

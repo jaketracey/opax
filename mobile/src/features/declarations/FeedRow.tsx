@@ -2,6 +2,9 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { haptic } from '../../design/haptics';
 import type { recentDeclarationsFor } from '../../api/selectors';
 import { formatDate } from '../../design/format';
+import { RecordNameLink } from '../../design/record';
+import { router } from 'expo-router';
+import { moneyRecordRoute } from '../../navigation/routes/public-money';
 import {
   Icon,
   PersonRow,
@@ -26,6 +29,16 @@ type Declaration = NonNullable<
   ReturnType<typeof recentDeclarationsFor>['data']
 >[number] & { profileSlug?: string | null };
 type Tie = NonNullable<Declaration['ties']>[number];
+
+/** The register supplies the donor identity; a name alone is not a join. */
+export function donorTieRoute(tie: Tie) {
+  return tie.donor_id?.startsWith('donor:')
+    ? moneyRecordRoute(
+        { node: tie.donor_id, jurisdiction: 'federal' },
+        tie.organisation,
+      )
+    : undefined;
+}
 
 /** "Same name as an AEC donor: Adani Mining Pty Ltd". */
 export function tieLine(tie: Tie): string {
@@ -139,10 +152,11 @@ function openEntrySource(item: Declaration, index: number) {
 }
 
 /**
- * One entry, one button: the member's words, the category, any name match
+ * One entry opens sources: the member's words, the category, any name match
  * and "Added 2 Sep 2026 · Register of interests". It opens the entry's
  * source sheet (no chevron: it does not push). Touch and hold, or the
  * VoiceOver actions, open the profile or the register, copy or share.
+ * A matched donor has its own link and menu action using the published ID.
  */
 function FeedEntry({
   item,
@@ -158,6 +172,17 @@ function FeedEntry({
   const change = changeLine(item);
   const slug = item.profileSlug;
   const menu: RowMenuAction[] = [
+    ...(item.ties ?? []).flatMap((tie) => {
+      const href = donorTieRoute(tie);
+      return href
+        ? [
+            {
+              title: `Open ${tie.organisation}`,
+              onPress: () => router.push(href),
+            },
+          ]
+        : [];
+    }),
     ...(onOpenPerson
       ? [
           {
@@ -234,13 +259,18 @@ function FeedEntry({
           {item.category}
         </Text>
         {ties.length ? (
-          <Text
-            wordSafe
-            variant="footnote"
-            testID={`declaration-ties-${index}`}
-          >
-            {ties.join('\n')}
-          </Text>
+          <View testID={`declaration-ties-${index}`}>
+            {(item.ties ?? []).map((tie, i) => (
+              <RecordNameLink
+                key={i}
+                name={tieLine(tie)}
+                accessibilityLabel={`Open ${tie.organisation}`}
+                href={donorTieRoute(tie)}
+                variant="footnote"
+                testID={`declaration-tie-${index}-${i}`}
+              />
+            ))}
+          </View>
         ) : null}
         <View style={styles.register}>
           <Icon name={symbols.source} size={13} maxScale={1.5} tone="navy" />

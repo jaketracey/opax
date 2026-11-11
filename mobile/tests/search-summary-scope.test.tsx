@@ -3,6 +3,9 @@ import TestRenderer from 'react-test-renderer';
 import { SuggestionRow, Text } from '../src/design/primitives';
 import { defaultSpeechFilters } from '../src/features/search/filters';
 import { SummaryBlock } from '../src/features/search/SummaryBlock';
+import { router } from 'expo-router';
+import { RecordRow } from '../src/design/rows';
+import { docRoute } from '../src/navigation/routes/records';
 
 jest.mock('../src/api/runtime', () => ({ recordSearch: {}, catalogs: {} }));
 jest.mock('../src/features/search/requests', () => ({
@@ -22,7 +25,7 @@ jest.mock('../src/features/search/requests', () => ({
           {
             id: 'fixture',
             title: 'Fixture speech',
-            href: '/doc/speech-1',
+            href: '/doc/speech-1?utm_source=summary#record',
             kind: 'speech',
             snippet: '',
             evidence: ['Synthetic fixture.'],
@@ -36,6 +39,7 @@ jest.mock('../src/features/search/requests', () => ({
   }),
 }));
 jest.mock('expo-router', () => ({
+  router: { push: jest.fn() },
   useSegments: () => [],
   Link: Object.assign(({ children }: { children: unknown }) => children, {
     Trigger: ({ children }: { children: unknown }) => children,
@@ -44,6 +48,35 @@ jest.mock('expo-router', () => ({
     MenuAction: () => null,
   }),
 }));
+
+test('a summary citation number and its source row open the same speech', () => {
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(
+      <SummaryBlock
+        q="housing"
+        filters={defaultSpeechFilters}
+        sort="relevance"
+        roster={null}
+      />,
+    );
+  });
+  act(() => view.root.findByType(SuggestionRow).props.onPress());
+  const citation = view.root
+    .findAllByType(Text)
+    .find((node) => node.props.testID === 'summary-citation-0-1')!;
+  expect(citation.props).toMatchObject({
+    accessibilityRole: 'link',
+    accessibilityLabel: 'Open citation 1, Fixture speech',
+  });
+  const stopPropagation = jest.fn();
+  act(() => citation.props.onPress({ stopPropagation }));
+  expect(stopPropagation).toHaveBeenCalledTimes(1);
+  expect(router.push).toHaveBeenLastCalledWith(docRoute('speech-1'));
+  expect(view.root.findByType(RecordRow).props.href).toEqual(
+    docRoute('speech-1'),
+  );
+});
 
 test.each(['relevance', 'newest', 'oldest'] as const)(
   'the summary describes the relevance-ranked sources when the list order is %s',
