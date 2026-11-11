@@ -40,9 +40,9 @@ export function StreamedAnswer({
 
 /**
  * The live half of an Ask turn (journeys/ask.md 4.4 step 2, 13 item 9):
- * one status line naming the stage beside a system activity indicator, a
- * skeleton in the answer's shape until text arrives, then the streamed
- * text. Stop is the composer's trailing button.
+ * The animal and research steps accompany the wait until text arrives,
+ * then the existing writing status and streamed text take their place.
+ * Stop is the composer's trailing button.
  */
 export function AskProgress({
   stage,
@@ -57,7 +57,12 @@ export function AskProgress({
 }) {
   return (
     <View style={styles.progress} testID="ask-progress">
-      <AskStatus stage={stage} steps={steps} announcement={announcement} />
+      <AskStatus
+        stage={stage}
+        steps={steps}
+        announcement={announcement}
+        waiting={!streaming}
+      />
       {streaming ? (
         <StreamedAnswer text={streaming} testID="ask-streaming" />
       ) : (
