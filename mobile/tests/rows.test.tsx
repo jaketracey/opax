@@ -369,6 +369,42 @@ for (const scale of [1, 1.786, 3.571]) {
         expect(glyphs(root).includes('chevron.right')).toBe(chevron);
       },
     );
+    test.each(rows)(
+      '%s keeps the same top inset and larger bottom inset in a rounded group',
+      (_name, element) => {
+        size(scale);
+        const plain = render(<InsetGroup>{element}</InsetGroup>).root;
+        const grouped = render(
+          <Screen grouped>
+            <InsetGroup>{element}</InsetGroup>
+          </Screen>,
+        ).root;
+        const plainStyle = rowStyle(row(plain));
+        const groupedStyle = rowStyle(row(grouped));
+        expect(groupedStyle.paddingTop ?? groupedStyle.paddingVertical).toBe(
+          plainStyle.paddingTop ?? plainStyle.paddingVertical,
+        );
+        expect(groupedStyle.paddingBottom).toBe(rhythm.row + rhythm.heading);
+        expect(plainStyle.paddingBottom ?? plainStyle.paddingVertical).toBe(
+          rhythm.row,
+        );
+        const card = grouped.find(
+          (node) =>
+            node.type === 'View' &&
+            flat(node.props.style)?.borderRadius === radii.container,
+        );
+        const cardStyle = flat(card.props.style);
+        expect(cardStyle.paddingBottom).toBe(rhythm.heading);
+        expect(
+          cardStyle.paddingTop ??
+            cardStyle.paddingVertical ??
+            cardStyle.padding ??
+            0,
+        ).toBe(0);
+        expect(groupedStyle.height).toBeUndefined();
+        expect(groupedStyle.maxHeight).toBeUndefined();
+      },
+    );
     test.each([
       <PersonRow
         key="person"

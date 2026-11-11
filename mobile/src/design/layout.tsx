@@ -736,6 +736,8 @@ const styles = StyleSheet.create({
     borderRadius: radii.container,
     borderCurve: 'continuous',
     overflow: 'hidden',
+    // Separate the last row's content inset from the rounded bottom edge.
+    paddingBottom: rhythm.heading,
   },
   sectionHead: {
     minHeight: minimumTarget,

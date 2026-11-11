@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect } from 'react';
-import { colors } from './tokens';
+import { colors, rhythm } from './tokens';
 
 /** Marks a row component that draws its own vertical padding in a InsetGroup. */
 export const ROW_OWNS_PADDING = Symbol.for('opax.rowOwnsPadding');
@@ -30,11 +30,16 @@ export function useRowHighlight() {
     : colors.sunken;
 }
 
-// The group keeps its text inset; rows bleed their interactive surface to the cell edges.
+// The group keeps its text inset; rows bleed their interactive surface to the
+// cell edges and leave a heading step extra below their last line of content.
 export const RowCellInsetContext = createContext(0);
 export function useRowCellStyle() {
   const inset = useContext(RowCellInsetContext);
   return inset
-    ? { marginHorizontal: -inset, paddingHorizontal: inset }
+    ? {
+        marginHorizontal: -inset,
+        paddingHorizontal: inset,
+        paddingBottom: rhythm.row + rhythm.heading,
+      }
     : undefined;
 }
