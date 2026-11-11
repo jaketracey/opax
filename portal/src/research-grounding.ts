@@ -8,6 +8,12 @@ import type {QualitativeAnswer} from './research-types'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
 import {plainCoverageRefusal} from './research-coverage'
 import {atomsFromText,sentenceFragment} from './research-claims'
+import {contentWords} from './research-evidence'
+
+// Metadata copied from a selected record is a citable record description,
+// rather than a model claim about the speaker's position.
+const titleLine=(source:SelectedSource)=>source.date&&source.title?`The record dated ${source.date} is ${source.title.replace(/\s*—\s*/g, ', ')}.`:null
+const isTitleLine=(text:string,sources:SelectedSource[])=>sources.some(source=>source.cited&&titleLine(source)===text)
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
 function checkedClaims(payload:Record<string,unknown>,question:string,promote=true):Record<string,unknown> {
@@ -15,7 +21,7 @@ function checkedClaims(payload:Record<string,unknown>,question:string,promote=tr
   const auditFor=(value:Record<string,unknown>)=>{
     const audit=auditPayload(question,value),records=((Array.isArray(value.sources)?value.sources:[]) as SelectedSource[]).filter(s=>renderedKind(s.kind))
     // A line copied from a selected record is that record; every other line, including points beside it, is audited.
-    audit.findings=audit.findings.filter(f=>{const line=f.text.endsWith('.')?f.text.slice(0,-1):f.text;return !records.some(s=>String(s.snippet??'').includes(line))})
+    audit.findings=audit.findings.filter(f=>{const line=f.text.endsWith('.')?f.text.slice(0,-1):f.text;return !isTitleLine(f.text,(value.sources??[]) as SelectedSource[])&&!records.some(s=>String(s.snippet??'').includes(line))})
     // Keep the decision itself; audit any accompanying substantive points without promoting them.
     if(!promote){const text=String(value.answer??''),end=text.indexOf('\n\n');audit.findings=audit.findings.filter(f=>{const inDecision=(f.offset??text.indexOf(f.text))<(end<0?text.length:end);const questionEcho=f.type==='quote'&&!f.entity&&!!f.quote&&question.includes(f.quote);const nonFactualIdentity=f.type==='entity'&&f.metric==='identity'&&!audit.claims.some(c=>c.text===f.text&&['figure','quote'].includes(c.type));return !inDecision||f.type!=='period'&&!questionEcho&&!nonFactualIdentity})}
     return audit
@@ -99,7 +105,7 @@ export function cleanAnswerShape(payload:Record<string,unknown>):Record<string,u
   const selected=original.map(source=>typeof source.title==='string'&&/\(\s*to\s*\)/i.test(source.title)?{...source,title:source.title.replace(/\s*\(\s*to\s*\)/gi,'')}:source)
   if(selected.some((source,i)=>source!==original[i]))payload={...payload,sources:selected}
   const entities=selected.flatMap(source=>[source.speaker,source.receipt?.source,...atomsFromText(String(source.snippet??''),source.resource,source).map(a=>a.entity)]).filter((s):s is string=>!!s)
-  const fragments=sentenceParts(String(payload.answer??'')).filter(part=>sentenceFragment(part.text,entities))
+  const fragments=sentenceParts(String(payload.answer??'')).filter(part=>!isTitleLine(part.text,selected)&&sentenceFragment(part.text,entities))
   const cleaned=rewriteAnswerPayload(payload,replace=>{
     for(const part of fragments.reverse())replace(new RegExp(`(?<=^[\\s\\S]{${part.at}})[\\s\\S]{${part.text.length}}`,'g'),'')
     replace(/^(?:[ \t]*(?:\[\d+\]|[.!?,;:—–-]))+[ \t]*(?:\n|$)/gm,'')
@@ -215,7 +221,42 @@ function answerFromFound(out:Record<string,unknown>,question:string,evidence:Rec
 }
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
-  return cleanAnswerShape(distinctSummary(answerFromFound(checkedAnswer(payload,question),question,payload)))
+  let result=cleanAnswerShape(distinctSummary(answerFromFound(checkedAnswer(payload,question),question,payload)))
+  const loose=['uncited','partly_cited'].includes(String(payload.answer_status))
+  if(loose&&!protectedDecision(payload)){
+    const text=String(result.answer??''),ranges=Object.values(result.citations??{}).flat() as [number,number][]
+    const unbound=sentenceParts(text).filter(part=>{
+      const from=Array.from(text.slice(0,part.at)).length,to=from+Array.from(part.text).length
+      return !ranges.some(([a,b])=>a<to&&b>from)
+    })
+    if(unbound.length)result=cleanAnswerShape(rewriteAnswerPayload(result,replace=>{
+      for(const part of unbound.reverse())replace(new RegExp(`(?<=^[\\s\\S]{${part.at}})[\\s\\S]{${part.text.length}}`,'g'),'')
+    }))
+    const {answer_status:_status,...rest}=result
+    if(['uncited','partly_cited'].includes(String(_status)))result=rest
+  }
+  // A substantial cut of a passage answer must leave useful, whole text.
+  // Rebuild from the already cited records' titles and dates, without adding
+  // an unchecked summary or changing a refusal, clarification or scope limit.
+  if(protectedDecision(payload)||causalAsk(question))return result
+  const before=String(payload.answer??''),after=String(result.answer??'')
+  const stripped=1-after.length/Math.max(1,before.length)
+  const parts=sentenceParts(after),fragment=parts.some(p=>sentenceFragment(p.text))
+  if(!emptyAnswer(after)&&!fragment&&(stripped<=1/3||parts.length>=2&&after.length>=120))return result
+  const scope=payload.answer_scope as WritingInput['constraints'],topic=contentWords(question)
+  const sources=((payload.sources??[]) as SelectedSource[]).filter(s=>(s.cited||loose)&&s.kind==='speech'&&titleLine(s)&&
+    (!scope?.people?.length||scope.people.includes(s.speaker??''))&&
+    (!scope?.dated||!!s.date&&(!scope.period?.since||s.date>=scope.period.since)&&(!scope.period?.until||s.date<=scope.period.until))&&
+    [...contentWords(s.snippet)].some(word=>topic.has(word))).slice(0,3).map(s=>({...s,cited:true}))
+  if(!sources.length)return result
+  let answer='';const citations:Record<string,[number,number][]>={}
+  for(const source of sources){
+    answer+=(answer?'\n':'')+'- ';const from=Array.from(answer).length
+    answer+=titleLine(source)
+    citations[`${source.resource}/t/body/0`]=[[from,Array.from(answer).length]]
+  }
+  const {answer_status:_status,...rest}=result
+  return {...rest,answer,answer_decision:'answer',citations,sources,coherence:{...((result.coherence??{}) as object),fallback:true,method:'cited_record_titles',stripped_ratio:stripped}}
 }
 function checkedAnswer(payload:Record<string,unknown>,question:string):Record<string,unknown> {
   payload=plainCoverageRefusal(payload,question)

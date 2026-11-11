@@ -35,6 +35,8 @@ export function sentenceParts(value){
 function periods(text){
  const out=[]
  for(const m of text.matchAll(/\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2} (?:January|February|March|April|May|June|July|August|September|October|November|December)(?: \d{4})?\b|\b(?:January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}(?:,? \d{4})?\b|\b(?:19|20)\d{2}(?:[–-]\d{2,4}|s)?\b/g)){
+  // A count such as "2070 chamber speeches" is a quantity, not the year 2070.
+  if(/^\d{4}$/.test(m[0])&&/^\s+(?:chamber |topic-labelled )?speeches\b/i.test(text.slice(m.index+m[0].length)))continue
   let value=m[0]
   if(!/^\d{4}/.test(value)){
    const date=/^(\d+) (\w+)(?: (\d{4}))?$/.exec(value),reverse=/^(\w+) (\d+),?(?: (\d{4}))?$/.exec(value)
@@ -156,8 +158,11 @@ function evidenceRows(payload){
    const ireport=held?null:/^(.+?) \(([^()]+)\) (?:issued|published|tabled) an? [^"]*?(?:report|statement)\b[^"]*"[^"]+"(?: \(([^()]+)\))?\./.exec(line)
    const commission=held?[held[2],held[3]]:ireport?[ireport[1],ireport[2],ireport[3]].filter(Boolean):null
    const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(receipt?.[2]??donor?.[1]??current??kmp?.[1]??commission?.[0]??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
-   const fiscal=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(text)?.[1];const period=periods(line);
+   const annualCount=source.kind==='count'&&/^(?:19|20)\d{2}: \d[\d,]* chamber speeches labelled\b/.test(line)
+   const fiscal=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(text)?.[1];const period=periods(annualCount?label:line);
    const values=figures(line);for(const f of values){if(['speech','bill'].includes(source.kind)&&f.metric==='receipts'&&!f.owner){const before=line.slice(Math.max(0,f.at-120),f.at),party=[...before.matchAll(/\b(Labor|Coalition|Liberal|ALP|Greens|Nationals)(?: Party)?\b[^.;]{0,70}\b(?:received|collected|accepted)\b[^$]*$/gi)].at(-1);if(party)f.owner=partyName(party[1])}if(source.date&&/^\s*last financial year\b/i.test(line.slice(f.end))){const year=Number(source.date.slice(0,4))-(Number(source.date.slice(5,7))>=7?1:2);f.period=periods(year+'-'+String((year+1)%100).padStart(2,'0'))}}
+   // A labelled year is the observation's period; "from" is the query window.
+   if(annualCount)for(const f of values)f.period=period
    for(const f of values){f.donor=givingActor(line,f,nounPhrases(line).map(n=>n.name),source.speaker);f.owners=['speech','bill'].includes(source.kind)?amountOwners(line,f):[f.owner??entity].filter(Boolean)}
    if(kmp)for(const f of values)if(f.unit.startsWith('AUD')){f.owner=kmp[2];f.owners=[entity,kmp[2]]}
    if(commission)for(const f of values)f.owners=commission

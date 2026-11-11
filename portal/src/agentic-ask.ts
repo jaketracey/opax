@@ -31,7 +31,7 @@ import { ResearchError, researchSources, type Research, type ResearchPayload, ty
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
 import { CAUSAL } from './research-coherence.mjs'
 
-export const AGENTIC_PROMPT_VERSION = `agentic-ask-10-evidence-completion/${ANSWER_WRITING_VERSION}`
+export const AGENTIC_PROMPT_VERSION = `agentic-ask-11-topic-scope/${ANSWER_WRITING_VERSION}`
 export const AGENTIC_BUDGET_MS = ASK_HARD_WALL_MS
 export const AGENTIC_MAX_STEPS = ASK_MAX_TOOL_CALLS
 /** Soft answer target; a missing fact or recovery may use the rest of the hard allowance. */
@@ -367,11 +367,20 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
   // asker uses capitals at all, a one-word match must be capitalised as written in the roster.
   const cased = /\p{Lu}/u.test(publicQuestion)
   const capitalised = (word: string) => !cased || new RegExp(`(?<![\\p{L}])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'u').test(publicQuestion)
+  // Topic objects and geographic names are not people. A surname alias needs
+  // an explicit title or person-subject grammar, rather than a capital letter.
+  // Full roster names still match anywhere, including comparisons.
+  const personalSurname = (surname: string) => {
+    const escaped = surname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    return new RegExp(`\\b(?:senator|sen|minister|mr|mrs|ms|miss|dr|mp) ${escaped}\\b|\\b${escaped} s\\b`, 'u').test(q) ||
+      new RegExp(`\\b(?:has|have|did|does|would|might|was|is) ${escaped} (?:said|say|spoken|speak|made|make|voted|vote|paid|earn|support|oppose|propose)\\b`, 'u').test(q) ||
+      new RegExp(`\\b(?:speeches|remarks|statements|votes) (?:by|from|of) ${escaped}(?: (?:about|on|in|since|until)| $)`, 'u').test(q)
+  }
   let unmatched = q
   for (const party of [...new Set(Object.values(aliases).flat())].sort((a, b) => b.length-a.length)) unmatched = unmatched.split(` ${normaliseQuestion(party)} `).join(' ~ ')
   for (const p of records.filter(p => typeof p.name === 'string').sort((a, b) => b.name.length - a.name.length)) {
     const name = ` ${normaliseQuestion(p.name)} `
-    if (!p.name.trim().includes(' ') && !capitalised(p.name.trim())) continue
+    if (!p.name.trim().includes(' ') && (!capitalised(p.name.trim()) || !personalSurname(normaliseQuestion(p.name)))) continue
     if (unmatched.includes(name)) { people.push(p.name); unmatched = unmatched.split(name).join(' ~ ') }
   }
   let ambiguous = false
@@ -385,7 +394,7 @@ export function extractNamedScope(question: string, roster: unknown, billList: u
     surnames.get(surname)!.add(p.name)
   }
   const namePrefixes = new Set('d has have did does do what who why how when is was were are by from about on of for to with and or versus vs compare senator minister mr mrs ms dr the will can could should'.split(' '))
-  for (const [surname, names] of surnames) if (remainder.includes(` ${surname} `) && capitalised([...names][0].trim().split(' ').at(-1)!)) {
+  for (const [surname, names] of surnames) if (remainder.includes(` ${surname} `) && capitalised([...names][0].trim().split(' ').at(-1)!) && personalSurname(surname)) {
     const before = remainder.slice(0, remainder.indexOf(` ${surname} `)).trim().split(' ').at(-1) ?? ''
     const given = [...names].some(name => normaliseQuestion(name).split(' ').slice(0, -1).includes(before))
     if (before && before !== '~' && !namePrefixes.has(before) && !given) continue

@@ -5,6 +5,7 @@ import { CAUSAL } from './research-coherence.mjs'
 import { claimMatchesSpeaker, personMentions } from './ask-attribution'
 import { withoutSaPlaceholder } from '../public/sa-hansard.js'
 import type { Passage, QualitativeAnswer } from './research-types'
+import {isPlaceNameMention} from './ask-person-slot'
 
 export interface AnswerCitation { id: string; quote: string; start: number; end: number }
 export interface AnswerDraft { text: string; citations: AnswerCitation[] }
@@ -299,7 +300,8 @@ export function verifyResearchPoints(points: unknown, passages: Map<string, Pass
     const full = speaker?.trim() ?? '', surname = full.split(/\s+/).at(-1) ?? ''
     if (!full.includes(' ') || !isNamed(named.people, full)) return claim
     const at = new RegExp(`(?<![\\p{L}])(\\p{Lu}[\\p{L}'’.-]*\\s+)?${surname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}])`, 'gu')
-    return claim.replace(at, (match, before?: string) => !before ? full : TITLE.test(before.trim()) ? full : match)
+    return claim.replace(at, (match, before: string | undefined, offset: number) =>
+      isPlaceNameMention(claim,offset,offset+match.length) ? match : !before ? full : TITLE.test(before.trim()) ? full : match)
   }
   const kept: AnswerPoint[] = [], loose: { claim: string; passage: Passage }[] = [], seen = new Set<string>()
   valid.forEach(raw => {

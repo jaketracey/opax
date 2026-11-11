@@ -2,6 +2,7 @@ import { extractNamedScope, normaliseQuestion } from './agentic-ask'
 import { EVIDENCE_GAP_ANSWER } from './ask-evidence'
 import { saDisplayPayload } from '../public/sa-hansard.js'
 import {guardClaimMeasures} from './ask-claim-measures'
+import {isPlaceNameMention} from './ask-person-slot'
 
 const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 // The export also has partial bylines ("Liddle", "David", "On"). They
@@ -24,6 +25,7 @@ export function personMentions(text: string, roster: unknown) {
     if (surname.length < 2) continue
     const short = new RegExp(`(?<![\\p{L}\\p{N}])${escape(surname)}(?![\\p{L}\\p{N}])`, surname.length < 4 ? 'gu' : 'giu')
     for (const match of text.matchAll(short)) {
+      if (isPlaceNameMention(text,match.index,match.index+match[0].length)) continue
       // A surname alone is a name only when capitalised ("Small", "SMALL"); "small modular reactors" names nobody.
       if (!/^\p{Lu}/u.test(match[0])) continue
       if (!fullNames.some(m => match.index >= m.start && match.index + match[0].length <= m.end)) {

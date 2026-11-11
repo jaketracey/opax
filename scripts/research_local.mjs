@@ -3,6 +3,7 @@
 //
 //   npm run research:local -- [questionIds...] [--model slug] [--port 8967] [--keep] [--json out.json]
 //
+// IDs or literal questions are accepted. --questions PATH selects a regression set.
 // --serve starts the server without Asks; --portal PATH selects a detached baseline checkout.
 // --local-data disables remote bindings and blocks outbound requests except the model provider.
 // Remote public D1/KV reads are retained; telemetry is local and KV writes are suppressed.
@@ -18,9 +19,12 @@ import {resolve, sep} from 'node:path';
 import {spawn} from 'node:child_process';
 import {readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync, symlinkSync} from 'node:fs';
 import {createRequire} from 'node:module';
+import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 
 const sourcePortal = fileURLToPath(new URL('../portal/', import.meta.url));
+const localTelemetry = new Map();
+const questionHash = question => createHash('sha256').update(question.normalize('NFKC').toLowerCase().replace(/[‘’“”]/g, "'").replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim()).digest('hex');
 const args = process.argv.slice(2);
 const flag = (name, fallback) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : fallback; };
 const portal = flag('--portal', sourcePortal);
@@ -30,9 +34,14 @@ const port = Number(flag('--port', 8967));
 const model = flag('--model', 'deepseek/deepseek-v4.1-flash');
 const keep = args.includes('--keep'), reuse = args.includes('--reuse');
 const jsonOut = flag('--json', null);
-const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal'].includes(args[i - 1]));
-const questions = JSON.parse(readFileSync(new URL('research_local_questions.json', import.meta.url), 'utf8'))
-  .filter(q => !serveOnly && (!ids.length || ids.includes(q.id)));
+const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal', '--questions'].includes(args[i - 1]));
+const available = JSON.parse(readFileSync(flag('--questions', new URL('research_local_questions.json', import.meta.url)), 'utf8'));
+const questions = serveOnly ? [] : ids.length ? ids.map((id, i) => {
+  const known = available.find(q => q.id === id);
+  if (known) return known;
+  if (/\s/.test(id)) return {id: `literal-${i + 1}`, kind: 'literal', question: id};
+  throw new Error(`Unknown question id: ${id}`);
+}) : available;
 
 const vars = Object.fromEntries(readFileSync(portal + '.dev.vars', 'utf8').split('\n')
   .map(l => l.match(/^([A-Z0-9_]+)=(.*)$/)).filter(Boolean).map(m => [m[1], m[2].replace(/^"|"$/g, '')]));
@@ -107,10 +116,19 @@ async function startServer(base) {
   child.stop = stop;
   if(serveOnly)child.once('exit',(code,signal)=>{console.error(`Local research Worker stopped (exit=${code}, signal=${signal??'none'}).`);process.exit(code??3)});
   let log = '';
-  child.stdout.on('data', d => { log += d; for (const line of String(d).split('\n')) if (/^\{"kind":"research_loop_/.test(line)) console.log(line); }); child.stderr.on('data', d => { log += d; });
+  let pendingLog = '';
+  child.stdout.on('data', d => {
+    log += d; pendingLog += d;
+    const lines = pendingLog.split('\n'); pendingLog = lines.pop();
+    for (const line of lines) if (/^\{"kind":"research_loop_/.test(line)) {
+      console.log(line);
+      try { const event = JSON.parse(line); if (event.kind === 'research_loop_fallback') localTelemetry.set(event.question_hash, event); } catch {}
+    }
+  }); child.stderr.on('data', d => { log += d; });
   for (let i = 0; i < 120; i++) {
     if (await up(base)) return child;
     if (child.exitCode !== null) break;
+    if (/\[ERROR\] Build failed/.test(log)) break;
     await new Promise(r => setTimeout(r, 2000));
   }
   console.error('wrangler dev did not come up:\n' + log.split('\n').filter(l => !/KEY|TOKEN|SECRET/.test(l)).slice(-25).join('\n'));
@@ -143,7 +161,7 @@ async function ask(base, q) {
     body: JSON.stringify({question: q.question})});
   const text = await res.text();
   let d; try { d = JSON.parse(text); } catch { d = {error: text.slice(0, 200)}; }
-  return {status: res.status, ms: Date.now() - t0, d};
+  return {status: res.status, ms: Date.now() - t0, d, telemetry: localTelemetry.get(questionHash(q.question))};
 }
 
 const base = `http://127.0.0.1:${port}`;
@@ -152,8 +170,14 @@ if (serveOnly) { console.log(`Local research server ready on port ${port}; proce
 const rows = [], dump = [];
 try {
   for (const q of questions) {
-    const {status, ms, d} = await ask(base, q);
-    const r = d.research || {}, c = checks(d);
+    const {status, ms, d, telemetry} = await ask(base, q);
+    const r = {...(d.research || {})}, c = checks(d);
+    if (telemetry) {
+      r.cost_usd ??= telemetry.cost_usd;
+      r.failure ??= telemetry.reason;
+      r.turns ??= telemetry.turns;
+      r.rounds ??= telemetry.rounds;
+    }
     console.log(`\n=== ${q.id} [${q.kind}] ${q.question}`);
     console.log(`HTTP ${status}  ${(ms / 1000).toFixed(1)} s  mode=${r.mode ?? '-'}  failure=${r.failure ?? '-'}  rounds=${r.rounds ?? '-'}  $${r.cost_usd?.toFixed?.(4) ?? '-'}  model=${short(r.model, 60)}`);
     for (const [i, t] of (r.turns || []).entries())
@@ -167,7 +191,8 @@ try {
     if (a) console.log(`  points: ${a.points_kept}/${a.points_in} kept (${a.mode ?? 'points'})  repairs ${JSON.stringify(a.repairs)}  drops ${JSON.stringify(a.drops)}`);
     console.log(`  checks: loop=${c.loop} quotes=${c.quotes} verbatim=${c.verbatim} unbound-markers=${c.unbound} placeholder=${c.placeholder}`);
     rows.push({id: q.id, kind: q.kind, s: (ms / 1000).toFixed(1), mode: r.mode ?? '-', failure: r.failure ?? '', cost: r.cost_usd ?? null, kept: r.answer_stats ? `${r.answer_stats.points_kept}/${r.answer_stats.points_in}` : '-', ...c});
-    dump.push({q, status, ms, payload: d});
+    dump.push({q, status, ms, payload: d, ...(telemetry ? {local_telemetry: telemetry} : {})});
+    if (jsonOut) writeFileSync(jsonOut, JSON.stringify(dump, null, 1));
   }
 } finally {
   if (server && !keep) server.stop();

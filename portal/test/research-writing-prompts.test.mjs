@@ -21,7 +21,7 @@ test('ordinary answer prompt starts with the requested answer and prevents tool 
  const {prompt}=buildAskBody({question:'Which party received the most disclosed receipts?'},{records:[{kind:'receipt',amount:20000}],coverage:'Published returns only.',total:1});
  assert.match(prompt.user,/first sentence must answer the question with the requested name, figure, date or outcome/);
  assert.match(prompt.user,/Do not restate the question/);
- assert.match(prompt.user,/never paste raw tool rows/);
+ assert.match(prompt.user,/Use plain prose for the substantive answer/);
  assert.match(prompt.user,/State each fact once/);
  assert.match(prompt.user,/each figure one supporting citation at the claim/);
  assert.match(prompt.user,/response coverage note, and only when the answer depends on them/);
