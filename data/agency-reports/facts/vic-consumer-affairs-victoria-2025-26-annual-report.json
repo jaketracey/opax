@@ -1,0 +1,129 @@
+{
+  "report_id": "vic-consumer-affairs-victoria-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "executive_count",
+    "executive_remuneration_total",
+    "staff_fte",
+    "staff_headcount",
+    "total_expenses",
+    "total_income",
+    "employee_expenses",
+    "net_result",
+    "consultancy_total",
+    "consultancy"
+  ],
+  "facts": [
+    {
+      "metric": "operational_other",
+      "label_as_published": "Court and administrative actions taken in relation to consumer laws",
+      "column_as_published": "2025–26 actual",
+      "value": 1104,
+      "value_as_published": "1,104",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 12,
+      "quote": "Court and administrative actions taken in relation to consumer laws 1 Number 963 1,171 900 1,104"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Calls answered",
+      "column_as_published": "Full year 2025–26",
+      "value": 232060,
+      "value_as_published": "232,060",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 14,
+      "quote": "Calls answered 220,741 226,102 232,060"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Disputes finalised",
+      "column_as_published": "Full year 2025–26",
+      "value": 7419,
+      "value_as_published": "7,419",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 14,
+      "quote": "Disputes finalised 4,499 6,537 7,419"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Residential Tenancies Bond Authority (RTBA) user transactions completed",
+      "column_as_published": "2025–26 actual",
+      "value": 503624,
+      "value_as_published": "503,624",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 12,
+      "quote": "Residential Tenancies Bond Authority (RTBA) user transactions completed Number 497,780 504,016 495,000 503,624"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Inspections",
+      "column_as_published": "2025–26",
+      "value": 3201,
+      "value_as_published": "3,201",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 36,
+      "quote": "Inspections 1,434 2,403 3,201"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Investigations",
+      "column_as_published": "2025–26",
+      "value": 49,
+      "value_as_published": "49",
+      "unit": "count",
+      "period": "open investigations as at 30 June 2026",
+      "page": 36,
+      "quote": "Investigations 1 74 51 49"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Official warnings and infringement notices issues",
+      "column_as_published": "2025–26",
+      "value": 1032,
+      "value_as_published": "1,032",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 36,
+      "quote": "Official warnings and infringement notices issues 876 1,095 1,032"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "new criminal and civil proceedings",
+      "value": 30,
+      "value_as_published": "30",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 32,
+      "quote": "CAV commenced 30 new criminal and civil proceedings in 2025–26"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "criminal prosecutions",
+      "value": 18,
+      "value_as_published": "18",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 32,
+      "quote": "We also finalised 18 criminal prosecutions and 7 civil and disciplinary matters"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total number of claims allowed",
+      "column_as_published": "2025–26",
+      "value": 48,
+      "value_as_published": "48",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 31,
+      "quote": "Total number of claims allowed 54 45 48"
+    }
+  ]
+}

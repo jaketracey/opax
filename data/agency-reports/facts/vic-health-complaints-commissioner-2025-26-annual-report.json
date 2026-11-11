@@ -1,0 +1,133 @@
+{
+  "report_id": "vic-health-complaints-commissioner-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "executive_count",
+    "executive_remuneration_total",
+    "staff_fte",
+    "staff_headcount",
+    "total_expenses",
+    "total_income",
+    "employee_expenses",
+    "net_result",
+    "consultancy_total",
+    "public_hearings",
+    "referrals_to_prosecution",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "matters_received",
+      "label_as_published": "total complaints received",
+      "value": 6358,
+      "value_as_published": "6,358",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "6,358 total complaints received"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "total enquiries received",
+      "value": 4438,
+      "value_as_published": "4,438",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "4,438 total enquiries received"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "Investigations commenced",
+      "value": 19,
+      "value_as_published": "19",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "19 Investigations commenced"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "Investigations finalised",
+      "value": 30,
+      "value_as_published": "30",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "30 Investigations finalised"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "total complaints finalised",
+      "value": 5402,
+      "value_as_published": "5,402",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "5,402 total complaints finalised"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "total enquiries finalised",
+      "value": 4426,
+      "value_as_published": "4,426",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "4,426 total enquiries finalised"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Interim prohibition orders published",
+      "value": 48,
+      "value_as_published": "48",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "48 Interim prohibition orders published"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Prohibition orders published",
+      "value": 10,
+      "value_as_published": "10",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "10 Prohibition orders published"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "notifications from Ahpra",
+      "value": 1425,
+      "value_as_published": "1,425",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 24,
+      "quote": "received 1,425 notifications from Ahpra"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "calls",
+      "value": 13826,
+      "value_as_published": "13,826",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 12,
+      "quote": "we answered 76% of 13,826 calls"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "complaints about HCC services",
+      "value": 103,
+      "value_as_published": "103",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 27,
+      "quote": "we received 103 complaints about HCC services, compared to 68 the previous year"
+    }
+  ]
+}

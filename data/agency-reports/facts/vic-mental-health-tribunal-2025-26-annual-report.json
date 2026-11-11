@@ -1,0 +1,186 @@
+{
+  "report_id": "vic-mental-health-tribunal-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_remuneration_total",
+    "executive_average_remuneration",
+    "total_income",
+    "employee_expenses",
+    "net_result",
+    "consultancy_total",
+    "consultancy",
+    "investigations_commenced",
+    "investigations_finalised",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total",
+      "column_as_published": "2025-26",
+      "value": 16014162,
+      "value_as_published": "$16,014,162",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 47,
+      "quote": "Operating Expenses $840,610 $696,710 $818,825 Total $16,014,162 $14,836,480 $13,380,591"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total",
+      "column_as_published": "All employees",
+      "value": 38,
+      "value_as_published": "38",
+      "unit": "people",
+      "period": "as at 30 June 2026",
+      "page": 48,
+      "quote": "Total 38 33.7 28 25.3 10 8.4"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total",
+      "column_as_published": "Filled FTE",
+      "value": 33.7,
+      "value_as_published": "33.7",
+      "unit": "fte",
+      "period": "as at 30 June 2026",
+      "page": 48,
+      "quote": "Total 38 33.7 28 25.3 10 8.4"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Executive",
+      "column_as_published": "All employees",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 48,
+      "quote": "Executive 1 1 - - 1 1",
+      "band": "Executive"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "complaints",
+      "column_as_published": "Complaints",
+      "value": 30,
+      "value_as_published": "30",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 43,
+      "quote": "During 2025-26 the Tribunal received 30 complaints and 15 pieces of feedback"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Hearings listed§",
+      "column_as_published": "2025-26",
+      "value": 18477,
+      "value_as_published": "18,477",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "Hearings listed§ 18,477 17,735 15,775"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Hearings conducted",
+      "column_as_published": "2025-26",
+      "value": 13274,
+      "value_as_published": "13,274",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "Hearings conducted 13,274 13,029 11,129"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Hearings determined",
+      "column_as_published": "2025-26",
+      "value": 11414,
+      "value_as_published": "11,414",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "Hearings determined 11,414 11,144 9,398"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of patients who had a hearing‡",
+      "column_as_published": "2025-26",
+      "value": 6468,
+      "value_as_published": "6,468",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "Number of patients who had a hearing‡ 6,468 6,171 5,618"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Treatment orders made / confirmed",
+      "column_as_published": "2025-26",
+      "value": 10120,
+      "value_as_published": "10,120",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "Treatment orders made / confirmed 10,120 10,087 8,350"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Temporary treatment orders / Treatment orders revoked",
+      "column_as_published": "2025-26",
+      "value": 829,
+      "value_as_published": "829",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "Temporary treatment orders / Treatment orders revoked 829 633 617"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "ECT orders made",
+      "column_as_published": "2025-26",
+      "value": 623,
+      "value_as_published": "623",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "ECT orders made 623 663 507"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "ECT applications refused",
+      "column_as_published": "2025-26",
+      "value": 117,
+      "value_as_published": "117",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "ECT applications refused 117 90 77"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Statement of reasons requested",
+      "column_as_published": "2025-26",
+      "value": 514,
+      "value_as_published": "514",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "Statement of reasons requested 514 436 348"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Applications to VCAT",
+      "column_as_published": "2025-26",
+      "value": 94,
+      "value_as_published": "94",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 20,
+      "quote": "Applications to VCAT 94 44 34"
+    }
+  ]
+}

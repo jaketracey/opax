@@ -1,0 +1,224 @@
+{
+  "report_id": "vic-victorian-institute-of-teaching-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "executive_average_remuneration",
+    "investigations_commenced",
+    "investigations_finalised",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "2026",
+      "value": 28713111,
+      "value_as_published": "28,713,111",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 73,
+      "quote": "Total revenue and income from transactions 28,713,111 24,438,713"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026",
+      "value": 25610949,
+      "value_as_published": "25,610,949",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 73,
+      "quote": "Total expenses from transactions 25,610,949 23,880,174"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee expenses",
+      "column_as_published": "2026",
+      "value": 18725695,
+      "value_as_published": "18,725,695",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 73,
+      "quote": "Employee expenses 3.1.1 18,725,695 16,599,610"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result from transactions",
+      "column_as_published": "2026",
+      "value": 3102162,
+      "value_as_published": "3,102,162",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 73,
+      "quote": "Net result from transactions 3,102,162 558,539"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "TOTAL",
+      "value": 152,
+      "value_as_published": "152",
+      "unit": "people",
+      "period": "as at 30 June 2026",
+      "page": 60,
+      "quote": "At 30 June 2026, VIT employed 152 staff, representing 149.6 full-time equivalent employees"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "TOTAL",
+      "value": 149.6,
+      "value_as_published": "149.6",
+      "unit": "fte",
+      "period": "as at 30 June 2026",
+      "page": 60,
+      "quote": "At 30 June 2026, VIT employed 152 staff, representing 149.6 full-time equivalent employees"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives",
+      "column_as_published": "2026",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 97,
+      "quote": "Total number of executives 2 2"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 432434,
+      "value_as_published": "432,434",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 97,
+      "quote": "Total remuneration 432,434 314,672"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total key management personnel compensation",
+      "column_as_published": "2026",
+      "value": 538812,
+      "value_as_published": "538,812",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 98,
+      "quote": "Total key management personnel compensation 538,812 402,348"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+      "value": 135400,
+      "value_as_published": "$135,400",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 106,
+      "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies was $135,400 (excl GST)."
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "Incoming cases",
+      "column_as_published": "2025-26",
+      "value": 1820,
+      "value_as_published": "1,820",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 33,
+      "quote": "Incoming cases 1,820 Finalised cases 1,916 Open cases 1,599"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Finalised cases",
+      "column_as_published": "2025-26",
+      "value": 1916,
+      "value_as_published": "1,916",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 33,
+      "quote": "Incoming cases 1,820 Finalised cases 1,916 Open cases 1,599"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Open cases",
+      "column_as_published": "2025-26",
+      "value": 1599,
+      "value_as_published": "1,599",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 33,
+      "quote": "Incoming cases 1,820 Finalised cases 1,916 Open cases 1,599"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "teachers were suspended on an interim basis",
+      "value": 29,
+      "value_as_published": "29",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 36,
+      "quote": "In total, 29 teachers were suspended on an interim basis during the reporting period."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "suspended the registration of",
+      "value": 38,
+      "value_as_published": "38",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 36,
+      "quote": "VIT suspended the registration of 38 teachers on an ongoing basis."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "teachers had their registration cancelled",
+      "value": 49,
+      "value_as_published": "49",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 36,
+      "quote": "49 teachers had their registration cancelled in the past year."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 $ (excl. GST)",
+      "column_as_published": "Expenditure 2025-26",
+      "value": 24000,
+      "value_as_published": "24,000",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 106,
+      "quote": "Headbench Omnip Pty Ltd Expert advice and review of project management for professional conduct reform program. 24,000 24,000 0",
+      "counterparty": "Headbench Omnip Pty Ltd",
+      "purpose": "Expert advice and review of project management for professional conduct reform program."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 $ (excl. GST)",
+      "column_as_published": "Expenditure 2025-26",
+      "value": 71400,
+      "value_as_published": "71,400",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 106,
+      "quote": "Vicissitude Pty Ltd Expert advice and review of People and Culture functions and follow up staff and leadership development 71,400 71,400 0",
+      "counterparty": "Vicissitude Pty Ltd",
+      "purpose": "Expert advice and review of People and Culture functions and follow up staff and leadership development"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 $ (excl. GST)",
+      "column_as_published": "Expenditure 2025-26",
+      "value": 40000,
+      "value_as_published": "40,000",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 106,
+      "quote": "Peter Styles HR Services Pty Ltd Industrial relations advice 40,000 40,000 0",
+      "counterparty": "Peter Styles HR Services Pty Ltd",
+      "purpose": "Industrial relations advice"
+    }
+  ]
+}

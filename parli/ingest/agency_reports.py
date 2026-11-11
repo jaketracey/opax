@@ -210,7 +210,11 @@ def page_text(row) -> list[str]:
     path = CACHE / "text" / (row["sha256"] + ".json")
     if not path.exists():
         pdf_pages((CACHE / "files" / f"{row['sha256']}.pdf").read_bytes(), CACHE)
-    return json.loads(path.read_text())
+    # some PDF text layers carry control characters (BEL before table labels); read them as spaces
+    return [CONTROL.sub(" ", t) for t in json.loads(path.read_text())]
+
+
+CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 
 
 def parse_number(text):

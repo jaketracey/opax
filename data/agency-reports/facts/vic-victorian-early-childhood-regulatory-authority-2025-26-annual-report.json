@@ -1,0 +1,288 @@
+{
+  "report_id": "vic-victorian-early-childhood-regulatory-authority-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "executive_average_remuneration",
+    "investigations_commenced",
+    "investigations_finalised",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "30 Jun 2026 $’000",
+      "value": 39568,
+      "value_as_published": "39,568",
+      "unit": "thousands_of_dollars",
+      "period": "period 1 January to 30 June 2026",
+      "page": 34,
+      "quote": "Total revenue and income from transactions 39,568"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "30 Jun 2026 $’000",
+      "value": -19956,
+      "value_as_published": "(19,956)",
+      "unit": "thousands_of_dollars",
+      "period": "period 1 January to 30 June 2026",
+      "page": 34,
+      "quote": "Total expenses from transactions (19,956)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee expenses",
+      "column_as_published": "30 Jun 2026 $’000",
+      "value": -15724,
+      "value_as_published": "(15,724)",
+      "unit": "thousands_of_dollars",
+      "period": "period 1 January to 30 June 2026",
+      "page": 34,
+      "quote": "Employee expenses 3.2.1 (15,724)"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result",
+      "column_as_published": "30 Jun 2026 $’000",
+      "value": 19599,
+      "value_as_published": "19,599",
+      "unit": "thousands_of_dollars",
+      "period": "period 1 January to 30 June 2026",
+      "page": 34,
+      "quote": "Net result 19,599"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total employees",
+      "column_as_published": "Number (headcount)(b)",
+      "value": 204,
+      "value_as_published": "204",
+      "unit": "people",
+      "period": "last full pay period in June 2026",
+      "page": 57,
+      "quote": "Total employees 204 197.9 163 23 180.0 18 17.9"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total employees",
+      "column_as_published": "FTE",
+      "value": 197.9,
+      "value_as_published": "197.9",
+      "unit": "fte",
+      "period": "last full pay period in June 2026",
+      "page": 57,
+      "quote": "Total employees 204 197.9 163 23 180.0 18 17.9"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+      "value": null,
+      "value_as_published": "$290,000–$300,000",
+      "unit": "dollars",
+      "period": "January to June 2026",
+      "page": 48,
+      "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of VECRA during the reporting period was in the range of $290,000–$300,000 from January to June 2026."
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration (inc. key management personnel in Note 7.4) ($’000)",
+      "column_as_published": "Period ended 30 Jun 2026",
+      "value": 549,
+      "value_as_published": "549",
+      "unit": "thousands_of_dollars",
+      "period": "period 1 January to 30 June 2026",
+      "page": 48,
+      "quote": "Total remuneration (inc. key management personnel in Note 7.4) ($’000) 549"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "count",
+      "period": "period 1 January to 30 June 2026",
+      "page": 48,
+      "quote": "Total number of executives 5"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES(e)",
+      "column_as_published": "Number (headcount)(b)",
+      "value": 4,
+      "value_as_published": "4",
+      "unit": "count",
+      "period": "last full pay period in June 2026",
+      "page": 57,
+      "quote": "SES(e) 4 3.8 3 1 3.8 – –",
+      "band": "SES"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Compensation of KMPs",
+      "column_as_published": "Period ended 30 Jun 2026 $’000",
+      "value": 604,
+      "value_as_published": "604",
+      "unit": "thousands_of_dollars",
+      "period": "period 1 January to 30 June 2026",
+      "page": 49,
+      "quote": "Compensation of KMPs 604"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies valued at $10,000 or greater",
+      "value": 614449,
+      "value_as_published": "$614,449",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 64,
+      "quote": "These consultancies incurred a total expenditure of $614,449 (excluding GST)"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025–26 ($ excl. GST)",
+      "column_as_published": "Expenditure 2025–26 ($ excl. GST)",
+      "value": 415049,
+      "value_as_published": "415,049",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 64,
+      "quote": "KPMG To support and enable VECRA’s transition to an independent statutory authority from the Department of Education, including options and a recommended approach for design issues required for a Cabinet submission, and cost estimates for a budget submission. 4/07/2025 19/12/2025 415,049 415,049 –",
+      "counterparty": "KPMG",
+      "purpose": "To support and enable VECRA’s transition to an independent statutory authority from the Department of Education, including options and a recommended approach for design issues required for a Cabinet submission, and cost estimates for a budget submission."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025–26 ($ excl. GST)",
+      "column_as_published": "Expenditure 2025–26 ($ excl. GST)",
+      "value": 144000,
+      "value_as_published": "144,000",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 64,
+      "quote": "Aeon Advisory Pty Ltd Oversee the undertaking and delivery of a Capability Review of the ECEC Regulator, as recommended by the 2025 Rapid Child Safety Review. 2/03/2026 15/09/2026 205,200 144,000 61,200",
+      "counterparty": "Aeon Advisory Pty Ltd",
+      "purpose": "Oversee the undertaking and delivery of a Capability Review of the ECEC Regulator, as recommended by the 2025 Rapid Child Safety Review."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025–26 ($ excl. GST)",
+      "column_as_published": "Expenditure 2025–26 ($ excl. GST)",
+      "value": 55400,
+      "value_as_published": "55,400",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 64,
+      "quote": "Right Lane Consulting Pty Ltd Provide structured external support to confirm current approved positions, refine branch structures, align functions to available resources, and develop a defensible interim operating model. 16/02/2026 16/03/2026 55,400 55,400 –",
+      "counterparty": "Right Lane Consulting Pty Ltd",
+      "purpose": "Provide structured external support to confirm current approved positions, refine branch structures, align functions to available resources, and develop a defensible interim operating model."
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "Direct and notified complaints",
+      "value": 2427,
+      "value_as_published": "2,427",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 22,
+      "quote": "During the reporting period, VECRA recorded 2,427 complaints across 2 channels."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Direct complaints to VECRA",
+      "column_as_published": "Cases recorded",
+      "value": 962,
+      "value_as_published": "962",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 22,
+      "quote": "Direct complaints to VECRA 962"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Complaints to VECRA reported through statutory notifications",
+      "column_as_published": "Cases recorded",
+      "value": 1465,
+      "value_as_published": "1,465",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 22,
+      "quote": "Complaints to VECRA reported through statutory notifications 1,465"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "licensing applications",
+      "value": 996,
+      "value_as_published": "996",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 16,
+      "quote": "From 1 January to 30 June 2026, VECRA received 996 licensing applications."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of inspections of early childhood services",
+      "column_as_published": "Progress at 30 June",
+      "value": 2756,
+      "value_as_published": "2,756",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 16,
+      "quote": "Number of inspections of early childhood services 4,800 2,756*"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Services receiving at least one unannounced visit",
+      "value": 1722,
+      "value_as_published": "1,722",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 16,
+      "quote": "1,722 services receiving at least one unannounced visit by 30 June"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "compliance and enforcement actions",
+      "value": 2414,
+      "value_as_published": "2,414",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 23,
+      "quote": "VECRA recorded 2,414 compliance and enforcement actions during the first 6 months."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Statutory actions",
+      "column_as_published": "Actions recorded",
+      "value": 535,
+      "value_as_published": "535",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 23,
+      "quote": "Statutory actions 535"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Prohibition notice issued",
+      "column_as_published": "Actions recorded",
+      "value": 15,
+      "value_as_published": "15",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 23,
+      "quote": "Prohibition notice issued 15"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Emergency action notice issued",
+      "column_as_published": "Actions recorded",
+      "value": 9,
+      "value_as_published": "9",
+      "unit": "count",
+      "period": "1 January to 30 June 2026",
+      "page": 23,
+      "quote": "Emergency action notice issued 9"
+    }
+  ]
+}

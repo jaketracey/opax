@@ -1,0 +1,221 @@
+{
+  "report_id": "vic-victorian-institute-of-forensic-medicine-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "executive_band",
+    "executive_average_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "2026",
+      "value": 59905930,
+      "value_as_published": "59,905,930",
+      "unit": "dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 77,
+      "quote": "Total revenue and income from transactions 59,905,930 64,040,407"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026",
+      "value": -67771296,
+      "value_as_published": "(67,771,296)",
+      "unit": "dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 77,
+      "quote": "Total expenses from transactions (67,771,296) (66,155,284)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee expenses",
+      "column_as_published": "2026",
+      "value": -48066475,
+      "value_as_published": "(48,066,475)",
+      "unit": "dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 77,
+      "quote": "Employee expenses 3.1 (48,066,475) (46,703,676)"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result",
+      "column_as_published": "2026",
+      "value": -7757113,
+      "value_as_published": "(7,757,113)",
+      "unit": "dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 77,
+      "quote": "Net result (7,757,113) (1,955,364)"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total (head-count)",
+      "column_as_published": "2025-2026",
+      "value": 283,
+      "value_as_published": "283",
+      "unit": "people",
+      "period": "last full pay period in June 2026",
+      "page": 55,
+      "quote": "Total 222 200.6 61 31.3 283 231.9"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total (FTE)",
+      "column_as_published": "2025-2026",
+      "value": 231.9,
+      "value_as_published": "231.9",
+      "unit": "fte",
+      "period": "last full pay period in June 2026",
+      "page": 55,
+      "quote": "Total 222 200.6 61 31.3 283 231.9"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "Total remuneration received or receivable by the Accountable Officer",
+      "value": 822074,
+      "value_as_published": "$822,074",
+      "unit": "dollars",
+      "period": "1 July 2025 to 30 June 2026",
+      "page": 102,
+      "quote": "Total remuneration received or receivable by the Accountable Officer in connection with their position as a responsible person from 1 July 2025 to 30 June 2026 was $822,074"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 966106,
+      "value_as_published": "966,106",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 102,
+      "quote": "Total remuneration 966,106 604,952"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of senior executive service officers",
+      "column_as_published": "2026",
+      "value": 3,
+      "value_as_published": "3",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 102,
+      "quote": "Total number of senior executive service officers 3 2"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Compensation of KMPs",
+      "column_as_published": "2026",
+      "value": 3121980,
+      "value_as_published": "3,121,980",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 103,
+      "quote": "Other long-term benefits 259,679 31,710 Total (a) (b) 3,121,980 1,824,291"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+      "value": 329048,
+      "value_as_published": "$329,048",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 61,
+      "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies was $329,048 (excluding GST)."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 (excl. GST)",
+      "column_as_published": "Expenditure 2025–26 (excl. GST)",
+      "value": 125248,
+      "value_as_published": "$125,248",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 61,
+      "quote": "FTI DTBV Strategic Review 9/9/2025 30/11/2025 $125,248 $125,248 $0.00",
+      "counterparty": "FTI",
+      "purpose": "DTBV Strategic Review"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 (excl. GST)",
+      "column_as_published": "Expenditure 2025–26 (excl. GST)",
+      "value": 49900,
+      "value_as_published": "$49,900",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 61,
+      "quote": "NOUS People & Culture structure review 1/9/2025 31/10/2025 $49,900 $49,900 $0.00",
+      "counterparty": "NOUS",
+      "purpose": "People & Culture structure review"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 (excl. GST)",
+      "column_as_published": "Expenditure 2025–26 (excl. GST)",
+      "value": 28500,
+      "value_as_published": "$28,500",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 61,
+      "quote": "CONVERGE INTERNATIONAL Psychosocial Risk Assessment 1/04/2025 31/05/2025 $28,500 $28,500 $0.00",
+      "counterparty": "CONVERGE INTERNATIONAL",
+      "purpose": "Psychosocial Risk Assessment"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 (excl. GST)",
+      "column_as_published": "Expenditure 2025–26 (excl. GST)",
+      "value": 40000,
+      "value_as_published": "$40,000",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 61,
+      "quote": "KPMG ICT structure review 1/10/2025 6/11/2025 $40,000 $40,000 $0.00",
+      "counterparty": "KPMG",
+      "purpose": "ICT structure review"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 (excl. GST)",
+      "column_as_published": "Expenditure 2025–26 (excl. GST)",
+      "value": 15600,
+      "value_as_published": "$15,600",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 61,
+      "quote": "Dr L HAMLEY Toxicology process review 3/10/2025 31/01/2026 $15,600 $15,600 $0.00",
+      "counterparty": "Dr L HAMLEY",
+      "purpose": "Toxicology process review"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 (excl. GST)",
+      "column_as_published": "Expenditure 2025–26 (excl. GST)",
+      "value": 19900,
+      "value_as_published": "$19,900",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 61,
+      "quote": "SYSTEMIQ Toxicology Human Factors review of Toxicology 1/04/2026 30/04/2026 $19,900 $19,900 $0.00",
+      "counterparty": "SYSTEMIQ",
+      "purpose": "Toxicology Human Factors review of Toxicology"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Expenditure 2025-26 (excl. GST)",
+      "column_as_published": "Expenditure 2025–26 (excl. GST)",
+      "value": 49900,
+      "value_as_published": "$49,900",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 61,
+      "quote": "THE BIG PICTURE Strategic Planning 23/04/2026 28/02/2027 $68,400 $49,900 $18,500",
+      "counterparty": "THE BIG PICTURE",
+      "purpose": "Strategic Planning"
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "report_id": "vic-victorian-registration-and-qualifications-authority-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "employee_expenses",
+    "consultancy_total",
+    "consultancy",
+    "executive_average_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "2026",
+      "value": 18378043,
+      "value_as_published": "18,378,043",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 57,
+      "quote": "Total revenue and income from transactions 18,378,043 16,099,483"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026",
+      "value": 20118010,
+      "value_as_published": "20,118,010",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 57,
+      "quote": "Total expenses from transactions 20,118,010 19,393,014"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Comprehensive result",
+      "column_as_published": "2026",
+      "value": -1739967,
+      "value_as_published": "(1,739,967)",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 57,
+      "quote": "Comprehensive result (1,739,967) (3,293,531)"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Employees",
+      "column_as_published": "June 2026",
+      "value": 91,
+      "value_as_published": "91",
+      "unit": "people",
+      "period": "last full pay period in June 2026",
+      "page": 42,
+      "quote": "June 2026 91 81 4 89.4 5.6"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Full-time equivalent staffing trends 2022–2026",
+      "column_as_published": "2026",
+      "value": 89.4,
+      "value_as_published": "89.4",
+      "unit": "fte",
+      "period": "last full pay period in June 2026",
+      "page": 42,
+      "quote": "2026 2025 2024 2023 2022 89.4 83.4 92.2 77.7 71.9"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+      "value": null,
+      "value_as_published": "$380,000–$390,000",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 75,
+      "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of the VRQA during the reporting period was $380,000–$390,000"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives(a)",
+      "column_as_published": "2026",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 75,
+      "quote": "Total number of executives(a) 5 4"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 769513,
+      "value_as_published": "769,513",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 75,
+      "quote": "Total remuneration 769,513 624,657"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total(a)",
+      "column_as_published": "2026",
+      "value": 1467523,
+      "value_as_published": "1,467,523",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 76,
+      "quote": "Remuneration of key management personnel 2026 $ 2025 $ Total(a) 1,467,523 1,307,639"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total",
+      "column_as_published": "All",
+      "value": 4,
+      "value_as_published": "4",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 45,
+      "quote": "Total 4 – 4 – – –"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES–2",
+      "column_as_published": "All",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 45,
+      "quote": "SES–2 1 – 1 – – –",
+      "band": "SES–2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES–1",
+      "column_as_published": "All",
+      "value": 3,
+      "value_as_published": "3",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 45,
+      "quote": "SES–1 3 – 3 – – –",
+      "band": "SES–1"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total",
+      "column_as_published": "2026",
+      "value": 2343,
+      "value_as_published": "2,343",
+      "unit": "count",
+      "period": "at 30 June 2026",
+      "page": 16,
+      "quote": "Table 2. Number of registered schools at 30 June 2026(a) School type 2026 2025 Government 1,617 1,600 Catholic 495 496 Independent 231 233 Total 2,343 2,329"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "independent school and school boarding premises reviews",
+      "value": 46,
+      "value_as_published": "46",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 15,
+      "quote": "the VRQA completed 46 independent school and school boarding premises reviews"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total assessments",
+      "value": 637,
+      "value_as_published": "637",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 23,
+      "quote": "Total assessments 637"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Children",
+      "column_as_published": "2026",
+      "value": 12708,
+      "value_as_published": "12,708",
+      "unit": "count",
+      "period": "at 30 June 2026",
+      "page": 24,
+      "quote": "Table 15. Home schooling registrations at 30 June 2026 2026 2025 Children 12,708 11,691"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "employer approvals revoked",
+      "value": 24,
+      "value_as_published": "24",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 25,
+      "quote": "24 employer approvals revoked (compared to 22 in 2024–25 and 27 in 2023–24)"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "delegate-ordered cancellations of training contracts",
+      "value": 81,
+      "value_as_published": "81",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 25,
+      "quote": "81 delegate-ordered cancellations of training contracts"
+    }
+  ]
+}

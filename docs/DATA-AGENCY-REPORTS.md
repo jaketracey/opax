@@ -119,9 +119,22 @@ People, TAC, WorkSafe, VMIA, VFMC, TCV, SRLA, Development Victoria, Parks Victor
 Melbourne Water, the VGCCC and Victoria Legal Aid) from the Parliament's tabled copies with
 OPAXBot (`intake-2026-11-11-vic-tabled-wave2.json`, `acquisition: "OPAXBot fetch"`); 651
 figures read. The Department of Education's 2025-26 report is not in the database under
-that year term; its publisher copy is in the first intake. The other 167 catalogued
-reports (health services, water corporations, catchment authorities, cemetery trusts,
-arts and sport bodies and others) are the next waves.
+that year term; its publisher copy is in the first intake.
+
+A third batch took 30 regulators, statutory authorities and service bodies the same way
+(`intake-2026-11-11-vic-tabled-wave3.json`): the ESC, Energy Safe Victoria, the Building
+and Plumbing Commission (VBA), Consumer Affairs Victoria, the Health Complaints and
+Disability Services Commissioners, the Mental Health Tribunal, the Social Services
+Regulator, the VLSB+C, the LHLA, Infrastructure Victoria, the VCAA, VIT, VRQA, Respect
+Victoria, the First Peoples' Assembly, Cenitex, Ambulance Victoria, VICSES, Triple Zero
+Victoria, VicTrack, V/Line, Ports Victoria, VECRA, the Judicial College, VIFM, Cladding
+Safety Victoria, the PLSBA, the GMA and the VEWH; 554 figures read. Several of these
+publish no financial statements of their own (their accounts sit in a department's
+report), so their documents carry operational counts only. VECRA's statements cover its
+first six months (1 January to 30 June 2026), as its period field says.
+
+The other 137 catalogued reports (health services, water corporations, catchment
+authorities, cemetery trusts, arts and sport bodies and others) are the next waves.
 
 ## Catalogue hosts and OPAXBot, 11 November 2026
 

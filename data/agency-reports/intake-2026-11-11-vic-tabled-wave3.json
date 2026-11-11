@@ -1,0 +1,619 @@
+{
+ "as_of": "2026-11-11",
+ "source": "OPAX maintainer intake of publisher files",
+ "scope": "Victorian annual reports tabled 2026-07-01 to 2026-11-11, fetched from the Parliament of Victoria's tabled copies with OPAXBot.",
+ "reporting_body_roster": {
+  "source_url": "https://www.parliament.vic.gov.au/api/search/tabledpapers",
+  "as_at": "2026-11-11",
+  "use": "Tabled papers search, not a full roster."
+ },
+ "catalogues": [
+  {
+   "jurisdiction": "VIC",
+   "primary": "https://www.parliament.vic.gov.au/tabled-documents-database",
+   "format": "Parliament tabled originals"
+  }
+ ],
+ "reports": [
+  {
+   "report_id": "vic-victorian-institute-of-forensic-medicine-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Institute of Forensic Medicine",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aa6bd/globalassets/tabled-paper-documents/tabled-paper-10777/victorian-institute-of-forensic-medicine-2025-26-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10777",
+   "sha256": "1e3bc1899baeee2f1a603f3c85f4edbb1e19d67d5321fd2bf225d452e46b7087",
+   "bytes": 4106336,
+   "pages": 114,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-11-02",
+    "basis": "released",
+    "paper_id": 10777
+   }
+  },
+  {
+   "report_id": "vic-ambulance-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Ambulance Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3c0/globalassets/tabled-paper-documents/tabled-paper-10700/ambulance-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10700",
+   "sha256": "c6c4cd9dd22e6c146b61a0fd029314cc7a8f7e94387607b1b2d9ace0530b64f4",
+   "bytes": 16366603,
+   "pages": 71,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10700
+   }
+  },
+  {
+   "report_id": "vic-mental-health-tribunal-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Mental Health Tribunal",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10695",
+   "sha256": "1c7f642c5c5878a400aafb8f47b75783a9f088cf10f0a8120c9f8986f61a61bf",
+   "bytes": 3340954,
+   "pages": 54,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10695
+   }
+  },
+  {
+   "report_id": "vic-consumer-affairs-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Consumer Affairs Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10690",
+   "sha256": "4215575a06537d7c937de542d7a66ec8a2bb85186bc685b4ad813dfa57bea3d6",
+   "bytes": 1292268,
+   "pages": 51,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10690
+   }
+  },
+  {
+   "report_id": "vic-victorian-curriculum-and-assessment-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Curriculum and Assessment Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab38e/globalassets/tabled-paper-documents/tabled-paper-10679/vcaa-annual-report-2025_26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10679",
+   "sha256": "f1aaebab3e9bd3147ea9e14d612b155fe58540cd7df02a83ac1a8358871b5c75",
+   "bytes": 2541503,
+   "pages": 92,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10679
+   }
+  },
+  {
+   "report_id": "vic-cladding-safety-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Cladding Safety Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10661",
+   "sha256": "ab6c6461ec455676945041d6d19a89080df62e01b8e00af6677bdc8af7dd190d",
+   "bytes": 8073124,
+   "pages": 90,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10661
+   }
+  },
+  {
+   "report_id": "vic-victorian-building-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Building Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10660/building-and-plumbing-commission-2025-26-annual-report-final.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10660",
+   "sha256": "2570cbd24bf8cedf27b3df9ca8895a5374294c9ca729c4891b01b42158583026",
+   "bytes": 8607297,
+   "pages": 162,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10660
+   }
+  },
+  {
+   "report_id": "vic-portable-long-service-benefits-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Portable Long Service Benefits Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10659/portable-long-service-authority---2025-26---annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10659",
+   "sha256": "4b890ba08ba36725120b2c7ddf42f66ff97d9c4d4bec26d37bd498babff4b7bb",
+   "bytes": 5152881,
+   "pages": 108,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10659
+   }
+  },
+  {
+   "report_id": "vic-labour-hire-licensing-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Labour Hire Licensing Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab372/globalassets/tabled-paper-documents/tabled-paper-10658/labour-hire-authority---annual-report---2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10658",
+   "sha256": "61ebf27fb49f72c077fa59842228385cf47115e2ab39e5e4b6901a4b3c9eafcc",
+   "bytes": 13684988,
+   "pages": 108,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10658
+   }
+  },
+  {
+   "report_id": "vic-infrastructure-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Infrastructure Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10656",
+   "sha256": "e1ce9e1d9502e495925b8dcfd5f702c713eb440c94802a3da3385af0f402aba7",
+   "bytes": 5718709,
+   "pages": 148,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10656
+   }
+  },
+  {
+   "report_id": "vic-victorian-early-childhood-regulatory-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Early Childhood Regulatory Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab38d/globalassets/tabled-paper-documents/tabled-paper-10655/vecra_annual_report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10655",
+   "sha256": "73f85d9cbca13bb3bc97d1f399d38ab931d8e91f48f2a7ac271413f4a8ae17da",
+   "bytes": 1990461,
+   "pages": 74,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10655
+   }
+  },
+  {
+   "report_id": "vic-victorian-institute-of-teaching-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Institute of Teaching",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab36d/globalassets/tabled-paper-documents/tabled-paper-10645/victorian-institute-of-teaching-2025-26-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10645",
+   "sha256": "970ae883cba94e516f0c8a2cfa6ef2e5deadf4a886251454178691d3816dbf76",
+   "bytes": 16061480,
+   "pages": 112,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10645
+   }
+  },
+  {
+   "report_id": "vic-victorian-environmental-water-holder-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Environmental Water Holder",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10630/victorian-environmental-water-holder-vewh-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10630",
+   "sha256": "49c0ff70af8589682be7c4b01e2d09f19c12d7d6c7e081023fab48375a97ae97",
+   "bytes": 1613425,
+   "pages": 88,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10630
+   }
+  },
+  {
+   "report_id": "vic-judicial-college-of-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Judicial College of Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab350/globalassets/tabled-paper-documents/tabled-paper-10616/judicial-college-of-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10616",
+   "sha256": "25dffd67e5d08ab0f0260d4f3c2e51291624ebac4448a49028f2e0bdf54a347b",
+   "bytes": 5230581,
+   "pages": 72,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10616
+   }
+  },
+  {
+   "report_id": "vic-victorian-registration-and-qualifications-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Registration and Qualifications Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab34e/globalassets/tabled-paper-documents/tabled-paper-10615/brd-260900046_att1_vrqa_annual_report_2025-26_final.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10615",
+   "sha256": "10228e758d0c68f20384d79ce88caebe921b593a346a7334f11882d2a9025ee3",
+   "bytes": 3172821,
+   "pages": 85,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10615
+   }
+  },
+  {
+   "report_id": "vic-triple-zero-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Triple Zero Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab34b/globalassets/tabled-paper-documents/tabled-paper-10614/triple-zero-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10614",
+   "sha256": "e986045495224e5c30acb7e2ab8630db96df02aeefc2d00f3b4b4d2cac1aea00",
+   "bytes": 4545110,
+   "pages": 108,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10614
+   }
+  },
+  {
+   "report_id": "vic-victoria-state-emergency-service-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victoria State Emergency Service Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10613",
+   "sha256": "5ed07b2ebaf09ed9b88181f26a5ad2416467cfc5a8ecccf9d8529ef81d987795",
+   "bytes": 6394051,
+   "pages": 139,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10613
+   }
+  },
+  {
+   "report_id": "vic-victorian-legal-services-board-and-commissioner-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Legal Services Board and Commissioner",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10611",
+   "sha256": "2596e1e00b78ff36b57570ac08ebdfcac074bb6478cd2ded96eaac8670c037bd",
+   "bytes": 30790291,
+   "pages": 248,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10611
+   }
+  },
+  {
+   "report_id": "vic-energy-safe-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Energy Safe Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10600",
+   "sha256": "17f113560e1b88d7849d301b6cf45258f7ddc1045632c5891ad98185dc422511",
+   "bytes": 1269500,
+   "pages": 106,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10600
+   }
+  },
+  {
+   "report_id": "vic-game-management-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Game Management Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab33c/globalassets/tabled-paper-documents/tabled-paper-10598/bmin-2-26-54595---attachment-1-gma-annual-report-25-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10598",
+   "sha256": "86c54345183c2bdf5a7374c264aaa51c7a0bc39d2d7f09e6ddb5c0550cfe2699",
+   "bytes": 2449841,
+   "pages": 60,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10598
+   }
+  },
+  {
+   "report_id": "vic-ports-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Ports Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10591",
+   "sha256": "e3fb1d88f60e26f4486eb1dec24cfb6ac0e543ccbf853f0faa84d36c462286bd",
+   "bytes": 18047301,
+   "pages": 72,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10591
+   }
+  },
+  {
+   "report_id": "vic-v-line-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "V/Line Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab31b/globalassets/tabled-paper-documents/tabled-paper-10588/vline-corporation-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10588",
+   "sha256": "bcd72d9773cb9f8de8ab8ffd2e269616e2cf4a8ff31e9857de2ccc63ea7151e2",
+   "bytes": 17758838,
+   "pages": 154,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10588
+   }
+  },
+  {
+   "report_id": "vic-victorian-rail-track-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Rail Track",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10584/victrack-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10584",
+   "sha256": "7f20dfeae100262154de67d2e5bb45aeae6f3835205e0c7d1d1c24310ef9ea92",
+   "bytes": 2652596,
+   "pages": 126,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10584
+   }
+  },
+  {
+   "report_id": "vic-cenitex-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Cenitex",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab329/globalassets/tabled-paper-documents/tabled-paper-10582/cenitex-annual-report-2025-2026.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10582",
+   "sha256": "3ebc5f57400000a78518360571c90f634f9989e5d7a06ea2cee1f6ecd8482fe7",
+   "bytes": 5946309,
+   "pages": 91,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10582
+   }
+  },
+  {
+   "report_id": "vic-first-peoples-assembly-of-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "First Peoples' Assembly of Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab327/globalassets/tabled-paper-documents/tabled-paper-10581/arb-annual-report-2026.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10581",
+   "sha256": "041f7aab854b508f163e97f75687c16ea7a7256c8e45bd1d9dfbc645d7ed3052",
+   "bytes": 21277514,
+   "pages": 56,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10581
+   }
+  },
+  {
+   "report_id": "vic-respect-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Respect Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10569/respect-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10569",
+   "sha256": "7b06f497ee4223e520e505f1be5b6ba5395b2f2b38f11a5a7b3b243bfaa5b21d",
+   "bytes": 823666,
+   "pages": 34,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-28",
+    "basis": "released",
+    "paper_id": 10569
+   }
+  },
+  {
+   "report_id": "vic-essential-services-commission-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Essential Services Commission",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10566",
+   "sha256": "66977407d3ba0344362aac00075214fd38b00119d7cbf77e6463757b7797de23",
+   "bytes": 1866120,
+   "pages": 106,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-23",
+    "basis": "released",
+    "paper_id": 10566
+   }
+  },
+  {
+   "report_id": "vic-social-services-regulator-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Social Services Regulator",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aa287/globalassets/tabled-paper-documents/tabled-paper-10561/social-services-regulator-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10561",
+   "sha256": "87c3fca495346df0d47f4fb4cf0356fc984e7bf31eeff81218789d7f67b1a385",
+   "bytes": 3383755,
+   "pages": 43,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-23",
+    "basis": "released",
+    "paper_id": 10561
+   }
+  },
+  {
+   "report_id": "vic-disability-services-commissioner-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Disability Services Commissioner",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aa286/globalassets/tabled-paper-documents/tabled-paper-10560/disability-services-commissioner-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10560",
+   "sha256": "5bb02d6c3fec9a57ff58aa4bc25f04311c24a22eb02ac2d7ac2c3394d6b40e45",
+   "bytes": 583323,
+   "pages": 14,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-23",
+    "basis": "released",
+    "paper_id": 10560
+   }
+  },
+  {
+   "report_id": "vic-health-complaints-commissioner-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Health Complaints Commissioner",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10394",
+   "sha256": "a4c156dee810905bbc4077ffec65efccb7df2eed49ce67b88c557a6d1441ae6d",
+   "bytes": 2614136,
+   "pages": 30,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-08-25",
+    "basis": "released",
+    "paper_id": 10394
+   }
+  }
+ ]
+}

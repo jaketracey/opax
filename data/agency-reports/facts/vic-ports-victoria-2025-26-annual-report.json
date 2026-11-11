@@ -1,0 +1,206 @@
+{
+  "report_id": "vic-ports-victoria-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration (band table lists responsible persons without attributing a band to the Accountable Officer)",
+    "named_remuneration",
+    "executive_average_remuneration",
+    "consultancy (individual rows are on the Ports Victoria website)"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income",
+      "column_as_published": "2026",
+      "value": 44858,
+      "value_as_published": "44,858",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 48,
+      "quote": "Total revenue and income 44,858 47,008"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses",
+      "column_as_published": "2026",
+      "value": -52359,
+      "value_as_published": "(52,359)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 48,
+      "quote": "Total expenses (52,359) (51,342)"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result",
+      "column_as_published": "2026",
+      "value": -7501,
+      "value_as_published": "(7,501)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 48,
+      "quote": "Net result (7,501) (4,334)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Total employee expenses",
+      "column_as_published": "2026",
+      "value": 21802,
+      "value_as_published": "21,802",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 52,
+      "quote": "Total employee expenses 3.1 21,802 19,900"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total employees",
+      "column_as_published": "JUNE 2026",
+      "value": 99,
+      "value_as_published": "99",
+      "unit": "people",
+      "period": "last full pay period in June 2026",
+      "page": 31,
+      "quote": "Total employees 99 87.52 65 2 66.12 32 21.4"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total employees",
+      "column_as_published": "JUNE 2026",
+      "value": 87.52,
+      "value_as_published": "87.52",
+      "unit": "fte",
+      "period": "last full pay period in June 2026",
+      "page": 31,
+      "quote": "Total employees 99 87.52 65 2 66.12 32 21.4"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives (i)",
+      "column_as_published": "2026",
+      "value": 21.0,
+      "value_as_published": "21.0",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 69,
+      "quote": "Total number of executives (i) 21.0 21.0"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total",
+      "column_as_published": "Executives",
+      "value": 19,
+      "value_as_published": "19",
+      "unit": "count",
+      "period": "last full pay period in June 2026 (annualised total remuneration table, executives)",
+      "page": 31,
+      "quote": "$350,000+ 4 Total 19"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 5682,
+      "value_as_published": "5,682",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 69,
+      "quote": "Total remuneration 5,682 5,090"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "$220,000–$239,999",
+      "column_as_published": "Executives",
+      "value": 3,
+      "value_as_published": "3",
+      "unit": "count",
+      "period": "last full pay period in June 2026 (annualised total remuneration, executives)",
+      "page": 31,
+      "quote": "$220,000–$239,999 3",
+      "band": "$220,000–$239,999"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "$240,000–$259,999",
+      "column_as_published": "Executives",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "count",
+      "period": "last full pay period in June 2026 (annualised total remuneration, executives)",
+      "page": 31,
+      "quote": "$240,000–$259,999 5",
+      "band": "$240,000–$259,999"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "$260,000–$279,999",
+      "column_as_published": "Executives",
+      "value": 3,
+      "value_as_published": "3",
+      "unit": "count",
+      "period": "last full pay period in June 2026 (annualised total remuneration, executives)",
+      "page": 31,
+      "quote": "$260,000–$279,999 3",
+      "band": "$260,000–$279,999"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "$280,000–$299,999",
+      "column_as_published": "Executives",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "last full pay period in June 2026 (annualised total remuneration, executives)",
+      "page": 31,
+      "quote": "$280,000–$299,999 1",
+      "band": "$280,000–$299,999"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "$300,000–$319,999",
+      "column_as_published": "Executives",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "last full pay period in June 2026 (annualised total remuneration, executives)",
+      "page": 31,
+      "quote": "$300,000–$319,999 1",
+      "band": "$300,000–$319,999"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "$320,000–$339,999",
+      "column_as_published": "Executives",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "last full pay period in June 2026 (annualised total remuneration, executives)",
+      "page": 31,
+      "quote": "$320,000–$339,999 2",
+      "band": "$320,000–$339,999"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "$350,000+",
+      "column_as_published": "Executives",
+      "value": 4,
+      "value_as_published": "4",
+      "unit": "count",
+      "period": "last full pay period in June 2026 (annualised total remuneration, executives)",
+      "page": 31,
+      "quote": "$350,000+ 4",
+      "band": "$350,000+"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies over $10,000",
+      "value": null,
+      "value_as_published": "$2.3 million",
+      "unit": "millions_of_dollars",
+      "period": "1 July 2025 to 30 June 2026",
+      "page": 39,
+      "quote": "The total expenditure was $2.3 million excluding GST."
+    }
+  ]
+}

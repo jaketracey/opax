@@ -1,0 +1,89 @@
+{
+  "report_id": "vic-first-peoples-assembly-of-victoria-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "named_remuneration",
+    "executive_band",
+    "executive_count",
+    "executive_remuneration_total",
+    "executive_average_remuneration",
+    "staff_fte",
+    "staff_headcount",
+    "total_income",
+    "total_expenses",
+    "employee_expenses",
+    "net_result",
+    "consultancy",
+    "consultancy_total",
+    "matters_received",
+    "investigations_commenced",
+    "investigations_finalised",
+    "public_hearings",
+    "referrals_to_prosecution",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "operational_other",
+      "label_as_published": "TOTAL EVENTS",
+      "value": 394,
+      "value_as_published": "394",
+      "unit": "count",
+      "period": "1 July 2025 to 30 June 2026",
+      "page": 31,
+      "quote": "394 TOTAL EVENTS 92 PRESENTATIONS 10 VISITS TO MOB IN PRISON"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "PRESENTATIONS",
+      "value": 92,
+      "value_as_published": "92",
+      "unit": "count",
+      "period": "1 July 2025 to 30 June 2026",
+      "page": 31,
+      "quote": "394 TOTAL EVENTS 92 PRESENTATIONS 10 VISITS TO MOB IN PRISON"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "VISITS TO MOB IN PRISON",
+      "value": 10,
+      "value_as_published": "10",
+      "unit": "count",
+      "period": "1 July 2025 to 30 June 2026",
+      "page": 31,
+      "quote": "394 TOTAL EVENTS 92 PRESENTATIONS 10 VISITS TO MOB IN PRISON"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "CANDIDATES",
+      "value": 81,
+      "value_as_published": "81",
+      "unit": "count",
+      "period": "2026 Treaty Elections",
+      "page": 37,
+      "quote": "81 CANDIDATES 5 TREATY IN THE PARK EVENTS"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "TREATY IN THE PARK EVENTS",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "count",
+      "period": "2026 Treaty Elections",
+      "page": 37,
+      "quote": "81 CANDIDATES 5 TREATY IN THE PARK EVENTS"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "More than 10,000 First Peoples enrolled in these elections",
+      "value": 10000,
+      "value_as_published": "10,000",
+      "unit": "count",
+      "period": "2026 Treaty Elections",
+      "page": 36,
+      "quote": "More than 10,000 First Peoples enrolled in these elections, which is four times the number enrolled for the first in 2019."
+    }
+  ]
+}

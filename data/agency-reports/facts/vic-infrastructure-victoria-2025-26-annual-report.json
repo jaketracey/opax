@@ -1,0 +1,158 @@
+{
+  "report_id": "vic-infrastructure-victoria-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_average_remuneration",
+    "consultancy"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total income from transactions",
+      "column_as_published": "2026",
+      "value": 10602,
+      "value_as_published": "10,602",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 109,
+      "quote": "Total income from transactions 10,602 9,404"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026",
+      "value": -10602,
+      "value_as_published": "(10,602)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 109,
+      "quote": "Total expenses from transactions (10,602) (9,404)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Total employee expense",
+      "column_as_published": "2026",
+      "value": 8242,
+      "value_as_published": "8,242",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 116,
+      "quote": "Total employee expense 8,242 7,384"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result",
+      "column_as_published": "2026",
+      "value": 23,
+      "value_as_published": "23",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 109,
+      "quote": "Net result 23 12"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total",
+      "column_as_published": "June 2026",
+      "value": 31,
+      "value_as_published": "31",
+      "unit": "people",
+      "period": "as at 30 June 2026",
+      "page": 46,
+      "quote": "Total 38 34.71 16 6.87 54 41.58 24 21.8 7 7 31 28.8"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total",
+      "column_as_published": "June 2026",
+      "value": 28.8,
+      "value_as_published": "28.8",
+      "unit": "fte",
+      "period": "as at 30 June 2026",
+      "page": 46,
+      "quote": "Total 38 34.71 16 6.87 54 41.58 24 21.8 7 7 31 28.8"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES-2",
+      "column_as_published": "June 2026",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "last full pay period in June 2026",
+      "page": 47,
+      "quote": "SES-2 2 2.00 0 0.00 0 0.00 2 2.00 2 0.00 0 0.00 0 0.00 2 0.00",
+      "band": "SES-2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES-1",
+      "column_as_published": "June 2026",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "last full pay period in June 2026",
+      "page": 47,
+      "quote": "SES-1 2 1.91 1 1.00 0 0.00 3 2.91 1 0.00 1 0.00 0 0.00 2 0.00",
+      "band": "SES-1"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES-3",
+      "column_as_published": "June 2026",
+      "value": 0,
+      "value_as_published": "0",
+      "unit": "count",
+      "period": "last full pay period in June 2026",
+      "page": 47,
+      "quote": "SES-3 0 0.00 0 0.00 0 0.00 0 0.00 0 0.00 0 0.00 0 0.00 0 0.00",
+      "band": "SES-3"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives",
+      "column_as_published": "2026",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 129,
+      "quote": "Total number of executives (i) 5 6"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration of executives",
+      "column_as_published": "2026",
+      "value": 1481,
+      "value_as_published": "1,481",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 129,
+      "quote": "Total remuneration of executives 1,481 1,305"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total compensation of key management personnel(i)(ii)",
+      "column_as_published": "2026",
+      "value": 1163,
+      "value_as_published": "1,163",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 129,
+      "quote": "Total compensation of key management personnel(i)(ii) 1,163 1,083"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+      "column_as_published": "2025-26",
+      "value": 1113148,
+      "value_as_published": "$1,113,148",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 49,
+      "quote": "The total expenditure incurred during 2025–26 for these consultancies was $1,113,148 (excluding GST)"
+    }
+  ]
+}

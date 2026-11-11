@@ -1,0 +1,156 @@
+{
+  "report_id": "vic-victorian-rail-track-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_average_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "2026 $'000",
+      "value": 182120,
+      "value_as_published": "182,120",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 40,
+      "quote": "Total revenue and income from transactions 182,120 199,272 177,556 194,370"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026 $'000",
+      "value": 2984094,
+      "value_as_published": "2,984,094",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 40,
+      "quote": "Total expenses from transactions 2,984,094 1,607,232 2,636,243 1,361,503"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee benefits",
+      "column_as_published": "2026 $'000",
+      "value": 77405,
+      "value_as_published": "77,405",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 40,
+      "quote": "Employee benefits 77,405 66,562 77,405 66,562"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result from continuing operations after tax",
+      "column_as_published": "2026 $'000",
+      "value": -2367534,
+      "value_as_published": "(2,367,534)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 40,
+      "quote": "Net result from continuing operations after tax (2,367,534) (1,258,468) (2,060,608) (1,024,839)"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Number (Headcount)",
+      "column_as_published": "As at June 2026",
+      "value": 451,
+      "value_as_published": "451",
+      "unit": "people",
+      "period": "as at June 2026",
+      "page": 99,
+      "quote": "451 446.3 388 12 396.4 51 49.9"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "FTE",
+      "column_as_published": "As at June 2026",
+      "value": 446.3,
+      "value_as_published": "446.3",
+      "unit": "fte",
+      "period": "as at June 2026",
+      "page": 99,
+      "quote": "451 446.3 388 12 396.4 51 49.9"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies valued at $10,000 or greater",
+      "value": 4942250,
+      "value_as_published": "$4,942,250",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 104,
+      "quote": "The total expenditure incurred during 2025–26 in relation to these consultancies is $4,942,250 (excluding GST)."
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026 $'000",
+      "value": 8363,
+      "value_as_published": "8,363",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 75,
+      "quote": "Total remuneration 8,363 7,813"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives",
+      "column_as_published": "2026 $'000",
+      "value": 35.0,
+      "value_as_published": "35.0",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 75,
+      "quote": "Total number of executives 35.0 28.0"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES-3",
+      "column_as_published": "Number",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 101,
+      "quote": "SES-3 1 0 0 0 1 0 n n",
+      "band": "SES-3"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES-2",
+      "column_as_published": "Number",
+      "value": 7,
+      "value_as_published": "7",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 101,
+      "quote": "SES-2 7 -1 2 0 5 -1 n n",
+      "band": "SES-2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES-1",
+      "column_as_published": "Number",
+      "value": 15,
+      "value_as_published": "15",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 101,
+      "quote": "SES-1 15 2 7 2 8 0 n n",
+      "band": "SES-1"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total",
+      "column_as_published": "Number",
+      "value": 23,
+      "value_as_published": "23",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 101,
+      "quote": "Total 23 1 9 2 14 -1 0 0"
+    }
+  ]
+}

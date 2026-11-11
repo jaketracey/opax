@@ -1,0 +1,167 @@
+{
+  "report_id": "vic-v-line-corporation-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "named_remuneration",
+    "executive_average_remuneration",
+    "consultancy (individual rows are on the V/Line website, not in the report)"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Revenue and income from transactions",
+      "column_as_published": "2026",
+      "value": 1428984,
+      "value_as_published": "1,428,984",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 94,
+      "quote": "Revenue and income from transactions 2.1 1,428,984 1,320,842"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026",
+      "value": 1429011,
+      "value_as_published": "1,429,011",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 94,
+      "quote": "Total expenses from transactions 1,429,011 1,307,543"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee benefit expenses",
+      "column_as_published": "2026",
+      "value": 516914,
+      "value_as_published": "516,914",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 94,
+      "quote": "Employee benefit expenses 3.3.1 516,914 475,272"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result",
+      "column_as_published": "2026",
+      "value": 14335,
+      "value_as_published": "14,335",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 94,
+      "quote": "Net result 14,335 (1,433)"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total employees",
+      "column_as_published": "June 2026",
+      "value": 3356,
+      "value_as_published": "3356",
+      "unit": "people",
+      "period": "last full pay period in June 2026",
+      "page": 59,
+      "quote": "Total employees 3356 3253.8"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total employees",
+      "column_as_published": "June 2026",
+      "value": 3253.8,
+      "value_as_published": "3253.8",
+      "unit": "fte",
+      "period": "last full pay period in June 2026",
+      "page": 59,
+      "quote": "Total employees 3356 3253.8"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+      "value": null,
+      "value_as_published": "$540,000 – $549,999",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 145,
+      "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of V/Line during the reporting period was in the range of $540,000 – $549,999"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of senior executives",
+      "column_as_published": "2026",
+      "value": 48,
+      "value_as_published": "48",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 146,
+      "quote": "Total number of senior executives 48 46"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 13766,
+      "value_as_published": "13,766",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26",
+      "page": 146,
+      "quote": "Total remuneration 13,766 12,270"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 3906,
+      "value_as_published": "3,906",
+      "unit": "thousands_of_dollars",
+      "period": "2025-26 (compensation of key management personnel)",
+      "page": 149,
+      "quote": "Compensation of KMPs 2026 2025 $’000 $’000 Short-term employee benefits 3,572 2,894 Post-employment benefits 256 215 Other long term benefits 78 56 Total remuneration 3,906 3,165"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Senior Executive Service – 3",
+      "column_as_published": "2026",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "count",
+      "period": "last full pay period in June 2026",
+      "page": 63,
+      "quote": "Senior Executive Service – 3 5 - 1 - 4 - 0 -",
+      "band": "Senior Executive Service – 3"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Senior Executive Service – 2",
+      "column_as_published": "2026",
+      "value": 17,
+      "value_as_published": "17",
+      "unit": "count",
+      "period": "last full pay period in June 2026",
+      "page": 63,
+      "quote": "Senior Executive Service – 2 17 +3 7 +3 10 - 0 -",
+      "band": "Senior Executive Service – 2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "Senior Executive Service – 1",
+      "column_as_published": "2026",
+      "value": 18,
+      "value_as_published": "18",
+      "unit": "count",
+      "period": "last full pay period in June 2026",
+      "page": 63,
+      "quote": "Senior Executive Service – 1 18 -1 10 -2 8 +1 0 -",
+      "band": "Senior Executive Service – 1"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies valued at $10,000 or greater",
+      "value": 8918445,
+      "value_as_published": "$8,918,445",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 67,
+      "quote": "The total expenditure incurred in 2025–26 in relation to these consultancies was $8,918,445 (excluding GST)."
+    }
+  ]
+}

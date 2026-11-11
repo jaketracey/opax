@@ -1,0 +1,149 @@
+{
+  "report_id": "vic-disability-services-commissioner-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "executive_count",
+    "executive_remuneration_total",
+    "total_income",
+    "net_result",
+    "consultancy_total",
+    "investigations_commenced",
+    "investigations_finalised",
+    "recommendations_made"
+  ],
+  "facts": [
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses",
+      "value": 706978,
+      "value_as_published": "$706,978",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 13,
+      "quote": "Total expenses $706,978"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Salaries",
+      "value": 636075,
+      "value_as_published": "$636,075",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 13,
+      "quote": "Salaries $636,075"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Staffing for the year ended 30 June 2026",
+      "value": null,
+      "value_as_published": "Four",
+      "unit": "people",
+      "period": "as at 30 June 2026",
+      "page": 13,
+      "quote": "Four VPS staff, three full-time equivalent (FTE) as at 30 June 2026."
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Staffing for the year ended 30 June 2026",
+      "value": null,
+      "value_as_published": "three",
+      "unit": "fte",
+      "period": "as at 30 June 2026",
+      "page": 13,
+      "quote": "Four VPS staff, three full-time equivalent (FTE) as at 30 June 2026."
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "new complaints",
+      "value": 56,
+      "value_as_published": "56",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "This year we received a total of 56 new complaints in comparison to 69 in the previous year"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "new enquiries",
+      "value": 450,
+      "value_as_published": "450",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 5,
+      "quote": "This year we received 450 new enquiries compared to 391 the previous year."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "in scope",
+      "value": null,
+      "value_as_published": "one",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "with one assessed as in scope and 55 out of scope"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "written referrals were actioned",
+      "value": 59,
+      "value_as_published": "59",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 6,
+      "quote": "a total of 59 written referrals were actioned"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Notices of Advice",
+      "value": null,
+      "value_as_published": "three",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 7,
+      "quote": "we issued three Notices of Advice"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "calls to our 1800 service",
+      "value": 1186,
+      "value_as_published": "1,186",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 5,
+      "quote": "a total of 1,186 calls to our 1800 service"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "already registered on 1 July 2025",
+      "value": 225,
+      "value_as_published": "225",
+      "unit": "count",
+      "period": "1 July 2025",
+      "page": 5,
+      "quote": "Registered disability service providers 225 already registered on 1 July 2025"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "providers provided a complaint report",
+      "value": 249,
+      "value_as_published": "249",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 10,
+      "quote": "In 2025-26, all 249 providers provided a complaint report."
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "in-scope complaints in total",
+      "value": 251,
+      "value_as_published": "251",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 10,
+      "quote": "submitted 251 in-scope complaints in total"
+    }
+  ]
+}

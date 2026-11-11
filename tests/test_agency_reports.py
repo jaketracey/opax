@@ -29,3 +29,12 @@ def test_every_facts_file_names_an_intake_document():
         doc = json.loads(path.read_text())
         assert doc["report_id"] == path.stem and doc["report_id"] in rows
         assert all(f["metric"] in ar.METRICS and f["unit"] in ar.UNITS for f in doc["facts"])
+
+
+def test_page_text_reads_control_characters_as_spaces(tmp_path, monkeypatch):
+    import json as _json
+    from parli.ingest import agency_reports as ar
+    (tmp_path / "text").mkdir()
+    (tmp_path / "text" / "abc.json").write_text(_json.dumps(["\u0007Fatalities\u00073"]))
+    monkeypatch.setattr(ar, "CACHE", tmp_path)
+    assert ar.page_text({"sha256": "abc"}) == [" Fatalities 3"]

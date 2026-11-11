@@ -1,0 +1,148 @@
+{
+  "report_id": "vic-ambulance-victoria-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "staff_headcount"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "TOTAL REVENUE AND INCOME FROM TRANSACTIONS",
+      "column_as_published": "2026",
+      "value_as_published": "1,640,080",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 55,
+      "quote": "TOTAL REVENUE AND INCOME FROM TRANSACTIONS 1,640,080",
+      "value": 1640080
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "TOTAL EXPENSES FROM TRANSACTIONS",
+      "column_as_published": "2026",
+      "value_as_published": "(1,642,973)",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 55,
+      "quote": "TOTAL EXPENSES FROM TRANSACTIONS (1,642,973)",
+      "value": -1642973
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee Expenses",
+      "column_as_published": "2026",
+      "value_as_published": "(1,188,696)",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 55,
+      "quote": "Employee Expenses 3.1(a) (1,188,696)",
+      "value": -1188696
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "NET RESULT",
+      "column_as_published": "2026",
+      "value_as_published": "(16,288)",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 55,
+      "quote": "NET RESULT (16,288)",
+      "value": -16288
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "TOTAL",
+      "column_as_published": "2025-26",
+      "value_as_published": "6,399.24",
+      "unit": "fte",
+      "period": "Full-Time Equivalent (FTE) Employees 2025-26",
+      "page": 29,
+      "quote": "TOTAL 6,399.24 6,195.77",
+      "value": 6399.24
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total Number of Executives",
+      "column_as_published": "2026",
+      "value_as_published": "17",
+      "unit": "count",
+      "period": "financial year ended 30 June 2026",
+      "page": 68,
+      "quote": "Total Number of Executives 1 17",
+      "value": 17
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total Remuneration",
+      "column_as_published": "2026",
+      "value_as_published": "4,779",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 68,
+      "quote": "Total Remuneration 4,779 4,066",
+      "value": 4779
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Compensation - KMPs",
+      "column_as_published": "2026",
+      "value_as_published": "5,364",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 68,
+      "quote": "Total i 5,364 4,899",
+      "value": 5364
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+      "value_as_published": "$263,524",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 50,
+      "quote": "in relation to these consultancies is $263,524 (excluding GST).",
+      "value": 263524
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "CONSULTANT NAME",
+      "column_as_published": "EXPENDITURE",
+      "value_as_published": "$50,749",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 50,
+      "quote": "Avipro Aviation Advisory Services $424,586 $50,749 $373,837",
+      "value": 50749,
+      "counterparty": "Avipro",
+      "purpose": "Aviation Advisory Services"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "CONSULTANT NAME",
+      "column_as_published": "EXPENDITURE",
+      "value_as_published": "$19,575",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 50,
+      "quote": "Mayfield Advisory Pty Ltd Independent Financial support and advice $75,680 $19,575 $0",
+      "value": 19575,
+      "counterparty": "Mayfield Advisory Pty Ltd",
+      "purpose": "Independent Financial support and advice"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "CONSULTANT NAME",
+      "column_as_published": "EXPENDITURE",
+      "value_as_published": "$193,200",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 50,
+      "quote": "Macutex Pty Ltd Building Condition and Function Audit $971,091 $193,200 $291,480",
+      "value": 193200,
+      "counterparty": "Macutex Pty Ltd",
+      "purpose": "Building Condition and Function Audit"
+    }
+  ]
+}
