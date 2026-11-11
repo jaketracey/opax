@@ -168,8 +168,8 @@ export const tool: ToolDefinition = {
       if (records(c.commissioners).length) citations.push({ kind: 'record', url: String(object(records(c.commissioners)[0].cite).url), text: clip(`${c.name} commissioners as ${object(records(c.commissioners)[0].cite).document ?? 'the cited document'} names them: ${people(c)}.`, 600) })
       for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${dayWords(d.date)})` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
       const span = transcriptSummary(c)
-      if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `OPAX lists ${span.count} hearing transcript${span.count === 1 ? '' : 's'} from ${fromThe(String(c.name))}, dated ${spanWords(span.first_date, span.last_date)} (view=transcripts lists them). ${TRANSCRIPT_LABEL}.` })
-      return publishedResult([row], citations, { view: 'profile', total: 1, offset: 0, next_offset: null, snapshot, notes: [...several, NOTE] })
+      if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `OPAX lists ${span.count} hearing transcript${span.count === 1 ? '' : 's'} from ${fromThe(String(c.name))}, dated ${spanWords(span.first_date, span.last_date)}. ${TRANSCRIPT_LABEL}.` })
+      return publishedResult([row], citations, { view: 'profile', total: 1, offset: 0, next_offset: null, snapshot, notes: [...several, NOTE, ...(span.count ? ['view=transcripts lists the hearing transcripts, newest first.'] : [])] })
     }
 
     if (args.view === 'transcripts') {

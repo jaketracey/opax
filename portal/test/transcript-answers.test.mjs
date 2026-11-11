@@ -118,9 +118,11 @@ test('a royal commission transcript count opens the way the integrity count does
   const profile = await api.callTool(env, 'royal_commissions', { view: 'profile', commission: 'robodebt' })
   const count = profile.citations.find(c => c.kind === 'count')
   for (const text of [listing.citations[0].text, count.text]) {
-    assert.match(text, /^OPAX lists 47 hearing transcripts from the Royal Commission into the Robodebt Scheme, dated 27 September 2022 to 10 March 2023 \(/, text)
+    assert.match(text, /^OPAX lists 47 hearing transcripts from the Royal Commission into the Robodebt Scheme, dated 27 September 2022 to 10 March 2023[ .]/, text)
     assert.ok(!/\bthe the\b/i.test(text) && !text.includes('transcripts listed'), text)
   }
+  assert.equal(count.text, `OPAX lists 47 hearing transcripts from the Royal Commission into the Robodebt Scheme, dated 27 September 2022 to 10 March 2023. ${LABEL}.`, 'no tool hint in answer text')
+  assert.ok(profile.notes.some(n => n.startsWith('view=transcripts')), 'the hint is a tool note')
 })
 
 test('an answer citing only hearing transcripts says they are evidence, not findings', async () => {
