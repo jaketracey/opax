@@ -186,7 +186,7 @@ test('a loaded party heading reveals its named bar title when it scrolls under t
   expect(options).toMatchObject({
     headerBackTitle: 'Today',
     headerBackButtonDisplayMode: 'default',
-    headerBackButtonMenuEnabled: false,
+    headerBackButtonMenuEnabled: true,
   });
   act(() => r.unmount());
 });

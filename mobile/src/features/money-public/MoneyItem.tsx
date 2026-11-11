@@ -19,7 +19,6 @@ import {
   grantProgramRoute,
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import { useNamedBackOptions } from '../../navigation/useNamedBackOptions';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
 import { evidenceRecord } from '../leads/evidence';
 import { discoveryAsOf, discoverPath, leadFor } from '../leads/model';
@@ -699,7 +698,6 @@ export default function MoneyItem() {
 }
 
 function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
-  const backOptions = useNamedBackOptions();
   const params = itemParams(raw);
   const key = JSON.stringify(params);
   const load = useCallback(
@@ -721,7 +719,6 @@ function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
         stableItems
         options={{
           title: name,
-          ...backOptions,
           ...(item?.path ? moneyBar({ name, path: item.path }) : {}),
         }}
       />

@@ -28,6 +28,7 @@ import MoneyItem, {
 import { leadsFor, plainCaveat } from '../src/features/leads/model';
 import { evidenceRecord } from '../src/features/leads/evidence';
 import { RouteOptions } from '../src/navigation/preview';
+import { publicMoneyScreens } from '../src/navigation/stack/public-money';
 import {
   HeaderHeightContext,
   NavigationContext,
@@ -501,10 +502,15 @@ test('a lead example names its back destination and has no lead methodology in N
       </NavigationRouteContext.Provider>
     </NavigationContext.Provider>
   ));
-  expect(r.root.findByType(RouteOptions).props.options).toMatchObject({
+  const registration = publicMoneyScreens().find(
+    (screen) => screen.props.name === 'money-item',
+  )!;
+  expect(registration.props.options({ route, navigation })).toMatchObject({
     headerBackTitle: 'Back',
     headerBackButtonDisplayMode: 'default',
+    headerBackButtonMenuEnabled: true,
   });
+  expect(r.root.findByType(RouteOptions).props.options).not.toHaveProperty('headerBackTitle');
   const shown = r.root
     .findAll((node) => typeof node.props.children === 'string')
     .map((node) => node.props.children);
@@ -576,6 +582,10 @@ test.each([
       isFocused: () => true,
       addListener: () => () => {},
     };
+    const registration = publicMoneyScreens().find(
+      (screen) => screen.props.name === name,
+    )!;
+    Object.assign(options, registration.props.options({ route, navigation }));
     const rendered = await mount(() => (
       <NavigationContext.Provider value={navigation as never}>
         <NavigationRouteContext.Provider value={route}>
@@ -596,7 +606,7 @@ test.each([
     expect(heading.props.collapsable).toBe(false);
     if (name === 'grant-program') {
       expect(options.headerBackTitle).toBe('Grants');
-      expect(options.headerBackButtonMenuEnabled).toBe(false);
+      expect(options.headerBackButtonMenuEnabled).toBe(true);
       expect(inline().props.backTitle).toBe('Grants');
       expect(inline().props.trailing).toBe(1);
       expect(options.headerSearchBarOptions).toMatchObject({
@@ -689,7 +699,7 @@ test.each([
   ['Grants', Grants, 'grants', 'Commonwealth grants'],
   ['Agencies', Agencies, 'agencies', 'Government agencies'],
 ] as const)(
-  '%s keeps its collapsed title and installs static back names only on iOS when known',
+  '%s keeps its collapsed title and leaves back names in the stack registration',
   async (_label, Page, name, title) => {
     const original = Platform.OS;
     for (const [os, previous, backTitle] of [
@@ -724,15 +734,21 @@ test.each([
           headerLargeTitleEnabled: true,
         });
         expect(options).not.toHaveProperty('headerTitle');
+        expect(options).not.toHaveProperty('headerBackTitle');
+        expect(options).not.toHaveProperty('headerBackButtonMenuEnabled');
+        const registration = publicMoneyScreens().find(
+          (screen) => screen.props.name === name,
+        )!;
+        const initial = registration.props.options({ route, navigation });
         if (backTitle) {
-          expect(options).toMatchObject({
+          expect(initial).toMatchObject({
             headerBackTitle: backTitle,
-            headerBackButtonMenuEnabled: false,
+            headerBackButtonMenuEnabled: true,
             headerBackButtonDisplayMode: 'default',
           });
         } else {
-          expect(options).not.toHaveProperty('headerBackTitle');
-          expect(options).not.toHaveProperty('headerBackButtonMenuEnabled');
+          expect(initial).not.toHaveProperty('headerBackTitle');
+          expect(initial).not.toHaveProperty('headerBackButtonMenuEnabled');
         }
       } finally {
         if (rendered) await act(async () => rendered!.unmount());
@@ -775,6 +791,13 @@ test.each([
           isFocused: () => true,
           addListener: () => () => {},
         };
+        const registration = publicMoneyScreens().find(
+          (screen) => screen.props.name === name,
+        )!;
+        Object.assign(
+          options,
+          registration.props.options({ route, navigation }),
+        );
         rendered = await mount(() => (
           <NavigationContext.Provider value={navigation as never}>
             <NavigationRouteContext.Provider value={route}>
@@ -788,7 +811,7 @@ test.each([
           title,
           headerLargeTitleEnabled: true,
           headerBackTitle: backTitle,
-          headerBackButtonMenuEnabled: false,
+          headerBackButtonMenuEnabled: true,
           headerBackButtonDisplayMode: 'default',
           headerSearchBarOptions: { placement: 'stacked' },
         });

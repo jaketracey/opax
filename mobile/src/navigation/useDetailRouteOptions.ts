@@ -84,7 +84,7 @@ export function useDetailRouteOptions(
     search: ReturnType<typeof itemSource>;
   }>(undefined);
   useLayoutEffect(() => {
-    if (!options) return;
+    if (!options || !Object.keys(options).length) return;
     if (!state.current || state.current.setter !== setOptions) {
       state.current = {
         setter: setOptions,
@@ -137,7 +137,12 @@ export function useDetailRouteOptions(
       }
     }
     // Even a seeded title can stay the same while disabled actions become ready.
-    if (rightChanged || leftChanged) delta.title = options.title ?? '';
+    if (rightChanged || leftChanged) {
+      if (options.title !== undefined) delta.title = options.title;
+      // An item-only owner must retain the title installed by the stack or
+      // scrolling-title owner. An empty update still re-reads the callbacks.
+      else if (!Object.keys(delta).length) setOptions({});
+    }
     if (Object.keys(delta).length) setOptions(delta as Options);
     current.applied = options;
   }, [options, setOptions]);

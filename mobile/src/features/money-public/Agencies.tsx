@@ -1,7 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, View } from 'react-native';
+import { View } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { BarSeries } from '../../design/charts';
 import { PopUpButton, SegmentedPicker } from '../../design/controls';
@@ -105,13 +105,6 @@ export default function Agencies() {
       <RouteOptions
         options={{
           title: name,
-          ...(Platform.OS === 'ios' && backTitle
-            ? {
-                headerBackTitle: backTitle,
-                headerBackButtonMenuEnabled: false,
-                headerBackButtonDisplayMode: 'default' as const,
-              }
-            : {}),
           headerLargeTitleEnabled: true,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,

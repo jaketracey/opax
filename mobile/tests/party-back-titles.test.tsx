@@ -72,7 +72,7 @@ afterEach(() => {
 });
 
 describe.each(destinations)('%s', (destination) => {
-  test('preserves the native name of source lists outside the explicit back-title resolver', () => {
+  test('settles a directory back label before the destination mounts', () => {
     Platform.OS = 'ios';
     const screens = sharedScreens('(today)', false);
     const previous = screens.find((item) => item.props.name === 'directory')!;
@@ -87,8 +87,11 @@ describe.each(destinations)('%s', (destination) => {
       'Parties',
     );
     const options = current.props.options({ route: routes[2], navigation });
-    expect(options.headerBackTitle).toBeUndefined();
-    expect(options.headerBackButtonMenuEnabled).toBeUndefined();
+    expect(options).toMatchObject({
+      headerBackTitle: 'Parties',
+      headerBackButtonDisplayMode: 'default',
+      headerBackButtonMenuEnabled: true,
+    });
   });
 
   test.each(entries)(
@@ -125,7 +128,7 @@ describe.each(destinations)('%s', (destination) => {
       expect(options).toMatchObject({
         headerBackTitle: entry.back,
         headerBackButtonDisplayMode: 'default',
-        headerBackButtonMenuEnabled: false,
+        headerBackButtonMenuEnabled: true,
       });
       expect(options.headerBackTitle.trim()).toBe(options.headerBackTitle);
     },

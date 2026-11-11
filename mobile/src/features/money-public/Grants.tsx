@@ -2,7 +2,7 @@ import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { View as NativeView, Platform } from 'react-native';
+import { View as NativeView } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { Button, SegmentedPicker } from '../../design/controls';
 import { formatMoney, formatMoneyCompact } from '../../design/format';
@@ -205,13 +205,6 @@ function GrantList({
       <RouteOptions
         options={{
           title,
-          ...(Platform.OS === 'ios' && backTitle
-            ? {
-                headerBackTitle: backTitle,
-                headerBackButtonMenuEnabled: false,
-                headerBackButtonDisplayMode: 'default' as const,
-              }
-            : {}),
           headerLargeTitleEnabled: true,
           headerLargeTitleShadowVisible: false,
           headerSearchBarOptions: search.options,

@@ -1,19 +1,8 @@
 import { throwIfAborted } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
-import {
-  NavigationContext,
-  NavigationRouteContext,
-} from 'expo-router/react-navigation';
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { Platform, Pressable, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Pressable, View } from 'react-native';
 import { ApiError } from '../../api/errors';
 import { Button, SegmentedPicker } from '../../design/controls';
 import {
@@ -33,7 +22,6 @@ import {
   largestGrantsRoute,
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
-import { useNamedBackOptions } from '../../navigation/useNamedBackOptions';
 import { shareRecord } from '../../navigation/share';
 import { useOpenAsk } from '../ask/open';
 import { useCatalogRecord } from '../bills/useCatalogRecord';
@@ -188,14 +176,7 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
   );
   const titleRef = useRef<View>(null);
   const name = program?.name ?? routeName ?? '';
-  const navigation = useContext(NavigationContext);
-  const route = useContext(NavigationRouteContext);
-  const routes = navigation?.getState?.()?.routes ?? [];
-  const at = routes.findIndex((item) => item.key === route?.key);
-  const previous = at > 0 ? routes[at - 1] : undefined;
-  const backTitle = previous?.name === 'grants' ? 'Grants' : undefined;
-  const title = useTitleOnScroll(titleRef, name, { trailing: 1, backTitle });
-  const backOptions = useNamedBackOptions();
+  const title = useTitleOnScroll(titleRef, name, { trailing: 1 });
   const openAsk = useOpenAsk();
   const seatGrants = useMemo(
     () =>
@@ -262,10 +243,6 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
         stableItems
         options={{
           title: name,
-          ...backOptions,
-          ...(Platform.OS === 'ios' && backTitle
-            ? { headerBackTitle: backTitle, headerBackButtonMenuEnabled: false }
-            : {}),
           headerSearchBarOptions: search.options,
           ...moneyBar({
             name,

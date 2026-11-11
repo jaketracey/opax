@@ -7,7 +7,6 @@ import { headerItems, pageItems } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
 import { exploreWebPath } from '../../navigation/routes/explore';
 import { copyRecordLink, shareRecord } from '../../navigation/share';
-import { useNamedBackOptions } from '../../navigation/useNamedBackOptions';
 
 /** One name per tool (explore spec 1.1). */
 export const toolNames: Readonly<Record<string, string>> = {
@@ -101,11 +100,9 @@ export function ExploreChrome({
 }) {
   const label = name ?? toolName(game);
   const path = exploreWebPath(game, params);
-  const backOptions = useNamedBackOptions();
   return (
     <RouteOptions
       options={{
-        ...backOptions,
         ...(title ? { title, headerTitle: title } : {}),
         ...headerItems(
           pageItems({

@@ -6,6 +6,7 @@ import {
   glassBar,
   headerItems,
   largeTitleBar,
+  pendingHeaderOptions,
   rootHeaderItems,
   shortSheet,
   tabRootGround,
@@ -40,6 +41,41 @@ const rootTitles: Record<string, string> = {
   'money-record': 'Money record',
   'explore/index': 'Quizzes and tools',
   'division-history': 'Votes in parliament',
+  leads: 'Leads',
+  discover: 'Leads',
+  'money-donors': 'Donors',
+  'funding-by-seat-type': 'Funding by seat type',
+  'agency-list': 'Agency records',
+  'bill-list': 'Bills',
+  'recent-records': 'Just added',
+  'record-list': 'Records',
+  'person/[slug]/votes': 'Voting record',
+  'person/[slug]/speeches': 'Speeches',
+  'person/[slug]/interests': 'Declared interests',
+  'party-sources': 'Largest sources by year',
+  declarations: 'Just declared',
+  topics: 'Topics',
+  edition: 'Daily edition',
+  follows: 'Following',
+  about: 'About OPAX',
+  coverage: 'Coverage',
+  stats: 'Coverage',
+  methods: 'Methods',
+  'sources/index': 'Sources and licences',
+  'sources/[...path]': 'Sources and licences',
+  'sources/datasets': 'Datasets',
+  'sources/portraits': 'Portraits',
+  'sources/photos': 'Time machine photographs',
+  'sources/fonts': 'Fonts',
+  consent: 'Voice consent',
+  'sign-in': 'Sign in',
+  'sign-in/code': 'Check your email',
+  delete: 'Delete account',
+  'delete/code': 'Deletion code',
+  conversations: 'Conversations',
+  'state/[code]': 'Electorates',
+  'seat/index': 'Your electorate',
+  'seat/state/[code]': 'Electorates',
 };
 const loadedTitleRoutes = new Set([
   'electorate/[id]',
@@ -76,7 +112,7 @@ export function rootBackTitle(
               routes?: readonly {
                 key?: string;
                 name?: string;
-                params?: { name?: unknown };
+                params?: { name?: unknown; kind?: unknown };
               }[];
             }
           | undefined;
@@ -89,6 +125,13 @@ export function rootBackTitle(
   const at = routes.findIndex((route) => route.key === key);
   const previous = at > 0 ? routes[at - 1] : undefined;
   if (at === 1 && stackRootTitle) return stackRootTitle;
+  if (previous?.name === 'directory') {
+    return previous.params?.kind === 'party'
+      ? 'Parties'
+      : previous.params?.kind === 'electorate'
+        ? 'Electorates'
+        : 'People';
+  }
   if (previous?.name && loadedTitleRoutes.has(previous.name)) {
     const name = previous.params?.name;
     return typeof name === 'string' && name.trim()
@@ -99,10 +142,8 @@ export function rootBackTitle(
 }
 
 /**
- * Install a named native back item before a detail mounts. The space-aware
- * iOS back item can discard its label beside a custom (including empty)
- * title view. Disabling its menu keeps the title and chevron in a static
- * item, as the short Grants and Tools buttons already do.
+ * Resolve the back item before a screen mounts. Keep UIKit's space-aware
+ * item so long names shorten to Back and header updates do not replace it.
  */
 export function detailBackOptions(
   navigation: Parameters<typeof rootBackTitle>[0],
@@ -117,20 +158,17 @@ export function detailBackOptions(
   const short =
     name === 'grant-program' && previous === 'grants'
       ? 'Grants'
-      : (name === 'grant-program' || name === 'money-item') &&
-          previous === 'explore/index'
+      : previous === 'explore/index'
         ? 'Tools'
         : undefined;
-  const back =
-    short ??
-    (previous && loadedTitleRoutes.has(name)
-      ? rootBackTitle(navigation, key, stackRootTitle)
-      : undefined);
-  return back
+  // An unlisted source can have a live title (for example Senators). An
+  // explicit undefined lets UIKit read that title instead of inheriting Back.
+  const back = short ?? rootBackTitle(navigation, key, stackRootTitle);
+  return previous
     ? {
         headerBackTitle: back,
         headerBackButtonDisplayMode: 'default',
-        headerBackButtonMenuEnabled: false,
+        headerBackButtonMenuEnabled: true,
       }
     : {};
 }
@@ -167,17 +205,8 @@ export function screen(
             ? (route.params as { name: string }).name
             : title,
         headerLargeTitleEnabled: false,
-        ...(Platform.OS === 'ios' &&
-        rootBackTitle(navigation, route.key, stackRootTitle)
-          ? {
-              headerBackTitle: rootBackTitle(
-                navigation,
-                route.key,
-                stackRootTitle,
-              ),
-            }
-          : {}),
         ...detailBackOptions(navigation, route.key, name, stackRootTitle),
+        ...pendingHeaderOptions(name, route.params),
         ...(doneWhenRoot && navigation?.getState().index === 0
           ? doneItems
           : {}),

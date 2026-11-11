@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
-  Platform,
   Pressable,
   RefreshControl,
   SectionList,
@@ -39,7 +38,6 @@ import type { SourceDetails } from '../../design/source';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, minimumTarget, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
-import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { resultsRoute } from '../../navigation/routes/search';
 import { presentSource } from '../../navigation/sheets';
@@ -206,7 +204,6 @@ export default function DirectoryScreen() {
 }
 function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const title = titles[kind];
-  const backTitle = useNamedBackTitle();
   const load = useCallback(
     (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
       loadDirectory(kind, refresh, signal),
@@ -541,13 +538,6 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         options={{
           title,
           headerTitle: kind === 'person' ? 'People' : title,
-          ...(Platform.OS === 'ios' && backTitle
-            ? {
-                headerBackTitle: backTitle,
-                headerBackButtonMenuEnabled: false,
-                headerBackButtonDisplayMode: 'default' as const,
-              }
-            : {}),
           headerLargeTitleEnabled: false,
           headerSearchBarOptions: { ...searchBar, obscureBackground: false },
           ...headerItems(

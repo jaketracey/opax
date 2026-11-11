@@ -1,4 +1,5 @@
 import { RouteOptions } from '../src/navigation/preview';
+import { exploreScreens } from '../src/navigation/stack/explore';
 /* eslint-disable @typescript-eslint/no-require-imports -- Native navigation is an inert host in component tests. */
 import { Picker, Slider } from '@expo/ui/swift-ui';
 import { router } from 'expo-router';
@@ -206,6 +207,15 @@ test('starting a round keeps the named Back button when the question installs it
       ],
     }),
   };
+  const registration = exploreScreens().find(
+    (screen) => screen.props.name === 'explore/[tool]',
+  )!;
+  const initial = registration.props.options({ route, navigation });
+  expect(initial).toMatchObject({
+    headerBackTitle: 'Tools',
+    headerBackButtonDisplayMode: 'default',
+    headerBackButtonMenuEnabled: true,
+  });
   await mount(
     <NavigationContext.Provider value={navigation as never}>
       <NavigationRouteContext.Provider value={route}>
@@ -217,12 +227,10 @@ test('starting a round keeps the named Back button when the question installs it
   expect(options()).toMatchObject({
     title: 'The record quiz',
     headerTitle: 'The record quiz',
-    headerBackTitle: 'Tools',
-    headerBackButtonDisplayMode: 'default',
   });
-  expect(navigation.setOptions).toHaveBeenCalledWith(
-    expect.objectContaining({ headerBackTitle: 'Tools' }),
-  );
+  expect(options()).not.toHaveProperty('headerBackTitle');
+  for (const [delta] of navigation.setOptions.mock.calls)
+    expect(Object.keys(delta).filter((key) => key.startsWith('headerBack'))).toEqual([]);
 });
 
 test('a full round: typed guesses exact, every answer then its source, and the result with eight reviews', async () => {
