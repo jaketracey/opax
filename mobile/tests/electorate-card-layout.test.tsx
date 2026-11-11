@@ -1,6 +1,6 @@
 import { act } from 'react';
 import { StyleSheet, View } from 'react-native';
-import TestRenderer from 'react-test-renderer';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import {
   decodeElectorate,
   decodeElectorateIndex,
@@ -9,7 +9,7 @@ import {
 import { Icon } from '../src/design/icon';
 import { PartyLabel } from '../src/design/people';
 import { symbols } from '../src/design/symbols';
-import { rhythm } from '../src/design/tokens';
+import { minimumTarget, rhythm } from '../src/design/tokens';
 import { OutlineMap } from '../src/features/electorate-map/OutlineMap';
 import {
   ElectorateCard,
@@ -26,6 +26,13 @@ const manifest = pinned('/electorates/manifest.json') as { index_url: string };
 const index = decodeElectorateIndex(pinned(manifest.index_url));
 const seat = index.electorates.find((item) => item.name === 'Grayndler')!;
 const view = electorateFor(decodeElectorate(pinned(seat.detail_url)));
+
+function parentView(node: ReactTestInstance): ReactTestInstance {
+  let parent = node.parent;
+  while (parent && parent.type !== View) parent = parent.parent;
+  if (!parent) throw new Error('Expected a containing View');
+  return parent;
+}
 
 test('the card cites the Census and election it actually displays, regardless of file order or update date', () => {
   const census = view.census.find((block) => block.data)!;
@@ -193,7 +200,14 @@ test.each([
       expect(card.props.accessibilityLabel).toContain(
         `Fixture Winner, ${spoken}, `,
       );
-      expect(renderer.root.findByType(PartyLabel).props.party).toBe(shown);
+      const label = renderer.root.findByType(PartyLabel);
+      expect(label.props.party).toBe(shown);
+      expect(label.props.compact).toBe(true);
+      const frame = parentView(label);
+      expect(StyleSheet.flatten(frame.props.style).minHeight).toBe(
+        minimumTarget,
+      );
+      expect(StyleSheet.flatten(parentView(frame).props.style).gap).toBe(4);
     } finally {
       act(() => renderer.unmount());
     }

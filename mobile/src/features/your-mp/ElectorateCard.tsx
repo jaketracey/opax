@@ -14,7 +14,13 @@ import { SourceLine, type SourceDetails } from '../../design/source';
 import { Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, hairline, radii, rhythm } from '../../design/tokens';
+import {
+  colors,
+  hairline,
+  minimumTarget,
+  radii,
+  rhythm,
+} from '../../design/tokens';
 import {
   electorateRoute,
   personRoute,
@@ -189,7 +195,14 @@ export function ElectorateCard({
                       href={winnerHref}
                       testID="your-electorate-winner"
                     />
-                    <PartyLabel party={election.winner.party} linked nested />
+                    <View style={styles.party}>
+                      <PartyLabel
+                        party={election.winner.party}
+                        linked
+                        nested
+                        compact
+                      />
+                    </View>
                   </>
                 ) : null}
                 <Text variant="secondary">
@@ -235,6 +248,7 @@ const styles = StyleSheet.create({
   afterOutline: { paddingTop: 0 },
   block: { gap: rhythm.line },
   electionText: { flex: 1 },
+  party: { minHeight: minimumTarget },
   election: {
     flexDirection: 'row',
     alignItems: 'flex-end',

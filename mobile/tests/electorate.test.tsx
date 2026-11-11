@@ -1,6 +1,6 @@
 import { withNavigationOptions } from './navigation-options';
 import { act, type ReactElement } from 'react';
-import TestRenderer from 'react-test-renderer';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { catalogs as runtime } from '../src/api/runtime';
 import * as c from '../src/api/catalogs';
 import { ApiError } from '../src/api/errors';
@@ -14,7 +14,7 @@ import { ContentUnavailable } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { Heading, Text } from '../src/design/text';
 import { Screen } from '../src/design/layout';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
@@ -29,6 +29,7 @@ import { personRoute } from '../src/navigation/routes';
 import { grantsRoute } from '../src/navigation/routes/public-money';
 import { LinkRow } from '../src/design/rows';
 import { RecordNameLink } from '../src/design/record';
+import { minimumTarget } from '../src/design/tokens';
 import {
   RepresentativeRows,
   sinceLine,
@@ -138,6 +139,12 @@ const unavailable = (r: TestRenderer.ReactTestRenderer, id: string) =>
     .title as string | undefined;
 const has = (r: TestRenderer.ReactTestRenderer, id: string) =>
   r.root.findAll((n) => n.props.testID === id).length > 0;
+function parentView(node: ReactTestInstance): ReactTestInstance {
+  let parent = node.parent;
+  while (parent && parent.type !== View) parent = parent.parent;
+  if (!parent) throw new Error('Expected a containing View');
+  return parent;
+}
 const order = (r: TestRenderer.ReactTestRenderer, ids: string[]) => {
   const seen: string[] = [];
   r.root.findAll((n) => {
@@ -358,6 +365,12 @@ test('election rows push the election screen, newest first', async () => {
   const parties = firstRow.findAllByType(PartyLabel);
   expect(parties[0]!.props.party).toBe('Labor');
   expect(parties[0]!.props.dense).toBeUndefined();
+  expect(parties[0]!.props.compact).toBe(true);
+  const partyFrame = parentView(parties[0]!);
+  expect(StyleSheet.flatten(partyFrame.props.style).minHeight).toBe(
+    minimumTarget,
+  );
+  expect(StyleSheet.flatten(parentView(partyFrame).props.style).gap).toBe(4);
   // VoiceOver hears the party's name, as drawn, never the file's code.
   expect(firstRow.props.accessibilityLabel).toMatch(/, Labor\./);
   expect(firstRow.props.accessibilityLabel).not.toMatch(/\bALP\b/);
