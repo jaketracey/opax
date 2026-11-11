@@ -38,6 +38,7 @@ import {
   type Read,
 } from './requests';
 import { groups, type CatalogGroup } from './scopes';
+import { ReportRow } from './ReportResults';
 
 /**
  * Where a money row goes (journeys/money.md 7 and 12.1): an organisation
@@ -203,6 +204,8 @@ function CatalogRow({
   ]
     .filter(Boolean)
     .join(' · ');
+  if (group === 'reports')
+    return <ReportRow row={row} testID={`results-${group}-${index}`} />;
   if (row.kind === 'interest')
     return (
       <InterestRow

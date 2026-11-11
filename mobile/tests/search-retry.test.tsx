@@ -80,10 +80,10 @@ const sources = (identity = true) =>
     bills,
     provenance: { people: source, electorates: source, bills: source },
   }) as unknown as Awaited<ReturnType<typeof catalogs.suggestionSources>>;
-const empty = () => ({
+const empty = (kind = 'speech') => ({
   data: decodeRecords({
     query: 'x',
-    kind: 'speech',
+    kind,
     sort: 'relevance',
     page: 1,
     per_page: 20,
@@ -296,7 +296,16 @@ test('offline, Speeches says it needs a connection while on-device groups stay',
   expect(ids(r)).toContain('search-result-anthony-albanese');
   expect(ids(r)).not.toContain('search-empty');
   await act(async () => error.props.onRetry());
-  expect(recordSearch.search).toHaveBeenCalledTimes(2);
+  expect(
+    jest
+      .mocked(recordSearch.search)
+      .mock.calls.filter(([, f]) => f.kind !== 'report'),
+  ).toHaveLength(2);
+  expect(
+    jest
+      .mocked(recordSearch.search)
+      .mock.calls.filter(([, f]) => f.kind === 'report'),
+  ).toHaveLength(1);
   await act(async () => r.unmount());
 });
 
@@ -330,7 +339,12 @@ test('electorate suggestions open the native identifier route', async () => {
 });
 
 test('a scope with nothing offers Show all results, which keeps the query', async () => {
-  jest.mocked(recordSearch.search).mockResolvedValue(empty() as never);
+  jest
+    .mocked(recordSearch.search)
+    .mockImplementation(
+      async (_q, f) =>
+        empty(f.kind === 'report' ? 'report' : 'speech') as never,
+    );
   const r = await mount();
   await submit('zzzznevermatching');
   // All finds nothing anywhere: No results with Ask OPAX about this.
@@ -344,7 +358,7 @@ test('a scope with nothing offers Show all results, which keeps the query', asyn
   );
   await act(async () => all.props.onPress());
   expect(r.root.findByType(ScopeBar).props.value).toBe('all');
-  expect(recordSearch.search).toHaveBeenCalledTimes(1);
+  expect(recordSearch.search).toHaveBeenCalledTimes(2);
   await act(async () => r.unmount());
 });
 

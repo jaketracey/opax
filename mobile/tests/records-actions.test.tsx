@@ -91,8 +91,25 @@ beforeEach(() => {
   } as never);
   jest
     .mocked(recordSearch.search)
-    .mockImplementation(async () => page() as never);
+    .mockImplementation(async (_q, f) =>
+      f.kind === 'report'
+        ? ({
+            ...page(),
+            data: {
+              ...page().data,
+              kind: 'report',
+              results: [],
+              count: 0,
+              total: 0,
+            },
+          } as never)
+        : (page() as never),
+    );
 });
+const speechCalls = () =>
+  jest
+    .mocked(recordSearch.search)
+    .mock.calls.filter(([, filters]) => filters.kind !== 'report');
 
 const items = () =>
   (mockBar.options!.unstable_headerRightItems?.() ?? []) as {
@@ -127,7 +144,7 @@ async function speeches() {
 
 test('Filters opens /filters/search; a change there is one request and one filter line', async () => {
   const r = await speeches();
-  expect(recordSearch.search).toHaveBeenCalledTimes(1);
+  expect(speechCalls()).toHaveLength(1);
   const filters = items().find((i) => i.label === 'Filters')!;
   expect(filters.accessibilityLabel).toBe('Filters');
   filters.onPress!();
@@ -138,8 +155,8 @@ test('Filters opens /filters/search; a change there is one request and one filte
   // The sheet writes this owner's filters.
   const store = searchFilterStore('search-root')!;
   await act(async () => store.set({ ...store.get(), party: 'Labor' }));
-  expect(recordSearch.search).toHaveBeenCalledTimes(2);
-  expect(jest.mocked(recordSearch.search).mock.calls[1]![1]).toMatchObject({
+  expect(speechCalls()).toHaveLength(2);
+  expect(speechCalls()[1]![1]).toMatchObject({
     party: 'Labor',
   });
   const line = r.root.findByType(FiltersLine);
@@ -156,7 +173,7 @@ test('Filters opens /filters/search; a change there is one request and one filte
   );
   await act(async () => line.props.onClear());
   expect(r.root.findAllByType(FiltersLine)).toHaveLength(0);
-  expect(recordSearch.search).toHaveBeenCalledTimes(2);
+  expect(speechCalls()).toHaveLength(2);
   await act(async () => r.unmount());
 });
 
@@ -171,14 +188,14 @@ test('Sort is one request per new order; returning to an order costs nothing', a
       .find((s) => s.label === 'Newest first')!
       .onPress(),
   );
-  expect(recordSearch.search).toHaveBeenCalledTimes(2);
-  expect(jest.mocked(recordSearch.search).mock.calls[1]![3]).toBe('newest');
+  expect(speechCalls()).toHaveLength(2);
+  expect(speechCalls()[1]![3]).toBe('newest');
   await act(async () =>
     sort()
       .find((s) => s.label === 'Most relevant')!
       .onPress(),
   );
-  expect(recordSearch.search).toHaveBeenCalledTimes(2);
+  expect(speechCalls()).toHaveLength(2);
   // Summaries are tap only.
   expect(recordSearch.summary).not.toHaveBeenCalled();
   await act(async () => r.unmount());
@@ -190,7 +207,7 @@ test('in All the Speeches group carries the filter line; its Clear clears', asyn
   await act(async () => store.set({ ...store.get(), party: 'Labor' }));
   await act(async () => r.root.findByType(ScopeBar).props.onChange('all'));
   // All's read by relevance is the Speeches read just made: no new request.
-  expect(recordSearch.search).toHaveBeenCalledTimes(2);
+  expect(speechCalls()).toHaveLength(2);
   const groupLine = () =>
     r.root
       .findAllByType(FiltersLine)

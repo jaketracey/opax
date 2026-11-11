@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "kind": "report",
+  "report_type": "agency_report",
+  "slug": "agency-report-nsw-public-service-commissioner-2025-26-annual-report",
+  "title": "Public Service Commissioner 2025-26 annual report",
+  "body": "Public Service Commissioner",
+  "jurisdiction": "NSW",
+  "date": null,
+  "date_basis": null,
+  "year": "2025-26",
+  "snippet": "the Commissioner received 1 request for guidance under section 83B",
+  "citation": {
+    "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf#page=33",
+    "document": "Public Service Commissioner 2025-26 annual report",
+    "page": 33
+  },
+  "snapshot_at": "2026-11-11",
+  "caveats": [
+    "Each figure is quoted from the report with its page; units, labels and definitions differ between reports, so check the unit and label before comparing agencies. Nothing here is an allegation or a finding about any person.",
+    "Coverage is the documents in OPAX's intake so far, not every agency in each jurisdiction."
+  ],
+  "publisher": {
+    "name": "Public Service Commissioner"
+  },
+  "record": {
+    "id": "nsw-public-service-commissioner-2025-26-annual-report",
+    "jurisdiction": "NSW",
+    "agency": "Public Service Commissioner",
+    "reporting_year": "2025-26",
+    "kind": "annual report",
+    "edition": "current",
+    "source_url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf",
+    "catalogue_url": "https://www.parliament.nsw.gov.au/parliamentary-business/tabled-papers-details?id=212142&ref=20611",
+    "pages": 38,
+    "sha256": "d65614f33ee819574bb05e18ff4d1d1f01f5d5e5be832a0856e673221b9ea50f",
+    "bytes": 907764,
+    "acquisition": "publisher browser download",
+    "status": "read",
+    "facts": 2,
+    "not_found": [
+      "consultancy_total",
+      "employee_expenses",
+      "executive_band",
+      "executive_count",
+      "head_remuneration",
+      "matters_received",
+      "net_result",
+      "staff_fte",
+      "staff_headcount",
+      "total_expenses",
+      "total_income"
+    ],
+    "facts_file": "/agency-reports/facts-nsw.json"
+  },
+  "facts": [
+    {
+      "id": "nsw-public-service-commissioner-2025-26-annual-report#1",
+      "report_id": "nsw-public-service-commissioner-2025-26-annual-report",
+      "agency": "Public Service Commissioner",
+      "reporting_year": "2025-26",
+      "edition": "current",
+      "metric": "operational_other",
+      "label": "received 1 request for guidance under section 83B",
+      "column": null,
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 33,
+      "quote": "the Commissioner received 1 request for guidance under section 83B",
+      "source_url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf#page=33"
+    },
+    {
+      "id": "nsw-public-service-commissioner-2025-26-annual-report#2",
+      "report_id": "nsw-public-service-commissioner-2025-26-annual-report",
+      "agency": "Public Service Commissioner",
+      "reporting_year": "2025-26",
+      "edition": "current",
+      "metric": "operational_other",
+      "label": "the OPSC has 19 roles across 3 teams",
+      "column": null,
+      "value": 19,
+      "value_as_published": "19",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 8,
+      "quote": "the OPSC has 19 roles across 3 teams",
+      "source_url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf#page=8"
+    }
+  ],
+  "tables": [],
+  "headline": null
+}

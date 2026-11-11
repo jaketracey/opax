@@ -43,7 +43,7 @@ jest.mock('../src/api/runtime', () => {
   const transport = async (url: RequestInfo | URL) => {
     const u = new URL(String(url));
     mockCalls.push(u.pathname + u.search);
-    if (mockGate.hold)
+    if (mockGate.hold && u.searchParams.get('kind') !== 'report')
       await new Promise<void>((done) => mockGate.release.push(done));
     const body = fixture(u, pinnedRoster);
     if (!body) return new Response('{}', { status: 404 });
@@ -131,7 +131,12 @@ beforeEach(() => {
 });
 
 const paid = () =>
-  mockCalls.filter((path) => /^\/api\/search(-summary|-all)?\?/.test(path));
+  mockCalls.filter(
+    (path) =>
+      /^\/api\/search(-summary|-all)?\?/.test(path) &&
+      new URL(path, 'https://example.test').searchParams.get('kind') !==
+        'report',
+  );
 const bar = () => mockBar.options!.headerSearchBarOptions;
 const type = (text: string) =>
   act(async () => bar().onChangeText({ nativeEvent: { text } }));
@@ -152,7 +157,7 @@ async function mount() {
   return r;
 }
 
-test('typing makes no request; the Search key makes one; scope switches reuse it', async () => {
+test('typing makes no paid request; Search reads speeches and reports; scope switches reuse both', async () => {
   const r = await mount();
   expect(paid()).toEqual([]);
   for (const text of ['h', 'ho', 'hou', 'hous', 'housi', 'housing'])
@@ -164,6 +169,13 @@ test('typing makes no request; the Search key makes one; scope switches reuse it
   await submit('housing');
   expect(paid()).toHaveLength(1);
   expect(paid()[0]).toMatch(/^\/api\/search\?/);
+  expect(
+    mockCalls.filter(
+      (path) =>
+        new URL(path, 'https://example.test').searchParams.get('kind') ===
+        'report',
+    ),
+  ).toHaveLength(1);
   const scopes = () => r.root.findByType(ScopeBar).props.onChange;
   await act(async () => scopes()('people'));
   await act(async () => scopes()('bills'));

@@ -49,8 +49,8 @@ export function searchPhase(
 
 /**
  * The Search root (journeys/search.md 3.1 to 3.4): one field, idle with
- * Recent and Browse, on-device suggestions while typing (no request), and
- * results in four scopes on the keyboard's Search key. Editing keeps the
+ * Recent and Browse, local suggestions plus debounced report catalogue
+ * suggestions while typing, and results in four scopes on the Search key. Editing keeps the
  * results under the suggestions; Cancel returns to them unchanged.
  */
 export function SearchScreen({

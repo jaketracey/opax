@@ -2,6 +2,7 @@ import type { Roster } from '../../api/catalog-decoders';
 import { nameKey } from '../../api/ids';
 import type { SearchRecord, SearchSummary } from './decoders';
 import { invalid } from '../../api/validation';
+import { isReportSlug } from '../../api/official-report-policy';
 
 // programRecord() emits this stable slug and canonical program href. Recipient
 // and award rows have no legal-entity flag: fail closed rather than guess names.
@@ -38,6 +39,8 @@ export function eligibleRecord(row: SearchRecord, roster: Roster) {
   if (row.kind === 'party') return !!row.href?.startsWith('/subject/party/');
   if (row.kind === 'agency') return !!row.href?.startsWith('/subject/agency/');
   if (row.kind === 'bill') return !!row.href?.match(/^\/bill\/[a-z0-9-]+$/);
+  if (row.kind === 'report')
+    return isReportSlug(row.slug) && row.href === `/report/${row.slug}`;
   if (row.href && !/^\/(?:doc|bill)\//.test(row.href)) return false;
   if (
     [

@@ -43,6 +43,7 @@ const routePatterns = new Set([
   '/division-history',
   '/doc-cite/[slug]',
   '/doc/[slug]',
+  '/report/[slug]',
   '/edition',
   '/election',
   '/electorate-date',
