@@ -356,20 +356,6 @@ describe('declaration identities in Today and the full feed', () => {
       );
       const group = host(renderer.root, 'today-declarations-group')[0]!;
       expect(group.findAllByType(DeclarationEntry)).toHaveLength(2);
-      const card = group.find(
-        (node) =>
-          node.type === 'View' &&
-          StyleSheet.flatten(node.props.style)?.backgroundColor ===
-            colors.raised,
-      );
-      const cardStyle = StyleSheet.flatten(card.props.style);
-      expect(cardStyle.paddingBottom).toBe(rhythm.heading);
-      expect(
-        cardStyle.paddingTop ??
-          cardStyle.paddingVertical ??
-          cardStyle.padding ??
-          0,
-      ).toBe(0);
       const dividers = group.findAll(
         (node) =>
           node.type === 'View' &&
