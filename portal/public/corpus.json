@@ -1,11 +1,13 @@
 {
-  "version": "2026-11-11",
-  "expected_resources": 1002410,
+  "version": "2026-11-12",
+  "expected_resources": 1002876,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 1002406,
-    "new_press_release_resources": 4
+    "live_index_before_refresh": 1002410,
+    "new_division_resources": 9,
+    "new_press_release_resources": 21,
+    "new_speech_resources": 436
   },
-  "collected_speeches": 963671,
+  "collected_speeches": 964107,
   "sources": [
     {
       "name": "Federal Hansard: House of Representatives (zenodo)",
@@ -14,7 +16,7 @@
     },
     {
       "name": "NSW Parliament",
-      "docs": 114462,
+      "docs": 114898,
       "coverage": "2015–2026"
     },
     {
@@ -59,17 +61,17 @@
     },
     {
       "name": "Recorded divisions (TheyVoteForYou + state Hansard)",
-      "docs": 14229,
+      "docs": 14238,
       "coverage": "1998–2026"
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
-      "docs": 719,
+      "docs": 721,
       "coverage": "2025–2026"
     },
     {
       "name": "NSW Government ministerial releases",
-      "docs": 5570,
+      "docs": 5581,
       "coverage": "2024–2026"
     },
     {
@@ -104,7 +106,7 @@
     },
     {
       "name": "Queensland Government ministerial statements",
-      "docs": 261,
+      "docs": 269,
       "coverage": "7–21 Sep 2026"
     },
     {
@@ -152,15 +154,15 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-11-10T18:58:11+00:00",
+    "checked_at": "2026-11-11T18:25:17+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
     "latest_bill_introduced": "2026-09-17",
-    "latest_nsw_release": "2026-11-10",
+    "latest_nsw_release": "2026-11-11",
     "source_limitations": [
       "SA Hansard refresh blocked by source HTTP 403; stored coverage ends 2024-11-12.",
-      "Federal Hansard is current to 2026-10-29 (no sittings since); NSW Parliament to 2026-11-10; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-10-29. Federal committee hearings (Senate, House and Joint) are current to 2026-10-29.",
+      "Federal Hansard is current to 2026-10-29 (no sittings since); NSW Parliament to 2026-11-11; Victoria to 2026-09-24; QLD to 2026-09-16; ACT to 2026-10-29. Federal committee hearings (Senate, House and Joint) are current to 2026-10-29.",
       "New AEC source snapshots are retained for reconciliation. Amended federal donation rows have not replaced reviewed public data.",
       "Ministerial diary and IPEA expense refreshes returned the same published rows as the previous verified snapshots.",
       "Federal interests source paused: honest agent refused (awaiting permission); existing disclosures were preserved."
@@ -192,27 +194,27 @@
     "resource_counts": {
       "bill": 2994,
       "bill_text": 4747,
-      "division": 14229,
+      "division": 14238,
       "election_baseline": 150,
       "grant_award": 8354,
       "grant_invitation": 227,
       "parliamentary_profile": 995,
-      "press_release": 7008,
+      "press_release": 7029,
       "research_report": 35,
-      "speech": 963671
+      "speech": 964107
     },
     "raw_source_updates": {
       "federal_speeches": 0,
-      "nsw_speeches": 0,
+      "nsw_speeches": 451,
       "vic_speeches": 0,
       "act_speeches": 0,
-      "nsw_releases": 0,
-      "austender_contracts": 3
+      "nsw_releases": 11,
+      "austender_contracts": 8
     },
     "structured_sources": {
-      "grantconnect_awards": 367482,
-      "austender_latest_contracts": 875683,
-      "published_supplier_contracts": 110226,
+      "grantconnect_awards": 369742,
+      "austender_latest_contracts": 875918,
+      "published_supplier_contracts": 108607,
       "lobbyist_firms": 1964,
       "lobbyist_client_links": 15162,
       "lobbyist_people": 6033,
@@ -241,31 +243,31 @@
       "bills": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-10T17:33:51.775344+00:00",
+        "checked_at": "2026-11-11T17:41:43.219166+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "committees": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-10T16:19:06.434446+00:00",
+        "checked_at": "2026-11-11T16:19:41.645890+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "grants_fetch": {
         "status": "paused",
         "host": "www.grants.gov.au",
-        "checked_at": "2026-11-10T16:31:44.270184+00:00",
+        "checked_at": "2026-11-11T16:36:39.778925+00:00",
         "reason": "HTTP 403"
       },
       "interests_federal": {
         "status": "paused",
         "host": "www.aph.gov.au",
-        "checked_at": "2026-11-10T16:43:33.672820+00:00",
+        "checked_at": "2026-11-11T16:49:07.712121+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld": {
         "status": "paused",
         "host": "data.parliament.qld.gov.au",
-        "checked_at": "2026-11-10T16:19:02.462007+00:00",
+        "checked_at": "2026-11-11T16:19:37.515994+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld_contracts": {
@@ -277,7 +279,7 @@
       "sa": {
         "status": "paused",
         "host": "hansardsearch.parliament.sa.gov.au",
-        "checked_at": "2026-11-10T16:19:09.499350+00:00",
+        "checked_at": "2026-11-11T16:24:01.002623+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       }
     },
@@ -286,7 +288,7 @@
       "committee_house": "2026-10-06",
       "committee_joint": "2026-10-08",
       "committee_senate": "2026-10-29",
-      "nsw_hansard": "2026-11-10",
+      "nsw_hansard": "2026-11-11",
       "openaustralia": "2026-10-29",
       "qld_hansard": "2026-09-16",
       "sa_hansard": "2024-11-12",
