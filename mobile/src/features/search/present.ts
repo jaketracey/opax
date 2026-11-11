@@ -1,7 +1,7 @@
 // How a search result reads: its own title, a kind · date · place line and
 // a count that agrees with its number. The web's search page (app.js,
 // pass 3F) draws the same anatomy.
-import { decodeEntities } from '../../api/passage-text';
+import { decodeEntities, passageText } from '../../api/passage-text';
 import type { Roster, Slugs } from '../../api/catalog-decoders';
 import { nameKey } from '../../api/ids';
 import { isRecordSlug } from '../../api/record-policy';
@@ -108,6 +108,43 @@ const singular: Record<string, string> = {
 };
 export const resultKindLabel = (kind: string) =>
   singular[kind] ?? typeLabel(kind);
+
+/** Register result titles name the declaring member before the category. */
+export function interestName(title: string) {
+  return decodeEntities(title)
+    .split(/\s+[\u2014–-]\s+|:\s+/)[0]!
+    .trim();
+}
+
+/** Remove only the export's trailing holder and action cells. */
+export function interestDetail(row: { title: string; snippet: string }) {
+  const snippet = passageText(row.snippet);
+  const cells =
+    /^(.*)\.\s*(unspecified|self|spouse|children)?\.\s*(statement|addition|deletion|amendment)?\.\s*$/is.exec(
+      snippet,
+    );
+  const holders: Record<string, string> = {
+    self: 'Member',
+    spouse: 'Spouse or partner',
+    children: 'Dependent children',
+  };
+  const actions: Record<string, string> = {
+    addition: 'Added',
+    deletion: 'Removed',
+    amendment: 'Amended',
+  };
+  const titleAction =
+    /(?:\s+[\u2014–-]\s+|:\s+)(statement|addition|deletion|amendment)$/i.exec(
+      row.title,
+    )?.[1];
+  return [
+    (cells ? cells[1]! : snippet).trim().slice(0, 140),
+    holders[cells?.[2]?.toLowerCase() ?? ''],
+    actions[(cells?.[3] ?? titleAction ?? '').toLowerCase()],
+  ]
+    .filter(Boolean)
+    .join(' · ');
+}
 
 /**
  * The record's own title. Search titles are built as "Speaker \u2014 Debate \u2014

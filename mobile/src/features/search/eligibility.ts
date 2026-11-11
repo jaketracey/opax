@@ -33,6 +33,7 @@ export function isGrantProgram(
   );
 }
 export function eligibleRecord(row: SearchRecord, roster: Roster) {
+  if (row.kind === 'interest') return true;
   if (row.kind === 'grant') return isGrantProgram(row);
   if (row.kind === 'party') return !!row.href?.startsWith('/subject/party/');
   if (row.kind === 'agency') return !!row.href?.startsWith('/subject/agency/');

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
+import { router } from 'expo-router';
 import type { Roster, Slugs } from '../../api/catalog-decoders';
 import { catalogs, portraits } from '../../api/runtime';
 import { counted } from '../../design/format';
@@ -15,11 +16,13 @@ import {
 import { rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes/records';
 import { personRoute } from '../../navigation/routes/people';
+import { openSource } from '../../navigation/external';
 import type { SearchRecord } from './decoders';
 import type { RecoveryHandlers } from './EmptyResults';
 import { EmptyResults } from './EmptyResults';
 import { excerptFor } from './Excerpt';
 import { filtersKey, type SpeechFilters } from './filters';
+import { InterestRow } from './InterestRow';
 import { resultMeta, resultTitle, speechSlug, speechSpeaker } from './present';
 import { failureRecovery } from './recovery';
 import type { SpeechList, SpeechSort } from './speeches';
@@ -82,6 +85,18 @@ export function SpeechRow({
   slugs?: Slugs | null;
 }) {
   const route = speechRoute(row, q);
+  if (row.kind === 'interest')
+    return (
+      <InterestRow
+        row={row}
+        testID={testID ?? `records-result-${index}`}
+        fallback={() => {
+          if (route) router.push(route);
+          else if (row.url)
+            return openSource(row.url, row.source || 'Original source');
+        }}
+      />
+    );
   const speaker = speechSpeaker(row, roster, slugs);
   return (
     <RecordRow

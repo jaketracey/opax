@@ -19,6 +19,7 @@ import {
 } from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
 import { isGrantProgram } from './eligibility';
+import { InterestRow } from './InterestRow';
 import { EmptyResults, type RecoveryHandlers } from './EmptyResults';
 import {
   openSearchPath,
@@ -202,6 +203,14 @@ function CatalogRow({
   ]
     .filter(Boolean)
     .join(' · ');
+  if (row.kind === 'interest')
+    return (
+      <InterestRow
+        row={row}
+        testID={`results-${group}-${index}`}
+        fallback={() => openSearchPath(row.href, title)}
+      />
+    );
   return (
     <View>
       <LinkRow
