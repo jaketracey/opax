@@ -8350,9 +8350,9 @@ function loadBillsIndex() {
     .then((d) => { if (!d) billsIndexPromise = null; return d; });
   return billsIndexPromise;
 }
-/** A profile's bill fields (key, titles, aliases, jurisdiction) from /growth/bill-titles.json
- *  (public/bill-titles.js), a third the size of /bills/index.json. The whole index when it is
- *  already loaded, or when the titles file is unreadable. */
+/** The bill fields profiles and speech pages read (key, titles, aliases, jurisdiction, status,
+ *  summary flag) from /growth/bill-titles.json (public/bill-titles.js), under half the size of
+ *  /bills/index.json. The whole index when it is already loaded, or when the titles file is unreadable. */
 let billTitlesPromise = null;
 function loadBillTitles() {
   if (billsIndexPromise) return billsIndexPromise;
@@ -8395,7 +8395,7 @@ function loadBill(key) {
 /** Index entries keyed by exact normalised title (and any alias the projection carries). */
 async function billTitleIndex() {
   if (billsTitleIndex) return billsTitleIndex;
-  const idx = await loadBillsIndex();
+  const idx = await loadBillTitles();
   const map = new Map();
   for (const b of idx?.bills || []) {
     if (b?.title) map.set(titleKey(b.title), b);

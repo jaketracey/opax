@@ -12,9 +12,10 @@ const pub = new URL('../public/', import.meta.url);
 const parsed = new Map();
 const readFile = path => { if (!parsed.has(path)) parsed.set(path, JSON.parse(readFileSync(new URL(path.slice(1), pub), 'utf8'))); return parsed.get(path); };
 
-test('bill titles: the five fields in index order, nothing else', () => {
-  const index = {generated_at: '2026-11-11', bills: [{key: 'au-federal-r1', title: 'A Bill', short_title: 'A', status: 'passed', jurisdiction: 'federal'}, {key: 'au-nsw-2', title: null, aliases: ['Other Bill'], jurisdiction: 'nsw', sponsor: 'X'}]};
-  assert.deepEqual(billTitlesFile(index), {generated_at: '2026-11-11', bills: [{key: 'au-federal-r1', title: 'A Bill', short_title: 'A', jurisdiction: 'federal'}, {key: 'au-nsw-2', title: null, aliases: ['Other Bill'], jurisdiction: 'nsw'}]});
+test('bill titles: the eight fields in index order, nothing else', () => {
+  const index = {generated_at: '2026-11-11', bills: [{key: 'au-federal-r1', title: 'A Bill', short_title: 'A', status: 'passed', status_as_of: '2026-11-01', has_summary: true, jurisdiction: 'federal', divisions: [1]}, {key: 'au-nsw-2', title: null, aliases: ['Other Bill'], jurisdiction: 'nsw', sponsor: 'X', has_summary: false}]};
+  assert.deepEqual(billTitlesFile(index), {generated_at: '2026-11-11', bills: [{key: 'au-federal-r1', title: 'A Bill', short_title: 'A', jurisdiction: 'federal', status: 'passed', status_as_of: '2026-11-01', has_summary: true}, {key: 'au-nsw-2', title: null, aliases: ['Other Bill'], jurisdiction: 'nsw', has_summary: false}]});
+  assert.deepEqual(Object.keys(billTitlesFile(index).bills[0]), ['key', 'title', 'short_title', 'jurisdiction', 'status', 'status_as_of', 'has_summary']);
   assert.throws(() => billTitlesFile({}));
 });
 
@@ -114,4 +115,35 @@ test('bills date: the app reads the date file for a bill page, the whole index w
   assert.equal(await c.loadBillsDate(), '', 'no date when neither loads');
   assert.equal(await c.loadBillsDate(), '');
   assert.equal(c.fetched.length, 4, 'a failure is not kept');
+});
+
+// A speech page matched its debate to a bill through the whole index (renderDocBillPanel). Every
+// title and alias the lookup can match finds the same bill, with the same status and summary flag,
+// in the titles file.
+test('bill titles: a speech page finds the same bill, status and summary flag from them as from the whole index', {skip: !existsSync(new URL('bills/index.json', pub))}, async () => {
+  const {default: ts} = await import('typescript');
+  const {runInNewContext} = await import('node:vm');
+  const src = readFileSync(new URL('app.js', pub), 'utf8');
+  const sf = ts.createSourceFile('app.js', src, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+  const want = new Set(['titleKey', 'billsIndexPromise', 'loadBillsIndex', 'billTitlesPromise', 'loadBillTitles', 'billsTitleIndex', 'billTitleIndex', 'billForTitle']);
+  const code = sf.statements.filter(n => ts.isFunctionDeclaration(n) ? want.has(n.name?.text) : ts.isVariableStatement(n) && n.declarationList.declarations.some(d => want.has(d.name.getText(sf)))).map(n => n.getText(sf)).join('\n');
+  const index = readFile('/bills/index.json');
+  const lookup = served => {
+    const fetched = [];
+    const ctx = {fetch: async path => { fetched.push(path); return new Response(JSON.stringify(served[path] ?? null), {status: served[path] ? 200 : 404}); }};
+    runInNewContext(code + '\nthis.api = {billTitleIndex, billForTitle};', ctx);
+    return {...ctx.api, fetched};
+  };
+  const fromTitles = lookup({'/growth/bill-titles.json': billTitlesFile(index)});
+  const fromIndex = lookup({'/bills/index.json': index});
+  const a = await fromTitles.billTitleIndex(), b = await fromIndex.billTitleIndex();
+  assert.deepEqual(fromTitles.fetched, ['/growth/bill-titles.json']);
+  assert.deepEqual(fromIndex.fetched, ['/growth/bill-titles.json', '/bills/index.json']);
+  assert.deepEqual([...a.keys()], [...b.keys()]);
+  assert.ok(a.size > 1000);
+  const fields = ['key', 'title', 'short_title', 'aliases', 'jurisdiction', 'status', 'status_as_of', 'has_summary'];
+  const pick = e => Object.fromEntries(fields.map(k => [k, e[k]]));
+  for (const [k, e] of b) assert.deepEqual(pick(a.get(k)), pick(e), k);
+  const some = index.bills.find(x => x.has_summary && x.status_as_of);
+  assert.equal((await fromTitles.billForTitle(` ${some.title.toUpperCase()} `))?.key, (await fromIndex.billForTitle(some.title))?.key);
 });
