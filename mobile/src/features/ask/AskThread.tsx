@@ -121,6 +121,7 @@ export function AskThread({
   onAsk,
   onRetry,
   onTurnLayout,
+  onAnchorLayout,
   minHeight,
   statusAnnouncement,
 }: {
@@ -134,6 +135,7 @@ export function AskThread({
   onRetry: () => void;
   /** The current turn's top, so a new question can be brought under the bar. */
   onTurnLayout: (y: number) => void;
+  onAnchorLayout?: (index: number, y: number, latest: boolean) => void;
   minHeight: number;
   statusAnnouncement?: string;
 }) {
@@ -162,15 +164,29 @@ export function AskThread({
         paneShowsSources={paneShowsSources}
       />
     );
+  const row = (turn: Turn, i: number) =>
+    onAnchorLayout ? (
+      <View
+        key={i}
+        testID={`ask-anchor-${i}`}
+        onLayout={(event) =>
+          onAnchorLayout(i, event.nativeEvent.layout.y, i >= split)
+        }
+      >
+        {render(turn, i)}
+      </View>
+    ) : (
+      render(turn, i)
+    );
   return (
-    <View style={styles.thread}>
-      {thread.slice(0, split).map((turn, i) => render(turn, i))}
+    <View style={styles.thread} testID="ask-thread">
+      {thread.slice(0, split).map((turn, i) => row(turn, i))}
       <View
         testID="ask-turn"
         style={[styles.thread, { minHeight }]}
         onLayout={(e) => onTurnLayout(e.nativeEvent.layout.y)}
       >
-        {thread.slice(split).map((turn, i) => render(turn, split + i))}
+        {thread.slice(split).map((turn, i) => row(turn, split + i))}
         {failure && s.failed ? (
           <QuestionLine
             turn={{ role: 'user', text: s.failed.question }}

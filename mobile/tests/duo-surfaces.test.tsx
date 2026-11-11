@@ -1,6 +1,12 @@
-import { act, type ReactNode } from 'react';
+import { act, type ReactNode, type ComponentProps } from 'react';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { Platform, StyleSheet, View } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  View,
+  ScrollView,
+  TextInput,
+} from 'react-native';
 import {
   Grid,
   RegionProvider,
@@ -12,11 +18,20 @@ import { ReservedRegionsProvider } from '../src/design/fold-area';
 import { emptyReservedRegions, type ReservedRegions } from '../src/design/fold';
 import { Text } from '../src/design/text';
 import { ElectorateCard } from '../src/features/your-mp/ElectorateCard';
-import { decodeElectorate, electorateFor } from '../src/api/catalogs';
+import { Catalogs, decodeElectorate, electorateFor } from '../src/api/catalogs';
 import { index, pinned, slugs } from './pinned';
-import { Catalogs } from '../src/api/catalogs';
 import { catalogs as runtime } from '../src/api/runtime';
 import { PartyPage } from '../src/features/Party';
+import AskScreen from '../src/features/ask/AskScreen';
+import { AskColumns } from '../src/features/ask/AskLayout';
+import { askSession } from '../src/features/ask/session';
+import { chatsSnapshot } from '../src/features/ask/store';
+import {
+  citationSelection,
+  selectCitation,
+} from '../src/features/ask/citation-state';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { withNavigationOptions } from './navigation-options';
 import { DailyPair } from '../src/features/today/DailyPair';
 import { MoreToExplore } from '../src/features/today/MoreToExplore';
 import { Masthead } from '../src/features/today/Masthead';
@@ -78,6 +93,49 @@ jest.mock('../src/api/runtime', () => ({
 }));
 jest.mock('../src/features/explore/runtime', () => ({
   explore: { pictures: jest.fn(() => new Promise(() => {})) },
+}));
+
+let mockThreadMounts = 0;
+jest.mock('../src/features/ask/AskThread', () => {
+  const React = jest.requireActual('react');
+  const actual = jest.requireActual('../src/features/ask/AskThread');
+  return {
+    ...actual,
+    AskThread: (
+      props: ComponentProps<
+        (typeof import('../src/features/ask/AskThread'))['AskThread']
+      >,
+    ) => {
+      React.useEffect(() => {
+        mockThreadMounts++;
+      }, []);
+      return React.createElement(actual.AskThread, props);
+    },
+  };
+});
+jest.mock('../src/features/account/store', () => ({
+  useAccount: () => ({ status: { signedIn: true }, checking: false }),
+  accountSnapshot: () => ({ status: { signedIn: true }, checking: false }),
+}));
+jest.mock('../src/voice/linked', () => ({ voiceLinked: false }));
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  useSeat: () => ({ status: 'none' }),
+  savedSeatDirectory: () => null,
+}));
+jest.mock('../src/features/ask/store', () => {
+  const empty = { v: 1, active: null, chats: [] };
+  return {
+    chatsSnapshot: jest.fn(() => empty),
+    subscribeChats: () => () => {},
+    subscribeChatDeletion: () => () => {},
+    loadChats: jest.fn().mockResolvedValue(undefined),
+    saveChats: jest.fn().mockResolvedValue(undefined),
+    forgetActiveChat: jest.fn(),
+  };
+});
+jest.mock('../src/features/split/RecordDetail', () => ({
+  RecordDetail: () => null,
+  RecordShare: () => null,
 }));
 const regular: WindowTraits = {
   horizontal: 'regular',
@@ -206,13 +264,15 @@ describe('Today on Duo', () => {
     'the phone rule at %spt retains the daily pair stack',
     (width) => {
       mockWidth = width;
-      act(() =>
+      act(() => {
+        setWindowTraitsOverride(null);
+        resetAdaptiveDeviceForTests();
         setWindowTraitsOverride({
           horizontal: width === 956 ? 'regular' : 'compact',
           vertical: width === 956 ? 'compact' : 'regular',
           foldable: false,
-        }),
-      );
+        });
+      });
       const tree = render(
         surface(
           <DailyPair today="2026-11-11" attempt={0} />,
@@ -317,13 +377,15 @@ describe('Your MP on Duo', () => {
     'phone rule at %spt retains the existing full-width stat rows',
     (width) => {
       mockWidth = width;
-      act(() =>
+      act(() => {
+        setWindowTraitsOverride(null);
+        resetAdaptiveDeviceForTests();
         setWindowTraitsOverride({
           horizontal: width === 956 ? 'regular' : 'compact',
           vertical: width === 956 ? 'compact' : 'regular',
           foldable: false,
-        }),
-      );
+        });
+      });
       const tree = render(
         surface(
           <ElectorateCard seat={seat} view={electorate} />,
@@ -375,13 +437,15 @@ describe('Party on Duo', () => {
     async (width) => {
       mockWidth = width;
       mockHeight = 560;
-      act(() =>
+      act(() => {
+        setWindowTraitsOverride(null);
+        resetAdaptiveDeviceForTests();
         setWindowTraitsOverride({
           horizontal: width === 956 ? 'regular' : 'compact',
           vertical: width === 956 ? 'compact' : 'regular',
           foldable: false,
-        }),
-      );
+        });
+      });
       const tree = render(
         surface(<PartyPage input="Labor" />, emptyReservedRegions, width),
       );
@@ -392,6 +456,256 @@ describe('Party on Duo', () => {
         .find((node) => node.props.testID === 'party-title')!;
       expect(title.props.children).toBe('Labor');
       expect(title.props.numberOfLines).toBeUndefined();
+    },
+  );
+});
+
+const savedChat = {
+  v: 1 as const,
+  active: 'duo-fixture',
+  chats: [
+    {
+      id: 'duo-fixture',
+      title: 'A fixture question',
+      kind: 'all' as const,
+      speaker: '',
+      created: 1,
+      updated: 1,
+      thread: [
+        { role: 'user' as const, text: 'A fixture question' },
+        {
+          role: 'answer' as const,
+          text: '',
+          result: {
+            answer: 'The fixture record supports this sentence.',
+            citations: {},
+            sources: [1, 2].map((n) => ({
+              resource: `fixture-${n}`,
+              title: `Fixture source ${n}`,
+              slug: `fixture-${n}`,
+              href: `/bill/fixture-${n}`,
+              snippet: `Synthetic passage ${n}.`,
+              cited: true,
+              answerRanges: [[0, 42] as [number, number]],
+            })),
+          },
+        },
+      ],
+    },
+  ],
+};
+function press(tree: TestRenderer.ReactTestRenderer, id: string) {
+  const button = tree.root.findAll(
+    (node) =>
+      node.props.testID === id && typeof node.props.onPress === 'function',
+  )[0]!;
+  act(() => button.props.onPress());
+}
+describe('Ask on Duo', () => {
+  beforeEach(() => {
+    mockThreadMounts = 0;
+    jest.mocked(chatsSnapshot).mockReturnValue(savedChat);
+    act(() => {
+      askSession.start();
+      askSession.open('duo-fixture');
+      selectCitation(null);
+    });
+  });
+  afterEach(() => {
+    act(() => {
+      askSession.start();
+      askSession.setDraft('');
+      selectCitation(null);
+    });
+  });
+  test('thread, scroll anchor, focused input, draft and source selection survive regular/compact/regular', async () => {
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype, 'scrollTo')
+      .mockImplementation(() => {});
+    const blur = jest.spyOn(TextInput.prototype, 'blur');
+    const tree = render(withNavigationOptions(<AskScreen />, () => {}));
+    await act(async () => {});
+    const thread = tree.root.findByProps({ testID: 'ask-thread' });
+    const input = tree.root.findByType(TextInput);
+    const scroll = tree.root
+      .findAllByType(ScrollView)
+      .find((node) => node.props.testID === 'ask-screen')!;
+    act(() => {
+      native(tree, 'ask-anchor-0').props.onLayout({
+        nativeEvent: { layout: { y: 0 } },
+      });
+      native(tree, 'ask-anchor-1').props.onLayout({
+        nativeEvent: { layout: { y: 100 } },
+      });
+    });
+    act(() => input.props.onChangeText('A draft kept while folding'));
+    input.instance.focus();
+    act(() =>
+      scroll.props.onScroll({ nativeEvent: { contentOffset: { y: 184 } } }),
+    );
+    press(tree, 'ask-pane-source-2');
+    expect(citationSelection()?.n).toBe(2);
+    scrollTo.mockClear();
+    blur.mockClear();
+    for (const traits of [compact, regular]) {
+      mockWidth = traits === compact ? 380 : 626;
+      mockHeight = traits === compact ? 560 : 800;
+      act(() => setWindowTraitsOverride(traits));
+      act(() =>
+        native(tree, 'ask-anchor-1').props.onLayout({
+          nativeEvent: { layout: { y: traits === compact ? 160 : 100 } },
+        }),
+      );
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 30));
+      });
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: traits === compact ? 244 : 184,
+        animated: false,
+      });
+      expect(tree.root.findByType(TextInput)).toBe(input);
+      expect(tree.root.findByType(TextInput).instance).toBe(input.instance);
+      expect(input.props.value).toBe('A draft kept while folding');
+      expect(tree.root.findByProps({ testID: 'ask-thread' })).toBe(thread);
+      expect(
+        tree.root
+          .findAllByType(ScrollView)
+          .find((node) => node.props.testID === 'ask-screen'),
+      ).toBe(scroll);
+      expect(scroll.props.maintainVisibleContentPosition).toEqual({
+        minIndexForVisible: 0,
+      });
+      expect(mockThreadMounts).toBe(1);
+      expect(citationSelection()?.n).toBe(2);
+    }
+    expect(
+      tree.root
+        .findAllByType(Text)
+        .some((node) => node.props.children === 'Synthetic passage 2.'),
+    ).toBe(true);
+    expect(scrollTo).toHaveBeenCalledTimes(2);
+    expect(blur).not.toHaveBeenCalled();
+    scrollTo.mockRestore();
+    blur.mockRestore();
+  });
+  test.each([false, true])(
+    'composer clears a vertical fold and camera, docked = %s',
+    (docked) => {
+      const regions: ReservedRegions = {
+        divisions: [{ x: 293, y: 0, width: 40, height: 800, active: true }],
+        occlusions: [
+          {
+            x: docked ? 240 : 550,
+            y: 700,
+            width: 53,
+            height: 100,
+            active: true,
+          },
+        ],
+      };
+      const tree = render(
+        surface(
+          <AskColumns
+            docked={docked}
+            content={<View />}
+            dock={<View />}
+            sources={<View />}
+            keyboard={0}
+            ground="sunken"
+          />,
+          regions,
+          626,
+        ),
+      );
+      act(() => {
+        native(tree, 'ask-composer-bounds').props.onLayout({
+          nativeEvent: { layout: { width: docked ? 293 : 626, height: 800 } },
+        });
+        native(tree, 'ask-composer-position').props.onLayout({
+          nativeEvent: { layout: { width: 293, height: 80 } },
+        });
+      });
+      const position = StyleSheet.flatten(
+        native(tree, 'ask-composer-position').props.style,
+      );
+      expect(position.width).toBe(293);
+      expect(position.left).toBe(docked ? 0 : 333);
+      expect(position.top).toBe(620);
+      if (docked) {
+        expect(
+          StyleSheet.flatten(
+            native(tree, 'ask-conversation-column').props.style,
+          ).width,
+        ).toBe(293);
+        expect(
+          StyleSheet.flatten(native(tree, 'ask-sources-column').props.style),
+        ).toMatchObject({ width: 293, marginLeft: 40 });
+      }
+    },
+  );
+  test('outer dock uses independent safe-area sides and the measured 320 by 560 content area', () => {
+    mockWidth = 380;
+    mockHeight = 560;
+    act(() => setWindowTraitsOverride(compact));
+    const tree = render(
+      surface(
+        <AskColumns
+          docked={false}
+          content={<View />}
+          dock={<View />}
+          sources={null}
+          keyboard={0}
+          ground="sunken"
+        />,
+        emptyReservedRegions,
+        380,
+      ),
+    );
+    expect(
+      tree.root
+        .findAllByType(SafeAreaView)
+        .some(
+          (node) =>
+            JSON.stringify(node.props.edges) ===
+            JSON.stringify(['left', 'right', 'bottom']),
+        ),
+    ).toBe(true);
+    // Native safe-area layout: left 0, right 60, then the area's own measurement.
+    act(() => {
+      native(tree, 'ask-composer-bounds').props.onLayout({
+        nativeEvent: { layout: { width: 320, height: 560 } },
+      });
+      native(tree, 'ask-composer-position').props.onLayout({
+        nativeEvent: { layout: { width: 320, height: 80 } },
+      });
+    });
+    expect(
+      StyleSheet.flatten(native(tree, 'ask-composer-position').props.style),
+    ).toMatchObject({ left: 0, top: 480, width: 320 });
+  });
+  test.each([320, 375, 390, 402, 414, 430, 440, 956])(
+    'the phone rule at %spt keeps the phone dock and sources closed',
+    async (width) => {
+      mockWidth = width;
+      act(() => {
+        setWindowTraitsOverride(null);
+        resetAdaptiveDeviceForTests();
+        setWindowTraitsOverride({
+          horizontal: width === 956 ? 'regular' : 'compact',
+          vertical: width === 956 ? 'compact' : 'regular',
+          foldable: false,
+        });
+      });
+      const tree = render(withNavigationOptions(<AskScreen />, () => {}));
+      await act(async () => {});
+      expect(
+        StyleSheet.flatten(native(tree, 'ask-sources-column').props.style)
+          .display,
+      ).toBe('none');
+      expect(
+        tree.root.findAll((node) => node.props.testID === 'ask-sources-pane'),
+      ).toHaveLength(0);
+      expect(tree.root.findByType(TextInput).props.value).toBe('');
     },
   );
 });

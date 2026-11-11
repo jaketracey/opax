@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
-  type ReactNode,
   type RefObject,
 } from 'react';
 import {
@@ -20,16 +19,14 @@ import {
   type KeyboardEvent,
   type TextInput,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { catalogs } from '../../api/runtime';
 import { useOffline } from '../../api/useOffline';
 import { useReduceMotion } from '../../design/accessibility';
 import {
   RegionProvider,
   SidebarSafe,
-  columns,
-  isPad,
   sizeClassFor,
+  useAdaptiveDevice,
   useLayout,
   useMeasuredRegion,
 } from '../../design/adaptive';
@@ -37,13 +34,7 @@ import { designFlags } from '../../design/flags';
 import { useFocusRequest, useKeyCommand } from '../../design/keyboard';
 import { useScreenColumn } from '../../design/layout';
 import { SurfaceContext } from '../../design/row-padding';
-import {
-  colors,
-  hairline,
-  layout,
-  rhythm,
-  type Role,
-} from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { askHeaderItems } from '../../navigation/chrome';
 import { talkSignInRoute } from '../../navigation/routes/account';
@@ -53,6 +44,8 @@ import { accountCopy } from '../account/copy';
 import { useAccount } from '../account/store';
 import { AskRevealContext, announceAnswer } from './AnswerView';
 import { AskDock } from './AskDock';
+import { AskColumns } from './AskLayout';
+import { ReservedRegionArea } from '../../design/fold-area';
 import { AskIdle } from './AskIdle';
 import { AskThread } from './AskThread';
 import { useAskStageAnnouncement } from './AskStatus';
@@ -70,7 +63,10 @@ import {
 } from './session';
 import { AskPaneProvider, useAskSources } from './SourcesPane';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
+import { useConversationAnchor } from './scroll-anchor';
 import { stopCopy } from './turn-copy';
+
+export { PhoneDock } from './AskLayout';
 
 const topicNames = Object.values(topics);
 // Remember blank arrivals across remounts; real drafts use the session guard.
@@ -122,13 +118,20 @@ export default function AskScreen() {
   const lastAnswer = useRef<object | null>(null);
   const loadingNames = useRef(false);
   useFocusRequest('ask', input);
-  // iPad: two columns when the room inside the sidebar's inset is regular.
+  // The conversation and composer keep their positions on both displays.
   const [onRoom, room] = useMeasuredRegion();
   const outer = useLayout();
+  const adaptive = useAdaptiveDevice();
   const docked =
-    isPad && sizeClassFor(room?.width ?? outer.width) === 'regular';
+    adaptive &&
+    sizeClassFor(room?.width ?? outer.width, outer.rule) === 'regular';
   const column = useScreenColumn('readable');
   const keyboard = useKeyboardOverlap(root);
+  const anchor = useConversationAnchor(
+    scroll,
+    `${outer.rule}:${outer.width}:${outer.height}:${room?.width}:${docked}`,
+    s.id,
+  );
 
   useEffect(() => {
     void loadChats().catch(() => setReadFailed(true));
@@ -303,9 +306,13 @@ export default function AskScreen() {
       automaticallyAdjustKeyboardInsets={false}
       keyboardDismissMode="interactive"
       scrollToOverflowEnabled
+      maintainVisibleContentPosition={
+        adaptive ? { minIndexForVisible: 0 } : undefined
+      }
       onLayout={column.onLayout}
       onScroll={(event) => {
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
+        if (adaptive) anchor.onScroll(event.nativeEvent.contentOffset.y);
         if (docked) sources.onScroll();
       }}
       scrollEventThrottle={16}
@@ -337,8 +344,10 @@ export default function AskScreen() {
             paneShowsSources={docked}
             onAsk={(q, carry) => void ask(q, carry)}
             onRetry={retry}
+            onAnchorLayout={adaptive ? anchor.onRowLayout : undefined}
             onTurnLayout={(y) => {
               turnY.current = y;
+              if (adaptive) anchor.onLatestLayout(y);
               reveal();
             }}
             minHeight={Math.max(
@@ -364,117 +373,34 @@ export default function AskScreen() {
             }),
             // Two panes: an inline title (a large title over two scroll views
             // collapses with whichever scrolls first).
-            ...(isPad ? { headerLargeTitleEnabled: !docked } : null),
+            ...(adaptive ? { headerLargeTitleEnabled: !docked } : null),
           }}
         />
         <AskRevealContext.Provider value={revealClaim}>
-          {isPad ? (
-            <SidebarSafe style={[styles.fill, groundStyle]}>
-              <View
-                style={[styles.fill, groundStyle, docked ? styles.split : null]}
-                onLayout={onRoom}
-              >
-                <RegionProvider value={room}>
-                  {docked ? (
-                    <>
-                      <PadColumn dock={dock}>
-                        <AskPaneProvider value={sources.context}>
-                          {content}
-                        </AskPaneProvider>
-                      </PadColumn>
-                      {sources.pane}
-                    </>
-                  ) : (
-                    <>
-                      {content}
-                      <PhoneDock keyboard={keyboard} ground={ground}>
-                        {dock}
-                      </PhoneDock>
-                    </>
-                  )}
-                </RegionProvider>
-              </View>
-            </SidebarSafe>
-          ) : (
-            <>
-              {content}
-              <PhoneDock keyboard={keyboard} ground={ground}>
-                {dock}
-              </PhoneDock>
-            </>
-          )}
+          <SidebarSafe style={[styles.fill, groundStyle]}>
+            <View style={[styles.fill, groundStyle]} onLayout={onRoom}>
+              <RegionProvider value={room}>
+                <ReservedRegionArea style={styles.fill}>
+                  <AskPaneProvider value={docked ? sources.context : null}>
+                    <AskColumns
+                      docked={docked}
+                      content={content}
+                      dock={dock}
+                      sources={docked ? sources.pane : null}
+                      keyboard={keyboard}
+                      ground={ground}
+                    />
+                  </AskPaneProvider>
+                </ReservedRegionArea>
+              </RegionProvider>
+            </View>
+          </SidebarSafe>
         </AskRevealContext.Provider>
       </View>
     </SurfaceContext.Provider>
   );
 }
 
-/**
- * iPhone (and compact iPad): the composer floats over the content on the
- * tab bar's top edge. A native safe-area view reads the bar's inset as the
- * bar minimises and expands (journeys/ask.md 4.4a); with the keyboard up the
- * composer sits on the keyboard instead, on a band of the page's ground:
- * the glass composer would otherwise show the starters scrolling through
- * it, over its placeholder (w4-ask-01-idle). The content ends at the band's
- * top edge; its bottom padding lets every line scroll clear of it.
- */
-export function PhoneDock({
-  keyboard,
-  ground,
-  children,
-}: {
-  keyboard: number;
-  ground: Role;
-  children: ReactNode;
-}) {
-  return (
-    <SafeAreaView
-      edges={keyboard ? [] : ['bottom']}
-      mode="padding"
-      pointerEvents="box-none"
-      style={[
-        styles.phoneDock,
-        keyboard
-          ? {
-              paddingBottom: keyboard,
-              paddingTop: rhythm.tight,
-              backgroundColor: colors[ground],
-            }
-          : null,
-      ]}
-      testID="ask-phone-dock"
-    >
-      <View style={styles.phoneDockInner}>{children}</View>
-    </SafeAreaView>
-  );
-}
-/** iPad regular: the composer docked under the conversation column. */
-function PadColumn({
-  dock,
-  children,
-}: {
-  dock: ReactNode;
-  children: ReactNode;
-}) {
-  const ref = useRef<View>(null);
-  const lift = useKeyboardOverlap(ref);
-  const ground = { backgroundColor: colors[askGround()] };
-  return (
-    <View ref={ref} style={[styles.fill, ground, { paddingBottom: lift }]}>
-      {children}
-      <View style={[styles.padDock, ground]}>
-        <View
-          style={[
-            styles.padDockColumn,
-            { maxWidth: columns.readable - layout.screenMargin * 2 },
-          ]}
-        >
-          {dock}
-        </View>
-      </View>
-    </View>
-  );
-}
 /** How far the software keyboard overlaps the bottom of `ref`, animated with it. */
 function useKeyboardOverlap(ref: RefObject<View | null>) {
   const [overlap, setOverlap] = useState(0);
@@ -507,18 +433,4 @@ function useKeyboardOverlap(ref: RefObject<View | null>) {
 const styles = StyleSheet.create({
   fill: { flex: 1 },
   content: { paddingTop: rhythm.block, gap: rhythm.section },
-  split: { flexDirection: 'row' },
-  phoneDock: { position: 'absolute', left: 0, right: 0, bottom: 0 },
-  phoneDockInner: {
-    paddingHorizontal: layout.screenMargin,
-    paddingBottom: rhythm.tight,
-  },
-  padDock: {
-    borderTopWidth: hairline,
-    borderTopColor: colors.dividerDefault,
-    paddingHorizontal: layout.screenMargin,
-    paddingTop: rhythm.tight,
-    paddingBottom: rhythm.heading,
-  },
-  padDockColumn: { width: '100%', alignSelf: 'center' },
 });
