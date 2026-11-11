@@ -730,6 +730,12 @@ describe('the native edition reader', () => {
       }),
     );
     expect(mockOnScroll).toHaveBeenCalledWith(240);
+    act(() =>
+      host(root, 'edition-screen')[0]!.props.onScroll({
+        nativeEvent: { contentOffset: { y: -96 } },
+      }),
+    );
+    expect(mockOnScroll).toHaveBeenLastCalledWith(-96);
     expect(root.findByType(Plate).props.onTitleLayout).toBe(mockOnTitleLayout);
   });
   test.each(['ios', 'android'] as const)(
