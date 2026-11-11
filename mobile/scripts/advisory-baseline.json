@@ -156,6 +156,30 @@
       "advisory": "GHSA-qr28-fpjm-wq7f",
       "exposure": "runtime",
       "reason": "Same path and risk class as GHSA-vcc3-ghjq-m6fr: Expo Router deep-link parsing uses query-string 7, which pins decode-uri-component ^0.2.2. The 0.5.1 fix is a different module line that query-string 7 does not accept. Accepted denial-of-service risk from a crafted deep link, confined to the user's own app session; review on SDK patch updates. Reviewed 9 Nov 2026."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-6889-vf6x-f3g5",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli (and @expo/code-signing-certificates): Expo CLI code-signing and dev-server tooling on the developer machine only, never bundled by Metro. Published 10 Nov 2026 (low/medium, fixed in 1.4.3). Reviewed 11 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-w4xr-hqv8-ch44",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli (and @expo/code-signing-certificates): Expo CLI code-signing and dev-server tooling on the developer machine only, never bundled by Metro. Published 10 Nov 2026 (low/medium, fixed in 1.4.3). Reviewed 11 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-6cv4-p8m7-4r25",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli (and @expo/code-signing-certificates): Expo CLI code-signing and dev-server tooling on the developer machine only, never bundled by Metro. Published 10 Nov 2026 (low/medium, fixed in 1.4.3). Reviewed 11 Nov 2026; take the fix with the next Expo SDK patch."
+    },
+    {
+      "package": "node-forge",
+      "advisory": "GHSA-j8rw-jp99-435v",
+      "exposure": "tooling",
+      "reason": "node-forge 1.4.0 via expo > @expo/cli (and @expo/code-signing-certificates): Expo CLI code-signing and dev-server tooling on the developer machine only, never bundled by Metro. Published 10 Nov 2026 (low/medium, fixed in 1.4.3). Reviewed 11 Nov 2026; take the fix with the next Expo SDK patch."
     }
   ]
 }
