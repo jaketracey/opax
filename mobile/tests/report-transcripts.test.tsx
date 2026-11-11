@@ -1,18 +1,35 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { ApiError } from '../src/api/errors';
+import { CatalogCache } from '../src/api/cache';
+import { ApiClient } from '../src/api/client';
 import { assertAllowedPath } from '../src/api/policy';
-import {
-  decodeReport,
-  decodeReportTranscripts,
-} from '../src/api/report-decoders';
-import { recordClient } from '../src/api/runtime';
+import { decodeReport } from '../src/api/report-decoders';
+import { openSource } from '../src/navigation/external';
 import { ReportContent } from '../src/features/reports/ReportScreen';
-import { transcriptMonths } from '../src/features/reports/report-transcripts';
-import { Disclosure, Text, Link } from '../src/features/reports/report-ui';
-import fixture from './fixtures/reports/transcripts.json';
-import royal from './fixtures/reports/royal.json';
-jest.mock('../src/api/runtime', () => ({ recordClient: { get: jest.fn() } }));
+import {
+  transcriptMonths,
+  transcriptTitle,
+} from '../src/features/reports/report-transcripts';
+import {
+  Disclosure,
+  Heading,
+  Text,
+  Link,
+} from '../src/features/reports/report-ui';
+import robodebt from './fixtures/reports/report-rc-robodebt.json';
+import page20 from './fixtures/reports/page-rc-robodebt-20.json';
+import page40 from './fixtures/reports/page-rc-robodebt-40.json';
+import antisemitism from './fixtures/reports/page-rc-antisemitism.json';
+import belcarra from './fixtures/reports/report-integrity-belcarra.json';
+import none from './fixtures/reports/report-integrity-none.json';
+import notFound from './fixtures/reports/page-404.json';
+
+let mockClient: ApiClient;
+jest.mock('../src/api/runtime', () => ({
+  recordClient: {
+    get: (...args: Parameters<ApiClient['get']>) => mockClient.get(...args),
+  },
+}));
 jest.mock('../src/navigation/external', () => ({
   openSource: jest.fn(),
   webPageUrl: jest.fn(),
@@ -26,7 +43,11 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn() },
 }));
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
-async function show(data: unknown = fixture) {
+const origin = 'https://example.test';
+const fetchMock = jest.fn<ReturnType<typeof fetch>, Parameters<typeof fetch>>();
+const response = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), { status });
+async function show(data: unknown = robodebt) {
   let tree!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     tree = TestRenderer.create(<ReportContent report={decodeReport(data)} />);
@@ -42,232 +63,334 @@ async function press(tree: TestRenderer.ReactTestRenderer, id: string) {
       .props.onPress(),
   );
 }
-const more = () => ({
-  ...fixture.transcripts,
-  next_offset: null,
-  items: [
-    {
-      id: 'gloucester-2019-02-04',
-      hearing_date: '2019-02-04',
-      title: 'Operation Gloucester hearing transcript, 4 February 2019',
-      pages: 41,
-      url: 'https://www.ibac.vic.gov.au/media/1052/download',
-      notes: ['Publisher’s suppression order applies.'],
-      orders: [],
-    },
-  ],
+function expectHidden(tree: TestRenderer.ReactTestRenderer) {
+  for (const testID of [
+    'report-transcripts',
+    'report-section-transcripts',
+    'report-jump-transcripts',
+  ])
+    expect(tree.root.findAllByProps({ testID })).toHaveLength(0);
+}
+beforeEach(() => {
+  fetchMock.mockReset();
+  fetchMock.mockImplementation(async () => {
+    throw new Error('Unexpected fetch');
+  });
+  jest.mocked(openSource).mockClear();
+  mockClient = new ApiClient({
+    origin,
+    version: '1.0.0',
+    build: '1',
+    transport: fetchMock,
+    retries: 0,
+    cache: new CatalogCache({
+      readIndex: async () => [],
+      writeIndex: async () => {},
+      read: async () => undefined,
+      write: async () => {},
+      remove: async () => {},
+    }),
+  });
 });
-beforeEach(() => jest.mocked(recordClient.get).mockReset());
-
-test('missing additive summary hides transcripts and never requests the endpoint', async () => {
-  const tree = await show(royal);
-  expect(decodeReport(royal).transcripts).toBeUndefined();
+test('an absent transcripts field hides the section and makes no request', async () => {
+  const tree = await show(none);
+  expect(decodeReport(none).transcripts).toBeUndefined();
+  expectHidden(tree);
+  expect(fetchMock).not.toHaveBeenCalled();
+});
+test('a malformed initial envelope hides only transcripts without an error or request', async () => {
+  const value = clone(robodebt);
+  value.transcripts.offset = 1;
+  const tree = await show(value);
+  expectHidden(tree);
   expect(
-    tree.root.findAllByProps({ testID: 'report-transcripts' }),
-  ).toHaveLength(0);
-  expect(recordClient.get).not.toHaveBeenCalled();
+    tree.root.findAllByProps({ testID: 'report-official-source' }).length,
+  ).toBeGreaterThan(0);
+  expect(fetchMock).not.toHaveBeenCalled();
 });
-test.each([
-  (x: any) => {
-    x.count = '3';
-  },
-  (x: any) => {
-    x.items = {};
-  },
-  (x: any) => {
-    x.first_date = '2019-02-30';
-  },
-  (x: any) => {
-    x.last_date = '2018-01-01';
-  },
-  (x: any) => {
-    x.items[0].hearing_date = '2019-04-01';
-  },
-  (x: any) => {
-    x.items[0].url = 'javascript:alert(1)';
-  },
-  (x: any) => {
-    x.items[0].pages = -1;
-  },
-  (x: any) => {
-    x.items[0].publisher_redacted = 'false';
-  },
-  (x: any) => {
-    x.items[0].orders = ['not a link'];
-  },
-  (x: any) => {
-    x.items[0].notes = [{}];
-  },
-  (x: any) => {
-    x.items[0].title = null;
-    x.items[0].case = null;
-  },
-  (x: any) => {
-    x.items[1].id = x.items[0].id;
-  },
-  (x: any) => {
-    x.next_offset = 0;
-  },
-  (x: any) => {
-    x.next_offset = 4;
-  },
-])('strictly rejects a malformed transcripts block', (damage) => {
-  const value = clone(fixture);
-  damage(value.transcripts);
-  expect(() => decodeReport(value)).toThrow(ApiError);
-});
-
-test('shows count and range, groups newest month first and opens only the first group', async () => {
+test('uses the API label, count and dates in words, with newest month open first', async () => {
   const tree = await show();
-  const groups = tree.root
-    .findAllByType(Disclosure)
-    .filter((n) => n.props.id.startsWith('transcript-month-'));
-  expect(groups.map((n) => n.props.title)).toEqual([
-    'March 2019 (1)',
-    'February 2019 (1)',
-  ]);
   expect(
-    tree.root.findAllByProps({ testID: 'transcript-month-2019-03-toggle' })[0]!
-      .props.accessibilityState.expanded,
+    tree.root
+      .findAllByType(Heading)
+      .some((n) => n.props.children === `${robodebt.transcripts.label} 47`),
   ).toBe(true);
-  expect(
-    tree.root.findAllByProps({ testID: 'transcript-month-2019-02-toggle' })[0]!
-      .props.accessibilityState.expanded,
-  ).toBe(false);
   expect(
     tree.root
       .findAllByType(Text)
       .some(
         (n) =>
           n.props.children ===
-          '3 hearing transcripts · 4 Feb 2019 to 1 Mar 2019',
+          '47 hearing transcripts · 27 September 2022 to 10 March 2023',
       ),
   ).toBe(true);
+  const groups = tree.root
+    .findAllByType(Disclosure)
+    .filter((n) => n.props.id.startsWith('transcript-month-'));
+  expect(groups.map((n) => n.props.title)).toEqual([
+    'March 2023 (8)',
+    'February 2023 (10)',
+    'January 2023 (2)',
+  ]);
+  for (const [index, group] of groups.entries())
+    expect(
+      tree.root.findAllByProps({ testID: `${group.props.id}-toggle` })[0]!.props
+        .accessibilityState.expanded,
+    ).toBe(index === 0);
   expect(
-    tree.root
-      .findAllByType(Text)
-      .some(
-        (n) => n.props.children === fixture.transcripts.items[0]!.notes?.[0],
-      ),
-  ).toBe(true);
-  expect(
-    tree.root
-      .findAllByType(Link)
-      .some(
-        (n) => n.props.title === 'Publication order 1: Operation Gloucester',
-      ),
-  ).toBe(true);
-  expect(recordClient.get).not.toHaveBeenCalled();
-  await press(tree, 'transcript-month-2019-02-toggle');
-  expect(
-    tree.root
-      .findAllByType(Link)
-      .some((n) => n.props.title === '28 Feb 2019 · Operation Gloucester'),
-  ).toBe(true);
-  const decoded = decodeReport(fixture).transcripts!;
-  expect(
-    transcriptMonths([...decoded.items].reverse()).map((x) => x.month),
-  ).toEqual(['2019-03', '2019-02']);
+    transcriptMonths(
+      [...decodeReport(robodebt).transcripts!.items].reverse(),
+    ).map((x) => x.month),
+  ).toEqual(['2023-03', '2023-02', '2023-01']);
+  expect(fetchMock).not.toHaveBeenCalled();
 });
-
-test('loads only the stated next offset, appends rows within the month and stops at the last page', async () => {
-  jest
-    .mocked(recordClient.get)
-    .mockImplementation(
-      async (_path, decode) => ({ data: decode(more()) }) as never,
-    );
+test('falls back to the existing heading when label is absent', async () => {
+  const { label: _label, ...summary } = robodebt.transcripts;
+  const tree = await show({ ...robodebt, transcripts: summary });
+  expect(
+    tree.root
+      .findAllByType(Heading)
+      .some((n) => n.props.children === `${transcriptTitle} 47`),
+  ).toBe(true);
+});
+test('walks all 47 Robodebt rows through mocked fetch with no duplicates', async () => {
+  fetchMock.mockImplementation(async (input) => {
+    const parsed = new URL(String(input));
+    const path = parsed.pathname + parsed.search;
+    if (path === `/api/report/${robodebt.slug}/transcripts?offset=20`)
+      return response(page20);
+    if (path === `/api/report/${robodebt.slug}/transcripts?offset=40`)
+      return response(page40);
+    throw new Error(`Unexpected fetch: ${path}`);
+  });
   const tree = await show();
+  expect(fetchMock).not.toHaveBeenCalled();
   await press(tree, 'report-transcripts-more');
-  expect(recordClient.get).toHaveBeenCalledTimes(1);
-  expect(jest.mocked(recordClient.get).mock.calls[0]![0]).toBe(
-    `/api/report/${fixture.slug}/transcripts?offset=2`,
-  );
+  await press(tree, 'report-transcripts-more');
+  expect(fetchMock.mock.calls.map(([url]) => String(url))).toEqual([
+    `${origin}/api/report/${robodebt.slug}/transcripts?offset=20`,
+    `${origin}/api/report/${robodebt.slug}/transcripts?offset=40`,
+  ]);
   expect(
     tree.root.findAllByProps({ testID: 'report-transcripts-more' }),
   ).toHaveLength(0);
-  await press(tree, 'transcript-month-2019-02-toggle');
-  expect(
-    tree.root
-      .findAllByType(Link)
-      .filter((n) => n.props.testID?.startsWith('report-transcript-'))
-      .map((n) => n.props.title),
-  ).toEqual([
-    '1 Mar 2019 · Operation Gloucester hearing transcript, 1 March 2019',
-    '28 Feb 2019 · Operation Gloucester',
-    '4 Feb 2019 · Operation Gloucester hearing transcript, 4 February 2019',
-  ]);
-  expect(
-    tree.root
-      .findAllByType(Text)
-      .some(
-        (n) => n.props.children === 'Publisher’s suppression order applies.',
-      ),
-  ).toBe(true);
+  for (const group of tree.root
+    .findAllByType(Disclosure)
+    .filter((n) => n.props.id.startsWith('transcript-month-'))) {
+    const id = `${group.props.id}-toggle`;
+    if (
+      !tree.root.findAllByProps({ testID: id })[0]!.props.accessibilityState
+        .expanded
+    )
+      await press(tree, id);
+  }
+  const actual = tree.root
+    .findAllByType(Link)
+    .filter((n) => /^report-transcript-transcript-/.test(n.props.testID || ''))
+    .map((n) => n.props.testID.replace('report-transcript-', ''));
+  expect(actual).toEqual(
+    [...robodebt.transcripts.items, ...page20.items, ...page40.items].map(
+      (row) => row.id,
+    ),
+  );
+  expect(new Set(actual).size).toBe(47);
 });
-
-test('missing paged endpoint removes the whole section and jump entry silently', async () => {
-  jest
-    .mocked(recordClient.get)
-    .mockRejectedValue(new ApiError('not-found', 'Missing endpoint.', 404));
+test('a saved 404 hides the section and contents entry silently', async () => {
+  fetchMock.mockResolvedValue(response(notFound, 404));
   const tree = await show();
   await press(tree, 'report-transcripts-more');
-  expect(
-    tree.root.findAllByProps({ testID: 'report-section-transcripts' }),
-  ).toHaveLength(0);
-  expect(
-    tree.root.findAllByProps({ testID: 'report-jump-transcripts' }),
-  ).toHaveLength(0);
+  expectHidden(tree);
+  expect(fetchMock).toHaveBeenCalledTimes(1);
   expect(
     tree.root
       .findAllByType(Text)
-      .some((n) => String(n.props.children).includes('Missing endpoint')),
+      .some((n) => String(n.props.children).includes(notFound.error)),
   ).toBe(false);
 });
-
-test.each(['duplicate', 'count', 'nonadvancing', 'malformed'] as const)(
-  'never appends a %s transcript page',
+test.each([
+  'duplicate',
+  'count',
+  'first_date',
+  'last_date',
+  'next_offset',
+  'offset',
+  'malformed',
+] as const)(
+  'a later page with %s damage hides the section silently',
   async (damage) => {
-    const page = more();
+    const page = clone(page20);
     if (damage === 'duplicate')
-      page.items[0]!.id = fixture.transcripts.items[0]!.id;
-    if (damage === 'count') page.count = 4;
-    if (damage === 'nonadvancing') (page as any).next_offset = 2;
-    if (damage === 'malformed') (page.items[0] as any).pages = '41';
-    jest
-      .mocked(recordClient.get)
-      .mockImplementation(
-        async (_path, decode) => ({ data: decode(page) }) as never,
-      );
+      page.items[0]!.id = robodebt.transcripts.items[0]!.id;
+    if (damage === 'count') page.count++;
+    if (damage === 'first_date') page.first_date = '2022-09-26';
+    if (damage === 'last_date') page.last_date = '2023-03-11';
+    if (damage === 'next_offset') page.next_offset = 39;
+    if (damage === 'offset') page.offset = 19;
+    if (damage === 'malformed') page.items[0]!.pages = -1;
+    fetchMock.mockResolvedValue(response(page));
     const tree = await show();
     await press(tree, 'report-transcripts-more');
+    expectHidden(tree);
     expect(
       tree.root
         .findAllByType(Link)
         .some((n) => n.props.title === 'Retry loading hearing days'),
-    ).toBe(true);
-    expect(
-      tree.root
-        .findAllByType(Disclosure)
-        .find((n) => n.props.id === 'transcript-month-2019-02')!.props.title,
-    ).toBe('February 2019 (1)');
+    ).toBe(false);
   },
 );
-
-test('cancels a page when the screen unmounts, without updating the old record', async () => {
-  jest
-    .mocked(recordClient.get)
-    .mockImplementation(() => new Promise(() => {}) as never);
+test('retains retry for a transport failure', async () => {
+  fetchMock.mockRejectedValue(new TypeError('Offline'));
   const tree = await show();
   await press(tree, 'report-transcripts-more');
-  const signal = jest.mocked(recordClient.get).mock.calls[0]![3]!.signal;
+  expect(
+    tree.root
+      .findAllByType(Link)
+      .some((n) => n.props.title === 'Retry loading hearing days'),
+  ).toBe(true);
+});
+test('shows the Antisemitism restriction note verbatim as a quiet line', async () => {
+  const tree = await show({ ...robodebt, transcripts: antisemitism });
+  expect(
+    tree.root
+      .findAllByType(Text)
+      .some(
+        (n) =>
+          n.props.children === antisemitism.items[0]!.notes[0] &&
+          n.props.selectable &&
+          n.props.variant === 'secondary',
+      ),
+  ).toBe(true);
+});
+test('PDF and publisher links name their targets for accessibility and open the source', async () => {
+  const tree = await show();
+  const row = robodebt.transcripts.items[0]!;
+  const id = `report-transcript-${row.id}`;
+  const link = tree.root
+    .findAllByType(Link)
+    .find((n) => n.props.testID === id)!;
+  expect(link.props.title).toBe(
+    'Transcript PDF, 114 pages, robodebt.royalcommission.gov.au',
+  );
+  const pdf = tree.root
+    .findAllByProps({ testID: id })
+    .find((n) => n.props.accessibilityRole === 'link')!;
+  expect(pdf.props.accessibilityLabel).toBe(
+    `Transcript PDF, 114 pages, robodebt.royalcommission.gov.au, 10 March 2023, ${row.title}`,
+  );
+  expect(pdf.props.accessibilityHint).toBe('Opens in the in-app browser');
+  const pageID = `report-transcript-page-${row.id}`;
+  const page = tree.root
+    .findAllByProps({ testID: pageID })
+    .find((n) => n.props.accessibilityRole === 'link')!;
+  expect(page.props.accessibilityLabel).toBe(
+    `Publisher’s hearing page, robodebt.royalcommission.gov.au, 10 March 2023, ${row.title}`,
+  );
+  await press(tree, id);
+  expect(openSource).toHaveBeenLastCalledWith(row.url, link.props.title);
+  await press(tree, pageID);
+  expect(openSource).toHaveBeenLastCalledWith(row.page_url, expect.any(String));
+});
+test('shows each order as a short, accessible source link and omits absent hearing pages', async () => {
+  const value = clone(robodebt);
+  const row = value.transcripts.items[0]!;
+  const order = 'https://publisher.example.test/orders/publication.pdf';
+  row.orders.push(
+    order,
+    'https://publisher.example.test/orders/suppression.pdf',
+  );
+  row.publisher_redacted = true;
+  const { page_url: _page, pages: _pages, ...withoutPage } = row;
+  const tree = await show({
+    ...value,
+    transcripts: {
+      ...value.transcripts,
+      items: [withoutPage, ...value.transcripts.items.slice(1)],
+    },
+  });
+  expect(
+    tree.root.findAllByProps({ testID: `report-transcript-page-${row.id}` }),
+  ).toHaveLength(0);
+  expect(
+    tree.root
+      .findAllByType(Link)
+      .some(
+        (n) =>
+          n.props.testID === `report-transcript-${row.id}` &&
+          n.props.title === 'Transcript PDF, robodebt.royalcommission.gov.au',
+      ),
+  ).toBe(true);
+  const orders = tree.root
+    .findAllByType(Link)
+    .filter((n) =>
+      n.props.testID?.startsWith(`report-transcript-order-${row.id}-`),
+    );
+  expect(orders.map((n) => n.props.title)).toEqual(['Order', 'Order']);
+  const id = `report-transcript-order-${row.id}-0`;
+  const control = tree.root
+    .findAllByProps({ testID: id })
+    .find((n) => n.props.accessibilityRole === 'link')!;
+  expect(control.props.accessibilityLabel).toBe(
+    `Order 1, publisher.example.test, 10 March 2023, ${row.title}`,
+  );
+  expect(control.props.accessibilityHint).toBe('Opens in the in-app browser');
+  await press(tree, id);
+  expect(openSource).toHaveBeenLastCalledWith(order, 'Order');
+  expect(
+    tree.root
+      .findAllByType(Text)
+      .some((n) => n.props.children === 'Redacted by the publisher.'),
+  ).toBe(true);
+});
+test('integrity case-only rows render and multiple files share a hearing-day group', async () => {
+  const value = clone(belcarra);
+  const { title: _title, ...caseOnly } = value.transcripts.items[0]!;
+  const tree = await show({
+    ...value,
+    transcripts: {
+      ...value.transcripts,
+      items: [caseOnly, ...value.transcripts.items.slice(1)],
+    },
+  });
+  expect(
+    tree.root
+      .findAllByType(Text)
+      .some((n) => n.props.children === `14 Jun 2017 · ${caseOnly.case}`),
+  ).toBe(true);
+  const day = tree.root.findAll(
+    (n) =>
+      typeof n.type === 'string' &&
+      n.props.testID === `report-hearing-day-${caseOnly.hearing_date}`,
+  );
+  expect(day).toHaveLength(1);
+  expect(
+    day[0]!
+      .findAllByType(Link)
+      .filter((n) => n.props.testID?.startsWith('report-transcript-qld_ccc-')),
+  ).toHaveLength(
+    value.transcripts.items.filter(
+      (row) => row.hearing_date === caseOnly.hearing_date,
+    ).length,
+  );
+});
+test('cancels the mocked fetch on unmount', async () => {
+  let finish!: (value: Response) => void;
+  fetchMock.mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const tree = await show();
+  await press(tree, 'report-transcripts-more');
+  const signal = fetchMock.mock.calls[0]![1]!.signal;
   expect(signal?.aborted).toBe(false);
   await act(async () => tree.unmount());
   expect(signal?.aborted).toBe(true);
+  await act(async () => finish(response(page20)));
 });
-
-test('allows only the reviewed public transcript GET with one canonical non-negative offset', () => {
+test('allows only the reviewed public GET with one canonical non-negative offset', () => {
   expect(() =>
-    assertAllowedPath(`/api/report/${fixture.slug}/transcripts?offset=2`),
+    assertAllowedPath(`/api/report/${robodebt.slug}/transcripts?offset=20`),
   ).not.toThrow();
   for (const suffix of [
     '?offset=-1',
@@ -281,35 +404,6 @@ test('allows only the reviewed public transcript GET with one canonical non-nega
     '?offset=9999999999',
   ])
     expect(() =>
-      assertAllowedPath(`/api/report/${fixture.slug}/transcripts${suffix}`),
+      assertAllowedPath(`/api/report/${robodebt.slug}/transcripts${suffix}`),
     ).toThrow();
-  expect(() =>
-    decodeReportTranscripts({
-      count: 0,
-      first_date: null,
-      last_date: null,
-      items: [],
-      next_offset: null,
-    }),
-  ).not.toThrow();
-});
-
-test('multiple published files for a hearing date share one day row', async () => {
-  const value = clone(fixture);
-  value.transcripts.count = 2;
-  value.transcripts.first_date = '2019-03-01';
-  value.transcripts.next_offset = null as never;
-  value.transcripts.items[1]!.hearing_date = '2019-03-01';
-  const tree = await show(value);
-  const days = tree.root.findAll(
-    (n) =>
-      typeof n.type === 'string' &&
-      n.props.testID?.startsWith('report-hearing-day-'),
-  );
-  expect(days).toHaveLength(1);
-  expect(
-    tree.root
-      .findAllByType(Link)
-      .filter((n) => n.props.testID?.startsWith('report-transcript-')),
-  ).toHaveLength(2);
 });

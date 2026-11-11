@@ -28,19 +28,14 @@ export async function readTranscriptPage(
   slug: string,
   offset: number,
   signal?: AbortSignal,
+  previous?: ReportTranscripts,
 ) {
   const result = await recordClient.get(
     `/api/report/${slug}/transcripts?offset=${offset}`,
-    decodeReportTranscripts,
+    (value) => decodeReportTranscripts(value, offset, previous),
     false,
     { signal, retries: 0 },
   );
-  if (
-    result.data.next_offset !== null
-      ? result.data.next_offset !== offset + result.data.items.length
-      : offset + result.data.items.length !== result.data.count
-  )
-    throw new ApiError('invalid-data', 'The transcript page did not advance.');
   return result.data;
 }
 export function HearingTranscripts({
@@ -68,12 +63,10 @@ export function HearingTranscripts({
         slug,
         page.next_offset,
         controller.signal,
+        summary,
       );
       if (controller.signal.aborted) return;
       if (
-        more.count !== summary.count ||
-        more.first_date !== summary.first_date ||
-        more.last_date !== summary.last_date ||
         more.items.some((row) =>
           page.items.some((item) => item.id === row.id),
         ) ||
@@ -87,7 +80,11 @@ export function HearingTranscripts({
       setPage({ ...more, items: [...page.items, ...more.items] });
     } catch (error) {
       if (controller.signal.aborted) return;
-      if (error instanceof ApiError && error.code === 'not-found') onMissing();
+      if (
+        error instanceof ApiError &&
+        (error.code === 'not-found' || error.code === 'invalid-data')
+      )
+        onMissing();
       else setFailed(true);
     } finally {
       if (request.current === controller) request.current = null;
@@ -97,7 +94,7 @@ export function HearingTranscripts({
   const groups = transcriptMonths(page.items);
   return (
     <Group testID="report-transcripts">
-      <Text>{`${formatCount(summary.count)} hearing ${summary.count === 1 ? 'transcript' : 'transcripts'}${summary.first_date && summary.last_date ? ` · ${formatDate(summary.first_date, 'short')} to ${formatDate(summary.last_date, 'short')}` : ''}`}</Text>
+      <Text>{`${formatCount(summary.count)} hearing ${summary.count === 1 ? 'transcript' : 'transcripts'}${summary.first_date && summary.last_date ? ` · ${formatDate(summary.first_date)} to ${formatDate(summary.last_date)}` : ''}`}</Text>
       {groups.map((group, index) => {
         const label = formatDate(`${group.month}-01`).replace(/^1 /, '');
         const days = new Map<string, TranscriptDay[]>();
@@ -110,33 +107,36 @@ export function HearingTranscripts({
           <RuleGroup key={day} testID={`report-hearing-day-${day}`}>
             {entries.map((row) => (
               <Group key={row.id}>
+                <Text>{`${formatDate(row.hearing_date, 'short')} · ${row.title || row.case}`}</Text>
                 <Link
-                  title={`${formatDate(row.hearing_date, 'short')} · ${row.title || row.case}`}
-                  detail={
-                    row.pages ? `${formatCount(row.pages)} pages` : undefined
-                  }
+                  title={`Transcript PDF${row.pages ? `, ${formatCount(row.pages)} ${row.pages === 1 ? 'page' : 'pages'}` : ''}, ${new URL(row.url).hostname}`}
+                  accessibilityLabel={`Transcript PDF${row.pages ? `, ${formatCount(row.pages)} ${row.pages === 1 ? 'page' : 'pages'}` : ''}, ${new URL(row.url).hostname}, ${formatDate(row.hearing_date)}, ${row.title || row.case}`}
                   url={row.url}
                   testID={`report-transcript-${row.id}`}
                 />
-                {row.page_url && row.page_url !== row.url ? (
+                {row.page_url ? (
                   <Link
-                    title={`Publisher’s hearing page: ${row.case || row.title}`}
+                    title={`Publisher’s hearing page, ${new URL(row.page_url).hostname}`}
+                    accessibilityLabel={`Publisher’s hearing page, ${new URL(row.page_url).hostname}, ${formatDate(row.hearing_date)}, ${row.case || row.title}`}
                     url={row.page_url}
+                    testID={`report-transcript-page-${row.id}`}
                   />
                 ) : null}
                 {row.publisher_redacted ? (
                   <Text variant="secondary">Redacted by the publisher.</Text>
                 ) : null}
-                {row.notes?.map((note, i) => (
-                  <Text key={i} selectable>
+                {row.notes.map((note, i) => (
+                  <Text key={i} selectable variant="secondary">
                     {note}
                   </Text>
                 ))}
-                {row.orders?.map((url, i) => (
+                {row.orders.map((url, i) => (
                   <Link
                     key={i}
-                    title={`Publication order ${i + 1}: ${row.case || row.title}`}
+                    title="Order"
+                    accessibilityLabel={`Order ${i + 1}, ${new URL(url).hostname}, ${formatDate(row.hearing_date)}, ${row.case || row.title}`}
                     url={url}
+                    testID={`report-transcript-order-${row.id}-${i}`}
                   />
                 ))}
               </Group>

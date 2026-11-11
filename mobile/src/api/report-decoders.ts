@@ -17,6 +17,7 @@ import {
   type Decoder,
 } from './validation';
 import { isReportSlug } from './official-report-policy';
+import { ApiError } from './errors';
 
 export const reportType = matching(
   /^(royal_commission|integrity_report|annual_report|agency_report)$/,
@@ -174,7 +175,13 @@ const record = shape({
   reports: optional(array(document)),
   documents: optional(array(document)),
   responses: optional(array(document)),
-  transcripts: optional(array(document)),
+  // Royal commissions retain legacy document arrays here. Integrity records
+  // also carry a registry object; hearing evidence uses the top-level envelope.
+  transcripts: optional((value) => {
+    if (Array.isArray(value)) return array(document)(value);
+    object(value);
+    return undefined;
+  }),
   pdf_url: optional(url),
   page_url: optional(url),
   source_url: optional(url),
@@ -269,35 +276,66 @@ const snapshot: Decoder<string> = (value) => {
 };
 // Additive transcript metadata follows the publisher registry's hearing_date,
 // first_date and last_date fields. No transcript text or witness fields are read.
+const transcriptDate: Decoder<string> = (value) =>
+  date(matching(/^\d{4}-\d{2}-\d{2}$/)(value));
+const transcriptOptional =
+  <T>(decode: Decoder<T>): Decoder<T | undefined> =>
+  (value) =>
+    value === undefined ? undefined : decode(value);
+const orderUrl: Decoder<string> = (value) => {
+  const result = url(value);
+  return new URL(result).protocol === 'https:' ? result : invalid();
+};
 const transcriptDay = shape({
   id: nonempty,
-  hearing_date: date,
-  title: optional(nonempty),
-  case: optional(nonempty),
-  pages: optional(positive),
+  hearing_date: transcriptDate,
+  title: transcriptOptional(nonempty),
+  case: transcriptOptional(nonempty),
+  pages: transcriptOptional(positive),
   url,
-  page_url: optional(url),
-  orders: optional(array(url)),
-  notes: optional(array(nonempty)),
-  publisher_redacted: optional(boolean),
+  page_url: transcriptOptional(url),
+  orders: array(orderUrl),
+  notes: array(text),
+  publisher_redacted: boolean,
 });
 const transcriptSummary = shape({
+  label: transcriptOptional(nonempty),
   count,
-  first_date: nullable(date),
-  last_date: nullable(date),
+  first_date: nullable(transcriptDate),
+  last_date: nullable(transcriptDate),
+  offset: count,
   items: array(transcriptDay),
   next_offset: nullable(count),
 });
-export function decodeReportTranscripts(value: unknown) {
+export function decodeReportTranscripts(
+  value: unknown,
+  expectedOffset = 0,
+  previous?: {
+    count: number;
+    first_date: string | null;
+    last_date: string | null;
+  },
+) {
   const result = transcriptSummary(value);
+  const end = count(result.offset + result.items.length);
   if (
+    result.offset !== count(expectedOffset) ||
+    (previous &&
+      (result.count !== previous.count ||
+        result.first_date !== previous.first_date ||
+        result.last_date !== previous.last_date)) ||
     (result.count > 0 && (!result.first_date || !result.last_date)) ||
+    (result.count === 0 &&
+      (result.first_date !== null || result.last_date !== null)) ||
     (result.first_date &&
       result.last_date &&
       result.first_date > result.last_date) ||
-    result.items.length > result.count ||
-    (result.next_offset !== null &&
-      (result.next_offset === 0 || result.next_offset >= result.count)) ||
+    result.items.length > Math.max(0, result.count - result.offset) ||
+    (result.next_offset === null
+      ? end < result.count
+      : !result.items.length ||
+        result.next_offset !== end ||
+        end >= result.count) ||
     new Set(result.items.map((item) => item.id)).size !== result.items.length
   )
     invalid();
@@ -315,6 +353,17 @@ export function decodeReportTranscripts(value: unknown) {
 }
 export type ReportTranscripts = ReturnType<typeof decodeReportTranscripts>;
 export type TranscriptDay = ReportTranscripts['items'][number];
+const initialTranscripts: Decoder<ReportTranscripts | undefined> = (value) => {
+  if (value === undefined) return undefined;
+  try {
+    return decodeReportTranscripts(value, 0);
+  } catch (error) {
+    // A malformed additive section must not make the report unreadable.
+    if (error instanceof ApiError && error.code === 'invalid-data')
+      return undefined;
+    throw error;
+  }
+};
 
 const detail = shape({
   schema: (value: unknown) => (value === 1 ? (1 as const) : invalid()),
@@ -331,7 +380,7 @@ const detail = shape({
   citation: decodeReportCitation,
   snapshot_at: snapshot,
   caveats: array(text),
-  transcripts: optional(decodeReportTranscripts),
+  transcripts: initialTranscripts,
   publisher: shape({
     name: nonempty,
     short: optional(text),
@@ -347,14 +396,6 @@ const detail = shape({
 export function decodeReport(value: unknown) {
   const result = detail(value);
   if (!result.slug.startsWith(result.report_type.replace(/_/g, '-') + '-'))
-    invalid();
-  const summary = result.transcripts;
-  if (
-    summary &&
-    (summary.next_offset === null
-      ? summary.items.length !== summary.count
-      : summary.next_offset !== summary.items.length)
-  )
     invalid();
   const r = object(object(value).record);
   if (['royal_commission', 'integrity_report'].includes(result.report_type)) {
