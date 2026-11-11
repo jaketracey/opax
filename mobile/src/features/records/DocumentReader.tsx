@@ -27,6 +27,7 @@ import {
 import { catalogs } from '../../api/runtime';
 import { formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
+import { billStatus } from '../../design/parliament';
 import {
   BillRow,
   Disclosure,
@@ -816,7 +817,8 @@ function LinkedBillRow({ bill }: { bill: BillEntry }) {
     <BillRow
       billKey={bill.key}
       title={bill.title}
-      status={bill.status}
+      status={billStatus(bill.status)}
+      rawStatus={bill.status}
       date={bill.introduced}
       dateLabel="Introduced"
       meta={

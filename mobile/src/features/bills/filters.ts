@@ -2,7 +2,11 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import { billFoldText, billName } from '../../api/bill-transforms';
 import type { billsFor } from '../../api/catalogs';
 import { counted, formatCount } from '../../design/format';
-import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
+import {
+  billStatus,
+  CHAMBER_NOT_RECORDED,
+  chamberName,
+} from '../../design/parliament';
 import {
   filterStore,
   registerFilterModel,
@@ -208,12 +212,6 @@ const STATUS_ORDER = [
   'passed',
   'lapsed',
 ];
-const statusLabels: Record<string, string> = {
-  before_parliament: 'Before parliament',
-  exposure_draft: 'Exposure draft',
-  passed: 'Passed',
-  lapsed: 'Lapsed',
-};
 /**
  * "48th Parliament (2025 to now)": the years run from the first bill
  * introduced in it to the first introduced in the next.
@@ -259,9 +257,7 @@ export function boundBillsModel(
     )
     .map((value) => ({
       value,
-      label:
-        statusLabels[value] ??
-        value[0]!.toUpperCase() + value.slice(1).replace(/_/g, ' '),
+      label: billStatus(value),
     }));
   const chambers = ['representatives', 'senate']
     .filter((c) => rows.some((r) => r.originating_house === c))
@@ -385,11 +381,7 @@ export function billRowText(
   bill: BillListRow & { status_stage?: string | null },
 ) {
   const name = billName(bill);
-  const status =
-    statusLabels[bill.status] ??
-    (bill.status
-      ? bill.status[0]!.toUpperCase() + bill.status.slice(1).replace(/_/g, ' ')
-      : 'Status not recorded');
+  const status = billStatus(bill.status);
   const event = rowDate(bill);
   const sponsor = bill.sponsor || null;
   const party = sponsor ? partyFromCode(bill.sponsor_party) : null;

@@ -1,3 +1,5 @@
+import { billSentenceCase } from '../api/bill-transforms';
+
 // Reader-facing names for the catalog's jurisdiction and chamber IDs: the one
 // mapping every screen uses, so a raw ID ("vic_la", "federal") never reaches
 // the reader. Wording follows portal/public/profile-jurisdictions.js, with the
@@ -76,18 +78,7 @@ export function declarationKind(kind: string): string {
     )[kind] ?? 'Register update'
   );
 }
-/** A bill's published status; unknown export values are not reader copy. */
+/** A bill's published status, with readable words for new register values. */
 export function billStatus(status: string): string {
-  return (
-    (
-      {
-        before_parliament: 'Before Parliament',
-        exposure_draft: 'Exposure draft',
-        lapsed: 'Lapsed',
-        passed: 'Passed',
-        withdrawn: 'Withdrawn',
-        enacted: 'Enacted',
-      } as Record<string, string>
-    )[status] ?? 'Status not recorded'
-  );
+  return billSentenceCase(status) || 'Status not recorded';
 }

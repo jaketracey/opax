@@ -25,6 +25,7 @@ import { ApiError } from '../src/api/errors';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { catalogs } from '../src/api/runtime';
 import {
+  BillRow,
   ContentUnavailable,
   Heading,
   InsetGroup,
@@ -32,6 +33,7 @@ import {
   PersonRow,
   RecordRow,
   SourceLine,
+  StatusCapsule,
   VoteSplit,
 } from '../src/design/primitives';
 import BillTextReader from '../src/features/records/BillTextReader';
@@ -51,7 +53,7 @@ import { records } from '../src/features/records/runtime';
 import { recordSource } from '../src/features/records/source';
 import { barTitleWidth } from '../src/navigation/useTitleOnScroll';
 import { billTextContentsRoute } from '../src/navigation/routes';
-import { index, manifest, people, roster, slugs } from './pinned';
+import { bills, index, manifest, people, roster, slugs } from './pinned';
 
 const responses: Record<string, unknown> = fixtures.responses;
 const doc = (path: string) => decodeDocument(responses[path]);
@@ -155,6 +157,36 @@ beforeEach(() => {
   jest.mocked(records.document).mockResolvedValue(record(speech));
   jest.mocked(records.similar).mockResolvedValue(record([]) as never);
 });
+
+test.each([
+  ['before_parliament', 'Before parliament'],
+  ['assented', 'Assented'],
+  ['awaiting_review', 'Awaiting review'],
+])(
+  'a linked bill renders %s as readable status words',
+  async (status, label) => {
+    const bill = { ...bills.bills[0]!, status };
+    jest
+      .mocked(catalogs.bills)
+      .mockResolvedValue(record({ bills: [bill] }) as never);
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        ...speech,
+        metadata: { ...speech.metadata, bill_ref: bill.title },
+      }),
+    );
+    const view = await mount(<DocumentReader />);
+    const row = view.root
+      .findAllByType(BillRow)
+      .find((node) => node.props.testID === 'doc-bill-open')!;
+    expect(row.props.status).toBe(label);
+    expect(row.findByType(StatusCapsule).props).toMatchObject({
+      status,
+      label,
+    });
+    expect(textOfId(view, 'doc-bill-open')).toContain(label);
+  },
+);
 
 test('one meta line says the kind and the chamber; the date is in the source line', async () => {
   expect(metaLine(speech, { date: false })).toBe(

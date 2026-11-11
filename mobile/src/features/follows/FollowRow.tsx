@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { StatusCapsule } from '../../design/labels';
+import { billStatus as billStatusLabel } from '../../design/parliament';
 import { Text } from '../../design/text';
 import { LinkRow } from '../../design/rows';
 import { Portrait } from '../../design/people';
@@ -100,7 +101,8 @@ export function FollowRow({
   const metadata = billStatus ? (
     <>
       <StatusCapsule
-        status={billStatus.words ?? String(billStatus.value)}
+        status={String(billStatus.value)}
+        label={billStatusLabel(String(billStatus.value))}
         hidden
       />
       {billStatus.asAt ? (
