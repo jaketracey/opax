@@ -547,6 +547,7 @@ export function PersonRow({
                 {...context}
                 linked
                 nested
+                compact
                 href={partyHref}
                 testID={testID && `${testID}-party`}
               />
@@ -734,8 +735,8 @@ const styles = StyleSheet.create({
   personText: { gap: rhythm.line, alignSelf: 'stretch' },
   personTextInline: { flex: 1 },
   personName: { flexShrink: 0 },
-  // The party takes its own line, with a little air before the place.
-  personParty: { flexDirection: 'row', paddingVertical: 1 },
+  // The label hugs the name; space below holds its expanded hit target.
+  personParty: { minHeight: minimumTarget },
 });
 
 ownsRowPadding(PersonRow);

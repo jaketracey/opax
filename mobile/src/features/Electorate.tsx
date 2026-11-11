@@ -892,12 +892,15 @@ function ElectionRow({
                 href={winnerHref}
                 testID={`${testID}-winner`}
               />
-              <PartyLabel
-                party={summary.winner.party}
-                status="unknown"
-                nested
-                linked
-              />
+              <View style={styles.party}>
+                <PartyLabel
+                  party={summary.winner.party}
+                  status="unknown"
+                  nested
+                  linked
+                  compact
+                />
+              </View>
             </>
           ) : null}
           <Text wordSafe variant="secondary">
@@ -920,5 +923,6 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
   },
   electionWords: { flex: 1, gap: rhythm.line },
+  party: { minHeight: minimumTarget },
   end: { height: 1 },
 });

@@ -217,13 +217,16 @@ export function DeclarationEntry({
               style={styles.name}
             />
             {item.party ? (
-              <PartyLabel
-                party={item.party}
-                status={item.partyStatus}
-                formerly={item.formerly}
-                linked
-                nested
-              />
+              <View style={styles.party}>
+                <PartyLabel
+                  party={item.party}
+                  status={item.partyStatus}
+                  formerly={item.formerly}
+                  linked
+                  nested
+                  compact
+                />
+              </View>
             ) : null}
             {preview ? (
               <Text
@@ -272,6 +275,8 @@ const styles = StyleSheet.create({
   words: { gap: rhythm.line, alignSelf: 'stretch' },
   inlineWords: { flex: 1 },
   name: { flexShrink: 0 },
+  // Keep the expanded party target clear of the declaration below it.
+  party: { minHeight: minimumTarget },
 });
 
 type DeclarationsBlockData = Block<Declaration[]>;

@@ -102,7 +102,11 @@ export function YearVoices({
               <Text wordSafe variant="name">
                 {voice.name}
               </Text>
-              {party ? <PartyLabel party={party} linked nested /> : null}
+              {party ? (
+                <View style={styles.party}>
+                  <PartyLabel party={party} linked nested compact />
+                </View>
+              ) : null}
               <Text wordSafe variant="secondary">
                 {speechesText(voice.speeches)}
               </Text>
@@ -121,7 +125,8 @@ const styles = StyleSheet.create({
   plain: {
     minHeight: minimumTarget,
     paddingVertical: rhythm.tight,
-    gap: 2,
+    gap: rhythm.line,
     justifyContent: 'center',
   },
+  party: { minHeight: minimumTarget },
 });
