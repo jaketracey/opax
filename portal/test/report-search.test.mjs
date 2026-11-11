@@ -161,3 +161,21 @@ test('rendering escapes source text and rejects unsafe links', () => {
   assert.ok(!html.includes('<script>'));
   assert.ok(!html.includes('href="javascript:'));
 });
+
+test('hearing transcripts get their own section, grouped by month newest first, and leave Official documents', async () => {
+  const section = (html, id) => (new RegExp(`<section[^>]*id="${id}"[\\s\\S]*?</section>`).exec(html) || [''])[0];
+  const rc = projected.find(p => p.detail.slug === 'royal-commission-cth-robodebt').detail;
+  const html = renderReport(rc), tx = section(html, 'transcripts');
+  assert.match(tx, /<h2 class="ui-section-title" id="transcripts-title">Hearing transcripts: evidence, not findings <span class="rr-count">47<\/span>/);
+  const months = [...tx.matchAll(/<details class="ui-disclosure rr-month"( open)?><summary><span>([^<]+)</g)];
+  assert.equal(months[0][2], 'March 2023'); assert.equal(months[0][1], ' open'); assert.ok(months.slice(1).every(m => !m[1]));
+  assert.equal((tx.match(/<li class="rr-doc">/g) || []).length, 47); assert.doesNotMatch(tx, /rr-doc-flag/);
+  assert.doesNotMatch(section(html, 'documents'), /Hearing transcript|transcript-hearing/i);
+  assert.match(html, /<a href="#transcripts"><span>Hearing transcripts: evidence, not findings<\/span><span class="rr-toc-count">47/);
+  const belcarra = projected.find(p => p.detail.report_type === 'integrity_report' && p.detail.record.transcripts?.items).detail;
+  const itx = section(renderReport(belcarra), 'transcripts');
+  assert.equal((itx.match(/<li class="rr-doc">/g) || []).length, belcarra.record.transcripts.count);
+  for (const t of belcarra.record.transcripts.items) assert.ok(itx.includes(escapeHtml(t.url)), t.id);
+  const plain = projected.find(p => p.detail.report_type === 'integrity_report' && !p.detail.record.transcripts).detail;
+  assert.doesNotMatch(renderReport(plain), /id="transcripts"/);
+});

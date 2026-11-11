@@ -65,6 +65,33 @@ lists do not establish that a report contains no findings or recommendations.
 Missing or malformed records return 404, unavailable assets return 503, and
 HEAD returns the GET headers without a body. No authentication is needed.
 
+### Hearing transcripts
+
+A royal commission's `record.transcripts` lists its hearing transcripts. An
+integrity report whose case has public hearing transcripts carries them in
+`record.transcripts.items` (added 12 November 2026; the summary fields `label`,
+`case`, `count`, `first_date`, `last_date` and `file` are unchanged).
+
+`GET /api/report/<slug>/transcripts?offset=0&limit=20` pages the same list
+the HTML page shows, newest first with ties broken by key, so an offset names the
+same row on every call:
+
+```ts
+{
+  schema: 1, kind: "report_transcripts", slug,
+  label: "Hearing transcript: evidence, not findings",
+  total, offset, limit, next_offset: number | null, items: object[]
+}
+```
+
+Each item is the record's own transcript row with `key` (the transcript id),
+`kind: "hearing_transcript"` and `date` (the hearing date) set. `limit` is 1 to
+100 (default 20); a bad `offset` or `limit` returns 400, an offset past the end
+returns no items with `next_offset: null`, and a report with no transcripts
+returns `total: 0`. The page lists the same rows in a "Hearing transcripts:
+evidence, not findings" section, one line per transcript in month folds (newest
+month open), and leaves them out of "Official documents".
+
 ## Local measurements
 
 Snapshot tested: 2,250 report records: 18 commissions, 738 integrity reports,

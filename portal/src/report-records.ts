@@ -58,7 +58,7 @@ const plural = (n: number, one: string, many = one + 's') => `${figure(n)} ${n =
 const anchor = (value: unknown) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
 const JURISDICTION: Record<string, string> = { Cth: 'Commonwealth', NSW: 'New South Wales', Vic: 'Victoria', Qld: 'Queensland', WA: 'Western Australia', SA: 'South Australia', Tas: 'Tasmania', ACT: 'Australian Capital Territory', NT: 'Northern Territory' }
-const DATE_BASIS: Record<string, string> = { tabled: 'Tabled', tabled_vic: 'Tabled in the Parliament of Victoria', published: 'Published', stated: 'Dated', dated: 'Dated', updated: 'Page updated', released: 'Released' }
+const DATE_BASIS: Record<string, string> = { publisher_listing: 'Listed by the publisher for', tabled: 'Tabled', tabled_vic: 'Tabled in the Parliament of Victoria', published: 'Published', stated: 'Dated', dated: 'Dated', updated: 'Page updated', released: 'Released' }
 const dated = (basis: unknown, value: unknown) => `${esc(DATE_BASIS[String(basis)] || 'Dated')} ${time(value)}`
 
 // ---- links and citations
@@ -173,7 +173,7 @@ function items(part: 'findings' | 'recommendations', r: ReportDetail, mainDocume
 }
 
 // ---- documents (commission reports, responses, transcripts; integrity documents)
-function documentRow(d: RecordRow, mainDocument: string, extra = ''): string {
+function documentRow(d: RecordRow, mainDocument: string, extra = '', flag = true): string {
   const href = url(d.page_url) || url(d.url)
   const title = d.title || human(d.key || d.kind || d.role) || 'Document'
   const kind = human(d.document_kind || d.kind || d.role)
@@ -190,13 +190,56 @@ function documentRow(d: RecordRow, mainDocument: string, extra = ''): string {
     ['Note', d.note ? esc(d.note) : ''],
   ])
   return `<li class="rr-doc"><h3 class="rr-doc-title">${href ? link(href, title) : esc(title)}</h3>` +
-    (d.kind === 'hearing_transcript' ? text('Hearing transcript: evidence, not findings.', 'rr-doc-flag') : '') +
+    (flag && d.kind === 'hearing_transcript' ? text('Hearing transcript: evidence, not findings.', 'rr-doc-flag') : '') +
     (meta ? `<p class="rr-doc-meta">${meta}</p>` : '') +
     (files.length ? `<ul class="rr-doc-files" role="list">${files.map(f => `<li>${link(f.url, `${isPdf(String(f.url)) ? 'PDF' : 'File'}: ${f.name || 'report file'}`)}${[finite(f.pages) ? plural(f.pages, 'page') : '', bytes(f.bytes)].filter(Boolean).map(x => ` · ${esc(x)}`).join('')}</li>`).join('')}</ul>` : '') +
     (d.text ? text(d.text) : '') + (d.cite && url(object(d.cite).url) !== href ? citeLine(d.cite, mainDocument) : '') +
     extra + (detail ? `<details class="ui-disclosure rr-doc-detail"><summary>Document details</summary><div class="ui-disclosure-body">${detail}</div></details>` : '') + `</li>`
 }
 const documentList = (docs: RecordRow[], mainDocument: string) => `<ul class="rr-docs" role="list">${docs.map(d => documentRow(d, mainDocument)).join('')}</ul>`
+
+// ---- hearing transcripts: evidence, not findings. One line per transcript, grouped by month, newest first.
+export const TRANSCRIPTS_TITLE = 'Hearing transcripts: evidence, not findings'
+/** A report's hearing transcripts, newest first (ties by key), each with `date` set to its hearing date. The page
+ * and /api/report/<slug>/transcripts read the same list, so an offset names the same row in both. */
+export function reportTranscripts(r: Pick<ReportDetail, 'report_type' | 'record'>): RecordRow[] {
+  const c = r.record
+  const raw = r.report_type === 'royal_commission' ? records(c.transcripts) : r.report_type === 'integrity_report' ? records(object(c.transcripts).items) : []
+  return raw.map(t => ({ ...t, key: t.key ?? t.id, kind: 'hearing_transcript', date: t.date ?? t.hearing_date ?? null }))
+    .sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')) || String(a.key).localeCompare(String(b.key)))
+}
+/** GET /api/report/<slug>/transcripts?offset=&limit=: the report's transcripts in the page's order, paged with stable
+ * offsets. Each item is the record's own transcript row (hearing date, case, publisher links, pages, redaction and
+ * order notes) under the label. */
+export function reportTranscriptPage(r: ReportDetail, params: URLSearchParams) {
+  const num = (k: string, fallback: number) => { const v = params.get(k); return v === null || v === '' ? fallback : /^\d{1,5}$/.test(v) ? Number(v) : NaN }
+  const offset = num('offset', 0), limit = num('limit', 20)
+  if (!Number.isFinite(offset) || !Number.isFinite(limit) || limit < 1 || limit > 100) return { error: 'offset must be a whole number and limit 1 to 100' }
+  const all = reportTranscripts(r), items = all.slice(offset, offset + limit)
+  return { schema: 1, kind: 'report_transcripts', slug: r.slug, label: 'Hearing transcript: evidence, not findings', total: all.length, offset, limit,
+    next_offset: offset + items.length < all.length ? offset + items.length : null, items }
+}
+function transcriptRow(t: RecordRow, mainDocument: string): string {
+  // Integrity transcripts hold the PDF as `url` and the case page as `page_url`; the PDF is the document.
+  const row = t.files ? t : { ...t, page_url: url(t.url) || t.page_url, files: [] }
+  const note = [t.publisher_redacted ? 'The publisher\'s copy is redacted.' : '', ...(Array.isArray(t.orders) ? t.orders : []), ...(Array.isArray(t.notes) ? t.notes : []),
+    t.transcript_pages ? `Transcript pages ${t.transcript_pages}.` : '', t.session_time ? `Session: ${t.session_time}.` : ''].filter(Boolean).map(String).join(' ')
+  return documentRow({ ...row, pages: row.pages ?? object(records(t.files)[0]).pages, note: note || t.note }, mainDocument, '', false)
+}
+function transcriptsPart(r: ReportDetail, mainDocument: string): Part | null {
+  const items = reportTranscripts(r)
+  if (!items.length) return null
+  const months = new Map<string, RecordRow[]>()
+  for (const t of items) {
+    const m = /^(\d{4})-(\d{2})/.exec(String(t.date ?? ''))
+    const label = m ? `${MONTHS[+m[2] - 1]} ${m[1]}` : 'Date not stated'
+    months.set(label, [...(months.get(label) ?? []), t])
+  }
+  const folds = [...months].map(([label, ts], i) => `<details class="ui-disclosure rr-month"${i === 0 ? ' open' : ''}><summary><span>${esc(label)}<span class="rr-summary-meta">${esc(plural(ts.length, 'transcript'))}</span></span></summary>` +
+    `<div class="ui-disclosure-body"><ul class="rr-docs" role="list">${ts.map(t => transcriptRow(t, mainDocument)).join('')}</ul></div></details>`).join('')
+  return { id: 'transcripts', title: TRANSCRIPTS_TITLE, count: items.length,
+    html: `<p class="ui-section-note">What a witness or counsel says at a hearing is evidence or submission, not a finding. Transcripts are the publisher's copies, including its redactions, listed newest first by month.</p>${folds}` }
+}
 
 // ---- annual reports (Transparency Portal body-years)
 const TABLE_KIND: Record<string, string> = { kmp: 'Key management personnel', senior_executive_band: 'Senior executives', highly_paid_band: 'Other highly paid staff', consultancy: 'Consultancy contracts', non_consultancy: 'Non-consultancy contracts' }
@@ -379,8 +422,10 @@ export function renderReport(r: ReportDetail) {
       ['Status as published', esc(c.status_as_published)],
     ])
     if (commission) parts.push({ id: 'commission', title: 'About the inquiry', html: commission })
-    const docs = [...reports, ...records(c.responses), ...records(c.transcripts)]
+    const docs = [...reports, ...records(c.responses)]
     if (docs.length) parts.push({ id: 'documents', title: 'Official documents', count: docs.length, html: documentList(docs, mainDocument) })
+    const heard = transcriptsPart(r, mainDocument)
+    if (heard) parts.push(heard)
     const status = object(c.status_source)
     if (status.url) parts.push({ id: 'status-source', title: 'Where the status comes from', html: `<p class="rr-record-text">${link(status.url, status.name || 'Government status pages')}${finite(status.pages) ? ` (${esc(plural(status.pages, 'page'))})` : ''}</p>` })
   } else if (type === 'integrity_report') {
@@ -406,6 +451,8 @@ export function renderReport(r: ReportDetail) {
     // A lone document that is the source card's own, with nothing more to say, is not listed twice.
     const lone = docs.length === 1 && docs[0].url === citeHref && !docs[0].acquisition && !docs[0].note && !docs[0].rights
     if (docs.length && !lone) parts.push({ id: 'documents', title: 'Official documents', count: docs.length, html: documentList(docs, mainDocument) })
+    const heard = transcriptsPart(r, mainDocument)
+    if (heard) parts.push(heard)
     const about = kv([['Period', esc(c.period)], ['How OPAX got it', esc(c.acquisition)], ['Rights', esc(typeof c.rights === 'object' ? object(c.rights).statement : c.rights)]])
     if (about) parts.push({ id: 'about', title: 'About the report', html: about })
   } else if (type === 'annual_report') {
