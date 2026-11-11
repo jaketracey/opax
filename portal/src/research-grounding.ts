@@ -11,10 +11,11 @@ import {atomsFromText,sentenceFragment} from './research-claims'
 import {contentWords,passageExcerpt} from './research-evidence'
 import {broadTopicOverview} from './ask-answer-grain'
 import {isBillSpeechQuestion} from './ask-scope-intent'
+import {readableDate} from './tools/record-common'
 
 // Metadata copied from a selected record is a citable record description,
 // rather than a model claim about the speaker's position.
-const titleLine=(source:SelectedSource)=>source.date&&source.title?`The record dated ${source.date} is ${source.title.replace(/\s*—\s*/g, ', ')}.`:null
+const titleLine=(source:SelectedSource)=>source.date&&source.title?`The record dated ${readableDate(source.date)} is ${source.title.replace(/\s*—\s*/g, ', ').replace(/\b\d{4}-\d{2}-\d{2}\b/g, readableDate)}.`:null
 const isTitleLine=(text:string,sources:SelectedSource[])=>sources.some(source=>source.cited&&titleLine(source)===text)
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */

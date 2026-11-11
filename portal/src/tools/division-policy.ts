@@ -1,7 +1,7 @@
 /** Topic-wide party voting from the published tallies, never from a member's row window. */
 import { normalize } from '../catalog-query.mjs'
 import { partyMajority, resolveDivisionParty, isDivisionParty, type DivisionSummary } from './division-aggregates'
-import { siteUrl, tableRows } from './record-common'
+import { readableDate, siteUrl, tableRows } from './record-common'
 import { readToolAsset, type ToolArgs, type ToolEnv, type StructuredToolResult } from './types'
 
 export function policyTerms(title: string): string[] {
@@ -49,10 +49,16 @@ export async function policyVotes(env: ToolEnv, args: ToolArgs, candidates: Divi
     split: rows.filter(d => (tally(d)?.votes.aye ?? 0) > 0 && (tally(d)?.votes.no ?? 0) > 0).length,
     partial: rows.filter(d => d.member_coverage !== 'recorded').length })
   const summary = summarise(selected), byKind = (['bill', 'motion'] as const).map(category => ({ category, ...summarise(selected.filter(d => d.category === category)) }))
-  const dates = selected.map(d => d.date).sort(), period = `${args.since ?? dates[0] ?? 'the start of the record'} to ${args.until ?? dates.at(-1) ?? 'the end of the record'}`
-  const wording = (s: ReturnType<typeof summarise>) => `an aye majority in ${s.aye}, a no majority in ${s.no}, a tied aye/no vote in ${s.tied} and no party-labelled aye/no vote in ${s.unrecorded}`
-  const lead = `${party} recorded ${wording(summary)} across ${summary.divisions} matching divisions for ${args.title} (${period}).`
-  const breakdown = byKind.map(s => `${party} recorded ${wording(s)} across ${s.divisions} matching ${s.category === 'bill' ? 'bill divisions (including amendments and procedural votes)' : 'motions and other non-bill divisions'}.`)
+  const dates = selected.map(d => d.date).sort(), period = `${readableDate(args.since ?? dates[0]) || 'the start of the record'} to ${readableDate(args.until ?? dates.at(-1)) || 'the end of the record'}`
+  const wording = (s: ReturnType<typeof summarise>) => [
+    s.aye || s.no ? `a majority of ${party} members voted ${[s.aye ? `aye in ${s.aye}` : '', s.no ? `no in ${s.no}` : ''].filter(Boolean).join(' and ')}` : '',
+    s.tied ? `${s.tied} had a tied aye/no vote` : '',
+    s.unrecorded ? `${s.unrecorded} had no party-labelled vote` : '',
+  ].filter(Boolean).join('; ')
+  const voteMeaning = 'An aye or no is the side of the specific question, not support for or opposition to the policy.'
+  const lead = (summary.divisions ? `Across ${summary.divisions} matching division${summary.divisions === 1 ? '' : 's'} on ${args.title} from ${period}, ${wording(summary)}.`
+    : `No matching divisions on ${args.title} from ${period} were recorded for ${party}.`) + ' ' + voteMeaning
+  const breakdown = byKind.filter(s => s.divisions).map(s => `Across ${s.divisions} matching ${s.category === 'bill' ? `bill division${s.divisions === 1 ? '' : 's'} (including amendments and procedural votes)` : s.divisions === 1 ? 'motion or other non-bill division' : 'motions and other non-bill divisions'}, ${wording(s)}.`)
   const representatives: Selected[] = []
   const add = (d: Selected | undefined) => { if (d && representatives.length < 6 && !representatives.some(r => r.key === d.key)) representatives.push(d) }
   for (const category of ['bill', 'motion']) for (const side of ['aye', 'no']) add(selected.find(d => d.category === category && direction(d) === side))
@@ -62,12 +68,15 @@ export async function policyVotes(env: ToolEnv, args: ToolArgs, candidates: Divi
     return { id: d.key, date: d.date, title: detail?.name ?? d.title, category: d.category, party, majority: direction(d),
       ayes: tally(d)?.votes.aye ?? 0, noes: tally(d)?.votes.no ?? 0, url: siteUrl(env, '/doc/division-' + d.key), source_url: detail?.source_url ?? null }
   }))
-  const selection = `Title selection: ${terms.join('; ')}. Linked bill titles are also matched. Repeat divisions are counted once. This is a title-matched selection, not every vote on the policy area. An aye or no is the side of the specific question, not support for or opposition to the policy.`
-  const qualifications = `Party majorities use published party labels, which may reflect later affiliations. ${summary.split} divisions had both aye and no votes within the party; ${summary.partial} had partial member lists. Missing votes do not establish absence.`
-  const url = siteUrl(env, '/divisions/index.json'), related = rows.map(r => ({ label: `${r.date}: ${r.title}`, url: r.url }))
+  const selection = `Title selection: ${terms.join('; ')}. Linked bill titles are also matched. Repeat divisions are counted once. This is a title-matched selection, not every vote on the policy area. ${voteMeaning}`
+  const qualifications = ['Party majorities use published party labels, which may reflect later affiliations.',
+    ...(summary.split ? [`${summary.split} division${summary.split === 1 ? '' : 's'} had both aye and no votes within the party.`] : []),
+    ...(summary.partial ? [`${summary.partial} division${summary.partial === 1 ? '' : 's'} had partial member lists.`] : []),
+    'Missing votes do not establish absence.'].join(' ')
+  const url = siteUrl(env, '/divisions/index.json'), related = rows.map(r => ({ label: `${readableDate(r.date)}: ${r.title}`, url: r.url }))
   return { operation: 'policy_votes', rows, total: selected.length, summary, by_kind: byKind, search_complete: complete.every(Boolean),
     coverage: { since: dates[0] ?? null, until: dates.at(-1) ?? null, as_of: null },
     citations: [{ kind: 'count', text: lead, url, related }, ...breakdown.map(text => ({ kind: 'count' as const, text, url, related })),
-      ...rows.map(r => ({ kind: 'record' as const, text: `On ${r.date}, ${party} recorded ${r.ayes} ${r.ayes === 1 ? 'aye' : 'ayes'} and ${r.noes} ${r.noes === 1 ? 'no' : 'noes'} on ${r.title.replace(/\s*—\s*/g, ', ')}.`, url: r.url }))],
+      ...rows.map(r => ({ kind: 'record' as const, text: `On ${readableDate(r.date)}, ${party} ${r.id.startsWith('federal-senate-') ? 'senators' : 'members'} voted ${r.ayes} ${r.ayes === 1 ? 'aye' : 'ayes'} and ${r.noes} ${r.noes === 1 ? 'no' : 'noes'} on ${r.title}.`, url: r.url }))],
     notes: [selection, qualifications, ...(!complete.every(Boolean) ? ['The title search reached a search window; these counts are lower bounds for that selection.'] : [])] }
 }

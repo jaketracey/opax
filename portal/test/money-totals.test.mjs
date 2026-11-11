@@ -61,6 +61,8 @@ function citation(result, index, total) {
   assert.equal(cite.value, total);
   assert.ok(cite.text.includes(new Intl.NumberFormat('en-AU').format(total)), cite.text);
   assert.ok(fy(cite.text).includes(fy(result.rows[index].period)), cite.text);
+  assert.doesNotMatch(cite.text, /\b\d{4}-\d{2}-\d{2}\b/);
+  assert.match(cite.text, /1 July \d{4} to 30 June \d{4}/);
   assert.match(cite.url, /^https:\/\/opax\.com\.au\//);
 }
 
@@ -338,6 +340,10 @@ test('industry rankings sum all selected flows before limiting, preserving perio
   assert.deepEqual(result.rows.map(r => [r.industry,r.total_aud]), [['property',400],['mining',180]])
   assert.match(result.citations[0].text, /^Property led the classified industry ranking/)
   assert.match(result.citations[0].text, /2017-18/)
+  for (const cite of result.citations) {
+    assert.match(cite.text, /1 July 2017 to 30 June 2018/)
+    assert.doesNotMatch(cite.text, /\b\d{4}-\d{2}-\d{2}\b/)
+  }
   assert.equal(new URL(result.citations[0].url).searchParams.get('industry'),'property')
   const labor = await api.callTool(env, 'money_totals', { party: 'Labor', from_year: 2017, to_year: 2018, group_by: 'industry', limit: 1 })
   assert.equal(labor.rows[0].total_aud,670)

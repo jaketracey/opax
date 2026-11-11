@@ -12,7 +12,7 @@ import {rankingCoverageMatches,rankingScopeGaps,partyNamed,sourceMetadata,resolv
 import {questionIndustry} from './research-ranking-repair.mjs'
 import {donationCoverageLimit} from './research-coverage'
 import {UNCONFIRMED_PERIOD} from './ask-constraints'
-import {recordAnswerLines,recordEvidenceText} from './research-record-answer'
+import {recordAnswerLines,recordEvidenceText,divisionVoteSource} from './research-record-answer'
 import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
@@ -679,6 +679,16 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
   const emptyRecordRefusal=!!written.answer.trim()&&emptyAnswer(written.answer)&&points.answer.trim()&&points.sources.some(s=>s.cited&&s.kind==='speech')
   let answer=emptyRecordRefusal?'':written.answer
   const citations=emptyRecordRefusal?{}:{...written.citations},seen=new Set<string>(),claims=new Set<string>()
+  // A sourced division title is one record, even when its procedural suffix
+  // repeats another title. Deduplicate the complete vote line, never its title clauses.
+  const divisionLine=(payload:QualitativeAnswer,line:string,from:number,until:number)=>{
+    const source=divisionVoteSource(payload,line,from,until)
+    return source?'division:'+source.url+':'+key(line.replace(/^[-*]\s*/,'')):null
+  }
+  for(const part of answer.matchAll(/[^\n]+/g)){
+    const from=Array.from(answer.slice(0,part.index)).length,id=divisionLine(written,part[0],from,from+Array.from(part[0]).length)
+    if(id)seen.add(id)
+  }
   // Canonical record atoms disambiguate equal amounts, shared figures and period aliases.
   const identities=(payload:QualitativeAnswer,text:string,from:number,until:number)=>{
     const ids=Object.entries(payload.citations).filter(([,ranges])=>ranges.some(([a,b])=>a<until&&b>from)).map(([id])=>id)
@@ -700,6 +710,8 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
     for(const [id,ranges] of Object.entries(points.citations))for(const [a,b] of ranges)if(a<until&&b>from)(citations[id]??=[]).push([offset+Math.max(a,from)-from,offset+Math.min(b,until)-from])
   }
   for(const part of points.answer.matchAll(/[^\n]+/g)) {
+    const from=Array.from(points.answer.slice(0,part.index)).length,until=from+Array.from(part[0]).length,division=divisionLine(points,part[0],from,until)
+    if(division){if(!seen.has(division)){seen.add(division);append(part[0],from,until)}continue}
     const line=part[0],base=part.index!,all=claimClauses(line),kept:typeof all=[]
     for(const clause of all){
       const from=Array.from(points.answer.slice(0,base+clause.start)).length,until=from+Array.from(clause.text).length

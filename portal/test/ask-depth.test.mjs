@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {build} from 'esbuild'
 import {MockLanguageModelV4} from 'ai/test'
-const built=await build({stdin:{contents:"export {auditPayload} from './src/research-claim-audit.mjs';export {recordAnswerLines} from './src/research-record-answer';export * from './src/ask-answer-grain';export {joinedSourceName} from './src/source-text-fidelity';export {callTool} from './src/tools';export {proseFallback,writingFacts} from './src/research-writing';export {withAnswerLanguage} from './src/research-response';export {extractAskConstraints,constrainStep} from './src/ask-constraints';export {groundAnswerPayload} from './src/research-grounding';export {inferPeriod,runAgentic} from './src/agentic-ask';export {createAnswerWriter} from './src/research-writer';export {createResearch} from './src/research-loop';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
+const built=await build({stdin:{contents:"export {auditPayload} from './src/research-claim-audit.mjs';export {recordAnswerLines} from './src/research-record-answer';export * from './src/ask-answer-grain';export {joinedSourceName} from './src/source-text-fidelity';export {callTool} from './src/tools';export {proseFallback,writingFacts,appendWrittenPoints} from './src/research-writing';export {withAnswerLanguage} from './src/research-response';export {extractAskConstraints,constrainStep} from './src/ask-constraints';export {groundAnswerPayload} from './src/research-grounding';export {inferPeriod,runAgentic} from './src/agentic-ask';export {createAnswerWriter} from './src/research-writer';export {createResearch} from './src/research-loop';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const named={people:[],parties:[],bills:[],ambiguous:false,unresolved:false}
 const constraints=(q,scope=named)=>api.extractAskConstraints(q,api.inferPeriod(q),scope)
@@ -57,24 +57,57 @@ test('joined compound names are rejected for quotation without silently altering
  assert.equal(explicit.rows[0].excerpt,body)
 })
 test('aggregate selection limits survive writing and repeated final-boundary checks, with the aggregate first',async()=>{
- const q='How have the Greens voted on climate bills?',lead='Greens recorded an aye majority in 2, a no majority in 1, a tied aye/no vote in 0 and no party-labelled aye/no vote in 0 across 3 matching divisions for climate (2011-11-08 to 2022-09-08).'
+ const q='How have the Greens voted on climate bills?',lead='Across 3 matching divisions on climate from 8 November 2011 to 8 September 2022, a majority of Greens members voted aye in 2 and no in 1. An aye or no is the side of the specific question, not support for or opposition to the policy.'
  const note='Title selection: climate; carbon. Linked bill titles are also matched. This is a title-matched selection, not every vote on the policy area. An aye or no is the side of the specific question, not support for or opposition to the policy.'
  const sources=[{resource:'fact-1',kind:'count',url:'https://opax.com.au/divisions/index.json',href:'https://opax.com.au/divisions/index.json',snippet:lead,title:lead,cited:true},{resource:'coverage',kind:'record',url:'https://opax.com.au/divisions/index.json',href:'https://opax.com.au/divisions/index.json',snippet:note,title:'Coverage of the selected records',cited:true}]
  const answer=lead+'\n\n'+note,input={question:q,period:api.inferPeriod(q),constraints:constraints(q,{...named,parties:['Greens']}),facts:api.writingFacts({answer,sources,citations:{'fact-1/t/body/0':[[0,lead.length]],'coverage/t/body/0':[[lead.length+2,answer.length]]}})}
  let out=api.proseFallback(input)
  for(let i=0;i<2;i++)out=await (await api.withAnswerLanguage(Response.json(out),q)).json()
  assert.ok(out.answer.startsWith(lead),out.answer)
+ assert.match(out.answer,/An aye or no is the side of the specific question, not support for or opposition to the policy\./)
+ assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b|in 0\b|—/)
  assert.match(out.coverage.note,/Title selection: climate; carbon/)
  assert.match(out.coverage.note,/not support for or opposition/)
 })
 test('broad topic title fallback can retain six distinct cited records when summaries are cut',()=>{
  const q='What has parliament said about the Murray–Darling Basin?'
- const sources=Array.from({length:6},(_,i)=>({resource:'speech-'+i,kind:'speech',title:`Murray–Darling Basin debate ${i}`,date:`201${i}-10-25`,speaker:`Speaker ${i}`,url:`https://www.aph.gov.au/record/${i}`,href:`https://www.aph.gov.au/record/${i}`,snippet:'The Murray–Darling Basin needs better water management.',cited:true}))
+ const sources=Array.from({length:6},(_,i)=>({resource:'speech-'+i,kind:'speech',title:`Murray–Darling Basin debate ${i}, 201${i}-10-25`,date:`201${i}-10-25`,speaker:`Speaker ${i}`,url:`https://www.aph.gov.au/record/${i}`,href:`https://www.aph.gov.au/record/${i}`,snippet:'The Murray–Darling Basin needs better water management.',cited:true}))
  const lines=sources.map(s=>`On ${s.date}, ${s.speaker} said “The Basin belongs to Martians”.`),answer=lines.join('\n')
  const out=api.groundAnswerPayload({answer,answer_decision:'answer',sources,citations:Object.fromEntries(sources.map(s=>[s.resource+'/t/body/0',[[0,answer.length]]]))},q)
  assert.equal(out.coherence.method,'cited_record_titles')
  assert.equal(Object.keys(out.citations).length,6)
+ assert.match(out.answer,/The record dated 25 October 2010 is Murray–Darling Basin debate 0, 25 October 2010\./)
+ assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b/)
  assert.doesNotMatch(out.answer,/Martians/)
+})
+
+test('policy representative wording and source punctuation survive the final answer boundary',async()=>{
+ const question='How have the Greens voted on climate bills?'
+ const lead='Across 1 matching division on climate from 16 May 2024 to 16 May 2024, a majority of Greens members voted no in 1. An aye or no is the side of the specific question, not support for or opposition to the policy.'
+ const representative='On 16 May 2024, Greens senators voted 0 ayes and 10 noes on Climate Bill — Second Reading.'
+ const facts=[lead,representative].map((text,i)=>({id:i+1,text,source:{resource:'fact-'+i,kind:i?'record':'count',url:i?'https://opax.com.au/doc/division-federal-senate-701':'https://opax.com.au/divisions/index.json',snippet:text,title:text,cited:true}}))
+ let out=api.proseFallback({question,period:api.inferPeriod(question),constraints:constraints(question,{...named,parties:['Greens']}),facts})
+ for(let i=0;i<2;i++)out=await (await api.withAnswerLanguage(Response.json(out),question)).json()
+ assert.ok(out.answer.startsWith(lead),out.answer)
+ assert.ok(out.answer.includes(representative),out.answer)
+ assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b|\bin 0\b|\b0 had\b/)
+ assert.equal(Object.keys(out.citations).length,2)
+})
+
+test('representative division titles retain repeated procedural suffixes when checked points are appended',async()=>{
+ const question='How have the Greens voted on climate bills?'
+ const lines=[
+  'On 16 September 2026, Greens senators voted 10 ayes and 0 noes on Documents — Climate Change; Order for the Production of Documents.',
+  'On 15 October 2026, Greens senators voted 0 ayes and 7 noes on DOCUMENTS - Department of Climate Change, Energy, the Environment and Water; Order for the Production of Documents.',
+ ]
+ const answer=lines.join('\n\n'),offset=Array.from(lines[0]+'\n\n').length
+ const points={answer,answer_decision:'answer',sources:lines.map((text,i)=>({resource:'fact-'+i,kind:'record',url:'https://opax.com.au/doc/division-federal-senate-'+i,title:text,snippet:text,cited:true})),citations:{'fact-0/t/body/0':[[0,offset-2]],'fact-1/t/body/0':[[offset,Array.from(answer).length]]}}
+ let out=api.appendWrittenPoints({answer:'',sources:[],citations:{}},points)
+ assert.equal(out.answer,answer,'complete titles survive point composition')
+ for(let i=0;i<2;i++)out=await (await api.withAnswerLanguage(Response.json(out),question)).json()
+ assert.equal(out.answer,answer)
+ assert.deepEqual(out.citations,points.citations)
+ assert.equal(api.appendWrittenPoints(out,points).answer,answer,'the same complete division line is still deduplicated')
 })
 
 test('member and party ranking prose keeps the complete requested grain and ordered leaders without a writer turn',()=>{
@@ -84,13 +117,15 @@ test('member and party ranking prose keeps the complete requested grain and orde
   const out=api.proseFallback({question:q,period:api.inferPeriod(q),constraints:constraints(q),facts})
   assert.ok(out.answer.startsWith(names[0]),out.answer)
   for(const name of names)assert.ok(out.answer.includes(name))
+  assert.equal((out.answer.match(/from 1 January 2022/g)??[]).length,3)
+  assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b/)
   assert.doesNotMatch(out.answer,/Wrong grain|9999/)
   assert.equal(Object.keys(out.citations).length,3)
  }
 })
 
 test('an incidental party aggregate cannot replace a broad topic overview',()=>{
- const text='Greens recorded an aye majority in 2, a no majority in 1 across 3 matching divisions for water.'
+ const text='Across 3 matching divisions on water from 8 November 2011 to 8 September 2022, a majority of Greens members voted aye in 2 and no in 1.'
  const facts=[{id:1,text,source:{resource:'fact-1',kind:'count',url:'https://opax.com.au/divisions/index.json',snippet:text,cited:true}}]
  assert.equal(api.recordAnswerLines({question:'What has parliament said about the Murray–Darling Basin?',period:{kind:'all'},facts}),null)
 })
