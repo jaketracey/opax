@@ -47,7 +47,7 @@ ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 # exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
 # quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
 # (periodic-refresh.md, exit codes)
-STALE_OK=",transparency_portal,x_annual_reports,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
+STALE_OK=",transparency_portal,transparency_legacy,x_annual_reports,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -107,10 +107,12 @@ if [ "$want_weekly" = 1 ]; then
   # --- loaders ------------------------------------------------------------------------------------------
   # Commonwealth annual reports from the Transparency Portal's public delivery API (parli/ingest/transparency_portal.py):
   # ~75 paced requests into a raw cache outside git, a snapshot with completeness and shrink guards (exit 3 keeps the
-  # last good one), then the public projection. No DB or KB writes. Most reports are tabled September to November.
+  # last good one), then the 2018-19 to 2021-22 data files (pinned assets, downloaded once into the same cache) and the
+  # public projection. No DB or KB writes. Most reports are tabled September to November.
   if [ -z "$(git ls-tree --name-only HEAD -- portal/public/annual-reports 2>/dev/null)" ]; then
     log "[transparency_portal/x_annual_reports] SKIP: projection not yet tracked on main"
-  elif run_step transparency_portal "" "$PY" -m parli.ingest.transparency_portal refresh; then
+  elif run_step transparency_portal "" "$PY" -m parli.ingest.transparency_portal refresh && \
+       run_step transparency_legacy "" "$PY" -m parli.ingest.transparency_legacy refresh; then
     run_step x_annual_reports "" "$EXPORT" dir portal/public/annual-reports -- \
       "$PY" scripts/export_annual_reports.py
   else

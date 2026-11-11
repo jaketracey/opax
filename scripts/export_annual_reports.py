@@ -31,6 +31,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from parli.ingest.transparency_portal import CACHE, LICENCE_NCE, LICENCE_OWN, SITE, number, clean  # noqa: E402
+from parli.ingest.transparency_legacy import DATASETS_PAGE, SNAPSHOT as LEGACY_SNAPSHOT  # noqa: E402
 
 OUT = ROOT / "portal" / "public" / "annual-reports"
 SCHEMA = 1
@@ -49,10 +50,13 @@ CAVEATS = [
     "Senior executive and other highly paid staff rows are bands with a count and averages, not individuals. Never multiply or add averages across bands, bodies or years.",
     "Contract spend is in thousands of dollars, GST inclusive, as published. Total expenses come from the departmental statement of comprehensive income extract; administered items are excluded.",
     "Staff numbers are headcounts as published in the all ongoing and all non-ongoing employee tables, not full-time equivalents.",
-    "Coverage starts with the 2022-23 reports, the first year the Portal published these tables as structured data. 2025-26 reports are still being tabled.",
+    "Key management personnel, band and supplier rows for 2018-19 to 2021-22 come from the files on the Portal's Data sets page; later years and all headline figures come from its structured annual report tables (2022-23 onward). 2025-26 reports are still being tabled.",
+    "Supplier spend before 2022-23 is stated in each file's own unit: dollars for 2020-21 and thousands of dollars for 2021-22. Organisations paid were not published as a table before 2020-21.",
+    "Older-year rows are matched to a body only where the published entity name, or one of the Portal's listed names for it, matches exactly. Other entity names are kept as published.",
 ]
 
 
+# Components may be rounded (often to the nearest thousand), so a gap within half a per cent is not flagged.
 TOTAL_ROW = re.compile(r"^\s*(sub-?\s*)?totals?\b", re.I)
 # Average reportable contract value (in $'000) above which a published thousands-of-dollars
 # figure is flagged as possibly entered in dollars. Flagged figures are kept as published.
@@ -141,6 +145,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--snapshot", default=str(CACHE / "snapshot.json"))
     ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--legacy", default=str(LEGACY_SNAPSHOT), help="2018-19 to 2021-22 file snapshot (parli.ingest.transparency_legacy)")
+    ap.add_argument("--no-legacy", action="store_true", help="publish without the 2018-19 to 2021-22 rows")
     args = ap.parse_args(argv)
     snap = json.loads(Path(args.snapshot).read_text())
     out = Path(args.out)
@@ -195,7 +201,7 @@ def main(argv=None):
                 cols = money_cols(c, KMP_COLUMNS)
                 parts = [cols.get(k) for k, _ in KMP_COLUMNS[:-1]]
                 checks = []
-                if cols.get("total") is not None and all(p is not None for p in parts) and abs(sum(parts) - cols["total"]) > 2:
+                if cols.get("total") is not None and all(p is not None for p in parts) and abs(sum(parts) - cols["total"]) > max(2, 0.005 * abs(cols["total"])):
                     checks.append("components_do_not_sum_to_total")
                 remuneration[t["year"]].append({**base(t, r), "kind": kind, **({"checks": checks} if checks else {}), "record_id": f"tp-{t['year']}-" + r["id"].replace("-", ""),
                     "name": name, "position": cell(c, "position_title"), "order": r["order"], **cols})
@@ -249,6 +255,72 @@ def main(argv=None):
                 h["income_statement"] = {**{k: number(v) for k, v in vals.items()}, **({"as_published": raw} if raw else {}),
                                          "unit": unit, **({"unit_basis": basis} if "template" in basis else {}), **src}
 
+    legacy_path = Path(args.legacy)
+    if not args.no_legacy and not legacy_path.exists():
+        sys.exit(f"[export_annual_reports] {legacy_path} is missing; run parli.ingest.transparency_legacy refresh or pass --no-legacy")
+    legacy = None if args.no_legacy else json.loads(legacy_path.read_text())
+    legacy_bodies = {}
+    if legacy:
+        # Exact name keys only: the Portal name, that name without a trailing "(...)", and any listed
+        # alternative name of two words or more. A key shared by two bodies is dropped.
+        keys = defaultdict(set)
+        for b in bodies.values():
+            names = [b["name"], re.sub(r"\s*\([^)]*\)\s*$", "", b["name"])]
+            names += [a for a in re.split(r",", b["acronyms"] or "") if len(a.split()) >= 2]
+            for n in names:
+                if norm_name(n):
+                    keys[norm_name(n)].add(b["id"])
+                    keys[norm_name(n).replace(" limited", " ltd")].add(b["id"])
+        by_key = {k: next(iter(v)) for k, v in keys.items() if len(v) == 1}
+
+        def legacy_body(entity):
+            k = norm_name(entity)
+            hit = by_key.get(k) or by_key.get(k.replace(" limited", " ltd"))
+            if hit:
+                return bodies[hit]
+            if k not in legacy_bodies:
+                legacy_bodies[k] = {"id": "legacy_" + re.sub(r"[^a-z0-9]+", "_", k).strip("_")[:150], "name": entity, "type": None,
+                                    "type_as_published": None, "acronyms": None, "status": "Name as published in the Portal's older data files; not matched to a current Portal body",
+                                    "portfolio": None, "austender_agency_id": agency_by_name.get(k), "reports": {}}
+            return legacy_bodies[k]
+
+        titles = {"kmp": "Information about remuneration for key management personnel",
+                  "senior_executive_band": "Information about remuneration for senior executives",
+                  "highly_paid_band": "Information about remuneration for other highly paid staff",
+                  "consultancy": "Organisations receiving a share of reportable consultancy contract expenditure",
+                  "non_consultancy": "Organisations receiving a share of reportable non-consultancy contract expenditure"}
+
+        def legacy_table(r, kind):
+            body = legacy_body(r["entity"])
+            tid = "lg-" + hashlib.md5("|".join([r["year"], body["id"], kind, r["source_file"]]).encode()).hexdigest()[:16]
+            tables_by_year[r["year"]].setdefault(tid, {
+                "body_id": body["id"], "body": body["name"], "body_type": body["type"], "title": titles[kind],
+                "entity_as_published": r["entity"], "source_url": r["source_url"], "source_file": r["source_file"],
+                "source_page": DATASETS_PAGE, "last_modified": None, "report_url": None,
+                "licence": (LICENCE_NCE if body["type"] == "NCE" else LICENCE_OWN)["status"]})
+            return {"table_id": tid}
+
+        for r in legacy["kmp"]:
+            cols = {k: r.get(k) for k, _ in KMP_COLUMNS}
+            parts = [cols.get(k) for k, _ in KMP_COLUMNS[:-1]]
+            checks = ["components_do_not_sum_to_total"] if cols.get("total") is not None and all(p is not None for p in parts) and abs(sum(parts) - cols["total"]) > max(2, 0.005 * abs(cols["total"])) else []
+            remuneration[r["year"]].append({**legacy_table(r, "kmp"), "kind": "kmp_total" if TOTAL_ROW.match(r["name"] or "") else "kmp",
+                **({"checks": checks} if checks else {}), "record_id": f"tp-{r['year']}-{r['id']}", "name": r["name"], "position": r["position"],
+                "order": r["source_row"], "source_row": r["source_row"], **cols, **({"as_published": r["as_published"]} if r.get("as_published") else {})})
+        for r in legacy["bands"]:
+            remuneration[r["year"]].append({**legacy_table(r, r["kind"]), "kind": r["kind"], "record_id": f"tp-{r['year']}-{r['id']}",
+                "band": r["band"], "order": r["source_row"], "source_row": r["source_row"], "source_column": r["source_column"],
+                "count": r["count"], "averages": r["averages"], **({"as_published": r["as_published"]} if r.get("as_published") else {})})
+        for r in legacy["suppliers"]:
+            money = {k: r[k] for k in ("expenditure_thousands", "expenditure_dollars") if k in r}
+            suppliers[r["year"]].append({**legacy_table(r, r["kind"]), "kind": r["kind"], "record_id": f"tp-{r['year']}-{r['id']}",
+                "organisation": r["organisation"], "abn": r["abn"], "source_row": r["source_row"], **money,
+                **({"organisation_as_published": r["organisation_as_published"]} if r.get("organisation_as_published") else {}),
+                **({"expenditure_as_published": r["expenditure_as_published"]} if r.get("expenditure_as_published") else {}),
+                "unit_as_published": r["unit_as_published"]})
+        for k, b in legacy_bodies.items():
+            bodies[b["id"]] = b
+
     headline_rows = []
     for (body_id, year), h in sorted(headline.items()):
         body = bodies[body_id]
@@ -262,9 +334,10 @@ def main(argv=None):
         used = {r["table_id"] for r in rows}
         files[f"remuneration-{y}.json"] = atomic(out / f"remuneration-{y}.json", {"year": y,
             "tables": {k: v for k, v in tables_by_year[y].items() if k in used}, "rows": rows})
-        srows = sorted(suppliers.get(y, []), key=lambda r: (tables_by_year[y][r["table_id"]]["body"].lower(), r["kind"], -(r["expenditure_thousands"] or 0)))
+        srows = sorted(suppliers.get(y, []), key=lambda r: (tables_by_year[y][r["table_id"]]["body"].lower(), r["kind"], -(r.get("expenditure_thousands") or r.get("expenditure_dollars") or 0)))
         used = {r["table_id"] for r in srows}
-        files[f"suppliers-{y}.json"] = atomic(out / f"suppliers-{y}.json", {"year": y, "unit": "$'000 GST inclusive",
+        files[f"suppliers-{y}.json"] = atomic(out / f"suppliers-{y}.json", {"year": y,
+            "unit": "dollars GST inclusive" if any("expenditure_dollars" in r for r in srows) else "$'000 GST inclusive",
             "tables": {k: v for k, v in tables_by_year[y].items() if k in used}, "rows": srows})
 
     counts = {
@@ -277,12 +350,23 @@ def main(argv=None):
         "scale_flags": sum(1 for h in headline_rows for k in SCALE_LIMIT if (h.get(k) or {}).get("scale_check")),
         "supplier_rows": sum(len(v) for v in suppliers.values()), "headline_rows": len(headline_rows),
         "by_year": {y: {"kmp_rows": sum(1 for r in remuneration.get(y, []) if r["kind"] == "kmp"),
+                        "kmp_bodies": len({tables_by_year[y][r["table_id"]]["body_id"] for r in remuneration.get(y, []) if r["kind"] == "kmp"}),
+                        "supplier_rows": len(suppliers.get(y, [])),
                         "bodies": len({r["body_id"] for r in headline_rows if r["year"] == y})} for y in years},
+        "legacy_bodies_unmatched": len(legacy_bodies),
     }
+    coverage = {
+        "remuneration": sorted(y for y in remuneration if any(r["kind"] == "kmp" for r in remuneration[y])),
+        "bands": sorted(y for y in remuneration if any(r["kind"].endswith("_band") for r in remuneration[y])),
+        "suppliers": sorted(y for y in suppliers if suppliers[y]),
+        "headline": sorted({r["year"] for r in headline_rows}),
+    }
+    counts["coverage"] = coverage
     meta = {"schema": SCHEMA, "generated": snap["built_at"], "fetched_at": snap["fetched_at"], "snapshot_at": stamp,
             "source": "Transparency Portal, Department of Finance", "source_url": SITE, "api": snap["source"]["api"],
             "api_item_url": snap["source"]["api"] + "?system.codename={codename}&depth=1",
-            "licences": {"cc-by-4.0": LICENCE_NCE, "entity-copyright": LICENCE_OWN}, "caveats": CAVEATS, "counts": counts}
+            "licences": {"cc-by-4.0": LICENCE_NCE, "entity-copyright": LICENCE_OWN}, "caveats": CAVEATS, "counts": counts,
+            **({"legacy_files": {"page": DATASETS_PAGE, "built_at": legacy["built_at"], "files": legacy["files"]}} if legacy else {})}
     body_list = list(bodies.values())
     atomic(out / "index.json", {"meta": meta, "bodies": body_list, "headline": headline_rows})
     content = hashlib.sha256(json.dumps([body_list, headline_rows], sort_keys=True).encode()).hexdigest()
