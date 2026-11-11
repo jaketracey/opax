@@ -244,6 +244,7 @@ export function PartyLabel({
   linked = !nested,
   href,
   onDeep = false,
+  compact = false,
 }: Omit<PartyContext, 'status'> & {
   status?: PartyStatus;
   dense?: boolean;
@@ -260,6 +261,8 @@ export function PartyLabel({
    * on a raised ring, which keeps every party colour at 3:1 against navy.
    */
   onDeep?: boolean;
+  /** Tight text stacks; the parent must leave room below for the hit target. */
+  compact?: boolean;
 }) {
   const identity = partyIdentity(party);
   const scheme = useColorScheme();
@@ -269,7 +272,7 @@ export function PartyLabel({
   const previousLinked = linked && !!text.previous && isPartyLabel(formerly);
   const fixed = useAccessibilitySize();
   const dotSize = partyDotSize(useWindowDimensions().fontScale);
-  const Container = partyLinked && !nested ? Pressable : View;
+  const Container = partyLinked && (!nested || compact) ? Pressable : View;
   const openParty = () =>
     router.push(href ?? partyRoute(partyFromCode(identity.name)));
   return (
@@ -277,13 +280,23 @@ export function PartyLabel({
       style={[
         styles.party,
         fixed ? styles.partyFixed : styles.partyHug,
-        partyLinked ? styles.partyLinked : null,
+        partyLinked
+          ? compact
+            ? styles.partyCompactLink
+            : styles.partyLinked
+          : null,
       ]}
-      {...(partyLinked && !nested
+      {...(partyLinked && (!nested || compact)
         ? {
-            accessibilityRole: 'link' as const,
-            accessibilityHint: 'Opens the party record',
-            onPress: openParty,
+            accessibilityRole: nested ? undefined : ('link' as const),
+            accessibilityHint: nested ? undefined : 'Opens the party record',
+            hitSlop: compact
+              ? { bottom: minimumTarget - textStyles.secondary.lineHeight }
+              : undefined,
+            onPress: (event: import('react-native').GestureResponderEvent) => {
+              if (nested) event.stopPropagation();
+              openParty();
+            },
           }
         : {})}
       {...(previousLinked
@@ -690,6 +703,7 @@ const styles = StyleSheet.create({
   partyHug: { alignSelf: 'flex-start' },
   partyFixed: { alignSelf: 'stretch', width: '100%' },
   partyLinked: { minHeight: minimumTarget, minWidth: minimumTarget },
+  partyCompactLink: { minWidth: minimumTarget },
   partyText: { flexShrink: 1, fontWeight: '600' },
   dotRinged: {
     borderWidth: 1.5,

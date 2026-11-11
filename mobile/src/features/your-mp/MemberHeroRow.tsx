@@ -125,7 +125,7 @@ export function MemberHeroRow({
             name={name}
             nameBeside
           />
-          <View style={styles.words}>
+          <View style={[styles.words, !stacked && styles.wordsInline]}>
             {/* Spec 2.1: SF Semibold on title2; tileFigure is the role with those metrics. */}
             <Text
               wordSafe
@@ -135,14 +135,25 @@ export function MemberHeroRow({
               {name}
             </Text>
             {context ? (
-              <PartyLabel
-                {...context}
-                linked
-                nested
-                testID={testID && `${testID}-party`}
-              />
+              <View style={styles.partyAndTenure}>
+                <PartyLabel
+                  {...context}
+                  linked
+                  nested
+                  compact
+                  testID={testID && `${testID}-party`}
+                />
+                {tenure ? (
+                  <Text wordSafe variant="secondary">
+                    {tenure}
+                  </Text>
+                ) : null}
+              </View>
+            ) : tenure ? (
+              <Text wordSafe variant="secondary">
+                {tenure}
+              </Text>
             ) : null}
-            {tenure ? <Text variant="secondary">{tenure}</Text> : null}
           </View>
         </View>
         <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
@@ -167,5 +178,12 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   stacked: { flexDirection: 'column', alignItems: 'flex-start' },
-  words: { flex: 1, gap: rhythm.line },
+  words: {
+    flexDirection: 'column',
+    gap: rhythm.line,
+    alignSelf: 'stretch',
+  },
+  wordsInline: { flex: 1 },
+  // Tenure supplies the room below the compact party link's hit target.
+  partyAndTenure: { minHeight: minimumTarget, gap: rhythm.line },
 });

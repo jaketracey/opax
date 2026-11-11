@@ -10,10 +10,11 @@ import {
 } from '../src/api/catalogs';
 import { catalogs, peopleDepth, portraits } from '../src/api/runtime';
 import { Disclosure } from '../src/design/disclosure';
-import { Portrait } from '../src/design/people';
+import { PartyLabel, Portrait } from '../src/design/people';
 import { RecordRow } from '../src/design/rows';
 import { PaneHost } from '../src/design/split';
 import { Text } from '../src/design/text';
+import { rhythm } from '../src/design/tokens';
 import { CitedRecordRow } from '../src/features/ask/AskRows';
 import { decodeAnswer } from '../src/features/ask/model';
 import { YearBrief } from '../src/features/explore/YearBrief';
@@ -288,6 +289,28 @@ test.each(families)(
     const layout = StyleSheet.flatten(speaker.props.style);
     expect(layout.minHeight).toBeGreaterThanOrEqual(44);
     expect(layout.minWidth).toBeGreaterThanOrEqual(44);
+    const parties = matched!.findAllByType(PartyLabel);
+    const words = matched!
+      .findAll((node) => {
+        const style = StyleSheet.flatten(node.props.style);
+        return style?.flexDirection === 'column' && style?.gap === rhythm.line;
+      })
+      .find((node) =>
+        node
+          .findAllByType(Text)
+          .some((text) => text.props.children === 'Don Farrell'),
+      );
+    expect(words).toBeDefined();
+    expect(
+      words!
+        .findAllByType(Text)
+        .flatMap((node) => [node.props.children].flat())
+        .filter((child) => typeof child === 'string'),
+    ).toEqual([
+      'Don Farrell',
+      ...(matched!.props.speaker.party ? ['Labor'] : []),
+    ]);
+    expect(parties).toHaveLength(matched!.props.speaker.party ? 1 : 0);
     expect(press(speaker)).toHaveBeenCalledTimes(1);
     expect(router.push).toHaveBeenCalledTimes(1);
     expect(router.push).toHaveBeenCalledWith(
