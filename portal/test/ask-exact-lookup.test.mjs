@@ -13,6 +13,14 @@ const assets = { '/bills/index.json': bills, '/divisions/index.json': divisions,
 const deps = overrides => ({ asset: async path => assets[path] ?? null, kb: async () => { throw Error('exact lookup must not use ranked retrieval') }, generate: async () => { throw Error('exact lookup must not use a model') }, ...overrides })
 const lookup = (q, d = deps(), named = api.extractNamedScope(q, roster, bills)) => api.exactRecordLookup(q, d, api.inferPeriod(q), named)
 const passed = bills.bills.find(b => b.status === 'passed' && b.title === 'Statute Stocktake (Appropriations) Bill 2013')
+// Coverage and snapshot dates are read from the published files the lookup reads, so the tests follow the data
+// as it moves on; the floors only guard against an index going backwards.
+const divisionDates = chamber => divisions.divisions.filter(r => !chamber || String(r.key).startsWith('federal-' + chamber + '-'))
+  .map(r => String(r.date).slice(0, 10)).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort()
+const chamberOf = q => /\bsenat(?:e|ors?)\b/i.test(q) ? 'senate' : /\bhouse\b/i.test(q) ? 'representatives' : undefined
+const latestDivision = divisionDates().at(-1)
+assert.ok(divisionDates()[0] === '2006-02-07' && latestDivision >= '2026-10-29', 'the divisions index covers 2006-02-07 to at least 2026-10-29')
+assert.ok(pay.meta.from === '1999-12-07' && /^\d{4}-\d{2}-\d{2}$/.test(pay.meta.as_of) && pay.meta.as_of >= '2026-10-19', 'the pay records run from 1999-12-07 to at least 2026-10-19')
 
 test('an absent full bill title cannot be replaced by a related fuel bill', async () => {
   const q = 'Who introduced the Rural Postcode Equity (Fuel Rebate) Bill 2017?'
@@ -50,7 +58,8 @@ test('missing division dates, including dates before coverage, state absence wit
   for (const q of ['What divisions were held in federal parliament on 2 September 2012?', 'How many divisions did the Senate hold in 1987?', 'How did the House vote on the Mabo response legislation in December 1993?']) {
     const out = await lookup(q)
     assert.match(out.answer.answer, /^OPAX has no recorded (?:federal|Senate|House) divisions /)
-    assert.match(out.answer.answer, /recorded divisions cover 2006-02-07 to 2026-10-(?:15|29)/)
+    const dates = divisionDates(chamberOf(q))
+    assert.ok(out.answer.answer.includes(`recorded divisions cover ${dates[0]} to ${dates.at(-1)}.`), out.answer.answer)
     assert.doesNotMatch(out.answer.answer, /zero|no divisions were held|never happened/i)
   }
 })
@@ -60,12 +69,12 @@ test('future requests give no prediction or neighbouring record and carry the la
     const run = await api.runAgentic(q, deps())
     assert.match(run.answer, /^OPAX has no record yet of the requested future event\./)
     if (/\bbills\b/.test(q)) assert.match(run.answer, new RegExp('latest recorded bill status is dated ' + bills.bills.map(b => b.status_as_of).filter(Boolean).sort().at(-1)))
-    else assert.match(run.answer, /latest recorded division is dated 2026-10-29/)
+    else assert.ok(run.answer.includes(`latest recorded division is dated ${latestDivision}.`), run.answer)
     assert.equal(run.qualitative.answer_decision, 'limitation')
     assert.equal(run.cost_usd, 0)
   }
   const payRun = await api.runAgentic('What will the Prime Minister be paid in 2091?', deps())
-  assert.match(payRun.answer, /pay records run to 2026-10-19/)
+  assert.ok(payRun.answer.includes(`pay records run to ${pay.meta.as_of}.`), payRun.answer)
   assert.equal(await lookup('What protections will be introduced by the housing bill?'), null, 'published proposals are not predictions of events')
 })
 
@@ -108,7 +117,7 @@ test('office premises are scoped to the recorded offices and their coverage', as
     const out = await lookup(`When was ${person} Prime Minister?`)
     assert.match(out.answer.answer, new RegExp(`^OPAX has no record of ${person} serving as Prime Minister;`))
     assert.match(out.answer.answer, /Leader of the Opposition/)
-    assert.match(out.answer.answer, /office records cover 1999-12-07 to 2026-10-19/)
+    assert.ok(out.answer.answer.includes(`office records cover ${pay.meta.from} to ${pay.meta.as_of}.`), out.answer.answer)
   }
   assert.equal(await lookup('When was John Howard Prime Minister?'), null)
 })

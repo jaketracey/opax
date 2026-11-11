@@ -154,7 +154,12 @@ test('NP-INTR-016: duplicate register descriptions merge while holders, changes 
   const result = await api.callTool(env, 'declared_interests', { person: 'David Kempton', category: 'shareholdings' });
   assert.equal(result.total, 4, 'preserve the register count as source metadata'); assert.equal(result.rows.length, 2);
   assert.match(result.citations[0].text, /^David Kempton declared shareholdings: Agrespond Pty Ltd, consulting, nil; Mount Barker Mining Pty Ltd/);
-  assert.match(result.citations[0].text, /2026-10-16/);
+  // The register date is the published register's own snapshot date, not a pinned one (it moves each refresh).
+  const index = await published('/interests/index.json');
+  const [registerId] = Object.entries(index.people).find(([, p]) => p.name === 'David Kempton');
+  const register = await published(`/interests/${registerId}.json`);
+  assert.match(register.as_at, /^\d{4}-\d{2}-\d{2}$/); assert.ok(register.as_at >= '2026-10-16', 'the Queensland register snapshot never goes backwards');
+  assert.ok(result.citations[0].text.includes(`(Queensland register of interests as at ${register.as_at}`), result.citations[0].text);
   const out = answer(toolInput('NP-INTR-016', result));
   assert.equal(out.answer.match(/Agrespond Pty Ltd/g).length, 1);
   assert.equal(out.answer.match(/Mount Barker Mining Pty Ltd/g).length, 1);
