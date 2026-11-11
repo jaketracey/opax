@@ -17,10 +17,12 @@ const LabelText = memo(function LabelText({
   text,
   ink,
   strong,
+  sub,
 }: {
   text: string;
   ink: string;
   strong: boolean;
+  sub?: string;
 }) {
   const variant = strong ? 'capsule' : 'footnote';
   // A paper halo keeps a name legible over the lines it sits on: the same
@@ -43,6 +45,17 @@ const LabelText = memo(function LabelText({
       >
         {text}
       </Text>
+      {sub ? (
+        <Text
+          variant="footnote"
+          wordSafe
+          tone="inkSoft"
+          accessible={false}
+          style={styles.halo}
+        >
+          {sub}
+        </Text>
+      ) : null}
     </View>
   );
 });
@@ -96,6 +109,7 @@ function Slot({
     >
       <LabelText
         text={slot.text}
+        sub={slot.sub}
         ink={slot.ink}
         strong={slot.kind === 'focus' || slot.kind === 'cluster'}
       />

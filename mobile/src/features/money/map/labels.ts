@@ -1,3 +1,4 @@
+import { associatedLine, donorAssociated } from '../../../api/associated';
 import { partyMapColour } from '../ported/palette';
 import type { Centre } from './layout';
 import { otherEnd, PARTIES, PUBLIC_MONEY, type MapModel } from './model';
@@ -17,6 +18,8 @@ export interface LabelSlot {
   key: string;
   kind: LabelKind;
   text: string;
+  /** Register attribution under the selected donor, without shortening its name. */
+  sub?: string;
   ink: string;
   /** World position the label hangs from. */
   x: number;
@@ -49,11 +52,16 @@ export function labelSlots(
   const nodeSlot = (index: number, kind: LabelKind): LabelSlot => {
     const node = model.nodes[index]!;
     const p = at(index);
+    const associated =
+      kind === 'focus' && node.kind === 'donor'
+        ? associatedLine(donorAssociated(node))
+        : null;
     named.add(index);
     return {
       key: `${kind}:${node.id}`,
       kind,
       text: node.label,
+      ...(associated ? { sub: associated } : {}),
       // A party's name is set in its colour, darkened to read on paper.
       ink: node.kind === 'party' ? partyMapColour(node.label).ink : node.ink,
       x: p.x,
@@ -178,7 +186,9 @@ export function visibleLabels(
         sx > viewport.width + box.width
       )
         continue;
-      const lines = Math.min(3, Math.ceil(slot.text.length / perLine));
+      const lines =
+        Math.ceil(slot.text.length / perLine) +
+        (slot.sub ? Math.ceil(slot.sub.length / perLine) : 0);
       const h = box.height * (lines < 1 ? 1 : lines);
       // The box as the stage lays it out: beside the rim for a disc, centred
       // above the blob for a cluster, the text growing downward from its

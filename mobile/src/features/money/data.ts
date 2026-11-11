@@ -1,3 +1,7 @@
+import {
+  decodeAssociatedTag,
+  decodeAssociatedWith,
+} from '../../api/associated';
 import { withholdIndividualDonors } from '../../privacy/donorEntity';
 import { aggregateWithheldDonors } from './withheld';
 
@@ -30,6 +34,9 @@ export interface MoneyNode extends MoneyFigures {
   via?: string;
   publicMoney?: number;
   aliases?: string[];
+  /** AEC register wording and party ties, supplied by the money export. */
+  associatedTag?: string;
+  associatedWith?: { party: string; url?: string }[];
   /** A donor without organisation evidence: never named (privacy/donorEntity). */
   withheld?: true;
   /** On an "Individual donors (N)" aggregate: the N. */
@@ -167,6 +174,23 @@ export function decodeMoneyGraph(value: unknown): MoneyGraph {
     for (const key of ['grants', 'contracts'] as const) {
       if (node[key] !== undefined && !publicMoney(node[key]!)) {
         delete node[key];
+        fields++;
+      }
+    }
+    // Optional register metadata must never hide an otherwise valid donor.
+    if (node.associatedTag !== undefined) {
+      const tag = decodeAssociatedTag(node.associatedTag);
+      if (tag) node.associatedTag = tag;
+      else {
+        delete node.associatedTag;
+        fields++;
+      }
+    }
+    if (node.associatedWith !== undefined) {
+      const ties = decodeAssociatedWith(node.associatedWith);
+      if (ties) node.associatedWith = ties;
+      else {
+        delete node.associatedWith;
         fields++;
       }
     }

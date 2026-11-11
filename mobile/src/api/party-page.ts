@@ -1,3 +1,4 @@
+import { associatedLine, donorAssociatedTo } from './associated';
 import type {
   BillDetail,
   BillIndex,
@@ -240,13 +241,21 @@ export function partyMoney(label: string, graph: Money) {
         .filter(([id]) => !donors.get(id)!.withheld)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10)
-        .map(([id, amount]) => ({ id, name: donors.get(id)!.label, amount })),
+        .map(([id, amount]) => ({
+          id,
+          name: donors.get(id)!.label,
+          amount,
+          associated: associatedLine(
+            donorAssociatedTo(donors.get(id)!, node.label),
+          ),
+        })),
       ...(hidden.length
         ? [
             {
               id: 'donor:individual-donors',
               name: individualDonorsLabel(hidden.length),
               amount: hidden.reduce((n, [, amount]) => n + amount, 0),
+              associated: null,
             },
           ]
         : []),

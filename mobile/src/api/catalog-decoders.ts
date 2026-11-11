@@ -1,3 +1,4 @@
+import { decodeAssociatedTag, decodeAssociatedWith } from './associated';
 import { publicTie, withholdIndividualDonors } from '../privacy/donorEntity';
 import { decodeBoundary, type Boundary } from './electorate-geometry';
 import { ApiError } from './errors';
@@ -836,6 +837,8 @@ const decodeMoneyRows = shape({
       firstYear: optional(count),
       lastYear: optional(count),
       byYear: dict(yearAmount),
+      associatedTag: decodeAssociatedTag,
+      associatedWith: decodeAssociatedWith,
     }),
   ),
   edges: array(

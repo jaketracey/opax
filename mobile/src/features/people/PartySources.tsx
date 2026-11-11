@@ -120,6 +120,7 @@ export default function PartySources() {
             renderItem={({ item, index, section }) => (
               <MoneyRow
                 name={item.name}
+                detail={item.associated ?? undefined}
                 amount={item.amount}
                 href={
                   item.id.startsWith('donor:individual')

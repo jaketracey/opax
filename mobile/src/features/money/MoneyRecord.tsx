@@ -1,3 +1,9 @@
+import {
+  associatedLine,
+  donorAssociated,
+  donorAssociatedTo,
+} from '../../api/associated';
+import { AssociatedEntityLabel } from '../../design/AssociatedEntityLabel';
 import { RouteOptions } from '../../navigation/preview';
 import {
   Redirect,
@@ -573,6 +579,7 @@ function NodeBody({
   refreshing: boolean;
   refresh: () => void;
 }) {
+  const associated = node.kind === 'donor' ? donorAssociated(node) : null;
   const full = graph.nodes.find((n) => n.id === node.id) ?? node;
   const narrowed = !isAllYears(graph, filters) || filters.inflation;
   const note = windowNote(filters, graph);
@@ -715,7 +722,12 @@ function NodeBody({
                 <MoneyRow
                   key={other.id}
                   name={other.label}
-                  detail={moneyYears(edge.firstYear, edge.lastYear)}
+                  detail={[
+                    associatedLine(donorAssociatedTo(other, node.label)),
+                    moneyYears(edge.firstYear, edge.lastYear),
+                  ]
+                    .filter(Boolean)
+                    .join(' · ')}
                   amount={edge.total}
                   href={pushRecord(other)}
                   testID={`money-focus-flow-${index}`}
@@ -792,7 +804,12 @@ function NodeBody({
               <MoneyRow
                 key={other.id}
                 name={other.label}
-                detail={moneyYears(edge.firstYear, edge.lastYear)}
+                detail={[
+                  associatedLine(donorAssociated(other)),
+                  moneyYears(edge.firstYear, edge.lastYear),
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
                 amount={edge.total}
                 href={pushRecord(other)}
                 testID={`money-focus-flow-${index}`}
@@ -829,6 +846,14 @@ function NodeBody({
           label: `AEC Transparency Register · returns for ${node.label}`,
           url: graph.meta.source_url ?? AEC_REGISTER,
         },
+        ...(associated
+          ? [
+              {
+                label: 'AEC register of associated entities',
+                url: associated.url,
+              },
+            ]
+          : []),
         ...(grants
           ? [
               {
@@ -915,6 +940,10 @@ function NodeBody({
       onRefresh={refresh}
     >
       <Title meta={roleMeta(node)} name={node.label} />
+      <AssociatedEntityLabel
+        associated={associated}
+        testID="money-focus-associated"
+      />
       {record.stale && !record.staleReason ? (
         <OfflineLine savedAt={record.savedAt} />
       ) : null}
