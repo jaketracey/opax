@@ -150,11 +150,17 @@ function evidenceRows(payload){
    const current=/^(.+?) \([^)]+\), [^:]+: base salary/.exec(line)?.[1]
    // Annual report remuneration rows: the person owns the figure and the reporting body published it.
    const kmp=/^(.+?) \((?:[^()]|\([^()]*\))*\), (.+?), (?:19|20)\d{2}-\d{2} annual report\b[^:]*: (?:total remuneration )?\$[\d,]+(?: total remuneration)?\b/.exec(line)
-   const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(receipt?.[2]??donor?.[1]??current??kmp?.[1]??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
+   // Integrity commission rows: the count line and each report line name the commission in full and short,
+   // and a report line its operation; each of those names owns the line's figures.
+   const held=/^OPAX holds (\d[\d,]*) .+? from the (.+?) \(([^()]+)\)[,. ]/.exec(line)
+   const ireport=held?null:/^(.+?) \(([^()]+)\) (?:issued|published|tabled) an? [^"]*?(?:report|statement)\b[^"]*"[^"]+"(?: \(([^()]+)\))?\./.exec(line)
+   const commission=held?[held[2],held[3]]:ireport?[ireport[1],ireport[2],ireport[3]].filter(Boolean):null
+   const entity=(/^coverage(?:-|$)/.test(source.resource)?'':undefined)??(receipt?.[2]??donor?.[1]??current??kmp?.[1]??commission?.[0]??(['speech','bill'].includes(source.kind)?source.speaker:undefined)??label??(table.length?table.find(s=>/[a-z]/i.test(s)):undefined)??source.speaker??'').replace(/\s*\([^)]*\).*$/,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\*\*/g,'').replace(/\s+(?:received|provided|gave|led|has the largest)\b.*$/i,'').trim()
    const fiscal=/(?:Financial years|Period):\s*([^\n.]+)/i.exec(text)?.[1];const period=periods(line);
    const values=figures(line);for(const f of values){if(['speech','bill'].includes(source.kind)&&f.metric==='receipts'&&!f.owner){const before=line.slice(Math.max(0,f.at-120),f.at),party=[...before.matchAll(/\b(Labor|Coalition|Liberal|ALP|Greens|Nationals)(?: Party)?\b[^.;]{0,70}\b(?:received|collected|accepted)\b[^$]*$/gi)].at(-1);if(party)f.owner=partyName(party[1])}if(source.date&&/^\s*last financial year\b/i.test(line.slice(f.end))){const year=Number(source.date.slice(0,4))-(Number(source.date.slice(5,7))>=7?1:2);f.period=periods(year+'-'+String((year+1)%100).padStart(2,'0'))}}
    for(const f of values){f.donor=givingActor(line,f,nounPhrases(line).map(n=>n.name),source.speaker);f.owners=['speech','bill'].includes(source.kind)?amountOwners(line,f):[f.owner??entity].filter(Boolean)}
    if(kmp)for(const f of values)if(f.unit.startsWith('AUD')){f.owner=kmp[2];f.owners=[entity,kmp[2]]}
+   if(commission)for(const f of values)f.owners=commission
    for(const f of values)if(['speech','bill'].includes(source.kind)&&f.unit==='AUD'&&f.metric==='receipts'&&!financialPredicate.test(line.slice(0,f.at))&&!(label&&f.owners.some(n=>norm(n)===norm(label))))f.owners=[]
    for(const f of values)if(source.speaker&&!f.owners.length&&!quotationSpans(line).some(q=>f.at>=q.at&&f.end<=q.end)&&/\bI (?:was |have |had |have been |had been |am )?(?:paid|received|secured|got|won|earned|given)\s*(?:(?:about|almost|nearly|over|more than|at least)\s*)?$/i.test(line.slice(0,f.at)))f.owners=[source.speaker]
    for(const f of values.slice())if(!f.period.length&&!period.length&&!fiscal){
@@ -191,6 +197,7 @@ const topicPatterns=[['housing',/\b(?:housing|homes?|homeless\w*|rent\w*|accommo
 function topicsMatch(text,row){return !['speech','bill'].includes(row.kind)||topicPatterns.every(([,pattern])=>!pattern.test(text)||pattern.test(row.text+' '+(row.title??'')))}
 const owns=(row,entity)=>!!entity&&(norm(row.entity)===norm(entity)||norm(row.speaker)===norm(entity)||row.figures.some(f=>(f.owners??[]).some(n=>norm(n)===norm(entity))))
 function mentions(text,names){const hits=names.flatMap(name=>[...text.matchAll(new RegExp('(?<![\\p{L}])'+escape(name)+'(?![\\p{L}])','giu'))].map(m=>({name,at:m.index,end:m.index+m[0].length}))).sort((a,b)=>a.at-b.at||b.end-a.end);return hits.filter((h,i)=>!hits.some((other,j)=>j!==i&&other.at<=h.at&&other.end>=h.end&&(other.end-other.at>h.end-h.at||j<i&&other.name===h.name)))}
+const commissionRow=r=>/^OPAX holds \d|^.+? \([^()]+\) (?:issued|published|tabled) an? [^"]*?(?:report|statement)\b[^"]*"/.test(r.text)
 function dateSupported(claim,row){
  const ps=[...row.period.map(p=>p.value),...(row.date?[row.date.slice(0,10)]:[])]
  if(ps.some(p=>p===claim||p.endsWith('-'+claim)))return true
@@ -250,13 +257,13 @@ export function auditPayload(question,payload,{roster=[]}={}){
    if(!owners.length&&scope.owner&&!reported)owners=[scope.owner]
    if(!owners.length){const aggregates=[...new Set(selected.filter(r=>r.role==='donor').map(r=>r.entity))];owners=!reported&&aggregates.length===1&&/\b(?:total|aggregate|records)\b/i.test(text)?aggregates:['']}
    for(const entity of [...new Set(owners)]){
-    const next=numeric.find(n=>n.at>f.at)?.at??text.length,nearPeriods=ps.filter(p=>p.at>=f.end&&p.at<next)
+    const next=numeric.find(n=>n.at>f.at)?.at??text.length,nearPeriods=ps.filter(p=>p.at>=f.end&&p.at<next&&!/\p{Lu}[\p{L}'’-]*\s*\($/u.test(text.slice(0,p.at)))
     const beforePeriod=ps.filter(p=>p.end<=f.at).at(-1)
     const attached=nearPeriods.length?nearPeriods:beforePeriod&&!/,\s*(?:and|but|while|because)|;/.test(text.slice(beforePeriod.end,f.at))?[beforePeriod]:[]
     const giving=/\b(?:gave|donated|provided|giving)\b/i.test(text)||/\b(?:total|aggregate|records)\b/i.test(text)&&!/\b(?:received|was paid|earned)\b/i.test(text),donor=givingActor(text,f,named.map(n=>n.name))??named.filter(n=>n.at<f.at&&rows.some(r=>r.donor===n.name)).at(-1)?.name
     let candidates=selected.filter(r=>r.figures.some(v=>{
      const passage=['speech','bill'].includes(r.kind),factOwners=v.owners??[]
-     const owner=reported&&!entity?(!reporter||r.speaker===reporter):!entity?(!r.entity&&!r.speaker&&!passage||/^(?:19|20)\d{2}$/.test(r.entity)):passage?factOwners.some(n=>norm(n)===norm(entity)):norm(r.entity)===norm(entity)&&(!r.role||r.role!=='donor'||giving)||v.owner===entity||giving&&r.donor===entity
+     const owner=reported&&!entity?(!reporter||r.speaker===reporter):!entity?(!r.entity&&!r.speaker&&!passage||/^(?:19|20)\d{2}$/.test(r.entity)):passage||commissionRow(r)?factOwners.some(n=>norm(n)===norm(entity)):norm(r.entity)===norm(entity)&&(!r.role||r.role!=='donor'||giving)||v.owner===entity||giving&&r.donor===entity
      if(!owner||reporter&&r.speaker!==reporter||v.value!==f.value||!metricSupported(f,v)||f.owner&&!(v.owners??[v.owner]).includes(f.owner)||donor&&(r.donor??v.donor)!==donor)return false
      const scope={...r,period:v.period.length?v.period:r.period,date:reporter?r.date:undefined}
      return attached.every(p=>dateSupported(p.value,scope))

@@ -86,6 +86,7 @@ def summary(r):
         "findings_status": r["findings_status"], "recommendations_status": r["recommendations_status"],
         "responses_status": r["responses_status"],
         **({"acquisition": r["acquisition"]} if r.get("acquisition") else {}),
+        **({"period": r["period"]} if r.get("period") else {}),
     }
 
 
@@ -195,7 +196,7 @@ def main(argv=None):
         for k in ("records", "findings", "recommendations", "responses"):
             totals[k] += counts[k]
 
-    rows.sort(key=lambda r: (r["date"] or "", r["id"]), reverse=True)
+    rows.sort(key=lambda r: (r["date"] or (r.get("period") or {}).get("value") or "", r["id"]), reverse=True)
     ids = [r["id"] for r in rows]
     if len(ids) != len(set(ids)):
         raise Held("duplicate record ids across bodies")

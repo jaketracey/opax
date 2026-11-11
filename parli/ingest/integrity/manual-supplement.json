@@ -408,6 +408,11 @@
      "statement": "Copyright Commonwealth of Australia; licensed under Creative Commons Attribution 4.0 International, except the Commonwealth Coat of Arms, the Commission's logo, third-party material, trade marks and images (report page 2).",
      "licence": "CC BY 4.0",
      "attribution": "National Anti-Corruption Commission"
+    },
+    "period": {
+     "value": "2026-03",
+     "precision": "month",
+     "basis": "The NACC's file path for the report is /documents/2026-03/; the report itself carries no date."
     }
    },
    {

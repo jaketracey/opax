@@ -44,6 +44,32 @@ def test_pre2016_summaries_parse_titles_dates_and_operations():
     assert rec["summary"].startswith("The ICAC investigated")
 
 
+def test_pre2016_month_only_reports_carry_the_month_as_a_period_not_a_date():
+    entry = {"title": "Waverley Council - employee's relationship with Dainford Ltd", "year": "1991", "links": [],
+             "paragraphs": ["The ICAC investigated the conduct of persons at Waverley Council.",
+                            "This report was made public in January 1991."]}
+    rec = n.pre2016_record(entry)
+    assert rec["date"] is None and rec["date_basis"] is None
+    assert rec["period"] == {"value": "1991-01", "precision": "month",
+                             "basis": "The ICAC's summary says the report was made public in January 1991."}
+    bare = n.pre2016_record({**entry, "paragraphs": entry["paragraphs"][:1]})
+    assert bare["period"]["value"] == "1991" and bare["period"]["precision"] == "year"
+    assert "Listed under 1991" in bare["period"]["basis"]
+    dated = n.pre2016_record({**entry, "paragraphs": ["This report was made public on 17 December 2015."]})
+    assert dated["date"] == "2015-12-17" and "period" not in dated
+
+
+def test_period_is_only_for_undated_records_and_needs_a_basis():
+    import pytest
+    kw = dict(title="T", page_url="https://www.icac.nsw.gov.au/x", report_type="investigation_report")
+    with pytest.raises(ValueError):
+        common.report_record(n.BODY, date="2020-01-02", date_basis="published", period={"value": "2020-01", "basis": "b"}, **kw)
+    with pytest.raises(ValueError):
+        common.report_record(n.BODY, period={"value": "2020-13", "basis": "b"}, **kw)
+    with pytest.raises(ValueError):
+        common.report_record(n.BODY, period={"value": "2020"}, **kw)
+
+
 def test_findings_are_statements_of_finding_with_report_labels():
     pages = json.loads(fixture("mantis_summary_pages.json"))
     # Pad to the summary chapter position (pages 13 and 14 of the report).

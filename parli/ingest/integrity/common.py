@@ -384,13 +384,17 @@ def document(role, title, url, data: bytes | None = None, pages: int | None = No
 
 
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+PERIOD = re.compile(r"^\d{4}(?:-(?:0[1-9]|1[0-2]))?$")
 
 
 def report_record(body: Body, *, title, page_url, report_type, date=None, date_basis=None, operation=None,
                   type_as_published=None, pdf_url=None, documents=(), subjects=(), findings=None,
                   findings_status="not_extracted", recommendations=None, recommendations_status="not_extracted",
-                  responses=None, responses_status="not_checked", notes=(), key=None, summary=None):
-    """One report or statement as the commission published it. Raises on a schema breach."""
+                  responses=None, responses_status="not_checked", notes=(), key=None, summary=None, period=None):
+    """One report or statement as the commission published it. Raises on a schema breach.
+
+    ``period`` is for an undated report whose source gives only the month or year it was made public:
+    ``{"value": "1991-01" | "1991", "basis": "<where the source says so>"}``. It never stands in for a date."""
     if report_type not in REPORT_TYPES:
         raise ValueError(f"report_type {report_type!r}")
     if date is not None and not DATE.match(date):
@@ -399,6 +403,11 @@ def report_record(body: Body, *, title, page_url, report_type, date=None, date_b
         raise ValueError(f"date_basis {date_basis!r}")
     if (date is None) != (date_basis is None):
         raise ValueError("date and date_basis go together")
+    if period is not None:
+        if date is not None or not PERIOD.match(str(period.get("value", ""))) or not period.get("basis"):
+            raise ValueError(f"period {period!r}: only for an undated report, as YYYY or YYYY-MM with a basis")
+        period = {"value": period["value"], "precision": "month" if len(period["value"]) == 7 else "year",
+                  "basis": clean(period["basis"])}
     for s in (findings_status, recommendations_status):
         if s not in LIST_STATUS:
             raise ValueError(f"status {s!r}")
@@ -429,6 +438,7 @@ def report_record(body: Body, *, title, page_url, report_type, date=None, date_b
         "recommendations": recommendations, "recommendations_status": recommendations_status,
         "responses": responses, "responses_status": responses_status,
         "notes": [clean(n) for n in notes if clean(n)],
+        **({"period": period} if period else {}),
     }
 
 

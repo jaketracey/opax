@@ -58,16 +58,47 @@ function reportRow(env: ToolEnv, ix: Index, r: RecordRow): RecordRow {
     findings_status: r.findings_status, recommendations_status: r.recommendations_status, responses_status: r.responses_status,
     page_url: sourceUrl(r.page_url), pdf_url: sourceUrl(r.pdf_url), full_record_url: sourceUrl(r.page_url) ?? siteUrl(env, '/integrity-reports/index.json'),
     ...(r.acquisition ? { acquisition: r.acquisition } : {}),
+    ...(!r.date && r.period ? { period: r.period } : {}),
     follow_up: { view: 'report', record_id: r.id } }
+}
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+/** An undated report whose source gives only a month or year matches a window that overlaps that month or year. */
+function inPeriod(r: RecordRow, args: Record<string, unknown>): boolean {
+  if (r.date || !(args.since || args.until)) return inWindow(r.date, args)
+  const p = String(object(r.period).value ?? '')
+  if (!/^\d{4}(-\d{2})?$/.test(p)) return false
+  const from = p.length === 4 ? `${p}-01-01` : `${p}-01`, to = p.length === 4 ? `${p}-12-31` : `${p}-31`
+  return (!args.since || to >= String(args.since)) && (!args.until || from <= String(args.until))
+}
+const periodText = (p: unknown) => { const v = String(object(p).value ?? ''); return v.length === 7 ? `${MONTHS[Number(v.slice(5)) - 1]} ${v.slice(0, 4)}` : v }
+/** The count line in plain words: no tool syntax, no clock time, no label-and-number shape. */
+function countSentence(n: number, noun: [string, string], args: Record<string, unknown>, bodies: RecordRow[], snapshot: unknown, extra = ''): string {
+  const parts: string[] = []
+  if ((args.body || args.jurisdiction) && bodies.length) parts.push(bodies.length === 1 ? `from the ${bodies[0].name} (${bodies[0].short})` : `from ${bodies.map(b => b.short).join(', ')}`)
+  for (const k of ['operation', 'query', 'subject'] as const) if (args[k]) parts.push(`matching "${clip(args[k], 80)}"`)
+  if (args.report_type) parts.push(`of the type ${TYPE_LABEL[String(args.report_type)] ?? args.report_type}`)
+  if (args.finding_kind) parts.push(`of the kind ${String(args.finding_kind).replace(/_/g, ' ')}`)
+  if (args.since && args.until) parts.push(`dated ${args.since} to ${args.until}`); else if (args.since) parts.push(`dated from ${args.since}`); else if (args.until) parts.push(`dated up to ${args.until}`)
+  return `OPAX holds ${n} ${n === 1 ? noun[0] : noun[1]}${parts.length ? ' ' + parts.join(', ') : ''}${extra}${n > 1 ? ', newest first' : ''} (records as at ${String(snapshot ?? '').slice(0, 10)}).`
 }
 
 // the commission's full name beside its short form, so an answer may use either
 const who = (row: RecordRow) => row.commission && row.commission !== row.body ? `${row.commission} (${row.body})` : String(row.body)
 
+/** One plain sentence per report, then what OPAX holds of it; no label-and-number shape. */
 function reportCite(row: RecordRow): ToolCitation {
   const counts = object(row.counts)
-  const listed = (n: unknown, status: unknown, what: string) => status === 'extracted' ? `${n} ${what}` : status === 'stated_none' ? `no ${what} (as the report states)` : `${what} not extracted`
-  return { kind: 'record', url: String(row.pdf_url ?? row.page_url ?? row.full_record_url), text: clip(`${who(row)}, ${TYPE_LABEL[String(row.report_type)] ?? 'report'}${row.date ? ` ${row.date_basis ?? 'dated'} ${row.date}` : ''}: "${row.title}"${row.operation ? ` (${row.operation})` : ''}. ${listed(counts.findings, row.findings_status, 'findings or opinions')}; ${listed(counts.recommendations, row.recommendations_status, 'recommendations')}.`, 600) }
+  const n = (v: unknown, one: string, many: string) => `${v} ${Number(v) === 1 ? one : many}`
+  const parts: [unknown, unknown, string, string][] = [[counts.findings, row.findings_status, 'finding or opinion', 'findings or opinions'], [counts.recommendations, row.recommendations_status, 'recommendation', 'recommendations']]
+  const held = parts.filter(p => p[1] === 'extracted').map(p => n(p[0], p[2], p[3]))
+  const tail = [held.length ? `OPAX holds ${held.join(' and ')} from it.` : '',
+    ...parts.filter(p => p[1] === 'stated_none').map(p => `The report says it makes no ${p[3]}.`),
+    ...(parts.some(p => p[1] !== 'extracted' && p[1] !== 'stated_none') ? [`Its ${parts.filter(p => p[1] !== 'extracted' && p[1] !== 'stated_none').map(p => p[3]).join(' and ')} were not extracted by OPAX.`] : [])].filter(Boolean).join(' ')
+  const verb = row.date_basis === 'tabled' ? 'tabled' : row.date_basis === 'dated' ? 'issued' : 'published'
+  const when = row.date ? ` on ${row.date}` : row.period ? ` in ${periodText(row.period)} (${/file path/i.test(String(object(row.period).basis)) ? 'month taken from the publisher\'s file path' : 'no day given'})` : ''
+  const type = TYPE_LABEL[String(row.report_type)] ?? 'report'
+  return { kind: 'record', url: String(row.pdf_url ?? row.page_url ?? row.full_record_url), text: clip(`${who(row)} ${row.date || row.period ? verb : 'published'} ${/^[aeiou]/.test(type) ? 'an' : 'a'} ${type}${when}, "${row.title}"${row.operation ? ` (${row.operation})` : ''}. ${tail}`, 600) }
 }
 
 function itemRow(ix: Index, r: RecordRow, part: 'findings' | 'recommendations' | 'responses' | 'documents', item: RecordRow, i: number): RecordRow {
@@ -90,7 +121,7 @@ function itemCite(row: RecordRow, part: string): ToolCitation {
 function reportMatches(ix: Index, r: RecordRow, args: Record<string, unknown>, codes: Set<string>): boolean {
   if (!codes.has(String(r.body))) return false
   if (args.report_type && r.report_type !== args.report_type) return false
-  if (!inWindow(r.date, args)) return false
+  if (!inPeriod(r, args)) return false
   if (args.operation && !wordsMatch(args.operation, [r.operation, r.title])) return false
   if (args.subject && !wordsMatch(args.subject, records(r.subjects).map(s => s.name))) return false
   if (args.query && !wordsMatch(args.query, [r.title, r.operation, r.type_as_published, ...records(r.subjects).map(s => s.name)])) return false
@@ -165,8 +196,8 @@ export const tool: ToolDefinition = {
     if (args.view === 'reports') {
       const matched = ix.reports.filter(r => reportMatches(ix, r, args, codes))
       const rows = matched.slice(offset, offset + limit).map(r => reportRow(env, ix, r))
-      const scope = ['body', 'jurisdiction', 'query', 'operation', 'subject', 'report_type', 'since', 'until'].filter(k => args[k] !== undefined).map(k => `${k} ${args[k]}`).join(', ') || 'all commissions'
-      const cites: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: `${matched.length} integrity commission reports and statements match ${scope} in the OPAX projection (snapshot ${snapshot}), newest first.` }, ...rows.map(reportCite)]
+      const cites: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: countSentence(matched.length, ['integrity commission report or statement', 'integrity commission reports and statements'], args, bodies.length < ix.bodies.length ? bodies : [], snapshot) }, ...rows.map(reportCite)]
+      if ((args.since || args.until) && matched.some(r => !r.date)) notes.push('Some reports matched by the month or year their commission says they were made public; the source gives no day (see period).')
       if (matched.length && matched.length <= 2) {
         // a named report: carry its findings and recommendations so one call answers "what did it find"
         for (const row of rows) {
@@ -207,9 +238,8 @@ export const tool: ToolDefinition = {
     }
     matches.sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')) || String(a.record_id).localeCompare(String(b.record_id)))
     const rows = matches.slice(offset, offset + limit)
-    const scope = ['body', 'jurisdiction', 'query', 'operation', 'subject', 'report_type', 'finding_kind', 'since', 'until'].filter(k => args[k] !== undefined).map(k => `${k} ${args[k]}`).join(', ') || 'all commissions'
     const what = part === 'findings' ? 'findings, opinions and statements' : 'recommendations'
-    const cites: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: `${matches.length} ${what} match ${scope} in ${candidates.size - unknown} reports whose ${part} OPAX extracted (snapshot ${snapshot}), newest first.` }, ...rows.map(r => itemCite(r, part))]
+    const cites: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: countSentence(matches.length, part === 'findings' ? ['finding, opinion or statement', 'findings, opinions and statements'] : ['recommendation', 'recommendations'], args, bodies.length < ix.bodies.length ? bodies : [], snapshot, `, in ${candidates.size - unknown} reports whose ${part} OPAX extracted`) }, ...rows.map(r => itemCite(r, part))]
     if (rows.some(r => r.acquisition)) notes.push(MANUAL_NOTE)
     if (unknown) notes.push(`${unknown} matching reports have ${part} that OPAX did not extract; their ${part} are unknown, not absent, and are not counted here.`)
     if (part === 'findings') notes.push('Labels are each commission\'s own statutory terms (for example serious corrupt conduct, or an opinion of serious misconduct). Do not treat counts as comparable across commissions. Names appear only as the report prints them.')
