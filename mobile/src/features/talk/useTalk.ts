@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import * as voice from '../../voice';
-import type { EndReason, VoiceFailure, VoiceSnapshot } from '../../voice';
+import type { EndReason, VoiceFailure } from '../../voice';
 import * as uiBridge from './bridge';
 import {
   asksForMicrophone,
@@ -16,6 +16,7 @@ import {
   eventKeys,
   isCallActive,
   recoverSnapshot,
+  type TalkSnapshot,
 } from './model';
 
 /**
@@ -25,7 +26,7 @@ import {
 export type MicrophoneStep = 'rationale' | 'denied' | 'blocked' | null;
 
 export function useTalk() {
-  const [snapshot, setSnapshot] = useState<VoiceSnapshot>(emptySnapshot);
+  const [snapshot, setSnapshot] = useState<TalkSnapshot>(emptySnapshot);
   const current = useRef(snapshot);
   const [consent, showConsent] = useState(false);
   const [consentLoaded, setConsentLoaded] = useState(false);
@@ -43,8 +44,8 @@ export function useTalk() {
   const mounted = useRef(false);
   const focusGeneration = useRef(0);
   const sequence = useRef(0);
-  const revisions = useRef<Partial<Record<keyof VoiceSnapshot, number>>>({});
-  const set = useCallback((value: VoiceSnapshot) => {
+  const revisions = useRef<Partial<Record<keyof TalkSnapshot, number>>>({});
+  const set = useCallback((value: TalkSnapshot) => {
     current.current = value;
     setSnapshot(value);
   }, []);
@@ -57,10 +58,10 @@ export function useTalk() {
       setError(result.error);
       return;
     }
-    const changed = new Set<keyof VoiceSnapshot>();
+    const changed = new Set<keyof TalkSnapshot>();
     for (const key of Object.keys(
       revisions.current,
-    ) as (keyof VoiceSnapshot)[]) {
+    ) as (keyof TalkSnapshot)[]) {
       if (revisions.current[key]! > before) changed.add(key);
     }
     set(recoverSnapshot(current.current, result.value, changed));

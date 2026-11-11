@@ -6,6 +6,11 @@ import type {
   VoiceStatus,
 } from '../../voice/types';
 
+/** UI-only arrival history. Native snapshots cannot recover turn attribution. */
+export type TalkSnapshot = VoiceSnapshot & {
+  sourceTurns?: Record<string, number | null>;
+};
+
 // Voice failures in plain sentences (specs/account.md 7.6, F-4 and F-5).
 // "Microphone off." is never said: the system indicator already shows it.
 const couldntConnect = 'Couldn’t connect. Check your connection and try again.';
@@ -176,7 +181,7 @@ export function refusal(status: VoiceStatus | null): VoiceFailure | null {
 }
 export const isCallActive = (state: VoiceSnapshot['state']) =>
   ['checking', 'reserving', 'connecting', 'live', 'ending'].includes(state);
-export const emptySnapshot: VoiceSnapshot = {
+export const emptySnapshot: TalkSnapshot = {
   state: 'idle',
   reason: null,
   mode: null,
@@ -186,20 +191,20 @@ export const emptySnapshot: VoiceSnapshot = {
   sources: [],
   status: null,
 };
-export const eventKeys: Record<VoiceEvent['type'], (keyof VoiceSnapshot)[]> = {
+export const eventKeys: Record<VoiceEvent['type'], (keyof TalkSnapshot)[]> = {
   state: ['state', 'reason'],
   mode: ['mode'],
   playback: ['playback'],
-  transcript: ['transcript'],
-  sources: ['sources'],
+  transcript: ['transcript', 'sourceTurns'],
+  sources: ['sources', 'sourceTurns'],
   remainingTime: ['remaining'],
   status: ['status'],
   error: [],
 };
 export function applyEvent(
-  current: VoiceSnapshot,
+  current: TalkSnapshot,
   event: VoiceEvent,
-): VoiceSnapshot {
+): TalkSnapshot {
   switch (event.type) {
     case 'state':
       return { ...current, state: event.state, reason: event.reason };
@@ -207,10 +212,36 @@ export function applyEvent(
       return { ...current, mode: event.mode };
     case 'playback':
       return { ...current, playback: event.playback };
-    case 'transcript':
-      return { ...current, transcript: event.turns };
-    case 'sources':
-      return { ...current, sources: event.sources };
+    case 'transcript': {
+      if (!event.turns.length)
+        return { ...current, transcript: [], sourceTurns: {} };
+      const sourceTurns = { ...current.sourceTurns };
+      const previousIds = new Set(
+        current.transcript
+          .filter((turn) => turn.role === 'agent')
+          .map((turn) => turn.id),
+      );
+      const nextAgent = event.turns.find(
+        (turn) => turn.role === 'agent' && !previousIds.has(turn.id),
+      );
+      if (nextAgent)
+        for (const path of Object.keys(sourceTurns))
+          if (sourceTurns[path] === null) sourceTurns[path] = nextAgent.id;
+      return { ...current, transcript: event.turns, sourceTurns };
+    }
+    case 'sources': {
+      const sourceTurns = { ...current.sourceTurns };
+      const last = current.transcript[current.transcript.length - 1];
+      const seen = new Set(current.sources.map((source) => source.path));
+      for (const source of event.sources)
+        if (!seen.has(source.path))
+          sourceTurns[source.path] = last?.role === 'agent' ? last.id : null;
+      return {
+        ...current,
+        sources: event.sources,
+        sourceTurns: event.sources.length ? sourceTurns : {},
+      };
+    }
     case 'remainingTime':
       return { ...current, remaining: event.seconds };
     case 'status':
@@ -222,11 +253,11 @@ export function applyEvent(
 // Merge by field: a caption correction must not hide a recovered call state,
 // and a pending snapshot must never overwrite a newer status: null event.
 export function recoverSnapshot(
-  current: VoiceSnapshot,
+  current: TalkSnapshot,
   recovered: VoiceSnapshot,
-  changed: ReadonlySet<keyof VoiceSnapshot>,
-): VoiceSnapshot {
-  const next = { ...recovered };
+  changed: ReadonlySet<keyof TalkSnapshot>,
+): TalkSnapshot {
+  const next: TalkSnapshot = { ...recovered, sourceTurns: current.sourceTurns };
   for (const key of changed) Object.assign(next, { [key]: current[key] });
   return next;
 }
