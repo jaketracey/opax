@@ -7,6 +7,8 @@ import {build} from 'esbuild';
 import {isOrganisationDonor} from "../public/donor-entity.js";
 import {divisionPlain} from '../public/division-markdown.js';
 import {renderBillAnswer as rawBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat,crumbsHTML,answerBlock} from '../src/seo-content.ts';
+// Visible text for assertions: strip tags until none remain (a single pass can leave a rebuilt tag).
+const stripTags = html => { let prev; do { prev = html; html = html.replace(/<[^<>]*>/g, ''); } while (html !== prev); return html; };
 const renderBillAnswer = (bill, people, slugs, related = [], query = {}) => rawBillAnswer(bill, people, slugs, related, query);
 const pub=new URL('../public/',import.meta.url);
 const parsedAssets=new Map();
@@ -52,7 +54,7 @@ test('official report page and API share the schema 1 record, independent of res
     assert.match(html,/href="https:\/\/opax.com.au\/report\/royal-commission-cth-robodebt"/);
     assert.match(html,/href="\/api\/report\/royal-commission-cth-robodebt"/);
     assert.doesNotMatch(html,/<script[^>]+src="\/(?:app|spa-entry|spa-shell)\.js/);
-    for(const rec of data.record.recommendations)assert.ok(html.includes(escapeHtml(rec.text)));
+    const text=stripTags(html);for(const rec of data.record.recommendations)assert.ok(text.includes(escapeHtml(rec.text)));
   }
 });
 test('search-all returns official report rows for web and native API consumers',async()=>{
@@ -89,7 +91,7 @@ test('annual, agency and integrity report pages and JSON routes expose the same 
     const html=await get('/report/'+slug);
     assert.ok(html.includes(escapeHtml(record.title)));assert.ok(html.includes(escapeHtml(record.body)));
     assert.ok(html.includes(escapeHtml(record.citation.url)));
-    assert.ok(html.includes('Record snapshot: '+record.snapshot_at));
+    assert.ok(html.includes('Record snapshot: <time datetime="'+record.snapshot_at.replace(/^(\d{4})-?(\d{2})-?(\d{2}).*$/,'$1-$2-$3')+'">'),slug);
     assert.equal(record.schema,1);assert.equal(record.kind,'report');
     for(const key of ['record','publisher','caveats','facts','tables','headline','date_basis','year'])assert.ok(Object.hasOwn(record,key),key);
   }

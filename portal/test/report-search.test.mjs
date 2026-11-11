@@ -68,11 +68,15 @@ test('warm searches read catalogue assets only, with no report detail or dataset
   assert.ok(requests.filter(p => p.endsWith('/report-names.json')).length <= 1);
   assert.ok(Array.isArray((await find('constructor', {kind:'all'})).results));
 });
+// The body's words stay verbatim in the page's text; inline list runs are only set one to a line.
+// Visible text for assertions: strip tags until none remain (a single pass can leave a rebuilt tag).
+const stripTags = html => { let prev; do { prev = html; html = html.replace(/<[^<>]*>/g, ''); } while (html !== prev); return html; };
+const visible = html => stripTags(html);
 test('record pages retain full numbered recommendations, findings labels, court context and source pages', () => {
   const royal = projected.find(r => r.detail.slug === 'royal-commission-cth-robodebt').detail;
   let html = renderReport(royal);
   for (const rec of royal.record.recommendations) {
-    assert.ok(html.includes(escapeHtml(rec.text)));
+    assert.ok(visible(html).includes(escapeHtml(rec.text)));
     assert.ok(html.includes('Recommendation ' + rec.number));
     assert.ok(html.includes('page ' + rec.cite.page));
   }
@@ -82,13 +86,48 @@ test('record pages retain full numbered recommendations, findings labels, court 
     assert.match(html, /Allegations are not findings/);
     assert.match(html, /not a finding that a person is guilty of a criminal offence/);
     for (const item of detail.record.findings) {
-      assert.ok(html.includes(escapeHtml(item.text)));
+      assert.ok(visible(html).includes(escapeHtml(item.text)));
       assert.ok(html.includes(escapeHtml(item.label)));
     }
   }
   const court = projected.find(r => r.detail.record.court_context?.length).detail;
   html = renderReport(court);
   for (const item of court.record.court_context) assert.ok(html.includes(escapeHtml(item.text)));
+});
+test('inline list runs are set one to a line without changing a character', () => {
+  const royal = structuredClone(projected.find(r => r.detail.slug === 'royal-commission-cth-robodebt').detail);
+  const words = 'Services Australia should: • avoid stigma • explain processes ◦ in plain language';
+  royal.record.recommendations = [{ number: '1.1', text: words, cite: { url: 'https://example.gov.au/r.pdf', page: 3 } }];
+  const html = renderReport(royal);
+  assert.equal((html.match(/class="rr-line"/g) || []).length, 2);
+  assert.equal((html.match(/class="rr-line rr-line-sub"/g) || []).length, 1);
+  assert.ok(visible(html).includes(escapeHtml(words)));
+  assert.match(html, /href="https:\/\/example\.gov\.au\/r\.pdf#page=3"[^>]*>Report, page 3</);
+});
+test('government statuses are counted in their own words and each keeps its lead, date and source', () => {
+  const royal = structuredClone(projected.find(r => r.detail.slug === 'royal-commission-cth-robodebt').detail);
+  const status = as_published => ({ as_published, lead: 'Lead agency', updated: '2026-09-07', cite: { url: 'https://example.gov.au/status', document: 'Status page' } });
+  royal.record.recommendations = Array.from({ length: 61 }, (_, i) => ({ number: String(i + 1), text: 'Do thing ' + (i + 1), status: status(i < 40 ? 'In progress' : 'Complete') }));
+  const html = renderReport(royal);
+  assert.match(visible(html), /In progress 40/);
+  assert.match(visible(html), /Complete 21/);
+  assert.ok(html.indexOf('In progress') < html.indexOf('Complete'), 'labels keep the order they first appear in');
+  assert.equal((html.match(/Lead: Lead agency · Updated <time datetime="2026-09-07">/g) || []).length, 61);
+  assert.equal((html.match(/href="https:\/\/example\.gov\.au\/status"/g) || []).length, 61);
+  assert.match(html, /<summary>Go to a recommendation \(1 to 61\)<\/summary>/);
+});
+test('a list of one kind is titled by that kind; a mixed list keeps the full title', () => {
+  const report = structuredClone(projected.find(r => r.detail.slug === 'integrity-report-nsw-icac-2023-03-07-operation-paragon').detail);
+  report.record.findings = [{ kind: 'finding', label: 'x', text: 'a' }, { kind: 'finding', label: 'y', text: 'b' }];
+  assert.match(renderReport(report), /<h2 class="ui-section-title" id="findings-title">Findings <span class="rr-count">2<\/span>/);
+  report.record.findings.push({ kind: 'no_finding', label: 'z', text: 'c' });
+  assert.match(renderReport(report), /<h2 class="ui-section-title" id="findings-title">Findings, opinions and statements <span class="rr-count">3<\/span>/);
+});
+test('annual report source links each name their table', () => {
+  const annual = projected.find(r => r.row.body === 'Department of Defence' && r.row.year === '2024-25').detail;
+  const texts = [...renderReport(annual).matchAll(/<a [^>]*href="https:\/\/previewapi[^"]*"[^>]*>(.*?)<\/a>/g)].map(m => visible(m[1]));
+  assert.ok(texts.length > 1);
+  assert.equal(new Set(texts).size, texts.length, texts.join(' | '));
 });
 test('agency facts and annual disclosures retain labels, units and per-row official sources', () => {
   const agency = projected.find(r => r.detail.facts.length).detail;
