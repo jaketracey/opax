@@ -36,7 +36,7 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
-import { readReport, renderReport, reportTranscriptPage } from './report-records'
+import { readReport, renderReport, reportApiBody, reportTranscriptPage } from './report-records'
 import { vicGiftsPage, vicGiftsReader, vicGiftsPersonBlock, vicGiftsResponse } from './vic-gifts'
 import { stateBillsPage, stateBillsReader } from './state-bills'
 import { governmentFinancePage, governmentFinanceReader } from './government-finance'
@@ -7165,7 +7165,7 @@ export default {
       catch { return communityResponse(json({ error: 'Report not found' }, 404)) }
       try {
         const record = await readReport(env.ASSETS, slug)
-        const response = record ? json(record) : json({ error: 'Report not found' }, 404)
+        const response = record ? json(reportApiBody(record)) : json({ error: 'Report not found' }, 404)
         response.headers.set('cache-control', record ? 'public, max-age=300' : 'no-store')
         return communityResponse(request.method === 'HEAD' ? new Response(null, response) : response)
       } catch { return communityResponse(json({ error: 'Report record is temporarily unavailable' }, 503)) }
