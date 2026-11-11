@@ -1,11 +1,16 @@
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
-import AskScreen from './AskScreen';
-import { catalogs, client } from '../../api/runtime';
-import { askConsentGiven } from './consent';
-import { defaultOptions, type Followup } from './model';
-import { askQuestion, askSession, continueHeld, inputCopy } from './session';
-import { AskFailure } from './stream';
-import { useSeat } from '../your-mp/useSeat';
+import AskScreen from '../src/features/ask/AskScreen';
+import { catalogs, client } from '../src/api/runtime';
+import { askConsentGiven } from '../src/features/ask/consent';
+import { defaultOptions, type Followup } from '../src/features/ask/model';
+import {
+  askQuestion,
+  askSession,
+  continueHeld,
+  inputCopy,
+} from '../src/features/ask/session';
+import { AskFailure } from '../src/features/ask/stream';
+import { useSeat } from '../src/features/your-mp/useSeat';
 
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -14,19 +19,19 @@ jest.mock('expo-router', () => ({
   useSegments: () => ['(tabs)', '(ask)'],
   router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true },
 }));
-jest.mock('../../api/runtime', () => ({
+jest.mock('../src/api/runtime', () => ({
   client: { askPost: jest.fn() },
   catalogs: { roster: jest.fn(), slugs: jest.fn(), bills: jest.fn() },
 }));
-jest.mock('./consent', () => ({
+jest.mock('../src/features/ask/consent', () => ({
   askConsentGiven: jest.fn(),
   giveAskConsent: jest.fn().mockResolvedValue(undefined),
 }));
-jest.mock('../account/store', () => ({
+jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: null }),
   accountSnapshot: () => ({ status: null }),
 }));
-jest.mock('./store', () => {
+jest.mock('../src/features/ask/store', () => {
   const saved = { v: 1, active: null, chats: [] };
   return {
     chatsSnapshot: () => saved,
@@ -37,10 +42,10 @@ jest.mock('./store', () => {
     forgetActiveChat: jest.fn(),
   };
 });
-jest.mock('./sync', () => ({
+jest.mock('../src/features/ask/sync', () => ({
   syncSubmittedChat: jest.fn().mockResolvedValue(undefined),
 }));
-jest.mock('../your-mp/useSeat', () => ({
+jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: jest.fn(() => ({ status: 'none' })),
   savedSeatDirectory: () => ({
     electorates: {
@@ -58,21 +63,21 @@ jest.mock('../your-mp/useSeat', () => ({
     },
   }),
 }));
-jest.mock('../your-mp/model', () => ({
+jest.mock('../src/features/your-mp/model', () => ({
   representativeProfile: () => ({ name: 'Sam Placeholder' }),
 }));
-jest.mock('./AnswerView', () => ({
+jest.mock('../src/features/ask/AnswerView', () => ({
   AnswerView: () => null,
   SearchOpaxRow: () => null,
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   AskRevealContext: require('react').createContext(null),
   announceAnswer: jest.fn(),
 }));
-jest.mock('./Options', () => ({
+jest.mock('../src/features/ask/Options', () => ({
   topics: { housing: 'Housing' },
   openAskOptions: jest.fn(),
 }));
-jest.mock('./SourcesPane', () => ({
+jest.mock('../src/features/ask/SourcesPane', () => ({
   AskPaneProvider: ({ children }: { children: unknown }) => children,
   useAskSources: () => ({ context: null, pane: null }),
   useAskPane: () => null,
