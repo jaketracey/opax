@@ -61,15 +61,18 @@ function reportRow(env: ToolEnv, ix: Index, r: RecordRow): RecordRow {
     follow_up: { view: 'report', record_id: r.id } }
 }
 
+// the commission's full name beside its short form, so an answer may use either
+const who = (row: RecordRow) => row.commission && row.commission !== row.body ? `${row.commission} (${row.body})` : String(row.body)
+
 function reportCite(row: RecordRow): ToolCitation {
   const counts = object(row.counts)
   const listed = (n: unknown, status: unknown, what: string) => status === 'extracted' ? `${n} ${what}` : status === 'stated_none' ? `no ${what} (as the report states)` : `${what} not extracted`
-  return { kind: 'record', url: String(row.pdf_url ?? row.page_url ?? row.full_record_url), text: clip(`${row.body}, ${TYPE_LABEL[String(row.report_type)] ?? 'report'}${row.date ? ` ${row.date_basis ?? 'dated'} ${row.date}` : ''}: "${row.title}"${row.operation ? ` (${row.operation})` : ''}. ${listed(counts.findings, row.findings_status, 'findings or opinions')}; ${listed(counts.recommendations, row.recommendations_status, 'recommendations')}.`, 600) }
+  return { kind: 'record', url: String(row.pdf_url ?? row.page_url ?? row.full_record_url), text: clip(`${who(row)}, ${TYPE_LABEL[String(row.report_type)] ?? 'report'}${row.date ? ` ${row.date_basis ?? 'dated'} ${row.date}` : ''}: "${row.title}"${row.operation ? ` (${row.operation})` : ''}. ${listed(counts.findings, row.findings_status, 'findings or opinions')}; ${listed(counts.recommendations, row.recommendations_status, 'recommendations')}.`, 600) }
 }
 
 function itemRow(ix: Index, r: RecordRow, part: 'findings' | 'recommendations' | 'responses' | 'documents', item: RecordRow, i: number): RecordRow {
   const b = ix.byCode.get(String(r.body)) ?? {}, c = object(item.cite)
-  const base: RecordRow = { record_id: r.id, body: b.short ?? r.body, jurisdiction: r.jurisdiction, report: r.title, operation: r.operation ?? null, date: r.date ?? null, ...(r.acquisition ? { acquisition: r.acquisition } : {}) }
+  const base: RecordRow = { record_id: r.id, body: b.short ?? r.body, commission: b.name ?? null, jurisdiction: r.jurisdiction, report: r.title, operation: r.operation ?? null, date: r.date ?? null, ...(r.acquisition ? { acquisition: r.acquisition } : {}) }
   if (part === 'findings') return { ...base, n: item.n ?? i + 1, label: item.label, kind: item.kind, text: clip(item.text, 900), source: where(c), source_url: pageUrl(c), follow_up: { view: 'report', record_id: r.id, part: 'findings' } }
   if (part === 'recommendations') return { ...base, number: item.number ?? null, text: clip(item.text, 900), source: where(c), source_url: pageUrl(c), follow_up: { view: 'report', record_id: r.id, part: 'recommendations' } }
   if (part === 'responses') return { ...base, kind: item.kind, title: item.title ?? null, date: item.date ?? null, ...(item.publisher ? { publisher: item.publisher } : {}), ...(item.tabled_in ? { tabled_in: item.tabled_in } : {}), ...(item.acquisition ? { acquisition: item.acquisition } : {}), ...(item.note ? { note: clip(item.note, 300) } : {}), recommendation: item.recommendation ?? null, status_as_published: item.status_as_published ?? null, text: item.text ? clip(item.text, 600) : null, source_url: sourceUrl(item.url) ?? pageUrl(c) }
@@ -78,9 +81,9 @@ function itemRow(ix: Index, r: RecordRow, part: 'findings' | 'recommendations' |
 
 function itemCite(row: RecordRow, part: string): ToolCitation {
   const url = String(row.source_url ?? row.url ?? '')
-  if (part === 'findings') return { kind: 'record', url, text: clip(`${row.body}, "${row.report}"${row.date ? ` (${row.date})` : ''}, ${row.source}: ${row.label} [${row.kind}]: "${row.text}"`, 900) }
-  if (part === 'recommendations') return { kind: 'record', url, text: clip(`${row.body}, "${row.report}"${row.date ? ` (${row.date})` : ''}, ${row.source}: Recommendation ${row.number ?? ''}: "${row.text}"`, 900) }
-  if (part === 'responses') return { kind: 'record', url, text: clip(`${row.publisher ? `${row.publisher} published` : row.tabled_in ? `Tabled in the ${row.tabled_in}:` : `${row.body} published`} ${String(row.kind).replace(/_/g, ' ')} "${row.title ?? 'untitled'}"${row.date ? ` dated ${row.date}` : ''} for ${row.body}'s "${row.report}"${row.status_as_published ? `; status as published: ${row.status_as_published}` : ''}.`, 600) }
+  if (part === 'findings') return { kind: 'record', url, text: clip(`${who(row)}, "${row.report}"${row.date ? ` (${row.date})` : ''}, ${row.source}: ${row.label} [${row.kind}]: "${row.text}"`, 900) }
+  if (part === 'recommendations') return { kind: 'record', url, text: clip(`${who(row)}, "${row.report}"${row.date ? ` (${row.date})` : ''}, ${row.source}: Recommendation ${row.number ?? ''}: "${row.text}"`, 900) }
+  if (part === 'responses') return { kind: 'record', url, text: clip(`${row.publisher ? `${row.publisher} published` : row.tabled_in ? `Tabled in the ${row.tabled_in}:` : `${who(row)} published`} ${String(row.kind).replace(/_/g, ' ')} "${row.title ?? 'untitled'}"${row.date ? ` dated ${row.date}` : ''} for ${row.body}'s "${row.report}"${row.status_as_published ? `; status as published: ${row.status_as_published}` : ''}.`, 600) }
   return { kind: 'record', url, text: clip(`${row.body}, "${row.report}": ${row.role} document "${row.title ?? ''}"${row.pages ? `, ${row.pages} pages` : ''}.`, 400) }
 }
 

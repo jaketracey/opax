@@ -50,6 +50,8 @@ function figures(text){
  for(const m of text.matchAll(/\$\s*\d(?:[\d,]*\d)?(?:\.\d+)?(?:\s*(?:billion|million|thousand|bn|m)\b)?|\b\d(?:[\d,]*\d)?(?:\.\d+)?(?:%|\s+per cent)?|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eighth|half|quarter)\b/gi)){
   const at=m.index,raw=m[0],tail=text.slice(at+raw.length),head=text.slice(0,at)
   if(dates.some(d=>at>=d.at&&at<d.end)||/^\d+(?:st|nd|rd|th)\b/.test(text.slice(at)))continue
+  // A statutory reference ("subsection 8(1)(c)", "section 149") names a provision, not a quantity.
+  if(/^\d+[A-Z]{0,2}(?:\(\w{1,4}\))+/.test(text.slice(at))||/\d[A-Z]{0,2}(?:\(\w{1,4}\))*\($/.test(head)||/\b(?:sub)?(?:sections?|ss?|clauses?|paragraphs?|regulations?|divisions?|schedules?)\s+$/i.test(head))continue
   if(/^[a-z]/i.test(raw)&&! /^(?:half|quarter)$/i.test(raw)&&! /^\s*(?:[- ]state|[- ]dollars?|per cent|percent|years?|decades?|speeches|donors|records|lowest|highest)\b/i.test(tail))continue
   const amount=raw.startsWith('$')||/^(?:one|two|three|four|five|six|seven|eight|nine|ten)$/i.test(raw)&&/^[- ]dollars?\b/i.test(tail),percent=/%|per cent/i.test(raw)||/^\s*(?:per cent|percent)/i.test(tail)
   const scale=/billion|bn\b/i.test(raw)?1e9:/million|m\b/i.test(raw)?1e6:/thousand/i.test(raw)?1e3:1
