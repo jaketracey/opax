@@ -208,16 +208,41 @@ export function reportTranscripts(r: Pick<ReportDetail, 'report_type' | 'record'
   return raw.map(t => ({ ...t, key: t.key ?? t.id, kind: 'hearing_transcript', date: t.date ?? t.hearing_date ?? null }))
     .sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')) || String(a.key).localeCompare(String(b.key)))
 }
-/** GET /api/report/<slug>/transcripts?offset=&limit=: the report's transcripts in the page's order, paged with stable
- * offsets. Each item is the record's own transcript row (hearing date, case, publisher links, pages, redaction and
- * order notes) under the label. */
+const ORDER_NOTE = /non-publication|suppression|publication order/i
+/** One transcript in the app's envelope: the publisher's PDF as `url`, the hearing date, notes (including any
+ * publication restrictions the publisher or commission records) and order links. */
+export function transcriptItem(r: Pick<ReportDetail, 'record'>, t: RecordRow): RecordRow {
+  const file = object(records(t.files)[0])
+  const pdf = url(t.url) || url(file.url) || url(t.page_url)
+  const own = Array.isArray(t.notes) ? t.notes.map(String) : []
+  const orderNotes = (Array.isArray(r.record.notes) ? r.record.notes : []).map(String).filter(n => t.files && ORDER_NOTE.test(n))
+  const restricted = object(t.full_text).quote_policy === 'no_quotes' ? ['The publisher\'s transcript records a non-publication or suppression order, a direction not to publish, or a pseudonymous witness. OPAX does not quote it.'] : []
+  return { id: String(t.key ?? t.id), hearing_date: String(t.date), ...(t.title ? { title: String(t.title) } : {}), ...(t.case ? { case: String(t.case) } : {}),
+    ...(finite(t.pages) ? { pages: t.pages } : finite(file.pages) ? { pages: file.pages } : {}), url: pdf,
+    ...(url(t.page_url) && url(t.page_url) !== pdf ? { page_url: t.page_url } : {}),
+    publisher_redacted: typeof t.publisher_redacted === 'boolean' ? t.publisher_redacted : /redact/i.test(`${file.url ?? ''} ${t.title ?? ''}`),
+    notes: [...own, ...orderNotes, ...restricted], orders: (Array.isArray(t.orders) ? t.orders : []).map(String).filter(o => url(o)) }
+}
+/** The transcripts envelope shared by the top-level `transcripts` field of GET /api/report/<slug> (first page) and
+ * GET /api/report/<slug>/transcripts?offset=&limit=: newest first, ties by id, so an offset names the same row on
+ * every call. */
+export function reportTranscriptEnvelope(r: Pick<ReportDetail, 'report_type' | 'record'>, offset = 0, limit = 20) {
+  const all = reportTranscripts(r), dates = all.map(t => String(t.date)).sort()
+  const items = all.slice(offset, offset + limit).map(t => transcriptItem(r, t))
+  return { label: 'Hearing transcript: evidence, not findings', count: all.length, first_date: dates[0] ?? null, last_date: dates.at(-1) ?? null,
+    offset, items, next_offset: offset + items.length < all.length ? offset + items.length : null }
+}
+/** GET /api/report/<slug>/transcripts?offset=&limit=, limit 1 to 100 (default 20). */
 export function reportTranscriptPage(r: ReportDetail, params: URLSearchParams) {
   const num = (k: string, fallback: number) => { const v = params.get(k); return v === null || v === '' ? fallback : /^\d{1,5}$/.test(v) ? Number(v) : NaN }
   const offset = num('offset', 0), limit = num('limit', 20)
   if (!Number.isFinite(offset) || !Number.isFinite(limit) || limit < 1 || limit > 100) return { error: 'offset must be a whole number and limit 1 to 100' }
-  const all = reportTranscripts(r), items = all.slice(offset, offset + limit)
-  return { schema: 1, kind: 'report_transcripts', slug: r.slug, label: 'Hearing transcript: evidence, not findings', total: all.length, offset, limit,
-    next_offset: offset + items.length < all.length ? offset + items.length : null, items }
+  return reportTranscriptEnvelope(r, offset, limit)
+}
+/** GET /api/report/<slug>: the schema 1 record plus, when it has hearing transcripts, the first page of them. */
+export function reportApiBody(r: ReportDetail) {
+  const env = reportTranscriptEnvelope(r)
+  return env.count ? { ...r, transcripts: env } : r
 }
 function transcriptRow(t: RecordRow, mainDocument: string): string {
   // Integrity transcripts hold the PDF as `url` and the case page as `page_url`; the PDF is the document.

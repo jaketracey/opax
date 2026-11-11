@@ -72,23 +72,33 @@ integrity report whose case has public hearing transcripts carries them in
 `record.transcripts.items` (added 12 November 2026; the summary fields `label`,
 `case`, `count`, `first_date`, `last_date` and `file` are unchanged).
 
-`GET /api/report/<slug>/transcripts?offset=0&limit=20` pages the same list
-the HTML page shows, newest first with ties broken by key, so an offset names the
-same row on every call:
+When a report has hearing transcripts, `GET /api/report/<slug>` also carries a
+top-level `transcripts` envelope with the first 20, and
+`GET /api/report/<slug>/transcripts?offset=0&limit=20` pages the rest. Both use
+the same shape, newest first with ties broken by id, so an offset names the same
+row on every call:
 
 ```ts
 {
-  schema: 1, kind: "report_transcripts", slug,
   label: "Hearing transcript: evidence, not findings",
-  total, offset, limit, next_offset: number | null, items: object[]
+  count: number, first_date: string | null, last_date: string | null,
+  offset: number, next_offset: number | null,
+  items: {
+    id: string, hearing_date: string, title?: string, case?: string,
+    pages?: number, url: string, page_url?: string,
+    publisher_redacted: boolean, notes: string[], orders: string[]
+  }[]
 }
 ```
 
-Each item is the record's own transcript row with `key` (the transcript id),
-`kind: "hearing_transcript"` and `date` (the hearing date) set. `limit` is 1 to
-100 (default 20); a bad `offset` or `limit` returns 400, an offset past the end
-returns no items with `next_offset: null`, and a report with no transcripts
-returns `total: 0`. The page lists the same rows in a "Hearing transcripts:
+`url` is the publisher's PDF and `page_url` the publisher's page (left out when
+they are the same). `notes` carries the publisher's notes and any publication
+restriction recorded by the commission or in the transcript; `orders` holds links
+to the publisher's order documents. `next_offset` is `offset` plus the items
+returned, or null at the end. `limit` is 1 to 100 (default 20); a bad `offset` or
+`limit` returns 400, an offset past the end returns no items with
+`next_offset: null`, and a report with no transcripts has no top-level field and
+returns `count: 0` from the paged route. The page lists the same rows in a "Hearing transcripts:
 evidence, not findings" section, one line per transcript in month folds (newest
 month open), and leaves them out of "Official documents".
 
