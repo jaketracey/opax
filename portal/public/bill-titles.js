@@ -23,3 +23,14 @@ export function billsDateFile(index) {
   if (typeof index?.generated_at !== 'string') throw new Error('bills date: no generated_at');
   return {generated_at: index.generated_at};
 }
+/** The bills with recorded divisions, in index order, with the fields a party page sorts them by:
+ *  the party page's "Bills they divided on" picks its newest candidates from these (app.js
+ *  renderPartyBillDivisions) instead of /bills/index.json. scripts/build_growth_modules.mjs writes it at release. */
+export const DIVISION_BILLS_PATH = '/growth/division-bills.json';
+const DIVISION_FIELDS = ['key', 'divisions', 'status_as_of', 'introduced'];
+/** /bills/index.json -> the file party pages read. */
+export function divisionBillsFile(index) {
+  if (!Array.isArray(index?.bills)) throw new Error('division bills: no bills');
+  return {generated_at: index.generated_at, bills: index.bills.filter(bill => Number(bill?.divisions) > 0)
+    .map(bill => Object.fromEntries(DIVISION_FIELDS.filter(k => bill[k] !== undefined).map(k => [k, bill[k]])))};
+}
