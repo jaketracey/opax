@@ -1,5 +1,5 @@
 import { act, type ReactElement, type ReactNode } from 'react';
-import { useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { router } from 'expo-router';
 import {
@@ -10,6 +10,10 @@ import {
 import { ApiError } from '../src/api/errors';
 import { formatDate } from '../src/design/format';
 import { InsetGroup } from '../src/design/layout';
+import { Icon } from '../src/design/icon';
+import { PersonRow } from '../src/design/people';
+import { symbols } from '../src/design/symbols';
+import { rhythm } from '../src/design/tokens';
 import { PageFoot } from '../src/design/record';
 import { BillRow } from '../src/design/rows';
 import { SourceLine } from '../src/design/source';
@@ -325,9 +329,9 @@ describe('Just declared', () => {
   const one = (entry = item) => (
     <DeclarationGroup entries={[{ item: entry, index: 0 }]} />
   );
-  test('the member as a PersonRow, then the entry as one link to the filtered feed', () => {
+  test('the member and entry share one link to the filtered feed', () => {
     const { root } = render(one());
-    expect(host(root, 'today-declaration-person-0')).not.toHaveLength(0);
+    expect(host(root, 'today-declaration-person-0-name')).not.toHaveLength(0);
     expect(strings(host(root, 'today-declaration-change-0')[0]!)).toBe(
       `${item.category} · ${registerChangeLabel(item.kind)} ${changeDate(item.date)}`,
     );
@@ -338,6 +342,67 @@ describe('Just declared', () => {
     });
     expect(strings(root)).not.toMatch(/The entry in full|\bMore\b/);
   });
+  test.each([1, 3.571])(
+    'each declaration has one link, one chevron and padded content at font scale %s',
+    (fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ ...standard, fontScale });
+      const profiled = { ...item, profileSlug: 'susan-mcdonald' };
+      const { root } = render(one(profiled));
+      expect(root.findAllByType(PersonRow)).toHaveLength(0);
+      const links = root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessible === true &&
+          node.props.accessibilityRole === 'link',
+      );
+      expect(links).toHaveLength(1);
+      const row = host(root, 'today-declaration-0')[0]!;
+      expect(links[0]).toBe(row);
+      expect(row.props.accessible).toBe(true);
+      expect(row.props.accessibilityLabel).toContain(item.name);
+      expect(row.props.accessibilityLabel).toContain(item.party);
+      expect(row.props.accessibilityLabel).toContain(item.category);
+      expect(row.props.accessibilityLabel).toContain(
+        entryPreview(item.description!),
+      );
+      expect(
+        root
+          .findAllByType(Icon)
+          .filter((node) => node.props.name === symbols.chevron),
+      ).toHaveLength(1);
+      const pressable = row.find(
+        (node) =>
+          node.type === 'View' &&
+          node.props.accessible === false &&
+          node.props.accessibilityRole === 'link',
+      );
+      expect(StyleSheet.flatten(pressable.props.style).paddingVertical).toBe(
+        rhythm.row,
+      );
+      const name = host(root, 'today-declaration-person-0-name')[0]!;
+      const words = host(root, 'today-declaration-text-0')[0]!;
+      const meta = host(root, 'today-declaration-change-0')[0]!;
+      const columnOf = (node: ReactTestInstance) => {
+        let column = node.parent!;
+        while (column.type !== 'View') column = column.parent!;
+        return column;
+      };
+      expect(columnOf(name)).toBe(columnOf(words));
+      expect(columnOf(meta)).toBe(columnOf(words));
+      expect(columnOf(columnOf(words)).props.accessibilityElementsHidden).toBe(
+        true,
+      );
+      expect(
+        root.findAll((node) => node.props.numberOfLines !== undefined),
+      ).toHaveLength(0);
+      act(() => row.props.onAccessibilityTap());
+      expect(router.push).toHaveBeenLastCalledWith(
+        declarationsForRoute(item.name),
+      );
+    },
+  );
   test('a long entry shows its opening, cut at a word, in the record’s words', () => {
     const long = items.find((i) => (i.description?.length ?? 0) > LONG_ENTRY);
     if (!long) return;

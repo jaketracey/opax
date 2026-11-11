@@ -2,7 +2,7 @@
 // source lines (P2-3), declarations grouped by member with no clamp
 // (P3-10), and the declarations list's first screen (P2-19, P3-9).
 import { act, type ReactElement } from 'react';
-import { SectionList, useWindowDimensions } from 'react-native';
+import { SectionList, StyleSheet, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { catalogs as runtime } from '../src/api/runtime';
 import {
@@ -12,6 +12,8 @@ import {
   recentDeclarationsFor,
 } from '../src/api/catalogs';
 import { dataAsOf, type ApiClient, type RecordResult } from '../src/api/client';
+import { SurfaceContext } from '../src/design/row-padding';
+import { colors, rhythm } from '../src/design/tokens';
 import { billDisplay } from '../src/api/bill-transforms';
 import {
   BillRow,
@@ -31,6 +33,7 @@ import {
 } from '../src/features/today/BillFeed';
 import {
   DeclarationGroup,
+  DeclarationEntry,
   DeclarationsBlock,
 } from '../src/features/today/DeclarationRow';
 import { declarationsSources } from '../src/features/today/sources';
@@ -262,7 +265,7 @@ describe('Today’s feeds each carry their own source line (P2-3)', () => {
   });
 });
 
-describe('declarations by one member sit under one PersonRow (P3-10)', () => {
+describe('declaration identities in Today and the full feed', () => {
   test('consecutive entries by one person make one run, in order', () => {
     const runs = personRuns(all);
     expect(runs.flatMap((run) => run.entries.map((e) => e.index))).toEqual(
@@ -278,16 +281,20 @@ describe('declarations by one member sit under one PersonRow (P3-10)', () => {
   });
   const run = personRuns(all).find((r) => r.entries.length > 1)!;
   test.each([standard, ax5])(
-    'Today: one PersonRow, then one element per entry, never clamped',
+    'Today: one accessible link per entry, never clamped',
     (size) => {
       jest.mocked(useWindowDimensions).mockReturnValue(size);
       const { root } = render(<DeclarationGroup entries={run.entries} />);
-      expect(root.findAllByType(PersonRow)).toHaveLength(1);
+      expect(root.findAllByType(PersonRow)).toHaveLength(0);
+      expect(root.findAllByType(DeclarationEntry)).toHaveLength(
+        run.entries.length,
+      );
       expect(
         root.findAll((n) => n.props.numberOfLines !== undefined),
       ).toHaveLength(0);
       for (const { item, index } of run.entries) {
         const entry = host(root, `today-declaration-${index}`)[0]!;
+        expect(entry.props.accessibilityLabel).toContain(item.name);
         expect(entry.props.accessibilityLabel).toContain(item.category);
       }
     },
@@ -316,15 +323,16 @@ describe('declarations by one member sit under one PersonRow (P3-10)', () => {
       ).toMatch(new RegExp(`${item.category}\\..*, Register of interests$`));
     }
   });
-  test('Today’s Just declared groups its rows the same way', async () => {
-    const runs = personRuns(recentDeclarations.data!);
+  test('Today’s Just declared renders one independent row per entry', async () => {
     mock.todayDeclarations.mockResolvedValue(recentDeclarations);
     mock.todayDeclarationsProfiled.mockResolvedValue(recentDeclarations);
     const renderer = await renderAsync(
       <DeclarationsBlock attempt={0} onRetry={() => {}} />,
     );
     const section = host(renderer.root, 'today-declarations')[0]!;
-    expect(section.findAllByType(PersonRow)).toHaveLength(runs.length);
+    expect(section.findAllByType(DeclarationEntry)).toHaveLength(
+      recentDeclarations.data!.length,
+    );
     expect(
       recentDeclarations.data!.map(
         (_, i) => host(section, `today-declaration-${i}`).length,
@@ -332,6 +340,49 @@ describe('declarations by one member sit under one PersonRow (P3-10)', () => {
     ).toEqual(recentDeclarations.data!.map(() => 1));
     act(() => renderer.unmount());
   });
+  test.each([standard, ax5])(
+    'consecutive declarations have dividers at the content column and card edge padding',
+    async (size) => {
+      jest.mocked(useWindowDimensions).mockReturnValue(size);
+      const item = recentDeclarations.data![0]!;
+      const data = [item, { ...item, id: `${item.id}-next` }];
+      const block = { ...recentDeclarations, data };
+      mock.todayDeclarations.mockResolvedValue(block);
+      mock.todayDeclarationsProfiled.mockResolvedValue(block);
+      const renderer = await renderAsync(
+        <SurfaceContext.Provider value="sunken">
+          <DeclarationsBlock attempt={0} onRetry={() => {}} />
+        </SurfaceContext.Provider>,
+      );
+      const group = host(renderer.root, 'today-declarations-group')[0]!;
+      expect(group.findAllByType(DeclarationEntry)).toHaveLength(2);
+      const dividers = group.findAll(
+        (node) =>
+          node.type === 'View' &&
+          StyleSheet.flatten(node.props.style)?.backgroundColor ===
+            colors.dividerSubtle,
+      );
+      expect(dividers).toHaveLength(1);
+      expect(StyleSheet.flatten(dividers[0]!.props.style).marginLeft).toBe(
+        size.fontScale === 1 ? 16 + 44 + rhythm.heading : 16,
+      );
+      for (let index = 0; index < data.length; index++) {
+        const row = host(group, `today-declaration-${index}`)[0]!;
+        const pressable = row.find(
+          (node) =>
+            node.type === 'View' &&
+            node.props.accessible === false &&
+            node.props.accessibilityRole === 'link',
+        );
+        expect(StyleSheet.flatten(pressable.props.style)).toMatchObject({
+          paddingVertical: rhythm.row,
+          paddingHorizontal: 16,
+          marginHorizontal: -16,
+        });
+      }
+      act(() => renderer.unmount());
+    },
+  );
 });
 
 describe('the declarations list’s first screen (P2-19, P3-9; people.md 2.7)', () => {
