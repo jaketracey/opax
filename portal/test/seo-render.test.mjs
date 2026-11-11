@@ -7,6 +7,8 @@ import {build} from 'esbuild';
 import {isOrganisationDonor} from "../public/donor-entity.js";
 import {divisionPlain} from '../public/division-markdown.js';
 import {renderBillAnswer as rawBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat,crumbsHTML,answerBlock} from '../src/seo-content.ts';
+// Visible text for assertions: strip tags until none remain (a single pass can leave a rebuilt tag).
+const stripTags = html => { let prev; do { prev = html; html = html.replace(/<[^<>]*>/g, ''); } while (html !== prev); return html; };
 const renderBillAnswer = (bill, people, slugs, related = [], query = {}) => rawBillAnswer(bill, people, slugs, related, query);
 const pub=new URL('../public/',import.meta.url);
 const parsedAssets=new Map();
@@ -44,7 +46,7 @@ test('official report page and API share the schema 1 record, independent of res
   for(const currentEnv of [env,{...env,REPORTS_ENABLED:'false',STAGING_API:{fetch(){throw Error('report records must use local assets');}}}]) {
     const api=await worker.fetch(new Request(origin+'/api/report/'+slug),currentEnv,{waitUntil(){}});
     assert.equal(api.status,200);assert.match(api.headers.get('content-type'),/application\/json/);
-    assert.deepEqual(await api.json(),data);
+    const body=await api.json();const {transcripts,...rest}=body;assert.deepEqual(rest,data);assert.equal(transcripts.count,47);assert.equal(transcripts.items.length,20);assert.equal(transcripts.next_offset,20);
     const page=await worker.fetch(new Request(origin+'/report/'+slug),currentEnv,{waitUntil(){}});
     assert.equal(page.status,200);
     const html=await page.text();
@@ -52,7 +54,7 @@ test('official report page and API share the schema 1 record, independent of res
     assert.match(html,/href="https:\/\/opax.com.au\/report\/royal-commission-cth-robodebt"/);
     assert.match(html,/href="\/api\/report\/royal-commission-cth-robodebt"/);
     assert.doesNotMatch(html,/<script[^>]+src="\/(?:app|spa-entry|spa-shell)\.js/);
-    for(const rec of data.record.recommendations)assert.ok(html.includes(escapeHtml(rec.text)));
+    const text=stripTags(html);for(const rec of data.record.recommendations)assert.ok(text.includes(escapeHtml(rec.text)));
   }
 });
 test('search-all returns official report rows for web and native API consumers',async()=>{
@@ -89,10 +91,38 @@ test('annual, agency and integrity report pages and JSON routes expose the same 
     const html=await get('/report/'+slug);
     assert.ok(html.includes(escapeHtml(record.title)));assert.ok(html.includes(escapeHtml(record.body)));
     assert.ok(html.includes(escapeHtml(record.citation.url)));
-    assert.ok(html.includes('Record snapshot: '+record.snapshot_at));
+    assert.ok(html.includes('Record snapshot: <time datetime="'+record.snapshot_at.replace(/^(\d{4})-?(\d{2})-?(\d{2}).*$/,'$1-$2-$3')+'">'),slug);
     assert.equal(record.schema,1);assert.equal(record.kind,'report');
     for(const key of ['record','publisher','caveats','facts','tables','headline','date_basis','year'])assert.ok(Object.hasOwn(record,key),key);
   }
+});
+test('report transcripts API: the app envelope, top level and paged, newest first with stable offsets',async()=>{
+  const fetchJson=async(path,status=200)=>{const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,status,path);return r.json();};
+  const checkItem=i=>{assert.equal(typeof i.id,'string');assert.match(i.hearing_date,/^\d{4}-\d{2}-\d{2}$/);assert.ok(i.title||i.case);assert.match(i.url,/^https:\/\//);
+    if(i.page_url!==undefined)assert.match(i.page_url,/^https:\/\//);assert.equal(typeof i.publisher_redacted,'boolean');assert.ok(Array.isArray(i.notes)&&i.notes.every(n=>typeof n==='string'));
+    assert.ok(Array.isArray(i.orders)&&i.orders.every(o=>/^https:\/\//.test(o)));if(i.pages!==undefined)assert.ok(Number.isInteger(i.pages));
+    for(const k of Object.keys(i))assert.ok(['id','hearing_date','title','case','pages','url','page_url','publisher_redacted','notes','orders'].includes(k),k);};
+  for(const [slug,count,first,last] of [['royal-commission-nsw-healthcare-funding',71,'2023-11-27','2025-02-27'],['royal-commission-cth-robodebt',47,'2022-09-27','2023-03-10']]){
+    const top=(await fetchJson('/api/report/'+slug)).transcripts;
+    assert.equal(top.count,count);assert.equal(top.first_date,first);assert.equal(top.last_date,last);assert.equal(top.next_offset,20);
+    const ids=[];
+    for(let offset=0;offset!==null;){const page=await fetchJson(`/api/report/${slug}/transcripts?offset=${offset}`);assert.equal(page.count,count);assert.equal(page.first_date,first);
+      page.items.forEach(checkItem);ids.push(...page.items.map(i=>i.id));assert.equal(page.next_offset,page.next_offset===null?null:offset+page.items.length);offset=page.next_offset;}
+    assert.equal(ids.length,count);assert.equal(new Set(ids).size,count);
+    assert.deepEqual(top.items.map(i=>i.id),ids.slice(0,20));
+    const dates=(await fetchJson(`/api/report/${slug}/transcripts?limit=100`)).items.map(i=>i.hearing_date);assert.deepEqual(dates,[...dates].sort().reverse());
+    const past=await fetchJson(`/api/report/${slug}/transcripts?offset=500`);assert.equal(past.items.length,0);assert.equal(past.next_offset,null);assert.equal(past.count,count);
+  }
+  const last=await fetchJson('/api/report/royal-commission-nsw-healthcare-funding/transcripts?offset=60&limit=20');assert.equal(last.items.length,11);assert.equal(last.next_offset,null);
+  const vic=(await fetchJson('/api/report/royal-commission-vic-major-infrastructure')).transcripts;assert.ok(vic.items.every(i=>i.notes.some(n=>/Non-publication orders/.test(n))));
+  const ibacIndex=await read('/integrity-reports/reports-vic-ibac.json');const glo=ibacIndex.records.find(r=>r.transcripts);
+  const ibac=(await fetchJson('/api/report/integrity-report-'+glo.id)).transcripts;assert.equal(ibac.count,17);assert.equal(ibac.first_date,'2019-02-04');assert.equal(ibac.last_date,'2019-03-01');
+  ibac.items.forEach(checkItem);assert.ok(ibac.items.some(i=>i.orders.length&&i.case==='Operation Gloucester'));
+  const plainId=(await read('/integrity-reports/index.json')).reports[0].id;
+  assert.equal((await fetchJson('/api/report/integrity-report-'+plainId)).transcripts,undefined);
+  assert.equal((await fetchJson('/api/report/integrity-report-'+plainId+'/transcripts')).count,0);
+  await fetchJson('/api/report/royal-commission-cth-robodebt/transcripts?limit=0',400);await fetchJson('/api/report/royal-commission-cth-robodebt/transcripts?offset=-1',400);
+  await fetchJson('/api/report/royal-commission-unknown/transcripts',404);
 });
 const prerenderBody = html => html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</main>'));
 function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.doesNotMatch(html,/id="panel-ask"|id="panel-privacy"|Ask &amp; search the record/);const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1]);assert.ok(graph['@graph'].some(n=>n['@type']==='BreadcrumbList'));return graph['@graph'];}

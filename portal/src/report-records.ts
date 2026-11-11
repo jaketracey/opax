@@ -27,74 +27,482 @@ export async function readReport(assets: Fetcher, slug: string): Promise<ReportD
   if (data.schema !== 1 || data.kind !== 'report' || data.slug !== slug) throw new Error('Invalid report record')
   return data
 }
+
+// ---- formatting. Everything here is presentation of values the record holds;
+// nothing is fetched or parsed beyond the one record already in hand.
 const esc = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 const url = (value: unknown) => typeof value === 'string' && /^https:\/\//.test(value) ? value : null
-const text = (value: unknown) => `<p class="report-record-text">${esc(value)}</p>`
-const section = (title: string, body: string) => `<section class="ui-section"><h2 class="ui-section-title">${esc(title)}</h2>${body}</section>`
-const list = (values: unknown) => Array.isArray(values) ? values.map(text).join('') : ''
-const link = (href: unknown, label: unknown) => url(href) ? `<a href="${esc(href)}" rel="noopener">${esc(label || href)}</a>` : ''
-const DATE_BASIS: Record<string, string> = { tabled: 'Tabled', tabled_vic: 'Tabled in the Parliament of Victoria', published: 'Published', stated: 'Dated', dated: 'Dated', updated: 'Page updated', released: 'Released' }
-function citation(raw: unknown) {
+const host = (href: string) => (/^https:\/\/(?:www\.)?([^/?#]+)/.exec(href) || [])[1] || ''
+const isPdf = (href: string) => /\.pdf\b/i.test(href)
+const human = (value: unknown) => { const s = String(value ?? '').replace(/_/g, ' ').trim(); return s ? s[0].toUpperCase() + s.slice(1) : '' }
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+/** 2023-07-07, 20231107 or an ISO time as "7 July 2023"; anything else as held. */
+function day(value: unknown): string {
+  const m = /^(\d{4})-?(\d{2})-?(\d{2})(?:$|T)/.exec(String(value ?? ''))
+  return m && +m[2] >= 1 && +m[2] <= 12 ? `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}` : String(value ?? '')
+}
+const isoDay = (value: unknown) => { const m = /^(\d{4})-?(\d{2})-?(\d{2})/.exec(String(value ?? '')); return m ? `${m[1]}-${m[2]}-${m[3]}` : '' }
+const time = (value: unknown) => isoDay(value) ? `<time datetime="${isoDay(value)}">${esc(day(value))}</time>` : esc(value)
+const group = (digits: string) => digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+const finite = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value)
+function figure(n: number): string { const [i, f] = String(Math.abs(n)).split('.'); return (n < 0 ? '-' : '') + group(i) + (f ? '.' + f : '') }
+/** A dollar amount in words a reader can say: $50.39 billion, $136.3 million, $880,211. */
+function dollars(n: number): string {
+  const a = Math.abs(n), sign = n < 0 ? '-' : ''
+  if (a >= 1e9) return `${sign}$${(a / 1e9).toFixed(2).replace(/\.?0+$/, '')} billion`
+  if (a >= 1e6) return `${sign}$${(a / 1e6).toFixed(1).replace(/\.0$/, '')} million`
+  return `${sign}$${figure(Math.round(a))}`
+}
+const bytes = (n: unknown) => finite(n) && n > 0 ? (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`) : ''
+const plural = (n: number, one: string, many = one + 's') => `${figure(n)} ${n === 1 ? one : many}`
+const anchor = (value: unknown) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
+const JURISDICTION: Record<string, string> = { Cth: 'Commonwealth', NSW: 'New South Wales', Vic: 'Victoria', Qld: 'Queensland', WA: 'Western Australia', SA: 'South Australia', Tas: 'Tasmania', ACT: 'Australian Capital Territory', NT: 'Northern Territory' }
+const DATE_BASIS: Record<string, string> = { publisher_listing: 'Listed by the publisher for', tabled: 'Tabled', tabled_vic: 'Tabled in the Parliament of Victoria', published: 'Published', stated: 'Dated', dated: 'Dated', updated: 'Page updated', released: 'Released' }
+const dated = (basis: unknown, value: unknown) => `${esc(DATE_BASIS[String(basis)] || 'Dated')} ${time(value)}`
+
+// ---- links and citations
+const link = (href: unknown, label: unknown, cls = '') => url(href) ? `<a href="${esc(href)}"${cls ? ` class="${cls}"` : ''} rel="noopener">${esc(label || href)}</a>` : ''
+function pageTarget(href: string, page: unknown) {
+  return page != null && isPdf(href) && !href.includes('#') ? `${href}#page=${page}` : href
+}
+/** A cite object as one link whose text says where it goes. Where it points at the
+ *  page's own main document the name shortens to "Report"; the page and section
+ *  stay in the link text either way. */
+/** Same name, ignoring case and outer space ("investigation report" / "Investigation Report"). */
+const same = (a: unknown, b: unknown) => String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase()
+function citeLink(raw: unknown, mainDocument = ''): string {
   const c = object(raw), href = url(c.url)
   if (!href) return ''
-  const page = c.page == null ? '' : `, page ${c.page}`
-  const target = c.page != null && /\.pdf(?:$|\?)/i.test(href) && !href.includes('#') ? `${href}#page=${c.page}` : href
-  return `<p class="ui-meta report-record-source">${link(target, c.document || 'Official source')}${esc(page)}${c.section ? `, ${esc(c.section)}` : ''}</p>`
+  const doc = c.document && !same(c.document, mainDocument) ? String(c.document) : mainDocument ? 'Report' : 'Official source'
+  const label = `${doc}${c.page == null ? '' : `, page ${c.page}`}${c.section ? `, ${c.section}` : ''}`
+  return `<a class="rr-cite" href="${esc(pageTarget(href, c.page))}" rel="noopener">${esc(label)}</a>`
+}
+const citeLine = (raw: unknown, mainDocument = '') => { const a = citeLink(raw, mainDocument); return a ? `<p class="rr-cite-line">${a}</p>` : '' }
+const text = (value: unknown, cls = 'rr-record-text') => `<p class="${cls}">${esc(value)}</p>`
+/** A body's words with its inline list runs (" • item", " ◦ sub-item") set one to a
+ *  line. Every character stays: the spans only break the line, so the text with the
+ *  tags removed is the source text exactly. */
+function prose(value: unknown, cls: string): string {
+  const s = String(value ?? ''), runs = s.split(/(?= [•◦▪●] )/)
+  if (runs.length < 2) return `<p class="${cls}">${esc(s)}</p>`
+  return `<p class="${cls}">${esc(runs[0])}${runs.slice(1).map(x => `<span class="rr-line${/^ [◦▪]/.test(x) ? ' rr-line-sub' : ''}">${esc(x)}</span>`).join('')}</p>`
+}
+const notes = (values: unknown) => Array.isArray(values) && values.length ? `<ul class="rr-notes" role="list">${values.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''
+/** Key and value rows for the fields a record holds, keys in words. */
+function kv(pairs: [string, string][]): string {
+  const kept = pairs.filter(([, v]) => v)
+  return kept.length ? `<dl class="ui-kv rr-kv" data-stack="phone">${kept.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl>` : ''
 }
 function fields(row: RecordRow, keys: string[]): string {
-  const entries = keys.filter(k => row[k] !== undefined && row[k] !== null)
-  return entries.length ? `<dl class="report-record-fields">${entries.map(k => `<dt>${esc(k.replace(/_/g, ' '))}</dt><dd>${typeof row[k] === 'object' && !Array.isArray(row[k]) ? fields(object(row[k]), Object.keys(object(row[k]))) : esc(Array.isArray(row[k]) ? row[k].join('; ') : row[k])}</dd>`).join('')}</dl>` : ''
+  return kv(keys.filter(k => row[k] !== undefined && row[k] !== null && row[k] !== '').map(k => {
+    const v = row[k]
+    return [human(k), typeof v === 'object' && !Array.isArray(v) ? fields(object(v), Object.keys(object(v))) : esc(Array.isArray(v) ? v.join('; ') : v)]
+  }))
 }
-function sourceDocument(d: RecordRow) {
-  const date = d.date ? `<p>${esc(DATE_BASIS[String(d.date_basis)] || 'Dated')} ${esc(d.date)}</p>` : ''
-  return `<article class="ui-section"><h3>${esc(d.title || d.key || d.kind)}</h3>${d.kind === 'hearing_transcript' ? text('Hearing transcript: evidence, not findings.') : ''}${date}${link(d.page_url || d.url, 'Official document')}${records(d.files).map(f => `<p>${link(f.url, f.name || 'Report PDF')}${f.pages ? ` (${esc(f.pages)} pages)` : ''}</p>`).join('')}${citation(d.cite)}${d.date_quote ? text(d.date_quote) + citation(d.date_cite) : ''}${fields(d, ['recommendations_status', 'recommendations', 'status', 'role', 'pages', 'acquisition', 'rights', 'note'])}</article>`
+
+interface Part { id: string; title: string; count?: number; html: string }
+const sectionHTML = (p: Part) => `<section class="ui-section rr-section" id="${p.id}" aria-labelledby="${p.id}-title"><h2 class="ui-section-title" id="${p.id}-title">${esc(p.title)}${p.count != null ? ` <span class="rr-count">${figure(p.count)}</span>` : ''}</h2>${p.html}</section>`
+interface Stat { label: string; value: string; note?: string }
+const glance = (stats: Stat[]) => stats.length ? `<dl class="ui-stats rr-glance">${stats.map(s => `<div class="ui-stat" data-size="compact"><dt class="ui-stat-label">${esc(s.label)}</dt><dd class="ui-stat-value">${s.value}</dd>${s.note ? `<dd class="rr-stat-note">${s.note}</dd>` : ''}</div>`).join('')}</dl>` : ''
+
+// ---- the official document: one card, the link first
+interface SourceDoc { href: string; label: string; pages?: unknown; size?: unknown }
+function sourceCard(main: SourceDoc | null, more: { href: unknown; label: string }[]): string {
+  const seen = new Set(main ? [main.href] : [])
+  const extra = more.filter(m => { const h = url(m.href); if (!h || seen.has(h)) return false; seen.add(h); return true })
+  if (!main && !extra.length) return ''
+  const facts = main ? [isPdf(main.href) ? 'PDF' : '', finite(main.pages) ? plural(main.pages, 'page') : '', bytes(main.size), host(main.href)].filter(Boolean).join(' · ') : ''
+  return `<div class="rr-source"><p class="rr-source-kicker">Official source</p>` +
+    (main ? `<p class="rr-source-title"><a href="${esc(main.href)}" rel="noopener">${esc(main.label)}</a></p><p class="rr-source-meta">${esc(facts)}</p>` : '') +
+    (extra.length ? `<ul class="rr-source-more" role="list">${extra.map(m => `<li>${link(m.href, m.label)}</li>`).join('')}</ul>` : '') + `</div>`
 }
-function items(part: 'findings' | 'recommendations', r: RecordRow) {
-  const held = records(r[part])
-  const state = r[part + '_status']
+
+// ---- recommendations and findings: the body's own words, labels and citations
+function statusMeta(status: RecordRow): string {
+  const bits = [status.lead ? `Lead: ${esc(status.lead)}` : '', status.updated ? `Updated ${time(status.updated)}` : ''].filter(Boolean)
+  return bits.length ? `<p class="rr-status-meta">${bits.join(' · ')}</p>` : ''
+}
+/** "Findings" when every item is a finding (or "Opinions"), else the mixed title. */
+function findingsTitle(held: RecordRow[]): string {
+  const kinds = new Set(held.map(x => x.kind))
+  const only = kinds.size === 1 ? { finding: 'Findings', opinion: 'Opinions' }[String([...kinds][0])] : undefined
+  return only || 'Findings, opinions and statements'
+}
+function items(part: 'findings' | 'recommendations', r: ReportDetail, mainDocument: string): Part {
+  const c = r.record, held = records(c[part]), state = c[part + '_status']
+  const reports = records(c.reports)
+  const id = part
+  const title = part === 'findings' ? findingsTitle(held) : 'Recommendations'
   // An unextracted list is unknown, not a report that made no findings.
-  const empty = state === 'stated_none' ? `The report states that it makes no ${part}.` : `No ${part} are reproduced in this record. This does not establish that the report contains none.`
-  return section(part === 'findings' ? 'Findings, opinions and statements' : 'Recommendations',
-    (state ? fields(r, [part + '_status']) : '') + (held.length ? `<ol class="report-record-items" role="list">${held.map(item => {
-      const label = item.label ?? (part === 'recommendations' ? `Recommendation${item.number == null ? '' : ' ' + item.number}` : item.kind)
-      const status = item.status ? object(item.status) : null
-      const report = records(r.reports).find(d => d.key === item.report)
-      return `<li><h3>${esc(label)}</h3>${item.kind ? `<p>${esc(item.kind)}</p>` : ''}${report ? text(report.title) : ''}${text(item.text)}${citation(item.cite)}${status ? `<h4>Government-published status</h4>${text(status.as_published)}${fields(status, ['lead', 'updated'])}${citation(status.cite)}` : ''}</li>`
-    }).join('')}</ol>` : text(empty)))
+  const empty = state === 'stated_none' ? `The report states that it makes no ${part}.`
+    : state === 'no_report' ? 'No report is held for this inquiry, so no recommendations are reproduced.'
+    : `No ${part} are reproduced in this record. This does not establish that the report contains none.`
+  const partial = state === 'partial' ? `<p class="ui-section-note">Only some of the ${part} are reproduced here, from the official copies OPAX could read.</p>` : ''
+  // The record's own caveat for this list leads it: allegations for an integrity
+  // body's findings, liability for a commission's recommendations.
+  const allegation = part === 'findings' ? r.caveats.find(x => /^Allegations are not findings/.test(x))
+    : r.report_type === 'royal_commission' && held.length ? r.caveats.find(x => /not findings of criminal or civil liability/.test(x)) : undefined
+  const note = allegation ? `<p class="ui-section-note rr-caveat-inline">${esc(allegation)}</p>` : ''
+  const statuses = held.map(i => object(i.status).as_published).filter(Boolean)
+  const list = held.length ? `<ol class="rr-items" role="list">${held.map((item, i) => {
+    const label = item.label ?? (part === 'recommendations' ? `Recommendation${item.number == null ? '' : ' ' + item.number}` : human(item.kind))
+    const status = item.status ? object(item.status) : null
+    const from = reports.length > 1 ? reports.find(d => d.key === item.report && !same(d.title, object(item.cite).document)) : null
+    const itemId = part === 'recommendations' && item.number != null ? `recommendation-${anchor(item.number)}` : `${part}-${i + 1}`
+    const kind = part === 'findings' && item.kind ? `<span class="ui-status rr-kind">${esc(human(item.kind))}</span>` : ''
+    return `<li class="rr-item" id="${esc(itemId)}"><div class="rr-item-head"><h3 class="rr-item-label">${esc(label)}</h3>${kind}</div>${from ? `<p class="rr-item-meta">${esc(from.title)}</p>` : ''}` +
+      `${prose(item.text, 'rr-item-text')}${citeLine(item.cite, mainDocument)}` +
+      (status ? `<div class="rr-status"><p class="rr-status-line"><span class="rr-status-title">Government-published status</span> <span class="ui-status">${esc(status.as_published)}</span></p>` +
+        `${statusMeta(status)}${citeLine(status.cite)}</div>` : '') + `</li>`
+  }).join('')}</ol>` : text(empty)
+  // Recommendation numbers as a quiet index; a very long index starts folded so the
+  // first recommendation is not a phone-screen of numbers away.
+  const numbers = part === 'recommendations' && held.length > 12 && held.every(x => x.number != null)
+    ? `<ul role="list">${held.map(x => `<li><a href="#recommendation-${esc(anchor(x.number))}">${esc(x.number)}</a></li>`).join('')}</ul>` : ''
+  const jump = !numbers ? '' : held.length > 60
+    ? `<nav class="rr-jump" aria-label="Recommendation numbers"><details class="ui-disclosure rr-jump-fold"><summary>Go to a recommendation (${esc(held[0].number)} to ${esc(held[held.length - 1].number)})</summary>${numbers}</details></nav>`
+    : `<nav class="rr-jump" aria-label="Recommendation numbers">${numbers}</nav>`
+  // How many carry each status, counted in the government's own words, in the order
+  // they first appear: a count of labels, not a judgement of them.
+  const tally = new Map<string, number>()
+  for (const x of statuses) tally.set(String(x), (tally.get(String(x)) || 0) + 1)
+  const statusNote = statuses.length ? `<p class="ui-section-note">${plural(statuses.length, 'recommendation has', 'recommendations have')} a status published by government, shown in the government's own words.</p>` +
+    `<ul class="rr-tally" role="list" aria-label="Government-published statuses">${[...tally].map(([label, n]) => `<li><span class="ui-status">${esc(label)}</span> <span class="rr-tally-count">${figure(n)}</span></li>`).join('')}</ul>` : ''
+  return { id, title, count: held.length || undefined, html: note + partial + statusNote + jump + list }
 }
-function annual(r: ReportDetail) {
-  const technical = new Set(['record_id', 'table_id', 'order', 'source_item_id', 'codename', 'source_last_modified'])
-  const clean = (row: RecordRow) => Object.fromEntries(Object.entries(row).filter(([key]) => !technical.has(key)))
-  const headline = r.headline ? section('Published headline figures', Object.entries(r.headline).filter(([, v]) => v && typeof v === 'object').map(([key, raw]) => {
-    const v = object(raw), source = v.codename ? `https://previewapi.transparency.gov.au/delivery/items?system.codename=${v.codename}&depth=1` : null
-    return `<article><h3>${esc(key.replace(/_/g, ' '))}</h3>${fields(clean(v), Object.keys(clean(v)))}${link(source, 'Official source table')}</article>`
-  }).join('')) : ''
-  return headline + section('Published disclosure tables', r.tables.length ? r.tables.map(t => `<details class="ui-disclosure"><summary>${esc(t.title)}</summary><div class="ui-disclosure-body">${link(t.source_url, 'Official source table or data file')}${fields(t, ['unit', 'source_file', 'source_page', 'entity_as_published', 'licence'])}${records(t.rows).map(row => `<article class="ui-section">${fields(clean(row), Object.keys(clean(row)))}${citation({ url: t.source_url, document: t.title, section: row.source_row == null ? undefined : `Data file row ${row.source_row}${row.source_column ? ', column ' + row.source_column : ''}` })}</article>`).join('')}</div></details>`).join('') : text('No disclosure tables are loaded for this body and year.'))
+
+// ---- documents (commission reports, responses, transcripts; integrity documents)
+function documentRow(d: RecordRow, mainDocument: string, extra = '', flag = true): string {
+  const href = url(d.page_url) || url(d.url)
+  const title = d.title || human(d.key || d.kind || d.role) || 'Document'
+  const kind = human(d.document_kind || d.kind || d.role)
+  const files = records(d.files)
+  const meta = [kind && kind !== title ? esc(kind) : '', d.date ? dated(d.date_basis, d.date) : '', finite(d.pages) ? plural(d.pages, 'page') : ''].filter(Boolean).join(' · ')
+  const detail = kv([
+    ['Recommendations', d.recommendations != null ? esc(d.recommendations) : ''],
+    ['Recommendations status', d.recommendations_status ? esc(human(d.recommendations_status)) : ''],
+    ['Status', d.status && d.status !== 'ready' ? esc(human(d.status)) : ''],
+    ['Role', d.role && !d.kind ? esc(human(d.role)) : ''],
+    ['Date as printed', d.date_quote ? esc(d.date_quote) + ' ' + citeLink(d.date_cite, mainDocument) : ''],
+    ['How OPAX got it', d.acquisition ? esc(d.acquisition) : ''],
+    ['Rights', d.rights ? esc(typeof d.rights === 'object' ? Object.values(object(d.rights)).join(' ') : d.rights) : ''],
+    ['Note', d.note ? esc(d.note) : ''],
+  ])
+  return `<li class="rr-doc"><h3 class="rr-doc-title">${href ? link(href, title) : esc(title)}</h3>` +
+    (flag && d.kind === 'hearing_transcript' ? text('Hearing transcript: evidence, not findings.', 'rr-doc-flag') : '') +
+    (meta ? `<p class="rr-doc-meta">${meta}</p>` : '') +
+    (files.length ? `<ul class="rr-doc-files" role="list">${files.map(f => `<li>${link(f.url, `${isPdf(String(f.url)) ? 'PDF' : 'File'}: ${f.name || 'report file'}`)}${[finite(f.pages) ? plural(f.pages, 'page') : '', bytes(f.bytes)].filter(Boolean).map(x => ` · ${esc(x)}`).join('')}</li>`).join('')}</ul>` : '') +
+    (d.text ? text(d.text) : '') + (d.cite && url(object(d.cite).url) !== href ? citeLine(d.cite, mainDocument) : '') +
+    extra + (detail ? `<details class="ui-disclosure rr-doc-detail"><summary>Document details</summary><div class="ui-disclosure-body">${detail}</div></details>` : '') + `</li>`
 }
-function agency(r: ReportDetail) {
-  return fields(r.record, ['edition', 'edition_note', 'status', 'pages', 'rights_note', 'attribution', 'file_note', 'not_found']) +
-    section('Figures as published', r.facts.length ? r.facts.map(f => `<article class="ui-section"><h3>${esc(f.label)}</h3>${fields(f, ['column', 'value_as_published', 'unit', 'period', 'name', 'position', 'band', 'counterparty', 'purpose', 'note'])}${text(f.quote)}${citation({ url: f.source_url, document: r.title, page: f.page })}</article>`).join('') : text('No figures are reproduced in this record. This does not establish that the report contains none.'))
-}
-export function renderReport(r: ReportDetail) {
+const documentList = (docs: RecordRow[], mainDocument: string) => `<ul class="rr-docs" role="list">${docs.map(d => documentRow(d, mainDocument)).join('')}</ul>`
+
+// ---- hearing transcripts: evidence, not findings. One line per transcript, grouped by month, newest first.
+export const TRANSCRIPTS_TITLE = 'Hearing transcripts: evidence, not findings'
+/** A report's hearing transcripts, newest first (ties by key), each with `date` set to its hearing date. The page
+ * and /api/report/<slug>/transcripts read the same list, so an offset names the same row in both. */
+export function reportTranscripts(r: Pick<ReportDetail, 'report_type' | 'record'>): RecordRow[] {
   const c = r.record
-  const docs = r.report_type === 'royal_commission' ? [...records(c.reports), ...records(c.responses), ...records(c.transcripts)] : records(c.documents)
-  const court = records(c.court_context)
-  const body = `<p>${esc(r.body)} · ${esc(r.publisher.jurisdiction_name || r.jurisdiction)}</p>${r.year ? text(r.year) : ''}${r.date ? `<p>${esc(DATE_BASIS[r.date_basis || ''] || 'Dated')} ${esc(r.date)}</p>` : text('No published or tabled day is recorded.')}` +
-    citation(r.citation) + [c.pdf_url, c.page_url, c.source_url, c.catalogue_url, c.corrigendum_url, c.reuse_terms_url].filter(Boolean).map(u => `<p>${link(u, u)}</p>`).join('') +
-    section('About this record', list(r.caveats)) +
-    (r.report_type === 'royal_commission' ? fields(c, ['inquiry_type', 'interim_report_date', 'final_report_date', 'recommendations_status', 'status_as_published']) +
-      (c.established ? section('Establishment', text(object(c.established).quote) + fields(object(c.established), ['date', 'instrument']) + citation(object(c.established).cite)) : '') +
-      (records(c.commissioners).length ? section('Commissioners', records(c.commissioners).map(p => text(p.quote || `${p.name} (${p.role})`) + citation(p.cite)).join('')) : '') : '') +
-    (court.length ? section('Court context', court.map(x => text(x.text) + citation(x.cite)).join('')) : '') +
-    (docs.length ? section('Official documents', docs.map(sourceDocument).join('')) : '') +
-    (r.report_type === 'integrity_report' ? fields(c, ['type_as_published', 'date_basis', 'period', 'findings_status', 'recommendations_status', 'responses_status']) + items('findings', c) : '') +
-    (r.report_type === 'royal_commission' || r.report_type === 'integrity_report' ? items('recommendations', c) : '') +
-    (r.report_type === 'integrity_report' && records(c.responses).length ? section('Published responses', records(c.responses).map(x => sourceDocument(x) + (x.text ? text(x.text) : '') + fields(x, ['publisher', 'tabled_in', 'recommendation', 'status_as_published'])).join('')) : '') +
-    (r.report_type === 'annual_report' ? annual(r) : r.report_type === 'agency_report' ? agency(r) : '') +
-    (Array.isArray(c.notes) && c.notes.length ? section('Record notes', list(c.notes)) : '') +
-    (Array.isArray(c.gaps) && c.gaps.length ? section('Coverage gaps', list(c.gaps)) : '') +
-    (Array.isArray(r.publisher.gaps) && r.publisher.gaps.length ? section('Publisher coverage', list(r.publisher.gaps)) : '') +
-    (records(c.reference_pages).length ? section('Official reference pages', records(c.reference_pages).map(x => `<p>${link(x.url, x.title)}</p>`).join('')) : '') +
-    `<p class="ui-meta">Record snapshot: ${esc(r.snapshot_at)}</p><p><a href="/api/report/${esc(r.slug)}">This record as JSON</a></p>`
-  return `<div class="wrap report-record">${body}</div>`
+  const raw = r.report_type === 'royal_commission' ? records(c.transcripts) : r.report_type === 'integrity_report' ? records(object(c.transcripts).items) : []
+  return raw.map(t => ({ ...t, key: t.key ?? t.id, kind: 'hearing_transcript', date: t.date ?? t.hearing_date ?? null }))
+    .sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')) || String(a.key).localeCompare(String(b.key)))
+}
+const ORDER_NOTE = /non-publication|suppression|publication order/i
+/** One transcript in the app's envelope: the publisher's PDF as `url`, the hearing date, notes (including any
+ * publication restrictions the publisher or commission records) and order links. */
+export function transcriptItem(r: Pick<ReportDetail, 'record'>, t: RecordRow): RecordRow {
+  const file = object(records(t.files)[0])
+  const pdf = url(t.url) || url(file.url) || url(t.page_url)
+  const own = Array.isArray(t.notes) ? t.notes.map(String) : []
+  const orderNotes = (Array.isArray(r.record.notes) ? r.record.notes : []).map(String).filter(n => t.files && ORDER_NOTE.test(n))
+  const restricted = object(t.full_text).quote_policy === 'no_quotes' ? ['The publisher\'s transcript records a non-publication or suppression order, a direction not to publish, or a pseudonymous witness. OPAX does not quote it.'] : []
+  return { id: String(t.key ?? t.id), hearing_date: String(t.date), ...(t.title ? { title: String(t.title) } : {}), ...(t.case ? { case: String(t.case) } : {}),
+    ...(finite(t.pages) ? { pages: t.pages } : finite(file.pages) ? { pages: file.pages } : {}), url: pdf,
+    ...(url(t.page_url) && url(t.page_url) !== pdf ? { page_url: t.page_url } : {}),
+    publisher_redacted: typeof t.publisher_redacted === 'boolean' ? t.publisher_redacted : /redact/i.test(`${file.url ?? ''} ${t.title ?? ''}`),
+    notes: [...own, ...orderNotes, ...restricted], orders: (Array.isArray(t.orders) ? t.orders : []).map(String).filter(o => url(o)) }
+}
+/** The transcripts envelope shared by the top-level `transcripts` field of GET /api/report/<slug> (first page) and
+ * GET /api/report/<slug>/transcripts?offset=&limit=: newest first, ties by id, so an offset names the same row on
+ * every call. */
+export function reportTranscriptEnvelope(r: Pick<ReportDetail, 'report_type' | 'record'>, offset = 0, limit = 20) {
+  const all = reportTranscripts(r), dates = all.map(t => String(t.date)).sort()
+  const items = all.slice(offset, offset + limit).map(t => transcriptItem(r, t))
+  return { label: 'Hearing transcript: evidence, not findings', count: all.length, first_date: dates[0] ?? null, last_date: dates.at(-1) ?? null,
+    offset, items, next_offset: offset + items.length < all.length ? offset + items.length : null }
+}
+/** GET /api/report/<slug>/transcripts?offset=&limit=, limit 1 to 100 (default 20). */
+export function reportTranscriptPage(r: ReportDetail, params: URLSearchParams) {
+  const num = (k: string, fallback: number) => { const v = params.get(k); return v === null || v === '' ? fallback : /^\d{1,5}$/.test(v) ? Number(v) : NaN }
+  const offset = num('offset', 0), limit = num('limit', 20)
+  if (!Number.isFinite(offset) || !Number.isFinite(limit) || limit < 1 || limit > 100) return { error: 'offset must be a whole number and limit 1 to 100' }
+  return reportTranscriptEnvelope(r, offset, limit)
+}
+/** GET /api/report/<slug>: the schema 1 record plus, when it has hearing transcripts, the first page of them. */
+export function reportApiBody(r: ReportDetail) {
+  const env = reportTranscriptEnvelope(r)
+  return env.count ? { ...r, transcripts: env } : r
+}
+function transcriptRow(t: RecordRow, mainDocument: string): string {
+  // Integrity transcripts hold the PDF as `url` and the case page as `page_url`; the PDF is the document.
+  const row = t.files ? t : { ...t, page_url: url(t.url) || t.page_url, files: [] }
+  const note = [t.publisher_redacted ? 'The publisher\'s copy is redacted.' : '', ...(Array.isArray(t.orders) ? t.orders : []), ...(Array.isArray(t.notes) ? t.notes : []),
+    t.transcript_pages ? `Transcript pages ${t.transcript_pages}.` : '', t.session_time ? `Session: ${t.session_time}.` : ''].filter(Boolean).map(String).join(' ')
+  return documentRow({ ...row, pages: row.pages ?? object(records(t.files)[0]).pages, note: note || t.note }, mainDocument, '', false)
+}
+function transcriptsPart(r: ReportDetail, mainDocument: string): Part | null {
+  const items = reportTranscripts(r)
+  if (!items.length) return null
+  const months = new Map<string, RecordRow[]>()
+  for (const t of items) {
+    const m = /^(\d{4})-(\d{2})/.exec(String(t.date ?? ''))
+    const label = m ? `${MONTHS[+m[2] - 1]} ${m[1]}` : 'Date not stated'
+    months.set(label, [...(months.get(label) ?? []), t])
+  }
+  const folds = [...months].map(([label, ts], i) => `<details class="ui-disclosure rr-month"${i === 0 ? ' open' : ''}><summary><span>${esc(label)}<span class="rr-summary-meta">${esc(plural(ts.length, 'transcript'))}</span></span></summary>` +
+    `<div class="ui-disclosure-body"><ul class="rr-docs" role="list">${ts.map(t => transcriptRow(t, mainDocument)).join('')}</ul></div></details>`).join('')
+  return { id: 'transcripts', title: TRANSCRIPTS_TITLE, count: items.length,
+    html: `<p class="ui-section-note">What a witness or counsel says at a hearing is evidence or submission, not a finding. Transcripts are the publisher's copies, including its redactions, listed newest first by month.</p>${folds}` }
+}
+
+// ---- annual reports (Transparency Portal body-years)
+const TABLE_KIND: Record<string, string> = { kmp: 'Key management personnel', senior_executive_band: 'Senior executives', highly_paid_band: 'Other highly paid staff', consultancy: 'Consultancy contracts', non_consultancy: 'Non-consultancy contracts' }
+const LICENCE: Record<string, string> = { 'cc-by-4.0': 'CC BY 4.0', 'cc-by-3.0-au': 'CC BY 3.0 AU' }
+const PAY = ['base_salary', 'bonuses', 'other_benefits', 'superannuation', 'long_service_leave', 'other_long_term', 'termination', 'total']
+const CHECKS: Record<string, string> = { components_do_not_sum_to_total: 'As published, the parts do not add up to the total.' }
+function cell(row: RecordRow, key: string, numeric = true): string {
+  const shown = object(row.as_published)[key]
+  const v = row[key]
+  if (shown !== undefined && shown !== null) return `<td${numeric ? ' class="ui-num"' : ''}>${esc(shown)}</td>`
+  if (v === null || v === undefined || v === '') return `<td class="ui-num rr-blank">Not stated</td>`
+  return `<td${numeric ? ' class="ui-num"' : ''}>${finite(v) ? figure(v) : esc(v)}</td>`
+}
+function annualTable(t: RecordRow): string {
+  const rows = records(t.rows)
+  if (!rows.length) return text('This table is empty as published.')
+  const kinds = new Set(rows.map(x => x.kind))
+  const rowRef = rows.some(x => x.source_row != null)
+  const ref = (x: RecordRow) => rowRef ? `<td class="ui-num">${x.source_row == null ? '' : esc(x.source_row)}${x.source_column != null ? `, col ${esc(x.source_column)}` : ''}</td>` : ''
+  const refHead = rowRef ? '<th scope="col" class="ui-num">Data file row</th>' : ''
+  let head = '', body = ''
+  if (kinds.has('kmp') || kinds.has('kmp_total') || kinds.has('kmp_other')) {
+    head = `<tr><th scope="col">Name</th><th scope="col">Position</th>${PAY.map(k => `<th scope="col" class="ui-num">${human(k)}</th>`).join('')}${refHead}</tr>`
+    body = rows.map(x => {
+      const checks = Array.isArray(x.checks) ? x.checks.map(k => CHECKS[k] || human(k)) : []
+      const name = esc(object(x.as_published).name ?? x.name) + (x.name_as_published && x.name_as_published !== x.name ? `<span class="rr-cell-note">As published: ${esc(x.name_as_published)}</span>` : '')
+      return `<tr${x.kind !== 'kmp' ? ' class="rr-row-total"' : ''}><th scope="row">${name}${checks.map(c => `<span class="rr-cell-note">${esc(c)}</span>`).join('')}</th>${cell(x, 'position', false)}${PAY.map(k => cell(x, k)).join('')}${ref(x)}</tr>`
+    }).join('')
+  } else if (kinds.has('senior_executive_band') || kinds.has('highly_paid_band')) {
+    head = `<tr><th scope="col">Pay band</th><th scope="col" class="ui-num">People</th>${PAY.map(k => `<th scope="col" class="ui-num">Average ${human(k).toLowerCase()}</th>`).join('')}${refHead}</tr>`
+    body = rows.map(x => `<tr><th scope="row">${esc(x.band)}</th>${cell(x, 'count')}${PAY.map(k => cell({ ...object(x.averages), as_published: object(object(x.as_published).averages) }, k)).join('')}${ref(x)}</tr>`).join('')
+  } else {
+    const amount = rows.some(x => x.expenditure_thousands != null) ? 'expenditure_thousands' : 'expenditure_dollars'
+    head = `<tr><th scope="col">Organisation</th><th scope="col" class="ui-num">Expenditure${t.unit ? `<span class="rr-cell-note">${esc(t.unit)}</span>` : ''}</th>${refHead}</tr>`
+    body = rows.map(x => `<tr><th scope="row">${esc(x.organisation)}${x.organisation_as_published && x.organisation_as_published !== x.organisation ? `<span class="rr-cell-note">As published: ${esc(x.organisation_as_published)}</span>` : ''}${x.abn ? `<span class="rr-cell-note">ABN ${esc(x.abn)}</span>` : ''}</th>${x.expenditure_as_published != null ? `<td class="ui-num">${esc(x.expenditure_as_published)}</td>` : cell(x, amount)}${ref(x)}</tr>`).join('')
+  }
+  return `<div class="rr-table-scroll" role="region" aria-label="${esc(t.title)}" tabindex="0"><table class="ui-table rr-table"><thead>${head}</thead><tbody>${body}</tbody></table></div>`
+}
+function annual(r: ReportDetail, parts: Part[]): Stat[] {
+  const h = object(r.headline), stats: Stat[] = []
+  // Each link names its table, so a list of links still says where each one goes.
+  const tableLink = (v: RecordRow, what: string) => v.codename ? `<p class="rr-cite-line">${link(`https://previewapi.transparency.gov.au/delivery/items?system.codename=${encodeURIComponent(String(v.codename))}&depth=1`, `${what} table on the Transparency Portal (JSON)`, 'rr-cite')}</p>` : ''
+  const thousands = (n: unknown) => finite(n) ? `${dollars(n * 1000)}` : ''
+  const blocks: string[] = []
+  const inc = object(h.income_statement)
+  if (Object.keys(inc).length) {
+    const unit = String(inc.unit || '')
+    const k = (n: unknown) => !finite(n) ? '' : unit === "$'000" ? `${esc(thousands(n))} <span class="rr-as-published">(${figure(n)} in $'000)</span>` : `${figure(n)} <span class="rr-as-published">(${esc(unit || 'unit not stated')})</span>`
+    if (finite(inc.total_expenses)) stats.push({ label: 'Total expenses', value: esc(unit === "$'000" ? thousands(inc.total_expenses) : figure(inc.total_expenses)) })
+    blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">Income statement extract</h3>${kv([
+      ['Total expenses', k(inc.total_expenses)], ['Employee benefits', k(inc.employee_benefits)], ['Suppliers', k(inc.suppliers)],
+      ['Revenue from government', k(inc.revenue_from_government)], ['Own-source income', k(inc.own_source_income)]])}` +
+      (inc.unit_basis ? `<p class="rr-figure-note">Unit: ${esc(inc.unit_basis)}.</p>` : '') + `${tableLink(inc, 'Income statement')}</div>`)
+  }
+  const staff = [['Ongoing staff', object(h.ongoing_staff)], ['Non-ongoing staff', object(h.non_ongoing_staff)]] as const
+  if (staff.some(([, v]) => finite(v.headcount))) {
+    for (const [label, v] of staff) if (finite(v.headcount)) stats.push({ label, value: figure(v.headcount) })
+    blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">Staff</h3>${kv(staff.filter(([, v]) => finite(v.headcount)).map(([label, v]) => [label, `${figure(v.headcount as number)} people${tableLink(v, label)}`]))}</div>`)
+  }
+  for (const [key, label] of [['consultancy', 'Consultancy contracts'], ['non_consultancy', 'Non-consultancy contracts']] as const) {
+    const v = object(h[key])
+    if (!Object.keys(v).length) continue
+    if (finite(v.expenditure_thousands)) stats.push({ label: `${label}`, value: esc(thousands(v.expenditure_thousands)), note: finite(v.contracts) ? esc(plural(v.contracts, 'contract')) : '' })
+    blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">${label}</h3>${kv([
+      ['Expenditure', finite(v.expenditure_thousands) ? `${esc(thousands(v.expenditure_thousands))} <span class="rr-as-published">(${figure(v.expenditure_thousands)} in $'000)</span>` : ''],
+      ['Contracts', finite(v.contracts) ? figure(v.contracts) : ''], ['New contracts', finite(v.new_contracts) ? figure(v.new_contracts) : ''], ['Ongoing contracts', finite(v.ongoing_contracts) ? figure(v.ongoing_contracts) : '']])}${tableLink(v, label)}</div>`)
+  }
+  if (blocks.length) parts.push({ id: 'figures', title: 'Published headline figures', html: blocks.join('') })
+  const tables = r.tables
+  parts.push({ id: 'tables', title: 'Published disclosure tables', count: tables.length || undefined, html: tables.length ? tables.map(t => {
+    const rows = records(t.rows)
+    const meta = [plural(rows.length, 'row'), t.unit ? `Unit: ${t.unit}` : ''].filter(Boolean).join(' · ')
+    return `<details class="ui-disclosure rr-table-block"${rows.length <= 8 ? ' open' : ''}><summary><span>${esc(t.title)}<span class="rr-summary-meta">${esc(meta)}</span></span></summary><div class="ui-disclosure-body">` +
+      `<p class="rr-cite-line rr-table-source">${t.source_file ? link(t.source_url, `Data file: ${t.source_file}`, 'rr-cite')
+        : link(t.source_url, 'Source table on the Transparency Portal', 'rr-cite').replace('</a>', `<span class="visually-hidden">: ${esc(t.title)}</span></a>`)}` +
+      `${t.licence ? `<span class="rr-licence"> · Licence ${esc(LICENCE[String(t.licence)] || t.licence)}</span>` : ''}</p>` +
+      kv([['Entity as published', t.entity_as_published && t.entity_as_published !== r.body ? esc(t.entity_as_published) : ''], ['Data file page', t.source_page ? link(t.source_page, host(String(t.source_page))) : '']]) +
+      annualTable(t) + `</div></details>`
+  }).join('') : text('No disclosure tables are loaded for this body and year.') })
+  return stats
+}
+
+// ---- agency reports (state and territory documents): figures quoted with their page
+// OPAX's own record states, said in words (these are OPAX's labels, not the report's).
+// Edition words as the agency report tool (src/tools/agency-reports.ts) says them; this
+// module stays free of runtime imports so the tests can load it directly.
+const EDITION: Record<string, string> = { current: 'current edition', current_corrected: 'current edition, corrected copy', prior_edition: 'earlier edition (latest verified)', statutory_companion: 'statutory companion document', statutory_return: 'statutory return' }
+const READING: Record<string, string> = { read: 'Read by OPAX', not_read: 'Not read by OPAX', not_read_no_text: 'Not read: the file is a scan without a text layer' }
+const FAMILIES: [string, string, string[]][] = [
+  ['finances', 'Finances', ['total_income', 'total_expenses', 'employee_expenses', 'net_result']],
+  ['staff', 'Staff', ['staff_headcount', 'staff_fte']],
+  ['executives', 'Executives and remuneration', ['head_remuneration', 'named_remuneration', 'executive_count', 'executive_band', 'executive_remuneration_total', 'executive_average_remuneration']],
+  ['consultancies', 'Consultancies', ['consultancy_total', 'consultancy']],
+  ['activity', 'Complaints and investigations', ['matters_received', 'investigations_commenced', 'investigations_finalised', 'referrals_to_prosecution', 'recommendations_made', 'public_hearings']],
+]
+const UNIT: Record<string, (v: string) => string> = {
+  millions_of_dollars: v => `${/^\$/.test(v) ? v : '$' + v} million`, thousands_of_dollars: v => `${/^\$/.test(v) ? v : '$' + v} thousand`,
+  dollars: v => /^\$/.test(v) || /\$/.test(v) ? v : '$' + v, percent: v => /%$/.test(v) ? v : v + '%', fte: v => `${v} FTE`, people: v => `${v} people`, days: v => `${v} days`, count: v => v,
+}
+const factValue = (f: RecordRow) => { const v = String(f.value_as_published ?? (finite(f.value) ? figure(f.value) : '')); return (UNIT[String(f.unit)] || (x => `${x} ${human(f.unit).toLowerCase()}`))(v) }
+function factRow(f: RecordRow, doc: string): string {
+  const title = f.counterparty || f.name || f.label
+  const meta = [f.position, f.purpose, f.column && f.column !== f.period ? `Column: ${f.column}` : '', f.period, f.band && f.band !== f.label ? `Band: ${f.band}` : ''].filter(Boolean).map(esc)
+  return `<li class="rr-fact"><div class="rr-fact-head"><p class="rr-fact-label">${esc(title)}</p><p class="rr-fact-value">${esc(factValue(f))}</p></div>` +
+    (title !== f.label ? `<p class="rr-fact-meta">${esc(f.label)}</p>` : '') + (meta.length ? `<p class="rr-fact-meta">${meta.join(' · ')}</p>` : '') +
+    (f.note ? text(f.note, 'rr-fact-meta') : '') +
+    `<p class="rr-fact-quote"><span class="rr-quote-label">Printed as</span> <q>${esc(f.quote)}</q></p>${citeLine({ url: f.source_url, document: doc, page: f.page }, doc)}</li>`
+}
+function agency(r: ReportDetail, parts: Part[], mainDocument: string): Stat[] {
+  const facts = r.facts, used = new Set<RecordRow>(), stats: Stat[] = []
+  for (const metric of ['total_expenses', 'total_income', 'staff_headcount', 'staff_fte']) {
+    const f = facts.find(x => x.metric === metric)
+    if (!f) continue
+    const scale = f.unit === 'millions_of_dollars' ? 1e6 : f.unit === 'thousands_of_dollars' ? 1e3 : 0
+    const readable = scale && finite(f.value) ? dollars(f.value * scale) : factValue(f)
+    stats.push({ label: String(f.label), value: esc(readable), note: (readable !== factValue(f) ? `Printed as ${esc(factValue(f))} · ` : '') + citeLink({ url: f.source_url, document: mainDocument, page: f.page }, mainDocument) })
+  }
+  for (const [id, title, metrics] of FAMILIES) {
+    const rows = facts.filter(f => metrics.includes(String(f.metric)))
+    rows.forEach(f => used.add(f))
+    if (rows.length) parts.push({ id, title, count: rows.length, html: `<ul class="rr-facts" role="list">${rows.map(f => factRow(f, mainDocument)).join('')}</ul>` })
+  }
+  const rest = facts.filter(f => !used.has(f))
+  if (rest.length) parts.push({ id: 'other-figures', title: 'Other figures', count: rest.length, html: `<ul class="rr-facts" role="list">${rest.map(f => factRow(f, mainDocument)).join('')}</ul>` })
+  // Same words as the agency report tool uses for an unread file.
+  const unread = r.record.status === 'not_read_no_text' ? 'The file is a scan without a text layer, so OPAX has not read figures from it. ' : ''
+  if (!facts.length) parts.push({ id: 'figures', title: 'Figures as published', html: text(`${unread}No figures are reproduced in this record. This does not establish that the report contains none.`) })
+  const c = r.record
+  const about = kv([['Edition', esc(human(EDITION[String(c.edition)] || c.edition))], ['Edition note', esc(c.edition_note)], ['Reading status', esc(READING[String(c.status)] || human(c.status))], ['Pages', finite(c.pages) ? figure(c.pages) : ''],
+    ['Figures not found in the report', Array.isArray(c.not_found) && c.not_found.length ? esc(c.not_found.map(human).join('; ')) : ''],
+    ['Rights', esc(c.rights_note)], ['Attribution', esc(c.attribution)], ['File note', esc(c.file_note)]])
+  if (about) parts.push({ id: 'document', title: 'About the document', html: about })
+  return stats
+}
+
+// ---- the page
+export function renderReport(r: ReportDetail) {
+  const c = r.record, type = r.report_type, parts: Part[] = []
+  const mainDocument = r.citation?.document || ''
+  const jurisdiction = String(r.publisher.jurisdiction_name || JURISDICTION[r.jurisdiction] || r.jurisdiction || '')
+  let stats: Stat[] = [], main: SourceDoc | null = null, court: RecordRow[] = []
+  const citeHref = url(r.citation?.url)
+  const more: { href: unknown; label: string }[] = []
+
+  // The one meta line: what kind of record, who published it, when.
+  const kindLabel = type === 'royal_commission' ? human(c.inquiry_type || 'royal_commission')
+    : type === 'integrity_report' ? String(c.type_as_published || human(c.report_type) || 'Integrity report')
+    : type === 'annual_report' ? `Annual report${r.year ? ' ' + r.year : ''}`
+    : `${human(c.kind || 'report')}${r.year ? ' ' + r.year : ''}`
+  const who = type === 'integrity_report' && r.publisher.short && r.publisher.short !== r.body ? `${r.body} (${r.publisher.short})` : r.body
+  // A title that already names the body and kind (most annual and agency reports) is not
+  // repeated: the line says what the title does not.
+  const titled = (type === 'annual_report' || type === 'agency_report') && !!r.body && r.title.toLowerCase().includes(String(r.body).toLowerCase())
+  const named = titled || same(r.body, r.title)
+  const metaBits = [titled && r.publisher.type_as_published ? esc(r.publisher.type_as_published) : esc(kindLabel), r.body && !named ? esc(who) : '', esc(jurisdiction),
+    r.date ? dated(r.date_basis, r.date) : 'No published or tabled day is recorded'].filter(Boolean)
+
+  if (type === 'royal_commission') {
+    const reports = records(c.reports), final = reports.find(d => d.kind === 'final_report') || reports[0]
+    const file = records(final?.files).find(f => f.url === citeHref) || records(final?.files)[0]
+    if (citeHref) main = { href: citeHref, label: mainDocument || 'Report', pages: file?.pages, size: file?.bytes }
+    for (const d of reports) if (url(d.page_url) && d.page_url !== citeHref) more.push({ href: d.page_url, label: String(d.title || human(d.kind)) })
+    if (c.site) more.push({ href: c.site, label: `Inquiry website (${host(String(c.site))})` })
+    const recs = records(c.recommendations)
+    if (recs.length) stats.push({ label: c.recommendations_status === 'partial' ? 'Recommendations reproduced' : 'Recommendations', value: figure(recs.length) })
+    // The meta line already carries the report's date; the glance adds what it does not.
+    if (c.final_report_date && c.final_report_date !== r.date) stats.push({ label: 'Final report', value: time(c.final_report_date) })
+    else if (!c.final_report_date && c.interim_report_date && c.interim_report_date !== r.date) stats.push({ label: 'Interim report', value: time(c.interim_report_date) })
+    const est = object(c.established)
+    if (est.date) stats.push({ label: 'Established', value: time(est.date) })
+    if (finite(file?.pages)) stats.push({ label: 'Report length', value: esc(plural(file!.pages as number, 'page')) })
+    court = records(c.court_context)
+    parts.push(items('recommendations', r, mainDocument))
+    const commission = kv([
+      ['Type of inquiry', esc(human(c.inquiry_type))],
+      ['Established', est.quote ? `${esc(est.quote)} ${citeLink(est.cite, mainDocument)}` : est.date ? time(est.date) : ''],
+      ...records(c.commissioners).map(p => [human(p.role) || 'Commissioner', `${esc(p.quote || p.name)} ${citeLink(p.cite, mainDocument)}`] as [string, string]),
+      ['Interim report', c.interim_report_date ? time(c.interim_report_date) : ''],
+      ['Final report', c.final_report_date ? time(c.final_report_date) : ''],
+      ['Status as published', esc(c.status_as_published)],
+    ])
+    if (commission) parts.push({ id: 'commission', title: 'About the inquiry', html: commission })
+    const docs = [...reports, ...records(c.responses)]
+    if (docs.length) parts.push({ id: 'documents', title: 'Official documents', count: docs.length, html: documentList(docs, mainDocument) })
+    const heard = transcriptsPart(r, mainDocument)
+    if (heard) parts.push(heard)
+    const status = object(c.status_source)
+    if (status.url) parts.push({ id: 'status-source', title: 'Where the status comes from', html: `<p class="rr-record-text">${link(status.url, status.name || 'Government status pages')}${finite(status.pages) ? ` (${esc(plural(status.pages, 'page'))})` : ''}</p>` })
+  } else if (type === 'integrity_report') {
+    const docs = records(c.documents)
+    const doc = docs.find(d => d.url === citeHref) || docs.find(d => d.role === 'report' || d.role === 'tabled_paper')
+    if (citeHref) main = { href: citeHref, label: mainDocument || 'Report', pages: doc?.pages, size: doc?.bytes }
+    more.push({ href: c.page_url, label: isPdf(String(c.page_url)) ? 'Report PDF' : `Report page on ${host(String(c.page_url))}` }, { href: c.pdf_url, label: 'Report PDF' })
+    const findings = records(c.findings), recs = records(c.recommendations), responses = records(c.responses)
+    if (findings.length) stats.push({ label: findingsTitle(findings), value: figure(findings.length) })
+    if (recs.length) stats.push({ label: 'Recommendations', value: figure(recs.length) })
+    if (responses.length) stats.push({ label: 'Published responses', value: figure(responses.length) })
+    if (finite(doc?.pages)) stats.push({ label: 'Report length', value: esc(plural(doc!.pages as number, 'page')) })
+    const unread = (k: string) => !records(c[k]).length && c[k + '_status'] !== 'stated_none'
+    if (unread('findings') && unread('recommendations')) {
+      // Nothing extracted: one plain statement, not two empty sections.
+      const allegation = r.caveats.find(x => /^Allegations are not findings/.test(x))
+      parts.push({ id: 'findings', title: 'Findings and recommendations', html: (allegation ? `<p class="ui-section-note rr-caveat-inline">${esc(allegation)}</p>` : '') +
+        text('No findings or recommendations are reproduced in this record. This does not establish that the report contains none.') +
+        (citeHref ? `<p class="rr-record-text">${link(citeHref, `Read the report${finite(doc?.pages) ? ` (${isPdf(citeHref) ? 'PDF, ' : ''}${plural(doc!.pages as number, 'page')})` : ''}`)}</p>` : '') })
+    } else parts.push(items('findings', r, mainDocument), items('recommendations', r, mainDocument))
+    const responseNote = c.responses_status === 'none_found' ? 'No published response was found.' : c.responses_status === 'not_checked' ? 'Responses to this report have not been checked.' : ''
+    if (responses.length || responseNote) parts.push({ id: 'responses', title: 'Published responses', count: responses.length || undefined, html: responses.length ? `<ul class="rr-docs" role="list">${responses.map(x => documentRow(x, mainDocument, kv([['Publisher', esc(x.publisher)], ['Tabled in', esc(x.tabled_in)], ['Recommendation', esc(x.recommendation)], ['Status as published', esc(x.status_as_published)]]))).join('')}</ul>` : text(responseNote) })
+    // A lone document that is the source card's own, with nothing more to say, is not listed twice.
+    const lone = docs.length === 1 && docs[0].url === citeHref && !docs[0].acquisition && !docs[0].note && !docs[0].rights
+    if (docs.length && !lone) parts.push({ id: 'documents', title: 'Official documents', count: docs.length, html: documentList(docs, mainDocument) })
+    const heard = transcriptsPart(r, mainDocument)
+    if (heard) parts.push(heard)
+    const about = kv([['Period', esc(c.period)], ['How OPAX got it', esc(c.acquisition)], ['Rights', esc(typeof c.rights === 'object' ? object(c.rights).statement : c.rights)]])
+    if (about) parts.push({ id: 'about', title: 'About the report', html: about })
+  } else if (type === 'annual_report') {
+    // The Portal's delivery API is the citable source the record holds; say plainly that it is data.
+    if (citeHref) main = { href: citeHref, label: 'Transparency Portal data for this report (JSON)' }
+    more.push({ href: c.url, label: 'Annual report' })
+    stats = annual(r, parts)
+  } else {
+    if (citeHref) main = { href: url(c.source_url) || citeHref, label: mainDocument || 'Report', pages: c.pages, size: c.bytes }
+    more.push({ href: c.catalogue_url, label: `Tabled document record on ${host(String(c.catalogue_url))}` }, { href: c.corrigendum_url, label: 'Corrigendum' }, { href: c.reuse_terms_url, label: 'Reuse terms' })
+    stats = agency(r, parts, mainDocument)
+  }
+
+  const recordNotes = Array.isArray(c.notes) && c.notes.length ? notes(c.notes) : ''
+  if (recordNotes) parts.push({ id: 'notes', title: 'Notes on this record', html: recordNotes })
+  const gaps = [...(Array.isArray(c.gaps) ? c.gaps : []), ...(Array.isArray(r.publisher.gaps) ? r.publisher.gaps : [])]
+  const refs = records(c.reference_pages)
+  if (gaps.length || refs.length) parts.push({ id: 'coverage', title: 'Coverage', html: (Array.isArray(c.gaps) && c.gaps.length ? `<h3 class="ui-subsection-title">This record</h3>${notes(c.gaps)}` : '') +
+    (Array.isArray(r.publisher.gaps) && r.publisher.gaps.length ? `<h3 class="ui-subsection-title">This publisher</h3>${notes(r.publisher.gaps)}` : '') +
+    (refs.length ? `<h3 class="ui-subsection-title">Official reference pages</h3><ul class="rr-notes" role="list">${refs.map(x => `<li>${link(x.url, x.title)}</li>`).join('')}</ul>` : '') })
+
+  const head = `<section id="prerender" class="wrap rr-head"><div class="ui-page-head"><h1>${esc(r.title)}</h1><p class="ui-page-meta">${metaBits.join(' · ')}</p></div></section>`
+  const caveats = r.caveats.length ? `<aside class="rr-caveats" aria-labelledby="rr-caveats-title"><h2 id="rr-caveats-title" class="rr-caveats-title">How to read this record</h2>${notes(r.caveats)}</aside>` : ''
+  const toc = parts.length > 1 ? `<nav class="rr-toc" aria-labelledby="rr-toc-title"><p class="ui-toc-head" id="rr-toc-title">On this page</p><ul class="ui-toc-list" role="list">${parts.map(p => `<li><a href="#${p.id}"><span>${esc(p.title)}</span>${p.count != null ? `<span class="rr-toc-count">${figure(p.count)}</span>` : ''}</a></li>`).join('')}</ul></nav>` : ''
+  const footer = `<p class="rr-footer">Record snapshot: ${time(r.snapshot_at)} · <a href="/api/report/${esc(r.slug)}">This record as JSON</a></p>`
+  const courtNote = court.length ? `<section class="rr-court" aria-labelledby="rr-court-title"><h2 id="rr-court-title" class="rr-court-title">A court has ruled on parts of this report</h2>${court.map(x => `${text(x.text)}${citeLine(x.cite)}`).join('')}</section>` : ''
+  return head + `<div class="wrap rr-record"><div class="rr-layout"><div class="rr-summary">${glance(stats)}${courtNote}${sourceCard(main, more)}${caveats}</div>${toc}<div class="rr-body">${parts.map(sectionHTML).join('')}${footer}</div></div></div>`
 }

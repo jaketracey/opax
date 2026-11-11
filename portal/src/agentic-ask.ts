@@ -40,6 +40,7 @@ export const LOOP_ANSWER_TARGET_MS = ASK_ANSWER_TARGET_MS
 export type Shape = 'ranking' | 'trend' | 'comparison' | 'money'
 export { inferPeriod, type Period } from './ask-period'
 import { inferPeriod, type Period } from './ask-period'
+import { transcriptListingOnly } from './transcript-answer'
 // ---------------------------------------------------------------- route classifier
 /**
  * Route-only rollout: only these shapes take the agentic path; every other
@@ -613,6 +614,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const sheet = writingFacts(recordAnswer, facts, run.notes)
     // A decline or an intentionally uncited 16 Oct point has no tool block to write from.
     if (!sheet.length) return run
+    // A hearing transcript listing is answered in the tool's own lines (transcript-answer.ts).
+    if (transcriptListingOnly(sheet)) return run
     await progress('status', {phase:'writing'})
     const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))

@@ -125,6 +125,9 @@ export function cleanAnswerShape(payload:Record<string,unknown>):Record<string,u
   const cleaned=rewriteAnswerPayload(payload,replace=>{
     for(const part of fragments.reverse())replace(new RegExp(`(?<=^[\\s\\S]{${part.at}})[\\s\\S]{${part.text.length}}`,'g'),'')
     replace(/^(?:[ \t]*(?:\[\d+\]|[.!?,;:—–-]))+[ \t]*(?:\n|$)/gm,'')
+    // A list marker with nothing after it, and spaces left at a line's end, are not answer text.
+    replace(/^[ \t]*(?:[-*+•]|\d+[.)])[ \t]*(?:\[\d+\][ \t]*)*(?:\n|$)/gm,'')
+    replace(/[ \t]+$/gm,'')
     replace(/^(?:What the records? say(?:s)?|Answer|Overview|Summary):[ \t]*\n/gi,'')
     replace(/^(?:Other large donors include|Other donors include|Smaller amounts included)\s+/gi,'')
     replace(/^Further down[, ]+/gi,'')

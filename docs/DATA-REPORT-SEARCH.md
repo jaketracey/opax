@@ -65,6 +65,43 @@ lists do not establish that a report contains no findings or recommendations.
 Missing or malformed records return 404, unavailable assets return 503, and
 HEAD returns the GET headers without a body. No authentication is needed.
 
+### Hearing transcripts
+
+A royal commission's `record.transcripts` lists its hearing transcripts. An
+integrity report whose case has public hearing transcripts carries them in
+`record.transcripts.items` (added 12 November 2026; the summary fields `label`,
+`case`, `count`, `first_date`, `last_date` and `file` are unchanged).
+
+When a report has hearing transcripts, `GET /api/report/<slug>` also carries a
+top-level `transcripts` envelope with the first 20, and
+`GET /api/report/<slug>/transcripts?offset=0&limit=20` pages the rest. Both use
+the same shape, newest first with ties broken by id, so an offset names the same
+row on every call:
+
+```ts
+{
+  label: "Hearing transcript: evidence, not findings",
+  count: number, first_date: string | null, last_date: string | null,
+  offset: number, next_offset: number | null,
+  items: {
+    id: string, hearing_date: string, title?: string, case?: string,
+    pages?: number, url: string, page_url?: string,
+    publisher_redacted: boolean, notes: string[], orders: string[]
+  }[]
+}
+```
+
+`url` is the publisher's PDF and `page_url` the publisher's page (left out when
+they are the same). `notes` carries the publisher's notes and any publication
+restriction recorded by the commission or in the transcript; `orders` holds links
+to the publisher's order documents. `next_offset` is `offset` plus the items
+returned, or null at the end. `limit` is 1 to 100 (default 20); a bad `offset` or
+`limit` returns 400, an offset past the end returns no items with
+`next_offset: null`, and a report with no transcripts has no top-level field and
+returns `count: 0` from the paged route. The page lists the same rows in a "Hearing transcripts:
+evidence, not findings" section, one line per transcript in month folds (newest
+month open), and leaves them out of "Official documents".
+
 ## Local measurements
 
 Snapshot tested: 2,250 report records: 18 commissions, 738 integrity reports,

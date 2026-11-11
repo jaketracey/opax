@@ -31,7 +31,7 @@ export * from './types'
 import { validToolIdentifier } from './identifiers'
 export * from './identifiers'
 
-export const TOOL_REGISTRY_VERSION = 'structured-tools-16-commission-transcripts'
+export const TOOL_REGISTRY_VERSION = 'structured-tools-18-transcript-turns'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
 export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions, agencyReports])
 const names = new Set<string>()

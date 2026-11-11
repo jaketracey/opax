@@ -2,6 +2,7 @@
 import { clip, fold, siteUrl } from './record-common'
 import { object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
+import { dayWords, pageHits, spanWords, textIndex, textMatches, type TextHits } from './transcript-text'
 
 const VIEWS = ['list', 'profile', 'recommendations', 'transcripts'] as const
 const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
@@ -42,7 +43,7 @@ async function full(env: ToolEnv, row: RecordRow): Promise<RecordRow> {
 }
 
 const people = (c: RecordRow) => records(c.commissioners).map(x => `${x.name} (${x.role})`).join('; ')
-const dated = (label: string, v: unknown) => v ? `${label} ${v}` : null
+const dated = (label: string, v: unknown) => v ? `${label} ${dayWords(v)}` : null
 
 function summaryOut(c: RecordRow): RecordRow {
   return { id: c.id, name: c.name, inquiry_type: TYPES[String(c.inquiry_type)] ?? c.inquiry_type, jurisdiction: c.jurisdiction_name, established: c.established ?? null, commissioners: c.commissioners,
@@ -71,17 +72,27 @@ function transcriptSummary(c: RecordRow): RecordRow {
     ...(all.length ? { follow_up: { view: 'transcripts', commission: c.id } } : {}) }
 }
 
-function transcriptOut(c: RecordRow, d: RecordRow): RecordRow {
+function transcriptOut(env: ToolEnv, c: RecordRow, d: RecordRow): RecordRow {
   const file = object(records(d.files)[0])
   return { commission: c.name, commission_id: c.id, label: TRANSCRIPT_LABEL, key: d.key, title: d.title, date: d.date ?? null, date_basis: BASIS[String(d.date_basis)] ?? d.date_basis ?? null,
     hearing: d.hearing ?? null, page_url: sourceUrl(d.page_url), pdf_url: sourceUrl(file.url), pages: file.pages ?? null, rights: d.rights ?? null,
-    publisher_redacted: /redact/i.test(`${file.url ?? ''} ${d.title ?? ''}`), ...(orderNotes(c).length ? { order_notes: orderNotes(c) } : {}) }
+    publisher_redacted: /redact/i.test(`${file.url ?? ''} ${d.title ?? ''}`), ...(orderNotes(c).length ? { order_notes: orderNotes(c) } : {}),
+    ...(d.full_text ? { text_url: siteUrl(env, String(object(d.full_text).url)), quote_policy: object(d.full_text).quote_policy } : {}) }
 }
 /** The commission's own notes about non-publication or suppression orders travel with each transcript. */
 const orderNotes = (c: RecordRow) => (Array.isArray(c.notes) ? c.notes as unknown[] : []).map(String).filter(n => /non-publication|suppression|publication order/i.test(n)).map(n => clip(n, 300))
 
 function transcriptCite(t: RecordRow): ToolCitation {
-  return { kind: 'record', url: String(t.pdf_url ?? t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${t.date})` : ''}${t.pages ? `, ${t.pages} pages` : ''}. ${TRANSCRIPT_LABEL}.`, 400) }
+  const text = t.text_matches as TextHits | undefined
+  if (text?.hits.length) {
+    const where = (h: TextHits['hits'][number]) => `transcript page ${h.transcript_page ?? '?'} (PDF page ${h.pdf_page})`
+    // A speaker's label leaves the quoted words; the hearing turn names who spoke.
+    const body = text.quote_policy === 'quote'
+      ? text.hits.map(h => `${where(h)}, hearing turn${h.speaker ? ` by ${h.speaker}` : ''}: "${h.excerpt}"`).join(' ')
+      : `the words appear on ${text.hits.map(where).join(' and ')}. Not quoted: the publisher's transcript records a non-publication order, a direction not to publish or a pseudonymous witness; read the publisher's edition.`
+    return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}, ${body}`, 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.` }
+  }
+  return { kind: 'record', url: String(t.pdf_url ?? t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}${t.pages ? `, ${t.pages} pages` : ''}. ${TRANSCRIPT_LABEL}.`, 400) }
 }
 
 function recOut(c: RecordRow, r: RecordRow, reports: Map<string, RecordRow>): RecordRow {
@@ -102,12 +113,12 @@ function recCite(r: RecordRow): ToolCitation {
 
 export const tool: ToolDefinition = {
   name: 'royal_commissions',
-  description: 'Royal commissions and comparable public inquiries in every jurisdiction: establishment date, commissioners, report dates and links, numbered recommendations in the commission\'s own words with the report page, official implementation status where a government publishes one (Victoria\'s Family Violence tracker), government responses, hearing transcripts (listed documents; evidence, not findings), and court rulings on parts of a report. view=list lists commissions (jurisdiction or name words); view=profile gives one commission\'s reports, responses, transcript count, court context and facts; view=transcripts pages one commission\'s transcripts newest first (words match title or date, e.g. "2023-03"); view=recommendations searches recommendation text (words, number, status, report) in one commission or all. Status is unknown unless a government publishes it.',
+  description: 'Royal commissions and similar public inquiries in every jurisdiction: establishment date, commissioners, report dates and links, numbered recommendations in the commission\'s own words with the report page, official implementation status where a government publishes one (Victoria\'s Family Violence tracker), government responses, hearing transcripts (evidence, not findings), and court rulings on parts of a report. view=list lists commissions (jurisdiction or name words); view=profile gives one commission\'s reports, responses, transcript count, court context and facts; view=transcripts pages one commission\'s transcripts newest first (words match title, date or text for Robodebt, Antisemitism, NSW Healthcare); view=recommendations searches recommendation text (words, number, status, report) in one commission or all. Status is unknown unless a government publishes it.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
-    commission: { type: 'string', minLength: 2, maxLength: 160, description: 'Commission id from a row, or words in its name, e.g. "family violence", "disability", "banking".' },
+    commission: { type: 'string', minLength: 2, maxLength: 160, description: 'Commission id from a row or words in its name, e.g. "family violence", "disability".' },
     jurisdiction: { type: 'string', enum: [...Object.keys(HOUSE_JURISDICTIONS), ...JURISDICTIONS] },
-    words: { type: 'string', minLength: 2, maxLength: 160, description: 'Words that must all appear in the recommendation text.' },
+    words: { type: 'string', minLength: 2, maxLength: 160, description: 'Words that must all appear (recommendation or transcript).' },
     number: { type: 'string', pattern: '^\\d{1,3}(?:\\.\\d{1,3})?$', description: 'Recommendation number as the report numbers it, e.g. "12" or "4.1".' },
     report: { type: 'string', pattern: '^[a-z0-9-]{2,40}$', description: 'Report key from a profile row (for commissions with several reports).' },
     status: { type: 'string', minLength: 2, maxLength: 60, description: 'Words in the published status, e.g. "Implemented".' },
@@ -152,22 +163,30 @@ export const tool: ToolDefinition = {
       if (est) citations.push({ kind: 'record', url: String(object(est.cite).url), text: clip(`${c.name}: "${est.quote}" (${object(est.cite).document}, page ${object(est.cite).page}).`, 600) })
       for (const x of records(c.court_context)) citations.push({ kind: 'record', url: String(object(x.cite).url), text: clip(`Court context for ${c.name}, as ${object(x.cite).document} states it: "${x.text}"`, 900) })
       if (records(c.commissioners).length) citations.push({ kind: 'record', url: String(object(records(c.commissioners)[0].cite).url), text: clip(`${c.name} commissioners as ${object(records(c.commissioners)[0].cite).document ?? 'the cited document'} names them: ${people(c)}.`, 600) })
-      for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${d.date})` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
+      for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${dayWords(d.date)})` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
       const span = transcriptSummary(c)
-      if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `${c.name}: ${span.count} hearing transcript${span.count === 1 ? '' : 's'} listed, dated ${span.first_date === span.last_date ? span.first_date : `${span.first_date} to ${span.last_date}`} (view=transcripts lists them). ${TRANSCRIPT_LABEL}.` })
+      if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `${c.name}: ${span.count} hearing transcript${span.count === 1 ? '' : 's'} listed, dated ${spanWords(span.first_date, span.last_date)} (view=transcripts lists them). ${TRANSCRIPT_LABEL}.` })
       return publishedResult([row], citations, { view: 'profile', total: 1, offset: 0, next_offset: null, snapshot, notes: [...several, NOTE] })
     }
 
     if (args.view === 'transcripts') {
       const c = await full(env, matched[0])
       const all = byDate(records(c.transcripts))
-      const hits = all.filter(d => (!args.words || wordsMatch(args.words, [d.title, d.hearing, d.date])))
-      const picked = hits.slice(offset, offset + limit).map(d => transcriptOut(c, d))
-      const span = transcriptSummary(c), range = span.first_date ? `, dated ${span.first_date === span.last_date ? span.first_date : `${span.first_date} to ${span.last_date}`}` : ''
+      const ix = args.words ? await textIndex(env).catch(() => null) : null
+      const found = ix && args.words ? await textMatches(env, ix, String(c.id), String(args.words)) : null
+      const hits = all.filter(d => (!args.words || wordsMatch(args.words, [d.title, d.hearing, d.date]) || !!found?.keys.has(String(d.key))))
+      const picked = await Promise.all(hits.slice(offset, offset + limit).map(async d => {
+        const row = transcriptOut(env, c, d)
+        const text = ix && found?.keys.has(String(d.key)) ? await pageHits(env, ix, String(d.key), found.terms) : null
+        return text ? { ...row, text_matches: text } : row
+      }))
+      const span = transcriptSummary(c), range = span.first_date ? `, dated ${spanWords(span.first_date, span.last_date)}` : ''
       const count = `${c.name}: ${all.length} hearing transcript${all.length === 1 ? '' : 's'} listed${range}${hits.length !== all.length ? `; ${hits.length} match` : ''} (OPAX projection, snapshot ${snapshot}). ${TRANSCRIPT_LABEL}.`
       return publishedResult(picked, [{ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: count }, ...picked.map(transcriptCite)],
         { view: 'transcripts', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot,
-          notes: [...several, NOTE, 'Transcripts are listed newest first with the publisher\'s page and PDF. What a witness or counsel says in a hearing is evidence or submission, not a finding of the commission.', ...(hits.length ? [] : ['No listed transcript matches. Try fewer words.'])] })
+          notes: [...several, NOTE, 'Transcripts are listed newest first with the publisher\'s page and PDF. What a witness or counsel says in a hearing is evidence or submission, not a finding of the commission.', ...(found ? [`Words are matched in the title, date and, for this commission, the transcript text (CC BY 4.0). Excerpts are the publisher's words; a transcript recording a non-publication order or a pseudonymous witness is pointed to by page, not quoted.`] : []),
+            ...(ix && args.words && !found && object(ix.commissions[String(c.id)]).name ? ['Those words are too common to search the transcript text; add a more specific word.'] : []),
+            ...(hits.length ? [] : ['No listed transcript matches. Try fewer words.'])] })
     }
 
     // recommendations
