@@ -1,5 +1,6 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
+import { StyleSheet } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { apiClient } from '../src/api/runtime';
 import MoneyScreen, { moneyMapLabel } from '../src/features/money/MoneyScreen';
@@ -7,7 +8,12 @@ import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
 import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
 import { decodeMoneyGraph } from '../src/features/money/data';
-import { buildModel } from '../src/features/money/map/model';
+import { buildModel, type MapNode } from '../src/features/money/map/model';
+import {
+  filtersFromParams,
+  moneyFocusRoute,
+} from '../src/features/money/records';
+import { partyRoute } from '../src/navigation/routes';
 import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
 import { IconButton, SegmentedPicker } from '../src/design/primitives';
 import { pinned } from './pinned';
@@ -175,6 +181,82 @@ test('a tap on a disc writes the focus to the route and the panel shows its reco
     ]),
   );
   act(() => r.unmount());
+});
+
+test.each([
+  ['party', 'party', undefined],
+  ['donor', 'donor', undefined],
+  ['grants hub', 'hub', 'grants'],
+  ['contracts hub', 'hub', 'contracts'],
+] as const)(
+  'the selected %s header opens its page from the collapsed panel',
+  async (_label, kind, flow) => {
+    const r = await render();
+    const node = stage().model.nodes.find(
+      (n: MapNode) =>
+        n.kind === kind && !n.withheld && (!flow || n.flow === flow),
+    )!;
+    await act(async () => stage().onFocus(node.id));
+    await act(async () =>
+      r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+    );
+    expect(r.root.findByType(MoneyMapPanel).props.expanded).toBe(false);
+    const link = r.root.findAll(
+      (n) =>
+        n.props.testID === 'money-map-focus-link' &&
+        typeof n.props.onPress === 'function',
+    )[0]!;
+    expect(link.props.accessibilityRole).toBe('link');
+    expect(link.props.accessibilityLabel).toContain(node.label);
+    const style = StyleSheet.flatten(
+      typeof link.props.style === 'function'
+        ? link.props.style({ pressed: false })
+        : link.props.style,
+    );
+    expect(style.minHeight).toBeGreaterThanOrEqual(44);
+    expect(style.minWidth).toBeGreaterThanOrEqual(44);
+    await act(async () => link.props.onPress());
+    expect(mockRouter.push).toHaveBeenCalledTimes(1);
+    expect(mockRouter.push).toHaveBeenCalledWith(
+      kind === 'party'
+        ? partyRoute(node.label)
+        : moneyFocusRoute(
+            node.id,
+            'federal',
+            filtersFromParams(graph, mockParams),
+            node.label,
+            'map',
+          ),
+    );
+    act(() => r.unmount());
+  },
+);
+
+test('a selected kind without a page keeps its name as plain text', async () => {
+  const r = await render();
+  await act(async () => stage().onFocus('party:Labor'));
+  await act(async () =>
+    r.update(withNavigationOptions(<MoneyScreen />, () => undefined)),
+  );
+  const props = r.root.findByType(MoneyMapPanel).props;
+  await act(async () => r.unmount());
+  let panel!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    panel = TestRenderer.create(
+      <MoneyMapPanel
+        {...props}
+        expanded
+        focus={{
+          ...props.focus!,
+          node: { ...props.focus!.node, kind: 'unknown' as MapNode['kind'] },
+        }}
+      />,
+    );
+  });
+  expect(byTestID(panel.root, 'money-map-focus-name')).toBeDefined();
+  expect(byTestID(panel.root, 'money-map-focus-link')).toBeUndefined();
+  expect(byTestID(panel.root, 'money-map-open-record')).toBeUndefined();
+  act(() => panel.unmount());
 });
 
 test('clearing the focus collapses the panel, so the next focus starts at the peek', async () => {

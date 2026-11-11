@@ -15,6 +15,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../../../design/accessibility';
+import { Icon } from '../../../design/icon';
 import {
   counted,
   formatMoney,
@@ -39,6 +40,8 @@ import {
   radii,
   rhythm,
 } from '../../../design/tokens';
+import { useRecordLink } from '../../../navigation/record-link';
+import { moneyMapEntityRoute } from '../record-routes';
 import { moneyYears } from '../records';
 import {
   clusterLabel,
@@ -161,6 +164,10 @@ export function MoneyMapPanel({
   onPeekHeight: (height: number) => void;
 }) {
   const reduced = useReduceMotion();
+  const entityRoute = focus
+    ? moneyMapEntityRoute(focus.node, focus.record)
+    : null;
+  const entityLink = useRecordLink(entityRoute ?? undefined);
   const [peek, setPeek] = useState(0);
   const height = useSharedValue(0);
   const target = expanded
@@ -214,6 +221,21 @@ export function MoneyMapPanel({
       </Text>
     </View>
   );
+  const entityTitle = focus ? (
+    <View style={styles.grow}>
+      <Text variant="footnote" wordSafe testID="money-map-focus-meta">
+        {focusMetaLine(focus.node)}
+      </Text>
+      <Text
+        variant="name"
+        tone={entityRoute ? 'navy' : 'ink'}
+        wordSafe
+        testID="money-map-focus-name"
+      >
+        {focus.node.label}
+      </Text>
+    </View>
+  ) : null;
   return (
     <Animated.View
       style={[styles.panel, style]}
@@ -247,18 +269,23 @@ export function MoneyMapPanel({
           {focus ? (
             <View style={styles.block}>
               <View style={styles.titleRow}>
-                <View style={styles.grow}>
-                  <Text
-                    variant="footnote"
-                    wordSafe
-                    testID="money-map-focus-meta"
+                {entityRoute ? (
+                  <Pressable
+                    accessibilityRole="link"
+                    accessibilityLabel={`${focusMetaLine(focus.node)}, ${focus.node.label}`}
+                    onPress={entityLink.open}
+                    style={({ pressed }) => [
+                      styles.entityLink,
+                      pressed && styles.pressed,
+                    ]}
+                    testID="money-map-focus-link"
                   >
-                    {focusMetaLine(focus.node)}
-                  </Text>
-                  <Text variant="name" wordSafe testID="money-map-focus-name">
-                    {focus.node.label}
-                  </Text>
-                </View>
+                    {entityTitle}
+                    <Icon name={symbols.chevron} size={16} />
+                  </Pressable>
+                ) : (
+                  entityTitle
+                )}
                 <IconButton
                   symbol={symbols.close}
                   accessibilityLabel="Clear the focus"
@@ -332,14 +359,16 @@ export function MoneyMapPanel({
         {expanded ? (
           focus ? (
             <View style={styles.block} testID="money-map-focus-flows">
-              <LinkRow
-                title="Open record"
-                detail={`${formatMoney(focus.node.amount)} with every source`}
-                symbol={symbols.money}
-                symbolInk="money"
-                href={focus.record}
-                testID="money-map-open-record"
-              />
+              {entityRoute ? (
+                <LinkRow
+                  title="Open record"
+                  detail={`${formatMoney(focus.node.amount)} with every source`}
+                  symbol={symbols.money}
+                  symbolInk="money"
+                  href={focus.record}
+                  testID="money-map-open-record"
+                />
+              ) : null}
               {focusFlowGroups(focus.node, focus.flows).map((group) => (
                 <View
                   key={group.key}
@@ -433,6 +462,15 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   grow: { flex: 1, gap: 2 },
+  entityLink: {
+    flex: 1,
+    minHeight: minimumTarget,
+    minWidth: minimumTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  pressed: { opacity: 0.6 },
   restRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
