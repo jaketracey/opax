@@ -36,7 +36,7 @@ import {
 } from 'expo-router/react-navigation';
 import { unnamedRecipient } from '../src/features/money-public/privacy';
 import { organisationHref } from '../src/features/money-public/routes';
-import { LinkRow, MoneyRow } from '../src/design/rows';
+import { LinkRow, MoneyRow, ValueRow } from '../src/design/rows';
 import { Screen as PageScreen } from '../src/design/layout';
 import {
   MoneyList,
@@ -49,6 +49,10 @@ import {
   decodeGrantIndex,
   decodeProgram,
 } from '../src/features/money-public/data';
+import {
+  agencyRoute,
+  grantProgramRoute,
+} from '../src/navigation/routes/public-money';
 import {
   formatCount,
   formatMoney,
@@ -144,6 +148,70 @@ const agencyId = 'a-7431f054588d4251c0b4';
 const connectionId = () =>
   (raw('/evidence/index.json').entities as { id: string }[])[0]!.id;
 const program = raw('/grants/federal/programs/go3141.json');
+
+test('a grant program fact opens that program using its decoded id', async () => {
+  const params = {
+    kind: 'grant' as const,
+    jur: 'federal',
+    program: 'go3141',
+    id: program.grants[0].id,
+  };
+  const data = (await loadMoneyItem(params, false)).data;
+  const expected = grantProgramRoute(
+    program.id,
+    'federal',
+    data.facts.find((f) => f.label === 'Program')!.value,
+  );
+  expect(data.facts.find((f) => f.label === 'Program')?.href).toEqual(expected);
+  Object.assign(mockParams, params);
+  const view = await mount(MoneyItem);
+  expect(
+    view.root
+      .findAllByType(ValueRow)
+      .find((node) => node.props.label === 'Program')?.props.href,
+  ).toEqual(expected);
+});
+
+test('a contract agency fact opens its actual agency id', async () => {
+  const record = await fixture.agency(agencyId);
+  const contract = record.data.profile.contracts[0]!;
+  const params = {
+    kind: 'contract' as const,
+    agency: agencyId,
+    id: contract.id,
+  };
+  const data = (await loadMoneyItem(params, false)).data;
+  const expected = agencyRoute(agencyId, record.data.profile.name);
+  expect(data.facts.find((f) => f.label === 'Agency')?.href).toEqual(expected);
+  Object.assign(mockParams, params);
+  const view = await mount(MoneyItem);
+  expect(
+    view.root
+      .findAllByType(ValueRow)
+      .find((node) => node.props.label === 'Agency')?.props.href,
+  ).toEqual(expected);
+});
+
+test('largest-grant program facts link only when the grants index resolves the published name', async () => {
+  const largest = await fixture.largest();
+  const index = await fixture.grants('federal');
+  for (const award of largest.data.months[largest.data.latest] ?? []) {
+    const data = (
+      await loadMoneyItem(
+        { kind: 'largest', month: largest.data.latest, id: award.id },
+        false,
+      )
+    ).data;
+    const program = index.data.programs.find(
+      (p) => p.listedAs === award.program,
+    );
+    expect(data.facts.find((f) => f.label === 'Program')?.href).toEqual(
+      program
+        ? grantProgramRoute(program.id, 'federal', program.name)
+        : undefined,
+    );
+  }
+});
 
 async function mount(Screen: () => React.ReactElement | null) {
   let rendered!: TestRenderer.ReactTestRenderer;
@@ -287,17 +355,20 @@ test.each([
   ['2026-13', 'No grant agreements to show.'],
   ['2026-1', 'No grant agreements to show.'],
   ['2026-10', 'No grant agreements started in October 2026.'],
-])('Largest grants has a complete empty-state title for latest=%s', async (latest, title) => {
-  money.largest = jest.fn(async () => ({
-    data: { asOf: '2026-11-10', latest, basis: [], months: {} },
-    stale: false,
-    savedAt: 10,
-    asOf: null,
-  }));
-  const r = await mount(Largest);
-  expect(r.root.findByType(MoneyList).props.empty.props.title).toBe(title);
-  await act(async () => r.unmount());
-});
+])(
+  'Largest grants has a complete empty-state title for latest=%s',
+  async (latest, title) => {
+    money.largest = jest.fn(async () => ({
+      data: { asOf: '2026-11-10', latest, basis: [], months: {} },
+      stale: false,
+      savedAt: 10,
+      asOf: null,
+    }));
+    const r = await mount(Largest);
+    expect(r.root.findByType(MoneyList).props.empty.props.title).toBe(title);
+    await act(async () => r.unmount());
+  },
+);
 
 test('the all-years grant figure names the full recorded range, including future agreements', () => {
   const index = decodeGrantIndex(raw('/graph/grants.federal.json'));
@@ -510,7 +581,9 @@ test('a lead example names its back destination and has no lead methodology in N
     headerBackButtonDisplayMode: 'default',
     headerBackButtonMenuEnabled: true,
   });
-  expect(r.root.findByType(RouteOptions).props.options).not.toHaveProperty('headerBackTitle');
+  expect(r.root.findByType(RouteOptions).props.options).not.toHaveProperty(
+    'headerBackTitle',
+  );
   const shown = r.root
     .findAll((node) => typeof node.props.children === 'string')
     .map((node) => node.props.children);
@@ -1217,59 +1290,66 @@ describe('the seat grant list', () => {
     expect(row.props.external).toBeUndefined();
     const strings = r.root
       .findAll(() => true)
-      .flatMap((n) => [
-        ...Object.values(n.props),
-        ...[n.props.children].flat(),
-      ])
+      .flatMap((n) => [...Object.values(n.props), ...[n.props.children].flat()])
       .filter((v): v is string => typeof v === 'string');
     expect(strings.join('\n')).not.toContain('Fixture private');
   });
 
-  test.each([true, false])('an unlisted recipient stays plain with an award URL=%s', async (sourceUrl) => {
-    money.grants = jest.fn(async () => record({ ...index, recipients: [] }));
-    money.seat = jest.fn(async () =>
-      record({
-        ...first,
-        grants: first.grants.map((g) => ({
-          ...g,
-          sourceUrl: sourceUrl ? g.sourceUrl : null,
-        })),
-      }),
-    );
-    const r = await mount(Grants);
-    const page = list(r),
-      row = page.props.render(page.props.rows[0], 0);
-    expect(row.props.href).toBeUndefined();
-    expect(row.props.external).toBeUndefined();
-    expect(row.props.name).toBe('Fixture Association 1');
-    const cell = r.root.findAllByType(LinkRow).find(
-      (n) => n.props.testID === 'grants-seat-grant-0',
-    )!;
-    expect(cell.props.accessory).toBe('none');
-    expect(cell.findAll((n) => typeof n.props.onPress === 'function')).toHaveLength(0);
-  });
+  test.each([true, false])(
+    'an unlisted recipient stays plain with an award URL=%s',
+    async (sourceUrl) => {
+      money.grants = jest.fn(async () => record({ ...index, recipients: [] }));
+      money.seat = jest.fn(async () =>
+        record({
+          ...first,
+          grants: first.grants.map((g) => ({
+            ...g,
+            sourceUrl: sourceUrl ? g.sourceUrl : null,
+          })),
+        }),
+      );
+      const r = await mount(Grants);
+      const page = list(r),
+        row = page.props.render(page.props.rows[0], 0);
+      expect(row.props.href).toBeUndefined();
+      expect(row.props.external).toBeUndefined();
+      expect(row.props.name).toBe('Fixture Association 1');
+      const cell = r.root
+        .findAllByType(LinkRow)
+        .find((n) => n.props.testID === 'grants-seat-grant-0')!;
+      expect(cell.props.accessory).toBe('none');
+      expect(
+        cell.findAll((n) => typeof n.props.onPress === 'function'),
+      ).toHaveLength(0);
+    },
+  );
 
   test.each([
     [null, 'Unnamed recipient'],
     ['', 'Unnamed recipient'],
     ['   ', 'Unnamed recipient'],
     ['Recipients not disclosed', 'Recipients not disclosed'],
-  ])('a nameless or undisclosed seat grant (%s) stays plain', async (rn, name) => {
-    const page = decodeSeatGrants({
-      ...seatFirstFixture,
-      grants: [{ ...seatFirstFixture.grants[0], rn, k: 'undisclosed' }],
-    });
-    money.seat = jest.fn(async () => record(page));
-    const r = await mount(Grants);
-    const cell = r.root.findAllByType(LinkRow).find(
-      (n) => n.props.testID === 'grants-seat-grant-0',
-    )!;
-    expect(cell.props.title).toBe(name);
-    expect(cell.props.href).toBeUndefined();
-    expect(cell.props.external).toBeUndefined();
-    expect(cell.props.accessory).toBe('none');
-    expect(cell.findAll((n) => typeof n.props.onPress === 'function')).toHaveLength(0);
-  });
+  ])(
+    'a nameless or undisclosed seat grant (%s) stays plain',
+    async (rn, name) => {
+      const page = decodeSeatGrants({
+        ...seatFirstFixture,
+        grants: [{ ...seatFirstFixture.grants[0], rn, k: 'undisclosed' }],
+      });
+      money.seat = jest.fn(async () => record(page));
+      const r = await mount(Grants);
+      const cell = r.root
+        .findAllByType(LinkRow)
+        .find((n) => n.props.testID === 'grants-seat-grant-0')!;
+      expect(cell.props.title).toBe(name);
+      expect(cell.props.href).toBeUndefined();
+      expect(cell.props.external).toBeUndefined();
+      expect(cell.props.accessory).toBe('none');
+      expect(
+        cell.findAll((n) => typeof n.props.onPress === 'function'),
+      ).toHaveLength(0);
+    },
+  );
 
   test('an index entry without a public organisation page cannot back a seat recipient link', async () => {
     money.grants = jest.fn(async () =>

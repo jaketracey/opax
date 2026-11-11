@@ -45,7 +45,7 @@ import {
 import { money } from './runtime';
 
 /** One fact row: a label and the record's words. Empty values are left out. */
-type Fact = { label: string; value: string; long?: boolean };
+type Fact = { label: string; value: string; long?: boolean; href?: Href };
 /** A row onward, named by its destination ("Open {organisation}"). */
 type Onward = {
   key: string;
@@ -212,7 +212,11 @@ async function readMoneyItem(
             asOf: program.asOf,
             register,
             facts: facts([
-              { label: 'Program', value: program.name },
+              {
+                label: 'Program',
+                value: program.name,
+                href: grantProgramRoute(program.id, program.jur, program.name),
+              },
               { label: 'Agency', value: program.agency },
               { label: 'Purpose', value: g.title, long: true },
               { label: 'Electorate', value: g.seat },
@@ -337,7 +341,13 @@ async function readMoneyItem(
           asOf: largest.data.asOf,
           register: 'GrantConnect',
           facts: facts([
-            { label: 'Program', value: r.program },
+            {
+              label: 'Program',
+              value: r.program,
+              href: program
+                ? grantProgramRoute(program.id, 'federal', program.name)
+                : undefined,
+            },
             { label: 'Agency', value: r.agency },
             { label: 'Purpose', value: r.purpose, long: true },
             { label: 'Selection', value: r.selection },
@@ -427,7 +437,11 @@ async function readMoneyItem(
             asOf: record.data.meta.asOf,
             register: 'AusTender',
             facts: facts([
-              { label: 'Agency', value: profile.name },
+              {
+                label: 'Agency',
+                value: profile.name,
+                href: agencyRoute(profile.id, profile.name),
+              },
               { label: 'Purpose', value: c.title, long: true },
               { label: 'Procurement', value: procurement(c.method) },
               { label: 'Published', value: short(c.published) },
@@ -792,6 +806,7 @@ function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
                       key={f.label}
                       label={f.label}
                       value={f.value}
+                      href={f.href}
                       testID={`money-item-fact-${slug(f.label)}`}
                     />
                   ),
