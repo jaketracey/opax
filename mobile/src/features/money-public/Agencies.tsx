@@ -16,6 +16,7 @@ import {
   agenciesRoute,
   agencyRoute,
   leadRoute,
+  moneyRecordRoute,
 } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useNamedBackTitle } from '../../navigation/useNamedBackOptions';
@@ -39,7 +40,7 @@ import {
   useMoneySearch,
   yearRange,
 } from './parts';
-import { moneyItemHref, organisationHref } from './routes';
+import { moneyItemHref } from './routes';
 import { money } from './runtime';
 
 const AGENCY_NAMES =
@@ -218,15 +219,26 @@ type AgencyView = 'years' | 'suppliers' | 'contracts';
  * interactive, journey 4.7) with a table toggle; supplier rows open the
  * organisation page; contract rows push their money item.
  */
-type AgencyParams = { id: string; section?: string; name?: string };
+type AgencyParams = {
+  id: string;
+  section?: string;
+  name?: string;
+  supplier?: string;
+  supplierName?: string;
+};
 
 export function Agency() {
   const params = useLocalSearchParams<AgencyParams>();
-  return <AgencyRecord key={params.id} params={params} />;
+  return (
+    <AgencyRecord
+      key={`${params.id}:${params.section ?? ''}:${params.supplier ?? ''}`}
+      params={params}
+    />
+  );
 }
 
 function AgencyRecord({ params }: { params: AgencyParams }) {
-  const { id, section, name: routeName } = params;
+  const { id, section, name: routeName, supplier, supplierName } = params;
   const load = useCallback(
       (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
         money.agency(id, refresh, signal),
@@ -237,6 +249,9 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
     profile = data?.profile;
   const [view, setView] = useState<AgencyView>(
     section === 'contracts' || section === 'suppliers' ? section : 'years',
+  );
+  const [supplierFilter, setSupplierFilter] = useState(
+    supplier ? { id: supplier, name: supplierName } : null,
   );
   const [table, setTable] = useState(false);
   const search = useMoneySearch(
@@ -252,6 +267,17 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
   });
   const openAsk = useOpenAsk();
   const lead = useAgencyLead(profile?.name);
+  const contracts = useMemo(
+    () =>
+      (profile?.contracts ?? []).filter(
+        (contract) =>
+          !supplierFilter ||
+          (contract.supplierId
+            ? contract.supplierId === supplierFilter.id
+            : contract.supplier === supplierFilter.name),
+      ),
+    [profile, supplierFilter],
+  );
   type Row =
     | ({ kind: 'supplier' } & NonNullable<typeof profile>['suppliers'][number])
     | ({ kind: 'contract' } & NonNullable<typeof profile>['contracts'][number]);
@@ -264,11 +290,11 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
         .filter((s) => s.organisation && matches(search.query, s.name))
         .sort((a, b) => b.total - a.total)
         .map((s) => ({ kind: 'supplier' as const, ...s }));
-    return profile.contracts
+    return contracts
       .filter((c) => matches(search.query, c.supplier, c.title, c.id))
       .sort((a, b) => b.value - a.value)
       .map((c) => ({ kind: 'contract' as const, ...c }));
-  }, [profile, view, search.query]);
+  }, [profile, contracts, view, search.query]);
   const searching = !!search.query.trim();
   const individualSuppliers = (profile?.suppliers ?? []).filter(
     (s) => !s.organisation,
@@ -280,7 +306,7 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
   const all =
     view === 'suppliers'
       ? (profile?.suppliers.length ?? 0) - individuals.count
-      : (profile?.contracts.length ?? 0);
+      : contracts.length;
   const noun = view === 'suppliers' ? 'supplier' : 'contract';
   const caption = searching
     ? `${rows.length.toLocaleString('en-AU')} of ${counted(all, noun)}`
@@ -383,7 +409,10 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
                 <SegmentedPicker
                   accessibilityLabel="Show"
                   value={view}
-                  onChange={setView}
+                  onChange={(next) => {
+                    setSupplierFilter(null);
+                    setView(next);
+                  }}
                   options={[
                     { value: 'years', label: 'Years', testID: 'agency-years' },
                     {
@@ -448,9 +477,19 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
                     )}
                   </View>
                 ) : (
-                  <ListCaption announce={searching} testID="agency-caption">
-                    {caption}
-                  </ListCaption>
+                  <>
+                    {view === 'contracts' && supplierFilter ? (
+                      <LinkRow
+                        title="Show all contracts"
+                        detail={supplierFilter.name}
+                        onPress={() => setSupplierFilter(null)}
+                        testID="agency-clear-supplier"
+                      />
+                    ) : null}
+                    <ListCaption announce={searching} testID="agency-caption">
+                      {caption}
+                    </ListCaption>
+                  </>
                 )}
               </>
             ) : null}
@@ -470,7 +509,10 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
               name={r.name}
               detail={counted(r.count, 'contract')}
               amount={r.total}
-              href={organisationHref(r.id, r.name)}
+              href={moneyRecordRoute(
+                { rid: r.id, agency: profile!.id },
+                r.name,
+              )}
               testID={`agency-supplier-${i}`}
             />
           ) : (

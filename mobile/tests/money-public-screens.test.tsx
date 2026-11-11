@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Redirect } from 'expo-router';
 import { Animated, Dimensions, Platform, StyleSheet } from 'react-native';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -16,6 +17,7 @@ import Grants from '../src/features/money-public/Grants';
 import Program from '../src/features/money-public/Program';
 import Largest from '../src/features/money-public/Largest';
 import Agencies, { Agency } from '../src/features/money-public/Agencies';
+import MoneyRecord from '../src/features/money/MoneyRecord';
 import Allocation from '../src/features/money-public/Allocation';
 import FundingBySeatType from '../src/features/money-public/FundingBySeatType';
 import Connections from '../src/features/money-public/Connections';
@@ -71,6 +73,8 @@ jest.mock('expo-router', () => {
       MenuAction: Wrap,
     }),
     Redirect: () => null,
+    useRouter: () => ({ push: jest.fn() }),
+    useNavigation: () => ({ setParams: jest.fn() }),
     useSegments: () => [],
     useLocalSearchParams: () => mockParams,
     router: { push: jest.fn(), setParams: jest.fn(), dismissTo: jest.fn() },
@@ -158,6 +162,123 @@ const ids = (r: TestRenderer.ReactTestRenderer) =>
       .findAll((n) => typeof n.props.testID === 'string')
       .map((n) => n.props.testID as string),
   );
+
+async function supplierAgencyFixture() {
+  const record = await fixture.agency('a-aaa167b0097858604254');
+  const suppliers = record.data.profile.suppliers
+    .filter((supplier) => supplier.organisation)
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 3);
+  const supplierIds = new Set(suppliers.map((supplier) => supplier.id));
+  const result = {
+    ...record,
+    data: {
+      ...record.data,
+      profile: {
+        ...record.data.profile,
+        suppliers,
+        contracts: record.data.profile.contracts.filter((contract) =>
+          supplierIds.has(contract.supplierId),
+        ),
+      },
+    },
+  };
+  money.agency = jest.fn(async () => result);
+  return result;
+}
+
+test('every supplier row in a fixture agency profile opens its supplier record', async () => {
+  const record = await supplierAgencyFixture();
+  const { profile } = record.data;
+  expect(profile.suppliers[0]!.name).toBe(
+    'FMS Account Reserve Bank of Australia',
+  );
+  Object.assign(mockParams, { id: profile.id, section: 'suppliers' });
+  const agency = await mount(Agency);
+  const list = agency.root.findByType(MoneyList);
+  const routes = profile.suppliers.map((supplier, index) => {
+    const row = list.props.render(list.props.rows[index], index);
+    expect(row.props.name).toBe(supplier.name);
+    expect(row.props.amount).toBe(supplier.total);
+    expect(row.props.href.params).toMatchObject({
+      rid: supplier.id,
+      agency: profile.id,
+    });
+    return row.props.href;
+  });
+  await act(async () => agency.unmount());
+  for (const [index, route] of routes.entries()) {
+    Object.keys(mockParams).forEach((key) => delete mockParams[key]);
+    Object.assign(mockParams, route.params);
+    const supplier = await mount(MoneyRecord);
+    expect(ids(supplier)).not.toContain('money-node-missing');
+    expect(ids(supplier)).toContain('money-focus-contracts');
+    expect(
+      supplier.root
+        .findAllByType(FigureBlock)
+        .find((figure) => figure.props.testID === 'money-focus-contracts')!
+        .props.label,
+    ).toContain(profile.suppliers[index]!.count.toLocaleString('en-AU'));
+    await act(async () => supplier.unmount());
+  }
+});
+
+test('a supplier without a record opens only its agency contracts, with a way to clear the filter', async () => {
+  const record = await supplierAgencyFixture();
+  const { profile } = record.data;
+  const supplier = profile.suppliers[0]!;
+  const own = profile.contracts.filter((c) => c.supplierId === supplier.id);
+  const other = profile.contracts.find((c) => c.supplierId !== supplier.id)!;
+  const contracts = [
+    { ...own[0]!, supplier: 'Former supplier name' },
+    { ...own[1]!, supplierId: '' },
+    { ...other, supplier: supplier.name },
+  ];
+  money.agency = jest.fn(async () => ({
+    ...record,
+    data: {
+      ...record.data,
+      profile: {
+        ...profile,
+        suppliers: profile.suppliers.filter((s) => s.id !== supplier.id),
+        contracts,
+      },
+    },
+  }));
+  Object.assign(mockParams, {
+    rid: supplier.id,
+    name: supplier.name,
+    agency: profile.id,
+  });
+  const missing = await mount(MoneyRecord);
+  expect(ids(missing)).not.toContain('money-node-missing');
+  const destination = missing.root.findByType(Redirect).props.href;
+  expect(destination).toMatchObject({
+    pathname: '/agency',
+    params: {
+      id: profile.id,
+      section: 'contracts',
+      supplier: supplier.id,
+      supplierName: supplier.name,
+    },
+  });
+  await act(async () => missing.unmount());
+  Object.keys(mockParams).forEach((key) => delete mockParams[key]);
+  Object.assign(mockParams, destination.params);
+  const agency = await mount(Agency);
+  const rows = () => agency.root.findByType(MoneyList).props.rows;
+  expect(
+    rows()
+      .map((c: { id: string }) => c.id)
+      .sort(),
+  ).toEqual([own[0]!.id, own[1]!.id].sort());
+  const clear = agency.root
+    .findAllByType(LinkRow)
+    .find((row) => row.props.testID === 'agency-clear-supplier')!;
+  await act(async () => clear.props.onPress());
+  expect(rows()).toHaveLength(contracts.length);
+  await act(async () => agency.unmount());
+});
 
 test.each([
   ['latest', 'No grant agreements to show.'],

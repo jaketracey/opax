@@ -1,5 +1,6 @@
 import { RouteOptions } from '../../navigation/preview';
 import {
+  Redirect,
   router,
   useLocalSearchParams,
   useNavigation,
@@ -1220,14 +1221,24 @@ function SupplierRecord({
       <LoadState name={name} error={loaded.error} retry={loaded.retry} />
     );
   const found = loaded.found;
-  if (!found || !found.supplier.organisation)
+  if (!found) {
+    const route = agencyRoute(agency, loaded.record.data.profile.name);
     return (
-      <Missing
-        name={found ? undefined : name}
-        register="contract"
-        body={found ? individualsNote : undefined}
+      <Redirect
+        href={{
+          ...route,
+          params: {
+            ...route.params,
+            section: 'contracts',
+            supplier: rid,
+            supplierName: name,
+          },
+        }}
       />
     );
+  }
+  if (!found.supplier.organisation)
+    return <Missing register="contract" body={individualsNote} />;
   return (
     <SupplierBody
       found={found}
