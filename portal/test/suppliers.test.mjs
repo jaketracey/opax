@@ -12,7 +12,7 @@ const parsed = ts.createSourceFile('index.ts', source, ts.ScriptTarget.Latest, t
 // Execute the actual metadata/route functions, without booting unrelated RAG
 // and image-rendering dependencies. TypeScript's parser supplies the boundaries.
 const names = new Set(['DIRECTORY_KINDS', 'isDirectoryKind', 'STATIC_PAGES', 'SUBJECT_NAME_MAX', 'CAMPAIGNER_NAME_MAX', 'SUPPLIER_NAME_MAX', 'BILL_KEY_MAX', 'BILL_KEY_RE',
-  'matchSeoRoute', 'supplierNameKey', 'suppliersMemo', 'suppliersFileMemo', 'loadSuppliersFile', 'loadSuppliers', 'supplierBucketMemo', 'supplierBucket', 'supplierRowById', 'supplierMeta', 'buildRouteMeta',
+  'matchSeoRoute', 'supplierNameKey', 'suppliersMemo', 'suppliersFileMemo', 'loadSuppliersFile', 'loadSuppliers', 'keptAssetJson', 'supplierBucketMemo', 'supplierBucket', 'supplierRowById', 'supplierMeta', 'buildRouteMeta',
   'escHtml', 'escXml', 'clip', 'withTail', 'num', 'money', 'years', 'indexLinks', 'prerenderBlock', 'canonicalFor', 'publisher', 'sitemapXml']);
 const statements = parsed.statements.filter((node) => {
   if (ts.isFunctionDeclaration(node)) return names.has(node.name?.text);
