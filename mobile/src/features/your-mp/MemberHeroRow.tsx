@@ -16,6 +16,7 @@ import {
   useRowInset,
 } from '../../design/row-padding';
 import { useFaceURIs } from './FaceStackRow';
+import { partyFromCode } from '../bills/party-codes';
 
 export interface OfficialPage {
   label: 'Parliament of Australia page' | 'Parliament of Victoria page';
@@ -108,7 +109,7 @@ export function MemberHeroRow({
           if (e.nativeEvent.actionName === 'official' && official)
             void openSource(official.url, official.label);
           if (e.nativeEvent.actionName === 'party' && party)
-            router.push(partyRoute(party));
+            router.push(partyRoute(partyFromCode(party)));
         }}
         onPress={() => router.push(href)}
         style={({ pressed }) => [
@@ -133,7 +134,14 @@ export function MemberHeroRow({
             >
               {name}
             </Text>
-            {context ? <PartyLabel {...context} linked={false} nested /> : null}
+            {context ? (
+              <PartyLabel
+                {...context}
+                linked
+                nested
+                testID={testID && `${testID}-party`}
+              />
+            ) : null}
             {tenure ? <Text variant="secondary">{tenure}</Text> : null}
           </View>
         </View>

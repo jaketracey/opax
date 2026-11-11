@@ -35,6 +35,7 @@ import {
   personRoute,
 } from '../../navigation/routes';
 import { CachedPortrait } from '../CachedPortrait';
+import { partyFromCode } from '../bills/party-codes';
 import { useSetAsMyElectorate } from '../your-mp/useSetAsMyElectorate';
 import type { RecordEntry } from '../split/entry';
 import { placeLine, type PartyRow, type PeopleRow } from './model';
@@ -229,6 +230,15 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
         .filter(Boolean)
         .join(', ')}
       accessibilityState={split ? { selected } : undefined}
+      accessibilityActions={
+        isPartyLabel(lines.party)
+          ? [{ name: 'party', label: `Open ${lines.party} party page` }]
+          : undefined
+      }
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'party' && lines.party)
+          router.push(partyRoute(partyFromCode(lines.party)));
+      }}
       testID={`directory-electorate-${item.slug}`}
       onPress={select}
       style={({ pressed }) => [
@@ -256,7 +266,7 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
               {lines.party ? `${lines.member} · ` : lines.member}
             </Text>
             {lines.party ? (
-              <PartyLabel party={lines.party} nested linked={false} />
+              <PartyLabel party={lines.party} nested linked />
             ) : null}
           </View>
         ) : null}

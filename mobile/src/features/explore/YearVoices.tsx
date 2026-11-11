@@ -1,4 +1,6 @@
 import { StyleSheet, View } from 'react-native';
+import { router } from 'expo-router';
+import { isPartyLabel } from '../../design/party';
 import {
   PartyLabel,
   PersonRow,
@@ -7,7 +9,7 @@ import {
   Text,
 } from '../../design/primitives';
 import { minimumTarget, rhythm } from '../../design/tokens';
-import { personRoute } from '../../navigation/routes/people';
+import { personRoute, partyRoute } from '../../navigation/routes/people';
 import { CachedPortrait } from '../CachedPortrait';
 import { partyName } from '../reports/model';
 import {
@@ -82,14 +84,25 @@ export function YearVoices({
               ]
                 .filter(Boolean)
                 .join(', ')}
+              accessibilityActions={
+                isPartyLabel(party)
+                  ? [{ name: 'party', label: `Open ${party} party page` }]
+                  : []
+              }
+              onAccessibilityAction={(event) => {
+                if (
+                  event.nativeEvent.actionName === 'party' &&
+                  party &&
+                  isPartyLabel(party)
+                )
+                  router.push(partyRoute(party));
+              }}
               style={styles.plain}
             >
               <Text wordSafe variant="name">
                 {voice.name}
               </Text>
-              {party ? (
-                <PartyLabel party={party} nested linked={false} />
-              ) : null}
+              {party ? <PartyLabel party={party} linked nested /> : null}
               <Text wordSafe variant="secondary">
                 {speechesText(voice.speeches)}
               </Text>

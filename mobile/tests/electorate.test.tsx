@@ -12,7 +12,7 @@ import Electorate, {
 import { router } from 'expo-router';
 import { ContentUnavailable } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
-import { Heading } from '../src/design/text';
+import { Heading, Text } from '../src/design/text';
 import { Screen } from '../src/design/layout';
 import { ScrollView, StyleSheet } from 'react-native';
 import Members from '../src/features/your-mp/Members';
@@ -28,6 +28,7 @@ import { CachedPortrait } from '../src/features/CachedPortrait';
 import { personRoute } from '../src/navigation/routes';
 import { grantsRoute } from '../src/navigation/routes/public-money';
 import { LinkRow } from '../src/design/rows';
+import { RecordNameLink } from '../src/design/record';
 import {
   RepresentativeRows,
   sinceLine,
@@ -360,6 +361,16 @@ test('election rows push the election screen, newest first', async () => {
   // VoiceOver hears the party's name, as drawn, never the file's code.
   expect(firstRow.props.accessibilityLabel).toMatch(/, Labor\./);
   expect(firstRow.props.accessibilityLabel).not.toMatch(/\bALP\b/);
+  const winner = firstRow.findByType(RecordNameLink);
+  expect(winner.props.href).toEqual(
+    personRoute('anthony-albanese', 'Anthony Albanese'),
+  );
+  const stopPropagation = jest.fn();
+  jest.mocked(router.push).mockClear();
+  act(() => winner.findByType(Text).props.onPress({ stopPropagation }));
+  expect(stopPropagation).toHaveBeenCalledTimes(1);
+  expect(router.push).toHaveBeenCalledTimes(1);
+  expect(router.push).toHaveBeenCalledWith(winner.props.href);
 
   expect(has(r, 'election-expand-0')).toBe(false);
   await act(async () => r.unmount());
@@ -770,29 +781,35 @@ test('a followed electorate with no change draws no Added since group', async ()
   await act(async () => r.unmount());
 });
 
-test.each(['Grayndler', 'Ballarat'])('the electorate page links to grants in %s', async (name) => {
-  load(name);
-  const r = await render(<Electorate />);
-  const link = r.root
-    .findAllByType(LinkRow)
-    .find((n) => n.props.testID === 'seat-grants-all');
-  expect(link?.props.title).toBe(`Grants in ${name}`);
-  expect(link?.props.href).toEqual(
-    grantsRoute({ jur: 'federal', seat: name, state: seat(name).state_code }),
-  );
-  await act(async () => r.unmount());
-});
+test.each(['Grayndler', 'Ballarat'])(
+  'the electorate page links to grants in %s',
+  async (name) => {
+    load(name);
+    const r = await render(<Electorate />);
+    const link = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === 'seat-grants-all');
+    expect(link?.props.title).toBe(`Grants in ${name}`);
+    expect(link?.props.href).toEqual(
+      grantsRoute({ jur: 'federal', seat: name, state: seat(name).state_code }),
+    );
+    await act(async () => r.unmount());
+  },
+);
 
 test.each([
   ['Richmond', 'vic'],
   ['New South Wales', 'federal'],
   ['Higgins', 'federal'],
-])('the electorate page has no seat grants link for %s', async (name, jurisdiction) => {
-  load(name, jurisdiction);
-  const r = await render(<Electorate />);
-  expect(has(r, 'seat-grants-all')).toBe(false);
-  await act(async () => r.unmount());
-});
+])(
+  'the electorate page has no seat grants link for %s',
+  async (name, jurisdiction) => {
+    load(name, jurisdiction);
+    const r = await render(<Electorate />);
+    expect(has(r, 'seat-grants-all')).toBe(false);
+    await act(async () => r.unmount());
+  },
+);
 
 test('a Victorian district shows its region row and the authorisation foot, and no grants', async () => {
   load('Richmond', 'vic');
