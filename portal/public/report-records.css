@@ -74,13 +74,22 @@
 .rr-line-sub { padding-left: 2.1em; }
 .rr-item-meta { display: flex; flex-wrap: wrap; gap: var(--space-tight); align-items: center; margin: 0 0 var(--space-tight); font: var(--type-metadata); color: var(--ink-soft); }
 .rr-item-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-.rr-status { margin-top: var(--space-row); padding: var(--space-row) var(--sp-16); border-radius: var(--radius-md); background: var(--paper-sunken); }
-.rr-status-title { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink-soft); }
-.rr-status-value { margin: 0 0 var(--space-tight); }
+/* A government-published status: one line, the government's word as a neutral label. */
+.rr-status { margin-top: var(--space-tight); padding: var(--space-tight) var(--space-row); border-left: var(--border-focus) solid var(--divider-default); }
+.rr-status-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-line) var(--space-tight); margin: 0; }
+.rr-status-title { font: var(--type-label); color: var(--ink-soft); }
+.rr-status-meta { margin: var(--space-line) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
+.rr-status .rr-cite-line { margin-top: var(--space-line); }
+.rr-tally { display: flex; flex-wrap: wrap; gap: var(--space-tight) var(--space-block); margin: 0 0 var(--space-block); padding: 0; list-style: none; }
+.rr-tally li { display: inline-flex; align-items: baseline; gap: var(--space-line); }
+.rr-tally-count { font: var(--type-strong); font-variant-numeric: tabular-nums; }
 
 /* Recommendation numbers: a quiet index for long lists. */
 .rr-jump ul { display: flex; flex-wrap: wrap; gap: var(--space-line); margin: 0 0 var(--space-block); padding: 0; list-style: none; }
 .rr-jump a { display: inline-flex; align-items: center; justify-content: center; min-width: 2.75rem; min-height: 2rem; padding: 0 var(--sp-8); border: var(--border-hairline) solid var(--divider-subtle); border-radius: var(--ui-radius); background: var(--paper-raised); font: var(--type-label); color: var(--ink); text-decoration: none; font-variant-numeric: tabular-nums; }
+.rr-jump-fold { margin-bottom: var(--space-block); }
+.rr-jump-fold > summary { font: var(--type-label); }
+.rr-jump-fold ul { margin-top: var(--space-row); }
 .rr-jump a:hover { border-color: var(--line-control); color: var(--bronze-ink); }
 
 /* Documents. */

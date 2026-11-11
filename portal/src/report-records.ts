@@ -69,10 +69,12 @@ function pageTarget(href: string, page: unknown) {
 /** A cite object as one link whose text says where it goes. Where it points at the
  *  page's own main document the name shortens to "Report"; the page and section
  *  stay in the link text either way. */
+/** Same name, ignoring case and outer space ("investigation report" / "Investigation Report"). */
+const same = (a: unknown, b: unknown) => String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase()
 function citeLink(raw: unknown, mainDocument = ''): string {
   const c = object(raw), href = url(c.url)
   if (!href) return ''
-  const doc = c.document && c.document !== mainDocument ? String(c.document) : mainDocument ? 'Report' : 'Official source'
+  const doc = c.document && !same(c.document, mainDocument) ? String(c.document) : mainDocument ? 'Report' : 'Official source'
   const label = `${doc}${c.page == null ? '' : `, page ${c.page}`}${c.section ? `, ${c.section}` : ''}`
   return `<a class="rr-cite" href="${esc(pageTarget(href, c.page))}" rel="noopener">${esc(label)}</a>`
 }
@@ -117,6 +119,10 @@ function sourceCard(main: SourceDoc | null, more: { href: unknown; label: string
 }
 
 // ---- recommendations and findings: the body's own words, labels and citations
+function statusMeta(status: RecordRow): string {
+  const bits = [status.lead ? `Lead: ${esc(status.lead)}` : '', status.updated ? `Updated ${time(status.updated)}` : ''].filter(Boolean)
+  return bits.length ? `<p class="rr-status-meta">${bits.join(' · ')}</p>` : ''
+}
 function items(part: 'findings' | 'recommendations', r: ReportDetail, mainDocument: string): Part {
   const c = r.record, held = records(c[part]), state = c[part + '_status']
   const reports = records(c.reports)
@@ -136,16 +142,27 @@ function items(part: 'findings' | 'recommendations', r: ReportDetail, mainDocume
   const list = held.length ? `<ol class="rr-items" role="list">${held.map((item, i) => {
     const label = item.label ?? (part === 'recommendations' ? `Recommendation${item.number == null ? '' : ' ' + item.number}` : human(item.kind))
     const status = item.status ? object(item.status) : null
-    const from = reports.length > 1 ? reports.find(d => d.key === item.report) : null
+    const from = reports.length > 1 ? reports.find(d => d.key === item.report && !same(d.title, object(item.cite).document)) : null
     const itemId = part === 'recommendations' && item.number != null ? `recommendation-${anchor(item.number)}` : `${part}-${i + 1}`
     const kind = part === 'findings' && item.kind ? `<span class="ui-status rr-kind">${esc(human(item.kind))}</span>` : ''
     return `<li class="rr-item" id="${esc(itemId)}"><div class="rr-item-head"><h3 class="rr-item-label">${esc(label)}</h3>${kind}</div>${from ? `<p class="rr-item-meta">${esc(from.title)}</p>` : ''}` +
       `${prose(item.text, 'rr-item-text')}${citeLine(item.cite, mainDocument)}` +
-      (status ? `<div class="rr-status"><h4 class="rr-status-title">Government-published status</h4><p class="rr-status-value"><span class="ui-status">${esc(status.as_published)}</span></p>${kv([['Lead', esc(status.lead)], ['Updated', status.updated ? time(status.updated) : '']])}${citeLine(status.cite)}</div>` : '') + `</li>`
+      (status ? `<div class="rr-status"><p class="rr-status-line"><span class="rr-status-title">Government-published status</span> <span class="ui-status">${esc(status.as_published)}</span></p>` +
+        `${statusMeta(status)}${citeLine(status.cite)}</div>` : '') + `</li>`
   }).join('')}</ol>` : text(empty)
-  const jump = part === 'recommendations' && held.length > 12 && held.every(x => x.number != null)
-    ? `<nav class="rr-jump" aria-label="Recommendation numbers"><ul role="list">${held.map(x => `<li><a href="#recommendation-${esc(anchor(x.number))}">${esc(x.number)}</a></li>`).join('')}</ul></nav>` : ''
-  const statusNote = statuses.length ? `<p class="ui-section-note">${plural(statuses.length, 'recommendation has', 'recommendations have')} a status published by government, shown in the government's own words.</p>` : ''
+  // Recommendation numbers as a quiet index; a very long index starts folded so the
+  // first recommendation is not a phone-screen of numbers away.
+  const numbers = part === 'recommendations' && held.length > 12 && held.every(x => x.number != null)
+    ? `<ul role="list">${held.map(x => `<li><a href="#recommendation-${esc(anchor(x.number))}">${esc(x.number)}</a></li>`).join('')}</ul>` : ''
+  const jump = !numbers ? '' : held.length > 60
+    ? `<nav class="rr-jump" aria-label="Recommendation numbers"><details class="ui-disclosure rr-jump-fold"><summary>Go to a recommendation (${esc(held[0].number)} to ${esc(held[held.length - 1].number)})</summary>${numbers}</details></nav>`
+    : `<nav class="rr-jump" aria-label="Recommendation numbers">${numbers}</nav>`
+  // How many carry each status, counted in the government's own words, in the order
+  // they first appear: a count of labels, not a judgement of them.
+  const tally = new Map<string, number>()
+  for (const x of statuses) tally.set(String(x), (tally.get(String(x)) || 0) + 1)
+  const statusNote = statuses.length ? `<p class="ui-section-note">${plural(statuses.length, 'recommendation has', 'recommendations have')} a status published by government, shown in the government's own words.</p>` +
+    `<ul class="rr-tally" role="list" aria-label="Government-published statuses">${[...tally].map(([label, n]) => `<li><span class="ui-status">${esc(label)}</span> <span class="rr-tally-count">${figure(n)}</span></li>`).join('')}</ul>` : ''
   return { id, title, count: held.length || undefined, html: note + partial + statusNote + jump + list }
 }
 
@@ -317,7 +334,8 @@ export function renderReport(r: ReportDetail) {
   // A title that already names the body and kind (most annual and agency reports) is not
   // repeated: the line says what the title does not.
   const titled = (type === 'annual_report' || type === 'agency_report') && !!r.body && r.title.toLowerCase().includes(String(r.body).toLowerCase())
-  const metaBits = [titled ? esc(r.publisher.type_as_published || '') : esc(kindLabel), r.body && !titled ? esc(who) : '', esc(jurisdiction),
+  const named = titled || same(r.body, r.title)
+  const metaBits = [titled ? esc(r.publisher.type_as_published || '') : esc(kindLabel), r.body && !named ? esc(who) : '', esc(jurisdiction),
     r.date ? dated(r.date_basis, r.date) : 'No published or tabled day is recorded'].filter(Boolean)
 
   if (type === 'royal_commission') {

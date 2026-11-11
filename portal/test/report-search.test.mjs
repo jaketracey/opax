@@ -102,6 +102,18 @@ test('inline list runs are set one to a line without changing a character', () =
   assert.ok(visible(html).includes(escapeHtml(words)));
   assert.match(html, /href="https:\/\/example\.gov\.au\/r\.pdf#page=3"[^>]*>Report, page 3</);
 });
+test('government statuses are counted in their own words and each keeps its lead, date and source', () => {
+  const royal = structuredClone(projected.find(r => r.detail.slug === 'royal-commission-cth-robodebt').detail);
+  const status = as_published => ({ as_published, lead: 'Lead agency', updated: '2026-09-07', cite: { url: 'https://example.gov.au/status', document: 'Status page' } });
+  royal.record.recommendations = Array.from({ length: 61 }, (_, i) => ({ number: String(i + 1), text: 'Do thing ' + (i + 1), status: status(i < 40 ? 'In progress' : 'Complete') }));
+  const html = renderReport(royal);
+  assert.match(visible(html), /In progress 40/);
+  assert.match(visible(html), /Complete 21/);
+  assert.ok(html.indexOf('In progress') < html.indexOf('Complete'), 'labels keep the order they first appear in');
+  assert.equal((html.match(/Lead: Lead agency · Updated <time datetime="2026-09-07">/g) || []).length, 61);
+  assert.equal((html.match(/href="https:\/\/example\.gov\.au\/status"/g) || []).length, 61);
+  assert.match(html, /<summary>Go to a recommendation \(1 to 61\)<\/summary>/);
+});
 test('agency facts and annual disclosures retain labels, units and per-row official sources', () => {
   const agency = projected.find(r => r.detail.facts.length).detail;
   const html = renderReport(agency);
