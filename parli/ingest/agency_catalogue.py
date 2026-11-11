@@ -155,7 +155,9 @@ def fetch(args):
     rows = rows[: args.limit] if args.limit else rows
     reports, seen = [], set()
     for r in rows:
-        url = r["pdf_urls"][0]
+        # the report is the largest file that is not the tabling letter
+        files = [(u, b) for u, b in zip(r["pdf_urls"], r["pdf_bytes"]) if "letter" not in u.rsplit("/", 1)[-1].lower()] or list(zip(r["pdf_urls"], r["pdf_bytes"]))
+        url = max(files, key=lambda f: f[1])[0]
         try:
             body = client.get(url, "pdf")
         except common.Held as e:

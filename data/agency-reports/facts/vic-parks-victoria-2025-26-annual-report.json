@@ -1,0 +1,176 @@
+{
+ "report_id": "vic-parks-victoria-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "executive_average_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 299068,
+   "value_as_published": "299,068",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Total revenue and income from transactions 299,068 317,513"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 313972,
+   "value_as_published": "313,972",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Total expenses from transactions 313,972 290,419"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits expenses",
+   "column_as_published": "2026",
+   "value": 144022,
+   "value_as_published": "144,022",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Employee benefits expenses 3.2.1 144,022 132,958"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -14578,
+   "value_as_published": "(14,578)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Net result (14,578) 26,830"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total",
+   "column_as_published": "June 2026",
+   "value": 1181,
+   "value_as_published": "1,181",
+   "unit": "people",
+   "period": "as at 30 June 2026",
+   "page": 29,
+   "quote": "1,167 1,054.8 678 173 801.1 316 253.7 1,181 1,077.2 850 150 955.6 181 121.6"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "June 2026",
+   "value": 1077.2,
+   "value_as_published": "1,077.2",
+   "unit": "fte",
+   "period": "as at 30 June 2026",
+   "page": 29,
+   "quote": "1,167 1,054.8 678 173 801.1 316 253.7 1,181 1,077.2 850 150 955.6 181 121.6"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Total remuneration received or receivable by the Accountable Officers",
+   "value": null,
+   "value_as_published": "$540,000 to $550,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 117,
+   "quote": "was in the range: $540,000 to $550,000 (2025–26)"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total",
+   "column_as_published": "Total 2026",
+   "value": 24,
+   "value_as_published": "24",
+   "unit": "count",
+   "period": "30 June 2026",
+   "page": 31,
+   "quote": "Total 28 28 24 24"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "SES–1",
+   "column_as_published": "Total 2026",
+   "value": 19,
+   "value_as_published": "19",
+   "unit": "count",
+   "period": "30 June 2026",
+   "page": 31,
+   "quote": "SES–1 16 16 19 19",
+   "band": "SES–1"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "SES–2",
+   "column_as_published": "Total 2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "30 June 2026",
+   "page": 31,
+   "quote": "SES–2 11 11 4 4",
+   "band": "SES–2"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "SES–3",
+   "column_as_published": "Total 2026",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "30 June 2026",
+   "page": 31,
+   "quote": "SES–3 1 1 1 1",
+   "band": "SES–3"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 8899,
+   "value_as_published": "8,899",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 118,
+   "quote": "Total remuneration 8,899 7,694"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 47,
+   "value_as_published": "47",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 118,
+   "quote": "Total number of executives (i) 47 30"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total*",
+   "column_as_published": "2026",
+   "value": 3390,
+   "value_as_published": "3,390",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (compensation of key management personnel)",
+   "page": 120,
+   "quote": "Total* 3,390 2,824"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total cost of these consultancies",
+   "value": 780289,
+   "value_as_published": "$780,289",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 38,
+   "quote": "In 2025–26, Parks Victoria engaged 4 consultancies where the fees payable was $10,000 or greater. The total cost of these consultancies was $780,289 (excluding GST)."
+  }
+ ]
+}

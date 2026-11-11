@@ -94,7 +94,8 @@ PORTAL_METRICS = {"head_remuneration", "named_remuneration", "executive_band", "
                   "employee_expenses", "net_result", "consultancy_total", "consultancy"}
 UNITS = {"dollars", "thousands_of_dollars", "millions_of_dollars", "people", "fte", "count", "percent", "days"}
 QUOTE_MAX = 320
-NUMBER = re.compile(r"^\(?-?\$?\s?-?[\d,]+(?:\.\d+)?\)?\s?(?:m|million|k|bn|billion|%)?$", re.I)
+# thousands grouped by commas or single spaces ("470 967", as some statements print them), or plain digits
+NUMBER = re.compile(r"^\(?-?\$?\s?-?(?:\d{1,3}(?:,\d{3})+|\d{1,3}(?: \d{3})+|\d+)(?:\.\d+)?\)?\s?(?:m|million|k|bn|billion|%)?$", re.I)
 
 
 def sha256(path: Path) -> str:

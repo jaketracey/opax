@@ -1,0 +1,157 @@
+{
+ "report_id": "vic-suburban-rail-loop-authority-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "consultancy",
+  "consultancy_total",
+  "executive_average_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026 ($ thousand)",
+   "value": 136774,
+   "value_as_published": "136,774",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Total revenue and income from transactions 136,774 118,181"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026 ($ thousand)",
+   "value": 136882,
+   "value_as_published": "136,882",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Total expenses from transactions 136,882 118,289"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits",
+   "column_as_published": "2026 ($ thousand)",
+   "value": 61024,
+   "value_as_published": "61,024",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Employee benefits 3.1.1 61,024 55,081"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net profit",
+   "column_as_published": "2026 ($ thousand)",
+   "value": 3254,
+   "value_as_published": "3,254",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Net profit 3,254 3,192"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "column_as_published": "Number",
+   "value": 598,
+   "value_as_published": "598",
+   "unit": "people",
+   "period": "last full pay period of June 2026",
+   "page": 25,
+   "quote": "Total employees 598 590.4 374 24 390.7 200 199.7"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "column_as_published": "FTE",
+   "value": 590.4,
+   "value_as_published": "590.4",
+   "unit": "fte",
+   "period": "last full pay period of June 2026",
+   "page": 25,
+   "quote": "Total employees 598 590.4 374 24 390.7 200 199.7"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total",
+   "column_as_published": "All",
+   "value": 72,
+   "value_as_published": "72",
+   "unit": "count",
+   "period": "last full pay period in June 2026",
+   "page": 27,
+   "quote": "Total 72 54 18 -"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "SES3",
+   "column_as_published": "All",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "last full pay period in June 2026",
+   "page": 27,
+   "quote": "SES3 5 2 3 -",
+   "band": "SES3"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "SES2",
+   "column_as_published": "All",
+   "value": 50,
+   "value_as_published": "50",
+   "unit": "count",
+   "period": "last full pay period in June 2026",
+   "page": 27,
+   "quote": "SES2 50 42 8 -",
+   "band": "SES2"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "SES1",
+   "column_as_published": "All",
+   "value": 17,
+   "value_as_published": "17",
+   "unit": "count",
+   "period": "last full pay period in June 2026",
+   "page": 27,
+   "quote": "SES1 17 10 7 -",
+   "band": "SES1"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officers",
+   "value": null,
+   "value_as_published": "$930,000 - $939,999",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 79,
+   "quote": "was in the range of $540,000 - $549,999 for Frankie Carroll and $390,000 - $399,999 for Kevin Devlin, totalling in the range of $930,000 - $939,999"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 32661,
+   "value_as_published": "32,661",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 80,
+   "quote": "Total remuneration 32,661 32,651"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 99,
+   "value_as_published": "99",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 80,
+   "quote": "Total number of executives 99 100"
+  }
+ ]
+}

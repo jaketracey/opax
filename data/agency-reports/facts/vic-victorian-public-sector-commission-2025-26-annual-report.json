@@ -1,0 +1,150 @@
+{
+ "report_id": "vic-victorian-public-sector-commission-2025-26-annual-report",
+ "read_by": "extraction lane vic-w2-c, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_remuneration_total",
+  "executive_average_remuneration",
+  "employee_expenses"
+ ],
+ "facts": [
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 59,
+   "value_as_published": "59",
+   "unit": "people",
+   "period": "as at 30 June 2026",
+   "page": 20,
+   "quote": "Total1 59 57.4 87 81.8"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 57.4,
+   "value_as_published": "57.4",
+   "unit": "fte",
+   "period": "as at 30 June 2026",
+   "page": 20,
+   "quote": "Total1 59 57.4 87 81.8"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total",
+   "column_as_published": "Executives",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "at 30 June 2026",
+   "page": 22,
+   "quote": "Total 3 2 0"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "260,000-279,999",
+   "column_as_published": "Executives",
+   "value": 2,
+   "value_as_published": "2",
+   "unit": "count",
+   "period": "at 30 June 2026",
+   "page": 22,
+   "quote": "260,000-279,999 2 0 0",
+   "band": "260,000-279,999"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "360,000-379,999",
+   "column_as_published": "Executives",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "at 30 June 2026",
+   "page": 22,
+   "quote": "360,000-379,999 1 0 0",
+   "band": "360,000-379,999"
+  },
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "2026 $",
+   "value": 21706097,
+   "value_as_published": "21,706,097",
+   "unit": "dollars",
+   "period": "2026",
+   "page": 12,
+   "quote": "Total income from transactions 21,706,097 24,266,469"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026 $",
+   "value": 21875801,
+   "value_as_published": "21,875,801",
+   "unit": "dollars",
+   "period": "2026",
+   "page": 12,
+   "quote": "Total expenses from transactions 21,875,801 24,059,719"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result from the period",
+   "column_as_published": "2026 $",
+   "value": -214008,
+   "value_as_published": "(214,008)",
+   "unit": "dollars",
+   "period": "2026",
+   "page": 12,
+   "quote": "Net result from the period (214,008) 55,820"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Total expenditure in relation to all three of these consultancies",
+   "value": 208663,
+   "value_as_published": "$208,663",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "Total expenditure in relation to all three of these consultancies was $208,663(excluding GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "column_as_published": "Expenditure 2025-26 (excl. GST)",
+   "value": 130861,
+   "value_as_published": "$130,861",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "16/02/26 30/06/26 $130,861 $130,861 $0",
+   "counterparty": "Cube Group",
+   "purpose": "An independent review of the Innovation Network (IN)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Nous Group Pty Ltd",
+   "value": 55417,
+   "value_as_published": "$55,417",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 26,
+   "quote": "08/12/25 06/04/26 $55,417 $55,417 $0",
+   "counterparty": "Nous Group Pty Ltd",
+   "purpose": "Business analysis and service design services"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Right Lane Consulting",
+   "value": 22385.0,
+   "value_as_published": "$22,385.00",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 26,
+   "quote": "24/03/26 07/04/26 $22,385.00 $22,385.00 $0",
+   "counterparty": "Right Lane Consulting",
+   "purpose": "Consulting services"
+  }
+ ]
+}

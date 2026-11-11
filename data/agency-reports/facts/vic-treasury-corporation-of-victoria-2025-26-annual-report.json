@@ -1,0 +1,98 @@
+{
+ "report_id": "vic-treasury-corporation-of-victoria-2025-26-annual-report",
+ "read_by": "extraction lane vic-w2-d, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "total_income",
+  "total_expenses",
+  "executive_band",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Income band",
+   "column_as_published": "2026",
+   "value": null,
+   "value_as_published": "$720,000 to $729,999",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026 (Managing Director and CEO, per footnote 1)",
+   "page": 73,
+   "quote": "$720,000 to $729,999 (1) 1 1"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net profit",
+   "column_as_published": "2026",
+   "value": 43.7,
+   "value_as_published": "43.7",
+   "unit": "millions_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Net profit 43.7 95.1"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 14.1,
+   "value_as_published": "14.1",
+   "unit": "millions_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 56,
+   "quote": "Employee expenses 14.1 13.4"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "we employed 60 people",
+   "value": 60,
+   "value_as_published": "60",
+   "unit": "people",
+   "period": "at 30 June 2026",
+   "page": 45,
+   "quote": "At 30 June 2026, we employed 60 people (57.3 full time equivalent)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "we employed 60 people",
+   "value": 57.3,
+   "value_as_published": "57.3",
+   "unit": "fte",
+   "period": "at 30 June 2026",
+   "page": 45,
+   "quote": "At 30 June 2026, we employed 60 people (57.3 full time equivalent)"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executive officers",
+   "column_as_published": "2026",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Total number of executive officers 7 7"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 2186548,
+   "value_as_published": "2,186,548",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Total remuneration 2,186,548 2,414,050"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "7 consultancy engagements valued at more than $10,000",
+   "value": 265765,
+   "value_as_published": "$265,765",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 45,
+   "quote": "there were 7 consultancy engagements valued at more than $10,000 (exclusive of GST), with a total of $265,765 incurred (exclusive of GST)"
+  }
+ ]
+}

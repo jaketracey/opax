@@ -103,3 +103,43 @@ reserved reproduction and Territory Stories attribution).
   assumed identities return (scans without a text layer).
 * IBAC and WA CCC are 2024-25 editions (`prior_edition`): their 2025-26 reports were not
   available at intake.
+
+## Victorian tabled reports, 11 November 2026 (OPAXBot)
+
+`python -m parli.ingest.agency_catalogue vic` lists the papers the Parliament of Victoria's
+tabled documents database types as annual reports (filter `tabled-type=49`) and titles
+for 2025-26: 212 papers tabled or released from 1 July to 11 November 2026, 189 of them
+annual reports (the rest are statutory reports under particular Acts). The API ignores
+its sort and date parameters, so the year term and the document-type filter do the
+selecting. `catalogue-vic-2026-11-11.json` keeps the list.
+
+`fetch` took 22 of them (the remaining departments, Victoria Police, the Ombudsman,
+Integrity Oversight Victoria, the VPSC, OVIC, the Commission for Children and Young
+People, TAC, WorkSafe, VMIA, VFMC, TCV, SRLA, Development Victoria, Parks Victoria,
+Melbourne Water, the VGCCC and Victoria Legal Aid) from the Parliament's tabled copies with
+OPAXBot (`intake-2026-11-11-vic-tabled-wave2.json`, `acquisition: "OPAXBot fetch"`); 651
+figures read. The Department of Education's 2025-26 report is not in the database under
+that year term; its publisher copy is in the first intake. The other 167 catalogued
+reports (health services, water corporations, catchment authorities, cemetery trusts,
+arts and sport bodies and others) are the next waves.
+
+## Catalogue hosts and OPAXBot, 11 November 2026
+
+`python -m parli.ingest.agency_catalogue probe` asked each catalogue host named in the
+intake manifest for its robots.txt and catalogue page once, as OPAXBot
+(`catalogue-probe-2026-11-11.json`):
+
+| Jurisdiction | Catalogue | Result |
+| --- | --- | --- |
+| NSW | parliament.nsw.gov.au tabled papers | HTTP 403 (refused) |
+| Vic | parliament.vic.gov.au tabled documents | answered |
+| Qld | parliament.qld.gov.au tabled papers | HTTP 403 (refused) |
+| WA | parliament.wa.gov.au tabled papers | HTTP 403 (refused) |
+| SA | parliament.sa.gov.au tabled papers | answered |
+| Tas | parliament.tas.gov.au tabled papers | answered |
+| ACT | act.gov.au annual reports directory | answered |
+| NT | parliament.nt.gov.au tabled papers | HTTP 403 (refused) |
+
+Refused hosts are not tried by any other route; NSW, Qld, WA and NT agency coverage depends
+on maintainer intakes or on each agency's own site answering OPAXBot.
+

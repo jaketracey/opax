@@ -1,0 +1,81 @@
+{
+ "report_id": "vic-victorian-funds-management-corporation-2025-26-annual-report",
+ "read_by": "extraction lane vic-w2-d, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "staff_fte",
+  "staff_headcount",
+  "consultancy",
+  "consultancy_total",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "2026 $’000",
+   "value": 241846,
+   "value_as_published": "241,846",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 59,
+   "quote": "Total income from transactions 241,846 240,390"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026 $’000",
+   "value": 217587,
+   "value_as_published": "217,587",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 59,
+   "quote": "Total expenses from transactions 217,587 228,876"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefit expenses",
+   "column_as_published": "2026 $’000",
+   "value": 48794,
+   "value_as_published": "48,794",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 59,
+   "quote": "Employee benefit expenses 4 48,794 44,925"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net surplus after tax",
+   "column_as_published": "2026 $’000",
+   "value": 17003,
+   "value_as_published": "17,003",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 59,
+   "quote": "Net surplus after tax 17,003 8,056"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 18,
+   "value_as_published": "18",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 77,
+   "quote": "Total number of executives 18 18"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026 $",
+   "value": 11094748,
+   "value_as_published": "11,094,748",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 77,
+   "quote": "Total remuneration 11,094,748 10,295,642"
+  }
+ ]
+}

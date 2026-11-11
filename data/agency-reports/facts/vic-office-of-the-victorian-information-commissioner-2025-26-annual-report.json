@@ -1,0 +1,185 @@
+{
+ "report_id": "vic-office-of-the-victorian-information-commissioner-2025-26-annual-report",
+ "read_by": "extraction lane vic-w2-c, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_count",
+  "executive_remuneration_total",
+  "executive_average_remuneration",
+  "staff_fte",
+  "staff_headcount",
+  "total_income",
+  "investigations_commenced",
+  "investigations_finalised",
+  "recommendations_made"
+ ],
+ "facts": [
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "Financial period ending 30 June 2026",
+   "value": 8456147,
+   "value_as_published": "$8,456,147",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 15,
+   "quote": "Total expenses from transactions $8,456,147 $9,815,496"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Total employee expense",
+   "column_as_published": "Financial period ending 30 June 2026",
+   "value": 7393074,
+   "value_as_published": "$7,393,074",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 15,
+   "quote": "Total employee expense $7,393,074 $8,152,206"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result from transactions (funded)",
+   "column_as_published": "Financial period ending 30 June 2026",
+   "value": -155647,
+   "value_as_published": "-$155,647",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 15,
+   "quote": "Net result from transactions (funded) -$155,647 -$503,196"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Consultancies over $10,000",
+   "value": 29409,
+   "value_as_published": "$29,409",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 15,
+   "quote": "The total expenditure during 2025-2026 in relation to this consultancy was $29,409 (excluding GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-2026 (excl GST)",
+   "value": 29409,
+   "value_as_published": "$29,409",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 15,
+   "quote": "Ethan Group Business continuity planning exercise 1 May 2026 5 June 2026 $29,409 $29,409 $0",
+   "counterparty": "Ethan Group",
+   "purpose": "Business continuity planning exercise"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "Breakdown of applicants by reviews received",
+   "value": 797,
+   "value_as_published": "797",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 7,
+   "quote": "Breakdown of applicants by reviews received Total 797"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "Breakdown of complaints received",
+   "value": 1135,
+   "value_as_published": "1135",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 9,
+   "quote": "Breakdown of complaints received Total 1135"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "Complaints received",
+   "column_as_published": "2025-2026",
+   "value": 156,
+   "value_as_published": "156",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 10,
+   "quote": "Complaints received Complaints finalised 2024-2025 162 2025-2026 156 2024-2025 127 2025-2026 160"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "information security incident notifications",
+   "value": 925,
+   "value_as_published": "925",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 6,
+   "quote": "925 information security incident notifications"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Reviews completed within the timeline agreed with applicant",
+   "value": 773,
+   "value_as_published": "773",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 7,
+   "quote": "Total 773 (accepted reviews only)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Breakdown of complaints finalised",
+   "value": 873,
+   "value_as_published": "873",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 9,
+   "quote": "Breakdown of complaints finalised Total 873"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Privacy complaints finalised",
+   "value": 160,
+   "value_as_published": "160",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 6,
+   "quote": "160 Privacy complaints finalised"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "breaches identified across 47 regulated entities regarding delayed decision making under section 21 of the FOI Act",
+   "value": 409,
+   "value_as_published": "409",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 6,
+   "quote": "409 breaches identified across 47 regulated entities regarding delayed decision making under section 21 of the FOI Act"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "FOI Professional Standards engagements concerning 19 standards across 87 regulated entities",
+   "value": 225,
+   "value_as_published": "225",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 6,
+   "quote": "225 FOI Professional Standards engagements concerning 19 standards across 87 regulated entities"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "consultations with VPS regulated entities",
+   "value": 99,
+   "value_as_published": "99",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 6,
+   "quote": "99 consultations with VPS regulated entities"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "attendees to OVIC events and training",
+   "value": 3759,
+   "value_as_published": "3,759",
+   "unit": "count",
+   "period": "2025-2026 financial year",
+   "page": 6,
+   "quote": "3,759 attendees to OVIC events and training"
+  }
+ ]
+}

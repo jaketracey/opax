@@ -1,0 +1,122 @@
+{
+ "report_id": "vic-melbourne-water-corporation-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_average_remuneration",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "2026",
+   "value": 2223130,
+   "value_as_published": "2,223,130",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 111,
+   "quote": "Total revenue 2,223,130 2,110,571"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses",
+   "column_as_published": "2026",
+   "value": -2044261,
+   "value_as_published": "(2,044,261)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 111,
+   "quote": "Total expenses (2,044,261) (1,954,044)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits",
+   "column_as_published": "2026",
+   "value": -189952,
+   "value_as_published": "(189,952)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 111,
+   "quote": "Employee benefits 3.2 (189,952) (190,814)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net profit for the period after tax",
+   "column_as_published": "2026",
+   "value": 95476,
+   "value_as_published": "95,476",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 111,
+   "quote": "Net profit for the period after tax 95,476 81,668"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total",
+   "column_as_published": "2025-26",
+   "value": 1445,
+   "value_as_published": "1,445",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 186,
+   "quote": "Total Employees 1,445 1,385.28 1,158 163 1,282.81 124 102.47"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "2025-26",
+   "value": 1385.28,
+   "value_as_published": "1,385.28",
+   "unit": "fte",
+   "period": "2025-26",
+   "page": 186,
+   "quote": "Total Employees 1,445 1,385.28 1,158 163 1,282.81 124 102.47"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 3011,
+   "value_as_published": "3,011",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 159,
+   "quote": "Total remuneration (a) 3,011 2,542"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executive officers",
+   "column_as_published": "2026",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 159,
+   "quote": "Total number of executive officers (a) 7 6"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 1247,
+   "value_as_published": "1,247",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (compensation of key management personnel)",
+   "page": 160,
+   "quote": "Total 1,247 1,164"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 2986261,
+   "value_as_published": "$2,986,261",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 180,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies was $2,986,261"
+  }
+ ]
+}

@@ -1,0 +1,459 @@
+{
+ "as_of": "2026-11-11",
+ "source": "OPAX maintainer intake of publisher files",
+ "scope": "Victorian annual reports tabled 2026-07-01 to 2026-11-11, fetched from the Parliament of Victoria's tabled copies with OPAXBot.",
+ "reporting_body_roster": {
+  "source_url": "https://www.parliament.vic.gov.au/api/search/tabledpapers",
+  "as_at": "2026-11-11",
+  "use": "Tabled papers search, not a full roster."
+ },
+ "catalogues": [
+  {
+   "jurisdiction": "VIC",
+   "primary": "https://www.parliament.vic.gov.au/tabled-documents-database",
+   "format": "Parliament tabled originals"
+  }
+ ],
+ "reports": [
+  {
+   "report_id": "vic-office-of-the-victorian-information-commissioner-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Office of the Victorian Information Commissioner",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10692",
+   "sha256": "8375243e56d78d9b910ee4914bcf891ce735a2f88561e23bcb4207b5062b1f1f",
+   "bytes": 1076268,
+   "pages": 69,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10692
+   }
+  },
+  {
+   "report_id": "vic-suburban-rail-loop-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Suburban Rail Loop Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10689",
+   "sha256": "f7998139d6544143ba65275f121c7bf37624313cac494c79a0491ad9d3dbc617",
+   "bytes": 14368543,
+   "pages": 90,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10689
+   }
+  },
+  {
+   "report_id": "vic-melbourne-water-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Melbourne Water Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10688",
+   "sha256": "4df9f535d279ca51945b18f82ca998127bb5b11d043c1d5942775466fed40557",
+   "bytes": 16503891,
+   "pages": 220,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10688
+   }
+  },
+  {
+   "report_id": "vic-victorian-public-sector-commission-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Public Sector Commission",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10686",
+   "sha256": "2aef42c66875f4f5192f953a7cce0298e4374e9696bb2002b0e530aa6e520400",
+   "bytes": 5350387,
+   "pages": 71,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10686
+   }
+  },
+  {
+   "report_id": "vic-department-of-treasury-and-finance-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Department of Treasury and Finance",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10657/2025-26-dtf-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10657",
+   "sha256": "d6dc9a64fa38e5658fa963bebb9a965f8a9f3563376b7f725874f8afe6a43249",
+   "bytes": 2632225,
+   "pages": 164,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10657
+   }
+  },
+  {
+   "report_id": "vic-department-of-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Department of Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab38b/globalassets/tabled-paper-documents/tabled-paper-10654/department-of-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10654",
+   "sha256": "d63880665fb2c401abd570be08cdbdf72309be3b0747410144c7efd35f0bee09",
+   "bytes": 3300297,
+   "pages": 234,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10654
+   }
+  },
+  {
+   "report_id": "vic-development-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Development Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10653",
+   "sha256": "cd55d36017d68e437c8ab1fc9129b87ea9932c93b1baad9039f6ce4bd4874b09",
+   "bytes": 17249911,
+   "pages": 63,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10653
+   }
+  },
+  {
+   "report_id": "vic-victorian-workcover-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian WorkCover Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab381/globalassets/tabled-paper-documents/tabled-paper-10652/worksafe-2025-26-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10652",
+   "sha256": "ed9a8f21d8ad2f71fc40145d0b0616d9a057b7c268593305e581b8d89e0db7ba",
+   "bytes": 11190637,
+   "pages": 123,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10652
+   }
+  },
+  {
+   "report_id": "vic-transport-accident-commission-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Transport Accident Commission",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10650/transport-accident-commission-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10650",
+   "sha256": "496df3d979c61d548c4d30d6b8bd46c1a0ece8388ad1c12978fc8bd4d03318c7",
+   "bytes": 7624251,
+   "pages": 136,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10650
+   }
+  },
+  {
+   "report_id": "vic-victoria-legal-aid-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victoria Legal Aid",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10612/victoria-legal-aid-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10612",
+   "sha256": "cb90db22e7be4d38d1920f4d9635119f94870224b86057717ff754e8a4601f46",
+   "bytes": 4812629,
+   "pages": 92,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10612
+   }
+  },
+  {
+   "report_id": "vic-parks-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Parks Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab341/globalassets/tabled-paper-documents/tabled-paper-10601/parks-victoira--annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10601",
+   "sha256": "0c8315bb0be4870924e9e3792bd4623d222297ef09ca133f676d8ca60b0d16ed",
+   "bytes": 7058234,
+   "pages": 125,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10601
+   }
+  },
+  {
+   "report_id": "vic-department-of-government-services-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Department of Government Services",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/dgs-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10579",
+   "sha256": "f86feeb883735f786a81cb5d4d73ee0b1f92cc7350bc6776610409c3715ad4cf",
+   "bytes": 2724398,
+   "pages": 209,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10579
+   }
+  },
+  {
+   "report_id": "vic-victoria-police-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victoria Police",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab31a/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10576",
+   "sha256": "f1ab8c8bb98a196d2650899888dc17094641b1b74fa5b162a057e002587fa829",
+   "bytes": 5056046,
+   "pages": 115,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10576
+   }
+  },
+  {
+   "report_id": "vic-department-of-justice-and-community-safety-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Department of Justice and Community Safety",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aaee8/globalassets/tabled-paper-documents/tabled-paper-10578/department-of-justice-and-community-safety-2025-26-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10578",
+   "sha256": "1314cc986e1d7ef3f8fd1e098210636d2005c49bc8d8303fcb10bdc3af16ce8f",
+   "bytes": 8703854,
+   "pages": 195,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-29",
+    "basis": "released",
+    "paper_id": 10578
+   }
+  },
+  {
+   "report_id": "vic-department-of-transport-and-planning-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Department of Transport and Planning",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aace1/globalassets/tabled-paper-documents/tabled-paper-10572/dtp-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10572",
+   "sha256": "84f7bab179f91661865ecfe9e5d257a15813d3aae95ac8396bc1e4e8d56fc8d6",
+   "bytes": 9889002,
+   "pages": 289,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-28",
+    "basis": "released",
+    "paper_id": 10572
+   }
+  },
+  {
+   "report_id": "vic-ombudsman-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Ombudsman",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10571",
+   "sha256": "25e474607fe8c51a09de58d4c598b5f1452551589c0ede67d0576d1c46a91c12",
+   "bytes": 6705129,
+   "pages": 96,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-28",
+    "basis": "released",
+    "paper_id": 10571
+   }
+  },
+  {
+   "report_id": "vic-integrity-oversight-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Integrity Oversight Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10568",
+   "sha256": "a6ca5cc45070ff4e6dc4a6c292f69189fe9ac75889de3bd40a8fd0c2d9bb3011",
+   "bytes": 3342139,
+   "pages": 138,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-28",
+    "basis": "released",
+    "paper_id": 10568
+   }
+  },
+  {
+   "report_id": "vic-victorian-gambling-and-casino-control-commission-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Gambling and Casino Control Commission",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aaac5/globalassets/tabled-paper-documents/tabled-paper-10567/victorian-gambling-and-casino-control-commission-2025-26-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10567",
+   "sha256": "118a8e0d0935aa8846929d98cb9566f58a1d03ad1e50005fa3c094c5aa02d8cc",
+   "bytes": 12457921,
+   "pages": 128,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-27",
+    "basis": "released",
+    "paper_id": 10567
+   }
+  },
+  {
+   "report_id": "vic-victorian-managed-insurance-authority-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Managed Insurance Authority",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aa28e/globalassets/tabled-paper-documents/tabled-paper-10564/victorian-managed-insurance-authority-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10564",
+   "sha256": "fe353a1896994f7640fc4c2f999af63a546e289fec266b5db20f44bda9c3ef89",
+   "bytes": 8144775,
+   "pages": 60,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-23",
+    "basis": "released",
+    "paper_id": 10564
+   }
+  },
+  {
+   "report_id": "vic-commission-for-children-and-young-people-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Commission for Children and Young People",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10554/commission-for-children-and-young-people-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10554",
+   "sha256": "bb5e9c08d374e77428538e2161c739f9b8da57ed6be8bfb231dd0f9fea8aa2cc",
+   "bytes": 5876132,
+   "pages": 92,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-16",
+    "basis": "released",
+    "paper_id": 10554
+   }
+  },
+  {
+   "report_id": "vic-victorian-funds-management-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Funds Management Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4a9414/globalassets/tabled-paper-documents/tabled-paper-10553/victorian-funds-management-corporation-2025-26-annual-report.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10553",
+   "sha256": "09eba909b2c685f2bed4d245347c01cd93fae3e57a0a30188130dfa6677ff270",
+   "bytes": 3437678,
+   "pages": 88,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-16",
+    "basis": "released",
+    "paper_id": 10553
+   }
+  },
+  {
+   "report_id": "vic-treasury-corporation-of-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Treasury Corporation of Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4a9413/globalassets/tabled-paper-documents/tabled-paper-10552/treasury-corporation-of-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10552",
+   "sha256": "610b981cf2b1ac9b31310360fc190820784ed714f1b48a881db5aec6d7e70fba",
+   "bytes": 8532880,
+   "pages": 84,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-15",
+    "basis": "released",
+    "paper_id": 10552
+   }
+  }
+ ]
+}

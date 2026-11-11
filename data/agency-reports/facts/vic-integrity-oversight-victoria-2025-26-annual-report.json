@@ -1,0 +1,251 @@
+{
+ "report_id": "vic-integrity-oversight-victoria-2025-26-annual-report",
+ "read_by": "extraction lane vic-w2-c, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "executive_average_remuneration",
+  "consultancy_total",
+  "consultancy",
+  "public_hearings",
+  "referrals_to_prosecution"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "2026",
+   "value": 8169516,
+   "value_as_published": "8,169,516",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 101,
+   "quote": "Total income from transactions 8,169,516 8,184,764"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -7943197,
+   "value_as_published": "(7,943,197)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 101,
+   "quote": "Total expenses from transactions (7,943,197) (7,740,482)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -5578834,
+   "value_as_published": "(5,578,834)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 101,
+   "quote": "Employee expenses 3.1.1 (5,578,834) (5,402,576)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 240331,
+   "value_as_published": "240,331",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 101,
+   "quote": "Net result 240,331 440,459"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+   "value": null,
+   "value_as_published": "$550,000-$559,999",
+   "unit": "dollars",
+   "period": "2025–26",
+   "page": 125,
+   "quote": "Remuneration received or receivable by the Accountable Officer, in connection with the management of Integrity Oversight Victoria during the reporting period was in the range of $550,000-$559,999"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 733002,
+   "value_as_published": "733,002",
+   "unit": "dollars",
+   "period": "2025–26",
+   "page": 126,
+   "quote": "Total remuneration 733,002 779,548"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 126,
+   "quote": "Total number of executives 4 2"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 1286010,
+   "value_as_published": "1,286,010",
+   "unit": "dollars",
+   "period": "2025–26",
+   "page": 127,
+   "quote": "Compensation of KMPs(1) 2026 2025 Total 1,286,010 1,307,535"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Staff",
+   "value": 29,
+   "value_as_published": "29",
+   "unit": "people",
+   "period": "at year end 2025–26",
+   "page": 10,
+   "quote": "29 Staff At year end we had 29 staff (27.5 FTE)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Staff",
+   "value": 27.5,
+   "value_as_published": "27.5",
+   "unit": "fte",
+   "period": "at year end 2025–26",
+   "page": 10,
+   "quote": "29 Staff At year end we had 29 staff (27.5 FTE)"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "Complaints received",
+   "value": 135,
+   "value_as_published": "135",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "This year we received 135 complaints"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "Disclosures",
+   "value": 22,
+   "value_as_published": "22",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "We received 22 disclosures under the PID Act"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "Received",
+   "value": 319,
+   "value_as_published": "319",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "We received 319 coercive powers notifications"
+  },
+  {
+   "metric": "investigations_commenced",
+   "label_as_published": "Investigations",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "We conducted 6 investigations in 2025–26, including 3 new ones."
+  },
+  {
+   "metric": "investigations_finalised",
+   "label_as_published": "Investigations",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "We closed the 3 investigations that were opened in 2024–25"
+  },
+  {
+   "metric": "recommendations_made",
+   "label_as_published": "Recommendations",
+   "value": 12,
+   "value_as_published": "12",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "We made 12 recommendations"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Enquiries",
+   "value": 386,
+   "value_as_published": "386",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "The number of enquiries we received rose by 49 per cent this year (386, up from 259)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Complaints closed",
+   "value": 162,
+   "value_as_published": "162",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "We closed 162 complaints"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Inspections",
+   "value": 15,
+   "value_as_published": "15",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "15 Inspections We conducted 14 regular inspections and one irregular inspection."
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Inspection reports",
+   "value": 9,
+   "value_as_published": "9",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "We completed 9 inspection reports during the year"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Reviewed",
+   "value": 110,
+   "value_as_published": "110",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "We completed 110 reviews of summonses, confidentiality notices and recordings of examinations and interviews"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Accepted",
+   "value": 83,
+   "value_as_published": "83%",
+   "unit": "percent",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "83% Accepted Eighty-three per cent of our recommendations were accepted by integrity bodies"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Improvements",
+   "value": 9,
+   "value_as_published": "9",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 11,
+   "quote": "We reported 9 systemic improvements by bodies to support compliance in Victoria’s integrity system."
+  }
+ ]
+}

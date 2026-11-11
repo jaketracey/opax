@@ -1,0 +1,334 @@
+{
+  "report_id": "vic-ombudsman-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "recommendations_made",
+    "public_hearings",
+    "referrals_to_prosecution",
+    "executive_average_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "2026",
+      "value": 25131396,
+      "value_as_published": "25,131,396",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 63,
+      "quote": "Total revenue and income from transactions 25,131,396 24,374,821"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026",
+      "value": 25313726,
+      "value_as_published": "25,313,726",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 63,
+      "quote": "Total expenses from transactions 25,313,726 24,389,570"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee expenses",
+      "column_as_published": "2026",
+      "value": 19300458,
+      "value_as_published": "19,300,458",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 63,
+      "quote": "Employee expenses 3.1.1 19,300,458 18,388,444"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result",
+      "column_as_published": "2026",
+      "value": -182330,
+      "value_as_published": "(182,330)",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 63,
+      "quote": "Net result (182,330) (14,749)"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Total employees",
+      "column_as_published": "Headcount",
+      "value": 116,
+      "value_as_published": "116",
+      "unit": "people",
+      "period": "last full pay period ending 28 June 2026",
+      "page": 45,
+      "quote": "Total employees 116 111.39 84 13 94.06 19 17.93"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total employees",
+      "column_as_published": "FTE",
+      "value": 111.39,
+      "value_as_published": "111.39",
+      "unit": "fte",
+      "period": "last full pay period ending 28 June 2026",
+      "page": 45,
+      "quote": "Total employees 116 111.39 84 13 94.06 19 17.93"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "The total remuneration package of the person holding the office of Ombudsman",
+      "value": null,
+      "value_as_published": "$560,000-$570,000",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 87,
+      "quote": "fell within the following bands: $560,000-$570,000 ($550,000-$560,000 in 2024-25)"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 2615453,
+      "value_as_published": "2,615,453",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 87,
+      "quote": "Total remuneration (a) 2,615,453 2,360,728"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives",
+      "column_as_published": "2026",
+      "value": 11.0,
+      "value_as_published": "11.00",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 87,
+      "quote": "Total number of executives(b) 11.00 11.00"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total",
+      "column_as_published": "2026",
+      "value": 1780350,
+      "value_as_published": "1,780,350",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 88,
+      "quote": "Compensation of KMPs 2026 $ 2025 $ Total (a) 1,780,350 1,590,044"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total",
+      "column_as_published": "All",
+      "value": 9,
+      "value_as_published": "9",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 49,
+      "quote": "Total 9 0 6 0 3 0 0 0"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES-3",
+      "column_as_published": "All",
+      "value": 1,
+      "value_as_published": "1",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 49,
+      "quote": "SES-3 1(a) 0 1 0 0 0 0 0",
+      "band": "SES-3"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES-2",
+      "column_as_published": "All",
+      "value": 3,
+      "value_as_published": "3",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 49,
+      "quote": "SES-2 3 0 1 0 2 0 0 0",
+      "band": "SES-2"
+    },
+    {
+      "metric": "executive_band",
+      "label_as_published": "SES-1",
+      "column_as_published": "All",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 49,
+      "quote": "SES-1 5 0 4 0 1 0 0 0",
+      "band": "SES-1"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Bendelta Ltd",
+      "column_as_published": "Expenditure 2025–26 (excl. GST)",
+      "value": 57500,
+      "value_as_published": "$57,500",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 51,
+      "quote": "Bendelta Ltd Development of Workforce Plan 12/03/2026 30/06/2026 $57,500 $57,500 -",
+      "counterparty": "Bendelta Ltd",
+      "purpose": "Development of Workforce Plan"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Total expenditure incurred during 2025–26 in relation to this consultancy",
+      "value": 57500,
+      "value_as_published": "$57,500",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 51,
+      "quote": "The total expenditure incurred during 2025–26 in relation to this consultancy is $57,500 (excluding GST)"
+    },
+    {
+      "metric": "matters_received",
+      "label_as_published": "complaints received that were within our",
+      "value": 17913,
+      "value_as_published": "17,913",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 8,
+      "quote": "17,913 complaints received that were within our"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "New Parliamentary complaints investigations commenced",
+      "value": 3,
+      "value_as_published": "3",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 30,
+      "quote": "New Parliamentary complaints investigations commenced 3"
+    },
+    {
+      "metric": "investigations_commenced",
+      "label_as_published": "New own-motion investigations commenced",
+      "value": 2,
+      "value_as_published": "2",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 30,
+      "quote": "New own-motion investigations commenced 2"
+    },
+    {
+      "metric": "investigations_finalised",
+      "label_as_published": "Investigations finalised",
+      "value": 13,
+      "value_as_published": "13",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 30,
+      "quote": "Investigations finalised 13"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "enquiries made into complaints we received",
+      "value": 4575,
+      "value_as_published": "4,575",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 8,
+      "quote": "4,575 enquiries made into complaints we received"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "public interest complaints received",
+      "value": 137,
+      "value_as_published": "137",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 8,
+      "quote": "137 public interest complaints received"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "public interest complaint cases finalised",
+      "value": 109,
+      "value_as_published": "109",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 8,
+      "quote": "109 public interest complaint cases finalised"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "complaints conciliated",
+      "value": 35,
+      "value_as_published": "35",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 8,
+      "quote": "35 complaints conciliated"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "complaints that engaged human rights",
+      "value": 4380,
+      "value_as_published": "4,380",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 28,
+      "quote": "we handled 4,380 complaints that engaged human rights"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Number of jurisdictional cases opened",
+      "column_as_published": "2025–26 actual",
+      "value": 17752,
+      "value_as_published": "17,752",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "Number of jurisdictional cases opened number 17,752 18,000"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Investigation reports tabled in Parliament",
+      "value": 4,
+      "value_as_published": "4",
+      "unit": "count",
+      "period": "2025-26",
+      "page": 30,
+      "quote": "Investigation reports tabled in Parliament 4"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Investigations continuing as of 30 June 2026",
+      "value": 31,
+      "value_as_published": "31",
+      "unit": "count",
+      "period": "as at 30 June 2026",
+      "page": 30,
+      "quote": "Investigations continuing as of 30 June 2026 31"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Investigation recommendations accepted",
+      "value": 90,
+      "value_as_published": "90%",
+      "unit": "percent",
+      "period": "2025-26",
+      "page": 30,
+      "quote": "Investigation recommendations accepted 90% (35 out of 39)"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Complaints closed within 30 days",
+      "column_as_published": "2025–26",
+      "value": 93,
+      "value_as_published": "93",
+      "unit": "percent",
+      "period": "2025-26",
+      "page": 29,
+      "quote": "Complaints closed within 30 days per cent 93 96 94 94"
+    }
+  ]
+}
