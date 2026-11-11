@@ -394,6 +394,8 @@ export interface BillRowProps {
   billKey?: string;
   title: string;
   status: string;
+  /** The API status for colour when `status` contains the display label. */
+  rawStatus?: string;
   date?: string | null;
   showStatus?: boolean;
   dateLabel?: string;
@@ -444,6 +446,7 @@ export function BillRow({
   billKey,
   title,
   status,
+  rawStatus,
   date,
   dateLabel,
   showStatus = true,
@@ -525,7 +528,9 @@ export function BillRow({
       {selected ? <SelectedMark /> : null}
       <View style={styles.main}>
         <View style={[styles.line, stacked ? styles.stacked : null]}>
-          {showStatus ? <StatusCapsule status={status} /> : null}
+          {showStatus ? (
+            <StatusCapsule status={rawStatus ?? status} label={status} />
+          ) : null}
           {dated ? (
             <Text wordSafe variant="secondary">
               {dated}

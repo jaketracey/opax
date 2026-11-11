@@ -68,6 +68,7 @@ export function BillIndexRow({
       billKey={bill.key}
       title={text.name}
       status={text.status}
+      rawStatus={bill.status}
       date={text.date}
       showStatus={showStatus}
       meta={text.meta}

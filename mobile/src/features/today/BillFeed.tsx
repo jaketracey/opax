@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { RecentBillsKind } from '../../api/catalogs';
 import type { recentBillsFor } from '../../api/selectors';
-import { billName, billSentenceCase } from '../../api/bill-transforms';
+import { billName } from '../../api/bill-transforms';
 import { catalogs } from '../../api/runtime';
 import { SegmentedPicker } from '../../design/controls';
 import { formatDate } from '../../design/format';
 import { InsetGroup } from '../../design/layout';
+import { billStatus } from '../../design/parliament';
 import { BillRow } from '../../design/rows';
 import { Skeleton } from '../../design/states';
 import { rhythm } from '../../design/tokens';
@@ -22,13 +23,6 @@ type Bill = NonNullable<ReturnType<typeof recentBillsFor>['data']>[number];
 export const sponsorPartyName = (party: string | null | undefined) =>
   partyFromCode(party);
 
-const statusWords: Record<string, string> = {
-  before_parliament: 'Before parliament',
-  exposure_draft: 'Exposure draft',
-  passed: 'Passed',
-  lapsed: 'Lapsed',
-};
-
 /**
  * What a Today bill row says. New: the status capsule and "Introduced {d MMM
  * yyyy}". Passed: no capsule (the segment says it), and the date of the
@@ -37,9 +31,7 @@ const statusWords: Record<string, string> = {
  * the portfolio, or the sponsor and their party for a private bill.
  */
 export function billRowText(bill: Bill, kind: RecentBillsKind = 'new') {
-  const status =
-    statusWords[bill.status] ??
-    (billSentenceCase(bill.status) || 'Status not recorded');
+  const status = billStatus(bill.status);
   const event =
     kind === 'new'
       ? bill.introduced
@@ -93,6 +85,7 @@ export function BillFeed({
             billKey={bill.key}
             title={text.name}
             status={text.status}
+            rawStatus={bill.status}
             showStatus={kind === 'new'}
             date={text.date}
             meta={text.meta}

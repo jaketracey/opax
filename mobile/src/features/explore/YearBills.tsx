@@ -11,6 +11,7 @@ import {
   Text,
 } from '../../design/primitives';
 import { counted } from '../../design/format';
+import { billStatus } from '../../design/parliament';
 import { rhythm } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes/bills';
 import type { BillIndex } from '../../api/catalog-decoders';
@@ -33,7 +34,8 @@ function Row({ bill }: { bill: Bill }) {
     <BillRow
       billKey={bill.key}
       title={title}
-      status={bill.status}
+      status={billStatus(bill.status)}
+      rawStatus={bill.status}
       date={bill.introduced}
       dateLabel="Introduced"
       href={billRoute(bill.key, title)}

@@ -29,11 +29,14 @@ export function statusTone(
 }
 export function StatusCapsule({
   status,
+  label = status,
   testID,
   hidden = false,
   accessibilityLabel,
 }: {
   status: string;
+  /** Reader-facing words; the raw status still determines the colour. */
+  label?: string;
   testID?: string;
   hidden?: boolean;
   accessibilityLabel?: string;
@@ -45,7 +48,7 @@ export function StatusCapsule({
     <View
       accessible={!hidden}
       accessibilityLabel={
-        hidden ? undefined : (accessibilityLabel ?? `Status: ${status}`)
+        hidden ? undefined : (accessibilityLabel ?? `Status: ${label}`)
       }
       accessibilityElementsHidden={hidden}
       importantForAccessibility={hidden ? 'no-hide-descendants' : 'auto'}
@@ -68,7 +71,7 @@ export function StatusCapsule({
         tone={active ? 'billsInk' : 'inkSoft'}
         style={styles.shrink}
       >
-        {status}
+        {label}
       </Text>
     </View>
   );
