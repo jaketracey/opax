@@ -1,5 +1,10 @@
 import { useFocusEffect } from 'expo-router';
 import {
+  CommonActions,
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
+import {
   createContext,
   useCallback,
   useContext,
@@ -20,10 +25,13 @@ import {
   Hoverable,
   RegionProvider,
   splitPane,
+  splitPanePhoneRegular,
   splitPaneWidth,
   useLayout,
   useMeasuredRegion,
 } from './adaptive';
+import { activeVerticalFold, sidesOf } from './fold';
+import { ReservedRegionArea, useReservedRegions } from './fold-area';
 import { Icon } from './icon';
 import { useKeyCommand } from './keyboard';
 import { symbols } from './symbols';
@@ -39,6 +47,8 @@ import { colors, hairline, minimumTarget, radii, rhythm } from './tokens';
 export interface SplitPane<T> {
   /** Opens an entry in the pane, above the current one. */
   push: (entry: T) => void;
+  /** Replaces a resolved entry without adding a Back step. */
+  replace?: (entry: T) => void;
   /** Back to the entry below; false at the selected item. */
   back: () => boolean;
   /** Makes `entry` the selection, alone in the pane (a related item). */
@@ -84,6 +94,23 @@ export function useSplitCursor(): string | null {
 // List widths survive remounts (a tab switch, a rotation through compact).
 const savedWidths = new Map<string, number>();
 
+/** A native record route, relative to the split's owning stack. */
+export interface SplitRoute {
+  pathname: string;
+  params?: Record<string, unknown>;
+}
+
+function sameRoute(left: SplitRoute | null, right: SplitRoute | null) {
+  return (
+    !!left &&
+    !!right &&
+    left.pathname === right.pathname &&
+    Object.keys({ ...left.params, ...right.params }).every(
+      (key) => left.params?.[key] === right.params?.[key],
+    )
+  );
+}
+
 export interface SplitLayoutProps<T> {
   /** Remembers this split's list width. */
   id: string;
@@ -97,6 +124,10 @@ export interface SplitLayoutProps<T> {
   /** Draws an entry in the detail pane (the selection or a pushed entry). */
   renderDetail: (entry: T) => ReactNode;
   entryKey: (entry: T) => string;
+  /** Maps loaded entries to native routes when the split collapses. */
+  entryRoute?: (entry: T) => SplitRoute | null;
+  /** Returns null for routes this split cannot draw when it expands. */
+  entryFromRoute?: (route: SplitRoute) => T | null;
   /** The Back label for an entry below the top one ("Bill"). */
   entryTitle?: (entry: T) => string;
   /** Trailing actions in the pane bar (Share). */
@@ -127,13 +158,18 @@ export interface SplitLayoutProps<T> {
 }
 
 /**
- * A list pane beside a detail pane on regular width (iPad, 700pt and up),
- * with a hairline divider that drags to resize the list (300–440pt). On
- * compact width it renders the list alone and the screen pushes its detail
- * route as before: check `useLayout().regular` to choose between `onSelect`
- * and `router.push`.
+ * One stable list container across window resizes. On regular width the
+ * detail and divider join it; on compact width the list fills the screen.
  */
-export function SplitLayout<T>({
+export function SplitLayout<T>(props: SplitLayoutProps<T>) {
+  return (
+    <ReservedRegionArea style={styles.grow}>
+      <SplitContent {...props} />
+    </ReservedRegionArea>
+  );
+}
+
+function SplitContent<T>({
   id,
   list,
   selected,
@@ -141,6 +177,8 @@ export function SplitLayout<T>({
   onSelect,
   renderDetail,
   entryKey,
+  entryRoute,
+  entryFromRoute,
   entryTitle,
   detailActions,
   empty,
@@ -174,6 +212,7 @@ export function SplitLayout<T>({
   const top = stack.at(-1) ?? null;
   const pane: SplitPane<T> = {
     push: (entry) => setStack((current) => [...current, entry]),
+    replace: (entry) => setStack((current) => [...current.slice(0, -1), entry]),
     back: () => {
       if (stack.length < 2) return false;
       setStack((current) => current.slice(0, -1));
@@ -186,6 +225,126 @@ export function SplitLayout<T>({
     entries: stack,
     depth: stack.length,
   };
+
+  const navigation = useContext(NavigationContext);
+  const route = useContext(NavigationRouteContext);
+  const previous = useRef({ regular: layout.regular, stack });
+  const pendingExpansion = useRef(false);
+  useEffect(() => {
+    const before = previous.current;
+    previous.current = { regular: layout.regular, stack };
+    if (!layout.regular) pendingExpansion.current = false;
+    else if (!before.regular) pendingExpansion.current = true;
+    if (!navigation || !route || !entryRoute || !entryFromRoute) return;
+    const parent = navigation.getParent();
+    const ownsWindow = () => parent?.isFocused() !== false;
+    const state = navigation.getState();
+    const owner = state.routes.findIndex((item) => item.key === route.key);
+    if (owner < 0 || state.type !== 'stack') return;
+
+    if (
+      before.regular &&
+      !layout.regular &&
+      ownsWindow() &&
+      navigation.isFocused()
+    ) {
+      // Add the mapped pane stack atomically, keeping every existing route
+      // key, including the list's. A route below the top may be unmappable.
+      const topRoute = before.stack.at(-1) && entryRoute(before.stack.at(-1)!);
+      const details = before.stack.flatMap((entry) => {
+        const destination = entryRoute(entry);
+        return destination
+          ? [
+              {
+                name: destination.pathname.replace(/^\//, ''),
+                params: destination.params,
+              },
+            ]
+          : [];
+      });
+      if (
+        topRoute &&
+        details.every((item) => state.routeNames.includes(item.name))
+      ) {
+        const routes = [...state.routes.slice(0, owner + 1), ...details];
+        navigation.dispatch({
+          ...CommonActions.reset({
+            ...state,
+            routes,
+            index: routes.length - 1,
+          }),
+          target: state.key,
+        });
+      }
+    }
+
+    const expand = () => {
+      // Recovery belongs to a width transition. Ordinary route pushes in a
+      // regular window retain their existing full-screen navigation.
+      if (!pendingExpansion.current || !layout.regular || !ownsWindow()) return;
+      const current = navigation.getState();
+      const index = current.routes.findIndex((item) => item.key === route.key);
+      if (index < 0 || current.index < index) return;
+      if (current.index === index) {
+        pendingExpansion.current = false;
+        // Back to the compact list has dismissed the pane's deeper entries.
+        if (!before.regular && stack.length > 1)
+          setPaneState({ key: selectedKey, stack: stack.slice(0, 1) });
+        return;
+      }
+      const details = current.routes.slice(index + 1, current.index + 1);
+      const entries = details.map((item) =>
+        item.state
+          ? null
+          : entryFromRoute({
+              pathname: `/${item.name}`,
+              params: item.params as SplitRoute['params'],
+            }),
+      );
+      // Only absorb a contiguous record stack immediately above this list.
+      // Another list, a sheet or an unrelated route retains its navigation.
+      if (!entries.length || entries.some((entry) => entry === null)) return;
+      const restored = (entries as T[]).map((entry) => {
+        const loaded = stack.find((item) => entryKey(item) === entryKey(entry));
+        // Reuse loaded entries only while the route's reader state agrees,
+        // including a document's cited passage changed on compact width.
+        return loaded && sameRoute(entryRoute(loaded), entryRoute(entry))
+          ? loaded
+          : entry;
+      });
+      const base = restored[0]!;
+      pendingExpansion.current = false;
+      setPaneState({ key: entryKey(base), stack: restored });
+      navigation.dispatch({
+        ...CommonActions.reset({
+          ...current,
+          routes: current.routes.slice(0, index + 1),
+          index,
+        }),
+        target: current.key,
+      });
+      // Update after the reset so its retained list route includes the new
+      // selection parameters, rather than replacing them with the old ones.
+      if (entryKey(base) !== selectedKey) onSelect(base);
+    };
+    expand();
+    const offState = navigation.addListener('state', expand);
+    const offFocus = parent?.addListener('focus', expand);
+    return () => {
+      offState();
+      offFocus?.();
+    };
+  }, [
+    layout.regular,
+    stack,
+    navigation,
+    route,
+    entryRoute,
+    entryFromRoute,
+    entryKey,
+    selectedKey,
+    onSelect,
+  ]);
 
   const [focused, setFocused] = useState(false);
   useFocusEffect(
@@ -261,29 +420,46 @@ export function SplitLayout<T>({
   // the region, 45% at accessibility sizes so its rows keep whole words); a
   // width the reader drags is kept per mode.
   const large = useAccessibilitySize();
-  const widthKey = large ? `${id}:large` : id;
-  const maxWidth = large
-    ? Math.round(layout.width * 0.5)
-    : Math.min(splitPane.max, Math.round(layout.width * 0.5));
+  const phoneRegular = layout.rule === 'phone-regular';
+  const modeKey = phoneRegular ? `${id}:phone-regular` : id;
+  const widthKey = large ? `${modeKey}:large` : modeKey;
+  const maxWidth = phoneRegular
+    ? Math.round(layout.width * splitPanePhoneRegular.maxFraction)
+    : large
+      ? Math.round(layout.width * 0.5)
+      : Math.min(splitPane.max, Math.round(layout.width * 0.5));
   const clampWidth = (next: number) =>
-    Math.round(Math.min(Math.max(next, splitPane.min), maxWidth));
+    Math.round(
+      Math.min(
+        Math.max(
+          next,
+          phoneRegular ? splitPanePhoneRegular.min : splitPane.min,
+        ),
+        maxWidth,
+      ),
+    );
   const [, setResized] = useState(0);
-  const width = clampWidth(
-    savedWidths.get(widthKey) ?? splitPaneWidth(layout.width, large),
-  );
+  const saved = savedWidths.get(widthKey);
+  const normalWidth =
+    saved === undefined
+      ? splitPaneWidth(layout.width, large, layout.rule)
+      : clampWidth(saved);
+  const regions = useReservedRegions();
+  const fold = layout.regular ? activeVerticalFold(regions.divisions) : null;
+  const sides = fold
+    ? sidesOf(fold, { x: 0, y: 0, width: layout.width, height: layout.height })
+    : null;
+  const vertical = sides && 'leading' in sides ? sides : null;
+  const width = vertical?.leading.width ?? normalWidth;
+  const gap = vertical ? vertical.trailing.x - width : 1;
   const resize = (next: number) => {
+    if (fold) return;
     savedWidths.set(widthKey, clampWidth(next));
     setResized((count) => count + 1);
   };
   const [onListLayout, listRegion] = useMeasuredRegion();
   const [onDetailLayout, detailRegion] = useMeasuredRegion();
 
-  if (!layout.regular) return <>{list}</>;
-  const listContent = cursorMode ? (
-    <CursorContext.Provider value={cursor}>{list}</CursorContext.Provider>
-  ) : (
-    list
-  );
   const below = stack.length > 1 ? stack.at(-2)! : null;
   const bar =
     top && (below || detailActions) ? (
@@ -299,38 +475,46 @@ export function SplitLayout<T>({
       </View>
     ) : null;
   return (
-    <View style={styles.split} testID={testID}>
+    <View style={styles.split} testID={layout.regular ? testID : undefined}>
       <View
-        style={[styles.listPane, { width }]}
+        style={[styles.listPane, layout.regular ? { width } : styles.grow]}
         onLayout={onListLayout}
         testID={testID ? `${testID}-list` : undefined}
       >
-        <RegionProvider value={listRegion}>
-          <ListPaneContext.Provider value>
-            {listContent}
+        <RegionProvider value={layout.regular ? listRegion : null}>
+          <ListPaneContext.Provider value={layout.regular}>
+            <CursorContext.Provider
+              value={layout.regular && cursorMode ? cursor : null}
+            >
+              {list}
+            </CursorContext.Provider>
           </ListPaneContext.Provider>
         </RegionProvider>
       </View>
-      <Divider width={width} onResize={resize} />
-      <View
-        style={styles.detailPane}
-        onLayout={onDetailLayout}
-        testID={testID ? `${testID}-detail` : undefined}
-      >
-        <RegionProvider value={detailRegion}>
-          <PaneContext.Provider value={pane as SplitPane<unknown>}>
-            <PaneBarContext.Provider value={bar}>
-              {top ? (
-                <View key={entryKey(top) + stack.length} style={styles.grow}>
-                  {renderDetail(top)}
-                </View>
-              ) : (
-                empty
-              )}
-            </PaneBarContext.Provider>
-          </PaneContext.Provider>
-        </RegionProvider>
-      </View>
+      {layout.regular ? (
+        <Divider width={width} onResize={resize} paused={!!fold} gap={gap} />
+      ) : null}
+      {layout.regular ? (
+        <View
+          style={styles.detailPane}
+          onLayout={onDetailLayout}
+          testID={testID ? `${testID}-detail` : undefined}
+        >
+          <RegionProvider value={detailRegion}>
+            <PaneContext.Provider value={pane as SplitPane<unknown>}>
+              <PaneBarContext.Provider value={bar}>
+                {top ? (
+                  <View key={entryKey(top) + stack.length} style={styles.grow}>
+                    {renderDetail(top)}
+                  </View>
+                ) : (
+                  empty
+                )}
+              </PaneBarContext.Provider>
+            </PaneContext.Provider>
+          </RegionProvider>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -404,14 +588,18 @@ const STEP = 40;
 function Divider({
   width,
   onResize,
+  paused,
+  gap,
 }: {
   width: number;
   onResize: (width: number) => void;
+  paused: boolean;
+  gap: number;
 }) {
   const start = useRef(width);
-  const latest = useRef({ width, onResize });
+  const latest = useRef({ width, onResize, paused });
   useEffect(() => {
-    latest.current = { width, onResize };
+    latest.current = { width, onResize, paused };
   });
   const [active, setActive] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -419,18 +607,35 @@ function Divider({
   // eslint-disable-next-line react-hooks/refs
   const [responder] = useState(() =>
     PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 2,
+      onStartShouldSetPanResponder: () => !latest.current.paused,
+      onMoveShouldSetPanResponder: (_, g) =>
+        !latest.current.paused && Math.abs(g.dx) > 2,
       onPanResponderGrant: () => {
         start.current = latest.current.width;
         setActive(true);
       },
-      onPanResponderMove: (_, g) =>
-        latest.current.onResize(start.current + g.dx),
+      onPanResponderMove: (_, g) => {
+        if (!latest.current.paused)
+          latest.current.onResize(start.current + g.dx);
+      },
       onPanResponderRelease: () => setActive(false),
       onPanResponderTerminate: () => setActive(false),
     }),
   );
+  if (paused)
+    return (
+      <View
+        accessible
+        accessibilityRole="adjustable"
+        accessibilityLabel="List width"
+        accessibilityValue={{ text: `${Math.round(width)} points` }}
+        accessibilityState={{ disabled: true }}
+        accessibilityHint="Resizing is paused while the device is folded. Unfold to resize the panes."
+        pointerEvents="none"
+        testID="split-divider"
+        style={{ width: gap }}
+      />
+    );
   return (
     <Hoverable effect="none" onHover={setHovered} style={styles.dividerWrap}>
       <View
