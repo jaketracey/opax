@@ -101,7 +101,13 @@ export function Disclosure({
       ]}
     >
       {icon ? <Icon name={icon} size={17} tone={tint} /> : null}
-      <View style={[styles.text, stacked ? styles.stacked : null]}>
+      <View
+        style={[
+          styles.text,
+          accessory ? styles.intrinsicText : styles.fillText,
+          stacked ? styles.stacked : null,
+        ]}
+      >
         <View style={styles.label}>
           <Text wordSafe variant="strong">
             {label}
@@ -184,11 +190,13 @@ const styles = StyleSheet.create({
     paddingVertical: rhythm.row,
   },
   text: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: rhythm.tight,
   },
+  fillText: { flex: 1 },
+  // Measure the label before deciding whether the accessory needs another line.
+  intrinsicText: { flexGrow: 1, flexShrink: 1, flexBasis: 'auto' },
   stacked: { flexDirection: 'column', alignItems: 'flex-start', gap: 0 },
   label: { flexShrink: 1, flexGrow: 1, gap: 2 },
   value: { flexShrink: 0 },
