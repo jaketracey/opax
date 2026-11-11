@@ -9,12 +9,14 @@ import {tokens as catalogTokens} from '../src/catalog-query.mjs';
 const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const code=ts.transpileModule(source.slice(source.indexOf('async function apiUnifiedSearch'),source.indexOf('/** One /find at `topK` depth')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function fixture({localError=false,docError=false,suggest=false,localRows}={}){
- const calls=[]; const requests=[];
+ const calls=[]; const requests=[]; const reads=[];
  const local={results:localRows || [{kind:'contract',slug:'catalog-1',title:'Woodside contract',href:'/subject/supplier/woodside',date:'2025-01-01'}],total:1,truncated:false,coverage:'Published snapshot',version:'test'};
  const docs={results:[{kind:'speech',slug:'speech-1',title:'Woodside debate',date:'2024-01-01'}],truncated:false};
- const ctx={URL,Request,Response,Set,Number,SEARCH_SORTS,compareSearchResults,CATALOG_KINDS,catalogTokens,validateSearchQuery:()=>null,rateLimited:async()=>null,json:(x,status=200)=>Response.json(x,{status}),searchCatalog:async()=>{calls.push('catalog');if(localError)throw Error();return local},apiSearch:async(_r,u,_e,_c,options)=>{requests.push({url:u,options});calls.push(u.pathname+'?'+u.searchParams.get('kind'));return docError?new Response('',{status:502}):Response.json(docs)}};
+ const ctx={URL,Request,Response,Set,Number,SEARCH_SORTS,compareSearchResults,CATALOG_KINDS,catalogTokens,validateSearchQuery:()=>null,rateLimited:async()=>null,json:(x,status=200)=>Response.json(x,{status}),searchCatalog:async()=>{calls.push('catalog');if(localError)throw Error();return local},
+  // The paged catalogue as src/catalog-search.ts returns it: stubs in rank order, and their records on request.
+  searchCatalogPaged:async()=>{calls.push('catalog');if(localError)throw Error();const rows=local.results;return {...local,stubs:rows.map((r,id)=>({id,kind:r.kind,date:r.date||undefined,sort_date:r.date||r.sort_date||''})),records:async ids=>{reads.push(ids);return new Map(ids.map(id=>[id,rows[id]]))}}},apiSearch:async(_r,u,_e,_c,options)=>{requests.push({url:u,options});calls.push(u.pathname+'?'+u.searchParams.get('kind'));return docError?new Response('',{status:502}):Response.json(docs)}};
  const fn=runInNewContext(code+';apiUnifiedSearch',ctx);
- return {calls,requests,run:async(params={},env={})=>{const url=new URL('https://opax.com.au/api/search-all?'+new URLSearchParams({q:'Woodside',...params}));const res=await fn(new Request(url),url,env,{}, {suggest});return {status:res.status,data:await res.json()}}};
+ return {calls,requests,reads,run:async(params={},env={})=>{const url=new URL('https://opax.com.au/api/search-all?'+new URLSearchParams({q:'Woodside',...params}));const res=await fn(new Request(url),url,env,{}, {suggest});return {status:res.status,data:await res.json()}}};
 }
 test('all-record search combines source types with pagination',async()=>{const f=fixture();const {data}=await f.run({per:'1',page:'2'});assert.equal(data.total,2);assert.equal(data.results[0].kind,'speech');assert.deepEqual(f.calls,['catalog','/api/search?all'])});
 test('financial-only queries do not invoke document retrieval',async()=>{const f=fixture();const {data}=await f.run({kind:'contract'});assert.equal(data.results[0].kind,'contract');assert.deepEqual(f.calls,['catalog'])});
@@ -61,4 +63,19 @@ test('exact topics and named collections stay above matching record mentions', a
   assert.equal(housing.data.results[0].href,'/subject/topic/housing');
   const instruments=await fixture({suggest:true,localRows}).run({q:'Instruments'});
   assert.equal(instruments.data.results[0].href,'/instruments');
+});
+
+test('a relevance or date page reads only the catalogue records it shows; title order reads all of them',async()=>{
+ const localRows=Array.from({length:30},(_,i)=>({kind:'contract',slug:'c-'+i,title:'Contract '+(29-i),href:'/c/'+i,...(i%4?{date:`20${10+i%12}-0${1+i%9}-01`}:{})}));
+ for(const sort of ['relevance','newest','oldest']){
+  const f=fixture({localRows});const {data}=await f.run({sort,per:'5',page:'2'});
+  assert.equal(f.reads.length,1,sort);
+  const shown=data.results.filter(r=>r.kind==='contract');
+  assert.deepEqual([...f.reads[0]],shown.map(r=>Number(r.slug.slice(2))),sort);
+  for(const row of shown){const id=Number(row.slug.slice(2)),record=localRows[id];
+   assert.deepEqual(Object.entries(row),Object.entries({...record,score:1/(10+id),sort_date:record.date||''}),sort)}
+  assert.equal(data.total,31);assert.ok(Object.values(data.years).reduce((a,b)=>a+b,0)>20);
+ }
+ const f=fixture({localRows});const {data}=await f.run({sort:'title_asc',per:'5'});
+ assert.equal(f.reads.length,0);assert.equal(data.results[0].title,'Contract 0');
 });

@@ -180,3 +180,43 @@ test('unfiltered searches read meta-core.json and return exactly what meta.json 
   assert.ok(seen.includes('meta-core.json'));assert.equal(seen.includes('meta.json'),metaRead);
  }
 });
+
+test('a paged search orders rows from dates.json, reads only the shards a page shows, and matches searchCatalog',async()=>{
+ const kinds=['grant','contract','person'];
+ const meta=Array.from({length:900},(_,i)=>[kinds[i%3],2000+i%20,i%7?2001+i%25:null,'qld','','','']);
+ const records=meta.map((m,i)=>({kind:m[0],title:'Record '+i,href:'/r/'+i,snippet:'',slug:'r-'+i,resource:'r'+i,...(i%9?{date:'20'+String(10+i%15)+'-0'+(1+i%9)+'-1'+i%10}:{})}));
+ const terms=Object.fromEntries(Array.from({length:64},(_,b)=>[b,{}]));
+ for(let id=0;id<meta.length;id++){(terms[bucket('water')].water??=[]).push(id,1+id%3);if(id%2===0)(terms[bucket('bridge')].bridge??=[]).push(id,id%11?1:8)}
+ const kindIndex=new Map(kinds.map((k,i)=>[k,i]));
+ const dates=records.map(r=>r.date?Number(r.date.replaceAll('-','')):0);
+ const files={meta,'meta-core':{kinds,kind:meta.map(m=>kindIndex.get(m[0])),to:meta.map(m=>m[2])},...Object.fromEntries(Object.entries(terms).map(([b,p])=>['terms-'+b,p]))};
+ for(let i=0;i<meta.length;i+=256)files['records-'+i/256]=records.slice(i,i+256);
+ const catalog=(seen,dateFile)=>({fetch:async request=>{
+  const path=new URL(request.url).pathname;seen.push(path.split('/').pop());
+  if(path==='/search-catalog/manifest.json')return Response.json({version:'0123456789abcdef',count:meta.length,counts:{},recordShardSize:256,coverage:'fixture'});
+  const name=path.split('/').pop().replace(/\.json$/,'');
+  if(name==='dates')return dateFile?Response.json(dateFile):new Response('missing',{status:404});
+  return name in files ? Response.json(files[name]) : new Response('missing',{status:404});
+ }});
+ const url=params=>new URL('https://opax.com.au/api/search-all?'+new URLSearchParams(params));
+ const eager=await import('../src/catalog-search.ts?eager');
+ // Each case has its own module instance (its own isolate cache): dates.json present, absent, or holding a -1.
+ const unreadable=[...dates];unreadable[2]=-1;
+ for(const [label,dateFile] of [['dates',dates],['none',null],['unreadable',unreadable]]){
+  const paged=await import('../src/catalog-search.ts?paged-'+label);
+  // {q:'water'} selects record 2, whose unreadable date sends that search down the up-front path.
+  for(const params of [{q:'water'},{q:'water bridge'},{q:'water',kind:'contract'},{q:'water',from:'2010'},{q:'nothing'}]){
+   const full=await eager.searchCatalog(url(params),catalog([],null)), seen=[];
+   const page=await paged.searchCatalogPaged(url(params),catalog(seen,dateFile));
+   assert.equal(page.total,full.total);assert.equal(page.truncated,full.truncated);
+   assert.deepEqual(page.stubs.map(({kind,date,sort_date})=>({kind,date,sort_date})),full.results.map(r=>({kind:r.kind,date:r.date||undefined,sort_date:r.date||r.sort_date})),label+' '+JSON.stringify(params));
+   const shown=page.stubs.slice(0,5).map(s=>s.id), before=seen.filter(f=>f.startsWith('records-')).length;
+   const read=await page.records(shown);
+   assert.deepEqual(shown.map(id=>read.get(id)),full.results.slice(0,5).map(({score,sort_date,...record})=>record));
+   const shards=new Set(shown.map(id=>Math.floor(id/256))).size;
+   const early=!dateFile || page.stubs.some(s=>dateFile[s.id]<0);
+   if(!early)assert.equal(seen.filter(f=>f.startsWith('records-')).length,shards,'only the shown rows\' shards');
+   else assert.equal(before,new Set(page.stubs.map(s=>Math.floor(s.id/256))).size,'every selected shard, up front');
+  }
+ }
+});
