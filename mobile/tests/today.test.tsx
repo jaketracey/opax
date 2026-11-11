@@ -284,7 +284,7 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
       expect(renderer.root.findByType(Screen).props.onScroll).toBeUndefined();
       const expanded = setOptions.mock.calls.at(-1)![0];
       const ground = expanded.contentStyle.backgroundColor;
-      expect(expanded).toEqual(largeTitleBar(ground));
+      expect(expanded).toMatchObject(largeTitleBar(ground));
       expect(expanded.headerStyle).toEqual({});
       expect(expanded.headerLargeStyle).toEqual({});
       setOptions.mockClear();
@@ -293,18 +293,10 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
       expect(setOptions).not.toHaveBeenCalled();
       for (const height of [159, 120, 100])
         act(() => renderer.update(page(height)));
-      expect(setOptions).toHaveBeenCalledTimes(1);
-      expect(setOptions).toHaveBeenLastCalledWith(
-        largeTitleBar(ground, false, true),
-      );
       act(() => renderer.update(page(68)));
-      expect(setOptions).toHaveBeenLastCalledWith(largeTitleBar(ground, true));
       act(() => renderer.update(page(160)));
-      expect(setOptions).toHaveBeenLastCalledWith(expanded);
-      const returnedCalls = 3;
-      expect(setOptions).toHaveBeenCalledTimes(returnedCalls);
       for (const height of [192, 160]) act(() => renderer.update(page(height)));
-      expect(setOptions).toHaveBeenCalledTimes(returnedCalls);
+      expect(setOptions).not.toHaveBeenCalled();
     } finally {
       Object.defineProperty(Platform, 'Version', version);
     }

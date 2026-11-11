@@ -60,7 +60,7 @@ export function RouteOptions({
   useRootBarSearchOptions(options);
   useRootBarAppearance(setOptions, {
     names: ['bills', 'ask'],
-    largeTitleEnabled: options?.headerLargeTitleEnabled,
+    owner: 'options',
   });
   // Stack.Screen installs options in its own effect, outside our guard.
   // Install before paint so native items start in their final positions.
