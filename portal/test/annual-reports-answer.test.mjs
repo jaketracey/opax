@@ -53,7 +53,7 @@ test('ranking bodies by key management personnel rows answers with counts of row
   const answer=`In 2018-19, the ${first.body} published the most key management personnel disclosure rows (${first.kmp_rows}), followed by the ${second.body} with ${second.kmp_rows}.`
   assert.deepEqual(auditPayload(q,payload(answer,sources)).findings,[])
   const fallback=api.groundAnswerPayload(payload('',sources),q).answer
-  assert.match(fallback,new RegExp(`^${first.body.replace(/[()]/g,'\\$&')} led the selected ranking with ${first.kmp_rows} key management personnel disclosure rows published for 2018-19`))
+  assert.match(fallback,new RegExp(`^${first.body.replace(/[\\^$.*+?()[\]{}|]/g,'\\$&')} led the selected ranking with ${first.kmp_rows} key management personnel disclosure rows published for 2018-19`))
   assert.doesNotMatch(fallback,/\$\d/)
 })
 
