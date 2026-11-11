@@ -3,7 +3,7 @@ import { clip, fold, siteUrl } from './record-common'
 import { fiscalYearValid, object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
 
-const VIEWS = ['remuneration', 'bands', 'profile', 'compare', 'suppliers'] as const
+const VIEWS = ['remuneration', 'bands', 'profile', 'compare', 'suppliers', 'kmp_counts', 'top_by_year'] as const
 const METRICS = ['total_expenses', 'employee_benefits', 'suppliers_expense', 'consultancy_spend', 'non_consultancy_spend', 'consultancy_contracts', 'ongoing_staff', 'non_ongoing_staff'] as const
 type Metric = typeof METRICS[number]
 const METRIC: Record<Metric, { label: string; unit: string; get: (h: RecordRow) => unknown }> = {
@@ -25,7 +25,9 @@ const NOTE = 'As published by each entity on the Transparency Portal (Department
 const norm = (v: unknown) => fold(v).replace(/&/g, ' and ').replace(/^the\s+/, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
 const num = (v: unknown): number | null => typeof v === 'number' && Number.isFinite(v) ? v : null
 const money = (v: unknown) => num(v) == null ? 'not published as a number' : '$' + Math.round(Number(v)).toLocaleString('en-AU')
-const fromTo = (ys: string[]) => ys.length ? `${ys[0]} to ${ys[ys.length - 1]}` : 'no years'
+const fromTo = (ys: string[]) => ys.length > 1 ? `${ys[0]} to ${ys[ys.length - 1]}` : ys[0] ?? 'no years'
+const plural = (n: unknown, one: string, many: string) => `${n} ${Number(n) === 1 ? one : many}`
+const list = (items: string[]) => items.length > 1 ? items.slice(0, -1).join(', ') + ' and ' + items[items.length - 1] : items.join('')
 const apiUrl = (codename: unknown) => typeof codename === 'string' && /^[a-z0-9_]+$/.test(codename) ? `${API}?system.codename=${codename}&depth=1` : null
 
 async function index(env: ToolEnv) {
@@ -56,7 +58,7 @@ function rowOut(env: ToolEnv, ix: Index, file: RecordRow, r: RecordRow, detail: 
   const source = sourceUrl(t.source_url) ?? apiUrl(t.codename)
   const base: RecordRow = { record_id: r.record_id, kind: r.kind, body: t.body ?? body.name, body_type: t.body_type ?? body.type, year: file.year, table: t.title,
     report_url: reportUrl(body, file.year), source_url: source, licence: t.licence, follow_up: { view: r.kind === 'kmp' ? 'remuneration' : r.kind === 'consultancy' || r.kind === 'non_consultancy' ? 'suppliers' : 'bands', record_id: r.record_id } }
-  if (r.kind === 'kmp') Object.assign(base, { name: r.name, position: r.position, ...Object.fromEntries(COMPONENTS.map(c => [c, r[c] ?? null])), unit: 'dollars' })
+  if (r.kind === 'kmp') Object.assign(base, { name: r.name, ...(r.name_as_published != null ? { name_as_published: r.name_as_published } : {}), position: r.position, ...Object.fromEntries(COMPONENTS.map(c => [c, r[c] ?? null])), unit: 'dollars' })
   else if (r.kind === 'consultancy' || r.kind === 'non_consultancy') Object.assign(base, { organisation: r.organisation, abn: r.abn ?? null,
     ...('expenditure_dollars' in r ? { expenditure_dollars: r.expenditure_dollars ?? null, unit: 'dollars GST inclusive' } : { expenditure_thousands: r.expenditure_thousands ?? null, unit: "$'000 GST inclusive" }) })
   else Object.assign(base, { band: r.band, count: r.count ?? null, averages: detail ? r.averages : { total: object(r.averages).total ?? null, base_salary: object(r.averages).base_salary ?? null }, unit: 'dollars (averages per person in the band)' })
@@ -74,7 +76,7 @@ function citeRow(r: RecordRow): ToolCitation {
   const where = r.source_file ? `${r.body}, ${r.year} annual report data (Transparency Portal data file "${r.source_file}", row ${r.source_row})` : `${r.body}, ${r.year} annual report on the Transparency Portal`
   if (r.kind === 'kmp') return { kind: 'record', url, value: num(r.total) ?? undefined, text: clip(`${r.name ?? 'Unnamed'} (${r.position ?? 'position not published'}), ${where}: total remuneration ${money(r.total)} (base salary ${money(r.base_salary)}, bonuses ${money(r.bonuses)}, superannuation ${money(r.superannuation)}, termination ${money(r.termination)}). Reported for the period the person held the role.`, 600) }
   if (r.kind === 'consultancy' || r.kind === 'non_consultancy') return { kind: 'record', url, text: clip(`${r.organisation}${r.abn ? ' (ABN ' + r.abn + ')' : ''} received ${'expenditure_dollars' in r ? (num(r.expenditure_dollars) == null ? 'an amount not published as a number' : '$' + Number(r.expenditure_dollars).toLocaleString('en-AU')) : num(r.expenditure_thousands) == null ? 'an amount not published as a number' : '$' + Number(r.expenditure_thousands).toLocaleString('en-AU') + ",000"} (GST inclusive) of ${r.kind === 'consultancy' ? 'reportable consultancy' : 'reportable non-consultancy'} contract expenditure, ${where}.`, 600) }
-  return { kind: 'record', url, text: clip(`${r.kind === 'senior_executive_band' ? 'Senior executives' : 'Other highly paid staff'} in the ${r.band} band, ${where}: ${r.count ?? 'count not published'} people, average total remuneration ${money(object(r.averages).total)}.`, 600) }
+  return { kind: 'record', url, text: clip(`${r.kind === 'senior_executive_band' ? 'Senior executives' : 'Other highly paid staff'} in the ${r.band} band, ${where}: ${r.count == null ? 'count not published' : plural(r.count, 'person', 'people')}, average total remuneration ${money(object(r.averages).total)}.`, 600) }
 }
 
 async function yearFile(env: ToolEnv, kind: 'remuneration' | 'suppliers', year: string): Promise<RecordRow> {
@@ -85,13 +87,15 @@ async function yearFile(env: ToolEnv, kind: 'remuneration' | 'suppliers', year: 
 
 export const tool: ToolDefinition = {
   name: 'annual_reports',
-  description: 'Commonwealth entity and company annual report disclosures from the Transparency Portal (Department of Finance): key management personnel and remuneration bands from 2018-19 reports, organisations paid from 2020-21, headline figures from 2022-23. Covers key management personnel remuneration by name and position (base salary, bonuses, super, long service leave, termination, total), senior executive and other highly paid staff remuneration bands, staff headcounts, reportable consultancy and non-consultancy contract spend (with the organisations paid, by ABN), and departmental total expenses. view=remuneration finds named people (filter body, person, position, year, min_total); view=bands lists bands for a body; view=profile gives one body\'s headline figures by year; view=compare ranks bodies by a metric in one year; view=suppliers lists organisations paid (filter organisation, abn, body). Follow record_id from any row for its full detail. Amounts are as published: remuneration in dollars for the period each person held the role (part-year amounts are not annual salaries); spend and expenses in each row\'s stated unit (thousands of dollars, except 2020-21 supplier rows in dollars). Never add totals across bodies, tables, bands or years.',
+  description: 'Commonwealth entity and company annual report disclosures from the Transparency Portal (Department of Finance): key management personnel and remuneration bands from 2018-19 reports, organisations paid from 2020-21, headline figures from 2022-23. Covers key management personnel remuneration by name and position (base salary, bonuses, super, long service leave, termination, total), senior executive and other highly paid staff remuneration bands, staff headcounts, reportable consultancy and non-consultancy contract spend (with the organisations paid, by ABN), and departmental total expenses. view=remuneration finds named people (filter body, person, position, year, min_total); view=bands lists bands for a body; view=profile gives one body\'s headline figures by year; view=compare ranks bodies by a metric in one year; view=suppliers lists organisations paid (filter organisation, abn, body); view=kmp_counts ranks bodies by how many key management personnel rows each published in one year (for "which agencies reported the most key management personnel"; counts are published disclosure rows, not distinct people); view=top_by_year gives one body\'s largest key management personnel total remuneration row in each year, oldest first (for "how has the highest paid executive\'s pay changed", optional position, from_year, to_year; each year can be a different person and is never added across years). Follow record_id from any row for its full detail. Amounts are as published: remuneration in dollars for the period each person held the role (part-year amounts are not annual salaries); spend and expenses in each row\'s stated unit (thousands of dollars, except 2020-21 supplier rows in dollars). Never add totals across bodies, tables, bands or years.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
     body: { type: 'string', minLength: 2, maxLength: 160, description: 'Entity or company name or acronym, e.g. "Department of Finance", "CSIRO", "NBN Co".' },
     person: { type: 'string', minLength: 2, maxLength: 120, description: 'Words in a key management person\'s published name.' },
     position: { type: 'string', minLength: 2, maxLength: 120, description: 'Words in the published position title, e.g. "Secretary", "Chief Executive".' },
-    year: { type: 'string', pattern: '^\\d{4}-\\d{2}$', description: 'Reporting year, e.g. 2024-25. Defaults: all years for remuneration searches, the latest complete year for compare.' },
+    year: { type: 'string', pattern: '^\\d{4}-\\d{2}$', description: 'Reporting year, e.g. 2024-25. Defaults: all years for remuneration searches, the latest complete year for compare and kmp_counts.' },
+    from_year: { type: 'string', pattern: '^\\d{4}-\\d{2}$', description: 'top_by_year only: first reporting year to include.' },
+    to_year: { type: 'string', pattern: '^\\d{4}-\\d{2}$', description: 'top_by_year only: last reporting year to include.' },
     metric: { type: 'string', enum: [...METRICS] },
     organisation: { type: 'string', minLength: 2, maxLength: 200 },
     abn: { type: 'string', pattern: '^\\d{11}$' },
@@ -99,12 +103,14 @@ export const tool: ToolDefinition = {
     band_kind: { type: 'string', enum: ['senior_executives', 'highly_paid', 'all'] },
     record_id: { type: 'string', pattern: '^tp-(?:\\d{4}-\\d{2}-[0-9a-f]{32}|[a-z0-9_]{2,160}-\\d{4}-\\d{2})$', description: 'Copy from a row.' },
     limit: { type: 'integer', minimum: 1, maximum: 8 }, offset: { type: 'integer', minimum: 0, maximum: 100000 },
-  }, required: ['view'], examples: [{ view: 'remuneration', body: 'Department of Finance', year: '2024-25' }, { view: 'remuneration', position: 'Chief Executive', year: '2024-25', min_total: 1000000 }, { view: 'compare', metric: 'consultancy_spend', year: '2024-25' }, { view: 'profile', body: 'CSIRO' }, { view: 'suppliers', organisation: 'Deloitte', year: '2024-25' }] },
+  }, required: ['view'], examples: [{ view: 'remuneration', body: 'Department of Finance', year: '2024-25' }, { view: 'remuneration', position: 'Chief Executive', year: '2024-25', min_total: 1000000 }, { view: 'compare', metric: 'consultancy_spend', year: '2024-25' }, { view: 'profile', body: 'CSIRO' }, { view: 'suppliers', organisation: 'Deloitte', year: '2024-25' }, { view: 'kmp_counts', year: '2018-19' }, { view: 'top_by_year', body: 'Department of Health', from_year: '2018-19', to_year: '2024-25' }] },
   identifierFields: ['body'],
-  validate: args => fiscalYearValid(args.year) &&
+  validate: args => fiscalYearValid(args.year) && fiscalYearValid(args.from_year) && fiscalYearValid(args.to_year) &&
+    (args.view === 'top_by_year' ? !!args.body && !args.year && !args.record_id && (!args.from_year || !args.to_year || String(args.from_year) <= String(args.to_year)) : !args.from_year && !args.to_year) &&
+    (args.view !== 'kmp_counts' || !args.record_id && !args.person && !args.position) &&
     (args.view === 'compare' ? !!args.metric && !args.person && !args.position && !args.organisation && !args.abn : !args.metric) &&
     (args.view === 'profile' ? !!args.body || !!args.record_id : true) &&
-    (['remuneration', 'bands'].includes(String(args.view)) || !args.person && !args.position && args.min_total === undefined) &&
+    (['remuneration', 'bands'].includes(String(args.view)) || !args.person && (!args.position || args.view === 'top_by_year') && args.min_total === undefined) &&
     (args.view === 'bands' || !args.band_kind) && (args.view === 'suppliers' || !args.organisation && !args.abn) &&
     (!args.record_id || ['body', 'person', 'position', 'metric', 'organisation', 'abn', 'min_total', 'offset', 'band_kind'].every(k => args[k] === undefined)),
   stepLabel: args => ({ label: 'Checking annual reports', arg: clip(args.person ?? args.body ?? args.organisation ?? args.metric ?? args.view, 40) }),
@@ -120,6 +126,80 @@ export const tool: ToolDefinition = {
     const bodies = matchBodies(ix, args.body), bodyIds = new Set(bodies.map(b => String(b.id)))
     if (args.body && !bodies.length) return { rows: [], citations: [{ kind: 'export', url: indexUrl, text: `${ix.bodies.length} Commonwealth entities and companies are in the published Transparency Portal projection; none matches "${clip(args.body, 80)}".` }], notes: ['No Commonwealth entity or company on the Transparency Portal matches that name. State and territory agencies are not covered here.'], total: 0, snapshot }
     const bodyNote = args.body && bodies.length > 1 ? [`"${clip(args.body, 60)}" matches ${bodies.length} bodies: ${bodies.slice(0, 6).map(b => b.name).join('; ')}${bodies.length > 6 ? '…' : ''}. Use the exact name to narrow.`] : []
+    const settled = ix.years.length > 1 ? ix.years[ix.years.length - 2] : latest
+
+    // How many key management personnel rows each body published in one year, most first.
+    if (args.view === 'kmp_counts') {
+      const year = String(args.year ?? settled), file = await yearFile(env, 'remuneration', year), tables = object(file.tables)
+      const by = new Map<string, { body: string; body_type: unknown; rows: number; source: string | null; file?: unknown }>()
+      for (const r of records(file.rows)) {
+        if (r.kind !== 'kmp') continue
+        const t = object(tables[String(r.table_id)]), id = String(t.body_id)
+        if (args.body && !bodyIds.has(id)) continue
+        const b = ix.byId.get(id) ?? {}, entry = by.get(id) ?? { body: String(t.body ?? b.name), body_type: t.body_type ?? b.type, rows: 0, source: sourceUrl(t.source_url) ?? apiUrl(t.codename), file: t.source_file }
+        entry.rows++; by.set(id, entry)
+      }
+      const ranked = [...by.entries()].sort((a, b) => b[1].rows - a[1].rows || a[1].body.localeCompare(b[1].body))
+      const rankOf = (n: number) => 1 + ranked.filter(([, e]) => e.rows > n).length, tied = (n: number) => ranked.filter(([, e]) => e.rows === n).length > 1
+      const picked = ranked.slice(offset, offset + limit).map(([id, e]) => {
+        const body = ix.byId.get(id) ?? {}
+        return { rank: rankOf(e.rows), tied: tied(e.rows), body: e.body, body_type: e.body_type ?? null, year, kmp_rows: e.rows, unit: 'published key management personnel rows',
+          report_url: reportUrl(body, year), source_url: e.source, ...(e.file ? { source_file: e.file } : {}), full_record_url: reportUrl(body, year) ?? e.source ?? siteUrl(env, `/annual-reports/remuneration-${year}.json`),
+          follow_up: { view: 'remuneration', body: e.body, year } } as RecordRow
+      })
+      const lead = `This ranks the ${ranked.length} ${ranked.length === 1 ? 'body' : 'bodies'} that published key management personnel rows for ${year} by the number of rows each published, most first. A row is one published disclosure, not necessarily a distinct person: someone who acted in or changed roles can have more than one row, and bodies differ in whom they list (some include board members).`
+      const citations: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: lead }, ...picked.map(r => ({ kind: 'count' as const, url: String(r.full_record_url),
+        text: `${r.body}: ${plural(r.kmp_rows, 'key management personnel disclosure row', 'key management personnel disclosure rows')} published for ${year} (rank ${r.rank} of ${ranked.length} bodies${r.tied ? ', tied' : ''}).` }))]
+      notes.push('Counts of published key management personnel rows per body, not counts of people. Table total lines and lines that name no one are not counted. Follow a row\'s follow_up for the named rows.')
+      if (!args.year) notes.push(`Defaulted to ${year}, the latest reporting year whose reports have largely been tabled; ${latest} reports are still being tabled.`)
+      if (!ix.coverage.remuneration.includes(year)) notes.push(`Key management personnel are covered for ${fromTo(ix.coverage.remuneration)}.`)
+      if (!picked.length) notes.push('No matching body published key management personnel rows for this year in this projection. This does not establish that it had none.')
+      return publishedResult(picked, citations, { view: args.view, total: ranked.length, offset, next_offset: offset + picked.length < ranked.length ? offset + picked.length : null, years: [year], snapshot, notes: [...bodyNote, ...notes] })
+    }
+
+    // One body's largest key management personnel total in each year: a comparison, never a sum.
+    if (args.view === 'top_by_year') {
+      const exact = bodies.filter(b => norm(b.name) === norm(args.body) || String(b.acronyms ?? '').split(/[,;/]/).some(a => norm(a) === norm(args.body)))
+      if (bodies.length !== 1 && exact.length !== 1) return { rows: [], citations: [{ kind: 'export', url: indexUrl, text: `"${clip(args.body, 80)}" matches ${bodies.length} bodies in the published Transparency Portal projection, so no single body's yearly comparison is shown.` }], notes: [...bodyNote], total: 0, snapshot }
+      const base = exact.length === 1 ? exact[0] : bodies[0]
+      // Bodies whose names extend this one ("Department of Health and Aged Care") fill years it has no rows for, never years it has.
+      const longer = ix.bodies.filter(b => b.id !== base.id && norm(b.name).startsWith(norm(base.name) + ' '))
+      const span = ix.coverage.remuneration.filter(y => (!args.from_year || y >= String(args.from_year)) && (!args.to_year || y <= String(args.to_year)))
+      const top = new Map<string, Map<string, { file: RecordRow; row: RecordRow }>>()
+      for (const year of span) {
+        const file = await yearFile(env, 'remuneration', year), tables = object(file.tables), ids = new Set([base, ...longer].map(b => String(b.id)))
+        for (const r of records(file.rows)) {
+          const id = String(object(tables[String(r.table_id)]).body_id)
+          if (r.kind !== 'kmp' || !ids.has(id) || num(r.total) == null || args.position && !wordsMatch(args.position, [r.position])) continue
+          const byBody = top.get(id) ?? new Map(), held = byBody.get(year)
+          if (!held || Number(r.total) > Number(held.row.total)) byBody.set(year, { file, row: r })
+          top.set(id, byBody)
+        }
+      }
+      const included = [base], held = new Set(top.get(String(base.id))?.keys() ?? [])
+      for (const b of longer.sort((x, y) => String([...(top.get(String(x.id))?.keys() ?? [])].sort()[0] ?? '9').localeCompare(String([...(top.get(String(y.id))?.keys() ?? [])].sort()[0] ?? '9')))) {
+        const ys = [...(top.get(String(b.id))?.keys() ?? [])]
+        if (ys.length && ys.every(y => !held.has(y))) { included.push(b); ys.forEach(y => held.add(y)) }
+      }
+      const picks = span.flatMap(year => included.flatMap(b => { const hit = top.get(String(b.id))?.get(year); return hit ? [hit] : [] }))
+      const rows = picks.map(m => rowOut(env, ix, m.file, m.row, false))
+      const yearsOf = (b: RecordRow) => span.filter(y => top.get(String(b.id))?.has(y))
+      const label = included.length === 1 ? String(base.name) : list(included.map(b => `${b.name} (${fromTo(yearsOf(b))})`))
+      const role = args.position ? ` for positions matching "${clip(args.position, 40)}"` : ''
+      // One citation: a lead, then one "Name (Position), Body, year annual report: $N total remuneration." sentence per year,
+      // so a written answer reads it as a side-by-side comparison and each figure keeps its own person, body and year.
+      const yearly = rows.map(r => `${r.name ?? 'Name not published'} (${r.position ?? 'position not published'}), ${r.body}, ${r.year} annual report: ${money(r.total)} total remuneration.`)
+      const summary = rows.length ? `Largest key management personnel total remuneration row in each year's table${role}, ${label}, ${fromTo(rows.map(r => String(r.year)))}, shown year by year and never added. ${yearly.join(' ')} Each is the largest single row that year, for the period that person held the role, so the rows can be different people and part-year amounts rather than one person's pay history.` : ''
+      const links = rows.flatMap(r => { const url = r.report_url ?? r.source_url; return url ? [{ label: `${r.body}, ${r.year} annual report`, url: String(url) }] : [] })
+      if (included.length > 1) notes.push(`${list(included.slice(1).map(b => String(b.name)))} ${included.length > 2 ? 'are' : 'is a'} separate Portal ${included.length > 2 ? 'entities' : 'entity'} whose name extends "${base.name}" and whose rows fill years "${base.name}" has none for. The Portal lists them separately; this comparison does not establish that one body succeeded the other.`)
+      notes.push('One row per year: the largest published total remuneration among the body\'s key management personnel rows. Table total lines are excluded. Compare years side by side; never add them.')
+      if (span.includes(latest)) notes.push(`${latest} reports are still being tabled.`)
+      const missing = span.filter(y => !rows.some(r => r.year === y))
+      if (missing.length && rows.length) notes.push(`No key management personnel row with a numeric total for ${missing.join(', ')} in this projection. This does not establish that the body published none.`)
+      if (!rows.length) notes.push('No matching key management personnel row in this projection. This does not establish that none was published.')
+      const citations: ToolCitation[] = summary ? [{ kind: 'record', url: links[links.length - 1]?.url ?? indexUrl, text: clip(summary, 2400), related: links }] : [{ kind: 'export', url: indexUrl, text: `No key management personnel row with a numeric total matches ${base.name}${role} in ${fromTo(span)}.` }]
+      return publishedResult(rows, citations, { view: args.view, total: rows.length, offset: 0, next_offset: null, years: span, snapshot, notes: [...bodyNote, ...notes] })
+    }
 
     // Headline rows (profile / compare)
     if (args.view === 'profile' || args.view === 'compare' || (args.record_id && HEADLINE_ID.test(String(args.record_id)))) {
@@ -142,7 +222,7 @@ export const tool: ToolDefinition = {
         total = rows.length; picked = rows.slice(offset, offset + (Number(args.limit) || 4)).map(headlineOut)
         countText = `${rows.length} body-year headline records for ${bodies.length === 1 ? bodies[0].name : bodies.length + ' matching bodies'}${args.year ? ' in ' + args.year : ''}.`
       } else {
-        const metric = METRIC[args.metric as Metric], year = String(args.year ?? (ix.years.length > 1 ? ix.years[ix.years.length - 2] : latest))
+        const metric = METRIC[args.metric as Metric], year = String(args.year ?? settled)
         const part = (h: RecordRow) => object(args.metric === 'consultancy_spend' || args.metric === 'consultancy_contracts' ? h.consultancy : args.metric === 'non_consultancy_spend' ? h.non_consultancy : {})
         const candidates = ix.headline.filter(h => h.year === year && (!args.body || bodyIds.has(String(h.body_id))) && num(metric.get(h)) != null)
         const flagged = candidates.filter(h => part(h).scale_check)
@@ -179,7 +259,7 @@ export const tool: ToolDefinition = {
           if (args.position && !wordsMatch(args.position, [r.position])) continue
           if (args.min_total !== undefined && !(num(r.total) != null && Number(r.total) >= Number(args.min_total))) continue
         } else if (args.view === 'bands') {
-          if (r.kind === 'kmp' || args.band_kind === 'senior_executives' && r.kind !== 'senior_executive_band' || args.band_kind === 'highly_paid' && r.kind !== 'highly_paid_band') continue
+          if (!String(r.kind).endsWith('_band') || args.band_kind === 'senior_executives' && r.kind !== 'senior_executive_band' || args.band_kind === 'highly_paid' && r.kind !== 'highly_paid_band') continue
         } else {
           if (args.organisation && !wordsMatch(args.organisation, [r.organisation])) continue
           if (args.abn && r.abn !== args.abn) continue

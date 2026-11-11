@@ -34,7 +34,7 @@ import zipfile
 from datetime import datetime, timezone
 
 from parli.ingest import http as source_http
-from parli.ingest.transparency_portal import CACHE, INTERVAL, Held, atomic_json, clean, number
+from parli.ingest.transparency_portal import CACHE, INTERVAL, Held, atomic_json, clean, footnote_free_name, number
 
 BASE = "https://previewapi.transparency.gov.au/delivery/assets/80a82ed1-3e33-027b-b7e0-6493f97f18f8/"
 DATASETS_PAGE = "https://www.transparency.gov.au/data-sets"
@@ -149,7 +149,9 @@ def parse_kmp(year, file, url, rows):
             continue
         cols = {k: number(v) for k, v in zip(KMP_FIELDS, values)}
         raw = {k: clean(v) for k, v in zip(KMP_FIELDS, values) if clean(v) is not None and str(cols[k]) != clean(v)}
-        out.append({"year": year, "entity": entity, "name": name, "position": position, **cols,
+        # A footnote reference glued to the name ("Christine Holgate1") is not part of it; the cell is kept.
+        plain, marker = footnote_free_name(name)
+        out.append({"year": year, "entity": entity, "name": plain, **({"name_as_published": name} if marker is not None else {}), "position": position, **cols,
                     **({"as_published": raw} if raw else {}), "source_url": url, "source_file": file, "source_row": line,
                     "id": row_id(year, "kmp", file, line, entity, name, position)})
     return out, skipped, no_data
