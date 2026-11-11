@@ -123,11 +123,17 @@ function statusMeta(status: RecordRow): string {
   const bits = [status.lead ? `Lead: ${esc(status.lead)}` : '', status.updated ? `Updated ${time(status.updated)}` : ''].filter(Boolean)
   return bits.length ? `<p class="rr-status-meta">${bits.join(' · ')}</p>` : ''
 }
+/** "Findings" when every item is a finding (or "Opinions"), else the mixed title. */
+function findingsTitle(held: RecordRow[]): string {
+  const kinds = new Set(held.map(x => x.kind))
+  const only = kinds.size === 1 ? { finding: 'Findings', opinion: 'Opinions' }[String([...kinds][0])] : undefined
+  return only || 'Findings, opinions and statements'
+}
 function items(part: 'findings' | 'recommendations', r: ReportDetail, mainDocument: string): Part {
   const c = r.record, held = records(c[part]), state = c[part + '_status']
   const reports = records(c.reports)
   const id = part
-  const title = part === 'findings' ? 'Findings, opinions and statements' : 'Recommendations'
+  const title = part === 'findings' ? findingsTitle(held) : 'Recommendations'
   // An unextracted list is unknown, not a report that made no findings.
   const empty = state === 'stated_none' ? `The report states that it makes no ${part}.`
     : state === 'no_report' ? 'No report is held for this inquiry, so no recommendations are reproduced.'
@@ -383,7 +389,7 @@ export function renderReport(r: ReportDetail) {
     if (citeHref) main = { href: citeHref, label: mainDocument || 'Report', pages: doc?.pages, size: doc?.bytes }
     more.push({ href: c.page_url, label: isPdf(String(c.page_url)) ? 'Report PDF' : `Report page on ${host(String(c.page_url))}` }, { href: c.pdf_url, label: 'Report PDF' })
     const findings = records(c.findings), recs = records(c.recommendations), responses = records(c.responses)
-    if (findings.length) stats.push({ label: 'Findings, opinions and statements', value: figure(findings.length) })
+    if (findings.length) stats.push({ label: findingsTitle(findings), value: figure(findings.length) })
     if (recs.length) stats.push({ label: 'Recommendations', value: figure(recs.length) })
     if (responses.length) stats.push({ label: 'Published responses', value: figure(responses.length) })
     if (finite(doc?.pages)) stats.push({ label: 'Report length', value: esc(plural(doc!.pages as number, 'page')) })

@@ -135,3 +135,12 @@
 .rr-footer { margin: var(--space-section) 0 0; padding-top: var(--space-row); border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-fine); color: var(--ink-soft); }
 .rr-table-source { margin-bottom: var(--space-tight); }
 .rr-licence { font: var(--type-fine); color: var(--ink-soft); }
+
+/* Printed: the reading column only, items kept whole where they fit. */
+@media print {
+  .rr-layout { display: block; }
+  .rr-toc, .rr-jump { display: none; }
+  .rr-item, .rr-fact, .rr-doc, .rr-court, .rr-source { break-inside: avoid; }
+  .rr-section .ui-section-title { break-after: avoid; }
+  .rr-table-scroll { overflow: visible; border: 0; }
+}

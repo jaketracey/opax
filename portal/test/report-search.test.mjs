@@ -114,6 +114,13 @@ test('government statuses are counted in their own words and each keeps its lead
   assert.equal((html.match(/href="https:\/\/example\.gov\.au\/status"/g) || []).length, 61);
   assert.match(html, /<summary>Go to a recommendation \(1 to 61\)<\/summary>/);
 });
+test('a list of one kind is titled by that kind; a mixed list keeps the full title', () => {
+  const report = structuredClone(projected.find(r => r.detail.slug === 'integrity-report-nsw-icac-2023-03-07-operation-paragon').detail);
+  report.record.findings = [{ kind: 'finding', label: 'x', text: 'a' }, { kind: 'finding', label: 'y', text: 'b' }];
+  assert.match(renderReport(report), /<h2 class="ui-section-title" id="findings-title">Findings <span class="rr-count">2<\/span>/);
+  report.record.findings.push({ kind: 'no_finding', label: 'z', text: 'c' });
+  assert.match(renderReport(report), /<h2 class="ui-section-title" id="findings-title">Findings, opinions and statements <span class="rr-count">3<\/span>/);
+});
 test('annual report source links each name their table', () => {
   const annual = projected.find(r => r.row.body === 'Department of Defence' && r.row.year === '2024-25').detail;
   const texts = [...renderReport(annual).matchAll(/<a [^>]*href="https:\/\/previewapi[^"]*"[^>]*>(.*?)<\/a>/g)].map(m => visible(m[1]));
