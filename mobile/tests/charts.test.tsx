@@ -109,7 +109,7 @@ test.each([false, true])(
         onShowTable={enabled ? show : undefined}
       />,
     );
-    const root = r.root.findByType(BarSeries).findByType(RN.View);
+    const root = r.root.findByProps({ testID: 'bar-series-content' });
     expect(root.props.accessibilityActions).toEqual(
       enabled ? [{ name: 'showTable', label: 'Show as table' }] : undefined,
     );
@@ -242,7 +242,7 @@ function timeline(
   const r = render(
     <StageTimeline {...proof} stages={stages} latestIndex={2} />,
   );
-  const container = r.root.findByType(StageTimeline).findByType(RN.View);
+  const container = r.root.findByProps({ testID: 'stage-timeline-content' });
   act(() => container.props.onLayout({ nativeEvent: { layout: { width } } }));
   act(() =>
     r.root

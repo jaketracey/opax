@@ -11,6 +11,14 @@ import {
 import { useAccessibilitySize, useIncreaseContrast } from './accessibility';
 import { SizedCanvas } from './canvas';
 import { Button } from './controls';
+import {
+  activeVerticalFold,
+  placeClear,
+  sidesOf,
+  type Rect as LabelRect,
+  type ReservedRegions,
+} from './fold';
+import { ReservedRegionArea, useReservedRegions } from './fold-area';
 import { formatCount, formatDate, type DateInput } from './format';
 import { dark, darkHighContrast, light, lightHighContrast } from './palette';
 import { SourceLine } from './source';
@@ -39,6 +47,33 @@ const provenance = ({ dateRange, citation }: ChartProvenance) => {
 };
 
 type Measurement = { width: number; height: number };
+
+/** Move only a chart annotation, keeping it with the datum on its fold side. */
+export function clearChartLabel(
+  rect: LabelRect,
+  anchor: number,
+  regions: ReservedRegions,
+  width: number,
+): LabelRect {
+  const fold = activeVerticalFold(regions.divisions);
+  if (!fold || !width) return rect;
+  const bounds = { x: 0, y: rect.y, width, height: rect.height };
+  const sides = sidesOf(fold, bounds);
+  if (!('leading' in sides)) return rect;
+  const side =
+    anchor < fold.x
+      ? sides.leading
+      : anchor > fold.x + fold.width
+        ? sides.trailing
+        : sides.trailing.width >= sides.leading.width
+          ? sides.trailing
+          : sides.leading;
+  return placeClear(
+    { ...rect, width: Math.min(rect.width, side.width) },
+    { divisions: [fold], occlusions: [] },
+    side,
+  );
+}
 type TextMeasurementEvent = { nativeEvent: { lines: readonly Measurement[] } };
 function useTextMeasurements() {
   const [sizes, setSizes] = useState<Record<string, Measurement>>({});
@@ -117,7 +152,17 @@ export function VoteSplit({
 }
 
 /** Both native label widths and heights determine the horizontal layout. */
-export function StageTimeline({
+export function StageTimeline(
+  props: Parameters<typeof StageTimelineContent>[0],
+) {
+  return (
+    <ReservedRegionArea>
+      <StageTimelineContent {...props} />
+    </ReservedRegionArea>
+  );
+}
+
+function StageTimelineContent({
   stages,
   latestIndex,
   onBand = false,
@@ -129,6 +174,7 @@ export function StageTimeline({
   onBand?: boolean;
 }) {
   const large = useAccessibilitySize();
+  const regions = useReservedRegions();
   const { fontScale } = useWindowDimensions();
   const [width, setWidth] = useState(0);
   const [firstLines, setFirstLines] = useState<Record<string, number>>({});
@@ -168,6 +214,30 @@ export function StageTimeline({
           : positions[index]! + 5 - size / 2;
     return { left, right: left + size };
   });
+  const annotations = bounds.map((bound, index) => {
+    if (!activeVerticalFold(regions.divisions))
+      return {
+        left: positions[index]!,
+        width: widths[index]!,
+        marginLeft: bound.left - positions[index]!,
+      };
+    const rect = clearChartLabel(
+      {
+        x: bound.left,
+        y: 0,
+        width: Math.max(10, widths[index]!),
+        height: 10 + 8 + labelHeight,
+      },
+      positions[index]! + 5,
+      regions,
+      width,
+    );
+    const left = Math.max(
+      rect.x,
+      Math.min(positions[index]!, rect.x + rect.width - 10),
+    );
+    return { left, width: rect.width, marginLeft: rect.x - left };
+  });
   const fits =
     measured &&
     width > 0 &&
@@ -183,6 +253,7 @@ export function StageTimeline({
     <View
       style={styles.chart}
       onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+      testID="stage-timeline-content"
     >
       <View
         pointerEvents="none"
@@ -232,7 +303,7 @@ export function StageTimeline({
             style={
               vertical
                 ? styles.verticalStage
-                : [styles.horizontalStage, { left: positions[index] }]
+                : [styles.horizontalStage, { left: annotations[index]!.left }]
             }
           >
             <View
@@ -266,13 +337,8 @@ export function StageTimeline({
                   : [
                       styles.stageWords,
                       {
-                        width: widths[index],
-                        marginLeft:
-                          index === 0
-                            ? 0
-                            : index === stages.length - 1
-                              ? 10 - widths[index]!
-                              : 5 - widths[index]! / 2,
+                        width: annotations[index]!.width,
+                        marginLeft: annotations[index]!.marginLeft,
                         alignItems:
                           index === 0
                             ? 'flex-start'
@@ -370,7 +436,15 @@ function axisLabels(
 }
 
 /** Skia is decorative. Accessible columns retain every value as x labels thin. */
-export function BarSeries({
+export function BarSeries(props: Parameters<typeof BarSeriesContent>[0]) {
+  return (
+    <ReservedRegionArea>
+      <BarSeriesContent {...props} />
+    </ReservedRegionArea>
+  );
+}
+
+function BarSeriesContent({
   data,
   ink,
   format,
@@ -405,6 +479,7 @@ export function BarSeries({
   height?: number;
 }) {
   const [width, setWidth] = useState(0);
+  const regions = useReservedRegions();
   const [showTable, setShowTable] = useState(false);
   const { fontScale } = useWindowDimensions();
   const { sizes, measure } = useTextMeasurements();
@@ -419,11 +494,20 @@ export function BarSeries({
     (item, index) =>
       `${fontScale}:${index}:${item.label}:${format(item.value)}`,
   );
+  const clearLabel = (label: PositionedLabel): PositionedLabel => {
+    const clear = clearChartLabel(
+      { x: label.left, y: 0, width: label.width, height: label.height },
+      (label.index + 0.5) * step,
+      regions,
+      width,
+    );
+    return { ...label, left: clear.x, width: clear.width };
+  };
   const xLabels = axisLabels(
     keys.map((key) => sizes[`${key}:x`]),
     width,
     labels?.every,
-  );
+  ).map(clearLabel);
   const xHeight = Math.max(0, ...xLabels.map((label) => label.height));
   const valueIndexes = data.flatMap((_, index) =>
     values === 'all' || (values === 'latest' && index === data.length - 1)
@@ -436,7 +520,9 @@ export function BarSeries({
   const valueLabels =
     measuredValues && width
       ? valueIndexes.map((index) =>
-          positionLabel(index, sizes[`${keys[index]}:value`]!, step, width),
+          clearLabel(
+            positionLabel(index, sizes[`${keys[index]}:value`]!, step, width),
+          ),
         )
       : [];
   const oversizedValues = valueLabels.some((label) => label.width > width);
@@ -479,6 +565,7 @@ export function BarSeries({
   return (
     <View
       style={styles.chart}
+      testID="bar-series-content"
       accessible={spark || undefined}
       accessibilityLabel={
         spark
