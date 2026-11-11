@@ -5039,7 +5039,7 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
     const slug=parts[2].toLowerCase().replace(/^division-/,'')
     if(/^(federal|nsw|vic|qld)-[a-z0-9-]+$/.test(slug)) {
       const target=`division-${slug}`
-      const record=await assetJson<Division>(env,`/divisions/${target}.json`).catch(()=>null)
+      const record=await divisionFile(env,target).catch(()=>null)
       if(record) return `/doc/${target}`
     }
   }
@@ -5349,6 +5349,10 @@ const supplierBucket = <T>(env: Env, path: string): Promise<T> => keptAssetJson<
 // One bill's file (p50 7 KB, at most 125 KB): a bill page reads it for the head's summary line and again for its body.
 const billFileMemo = new Map<string, Promise<unknown>>()
 const BILL_FILE_RE = /^\/bills\/(?!index\.json$)[^/]+\.json$/
+// One division's file (p50 8 KB, at most 19 KB): a /doc/division-* request reads it to settle the
+// canonical path, then again for the page's head and body.
+const divisionFileMemo = new Map<string, Promise<unknown>>()
+const divisionFile = (env: Env, slug: string): Promise<Division> => keptAssetJson<Division>(divisionFileMemo, 64, env, `/divisions/${encodeURIComponent(slug)}.json`)
 // Small files that several parts of one page read: the electorate manifest with its release's index
 // and people files (also behind loadElectorates), and the interests register index. A person page
 // read each of them twice. Published files never change under a deployment.
@@ -5616,7 +5620,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   if (/^news-\d+$/.test(slug)) return { ...generic, title: 'Document removed · OPAX', status: 410 }
   if (!isPublicSlug(slug)) return { ...generic, title: 'Document not found · OPAX', status: 404 }
   if (DIVISION_SLUG_RE.test(slug)) {
-    const division = await assetJson<Division>(env,`/divisions/${encodeURIComponent(slug)}.json`).catch(()=>null)
+    const division = await divisionFile(env,slug).catch(()=>null)
     if (division) {
       const people = await loadPeople(env).catch(()=>null)
       const content = renderDivisionAnswer(division,people?.people || [],people?.slugOf || new Map())
