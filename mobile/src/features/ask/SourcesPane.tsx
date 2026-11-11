@@ -15,8 +15,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 // From adaptive, not primitives: screen tests mock primitives' components.
-import { useAccessibilitySize } from '../../design/accessibility';
-import { LayoutRegion, splitPaneWidth, useLayout } from '../../design/adaptive';
+import { LayoutRegion } from '../../design/adaptive';
 import { IconButton } from '../../design/controls';
 import { InsetGroup } from '../../design/layout';
 import { useListKeys } from '../../design/list-keys';
@@ -212,9 +211,6 @@ function SourcesPane({
   onAsk?: (question: string) => void;
   readFailed: boolean;
 }) {
-  const { width } = useLayout();
-  const large = useAccessibilitySize();
-  const paneWidth = splitPaneWidth(width, large);
   const top = stack.at(-1);
   const ground = askGround();
   const pane: SplitPane<RecordEntry> = {
@@ -234,7 +230,7 @@ function SourcesPane({
       <View
         style={[
           styles.pane,
-          { width: paneWidth, backgroundColor: colors[ground] },
+          { width: '100%', backgroundColor: colors[ground] },
         ]}
         testID="ask-sources-pane"
       >

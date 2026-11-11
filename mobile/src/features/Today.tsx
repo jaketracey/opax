@@ -12,6 +12,8 @@ import type { Block, EditionView, Electorate } from '../api/catalogs';
 import { catalogs } from '../api/runtime';
 import { useOffline } from '../api/useOffline';
 import { useAccessibilitySize } from '../design/accessibility';
+import { ReservedRegionArea, useReservedRegions } from '../design/fold-area';
+import { activeVerticalFold } from '../design/fold';
 import { useLayout } from '../design/adaptive';
 import { thisDevice } from '../design/device';
 import { Screen } from '../design/layout';
@@ -53,6 +55,7 @@ import {
   type TodaySlot,
 } from './today/order';
 import { editionTier, sydneyDay, type SydneyDate } from './today/rules';
+import { SurfaceGrid } from './today/SurfaceGrid';
 import { SeatInvitation } from './today/SeatInvitation';
 import { TodayReports, useTodayReports } from './today/TodayBlock';
 import { VoiceCard } from './today/VoiceCard';
@@ -279,18 +282,20 @@ export default function Today() {
         if (nothingSaved) return null;
         return (
           <View key={name} style={styles.seats}>
-            <YourMPCard
-              seat={home}
-              directory={directory}
-              stateSeatIds={choice?.stateSeatIds ?? []}
-              attempt={attempt}
-              onRetry={retry}
-            />
-            <StateSeatCard
-              directory={directory}
-              stateSeatIds={choice?.stateSeatIds ?? []}
-              today={today}
-            />
+            <SurfaceGrid testID="today-seat-grid">
+              <YourMPCard
+                seat={home}
+                directory={directory}
+                stateSeatIds={choice?.stateSeatIds ?? []}
+                attempt={attempt}
+                onRetry={retry}
+              />
+              <StateSeatCard
+                directory={directory}
+                stateSeatIds={choice?.stateSeatIds ?? []}
+                today={today}
+              />
+            </SurfaceGrid>
           </View>
         );
       case 'invitation':
@@ -437,18 +442,49 @@ function TodayBody({
 }) {
   const layout = useLayout();
   const large = useAccessibilitySize();
-  if (!layout.regular || large || layout.width < 900)
+  if (
+    !layout.regular ||
+    layout.rule === 'phone-regular' ||
+    large ||
+    layout.width < 900
+  )
     return <View style={styles.column}>{order.slots.map(slot)}</View>;
   const { leading, trailing } = todayColumns(order);
   return (
     <View style={styles.column}>
-      <View style={styles.columns}>
-        <View style={[styles.column, styles.leading]}>{leading.map(slot)}</View>
-        <View style={[styles.column, styles.trailing]}>
-          {trailing.map(slot)}
-        </View>
-      </View>
+      <ReservedRegionArea>
+        <TodaySpread
+          leading={leading.map(slot)}
+          trailing={trailing.map(slot)}
+        />
+      </ReservedRegionArea>
       {slot('foot')}
+    </View>
+  );
+}
+
+/** The iPad spread retains its 3:2 measure until a fold calls for an even split. */
+function TodaySpread({
+  leading,
+  trailing,
+}: {
+  leading: ReactNode;
+  trailing: ReactNode;
+}) {
+  const { width } = useLayout();
+  const { divisions } = useReservedRegions();
+  const fold = activeVerticalFold(divisions);
+  const gap = fold
+    ? Math.max(32, width - 2 * fold.x, 2 * (fold.x + fold.width) - width)
+    : 32;
+  return (
+    <View style={[styles.columns, { gap }]}>
+      <View style={[styles.column, fold ? styles.even : styles.leading]}>
+        {leading}
+      </View>
+      <View style={[styles.column, fold ? styles.even : styles.trailing]}>
+        {trailing}
+      </View>
     </View>
   );
 }
@@ -497,6 +533,7 @@ const styles = StyleSheet.create({
   // The state seat block sits 16 pt under the federal block's line.
   seats: { gap: rhythm.block },
   columns: { flexDirection: 'row', alignItems: 'flex-start', gap: 32 },
+  even: { flex: 1, minWidth: 0 },
   leading: { flex: 3, minWidth: 0 },
   trailing: { flex: 2, minWidth: 0 },
 });

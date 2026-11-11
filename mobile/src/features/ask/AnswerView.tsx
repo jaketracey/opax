@@ -120,6 +120,7 @@ export function AnswerView({
   const key = turnKey(chat, index);
   const selection = useCitationSelection();
   const mine = selection?.turn === key ? selection : null;
+  const revealedClaim = useRef<object | undefined>(undefined);
   useEffect(() => {
     if (!pane) return;
     return pane.register(index, self);
@@ -127,6 +128,9 @@ export function AnswerView({
   // The claim moves just above the sheet's top edge as the sheet opens or
   // is re-targeted.
   useEffect(() => {
+    // A resize changes reveal geometry, but must retain the reading anchor.
+    if (revealedClaim.current === mine?.claim) return;
+    revealedClaim.current = mine?.claim;
     const target = mine?.claim && blockRefs.current.get(mine.claim.block);
     if (target) reveal?.(target);
   }, [mine?.claim, reveal]);

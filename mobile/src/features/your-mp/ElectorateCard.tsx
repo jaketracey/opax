@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import type { Electorate } from '../../api/catalogs';
+import { SurfaceGrid } from '../today/SurfaceGrid';
 import { Card } from '../../design/card';
 import { Divider } from '../../design/controls';
 import { formatDate } from '../../design/format';
@@ -169,9 +170,11 @@ export function ElectorateCard({
           {census ? (
             <View style={styles.block}>
               <Text variant="subsectionTitle">{census.label}</Text>
-              {census.rows.map((row) => (
-                <ValueRow key={row.key} label={row.label} value={row.value} />
-              ))}
+              <SurfaceGrid testID="your-mp-stats-grid" minItemWidth={120}>
+                {census.rows.map((row) => (
+                  <ValueRow key={row.key} label={row.label} value={row.value} />
+                ))}
+              </SurfaceGrid>
             </View>
           ) : null}
           {census && election ? <Divider /> : null}
