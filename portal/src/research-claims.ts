@@ -12,9 +12,14 @@ export function sentenceFragment(text: string, entities: string[] = []): boolean
   const plain = normalClaim(text.replace(/\[\d+\]/g, '').replace(/^[-*•]\s*/, ''))
   if (!plain) return true
   // A clause left behind by a removed claim starts mid-sentence ("while a rebate…", "and Pasquale Minniti, …").
-  if (/^(?:[-*•]\s*)?(?:while|and|but|or|nor|whereas|which|who|whom|whose|although|though|because|including|plus)\b/.test(text.trimStart())) return true
+  const lead=text.trimStart().replace(/^(?:[-*•]\s*)?[,;:.]\s*/, '')
+  if (/^(?:[-*•]\s*)?(?:while|and|but|or|nor|whereas|which|who|whom|whose|although|though|because|including|plus)\b/.test(lead)) return true
   const name = plain.replace(/^(?:the|a|an) /, '')
   const words = plain.split(' ')
+  // Possessives and plural nouns are not finite verbs. In particular, a
+  // surviving date/location lead must include a clause after that lead.
+  if (/^(?:in|on|at|during|from|after|before|with|about)\b/i.test(plain) && !CLAUSE_VERB.test(plain) &&
+      !/\b(?:\p{L}{3,}ed|argues|calls|proposes|recommends|criticises|supports|opposes|discusses|notes|warns|explains|urges|highlights|emphasises)\b/iu.test(plain)) return true
   if (/^(?:please )?(?:name|choose|specify|ask|check|select|try|tell|give|provide|narrow|clarify)\b/.test(plain) && words.length >= 2) return false
   if (words.length < 3) return !/\b(?:passed|failed|won|lost|spoke|voted|resigned|died)\b/i.test(plain) || words.length < 2
   const names = text.match(/[\p{L}'’-]+/gu) ?? []

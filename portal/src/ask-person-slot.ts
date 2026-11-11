@@ -1,4 +1,9 @@
 /** A person supplied in question grammar, before roster matching. Party comparisons are collective subjects. */
+export function isPlaceNameMention(text: string, start: number, end: number): boolean {
+  return /^[–—-]\p{L}/u.test(text.slice(end)) || /\p{L}[–—-]$/u.test(text.slice(0,start)) ||
+    /^\s+(?:River|Basin|Valley|Island|Islands|Creek|Lake|Range|Ranges|Bay|Peninsula|electorate|region|district)\b/i.test(text.slice(end))
+}
+
 export function requestedPersonSlot(question: string): string | null {
   const patterns = [
     /\b(?:did|does|has|have|will|how['’]d|what['’]d)\s+(.+?)\s+(?:vot\w*|say|said|speak\w*|spoken|declare\w*|represent)\b/i,
