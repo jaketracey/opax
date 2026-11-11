@@ -9,9 +9,11 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  useTransition,
 } from 'react';
 import {
   AccessibilityInfo,
+  ActivityIndicator,
   Keyboard,
   RefreshControl,
   SectionList,
@@ -57,11 +59,12 @@ import {
   type FilterValues,
 } from '../sheets/filter-model';
 import { divisionsFilterModel } from '../sheets/filter-models';
-import { loadDivisionHistory } from './division-data';
+import { loadDivisionHistory, type DivisionRecord } from './division-data';
 import type { DivisionRow as Division } from './model';
 
 const PATH = '/bills?view=divisions';
 const TITLE = 'Votes in parliament';
+const PAGE_SIZE = 16;
 const RULE =
   'Every recorded vote on a bill, newest first, grouped by bill. With "Leave out procedural votes" on, votes recorded as limitation of debate, closure, suspension of standing orders or adjournment are hidden.';
 const NOTE =
@@ -74,6 +77,8 @@ export interface HistorySection {
   key: string;
   billKey: string;
   title: string;
+  /** Count the whole run, even when a page ends part way through it. */
+  total: number;
   data: Division[];
 }
 
@@ -90,11 +95,13 @@ export function historySections(rows: readonly Division[]): HistorySection[] {
         key: `bill:${row.key}`,
         billKey: row.billKey,
         title: row.title,
+        total: 0,
         data: [],
       };
       sections.push(run);
     }
     run.data.push(row);
+    run.total++;
   }
   return sections;
 }
@@ -230,7 +237,7 @@ const BillHeader = memo(function BillHeader({
     >
       <LinkRow
         title={section.title}
-        detail={votes(section.data.length)}
+        detail={votes(section.total)}
         symbol={symbols.bills}
         leading={
           // Remounted when the width arrives, so it measures again.
@@ -242,7 +249,7 @@ const BillHeader = memo(function BillHeader({
             style={styles.probe}
           />
         }
-        accessibilityLabel={`${section.title}, ${votes(section.data.length)}. Bill.`}
+        accessibilityLabel={`${section.title}, ${votes(section.total)}. Bill.`}
         accessibilityHint="Opens the bill"
         href={billRoute(section.billKey, section.title)}
         testID={`division-history-bill-${section.billKey}`}
@@ -263,7 +270,14 @@ export default function DivisionHistory() {
     ) => loadDivisionHistory(refresh, publish, signal),
     [],
   );
-  const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
+  const {
+    record: latest,
+    error,
+    refreshing,
+    refresh,
+    retry,
+  } = useCatalogRecord(load);
+  const list = useRef<SectionList<Division, HistorySection>>(null);
   const column = useScreenColumn();
   const [inset, setInset] = useState(0);
   const [text, setText] = useState('');
@@ -280,6 +294,42 @@ export default function DivisionHistory() {
   );
   const state = useSyncExternalStore(store.subscribe, store.get, store.get);
   const filters = divisionFilters(state);
+  const filterKey = JSON.stringify(filters);
+  const settled = !!latest && latest.loaded + latest.failed === latest.total;
+  const usable = settled && (latest.loaded > 0 || latest.total === 0);
+  const [page, setPage] = useState({
+    record: null as DivisionRecord | null,
+    query,
+    filters: filterKey,
+    limit: PAGE_SIZE,
+  });
+  // Retain the displayed snapshot through refreshes, including its count and
+  // section headers. Only an explicit search/filter change or update action
+  // replaces it. Adjust before children render, avoiding an intermediate page.
+  if (
+    (!page.record && usable) ||
+    page.query !== query ||
+    page.filters !== filterKey
+  ) {
+    setPage({
+      record: usable ? latest : page.record,
+      query,
+      filters: filterKey,
+      limit: PAGE_SIZE,
+    });
+  }
+  const record = page.record ?? (settled ? latest : null);
+  const updatesAvailable = useMemo(
+    () =>
+      usable &&
+      !!record &&
+      latest !== record &&
+      (JSON.stringify(latest.rows) !== JSON.stringify(record.rows) ||
+        latest.stale !== record.stale ||
+        latest.failed !== record.failed ||
+        latest.partial !== record.partial),
+    [usable, latest, record],
+  );
   const on = divisionFilterCount(filters);
   const all = useMemo(() => record?.rows ?? [], [record]);
   // The sheet's result line counts what the list would show.
@@ -297,14 +347,42 @@ export default function DivisionHistory() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [all, state, query],
   );
-  const sections = useMemo(() => historySections(rows), [rows]);
+  const allSections = useMemo(() => historySections(rows), [rows]);
+  const sections = useMemo(() => {
+    let remaining = page.limit;
+    const visible: HistorySection[] = [];
+    for (const section of allSections) {
+      if (remaining <= 0) break;
+      visible.push(
+        section.data.length <= remaining
+          ? section
+          : { ...section, data: section.data.slice(0, remaining) },
+      );
+      remaining -= section.data.length;
+    }
+    return visible;
+  }, [allSections, page.limit]);
+  const [appending, startAppend] = useTransition();
+  const append = () => {
+    if (appending || page.limit >= rows.length) return;
+    const limit = Math.min(page.limit + PAGE_SIZE, rows.length);
+    startAppend(() => {
+      setPage((previous) =>
+        previous.record === record &&
+        previous.query === query &&
+        previous.filters === filterKey
+          ? { ...previous, limit: Math.max(previous.limit, limit) }
+          : previous,
+      );
+    });
+  };
   const complete = !!record && record.loaded + record.failed === record.total;
   const loaded = !!record && (record.loaded > 0 || record.total === 0);
   const offline = error instanceof ApiError && error.code === 'offline';
   useEffect(() => {
     if (complete && !error && loaded)
       AccessibilityInfo.announceForAccessibility(
-        `${counted(record.rows.length, 'vote', 'votes')} shown`,
+        `${counted(record.rows.length, 'vote', 'votes')} available`,
       );
   }, [complete, error, loaded, record?.rows.length]);
 
@@ -494,6 +572,7 @@ export default function DivisionHistory() {
           <VoteInset.Provider value={inset}>
             <StatePageProvider refreshing={refreshing}>
               <SectionList
+                ref={list}
                 onScroll={scrollTitle.onScroll}
                 scrollEventThrottle={16}
                 testID="division-history-screen"
@@ -510,6 +589,8 @@ export default function DivisionHistory() {
                   />
                 }
                 sections={loaded ? sections : []}
+                onEndReached={append}
+                onEndReachedThreshold={0.5}
                 stickySectionHeadersEnabled={false}
                 keyExtractor={(item) => item.key}
                 renderSectionHeader={({ section }) => (
@@ -527,8 +608,33 @@ export default function DivisionHistory() {
                 ListEmptyComponent={empty}
                 ListFooterComponent={
                   <View style={styles.footer}>
-                    {loaded && !complete ? (
-                      <Skeleton shape="rows" count={2} label="Loading votes" />
+                    {appending ? (
+                      <ActivityIndicator
+                        color={colors.inkSoft}
+                        accessibilityLabel="Loading more votes"
+                        testID="division-history-more-loading"
+                      />
+                    ) : null}
+                    {updatesAvailable ? (
+                      <Button
+                        label="Show updated votes"
+                        variant="plain"
+                        onPress={() => {
+                          if (sections.length)
+                            list.current?.scrollToLocation({
+                              sectionIndex: 0,
+                              itemIndex: 0,
+                              animated: false,
+                            });
+                          setPage({
+                            record: latest,
+                            query,
+                            filters: filterKey,
+                            limit: PAGE_SIZE,
+                          });
+                        }}
+                        testID="division-history-updates"
+                      />
                     ) : null}
                     {loaded ? source : null}
                   </View>

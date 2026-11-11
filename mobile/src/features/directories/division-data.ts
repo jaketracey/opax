@@ -42,7 +42,8 @@ export async function readDivisionHistory(
     partial: !!index.partial,
   };
   throwIfAborted(signal);
-  publish?.({ ...view });
+  // Bill status dates do not bound their division dates. No batch is a final
+  // chronological prefix until every candidate has settled, so publish once.
   for (let i = 0; i < candidates.length; i += 8) {
     const batch = await Promise.allSettled(
       candidates
@@ -66,16 +67,16 @@ export async function readDivisionHistory(
       view.savedAt = Math.min(view.savedAt, result.value.savedAt);
       files.push(result.value.data);
     }
-    view.rows = [...view.rows, ...divisionRows(files)].sort(
-      (a, b) => b.date.localeCompare(a.date) || a.key.localeCompare(b.key),
-    );
-    throwIfAborted(signal);
-    publish?.({ ...view });
+    view.rows.push(...divisionRows(files));
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
   }
   if (candidates.length && !view.loaded)
     throw new ApiError('http', 'Bill division records could not be loaded.');
   throwIfAborted(signal);
+  view.rows.sort(
+    (a, b) => b.date.localeCompare(a.date) || a.key.localeCompare(b.key),
+  );
+  publish?.(view);
   return view;
 }
 const session = new ReadSession<DivisionRecord>();
