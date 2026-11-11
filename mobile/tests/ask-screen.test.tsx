@@ -1,5 +1,10 @@
 import { withNavigationOptions } from './navigation-options';
-import { act, create, type ReactTestRenderer } from 'react-test-renderer';
+import {
+  act,
+  create,
+  type ReactTestInstance,
+  type ReactTestRenderer,
+} from 'react-test-renderer';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -11,6 +16,7 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  View,
 } from 'react-native';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
 import {
@@ -38,6 +44,13 @@ import {
 } from '../src/design/keyboard';
 import { useOpenAsk } from '../src/features/ask/open';
 import { fromWebPath } from '../src/navigation/external';
+import * as Duo from '../modules/opax-duo';
+import {
+  resetAdaptiveDeviceForTests,
+  setWindowTraitsOverride,
+} from '../src/design/adaptive';
+import { ReservedRegionsProvider } from '../src/design/fold-area';
+import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
@@ -203,10 +216,10 @@ afterEach(async () => {
   jest.mocked(catalogs.roster).mockRejectedValue(new Error('Offline'));
   mockDirectory.current = null;
 });
-async function mount() {
+async function mount(screen = <AskScreen />) {
   await act(async () => {
     view = create(
-      withNavigationOptions(<AskScreen />, (options) => {
+      withNavigationOptions(screen, (options) => {
         mockBar.options = options;
       }),
     );
@@ -500,6 +513,108 @@ test('a cold launch opens idle, with the last conversation first under Conversat
   expect(askSession.snapshot().id).toBe('saved-fixture');
   expect(client.askPost).not.toHaveBeenCalled();
 });
+
+test.each([false, true])(
+  'phone idle touches pass through the composer overlay, native region view = %s',
+  async (native) => {
+    const window = Dimensions.get('window');
+    const regionView = jest.replaceProperty(
+      Duo,
+      'ReservedRegionView',
+      native ? View : null,
+    );
+    act(() => {
+      Dimensions.set({
+        window: { ...window, width: 402, height: 874, fontScale: 1 },
+      });
+      setWindowTraitsOverride({
+        horizontal: 'compact',
+        vertical: 'regular',
+        foldable: false,
+      });
+      resetAdaptiveDeviceForTests();
+    });
+    jest.mocked(chatsSnapshot).mockReturnValue(oneChat);
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    askSession.setDraft('A prefilled fixture question?');
+    try {
+      await mount(
+        <ReservedRegionsProvider value={emptyReservedRegions}>
+          <AskScreen />
+        </ReservedRegionsProvider>,
+      );
+      expect(byId('ask-idle')).not.toEqual([]);
+      expect(one('ask-question').props.value).toBe(
+        'A prefilled fixture question?',
+      );
+      const scroll = view!.root.findByType(ScrollView);
+      // Omitted scrollEnabled uses React Native's enabled default.
+      expect(scroll.props.scrollEnabled ?? true).toBe(true);
+      expect(scroll.props.maintainVisibleContentPosition).toBeUndefined();
+      const column = byId('ask-conversation-column').find(
+        (node) => typeof node.type === 'string',
+      )!;
+      expect(column.children[0]).toBe(scroll);
+      // Renderer presses bypass native hit testing. Also inspect every
+      // full-height layer in the siblings drawn above the scrolling content.
+      const fullHeightLayers: ReactTestInstance[] = [];
+      const inspectOverlay = (node: ReactTestInstance | string) => {
+        if (typeof node === 'string') return;
+        if (typeof node.type === 'string') {
+          const style = StyleSheet.flatten(node.props.style);
+          const fillsHeight =
+            style?.flex === 1 ||
+            style?.flexGrow === 1 ||
+            style?.height === '100%' ||
+            (style?.position === 'absolute' &&
+              style.top === 0 &&
+              style.bottom === 0);
+          // Stop at the bounded composer band. Its controls accept touches.
+          if (!fillsHeight) return;
+          fullHeightLayers.push(node);
+        }
+        node.children.forEach(inspectOverlay);
+      };
+      column.children.slice(1).forEach(inspectOverlay);
+      expect(fullHeightLayers.length).toBeGreaterThan(0);
+      expect(
+        fullHeightLayers
+          .filter((node) => {
+            const pointerEvents =
+              node.props.pointerEvents ??
+              StyleSheet.flatten(node.props.style)?.pointerEvents;
+            return pointerEvents !== 'box-none' && pointerEvents !== 'none';
+          })
+          .map((node) => node.props.testID ?? node.type),
+      ).toEqual([]);
+      expect(
+        StyleSheet.flatten(byId('ask-sources-column')[0]!.props.style).display,
+      ).toBe('none');
+
+      await press('ask-conversation-0');
+      expect(askSession.snapshot().id).toBe('saved-fixture');
+      expect(client.askPost).not.toHaveBeenCalled();
+      await act(async () => askSession.newConversation());
+      const starter = a11y('ask-starter-0', 'accessibilityLabel');
+      await press('ask-starter-0');
+      expect(jest.mocked(client.askPost).mock.calls[0]?.[1]).toMatchObject({
+        question: starter,
+      });
+    } finally {
+      await act(async () => {
+        view?.unmount();
+        view = null;
+        Dimensions.set({ window });
+        setWindowTraitsOverride(undefined);
+        resetAdaptiveDeviceForTests();
+      });
+      regionView.restore();
+    }
+  },
+);
 
 test('Ask stands on the grouped ground, so its inset groups read as raised', async () => {
   expect(designFlags.groupedSurfaces).toBe(true);

@@ -69,7 +69,10 @@ export function AskColumns({
           pointerEvents="box-none"
           style={StyleSheet.absoluteFill}
         >
-          <ReservedRegionArea style={styles.fill} testID="ask-composer-area">
+          <ReservedRegionArea
+            style={styles.composerArea}
+            testID="ask-composer-area"
+          >
             <ComposerPosition
               docked={docked}
               keyboard={keyboard}
@@ -205,6 +208,8 @@ export function PhoneDock({
 
 const styles = StyleSheet.create({
   fill: { flex: 1 },
+  // The measuring area fills the overlay; only its composer accepts touches.
+  composerArea: { flex: 1, pointerEvents: 'box-none' },
   row: { flex: 1, flexDirection: 'row' },
   hidden: { display: 'none' },
   position: { position: 'absolute' },
