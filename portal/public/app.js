@@ -8363,6 +8363,18 @@ function loadBillTitles() {
   return billTitlesPromise;
 }
 
+/** The bills with divisions, with the fields a party page sorts them by, from
+ *  /growth/division-bills.json (public/bill-titles.js), not the 1.8 MB index. The whole
+ *  index when it is already loaded, or when the file is unreadable. */
+let divisionBillsPromise = null;
+function loadDivisionBills() {
+  if (billsIndexPromise) return billsIndexPromise;
+  divisionBillsPromise ??= fetch("/growth/division-bills.json", { cache: "no-cache" })
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    .then((d) => (Array.isArray(d?.bills) ? d : loadBillsIndex()))
+    .then((d) => { if (!d) divisionBillsPromise = null; return d; });
+  return divisionBillsPromise;
+}
 /** The bill export's date (the index's generated_at) from /growth/bills-date.json
  *  (public/bill-titles.js), not the 1.8 MB index. The index's own date when it is already
  *  loaded, or when the date file is unreadable. */
@@ -9414,7 +9426,7 @@ async function renderPartyBillDivisions(label, sections, key) {
   slot.innerHTML = `<h3 class="subject-section-title">Bills they divided on</h3>
     <p class="status">Reading the divisions…</p>`;
   sections.appendChild(slot);
-  const idx = await loadBillsIndex();
+  const idx = await loadDivisionBills();
   if (currentSubjectKey !== key || !slot.isConnected) return;
   if (!idx?.bills?.length) { slot.remove(); return; }
   const candidates = idx.bills.filter((b) => Number(b.divisions) > 0)
