@@ -16,13 +16,25 @@ import {
 
 const kind = matching(/^[a-z][a-z_]*$/);
 const localHref = matching(/^\/(?!\/)[^\s\\]*$/);
+/** Search links from OPAX exports may include the public origin. */
+function recordHref(value: unknown) {
+  const href = nonempty(value);
+  if (href.startsWith('/')) return localHref(href);
+  const absolute = new URL(url(href));
+  if (
+    absolute.protocol !== 'https:' ||
+    !['opax.com.au', 'www.opax.com.au'].includes(absolute.host)
+  )
+    invalid();
+  return localHref(absolute.pathname + absolute.search + absolute.hash);
+}
 export const decodeRecord = shape({
   kind,
   title: nonempty,
   slug: nonempty,
   resource: text,
   snippet: text,
-  href: optional(localHref),
+  href: optional(recordHref),
   source: optional(text),
   url: optional(url),
   date: optional(date),

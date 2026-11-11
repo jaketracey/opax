@@ -1,24 +1,26 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
-import type { Roster } from '../../api/catalog-decoders';
+import type { Roster, Slugs } from '../../api/catalog-decoders';
+import { catalogs, portraits } from '../../api/runtime';
 import { counted } from '../../design/format';
 import {
   Group,
   InlineError,
   InsetGroup,
   LinkRow,
+  Portrait,
   RecordRow,
   Skeleton,
 } from '../../design/primitives';
 import { rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes/records';
+import { personRoute } from '../../navigation/routes/people';
 import type { SearchRecord } from './decoders';
 import type { RecoveryHandlers } from './EmptyResults';
 import { EmptyResults } from './EmptyResults';
 import { excerptFor } from './Excerpt';
 import { filtersKey, type SpeechFilters } from './filters';
-import { searchPathRoute } from './navigation';
-import { resultMeta, resultTitle } from './present';
+import { resultMeta, resultTitle, speechSlug, speechSpeaker } from './present';
 import { failureRecovery } from './recovery';
 import type { SpeechList, SpeechSort } from './speeches';
 import { SummaryBlock } from './SummaryBlock';
@@ -28,13 +30,39 @@ export const SUMMARY_AFTER = 3;
 
 /** The reader for a result row, with the query for its find bar. */
 export function speechRoute(row: SearchRecord, q: string) {
-  const slug = /^\/doc\/([^/?#]+)/.exec(row.href ?? '')?.[1];
-  if (slug)
-    return {
-      ...docRoute(decodeURIComponent(slug)),
-      params: { slug: decodeURIComponent(slug), q: q.trim() },
+  const slug = speechSlug(row);
+  return slug ? docRoute(slug, undefined, { q: q.trim() }) : null;
+}
+
+/** The same cached portrait as person rows, with no face when unavailable. */
+function SpeakerPortrait({ name, slug }: { name: string; slug: string }) {
+  const [photo, setPhoto] =
+    useState<Awaited<ReturnType<typeof portraits.get>>>(null);
+  useEffect(() => {
+    let active = true;
+    void portraits.get({ name, slug }).then(
+      (value) => {
+        if (active) setPhoto(value);
+      },
+      () => {
+        if (active) setPhoto(null);
+      },
+    );
+    return () => {
+      active = false;
     };
-  return row.href ? searchPathRoute(row.href) : null;
+  }, [name, slug]);
+  return photo ? (
+    <Portrait
+      size="row"
+      name={name}
+      localURI={photo.localURI}
+      official={/^\d+$/.test(photo.info.key)}
+      onDisplay={(visible) => {
+        if (!visible) setPhoto(null);
+      }}
+    />
+  ) : null;
 }
 
 /** A speech or record as a `RecordRow` `compact`, opening the reader. */
@@ -43,14 +71,18 @@ export function SpeechRow({
   q,
   index,
   testID,
+  roster = null,
+  slugs = null,
 }: {
   row: SearchRecord;
   q: string;
   index: number;
   testID?: string;
+  roster?: Roster | null;
+  slugs?: Slugs | null;
 }) {
-  const slug = /^\/doc\/([^/?#]+)/.exec(row.href ?? '')?.[1];
   const route = speechRoute(row, q);
+  const speaker = speechSpeaker(row, roster, slugs);
   return (
     <RecordRow
       compact
@@ -58,7 +90,22 @@ export function SpeechRow({
       title={resultTitle(row)}
       excerpt={excerptFor(row.snippet, row.resource, q)}
       speaker={
-        row.speaker ? { name: row.speaker, party: row.party ?? null } : null
+        speaker
+          ? {
+              name: speaker.name,
+              party: speaker.party,
+              href: speaker.slug
+                ? personRoute(speaker.slug, speaker.name)
+                : undefined,
+              portrait: speaker.slug ? (
+                <SpeakerPortrait
+                  key={speaker.slug}
+                  name={speaker.name}
+                  slug={speaker.slug}
+                />
+              ) : undefined,
+            }
+          : null
       }
       href={route ?? undefined}
       external={
@@ -66,7 +113,7 @@ export function SpeechRow({
           ? { url: row.url, label: row.source || 'Original source' }
           : undefined
       }
-      menu={slug ? 'record' : undefined}
+      menu={route ? 'record' : undefined}
       testID={testID ?? `records-result-${index}`}
     />
   );
@@ -100,6 +147,25 @@ export function SpeechResults({
   onRetrySources?: () => void;
   announce?: boolean;
 }) {
+  const [people, setPeople] = useState<{ roster: Roster; slugs: Slugs } | null>(
+    null,
+  );
+  useEffect(() => {
+    if (!roster) return;
+    let active = true;
+    void (async () => {
+      try {
+        const result = await catalogs.slugs();
+        if (active) setPeople({ roster, slugs: result.data });
+      } catch {
+        // Speech links remain available if the person catalogue cannot load.
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [roster]);
+  const slugs = people?.roster === roster ? people.slugs : null;
   const announced = useRef<{ key: string; rows: number } | null>(null);
   const noun = filters.kind !== 'speech' ? 'records' : 'speeches';
   const announcementKey = JSON.stringify([q.trim(), filtersKey(filters), sort]);
@@ -177,7 +243,14 @@ export function SpeechResults({
     return (
       <InsetGroup>
         {rows.slice(0, 3).map((row, index) => (
-          <SpeechRow key={row.slug} row={row} q={q} index={index} />
+          <SpeechRow
+            key={row.slug}
+            row={row}
+            q={q}
+            index={index}
+            roster={roster}
+            slugs={slugs}
+          />
         ))}
         {list.total > 3 ? (
           <LinkRow
@@ -195,7 +268,14 @@ export function SpeechResults({
     <Group gap={rhythm.block} testID="records-results">
       <InsetGroup>
         {head.map((row, index) => (
-          <SpeechRow key={row.slug} row={row} q={q} index={index} />
+          <SpeechRow
+            key={row.slug}
+            row={row}
+            q={q}
+            index={index}
+            roster={roster}
+            slugs={slugs}
+          />
         ))}
       </InsetGroup>
       {head.length === SUMMARY_AFTER && filters.kind === 'speech' ? (
@@ -209,6 +289,8 @@ export function SpeechResults({
               row={row}
               q={q}
               index={index + SUMMARY_AFTER}
+              roster={roster}
+              slugs={slugs}
             />
           ))}
         </InsetGroup>
