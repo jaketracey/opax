@@ -11,6 +11,10 @@ const rows=Object.fromEntries(Object.entries(TABLE_DATASETS).map(([name,c])=>[na
 const local=await tableDatabase({datasets:rows,metadata:{'act-invoices':actMetadata}});test.after(()=>local.close());
 const env={TABLE_DB:local.db,CACHE_EPOCH:'test'};
 const fetchTable=(name,query='',init)=>tableApi(new Request('https://opax.com.au/api/table/'+name+'?'+query,init),env);
+// Production data only changes through a reload, which publishes a new version; whole-table
+// aggregates are kept per version, so a fixture that edits rows publishes one too.
+let fixtureVersion=0;
+const newVersion=()=>local.db.prepare("UPDATE table_meta SET value=? WHERE key='version'").bind('fixture-'+(++fixtureVersion)).run();
 
 for(const [name,config]of Object.entries(TABLE_DATASETS))test(name+': paging, sorting, facets, CSV and caps',async()=>{
   let r=await fetchTable(name,'page=2&pageSize=200');assert.equal(r.status,200);let page=await r.json();assert.equal(page.total,260);assert.equal(page.rows.length,60);assert.equal(page.page,2);
@@ -45,6 +49,7 @@ test('core serializer and D1 API integrate with category and range state',async(
 });
 test('facet computation is bounded even with more than 100 distinct values',async()=>{
   await local.db.batch(Array.from({length:110},(_,i)=>local.db.prepare('INSERT INTO table_contracts_facets (key,value,rowid) VALUES (?,?,?)').bind('agency','Facet '+i,i+1)));
+  await newVersion();
   const page=await(await fetchTable('contracts')).json();assert.equal(page.facets.agency.length,100);
 });
 test('core-sized category arrays use bounded SQL bindings',async()=>{
@@ -55,6 +60,7 @@ test('core-sized category arrays use bounded SQL bindings',async()=>{
 
 test('CSV pages are bounded, retryable and retain the 50,000-row export ceiling',async()=>{
   await local.db.prepare("WITH RECURSIVE n(x) AS (SELECT 261 UNION ALL SELECT x+1 FROM n WHERE x<50100) INSERT INTO table_votes (rowid,id,name,ayes,search) SELECT x,'cap-'||x,'Record',x,'Record' FROM n").run();
+  await newVersion();
   let path='/api/table/votes?format=csv&sort=ayes:asc',previousETag,last;
   const values=[];
   for(let page=1;page<=5;page++){
@@ -88,4 +94,23 @@ registerServerCSVContract(test,{
   note:response=>'"'+response.headers.get('x-table-export-note')+'"'+','.repeat(TABLE_DATASETS.votes.columns.length-1),
   seed:async records=>{coreCSV=await tableDatabase({datasets:{votes:records.map(row=>({row:{id:row.id,name:row.name,ayes:row.amount}}))}});},
   request:async search=>{try{return await tableApi(new Request('https://opax.com.au/api/table/votes'+search),{TABLE_DB:coreCSV.db});}finally{test.after(()=>coreCSV.close());}},
+});
+
+test('whole-table counts, facets and ranges are kept per version; filtered ones are always queried',async()=>{
+  const sql=[];const counting={...env,TABLE_DB:{prepare:query=>{sql.push(query);return local.db.prepare(query);},batch:statements=>local.db.batch(statements)}};
+  const get=query=>tableApi(new Request('https://opax.com.au/api/table/grants?'+query),counting).then(r=>r.json());
+  await newVersion();
+  const cold=await get('');const coldSQL=sql.splice(0);
+  const warm=await get('');const warmSQL=sql.splice(0);
+  assert.deepEqual(warm,cold);
+  assert.ok(coldSQL.some(q=>/COUNT\(\*\) FROM table_grants t$/.test(q))&&coldSQL.some(q=>/_facets f WHERE f.key=\?/.test(q))&&coldSQL.some(q=>/SELECT \(SELECT MIN/.test(q)));
+  assert.ok(!warmSQL.some(q=>/COUNT\(\*\)|_facets|MIN\(/.test(q)),warmSQL.join('\n'));
+  const filtered=new URLSearchParams({'f.agency':JSON.stringify(['Group 0'])});
+  await get(filtered);const first=sql.splice(0);await get(filtered);const second=sql.splice(0);
+  // The agency facet's own scope is unfiltered and kept; every other aggregate is filtered and queried.
+  assert.deepEqual(second.filter(q=>/COUNT|MIN/.test(q)),first.filter(q=>/COUNT|MIN/.test(q)));
+  assert.ok(second.some(q=>/WHERE t.rowid IN \(SELECT rowid FROM table_grants_facets/.test(q)));
+  // A reload publishes a new version, and the next page reads the new data.
+  await local.db.prepare("DELETE FROM table_grants WHERE id='item-0'").run();await newVersion();
+  assert.equal((await get('')).total,cold.total-1);
 });

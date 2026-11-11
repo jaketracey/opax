@@ -17,6 +17,16 @@ const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
 const arrays = new Set(['portfolios','sectors','entities','bill','sitting'])
 const quote = (key: string) => `"${key}"`
 const tableName = (name: string) => 'table_' + name.replaceAll('-', '_')
+/**
+ * Whole-table counts, facet counts and ranges depend only on the loaded data, which the version row
+ * names, so an isolate keeps them per version instead of scanning a whole table on every page view
+ * (the grants facets alone read about 35M rows a day). Filtered aggregates are never kept.
+ */
+let aggregateVersion = '', aggregates = new Map<string, unknown>()
+export function tableAggregates(version: string): Map<string, unknown> {
+  if (aggregateVersion !== version) {aggregateVersion = version;aggregates = new Map()}
+  return aggregates
+}
 const errorResponse = (status: number, error: string, headers = {}) => Response.json({error}, {status,headers:{'cache-control':'no-store','x-robots-tag':'noindex',...headers}})
 
 /** The exact core serializer grammar, including optional URL-key prefixes. */
@@ -167,7 +177,9 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
       return {...row,from:from ? donorDisclosure(from).name : row.from,to:to ? donorDisclosure(to).name : row.to,from_href:from ? donorDisclosure(from).href : null,to_href:to ? donorDisclosure(to).href : null,return_reference:donor ? donorDisclosure(donor).reference : row.type==='receipts' ? [({federal:'AEC',qld:'ECQ',vic:'VEC',tas:'TEC'} as Record<string,string>)[String(row.jurisdiction)] || String(row.jurisdiction),'disclosure returns',row.firstYear===row.lastYear ? row.firstYear : `${row.firstYear}–${row.lastYear}`,({federal:'https://transparency.aec.gov.au/',qld:'https://disclosures.ecq.qld.gov.au/',vic:'https://disclosures.vec.vic.gov.au/',tas:'https://www.tec.tas.gov.au/disclosure-and-funding/registers-and-reports/'} as Record<string,string>)[String(row.jurisdiction)]].filter(Boolean).join(' · ') : ''}
     })
     const table=tableName(name), selection=where(table,query,undefined,supplierIds), columnSQL=config.columns.filter(c=>!c.computed).map(c=>'t.'+quote(c.key)).join(',')
-    const total=Number(await db.prepare(`SELECT COUNT(*) FROM ${table} t${selection.sql}`).bind(...selection.values).first<number>('COUNT(*)'))
+    const kept=tableAggregates(version+'|'+(env.CACHE_EPOCH || '')),totalKey=name+'|count'
+    const total=!selection.sql && kept.has(totalKey) ? kept.get(totalKey) as number : Number(await db.prepare(`SELECT COUNT(*) FROM ${table} t${selection.sql}`).bind(...selection.values).first<number>('COUNT(*)'))
+    if (!selection.sql) kept.set(totalKey,total)
     if (csv) {
       const csvNotes=actReceipt?actInvoiceCoverageNotes({...actReceipt,public_copy:actInvoicesPublicCopy(actReceipt)}):[]
       if(csvNotes.length)headers.set('x-table-csv-notes',encodeURIComponent(JSON.stringify(csvNotes)))
@@ -212,17 +224,24 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     let rows: Row[]=[]
     {
       const statements=[db.prepare(`SELECT ${columnSQL} FROM ${table} t${selection.sql}${order(query,config.columns)} LIMIT ? OFFSET ?`).bind(...selection.values,pageSize,(page-1)*pageSize)]
-      const facetColumns=config.columns.filter(c=>c.facet)
+      const facetColumns=config.columns.filter(c=>c.facet),pending: {c: Column; at: number; key?: string}[]=[],known=new Map<string,Row[]>()
       for (const c of facetColumns) {
-        const scope=where(table,query,c.key,supplierIds)
-        statements.push(c.facet==='range' ? db.prepare(`SELECT MIN(t.${quote(c.key)}) AS min,MAX(t.${quote(c.key)}) AS max FROM ${table} t${scope.sql}`).bind(...scope.values) : db.prepare(`SELECT f.value,COUNT(*) AS count FROM ${table}_facets f JOIN ${table} t ON t.rowid=f.rowid${scope.sql ? scope.sql+' AND' : ' WHERE'} f.key=? GROUP BY f.value ORDER BY count DESC,f.value LIMIT ${MAX_FACETS}`).bind(...scope.values,c.key))
+        const scope=where(table,query,c.key,supplierIds),key=scope.sql ? undefined : name+'|'+c.facet+'|'+c.key
+        if (key && kept.has(key)) {known.set(c.key,kept.get(key) as Row[]);continue}
+        pending.push({c,at:statements.length,key})
+        // Unfiltered: MIN and MAX as separate subqueries each use the column index (one row each),
+        // and every facet row has its table row, so the join only filters.
+        statements.push(c.facet==='range'
+          ? db.prepare(scope.sql ? `SELECT MIN(t.${quote(c.key)}) AS min,MAX(t.${quote(c.key)}) AS max FROM ${table} t${scope.sql}` : `SELECT (SELECT MIN(${quote(c.key)}) FROM ${table}) AS min,(SELECT MAX(${quote(c.key)}) FROM ${table}) AS max`).bind(...scope.values)
+          : db.prepare(scope.sql ? `SELECT f.value,COUNT(*) AS count FROM ${table}_facets f JOIN ${table} t ON t.rowid=f.rowid${scope.sql} AND f.key=? GROUP BY f.value ORDER BY count DESC,f.value LIMIT ${MAX_FACETS}` : `SELECT f.value,COUNT(*) AS count FROM ${table}_facets f WHERE f.key=? GROUP BY f.value ORDER BY count DESC,f.value LIMIT ${MAX_FACETS}`).bind(...scope.values,c.key))
       }
       const results=await db.batch<Row>(statements);rows=enrich(decode(results[0].results))
-      facetColumns.forEach((c,i)=>{
-        const values=results[i+1].results
+      for (const {c,at,key} of pending) {known.set(c.key,results[at].results);if (key) kept.set(key,results[at].results)}
+      for (const c of facetColumns) {
+        const values=known.get(c.key)!
         if (c.facet==='range') {const range=values[0];if(range?.min!=null && range?.max!=null) facets[c.key]={min:Number(range.min),max:Number(range.max)}}
         else facets[c.key]=values as {value:string;count:number}[]
-      })
+      }
     }
     headers.set('content-type','application/json; charset=utf-8')
     return Response.json({rows,total,page,pageSize,facets} satisfies Page,{headers})
