@@ -91,7 +91,7 @@ function reportMatches(ix: Index, r: RecordRow, args: Record<string, unknown>, c
 
 export const tool: ToolDefinition = {
   name: 'integrity_reports',
-  description: 'Reports of Australian anti-corruption and integrity commissions (NSW, Qld, WA, SA and ACT; NACC, Tas and NT partly): investigation, special, inquiry and prevention reports and statements, with findings or opinions quoted in each commission\'s own words and labels, numbered recommendations and agency responses, each cited to the report page. Views: reports, report (record_id, part), findings, recommendations, bodies (coverage and gaps). Allegations are not findings; a corrupt conduct finding is not a criminal conviction; statutory terms differ, so do not compare counts across commissions.',
+  description: 'Reports of Australian anti-corruption and integrity commissions (NSW, Vic IBAC from tabled copies, Qld, WA, SA and ACT; NACC, Tas and NT partly): investigation, special, inquiry and prevention reports and statements, with findings or opinions quoted in each commission\'s own words and labels, numbered recommendations and agency responses, each cited to the report page. Views: reports, report (record_id, part), findings, recommendations, bodies (coverage and gaps). Allegations are not findings; a corrupt conduct finding is not a criminal conviction; statutory terms differ, so do not compare counts across commissions.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
     body: { type: 'string', minLength: 2, maxLength: 120, description: 'Commission, e.g. "NSW ICAC".' },
