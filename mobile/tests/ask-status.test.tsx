@@ -54,22 +54,7 @@ test('step frames retain start and finish order across chunk boundaries and para
   ];
   const text = steps.map((s) => frame({ phase: 'step', step: s })).join('');
   for (let i = 0; i < text.length; i += 3) stream.push(text.slice(i, i + 3));
-  expect(
-    handlers.step.mock.calls.map(([s], i) =>
-      s.trail.find((entry: AskStep) => entry.id === steps[i]!.id),
-    ),
-  ).toEqual([
-    steps[0],
-    steps[1],
-    steps[2],
-    { ...steps[3], arg: 'Greens' },
-    steps[4],
-  ]);
-  expect(handlers.step.mock.calls.at(-1)![0].trail).toEqual([
-    steps[2],
-    { ...steps[3], arg: 'Greens' },
-    steps[4],
-  ]);
+  expect(handlers.step.mock.calls.map(([s]) => s)).toEqual(steps);
   expect(handlers.stage).not.toHaveBeenCalled();
   stream.push(frame({ phase: 'retrieved', sources: [{}, {}] }));
   expect(handlers.reading).toHaveBeenCalledWith(2);
@@ -83,8 +68,7 @@ test.each([
   null,
   [],
   {},
-  { id: -1, label: 'Checking', state: 'running' },
-  { id: 1.5, label: 'Checking', state: 'running' },
+  { id: 1, label: 'Checking', state: 'running' },
   { id: '', label: 'Checking', state: 'running' },
   { id: 's', label: '  ', state: 'running' },
   { id: 's', label: 1, state: 'running' },
@@ -101,62 +85,6 @@ test.each([
   ).not.toThrow();
   expect(handlers.step).not.toHaveBeenCalled();
   expect(handlers.stage).not.toHaveBeenCalled();
-});
-
-test('research trail fields decode numeric IDs, round order and ok states without leaking malformed metadata', () => {
-  const handlers = stageHandlers();
-  const stream = new AskStream(handlers);
-  const trail = [
-    {
-      id: 2,
-      label: 'Reading a passage',
-      tool: 'read_passage',
-      round: 2,
-      results: 1,
-      ms: 100,
-      ok: true,
-    },
-    {
-      id: 1,
-      label: 'Searching the record',
-      tool: 'search',
-      round: 1,
-      results: 128,
-      ms: 1200,
-      ok: true,
-    },
-    {
-      id: 3,
-      label: 'Checking coverage',
-      results: -1,
-      ms: '100',
-      round: {},
-      ok: false,
-    },
-  ];
-  stream.push(`event: research.trail\ndata: ${JSON.stringify({ trail })}\n\n`);
-  expect(handlers.step).toHaveBeenCalledTimes(1);
-  expect(handlers.step.mock.calls[0]![0].trail).toEqual([
-    {
-      id: '1',
-      label: 'Searching the record',
-      tool: 'search',
-      round: 1,
-      results: 128,
-      ms: 1200,
-      state: 'done',
-    },
-    {
-      id: '2',
-      label: 'Reading a passage',
-      tool: 'read_passage',
-      round: 2,
-      results: 1,
-      ms: 100,
-      state: 'done',
-    },
-    { id: '3', label: 'Checking coverage', state: 'error' },
-  ]);
 });
 
 test('the latest start still running wins, including out-of-order completions and duplicate starts', () => {
@@ -201,15 +129,12 @@ test('controller resets lookups between rounds, on writing and cancellation, and
   const stream = new AskStream(on);
   stream.push(frame({ phase: 'step', step: step('hearings') }));
   stream.push(frame({ phase: 'step', step: step('speakers') }));
-  expect(controller.snapshot().steps[0]!.trail!.map((s) => s.id)).toEqual([
+  expect(controller.snapshot().steps.map((s) => s.id)).toEqual([
     'hearings',
     'speakers',
   ]);
   stream.push(frame({ phase: 'step', step: step('speakers', 'done') }));
-  expect(controller.snapshot().steps[0]!.trail).toEqual([
-    step('hearings'),
-    step('speakers', 'done'),
-  ]);
+  expect(controller.snapshot().steps.map((s) => s.id)).toEqual(['hearings']);
   stream.push('event: retry\ndata: {}\n\n');
   expect(controller.snapshot()).toMatchObject({
     steps: [],

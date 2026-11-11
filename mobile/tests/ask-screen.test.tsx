@@ -750,13 +750,12 @@ test('a sent question shows the status line, Stop, and is revealed below the hea
   expect(turn.findAllByProps({ testID: 'ask-user-question' })).not.toEqual([]);
   expect(textOf('ask-user-question')).toBe('Who spoke on housing?');
   expect(textOf('ask-status')).toBe('Reading your question');
-  // The decorative animal leads the waiting line and is never announced.
-  const animal = byId('ask-animal')[0]!;
-  expect(animal.props).toMatchObject({
+  // A system activity indicator leads the line and is never announced.
+  const spinner = byId('ask-progress')[0]!.findAllByType(ActivityIndicator)[0]!;
+  expect(spinner.props).toMatchObject({
     accessibilityElementsHidden: true,
     importantForAccessibility: 'no-hide-descendants',
   });
-  expect(byId('ask-progress')[0]!.findAllByType(ActivityIndicator)).toEqual([]);
   // Send has become Stop; the composer was cleared for the next question.
   expect(one('ask-stop').props.accessibilityLabel).toBe('Stop answering');
   expect(byId('ask-submit')).toEqual([]);

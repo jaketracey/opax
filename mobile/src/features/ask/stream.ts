@@ -4,19 +4,11 @@ export type AskStage =
   | 'Searching the record'
   | 'Writing the answer'
   | 'Searching again';
-export type AskTrailStep = {
+export type AskStep = {
   id: string;
   label: string;
   arg?: string;
   state: 'running' | 'done' | 'failed' | 'error';
-  tool?: string;
-  round?: number;
-  results?: number;
-  ms?: number;
-};
-export type AskStep = AskTrailStep & {
-  /** One decoded run, including completed lookups, in start order. */
-  trail?: readonly AskTrailStep[];
 };
 export type StreamHandlers = {
   stage: (stage: AskStage) => void;
@@ -27,20 +19,12 @@ export type StreamHandlers = {
   reading?: (count: number) => void;
 };
 
-function parseStep(value: unknown): AskTrailStep | null {
+function parseStep(value: unknown): AskStep | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-  const { id, label, arg, tool, round, results, ms, ok } = value as Record<
-    string,
-    unknown
-  >;
-  const state =
-    (value as Record<string, unknown>).state ??
-    (typeof ok === 'boolean' ? (ok ? 'done' : 'error') : undefined);
+  const { id, label, arg, state } = value as Record<string, unknown>;
   if (
-    !(
-      (typeof id === 'string' && id.trim()) ||
-      (typeof id === 'number' && Number.isSafeInteger(id) && id >= 0)
-    ) ||
+    typeof id !== 'string' ||
+    !id.trim() ||
     typeof label !== 'string' ||
     !label.trim() ||
     (arg !== undefined && (typeof arg !== 'string' || arg.length > 40)) ||
@@ -49,18 +33,10 @@ function parseStep(value: unknown): AskTrailStep | null {
   )
     return null;
   return {
-    id: String(id),
+    id,
     label,
     ...(arg ? { arg } : {}),
     state: state as AskStep['state'],
-    ...(typeof tool === 'string' && tool.trim() ? { tool } : {}),
-    ...(typeof round === 'number' && Number.isSafeInteger(round) && round > 0
-      ? { round }
-      : {}),
-    ...(typeof results === 'number' && Number.isFinite(results) && results >= 0
-      ? { results }
-      : {}),
-    ...(typeof ms === 'number' && Number.isFinite(ms) && ms >= 0 ? { ms } : {}),
   };
 }
 export class AskFailure extends Error {
@@ -85,43 +61,9 @@ export class AskStream {
   private final: unknown;
   private completed = false;
   private shown = false;
-  private trail: AskTrailStep[] = [];
   constructor(private on: StreamHandlers) {}
   get done() {
     return this.completed;
-  }
-  private steps(values: unknown[]) {
-    let changed = false;
-    for (const value of values) {
-      const step = parseStep(value);
-      if (!step) continue;
-      const index = this.trail.findIndex((s) => s.id === step.id);
-      if (index < 0)
-        this.trail = [...this.trail, step].sort((a, b) => {
-          const left = Number(a.id),
-            right = Number(b.id);
-          return Number.isFinite(left) && Number.isFinite(right)
-            ? left - right
-            : 0;
-        });
-      else
-        this.trail = this.trail.map((s, i) =>
-          i === index ? { ...s, ...step } : s,
-        );
-      changed = true;
-    }
-    if (!changed) return;
-    // The controller retains running lookups only. Decode the research run
-    // as one envelope, with each lookup's real state and counts inside it.
-    // Fresh snapshots preserve even starts and finishes in one network chunk.
-    const current = this.trail.filter((s) => s.state === 'running').at(-1);
-    this.on.step?.({
-      id: 'research.trail',
-      label: current?.label ?? 'Searching the record',
-      ...(current?.arg ? { arg: current.arg } : {}),
-      state: 'running',
-      trail: this.trail,
-    });
   }
   push(text: string, end = false) {
     this.buffer += text;
@@ -166,14 +108,12 @@ export class AskStream {
       this.on.delta(v.text);
     } else if (event === 'retry') {
       this.shown = false;
-      this.trail = [];
       this.on.retry();
       this.on.stage('Searching again');
-    } else if (event === 'research.trail') {
-      this.steps(Array.isArray(v.trail) ? v.trail : [v]);
     } else if (event === 'status') {
       if (v.phase === 'step') {
-        this.steps([v.step]);
+        const step = parseStep(v.step);
+        if (step) this.on.step?.(step);
       } else if (v.phase === 'searching') this.on.stage('Searching the record');
       else if (
         v.phase === 'retrieved' ||
