@@ -1,4 +1,4 @@
-import {PERSON_PATHS} from '../public/person-paths.js'
+import {PERSON_PATHS} from '../public/canonical-urls.js'
 import {rankingRepairQuestion} from './research-ranking-repair.mjs'
 
 /** The roster establishes a current party only for one fully identified person.

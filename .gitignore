@@ -65,6 +65,12 @@ portal/public/growth/votes/
 portal/public/growth/party-money/
 # The supplier index split by id prefix for supplier pages (npm run build:growth).
 portal/public/growth/supplier-rows/
+# Small slices of published exports for pages and the Worker (npm run build:growth).
+portal/public/growth/bill-titles.json
+portal/public/growth/bills-date.json
+portal/public/growth/division-bills.json
+portal/public/growth/money-parties.json
+portal/public/growth/newest-bills.json
 # Local SEO HTML snapshots, CDP measurements and Wrangler state.
 portal/private/
 
