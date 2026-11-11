@@ -12,7 +12,11 @@ import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
 import { colors } from '../design/tokens';
 import { RootLaunchHandoff } from '../launch/LaunchHandoff';
-import { decideSplashPlain, holdSplashForWelcome } from '../launch/splash';
+import {
+  decideLaunchSequence,
+  decideSplashPlain,
+  holdSplashForWelcome,
+} from '../launch/splash';
 import { useStackChrome } from '../navigation/chrome';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
 import { welcomeRoute } from '../navigation/routes';
@@ -50,6 +54,9 @@ export default function Layout() {
   useScreenTracking();
   useEffect(() => {
     void checkFirstLaunch();
+    // Beside the first-launch check: which splash sequence a plain launch
+    // plays (launch/played.ts). The cover draws either way; motion waits.
+    void decideLaunchSequence();
     startAnalytics();
   }, []);
   // The launch decision, once (shell.md 3, first-launch 4.1 L2 and 4.5): the

@@ -94,6 +94,7 @@ jest.mock('expo-constants', () => ({
   },
 }));
 jest.mock('../src/launch/splash', () => ({
+  decideLaunchSequence: jest.fn(async () => undefined),
   decideSplashPlain: jest.fn(),
   holdSplashForWelcome: jest.fn(),
 }));

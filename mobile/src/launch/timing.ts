@@ -1,16 +1,23 @@
 /**
- * The launch handoff's beats, in milliseconds (shell.md 3, today.md 2).
- * Content is mounted and touchable underneath the whole time; the cover is
- * the splash image on paper, never takes input and is hidden from VoiceOver.
+ * The launch cover's beats, in milliseconds (shell.md 3, today.md 2).
+ * Content is mounted underneath the whole time; the cover is the native
+ * splash's own layers (the star and the "OPAX" wordmark on navy), so hiding
+ * the native splash under it shows no seam. It is hidden from VoiceOver.
  *
- * - One crossfade of `fade` (motion.launch) from the splash to the first
- *   screen. No rule under the mark and no hold.
- * - On a returning launch the fade starts when Today's cached reads answer
- *   (`releaseSplash('today')`) and never later than `latestFade` after the
- *   root lays out.
- * - On a first launch the splash waits for the welcome's first layout, with
- *   `splashFailsafe` as the ceiling.
- * - Reduce Motion: a cut.
+ * Two sequences:
+ *
+ * - `short` (later cold launches): the lockup holds until the first screen
+ *   has laid out, never longer than `handoff.latestFade`, then one crossfade
+ *   of `handoff.fade` (motion.launch). Reduce Motion: a cut.
+ * - `full` (once per device, see played.ts): the four letters of OPAX
+ *   unfold into the full name, hold while it is read, then the field fades
+ *   to the app. Never longer than `splash.full` adds up to, plus any wait for
+ *   the first screen; a tap skips to the exit as soon as the app is ready.
+ *   Reduce Motion: the name crossfades in place of the unfold.
+ *
+ * On a first launch the cover waits for the welcome's first layout, with
+ * `handoff.splashFailsafe` as the ceiling. Warm launches (the app returning
+ * from the background) never mount a cover at all.
  */
 export const handoff = {
   fade: 240,
@@ -20,12 +27,50 @@ export const handoff = {
   splashFailsafe: 4000,
 } as const;
 
-/** When the fade starts, in ms after the cover is drawn, given readiness. */
+export const splash = {
+  /** The name unfolds: settle, unfold, hold, exit. 1.9 s. */
+  full: { settle: 100, unfold: 900, hold: 550, exit: 350 },
+  /** Reduce Motion: a crossfade in place of the unfold. 1.35 s. */
+  reduced: { settle: 100, crossfade: 300, hold: 650, exit: 300 },
+  /** The exit after a tap. */
+  skipExit: 250,
+  /** How far the lockup recedes as the field fades (scale). */
+  exitScale: 0.96,
+  /**
+   * Choreography windows, as fractions of `full.unfold`. A line's window
+   * starts `stagger` later than the line above it.
+   */
+  stagger: 0.08,
+  windows: {
+    /** The wordmark image dissolves into the live letters it matches. */
+    swap: [0, 0.1],
+    /** The star rises and settles above the name. */
+    star: [0, 0.8],
+    /** A letter travels from the wordmark to its line. */
+    letter: [0, 0.62],
+    /** The rest of a word fades in beside its letter. */
+    rest: [0.42, 0.78],
+  },
+} as const;
+
+export type SplashSequence = 'full' | 'short';
+
+/** The full sequence's length when nothing waits on the app, in ms. */
+export function fullSequenceLength(reduced: boolean): number {
+  if (reduced) {
+    const r = splash.reduced;
+    return r.settle + r.crossfade + r.hold + r.exit;
+  }
+  const f = splash.full;
+  return f.settle + f.unfold + f.hold + f.exit;
+}
+
+/** When the short fade starts, in ms after the cover is drawn, given readiness. */
 export function fadeStart(readyAt: number, reduced: boolean): number {
   return Math.max(0, reduced ? readyAt : Math.min(handoff.latestFade, readyAt));
 }
 
-/** The longest a returning launch's handoff can last. */
+/** The longest a returning launch's short handoff can last. */
 export function longestHandoff(reduced: boolean): number {
   return handoff.latestFade + (reduced ? handoff.reducedFade : handoff.fade);
 }
