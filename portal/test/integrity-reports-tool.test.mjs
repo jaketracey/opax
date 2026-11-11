@@ -138,9 +138,35 @@ test('unknown record id and unmatched body answer with coverage, not an error', 
   const none = await call({ view: 'reports', body: 'Ruritania Commission' }); cited(none, false);
 });
 
+test('a named report carries its own findings and recommendations, within the payload limit', async () => {
+  for (const r of [...withFindings, ...withRecs].slice(0, 40)) {
+    const out = await call({ view: 'reports', operation: r.operation ?? undefined, query: r.operation ? undefined : r.title.split(/\s+/).slice(0, 6).join(' '), body: r.body });
+    cited(out);
+    const row = out.rows.find(x => x.record_id === r.id);
+    if (!row || out.total > 2) continue;
+    assert.ok(row.findings.length || row.recommendations.length, r.id);
+    for (const it of [...row.findings, ...row.recommendations]) assert.ok(out.citations.some(c => c.text.includes(it.text.slice(0, 60))), r.id);
+    if (r.findings.length) assert.equal(row.findings[0].label, r.findings[0].label);
+  }
+  const karamu = await call({ view: 'reports', query: 'Karamu' });
+  cited(karamu);
+  assert.equal(karamu.rows[0].record_id, 'tas-ic-2025-12-02-karamu');
+  assert.ok(karamu.rows[0].findings.length >= 1 && karamu.notes.some(n => /More items/.test(n)));
+});
+
+test('record_id with view=findings or recommendations opens that report', async () => {
+  const r = withRecs[0];
+  const out = await call({ view: 'recommendations', record_id: r.id });
+  cited(out);
+  assert.equal(out.view, 'report');
+  assert.equal(out.part, 'recommendations');
+  assert.equal(out.rows[0].recommendations[0].text.slice(0, 80), r.recommendations[0].text.slice(0, 80));
+});
+
 test('invalid input is rejected before any read', async () => {
   await invalid({ view: 'report' });
   await invalid({ view: 'reports', record_id: 'nsw-icac-x' });
+  await invalid({ view: 'bodies', record_id: 'nsw-icac-x' });
   await invalid({ view: 'reports', finding_kind: 'finding' });
   await invalid({ view: 'findings', since: '2024-05-01', until: '2023-01-01' });
   await invalid({ view: 'reports', report_type: 'media_release' });

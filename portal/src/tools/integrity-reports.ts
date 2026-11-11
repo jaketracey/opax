@@ -109,12 +109,14 @@ export const tool: ToolDefinition = {
   }, required: ['view'], examples: [{ view: 'reports', body: 'NSW ICAC', since: '2023-01-01' }, { view: 'reports', subject: 'council', jurisdiction: 'WA' }, { view: 'findings', body: 'NSW ICAC', operation: 'Operation Keppel' }] },
   identifierFields: ['body'],
   validate: args => validWindow(args) &&
-    (args.view === 'report' ? !!args.record_id && ['body', 'jurisdiction', 'query', 'operation', 'subject', 'report_type', 'finding_kind', 'since', 'until'].every(k => args[k] === undefined) : !args.record_id && !args.part) &&
-    (args.view === 'findings' || !args.finding_kind) &&
+    (args.record_id ? ['report', 'findings', 'recommendations'].includes(String(args.view)) : args.view !== 'report' && !args.part) &&
+    (args.view === 'findings' || !!args.record_id || !args.finding_kind) &&
     (args.view !== 'bodies' || ['query', 'operation', 'subject', 'report_type', 'since', 'until'].every(k => args[k] === undefined)),
   stepLabel: args => ({ label: 'Checking integrity commission reports', arg: clip(args.operation ?? args.query ?? args.subject ?? args.body ?? args.view, 40) }),
   async handler(env, args) {
     const ix = await index(env)
+    // a record_id with view=findings or recommendations opens that report's list
+    if (args.record_id && args.view !== 'report') args = { view: 'report', record_id: args.record_id, part: args.part ?? args.view, offset: args.offset, limit: args.limit }
     const offset = Number(args.offset) || 0, limit = Number(args.limit) || 5
     const snapshot = ix.meta.snapshot_at, indexUrl = siteUrl(env, '/integrity-reports/index.json')
     const notes = [NOTE]
@@ -157,6 +159,22 @@ export const tool: ToolDefinition = {
       const rows = matched.slice(offset, offset + limit).map(r => reportRow(env, ix, r))
       const scope = ['body', 'jurisdiction', 'query', 'operation', 'subject', 'report_type', 'since', 'until'].filter(k => args[k] !== undefined).map(k => `${k} ${args[k]}`).join(', ') || 'all commissions'
       const cites: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: `${matched.length} integrity commission reports and statements match ${scope} in the OPAX projection (snapshot ${snapshot}), newest first.` }, ...rows.map(reportCite)]
+      if (matched.length && matched.length <= 2) {
+        // a named report: carry its findings and recommendations so one call answers "what did it find"
+        for (const row of rows) {
+          const full = (await bodyFile(env, ix, String(matched.find(m => m.id === row.record_id)?.body))).find(r => r.id === row.record_id)
+          if (!full) continue
+          const fs = records(full.findings).slice(0, 6).map((it, i) => itemRow(ix, full, 'findings', it, i))
+          const rs = records(full.recommendations).slice(0, 4).map((it, i) => itemRow(ix, full, 'recommendations', it, i))
+          const ps = records(full.responses).slice(0, 3).map((it, i) => itemRow(ix, full, 'responses', it, i))
+          // long verbatim items: drop whole items (responses, then recommendations, then findings), never cut their text
+          const size = () => new TextEncoder().encode(JSON.stringify({ rows, cites, fs, rs, ps, c: [...fs.map(it => itemCite(it, 'findings')), ...rs.map(it => itemCite(it, 'recommendations')), ...ps.map(it => itemCite(it, 'responses'))] })).length
+          while (size() > 11_000 && (ps.length || rs.length || fs.length > 1)) (ps.length ? ps : rs.length ? rs : fs).pop()
+          Object.assign(row, { findings: fs, recommendations: rs, responses: ps })
+          cites.push(...fs.map(it => itemCite(it, 'findings')), ...rs.map(it => itemCite(it, 'recommendations')), ...ps.map(it => itemCite(it, 'responses')))
+          if (records(full.findings).length > fs.length || records(full.recommendations).length > rs.length || records(full.responses).length > ps.length) notes.push(`More items: view=report, record_id ${row.record_id}, part=findings, recommendations or responses.`)
+        }
+      }
       if (rows.some(r => r.acquisition)) notes.push(MANUAL_NOTE)
       if (!matched.length) notes.push('No matching report. This does not establish that none exists: coverage differs by commission (see view=bodies), and titles use each commission\'s own wording.')
       return publishedResult(rows, cites, { view: 'reports', total: matched.length, offset, next_offset: offset + rows.length < matched.length ? offset + rows.length : null, snapshot, notes: [...notes, ...gapNote] })
