@@ -11,6 +11,7 @@ import {
   Screen,
   errorMessage,
   menuLeaves,
+  useSplitPane,
 } from '../../design/primitives';
 import { LinkRow } from '../../design/rows';
 import { openOnWeb } from '../../navigation/external';
@@ -68,6 +69,7 @@ export function RecordDetail({ entry }: { entry: RecordEntry }) {
  * pane never leaves the app by itself.
  */
 function ResolvedPerson({ entry }: { entry: RecordEntry }) {
+  const pane = useSplitPane<RecordEntry>();
   const [state, setState] = useState<{
     key: string;
     retry: number;
@@ -94,6 +96,14 @@ function ResolvedPerson({ entry }: { entry: RecordEntry }) {
   }, [entry.kind, entry.key, id, retry]);
   const current = state.key === id && state.retry === retry ? state : null;
   const destination = current?.destination;
+  useEffect(() => {
+    if (destination && 'route' in destination)
+      pane?.replace?.({
+        kind: 'person',
+        key: destination.route.params.slug,
+        title: entry.title,
+      });
+  }, [destination, pane, entry.title]);
   if (destination && 'route' in destination)
     return (
       <ProfileScreen

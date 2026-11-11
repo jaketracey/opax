@@ -63,7 +63,9 @@ jest.mock('expo-router', () => ({
 jest.mock('../src/design/adaptive', () => ({
   ...jest.requireActual('../src/design/adaptive'),
   isPad: true,
+  useAdaptiveDevice: () => true,
   useLayout: () => ({
+    rule: 'pad',
     size: 'regular',
     regular: true,
     wide: true,

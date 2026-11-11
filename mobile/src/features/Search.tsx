@@ -8,6 +8,7 @@ import {
   SidebarSafe,
   SplitLayout,
   isPad,
+  useAdaptiveDevice,
   useLayout,
 } from '../design/primitives';
 import { colors } from '../design/tokens';
@@ -15,7 +16,9 @@ import { RecordDetail, RecordShare } from './split/RecordDetail';
 import {
   encodeEntry,
   entryForRoute,
+  entryFromRoute,
   entryLabel,
+  entryRoute,
   type RecordEntry,
 } from './split/entry';
 import { SearchScreen } from './search/SearchScreen';
@@ -29,7 +32,8 @@ import type { PaneRow } from './search/ResultsView';
  * result row rather than an empty pane.
  */
 export default function Search() {
-  if (!isPad) return <SearchScreen />;
+  const adaptive = useAdaptiveDevice();
+  if (!adaptive) return <SearchScreen />;
   return (
     <SidebarSafe style={styles.screen}>
       <LayoutRegion style={styles.screen}>
@@ -74,12 +78,13 @@ function SearchSplit() {
       <SearchScreen onRows={split ? onRows : undefined} />
     </SearchSplitContext.Provider>
   );
-  if (!split) return list;
   return (
     <>
       {/* The list column keeps an inline title; large titles over two
           panes would collapse with whichever scrolls first. */}
-      <RouteOptions options={{ headerLargeTitleEnabled: false }} />
+      {isPad && split ? (
+        <RouteOptions options={{ headerLargeTitleEnabled: false }} />
+      ) : null}
       <SplitLayout<RecordEntry>
         id="search"
         testID="search-split"
@@ -88,6 +93,8 @@ function SearchSplit() {
         initialSelection={() => first}
         onSelect={setSelected}
         entryKey={encodeEntry}
+        entryRoute={entryRoute}
+        entryFromRoute={entryFromRoute}
         entryTitle={entryLabel}
         keys={keys}
         entryForKey={(key) =>

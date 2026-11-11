@@ -29,7 +29,7 @@ import {
   SplitLayout,
   Text,
   copy,
-  isPad,
+  useAdaptiveDevice,
   rowMenus,
   useLayout,
 } from '../../design/primitives';
@@ -53,6 +53,9 @@ import {
   decodeEntry,
   encodeEntry,
   entryLabel,
+  entryFromRoute,
+  entryRoute,
+  useSplitSelectionParams,
   type RecordEntry,
 } from '../split/entry';
 import { RecordDetail, RecordShare } from '../split/RecordDetail';
@@ -188,11 +191,12 @@ function activeFilters(kind: DirectoryKind, filters: Filters): string[] {
 }
 
 export default function DirectoryScreen() {
+  const adaptive = useAdaptiveDevice();
   const params = useLocalSearchParams<{ kind: string }>();
   const kind = directoryKind(params.kind);
   // A directory deep link can replace kind on this same route. Keep each view’s
   // query and record local, so the previous kind never filters or flashes here.
-  if (!isPad) return <DirectoryView key={kind} kind={kind} />;
+  if (!adaptive) return <DirectoryView key={kind} kind={kind} />;
   // iPad: the region a split measures (list left, profile right).
   return (
     <SidebarSafe style={styles.screen}>
@@ -203,6 +207,8 @@ export default function DirectoryScreen() {
   );
 }
 function DirectoryView({ kind }: { kind: DirectoryKind }) {
+  const adaptive = useAdaptiveDevice();
+  const setSelectionParams = useSplitSelectionParams();
   const title = titles[kind];
   const load = useCallback(
     (refresh: boolean, _publish: unknown, signal?: AbortSignal) =>
@@ -301,7 +307,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
   // iPad regular width: list left, the record right, the selection in the
   // route (`/directory?kind=person&open=person:…`), as Bills does.
   const split = useLayout().regular;
-  const selected = split ? decodeEntry(params.open) : null;
+  const selected = decodeEntry(params.open);
   const selectedKey = selected ? encodeEntry(selected) : null;
   const listRef = useRef<SectionList<Row, Section>>(null);
   const visible = useRef(new Set<string>());
@@ -317,7 +323,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const select = useCallback(
     (entry: RecordEntry | null) => {
       Keyboard.dismiss();
-      router.setParams({ open: entry ? encodeEntry(entry) : '' });
+      setSelectionParams({ open: entry ? encodeEntry(entry) : '' });
       if (!entry) return;
       // A keyboard step past the visible rows brings the row into view.
       const key = encodeEntry(entry);
@@ -336,7 +342,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         return true;
       });
     },
-    [sections],
+    [sections, setSelectionParams],
   );
   const renderRow = useCallback(
     ({ item }: SectionListRenderItemInfo<Row, Section>) => (
@@ -359,14 +365,9 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
       new Map(rows.map((row) => [encodeEntry(entryFor(row)), entryFor(row)])),
     [rows],
   );
-  // iPad: the pane opens on the first row rather than empty, in portrait as
-  // in landscape (P2-21). A selection, not a navigation: VoiceOver focus
-  // stays on the list, and a cleared selection (`open=`) stays cleared.
+  // A cleared selection (`open=`) stays cleared. SplitLayout chooses the
+  // default only while focused, after recovering any compact detail route.
   const first = rows[0];
-  useEffect(() => {
-    if (!split || params.open !== undefined || !first) return;
-    router.setParams({ open: encodeEntry(entryFor(first)) });
-  }, [split, params.open, first]);
 
   const offline = record ? savedCopy(record.stale, record.staleReason) : null;
   const statusHeader =
@@ -514,7 +515,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         )}
         stickySectionHeadersEnabled
         extraData={split ? selectedKey : undefined}
-        onViewableItemsChanged={split ? onViewable : undefined}
+        onViewableItemsChanged={adaptive ? onViewable : undefined}
         // A row not yet measured: scroll near it; the next step lands on it.
         onScrollToIndexFailed={({ index: at, averageItemLength }) =>
           listRef.current
@@ -566,14 +567,19 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
           ),
         }}
       />
-      {isPad ? (
+      {adaptive ? (
         <SplitLayout<RecordEntry>
           id="directory"
           testID="directory-split"
           list={list}
           selected={selected}
+          initialSelection={() =>
+            params.open === undefined && first ? entryFor(first) : null
+          }
           onSelect={select}
           entryKey={encodeEntry}
+          entryRoute={entryRoute}
+          entryFromRoute={entryFromRoute}
           entryTitle={entryLabel}
           renderDetail={(entry) => <RecordDetail entry={entry} />}
           detailActions={(entry) => <RecordShare entry={entry} />}

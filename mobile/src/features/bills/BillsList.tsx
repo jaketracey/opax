@@ -49,6 +49,7 @@ import {
   Text,
   isPad,
   useAccessibilitySize,
+  useAdaptiveDevice,
   useLayout,
 } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
@@ -69,6 +70,11 @@ import { scopedQuestion } from '../ask/AskAbout';
 import { useOpenAsk } from '../ask/open';
 import BillTextReader from '../records/BillTextReader';
 import { BillTextPaneBar } from '../split/RecordDetail';
+import {
+  billEntryFromRoute,
+  entryRoute,
+  useSplitSelectionParams,
+} from '../split/entry';
 import BillDetail, { PaneMenu } from './BillDetail';
 import {
   activeFilterCount,
@@ -96,7 +102,8 @@ const LIST_NOTE = 'This list may not include every bill yet.';
  * left, the selected bill (and its text) in the detail pane.
  */
 export default function BillsList({ pushed = false }: { pushed?: boolean }) {
-  if (!isPad) return <BillsScreen pushed={pushed} />;
+  const adaptive = useAdaptiveDevice();
+  if (!adaptive) return <BillsScreen pushed={pushed} />;
   return (
     <SidebarSafe style={styles.screen}>
       <LayoutRegion style={styles.screen}>
@@ -145,6 +152,8 @@ export function listParams(params: {
 }
 
 function BillsScreen({ pushed }: { pushed: boolean }) {
+  const adaptive = useAdaptiveDevice();
+  const setSelectionParams = useSplitSelectionParams();
   const params = useLocalSearchParams<{
     bill?: string;
     scope?: string;
@@ -220,7 +229,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   const select = useCallback(
     (entry: BillEntry | null) => {
       Keyboard.dismiss();
-      router.setParams({ bill: entry?.key ?? '' });
+      setSelectionParams({ bill: entry?.key ?? '' });
       const at = entry ? rows.findIndex((bill) => bill.key === entry.key) : -1;
       if (at >= 0 && !visible.current.has(entry!.key))
         listRef.current?.scrollToIndex({
@@ -229,7 +238,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
           animated: true,
         });
     },
-    [rows],
+    [rows, setSelectionParams],
   );
   const offline = error instanceof ApiError && error.code === 'offline';
   const account = useAccount();
@@ -465,7 +474,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
           />
         )}
         extraData={split ? selectedKey : scope}
-        onViewableItemsChanged={split ? onViewable : undefined}
+        onViewableItemsChanged={adaptive ? onViewable : undefined}
         onScrollToIndexFailed={({ index: at, averageItemLength }) =>
           listRef.current?.scrollToOffset({
             offset: averageItemLength * at,
@@ -488,7 +497,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       ? { kind: 'bill', key: first.key, title: billName(first) }
       : null;
   }
-  if (!isPad)
+  if (!adaptive)
     return (
       <>
         <RouteOptions options={options} />
@@ -507,6 +516,8 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         initialSelection={firstEntry}
         onSelect={select}
         entryKey={(entry) => `${entry.kind}:${entry.key}`}
+        entryRoute={entryRoute}
+        entryFromRoute={billEntryFromRoute}
         entryTitle={(entry) => (entry.kind === 'bill' ? 'Bill' : 'Bill text')}
         renderDetail={(entry) =>
           entry.kind === 'bill' ? (
