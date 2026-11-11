@@ -2,28 +2,12 @@
 // a count that agrees with its number. The web's search page (app.js,
 // pass 3F) draws the same anatomy.
 import { decodeEntities, passageText } from '../../api/passage-text';
-import type { Roster, Slugs } from '../../api/catalog-decoders';
-import { nameKey } from '../../api/ids';
 import { isRecordSlug } from '../../api/record-policy';
 import { formatCount, formatDate } from '../../design/format';
 import { jurisdictionName } from '../../design/parliament';
 import { titleSubject } from '../records/citations';
 import { typeLabel } from './contracts';
 import type { SearchRecord } from './decoders';
-
-const profileNames = new WeakMap<Slugs, Map<string, string[]>>();
-function speakerProfiles(slugs: Slugs, names: string[]) {
-  let index = profileNames.get(slugs);
-  if (!index) {
-    index = new Map();
-    for (const [slug, name] of Object.entries(slugs.slugs)) {
-      const key = nameKey(name);
-      index.set(key, [...(index.get(key) ?? []), slug]);
-    }
-    profileNames.set(slugs, index);
-  }
-  return [...new Set(names.flatMap((name) => index.get(nameKey(name)) ?? []))];
-}
 
 /** Resource IDs are opaque; only public record slugs can open the reader. */
 export function speechSlug(row: SearchRecord): string | null {
@@ -54,30 +38,7 @@ export function speechSlug(row: SearchRecord): string | null {
   return null;
 }
 
-/** Resolve the recorded speaker without inventing a profile from their name. */
-export function speechSpeaker(
-  row: SearchRecord,
-  roster: Roster | null,
-  slugs: Slugs | null,
-) {
-  if (!row.speaker) return null;
-  const name = decodeEntities(row.speaker);
-  const matches = roster?.people.filter(
-    (person) =>
-      nameKey(person.name) === nameKey(name) ||
-      (!!person.full && nameKey(person.full) === nameKey(name)),
-  );
-  const person = matches?.length === 1 ? matches[0] : undefined;
-  const profiles =
-    person && slugs
-      ? speakerProfiles(slugs, [person.name, person.full ?? person.name])
-      : [];
-  return {
-    name,
-    party: row.party ?? null,
-    slug: profiles.length === 1 ? profiles[0] : undefined,
-  };
-}
+export { speechSpeaker } from '../records/speech-speaker';
 
 /** One result's kind, said in the singular ("Speech", not "Speeches and hearings"). */
 const singular: Record<string, string> = {

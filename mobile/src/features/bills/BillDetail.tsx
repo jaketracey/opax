@@ -115,6 +115,7 @@ import {
 } from './parts';
 import { sponsorRows, type SponsorDirectory } from './sponsors';
 import { statusEvent, statusEventText } from './status-event';
+import { useSpeechSpeakers } from '../records/speaker';
 import { useCatalogRecord } from './useCatalogRecord';
 import { memberPosition, useMyMemberVotes } from './your-mp-vote';
 import { sydneyDay } from '../today/rules';
@@ -1782,6 +1783,7 @@ function Speeches({
   anchor: RefObject<View | null>;
   fresh: ReadonlySet<string>;
 }) {
+  const speakerFor = useSpeechSpeakers();
   const [all, setAll] = useState(false);
   const speeches = useMemo(
     () =>
@@ -1808,7 +1810,7 @@ function Speeches({
                   meta={`${speech.stage_hint ? billStage(speech.stage_hint) : 'Speech'} · ${short(speech.date)}`}
                   showTitle={false}
                   compact
-                  speaker={{ name: speech.speaker, party: speech.party }}
+                  speaker={speakerFor(speech)}
                   excerpt={speech.brief ? { text: speech.brief } : null}
                   href={docRoute(speech.slug, speech.speaker)}
                   testID={`bill-speech-${index}`}

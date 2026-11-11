@@ -135,9 +135,12 @@ test('Ask source speakers use the verified profile and do not select the source 
       testID="source"
     />,
   );
-  const speaker = root
-    .findAllByType(Text)
-    .find((node) => node.props.testID === 'source-speaker')!;
+  const speaker = root.find(
+    (node) =>
+      node.props.accessibilityRole === 'link' &&
+      node.props.testID === 'source-speaker' &&
+      typeof node.props.onPress === 'function',
+  );
   tap(speaker);
   expect(select).not.toHaveBeenCalled();
   expect(router.push).toHaveBeenCalledWith(
@@ -207,7 +210,7 @@ test('an Ask source with only an external href opens its published original', ()
   const root = draw(<CitedRecordRow record={source} testID="original" />);
   const row = root.findAll(
     (node) =>
-      typeof node.type !== 'string' &&
+      node.props.accessibilityRole === 'link' &&
       node.props.testID === 'original' &&
       typeof node.props.onPress === 'function',
   )[0]!;

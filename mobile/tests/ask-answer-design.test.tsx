@@ -5,6 +5,7 @@ import { CitationMark } from '../src/design/citation-mark';
 import { haptic } from '../src/design/haptics';
 import { dispatchKeyCommand } from '../src/design/keyboard';
 import { FigureBlock } from '../src/design/record';
+import { RecordRow } from '../src/design/rows';
 import type { SourceDetails } from '../src/design/source';
 import { AnswerBody } from '../src/features/ask/AnswerBody';
 import {
@@ -240,26 +241,24 @@ test('the answer leads with one machine pill and its records, cited once each', 
 
 test("a cited row says the speaker's party and exposes both record links", () => {
   const { renderer } = draw();
-  const [row] = renderer.root.findAll(
-    (n) =>
-      typeof n.props.accessibilityLabel === 'string' &&
-      n.props.accessibilityLabel.startsWith('2.') &&
-      typeof n.type !== 'string',
+  const row = renderer.root
+    .findAllByType(RecordRow)
+    .find((node) => node.props.testID === 'ask-citation-2')!;
+  const title = row.find(
+    (node) =>
+      typeof node.type !== 'string' &&
+      node.props.accessibilityLabel?.startsWith('2.') &&
+      node.props.accessible === true,
   );
-  expect(row!.props.accessibilityLabel).toMatch(
+  expect(title.props.accessibilityLabel).toMatch(
     /Sam Placeholder, Example Party$/,
   );
-  const links = row!.findAll((n) => n.props.accessibilityRole === 'link');
+  // The shared row exposes sibling links, so each can receive focus directly.
+  const links = row.findAll((node) => node.props.accessibilityRole === 'link');
   for (const label of ['Open Sam Placeholder', 'Open Example Party party page'])
     expect(links.some((node) => node.props.accessibilityLabel === label)).toBe(
       true,
     );
-  expect(row!.props.accessibilityActions).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({ name: 'openSpeaker' }),
-      expect.objectContaining({ name: 'openParty' }),
-    ]),
-  );
 });
 
 test('adjacent citations merge into one mark that opens the first source beside its claim', () => {

@@ -5,6 +5,7 @@ import type { Catalogs } from '../src/api/catalogs';
 import { PeoplePortraits } from '../src/api/people-portraits';
 import type { PortraitCache } from '../src/api/portrait-cache';
 import { AnswerView } from '../src/features/ask/AnswerView';
+import { CitedRecordRow } from '../src/features/ask/AskRows';
 import { type Source, type Turn } from '../src/features/ask/model';
 import { rosterProfiles } from '../src/features/ask/people';
 import { catalogs } from './pinned';
@@ -38,7 +39,9 @@ jest.mock('../src/api/image-policy', () => ({
   localImageURI: (uri: string) => uri,
 }));
 jest.mock('expo-router', () => ({
-  useIsPreview: () => false, router: { push: jest.fn() } }));
+  useIsPreview: () => false,
+  router: { push: jest.fn() },
+}));
 // The saved seat is read on the device; none is saved here.
 jest.mock('../src/features/your-mp/useIsMyMember', () => ({
   useIsMyMember: () => false,
@@ -69,7 +72,7 @@ const speakers = [
   'Smith',
 ];
 
-test('People in this answer shows each verified roster portrait and nothing else', async () => {
+test('People and speech sources show only verified roster portraits', async () => {
   const profiles = rosterProfiles(catalogs.roster, catalogs.slugs);
   for (const name of speakers) expect(profiles.has(name)).toBe(true);
   const turn: Turn = {
@@ -121,13 +124,22 @@ test('People in this answer shows each verified roster portrait and nothing else
       await new Promise((r) => setTimeout(r, 0));
     });
   expect(pending()).toBe(0);
-  const shown = renderer.root
+  const people = renderer.root.find(
+    (node) =>
+      typeof node.type === 'string' && node.props.testID === 'ask-people',
+  );
+  const shown = people
     .findAllByType(Image)
     .map((image) => image.props.source.uri);
   expect(shown.sort()).toEqual([
     'file:///cache/10872.webp',
     'file:///cache/wd-Q134384419.webp',
   ]);
+  const sourcePhotos = renderer.root
+    .findAllByType(CitedRecordRow)
+    .flatMap((row) => row.findAllByType(Image))
+    .map((image) => image.props.source.uri);
+  expect(sourcePhotos.sort()).toEqual(shown.sort());
   const ids = (suffix: string) =>
     renderer.root
       .findAll(

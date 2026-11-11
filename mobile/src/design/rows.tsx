@@ -603,8 +603,13 @@ export interface RecordRowProps {
     party: string | null;
     href?: Href;
     portrait?: ReactNode;
+    linkedParty?: boolean;
   } | null;
   href?: Href;
+  /** Selects a source or opens it in the reader's detail pane. */
+  onPress?: () => void;
+  selected?: boolean;
+  leading?: { content: ReactNode; label: string };
   external?: External;
   menu?: 'record' | RowMenuAction[];
   testID?: string;
@@ -647,6 +652,9 @@ export function RecordRow({
   excerpt,
   speaker,
   href,
+  onPress,
+  selected,
+  leading,
   external,
   menu = 'record',
   testID,
@@ -660,8 +668,9 @@ export function RecordRow({
   const cellStyle = useRowCellStyle();
   const recordLink = useRecordLink(href);
   const speakerLink = useRecordLink(speaker?.href);
-  const separateSpeaker = !!speaker?.href;
-  useRowInset();
+  const separateSpeaker =
+    !!speaker?.href || (!!speaker?.linkedParty && isPartyLabel(speaker.party));
+  useRowInset(leading && !stacked ? 46 : 16);
   const clean = cleanRecordTitle(title);
   const stage = recordTitleStage(title);
   const datedKind =
@@ -670,6 +679,7 @@ export function RecordRow({
       ? `${meta} · ${stage}`
       : meta;
   const label = [
+    leading?.label,
     datedKind,
     showTitle ? clean : null,
     excerpt?.text,
@@ -690,21 +700,24 @@ export function RecordRow({
         ? rowMenus.record({ title: clean || meta, path })
         : undefined
       : menu;
-  const open = href
-    ? recordLink.open
-    : external
-      ? () => void openSource(external.url, external.label)
-      : undefined;
+  const open =
+    onPress ??
+    (href
+      ? recordLink.open
+      : external
+        ? () => void openSource(external.url, external.label)
+        : undefined);
   const Content = separateSpeaker ? Pressable : View;
   const row = (
     <Pressable
       accessible={!separateSpeaker}
       accessibilityRole={
-        !separateSpeaker && (href || external) ? 'link' : undefined
+        !separateSpeaker && (href || external || onPress) ? 'link' : undefined
       }
+      accessibilityState={selected === undefined ? undefined : { selected }}
       accessibilityLabel={separateSpeaker ? undefined : label}
       testID={separateSpeaker && testID ? `${testID}-container` : testID}
-      onPress={separateSpeaker ? open : external ? open : undefined}
+      onPress={separateSpeaker || external || onPress ? open : undefined}
       onLongPress={
         separateSpeaker && actions?.length
           ? () => showMenu('', menuLeaves(actions))
@@ -713,17 +726,22 @@ export function RecordRow({
       style={({ pressed }) => [
         styles.row,
         cellStyle,
-        pressed && (href || external) ? { backgroundColor: highlight } : null,
+        (pressed && (href || external || onPress)) || selected
+          ? { backgroundColor: highlight }
+          : null,
       ]}
     >
+      {leading?.content}
       <View style={styles.main}>
         <Content
           {...(separateSpeaker
             ? {
                 accessible: true,
                 accessibilityRole:
-                  href || external ? ('link' as const) : undefined,
+                  href || external || onPress ? ('link' as const) : undefined,
                 accessibilityLabel: label,
+                accessibilityState:
+                  selected === undefined ? undefined : { selected },
                 testID,
                 onPress: (
                   event: import('react-native').GestureResponderEvent,
@@ -816,7 +834,11 @@ export function RecordRow({
                 </Text>
               </Pressable>
             ) : (
-              <Text wordSafe variant="secondary">
+              <Text
+                wordSafe
+                variant="secondary"
+                testID={testID && `${testID}-speaker`}
+              >
                 {speaker.name}
               </Text>
             )}
@@ -825,13 +847,13 @@ export function RecordRow({
                 party={speaker.party}
                 status="unknown"
                 nested
-                linked={false}
+                linked={speaker.linkedParty ?? false}
               />
             ) : null}
           </View>
         ) : null}
       </View>
-      {href || external ? (
+      {href || external || onPress ? (
         <Icon
           name={external ? EXTERNAL_GLYPH : chevron}
           size={13}
@@ -845,7 +867,7 @@ export function RecordRow({
   // the reader's accessible target, within an ungrouped touchable row.
   const linked =
     href && !separateSpeaker ? (
-      <RowLink href={href} menu={actions}>
+      <RowLink href={href} menu={actions} select={onPress}>
         {row}
       </RowLink>
     ) : (
@@ -1199,7 +1221,7 @@ const styles = StyleSheet.create({
   stackedValue: { flexShrink: 0 },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },
   recordContent: { gap: rhythm.line },
-  recordTarget: { minHeight: minimumTarget },
+  recordTarget: { minHeight: minimumTarget, minWidth: minimumTarget },
   recordSpeaker: {
     minHeight: minimumTarget,
     minWidth: minimumTarget,

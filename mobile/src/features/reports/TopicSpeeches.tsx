@@ -14,6 +14,7 @@ import { counted, formatCount } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { docRoute } from '../../navigation/routes/records';
 import { resultsRoute } from '../../navigation/routes/search';
+import { useSpeechSpeakers } from '../records/speaker';
 import { FiltersLine } from '../search/FiltersLine';
 import { PASSAGE_MAX, isWorkerSnippet, oneEllipsis } from '../search/Excerpt';
 import { resultMeta, resultTitle } from '../search/present';
@@ -130,6 +131,7 @@ export function TopicSpeeches({
   /** Where the drawn rows end, from the top of this section. */
   onRowsEnd?: (bottom: number) => void;
 }) {
+  const speakerFor = useSpeechSpeakers();
   const [order, setOrder] = useState<Order>('newest');
   const stacked = useAccessibilitySize();
   const line = topicFiltersLine(filters, decades);
@@ -217,14 +219,10 @@ export function TopicSpeeches({
                   })}
                   title={resultTitle({ ...s, kind: 'speech' })}
                   excerpt={excerpt(s.snippet, s.resource)}
-                  speaker={
-                    s.speaker
-                      ? {
-                          name: s.speaker,
-                          party: s.party ? partyName(s.party) : null,
-                        }
-                      : null
-                  }
+                  speaker={speakerFor({
+                    ...s,
+                    party: s.party ? partyName(s.party) : null,
+                  })}
                   href={docRoute(s.slug)}
                   testID={`topic-speech-${i}`}
                 />

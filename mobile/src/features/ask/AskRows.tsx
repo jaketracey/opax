@@ -1,12 +1,11 @@
 import { router, type Href } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { useAccessibilitySize } from '../../design/accessibility';
+import { Pressable, StyleSheet } from 'react-native';
 import { CitationBadge } from '../../design/citation-mark';
 import { Icon } from '../../design/icon';
 import { confirmAction } from '../../design/menu';
-import { partyText, isPartyLabel } from '../../design/party';
-import { PartyLabel } from '../../design/people';
-import { RowLink, type RowMenuAction } from '../../design/row-link';
+import { type RowMenuAction } from '../../design/row-link';
+import { RecordRow } from '../../design/rows';
+import { speakerSlot } from '../records/speaker';
 import {
   useRowCellStyle,
   useRowHighlight,
@@ -25,8 +24,6 @@ import { personName, sourceMeta, sourceTitle } from './source-present';
 import { recordRoute } from '../records/route';
 import { openAnswerLink } from './AnswerBody';
 import type { AskPerson } from './people';
-import { partyRoute, personRoute } from '../../navigation/routes/people';
-import { partyFromCode } from '../bills/party-codes';
 
 /** A source's long-press menu, the same in Records cited, the sheet and the pane. */
 export function sourceMenu(
@@ -112,10 +109,6 @@ export function CitedRecordRow({
   profiles?: Map<string, AskPerson>;
   testID?: string;
 }) {
-  const stacked = useAccessibilitySize();
-  const highlight = useRowHighlight();
-  const cellStyle = useRowCellStyle();
-  useRowInset(n && !stacked ? 46 : 16);
   const title = sourceTitle(source);
   const meta = sourceMeta(source);
   const speaker = source.speaker ? personName(source.speaker) : null;
@@ -129,89 +122,23 @@ export function CitedRecordRow({
       : href
         ? router.push(href)
         : openAnswerLink(source.url || source.href || '');
-  const row = (
-    <Pressable
-      accessibilityRole={onPress ? 'button' : 'link'}
-      accessibilityLabel={[
-        n ? `${n}.` : null,
-        meta,
-        title,
-        speaker,
-        speaker && source.party
-          ? partyText({ party: source.party, status: 'unknown' }).spoken
-          : null,
-      ]
-        .filter(Boolean)
-        .join(', ')}
-      accessibilityState={selected ? { selected } : undefined}
-      accessibilityActions={[
-        ...(person
-          ? [{ name: 'openSpeaker', label: `Open ${person.name}` }]
-          : []),
-        ...(isPartyLabel(source.party)
-          ? [{ name: 'openParty', label: `Open ${source.party} party page` }]
-          : []),
-      ]}
-      onAccessibilityAction={(event) => {
-        if (event.nativeEvent.actionName === 'openSpeaker' && person)
-          router.push(personRoute(person.slug, person.name));
-        if (event.nativeEvent.actionName === 'openParty' && source.party)
-          router.push(partyRoute(partyFromCode(source.party)));
-      }}
-      onPress={open}
+  const slot = speakerSlot(speaker, source.party ?? null, person?.slug);
+  return (
+    <RecordRow
+      meta={meta}
+      title={title}
+      leading={
+        n
+          ? { content: <CitationBadge label={String(n)} />, label: `${n}.` }
+          : undefined
+      }
+      speaker={slot ? { ...slot, linkedParty: true } : null}
+      href={href ?? undefined}
+      onPress={onPress ?? (!href ? open : undefined)}
+      selected={selected}
+      menu={sourceMenu(source, onShowPassage)}
       testID={testID}
-      style={({ pressed }) => [
-        styles.row,
-        cellStyle,
-        stacked ? styles.stacked : null,
-        pressed || selected ? { backgroundColor: highlight } : null,
-      ]}
-    >
-      {n ? <CitationBadge label={String(n)} /> : null}
-      <View style={styles.main}>
-        <Text wordSafe variant="secondary">
-          {meta}
-        </Text>
-        <Text wordSafe variant="rowRecord">
-          {title}
-        </Text>
-        {speaker ? (
-          <View style={styles.speaker}>
-            <Text
-              variant="secondary"
-              tone={person ? 'link' : undefined}
-              accessibilityRole={person ? 'link' : undefined}
-              accessibilityLabel={person ? `Open ${person.name}` : undefined}
-              onPress={
-                person
-                  ? (event) => {
-                      event.stopPropagation();
-                      router.push(personRoute(person.slug, person.name));
-                    }
-                  : undefined
-              }
-              testID={testID && `${testID}-speaker`}
-            >
-              {speaker}
-            </Text>
-            {source.party ? (
-              <PartyLabel party={source.party} linked nested />
-            ) : null}
-          </View>
-        ) : null}
-      </View>
-      {stacked ? null : (
-        <Icon name={symbols.chevron} size={13} tone="inkFaint" maxScale={1.5} />
-      )}
-    </Pressable>
-  );
-  const menu = sourceMenu(source, onShowPassage);
-  return href ? (
-    <RowLink href={href} menu={menu} select={onPress}>
-      {row}
-    </RowLink>
-  ) : (
-    row
+    />
   );
 }
 /**
@@ -312,12 +239,5 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
     paddingVertical: rhythm.row,
   },
-  stacked: { flexDirection: 'column', alignItems: 'flex-start' },
   main: { flex: 1, gap: rhythm.line },
-  speaker: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: rhythm.tight,
-  },
 });
