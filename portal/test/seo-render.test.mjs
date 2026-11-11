@@ -96,6 +96,12 @@ test('annual, agency and integrity report pages and JSON routes expose the same 
     for(const key of ['record','publisher','caveats','facts','tables','headline','date_basis','year'])assert.ok(Object.hasOwn(record,key),key);
   }
 });
+test('official report pages carry no generic association caveat',async()=>{
+  for(const slug of ['royal-commission-cth-robodebt','annual-report-department-of-defence-2024-25']){
+    const html=await get('/report/'+slug);
+    assert.ok(html.includes('rr-footer'),slug);assert.ok(!html.includes('An association does not prove influence.'),slug);
+  }
+});
 test('report transcripts API: the app envelope, top level and paged, newest first with stable offsets',async()=>{
   const fetchJson=async(path,status=200)=>{const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,status,path);return r.json();};
   const checkItem=i=>{assert.equal(typeof i.id,'string');assert.match(i.hearing_date,/^\d{4}-\d{2}-\d{2}$/);assert.ok(i.title||i.case);assert.match(i.url,/^https:\/\//);
