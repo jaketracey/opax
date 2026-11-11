@@ -13,11 +13,12 @@ import { rhythm } from '../../design/tokens';
 import { suggestionList, type GroupKind, type MatchSources } from './ranking';
 import { MatchRow, type RowSources } from './rows';
 import { scopeMenuAt } from './ScopeBar';
+import { ReportResults, useReportSearch } from './ReportResults';
 
 /**
  * Typing (journeys/search.md 3.3). Computed on the device from files the
- * app already caches, plus the bundled topics: no request per keystroke, so
- * nothing here ever loads. A Top suggestion leads only when a name matches
+ * app already caches, plus the bundled topics. Reports use a debounced,
+ * report-only catalogue read. A Top suggestion leads only when a name matches
  * exactly or by prefix; otherwise "Search speeches for …" leads. "Ask OPAX
  * about …" is always last. No `SourceLine`: suggestions are navigation.
  */
@@ -45,6 +46,7 @@ export function SearchSuggestions({
   // At AX3 and above a group shows one row and a "See all" row (3.10).
   const ax3 = scopeMenuAt(useWindowDimensions().fontScale);
   const text = q.trim();
+  const reports = useReportSearch(text, true);
   const list = sources
     ? suggestionList(text, sources, ax3 ? 1 : 3)
     : { top: null, groups: [] };
@@ -98,6 +100,7 @@ export function SearchSuggestions({
           </View>
         </View>
       ))}
+      <ReportResults q={text} read={reports} suggestion limit={ax3 ? 1 : 3} />
       {failed ? (
         <InlineError
           subject="Suggestions"

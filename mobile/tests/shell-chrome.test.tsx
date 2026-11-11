@@ -761,7 +761,11 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
       const resolved = options(screen);
       expect(resolved.headerTitle).not.toBe('');
       const name = (screen.props as { name: string }).name;
-      if (name === 'doc/[slug]' || name === 'bill-text/[key]')
+      if (
+        name === 'doc/[slug]' ||
+        name === 'bill-text/[key]' ||
+        name === 'report/[slug]'
+      )
         expect(resolved.title).toBe('');
       else expect(resolved.title).not.toBe('');
     }

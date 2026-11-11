@@ -21,6 +21,12 @@ export const scopeLabel = (scope: Scope) =>
  * groups name the one `/api/search-all` kind their single read uses.
  */
 export const groups = {
+  reports: {
+    label: 'Reports',
+    noun: 'reports',
+    one: 'report',
+    catalog: 'report',
+  },
   topics: { label: 'Topics', noun: 'topics', one: 'topic' },
   electorates: {
     label: 'Electorates',
@@ -71,6 +77,7 @@ export const moneyGroups: readonly CatalogGroup[] = ['grants', 'agencies'];
  * ("speech", "person", "interest"), folded onto a scope or a group.
  */
 const aliases: Readonly<Record<string, Scope | Group>> = {
+  report: 'reports',
   speech: 'speeches',
   record: 'speeches',
   records: 'speeches',
@@ -118,6 +125,7 @@ export function targetForWebKind(
   if (['person', 'interest', 'pay', 'expense'].includes(kind))
     return { scope: 'people' };
   if (kind === 'bill') return { scope: 'bills' };
+  if (kind === 'report') return { group: 'reports' };
   if (kind === 'grant') return { group: 'grants' };
   if (kind === 'agency') return { group: 'agencies' };
   if (kind === 'party') return { group: 'parties' };
@@ -152,6 +160,7 @@ export function webSearchPath(
     ? (
         {
           grants: 'grant',
+          reports: 'report',
           agencies: 'agency',
           parties: 'party',
           interests: 'interest',

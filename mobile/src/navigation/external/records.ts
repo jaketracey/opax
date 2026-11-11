@@ -1,8 +1,16 @@
 import type { WebPathResolver } from './types';
 import { isRecordSlug } from '../../api/record-policy';
-import { docRoute, billTextRoute, recentRecordsRoute } from '../routes/records';
+import {
+  docRoute,
+  billTextRoute,
+  recentRecordsRoute,
+  reportRoute,
+} from '../routes/records';
+import { isReportSlug } from '../../api/official-report-policy';
 export const recordsPaths = [
   (path) => {
+    const report = /^\/report\/([^/?#]+)\/?$/.exec(path);
+    if (report?.[1] && isReportSlug(report[1])) return reportRoute(report[1]);
     if (path === '/#hp-indexed-title' || path === '/#mod-added')
       return recentRecordsRoute;
     const document = /^(?:#)?\/doc\/([a-z0-9-]+)\/?$/.exec(path);

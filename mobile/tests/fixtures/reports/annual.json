@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "kind": "report",
+  "report_type": "annual_report",
+  "slug": "annual-report-bundanon-trust-2022-23",
+  "title": "Bundanon Trust Annual Report 2022-23",
+  "body": "Bundanon Trust",
+  "jurisdiction": "Cth",
+  "date": null,
+  "date_basis": null,
+  "year": "2022-23",
+  "snippet": "Bundanon Trust Annual Report 2022-23",
+  "citation": {
+    "url": "https://www.transparency.gov.au/publications/infrastructure-transport-regional-development-communications-and-the-arts/bundanon_trust/bundanon-trust-annual-report-2022-23",
+    "document": "Bundanon Trust Annual Report 2022-23"
+  },
+  "snapshot_at": "20261110",
+  "caveats": [
+    "Figures are as each entity published them on the Transparency Portal under the PGPA Rule. OPAX does not audit or adjust them.",
+    "Key management personnel remuneration is reported on an accrual basis for the period each person held the role, so part-year amounts are not annual salaries.",
+    "Senior executive and other highly paid staff rows are bands with a count and averages, not individuals. Never multiply or add averages across bands, bodies or years.",
+    "Contract spend is in thousands of dollars, GST inclusive, as published. Total expenses come from the departmental statement of comprehensive income extract; administered items are excluded.",
+    "Staff numbers are headcounts as published in the all ongoing and all non-ongoing employee tables, not full-time equivalents.",
+    "Key management personnel, band and supplier rows for 2018-19 to 2021-22 come from the files on the Portal's Data sets page; later years and all headline figures come from its structured annual report tables (2022-23 onward). 2025-26 reports are still being tabled.",
+    "Supplier spend before 2022-23 is stated in each file's own unit: dollars for 2020-21 and thousands of dollars for 2021-22. Organisations paid were not published as a table before 2020-21.",
+    "A footnote reference attached to a person's name in the source table (for example a trailing 1, * or [2]) is removed from the name; the cell as published is kept in name_as_published. Lines in a key management personnel table that name no one are kept as kmp_total (the table's own total) or kmp_other (a bare number or a band label) rows, not as people.",
+    "Older-year rows are matched to a body only where the published entity name, or one of the Portal's listed names for it, matches exactly. Other entity names are kept as published."
+  ],
+  "publisher": {
+    "id": "bundanon_trust",
+    "name": "Bundanon Trust",
+    "acronyms": null,
+    "type": "CC",
+    "type_as_published": "Commonwealth Company",
+    "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts"
+  },
+  "record": {
+    "title": "Bundanon Trust Annual Report 2022-23",
+    "published_on": null,
+    "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+    "url": "https://www.transparency.gov.au/publications/infrastructure-transport-regional-development-communications-and-the-arts/bundanon_trust/bundanon-trust-annual-report-2022-23"
+  },
+  "facts": [],
+  "tables": [
+    {
+      "body_id": "bundanon_trust",
+      "body": "Bundanon Trust",
+      "body_type": "CC",
+      "title": "Information about remuneration for key management personnel",
+      "codename": "information_about_remuneration_for_key_management__5ab4ee9",
+      "last_modified": "2024-02-07T23:52:55.5347598Z",
+      "report_url": "https://www.transparency.gov.au/publications/infrastructure-transport-regional-development-communications-and-the-arts/bundanon_trust/bundanon-trust-annual-report-2022-23",
+      "licence": "entity-copyright",
+      "unit": "dollars; band averages are per person in the band",
+      "rows": [
+        {
+          "table_id": "5ab4ee95-adbf-4535-b998-0f3c8980afde",
+          "kind": "kmp",
+          "record_id": "tp-2022-23-b51e32d3002d4580ba7385360ce66a88",
+          "name": "Rachel Kent",
+          "position": "Chief Executive Officer",
+          "order": 0,
+          "base_salary": 200475,
+          "bonuses": 0,
+          "other_benefits": 13869,
+          "superannuation": 21302,
+          "long_service_leave": 2999,
+          "other_long_term": 0,
+          "termination": 0,
+          "total": 238645
+        }
+      ],
+      "source_url": "https://previewapi.transparency.gov.au/delivery/items?system.codename=information_about_remuneration_for_key_management__5ab4ee9&depth=1"
+    }
+  ],
+  "headline": {
+    "record_id": "tp-bundanon_trust-2022-23",
+    "body_id": "bundanon_trust",
+    "year": "2022-23",
+    "ongoing_staff": {
+      "headcount": 0,
+      "source_item_id": "8c63aafa-959b-4b91-b3c7-73ed5b6fa542",
+      "codename": "all_ongoing_employees_current_report_period__2022__8c63aaf",
+      "source_last_modified": "2024-02-15T00:33:17.7868557Z"
+    },
+    "non_ongoing_staff": {
+      "headcount": 34,
+      "source_item_id": "e651662f-c894-4ffe-a536-57ea1fe3601d",
+      "codename": "all_non_ongoing_employees_current_report_period__2_e651662",
+      "source_last_modified": "2024-02-14T02:44:00.1882029Z"
+    },
+    "income_statement": {
+      "total_expenses": 9801,
+      "employee_benefits": 0,
+      "suppliers": 0,
+      "own_source_income": 3381,
+      "revenue_from_government": 7886,
+      "unit": "$'000",
+      "source_item_id": "fa04aa21-7204-4697-91e2-58861e46d75d",
+      "codename": "extract_of_statement_of_comprehensive_income_for_t_fa04aa2",
+      "source_last_modified": "2024-02-07T22:39:25.3104223Z"
+    }
+  }
+}

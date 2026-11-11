@@ -57,6 +57,7 @@ const recordRoutes: RecordRoute[] = [
   { path: 'electorate/[id]', fields: ['id', 'asof'] },
   { path: 'topic/[slug]', fields: ['slug'] },
   { path: 'doc/[slug]', fields: ['slug'] },
+  { path: 'report/[slug]', fields: ['slug'] },
   { path: 'bill-text/[key]', fields: ['key', 'version'] },
   {
     path: 'account/sources/dataset/[id]',

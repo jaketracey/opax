@@ -1,0 +1,732 @@
+{
+  "schema": 1,
+  "kind": "report",
+  "report_type": "royal_commission",
+  "slug": "royal-commission-cth-robodebt",
+  "title": "Royal Commission into the Robodebt Scheme",
+  "body": "Royal Commission into the Robodebt Scheme",
+  "jurisdiction": "Cth",
+  "date": "2023-07-07",
+  "date_basis": "stated",
+  "year": null,
+  "snippet": "Report of the Royal Commission into the Robodebt Scheme",
+  "citation": {
+    "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+    "document": "Report of the Royal Commission into the Robodebt Scheme"
+  },
+  "snapshot_at": "2026-11-11T04:19:22+00:00",
+  "caveats": [
+    "Recommendations are the commission's own words, cut at the report's own numbered headings, with the PDF and page each was read from.",
+    "A commission's findings and recommendations are not findings of criminal or civil liability.",
+    "Status appears only where a government publishes an official status for that recommendation, in the government's own words. Where none is published the status is unknown, not unimplemented.",
+    "A government response or implementation report is listed as a document; OPAX does not grade whether a recommendation was accepted or implemented.",
+    "Commissions listed with recommendations not_extracted may still have made recommendations; OPAX could not read them reliably from an official copy it can reach.",
+    "Hearing transcripts are evidence given to a commission, not its findings. OPAX lists them as documents only and extracts nothing from them.",
+    "Where a court has ruled on parts of a report, the ruling is recorded in court_context exactly as the cited official page states it, and travels with the report.",
+    "Documents marked as a manual publisher download were supplied by the OPAX maintainer from the publisher's own site, where that host refuses OPAX's automated agent. Each is cited to the publisher's URL and checked against its recorded SHA-256.",
+    "Boards and commissions of inquiry are listed with royal commissions as comparable public inquiries; inquiry_type gives each body's actual type."
+  ],
+  "publisher": {
+    "name": "Royal Commission into the Robodebt Scheme",
+    "jurisdiction_name": "Commonwealth"
+  },
+  "record": {
+    "id": "cth-robodebt",
+    "name": "Royal Commission into the Robodebt Scheme",
+    "inquiry_type": "royal_commission",
+    "jurisdiction": "Cth",
+    "jurisdiction_name": "Commonwealth",
+    "site": null,
+    "established": {
+      "date": "2022-08-18",
+      "instrument": "Letters Patent",
+      "quote": "established by Letters Patent on 18 August 2022",
+      "cite": {
+        "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+        "document": "Report of the Royal Commission into the Robodebt Scheme",
+        "page": 11
+      }
+    },
+    "commissioners": [
+      {
+        "name": "Catherine Holmes AC SC",
+        "role": "Royal Commissioner",
+        "quote": "Catherine Holmes AC SC Royal Commissioner",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 3
+        }
+      }
+    ],
+    "interim_report_date": null,
+    "final_report_date": "2023-07-07",
+    "reports": [
+      {
+        "key": "final",
+        "kind": "final_report",
+        "title": "Report of the Royal Commission into the Robodebt Scheme",
+        "date": "2023-07-07",
+        "date_basis": "stated",
+        "page_url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+        "files": [
+          {
+            "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+            "name": "robodebt-accessible-full-report.PDF",
+            "pages": 1052,
+            "bytes": 21219578,
+            "sha256": "9837ca00ecf7022694abb9eae1be57f49a8a791d4df8951339be282a2c76cf42"
+          }
+        ],
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme"
+        },
+        "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+        "document_kind": "full final report",
+        "rights": "© Commonwealth of Australia 2023. With the exception of the Coat of Arms and where otherwise stated, all material presented in this publication is provided under a Creative Commons Attribution 4.0 International licence (imprint, page 2).",
+        "date_cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 3
+        },
+        "date_quote": "7 July 2023 His Excellency General the Honourable David Hurley",
+        "recommendations": 56,
+        "recommendations_status": "extracted"
+      }
+    ],
+    "responses": [],
+    "transcripts": [],
+    "court_context": [],
+    "reference_pages": [],
+    "recommendations": [
+      {
+        "number": "10.1",
+        "report": "final",
+        "text": "Services Australia design its policies and processes with a primary emphasis on the recipients it is meant to serve. That should entail: • avoiding language and conduct which reinforces feelings of stigma and shame associated with the receipt of government support when it is needed • facilitating easy and efficient engagement with options of online, in person and telephone communication which is sensitive to the particular circumstances of the customer cohort, including itinerant lifestyles, lack of access to technology, lack of digital literacy and the particular difficulties rural and remote living • explaining processes in clear terms and plain language in communication to customers, and acting with sensitivity to financial and other forms of stress experienced by the customer cohort and taking all practicable steps to avoid the possibility that interactions with the government might exacerbate those stresses or introduce new ones.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 19
+        },
+        "status": null
+      },
+      {
+        "number": "11.1",
+        "report": "final",
+        "text": "Services Australia should ensure that for any cohort of recipients that is intended to be excluded from a compliance process or activity, there is clear documentation of the exclusion criteria, and, unless there is a technical reason it cannot be, the mechanism by which that is to occur should be reflected in the relevant technical specification documents.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 19
+        },
+        "status": null
+      },
+      {
+        "number": "11.2",
+        "report": "final",
+        "text": "Services Australia should ensure that its processes and policies in relation to the identification of potential vulnerabilities extend to the identification of circumstances affecting a recipient’s capacity to engage with any form of compliance activity. To this end, circumstances likely to affect a recipient’s capacity to engage with compliance activities should be recorded on their file regardless of whether they are in receipt of a payment that gives rise to mutual obligations.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 19
+        },
+        "status": null
+      },
+      {
+        "number": "11.3",
+        "report": "final",
+        "text": "Services Australia should ensure that its processes and policies in relation to the identification of potential vulnerabilities require staff to engage with a recipient prior to the removal of an indicator on their file. For this purpose, Services Australia should remove any feature that would allow for the automatic expiry of a vulnerability indicator (or equivalent flagging tool). An indicator should only be removed where a recipient, or evidence provided to the Agency in relation to the recipient, confirms that they are no longer suffering from the vulnerability to which the indicator relates.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 20
+        },
+        "status": null
+      },
+      {
+        "number": "11.4",
+        "report": "final",
+        "text": "Services Australia should incorporate a process in the design of compliance programs to consider and document the categories of vulnerable recipients who may be affected by the program, and how those recipients will be dealt with. Services Australia should consult stakeholders (including peak advocacy bodies) as part of this process to ensure that adequate provision is made to accommodate vulnerable recipients who may encounter particular difficulties engaging with the program.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 20
+        },
+        "status": null
+      },
+      {
+        "number": "12.1",
+        "report": "final",
+        "text": "Options for easier engagement with Centrelink by advocacy groups – for example, through the creation of a national advocates line – should be considered.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 20
+        },
+        "status": null
+      },
+      {
+        "number": "12.2",
+        "report": "final",
+        "text": "The government should consider establishing a customer experience reference group, which would provide streamlined insight to government regarding the experiences of people accessing income support.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 20
+        },
+        "status": null
+      },
+      {
+        "number": "12.3",
+        "report": "final",
+        "text": "Peak advocacy bodies should be consulted prior to the implementation of projects involving the modification of the social security system.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 20
+        },
+        "status": null
+      },
+      {
+        "number": "12.4",
+        "report": "final",
+        "text": "When it next conducts a review of the National Legal Assistance Partnership, the Commonwealth should have regard, in considering funding for legal aid commissions and community legal centres, to the importance of the public interest role played by those services as exemplified in their work during the Scheme.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 20
+        },
+        "status": null
+      },
+      {
+        "number": "13.1",
+        "report": "final",
+        "text": "Services Australia should put in place processes for genuine and receptive consultation with frontline staff when new programs are being designed and implemented.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 20
+        },
+        "status": null
+      },
+      {
+        "number": "13.2",
+        "report": "final",
+        "text": "Better feedback processes should be put in place so that frontline staff can communicate their feedback in an open and consultative environment. Management should have constructive processes in place to review and respond to staff feedback.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 20
+        },
+        "status": null
+      },
+      {
+        "number": "13.3",
+        "report": "final",
+        "text": "More “face-to-face” customer service support options should be available for vulnerable recipients needing support.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 21
+        },
+        "status": null
+      },
+      {
+        "number": "13.4",
+        "report": "final",
+        "text": "Increased social worker support (for both recipients and staff), and better referral processes to enable this support, should be implemented.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 21
+        },
+        "status": null
+      },
+      {
+        "number": "15.1",
+        "report": "final",
+        "text": "The Budget Process Operational Rules should include a requirement that all New Policy Proposals contain a statement as to whether the proposal requires legislative change in order to be lawfully implemented, as distinct from legislative change to authorise expenditure.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 21
+        },
+        "status": null
+      },
+      {
+        "number": "15.2",
+        "report": "final",
+        "text": "The Budget Process Operational Rules should include a requirement that any legal advice (either internal or external) relating to whether the proposal requires legislative change in order to be implemented be included with the New Policy Proposal in any versions of the Portfolio Budget Submission circulated to other agencies or Cabinet ministers.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 21
+        },
+        "status": null
+      },
+      {
+        "number": "15.3",
+        "report": "final",
+        "text": "The Budget Process Operational Rules should include a requirement that where legal advice has been given in relation to whether the proposal requires legislative change in order to be implemented, the New Policy Proposal includes a statement as to whether the Australian Government Solicitor has reviewed and agreed with the advice.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 21
+        },
+        "status": null
+      },
+      {
+        "number": "15.4",
+        "report": "final",
+        "text": "The standard language used in the NPP Checklist should be sufficiently specific to make it obvious on the face of the document what advice is being provided, in respect of what legal risks and by whom it is being provided.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 21
+        },
+        "status": null
+      },
+      {
+        "number": "15.5",
+        "report": "final",
+        "text": "That in developing compliance Budget measures, Services Australia and DSS document the basis for the assumptions and inputs used, including the sources of the data relied on.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 21
+        },
+        "status": null
+      },
+      {
+        "number": "15.6",
+        "report": "final",
+        "text": "That in seeking agreement from Finance for costings of compliance Budget measures, Services Australia and DSS provide Finance with documentation setting out the basis for the assumptions and inputs used, including related data sources, to allow Finance to properly investigate and test those assumptions and inputs.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 21
+        },
+        "status": null
+      },
+      {
+        "number": "16.1",
+        "report": "final",
+        "text": "The Commonwealth should seek legal advice on the end-to-end data exchange processes which are currently operating between Services Australia and the ATO to ensure they are lawful.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 22
+        },
+        "status": null
+      },
+      {
+        "number": "16.2",
+        "report": "final",
+        "text": "The ATO and DHS should take immediate steps to review and strengthen their operational governance practices as applied to jointly conducted data-matching programs. This should include: • reviews to ensure that all steps and operations relating to existing or proposed data-matching programs are properly documented • a review of all existing framework documents for existing or proposed data-matching programs • a review of the operations of the ATO/DHS Consultative Forum and the ATO/DHS Data Management Forum • a review of the existing Head Agreement/s, Memoranda of Understanding and Services Schedule • a joint review of any existing or proposed data-matching program protocols to ensure they are legally compliant in respect of their provision for the data exchanges contemplated for the relevant data-matching program.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 22
+        },
+        "status": null
+      },
+      {
+        "number": "17.1",
+        "report": "final",
+        "text": "The Commonwealth should consider legislative reform to introduce a consistent legal framework in which automation in government services can operate. Where automated decision-making is implemented: • there should be a clear path for those affected by decisions to seek review • departmental websites should contain information advising that automated decision-making is used and explaining in plain language how the process works • business rules and algorithms should be made available, to enable independent expert scrutiny.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 22
+        },
+        "status": null
+      },
+      {
+        "number": "17.2",
+        "report": "final",
+        "text": "The Commonwealth should consider establishing a body, or expanding an existing body, with the power to monitor and audit automate decision-making processes with regard to their technical aspects and their impact in respect of fairness, the avoiding of bias, and client usability.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 22
+        },
+        "status": null
+      },
+      {
+        "number": "18.1",
+        "report": "final",
+        "text": "Services Australia should develop a comprehensive debt recovery management policy which among other things should incorporate the Guideline for Collectors and Creditors’ issued by the Australian Competition and Consumer Commission (ACCC) and the Australian Securities and Investments Commission (ASIC). Examples of such documents already exist at both federal and state levels. Any such policy should also prescribe how Services Australia undertakes to engage with debtors, including that staff must: • ensure any debt recovery action is always ethical, proportionate, consistent and transparent • treat all recipients fairly and with dignity, taking each person’s circumstances into account before commencing recovery action • subject to any express legal authority to do so, refrain from commencing or continuing recovery action while a debt is being reviewed or disputed, and • in accordance with legal authority, consider and respond appropriately and proportionately to cases of hardship. Services Australia should ensure that recipients are given ample and appropriate opportunities to challenge, review and seek guidance on any proposed debts before they are referred for debt recovery.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 22
+        },
+        "status": null
+      },
+      {
+        "number": "18.2",
+        "report": "final",
+        "text": "The Commonwealth should repeal s 1234B of the Social Security Act and reinstate the effective limitation period of six years for the bringing of proceedings to recover debts under Part 5.2 of the Act formerly contained in s 1232 and s 1236 of that Act, before repeal of the relevant sub-sections by the Budget Savings (Omnibus) Act (No 55) 2016 (Cth). There is no reason that current and former social security recipients should be on any different footing from other debtors.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 23
+        },
+        "status": null
+      },
+      {
+        "number": "19.1",
+        "report": "final",
+        "text": "The selection panel for the appointment of chief counsel of Services Australia or DSS (chief counsel being the head of the entity’s legal practice) should include as a member of the panel, the Australian Government Solicitor.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 23
+        },
+        "status": null
+      },
+      {
+        "number": "19.2",
+        "report": "final",
+        "text": "Services Australia should provide regular training to its in-house lawyers on the core duties and responsibilities set out in the Legal Practice Standards, including: • an emphasis on the duty to avoid any compromise to their integrity and professional independence and the challenges that may be presented to a government lawyer in fulfilling that obligation. • appropriate statutory and case authority references in advice writing.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 23
+        },
+        "status": null
+      },
+      {
+        "number": "19.3",
+        "report": "final",
+        "text": "DSS should develop Legal Practice Standards which set out the core duties and responsibilities of all legal officers working at DSS.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 23
+        },
+        "status": null
+      },
+      {
+        "number": "19.4",
+        "report": "final",
+        "text": "DSS should provide regular training on the core duties and responsibilities to be set out in the Legal Practice Standards which should include: an emphasis on the duty to avoid any compromise to their integrity and professional independence and the challenges that may be presented to a government lawyer in fulfilling that obligation appropriate statutory and case authority references in advice writing",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 23
+        },
+        "status": null
+      },
+      {
+        "number": "19.5",
+        "report": "final",
+        "text": "DSS should issue a further direction providing that, if the administering agency decides that a draft advice need not be provided in final form, that decision and the reasons for it must be documented. One of those steps – finalisation, or a documented decision against finalisation – should have been taken within three months of the receipt of the draft advice.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 24
+        },
+        "status": null
+      },
+      {
+        "number": "19.6",
+        "report": "final",
+        "text": "Services Australia should issue a direction that legal advice is to be left in draft form only to the extent that the administrative step of finalising it has not yet been undertaken by lawyers or there are remaining questions to be answered in relation to the issues under consideration and that, if the administering agency decides that a draft advice need not be provided in final form, that decision and the reasons for it must be documented. One of those steps – finalisation, or a documented decision against finalisation – should have been taken within three months of the receipt of the draft advice.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 24
+        },
+        "status": null
+      },
+      {
+        "number": "19.7",
+        "report": "final",
+        "text": "The Legal Services Directions 2017 should be reviewed and simplified.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 24
+        },
+        "status": null
+      },
+      {
+        "number": "19.8",
+        "report": "final",
+        "text": "The OLSC should provide more extensive information and feedback to assist agencies with the significant legal issues process.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 24
+        },
+        "status": null
+      },
+      {
+        "number": "19.9",
+        "report": "final",
+        "text": "The OLSC should ensure a documentary record is made of substantive inquiries made with and responses given by agencies concerning their obligations to report significant issues pursuant to para 3.1 of the Directions.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 24
+        },
+        "status": null
+      },
+      {
+        "number": "19.10",
+        "report": "final",
+        "text": "The OLSC should issue guidance material on the obligations to consult on and disclose advice in clause 10 of the Legal Services Directions 2017.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 24
+        },
+        "status": null
+      },
+      {
+        "number": "19.11",
+        "report": "final",
+        "text": "The OLSC should be properly resourced to deliver these functions.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 24
+        },
+        "status": null
+      },
+      {
+        "number": "19.12",
+        "report": "final",
+        "text": "The Australian Government Legal Service’s General Counsel Charter be amended to place a positive obligation on chief counsel to ensure that the Legal Services Directions 2017 (Cth) are complied with and to document interactions with OLSC about inquiries made, and responses given, concerning reporting obligations under those Directions.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 24
+        },
+        "status": null
+      },
+      {
+        "number": "19.13",
+        "report": "final",
+        "text": "The revised Bilateral Management Agreement should set out the requirement to consult on and disclose legal advices between the two agencies where any intersection of work is identified.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 24
+        },
+        "status": null
+      },
+      {
+        "number": "20.1",
+        "report": "final",
+        "text": "Services Australia should put in place a system for identifying AAT1 cases which raise significant legal and policy issues and ensuring that they are brought to the attention of senior DSS and Services Australia officers.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 25
+        },
+        "status": null
+      },
+      {
+        "number": "20.2",
+        "report": "final",
+        "text": "Services Australia legal officers whose duties involve the preparation of advices in relation to AAT1 decisions should receive training which emphasises the requirements of the Standing Operational Statements in relation to appeal recommendations and referral to DSS; Services Australia’s obligations as a model litigant; and the obligation to pay due regard to AAT decisions and directions.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 25
+        },
+        "status": null
+      },
+      {
+        "number": "20.3",
+        "report": "final",
+        "text": "DSS should establish, or if it is established, maintain, a system for identifying all significant AAT decisions and bringing them to the attention of its secretary.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 25
+        },
+        "status": null
+      },
+      {
+        "number": "20.4",
+        "report": "final",
+        "text": "The federal administrative review body which replaces the AAT should devise a system for publication on a readily accessible platform of first instance social security decisions which involve significant conclusions of law or have implications for social security policy.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 25
+        },
+        "status": null
+      },
+      {
+        "number": "20.5",
+        "report": "final",
+        "text": "Re-instate the Administrative Review Council or a body with similar membership and similar functions, with consideration given to a particular role in review of Commonwealth administrative decision-making processes.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 25
+        },
+        "status": null
+      },
+      {
+        "number": "21.1",
+        "report": "final",
+        "text": "A statutory duty be imposed on departmental secretaries and agency chief executive officers to ensure that their department or agency use its best endeavours to assist the Ombudsman in any investigation concerning it, with a corresponding statutory duty on the part of Commonwealth public servants within a department or agency being investigated to use their best endeavours to assist the Ombudsman in the investigation.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 25
+        },
+        "status": null
+      },
+      {
+        "number": "21.2",
+        "report": "final",
+        "text": "The Ombudsman Act be amended to confer on the Ombudsman a power in equivalent terms to that in s 33(3) of the Auditor-General Act.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 25
+        },
+        "status": null
+      },
+      {
+        "number": "21.3",
+        "report": "final",
+        "text": "Departmental and agency responses to own motion investigations by the Ombudsman should be overseen by the legal services division of the relevant department or agency.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 25
+        },
+        "status": null
+      },
+      {
+        "number": "21.4",
+        "report": "final",
+        "text": "The Ombudsman maintain a log, recording communications with a department or agency for the purposes of an own motion investigation.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 26
+        },
+        "status": null
+      },
+      {
+        "number": "21.5",
+        "report": "final",
+        "text": "The AAT is soon to be replaced by a new administrative review body. S 10A and s 11 of the Ombudsman Act should be amended so as to ensure the Ombudsman has the powers of referral and recommendation of referral in respect of that new administrative review body.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 26
+        },
+        "status": null
+      },
+      {
+        "number": "23.1",
+        "report": "final",
+        "text": "The Australian Government should undertake an immediate and full review to examine whether the existing structure of the social services portfolio, and the status of Services Australia as an entity, are optimal.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 26
+        },
+        "status": null
+      },
+      {
+        "number": "23.2",
+        "report": "final",
+        "text": "The APSC should, as recommended by the Thodey Review, deliver whole-of-service induction on essential knowledge required for public servants.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 26
+        },
+        "status": null
+      },
+      {
+        "number": "23.3",
+        "report": "final",
+        "text": "Services Australia and DSS should introduce mechanisms to ensure that all new programs and schemes are developed with a customer centric focus, and that specific testing is done to ensure that recipients are at the forefront of each new initiative.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 26
+        },
+        "status": null
+      },
+      {
+        "number": "23.4",
+        "report": "final",
+        "text": "The reinstated Administrative Review Council (or similar body) should provide training and develop resources to inform APS members about the Commonwealth administrative law system. (see Automated Decision-Making and the Administrative Appeals Tribunal chapters)",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 26
+        },
+        "status": null
+      },
+      {
+        "number": "23.5",
+        "report": "final",
+        "text": "The Commonwealth should explore the feasibility of establishing an internal college within Services Australia to provide training and development to staff linked to the skills and knowledge required to undertake their duties.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 26
+        },
+        "status": null
+      },
+      {
+        "number": "23.6",
+        "report": "final",
+        "text": "SES staff at Services Australia should spend some time in a front-line service delivery role and with other community partnerships.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 26
+        },
+        "status": null
+      },
+      {
+        "number": "23.7",
+        "report": "final",
+        "text": "The Public Service Act should be amended to make it clear that the Australian Public Service Commissioner can inquire into the conduct of former Agency Heads. Also, the Public Service Act should be amended to allow for a disciplinary declaration to be made against former APS employees and former Agency Heads.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 26
+        },
+        "status": null
+      },
+      {
+        "number": "23.8",
+        "report": "final",
+        "text": "The Australian Public Service Commission should develop standards for documenting important decisions and discussions, and the delivery of training on those standards.",
+        "cite": {
+          "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+          "document": "Report of the Royal Commission into the Robodebt Scheme",
+          "page": 27
+        },
+        "status": null
+      }
+    ],
+    "recommendations_status": "extracted",
+    "status_source": null,
+    "notes": [
+      "The report's list of recommendations (page 19) refers to 57 recommendations; 56 are numbered there. The other, in the report's closing observations, reads \"Section 34 of the Cth FOI Act should be repealed\" and has no number, so it is not loaded as a numbered recommendation."
+    ],
+    "gaps": [
+      "royalcommission.gov.au and the other Commonwealth royal commission hosts refuse OPAXBot, so the weekly refresh cannot re-read this document; it is a manual supplement and its record is carried forward unchanged where the PDF is absent."
+    ]
+  },
+  "facts": [],
+  "tables": [],
+  "headline": null
+}
