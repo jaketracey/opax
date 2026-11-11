@@ -63,6 +63,8 @@ portal/public/growth/recent-votes/
 portal/public/growth/votes/
 # Each party's receipt rows by money graph for profile rendering (npm run build:growth).
 portal/public/growth/party-money/
+# The supplier index split by id prefix for supplier pages (npm run build:growth).
+portal/public/growth/supplier-rows/
 # Local SEO HTML snapshots, CDP measurements and Wrangler state.
 portal/private/
 

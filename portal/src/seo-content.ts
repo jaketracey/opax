@@ -17,6 +17,7 @@ import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-car
 import {agencyTopRows, type AgencyTopRow} from '../public/agency-top-suppliers.js'
 import {recentVotesBucket, recentVotesBucketPath, votesBucketPath, VOTES_NAMES_PATH} from '../public/recent-votes-buckets.js'
 import {partyFold, partyMoneyBucket, partyMoneyBucketPath} from '../public/party-money-buckets.js'
+import {SUPPLIER_ID_RE, supplierRowsPath} from '../public/supplier-row-buckets.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -421,17 +422,30 @@ export const agencyTopSuppliers = (read: ReadAsset): AgencyTopSuppliers => async
   const data=await optional<{suppliers:AgencySupplier[]}>(read,path)
   return data ? agencyTopRows(data.suppliers) : null
 }
+type SupplierIndex = {meta:{generated_at:string;source:string};suppliers:{id:string;profile_path:string}[]}
+/**
+ * The supplier's index row with the index's date and source: its id's bucket of /suppliers.json
+ * (public/supplier-row-buckets.js), or the whole index when the bucket is unreadable or lacks it.
+ */
+async function supplierIndexEntry(read: ReadAsset, id: string): Promise<{meta: SupplierIndex['meta']; row?: SupplierIndex['suppliers'][number]}> {
+  if (SUPPLIER_ID_RE.test(id)) {
+    const bucket=await optional<SupplierIndex>(read,supplierRowsPath(id))
+    const row=bucket?.meta ? bucket.suppliers?.find(s=>s.id===id) : undefined
+    if(row) return {meta:bucket!.meta,row}
+  }
+  const index=await read<SupplierIndex>('/suppliers.json')
+  return {meta:index.meta,row:index.suppliers.find(s=>s.id===id)}
+}
 export async function renderSupplierAnswer(id: string, read: ReadAsset, params = new URLSearchParams(), topSuppliers: AgencyTopSuppliers = agencyTopSuppliers(read)): Promise<RenderedContent | null> {
-  const [index,agencies] = await Promise.all([
-    read<{meta:{generated_at:string;source:string};suppliers:{id:string;profile_path:string}[]}>('/suppliers.json'),
+  const [{meta:indexMeta,row},agencies] = await Promise.all([
+    supplierIndexEntry(read,id),
     read<{agencies:AgencyProfile[]}>('/agencies.json'),
   ])
-  const row=index.suppliers.find(s=>s.id===id)
   if(!row) return null
   const profile=(await read<{profiles:Record<string,SupplierProfile>}>(row.profile_path)).profiles[id]
   if(!profile) return null
   const description=`${profile.name}: ${currency(profile.total)} in recorded Commonwealth contract awards across ${count(profile.count)} contracts and ${profile.agencies.length} agencies.`
-  let body=`<p>Updated ${escapeHtml(index.meta.generated_at.slice(0,10))}. Source: ${escapeHtml(index.meta.source)}. Award values are not expenditure. One contract is counted at its latest recorded notice value; amendments are not added together. Coverage is limited to the available notices.</p><h2>Agencies contracted</h2><ul>`
+  let body=`<p>Updated ${escapeHtml(indexMeta.generated_at.slice(0,10))}. Source: ${escapeHtml(indexMeta.source)}. Award values are not expenditure. One contract is counted at its latest recorded notice value; amendments are not added together. Coverage is limited to the available notices.</p><h2>Agencies contracted</h2><ul>`
   const matches=profile.agencies.map(a=>({a,record:agencies.agencies.find(r=>r.name===a.name)}))
   body+=matches.map(({a,record})=>`<li>${record ? link(`/subject/agency/${record.id}`,a.name) : escapeHtml(a.name)} — ${count(a.count)} contracts, ${currency(a.total)}</li>`).join('')+'</ul>'
   body+=supplierContractsHTML(profile.contracts as unknown as Record<string, unknown>[],id,params)+'<details><summary>Notice details for the largest awards</summary><ol>'

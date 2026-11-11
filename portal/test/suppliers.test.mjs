@@ -5,13 +5,14 @@ import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
 import { shortMoney } from '../public/format.js';
 import { vicElectionEnabled, vicElectionDiscovery, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js';
+import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js';
 
 const source = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8');
 const parsed = ts.createSourceFile('index.ts', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 // Execute the actual metadata/route functions, without booting unrelated RAG
 // and image-rendering dependencies. TypeScript's parser supplies the boundaries.
 const names = new Set(['DIRECTORY_KINDS', 'isDirectoryKind', 'STATIC_PAGES', 'SUBJECT_NAME_MAX', 'CAMPAIGNER_NAME_MAX', 'SUPPLIER_NAME_MAX', 'BILL_KEY_MAX', 'BILL_KEY_RE',
-  'matchSeoRoute', 'supplierNameKey', 'suppliersMemo', 'suppliersFileMemo', 'loadSuppliersFile', 'loadSuppliers', 'supplierMeta', 'buildRouteMeta',
+  'matchSeoRoute', 'supplierNameKey', 'suppliersMemo', 'suppliersFileMemo', 'loadSuppliersFile', 'loadSuppliers', 'supplierBucketMemo', 'supplierBucket', 'supplierRowById', 'supplierMeta', 'buildRouteMeta',
   'escHtml', 'escXml', 'clip', 'withTail', 'num', 'money', 'years', 'indexLinks', 'prerenderBlock', 'canonicalFor', 'publisher', 'sitemapXml']);
 const statements = parsed.statements.filter((node) => {
   if (ts.isFunctionDeclaration(node)) return names.has(node.name?.text);
@@ -22,19 +23,30 @@ const id = 's-0123456789abcdef0123';
 const otherId = 's-abcdef0123456789abcd';
 const supplier = (overrides = {}) => ({ id, name: 'Acme Pty Ltd', abn: '12345678901', aliases: ['Acme Corporation'], lookup_names: ['Acme Funding Identity'], total: 12000000, count: 24, agency_count: 3, first_year: 2018, last_year: 2025, ...overrides });
 
-function harness(rows = [supplier()], loader) {
+// The release buckets (public/supplier-row-buckets.js) as scripts/build_growth_modules.mjs writes them.
+const bucketFiles = (rows) => {
+  const files = {};
+  for (const row of rows) (files[supplierRowsPath(row.id)] ??= { meta: { generated_at: '2026-09-07T00:00:00Z' }, suppliers: [] }).suppliers.push(row);
+  return files;
+};
+
+function harness(rows = [supplier()], loader, buckets = null) {
   let requests = 0;
+  const bucketReads = [];
   const context = {
+    SUPPLIER_ID_RE, supplierRowsPath,
     vicElectionEnabled, vicElectionDiscovery, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP,
     money: shortMoney, URL, Request, Response, SITE_ORIGIN: 'https://opax.com.au', SITE_TITLE: 'OPAX', SITE_DESCRIPTION: 'Parliamentary records', TOPIC_NAMES: {},
-    assetJson: async (_env, path) => { assert.equal(path, '/suppliers.json'); requests++; return loader ? loader() : { meta: { generated_at: '2026-09-07T00:00:00Z' }, suppliers: rows }; },
+    assetJson: async (_env, path) => {
+      if (path.startsWith('/growth/supplier-rows/')) { bucketReads.push(path); if (buckets?.[path]) return buckets[path]; throw new Error('asset 404'); }
+      assert.equal(path, '/suppliers.json'); requests++; return loader ? loader() : { meta: { generated_at: '2026-09-07T00:00:00Z' }, suppliers: rows }; },
     cachedJson: async (_key, fn) => fn(),
     loadPeople: async () => ({ people: [] }), loadMoney: async () => ({ parties: new Map(), donors: new Map() }),
     loadAgencies: async () => null, loadElectorates: async () => null,
     loadReports: async () => ({ reports: [] }), loadCampaigners: async () => null,
   };
   runInNewContext(code, context);
-  return { context, requests: () => requests, meta: (name) => context.supplierMeta(name, new URL(`https://opax.com.au/subject/supplier/${encodeURIComponent(name)}?tracking=1`), {}) };
+  return { context, requests: () => requests, bucketReads: () => bucketReads, meta: (name) => context.supplierMeta(name, new URL(`https://opax.com.au/subject/supplier/${encodeURIComponent(name)}?tracking=1`), {}) };
 }
 
 test('supplier directory and encoded name routes match, malformed and extra paths do not', () => {
@@ -86,6 +98,23 @@ test('ambiguous names and aliases never merge suppliers with distinct identities
   assert.match((await h.meta('Acme Funding Identity')).title, /Choose a supplier/);
   assert.equal((await h.meta(id)).status, 200);
   assert.equal((await h.meta(otherId)).jsonLd.mainEntity.identifier.value, '98765432101');
+});
+
+test('an id resolves from its bucket without the whole index, and every other lookup falls back to it', async () => {
+  const rows = [supplier(), supplier({ id: otherId, name: 'Other Pty Ltd', abn: '98765432101', aliases: [], lookup_names: [] })];
+  const names = [id, otherId, ' acme pty ltd ', 'ACME CORPORATION', 'Other Pty Ltd', 's-ffffffffffffffffffff', 'Completely unknown'];
+  const whole = harness(rows), split = harness(rows, undefined, bucketFiles(rows));
+  // Each harness is its own realm, so compare the metadata as data.
+  const plain = async (h, name) => JSON.parse(JSON.stringify(await h.meta(name)));
+  for (const name of names) assert.deepEqual(await plain(split, name), await plain(whole, name), name);
+  const ids = harness(rows, undefined, bucketFiles(rows));
+  await ids.meta(id); await ids.meta(otherId); await ids.meta(id);
+  assert.equal(ids.requests(), 0, 'an id never reads /suppliers.json');
+  assert.deepEqual([...ids.bucketReads()], [supplierRowsPath(id), supplierRowsPath(otherId)], 'a bucket is read once while kept');
+  // A bucket that lacks the id (or a missing one) is not a 404 on its own: the whole index decides.
+  const stale = harness(rows, undefined, { [supplierRowsPath(otherId)]: { meta: {}, suppliers: [] } });
+  assert.equal((await stale.meta(otherId)).status, 200);
+  assert.equal(stale.requests(), 1);
 });
 
 test('duplicate alias spellings within one supplier remain resolvable', async () => {

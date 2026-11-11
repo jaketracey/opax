@@ -132,6 +132,7 @@ import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, repor
 import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
+import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js'
 import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
@@ -4717,6 +4718,7 @@ function sharedMoneyAnswer(title: string, read: ReadAsset): ReturnType<typeof re
 
 function sharedAssetJson<T>(env: Env, path: string): Promise<T> {
   if (path === '/suppliers.json') return loadSuppliersFile(env) as Promise<T>
+  if (path.startsWith('/growth/supplier-rows/')) return supplierBucket<T>(env, path)
   if (path === '/bills/index.json') return loadBills(env).then((bills) => bills.file as T)
   return assetJson<T>(env, path)
 }
@@ -5012,6 +5014,9 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
       const candidates=(data?.electorates || []).filter(e=>e.slug.toLowerCase()===name.toLowerCase() || e.electorate_id===name || foldName(e.name)===foldName(name))
       if(candidates.length===1) return candidates[0].url
     } else if(kind==='supplier') {
+      // Every supplier request passes here, cached page or not: an id resolves from its bucket.
+      const row=await supplierRowById(env,name.toLowerCase())
+      if(row) return `/subject/supplier/${row.id}`
       const data=await loadSuppliers(env).catch(()=>null)
       const supplier=data?.byId.get(name.toLowerCase()) || data?.byName.get(supplierNameKey(name))
       if(supplier) return `/subject/supplier/${supplier.id}`
@@ -5316,9 +5321,38 @@ async function agencyMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     card: { kicker: 'Government agency', title: agency.name, lines: [`${money(agency.total)} in recorded commitments`, `${num(agency.count)} contracts · ${num(agency.supplier_count)} suppliers`, 'Recorded awards, not expenditure.'] } }
 }
 
+/**
+ * Recently read supplier buckets. One supplier request reads its bucket three times (the address
+ * check, the head and the page), so the last few are kept; failures are not.
+ */
+const supplierBucketMemo = new Map<string, Promise<unknown>>()
+function supplierBucket<T>(env: Env, path: string): Promise<T> {
+  let kept = supplierBucketMemo.get(path)
+  if (!kept) {
+    if (supplierBucketMemo.size >= 16) supplierBucketMemo.delete(supplierBucketMemo.keys().next().value!)
+    const read = assetJson<T>(env, path)
+    supplierBucketMemo.set(path, read)
+    read.catch(() => { if (supplierBucketMemo.get(path) === read) supplierBucketMemo.delete(path) })
+    kept = read
+  }
+  return kept as Promise<T>
+}
+
+/**
+ * The row a supplier id names, from its bucket of /suppliers.json (public/supplier-row-buckets.js),
+ * so a supplier page on a cold isolate does not parse the whole index. Null when the name is not
+ * an id or the bucket is unreadable or lacks it; the caller then reads the whole index.
+ */
+async function supplierRowById(env: Env, name: string): Promise<SupplierRow | null> {
+  if (!SUPPLIER_ID_RE.test(name)) return null
+  const bucket = await supplierBucket<{ suppliers?: SupplierRow[] }>(env, supplierRowsPath(name)).catch(() => null)
+  return bucket?.suppliers?.find((row) => row.id === name) ?? null
+}
+
 async function supplierMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
-  const data = await loadSuppliers(env).catch(() => null)
-  const supplier = data?.byId.get(name) ?? data?.byName.get(supplierNameKey(name)) ?? null
+  const row = await supplierRowById(env, name)
+  const data = row ? null : await loadSuppliers(env).catch(() => null)
+  const supplier = row ?? data?.byId.get(name) ?? data?.byName.get(supplierNameKey(name)) ?? null
   if (!supplier && data?.byName.has(supplierNameKey(name))) {
     const candidates = data.suppliers.filter((entry) => [entry.name, ...(entry.aliases ?? []), ...(entry.lookup_names ?? [])]
       .some((alias) => supplierNameKey(alias) === supplierNameKey(name)))
