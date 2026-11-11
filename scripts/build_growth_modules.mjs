@@ -5,6 +5,7 @@ import {pathToFileURL,fileURLToPath} from 'node:url';
 import {sponsorPerson} from '../portal/public/sponsor-person.js';
 import {sponsorSummaryPath,growthSummaryPath,normalisedName,personQuestions,billQuestions,latestBillVotes} from '../portal/public/growth-modules.js';
 import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../portal/public/supplier-growth.js';
+import {AGENCY_TOP_SUPPLIERS_PATH,agencyTopRows} from '../portal/public/agency-top-suppliers.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',import.meta.url)), {read: sourceRead} = {}) {
  const read=async p=>sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p),'utf8'));
@@ -107,12 +108,16 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  const shards=[];
  for(const file of (await readdir(join(root,'grants/federal'))).filter(f=>/^shard-\d+\.json$/.test(f)).sort())shards.push(await read('grants/federal/'+file));
  const grantMeta=(await read('graph/grants.federal.json')).meta;
+ const agencyTop={};
  for(const entry of agencies.agencies){
   const agency=await read(entry.profile_path.replace(/^\//,''));
+  agencyTop[entry.profile_path]=agencyTopRows(agency.suppliers);
   const grants=agencyGrants(shards,agency.name);
   const suppliers=publishedAgencySuppliers(agency,publishedSuppliers).sort((a,b)=>Number(b.total)-Number(a.total)).slice(0,6);
   await write(await growthSummaryPath('agencies',normalisedName(agency.name)),{agency:{id:agency.id,name:agency.name,suppliers},grants,meta:{generated:grantMeta.generated,coverage:grantMeta.coverage,source_url:grantMeta.source_url},contracts_updated:agencies.meta?.generated_at || ''});
  }
+ // Supplier pages read this instead of each agency's full file (portal/public/agency-top-suppliers.js).
+ await write(AGENCY_TOP_SUPPLIERS_PATH,{agencies:agencyTop});
  console.log(JSON.stringify({files:sizes.length,largest:Math.max(...sizes.map(s=>s.bytes)),donorIndexBytes:sizes[0].bytes}));
  return sizes;
 }

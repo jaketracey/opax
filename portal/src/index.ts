@@ -131,6 +131,7 @@ import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
 import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
+import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
 import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
@@ -4679,11 +4680,18 @@ function sharedAssetJson<T>(env: Env, path: string): Promise<T> {
 }
 
 /**
- * Each agency's largest suppliers for the "Other suppliers" lists on supplier pages, kept per
- * isolate. The agency files run to 13.6 MB (Defence), and one supplier page reads up to ten.
+ * Each agency's largest suppliers for the "Other suppliers" lists on supplier pages. The release
+ * build ranks them once into one small file (public/agency-top-suppliers.js); an agency it does
+ * not cover falls back to ranking that agency's own file (up to 13.6 MB, Defence) once per isolate.
  */
+let agencyTopIndexMemo: Promise<Record<string, AgencyTopRow[]> | null> | null = null
 const agencyTopMemo = new Map<string, ReturnType<AgencyTopSuppliers>>()
-const sharedAgencyTopSuppliers = (env: Env): AgencyTopSuppliers => (path) => {
+const sharedAgencyTopSuppliers = (env: Env): AgencyTopSuppliers => async (path) => {
+  agencyTopIndexMemo ??= assetJson<{ agencies?: Record<string, AgencyTopRow[]> }>(env, AGENCY_TOP_SUPPLIERS_PATH)
+    .then((data) => data.agencies ?? null)
+    .catch(() => { agencyTopIndexMemo = null; return null })
+  const ranked = await agencyTopIndexMemo
+  if (ranked && Object.hasOwn(ranked, path)) return ranked[path]
   let top = agencyTopMemo.get(path)
   if (!top) {
     top = agencyTopSuppliers(<T>(p: string) => assetJson<T>(env, p))(path).then((rows) => { if (!rows) agencyTopMemo.delete(path); return rows })
