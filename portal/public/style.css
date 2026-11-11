@@ -1023,7 +1023,8 @@ button.link.source-title { font: var(--weight-strong) var(--text-16)/var(--leadi
 .source-title:hover, button.link.source-title:hover, a.source-title:hover { color: var(--bronze-ink); }
 /* An AEC associated entity's register line, shown with the donor's name (donor-disclosure.js). */
 .donor-assoc { display: block; font: var(--type-fine); color: var(--ink-soft); }
-.donor-assoc a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.donor-assoc a { color: inherit; text-decoration: none; }
+.donor-assoc a:hover, .donor-assoc a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
 /* Document titles in list rows: some ingested titles run to a paragraph
    (every bill in a cognate debate), so a row shows three lines at most. The
    full title is still the link's text and waits on the document page. */
