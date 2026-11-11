@@ -4721,6 +4721,7 @@ function sharedAssetJson<T>(env: Env, path: string): Promise<T> {
   if (path.startsWith('/growth/supplier-rows/')) return supplierBucket<T>(env, path)
   if (path === '/bills/index.json') return loadBills(env).then((bills) => bills.file as T)
   if (BILL_FILE_RE.test(path)) return keptAssetJson<T>(billFileMemo, 32, env, path)
+  if (SHARED_FILE_RE.test(path)) return keptAssetJson<T>(sharedFileMemo, 8, env, path)
   return assetJson<T>(env, path)
 }
 
@@ -4925,11 +4926,11 @@ interface ElectoratePerson {
 }
 let electorateMemo: Promise<{ generated: string; electorates: ElectorateSummary[]; people: ElectoratePerson[] }> | null = null
 function loadElectorates(env: Env) {
-  electorateMemo ??= assetJson<{ index_url: string; people_url: string; generated: string }>(env, '/electorates/manifest.json')
+  electorateMemo ??= sharedAssetJson<{ index_url: string; people_url: string; generated: string }>(env, '/electorates/manifest.json')
     .then(async (manifest) => {
       const [index, people] = await Promise.all([
-        assetJson<{ electorates: ElectorateSummary[] }>(env, manifest.index_url),
-        assetJson<{ people: ElectoratePerson[] }>(env, manifest.people_url),
+        sharedAssetJson<{ electorates: ElectorateSummary[] }>(env, manifest.index_url),
+        sharedAssetJson<{ people: ElectoratePerson[] }>(env, manifest.people_url),
       ])
       return { generated: manifest.generated, electorates: index.electorates, people: people.people }
     }).catch((error) => { electorateMemo = null; throw error })
@@ -5114,7 +5115,7 @@ async function apiPersonSlugs(env: Env): Promise<Response> {
 /** Lower-cased names and ids on a published register of interests (/interests/index.json). */
 let interestsMemo: Promise<Set<string>> | null = null
 async function hasInterestsRegister(env: Env, name: string, pid: string | undefined): Promise<boolean> {
-  interestsMemo ??= assetJson<{ people: Record<string, unknown>; _by_name: Record<string, string> }>(env, '/interests/index.json')
+  interestsMemo ??= sharedAssetJson<{ people: Record<string, unknown>; _by_name: Record<string, string> }>(env, '/interests/index.json')
     .then(d => new Set([...Object.keys(d.people ?? {}), ...Object.keys(d._by_name ?? {})]))
     .catch((error) => { interestsMemo = null; throw error })
   const known = await interestsMemo.catch(() => null)
@@ -5352,6 +5353,11 @@ const BILL_FILE_RE = /^\/bills\/(?!index\.json$)[^/]+\.json$/
 // canonical path, then again for the page's head and body.
 const divisionFileMemo = new Map<string, Promise<unknown>>()
 const divisionFile = (env: Env, slug: string): Promise<Division> => keptAssetJson<Division>(divisionFileMemo, 64, env, `/divisions/${encodeURIComponent(slug)}.json`)
+// Small files that several parts of one page read: the electorate manifest with its release's index
+// and people files (also behind loadElectorates), and the interests register index. A person page
+// read each of them twice. Published files never change under a deployment.
+const sharedFileMemo = new Map<string, Promise<unknown>>()
+const SHARED_FILE_RE = /^\/(?:electorates\/(?:manifest\.json|releases\/[^/]+\/(?:index|people)\.json)|interests\/index\.json)$/
 
 /**
  * The row a supplier id names, from its bucket of /suppliers.json (public/supplier-row-buckets.js),
