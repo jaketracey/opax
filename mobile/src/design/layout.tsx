@@ -35,7 +35,7 @@ import { useAccessibilitySize } from './accessibility';
 import {
   columnBreakout,
   columns,
-  isPad,
+  sizeClassFor,
   RegionProvider,
   SidebarSafe,
   useColumnChoice,
@@ -86,7 +86,7 @@ export function useScreenColumn(own: keyof typeof columns = 'readable') {
   const [onLayout, region] = useMeasuredRegion();
   const outer = useLayout();
   const width = region?.width ?? outer.width;
-  const regular = isPad && width >= columns.readable;
+  const regular = sizeClassFor(width, outer.rule) === 'regular';
   const inset = regular
     ? Math.max(rhythmRegular.screen, Math.round((width - columns[column]) / 2))
     : width < 414
@@ -96,7 +96,7 @@ export function useScreenColumn(own: keyof typeof columns = 'readable') {
   const inner = region
     ? { width: region.width - inset * 2, height: region.height }
     : null;
-  const breakout = columnBreakout(width, column);
+  const breakout = columnBreakout(width, column, outer.rule);
   // Inside a split pane: its Back and actions, first in the content.
   const bar = usePaneBar();
   return { onLayout, content, inner, bar, breakout, regular };

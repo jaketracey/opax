@@ -19,6 +19,7 @@ export {
   SidebarSafe,
   breakpoints,
   columnBreakout,
+  currentRule,
   columns,
   dragWebUrl,
   gridColumns,
@@ -28,13 +29,34 @@ export {
   sizeClassFor,
   splitPane,
   splitPaneWidth,
+  splitPanePhoneRegular,
+  useWindowTraits,
+  useAdaptiveDevice,
+  setWindowTraitsOverride,
+  ReservedRegionArea,
+  ReservedRegionsProvider,
+  useReservedRegions,
   useColumnChoice,
   useHover,
   useLayout,
   useMeasuredRegion,
   useScreenMargin,
 } from './adaptive';
-export type { GridColumns, Layout, SizeClass } from './adaptive';
+export type {
+  GridColumns,
+  Layout,
+  LayoutRule,
+  SizeClass,
+  WindowTraits,
+} from './adaptive';
+export {
+  activeVerticalFold,
+  activeHorizontalFold,
+  sidesOf,
+  placeClear,
+  evenColumns,
+} from './fold';
+export type { Rect, Region, ReservedRegions, FoldSides } from './fold';
 export { Card, Tile, TileGrid, useInCard } from './card';
 export { BarSeries, StageTimeline, VoteSplit } from './charts';
 export type { ChartProvenance } from './charts';
