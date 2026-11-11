@@ -15,7 +15,7 @@ import { rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { RecordLoadError } from '../records/RecordLoadError';
 import { ReportProvenance } from './report-provenance';
-import { HearingTranscripts } from './report-transcripts';
+import { HearingTranscripts, transcriptTitle } from './report-transcripts';
 import { officialReports } from './official';
 import {
   figures,
@@ -191,9 +191,13 @@ export function ReportContent({
   const [transcriptsMissing, setTranscriptsMissing] = useState(false);
   const parts = useMemo(
     () =>
-      sections(report).filter(
-        (part) => part.id !== 'transcripts' || !transcriptsMissing,
-      ),
+      sections(report)
+        .filter((part) => part.id !== 'transcripts' || !transcriptsMissing)
+        .map((part) =>
+          part.id === 'transcripts'
+            ? { ...part, title: report.transcripts?.label || transcriptTitle }
+            : part,
+        ),
     [report, transcriptsMissing],
   );
   const stats = useMemo(() => figures(report), [report]);
