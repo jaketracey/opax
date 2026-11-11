@@ -1,0 +1,259 @@
+{
+ "report_id": "vic-melbourne-and-olympic-parks-trust-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band",
+  "executive_average_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026 $’000",
+   "value": 196781,
+   "value_as_published": "196,781",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 92,
+   "quote": "Total revenue and income from transactions 196,781 185,217"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026 $’000",
+   "value": 203668,
+   "value_as_published": "203,668",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 92,
+   "quote": "Total expenses from transactions 203,668 188,747"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits",
+   "column_as_published": "2026 $’000",
+   "value": 41844,
+   "value_as_published": "41,844",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 92,
+   "quote": "Employee benefits (3.3) 41,844 40,030"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026 $’000",
+   "value": -6763,
+   "value_as_published": "(6,763)",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 92,
+   "quote": "Net result (6,763) (3,202)"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "value": 970,
+   "value_as_published": "970",
+   "unit": "people",
+   "period": "JUNE 2026",
+   "page": 73,
+   "quote": "Total employees 970 157 8 163 39 766"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "value": 163,
+   "value_as_published": "163",
+   "unit": "fte",
+   "period": "JUNE 2026 (ongoing FTE)",
+   "page": 73,
+   "quote": "Total employees 970 157 8 163 39 766"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Accountable Officer’s Remuneration",
+   "value": null,
+   "value_as_published": "$680,000–$689,999",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 116,
+   "quote": "Total remuneration received or receivable by the Accountable Officer in connection with the management of the Trust during the reporting period was in the range of $680,000–$689,999"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026 $’000",
+   "value": 6.0,
+   "value_as_published": "6.0",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 116,
+   "quote": "Total number of executives 6.0 6.0"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration(i)",
+   "column_as_published": "2026 $’000",
+   "value": 2279,
+   "value_as_published": "2,279",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 116,
+   "quote": "Total remuneration(i) 2,279 2,195"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total",
+   "column_as_published": "2026 $’000",
+   "value": 3173,
+   "value_as_published": "3,173",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 117,
+   "quote": "Other long-term benefits 90 78 Total 3,173 2,859"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred during 2025–26 in relation to these consultancies",
+   "value": 932453,
+   "value_as_published": "$932,453",
+   "unit": "dollars",
+   "period": "2025-26 (7 consultancies of $10,000 or greater, excluding GST)",
+   "page": 74,
+   "quote": "The total expenditure incurred during 2025–26 in relation to these consultancies was $932,453 (excluding GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "column_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "value": 128500,
+   "value_as_published": "$128,500",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "ColganBauer (Ad-Hippo Pty Ltd) Commercial strategy assessment and development $128,500 $128,500",
+   "counterparty": "ColganBauer (Ad-Hippo Pty Ltd)",
+   "purpose": "Commercial strategy assessment and development"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "column_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "value": 83700,
+   "value_as_published": "$83,700",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Commercial rights consulting $83,700 $83,700",
+   "counterparty": "ColganBauer (Ad-Hippo Pty Ltd)",
+   "purpose": "Commercial rights consulting"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "column_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "value": 71680,
+   "value_as_published": "$71,680",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Hatamoto Procurement advisory services and tender documentation $71,680 $71,680",
+   "counterparty": "Hatamoto",
+   "purpose": "Procurement advisory services and tender documentation"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "column_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "value": 25174,
+   "value_as_published": "$25,174",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Kirsty McCulloch Consulting Pty Ltd Health and wellbeing study $25,174 $25,174",
+   "counterparty": "Kirsty McCulloch Consulting Pty Ltd",
+   "purpose": "Health and wellbeing study"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "column_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "value": 44375,
+   "value_as_published": "$44,375",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Mercer Consulting (Australia) Pty Ltd Human resource consulting $44,375 $44,375",
+   "counterparty": "Mercer Consulting (Australia) Pty Ltd",
+   "purpose": "Human resource consulting"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "column_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "value": 67320,
+   "value_as_published": "$67,320",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Nation Partners Pty Ltd Environmental compliance advisory services $67,320 $67,320",
+   "counterparty": "Nation Partners Pty Ltd",
+   "purpose": "Environmental compliance advisory services"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "column_as_published": "Total expenditure 2025–26 (exc. GST)",
+   "value": 511705,
+   "value_as_published": "$511,705",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Oliver Wyman Pty Ltd Consultancy services for organisational strategy plan $511,705 $511,705",
+   "counterparty": "Oliver Wyman Pty Ltd",
+   "purpose": "Consultancy services for organisational strategy plan"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "fans at the biggest-ever Australian Open",
+   "value": null,
+   "value_as_published": "1.36 million",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "1.36 million fans at the biggest-ever Australian Open"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "guests",
+   "value": null,
+   "value_as_published": "3.75 million",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "3.75 million guests 495 events"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "events",
+   "value": 495,
+   "value_as_published": "495",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "3.75 million guests 495 events"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "unique hirers across sport, music and entertainment",
+   "value": 44,
+   "value_as_published": "44",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "44 unique hirers across sport, music and entertainment"
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+{
+ "report_id": "vic-heathcote-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 20460,
+   "value_as_published": "20,460",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 80,
+   "quote": "Total revenue and income from transactions 20,460 23,169"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -22075,
+   "value_as_published": "(22,075)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 80,
+   "quote": "Total expenses from transactions (22,075) (19,778)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -14464,
+   "value_as_published": "(14,464)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 80,
+   "quote": "Employee expenses 3.1 (a) (14,464) (12,634)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -1684,
+   "value_as_published": "(1,684)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 80,
+   "quote": "Net result (1,684) 3,524"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "TOTAL",
+   "column_as_published": "JUNE Current Month FTE",
+   "value": 117.12,
+   "value_as_published": "117.12",
+   "unit": "fte",
+   "period": "June 2026 current month FTE",
+   "page": 64,
+   "quote": "TOTAL 117.12 TOTAL 113.41"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 118,
+   "quote": "Total number of executives 4 1"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 404,
+   "value_as_published": "404",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 118,
+   "quote": "Total remuneration i 404 211"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 990,
+   "value_as_published": "990",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 120,
+   "quote": "Total compensation - KMPs i 990 511"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-2026 in relation to these consultancies",
+   "value": 0.0,
+   "value_as_published": "$0.00",
+   "unit": "dollars",
+   "period": "2025-2026 (no consultancies of $10,000 or greater, excl. GST)",
+   "page": 68,
+   "quote": "in relation to these consultancies is $0.00 (excl. GST)"
+  }
+ ]
+}

@@ -1,0 +1,133 @@
+{
+ "report_id": "vic-legal-practitioners-liability-committee-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "named_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Income",
+   "column_as_published": "2026 ($)",
+   "value": 84262133,
+   "value_as_published": "84,262,133",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Total Income 84,262,133 83,932,687"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses incurred in delivery of services",
+   "column_as_published": "2026 ($)",
+   "value": 53393396,
+   "value_as_published": "53,393,396",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 52,
+   "quote": "Total expenses incurred in delivery of services 53,393,396 74,910,121"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefit expenses",
+   "column_as_published": "2026 ($)",
+   "value": 7055204,
+   "value_as_published": "7,055,204",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 52,
+   "quote": "Employee benefit expenses 3.1.1 7,055,204 5,435,622"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for the year",
+   "column_as_published": "At 30 June 2026",
+   "value": 36940184,
+   "value_as_published": "36,940,184",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 46,
+   "quote": "Net result for the year 36,940,184 36,940,184"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "Current year FTE*",
+   "value": 38.13,
+   "value_as_published": "38.13",
+   "unit": "fte",
+   "period": "as at last full pay period in June 2026",
+   "page": 35,
+   "quote": "Total 40 38.13 28 26.6"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total",
+   "column_as_published": "Current year headcount",
+   "value": 40,
+   "value_as_published": "40",
+   "unit": "people",
+   "period": "as at last full pay period in June 2026",
+   "page": 35,
+   "quote": "Total 40 38.13 28 26.6"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "Total remuneration 2026 $",
+   "value": 14,
+   "value_as_published": "14",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 86,
+   "quote": "Total number of executives 14 15"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "Total remuneration 2026 $",
+   "value": 2307027,
+   "value_as_published": "2,307,027",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 86,
+   "quote": "Total remuneration 2,307,027 2,114,264"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation(a)",
+   "column_as_published": "Total remuneration 2026 $",
+   "value": 2307027,
+   "value_as_published": "2,307,027",
+   "unit": "dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 87,
+   "quote": "Total compensation(a) 2,307,027 1,340,343"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total consultant expenditure",
+   "value": 417848,
+   "value_as_published": "$417,848",
+   "unit": "dollars",
+   "period": "2025-2026 (approximately, as defined by the Financial Management Act 1994)",
+   "page": 36,
+   "quote": "During 2025–2026 total consultant expenditure as defined by the Financial Management Act 1994 (Vic) was approximately $417,848"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Finity Consulting Pty Ltd",
+   "value": 88983,
+   "value_as_published": "$88,983",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 36,
+   "quote": "During the reporting year, Finity Consulting was engaged to provide pricing advice and other ad hoc actuarial consulting services. Expenditure for the reporting period was $88,983.",
+   "counterparty": "Finity Consulting Pty Ltd",
+   "purpose": "pricing advice and other ad hoc actuarial consulting services"
+  }
+ ]
+}

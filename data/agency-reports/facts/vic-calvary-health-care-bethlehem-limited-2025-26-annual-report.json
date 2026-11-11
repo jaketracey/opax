@@ -1,0 +1,100 @@
+{
+ "report_id": "vic-calvary-health-care-bethlehem-limited-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "consultancy_total",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "head_remuneration",
+  "staff_fte",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue for the year",
+   "column_as_published": "2026",
+   "value": 38025,
+   "value_as_published": "38,025",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 54,
+   "quote": "Total revenue for the year 38,025 33,989"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses for the year",
+   "column_as_published": "2026",
+   "value": 36474,
+   "value_as_published": "36,474",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 54,
+   "quote": "Total expenses for the year 36,474 33,649"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits expense",
+   "column_as_published": "2026",
+   "value": 29268,
+   "value_as_published": "29,268",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 54,
+   "quote": "Employee benefits expense 12 29,268 26,759"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net Surplus/(Deficit) for the year",
+   "column_as_published": "2026",
+   "value": 272,
+   "value_as_published": "272",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 54,
+   "quote": "Net Surplus/(Deficit) for the year 272 (923)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "A total of 68 active volunteers contributed approximately 9,500 hours of service",
+   "value": 68,
+   "value_as_published": "68",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "A total of 68 active volunteers contributed approximately 9,500 hours of service"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "A total of 68 active volunteers contributed approximately 9,500 hours of service",
+   "value": 9500,
+   "value_as_published": "9,500",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "A total of 68 active volunteers contributed approximately 9,500 hours of service"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "National Weighted Activity Unit (NWAU)",
+   "value": 3225,
+   "value_as_published": "3,225",
+   "unit": "count",
+   "period": "2025-26 activity achievement",
+   "page": 19,
+   "quote": "National Weighted Activity Unit (NWAU) 3,225"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Percentage of healthcare workers immunised for influenza",
+   "value": 99.4,
+   "value_as_published": "99.4%",
+   "unit": "percent",
+   "period": "2025-26 result",
+   "page": 18,
+   "quote": "Percentage of healthcare workers immunised for influenza 94% 99.4%"
+  }
+ ]
+}

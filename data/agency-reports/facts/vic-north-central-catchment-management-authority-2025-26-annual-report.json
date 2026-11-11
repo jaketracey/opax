@@ -1,0 +1,88 @@
+{
+ "report_id": "vic-north-central-catchment-management-authority-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officer (CEO)",
+   "value": null,
+   "value_as_published": "$320,000–329,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 102,
+   "quote": "Remuneration received or receivable by the Accountable Officer (CEO) in connection with the management of the Authority during the reporting period was in the range: $320,000–329,000"
+  },
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 17445327,
+   "value_as_published": "17,445,327",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 82,
+   "quote": "17,445,327 18,209,528"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 18610003,
+   "value_as_published": "18,610,003",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 82,
+   "quote": "18,610,003 18,340,633"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 8835068,
+   "value_as_published": "8,835,068",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 82,
+   "quote": "8,835,068 8,249,280"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for the year",
+   "value": -1164016,
+   "value_as_published": "(1,164,016)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 85,
+   "quote": "Net result for the year (1,164,016)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "column_as_published": "FTE",
+   "value": 61.62,
+   "value_as_published": "61.62",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 62,
+   "quote": "Total employees 67 61.62"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "column_as_published": "Head count",
+   "value": 67,
+   "value_as_published": "67",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 62,
+   "quote": "Total employees 67 61.62"
+  }
+ ]
+}

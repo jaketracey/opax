@@ -1,0 +1,112 @@
+{
+ "report_id": "vic-bairnsdale-regional-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "178,837",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 58,
+   "quote": "Total revenue and income from transactions 178,837 167,715",
+   "value": 178837
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "(182,895)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 58,
+   "quote": "Total expenses from transactions (182,895) (175,870)",
+   "value": -182895
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value_as_published": "(119,230)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 58,
+   "quote": "Employee expenses 3.1 (a) (119,230) (111,670)",
+   "value": -119230
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value_as_published": "(3,644)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 58,
+   "quote": "Net result (3,644) (8,173)",
+   "value": -3644
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value_as_published": "712",
+   "unit": "fte",
+   "period": "June 2026 (June current month FTE)",
+   "page": 24,
+   "quote": "Total 712 664 678.6 644.5",
+   "value": 712
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value_as_published": "9",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 91,
+   "quote": "Total number of executives 9 8",
+   "value": 9
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration i *",
+   "column_as_published": "2026",
+   "value_as_published": "1,496",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 91,
+   "quote": "Total remuneration i * 1,496 1,313",
+   "value": 1496
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-2026 in relation to these consultancies",
+   "value_as_published": "$47,516",
+   "unit": "dollars",
+   "period": "2025-2026 (one consultancy of $10,000 or greater)",
+   "page": 27,
+   "quote": "In 2025-2026 there was one consultancy where the total fees payable to the consultants were $10,000 or greater. The total expenditure incurred during 2025-2026 in relation to these consultancies is $47,516.",
+   "value": 47516
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Aspex Consulting Pty Ltd",
+   "column_as_published": "EXPENDITURE 2025-2026 (EXCLUDING GST)",
+   "value_as_published": "$47,516",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 28,
+   "quote": "Aspex Consulting Pty Ltd BRHS Strategic Plan March 2026 Jun 2026 $47,516 $47,516 $0",
+   "counterparty": "Aspex Consulting Pty Ltd",
+   "purpose": "BRHS Strategic Plan",
+   "value": 47516
+  }
+ ]
+}

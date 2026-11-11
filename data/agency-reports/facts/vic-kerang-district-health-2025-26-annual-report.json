@@ -1,0 +1,112 @@
+{
+ "report_id": "vic-kerang-district-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band",
+  "head_remuneration",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 22911188,
+   "value_as_published": "22,911,188",
+   "unit": "dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 47,
+   "quote": "Total revenue and income from transactions 22,911,188 22,609,163"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value": 24380791,
+   "value_as_published": "24,380,791",
+   "unit": "dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 47,
+   "quote": "Total Expenses from transactions 24,380,791 21,755,310"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 15660418,
+   "value_as_published": "15,660,418",
+   "unit": "dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 47,
+   "quote": "Employee expenses 3.1(a) 15,660,418 14,664,526"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for the year",
+   "column_as_published": "2026",
+   "value": -1320612,
+   "value_as_published": "(1,320,612)",
+   "unit": "dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 47,
+   "quote": "Net result for the year (1,320,612) 1,040,714"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total *FTE",
+   "column_as_published": "2026",
+   "value": 115.74,
+   "value_as_published": "115.74",
+   "unit": "fte",
+   "period": "June 2026 (current month FTE)",
+   "page": 21,
+   "quote": "Total *FTE 115.04 115.74"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 90,
+   "quote": "Total number of executives 3"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 415294,
+   "value_as_published": "415,294",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 90,
+   "quote": "Total remuneration i 415,294"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred during 2025-2026 in relation to this consultancy",
+   "value": 54005,
+   "value_as_published": "$54,005",
+   "unit": "dollars",
+   "period": "2025-2026 (one consultancy of $10,000 or greater, excl. GST)",
+   "page": 29,
+   "quote": "The total expenditure incurred during 2025-2026 in relation to this consultancy is $54,005"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Australian Health Services Group (AHSG)",
+   "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+   "value": 54005,
+   "value_as_published": "$54,005",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 29,
+   "quote": "Development of Strategic Plan, Department Heads Strategic Plan education along with development of Values and behaviours Jan 2026 June 2026 $54,005 $54,005 0",
+   "counterparty": "Australian Health Services Group (AHSG)",
+   "purpose": "Development of Strategic Plan, Department Heads Strategic Plan education along with development of Values and behaviours"
+  }
+ ]
+}

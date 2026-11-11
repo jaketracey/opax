@@ -1,0 +1,149 @@
+{
+ "report_id": "vic-beechworth-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 22991,
+   "value_as_published": "22,991",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Total revenue and income from transactions 22,991 22,147"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -24873,
+   "value_as_published": "(24,873)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Total expenses from transactions (24,873) (23,238)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -16284,
+   "value_as_published": "(16,284)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Employee expenses 3.1 (a) (16,284) (15,647)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -1859,
+   "value_as_published": "(1,859)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 40,
+   "quote": "Net result (1,859) (1,184)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "FTE",
+   "column_as_published": "2025/26",
+   "value": 113.48,
+   "value_as_published": "113.48",
+   "unit": "fte",
+   "period": "2025/26 (normalisers, for information only)",
+   "page": 35,
+   "quote": "FTE 117 115 113.48"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 77,
+   "quote": "Total number of executives 3 4"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 384,
+   "value_as_published": "384",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 77,
+   "quote": "Total remuneration i 384 386"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 671,
+   "value_as_published": "671",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 79,
+   "quote": "Total compensation - KMPs i 671 658"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-2026 in relation to these consultancies",
+   "value": 43100,
+   "value_as_published": "$43,100",
+   "unit": "dollars",
+   "period": "2025-26 (three consultancies of $10,000 or greater, excl. GST)",
+   "page": 22,
+   "quote": "in relation to these consultancies is $43,100 (excl. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Regional HRP",
+   "column_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 15700,
+   "value_as_published": "$15,700",
+   "unit": "dollars",
+   "period": "2025-26 (excluding GST)",
+   "page": 22,
+   "quote": "Regional HRP Culture Review 15/05/2026 30/06/2026 $15,700 $15,700 $0",
+   "counterparty": "Regional HRP",
+   "purpose": "Culture Review"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Crowe Horvath",
+   "column_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 10400,
+   "value_as_published": "$10,400",
+   "unit": "dollars",
+   "period": "2025-26 (excluding GST)",
+   "page": 22,
+   "quote": "Crowe Horvath Asset Management Review 20/05/2026 19/06/2026 $10,400 $10,400 $0",
+   "counterparty": "Crowe Horvath",
+   "purpose": "Asset Management Review"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "National Ageing Research Institute Ltd",
+   "column_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 17000,
+   "value_as_published": "$17,000",
+   "unit": "dollars",
+   "period": "2025-26 (excluding GST)",
+   "page": 22,
+   "quote": "National Ageing Research Institute Ltd Falls review 1/08/2025 31/11/2025 $17,000 $17,000 $0",
+   "counterparty": "National Ageing Research Institute Ltd",
+   "purpose": "Falls review"
+  }
+ ]
+}

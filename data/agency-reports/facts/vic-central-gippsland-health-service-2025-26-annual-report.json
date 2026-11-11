@@ -1,0 +1,125 @@
+{
+ "report_id": "vic-central-gippsland-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "166,712",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 83,
+   "quote": "Total revenue and income from transactions 166,712 153,883",
+   "value": 166712
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "(168,617)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 83,
+   "quote": "Total Expenses from transactions (168,617) (163,580)",
+   "value": -168617
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value_as_published": "(103,837)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 83,
+   "quote": "Employee expenses 3.1(a) (103,837) (100,209)",
+   "value": -103837
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value_as_published": "2,679",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 83,
+   "quote": "Net result 2,679 (10,567)",
+   "value": 2679
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "TOTAL",
+   "column_as_published": "2026",
+   "value_as_published": "716.02",
+   "unit": "fte",
+   "period": "June 2026 (current month FTE)",
+   "page": 24,
+   "quote": "TOTAL 688.04 716.02 676.22 688.73",
+   "value": 716.02
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value_as_published": "9",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 108,
+   "quote": "Total number of executives 9 8",
+   "value": 9
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (i)",
+   "column_as_published": "2026",
+   "value_as_published": "1,813",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 108,
+   "quote": "1,813 1,737 Total number of executives 9 8",
+   "value": 1813
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025/26 in relation to these consultancies",
+   "value_as_published": "$38,031",
+   "unit": "dollars",
+   "period": "2025/26 (two consultancies of $10,000 or greater)",
+   "page": 44,
+   "quote": "The total expenditure incurred during 2025/26 in relation to these consultancies is $38,031 (excl. GST)",
+   "value": 38031
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Kelloway Lonsdale Pty Ltd",
+   "column_as_published": "EXPENDITURE 2025/26 (EXCLUDING GST)",
+   "value_as_published": "$20,031",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "Kelloway Lonsdale Pty Ltd Strategic Planning Support July 2025 Oct 2025 $20,031 $20,031 Nil",
+   "counterparty": "Kelloway Lonsdale Pty Ltd",
+   "purpose": "Strategic Planning Support",
+   "value": 20031
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Vuca Pty Ltd",
+   "column_as_published": "EXPENDITURE 2025/26 (EXCLUDING GST)",
+   "value_as_published": "$18,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "Vuca Pty Ltd Board Evaluation Sept 2025 Sept 2025 $18,000 $18,000 Nil",
+   "counterparty": "Vuca Pty Ltd",
+   "purpose": "Board Evaluation",
+   "value": 18000
+  }
+ ]
+}

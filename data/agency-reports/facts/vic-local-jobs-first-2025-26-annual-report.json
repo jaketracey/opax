@@ -1,0 +1,120 @@
+{
+ "report_id": "vic-local-jobs-first-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "staff_fte",
+  "staff_headcount",
+  "total_expenses",
+  "total_income",
+  "employee_expenses",
+  "net_result",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "operational_other",
+   "label_as_published": "new Strategic Projects",
+   "value_as_published": "34",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 17,
+   "quote": "set local content requirements for 34 new Strategic Projects with a combined value of more than $41 billion.",
+   "value": 34
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Local Jobs First has been applied to 283 projects",
+   "value_as_published": "283",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 17,
+   "quote": "Local Jobs First has been applied to 283 projects with a combined value of $2.4 billion.",
+   "value": 283
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Local Jobs First projects",
+   "value_as_published": "302",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 19,
+   "quote": "A total of 302 Local Jobs First projects worth $8.1 billion commenced during 2025‑26.",
+   "value": 302
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Local Jobs First projects",
+   "value_as_published": "86",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 19,
+   "quote": "A total of 86 Local Jobs First projects worth $10.7 billion were completed during 2025‑26.",
+   "value": 86
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "LIDPs were prepared by businesses",
+   "value_as_published": "3,948",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 21,
+   "quote": "A total of 3,948 LIDPs were prepared by businesses in bidding for Local Jobs First projects.",
+   "value": 3948
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "tenders were registered with ICN Victoria",
+   "value_as_published": "1,190",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 21,
+   "quote": "1,190 tenders were registered with ICN Victoria.",
+   "value": 1190
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "grants were registered with ICN Victoria",
+   "value_as_published": "179",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 21,
+   "quote": "a total of 179 grants were registered with ICN Victoria.",
+   "value": 179
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "contestability assessments",
+   "value_as_published": "1,232",
+   "unit": "count",
+   "period": "20 August 2025 to 30 June 2026",
+   "page": 21,
+   "quote": "1,232 contestability assessments were undertaken.",
+   "value": 1232
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "530 MPSG PROJECTS",
+   "value_as_published": "530",
+   "unit": "count",
+   "period": "since introduction in 2016 to 31 March 2026",
+   "page": 20,
+   "quote": "530 MPSG PROJECTS",
+   "value": 530
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "ATC employment opportunities",
+   "value_as_published": "22,523",
+   "unit": "count",
+   "period": "since introduction in 2016",
+   "page": 19,
+   "quote": "22,523 ATC employment opportunities",
+   "value": 22523
+  }
+ ]
+}

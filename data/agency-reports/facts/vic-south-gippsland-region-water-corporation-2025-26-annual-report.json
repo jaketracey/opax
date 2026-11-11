@@ -1,0 +1,138 @@
+{
+ "report_id": "vic-south-gippsland-region-water-corporation-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_count",
+  "executive_remuneration_total",
+  "employee_expenses",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "2025–26 $’000",
+   "value": 46448,
+   "value_as_published": "46,448",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 65,
+   "quote": "Total revenue 46,448 42,519"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenditure",
+   "column_as_published": "2025–26 $’000",
+   "value": 67190,
+   "value_as_published": "67,190",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 65,
+   "quote": "Total expenditure 67,190 66,388"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net profit (loss) after tax",
+   "column_as_published": "2025–26 $’000",
+   "value": -21148,
+   "value_as_published": "-21,148",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 65,
+   "quote": "Net profit (loss) after tax -21,148 -17,902"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "All employees",
+   "value": 155,
+   "value_as_published": "155",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 69,
+   "quote": "137 128.91 14 11.58 137 128.82 18 15.36 151 140.49 155 144.18"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "All employees",
+   "value": 144.18,
+   "value_as_published": "144.18",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 69,
+   "quote": "137 128.91 14 11.58 137 128.82 18 15.36 151 140.49 155 144.18"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Executives",
+   "value": 6,
+   "value_as_published": "6",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 69,
+   "quote": "Executives 0 0 3 3 0 0 6 5.9",
+   "band": "Executives"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total value of these consultancies",
+   "value": 782519.45,
+   "value_as_published": "$782,519.45",
+   "unit": "dollars",
+   "period": "2025-26 (21 engagements valued at $10,000 or greater)",
+   "page": 78,
+   "quote": "The total value of these consultancies was $782,519.45"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "customers (connections)",
+   "value": 22875,
+   "value_as_published": "22,875",
+   "unit": "count",
+   "period": "2025-26 (water services)",
+   "page": 19,
+   "quote": "Provided water services to 22,875 customers (connections)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "customers (connections)",
+   "value": 21135,
+   "value_as_published": "21,135",
+   "unit": "count",
+   "period": "2025-26 (wastewater services)",
+   "page": 19,
+   "quote": "wastewater services to 21,135 customers (connections)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "annual volume of drinking water supplied to customers",
+   "value": 5573,
+   "value_as_published": "5,573",
+   "unit": "count",
+   "period": "2025-26 (million litres)",
+   "page": 10,
+   "quote": "5,573 million litres (ML) annual volume of drinking water supplied to customers"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "megalitres of water",
+   "value": 3685,
+   "value_as_published": "3,685",
+   "unit": "count",
+   "period": "2025-26 (safely treated and returned to the environment)",
+   "page": 8,
+   "quote": "safely treated and returned 3,685 megalitres of water back into the environment"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "km of water mains",
+   "value": 767,
+   "value_as_published": "767",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 10,
+   "quote": "767 km of water mains"
+  }
+ ]
+}

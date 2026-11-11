@@ -1,0 +1,90 @@
+{
+ "report_id": "vic-rochester-and-elmore-district-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "23,040",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 36,
+   "quote": "Total revenue and income from transactions 23,040 27,122",
+   "value": 23040
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "(26,792)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 36,
+   "quote": "Total Expenses from transactions (26,792) (24,099)",
+   "value": -26792
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value_as_published": "(18,494)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 36,
+   "quote": "Employee expenses 3.1 (18,494) (13,972)",
+   "value": -18494
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value_as_published": "(3,756)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 36,
+   "quote": "Net result (3,756) 2,883",
+   "value": -3756
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Totals",
+   "column_as_published": "2026",
+   "value_as_published": "157.03",
+   "unit": "fte",
+   "period": "June 2026 (June current month FTE)",
+   "page": 17,
+   "quote": "Totals 127.52 157.03 105.55 147.73",
+   "value": 157.03
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Total number of executives 1 1",
+   "value": 1
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration i",
+   "column_as_published": "2026",
+   "value_as_published": "205",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Total remuneration i 205 181",
+   "value": 205
+  }
+ ]
+}

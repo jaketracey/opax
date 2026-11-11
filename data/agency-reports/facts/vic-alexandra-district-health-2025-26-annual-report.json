@@ -1,0 +1,146 @@
+{
+ "report_id": "vic-alexandra-district-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 13365,
+   "value_as_published": "13,365",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 47,
+   "quote": "Total revenue and income from transactions 13,365 12,405"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -15309,
+   "value_as_published": "(15,309)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 47,
+   "quote": "Total expenses from transactions (15,309) (14,248)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Total employee expenses",
+   "column_as_published": "2026",
+   "value": 9464,
+   "value_as_published": "9,464",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 57,
+   "quote": "Total employee expenses 9,464 9,048"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -1927,
+   "value_as_published": "(1,927)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 47,
+   "quote": "Net result (1,927) (1,845)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "JUNE Current Month FTE",
+   "value": 59.27,
+   "value_as_published": "59.27",
+   "unit": "fte",
+   "period": "June current month FTE 2026",
+   "page": 22,
+   "quote": "Total 59.05 59.27 58.46 58.96"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2026",
+   "page": 81,
+   "quote": "Total number of executives 4 4"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 711,
+   "value_as_published": "711",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (executive officers including Key Management Personnel disclosed in Note 8.4)",
+   "page": 81,
+   "quote": "Total remuneration i 711 536"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 1020,
+   "value_as_published": "1,020",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (key management personnel)",
+   "page": 83,
+   "quote": "Total compensation - KMPs i 1,020 801"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 118391,
+   "value_as_published": "$118,391",
+   "unit": "dollars",
+   "period": "2025-26 (2 consultancies of $10,000 or greater)",
+   "page": 25,
+   "quote": "in relation to these consultancies was $118,391 (excl. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (exc. GST)",
+   "column_as_published": "Expenditure 2025-26 (exc. GST)",
+   "value": 103901,
+   "value_as_published": "$103,901",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "Fleishman Hillard Stakeholder engagement/ Public Relations – Voluntary Amalgamation 1/10/2025 31/12/2026 $150,000 $103,901 $46,099",
+   "counterparty": "Fleishman Hillard",
+   "purpose": "Stakeholder engagement/ Public Relations – Voluntary Amalgamation"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (exc. GST)",
+   "column_as_published": "Expenditure 2025-26 (exc. GST)",
+   "value": 14490,
+   "value_as_published": "$14,490",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "Clarke Hopkins Clarke Architects Dialysis Feasibility and infrastructure space costings 19/01/2026 31/03/2027 $50,000 $14,490 $35,510",
+   "counterparty": "Clarke Hopkins Clarke Architects",
+   "purpose": "Dialysis Feasibility and infrastructure space costings"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "applications",
+   "value": 36,
+   "value_as_published": "36",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 22,
+   "quote": "received 36 applications"
+  }
+ ]
+}

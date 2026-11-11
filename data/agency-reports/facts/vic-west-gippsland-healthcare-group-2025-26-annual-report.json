@@ -1,0 +1,171 @@
+{
+ "report_id": "vic-west-gippsland-healthcare-group-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue",
+   "column_as_published": "2026",
+   "value": 194361,
+   "value_as_published": "194,361",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 24,
+   "quote": "Total Revenue 194,361 184,340"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses",
+   "column_as_published": "2026",
+   "value": 203188,
+   "value_as_published": "203,188",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 24,
+   "quote": "Total Expenses 203,188 193,124"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -144496,
+   "value_as_published": "(144,496)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 51,
+   "quote": "(144,496) (136,789)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net Result",
+   "column_as_published": "2026",
+   "value": -8430,
+   "value_as_published": "(8,430)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 24,
+   "quote": "Net Result (8,430) (8,542)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "June current month FTE",
+   "value": 923.84,
+   "value_as_published": "923.84",
+   "unit": "fte",
+   "period": "June current month FTE, 2026",
+   "page": 21,
+   "quote": "Total 884.77 923.84 883.83 904.89"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "WGHG employed 1,726 people",
+   "value": 1726,
+   "value_as_published": "1,726",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 21,
+   "quote": "During 2025-26, WGHG employed 1,726 people"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2026",
+   "page": 96,
+   "quote": "Total number of executives 7 5"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 1617,
+   "value_as_published": "1,617",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (executive officers including Key Management Personnel disclosed in Note 8.4)",
+   "page": 96,
+   "quote": "Total remuneration i 1,617 1,295"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 545,
+   "value_as_published": "545",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (key management personnel)",
+   "page": 97,
+   "quote": "Total compensation - KMPs i 545 723"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 376000,
+   "value_as_published": "$376,000",
+   "unit": "dollars",
+   "period": "2025-26 (5 consultancies over $10,000)",
+   "page": 25,
+   "quote": "in relation to these consultancies is $376,000 (excl. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST) $’000",
+   "column_as_published": "Expenditure 2025-26",
+   "value": 76,
+   "value_as_published": "76",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "Senate SHJ Consultancy Strategic advice and stakeholder engagement -HSV Statewide linen tender - Warragul Linen Service Jul-25 Ongoing 76 76",
+   "counterparty": "Senate SHJ Consultancy",
+   "purpose": "Strategic advice and stakeholder engagement -HSV Statewide linen tender - Warragul Linen Service"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST) $’000",
+   "column_as_published": "Expenditure 2025-26",
+   "value": 132,
+   "value_as_published": "132",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "Creative Change Consulting Advice on governance systems and processes and the development of the new Strategic Plan for WGHG Jul-25 Dec-25 132 132",
+   "counterparty": "Rachel Pirani T/A Creative Change Consulting",
+   "purpose": "Advice on governance systems and processes and the development of the new Strategic Plan for WGHG"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST) $’000",
+   "column_as_published": "Expenditure 2025-26",
+   "value": 99,
+   "value_as_published": "99",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "Emergency Management Capability Review Mar-26 Ongoing 99 99",
+   "counterparty": "Redgum Continuity Pty Ltd",
+   "purpose": "Emergency Management Capability Review"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Total approved project fee (excluding GST) $’000",
+   "column_as_published": "Total approved project fee",
+   "value": 55,
+   "value_as_published": "55",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (expenditure printed as -)",
+   "page": 25,
+   "quote": "Mayfield Advisory Pty Ltd Finance Servicess Mar-26 Ongoing 55 -",
+   "counterparty": "Mayfield Advisory Pty Ltd",
+   "purpose": "Finance Servicess"
+  }
+ ]
+}

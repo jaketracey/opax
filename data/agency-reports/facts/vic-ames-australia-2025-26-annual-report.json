@@ -1,0 +1,208 @@
+{
+ "report_id": "vic-ames-australia-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band",
+  "staff_fte",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "30 June 2026",
+   "value": 129708,
+   "value_as_published": "129,708",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026 (AMES Australia five-year summary)",
+   "page": 34,
+   "quote": "Total income from transactions 129,708 112,521 89,817"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "30 June 2026",
+   "value": -124959,
+   "value_as_published": "(124,959)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026 (AMES Australia five-year summary)",
+   "page": 34,
+   "quote": "Total expenses from transactions (124,959) (106,164) (93,226)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for the period",
+   "column_as_published": "30 June 2026",
+   "value": 4939,
+   "value_as_published": "4,939",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026 (AMES Australia five-year summary)",
+   "page": 34,
+   "quote": "Net result for the period 4,939 6,386 (3,340)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 70481,
+   "value_as_published": "70,481",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026 (AMES Australia)",
+   "page": 42,
+   "quote": "Employee expenses 3.1.1 70,481 59,772 70,481 54,700"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+   "value": null,
+   "value_as_published": "$440,000-450,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 69,
+   "quote": "Remuneration received or receivable by the Accountable Officer with the management of AMES Australia for the reporting year was in the range: $440,000-450,000"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 69,
+   "quote": "Total number of executives 7 6"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 2258,
+   "value_as_published": "2,258",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (executives)",
+   "page": 69,
+   "quote": "Total remuneration(a) 2,258 1846"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total(b)",
+   "column_as_published": "AMES Australia",
+   "value": 3031,
+   "value_as_published": "3,031",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (compensation of KMPs, AMES Australia)",
+   "page": 70,
+   "quote": "Total(b) 3,239 2,745 3,031 2,532"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total(b)",
+   "column_as_published": "Consolidated",
+   "value": 3239,
+   "value_as_published": "3,239",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (compensation of KMPs, Consolidated)",
+   "page": 70,
+   "quote": "Total(b) 3,239 2,745 3,031 2,532"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Total expenditure during 2025-2026",
+   "value": 352436,
+   "value_as_published": "$352,436",
+   "unit": "dollars",
+   "period": "2025-26 (four consultancies of $10,000 or greater, excl. GST)",
+   "page": 33,
+   "quote": "Total expenditure during 2025-2026 was $352,436 (excluding GST)."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure (ex-GST)",
+   "counterparty": "Nous Group Pty Ltd",
+   "purpose": "Program strategy development",
+   "value": 100000,
+   "value_as_published": "$100,000",
+   "unit": "dollars",
+   "period": "2025-26 (excl. GST)",
+   "page": 33,
+   "quote": "Nous Group Pty Ltd Program strategy development $100,000 -"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure (ex-GST)",
+   "counterparty": "Pinnacle Group Australia Pty Ltd",
+   "purpose": "Leadership development",
+   "value": 36086,
+   "value_as_published": "$36,086",
+   "unit": "dollars",
+   "period": "2025-26 (excl. GST)",
+   "page": 33,
+   "quote": "Pinnacle Group Australia Pty Ltd Leadership development $36,086 -"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure (ex-GST)",
+   "counterparty": "Right Lane Consulting Pty Ltd",
+   "purpose": "Project (i): Impact evaluation Project (ii): Strategic planning project",
+   "value": 196950,
+   "value_as_published": "$196,950",
+   "unit": "dollars",
+   "period": "2025-26 (excl. GST)",
+   "page": 33,
+   "quote": "Right Lane Consulting Pty Ltd Project (i): Impact evaluation Project (ii): Strategic planning project $196,950 $106,635"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure (ex-GST)",
+   "counterparty": "Banksia Strategic Partners Pty Ltd",
+   "purpose": "Tender submission preparation services",
+   "value": 19400,
+   "value_as_published": "$19,400",
+   "unit": "dollars",
+   "period": "2025-26 (excl. GST)",
+   "page": 33,
+   "quote": "Banksia Strategic Partners Pty Ltd Tender submission preparation services $19,400 -"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "learners successfully completed vocational work placements",
+   "value": 216,
+   "value_as_published": "216",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "A total of 216 learners successfully completed vocational work placements"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "active host organisations",
+   "value": 119,
+   "value_as_published": "119",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "119 active host organisations"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "learners participating in community-based learning",
+   "value": 2392,
+   "value_as_published": "2,392",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "with a further 2,392 learners participating in community-based learning"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "locations across Victoria",
+   "value": 43,
+   "value_as_published": "43",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 12,
+   "quote": "Education delivery expanded significantly to 43 locations across Victoria"
+  }
+ ]
+}

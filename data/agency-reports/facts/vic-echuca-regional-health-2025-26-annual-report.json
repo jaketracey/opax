@@ -1,0 +1,91 @@
+{
+ "report_id": "vic-echuca-regional-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_fte",
+  "staff_headcount",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 169194,
+   "value_as_published": "169,194",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 44,
+   "quote": "Total revenue and income from transactions 169,194 151,850"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -171334,
+   "value_as_published": "(171,334)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 44,
+   "quote": "Total expenses from transactions (171,334) (157,342)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -115932,
+   "value_as_published": "(115,932)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 44,
+   "quote": "Employee expenses 3.1 (a) (115,932) (108,191)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -2670,
+   "value_as_published": "(2,670)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 44,
+   "quote": "Net result (2,670) (5,420)"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 10,
+   "value_as_published": "10",
+   "unit": "count",
+   "period": "2026",
+   "page": 61,
+   "quote": "Total number of executives 10 7"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (i)",
+   "column_as_published": "2026",
+   "value": 1631,
+   "value_as_published": "1631",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (executive officers including Key Management Personnel disclosed in Note 8.3)",
+   "page": 61,
+   "quote": "Total remuneration (i) 1631 1342"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs (i)",
+   "column_as_published": "2026",
+   "value": 2090,
+   "value_as_published": "2,090",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (key management personnel)",
+   "page": 61,
+   "quote": "Total compensation - KMPs (i) 2,090"
+  }
+ ]
+}

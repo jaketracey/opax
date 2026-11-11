@@ -1,0 +1,111 @@
+{
+ "report_id": "vic-yarrawonga-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 37440,
+   "value_as_published": "37,440",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 51,
+   "quote": "Total revenue and income from transactions 37,440 41,418"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -39424,
+   "value_as_published": "(39,424)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 51,
+   "quote": "Total expenses from transactions (39,424) (36,490)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -29004,
+   "value_as_published": "(29,004)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 51,
+   "quote": "Employee expenses 3.1 (a) (29,004) (26,795)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -1925,
+   "value_as_published": "(1,925)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 51,
+   "quote": "Net result (1,925) 4,983"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "TOTAL",
+   "column_as_published": "JUNE CURRENT MONTH FTE",
+   "value": 201.39,
+   "value_as_published": "201.39",
+   "unit": "fte",
+   "period": "June current month FTE 2026",
+   "page": 14,
+   "quote": "TOTAL 202.72 201.39 193.65 199.56"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2026",
+   "page": 86,
+   "quote": "Total number of executives 4 5"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 776,
+   "value_as_published": "776",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (executive officers including Key Management Personnel disclosed in Note 8.4)",
+   "page": 86,
+   "quote": "Total remuneration i 776 613"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 1100,
+   "value_as_published": "1,100",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (key management personnel)",
+   "page": 89,
+   "quote": "Total compensation - KMPs i 1,100"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "applications",
+   "value": 27,
+   "value_as_published": "27",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 19,
+   "quote": "Yarrawonga Health received 27 applications"
+  }
+ ]
+}

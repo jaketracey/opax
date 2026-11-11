@@ -1,0 +1,151 @@
+{
+ "report_id": "vic-adult-community-and-further-education-board-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "staff_fte",
+  "staff_headcount",
+  "employee_expenses"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "30 June 2026",
+   "value": 32583,
+   "value_as_published": "32,583",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 51,
+   "quote": "Total income from transactions 32,583 34,588"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "30 June 2026",
+   "value": -36932,
+   "value_as_published": "(36,932)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 51,
+   "quote": "Total expenses from transactions (36,932) (39,637)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "30 June 2026",
+   "value": -4354,
+   "value_as_published": "(4,354)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 51,
+   "quote": "Net result (4,354) (5,107)"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Total expenditure in relation to this",
+   "value": 84065,
+   "value_as_published": "$84,065",
+   "unit": "dollars",
+   "period": "2025–26 (4 consultancies of $10,000 or greater, excl. GST)",
+   "page": 38,
+   "quote": "In 2025–26, the board engaged 4 consultancies with fees payable of $10,000 or greater. Total expenditure in relation to this was $84,065 (excl. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025–26 (excl. GST) $’000",
+   "column_as_published": "Expenditure 2025–26",
+   "value": 30,
+   "value_as_published": "30",
+   "unit": "thousands_of_dollars",
+   "period": "2025–26",
+   "page": 38,
+   "quote": "KordaMentha Pty Ltd as trustee for KM Unit Trust Preparation of a stakeholder discussion paper for the board 30 30 –",
+   "counterparty": "KordaMentha Pty Ltd as trustee for KM Unit Trust",
+   "purpose": "Preparation of a stakeholder discussion paper for the board"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025–26 (excl. GST) $’000",
+   "column_as_published": "Expenditure 2025–26",
+   "value": 22,
+   "value_as_published": "22",
+   "unit": "thousands_of_dollars",
+   "period": "2025–26",
+   "page": 38,
+   "quote": "FPL Advisory Pty Ltd Facilitation services for the board's planning days 22 22 –",
+   "counterparty": "FPL Advisory Pty Ltd",
+   "purpose": "Facilitation services for the board's planning days"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025–26 (excl. GST) $’000",
+   "column_as_published": "Expenditure 2025–26",
+   "value": 17,
+   "value_as_published": "17",
+   "unit": "thousands_of_dollars",
+   "period": "2025–26",
+   "page": 38,
+   "quote": "Pauline Maree Wilson Expert services for the pre accredited quality framework 17 17 –",
+   "counterparty": "Pauline Maree Wilson",
+   "purpose": "Expert services for the pre accredited quality framework"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025–26 (excl. GST) $’000",
+   "column_as_published": "Expenditure 2025–26",
+   "value": 14,
+   "value_as_published": "14",
+   "unit": "thousands_of_dollars",
+   "period": "2025–26",
+   "page": 38,
+   "quote": "Lindee Conway Expert services for the pre accredited quality framework 14 14 –",
+   "counterparty": "Lindee Conway",
+   "purpose": "Expert services for the pre accredited quality framework"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Victorians",
+   "value": 27773,
+   "value_as_published": "27,773",
+   "unit": "people",
+   "period": "2025 (training funded through 204 contracted Learn Local providers)",
+   "page": 16,
+   "quote": "the board funded the training of 27,773 Victorians through 204 contracted Learn Local providers"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "contracted Learn Local providers",
+   "value": 204,
+   "value_as_published": "204",
+   "unit": "count",
+   "period": "2025",
+   "page": 16,
+   "quote": "through 204 contracted Learn Local providers"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "female learners",
+   "value": 19456,
+   "value_as_published": "19,456",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 16,
+   "quote": "19,456 female learners"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "30 June 2026",
+   "value": 219,
+   "value_as_published": "219",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel, excluding responsible ministers)",
+   "page": 62,
+   "quote": "Remuneration of key management personnel (excluding responsible ministers) 30 June 2026 $’000 30 June 2025 $’000 Total remuneration 219 209"
+  }
+ ]
+}

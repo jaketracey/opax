@@ -63,3 +63,25 @@ def test_ocr_text_backs_scanned_documents():
         assert all(f.get("extraction", {}).get("method") == "ocr" for f in doc["facts"]), rid
         ocr = json.loads((ar.DATA / "ocr" / f"{rid}.json").read_text())
         assert ocr["sha256"] == rows[rid]["sha256"]
+
+
+def test_ocr_fills_only_pages_without_a_text_layer(tmp_path, monkeypatch):
+    from parli.ingest import agency_reports as ar
+    (tmp_path / "cache" / "text").mkdir(parents=True)
+    (tmp_path / "data" / "ocr").mkdir(parents=True)
+    (tmp_path / "cache" / "text" / "abc.json").write_text(json.dumps(["", "Independent Auditor's Report", " "]))
+    ocr = {"sha256": "abc", "pages": [{"page": 1, "text": "Total expenses 4,512", "rows": "Total expenses 4,512"},
+                                      {"page": 2, "text": "ignored", "rows": ""}, {"page": 3, "text": "Staff 12", "rows": ""}]}
+    (tmp_path / "data" / "ocr" / "r.json").write_text(json.dumps(ocr))
+    monkeypatch.setattr(ar, "CACHE", tmp_path / "cache")
+    monkeypatch.setattr(ar, "DATA", tmp_path / "data")
+    row = {"sha256": "abc", "report_id": "r"}
+    assert ar.ocr_pages(row) == {1, 3}
+    pages = ar.page_text(row)
+    assert pages[1] == "Independent Auditor's Report" and "Total expenses 4,512" in pages[0] and "Staff 12" in pages[2]
+    fact = {"metric": "total_expenses", "label_as_published": "Total expenses", "value_as_published": "4,512", "unit": "thousands_of_dollars",
+            "period": "2025-26", "page": 1, "quote": "Total expenses 4,512", "value": 4512}
+    assert any("extraction" in e for e in ar.check_fact(dict(fact), pages, row)), "an OCR page needs provenance"
+    ok = dict(fact, extraction={"method": "ocr", "engine": "Apple Vision (on device)", "check": "page_image_checked"})
+    assert ar.check_fact(ok, pages, row) == []
+    assert ar.ocr_pages({"sha256": "abc", "report_id": "other"}) == set()

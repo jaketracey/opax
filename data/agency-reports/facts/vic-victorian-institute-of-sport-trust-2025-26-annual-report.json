@@ -1,0 +1,100 @@
+{
+ "report_id": "vic-victorian-institute-of-sport-trust-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "consultancy_total",
+  "employee_expenses",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "head_remuneration",
+  "net_result",
+  "staff_fte",
+  "staff_headcount",
+  "total_expenses",
+  "total_income"
+ ],
+ "facts": [
+  {
+   "metric": "operational_other",
+   "label_as_published": "Future Talent 3 2 5 Representative Stream 8 0 8 TOTAL 205 246 451",
+   "value": 451,
+   "value_as_published": "451",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 62,
+   "quote": "Future Talent 3 2 5 Representative Stream 8 0 8 TOTAL 205 246 451"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "SUMMARY OF VIS ATHLETES MALE FEMALE TOTAL Tier 1 110 154 264",
+   "value": 264,
+   "value_as_published": "264",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 62,
+   "quote": "SUMMARY OF VIS ATHLETES MALE FEMALE TOTAL Tier 1 110 154 264"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "NUMBER OF PARA ATHLETES MALE FEMALE TOTAL Tier 1 23 19 42 Individual 12 15 27 Future Talent 0 0 0 TOTAL 35 34 69",
+   "value": 69,
+   "value_as_published": "69",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 62,
+   "quote": "NUMBER OF PARA ATHLETES MALE FEMALE TOTAL Tier 1 23 19 42 Individual 12 15 27 Future Talent 0 0 0 TOTAL 35 34 69"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "The organisation is made up of over 115 employees",
+   "value": 115,
+   "value_as_published": "115",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 8,
+   "quote": "The organisation is made up of over 115 employees"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Students engaged",
+   "value": 23207,
+   "value_as_published": "23,207",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 59,
+   "quote": "222 School bookings including 80 regional schools 23,207 Students engaged"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Participants reached across 24 engagements",
+   "value": 2377,
+   "value_as_published": "2,377",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 59,
+   "quote": "2,377 Participants reached across 24 engagements"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Participants toured the world-class facilities of the VIS across 49 bookings",
+   "value": 1644,
+   "value_as_published": "1,644",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 59,
+   "quote": "1,644 Participants toured the world-class facilities of the VIS across 49 bookings"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "over 28,000 participants were engaged through 334 bookings",
+   "value": 334,
+   "value_as_published": "334",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 59,
+   "quote": "over 28,000 participants were engaged through 334 bookings"
+  }
+ ]
+}

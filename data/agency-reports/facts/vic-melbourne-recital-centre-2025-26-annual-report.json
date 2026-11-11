@@ -1,0 +1,169 @@
+{
+ "report_id": "vic-melbourne-recital-centre-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Accountable Officer",
+   "column_as_published": "2026",
+   "value": null,
+   "value_as_published": "$310,000 – $319,999",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 84,
+   "quote": "Sandra Willis (CEO) The remuneration received or receivable by the Accountable Officer in connection with the management of the Company during the reporting period was in the range of $310,000 – $319,999"
+  },
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "2026",
+   "value": 17172,
+   "value_as_published": "17,172",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 62,
+   "quote": "Total income from transactions 17,172 14,987"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 19560,
+   "value_as_published": "19,560",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 62,
+   "quote": "Total expenses from transactions 19,560 18,321"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits",
+   "column_as_published": "2026",
+   "value": 7711,
+   "value_as_published": "7,711",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 62,
+   "quote": "Employee benefits 3.1 7,711 7,331"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -2341,
+   "value_as_published": "(2,341)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 62,
+   "quote": "Net result (2,341) (2,699)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total FTE",
+   "column_as_published": "2026",
+   "value": 52,
+   "value_as_published": "52",
+   "unit": "fte",
+   "period": "2025-26",
+   "page": 51,
+   "quote": "Total FTE 21 29 2 52 24 29 4 57"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total headcount",
+   "column_as_published": "2026",
+   "value": 108,
+   "value_as_published": "108",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 51,
+   "quote": "Total headcount 35 65 8 108 50 65 10 125"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executive equivalents",
+   "column_as_published": "2026 $’000s",
+   "value": 6,
+   "value_as_published": "6",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 84,
+   "quote": "Total number of executive equivalents 6 7"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (a)",
+   "column_as_published": "2026 $’000s",
+   "value": 1120,
+   "value_as_published": "1,120",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 84,
+   "quote": "Total remuneration (a) 1,120 991"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026 $’000s",
+   "value": 1432,
+   "value_as_published": "1,432",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 85,
+   "quote": "Total remuneration 1,432 1,292"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during this period in relation to these consultancies",
+   "value": 61866,
+   "value_as_published": "$61,866",
+   "unit": "dollars",
+   "period": "2025-2026 (three consultancies of $10,000 or more, excluding GST)",
+   "page": 52,
+   "quote": "in relation to these consultancies is $61,866 (excluding GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Perfectly Paired",
+   "column_as_published": "Expenditure 2025–2026",
+   "value": 29400,
+   "value_as_published": "$29,400",
+   "unit": "dollars",
+   "period": "2025–2026",
+   "page": 52,
+   "quote": "Perfectly Paired Food & Beverage Strategy Advisory $37,000 $29,400 $7,600",
+   "counterparty": "Perfectly Paired",
+   "purpose": "Food & Beverage Strategy Advisory"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "TSA Management Pty Ltd",
+   "column_as_published": "Expenditure 2025–2026",
+   "value": 21660,
+   "value_as_published": "$21,660",
+   "unit": "dollars",
+   "period": "2025–2026",
+   "page": 52,
+   "quote": "TSA Management Pty Ltd Building Project Advisory $21,660 $21,660",
+   "counterparty": "TSA Management Pty Ltd",
+   "purpose": "Building Project Advisory"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Future Food",
+   "column_as_published": "Expenditure 2025–2026",
+   "value": 10806,
+   "value_as_published": "$10,806",
+   "unit": "dollars",
+   "period": "2025–2026",
+   "page": 52,
+   "quote": "Future Food Food & Beverage Strategy Advisory $10,806 $10,806",
+   "counterparty": "Future Food",
+   "purpose": "Food & Beverage Strategy Advisory"
+  }
+ ]
+}

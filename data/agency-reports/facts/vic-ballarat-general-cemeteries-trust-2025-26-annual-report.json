@@ -1,0 +1,74 @@
+{
+ "report_id": "vic-ballarat-general-cemeteries-trust-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "staff_fte",
+  "staff_headcount",
+  "employee_expenses",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "2026",
+   "value_as_published": "4,554",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (five-year summary, $000)",
+   "page": 29,
+   "quote": "Total revenue 4,554 4,106 4,027 3,791 3,692",
+   "value": 4554
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses",
+   "column_as_published": "2026",
+   "value_as_published": "4,443",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (five-year summary, $000)",
+   "page": 29,
+   "quote": "Total expenses 4,443 4,115 3,947 3,868 3,309",
+   "value": 4443
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "111",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (five-year summary, $000)",
+   "page": 29,
+   "quote": "Net result from transactions 111 (9) 80 (77) 383",
+   "value": 111
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Comprehensive result",
+   "column_as_published": "2026",
+   "value_as_published": "878",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (five-year summary, $000)",
+   "page": 29,
+   "quote": "Comprehensive result 878 191 811 43 4,343",
+   "value": 878
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "RM Consulting Group",
+   "column_as_published": "Expenditure 2025–26 (excluding GST)",
+   "value_as_published": "$14,772",
+   "unit": "dollars",
+   "period": "2025–26",
+   "page": 39,
+   "quote": "RM Consulting Group Development of a Long-Term Financial Sustainability Strategy 8 May 2026 – 31 July 2026 $129,975 $14,772 $115,203",
+   "counterparty": "RM Consulting Group",
+   "purpose": "Development of a Long-Term Financial Sustainability Strategy",
+   "value": 14772
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "report_id": "vic-emergency-services-superannuation-scheme-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "employee_expenses",
+  "staff_headcount",
+  "named_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income",
+   "column_as_published": "2026 $’000",
+   "value": 3466075,
+   "value_as_published": "3,466,075",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 37,
+   "quote": "Total income 3,466,075 4,031,679"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses",
+   "column_as_published": "2026 $’000",
+   "value": -164372,
+   "value_as_published": "(164,372)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 37,
+   "quote": "Total expenses (164,372) (145,592)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Operating result after income tax",
+   "column_as_published": "2026 $’000",
+   "value": -1008954,
+   "value_as_published": "(1,008,954)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 37,
+   "quote": "Operating result after income tax (1,008,954) (501,144)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "FULL TIME EQUIVALENTS (FTE) STAFFING TRENDS FROM 2022 TO 2026",
+   "column_as_published": "30 June 2026",
+   "value": 161.6,
+   "value_as_published": "161.6",
+   "unit": "fte",
+   "period": "as at 30 June 2026",
+   "page": 71,
+   "quote": "FULL TIME EQUIVALENTS (FTE) STAFFING TRENDS FROM 2022 TO 2026 30 June 2026 30 June 2025 30 June 2024 30 June 2023 30 June 2022 161.6 156.7"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 9,
+   "value_as_published": "9",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 49,
+   "quote": "Total number of executives 9 10"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026 $’000",
+   "value": 2715,
+   "value_as_published": "2,715",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 49,
+   "quote": "Total remuneration 2,715 3,043"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Consultants",
+   "value": 1615868,
+   "value_as_published": "$1,615,868",
+   "unit": "dollars",
+   "period": "2025-26 (18 consultants with fees greater than $10,000)",
+   "page": 34,
+   "quote": "In 2025–26, 18 consultants were used where the fees incurred were greater than $10,000. The total costs were $1,615,868."
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Total ICT expenditure",
+   "value": 12622,
+   "value_as_published": "$12,622",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 34,
+   "quote": "Total ICT expenditure: $12,622"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Member Service Centre answered",
+   "value": 83707,
+   "value_as_published": "83,707",
+   "unit": "count",
+   "period": "2025-26 (calls)",
+   "page": 8,
+   "quote": "our Member Service Centre answered 83,707 calls"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "one-on-one appointments",
+   "value": 8404,
+   "value_as_published": "8,404",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 8,
+   "quote": "Member Education Consultants completed 8,404 one-on-one appointments"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "claims admitted",
+   "value": 445,
+   "value_as_published": "445",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 8,
+   "quote": "with 445 claims admitted"
+  }
+ ]
+}

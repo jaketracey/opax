@@ -1,0 +1,138 @@
+{
+ "report_id": "vic-mansfield-district-hospital-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "Total 2026",
+   "value": 54350,
+   "value_as_published": "54,350",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Total revenue and income from transactions 54,350 51,455"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "Total 2026",
+   "value": -35783,
+   "value_as_published": "(35,783)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Total expenses from transactions (35,783) (33,484)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "Total 2026",
+   "value": -25736,
+   "value_as_published": "(25,736)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Employee expenses 3.1 (a) (25,736) (24,459)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "Total 2026",
+   "value": 18648,
+   "value_as_published": "18,648",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Net result 18,648 17,992"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "TOTAL",
+   "column_as_published": "JUNE current month FTE",
+   "value": 175.94,
+   "value_as_published": "175.94",
+   "unit": "fte",
+   "period": "JUNE 2026 (current month FTE)",
+   "page": 12,
+   "quote": "TOTAL 162.25 175.94 162.19 168.24"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 62,
+   "quote": "Total number of executives 4 4"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (i)",
+   "column_as_published": "2026",
+   "value": 816,
+   "value_as_published": "816",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 62,
+   "quote": "Total remuneration (i) 816 929"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure during 2025 -2026 in relation to this consultancy",
+   "value": 215447.95,
+   "value_as_published": "$215,447.95",
+   "unit": "dollars",
+   "period": "2025-26 (three consultancies of $10,000 or greater, exc. GST)",
+   "page": 15,
+   "quote": "The total expenditure during 2025 -2026 in relation to this consultancy was $215,447.95 (exc. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "column_as_published": "Expenditure 2025-26 (excl. GST)",
+   "value": 48591.4,
+   "value_as_published": "$48,591.40",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "JWP Architects Architecture support in the development of Theatre and Urgent Care RHIF funding submission - design development and documentation - Urgent Care and Theatre compliance upgrade Jul-24 Ongoing Estimated $100,000 $48,591.40 $100,000",
+   "counterparty": "JWP Architects",
+   "purpose": "Architecture support in the development of Theatre and Urgent Care RHIF funding submission - design development and documentation - Urgent Care and Theatre compliance upgrade"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "column_as_published": "Expenditure 2025-26 (excl. GST)",
+   "value": 144031.55,
+   "value_as_published": "$144,031.55",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "Healthcare Australia Allied Health agency for Physiotherapy, vacant position unable to recruit to Jul-25 Jun-26 $0.0 $144,031.55 $0.0",
+   "counterparty": "Healthcare Australia",
+   "purpose": "Allied Health agency for Physiotherapy, vacant position unable to recruit to"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "column_as_published": "Expenditure 2025-26 (excl. GST)",
+   "value": 22825.0,
+   "value_as_published": "$22,825.00",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "Health Generation ANNAC Aged Care review and education Jul-25 Ongoing $3’500 Monthly $22,825.00 $3,500 Monthly",
+   "counterparty": "Health Generation",
+   "purpose": "ANNAC Aged Care review and education"
+  }
+ ]
+}

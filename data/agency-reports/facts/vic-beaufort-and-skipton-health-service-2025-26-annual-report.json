@@ -1,0 +1,81 @@
+{
+ "report_id": "vic-beaufort-and-skipton-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_fte",
+  "staff_headcount",
+  "consultancy_total",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 24652822,
+   "value_as_published": "24,652,822",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 56,
+   "quote": "Total revenue and income from transactions 24,652,822 23,089,529"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -24889368,
+   "value_as_published": "(24,889,368)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 56,
+   "quote": "Total expenses from transactions (24,889,368) (23,424,774)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -17191455,
+   "value_as_published": "(17,191,455)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 56,
+   "quote": "Employee expenses 3.1 (17,191,455) (16,174,613)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -162522,
+   "value_as_published": "(162,522)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 56,
+   "quote": "Net result (162,522) (350,602)"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 85,
+   "quote": "Total number of executives 5 4"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (i)",
+   "column_as_published": "2026",
+   "value": 751856,
+   "value_as_published": "751,856",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 85,
+   "quote": "Total remuneration (i) 751,856 727,022"
+  }
+ ]
+}
