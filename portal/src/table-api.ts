@@ -12,7 +12,9 @@ import {TABLE_DATASETS, tableText, tableTerms} from './table-datasets.mjs'
 import {repeatedTableKeys} from '../public/datatable-query.js'
 
 
-type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string; ASSETS?: Fetcher}
+type TableEnv = {TABLE_DB: D1Database; CACHE_EPOCH?: string; ASSETS?: Fetcher; CF_VERSION_METADATA?: {id?: string}}
+/** JSON pages kept in the edge cache: the key already names the data version, cache epoch and Worker version. */
+const PAGE_CACHE_SECONDS = 86_400
 const MAX_CSV = 50_000, CSV_PAGE = 10_000, BATCH = 200, MAX_FACETS = 100
 const arrays = new Set(['portfolios','sectors','entities','bill','sitting'])
 const quote = (key: string) => `"${key}"`
@@ -123,7 +125,13 @@ const decode = (rows: Row[]) => rows.map(row => {
 })
 const csvValue = (value: unknown) => {const raw=Array.isArray(value) ? value.join('; ') : String(value ?? '');return /[",\r\n]/.test(raw) ? '"'+raw.replaceAll('"','""')+'"' : raw}
 
-export async function tableApi(request: Request, env: TableEnv, _ctx?: ExecutionContext): Promise<Response> {
+/**
+ * Public table requests (a caller passes `ctx`) keep each JSON page in the colo's edge cache. The
+ * key holds the table version, the cache epoch, the Worker version and the canonical query state,
+ * so a stored page is exactly what the same request would build again; headers that depend on the
+ * request's own URL are written fresh. CSV exports and server-side renders are never cached.
+ */
+export async function tableApi(request: Request, env: TableEnv, ctx?: ExecutionContext): Promise<Response> {
   const url=new URL(request.url), name=url.pathname.slice('/api/table/'.length),config=TABLE_DATASETS[name]
   if (!config || !Object.hasOwn(TABLE_DATASETS,name)) return errorResponse(404,'not_found')
   if (request.method!=='GET') return errorResponse(405,'method_not_allowed',{allow:'GET'})
@@ -169,6 +177,15 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
     headers.set('content-location','/api/table/'+name+'?'+key)
     if (url.searchParams.size || csv || name==='act-invoices') headers.set('x-robots-tag','noindex')
     if (request.headers.get('if-none-match')===headers.get('etag')) return new Response(null,{status:304,headers})
+    const cache=ctx && !csv && typeof caches!=='undefined' ? caches.default : null
+    const cacheKey=cache ? new Request(`https://cache.opax.internal/table/${name}/${digest}/${encodeURIComponent(env.CF_VERSION_METADATA?.id || '')}`) : null
+    if (cache && cacheKey) {
+      const hit=await cache.match(cacheKey).catch(()=>undefined)
+      if (hit) {
+        headers.set('content-type','application/json; charset=utf-8');headers.set('x-opax-cache','HIT')
+        return new Response(hit.body,{headers})
+      }
+    }
     const disclosures=['money-connections','party-money'].includes(name) && env.ASSETS ? await loadDonorIndex(env.ASSETS).catch(()=>new Map<string,DonorDisclosureRecord>()) : null
     const enrich=(rows:Row[])=>rows.map(row=>{
       if(!['money-connections','party-money'].includes(name))return row
@@ -244,6 +261,12 @@ export async function tableApi(request: Request, env: TableEnv, _ctx?: Execution
       }
     }
     headers.set('content-type','application/json; charset=utf-8')
-    return Response.json({rows,total,page,pageSize,facets} satisfies Page,{headers})
+    const body=JSON.stringify({rows,total,page,pageSize,facets} satisfies Page)
+    if (cache && cacheKey && ctx) {
+      headers.set('x-opax-cache','MISS')
+      const stored=new Response(body,{headers:{'content-type':'application/json; charset=utf-8','cache-control':`public, max-age=${PAGE_CACHE_SECONDS}`}})
+      ctx.waitUntil(cache.put(cacheKey,stored).catch(()=>{}))
+    }
+    return new Response(body,{headers})
   } catch {return errorResponse(503,'unavailable',{})}
 }

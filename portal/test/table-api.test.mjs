@@ -114,3 +114,25 @@ test('whole-table counts, facets and ranges are kept per version; filtered ones 
   await local.db.prepare("DELETE FROM table_grants WHERE id='item-0'").run();await newVersion();
   assert.equal((await get('')).total,cold.total-1);
 });
+test('public JSON pages come from the edge cache until the version, epoch or Worker changes; CSV and internal reads never do',async()=>{
+  const store=new Map(),pending=[];
+  const ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}};
+  globalThis.caches={default:{match:async key=>{const hit=store.get(key.url);return hit ? new Response(hit) : undefined},put:async(key,res)=>{store.set(key.url,await res.text())}}};
+  try {
+    const publicEnv={...env,CF_VERSION_METADATA:{id:'worker-a'}};
+    const get=async(query,e=publicEnv,c=ctx)=>{const r=await tableApi(new Request('https://opax.com.au/api/table/contracts?'+query),e,c);await Promise.all(pending.splice(0));return r};
+    const keep=r=>[...r.headers].filter(([k])=>k!=='x-opax-cache');
+    const miss=await get('f.amount=%7B%22min%22%3A10%7D');assert.equal(miss.headers.get('x-opax-cache'),'MISS');
+    const missBody=await miss.text();
+    const hit=await get('f.amount=%7B%22min%22%3A10%7D');assert.equal(hit.headers.get('x-opax-cache'),'HIT');
+    assert.equal(await hit.text(),missBody);assert.deepEqual(keep(hit),keep(miss));
+    // Headers that depend on the request's own URL are written fresh: the bare URL is indexable.
+    const bare=await get('');await bare.text();const bareHit=await get('page=1');assert.equal(bareHit.headers.get('x-opax-cache'),'HIT');
+    assert.equal(bare.headers.get('x-robots-tag'),null);assert.equal(bareHit.headers.get('x-robots-tag'),'noindex');
+    assert.equal((await get('',{...publicEnv,CF_VERSION_METADATA:{id:'worker-b'}})).headers.get('x-opax-cache'),'MISS');
+    assert.equal((await get('',{...publicEnv,CACHE_EPOCH:'other'})).headers.get('x-opax-cache'),'MISS');
+    await newVersion();assert.equal((await get('')).headers.get('x-opax-cache'),'MISS');
+    const csv=await get('format=csv');assert.equal(csv.headers.get('x-opax-cache'),null);await csv.text();
+    const internal=await get('',publicEnv,null);assert.equal(internal.headers.get('x-opax-cache'),null);await internal.text();
+  } finally {delete globalThis.caches}
+});
