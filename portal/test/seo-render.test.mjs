@@ -25,6 +25,7 @@ class Rewriter {
       else if(selector==='title')html=html.replace(/(<title>)([\s\S]*?)(<\/title>)/,mutate);
       else if(selector==='head')html=html.replace(/(<head>)([\s\S]*?)(<\/head>)/,mutate);
       else if(selector==='body')html=html.replace(/(<body\b[^>]*>)([\s\S]*?)(<\/body>)/,mutate);
+      else if(selector==='script[src]')html=html.replace(/<script\b[^>]*\bsrc="([^"]+)"[^>]*>[\s\S]*?<\/script>/g,(outer,src)=>{let removed=false;handler.element({getAttribute:name=>name==='src'?src:null,remove(){removed=true;}});return removed?'':outer;});
       else if(selector==='script#ld-page')html=html.replace(/(<script\b[^>]*id="ld-page"[^>]*>)([\s\S]*?)(<\/script>)/,mutate);
       else{const match=/^(meta|link)\[(name|property|rel)="([^"]+)"\]$/.exec(selector);if(match)html=html.replace(new RegExp(`<${match[1]}\\b[^>]*${match[2]}="${match[3]}"[^>]*>`,'g'),outer=>mutate(outer,outer,'',''));}
     }
@@ -37,6 +38,62 @@ const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(c
 const origin='https://opax.com.au';
 const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){const path=new URL(req.url).pathname;const file=new URL(path==='/'?'index.html':path==='/home'?'home.html':path==='/community'?'community.html':path.slice(1),pub);if(!existsSync(file)) return new Response('Missing',{status:404}); const response=new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}); if(path.endsWith('.json')) response.json=()=>read(path); return response;}}};
 async function get(path){const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();}
+test('official report page and API share the schema 1 record, independent of research report gates', async () => {
+  const slug='royal-commission-cth-robodebt';
+  const data=await read('/report-records/'+slug+'.json');
+  for(const currentEnv of [env,{...env,REPORTS_ENABLED:'false',STAGING_API:{fetch(){throw Error('report records must use local assets');}}}]) {
+    const api=await worker.fetch(new Request(origin+'/api/report/'+slug),currentEnv,{waitUntil(){}});
+    assert.equal(api.status,200);assert.match(api.headers.get('content-type'),/application\/json/);
+    assert.deepEqual(await api.json(),data);
+    const page=await worker.fetch(new Request(origin+'/report/'+slug),currentEnv,{waitUntil(){}});
+    assert.equal(page.status,200);
+    const html=await page.text();
+    assert.match(html,/<h1>Royal Commission into the Robodebt Scheme<\/h1>/);
+    assert.match(html,/href="https:\/\/opax.com.au\/report\/royal-commission-cth-robodebt"/);
+    assert.match(html,/href="\/api\/report\/royal-commission-cth-robodebt"/);
+    assert.doesNotMatch(html,/<script[^>]+src="\/(?:app|spa-entry|spa-shell)\.js/);
+    for(const rec of data.record.recommendations)assert.ok(html.includes(escapeHtml(rec.text)));
+  }
+});
+test('search-all returns official report rows for web and native API consumers',async()=>{
+  const currentEnv={...env,STAGING_API:{fetch:async()=>Response.json({results:[{kind:'speech',slug:'speech-existing',title:'Existing speech',date:'2024-01-01'}],truncated:false})}};
+  for(const [query,type,title] of [['robodebt','royal_commission','Royal Commission into the Robodebt Scheme'],['IBAC','integrity_report',null],['Department of Defence','annual_report',null]]){
+    const response=await worker.fetch(new Request(origin+'/api/search-all?'+new URLSearchParams({q:query,per:'200'})),currentEnv,{waitUntil(){}});
+    assert.equal(response.status,200);const data=await response.json();
+    const reports=data.results.filter(r=>r.kind==='report');assert.ok(reports.length,query);
+    assert.ok(reports.some(r=>r.report_type===type),query);
+    if(title)assert.equal(reports[0].title,title);
+    for(const row of reports){assert.match(row.href,/^\/report\//);assert.match(row.kind,/^[a-z][a-z_]*$/);assert.ok(row.citation.url);assert.ok(Object.hasOwn(row,'date'));}
+    const speech=data.results.find(r=>r.slug==='speech-existing');
+    assert.deepEqual(speech,{kind:'speech',slug:'speech-existing',title:'Existing speech',date:'2024-01-01',score:1/10.5,sort_date:'2024-01-01'});
+  }
+});
+test('report API and page return 404 for missing or malformed records, and API supports HEAD',async()=>{
+  for(const prefix of ['/api/report/','/report/'])for(const suffix of ['royal-commission-unknown','%E0%A4%A','integrity-report-a%2Fb']) {
+    const response=await worker.fetch(new Request(origin+prefix+suffix),env,{waitUntil(){}});
+    assert.equal(response.status,404,prefix+suffix);
+  }
+  const path='/api/report/royal-commission-cth-robodebt';
+  const head=await worker.fetch(new Request(origin+path,{method:'HEAD'}),env,{waitUntil(){}});
+  assert.equal(head.status,200);assert.equal(await head.text(),'');
+  const post=await worker.fetch(new Request(origin+path,{method:'POST'}),env,{waitUntil(){}});
+  assert.equal(post.status,405);assert.equal(post.headers.get('allow'),'GET, HEAD');
+});
+test('annual, agency and integrity report pages and JSON routes expose the same cited records',async()=>{
+  const index=await read('/integrity-reports/index.json');
+  const agency=await read('/agency-reports/index.json');
+  const slugs=['integrity-report-'+index.reports[0].id,'annual-report-department-of-defence-2024-25','agency-report-'+agency.documents[0].id];
+  for(const slug of slugs){
+    const response=await worker.fetch(new Request(origin+'/api/report/'+slug),env,{waitUntil(){}});
+    assert.equal(response.status,200,slug);const record=await response.json();
+    const html=await get('/report/'+slug);
+    assert.ok(html.includes(escapeHtml(record.title)));assert.ok(html.includes(escapeHtml(record.body)));
+    assert.ok(html.includes(escapeHtml(record.citation.url)));
+    assert.ok(html.includes('Record snapshot: '+record.snapshot_at));
+    assert.equal(record.schema,1);assert.equal(record.kind,'report');
+    for(const key of ['record','publisher','caveats','facts','tables','headline','date_basis','year'])assert.ok(Object.hasOwn(record,key),key);
+  }
+});
 const prerenderBody = html => html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</main>'));
 function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.doesNotMatch(html,/id="panel-ask"|id="panel-privacy"|Ask &amp; search the record/);const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1]);assert.ok(graph['@graph'].some(n=>n['@type']==='BreadcrumbList'));return graph['@graph'];}
 

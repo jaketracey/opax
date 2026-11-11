@@ -17,7 +17,7 @@ export function searchSortTitle(row: SortableRecord): string {
   if (parts.length && dates.filter(Boolean).map(key).includes(key(parts.at(-1)!))) parts.splice(-2)
   return parts.join('').trim() || row.title || row.slug || ''
 }
-const kindLabels: Record<string,string> = { person:'People', party:'Political parties', agency:'Government agencies', donor:'Donors', receipt:'Political receipts', supplier:'Suppliers', contract:'Government contracts', grant:'Grants', interest:'Declared interests', expense:'Parliamentary expenses', access:'Meetings and lobbying registers', campaigner:'Campaigners and associated entities', bill:'Bills', speech:'Speeches and hearings', division:'Divisions', press_release:'Government transcripts and releases', report:'Research reports' }
+const kindLabels: Record<string,string> = { person:'People', party:'Political parties', agency:'Government agencies', donor:'Donors', receipt:'Political receipts', supplier:'Suppliers', contract:'Government contracts', grant:'Grants', interest:'Declared interests', expense:'Parliamentary expenses', access:'Meetings and lobbying registers', campaigner:'Campaigners and associated entities', bill:'Bills', speech:'Speeches and hearings', division:'Divisions', press_release:'Government transcripts and releases', report:'Reports and commissions' }
 export function compareSearchResults(a: SortableRecord, b: SortableRecord, sort: string): number {
   const fallback = (b.score || 0) - (a.score || 0) || textOrder.compare(a.slug || '', b.slug || '')
   if (sort === 'newest' || sort === 'oldest') {

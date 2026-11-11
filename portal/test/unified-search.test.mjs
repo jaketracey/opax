@@ -21,6 +21,16 @@ function fixture({localError=false,docError=false,suggest=false,localRows}={}){
 test('all-record search combines source types with pagination',async()=>{const f=fixture();const {data}=await f.run({per:'1',page:'2'});assert.equal(data.total,2);assert.equal(data.results[0].kind,'speech');assert.deepEqual(f.calls,['catalog','/api/search?all'])});
 test('financial-only queries do not invoke document retrieval',async()=>{const f=fixture();const {data}=await f.run({kind:'contract'});assert.equal(data.results[0].kind,'contract');assert.deepEqual(f.calls,['catalog'])});
 test('speech-only queries retain document semantics',async()=>{const f=fixture();await f.run({kind:'speech'});assert.deepEqual(f.calls,['/api/search?speech'])});
+test('adding report rows preserves the existing kinds, row fields and relative order',async()=>{
+ const existing=['bill','division','party','agency','grant'].map((kind,i)=>({kind,slug:'existing-'+i,title:'Existing '+kind,href:'/existing/'+kind,date:'2024-01-01',snippet:'Original '+kind}));
+ const before=(await fixture({localRows:existing}).run({per:'200'})).data.results;
+ const report={kind:'report',report_type:'royal_commission',slug:'royal-commission-cth-robodebt',title:'Royal Commission into the Robodebt Scheme',href:'/report/royal-commission-cth-robodebt',body:'Royal Commission into the Robodebt Scheme',jurisdiction:'Cth',date:'2023-07-07',snippet:'Report of the Royal Commission into the Robodebt Scheme'};
+ const after=(await fixture({localRows:[report,...existing]}).run({per:'200'})).data.results.filter(r=>r.kind!=='report');
+ const withoutRank=rows=>rows.map(({score,...row})=>row);
+ // The new match can shift reciprocal rank values, but not the old rows' contract or order within a source.
+ assert.deepEqual(withoutRank(after.filter(r=>r.kind!=='speech')),withoutRank(before.filter(r=>r.kind!=='speech')));
+ assert.deepEqual(after.find(r=>r.kind==='speech'),before.find(r=>r.kind==='speech'));
+});
 test('partial failure is disclosed without discarding successful source results',async()=>{const f=fixture({docError:true});const {data}=await f.run();assert.equal(data.results.length,1);assert.equal(data.truncated,true);assert.match(data.warnings[0],/Document search is temporarily unavailable/)});
 test('total failure returns a recoverable error',async()=>{assert.equal((await fixture({docError:true,localError:true}).run()).status,503)});
 test('staging retrieves documents through its binding while searching its own catalog',async()=>{const f=fixture();let upstream;const {data}=await f.run({}, {STAGING_API:{fetch:async r=>{upstream=r.url;return Response.json({results:[],truncated:false})}}});assert.equal(data.results[0].kind,'contract');assert.match(upstream,/\/api\/search\?/);assert.deepEqual(f.calls,['catalog'])});

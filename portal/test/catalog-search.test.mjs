@@ -7,7 +7,7 @@ import {programRecord,programKey} from '../../scripts/build_search_catalog.mjs';
 import {reportsPublished} from '../../scripts/reports_flag.mjs';
 const assets={fetch:async request=>{
  const path=new URL(request.url).pathname;
- assert.match(path,/^\/search-catalog\/(manifest\.json|[a-f0-9]{16}\/(meta|meta-core|terms-\d+|records-\d+)\.json)$/);
+ assert.match(path,/^\/search-catalog\/(manifest\.json|[a-f0-9]{16}\/(meta|meta-core|report-names|terms-\d+|records-\d+)\.json)$/);
  try{return new Response(await readFile(new URL('../public'+path,import.meta.url)),{headers:{'content-type':'application/json'}})}catch{return new Response('missing',{status:404})}
 }};
 const find=(q,params={})=>searchCatalog(new URL('https://opax.com.au/api/search-all?'+new URLSearchParams({q,kind:'all',...params})),assets);
@@ -23,7 +23,7 @@ test('published index covers financial records alongside people, bills and regis
  assert.ok(manifest.counts.contract>=suppliers.meta.contract_count);
  // Report rows (the reports and the grants-allocation research) follow REPORTS_ENABLED.
  for(const kind of ['person','agency','donor','receipt','grant','bill','interest','expense','access','campaigner',...(reportsPublished()?['report']:[])])assert.ok(manifest.counts[kind]>0,kind);
- if(!reportsPublished())assert.equal(manifest.counts.report,undefined);
+ assert.ok(manifest.counts.report>=2250,'official report records remain published independently of research essays');
 });
 test('an organisation is found in donors, receipts, contracts and grants',async()=>{
  for(const kind of ['donor','receipt','contract','grant']){
@@ -146,7 +146,7 @@ test('the 226 active invited projects resolve to the GO7867 program view, invite
  }
  assert.equal(records.find(r=>r.record_id==='research-cpi-mlci-2026')?.href,view,'the CPI comparison');
  assert.equal(records.find(r=>r.title==='Major and Local Community Infrastructure Program: invited projects and awards')?.href,view,'the program summary');
- assert.equal(records.filter(r=>String(r.href).startsWith('/reports')).length,reportsPublished()?records.filter(r=>r.kind==='report').length:0);
+ assert.equal(records.filter(r=>String(r.href).startsWith('/reports')).length,reportsPublished()?records.filter(r=>r.kind==='report' && !r.report_type).length:0);
  assert.ok(!records.some(r=>/^\/reports\/grants-allocation/.test(r.href)&&/^mlci-invitation-/.test(r.record_id||'')));
  assert.doesNotMatch(JSON.stringify(invited),/rort|pork|bias/i);
  const found=await find('Chisholm Cricket',{kind:'grant'});

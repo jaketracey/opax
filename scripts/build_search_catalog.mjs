@@ -13,6 +13,7 @@ import { auditComplete } from '../portal/public/audit.js';
 import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/src/pay-records.mjs';
 import { reportsPublished } from './reports_flag.mjs';
 import { pageSearchRecords } from './search_catalog_pages.mjs';
+import { buildReportCatalog } from './build_report_catalog.mjs';
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
@@ -214,6 +215,18 @@ async function main() {
  }
  const readConfig = async name => JSON.parse(await readFile(new URL('./hubs/'+name,import.meta.url),'utf8'));
  for await (const r of pageSearchRecords(read,readConfig)) add(r.key,r.kind,r.title,r.href,r.snippet,r.extra);
+ // Append official reports after existing records: their IDs and tie order stay stable.
+ // Detail JSON is projected offline, not parsed from every dataset by a request.
+ const reportNames=Object.create(null);
+ for(const {row,aliases,state,year} of await buildReportCatalog(root)) {
+  const id=docs.length;
+  add('official-report:'+row.slug,'report',row.title,row.href,row.snippet,
+   {...row,aliases:aliases.join(' '),state,from:year,to:year});
+  for(const name of [row.title,...aliases.filter(a=>typeof a==='string' && !/^\d/.test(a))]) {
+   const key=tokens(name).sort().join(' ');
+   if(key && !(reportNames[key]||[]).includes(id))(reportNames[key]??=[]).push(id);
+  }
+ }
  // Rebuild postings from sanitised document tokens; block contained aliases before
  // both release hashing and writing; unrelated record IDs stay intact.
  const meta=docs.map(d=>d.meta), postings=Array.from({length:64},()=>Object.create(null));
@@ -222,13 +235,14 @@ async function main() {
   for(const [term,weight] of weights){const p=postings[bucket(term)];(p[term]??=[]).push(id,weight);}
  }
  const publicPaths=recordPathIndex(docs.map(d=>d.key.includes(':grant-recipient:')?{...d.record,owner:true}:d.record));
- const version=createHash('sha256').update(JSON.stringify([docs.map(d=>[d.record,d.meta,d.titleTokens,d.bodyTokens]),publicPaths])).digest('hex').slice(0,16);
+ const version=createHash('sha256').update(JSON.stringify([docs.map(d=>[d.record,d.meta,d.titleTokens,d.bodyTokens]),publicPaths,reportNames])).digest('hex').slice(0,16);
  const output=join(root,'search-catalog'); await mkdir(output,{recursive:true});
  // This directory contains generated search assets only.
  for(const name of await readdir(output))await rm(join(output,name),{recursive:true,force:true});
  await mkdir(join(output,version));
  const put=async(name,data)=>writeFile(join(output,version,name),JSON.stringify(data));
  await put('meta.json',meta);
+ await put('report-names.json',reportNames);
  // An unfiltered search needs only each record's kind and closing year (portal/src/catalog-search.ts).
  const kinds=[...new Set(meta.map(m=>m[0]))], kindIndex=new Map(kinds.map((k,i)=>[k,i]));
  await put('meta-core.json',{kinds,kind:meta.map(m=>kindIndex.get(m[0])),to:meta.map(m=>m[2])});
@@ -242,7 +256,7 @@ async function main() {
  // A grant recipient's own record owns its page; the award records only link to it.
  // Support reports use the same canonical addresses as search links.
  for(const [i,shard]of publicPaths.entries())await put('paths-'+i+'.json',shard);
- const manifest={version,count:docs.length,counts,recordShardSize:256,coverage:'Searches the records and profiles published on OPAX. Map connections, expense totals and recipient profiles are aggregates and may overlap individual records. Published grant and interest detail exports are samples of their source registers; document search returns a ranked retrieval window.'};
+ const manifest={version,count:docs.length,counts,recordShardSize:256,reportNames:true,coverage:'Searches the records and profiles published on OPAX. Map connections, expense totals and recipient profiles are aggregates and may overlap individual records. Published grant and interest detail exports are samples of their source registers; document search returns a ranked retrieval window.'};
  await writeFile(join(output,'manifest.json'),JSON.stringify(manifest));
  console.log(JSON.stringify(manifest,null,2));
 }

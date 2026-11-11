@@ -1,0 +1,10 @@
+.report-record { max-width: var(--size-readable); padding-bottom: var(--space-section); }
+.report-record-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.report-record-items { list-style: none; padding: 0; }
+.report-record-items > li { padding-block: var(--space-heading); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+.report-record-source { overflow-wrap: anywhere; }
+.report-record-fields { display: grid; grid-template-columns: minmax(8rem, 1fr) minmax(0, 3fr); gap: var(--space-tight) var(--space-heading); }
+.report-record-fields dt { font: var(--type-label); }
+.report-record-fields dd { margin: 0; overflow-wrap: anywhere; }
+.report-record-fields dl { margin-top: 0; }
+@media (max-width: 40rem) { .report-record-fields { grid-template-columns: minmax(0, 1fr); } }
