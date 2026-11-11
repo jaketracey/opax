@@ -40,13 +40,26 @@ for (const tool of tools) {
   names.add(tool.name)
 }
 // Schemas are immutable metadata, not request state. No env, response or asset is cached here.
-const schemas = new Map(tools.map(tool => [tool.name, z.fromJSONSchema(tool.inputSchema).meta(tool.inputSchema)]))
+// Each is built on first use: converting every tool's JSON Schema at module load cost every
+// cold isolate (pages and searches included) the zod work of the whole registry.
+const schemas = new Map<string, ReturnType<typeof buildSchema>>()
+const buildSchema = (tool: ToolDefinition) => z.fromJSONSchema(tool.inputSchema).meta(tool.inputSchema)
+function schemaFor(name: string) {
+  let schema = schemas.get(name)
+  if (!schema) {
+    const tool = getTool(name)
+    if (!tool) return undefined
+    schema = buildSchema(tool)
+    schemas.set(name, schema)
+  }
+  return schema
+}
 export const getTool = (name: string) => tools.find(tool => tool.name === name)
 export const getAskTool = (name: string) => tools.find(tool => !tool.mcpOnly && (tool.askName ?? tool.name) === name)
-export const toolSchema = (name: string) => schemas.get(name)!
+export const toolSchema = (name: string) => schemaFor(name)!
 export const listTools = () => tools.map(({ name, description, inputSchema }) => ({ name, description, inputSchema }))
 export function parseToolArgs(name: string, args: unknown): ToolArgs {
-  const tool = getTool(name), schema = schemas.get(name)
+  const tool = getTool(name), schema = schemaFor(name)
   if (!tool || !schema) throw new ToolInputError(name)
   const parsed = schema.safeParse(args)
   if (!parsed.success || !parsed.data || typeof parsed.data !== 'object' || Array.isArray(parsed.data)) throw new ToolInputError(name)
