@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 import {readFile} from 'node:fs/promises'
 import {build} from 'esbuild'
 import {auditPayload} from '../src/research-claim-audit.mjs'
-const built=await build({stdin:{contents:"export * from './src/research-grounding';export {callTool} from './src/tools/index';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
+const built=await build({stdin:{contents:"export * from './src/research-grounding';export {callTool} from './src/tools/index';export {constrainStep,extractAskConstraints} from './src/ask-constraints';export {inferPeriod} from './src/ask-period';export {toolArgProblem,TOOL_SPECS} from './src/agentic-tools';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const env={asset:async path=>JSON.parse(await readFile(new URL('../public'+path,import.meta.url),'utf8')),origin:'https://opax.test'}
 
@@ -58,7 +58,7 @@ test('ranking bodies by key management personnel rows answers with counts of row
 })
 
 test('the highest paid executive by year is a side-by-side comparison with each year\'s own person',async()=>{
-  const out=await api.callTool(env,'annual_reports',{view:'top_by_year',body:'Department of Health',from_year:'2018-19',to_year:'2024-25'}),sources=out.citations.map((c,i)=>sourceOf(c.text,i+2,c.kind))
+  const out=await api.callTool(env,'annual_reports',{view:'top_by_year',body:'Department of Health',first_year:'2018-19',last_year:'2024-25'}),sources=out.citations.map((c,i)=>sourceOf(c.text,i+2,c.kind))
   const q="How has the Department of Health's highest paid executive's total remuneration changed from 2018-19 to 2024-25?"
   const answer='In 2018-19 the largest row was Glenys Beauchamp (Secretary) at $858,014. In 2024-25 it was Blair Comley (Secretary) at $972,552.'
   assert.deepEqual(auditPayload(q,payload(answer,sources)).findings,[])
@@ -70,4 +70,22 @@ test('the highest paid executive by year is a side-by-side comparison with each 
   assert.match(fallback,/different people/); assert.doesNotMatch(fallback,/led the selected ranking|received the most/)
   const order=['2018-19','2019-20','2020-21','2021-22','2022-23','2023-24','2024-25'].map(y=>fallback.indexOf(y+' annual report: $'))
   assert.ok(order.every((at,i)=>at>0&&(!i||at>order[i-1])),String(order))
+})
+
+// Production 2026-11-11 after the first deploy: a dated question ("in 2019-20") failed with malformed_args because
+// the request scope writes numeric from_year/to_year into any tool that declares them, and annual_reports briefly did.
+test('dated questions keep valid annual_reports arguments after request scoping',()=>{
+  const props=api.TOOL_SPECS.find(t=>t.name==='annual_reports').input.properties
+  assert.ok(!('from_year' in props)&&!('to_year' in props)&&!('since' in props)&&!('until' in props))
+  const cases=[
+    ["What was Michael Wallace's total remuneration at the Australian Commission on Safety and Quality in Health Care in 2019-20?",{view:'remuneration',person:'Michael Wallace',body:'Australian Commission on Safety and Quality in Health Care',year:'2019-20'}],
+    ["How has the Department of Health's highest paid executive's total remuneration changed from 2018-19 to 2024-25?",{view:'top_by_year',body:'Department of Health',first_year:'2018-19',last_year:'2024-25'}],
+    ['Which Commonwealth agencies reported the most key management personnel in 2018-19?',{view:'kmp_counts',year:'2018-19'}],
+  ]
+  for(const [q,args] of cases){
+    const c=api.extractAskConstraints(q,api.inferPeriod(q),{people:[],parties:[],bills:[],ambiguous:false,unresolved:false})
+    const step=api.constrainStep({tool:'annual_reports',args},c,props)
+    assert.deepEqual(step.args,args,q)
+    assert.equal(api.toolArgProblem('annual_reports',step.args),null,q)
+  }
 })
