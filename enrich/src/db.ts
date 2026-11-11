@@ -264,7 +264,8 @@ export async function finishRows(db: D1Database, updates: readonly RowUpdate[], 
 /** Rows the model has finished but the box has not received: dry-run results, or writes that met backpressure. */
 export async function unwrittenRows(db: D1Database, limit: number): Promise<QueueRow[]> {
   const { results } = await db
-    .prepare("SELECT * FROM queue WHERE status = 'done' AND terminal_reason IS NULL AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL ORDER BY priority DESC, done_at LIMIT ?")
+    // INDEXED BY: the planner otherwise prefers queue_pick and scans every done row each minute (migration 0006).
+    .prepare("SELECT * FROM queue INDEXED BY queue_unwritten WHERE status = 'done' AND terminal_reason IS NULL AND outcome IN ('dry', 'unwritten') AND result IS NOT NULL ORDER BY priority DESC, done_at LIMIT ?")
     .bind(limit)
     .all<QueueRow>()
   return results
