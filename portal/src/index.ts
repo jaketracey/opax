@@ -4697,6 +4697,24 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
  * memory instead of being fetched and parsed again on every page: /suppliers.json (supplier
  * pages) and /bills/index.json (related bills on every bill page). Renderers only read them.
  */
+/**
+ * The money summary on the home page, /map, /money, /connections and /explore. renderMoneyAnswer
+ * reads three money graphs and /suppliers.json (about 10 MB of immutable assets) for a few
+ * kilobytes of HTML, so an isolate renders each title once. A failed render is not kept.
+ */
+const moneyAnswerMemo = new Map<string, ReturnType<typeof renderMoneyAnswer>>()
+function sharedMoneyAnswer(title: string, read: ReadAsset): ReturnType<typeof renderMoneyAnswer> {
+  const kept = moneyAnswerMemo.get(title)
+  if (kept) return kept
+  const answer = renderMoneyAnswer(title, read)
+  // The titles are fixed page names; the bound only guards against a future caller passing reader text.
+  if (moneyAnswerMemo.size < 8) {
+    moneyAnswerMemo.set(title, answer)
+    answer.catch(() => { if (moneyAnswerMemo.get(title) === answer) moneyAnswerMemo.delete(title) })
+  }
+  return answer
+}
+
 function sharedAssetJson<T>(env: Env, path: string): Promise<T> {
   if (path === '/suppliers.json') return loadSuppliersFile(env) as Promise<T>
   if (path === '/bills/index.json') return loadBills(env).then((bills) => bills.file as T)
@@ -4776,7 +4794,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         return response.json()
       },url.searchParams))
     } else if(route.kind==='static' && ['money','connections','explore'].includes(route.page)) {
-      meta.prerender=(await renderMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
+      meta.prerender=(await sharedMoneyAnswer(meta.title.replace(/ · OPAX$/,''),read).catch(()=>null))?.html || answerBlock(meta.title.replace(/ · OPAX$/,''),meta.description)
       if(route.page==='money')meta.prerender+=await renderMoneyConnectionsTable(url,read).catch(()=> '')
     } else if (route.kind === 'static' && route.page === 'money/grants' && !url.searchParams.has('program') && !url.searchParams.has('open') && !url.searchParams.has('largest')) {
       const hadState = Boolean(url.search)
@@ -7038,7 +7056,7 @@ export default {
     if (url.pathname.startsWith('/api/app/')) return communityResponse(appJson(request, {error:'not_found'}, 404))
     if(url.pathname==='/map' && ['GET','HEAD'].includes(request.method)) {
       const shell=await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/map.html`))
-      const facts=await renderMoneyAnswer('Money map',<T>(path:string)=>assetJson<T>(env,path))
+      const facts=await sharedMoneyAnswer('Money map',<T>(path:string)=>assetJson<T>(env,path))
       const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/map`,title:'Money map · OPAX'})).replace(/</g,'\\u003c')
       const out=new HTMLRewriter().on('div#crawl-facts',{element(el){el.setInnerContent(facts.html,{html:true})}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(shell)
       const headers=new Headers(out.headers);headers.delete('content-length')
@@ -7050,7 +7068,7 @@ export default {
       if (/^\/search\/?$/.test(url.pathname)) entry.headers.set('x-robots-tag', url.search ? 'noindex' : 'all')
       if(entry.status===200 && url.pathname==='/') {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
-        const money=await renderMoneyAnswer('Public money',<T>(path:string)=>assetJson<T>(env,path)).catch(()=>null)
+        const money=await sharedMoneyAnswer('Public money',<T>(path:string)=>assetJson<T>(env,path)).catch(()=>null)
         const moneyHtml=money ? money.html.replace('id="prerender"','id="prerender-money"').replace('<h1>','<h2>').replace('</h1>','</h2>') : null
         // The menus read the published optional sections off the page (navigation.js).
         const gates=navGates(env)
