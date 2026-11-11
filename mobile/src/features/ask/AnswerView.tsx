@@ -44,7 +44,7 @@ import { copyText } from '../records/actions';
 import { useIsMyMember } from '../your-mp/useIsMyMember';
 import { answerBlocks, parseAnswer } from './answer-markdown';
 import { AnswerBody, openAnswerLink, type Claim } from './AnswerBody';
-import { CitedRecordRow, sourceRoute } from './AskRows';
+import { CitedRecordRow, sourcePath, sourceRoute } from './AskRows';
 import {
   caveat,
   figureBlocks,
@@ -174,9 +174,12 @@ export function AnswerView({
   };
   const answered = answeredText(turn, legacy);
   const openSources = () =>
-    presentSource(askSourceDetails({ turn, question, chat, index, legacy }), {
-      testID: 'ask-answer-sources',
-    });
+    presentSource(
+      askSourceDetails({ turn, question, chat, index, legacy, profiles }),
+      {
+        testID: 'ask-answer-sources',
+      },
+    );
   const copyAnswer = async () => {
     if (await copyText(answerCopyText(question, turn, legacy)))
       haptic('success');
@@ -253,6 +256,7 @@ export function AnswerView({
             {source ? (
               <CitedRecordRow
                 record={source}
+                profiles={profiles}
                 n={numbered ? n : undefined}
                 onPress={() =>
                   cite([n], { block: `excerpt.${i}`, sentence: 0 })
@@ -303,6 +307,7 @@ export function AnswerView({
               <CitedRecordRow
                 key={source.resource}
                 record={source}
+                profiles={profiles}
                 n={numbered ? i + 1 : undefined}
                 selected={mine?.n === i + 1}
                 // An open citation sheet moves to this source instead.
@@ -310,10 +315,10 @@ export function AnswerView({
                   mine
                     ? () => showCitation({ turn: key, n: i + 1 })
                     : pane
-                      ? () => go(source.href, sourceTitle(source))
+                      ? () => go(sourcePath(source), sourceTitle(source))
                       : sourceRoute(source)
                         ? undefined
-                        : () => go(source.href, sourceTitle(source))
+                        : () => go(sourcePath(source), sourceTitle(source))
                 }
                 onShowPassage={
                   numbered
@@ -369,12 +374,14 @@ export function askSourceDetails({
   chat,
   index,
   legacy,
+  profiles,
 }: {
   turn: Turn;
   question: Turn;
   chat: string;
   index: number;
   legacy: LegacyDate;
+  profiles?: Map<string, AskPerson>;
 }): SourceDetails {
   const data = turn.result || {
     answer: turn.text,
@@ -387,7 +394,7 @@ export function askSourceDetails({
     router.back();
     const href = sourceRoute(source);
     if (href) router.push(href);
-    else openAnswerLink(source.href);
+    else openAnswerLink(sourcePath(source));
   };
   const originals = groups.cited.filter((s) => s.url?.startsWith('https://'));
   const calculated = isCalculated(data);
@@ -424,6 +431,7 @@ export function askSourceDetails({
               <CitedRecordRow
                 key={source.resource}
                 record={source}
+                profiles={profiles}
                 n={groups.numbered ? i + 1 : undefined}
                 onPress={() => leave(source)}
                 testID={`ask-sources-cited-${i + 1}`}
@@ -459,6 +467,7 @@ export function askSourceDetails({
               <CitedRecordRow
                 key={source.resource}
                 record={source}
+                profiles={profiles}
                 onPress={() => leave(source)}
               />
             ))}

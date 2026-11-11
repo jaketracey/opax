@@ -238,7 +238,7 @@ test('the answer leads with one machine pill and its records, cited once each', 
   expect(words()).not.toMatch(/\[\d\] Synthetic|Also retrieved|retrieved/);
 });
 
-test("a cited row says the speaker's party and the party is not a separate link inside it", () => {
+test("a cited row says the speaker's party and exposes both record links", () => {
   const { renderer } = draw();
   const [row] = renderer.root.findAll(
     (n) =>
@@ -249,13 +249,17 @@ test("a cited row says the speaker's party and the party is not a separate link 
   expect(row!.props.accessibilityLabel).toMatch(
     /Sam Placeholder, Example Party$/,
   );
-  expect(
-    row!.findAll(
-      (n) =>
-        n.props.accessibilityRole === 'link' &&
-        n.props.accessibilityLabel !== row!.props.accessibilityLabel,
-    ),
-  ).toHaveLength(0);
+  const links = row!.findAll((n) => n.props.accessibilityRole === 'link');
+  for (const label of ['Open Sam Placeholder', 'Open Example Party party page'])
+    expect(links.some((node) => node.props.accessibilityLabel === label)).toBe(
+      true,
+    );
+  expect(row!.props.accessibilityActions).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ name: 'openSpeaker' }),
+      expect.objectContaining({ name: 'openParty' }),
+    ]),
+  );
 });
 
 test('adjacent citations merge into one mark that opens the first source beside its claim', () => {

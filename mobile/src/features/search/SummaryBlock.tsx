@@ -17,7 +17,7 @@ import {
 import { rhythm } from '../../design/tokens';
 import type { SearchSummary } from './decoders';
 import type { SpeechFilters } from './filters';
-import { searchPathRoute } from './navigation';
+import { recordRoute } from '../records/route';
 import { resultMeta, resultTitle, savedCopy } from './present';
 import { failureRecovery } from './recovery';
 import { summaryKey, summaryRequest, useRead } from './requests';
@@ -118,7 +118,7 @@ export function SummaryBlock({
             onAccessibilityAction={(event) => {
               const n = Number(event.nativeEvent.actionName.split('-')[1]);
               const route = sources[n - 1]
-                ? searchPathRoute(sources[n - 1]!.href)
+                ? recordRoute(sources[n - 1]!)
                 : null;
               if (route) router.push(route);
             }}
@@ -127,7 +127,29 @@ export function SummaryBlock({
             {numbers.length ? (
               <Text variant="body" tone="navy">
                 {' '}
-                {numbers.map((n) => `[${n}]`).join('')}
+                {numbers.map((n) => {
+                  const route = recordRoute(sources[n - 1]!);
+                  return (
+                    <Text
+                      key={n}
+                      variant="body"
+                      tone="navy"
+                      accessibilityRole={route ? 'link' : undefined}
+                      accessibilityLabel={`Open citation ${n}, ${resultTitle({ ...sources[n - 1]!, kind: 'speech' })}`}
+                      onPress={
+                        route
+                          ? (event) => {
+                              event.stopPropagation();
+                              router.push(route);
+                            }
+                          : undefined
+                      }
+                      testID={`summary-citation-${index}-${n}`}
+                    >
+                      {`[${n}]`}
+                    </Text>
+                  );
+                })}
               </Text>
             ) : null}
           </Text>
@@ -137,7 +159,7 @@ export function SummaryBlock({
         <SectionHeader title={`Records cited (${sources.length})`} level={3} />
         <InsetGroup>
           {sources.map((s, index) => {
-            const route = searchPathRoute(s.href);
+            const route = recordRoute(s);
             return (
               <RecordRow
                 key={s.id}

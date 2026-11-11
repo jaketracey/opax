@@ -129,6 +129,7 @@ export function CitationContent({
                 variant="secondary"
                 tone="navy"
                 accessibilityRole="link"
+                accessibilityLabel={`Open ${person.name}`}
                 onPress={() =>
                   onOpenPerson
                     ? onOpenPerson(person)
