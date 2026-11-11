@@ -40,6 +40,7 @@ import RecordList from '../src/features/people/RecordList';
 import { MoreFromRecord } from '../src/features/people/Sections';
 import { topicRoute } from '../src/navigation/routes';
 import Person from '../src/features/Person';
+import { AddedSinceGroup } from '../src/features/follows/AddedSinceGroup';
 import type { ProfileView } from '../src/features/your-mp/model';
 import { catalogs, manifest, people, pinned, roster, slugs } from './pinned';
 
@@ -177,6 +178,18 @@ const has = (r: TestRenderer.ReactTestRenderer, testID: string) =>
   r.root.findAll((n) => n.props.testID === testID).length > 0;
 const host = (r: TestRenderer.ReactTestRenderer, testID: string) =>
   r.root.find((n) => typeof n.type === 'string' && n.props.testID === testID);
+
+const anchorMeasure = (
+  r: TestRenderer.ReactTestRenderer,
+  section: string,
+  measureLayout: Native.View['measureLayout'],
+) => {
+  let view = host(r, `person-${section}-anchor`);
+  expect(view.props.collapsable).toBe(false);
+  while (typeof view.instance?.measureLayout !== 'function')
+    view = view.parent!;
+  view.instance.measureLayout = measureLayout;
+};
 
 const viewportAt = (top: () => number) =>
   jest.spyOn(ScrollView.prototype, 'getNativeScrollRef').mockReturnValue({
@@ -332,6 +345,237 @@ describe('Topics in More from the record', () => {
 describe('profile', () => {
   afterEach(() => jest.restoreAllMocks());
   test.each(['votes', 'interests', 'pay'] as const)(
+    '%s still scrolls on iOS when native refs are unavailable and layout targets are numeric',
+    async (section) => {
+      const scrollTo = jest
+        .spyOn(ScrollView.prototype, 'scrollTo')
+        .mockImplementation(() => {});
+      jest
+        .spyOn(ScrollView.prototype, 'getNativeScrollRef')
+        .mockReturnValue(null);
+      const { r } = await wong();
+      let holder = host(r, `person-${section}`).parent!;
+      while (typeof holder.props.onLayout !== 'function')
+        holder = holder.parent!;
+      await act(async () =>
+        holder.props.onLayout({
+          currentTarget: 71,
+          nativeEvent: { layout: { y: 900 } },
+        }),
+      );
+      await act(async () =>
+        r.root
+          .find(
+            (node) =>
+              node.props.testID === `person-figure-${section}` &&
+              typeof node.props.onPress === 'function',
+          )
+          .props.onPress(),
+      );
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      expect(scrollTo.mock.calls[0]![0]).toEqual({
+        y: expect.any(Number),
+        animated: true,
+      });
+      expect(scrollTo.mock.calls[0]![0]!.y).toBeGreaterThan(700);
+    },
+  );
+
+  test.each(['ios', 'android'] as const)(
+    '%s falls back for failed, throwing and unanswered native measurements',
+    async (platform) => {
+      jest.replaceProperty(Platform, 'OS', platform);
+      jest.useFakeTimers();
+      try {
+        const scrollTo = jest
+          .spyOn(ScrollView.prototype, 'scrollTo')
+          .mockImplementation(() => {});
+        jest
+          .spyOn(ScrollView.prototype, 'getInnerViewNode')
+          .mockReturnValue(42);
+        viewportAt(() => 0);
+        const { r } = await wong();
+        const anchor = host(r, 'person-votes-anchor');
+        await act(async () =>
+          anchor.props.onLayout({
+            currentTarget: 71,
+            nativeEvent: { layout: { y: 900 } },
+          }),
+        );
+        const tap = () =>
+          r.root
+            .find(
+              (node) =>
+                node.props.testID === 'person-figure-votes' &&
+                typeof node.props.onPress === 'function',
+            )
+            .props.onPress();
+        for (const mode of ['failure', 'throws', 'no callback']) {
+          scrollTo.mockClear();
+          anchorMeasure(r, 'votes', (_ancestor, _done, fail) => {
+            if (mode === 'failure') fail?.();
+            else if (mode === 'throws') throw new Error('View is remounting');
+          });
+          await act(async () => tap());
+          await act(async () => jest.advanceTimersByTime(100));
+          expect(scrollTo).toHaveBeenCalledTimes(1);
+          expect(scrollTo).toHaveBeenLastCalledWith({
+            y:
+              platform === 'ios'
+                ? 900 - mockHeaderBottom
+                : 900 + rhythm.block - rhythm.heading,
+            animated: true,
+          });
+        }
+        // Missing inner refs take the same layout fallback, without animation.
+        jest
+          .spyOn(ScrollView.prototype, 'getInnerViewNode')
+          .mockReturnValue(null);
+        jest.mocked(useReduceMotion).mockReturnValue(true);
+        await act(async () => r.update(<Person />));
+        scrollTo.mockClear();
+        await act(async () => tap());
+        expect(scrollTo).toHaveBeenLastCalledWith({
+          y:
+            platform === 'ios'
+              ? 900 - mockHeaderBottom
+              : 900 + rhythm.block - rhythm.heading,
+          animated: false,
+        });
+        await act(async () => r.unmount());
+      } finally {
+        jest.useRealTimers();
+      }
+    },
+  );
+
+  test.each(['ios', 'android'] as const)(
+    '%s change rows jump to votes, interests and pay',
+    async (platform) => {
+      jest.replaceProperty(Platform, 'OS', platform);
+      const scrollTo = jest
+        .spyOn(ScrollView.prototype, 'scrollTo')
+        .mockImplementation(() => {});
+      jest.spyOn(ScrollView.prototype, 'getInnerViewNode').mockReturnValue(42);
+      viewportAt(() => 0);
+      const person = c.joinPerson(
+        'penny-wong',
+        slugs,
+        roster,
+        people,
+        manifest,
+      );
+      const follow = {
+        kind: 'person' as const,
+        id: person.canonicalPersonId!,
+        title: person.name,
+        followedAt: 1,
+        seen: {},
+        seenAt: 1,
+      };
+      const changes = [
+        { record: { kind: 'vote' }, marker: 'votes' },
+        { record: { kind: 'register' }, marker: 'declarations' },
+        { marker: 'pay' },
+        { marker: 'expenses' },
+      ];
+      jest.mocked(useFollows).mockReturnValue([follow] as never);
+      jest.mocked(useFollowStates).mockReturnValue({
+        states: new Map([
+          [followKey(follow), { status: 'ready', current: {}, changes }],
+        ]),
+      } as never);
+      const { r } = await wong();
+      for (const [section, top] of [
+        ['votes', 500],
+        ['interests', 900],
+        ['pay', 1300],
+      ] as const) {
+        anchorMeasure(r, section, (_ancestor, done) => done(0, top, 300, 44));
+      }
+      for (const [index, change] of changes.entries()) {
+        scrollTo.mockClear();
+        await act(async () =>
+          r.root.findByType(AddedSinceGroup).props.onRowPress(change),
+        );
+        expect(scrollTo).toHaveBeenCalledTimes(1);
+        const top = [500, 900, 1300, 1300][index]!;
+        expect(scrollTo).toHaveBeenLastCalledWith({
+          y:
+            top -
+            (platform === 'ios'
+              ? mockHeaderBottom + rhythm.block
+              : rhythm.heading),
+          animated: true,
+        });
+      }
+    },
+  );
+
+  test('the pending profile has its own geometry and one accessible loading label', async () => {
+    jest
+      .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    mock.person.mockReturnValue(new Promise(() => {}));
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<Person />);
+    });
+    const loading = host(r, 'person-loading');
+    expect(loading.props.accessibilityLabel).toBe('Loading the profile');
+    expect(
+      r.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityRole === 'progressbar',
+      ),
+    ).toHaveLength(1);
+    expect(
+      loading.findAll(
+        (node) =>
+          node.props.accessibilityElementsHidden &&
+          node.props.importantForAccessibility === 'no-hide-descendants',
+      ).length,
+    ).toBeGreaterThan(0);
+    for (const part of [
+      'portrait',
+      'name',
+      'follow',
+      'party',
+      'seat',
+      'stat-strip',
+      'source',
+      'votes-heading',
+      'vote-0',
+      'vote-1',
+      'vote-2',
+    ]) {
+      expect(has(r, `person-loading-${part}`)).toBe(true);
+    }
+    expect(
+      Native.StyleSheet.flatten(host(r, 'person-loading-portrait').props.style),
+    ).toMatchObject({ width: 96, height: 96, borderRadius: 48 });
+    const strip = host(r, 'person-loading-stat-strip');
+    expect(Native.StyleSheet.flatten(strip.props.style).flexDirection).toBe(
+      'row',
+    );
+    expect(
+      strip.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID?.startsWith('person-loading-stat-tile-'),
+      ),
+    ).toHaveLength(3);
+    expect(
+      strip.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID?.startsWith('person-loading-stat-divider-'),
+      ),
+    ).toHaveLength(2);
+  });
+
+  test.each(['votes', 'interests', 'pay'] as const)(
     '%s jumps to the measured heading below the current iOS bar at every text size',
     async (section) => {
       const scrollTo = jest
@@ -342,8 +586,10 @@ describe('profile', () => {
         .mockReturnValue(42);
       let viewportTop = 0;
       const viewport = viewportAt(() => viewportTop);
+      const dimensions = jest
+        .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+        .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
       const { r } = await wong();
-      const dimensions = jest.spyOn(Native, 'useWindowDimensions');
       const heading = () => host(r, `person-${section}-heading`);
       const tap = () =>
         r.root
@@ -354,7 +600,11 @@ describe('profile', () => {
           )
           .props.onPress();
       let top = 900;
-      const measureLayout = jest.fn((_ancestor, done) => done(0, top, 300, 60));
+      let headingOffset = 0;
+      const measureLayout = jest.fn((_ancestor, done) =>
+        done(0, top - headingOffset, 300, 60),
+      );
+      anchorMeasure(r, section, measureLayout);
       // The section's outer position is deliberately different from its heading.
       let holder = host(r, `person-${section}`).parent!;
       while (typeof holder.props.onLayout !== 'function')
@@ -376,9 +626,10 @@ describe('profile', () => {
         });
         await act(async () => r.update(<Person />));
         top = 900 + size * 80;
+        headingOffset = size * 3;
         await act(async () =>
           heading().props.onLayout({
-            currentTarget: { measureLayout },
+            currentTarget: 71,
             nativeEvent: {
               layout: { x: 0, y: size * 3, width: 300, height: 28 + size * 12 },
             },
@@ -387,6 +638,7 @@ describe('profile', () => {
         await act(async () => tap());
         expect(measureLayout).toHaveBeenLastCalledWith(
           42,
+          expect.any(Function),
           expect.any(Function),
         );
         expect(scrollTo).toHaveBeenLastCalledWith({
@@ -416,6 +668,12 @@ describe('profile', () => {
         y: top - rhythm.block,
         animated: false,
       });
+      // Expanding content after arrival must not pull the reader back up.
+      scrollTo.mockClear();
+      await act(async () =>
+        holder.props.onLayout({ nativeEvent: { layout: { y: 820 } } }),
+      );
+      expect(scrollTo).not.toHaveBeenCalled();
       await act(async () => r.unmount());
       inner.mockRestore();
       viewport.mockRestore();
@@ -423,12 +681,14 @@ describe('profile', () => {
     },
   );
 
-  test('Android keeps its existing section offset', async () => {
+  test('Android measures the section against the scroll content', async () => {
     jest.replaceProperty(Platform, 'OS', 'android');
     const scrollTo = jest
       .spyOn(ScrollView.prototype, 'scrollTo')
       .mockImplementation(() => {});
+    jest.spyOn(ScrollView.prototype, 'getInnerViewNode').mockReturnValue(42);
     const { r } = await wong();
+    anchorMeasure(r, 'interests', (_ancestor, done) => done(0, 900, 300, 60));
     let holder = host(r, 'person-interests').parent!;
     while (typeof holder.props.onLayout !== 'function') holder = holder.parent!;
     await act(async () =>
@@ -457,16 +717,12 @@ describe('profile', () => {
     jest.spyOn(ScrollView.prototype, 'getInnerViewNode').mockReturnValue(42);
     viewportAt(() => 0);
     const { r } = await wong();
-    const pending: ((x: number, y: number) => void)[] = [];
+    const pending: Parameters<Native.View['measureLayout']>[1][] = [];
     for (const section of ['interests', 'votes']) {
+      anchorMeasure(r, section, (_ancestor, done) => pending.push(done));
       await act(async () =>
         host(r, `person-${section}-heading`).props.onLayout({
-          currentTarget: {
-            measureLayout: (
-              _ancestor: number,
-              done: (x: number, y: number) => void,
-            ) => pending.push(done),
-          },
+          currentTarget: 71,
           nativeEvent: { layout: { x: 0, y: 0, width: 300, height: 28 } },
         }),
       );
@@ -480,9 +736,9 @@ describe('profile', () => {
           .props.onPress(),
       );
     }
-    await act(async () => pending[0]!(0, 900));
+    await act(async () => pending[0]!(0, 900, 300, 60));
     expect(scrollTo).not.toHaveBeenCalled();
-    await act(async () => pending[1]!(0, 500));
+    await act(async () => pending[1]!(0, 500, 300, 60));
     expect(scrollTo).toHaveBeenCalledTimes(1);
     expect(scrollTo).toHaveBeenLastCalledWith({
       y: 500 - 103 - rhythm.block,
@@ -502,14 +758,10 @@ describe('profile', () => {
     const viewport = viewportAt(() => 0);
     const { r } = await wong();
     expect(scrollTo).not.toHaveBeenCalled();
+    anchorMeasure(r, 'interests', (_ancestor, done) => done(0, 1193, 300, 60));
     await act(async () =>
       host(r, 'person-interests-heading').props.onLayout({
-        currentTarget: {
-          measureLayout: (
-            _ancestor: number,
-            done: (x: number, y: number) => void,
-          ) => done(0, 1200),
-        },
+        currentTarget: 71,
         nativeEvent: { layout: { x: 0, y: 7, width: 300, height: 90 } },
       }),
     );
@@ -804,14 +1056,15 @@ describe('profile', () => {
     let holder: TestRenderer.ReactTestInstance | null = group.parent;
     while (holder && typeof holder.props.onLayout !== 'function')
       holder = holder.parent;
+    while (typeof holder!.instance?.measureLayout !== 'function')
+      holder = holder!.parent;
+    holder!.instance.measureLayout = (
+      _ancestor: unknown,
+      done: (x: number, y: number) => void,
+    ) => done(0, 900);
     await act(async () =>
       holder!.props.onLayout({
-        currentTarget: {
-          measureLayout: (
-            _ancestor: number,
-            done: (x: number, y: number) => void,
-          ) => done(0, 900),
-        },
+        currentTarget: 71,
         nativeEvent: { layout: { y: 900 } },
       }),
     );

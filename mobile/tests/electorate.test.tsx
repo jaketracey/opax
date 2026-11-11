@@ -14,7 +14,7 @@ import { ContentUnavailable } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { Heading } from '../src/design/text';
 import { Screen } from '../src/design/layout';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
@@ -168,6 +168,73 @@ beforeEach(() => {
   mockFollow.states = new Map();
   for (const key of Object.keys(mockParams)) delete mockParams[key];
   mock.directory.mockResolvedValue(directory as never);
+});
+
+test('the pending electorate reserves the map, title and member layout with one loading label', async () => {
+  const dimensions = jest
+    .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+    .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+  load('Boothby');
+  mock.electorateFor.mockReturnValue(new Promise(() => {}));
+  const r = await render(<Electorate />);
+  const host = (id: string) =>
+    r.root.find(
+      (node) => typeof node.type === 'string' && node.props.testID === id,
+    );
+  expect(host('electorate-loading').props.accessibilityLabel).toBe(
+    'Loading the electorate',
+  );
+  expect(
+    r.root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.accessibilityRole === 'progressbar',
+    ),
+  ).toHaveLength(1);
+  expect(
+    order(r, [
+      'electorate-loading-map',
+      'electorate-loading-source',
+      'electorate-loading-title',
+      'electorate-loading-chamber',
+      'electorate-loading-follow',
+      'electorate-loading-members-heading',
+      'electorate-loading-member',
+      'electorate-loading-past-heading',
+      'electorate-loading-past-0',
+      'electorate-loading-past-1',
+    ]),
+  ).toEqual([
+    'electorate-loading-map',
+    'electorate-loading-source',
+    'electorate-loading-title',
+    'electorate-loading-chamber',
+    'electorate-loading-follow',
+    'electorate-loading-members-heading',
+    'electorate-loading-member',
+    'electorate-loading-past-heading',
+    'electorate-loading-past-0',
+    'electorate-loading-past-1',
+  ]);
+  expect(
+    StyleSheet.flatten(host('electorate-loading-map').props.style).height,
+  ).toBe(200);
+  expect(
+    host('electorate-loading').findAll(
+      (node) =>
+        node.props.accessibilityElementsHidden &&
+        node.props.importantForAccessibility === 'no-hide-descendants',
+    ).length,
+  ).toBeGreaterThan(0);
+  const member = host('electorate-loading-member');
+  let card = member.parent!;
+  while (!StyleSheet.flatten(card.props.style)?.backgroundColor)
+    card = card.parent!;
+  expect(
+    StyleSheet.flatten(host('electorate-loading-member-portrait').props.style)
+      .backgroundColor,
+  ).not.toEqual(StyleSheet.flatten(card.props.style).backgroundColor);
+  dimensions.mockRestore();
 });
 
 test('the electorate nav centre stays blank through loading, data arrival and scrolling, with its accessible content heading intact', async () => {

@@ -26,12 +26,7 @@ import { isPartyLabel } from '../design/party';
 import { phoneCopy } from '../design/phone-copy';
 import { StatStrip, type StatTileProps } from '../design/record';
 import { LinkRow } from '../design/rows';
-import {
-  ContentUnavailable,
-  InlineError,
-  LoadingState,
-  Skeleton,
-} from '../design/states';
+import { ContentUnavailable, InlineError, Skeleton } from '../design/states';
 import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
 import { useHeaderBottom } from '../design/useHeaderBottom';
@@ -296,6 +291,7 @@ export function ProfileScreen({
       )}
       {load.status !== 'ready' ? (
         <Screen
+          column="wide"
           testID="person-pending-screen"
           barTitle={load.status === 'not-found' ? 'No profile' : undefined}
           refreshControl={
@@ -337,15 +333,7 @@ export function ProfileScreen({
               />
             )
           ) : (
-            <>
-              <LoadingState
-                shape="people"
-                count={1}
-                label="Loading profile"
-                testID="person-loading"
-              />
-              <Skeleton shape="rows" count={3} label="Loading profile" />
-            </>
+            <PersonSkeleton />
           )}
         </Screen>
       ) : !identity ? null : (
@@ -362,6 +350,16 @@ export function ProfileScreen({
         />
       )}
     </>
+  );
+}
+
+function PersonSkeleton() {
+  return (
+    <Skeleton
+      shape="person-profile"
+      label="Loading the profile"
+      testID="person-loading"
+    />
   );
 }
 
@@ -404,11 +402,11 @@ function ProfileContent({
   const b = profile.blocks;
   const scroll = useRef<ScrollView>(null);
   const y = useRef<Partial<Record<ProfileSection | 'changes', number>>>({});
+  // Keep native host refs, never the synthetic layout event's target.
   const headings = useRef<
-    Partial<
-      Record<ProfileSection | 'changes', LayoutChangeEvent['currentTarget']>
-    >
+    Partial<Record<ProfileSection | 'changes', View | null>>
   >({});
+  const headingY = useRef<Partial<Record<ProfileSection, number>>>({});
   const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
   const yourMP = useIsMyMember(slug);
@@ -422,42 +420,84 @@ function ProfileContent({
     animated: boolean;
     at: number;
   } | null>(null);
+  const completedJump = useRef<typeof goTo>(null);
   const jump = (to: ProfileSection | 'changes') =>
     setGoTo({ to, animated: !reduceMotion, at: Date.now() });
   useEffect(() => {
     if (!goTo) return;
-    if (Platform.OS === 'ios') {
-      const heading = headings.current[goTo.to];
-      const view = scroll.current;
-      const viewport = view?.getNativeScrollRef();
-      const inner = view?.getInnerViewNode();
-      if (!heading || !view || !viewport || inner == null) return;
-      let active = true;
-      // Native content coordinates include Screen's padding and every nested
-      // row/grid inset. Re-measure after the large title changes bar height.
-      viewport.measureInWindow((_x, viewportTop) => {
-        if (!active) return;
-        // Opaque bars already place the viewport below the bar. Only subtract
-        // the part covering this scroll view for translucent/large-title bars.
-        const overlay = Math.max(0, headerBottom - viewportTop);
-        heading.measureLayout(inner, (_x, top) => {
-          if (!active) return;
-          view.scrollTo({
-            y: Math.max(-overlay, top - overlay - rhythm.block),
-            animated: goTo.animated,
-          });
-        });
-      });
-      return () => {
-        active = false;
-      };
-    }
-    const top = y.current[goTo.to];
-    if (top !== undefined)
-      scroll.current?.scrollTo({
-        y: Math.max(0, top - rhythm.heading),
+    const view = scroll.current;
+    if (!view) return;
+    let active = true;
+    let finished = false;
+    let overlay = Platform.OS === 'ios' ? headerBottom : 0;
+    const inset = Platform.OS === 'ios' ? rhythm.block : rhythm.heading;
+    const finish = (top: number) => {
+      if (!active || finished || !Number.isFinite(top)) return;
+      finished = true;
+      completedJump.current = goTo;
+      clearTimeout(fallbackTimer);
+      view.scrollTo({
+        y: Math.max(-overlay, top - overlay - inset),
         animated: goTo.animated,
       });
+    };
+    const fallback = () => {
+      const top = y.current[goTo.to];
+      if (top === undefined) return;
+      // Screen's content padding precedes the section's onLayout coordinate.
+      finish(
+        top + rhythm.block + (headingY.current[goTo.to as ProfileSection] ?? 0),
+      );
+    };
+    // Native measurement callbacks can also disappear while a view remounts.
+    const fallbackTimer = setTimeout(fallback, 100);
+    const measure = () => {
+      if (!active || finished) return;
+      try {
+        const heading = headings.current[goTo.to];
+        // RN exposes the host ref at runtime; its TS declaration omits it.
+        const inner =
+          (
+            view as ScrollView & { getInnerViewRef?: () => View | null }
+          ).getInnerViewRef?.() ?? view.getInnerViewNode();
+        if (!heading?.measureLayout || inner == null) {
+          fallback();
+          return;
+        }
+        heading.measureLayout(
+          inner,
+          (_x, top) => {
+            if (Number.isFinite(top))
+              finish(top + (headingY.current[goTo.to as ProfileSection] ?? 0));
+            else fallback();
+          },
+          fallback,
+        );
+      } catch {
+        fallback();
+      }
+    };
+    try {
+      if (Platform.OS === 'ios') {
+        const viewport = view.getNativeScrollRef();
+        if (viewport?.measureInWindow) {
+          viewport.measureInWindow((_x, viewportTop) => {
+            if (!active || finished) return;
+            // Opaque bars already place the viewport below the bar.
+            overlay = Number.isFinite(viewportTop)
+              ? Math.max(0, headerBottom - viewportTop)
+              : 0;
+            measure();
+          });
+        } else fallback();
+      } else measure();
+    } catch {
+      fallback();
+    }
+    return () => {
+      active = false;
+      clearTimeout(fallbackTimer);
+    };
   }, [goTo, headerBottom]);
   // Arriving at a section (`?section=`): once, when its place is known.
   const arrived = useRef(false);
@@ -469,17 +509,18 @@ function ProfileContent({
   };
   const placed = (to: ProfileSection | 'changes', event: LayoutChangeEvent) => {
     y.current[to] = event.nativeEvent.layout.y;
-    if (Platform.OS !== 'ios') arrive(to);
-    else if (to === 'changes') {
-      // This group's first text starts at its origin, with no row padding.
-      headings.current[to] = event.currentTarget;
-      arrive(to);
-    }
+    if (Platform.OS !== 'ios' || to === 'changes') arrive(to);
+    // A tap can arrive before the section has completed its first layout.
+    setGoTo((pending) =>
+      pending?.to === to && pending !== completedJump.current
+        ? { ...pending }
+        : pending,
+    );
   };
   const headingPlaced = (testID: string, event: LayoutChangeEvent) => {
     const section = headingSections[testID];
     if (!section) return;
-    headings.current[section] = event.currentTarget;
+    headingY.current[section] = event.nativeEvent.layout.y;
     arrive(section);
   };
 
@@ -893,7 +934,13 @@ function ProfileContent({
         ) : null}
       </ReadableColumn>
       {follow && changes.length ? (
-        <View onLayout={(e) => placed('changes', e)}>
+        <View
+          ref={(view) => {
+            headings.current.changes = view;
+          }}
+          collapsable={false}
+          onLayout={(e) => placed('changes', e)}
+        >
           <AddedSinceGroup
             follow={follow}
             changes={changes}
@@ -911,11 +958,17 @@ function ProfileContent({
           />
         </View>
       ) : null}
-      <SectionHeadingLayoutContext.Provider
-        value={Platform.OS === 'ios' ? headingPlaced : null}
-      >
+      <SectionHeadingLayoutContext.Provider value={headingPlaced}>
         {PROFILE_SECTIONS.filter(shows).map((section) => (
-          <View key={section} onLayout={(e) => placed(section, e)}>
+          <View
+            key={section}
+            ref={(view) => {
+              headings.current[section] = view;
+            }}
+            collapsable={false}
+            testID={`person-${section}-anchor`}
+            onLayout={(e) => placed(section, e)}
+          >
             {sections[section]()}
           </View>
         ))}
