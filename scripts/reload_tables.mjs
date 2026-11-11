@@ -6,12 +6,15 @@
 // 1. The manifest's version (sha256 of every SQL file, written by load_tables.mjs into the last file as
 //    table_meta 'version') is compared with the live table_meta row. Equal: nothing to load, smoke only.
 //    The live row only exists after a complete load: file 0 deletes it, the last file writes it.
+//    Otherwise only the datasets whose content hash (table_meta 'hash:<dataset>', written last in each
+//    dataset's group of files) differs from the manifest are loaded, plus the schema and version files.
+//    D1 bills every row and index entry written, and a refresh usually changes one or two datasets.
 // 2. Preflight: every file is applied to an in-memory SQLite first, so D1 is never emptied for a load that
 //    cannot import. Row counts must match the manifest.
 // 3. Drift check: the live PRAGMA table_info of each table_* table against the new schema; drifted tables
 //    (+ _fts, _facets) are dropped so CREATE TABLE IF NOT EXISTS recreates them. (D1 refuses a
 //    sqlite_master JOIN pragma_table_info(...) with SQLITE_AUTH; plain PRAGMA table_info works.)
-// 4. Every file in order, 3 attempts each (D1_RESET_DO, timeouts). Wrangler's "Not currently importing
+// 4. The schema file, each changed dataset's files and the version file in order, 3 attempts each (D1_RESET_DO, timeouts). Wrangler's "Not currently importing
 //    anything" is a poll race after the import finished: the file applied.
 // 5. Smoke: every /api/table/<dataset>?pageSize=1 answers 200 with total > 0.
 // While files 0..N apply, /api/table answers 503 "unavailable" (no version row). Exit 1 on any failure.
@@ -25,7 +28,7 @@ import {DatabaseSync} from 'node:sqlite';
 export const SMOKE_DATASETS = ['money-connections','contracts','suppliers','grants','divisions','votes','instruments','audit-reports','interests','party-money'];
 export const POLL_RACE = 'Not currently importing anything';
 const LIVE_TABLES = "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'table_%' AND name NOT LIKE '%_fts%'";
-const VERSION = "SELECT value FROM table_meta WHERE key='version'";
+const STATE = "SELECT key,value FROM table_meta WHERE key='version' OR key LIKE 'hash:%'";
 
 export class ReloadError extends Error {}
 
@@ -35,7 +38,11 @@ export function readManifest(dir) {
   const last = readFileSync(join(dir,manifest.files.at(-1)),'utf8');
   const version = /INSERT INTO table_meta VALUES \('version','([0-9a-f]{16,64})'\)/.exec(last)?.[1];
   if (!version) throw new ReloadError('manifest has no version file');
-  return {...manifest,version};
+  const datasets = manifest.datasets || {};
+  const grouped = Object.values(datasets).flatMap(d => d.files || []);
+  if (Object.values(datasets).some(d => !/^[0-9a-f]{16,64}$/.test(d.hash || '') || !Array.isArray(d.files) || !d.files.length) || new Set(grouped).size !== grouped.length || grouped.some(f => !manifest.files.includes(f)) || grouped.includes(manifest.files[0]) || grouped.includes(manifest.files.at(-1)))
+    throw new ReloadError('manifest dataset groups are invalid');
+  return {...manifest,datasets,version};
 }
 
 /** Apply every manifest file to a fresh in-memory SQLite; return the expected column lists. */
@@ -84,12 +91,30 @@ const parseJSON = stdout => {
   return JSON.parse(stdout.slice(at));
 };
 
-/** The live version row, or null when table_meta is missing or empty. */
-export async function liveVersion(d1, options) {
-  const first = await d1({command:VERSION,json:true});
-  if (first.code !== 0 && /no such table/i.test(first.stdout + first.stderr)) return null;
-  const stdout = first.code === 0 ? first.stdout : await attempt(d1,{command:VERSION,json:true},{...options,label:'version query'});
-  return parseJSON(stdout)[0]?.results?.[0]?.value ?? null;
+/** The live version row (null when table_meta is missing or empty) and the live dataset hashes. */
+export async function liveState(d1, options) {
+  const first = await d1({command:STATE,json:true});
+  if (first.code !== 0 && /no such table/i.test(first.stdout + first.stderr)) return {version:null,hashes:{}};
+  const stdout = first.code === 0 ? first.stdout : await attempt(d1,{command:STATE,json:true},{...options,label:'version query'});
+  const rows = parseJSON(stdout)[0]?.results || [];
+  return {version:rows.find(r => r.key === 'version')?.value ?? null,hashes:Object.fromEntries(rows.filter(r => r.key.startsWith('hash:')).map(r => [r.key.slice(5),r.value]))};
+}
+
+/**
+ * Datasets to load: the hash differs from the live row, the table was dropped for drift or is not live,
+ * or every dataset when forced. A manifest without groups (older builds) loads every file.
+ */
+export function changedDatasets(manifest, {hashes = {}, drift = [], liveTables = null, force = false} = {}) {
+  return Object.entries(manifest.datasets).filter(([name,{hash}]) => {
+    const table = 'table_' + name.replaceAll('-','_');
+    return force || hashes[name] !== hash || drift.includes(table) || (liveTables && !liveTables.has(table));
+  }).map(([name]) => name);
+}
+
+/** The files to apply, in manifest order: everything outside a group, and the groups of `load`. */
+export function filesToApply(manifest, load) {
+  const skip = new Set(Object.entries(manifest.datasets).filter(([name]) => !load.includes(name)).flatMap(([,d]) => d.files));
+  return manifest.files.filter(f => !skip.has(f));
 }
 
 export async function smoke({base, fetch = globalThis.fetch, sleep, log, datasets = SMOKE_DATASETS, tries = 3}) {
@@ -118,29 +143,34 @@ export async function smoke({base, fetch = globalThis.fetch, sleep, log, dataset
 export async function reloadTables({dir, d1, base, fetch, sleep = ms => new Promise(r => setTimeout(r,ms)), log = console.log, force = false}) {
   const options = {sleep,log};
   const manifest = readManifest(dir);
-  const live = await liveVersion(d1,options);
+  const {version:live,hashes} = await liveState(d1,options);
   let result;
   if (!force && live === manifest.version) {
     log(`D1 tables current (version ${live}); no reload`);
-    result = {action:'skipped',version:live,drift:[],files:0};
+    result = {action:'skipped',version:live,drift:[],files:0,datasets:[]};
   } else {
-    log(`D1 version ${live ?? 'none'} -> ${manifest.version}: reloading ${manifest.files.length} files`);
+    log(`D1 version ${live ?? 'none'} -> ${manifest.version}`);
     const expected = preflight(dir,manifest);
     log(`preflight ok: ${manifest.files.length} files import into a fresh database`);
     const tables = Object.keys(expected);
     const out = parseJSON(await attempt(d1,{command:[LIVE_TABLES,...tables.map(t => `PRAGMA table_info(${t})`)].join(';\n') + ';',json:true},{...options,label:'drift check'}));
-    for (const t of (out[0]?.results || []).map(r => r.name).filter(t => !(t in expected))) log(`note: live table ${t} is not in the new schema (left as is)`);
+    const liveTables = new Set((out[0]?.results || []).map(r => r.name));
+    for (const t of [...liveTables].filter(t => !(t in expected))) log(`note: live table ${t} is not in the new schema (left as is)`);
     const liveColumns = Object.fromEntries(tables.map((t,i) => [t,(out[i+1]?.results || []).map(c => c.name)]));
     const drift = driftedTables(expected,liveColumns);
     if (drift.length) {
       log(`schema drift: ${drift.join(' ')}; dropping and recreating`);
       await attempt(d1,{command:drift.map(t => `DROP TABLE IF EXISTS ${t}_fts; DROP TABLE IF EXISTS ${t}_facets; DROP TABLE IF EXISTS ${t};`).join(' ')},{...options,label:'drop drifted tables'});
     } else log('no schema drift');
-    for (const [i,file] of manifest.files.entries()) {
-      await attempt(d1,{file:join(dir,file)},{...options,label:`file ${i+1}/${manifest.files.length} ${file}`,tolerateRace:true});
-      if ((i+1) % 10 === 0 || i === manifest.files.length-1) log(`applied ${i+1}/${manifest.files.length}`);
+    const load = changedDatasets(manifest,{hashes,drift,liveTables,force});
+    const unchanged = Object.keys(manifest.datasets).filter(name => !load.includes(name));
+    const files = filesToApply(manifest,load);
+    log(`loading ${load.length ? load.join(' ') : 'no datasets'} (${files.length} of ${manifest.files.length} files)${unchanged.length ? `; unchanged, left as is: ${unchanged.join(' ')}` : ''}`);
+    for (const [i,file] of files.entries()) {
+      await attempt(d1,{file:join(dir,file)},{...options,label:`file ${i+1}/${files.length} ${file}`,tolerateRace:true});
+      if ((i+1) % 10 === 0 || i === files.length-1) log(`applied ${i+1}/${files.length}`);
     }
-    result = {action:'reloaded',version:manifest.version,drift,files:manifest.files.length};
+    result = {action:'reloaded',version:manifest.version,drift,files:files.length,datasets:load};
   }
   if (base) {
     const datasets=manifest.counts?.['act-invoices']>0 ? [...SMOKE_DATASETS,'act-invoices'] : SMOKE_DATASETS;
@@ -170,7 +200,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const dir = resolve(value('--sql-dir',fileURLToPath(new URL('../portal/private/dt-api/sql/',import.meta.url))));
   try {
     const result = await reloadTables({dir,d1:wranglerD1(),base:value('--base','https://opax.com.au'),force:flag('--force')});
-    summary(result.action === 'skipped' ? `- D1 tables: current (version \`${result.version}\`), not reloaded; smoke ok` : `- D1 tables: reloaded ${result.files} files (version \`${result.version}\`${result.drift.length ? `, recreated ${result.drift.join(' ')}` : ''}); smoke ok`);
+    summary(result.action === 'skipped' ? `- D1 tables: current (version \`${result.version}\`), not reloaded; smoke ok` : `- D1 tables: reloaded ${result.datasets.length ? result.datasets.join(', ') : 'no datasets'} in ${result.files} files (version \`${result.version}\`${result.drift.length ? `, recreated ${result.drift.join(' ')}` : ''}); smoke ok`);
   } catch (error) {
     const reason = error instanceof ReloadError ? error.message : 'unexpected error: ' + String(error?.message || error).slice(0,200);
     console.log(`::error::D1 reload failed: ${reason}`);

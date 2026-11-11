@@ -111,20 +111,24 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
   const active=Object.keys(TABLE_DATASETS).filter(name=>name!=='act-invoices'||includeAct);
   await mkdir(output,{recursive:true});
   for (const file of await readdir(output)) if (/^\d+-.*\.sql$|^manifest\.json$/.test(file)) await rm(join(output,file));
-  const files=[],counts={};let bytes=0,part=0;
-  const put=async (suffix,sql)=>{const file=String(part++).padStart(4,'0')+'-'+suffix+'.sql';await writeFile(join(output,file),sql);files.push(file);bytes+=Buffer.byteLength(sql);};
-  // Rebuild these projections when reloading an earlier summary-only database.
-  let setup=['divisions','votes'].map(name=>`DROP TABLE IF EXISTS table_${name}_fts;\nDROP TABLE IF EXISTS table_${name}_facets;\nDROP TABLE IF EXISTS table_${name};\n`).join('')+tableSchema(active);
-  for (const name of active) {const table=tableName(name);setup+=`DELETE FROM ${table};\nDELETE FROM ${table}_facets;\n`;}
-  // An ordinary deploy without the private reviewed artifact preserves the
-  // last approved ACT rows and receipt. It cannot clear or refresh that source.
-  setup+=includeAct ? 'DELETE FROM table_meta;\n' : "DELETE FROM table_meta WHERE key<>'act-invoices';\n";
-  await put('schema',setup);
+  const files=[],counts={},groups={};let bytes=0,part=0,group=null;
+  // Each dataset is a self-contained group of files with its own content hash, so the reloader can
+  // leave an unchanged dataset alone (scripts/reload_tables.mjs). Writes are billed per row and per index
+  // entry, and a typical refresh changes one or two of the eleven datasets.
+  const put=async (suffix,sql)=>{const file=String(part++).padStart(4,'0')+'-'+suffix+'.sql';await writeFile(join(output,file),sql);files.push(file);bytes+=Buffer.byteLength(sql);if(group){group.files.push(file);if(!group.done)group.hash.update(sql);}};
+  // Creates any missing table and takes the data version away first: /api/table answers 503 until the
+  // last file publishes the new version. Dataset hashes and the ACT receipt are left to their own groups.
+  await put('schema',tableSchema(active)+"DELETE FROM table_meta WHERE key='version';\n");
   let sql='',pending=new Map();
   const insert=(prefix,values)=>{let list=pending.get(prefix)||[];if(list.length && Buffer.byteLength(prefix+' VALUES '+list.join(',')+','+values)>80_000){sql+=prefix+' VALUES '+list.join(',')+';\n';list=[];}list.push(values);pending.set(prefix,list);if(list.length>=100){sql+=prefix+' VALUES '+list.join(',')+';\n';pending.delete(prefix);}};
   const flush=async suffix=>{for(const [prefix,list]of pending)sql+=prefix+' VALUES '+list.join(',')+';\n';pending.clear();if(sql){await put(suffix,sql);sql='';}};
   for (const name of active) {
     const config=TABLE_DATASETS[name],table=tableName(name);counts[name]=0;
+    group={files:[],hash:createHash('sha256')};
+    // DROP and CREATE rather than DELETE: dropping is not billed per row, and the indexes, FTS index and
+    // facets are rebuilt from scratch exactly as on a first load. The hash row goes first so a load cut
+    // short inside this group reloads it next time.
+    sql=`DELETE FROM table_meta WHERE key='hash:${name}';\n`+(name==='act-invoices' ? "DELETE FROM table_meta WHERE key='act-invoices';\n" : '')+`DROP TABLE IF EXISTS ${table}_fts;\nDROP TABLE IF EXISTS ${table}_facets;\nDROP TABLE IF EXISTS ${table};\n`+tableSchema([name]);
     for (const {row} of datasets[name] || []) {
       const rowid=++counts[name];
       const values=config.columns.filter(c=>!c.computed).map(c=>arrayColumns.has(c.key) && Array.isArray(row[c.key]) ? JSON.stringify(row[c.key]) : row[c.key] ?? null);
@@ -135,17 +139,21 @@ export async function buildTableSQL({root=defaultRoot,output=fileURLToPath(new U
       if (sql.length>2_000_000) await flush(name);
     }
     await flush(name);
-    await put(name+'-fts',`INSERT INTO ${table}_fts (${table}_fts) VALUES ('rebuild');\n`);
-  }
-  // Dataset receipt and rows become readable together only after the final version.
-  if (counts['act-invoices']) {
-    if (!metadata['act-invoices']) throw Error('ACT invoice source receipt missing; reload held');
-    await put('act-invoices-receipt',`INSERT INTO table_meta VALUES ('act-invoices',${literal(JSON.stringify(metadata['act-invoices']))});\n`);
+    let tail=`INSERT INTO ${table}_fts (${table}_fts) VALUES ('rebuild');\n`;
+    // Dataset receipt and rows become readable together only after the final version.
+    if (name==='act-invoices') {
+      if (!metadata['act-invoices']) throw Error('ACT invoice source receipt missing; reload held');
+      tail+=`INSERT INTO table_meta VALUES ('act-invoices',${literal(JSON.stringify(metadata['act-invoices']))});\n`;
+    }
+    group.hash.update(tail);
+    const hash=group.hash.digest('hex').slice(0,24);group.done=true;
+    await put(name+'-fts',tail+`INSERT INTO table_meta VALUES ('hash:${name}','${hash}');\n`);
+    groups[name]={hash,files:group.files};group=null;
   }
   const version=createHash('sha256');for(const file of files)version.update(await readFile(join(output,file)));
   // Publish the data version after all projections and their indexes are loaded.
   await put('version',`INSERT INTO table_meta VALUES ('version','${version.digest('hex').slice(0,24)}');\nANALYZE;\n`);
-  const manifest={files,bytes,counts,publicAssets:0,retainedDatasets:includeAct?[]:['act-invoices']};
+  const manifest={files,bytes,counts,datasets:groups,publicAssets:0,retainedDatasets:includeAct?[]:['act-invoices']};
   await writeFile(join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
   return manifest;
 }
