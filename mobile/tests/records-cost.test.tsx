@@ -1,6 +1,7 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
 import { Text } from 'react-native';
+import { SectionHeader } from '../src/design/layout';
 import TestRenderer from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { CatalogCache } from '../src/api/cache';
@@ -261,6 +262,12 @@ test('bill text leads with the bill page summary, labelled as machine-written', 
     .findAllByProps({ testID: 'bill-text-summary-label' })
     .find((node) => node.props.note);
   expect(pill!.props.note.body).toContain(bill.summary!.attribution);
+  const header = view.root
+    .findAllByType(SectionHeader)
+    .find((node) => node.props.title === 'In short');
+  expect(
+    header!.findAllByProps({ testID: 'bill-text-summary-label' }),
+  ).toContain(pill);
   // VoiceOver hears the pill as plain "Machine-written".
   expect(
     view.root

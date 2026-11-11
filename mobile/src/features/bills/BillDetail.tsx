@@ -1141,7 +1141,7 @@ function Summary({
   const more = changes.slice(shown.length);
   const sources = view.summary.sources;
   return (
-    <Section title="In short" testID="bill-summary">
+    <Section testID="bill-summary">
       <MachineSummary
         attribution={summary.attribution}
         sentences={sentences}
@@ -1462,6 +1462,7 @@ function Votes({
   const reduceMotion = useReduceMotion();
   const headerBottom = useHeaderBottom();
   const member = useMyMemberVotes(votes.has);
+  const [rowWidth, setRowWidth] = useState<number>();
   const headerRef = useRef<View>(null);
   useEffect(() => {
     if (votes.sectionFocus) targets.scrollTo(headerRef, true);
@@ -1476,6 +1477,7 @@ function Votes({
     <BillVoteRow
       key={division.key}
       division={division}
+      width={rowWidth}
       index={ordered.indexOf(division)}
       bill={identity}
       expanded={votes.expanded.has(division.key)}
@@ -1513,7 +1515,14 @@ function Votes({
     });
   };
   return (
-    <View ref={headerRef} collapsable={false}>
+    <View
+      ref={headerRef}
+      collapsable={false}
+      testID="bill-divisions-layout"
+      onLayout={({ nativeEvent: { layout } }) => {
+        if (layout.width > 0) setRowWidth(layout.width);
+      }}
+    >
       <Section
         title="How parliament voted"
         testID="bill-divisions"
@@ -1571,6 +1580,7 @@ function Votes({
  */
 function BillVoteRow({
   division,
+  width,
   index,
   bill,
   expanded,
@@ -1581,6 +1591,8 @@ function BillVoteRow({
   memberVote,
 }: {
   division: Division;
+  /** The list's width also constrains the intrinsically sized iOS menu trigger. */
+  width: number | undefined;
   index: number;
   bill: Identity;
   expanded: boolean;
@@ -1677,6 +1689,7 @@ function BillVoteRow({
           testID={`${id}-more`}
           style={({ pressed }) => [
             styles.voteRow,
+            { width },
             pressed ? styles.pressed : null,
           ]}
         >

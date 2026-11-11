@@ -5,8 +5,8 @@ import { withNavigationOptions } from './navigation-options';
 // link, and the Contents hand-back for bill text (records.md 4.2).
 import { router } from 'expo-router';
 import { act } from 'react';
-import { LayoutAnimation, Text as NativeText } from 'react-native';
-import TestRenderer from 'react-test-renderer';
+import { LayoutAnimation, Text as NativeText, StyleSheet } from 'react-native';
+import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import fixtures from '../scripts/fixtures/records/contracts.json';
 import { ApiError } from '../src/api/errors';
 import { catalogs } from '../src/api/runtime';
@@ -103,6 +103,11 @@ const text = (view: TestRenderer.ReactTestRenderer) =>
     .flat(Infinity)
     .filter((c) => typeof c === 'string')
     .join('\n');
+function hostParent(node: ReactTestInstance) {
+  let parent = node.parent;
+  while (parent && typeof parent.type !== 'string') parent = parent.parent;
+  return parent!;
+}
 let mockOptions: Record<string, unknown> = {};
 const toolbars = (view: TestRenderer.ReactTestRenderer) =>
   view.root.findAll((node) => (node.type as unknown) === 'Toolbar');
@@ -149,10 +154,43 @@ test.each([false, true])(
     expect(toggle().props.accessibilityState).toEqual({ expanded: true });
     expect(text(view)).toContain('A speech summary.');
     expect(text(view)).toContain('Machine-written');
+    const pill = view.root.find(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.testID === 'doc-brief-label',
+    );
+    const header = hostParent(hostParent(pill));
+    expect(StyleSheet.flatten(header.props.style)).toMatchObject({
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+    });
+    expect(StyleSheet.flatten(hostParent(pill).props.style)).toMatchObject({
+      marginLeft: 'auto',
+      maxWidth: '100%',
+    });
+    // These are separate buttons: opening provenance must not collapse the summary.
+    expect(
+      toggle().findAll((node) => node.props.testID === 'doc-brief-label'),
+    ).toHaveLength(0);
+    await act(async () =>
+      view.root
+        .find(
+          (node) =>
+            node.props.testID === 'doc-brief-label' &&
+            typeof node.props.onPress === 'function',
+        )
+        .props.onPress(),
+    );
+    expect(router.push).toHaveBeenLastCalledWith(
+      expect.objectContaining({ pathname: '/machine-note' }),
+    );
+    expect(toggle().props.accessibilityState).toEqual({ expanded: true });
     animate.mockClear();
     await act(async () => toggle().props.onPress());
     expect(toggle().props.accessibilityState).toEqual({ expanded: false });
     expect(text(view)).not.toContain('A speech summary.');
+    expect(text(view)).toContain('Machine-written');
     if (reduced) expect(animate).not.toHaveBeenCalled();
     else expect(animate).toHaveBeenCalledTimes(1);
     await act(async () =>
