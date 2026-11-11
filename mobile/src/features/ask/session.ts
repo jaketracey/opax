@@ -105,6 +105,7 @@ export async function askQuestion(
 ): Promise<string | null> {
   const s = askSession.snapshot();
   if (s.busy || !question.trim()) return null;
+  if (!fromDraft) askSession.clearDraft();
   if (!(await askConsentGiven())) {
     askSession.hold(question, carry, fromDraft);
     router.push(askConsentRoute);
@@ -131,7 +132,10 @@ export async function continueHeld() {
   const held = askSession.takePending();
   if (!held) return;
   if (held.fromDraft) await askSession.sendDraft();
-  else await askSession.submit(held.question, held.carry);
+  else {
+    askSession.clearDraft();
+    await askSession.submit(held.question, held.carry);
+  }
 }
 
 /** One answer and its question, from the open conversation or a saved one. */

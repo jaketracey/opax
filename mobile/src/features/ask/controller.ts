@@ -182,6 +182,10 @@ export class AskController {
       this.update({ draft: text, fresh: false, freshOptions: null });
     else this.update({ draft: text });
   }
+  /** A tapped question clears the text while keeping the composer's options. */
+  clearDraft() {
+    this.update({ draft: '' });
+  }
   /** Clears an arrival's options line (its ⓧ): back to the conversation's own. */
   clearFresh() {
     this.update({ fresh: false, freshOptions: null });
