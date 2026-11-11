@@ -118,7 +118,7 @@
 .rr-table tbody tr:last-child > th { border-bottom: 0; }
 .rr-table td { vertical-align: top; }
 .rr-row-total th, .rr-row-total td { background: var(--paper-sunken); }
-.rr-cell-note { display: block; margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); font-weight: 400; }
+.rr-cell-note { display: block; margin-top: var(--space-line); font: var(--type-fine); color: var(--ink-soft); font-weight: var(--weight-regular); }
 .rr-blank { color: var(--ink-faint); }
 
 /* Agency facts: the figure as printed, its label, the line it was read from. */
