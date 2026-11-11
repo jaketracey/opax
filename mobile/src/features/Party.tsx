@@ -21,7 +21,7 @@ import { nameKey } from '../api/ids';
 import type { PartyMember } from '../api/party-page';
 import { apiClient, catalogs, portraits } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
-import { PadGrid, isPad, useLayout } from '../design/adaptive';
+import { useLayout } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
 import {
   counted,
@@ -84,6 +84,7 @@ import {
 } from './people/PartyDepth';
 import { ProfileHeader } from './people/ProfileHeader';
 import { MoreFromRecord } from './people/Sections';
+import { SurfaceGrid } from './today/SurfaceGrid';
 import { profileGrid } from './split/grid';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
@@ -496,10 +497,10 @@ function PartyContent({
     view.associated.status === 'error' ||
     view.associated.status === 'loading';
 
-  // On an iPad at regular width, related sections pair (people.md 2.2):
+  // At regular width, related sections pair (people.md 2.2):
   // Members with Recent votes, Receipts with Debts and associated entities.
-  // The phone keeps one column in its own order.
-  const pairs = isPad && layout.regular;
+  // Compact windows keep one column in their own order.
+  const pairs = layout.regular;
   const membersSection = (
     <ProfileBlock
       title="Members"
@@ -887,16 +888,16 @@ function PartyContent({
       {pairs ? (
         <>
           <View onLayout={(e) => placed('members')(e.nativeEvent.layout.y)}>
-            <PadGrid {...profileGrid}>
+            <SurfaceGrid {...profileGrid} testID="party-members-grid">
               {membersSection}
               {votesSection}
-            </PadGrid>
+            </SurfaceGrid>
           </View>
           <View onLayout={(e) => placed('receipts')(e.nativeEvent.layout.y)}>
-            <PadGrid {...profileGrid}>
+            <SurfaceGrid {...profileGrid} testID="party-receipts-grid">
               {receiptsSection}
               {debtsSection}
-            </PadGrid>
+            </SurfaceGrid>
           </View>
         </>
       ) : (

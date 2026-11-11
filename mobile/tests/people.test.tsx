@@ -76,7 +76,7 @@ jest.mock('../src/api/runtime', () => ({
     list: jest.fn(),
   },
 }));
-// A live iPad flag: the page reads `isPad` and `useLayout` at render.
+// A live iPad flag for the page's measured layout decisions.
 jest.mock('../src/design/adaptive', () => {
   const actual = jest.requireActual('../src/design/adaptive');
   const pad = () => !!(globalThis as { __opaxTestPad?: boolean }).__opaxTestPad;
@@ -90,6 +90,11 @@ jest.mock('../src/design/adaptive', () => {
   Object.defineProperty(out, 'isPad', { get: pad, enumerable: true });
   return out;
 });
+// These page assertions observe the shared grid boundary. Local hardware
+// measurements and fold clearance are covered in duo-surfaces.test.tsx.
+jest.mock('../src/features/today/SurfaceGrid', () => ({
+  SurfaceGrid: jest.requireMock('../src/design/adaptive').PadGrid,
+}));
 const setPad = (on: boolean) => {
   (globalThis as { __opaxTestPad?: boolean }).__opaxTestPad = on;
 };

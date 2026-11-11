@@ -13,7 +13,10 @@ import { emptyReservedRegions, type ReservedRegions } from '../src/design/fold';
 import { Text } from '../src/design/text';
 import { ElectorateCard } from '../src/features/your-mp/ElectorateCard';
 import { decodeElectorate, electorateFor } from '../src/api/catalogs';
-import { index, pinned } from './pinned';
+import { index, pinned, slugs } from './pinned';
+import { Catalogs } from '../src/api/catalogs';
+import { catalogs as runtime } from '../src/api/runtime';
+import { PartyPage } from '../src/features/Party';
 import { DailyPair } from '../src/features/today/DailyPair';
 import { MoreToExplore } from '../src/features/today/MoreToExplore';
 import { Masthead } from '../src/features/today/Masthead';
@@ -57,9 +60,18 @@ jest.mock('expo-router', () => {
 });
 jest.mock('../src/api/runtime', () => ({
   client: { askPost: jest.fn() },
+  apiClient: { get: jest.fn() },
+  peopleDepth: {
+    access: jest.fn().mockRejectedValue(new Error('Offline')),
+    funding: jest.fn().mockRejectedValue(new Error('Offline')),
+    mentions: jest.fn().mockRejectedValue(new Error('Offline')),
+    news: jest.fn().mockRejectedValue(new Error('Offline')),
+  },
   catalogs: {
     roster: jest.fn().mockRejectedValue(new Error('Offline')),
     slugs: jest.fn(),
+    partyPage: jest.fn(),
+    followSources: jest.fn(),
   },
   portraits: { get: jest.fn(async () => null) },
   yearPictures: { get: jest.fn(async () => null) },
@@ -320,6 +332,66 @@ describe('Your MP on Duo', () => {
         ),
       );
       expect(tree.root.findAllByType(Grid)).toHaveLength(0);
+    },
+  );
+});
+
+describe('Party on Duo', () => {
+  beforeAll(async () => {
+    const api = new Catalogs({
+      get: async (path, decode) => ({
+        data: decode(path === '/api/person-slugs' ? slugs : pinned(path)),
+        stale: false,
+        savedAt: 1,
+        asOf: null,
+      }),
+    });
+    jest
+      .mocked(runtime.partyPage)
+      .mockResolvedValue(await api.partyPage('Labor'));
+  });
+  test('related sections pair on the inner phone display and their fold gutter stays empty', async () => {
+    const tree = render(surface(<PartyPage input="Labor" />));
+    await act(async () => {});
+    expect(tree.root.findAllByType(Grid)).toHaveLength(2);
+    expect(
+      cells(tree, 'party-members-grid').map(
+        (cell) => StyleSheet.flatten(cell.props.style).width,
+      ),
+    ).toEqual([263, 263]);
+    act(() => tree.update(surface(<PartyPage input="Labor" />, fold)));
+    expect(
+      StyleSheet.flatten(native(tree, 'party-members-grid').props.style)
+        .columnGap,
+    ).toBe(40);
+    expect(
+      cells(tree, 'party-members-grid').map(
+        (cell) => StyleSheet.flatten(cell.props.style).width,
+      ),
+    ).toEqual([261, 261]);
+  });
+  test.each([320, 375, 390, 402, 414, 430, 440, 956])(
+    'the phone rule at %spt retains the section stack and wrapping header',
+    async (width) => {
+      mockWidth = width;
+      mockHeight = 560;
+      act(() =>
+        setWindowTraitsOverride({
+          horizontal: width === 956 ? 'regular' : 'compact',
+          vertical: width === 956 ? 'compact' : 'regular',
+          foldable: false,
+        }),
+      );
+      const tree = render(
+        surface(<PartyPage input="Labor" />, emptyReservedRegions, width),
+      );
+      await act(async () => {});
+      expect(tree.root.findAllByType(Grid)).toHaveLength(0);
+      const title = tree.root
+        .findAllByType(Text)
+        .find((node) => node.props.testID === 'party-title')!;
+      expect(title.props.children).toBe('Labor');
+      expect(title.props.numberOfLines).toBeUndefined();
     },
   );
 });
