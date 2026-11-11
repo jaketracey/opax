@@ -82,6 +82,9 @@ function transcriptOut(env: ToolEnv, c: RecordRow, d: RecordRow): RecordRow {
 /** The commission's own notes about non-publication or suppression orders travel with each transcript. */
 const orderNotes = (c: RecordRow) => (Array.isArray(c.notes) ? c.notes as unknown[] : []).map(String).filter(n => /non-publication|suppression|publication order/i.test(n)).map(n => clip(n, 300))
 
+/** "the Royal Commission into ...", as the integrity tool's count line reads ("OPAX lists N ... from the IBAC"). */
+const fromThe = (name: string) => /^the\s/i.test(name) ? name : `the ${name}`
+
 function transcriptCite(t: RecordRow): ToolCitation {
   const text = t.text_matches as TextHits | undefined
   if (text?.hits.length) {
@@ -165,8 +168,8 @@ export const tool: ToolDefinition = {
       if (records(c.commissioners).length) citations.push({ kind: 'record', url: String(object(records(c.commissioners)[0].cite).url), text: clip(`${c.name} commissioners as ${object(records(c.commissioners)[0].cite).document ?? 'the cited document'} names them: ${people(c)}.`, 600) })
       for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${dayWords(d.date)})` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
       const span = transcriptSummary(c)
-      if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `${c.name}: ${span.count} hearing transcript${span.count === 1 ? '' : 's'} listed, dated ${spanWords(span.first_date, span.last_date)} (view=transcripts lists them). ${TRANSCRIPT_LABEL}.` })
-      return publishedResult([row], citations, { view: 'profile', total: 1, offset: 0, next_offset: null, snapshot, notes: [...several, NOTE] })
+      if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `OPAX lists ${span.count} hearing transcript${span.count === 1 ? '' : 's'} from ${fromThe(String(c.name))}, dated ${spanWords(span.first_date, span.last_date)}. ${TRANSCRIPT_LABEL}.` })
+      return publishedResult([row], citations, { view: 'profile', total: 1, offset: 0, next_offset: null, snapshot, notes: [...several, NOTE, ...(span.count ? ['view=transcripts lists the hearing transcripts, newest first.'] : [])] })
     }
 
     if (args.view === 'transcripts') {
@@ -181,7 +184,7 @@ export const tool: ToolDefinition = {
         return text ? { ...row, text_matches: text } : row
       }))
       const span = transcriptSummary(c), range = span.first_date ? `, dated ${spanWords(span.first_date, span.last_date)}` : ''
-      const count = `${c.name}: ${all.length} hearing transcript${all.length === 1 ? '' : 's'} listed${range}${hits.length !== all.length ? `; ${hits.length} match` : ''} (OPAX projection, snapshot ${snapshot}). ${TRANSCRIPT_LABEL}.`
+      const count = `OPAX lists ${all.length} hearing transcript${all.length === 1 ? '' : 's'} from ${fromThe(String(c.name))}${range}${hits.length !== all.length ? `; ${hits.length} match` : ''} (OPAX projection, snapshot ${snapshot}). ${TRANSCRIPT_LABEL}.`
       return publishedResult(picked, [{ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: count }, ...picked.map(transcriptCite)],
         { view: 'transcripts', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot,
           notes: [...several, NOTE, 'Transcripts are listed newest first with the publisher\'s page and PDF. What a witness or counsel says in a hearing is evidence or submission, not a finding of the commission.', ...(found ? [`Words are matched in the title, date and, for this commission, the transcript text (CC BY 4.0). Excerpts are the publisher's words; a transcript recording a non-publication order or a pseudonymous witness is pointed to by page, not quoted.`] : []),
