@@ -231,7 +231,8 @@ function annualTable(t: RecordRow): string {
 }
 function annual(r: ReportDetail, parts: Part[]): Stat[] {
   const h = object(r.headline), stats: Stat[] = []
-  const tableLink = (v: RecordRow) => v.codename ? link(`https://previewapi.transparency.gov.au/delivery/items?system.codename=${encodeURIComponent(String(v.codename))}&depth=1`, 'Source table on the Transparency Portal (JSON)', 'rr-cite') : ''
+  // Each link names its table, so a list of links still says where each one goes.
+  const tableLink = (v: RecordRow, what: string) => v.codename ? `<p class="rr-cite-line">${link(`https://previewapi.transparency.gov.au/delivery/items?system.codename=${encodeURIComponent(String(v.codename))}&depth=1`, `${what} table on the Transparency Portal (JSON)`, 'rr-cite')}</p>` : ''
   const thousands = (n: unknown) => finite(n) ? `${dollars(n * 1000)}` : ''
   const blocks: string[] = []
   const inc = object(h.income_statement)
@@ -242,12 +243,12 @@ function annual(r: ReportDetail, parts: Part[]): Stat[] {
     blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">Income statement extract</h3>${kv([
       ['Total expenses', k(inc.total_expenses)], ['Employee benefits', k(inc.employee_benefits)], ['Suppliers', k(inc.suppliers)],
       ['Revenue from government', k(inc.revenue_from_government)], ['Own-source income', k(inc.own_source_income)]])}` +
-      (inc.unit_basis ? `<p class="rr-figure-note">Unit: ${esc(inc.unit_basis)}.</p>` : '') + `${tableLink(inc)}</div>`)
+      (inc.unit_basis ? `<p class="rr-figure-note">Unit: ${esc(inc.unit_basis)}.</p>` : '') + `${tableLink(inc, 'Income statement')}</div>`)
   }
   const staff = [['Ongoing staff', object(h.ongoing_staff)], ['Non-ongoing staff', object(h.non_ongoing_staff)]] as const
   if (staff.some(([, v]) => finite(v.headcount))) {
     for (const [label, v] of staff) if (finite(v.headcount)) stats.push({ label, value: figure(v.headcount) })
-    blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">Staff</h3>${kv(staff.filter(([, v]) => finite(v.headcount)).map(([label, v]) => [label, `${figure(v.headcount as number)} people ${tableLink(v)}`]))}</div>`)
+    blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">Staff</h3>${kv(staff.filter(([, v]) => finite(v.headcount)).map(([label, v]) => [label, `${figure(v.headcount as number)} people${tableLink(v, label)}`]))}</div>`)
   }
   for (const [key, label] of [['consultancy', 'Consultancy contracts'], ['non_consultancy', 'Non-consultancy contracts']] as const) {
     const v = object(h[key])
@@ -255,7 +256,7 @@ function annual(r: ReportDetail, parts: Part[]): Stat[] {
     if (finite(v.expenditure_thousands)) stats.push({ label: `${label}`, value: esc(thousands(v.expenditure_thousands)), note: finite(v.contracts) ? esc(plural(v.contracts, 'contract')) : '' })
     blocks.push(`<div class="rr-figure-group"><h3 class="ui-subsection-title">${label}</h3>${kv([
       ['Expenditure', finite(v.expenditure_thousands) ? `${esc(thousands(v.expenditure_thousands))} <span class="rr-as-published">(${figure(v.expenditure_thousands)} in $'000)</span>` : ''],
-      ['Contracts', finite(v.contracts) ? figure(v.contracts) : ''], ['New contracts', finite(v.new_contracts) ? figure(v.new_contracts) : ''], ['Ongoing contracts', finite(v.ongoing_contracts) ? figure(v.ongoing_contracts) : '']])}${tableLink(v)}</div>`)
+      ['Contracts', finite(v.contracts) ? figure(v.contracts) : ''], ['New contracts', finite(v.new_contracts) ? figure(v.new_contracts) : ''], ['Ongoing contracts', finite(v.ongoing_contracts) ? figure(v.ongoing_contracts) : '']])}${tableLink(v, label)}</div>`)
   }
   if (blocks.length) parts.push({ id: 'figures', title: 'Published headline figures', html: blocks.join('') })
   const tables = r.tables
@@ -263,14 +264,21 @@ function annual(r: ReportDetail, parts: Part[]): Stat[] {
     const rows = records(t.rows)
     const meta = [plural(rows.length, 'row'), t.unit ? `Unit: ${t.unit}` : ''].filter(Boolean).join(' · ')
     return `<details class="ui-disclosure rr-table-block"${rows.length <= 8 ? ' open' : ''}><summary><span>${esc(t.title)}<span class="rr-summary-meta">${esc(meta)}</span></span></summary><div class="ui-disclosure-body">` +
-      `<p class="rr-cite-line">${link(t.source_url, t.source_file ? `Data file: ${t.source_file}` : 'Source table on the Transparency Portal', 'rr-cite')}</p>` +
-      kv([['Entity as published', t.entity_as_published && t.entity_as_published !== r.body ? esc(t.entity_as_published) : ''], ['Data file page', t.source_page ? link(t.source_page, host(String(t.source_page))) : ''], ['Licence', esc(LICENCE[String(t.licence)] || t.licence)]]) +
+      `<p class="rr-cite-line rr-table-source">${t.source_file ? link(t.source_url, `Data file: ${t.source_file}`, 'rr-cite')
+        : link(t.source_url, 'Source table on the Transparency Portal', 'rr-cite').replace('</a>', `<span class="visually-hidden">: ${esc(t.title)}</span></a>`)}` +
+      `${t.licence ? `<span class="rr-licence"> · Licence ${esc(LICENCE[String(t.licence)] || t.licence)}</span>` : ''}</p>` +
+      kv([['Entity as published', t.entity_as_published && t.entity_as_published !== r.body ? esc(t.entity_as_published) : ''], ['Data file page', t.source_page ? link(t.source_page, host(String(t.source_page))) : '']]) +
       annualTable(t) + `</div></details>`
   }).join('') : text('No disclosure tables are loaded for this body and year.') })
   return stats
 }
 
 // ---- agency reports (state and territory documents): figures quoted with their page
+// OPAX's own record states, said in words (these are OPAX's labels, not the report's).
+// Edition words as the agency report tool (src/tools/agency-reports.ts) says them; this
+// module stays free of runtime imports so the tests can load it directly.
+const EDITION: Record<string, string> = { current: 'current edition', current_corrected: 'current edition, corrected copy', prior_edition: 'earlier edition (latest verified)', statutory_companion: 'statutory companion document', statutory_return: 'statutory return' }
+const READING: Record<string, string> = { read: 'Read by OPAX', not_read: 'Not read by OPAX', not_read_no_text: 'Not read: the file is a scan without a text layer' }
 const FAMILIES: [string, string, string[]][] = [
   ['finances', 'Finances', ['total_income', 'total_expenses', 'employee_expenses', 'net_result']],
   ['staff', 'Staff', ['staff_headcount', 'staff_fte']],
@@ -307,9 +315,11 @@ function agency(r: ReportDetail, parts: Part[], mainDocument: string): Stat[] {
   }
   const rest = facts.filter(f => !used.has(f))
   if (rest.length) parts.push({ id: 'other-figures', title: 'Other figures', count: rest.length, html: `<ul class="rr-facts" role="list">${rest.map(f => factRow(f, mainDocument)).join('')}</ul>` })
-  if (!facts.length) parts.push({ id: 'figures', title: 'Figures as published', html: text('No figures are reproduced in this record. This does not establish that the report contains none.') })
+  // Same words as the agency report tool uses for an unread file.
+  const unread = r.record.status === 'not_read_no_text' ? 'The file is a scan without a text layer, so OPAX has not read figures from it. ' : ''
+  if (!facts.length) parts.push({ id: 'figures', title: 'Figures as published', html: text(`${unread}No figures are reproduced in this record. This does not establish that the report contains none.`) })
   const c = r.record
-  const about = kv([['Edition', esc(human(c.edition))], ['Edition note', esc(c.edition_note)], ['Reading status', esc(human(c.status))], ['Pages', finite(c.pages) ? figure(c.pages) : ''],
+  const about = kv([['Edition', esc(human(EDITION[String(c.edition)] || c.edition))], ['Edition note', esc(c.edition_note)], ['Reading status', esc(READING[String(c.status)] || human(c.status))], ['Pages', finite(c.pages) ? figure(c.pages) : ''],
     ['Figures not found in the report', Array.isArray(c.not_found) && c.not_found.length ? esc(c.not_found.map(human).join('; ')) : ''],
     ['Rights', esc(c.rights_note)], ['Attribution', esc(c.attribution)], ['File note', esc(c.file_note)]])
   if (about) parts.push({ id: 'document', title: 'About the document', html: about })
@@ -335,7 +345,7 @@ export function renderReport(r: ReportDetail) {
   // repeated: the line says what the title does not.
   const titled = (type === 'annual_report' || type === 'agency_report') && !!r.body && r.title.toLowerCase().includes(String(r.body).toLowerCase())
   const named = titled || same(r.body, r.title)
-  const metaBits = [titled ? esc(r.publisher.type_as_published || '') : esc(kindLabel), r.body && !named ? esc(who) : '', esc(jurisdiction),
+  const metaBits = [titled && r.publisher.type_as_published ? esc(r.publisher.type_as_published) : esc(kindLabel), r.body && !named ? esc(who) : '', esc(jurisdiction),
     r.date ? dated(r.date_basis, r.date) : 'No published or tabled day is recorded'].filter(Boolean)
 
   if (type === 'royal_commission') {

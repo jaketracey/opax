@@ -114,6 +114,12 @@ test('government statuses are counted in their own words and each keeps its lead
   assert.equal((html.match(/href="https:\/\/example\.gov\.au\/status"/g) || []).length, 61);
   assert.match(html, /<summary>Go to a recommendation \(1 to 61\)<\/summary>/);
 });
+test('annual report source links each name their table', () => {
+  const annual = projected.find(r => r.row.body === 'Department of Defence' && r.row.year === '2024-25').detail;
+  const texts = [...renderReport(annual).matchAll(/<a [^>]*href="https:\/\/previewapi[^"]*"[^>]*>(.*?)<\/a>/g)].map(m => visible(m[1]));
+  assert.ok(texts.length > 1);
+  assert.equal(new Set(texts).size, texts.length, texts.join(' | '));
+});
 test('agency facts and annual disclosures retain labels, units and per-row official sources', () => {
   const agency = projected.find(r => r.detail.facts.length).detail;
   const html = renderReport(agency);

@@ -133,3 +133,5 @@
 .rr-quote-label { font-weight: var(--weight-strong); }
 
 .rr-footer { margin: var(--space-section) 0 0; padding-top: var(--space-row); border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-fine); color: var(--ink-soft); }
+.rr-table-source { margin-bottom: var(--space-tight); }
+.rr-licence { font: var(--type-fine); color: var(--ink-soft); }
