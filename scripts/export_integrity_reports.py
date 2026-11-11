@@ -33,6 +33,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from parli.ingest.integrity import common  # noqa: E402
 from parli.ingest.integrity.run import ADAPTERS  # noqa: E402
+from parli.ingest.integrity import transcripts as tx  # noqa: E402
 
 OUT = ROOT / "portal" / "public" / "integrity-reports"
 SCHEMA = 1
@@ -45,6 +46,61 @@ CAVEATS = [
     "Bodies and public roles named in a report are recorded as the report names them. OPAX adds no names and does not create pages for private individuals.",
     "Responses and implementation status appear only where the commission publishes them; their absence does not mean an agency did not respond.",
 ]
+
+
+TRANSCRIPT_CAVEATS = [
+    "Hearing transcript: evidence, not findings. What a witness, counsel or a commissioner says in a hearing is evidence, submission or questioning; a finding is only what a commission's report states.",
+    "Transcripts are listed as the publisher released them, with its redactions, page numbers and any publication orders noted for them. OPAX links the publisher's copy and does not republish the text.",
+    "Titles are neutral (case, document type and date). Witnesses are not recorded as fields.",
+]
+TRANSCRIPT_BODIES = {"nsw_lecc": {"name": "Law Enforcement Conduct Commission", "short": "NSW LECC", "jurisdiction": "NSW",
+                                  "site": "https://www.lecc.nsw.gov.au/"}}
+
+
+def case_key(text):
+    """Operation Belcarra: Reforming ... -> belcarra; Taskforce Flaxton -> flaxton; otherwise the folded name."""
+    m = re.search(r"\b(?:operation|taskforce)\s+([a-z]+)", str(text or ""), re.I)
+    return m.group(1).lower() if m else re.sub(r"[^a-z0-9]+", " ", str(text or "").lower()).strip()
+
+
+def export_transcripts(out: Path, bodies_by_code: dict, records_by_body: dict, files: dict):
+    """transcripts-<body>.json per body, and a summary on each report record whose operation the transcripts share."""
+    reg = tx.load()
+    groups = {}
+    for t in reg["transcripts"]:
+        groups.setdefault(t["body"], []).append(t)
+    summary = {"label": tx.LABEL, "caveats": TRANSCRIPT_CAVEATS, "intake": reg.get("intake"), "built_at": reg.get("built_at"),
+               "counts": {}, "files": {}, "bodies": {}, "gaps": reg.get("gaps", [])}
+    for code, items in sorted(groups.items()):
+        # the publisher's link label can name a witness: it stays in the registry for provenance, out of the public file
+        items = sorted(({k: v for k, v in t.items() if k != "title_as_listed"} for t in items),
+                       key=lambda t: (t["hearing_date"], t.get("transcript_pages", ""), t["title"]), reverse=True)
+        records = records_by_body.get(code, [])
+        cases = []
+        for case in sorted({t["case"] for t in items}):
+            mine = [t for t in items if t["case"] == case]
+            reports = [r["id"] for r in records if r.get("operation") and case_key(r["operation"]) == case_key(case)]
+            dates = sorted(t["hearing_date"] for t in mine)
+            cases.append({"case": case, "count": len(mine), "first_date": dates[0], "last_date": dates[-1],
+                          "pages": sum(t["pages"] for t in mine), "report_ids": reports})
+            for r in records:
+                if r["id"] in reports:
+                    r["transcripts"] = {"label": tx.LABEL, "case": case, "count": len(mine), "first_date": dates[0],
+                                        "last_date": dates[-1], "file": f"/integrity-reports/transcripts-{code.replace('_', '-')}.json"}
+        view_only = [v for v in reg.get("publisher_view_only", []) if v["body"] == code]
+        body = bodies_by_code.get(code) or TRANSCRIPT_BODIES[code]
+        name = f"transcripts-{code.replace('_', '-')}.json"
+        sha, size = atomic(out / name, {"schema": SCHEMA, "body": code, "name": body["name"], "short": body["short"],
+                                        "jurisdiction": body["jurisdiction"], "label": tx.LABEL, "caveats": TRANSCRIPT_CAVEATS,
+                                        "snapshot_at": reg.get("built_at"), "cases": cases, "transcripts": items,
+                                        "publisher_view_only": view_only})
+        files[name] = {"sha256": sha, "bytes": size}
+        summary["counts"][code] = len(items)
+        summary["files"][code] = "/integrity-reports/" + name
+        summary["bodies"][code] = {"name": body["name"], "short": body["short"], "jurisdiction": body["jurisdiction"],
+                                   "cases": len(cases), "view_only": len(view_only)}
+    summary["total"] = sum(summary["counts"].values())
+    return summary
 
 
 class Held(SystemExit):
@@ -153,8 +209,19 @@ def main(argv=None):
         old_manifest = json.loads((out / "manifest.json").read_text())
 
     bodies, rows, files, totals = [], [], {}, Counter()
+    loaded = {}
     codes = sorted(set(snapshots) | set(adapters),
                    key=lambda c: (JURISDICTION_ORDER.index((snapshots.get(c) or {}).get("jurisdiction") or adapters[c][0].jurisdiction), c))
+    for code in codes:
+        snap = snapshots.get(code)
+        if snap is None:
+            continue
+        records = [tidy_record(r) for r in snap["records"]]
+        for r in records:
+            check_record(r)
+        loaded[code] = (snap, records)
+    transcripts = export_transcripts(out, {c: {"name": s["name"], "short": s["short"], "jurisdiction": s["jurisdiction"]} for c, (s, _) in loaded.items()},
+                                     {c: recs for c, (_, recs) in loaded.items()}, files)
     for code in codes:
         snap = snapshots.get(code)
         if snap is None:
@@ -164,9 +231,7 @@ def main(argv=None):
                            "counts": {"records": 0, "findings": 0, "recommendations": 0, "responses": 0},
                            "snapshot_at": None, "file": None})
             continue
-        records = [tidy_record(r) for r in snap["records"]]
-        for r in records:
-            check_record(r)
+        records = loaded[code][1]
         prev = ((old_manifest.get("bodies") or {}).get(code) or {}).get("records")
         if prev and len(records) < prev * 0.9 and not args.allow_shrink:
             raise Held(f"{code} records would fall from {prev} to {len(records)}")
@@ -205,14 +270,14 @@ def main(argv=None):
                        "bodies_gap": sum(1 for b in bodies if b["status"] == "gap")},
             "report_types": list(common.REPORT_TYPES), "finding_kinds": list(common.FINDING_KINDS),
             "snapshot_at": max(b["snapshot_at"] for b in bodies if b["snapshot_at"])}
-    sha, size = atomic(out / "index.json", {"meta": meta, "bodies": bodies, "reports": rows})
+    sha, size = atomic(out / "index.json", {"meta": meta, "bodies": bodies, "reports": rows, "transcripts": transcripts})
     files["index.json"] = {"sha256": sha, "bytes": size}
-    for stale in out.glob("reports-*.json"):
+    for stale in [*out.glob("reports-*.json"), *out.glob("transcripts-*.json")]:
         if stale.name not in files:
             stale.unlink()
     atomic(out / "manifest.json", {"schema": SCHEMA, "built_at": meta["built_at"], "counts": meta["counts"],
                                    "bodies": {b["code"]: {"status": b["status"], **{k: b["counts"][k] for k in ("records", "findings", "recommendations", "responses")}} for b in bodies},
-                                   "files": files})
+                                   "transcripts": transcripts["counts"], "files": files})
     print(f"[export_integrity_reports] {json.dumps(meta['counts'])}", flush=True)
 
 

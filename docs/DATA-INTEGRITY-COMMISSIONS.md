@@ -167,6 +167,54 @@ and read from `<cache>/manual/vic_ibac/`).
   kept and a note records the match.
 * Annual reports are `other`, with no findings or recommendations.
 
+## Public hearing transcripts (12 November 2026 intake)
+
+The OPAX maintainer supplied 486 publisher PDFs of public hearing transcripts with a manifest
+(publisher URL, SHA-256, bytes, page count, rights and orders). `python -m
+parli.ingest.integrity.transcripts build --intake <dir>` checks every file against the
+manifest (all matched), copies it to `<cache>/manual/transcripts/<sha256>.pdf` (never
+committed, never fetched by the refresh), checks the hearing date on the transcript's first
+pages, and writes `parli/ingest/integrity/transcripts.json`: metadata, citations and rights
+only. No transcript text is committed or published.
+
+| Commission | Transcripts | Cases |
+| --- | --- | --- |
+| NSW ICAC | 256 | Operations Navarra, Rosny, Scandi and Wyvern (current public inquiries) |
+| NSW LECC | 24 | Operations Almas, Brugge, Corwen, Cusco, Gennaker, Makalu (opening address), Mantus |
+| Qld CCC | 160 | Belcarra, Taskforce Flaxton, Impala, Grand, Tesco, a 2009 misuse of public monies investigation, separation issues in the public sector, the escort agency inquiry |
+| ACT Integrity Commission | 17 | Operation Kingfisher |
+| IBAC | 17 | Operation Gloucester (each carries IBAC's suppression order link) |
+| WA CCC | 9 | Public examinations into the Parliamentary Commissioner for Administrative Investigations |
+| SA ICAC | 3 | Review of Legislative Schemes hearings |
+
+Rules:
+
+* Every transcript carries the label "Hearing transcript: evidence, not findings". What a
+  witness, counsel or a commissioner says in a hearing is evidence, submission or
+  questioning; only a report states findings.
+* Titles are neutral: case, document type and date (with the ICAC transcript page range, and
+  "part n of m" where one day has several documents). The publisher's own link label, which
+  for the Qld CCC often names the witness, is kept as `title_as_listed` in the registry for
+  provenance only: it is left out of the public files and tool rows and never used for search.
+* Dates: 482 are read on the transcript itself (`date_quote`, `date_page`). Two listings
+  differ from the cover (ICAC Wyvern, listed 31 October 2025, dated 30 October; LECC
+  Gennaker, listed 4 December 2019, dated 5 December); the cover date is used and the
+  difference noted. Four keep the publisher's listing date (`date_basis:
+  publisher_listing`): three LECC scans without a text layer and one Flaxton cover whose
+  date is garbled in its text layer.
+* Publisher redactions: five transcripts are the publisher's redacted editions
+  (`publisher_redacted`). No corrected editions were supplied in this intake.
+* Rights and orders travel with each transcript (`rights`, `reuse_status`, `copyright_url`,
+  `terms_url`, `orders`). OPAX links the publisher's copy and republishes no text.
+* The 21 Qld CCC public forum transcripts the publisher authorises for viewing only are
+  listed as links (`publisher_view_only`), not supplied, read or indexed.
+
+The export writes `transcripts-<body>.json` (cases and transcripts, newest first), adds a
+`transcripts` block to `index.json`, and gives each report whose operation had these hearings
+a `transcripts` summary (ACT Kingfisher, Qld Impala, Flaxton, Belcarra and Tesco, IBAC
+Gloucester). The `integrity_reports` tool's `view=transcripts` lists them by body, operation,
+words and `since`/`until`.
+
 ## Coverage still open
 
 * NT Tabled Papers 875 and 876 (Territory Stories).

@@ -3,7 +3,8 @@ import { clip, fold, siteUrl } from './record-common'
 import { inWindow, object, publishedResult, records, sourceUrl, validWindow, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
 
-const VIEWS = ['reports', 'report', 'findings', 'recommendations', 'bodies'] as const
+const VIEWS = ['reports', 'report', 'findings', 'recommendations', 'bodies', 'transcripts'] as const
+const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
 const REPORT_TYPES = ['investigation_report', 'special_report', 'public_inquiry_report', 'prevention_research_report', 'statement', 'other'] as const
 const FINDING_KINDS = ['finding', 'opinion', 'no_finding', 'prosecution_statement', 'other'] as const
 const PARTS = ['findings', 'recommendations', 'responses', 'documents'] as const
@@ -26,7 +27,7 @@ async function index(env: ToolEnv) {
   const data = object(await readToolAsset(env, '/integrity-reports/index.json')), meta = object(data.meta)
   const bodies = records(data.bodies), reports = records(data.reports)
   if (!bodies.length || typeof meta.snapshot_at !== 'string') throw new Error('Integrity report projection unavailable')
-  return { meta, bodies, reports, byCode: new Map(bodies.map(b => [String(b.code), b])) }
+  return { meta, bodies, reports, byCode: new Map(bodies.map(b => [String(b.code), b])), transcripts: object(data.transcripts) }
 }
 type Index = Awaited<ReturnType<typeof index>>
 
@@ -59,8 +60,27 @@ function reportRow(env: ToolEnv, ix: Index, r: RecordRow): RecordRow {
     page_url: sourceUrl(r.page_url), pdf_url: sourceUrl(r.pdf_url), full_record_url: sourceUrl(r.page_url) ?? siteUrl(env, '/integrity-reports/index.json'),
     ...(r.acquisition ? { acquisition: r.acquisition } : {}),
     ...(!r.date && r.period ? { period: r.period } : {}),
+    ...(r.transcripts ? { transcripts: { label: TRANSCRIPT_LABEL, case: object(r.transcripts).case, count: object(r.transcripts).count, first_date: object(r.transcripts).first_date, last_date: object(r.transcripts).last_date, follow_up: { view: 'transcripts', body: b.short ?? r.body, operation: object(r.transcripts).case } } } : {}),
     follow_up: { view: 'report', record_id: r.id } }
 }
+
+/** Bodies with hearing transcripts, from the index (a body can have transcripts and no loaded reports). */
+function transcriptBodies(ix: Index, query: unknown, jurisdiction: unknown): RecordRow[] {
+  const code = jurisdictionCode(jurisdiction), files = object(ix.transcripts.files)
+  const pool: RecordRow[] = Object.entries(object(ix.transcripts.bodies)).map(([c, b]): RecordRow => ({ ...object(b), code: c, file: files[c] })).filter(b => !code || b.jurisdiction === code)
+  if (!query) return pool
+  const q = norm(query), exact = pool.filter(b => b.code === query || norm(b.code) === q || norm(b.short) === q || norm(b.name) === q)
+  return exact.length ? exact : pool.filter(b => wordsMatch(query, [b.name, b.short, b.jurisdiction, String(b.code).replace(/_/g, ' ')]))
+}
+
+function transcriptRow(b: RecordRow, t: RecordRow): RecordRow {
+  return { label: TRANSCRIPT_LABEL, body: b.short, commission: b.name, jurisdiction: t.jurisdiction, case: t.case, title: t.title, hearing_date: t.hearing_date,
+    ...(t.session_time ? { session_time: t.session_time } : {}), ...(t.transcript_pages ? { transcript_pages: t.transcript_pages } : {}),
+    pages: t.pages ?? null, pdf_url: sourceUrl(t.url), page_url: sourceUrl(t.page_url), publisher_redacted: !!t.publisher_redacted,
+    ...(Array.isArray(t.orders) && t.orders.length ? { orders: t.orders.map(sourceUrl).filter(Boolean) } : {}), rights: clip(t.rights, 300) }
+}
+
+const transcriptCite = (r: RecordRow): ToolCitation => ({ kind: 'record', url: String(r.pdf_url ?? r.page_url), text: clip(`${r.commission} (${r.body}), ${r.title}${r.pages ? `, ${r.pages} pages` : ''}${r.publisher_redacted ? ', as redacted by the publisher' : ''}. ${TRANSCRIPT_LABEL}.`, 400) })
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 /** An undated report whose source gives only a month or year matches a window that overlaps that month or year. */
@@ -139,7 +159,7 @@ function reportMatches(ix: Index, r: RecordRow, args: Record<string, unknown>, c
 
 export const tool: ToolDefinition = {
   name: 'integrity_reports',
-  description: 'Reports of Australian anti-corruption and integrity commissions (NSW, Vic IBAC from tabled copies, Qld, WA, SA and ACT; NACC, Tas and NT partly): investigation, special, inquiry and prevention reports and statements, with findings or opinions quoted in each commission\'s own words and labels, numbered recommendations and agency responses, each cited to the report page. Views: reports, report (record_id, part), findings, recommendations, bodies (coverage and gaps). Allegations are not findings; a corrupt conduct finding is not a criminal conviction; statutory terms differ, so do not compare counts across commissions.',
+  description: 'Australian anti-corruption and integrity commission reports (NSW, Vic, Qld, WA, SA, ACT; NACC, Tas, NT partly) and statements: findings or opinions in each commission\'s own words and labels, numbered recommendations and agency responses, cited to the report page. Views: reports, report (record_id, part), findings, recommendations, bodies (coverage, gaps), transcripts (hearing transcripts by body, operation, since/until; evidence, not findings). Allegations are not findings; a corrupt conduct finding is not a criminal conviction; statutory terms differ, so do not compare counts across commissions.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
     body: { type: 'string', minLength: 2, maxLength: 120, description: 'Commission, e.g. "NSW ICAC".' },
@@ -159,7 +179,8 @@ export const tool: ToolDefinition = {
   validate: args => validWindow(args) &&
     (args.record_id ? ['report', 'findings', 'recommendations'].includes(String(args.view)) : args.view !== 'report' && !args.part) &&
     (args.view === 'findings' || !!args.record_id || !args.finding_kind) &&
-    (args.view !== 'bodies' || ['query', 'operation', 'subject', 'report_type', 'since', 'until'].every(k => args[k] === undefined)),
+    (args.view !== 'bodies' || ['query', 'operation', 'subject', 'report_type', 'since', 'until'].every(k => args[k] === undefined)) &&
+    (args.view !== 'transcripts' || ['subject', 'report_type', 'finding_kind'].every(k => args[k] === undefined)),
   stepLabel: args => ({ label: 'Checking integrity commission reports', arg: clip(args.operation ?? args.query ?? args.subject ?? args.body ?? args.view, 40) }),
   async handler(env, args) {
     const ix = await index(env)
@@ -204,6 +225,27 @@ export const tool: ToolDefinition = {
       if (part !== 'documents' && status !== 'extracted' && status !== 'published') notes.push(status === 'stated_none' ? `The report states it has no ${part}.` : status === 'none_found' ? 'The commission\'s page for this report lists no response or implementation documents.' : status === 'not_checked' ? 'Responses were not checked for this report.' : `The ${part} of this report were not extracted by OPAX; they are unknown, not absent. Read the report itself.`)
       if (full.acquisition) notes.push(MANUAL_NOTE)
       return publishedResult([row], [reportCite(head), ...pageItems.map(it => itemCite(it, part))], { view: 'report', total: 1, offset, part, snapshot, notes })
+    }
+
+    if (args.view === 'transcripts') {
+      const tb = transcriptBodies(ix, args.body, args.jurisdiction)
+      const all: RecordRow[] = []
+      for (const b of tb) {
+        if (!/^\/integrity-reports\/transcripts-[a-z-]+\.json$/.test(String(b.file))) continue
+        const data = object(await readToolAsset(env, String(b.file)))
+        if (data.body !== b.code) throw new Error('Integrity transcripts file unavailable')
+        for (const t of records(data.transcripts)) {
+          if (args.operation && !wordsMatch(args.operation, [t.case])) continue
+          if (args.query && !wordsMatch(args.query, [t.case, t.title, t.hearing_date])) continue
+          if (!inWindow(t.hearing_date, args)) continue
+          all.push(transcriptRow(b, t))
+        }
+      }
+      all.sort((a, b) => String(b.hearing_date).localeCompare(String(a.hearing_date)) || String(a.title).localeCompare(String(b.title)))
+      const rows = all.slice(offset, offset + limit), cases = new Set(all.map(r => `${r.body}: ${r.case}`))
+      const count = `OPAX lists ${all.length} public hearing transcript${all.length === 1 ? '' : 's'}${tb.length === 1 ? ` from the ${tb[0].name} (${tb[0].short})` : ''}${args.operation || args.query ? ` matching "${clip(args.operation ?? args.query, 80)}"` : ''}, from ${cases.size} case${cases.size === 1 ? '' : 's'}, newest first. ${TRANSCRIPT_LABEL}.`
+      return publishedResult(rows, [{ kind: 'count', url: indexUrl, text: count }, ...rows.map(transcriptCite)], { view: 'transcripts', total: all.length, offset, next_offset: offset + rows.length < all.length ? offset + rows.length : null, snapshot,
+        notes: [NOTE, 'Transcripts are listed as each commission published them, with its redactions and orders; OPAX links the publisher\'s copy. What a witness or counsel says is evidence or submission, never a finding; only a report states findings.', ...(all.length ? [] : ['No listed transcript matches. Coverage is the transcripts supplied so far, not every hearing.'])] })
     }
 
     const bodies = matchBodies(ix, args.body, args.jurisdiction), codes = new Set(bodies.map(b => String(b.code)))
