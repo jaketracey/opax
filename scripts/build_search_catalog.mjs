@@ -229,6 +229,9 @@ async function main() {
  await mkdir(join(output,version));
  const put=async(name,data)=>writeFile(join(output,version,name),JSON.stringify(data));
  await put('meta.json',meta);
+ // An unfiltered search needs only each record's kind and closing year (portal/src/catalog-search.ts).
+ const kinds=[...new Set(meta.map(m=>m[0]))], kindIndex=new Map(kinds.map((k,i)=>[k,i]));
+ await put('meta-core.json',{kinds,kind:meta.map(m=>kindIndex.get(m[0])),to:meta.map(m=>m[2])});
  for(let i=0;i<64;i++)await put('terms-'+i+'.json',postings[i]);
  for(let i=0;i<docs.length;i+=256)await put('records-'+Math.floor(i/256)+'.json',docs.slice(i,i+256).map(d=>d.record));
  // /support names a reported record only when its path is exactly one of these (portal/public/record-paths.js).
