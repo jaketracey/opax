@@ -12,6 +12,7 @@ import {SUPPLIER_ID_RE,supplierRowsPath,SUPPLIERS_META_PATH} from '../portal/pub
 import {MONEY_GRAPH_PATHS,MONEY_PARTIES_PATH,moneyPartiesFile} from '../portal/public/money-parties.js';
 import {BILL_TITLES_PATH,billTitlesFile,BILLS_DATE_PATH,billsDateFile} from '../portal/public/bill-titles.js';
 import {partyMoneyData} from '../portal/public/register-tables.js';
+import {NEWEST_BILLS_PATH,newestBillsFile} from '../portal/public/home-data.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 /** A money graph's party-receipt buckets as [path, contents] pairs (portal/public/party-money-buckets.js). */
 export function partyMoneyBucketFiles(path,graph){
@@ -178,6 +179,8 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  await write(BILL_TITLES_PATH,billTitlesFile(index));
  // A bill page reads only the index's date (portal/public/bill-titles.js).
  if (typeof index.generated_at==='string') await write(BILLS_DATE_PATH,billsDateFile(index));
+ // The home page's newest bills (portal/public/home-data.js).
+ await write(NEWEST_BILLS_PATH,newestBillsFile(index));
  console.log(JSON.stringify({files:sizes.length,largest:Math.max(...sizes.map(s=>s.bytes)),donorIndexBytes:sizes[0].bytes}));
  return sizes;
 }

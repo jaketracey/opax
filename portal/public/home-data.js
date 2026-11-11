@@ -14,6 +14,23 @@ const IDENTITY = { cache: 'no-cache' };
 export function newest(items, key, limit) {
   return items.filter(item => item[key]).slice().sort((a,b) => String(b[key]).localeCompare(String(a[key]))).slice(0,limit);
 }
+/** The home page's newest bills, read from a small file rather than /bills/index.json (1.8 MB):
+ *  the index's date and its LATEST_BILLS newest bills, with the fields billRowHTML reads.
+ *  scripts/build_growth_modules.mjs writes it at release. */
+export const LATEST_BILLS = 3;
+export const NEWEST_BILLS_PATH = '/growth/newest-bills.json';
+const NEWEST_BILL_FIELDS = ['key','title','short_title','status','introduced','jurisdiction','portfolio'];
+/** /bills/index.json -> the file the home page reads. */
+export function newestBillsFile(index) {
+  if (!Array.isArray(index?.bills)) throw new Error('newest bills: no bills');
+  return {generated_at: index.generated_at, bills: newest(index.bills,'introduced',LATEST_BILLS)
+    .map(bill => Object.fromEntries(NEWEST_BILL_FIELDS.filter(k => bill[k] !== undefined).map(k => [k, bill[k]])))};
+}
+/** The newest-bills file, or the whole index when it is unreadable. */
+export async function latestBillsSource(read) {
+  const small = await read(NEWEST_BILLS_PATH).catch(() => null);
+  return Array.isArray(small?.bills) ? small : read('/bills/index.json');
+}
 export function safeSource(url) {
   try { const value = new URL(url); return ['https:','http:'].includes(value.protocol) ? value.href : null; } catch { return null; }
 }
@@ -163,8 +180,8 @@ export async function hydrateLatest() {
   const refresh = await refreshInfo();
   await Promise.allSettled([
     (async () => {
-      const index = await read('/bills/index.json');
-      const rows = newest(index.bills,'introduced',3);
+      const index = await latestBillsSource(read);
+      const rows = newest(index.bills,'introduced',LATEST_BILLS);
       if (!rows.length) return;
       document.querySelector('#hp-bills').innerHTML = rows.map(billRowHTML).join('');
       document.querySelector('#hp-bills-source').innerHTML = billsSourceHTML(index, refresh);
