@@ -105,6 +105,23 @@ test('current members have matching current party evidence; unknowns are separat
     expect(profile.partyStatus).toBe('unknown');
   }
 });
+test.each([
+  ['Animal Justice Party', ['Georgie Purcell']],
+  ['Legalise Cannabis Victoria', ['David Ettershank', 'Rachel Payne']],
+  ['Libertarian Party', ['David Limbrick']],
+])(
+  '%s includes sitting state members without a roster party label',
+  (label, names) => {
+    const members = partyMembers(label, roster, people, slugs, manifest);
+    expect(members.currentCount).toBe(names.length);
+    expect(members.current.map((m) => m.name).sort()).toEqual(
+      [...names].sort(),
+    );
+    expect(members.current.every((m) => m.jurisdiction === 'vic')).toBe(true);
+    expect(members.recorded).toEqual([]);
+    expect(members.sources.length).toBeGreaterThan(0);
+  },
+);
 test('undated or ended evidence never turns a real public member into a current member', () => {
   const ended = {
     ...people,

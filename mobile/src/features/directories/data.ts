@@ -94,23 +94,27 @@ export async function loadDirectory(
       },
     );
   } else if (kind === 'party') {
-    const [roster, federal, qld, vic] = await Promise.all([
-      catalogs.roster(refresh, signal),
+    const [d, federal, qld, vic] = await Promise.all([
+      directory(refresh, signal),
       catalogs.partyFile('federal', refresh, signal),
       catalogs.partyFile('qld', refresh, signal),
       catalogs.partyFile('vic', refresh, signal),
     ]);
-    rows.parties = partyRows(roster.data, {
+    rows.parties = partyRows(d, {
       federal: federal.data,
       qld: qld.data,
       vic: vic.data,
     });
     rows.facets = partyFacets;
-    records.push(roster, federal, qld, vic);
+    records.push(...Object.values(d), federal, qld, vic);
     sources.push(
       {
-        asAt: roster.data.meta.generated,
+        asAt: d.roster.data.meta.generated,
         label: 'OPAX parliamentary roster',
+      },
+      {
+        asAt: d.people.data.meta.generated,
+        label: 'Dated parliamentary seats',
       },
       ...[
         [federal, 'AEC returns'],

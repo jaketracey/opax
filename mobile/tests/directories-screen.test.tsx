@@ -188,9 +188,9 @@ test('nothing precedes the first row; source and count stay at the foot', async 
   expect(count.props.variant).toBe('footnote');
   expect(count.props.wordSafe).toBe(true);
   expect(said(count)).toBe('2 parties');
-  // Party rows: members on record, no money and no speeches.
+  // Party rows label the sitting count explicitly.
   const row = byID(renderer, 'directory-party-labor')[0]!;
-  expect(row.props.accessibilityLabel).toBe('Labor, 2 members on record');
+  expect(row.props.accessibilityLabel).toBe('Labor, 2 sitting members');
   expect(
     row.findAllByType(NativeText).filter((node) => node.props.children === ''),
   ).toHaveLength(0);
