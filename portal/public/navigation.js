@@ -65,6 +65,12 @@
           page('/subject/topic', 'Topics A–Z', 'Every debate in the record, by subject.'),
           page('/explore', 'Interactive tools', 'Time machine, the tide, the record quiz and more.'),
         ] },
+        { heading: 'Official reports', section: page('/official-reports', 'Official reports', 'Browse official Australian report records.'), more: 'All official reports', links: [
+          page('/official-reports/royal-commissions', 'Royal commissions', 'Reports, recommendations and public hearing transcripts.'),
+          page('/official-reports/integrity', 'Integrity reports', 'Published reports from Australian integrity bodies.'),
+          page('/official-reports/annual-reports', 'Annual reports', 'Commonwealth bodies, grouped by reporting year.'),
+          page('/official-reports/agency-reports', 'Agency reports', 'Commonwealth, state and territory agency reports.'),
+        ] },
         // Each report keeps the title its own page gives it. The reports are
         // published only where the Worker marks them (REPORTS_ENABLED).
         { heading: 'Reports', compact: true, section: page('/reports', 'Reports', '', { gate: 'reports' }), more: 'All reports', links: [
@@ -132,7 +138,7 @@
     if (/^\/(money|map|discover|connections)(\/|$)/.test(path)) return 'money';
     if (/^\/subject\/(donor|supplier|agency|campaigner)(\/|$)/.test(path)) return 'money';
     if (path === '/explore') return ['ledger','grants','wd'].includes(params.get('game')) ? 'money' : 'research';
-    if (/^\/(subject\/topic|reports|audit|explore)(\/|$)/.test(path)) return 'research';
+    if (/^\/(subject\/topic|official-reports|reports|audit|explore)(\/|$)/.test(path)) return 'research';
     if (/^\/(subject|declared|vic-election-2026)(\/|$)/.test(path)) return 'people';
     if (/^\/(sitting|estimates|bills?|instruments?|video)(\/|$)/.test(path)) return 'parliament';
     if (/^\/(about|methods|stats|expenses|privacy|support|community)(\/|$)/.test(path)) return 'about';
@@ -265,7 +271,7 @@
   }
   function panelHTML(group, links) {
     const cols = group.columns.map(col => `<div class="nav-col${col.compact ? ' nav-col-compact' : ''}"><p class="nav-col-h">${esc(col.heading)}</p><ul class="nav-links" role="list">${col.links.filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'nav-item-link')}<span class="nav-item-title">${esc(l.label)}</span>${l.blurb && !col.compact ? `<span class="nav-item-blurb">${esc(l.blurb)}</span>` : ''}</a>`)).join('')}</ul>${col.section && visible(col.section) ? `<a class="nav-all" href="${col.section.href}">${esc(col.more)}${ARROW}</a>` : ''}</div>`).join('');
-    return `<div class="wrap nav-panel-inner"><div class="nav-intro"><p class="nav-intro-title">${esc(group.label)}</p><p class="nav-intro-text">${esc(group.intro)}</p></div>${cols}<div class="nav-feature-slot" data-feature="${group.feature || ''}">${featureHTML(group)}</div></div>`;
+    return `<div class="wrap nav-panel-inner" data-nav-group="${esc(group.id)}"><div class="nav-intro"><p class="nav-intro-title">${esc(group.label)}</p><p class="nav-intro-text">${esc(group.intro)}</p></div>${cols}<div class="nav-feature-slot" data-feature="${group.feature || ''}">${featureHTML(group)}</div></div>`;
   }
   const desktopHTML = (links) => groups.map(g => `<li class="nav-group" data-group="${g.id}"><button type="button" class="nav-trigger" data-nav-trigger="${g.id}" aria-expanded="false" aria-controls="menu-${g.id}">${esc(g.label)}${CARET}</button><div class="nav-panel" id="menu-${g.id}" data-group="${g.id}" hidden>${panelHTML(g, links)}</div></li>`).join('');
   const sheetHTML = (links) => `<a class="sheet-ask" href="/ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z"/><path d="M8.5 9.5h7M8.5 12.5h4"/></svg><span><span class="sheet-ask-title">Ask OPAX</span><span class="sheet-ask-sub">Ask a question of the public record</span></span>${ARROW}</a>`
@@ -276,7 +282,7 @@
     + `<p class="sheet-foot">${footerOnly.map(p => `<a href="${p.href}">${esc(p.label)}</a>`).join('')}</p>`;
   /** The footer's site index. `slot: false` (the build's static copy) leaves
    *  closed gates out entirely instead of drawing a slot for them. */
-  const footerHTML = (links = () => true, { slot = true } = {}) => groups.map(g => `<div class="footer-col"><h2 class="footer-col-h">${esc(g.label)}</h2><ul role="list">${g.columns.flatMap(c => c.links).filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'footer-link')}${esc(l.label)}</a>`, { slot })).join('')}${g.id === 'about' ? footerOnly.map(p => `<li><a class="footer-link" href="${p.href}">${esc(p.label)}</a></li>`).join('') : ''}</ul></div>`).join('');
+  const footerHTML = (links = () => true, { slot = true } = {}) => groups.map(g => `<div class="footer-col"><h2 class="footer-col-h">${esc(g.label)}</h2><ul role="list">${g.columns.flatMap(c => [...(c.section ? [{ ...c.section, label: c.more || c.section.label }] : []), ...c.links]).filter(links).map(l => itemHTML(l, () => `${linkHTML(l, 'footer-link')}${esc(l.label)}</a>`, { slot })).join('')}${g.id === 'about' ? footerOnly.map(p => `<li><a class="footer-link" href="${p.href}">${esc(p.label)}</a></li>`).join('') : ''}</ul></div>`).join('');
   /** The menu bar before (or without) scripts: each group as a link to its first page. */
   const barHTML = () => groups.map(g => `<li class="nav-group"><a class="nav-trigger" href="${g.href}">${esc(g.label)}</a></li>`).join('');
 

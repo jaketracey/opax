@@ -317,6 +317,15 @@ export function buildCss(source) {
   if (wide.length) blocks.push(`@media (min-width: ${source.layout.wide.$value + 1}px) {\n  :root {\n${wide.map((line) => `  ${line}`).join('\n')}\n  }\n}`)
   if (compact.length) blocks.push(`@media (max-width: ${source.layout.regular.$value}px) {\n  :root {\n${compact.map((line) => `  ${line}`).join('\n')}\n  }\n}`)
   if (highContrast.length) blocks.push(`@media (prefers-contrast: more) {\n  :root {\n${highContrast.map((line) => `  ${line}`).join('\n')}\n  }\n}`)
+  // Opt-in web pages use the existing app dark palette. The rest of the web
+  // keeps its established light theme until its components opt in as well.
+  const themes = palettes(source)
+  const roles = colourRoles(source)
+  const chrome = new Set(['navy', 'navyRaised', 'onNavy', 'onNavySoft', 'bronzeBright'])
+  const dark = roles.filter(role => !chrome.has(role.name)).map(role => `    ${role.web}: ${themes.dark[role.name]};`).join('\n')
+  blocks.push(`@media (prefers-color-scheme: dark) {\n  html[data-colour-scheme="system"] {\n    color-scheme: dark;\n${dark}\n  }\n}`)
+  const darkContrast = roles.filter(role => !chrome.has(role.name) && themes.darkHighContrast[role.name]).map(role => `    ${role.web}: ${themes.darkHighContrast[role.name]};`).join('\n')
+  blocks.push(`@media (prefers-color-scheme: dark) and (prefers-contrast: more) {\n  html[data-colour-scheme="system"] {\n${darkContrast}\n  }\n}`)
   return blocks.join('\n') + '\n'
 }
 

@@ -90,6 +90,8 @@
 .nav-intro-text { margin: var(--space-tight) 0 0; max-width: 28ch; font: var(--type-metadata); color: var(--ink-soft); }
 .nav-col { min-width: 0; }
 .nav-col-compact { grid-column: span 2; }
+/* Topics, official records and investigations share the existing dropdown. */
+.nav-panel-inner[data-nav-group="research"] .nav-col-compact { grid-column: auto; }
 .nav-col-h { margin: 0 0 var(--space-tight); font: var(--type-label); color: var(--ink-faint); }
 .nav-links { display: grid; gap: var(--sp-2); list-style: none; margin: 0; padding: 0; }
 .nav-col-compact .nav-links { grid-template-columns: 1fr 1fr; column-gap: var(--space-group); }

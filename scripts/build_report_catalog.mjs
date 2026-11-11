@@ -125,7 +125,55 @@ export async function buildReportCatalog(root = publicRoot) {
   await rm(dir, { recursive: true, force: true });
   await mkdir(dir, { recursive: true });
   for (const { row, detail } of reports) await writeFile(join(dir, row.slug + '.json'), JSON.stringify(detail));
+  const indexes = projectReportIndexes(reports);
+  for (const [type, index] of Object.entries(indexes)) await writeFile(join(dir, `index-${type}.json`), JSON.stringify(index));
+  await writeFile(join(dir, 'index.json'), JSON.stringify({ schema: 1, collections: Object.values(indexes).map(({ rows, ...summary }) => summary) }));
   return reports;
+}
+
+/** List-only projection. Never embeds findings, facts, document text or transcript items.
+ * Annual body-year links retain their own portfolio, including historical changes. */
+export function projectReportIndexes(reports) {
+  const indexes = {};
+  for (const type of ['royal_commission', 'integrity_report', 'annual_report', 'agency_report']) {
+    const held = reports.filter(r => r.detail.report_type === type);
+    const annual = new Map();
+    const list = [];
+    for (const { detail: d, aliases } of held) {
+      const c = d.record;
+      const alias = [...new Set(aliases.flat().filter(Boolean).map(String))].filter(a => a !== d.title && a !== d.body && a !== d.date && a !== d.year);
+      if (type === 'annual_report') {
+        const id = d.publisher.id;
+        if (!annual.has(id)) annual.set(id, { id, title: d.body, aliases: [], body_type: d.publisher.type_as_published || d.publisher.type || '', years: [] });
+        const group = annual.get(id);
+        group.aliases = [...new Set([...group.aliases, ...alias.map(a => a.replace(/\s+\d{4}\s+\d{2}$/, '')).filter(a => a && !/^[\d\s:-]+$/.test(a))])];
+        annual.get(id).years.push({ year: d.year, slug: d.slug, date: d.date, portfolio: d.publisher.portfolio || '' });
+      } else {
+        const item = { slug: d.slug, title: d.title, body: d.body, jurisdiction: d.jurisdiction, date: d.date, year: d.year, aliases: alias };
+        if (type === 'royal_commission') {
+          const final = rows(c.reports).find(r => r.kind === 'final_report');
+          item.final_date = c.final_report_date || final?.date || null;
+          item.status = final ? 'Final report held' : 'No final report held';
+          item.inquiry_type = c.inquiry_type;
+          item.transcripts = rows(c.transcripts).length;
+          const dates = [c.established?.date, item.final_date, ...rows(c.reports).map(r => r.date), ...rows(c.transcripts).map(r => r.date)].filter(Boolean).map(d => String(d).slice(0, 4)).sort();
+          item.years = [...new Set(dates)].join(', ');
+          item.date = item.final_date || dates.at(-1) || null;
+        }
+        if (type === 'integrity_report') {
+          item.operation = c.transcripts?.case || c.operation || c.case || '';
+          item.transcripts = c.transcripts?.count || 0;
+        }
+        list.push(item);
+      }
+    }
+    for (const b of annual.values()) b.years.sort((a, b) => b.year.localeCompare(a.year));
+    const dates = held.flatMap(({ detail: d }) => [d.year, d.date, ...(d.report_type === 'royal_commission' ? [d.record.established?.date, d.record.final_report_date, ...rows(d.record.reports).map(r => r.date), ...rows(d.record.transcripts).map(r => r.date)] : [])]).filter(Boolean).map(d => String(d).slice(0, 4)).sort();
+    indexes[type] = { schema: 1, type, count: held.length, bodies: new Set(held.map(r => r.detail.publisher.id || r.detail.body)).size,
+      from: dates[0] || null, to: dates.at(-1) || null, snapshot_at: held.map(r => String(r.detail.snapshot_at || '').replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3')).filter(Boolean).sort().at(-1) || null,
+      rows: type === 'annual_report' ? [...annual.values()] : list };
+  }
+  return indexes;
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   console.log(`Built ${(await buildReportCatalog()).length} report records`);
