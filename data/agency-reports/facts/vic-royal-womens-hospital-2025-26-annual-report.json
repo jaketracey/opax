@@ -1,0 +1,187 @@
+{
+  "report_id": "vic-royal-womens-hospital-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "staff_headcount",
+    "named_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "2026",
+      "value": 487089,
+      "value_as_published": "487,089",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 64,
+      "quote": "Total revenue and income from transactions 487,089 443,625"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026",
+      "value": -470614,
+      "value_as_published": "(470,614)",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 64,
+      "quote": "Total expenses from transactions (470,614) (442,796)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee expenses",
+      "column_as_published": "2026",
+      "value": -292393,
+      "value_as_published": "(292,393)",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 64,
+      "quote": "Employee expenses 3.1(a) (292,393) (277,108)"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result for the year",
+      "column_as_published": "2026",
+      "value": 19784,
+      "value_as_published": "19,784",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 64,
+      "quote": "Net result for the year 19,784 (1,046)"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "TOTAL",
+      "column_as_published": "Employees at June 2026",
+      "value": 1658.5,
+      "value_as_published": "1658.5",
+      "unit": "fte",
+      "period": "Employees at June 2026",
+      "page": 15,
+      "quote": "TOTAL 1616.1 1658.5 1624.5 1615.3"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives",
+      "column_as_published": "2026",
+      "value": 11,
+      "value_as_published": "11",
+      "unit": "count",
+      "period": "financial year ended 30 June 2026",
+      "page": 110,
+      "quote": "Total number of executives 11 10"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration i",
+      "column_as_published": "2026",
+      "value": 3072,
+      "value_as_published": "3,072",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 110,
+      "quote": "Total remuneration i 3,072 2,949"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total compensation - KMPs i",
+      "column_as_published": "2026",
+      "value": 3949,
+      "value_as_published": "3,949",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 112,
+      "quote": "Total compensation - KMPs i 3,949 3,855"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Operating result",
+      "column_as_published": "2026",
+      "value": 2444,
+      "value_as_published": "2,444",
+      "unit": "thousands_of_dollars",
+      "period": "2026",
+      "page": 19,
+      "quote": "Operating result 2,444 Capital purpose income"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Consultancies ($10,000 or greater)",
+      "value": 282500,
+      "value_as_published": "$282,500",
+      "unit": "dollars",
+      "period": "2025/26",
+      "page": 20,
+      "quote": "In 2025/26 there were five consultancies where the total fee payable to the consultants was $10,000 or greater. The total expenditure incurred during 2025/26 in relation to these consultancies is $282,500 GST exclusive."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "FTI Consulting",
+      "column_as_published": "Expenditure 2026 $’000 (excluding GST)",
+      "value": 150,
+      "value_as_published": "150",
+      "unit": "thousands_of_dollars",
+      "period": "2025/26",
+      "page": 20,
+      "quote": "FTI Consulting Outpatient administration workforce and process review Apr-26 Jun-26 200 150 50",
+      "counterparty": "FTI Consulting",
+      "purpose": "Outpatient administration workforce and process review"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "One Mile Grid",
+      "column_as_published": "Expenditure 2026 $’000 (excluding GST)",
+      "value": 15,
+      "value_as_published": "15",
+      "unit": "thousands_of_dollars",
+      "period": "2025/26",
+      "page": 20,
+      "quote": "One Mile Grid Car parking review Nov-25 Sep-26 27 15 12",
+      "counterparty": "One Mile Grid",
+      "purpose": "Car parking review"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "NH Architecture",
+      "column_as_published": "Expenditure 2026 $’000 (excluding GST)",
+      "value": 15,
+      "value_as_published": "15",
+      "unit": "thousands_of_dollars",
+      "period": "2025/26",
+      "page": 20,
+      "quote": "NH Architecture Accommodation review Jun-26 Oct-26 102 15 87",
+      "counterparty": "NH Architecture",
+      "purpose": "Accommodation review"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Innovative Thinking",
+      "column_as_published": "Expenditure 2026 $’000 (excluding GST)",
+      "value": 43,
+      "value_as_published": "43",
+      "unit": "thousands_of_dollars",
+      "period": "2025/26",
+      "page": 20,
+      "quote": "Innovative Thinking Asset management review Jun-26 Sep-26 99 43 56",
+      "counterparty": "Innovative Thinking",
+      "purpose": "Asset management review"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Shrunk Innovation Group Ltd",
+      "column_as_published": "Expenditure 2026 $’000 (excluding GST)",
+      "value": 59,
+      "value_as_published": "59",
+      "unit": "thousands_of_dollars",
+      "period": "2025/26",
+      "page": 20,
+      "quote": "Shrunk Innovation Group Ltd Environmental review Nov-25 Jun-26 70 59 11",
+      "counterparty": "Shrunk Innovation Group Ltd",
+      "purpose": "Environmental review"
+    }
+  ]
+}

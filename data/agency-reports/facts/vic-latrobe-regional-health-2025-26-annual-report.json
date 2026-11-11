@@ -1,0 +1,191 @@
+{
+ "report_id": "vic-latrobe-regional-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 504694,
+   "value_as_published": "504,694",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Total revenue and income from transactions 504,694 463,423"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value": -535935,
+   "value_as_published": "(535,935)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Total Expenses from transactions (535,935) (507,435)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -361609,
+   "value_as_published": "(361,609)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Employee expenses 3.1(a) (361,609) (332,024)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -29810,
+   "value_as_published": "(29,810)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 35,
+   "quote": "Net result (29,810) (41,689)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total Staff Employed – FTE",
+   "column_as_published": "2026",
+   "value": 2281.06,
+   "value_as_published": "2,281.06",
+   "unit": "fte",
+   "period": "at 30 June 2026 (June current month FTE)",
+   "page": 15,
+   "quote": "Total Staff Employed – FTE 2,072.49 2,281.06 2,013.74 2,159.33"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "employed 3,235 staff across Gippsland",
+   "value": 3235,
+   "value_as_published": "3,235",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "In 2025-26 Latrobe Regional Health employed 3,235 staff across Gippsland"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 10,
+   "value_as_published": "10",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 55,
+   "quote": "Total number of executives 10 10"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 2400,
+   "value_as_published": "2,400",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 55,
+   "quote": "Total remuneration i 2,400 2,058"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 3150,
+   "value_as_published": "3,150",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 56,
+   "quote": "Total compensation - KMPs i 3,150 2,759"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025 – 26 in relation to these consultancies",
+   "value": 620537,
+   "value_as_published": "$620,537",
+   "unit": "dollars",
+   "period": "2025-26 (six consultancies of $10,000 or greater)",
+   "page": 18,
+   "quote": "The total expenditure incurred during 2025 – 26 in relation to these consultancies is $620,537 (excluding GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 40180,
+   "value_as_published": "$40,180",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Balanced Effect Pty Ltd Fundraising: Establishing a Foundation & Philanthropy Strategy. Fundraising System Support. Dec-25 Mar-26 $40,180 $40,180 NIL",
+   "counterparty": "Balanced Effect Pty Ltd",
+   "purpose": "Fundraising: Establishing a Foundation & Philanthropy Strategy. Fundraising System Support."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 11250,
+   "value_as_published": "$11,250",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Catherine Helen Jones Clinical Governance Review Jun-26 Jun-26 $11,250 $11,250 NIL",
+   "counterparty": "Catherine Helen Jones",
+   "purpose": "Clinical Governance Review"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 13074,
+   "value_as_published": "$13,074",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Future Leadership Pty Ltd \"Facilitation of CEO Forum Draft CEO Committee Terms of Reference\" Aug-25 Aug-25 $13,074 $13,074 NIL",
+   "counterparty": "Future Leadership Pty Ltd",
+   "purpose": "Facilitation of CEO Forum Draft CEO Committee Terms of Reference"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 533731,
+   "value_as_published": "$533,731",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Nous Group Pty Ltd Clinical Services Plan for Gippsland Local Health Service Network Mar-26 Jun-26 $533,731 $533,731 NIL",
+   "counterparty": "Nous Group Pty Ltd",
+   "purpose": "Clinical Services Plan for Gippsland Local Health Service Network"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 11801,
+   "value_as_published": "$11,801",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Suzanne Maree Callaway Incident Reporting and Investigation Systems and Processes Review Aug-25 Aug-25 $11,801 $11,801 NIL",
+   "counterparty": "Suzanne Maree Callaway",
+   "purpose": "Incident Reporting and Investigation Systems and Processes Review"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 10502,
+   "value_as_published": "$10,502",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "Suzanne Maree Callaway Clinical Governance Review Jun-26 Jun-26 $10,502 $10,502 NIL",
+   "counterparty": "Suzanne Maree Callaway",
+   "purpose": "Clinical Governance Review"
+  }
+ ]
+}

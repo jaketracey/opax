@@ -1,0 +1,659 @@
+{
+ "as_of": "2026-11-11",
+ "source": "OPAX maintainer intake of publisher files",
+ "scope": "Victorian annual reports tabled 2026-07-01 to 2026-11-11, fetched from the Parliament of Victoria's tabled copies with OPAXBot.",
+ "reporting_body_roster": {
+  "source_url": "https://www.parliament.vic.gov.au/api/search/tabledpapers",
+  "as_at": "2026-11-11",
+  "use": "Tabled papers search, not a full roster."
+ },
+ "catalogues": [
+  {
+   "jurisdiction": "VIC",
+   "primary": "https://www.parliament.vic.gov.au/tabled-documents-database",
+   "format": "Parliament tabled originals"
+  }
+ ],
+ "reports": [
+  {
+   "report_id": "vic-victorian-health-promotion-foundation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Victorian Health Promotion Foundation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4aa6b9/globalassets/tabled-paper-documents/tabled-paper-10680/victorian-health-promotion-foundation-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10680",
+   "sha256": "217fc7a97230418cf3521189310781051bed3a40849aef914bb35e058d4d5e8d",
+   "bytes": 18290939,
+   "pages": 129,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-11-02",
+    "basis": "released",
+    "paper_id": 10680
+   }
+  },
+  {
+   "report_id": "vic-western-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Western Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10768",
+   "sha256": "b96ed62320ba13aecb027a3f1b44a002f23d1155a30043ce09f6ba3bad6fba07",
+   "bytes": 2457023,
+   "pages": 130,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10768
+   }
+  },
+  {
+   "report_id": "vic-royal-womens-hospital-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Royal Women's Hospital",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab42a/globalassets/tabled-paper-documents/tabled-paper-10762/the-royal-womens-hospital-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10762",
+   "sha256": "756e823507788248b4c39b299874a4fca05143bd4c5b67156d0a4b02c7acc346",
+   "bytes": 5367778,
+   "pages": 116,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10762
+   }
+  },
+  {
+   "report_id": "vic-royal-victorian-eye-and-ear-hospital-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Royal Victorian Eye and Ear Hospital",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab428/globalassets/tabled-paper-documents/tabled-paper-10761/the-royal-victorian-eye-and-ear-hospital-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10761",
+   "sha256": "1a6cca310ea760baaaf438b0149d775b8d16dfa6319c1949179e82394f0ffd20",
+   "bytes": 2719923,
+   "pages": 78,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10761
+   }
+  },
+  {
+   "report_id": "vic-royal-childrens-hospital-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Royal Children's Hospital",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab425/globalassets/tabled-paper-documents/tabled-paper-10760/the-royal-childrens-hospital-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10760",
+   "sha256": "ab96fd62e0a058733313eb3c618f277936e2231079a9d8902146765f24908b35",
+   "bytes": 3075720,
+   "pages": 125,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10760
+   }
+  },
+  {
+   "report_id": "vic-st-vincents-hospital-melbourne-ltd-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "St Vincent's Hospital Melbourne Ltd",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab41a/globalassets/tabled-paper-documents/tabled-paper-10755/st-vincents-hospital-melbourne-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10755",
+   "sha256": "2b7af8ad34e3a615cb0f1ef12d984de519dba8a166807a139d80891e18ec2339",
+   "bytes": 3863150,
+   "pages": 59,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10755
+   }
+  },
+  {
+   "report_id": "vic-south-west-healthcare-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "South West Healthcare",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab417/globalassets/tabled-paper-documents/tabled-paper-10754/south-west-healthcare-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10754",
+   "sha256": "47160ff8ffed6d9182ab0e22938c988cd6dd9ad90ef372d864ee54aad6e6b9fe",
+   "bytes": 29688465,
+   "pages": 53,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10754
+   }
+  },
+  {
+   "report_id": "vic-grampians-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Grampians Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10738",
+   "sha256": "001da5d8e032b8221977780c2629e89608160719b316ce298fa14a53579ab271",
+   "bytes": 4570662,
+   "pages": 110,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10738
+   }
+  },
+  {
+   "report_id": "vic-goulburn-valley-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Goulburn Valley Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10737",
+   "sha256": "5b5112b70342eabb6996aebdb26277396adcd86143962dcba852db2ba4f5bd96",
+   "bytes": 8572693,
+   "pages": 69,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10737
+   }
+  },
+  {
+   "report_id": "vic-eastern-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Eastern Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10734",
+   "sha256": "4474325dfb121cb99cc009994740a0e6b46dd22541976847a6a96a506c07197f",
+   "bytes": 7336141,
+   "pages": 144,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10734
+   }
+  },
+  {
+   "report_id": "vic-northern-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Northern Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3f2/globalassets/tabled-paper-documents/tabled-paper-10726/northern-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10726",
+   "sha256": "ff808325bf41373e013a3a990ad4bdad30268941593f33fb9be9c1e3eb141b47",
+   "bytes": 8315579,
+   "pages": 144,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10726
+   }
+  },
+  {
+   "report_id": "vic-monash-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Monash Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10718",
+   "sha256": "3e07cfd2541d1049d66c13b77f28c2b692b7baeffec282c525e548ea04bbd5e5",
+   "bytes": 2113851,
+   "pages": 131,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10718
+   }
+  },
+  {
+   "report_id": "vic-mildura-base-public-hospital-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Mildura Base Public Hospital",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3ea/globalassets/tabled-paper-documents/tabled-paper-10717/mildura-base-public-hospital-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10717",
+   "sha256": "dec1aea5d197ec7c1d3092601d2ad4fea513316875153405f33d2ac743aea7fb",
+   "bytes": 18318626,
+   "pages": 80,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10717
+   }
+  },
+  {
+   "report_id": "vic-mercy-hospitals-victoria-ltd-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Mercy Hospitals Victoria Ltd",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3df/globalassets/tabled-paper-documents/tabled-paper-10715/mercy-hospitals-victoria-ltd-annual-report-2025-2026.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10715",
+   "sha256": "4da30e1b00d1305f81492263b50515426adbf4b0656f45e36081ea7e04c165bd",
+   "bytes": 12140938,
+   "pages": 113,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10715
+   }
+  },
+  {
+   "report_id": "vic-melbourne-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Melbourne Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3cf/globalassets/tabled-paper-documents/tabled-paper-10713/melbourne-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10713",
+   "sha256": "d051fb54d3c355d56c1c0d6c4b9ec7d099a35a7ce0ada5fdc30972f39d464b6b",
+   "bytes": 4363506,
+   "pages": 135,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10713
+   }
+  },
+  {
+   "report_id": "vic-bayside-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Bayside Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3b7/globalassets/tabled-paper-documents/tabled-paper-10707/bayside-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10707",
+   "sha256": "fb1a0a3ba5a56343b3e1c6db4a449d8e2edc8888403c854bcefb03d6ede4dc80",
+   "bytes": 15255522,
+   "pages": 224,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10707
+   }
+  },
+  {
+   "report_id": "vic-barwon-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Barwon Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3b1/globalassets/tabled-paper-documents/tabled-paper-10706/barwon-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10706",
+   "sha256": "583affe72e7319f8c29a76ca9e4699c46aeda970398e65fbc8a45b1bdf2f4c21",
+   "bytes": 8464446,
+   "pages": 142,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10706
+   }
+  },
+  {
+   "report_id": "vic-latrobe-regional-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Latrobe Regional Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10704",
+   "sha256": "b18868e03d2f85e667ffbececa417f5c790bc1f3bb88674260b5fb88b2fabe59",
+   "bytes": 3990143,
+   "pages": 60,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10704
+   }
+  },
+  {
+   "report_id": "vic-austin-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Austin Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10701/austin-health-annual-report--2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10701",
+   "sha256": "0f34136c5cdc428b268b0fbc96e81e21774d5dc8d6e481f69165015143dcffdd",
+   "bytes": 9142185,
+   "pages": 148,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10701
+   }
+  },
+  {
+   "report_id": "vic-albury-wodonga-health-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Albury Wodonga Health",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10697",
+   "sha256": "1ecccf03aec1c85c9e4440c01f4c5c9704e8296990f95f13abfda39bde0b393e",
+   "bytes": 19708854,
+   "pages": 69,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10697
+   }
+  },
+  {
+   "report_id": "vic-greyhound-racing-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Greyhound Racing Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10685",
+   "sha256": "28ce385b1d2cb57e9ee01749acfe66842af84834cf8c0fe983a9c526d6a3af2d",
+   "bytes": 11645467,
+   "pages": 86,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10685
+   }
+  },
+  {
+   "report_id": "vic-australian-grand-prix-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Australian Grand Prix Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab395/globalassets/tabled-paper-documents/tabled-paper-10681/agpc-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10681",
+   "sha256": "7f0b28d0086804d37f96c817120868f58593e4eab4085d0671479fa608d6c6e0",
+   "bytes": 18149148,
+   "pages": 100,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10681
+   }
+  },
+  {
+   "report_id": "vic-national-gallery-of-victoria-council-of-trustees-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "National Gallery of Victoria Council of Trustees",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10665",
+   "sha256": "8f6c8abd62682cd21b429e9d7ee4544bc1d67d71a5026a3f340cb124959f9baf",
+   "bytes": 11099433,
+   "pages": 189,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10665
+   }
+  },
+  {
+   "report_id": "vic-central-highlands-region-water-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Central Highlands Region Water Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab374/globalassets/tabled-paper-documents/tabled-paper-10636/central-highlands-water-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10636",
+   "sha256": "5b03ea368f9e5c796fe3409a6e8aaaddc9b4dcc6844c153d3cdbe167a28f61a4",
+   "bytes": 10155529,
+   "pages": 132,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10636
+   }
+  },
+  {
+   "report_id": "vic-yarra-valley-water-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Yarra Valley Water Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab36c/globalassets/tabled-paper-documents/tabled-paper-10634/yarra-valley-water-annual-report-2025-26-.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10634",
+   "sha256": "67da9bc0b1eaec04954ba427e385303754dcd7acf33a1aec91972755acb270ef",
+   "bytes": 11295528,
+   "pages": 200,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10634
+   }
+  },
+  {
+   "report_id": "vic-barwon-region-water-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Barwon Region Water Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab355/globalassets/tabled-paper-documents/tabled-paper-10629/barwon-water-group--annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10629",
+   "sha256": "92ba7fcb4c9fee81a6f27042fba419da01df235924204c1d0d6d1f04a49e82ed",
+   "bytes": 7033340,
+   "pages": 158,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10629
+   }
+  },
+  {
+   "report_id": "vic-coliban-region-water-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Coliban Region Water Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab353/globalassets/tabled-paper-documents/tabled-paper-10628/coliban-water-annual-report-2025-26-.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10628",
+   "sha256": "d68b6c6f41481dc8c8efe448a7bc040c0430afe728f98ea87f44adb639807024",
+   "bytes": 9982140,
+   "pages": 120,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10628
+   }
+  },
+  {
+   "report_id": "vic-south-east-water-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "South East Water Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10623",
+   "sha256": "1ae7133c74013d3ae6ef0de94d4ebb30fbc04f9d9962968ade2e22027b6782c6",
+   "bytes": 6531648,
+   "pages": 173,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10623
+   }
+  },
+  {
+   "report_id": "vic-goulburn-murray-rural-water-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Goulburn Murray Rural Water Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab33e/globalassets/tabled-paper-documents/tabled-paper-10622/goulburn-murray-water-2025-26-annual-report-.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10622",
+   "sha256": "744274f2440e1ebcf10aee74386d45469f362b9ea4bb8c2c7212d6a176a65854",
+   "bytes": 5372643,
+   "pages": 142,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10622
+   }
+  },
+  {
+   "report_id": "vic-greater-western-water-corporation-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Greater Western Water Corporation",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10621",
+   "sha256": "74c200980434699d70bc31893cbbacfc0c78ef51614cc55524bd11962a000c5d",
+   "bytes": 3198192,
+   "pages": 156,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10621
+   }
+  },
+  {
+   "report_id": "vic-safe-transport-victoria-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "Safe Transport Victoria",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10617",
+   "sha256": "2020092ef976962d15ac79c2806208817c4f89133a5d87d30f7e4af4a7bb3526",
+   "bytes": 14492491,
+   "pages": 52,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10617
+   }
+  },
+  {
+   "report_id": "vic-sec-victoria-pty-ltd-2025-26-annual-report",
+   "jurisdiction": "VIC",
+   "agency": "SEC Victoria Pty Ltd",
+   "reporting_year": "2025-26",
+   "document_kind": "annual report",
+   "edition": "current",
+   "source_url": "https://www.parliament.vic.gov.au/4ab32b/globalassets/tabled-paper-documents/tabled-paper-10605/sec-annual-report-2025-26.pdf",
+   "catalogue_url": "https://www.parliament.vic.gov.au/parliamentary-activity/tabled-documents-database/tabled-document-details/10605",
+   "sha256": "e535e28c9e7ad864e13895bcb84ed6e952241c01d98e797fc93a7ef697f1271c",
+   "bytes": 18566902,
+   "pages": 225,
+   "acquisition": "OPAXBot fetch",
+   "intake": "2026-11-11",
+   "tabled": {
+    "date": "2026-10-30",
+    "basis": "released",
+    "paper_id": 10605
+   }
+  }
+ ]
+}

@@ -1,0 +1,149 @@
+{
+ "report_id": "vic-goulburn-valley-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "staff_headcount",
+  "head_remuneration",
+  "named_remuneration",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "June Monthly FTE*",
+   "value": 2022.32,
+   "value_as_published": "2,022.32",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 16,
+   "quote": "Total 2,128.89 2,022.32 2,058.78 2,165.07"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "Average Monthly FTE*",
+   "value": 2165.07,
+   "value_as_published": "2,165.07",
+   "unit": "fte",
+   "period": "2026 average monthly",
+   "page": 16,
+   "quote": "Total 2,128.89 2,022.32 2,058.78 2,165.07"
+  },
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 522488,
+   "value_as_published": "522,488",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Total revenue and income from transactions 522,488 481,988"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -534531,
+   "value_as_published": "(534,531)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Total expenses from transactions (534,531) (493,117)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -381913,
+   "value_as_published": "(381,913)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Employee expenses 3.1(a) (381,913) (350,732)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -9750,
+   "value_as_published": "(9,750)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Net result (9,750) (11,548)"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 11,
+   "value_as_published": "11",
+   "unit": "count",
+   "period": "year ended 30 June 2026",
+   "page": 66,
+   "quote": "Total number of executives 11 11"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 3159,
+   "value_as_published": "3,159",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 66,
+   "quote": "Total remuneration i 3,159 2,681"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMP's",
+   "column_as_published": "2026",
+   "value": 4290,
+   "value_as_published": "4,290",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 67,
+   "quote": "Total compensation - KMP's 4,290 3,453"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "The Trustee for Armour Finance Trust",
+   "column_as_published": "Expenditure 2023–24 (exc. GST)",
+   "value": 10000,
+   "value_as_published": "$10,000",
+   "unit": "dollars",
+   "period": "2025/26",
+   "page": 28,
+   "quote": "Nov 2025 Dec 2025 $10,000 $10,000 $-",
+   "counterparty": "The Trustee for Armour Finance Trust",
+   "purpose": "Consultation services - Board presentation"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Impact collaborative Pty Ltd",
+   "column_as_published": "Expenditure 2023–24 (exc. GST)",
+   "value": 188880,
+   "value_as_published": "$188,880",
+   "unit": "dollars",
+   "period": "2025/26",
+   "page": 28,
+   "quote": "Feb 2026 July 2026 $403,000 $188,880 $214,720",
+   "counterparty": "Impact collaborative Pty Ltd",
+   "purpose": "To undertake a co-design approach to deliver the Hume network clinical service plan, a region wide workforce plan and identify step closer care pathways in priority clinical streams."
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred during 2025/26 in relation to these consultancies",
+   "column_as_published": "2025/26",
+   "value": 198880,
+   "value_as_published": "$198,880",
+   "unit": "dollars",
+   "period": "2025/26",
+   "page": 28,
+   "quote": "The total expenditure incurred during 2025/26 in relation to these consultancies is $198,880 (excluding GST)."
+  }
+ ]
+}

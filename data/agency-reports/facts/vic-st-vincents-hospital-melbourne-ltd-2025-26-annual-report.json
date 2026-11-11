@@ -1,0 +1,118 @@
+{
+  "report_id": "vic-st-vincents-hospital-melbourne-ltd-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "named_remuneration",
+    "executive_band",
+    "executive_count",
+    "executive_average_remuneration",
+    "staff_headcount"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "2026 $’000",
+      "value": 1201493,
+      "value_as_published": "1,201,493",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 41,
+      "quote": "Total revenue and income from transactions 1,201,493 1,129,146"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026 $’000",
+      "value": -1187352,
+      "value_as_published": "(1,187,352)",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 41,
+      "quote": "Total expenses from transactions (1,187,352) (1,129,556)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee expenses",
+      "column_as_published": "2026 $’000",
+      "value": -853574,
+      "value_as_published": "(853,574)",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 41,
+      "quote": "Employee expenses A2 (853,574) (811,501)"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net result for the year",
+      "column_as_published": "2026 $’000",
+      "value": 6707,
+      "value_as_published": "6,707",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 41,
+      "quote": "Net result for the year 6,707 7,798"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total",
+      "column_as_published": "June current month FTE",
+      "value": 5013,
+      "value_as_published": "5,013",
+      "unit": "fte",
+      "period": "June 2026",
+      "page": 18,
+      "quote": "Ancillary Staff (Allied Health) 614 587 597 569 Total 5,013 5,036 4,983 4,942"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total compensation - KMPs",
+      "column_as_published": "2026 $’000",
+      "value": 2986,
+      "value_as_published": "2,986",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 55,
+      "quote": "Compensation 2026 $’000 2025 $’000 Total compensation - KMPs 2,986 2,993"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "total expenditure incurred during 2025-26",
+      "column_as_published": "2025-26",
+      "value": 48383,
+      "value_as_published": "$48,383",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies was $48,383 (excluding GST)."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Basic Fire Pty Ltd",
+      "column_as_published": "Expenditure 2025-26 (ex GST) $",
+      "value": 37722,
+      "value_as_published": "37,722",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "Basic Fire Pty Ltd Recommendations from fire testing on cladding. Jul-25 Oct-25 37,722 37,722 0",
+      "counterparty": "Basic Fire Pty Ltd",
+      "purpose": "Recommendations from fire testing on cladding."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Corrs Chambers Westgarth",
+      "column_as_published": "Expenditure 2025-26 (ex GST) $",
+      "value": 10661,
+      "value_as_published": "10,661",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 17,
+      "quote": "Corrs Chambers Westgarth Termination of G4S Correctional Health contract Nov-25 Feb-26 10,661 10,661 0",
+      "counterparty": "Corrs Chambers Westgarth",
+      "purpose": "Termination of G4S Correctional Health contract"
+    }
+  ]
+}

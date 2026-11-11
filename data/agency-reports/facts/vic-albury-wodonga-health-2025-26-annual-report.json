@@ -1,0 +1,127 @@
+{
+ "report_id": "vic-albury-wodonga-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "named_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 580993,
+   "value_as_published": "580,993",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Total revenue and income from transactions 580,993 530,271"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -602815,
+   "value_as_published": "(602,815)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Total expenses from transactions (602,815) (549,743)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -440255,
+   "value_as_published": "(440,255)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Employee expenses 3.1 (a) (440,255) (395,203)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -25597,
+   "value_as_published": "(25,597)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 49,
+   "quote": "Net result (25,597) (17,073)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "June 2026 FTE",
+   "value": 2340,
+   "value_as_published": "2,340",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 16,
+   "quote": "Total 2,164 2,340 2,096 2,254"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 8,
+   "value_as_published": "8",
+   "unit": "count",
+   "period": "2026",
+   "page": 66,
+   "quote": "Total number of executives 8 9"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 2453,
+   "value_as_published": "2,453",
+   "unit": "thousands_of_dollars",
+   "period": "2026",
+   "page": 66,
+   "quote": "Total remuneration i 2,453 2,340"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 3423,
+   "value_as_published": "3,423",
+   "unit": "thousands_of_dollars",
+   "period": "2026",
+   "page": 67,
+   "quote": "Total compensation - KMPs i 3,423 3,136"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of Consultancies (valued at $10,000 or greater)",
+   "value": 21000,
+   "value_as_published": "$21,000",
+   "unit": "dollars",
+   "period": "2025/26",
+   "page": 38,
+   "quote": "The total expenditure incurred during 2025/26 in relation to this consultancy was $21,000 (excl. GST)."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-2026 (EXC GST)",
+   "column_as_published": "Expenditure 2025-2026",
+   "value": 21000,
+   "value_as_published": "21,000",
+   "unit": "dollars",
+   "period": "2025/26",
+   "page": 38,
+   "quote": "Nelson Sala Trust Safer Care Victoria Protected Review Dec 25 Feb 26 21,000 21,000 0",
+   "counterparty": "Nelson Sala Trust",
+   "purpose": "Safer Care Victoria Protected Review"
+  }
+ ],
+ "notes": [
+  "staff_headcount: p.3 prints 'More than 3,427 staff', a lower bound rather than a count; p.7 separates the label from the number in the text layer."
+ ]
+}

@@ -1,0 +1,133 @@
+{
+  "report_id": "vic-mildura-base-public-hospital-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "executive_band",
+    "executive_count",
+    "executive_remuneration_total",
+    "employee_expenses",
+    "staff_headcount",
+    "named_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total Revenue",
+      "column_as_published": "2026 ($000)",
+      "value": 275389,
+      "value_as_published": "275,389",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 28,
+      "quote": "Total Revenue 275,389 260,015 203,640"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total Expenses",
+      "column_as_published": "2026 ($000)",
+      "value": -273510,
+      "value_as_published": "(273,510)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 28,
+      "quote": "Total Expenses (273,510) (260,942) (248,439)"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net Result",
+      "column_as_published": "2026 ($000)",
+      "value": 1211,
+      "value_as_published": "1,211",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 28,
+      "quote": "Net Result 1,211 (1,358) (45,096)"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "OPERATING RESULT*",
+      "column_as_published": "2026 ($000)",
+      "value": 6251,
+      "value_as_published": "6,251",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 28,
+      "quote": "OPERATING RESULT* 6,251 (331) (45,746)"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Total",
+      "column_as_published": "June Current Month FTE",
+      "value": 1059,
+      "value_as_published": "1,059",
+      "unit": "fte",
+      "period": "June 2026",
+      "page": 29,
+      "quote": "Total 978 1,059 958 1,027"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+      "value": 149757.0,
+      "value_as_published": "$149,757.00",
+      "unit": "dollars",
+      "period": "2025-2026",
+      "page": 30,
+      "quote": "In 2025-2026, there were four consultancies where the total fees payable to the consultants were $10,000 or greater. The total expenditure incurred during 2025-2026 in relation to these consultancies is $149,757.00 (excl. GST)."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "HICMR Pty Ltd",
+      "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+      "value": 16262,
+      "value_as_published": "$16,262",
+      "unit": "dollars",
+      "period": "2025-2026",
+      "page": 30,
+      "quote": "HICMR Pty Ltd Review of Infection Prevention and Control Practices 27th May 2025 28th May 2025 $16,262 $16,262 $0",
+      "counterparty": "HICMR Pty Ltd",
+      "purpose": "Review of Infection Prevention and Control Practices"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Stefano’s Consulting",
+      "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+      "value": 13209,
+      "value_as_published": "$13,209",
+      "unit": "dollars",
+      "period": "2025-2026",
+      "page": 30,
+      "quote": "Stefano’s Consulting Food Services Plan 1st March 2024 30th January 2027 $85,745 $13,209 $72,536",
+      "counterparty": "Stefano’s Consulting",
+      "purpose": "Food Services Plan"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Engaging People",
+      "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+      "value": 93525,
+      "value_as_published": "$93,525",
+      "unit": "dollars",
+      "period": "2025-2026",
+      "page": 30,
+      "quote": "Engaging People Executive Support Program 1st July 2023 Ongoing $106,384 $93,525 $12,859",
+      "counterparty": "Engaging People",
+      "purpose": "Executive Support Program"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Converge International Pty Ltd",
+      "column_as_published": "Expenditure 2025-2026 (excluding GST)",
+      "value": 26761,
+      "value_as_published": "$26,761",
+      "unit": "dollars",
+      "period": "2025-2026",
+      "page": 30,
+      "quote": "Converge International Pty Ltd Employee Assistance Program 1st October 2025 30th September 2026 $34,732.24 $26,761 $7,971.24",
+      "counterparty": "Converge International Pty Ltd",
+      "purpose": "Employee Assistance Program"
+    }
+  ]
+}

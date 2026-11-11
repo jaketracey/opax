@@ -1,0 +1,166 @@
+{
+ "report_id": "vic-barwon-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "staff_fte",
+  "consultancy_total",
+  "named_remuneration",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026 $'000",
+   "value": 1494655,
+   "value_as_published": "1,494,655",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 81,
+   "quote": "Total revenue and income from transactions 1,494,655 1,294,271"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026 $'000",
+   "value": -1415148,
+   "value_as_published": "(1,415,148)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 81,
+   "quote": "Total expenses from transactions (1,415,148) (1,324,464)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026 $'000",
+   "value": -979956,
+   "value_as_published": "(979,956)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 81,
+   "quote": "Employee expenses 3.1(a) (979,956) (925,584)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for year",
+   "column_as_published": "2026 $'000",
+   "value": 83049,
+   "value_as_published": "83,049",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 81,
+   "quote": "Net result for year 83,049 (33,299)"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "STAFF (HEAD COUNT)",
+   "value": 9759,
+   "value_as_published": "9,759",
+   "unit": "people",
+   "period": "as at 30 June 2026",
+   "page": 6,
+   "quote": "9,759 STAFF (HEAD COUNT)*"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "Consolidated 2026 $'000",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2026",
+   "page": 132,
+   "quote": "Total number of executives 7 7"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "Consolidated 2026 $'000",
+   "value": 2738,
+   "value_as_published": "2,738",
+   "unit": "thousands_of_dollars",
+   "period": "2026",
+   "page": 132,
+   "quote": "Total remuneration i 2,738 2,514"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total",
+   "column_as_published": "2026 $'000",
+   "value": 3874,
+   "value_as_published": "3,874",
+   "unit": "thousands_of_dollars",
+   "period": "2026",
+   "page": 133,
+   "quote": "Total i 3,874 3,636"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "EXPENDITURE 2025/2026",
+   "column_as_published": "EXPENDITURE 2025/2026",
+   "value": 11700,
+   "value_as_published": "$11,700",
+   "unit": "dollars",
+   "period": "2025/2026",
+   "page": 42,
+   "quote": "RIDER LEVETT BUCKNALL VICTORIA Barwon Heart Capital Development cost plan $11,700 $11,700",
+   "counterparty": "RIDER LEVETT BUCKNALL VICTORIA",
+   "purpose": "Barwon Heart Capital Development cost plan"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "EXPENDITURE 2025/2026",
+   "column_as_published": "EXPENDITURE 2025/2026",
+   "value": 25792,
+   "value_as_published": "$25,792",
+   "unit": "dollars",
+   "period": "2025/2026",
+   "page": 42,
+   "quote": "TEKTOLOGY CONSULTING SOPHIA feasibility assessment $25,792 $25,792",
+   "counterparty": "TEKTOLOGY CONSULTING",
+   "purpose": "SOPHIA feasibility assessment"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "EXPENDITURE 2025/2026",
+   "column_as_published": "EXPENDITURE 2025/2026",
+   "value": 35000,
+   "value_as_published": "$35,000",
+   "unit": "dollars",
+   "period": "2025/2026",
+   "page": 42,
+   "quote": "Trustee for Armour Finance Trust Competitive tender process for public in private clinical services i.e. surgical, cancer, renal $35,000 $35,000",
+   "counterparty": "Trustee for Armour Finance Trust",
+   "purpose": "Competitive tender process for public in private clinical services i.e. surgical, cancer, renal"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "EXPENDITURE 2025/2026",
+   "column_as_published": "EXPENDITURE 2025/2026",
+   "value": 69417,
+   "value_as_published": "$69,417",
+   "unit": "dollars",
+   "period": "2025/2026",
+   "page": 42,
+   "quote": "JB WERE Investment Portfolio Advice and Management $69,417 $69,417",
+   "counterparty": "JB WERE",
+   "purpose": "Investment Portfolio Advice and Management"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "EXPENDITURE 2025/2026",
+   "column_as_published": "EXPENDITURE 2025/2026",
+   "value": 132788,
+   "value_as_published": "$132,788",
+   "unit": "dollars",
+   "period": "2025/2026",
+   "page": 42,
+   "quote": "CAPITAL INSIGHT UHG Masterplan and mental health business case $132,788 $132,788",
+   "counterparty": "CAPITAL INSIGHT",
+   "purpose": "UHG Masterplan and mental health business case"
+  }
+ ]
+}

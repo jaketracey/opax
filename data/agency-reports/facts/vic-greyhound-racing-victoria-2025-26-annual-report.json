@@ -1,0 +1,167 @@
+{
+ "report_id": "vic-greyhound-racing-victoria-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "staff_fte",
+  "staff_headcount",
+  "named_remuneration",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 137078,
+   "value_as_published": "137,078",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 46,
+   "quote": "Total Revenue and income from transactions 137,078 135,674"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -136542,
+   "value_as_published": "(136,542)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 46,
+   "quote": "Total expenses from transactions (136,542) (133,435)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -136,
+   "value_as_published": "(136)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 46,
+   "quote": "Net result (136) 2,085"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Total Employee Expenses",
+   "column_as_published": "2026",
+   "value": 28149,
+   "value_as_published": "28,149",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 54,
+   "quote": "Total Employee Expenses 28,149 28,264"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "$490 000 - $499 999",
+   "column_as_published": "2026",
+   "value": null,
+   "value_as_published": "$490 000 - $499 999",
+   "unit": "dollars",
+   "period": "2025-26 reporting period",
+   "page": 77,
+   "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of GRV during the reporting period was in the range: $490 000 - $499 999 (2025: $480 000 - $489 999)."
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of Executives",
+   "column_as_published": "2026",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "2026",
+   "page": 78,
+   "quote": "Total number of Executives 5 4"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (a)",
+   "column_as_published": "2026",
+   "value": 1264,
+   "value_as_published": "1,264",
+   "unit": "thousands_of_dollars",
+   "period": "2026",
+   "page": 78,
+   "quote": "Remuneration of Executive Officers Total remuneration (a) 1,264 1,115"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Compensation of KMPs Total (a)",
+   "column_as_published": "2026",
+   "value": 2095,
+   "value_as_published": "2,095",
+   "unit": "thousands_of_dollars",
+   "period": "2026",
+   "page": 78,
+   "quote": "Compensation of KMPs Total (a) 2,095 1,986"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "CONSULTANTS",
+   "value": 32000,
+   "value_as_published": "$32,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 84,
+   "quote": "During the year, GRV engaged one consultant that cost in excess of $10,000 excluding GST. The total expenditure incurred during 2025-26 in relation to these consultancies is $32,000 excluding GST."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "$ (excl GST)",
+   "column_as_published": "$ (excl GST)",
+   "value": 32000,
+   "value_as_published": "32,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 84,
+   "quote": "Consultant Purpose of consultancy $ (excl GST) PM-Partners Group Technology Consultants 32,000 TOTAL 32,000",
+   "counterparty": "PM-Partners Group",
+   "purpose": "Technology Consultants"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Total VRT",
+   "column_as_published": "2025-26",
+   "value": 46,
+   "value_as_published": "46",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 19,
+   "quote": "Total VRT 100 109 100 46"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Total Stewards Hearings",
+   "column_as_published": "2025-26",
+   "value": 102,
+   "value_as_published": "102",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 19,
+   "quote": "Total Stewards Hearings - - - 102"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Total property visits /inspections",
+   "column_as_published": "2025-26",
+   "value": 2988,
+   "value_as_published": "2,988",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 20,
+   "quote": "Total property visits /inspections 1,734 2,809 3,478 2,988"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "greyhound scans",
+   "value": 16431,
+   "value_as_published": "16,431",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 20,
+   "quote": "16,431 greyhound scans were conducted at participant properties."
+  }
+ ]
+}

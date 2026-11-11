@@ -1,0 +1,116 @@
+{
+  "report_id": "vic-royal-childrens-hospital-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "named_remuneration",
+    "executive_band",
+    "executive_average_remuneration",
+    "staff_fte",
+    "staff_headcount"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income from transactions",
+      "column_as_published": "2026",
+      "value": 1249872,
+      "value_as_published": "1,249,872",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 68,
+      "quote": "Total revenue and income from transactions 1,249,872 1,148,789"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses from transactions",
+      "column_as_published": "2026",
+      "value": -1235928,
+      "value_as_published": "(1,235,928)",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 68,
+      "quote": "Total expenses from transactions (1,235,928) (1,177,812)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee expenses",
+      "column_as_published": "2026",
+      "value": -772199,
+      "value_as_published": "(772,199)",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 68,
+      "quote": "Employee expenses 3.1 (a) (772,199) (739,445)"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "NET RESULT",
+      "column_as_published": "2026",
+      "value": 8973,
+      "value_as_published": "8,973",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 68,
+      "quote": "NET RESULT 8,973 (29,643)"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives",
+      "column_as_published": "2026",
+      "value": 11,
+      "value_as_published": "11",
+      "unit": "count",
+      "period": "financial year ended 30 June 2026",
+      "page": 117,
+      "quote": "Total remuneration 3,277 2,569 Total number of executives 11 9"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 3277,
+      "value_as_published": "3,277",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 117,
+      "quote": "Other long term benefits 319 123 Total remuneration 3,277 2,569 Total number of executives 11 9"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total compensation",
+      "column_as_published": "2026",
+      "value": 6368,
+      "value_as_published": "6,368",
+      "unit": "thousands_of_dollars",
+      "period": "financial year ended 30 June 2026",
+      "page": 119,
+      "quote": "Termination benefits - 240 Total compensation 6,368 5,596"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "total expenditure incurred during 2025-26",
+      "column_as_published": "2025-26",
+      "value": 12400,
+      "value_as_published": "$12,400",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 26,
+      "quote": "The total expenditure incurred during 2025-26 in relation to the consultancy is $12,400 (excl. GST)."
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Prensa Pty Ltd",
+      "column_as_published": "Expenditure 2025-26 (excl. GST)",
+      "value": 12400,
+      "value_as_published": "$12,400",
+      "unit": "dollars",
+      "period": "2025-26",
+      "page": 26,
+      "quote": "Prensa Pty Ltd Assess Risk Controls for Liquid Nitrogen Use Nov 25 Nov 25 $12,400 $12,400 $0",
+      "counterparty": "Prensa Pty Ltd",
+      "purpose": "Assess Risk Controls for Liquid Nitrogen Use"
+    }
+  ]
+}

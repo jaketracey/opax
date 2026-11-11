@@ -133,8 +133,19 @@ publish no financial statements of their own (their accounts sit in a department
 report), so their documents carry operational counts only. VECRA's statements cover its
 first six months (1 January to 30 June 2026), as its period field says.
 
-The other 137 catalogued reports (health services, water corporations, catchment
-authorities, cemetery trusts, arts and sport bodies and others) are the next waves.
+A fourth batch took 32 more (`intake-2026-11-11-vic-tabled-wave4.json`): the metropolitan
+and large regional health services (Austin, Bayside, Monash, Eastern, Northern, Western,
+Melbourne Health, the Royal Children's, the Royal Women's, the Eye and Ear, Barwon,
+Grampians, Goulburn Valley, Albury Wodonga, Latrobe Regional, Mildura Base, South West
+Healthcare, St Vincent's and Mercy), seven water corporations, VicHealth, Safe Transport
+Victoria, Greyhound Racing Victoria, the NGV, SEC Victoria and the Australian Grand Prix
+Corporation; 500 figures read. Most health services print responsible persons' pay in
+bands without tying a band to the chief executive, so `head_remuneration` is usually in
+`not_found` for them. Mildura Base's financial statement pages have no usable text
+layer; its money figures come from the readable five-year summary.
+
+The other 102 catalogued reports (smaller rural health services, catchment authorities,
+cemetery trusts, arts and sport bodies and others) are the next waves.
 
 ## Catalogue hosts and OPAXBot, 11 November 2026
 

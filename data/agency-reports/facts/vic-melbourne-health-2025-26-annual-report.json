@@ -1,0 +1,188 @@
+{
+ "report_id": "vic-melbourne-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "named_remuneration",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 1791998,
+   "value_as_published": "1,791,998",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 74,
+   "quote": "Total revenue and income from transactions 1,791,998 1,820,718"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -1843671,
+   "value_as_published": "(1,843,671)",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 74,
+   "quote": "Total expenses from transactions (1,843,671) (1,809,514)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -1271651,
+   "value_as_published": "(1,271,651)",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 74,
+   "quote": "Employee expenses 3.1(a) (1,271,651) (1,268,065)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -53273,
+   "value_as_published": "(53,273)",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 74,
+   "quote": "Net result (53,273) 8,461"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total FTE",
+   "column_as_published": "June current month FTE",
+   "value": 7604,
+   "value_as_published": "7,604",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 29,
+   "quote": "Total FTE 7,729 7,604 7,652 7,440"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 15,
+   "value_as_published": "15",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 130,
+   "quote": "Total number of executives 15 14"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (i)",
+   "column_as_published": "2026",
+   "value": 5023,
+   "value_as_published": "5,023",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 130,
+   "quote": "Total remuneration (i) 5,023 4,527"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total (i)",
+   "column_as_published": "2026",
+   "value": 5151,
+   "value_as_published": "5,151",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 132,
+   "quote": "Compensation - KMPs Short-term employee benefits 4,645 4,276 Post-employment benefits 357 343 Other long-term benefits 149 140 Total (i) 5,151 4,759"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+   "value": 0.19,
+   "value_as_published": "$0.19m",
+   "unit": "millions_of_dollars",
+   "period": "2025-26",
+   "page": 35,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies is $0.19m (excluding GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Caraniche Pty Ltd",
+   "column_as_published": "Expenditure 2025-26 $'000 (excluding GST)",
+   "value": 23,
+   "value_as_published": "23",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 35,
+   "quote": "Caraniche Pty Ltd Development of program to activate early intervention support for workers experiencing work-related psychological injury 02/04/2026 13/03/2028 46 23 23",
+   "counterparty": "Caraniche Pty Ltd",
+   "purpose": "Development of program to activate early intervention support for workers experiencing work-related psychological injury"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Consilium Strategy Pty Ltd",
+   "column_as_published": "Expenditure 2025-26 $'000 (excluding GST)",
+   "value": 50,
+   "value_as_published": "50",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 35,
+   "quote": "Consilium Strategy Pty Ltd Development of the RMH Strategic Plan 01/08/2025 01/12/2025 50 50 -",
+   "counterparty": "Consilium Strategy Pty Ltd",
+   "purpose": "Development of the RMH Strategic Plan"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Enable Workplace Consulting",
+   "column_as_published": "Expenditure 2025-26 $'000 (excluding GST)",
+   "value": 65,
+   "value_as_published": "65",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 35,
+   "quote": "Enable Workplace Consulting Development of program to activate early intervention support for workers experiencing work-related psychological injury 13/03/2026 13/03/2028 216 65 151",
+   "counterparty": "Enable Workplace Consulting",
+   "purpose": "Development of program to activate early intervention support for workers experiencing work-related psychological injury"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "FLX Consulting Pty Ltd",
+   "column_as_published": "Expenditure 2025-26 $'000 (excluding GST)",
+   "value": 16,
+   "value_as_published": "16",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 35,
+   "quote": "FLX Consulting Pty Ltd Development of Nephrology Strategic Plan 04/03/2025 31/03/2026 16 16 -",
+   "counterparty": "FLX Consulting Pty Ltd",
+   "purpose": "Development of Nephrology Strategic Plan"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Jennifer Cheung Consulting",
+   "column_as_published": "Expenditure 2025-26 $'000 (excluding GST)",
+   "value": 19,
+   "value_as_published": "19",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 35,
+   "quote": "Jennifer Cheung Consulting Food waste audit and AI-enabled opportunity analysis 01/10/2025 31/05/2026 19 19 -",
+   "counterparty": "Jennifer Cheung Consulting",
+   "purpose": "Food waste audit and AI-enabled opportunity analysis"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "The Leadership Sphere",
+   "column_as_published": "Expenditure 2025-26 $'000 (excluding GST)",
+   "value": 18,
+   "value_as_published": "18",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 35,
+   "quote": "The Leadership Sphere Design and administration of Surgical Services Culture Survey 01/10/2025 30/06/2027 232 18 214",
+   "counterparty": "The Leadership Sphere",
+   "purpose": "Design and administration of Surgical Services Culture Survey"
+  }
+ ]
+}

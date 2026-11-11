@@ -1,0 +1,155 @@
+{
+ "report_id": "vic-barwon-region-water-corporation-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "named_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 313037,
+   "value_as_published": "313,037",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 86,
+   "quote": "Total revenue and income from transactions 313,037 344,242"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 279424,
+   "value_as_published": "279,424",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 86,
+   "quote": "Total expenses from transactions 279,424 262,373"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits",
+   "column_as_published": "2026",
+   "value": 61365,
+   "value_as_published": "61,365",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 86,
+   "quote": "Employee benefits 3.1.1 61,365 57,342"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for the period",
+   "column_as_published": "2026",
+   "value": -14748,
+   "value_as_published": "(14,748)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 86,
+   "quote": "Net result for the period (14,748) 29,084"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "column_as_published": "June 2026",
+   "value": 575,
+   "value_as_published": "575",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 67,
+   "quote": "Total employees 575 551.53 479 74 21 0 1"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "column_as_published": "June 2026",
+   "value": 551.53,
+   "value_as_published": "551.53",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 67,
+   "quote": "Total employees 575 551.53 479 74 21 0 1"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+   "column_as_published": "2026",
+   "value": null,
+   "value_as_published": "$480,000–$489,999",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 130,
+   "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of the Group during the reporting period was in the range: $480,000–$489,999 (2025: $450,000–$459,999)."
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Number of executive officers",
+   "column_as_published": "2026",
+   "value": 31,
+   "value_as_published": "31",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 131,
+   "quote": "Number of executive officers 31 28"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (a)",
+   "column_as_published": "2026",
+   "value": 7282,
+   "value_as_published": "7,282",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 131,
+   "quote": "Total remuneration (a) 7,282 5,952"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Consultancies valued at more than $10,000",
+   "value": 8719252,
+   "value_as_published": "$8,719,252",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "Our total expenditure on these consultancies during the financial year was $8,719,252 (ex-GST)."
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "SES-1",
+   "column_as_published": "June 2026",
+   "value": 22,
+   "value_as_published": "22",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 68,
+   "quote": "SES-1 22 21.5 0 22 0 0 0",
+   "band": "SES-1"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "SES-2",
+   "column_as_published": "June 2026",
+   "value": 6,
+   "value_as_published": "6",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 68,
+   "quote": "SES-2 6 6 0 6 0 0 0",
+   "band": "SES-2"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "SES-3",
+   "column_as_published": "June 2026",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 68,
+   "quote": "SES-3 1 1 0 1 0 0 0",
+   "band": "SES-3"
+  }
+ ]
+}

@@ -1,0 +1,123 @@
+{
+ "report_id": "vic-royal-victorian-eye-and-ear-hospital-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "named_remuneration",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue and Income from Transactions",
+   "column_as_published": "2026",
+   "value": 167815,
+   "value_as_published": "167,815",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 52,
+   "quote": "Total Revenue and Income from Transactions 167,815 167,048"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from Transactions",
+   "column_as_published": "2026",
+   "value": -182655,
+   "value_as_published": "(182,655)",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 52,
+   "quote": "Total Expenses from Transactions (182,655) (176,791)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee Expenses",
+   "column_as_published": "2026",
+   "value": -111961,
+   "value_as_published": "(111,961)",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 52,
+   "quote": "Employee Expenses 3.1(a) (111,961) (108,432)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net Result",
+   "column_as_published": "2026",
+   "value": -14481,
+   "value_as_published": "(14,481)",
+   "unit": "thousands_of_dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 52,
+   "quote": "Net Result (14,481) (8,366)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "June Current Month FTE",
+   "value": 613,
+   "value_as_published": "613",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 19,
+   "quote": "Total 610 613 610 611"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total Number of Executives (i)",
+   "column_as_published": "2026",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "2026 2025 $'000 $'000 1,360 1,424 5 7 3.76 4.02"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total Remuneration",
+   "column_as_published": "2026",
+   "value": 1360,
+   "value_as_published": "1,360",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 74,
+   "quote": "2026 2025 $'000 $'000 1,360 1,424 5 7 3.76 4.02"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs (i)",
+   "column_as_published": "2026",
+   "value": 2100,
+   "value_as_published": "2,100",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 75,
+   "quote": "2026 2025 $'000 $'000 2,100 2,109"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+   "value": 105000,
+   "value_as_published": "$105,000",
+   "unit": "dollars",
+   "period": "2025–2026",
+   "page": 24,
+   "quote": "The total expenditure incurred during 2025–2026 in relation to this consultancy is $105,000 (excl. GST)."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "AABB Consulting Pty Ltd",
+   "column_as_published": "Expenditure 2025–2026 (excluding GST)",
+   "value": 105000,
+   "value_as_published": "$ 105,000",
+   "unit": "dollars",
+   "period": "2025–2026",
+   "page": 24,
+   "quote": "AABB Consulting Pty Ltd Professional services to support the Electronic Medical Record business case. Oct-25 Mar-26 $ 105,000 $ 105,000 $0",
+   "counterparty": "AABB Consulting Pty Ltd",
+   "purpose": "Professional services to support the Electronic Medical Record business case."
+  }
+ ]
+}

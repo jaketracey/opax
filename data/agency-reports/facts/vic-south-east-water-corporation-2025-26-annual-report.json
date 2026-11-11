@@ -1,0 +1,122 @@
+{
+  "report_id": "vic-south-east-water-corporation-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "head_remuneration",
+    "consultancy",
+    "executive_band",
+    "named_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Total revenue and income",
+      "column_as_published": "2026",
+      "value": 1252294,
+      "value_as_published": "1,252,294",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 116,
+      "quote": "Total revenue and income 1,252,294 1,221,019"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total expenses",
+      "column_as_published": "2026",
+      "value": -1197953,
+      "value_as_published": "(1,197,953)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 116,
+      "quote": "Total expenses (1,197,953) (1,108,535)"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee benefits",
+      "column_as_published": "2026",
+      "value": -93199,
+      "value_as_published": "(93,199)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 116,
+      "quote": "Employee benefits 3.2.1 (93,199) (82,979)"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Net profit after income tax",
+      "column_as_published": "2026",
+      "value": 28626,
+      "value_as_published": "28,626",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 116,
+      "quote": "Net profit after income tax 28,626 79,808"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "TOTAL",
+      "column_as_published": "All employees",
+      "value": 1021,
+      "value_as_published": "1021",
+      "unit": "people",
+      "period": "30 June 2026",
+      "page": 76,
+      "quote": "TOTAL 1021 994.5"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "TOTAL",
+      "column_as_published": "All employees",
+      "value": 994.5,
+      "value_as_published": "994.5",
+      "unit": "fte",
+      "period": "30 June 2026",
+      "page": 76,
+      "quote": "TOTAL 1021 994.5"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Total number of executives",
+      "column_as_published": "2026",
+      "value": 11,
+      "value_as_published": "11",
+      "unit": "count",
+      "period": "year ended 30 June 2026",
+      "page": 160,
+      "quote": "Total number of executives 11 12"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration",
+      "column_as_published": "2026",
+      "value": 3206,
+      "value_as_published": "3,206",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 160,
+      "quote": "Total remuneration 3,206 3,051"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total remuneration (a)",
+      "column_as_published": "2026",
+      "value": 1158,
+      "value_as_published": "1,158",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 161,
+      "quote": "Total remuneration (a) 1,158 1,115"
+    },
+    {
+      "metric": "consultancy_total",
+      "label_as_published": "Total Expenditure incurred during the reporting period in relation to these consultants",
+      "value": 0.9,
+      "value_as_published": "$0.9 million",
+      "unit": "millions_of_dollars",
+      "period": "2025-26",
+      "page": 92,
+      "quote": "Total Expenditure incurred during the reporting period in relation to these consultants was $0.9 million (GST exclusive)"
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "report_id": "vic-sec-victoria-pty-ltd-2025-26-annual-report",
+  "read_by": "extraction lane, 2026-11-11",
+  "pages_read": "all",
+  "not_found": [
+    "consultancy_total",
+    "named_remuneration",
+    "executive_band",
+    "executive_average_remuneration"
+  ],
+  "facts": [
+    {
+      "metric": "total_income",
+      "label_as_published": "Revenue",
+      "column_as_published": "2026",
+      "value": 506713,
+      "value_as_published": "506,713",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 88,
+      "quote": "Revenue 3 506,713 - Other income 1,874 1,680"
+    },
+    {
+      "metric": "total_expenses",
+      "label_as_published": "Total",
+      "column_as_published": "2026",
+      "value": 647699,
+      "value_as_published": "647,699",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 95,
+      "quote": "Other 4,527 3,765 Total 647,699 14,608"
+    },
+    {
+      "metric": "employee_expenses",
+      "label_as_published": "Employee benefits expenses",
+      "column_as_published": "2026",
+      "value": 35348,
+      "value_as_published": "35,348",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 95,
+      "quote": "Employee benefits expenses 35,348 23,247"
+    },
+    {
+      "metric": "net_result",
+      "label_as_published": "Loss for the year",
+      "column_as_published": "2026",
+      "value": -159782,
+      "value_as_published": "(159,782)",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 88,
+      "quote": "Loss for the year (159,782) (6,819)"
+    },
+    {
+      "metric": "staff_headcount",
+      "label_as_published": "Non-executive",
+      "column_as_published": "2026",
+      "value": 178,
+      "value_as_published": "178",
+      "unit": "people",
+      "period": "last full pay period in June 2026",
+      "page": 47,
+      "quote": "Non-executive 170 166.4 116 114 178 174.2 125 123.4"
+    },
+    {
+      "metric": "staff_fte",
+      "label_as_published": "Non-executive",
+      "column_as_published": "2026",
+      "value": 174.2,
+      "value_as_published": "174.2",
+      "unit": "fte",
+      "period": "last full pay period in June 2026",
+      "page": 47,
+      "quote": "Non-executive 170 166.4 116 114 178 174.2 125 123.4"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Executive*",
+      "column_as_published": "2026",
+      "value": 8,
+      "value_as_published": "8",
+      "unit": "people",
+      "period": "last full pay period in June 2026",
+      "page": 47,
+      "quote": "Executive* 8 7.8 9 8.6"
+    },
+    {
+      "metric": "head_remuneration",
+      "label_as_published": "Accountable Officer",
+      "column_as_published": "Year ended 30 June 2026",
+      "value": null,
+      "value_as_published": "$730,000 - 739,999",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 123,
+      "quote": "Accountable Officer $640,000 - 649,999 - 1 $730,000 - 739,999 1 -"
+    },
+    {
+      "metric": "executive_remuneration_total",
+      "label_as_published": "Total key management personnel remuneration expense",
+      "column_as_published": "2026",
+      "value": 3324129,
+      "value_as_published": "3,324,129",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 124,
+      "quote": "Total key management personnel remuneration expense 3,324,129 3,139,412"
+    },
+    {
+      "metric": "executive_count",
+      "label_as_published": "Executives",
+      "column_as_published": "2026",
+      "value": 5,
+      "value_as_published": "5",
+      "unit": "people",
+      "period": "year ended 30 June 2026",
+      "page": 124,
+      "quote": "Non-executive directors 7 7 Executives 5 5 Total key management personnel 12 12"
+    },
+    {
+      "metric": "operational_other",
+      "label_as_published": "Total remuneration ($000's)",
+      "column_as_published": "Year ended 30 June 2026",
+      "value": 727,
+      "value_as_published": "727",
+      "unit": "thousands_of_dollars",
+      "period": "year ended 30 June 2026",
+      "page": 123,
+      "quote": "Total directors 7 7 Total remuneration ($000's) 727 680"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Arthur D Little (Australia)",
+      "column_as_published": "Incurred in 2026 $",
+      "value": 250000,
+      "value_as_published": "250,000",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 132,
+      "quote": "Arthur D Little (Australia) Strategic advice on structuring options 250,000 250,000 -",
+      "counterparty": "Arthur D Little (Australia)",
+      "purpose": "Strategic advice on structuring options"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Workforce Advantage",
+      "column_as_published": "Incurred in 2026 $",
+      "value": 132950,
+      "value_as_published": "132,950",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 132,
+      "quote": "Workforce Advantage Consultancy services involving provision of strategic industrial relations advice 132,950 132,950 -",
+      "counterparty": "Workforce Advantage",
+      "purpose": "Consultancy services involving provision of strategic industrial relations advice"
+    },
+    {
+      "metric": "consultancy",
+      "label_as_published": "Nation Partners",
+      "column_as_published": "Incurred in 2026 $",
+      "value": 20371,
+      "value_as_published": "20,371",
+      "unit": "dollars",
+      "period": "year ended 30 June 2026",
+      "page": 132,
+      "quote": "Nation Partners Community engagement plan & strategy for Monash Way development. 163,525 20,371 124,022",
+      "counterparty": "Nation Partners",
+      "purpose": "Community engagement plan & strategy for Monash Way development."
+    }
+  ]
+}

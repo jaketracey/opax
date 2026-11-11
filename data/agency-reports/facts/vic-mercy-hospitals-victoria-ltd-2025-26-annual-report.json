@@ -1,0 +1,110 @@
+{
+ "report_id": "vic-mercy-hospitals-victoria-ltd-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "staff_fte",
+  "staff_headcount",
+  "head_remuneration",
+  "named_remuneration",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue and Income from Transactions",
+   "column_as_published": "2026",
+   "value": 772240,
+   "value_as_published": "772,240",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 77,
+   "quote": "Total Revenue and Income from Transactions 772,240 639,469"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from Transactions",
+   "column_as_published": "2026",
+   "value": -738688,
+   "value_as_published": "(738,688)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 77,
+   "quote": "Total Expenses from Transactions (738,688) (689,216)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee Expenses",
+   "column_as_published": "2026",
+   "value": -561603,
+   "value_as_published": "(561,603)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 77,
+   "quote": "Employee Expenses 3.1 (561,603) (520,819)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net Result for the year",
+   "column_as_published": "2026",
+   "value": 51005,
+   "value_as_published": "51,005",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 77,
+   "quote": "Net Result for the year 51,005 (49,566)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "WANYAARI PTY LTD",
+   "column_as_published": "Expenditure 2025 – 2026 (excluding GST)",
+   "value": 30492.0,
+   "value_as_published": "30,492.00",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "WANYAARI PTY LTD Provision of reconciliation action plan for Mercy Health Sep 25 Jun 26 30,492.00 30,492.00",
+   "counterparty": "WANYAARI PTY LTD",
+   "purpose": "Provision of reconciliation action plan for Mercy Health"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "ASPEX CONSULTING PTY LTD",
+   "column_as_published": "Expenditure 2025 – 2026 (excluding GST)",
+   "value": 20000.0,
+   "value_as_published": "20,000.00",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "ASPEX CONSULTING PTY LTD Mercy Financial Improvement Plan Support Jul 25 Jun 26 20,000.00 20,000.00",
+   "counterparty": "ASPEX CONSULTING PTY LTD",
+   "purpose": "Mercy Financial Improvement Plan Support"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Mayfield Advisory",
+   "column_as_published": "Expenditure 2025 – 2026 (excluding GST)",
+   "value": 22475.0,
+   "value_as_published": "22,475.00",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Mayfield Advisory Review of Budget Build and Financial Improvement Plan Jul 25 Jun 26 22,475.00 22,475.00",
+   "counterparty": "Mayfield Advisory",
+   "purpose": "Review of Budget Build and Financial Improvement Plan"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred during 2025-26 in relation to these consultancies",
+   "column_as_published": "2025-26",
+   "value": 72967,
+   "value_as_published": "$72,967",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies is $72,967 (excl. GST)."
+  }
+ ]
+}

@@ -1,0 +1,124 @@
+{
+ "report_id": "vic-eastern-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "staff_headcount",
+  "head_remuneration",
+  "named_remuneration",
+  "executive_band",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "June Current Month FTE",
+   "value": 7984.5,
+   "value_as_published": "7,984.5",
+   "unit": "fte",
+   "period": "June 2026 (2025–26)",
+   "page": 30,
+   "quote": "Total 7,984.5 7,812.1 7,869.1 7,713.7"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "Average Monthly FTE",
+   "value": 7869.1,
+   "value_as_published": "7,869.1",
+   "unit": "fte",
+   "period": "2025–26 average monthly",
+   "page": 30,
+   "quote": "Total 7,984.5 7,812.1 7,869.1 7,713.7"
+  },
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue and Income from Transactions",
+   "column_as_published": "2026",
+   "value": 1845487,
+   "value_as_published": "1,845,487",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 76,
+   "quote": "Total Revenue and Income from Transactions 1,845,487 1,718,014"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from Transactions",
+   "column_as_published": "2026",
+   "value": -1865245,
+   "value_as_published": "(1,865,245)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 76,
+   "quote": "Total Expenses from Transactions (1,865,245) (1,771,803)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee Expenses",
+   "column_as_published": "2026",
+   "value": -1344254,
+   "value_as_published": "(1,344,254)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 76,
+   "quote": "Employee Expenses 3.1 (1,344,254) (1,268,361)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net Result",
+   "column_as_published": "2026",
+   "value": -14833,
+   "value_as_published": "(14,833)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 76,
+   "quote": "Net Result (14,833) (54,853)"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total Number of Executives (i)",
+   "column_as_published": "2026",
+   "value": 14,
+   "value_as_published": "14",
+   "unit": "count",
+   "period": "year ended 30 June 2026",
+   "page": 129,
+   "quote": "Total Number of Executives (i) 14 14"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total Remuneration (i)",
+   "column_as_published": "2026",
+   "value": 3118,
+   "value_as_published": "3,118",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 129,
+   "quote": "Total Remuneration (i) 3,118 4,304"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total (i)",
+   "column_as_published": "2026",
+   "value": 4065,
+   "value_as_published": "4,065",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 131,
+   "quote": "Total (i) 4,065 5,331"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "with the total expenditure of $253,159",
+   "column_as_published": "2025–26",
+   "value": 253159,
+   "value_as_published": "$253,159",
+   "unit": "dollars",
+   "period": "2025–26",
+   "page": 60,
+   "quote": "with the total expenditure of $253,159."
+  }
+ ]
+}

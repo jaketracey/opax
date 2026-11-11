@@ -1,0 +1,121 @@
+{
+ "report_id": "vic-greater-western-water-corporation-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "named_remuneration",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income",
+   "column_as_published": "2026",
+   "value": 1057131,
+   "value_as_published": "1,057,131",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 66,
+   "quote": "Total income 1,057,131 1,026,876"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses",
+   "column_as_published": "2026",
+   "value": -1259663,
+   "value_as_published": "(1,259,663)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 66,
+   "quote": "Total expenses (1,259,663) (941,534)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits",
+   "column_as_published": "2026",
+   "value": -176678,
+   "value_as_published": "(176,678)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 66,
+   "quote": "Employee benefits 3.3.1 (176,678) (115,090)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "(Loss)/Profit after income tax expense",
+   "column_as_published": "2026",
+   "value": -141772,
+   "value_as_published": "(141,772)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 66,
+   "quote": "(Loss)/Profit after income tax expense (141,772) 58,871"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "column_as_published": "June 2026",
+   "value": 1056,
+   "value_as_published": "1,056",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 44,
+   "quote": "Total employees 931 904.3 768 106 848.3 57 56 1,056 1,026 863 105 939.2 88 86.8"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "column_as_published": "June 2026",
+   "value": 1026,
+   "value_as_published": "1,026",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 44,
+   "quote": "Total employees 931 904.3 768 106 848.3 57 56 1,056 1,026 863 105 939.2 88 86.8"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total employees (no.)",
+   "column_as_published": "2026",
+   "value": 8,
+   "value_as_published": "8",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 130,
+   "quote": "Total employees (no.) 8 6"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 2422,
+   "value_as_published": "2,422",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 130,
+   "quote": "Total 2,422 2,139 Total employees (no.) 8 6"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 1238,
+   "value_as_published": "1,238",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 132,
+   "quote": "Total 1,238 1,076 Total employees (no.) 15 11"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure during 2026 in relation to these consultancies",
+   "value": 8848521,
+   "value_as_published": "$8,848,521",
+   "unit": "dollars",
+   "period": "2026",
+   "page": 54,
+   "quote": "The total expenditure during 2026 in relation to these consultancies was $8,848,521 (GST exclusive)"
+  }
+ ]
+}
