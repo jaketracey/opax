@@ -506,7 +506,7 @@ export interface AgenticPayload {
   answer_source: 'model' | 'template' | 'none'
   shape: Plan['shape'] | null
   period: Period
-  facts: { id: number; text: string; url: string; kind: string; value?: number | string; receipt?: ReceiptFact }[]
+  facts: { id: number; text: string; url: string; kind: string; value?: number | string; receipt?: ReceiptFact; entities?: string[] }[]
   notes: string[]
   steps: { tool: string; args: unknown; ok: boolean; error?: string; ms?: number; label?: string }[]
   events: StepEvent[]
@@ -607,7 +607,7 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
     const chosen = new Set(run.chosen_facts ?? [])
-    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind as Fact['cite']['kind'],url:f.url,label:f.text,value:f.value},...(f.receipt?{receipt:f.receipt}:{})}))
+    const facts: Fact[] = run.facts.filter(f => !chosen.size || chosen.has(f.id)).map(f => ({id:f.id,text:f.text,cite:{kind:f.kind as Fact['cite']['kind'],url:f.url,label:f.text,value:f.value},...(f.receipt?{receipt:f.receipt}:{}),...(f.entities?.length?{entities:f.entities}:{})}))
     // Passage points have already been written and checked by the model; retain the 16 Oct loose-point contract.
     if (run.qualitative && !run.qualitative.sources.some(s=>!['speech','bill'].includes(s.kind))) return run
     const recordAnswer = run.qualitative && run.passage_answer ? {...run.qualitative,sources:run.qualitative.sources.filter(s=>!['speech','bill'].includes(s.kind))} : run.qualitative
@@ -876,7 +876,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   timings.tools_ms = Date.now() - tTools
   const { facts } = factSheet(results)
   const { notes } = factSheet(researched ? results.filter(r => !['search', 'read_passage'].includes(r.tool)) : results)
-  const factOut = facts.map(f => ({ id: f.id, text: f.text, url: f.cite?.url ?? '', kind: f.cite?.kind ?? 'count', value: f.cite?.value, ...(f.receipt ? { receipt: f.receipt } : {}) }))
+  const factOut = facts.map(f => ({ id: f.id, text: f.text, url: f.cite?.url ?? '', kind: f.cite?.kind ?? 'count', value: f.cite?.value, ...(f.receipt ? { receipt: f.receipt } : {}), ...(f.entities?.length ? { entities: f.entities } : {}) }))
   if (!facts.length) return base({ reason: 'no_supported_claim', notes })
   await progress('status', { phase: 'writing' })
   const tCompose = Date.now()

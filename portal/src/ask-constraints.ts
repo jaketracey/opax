@@ -4,6 +4,7 @@ import type { ToolResult } from './agentic-tools'
 import { receiptYearWindow } from './receipt-period'
 import { requestedBillTitle, billTitleMatches } from './bill-title'
 import { recordIntentText, recordCountKind, billIntroductionListQuestion } from './ask-scope-intent'
+import { speechRankingGrain, partyPolicyTopic } from './ask-answer-grain'
 export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
@@ -15,6 +16,9 @@ export interface AskConstraints {
   grantRecipient?: string
   recordCountKind?: 'bills' | 'divisions'
   listIntroductions?: true
+  speechRankingGrain?: 'speaker' | 'party'
+  industryRanking?: true
+  policyVoteTopic?: string
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}, statuteTitles: ReadonlySet<string> | null = null): AskConstraints {
   question = named.resolvedQuestion ?? question
@@ -31,13 +35,27 @@ export function extractAskConstraints(question: string, period: Period, named: N
   const contractSupplier = /\b(?:which|what)\s+(?:department|agency)\s+(?:gives?|awards?|awarded)\s+(.+?)\s+(?:(?:the\s+)?(?:most|more|largest)\s+)?contracts?\b/i.exec(question)?.[1]?.trim()
   const grantTotal = /\b(?:total|how much)\b/i.test(question) && !/\b(?:largest|biggest|single|individual)\s+(?:(?:federal|Commonwealth)\s+)?grant\b/i.test(question)
   const grantRecipient = grantTotal ? (/\bgrants?\s+to\s+(.+?)(?=[?!]|\.\s|\s+(?:in|during|since|from|between)\s+(?:\d|financial|FY)|$)/i.exec(question)?.[1] ?? /\bhow much has\s+(.+?)\s+(?:received|been awarded)\s+in\s+(?:(?:federal|Commonwealth|Queensland Government)\s+)?grants?\b/i.exec(question)?.[1])?.trim().replace(/\.$/,'') : undefined
-  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, ...(contractSupplier?{contractSupplier}:{}), ...(grantRecipient?{grantRecipient}:{}), recordKind: /\b(?:divisions?|vot(?:e|ed|es|ing))\b/i.test(q) ? 'division' : /\b(?:bills?|legislation)\b/i.test(q) ? 'bill' : undefined, exactBillTitle: requestedBillTitle(question) ?? undefined, ...(recordCountKind(q) ? { recordCountKind: recordCountKind(q) } : {}), ...(billIntroductionListQuestion(q) ? { listIntroductions: true as const } : {}), ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
+  return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, ...(speechRankingGrain(question) ? { speechRankingGrain: speechRankingGrain(question) } : {}), ...(party && partyPolicyTopic(question) ? { policyVoteTopic: partyPolicyTopic(question) } : {}), ...(/\b(?:which|what) industries\b/i.test(question) && /\b(?:gave|give|donat\w*|fund\w*|receipts?)\b/i.test(question) ? { industryRanking: true as const } : {}), ...(contractSupplier?{contractSupplier}:{}), ...(grantRecipient?{grantRecipient}:{}), recordKind: /\b(?:divisions?|vot(?:e|ed|es|ing))\b/i.test(q) ? 'division' : /\b(?:bills?|legislation)\b/i.test(q) ? 'bill' : undefined, exactBillTitle: requestedBillTitle(question) ?? undefined, ...(recordCountKind(q) ? { recordCountKind: recordCountKind(q) } : {}), ...(billIntroductionListQuestion(q) ? { listIntroductions: true as const } : {}), ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
     superlative: /\b(?:lowest|least|fewest|smallest|youngest)\b/.test(q) ? 'lowest' : /\b(?:highest|most|largest|biggest|oldest|top)\b/.test(q) ? 'highest' : undefined,
     trend: /\b(?:trend|since|over time|each year|by year|changed?|increas\w*|decreas\w*)\b/.test(q) }
 }
 /** Restrict model arguments using only parameters the tool actually supports. */
 export function constrainStep(step: PlanStep, c: AskConstraints, properties: Record<string, unknown>): PlanStep {
   const a = { ...step.args }, has = (k: string) => Object.hasOwn(properties, k)
+  if (step.tool === 'count_speeches' && c.speechRankingGrain && has('group_by')) {
+    a.group_by = c.speechRankingGrain
+    if (!c.people.length) delete a.speaker
+  }
+  if (step.tool === 'money_totals' && c.industryRanking && has('group_by')) { a.group_by = 'industry'; delete a.donor }
+  if (step.tool === 'division' && c.policyVoteTopic && c.party) {
+    a.operation = 'policy_votes'; a.title = c.policyVoteTopic
+    for (const key of ['bill', 'person', 'division_id', 'other_party', 'date']) delete a[key]
+  }
+  if (step.tool === 'division' && a.operation === 'policy_votes') {
+    if (!c.chamber) delete a.chamber
+    if (!c.jurisdiction && has('jurisdiction')) a.jurisdiction = 'federal'
+    if (!c.dated) for (const key of ['date', 'since', 'until']) delete a[key]
+  }
   if (step.tool === 'count_records') {
     if (c.listIntroductions && a.record_type === 'bills') a.include_records = true
     if (c.recordCountKind === 'divisions' && c.exactBillTitle && has('bill')) {

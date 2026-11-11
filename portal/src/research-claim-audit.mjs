@@ -195,7 +195,7 @@ function claimScope(text,at,named,speakers=[]){
  const cuts=[0,...[...text.matchAll(/;\s*|,?\s+(?:and|but|while|whereas|because)\s+/g)].filter(m=>!quotes.some(q=>m.index>=q.at&&m.index<q.end)&&! /^[A-Z][\p{L}'’-]*(?:\s+(?:[A-Z][\p{L}'’-]*|to|of|the|and|for))*(?: political parties| parties)?(?: in \d{4}(?:[–-]\d{2,4})?)?\s*(?:[,).]|$)/u.test(text.slice(m.index+m[0].length))&&(named.some(n=>n.at===m.index+m[0].length)||figures(text.slice(0,m.index)).length>0||quotes.some(q=>q.end<=m.index))).map(m=>m.index+m[0].length),text.length]
  const start=cuts.filter(c=>c<=at).at(-1)??0,end=cuts.find(c=>c>at)??text.length
  const names=named.filter(n=>n.at>=start&&n.at<end&&!/^\d{4}$/.test(n.name))
- const before=names.filter(n=>n.at<=at),subject=before.find(n=>speakers.includes(n.name))??names.find(n=>speakers.includes(n.name))??before[0]??names[0]??named.find(n=>n.at<start&&!/^\d{4}$/.test(n.name))
+ const before=names.filter(n=>n.at<=at),subject=before.find(n=>speakers.includes(n.name))??names.find(n=>speakers.includes(n.name))??before[0]??names[0]??[...named].reverse().find(n=>n.at<start&&speakers.includes(n.name))??named.find(n=>n.at<start&&!/^\d{4}$/.test(n.name))
  return {start,end,names,owner:subject?.name??''}
 }
 const topicPatterns=[['housing',/\b(?:housing|homes?|homeless\w*|rent\w*|accommodation)\b/i],['immigration',/immigra|migration|refugee|asylum|detention/i],['gambling',/gambl|poker|pokies|betting/i],['climate',/climate|emissions|fossil|carbon/i],['tax-budget',/tax|\bGST\b|goods and services|budget/i],['mining',/mining/i]]
@@ -290,7 +290,7 @@ export function auditPayload(question,payload,{roster=[]}={}){
    const at=unclosedQuoteOffset(text);add({type:'quote',entity:speaker??'',metric:'literal quote',value:'unbalanced quotation',quote:text.slice(at),period:[],text,offset:sentenceAt+at},[],'quotation is malformed and cannot be verified literally')
   }
   for(const q of quotations(text)){
-   const scope=claimScope(text,q.at,named,speakers),possessive=scope.names.filter(n=>n.end<=q.at&&/^[’']s\b/.test(text.slice(n.end))).at(-1),entity=possessive?.name??scope.owner,dates=ps.filter(p=>p.at>=scope.start&&p.end<=scope.end),numbers=numeric.filter(f=>f.at>=scope.start&&f.end<=scope.end)
+   const scope=claimScope(text,q.at,named,speakers),possessive=scope.names.filter(n=>n.end<=q.at&&/^[’']s\s+(?:(?:own |recorded |public )?(?:words|remarks|statement|claim|comments?|argument|speech|quote|phrase|view|position)\b|[“"‘'])/i.test(text.slice(n.end,q.at+1))).at(-1),entity=possessive?.name??scope.owner,dates=ps.filter(p=>p.at>=scope.start&&p.end<=scope.end),numbers=numeric.filter(f=>f.at>=scope.start&&f.end<=scope.end)
    const candidates=selected.filter(r=>(!entity?true:personName(entity,selected)?samePerson(r.speaker,entity):recordName(entity,r))&&r.text.includes(q.value)&&topicsMatch(text.slice(scope.start,scope.end),r)&&dates.every(p=>dateSupported(p.value,r))&&numbers.every(f=>r.figures.some(v=>v.value===f.value&&metricSupported(f,v))))
    add({type:'quote',entity,metric:'literal quote',value:q.value,quote:q.value,period:dates.map(p=>p.value),text,offset:sentenceAt+q.at},candidates,'quotation/owner/figure/period is not one literal selected evidence atom')
   }

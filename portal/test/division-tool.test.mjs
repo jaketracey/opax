@@ -475,3 +475,62 @@ test('the Ask loop answers a large real division from its facts without exceedin
   assert.ok(modelBytes < objectBytes);
   t.diagnostic(`Complete 144-member feedback: ${modelBytes} bytes in model tuples, ${objectBytes} bytes with canonical objects; model result cap 16384 bytes.`);
 });
+
+test('policy voting aggregates the full union of bill and motion matches, not the representative row limit', async () => {
+  const greens = vote => [member('Greens Example', 'Greens', vote)]
+  const rows = [
+    division({key:'federal-senate-501',date:'2022-09-08',name:'Climate Change Bill 2022 - Second Reading',bills:[{...bill,title:'Climate Change Bill 2022'}],members:greens('aye')}),
+    division({key:'federal-senate-502',date:'2022-09-08',name:'Climate Change Bill 2022 - Opposition amendment',bills:[],members:greens('no')}),
+    division({key:'federal-senate-503',date:'2019-12-02',name:'Motions — Climate change',bills:[],members:greens('no')}),
+    division({key:'federal-senate-504',date:'2011-11-08',name:'Clean Energy Bill 2011 - Second Reading',bills:[],members:greens('aye')}),
+    division({key:'federal-senate-505',date:'2024-01-01',name:'Housing motion',bills:[],members:greens('aye')}),
+    division({key:'federal-senate-506',date:'2023-01-01',name:'Carbon motion',bills:[],members:[member('A','Greens','aye'),member('B','Greens','no')]}),
+    division({key:'federal-senate-507',date:'2023-02-01',name:'Emissions motion',bills:[],members:[member('Other','Labor','aye')]}),
+  ]
+  const f=fixture(rows)
+  const result=await api.callTool(f.env,'division',{operation:'policy_votes',party:'Greens',title:'climate',limit:1})
+  assert.equal(result.total,6)
+  assert.deepEqual(result.summary,{divisions:6,aye:2,no:2,tied:1,unrecorded:1,split:1,partial:0})
+  assert.equal(result.by_kind.find(r=>r.category==='bill').divisions,3)
+  assert.equal(result.by_kind.find(r=>r.category==='motion').divisions,3)
+  assert.ok(result.rows.length>1)
+  assert.ok(result.rows.some(r=>r.title==='Motions — Climate change'))
+  assert.ok(result.citations.some(c=>c.text==='On 2 December 2019, Greens senators voted 0 ayes and 1 no on Motions — Climate change.'))
+  assert.match(result.citations[0].text,/^Across 6 matching divisions on climate from 8 November 2011 to 1 February 2023, a majority of Greens members voted aye in 2 and no in 2; 1 had a tied aye\/no vote; 1 had no party-labelled vote\./)
+  assert.ok(result.citations.every(c=>!(/\b\d{4}-\d{2}-\d{2}\b/).test(c.text)))
+  assert.ok(result.citations[0].related.length>=4)
+  assert.ok(result.citations.some(c=>c.text.includes('Clean Energy Bill 2011')))
+  assert.match(result.notes.join(' '),/not support for or opposition/)
+  assert.match(result.citations[0].text,/An aye or no is the side of the specific question, not support for or opposition to the policy\./)
+  const scoped=await api.callTool(f.env,'division',{operation:'policy_votes',party:'Greens',title:'climate',since:'2022-01-01',until:'2022-12-31'})
+  assert.equal(scoped.total,2)
+  f.assets['/divisions/index.json'].divisions.find(d=>d.key==='federal-senate-502').duplicate_of='federal-senate-501'
+  assert.equal((await api.callTool(f.env,'division',{operation:'policy_votes',party:'Greens',title:'climate'})).total,5)
+})
+
+test('policy vote prose omits zero categories and empty breakdowns, keeping zero ayes or noes in representative votes', async () => {
+  for (const [votes, wording, representativeVotes] of [
+    [[member('A','Greens','aye')], 'a majority of Greens members voted aye in 1', '1 aye and 0 noes'],
+    [[member('A','Greens','no')], 'a majority of Greens members voted no in 1', '0 ayes and 1 no'],
+    [[member('A','Greens','aye'),member('B','Greens','no')], '1 had a tied aye/no vote', '1 aye and 1 no'],
+    [[member('A','Labor','aye')], '1 had no party-labelled vote', '0 ayes and 0 noes'],
+  ]) {
+    const f = fixture([division({key:'federal-senate-701',date:'2024-05-16',name:'Climate Bill — Second Reading',members:votes})])
+    const result = await api.callTool(f.env,'division',{operation:'policy_votes',party:'Greens',title:'climate'})
+    assert.equal(result.citations[0].text, `Across 1 matching division on climate from 16 May 2024 to 16 May 2024, ${wording}. An aye or no is the side of the specific question, not support for or opposition to the policy.`)
+    assert.equal(result.citations.filter(c=>c.kind==='count').length,2, 'empty motion category is omitted')
+    assert.doesNotMatch(result.citations.filter(c=>c.kind==='count').map(c=>c.text).join(' '), /\bin 0\b|\b0 had\b|\b0 matching\b|\d{4}-\d{2}-\d{2}/)
+    assert.doesNotMatch(result.notes.join(' '), /\b0 divisions\b|\b0 had\b/)
+    const representative = result.citations.find(c=>c.kind==='record')
+    assert.equal(representative.text, `On 16 May 2024, Greens senators voted ${representativeVotes} on Climate Bill — Second Reading.`)
+  }
+})
+
+test('policy representative prose distinguishes House members and preserves the full division title', async () => {
+  const title = 'Climate Change Bill 2026 - Consideration in Detail - Climate and First Nations'
+  const f = fixture([division({key:'federal-representatives-702',house:'representatives',date:'2026-03-11',name:title,members:[member('A','Greens','aye')]})])
+  const result = await api.callTool(f.env,'division',{operation:'policy_votes',party:'Greens',title:'climate',since:'2026-01-01',until:'2026-04-30'})
+  assert.match(result.citations[0].text,/from 1 January 2026 to 30 April 2026/)
+  assert.equal(result.citations.find(c=>c.kind==='record').text, `On 11 March 2026, Greens members voted 1 aye and 0 noes on ${title}.`)
+  assert.equal(result.rows[0].date,'2026-03-11', 'structured dates keep their canonical form')
+})

@@ -8,11 +8,14 @@ import type {QualitativeAnswer} from './research-types'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
 import {plainCoverageRefusal} from './research-coverage'
 import {atomsFromText,sentenceFragment} from './research-claims'
-import {contentWords} from './research-evidence'
+import {contentWords,passageExcerpt} from './research-evidence'
+import {broadTopicOverview} from './ask-answer-grain'
+import {isBillSpeechQuestion} from './ask-scope-intent'
+import {readableDate} from './tools/record-common'
 
 // Metadata copied from a selected record is a citable record description,
 // rather than a model claim about the speaker's position.
-const titleLine=(source:SelectedSource)=>source.date&&source.title?`The record dated ${source.date} is ${source.title.replace(/\s*—\s*/g, ', ')}.`:null
+const titleLine=(source:SelectedSource)=>source.date&&source.title?`The record dated ${readableDate(source.date)} is ${source.title.replace(/\s*—\s*/g, ', ').replace(/\b\d{4}-\d{2}-\d{2}\b/g, readableDate)}.`:null
 const isTitleLine=(text:string,sources:SelectedSource[])=>sources.some(source=>source.cited&&titleLine(source)===text)
 
 /** Apply the loose-answer contract to final selected evidence, including ordinary fallback. */
@@ -44,6 +47,19 @@ function checkedClaims(payload:Record<string,unknown>,question:string,promote=tr
     if(!audit.findings.length)return promote?leadWithFinding(out):out
     const answer=String(out.answer??''),remove=new Set<string>()
     let repaired=false
+    // An unsupported topic frame is not the speaker or owner of a later quotation. Drop only the frame,
+    // retaining a complete sentence beginning with a cited speaker, then run every claim check again.
+    for(const finding of audit.findings){
+      if(finding.type!=='entity')continue
+      const text=finding.text,base=answer.indexOf(text),at=(finding.offset??base)-base
+      const frame=/^(?:On|About|Regarding|As for|In relation to)\s+[^,]{3,120},\s+/.exec(text)
+      if(!frame||at>=frame[0].length)continue
+      const rest=text.slice(frame[0].length),sources=(Array.isArray(out.sources)?out.sources:[]) as SelectedSource[]
+      if(!sources.some(source=>source.cited&&source.speaker&&rest.startsWith(source.speaker+' ')))continue
+      const candidate=rewriteAnswerPayload(out,replace=>replace(new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),rest))
+      if(auditPayload(question,candidate).findings.length<audit.findings.length){out=candidate;repaired=true;break}
+    }
+    if(repaired)continue
     for(const finding of audit.findings){
       if(finding.type!=='figure'&&finding.type!=='period')continue
       const text=finding.text,base=answer.indexOf(text),at=(finding.offset??base)-base
@@ -129,6 +145,38 @@ export function cleanAnswerShape(payload:Record<string,unknown>):Record<string,u
   return {...cleaned,citations,sources}
 }
 type SelectedSource=WritingInput['facts'][number]['source']
+/** Keep source sentences intact rather than finishing a truncated word window with punctuation. */
+function overviewSentence(text:string,question:string){
+  return (text.match(/[^.!?]+[.!?]/g)??[]).flatMap(part=>{
+    const sentence=part.trim(),candidate=passageExcerpt(sentence,question,40)
+    return candidate?.text===sentence&&candidate.score&&/^[\p{Lu}\p{N}]/u.test(sentence)&&!sentenceFragment(sentence)&&!/["“”—]/.test(sentence)?[candidate]:[]
+  }).sort((a,b)=>b.score-a.score)[0]
+}
+/** A checked person overview can lose a verbose paraphrase while still holding that person's verified words.
+ * Keep the surviving points and add short literal excerpts, with a fresh audit for every addition. */
+function completePersonOverview(original:Record<string,unknown>,result:Record<string,unknown>,question:string):Record<string,unknown> {
+  if(protectedDecision(result))return result
+  const scope=original.answer_scope as WritingInput['constraints'],people=scope?.people??[]
+  if((original.research as {mode?:string}|undefined)?.mode!=='loop'||people.length!==1||isBillSpeechQuestion(question)||!/^what\b.*\b(?:said|say|spoken)\b/i.test(question))return result
+  const same=(s:SelectedSource)=>s.kind==='speech'&&s.speaker===people[0]&&/^speech-\d+$/.test(s.slug)&&!!s.date&&/^\d{4}-\d{2}-\d{2}$/.test(s.date)&&
+    (!scope?.dated||(!scope.period?.since||s.date>=scope.period.since)&&(!scope.period?.until||s.date<=scope.period.until))&&!/excerpt omitted/i.test(s.snippet)
+  let out=result
+  const used=()=>new Set(((out.sources??[]) as SelectedSource[]).filter(s=>s.cited&&same(s)).map(s=>s.resource))
+  for(const source of (original.sources??[]) as SelectedSource[]){
+    if(used().size>=4)break
+    if(!same(source)||used().has(source.resource))continue
+    const excerpt=overviewSentence(source.snippet,question)
+    if(!excerpt)continue
+    let answer=String(out.answer??'').trim()
+    answer+=(answer?'\n':'')+'- '
+    const from=Array.from(answer).length
+    const date=new Date(source.date+'T00:00:00Z').toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})
+    answer+=`On ${date}, ${source.speaker} said “${excerpt.text}”${/[.!?]$/.test(excerpt.text)?'':'.'}`
+    const candidate={...out,answer,citations:{...((out.citations??{}) as QualitativeAnswer['citations']),[source.resource+'/t/body/0']:[[from,Array.from(answer).length]]},sources:[...((out.sources??[]) as SelectedSource[]).filter(s=>s.resource!==source.resource),{...source,cited:true}]}
+    if(!auditPayload(question,candidate).findings.length)out=candidate
+  }
+  return out
+}
 /** Every monetary fallback sentence needs selected evidence for its own owner/amount association. */
 function citeFallbackMoney(payload:Record<string,unknown>,question:string,selected:SelectedSource[]):Record<string,unknown> {
   const research=payload.research as {mode?:string;coherence?:{fallback?:boolean}}|undefined
@@ -242,20 +290,27 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   // Rebuild from the already cited records' titles and dates, without adding
   // an unchecked summary or changing a refusal, clarification or scope limit.
   if(protectedDecision(payload)||causalAsk(question))return result
+  result=completePersonOverview(payload,result,question)
   const before=String(payload.answer??''),after=String(result.answer??'')
   const stripped=1-after.length/Math.max(1,before.length)
   const parts=sentenceParts(after),fragment=parts.some(p=>sentenceFragment(p.text))
-  if(!emptyAnswer(after)&&!fragment&&(stripped<=1/3||parts.length>=2&&after.length>=120))return result
+  const overview=broadTopicOverview(question)
+  if(!emptyAnswer(after)&&!fragment&&(stripped<=1/3||parts.length>=(overview?4:2)&&after.length>=120))return result
   const scope=payload.answer_scope as WritingInput['constraints'],topic=contentWords(question)
   const sources=((payload.sources??[]) as SelectedSource[]).filter(s=>(s.cited||loose)&&s.kind==='speech'&&titleLine(s)&&
     (!scope?.people?.length||scope.people.includes(s.speaker??''))&&
     (!scope?.dated||!!s.date&&(!scope.period?.since||s.date>=scope.period.since)&&(!scope.period?.until||s.date<=scope.period.until))&&
-    [...contentWords(s.snippet)].some(word=>topic.has(word))).slice(0,3).map(s=>({...s,cited:true}))
+    [...contentWords(s.snippet)].some(word=>topic.has(word))).slice(0,overview?6:3).map(s=>({...s,cited:true}))
   if(!sources.length)return result
   let answer='';const citations:Record<string,[number,number][]>={}
   for(const source of sources){
     answer+=(answer?'\n':'')+'- ';const from=Array.from(answer).length
     answer+=titleLine(source)
+    if(overview){
+      const excerpt=overviewSentence(source.snippet,question)
+      // Keep the useful source words beside its title, without writing another unchecked summary.
+      if(excerpt)answer+=` The record includes “${excerpt.text}”`
+    }
     citations[`${source.resource}/t/body/0`]=[[from,Array.from(answer).length]]
   }
   const {answer_status:_status,...rest}=result

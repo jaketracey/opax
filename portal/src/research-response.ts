@@ -8,6 +8,7 @@ import type { QualitativeAnswer } from './research-types'
 import type { ResearchPayload } from './research-types'
 import type { researchEvalUsage } from './research-eval'
 import { inferPeriod } from './ask-period'
+import { divisionVoteSource } from './research-record-answer'
 
 function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPayload): Record<string, unknown> {
   if (payload.research) return payload
@@ -302,7 +303,9 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>,questio
     const text=paragraph[0], base=paragraph.index!
     if (/^(?:#{1,6}\s*)?(?:what the records? say(?:s)?|answer|overview|sources|summary)\s*:?$/i.test(text.trim())) {changed=true;continue}
     const parts:{text:string;from:number;until:number}[]=[]
-    for(const clause of claimClauses(text)) {
+    // Repeated procedural wording belongs to each complete cited division title.
+    const division=divisionVoteSource({sources:sources as unknown as QualitativeAnswer['sources'],citations:(payload.citations??{}) as QualitativeAnswer['citations']},text,cp(base),cp(base+text.length))
+    for(const clause of division?[{text,start:0,end:text.length}]:claimClauses(text)) {
       const connector=parts.length?/(?:,?\s+and\s+)$/.exec(text.slice(0,clause.start))?.[0]:undefined
       const sentence=(connector?'and ':'')+clause.text, scope=claimScope(clause.text,cp(base+clause.start),cp(base+clause.end)),identities=proseClaimKeys(clause.text).map(identity=>scope?identity+'|'+scope:identity),signature=key(clause.text)
       if(seenText.has(signature)||identities.length>0&&identities.every(id=>seenClaims.has(id))) {changed=true;continue}

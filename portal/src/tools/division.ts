@@ -3,6 +3,7 @@ import { tokens, normalize } from '../catalog-query.mjs'
 import { clip, fold, siteUrl, tableRows } from './record-common'
 import { aggregateDivisions, isDivisionParty, resolveDivisionParty, type DivisionSummary } from './division-aggregates'
 import { readToolAsset, type ToolArgs, type ToolDefinition, type ToolEnv, type ToolCitation } from './types'
+import { policyVotes } from './division-policy'
 
 interface Member { name: string; party?: string | null; vote: string }
 interface BillLink { key: string; title?: string }
@@ -84,7 +85,7 @@ export const tool: ToolDefinition = {
   name: 'division',
   description: 'Look up a specific recorded federal or state division by exact date and chamber, title words, bill name/key or division_id. Use this for how a person or party voted in one division, its passed/defeated outcome, ayes/noes, party majorities and named floor crossers; never use member_votes for a single division. Returns full member lists with published party labels and source URLs. For outcomes, state the result and ayes/noes first. For who crossed the floor, use lookup and answer with the named members against their party majority, or state that none were recorded, retaining partial-list qualifications. Mention floor crossing only when asked. total is the number of matching divisions before row/byte limits, not the number or names of dissenters; a division outcome does not establish that the bill became law. operation floor_crossing counts member-votes against party majorities over date/since/until; party_agreement compares party and other_party over that period. Aggregates default to federal divisions unless a state chamber/jurisdiction is specified. Both aggregates use the published index, not a retrieved sample.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
-    operation: { type: 'string', enum: ['lookup', 'floor_crossing', 'party_agreement'] },
+    operation: { type: 'string', enum: ['lookup', 'floor_crossing', 'party_agreement', 'policy_votes'], description: 'policy_votes aggregates a named party across every matching topic-title division, including linked bills and motions. Pass party and title (core policy words), not a single member or bill.' },
     chamber: { type: 'string', enum: Object.keys(CHAMBERS), description: 'Exact chamber, e.g. senate, representatives, nsw_lc, vic_la or qld_la.' },
     jurisdiction: { type: 'string', enum: ['all', 'federal', 'nsw', 'vic', 'qld', 'sa', 'act', 'nt', 'wa', 'tas'], description: 'Lookup defaults to all published divisions; aggregates default to federal.' },
     date: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Exact division date, YYYY-MM-DD. Do not replace it with a year.' },
@@ -105,16 +106,18 @@ export const tool: ToolDefinition = {
     if (args.since && args.until && String(args.since) > String(args.until)) return false
     if (args.date && (args.since && String(args.date) < String(args.since) || args.until && String(args.date) > String(args.until))) return false
     if (args.title && !tokens(args.title).length || args.bill && !tokens(args.bill).length || args.division_id && !ID.test(String(args.division_id))) return false
-    if (args.operation && args.operation !== 'lookup' && (!args.date && !args.since && !args.until || args.person || args.title || args.division_id)) return false
+    if (args.operation === 'policy_votes' && (!args.party || !args.title || args.person || args.bill || args.division_id || args.other_party)) return false
+    if (args.operation && !['lookup', 'policy_votes'].includes(String(args.operation)) && (!args.date && !args.since && !args.until || args.person || args.title || args.division_id)) return false
     if (args.operation === 'party_agreement' && (!args.party || !args.other_party || partyKey(String(args.party)) === partyKey(String(args.other_party)))) return false
     return !args.other_party || args.operation === 'party_agreement'
   },
-  stepLabel: args => ({ label: args.operation === 'floor_crossing' ? 'Counting votes against party majorities' : args.operation === 'party_agreement' ? 'Comparing party votes' : 'Checking a recorded division', arg: clip(args.title ?? args.bill ?? args.division_id ?? args.date ?? '', 60) }),
+  stepLabel: args => ({ label: args.operation === 'policy_votes' ? 'Counting party votes on a policy' : args.operation === 'floor_crossing' ? 'Counting votes against party majorities' : args.operation === 'party_agreement' ? 'Comparing party votes' : 'Checking a recorded division', arg: clip(args.title ?? args.bill ?? args.division_id ?? args.date ?? '', 60) }),
   async handler(env, args) {
     const index = await readToolAsset(env, '/divisions/index.json') as { divisions?: DivisionSummary[] } | null
     if (!Array.isArray(index?.divisions)) throw new Error('Division index unavailable')
     let candidates = index.divisions.filter(d => ID.test(d.key) && inScope(d, args))
     if (args.operation && args.operation !== 'lookup' && !args.chamber && !args.jurisdiction) candidates = candidates.filter(d => d.key.startsWith('federal-'))
+    if (args.operation === 'policy_votes') return policyVotes(env, args, candidates)
     if (args.division_id) candidates = candidates.filter(d => d.key === keyOf(String(args.division_id)))
     let bill: Bill | undefined, billTitleOnly = false
     if (args.bill) {

@@ -2,6 +2,16 @@ import type { WritingFact, WritingInput, WrittenSentence } from './research-writ
 import { decodeHTMLStrict } from 'entities'
 import { requestedBillTitle, billTitleMatches } from './bill-title'
 import { billIntroductionListQuestion, recordCountKind, recordIntentText } from './ask-scope-intent'
+import { speechRankingGrain, partyPolicyTopic } from './ask-answer-grain'
+import type { QualitativeAnswer } from './research-types'
+
+/** A selected representative vote carries its complete source title, including procedural clauses. */
+export function divisionVoteSource(payload: Pick<QualitativeAnswer, 'sources' | 'citations'>, line: string, from: number, until: number) {
+  const text = line.replace(/^[-*]\s*/, '')
+  if (!/^On .+, .+ (?:senators|members) voted \d[\d,]* ayes? and \d[\d,]* no(?:es)? on /.test(text)) return
+  return payload.sources.find(s => /\/doc\/division-/.test(s.url) && s.snippet.split('\n').includes(text)
+    && Object.entries(payload.citations).some(([id, ranges]) => (id === s.resource || id.startsWith(s.resource + '/')) && ranges.some(([a, b]) => a < until && b > from)))
+}
 
 /** Keep the requested bill fact ahead of supporting lifecycle dates, including misspelt introduction verbs. */
 export function billQuestionFocus(question: string): 'sponsor' | 'introduced' | 'assent' | 'status' | 'passed' | 'portfolio' {
@@ -55,6 +65,24 @@ export function recordEvidenceText(text: string, url: string): string {
 export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null {
   input = { ...input, question: recordIntentText(input.question) }
   const facts = input.facts.filter(f => !f.coverage && !f.metadata)
+  const grain = input.constraints?.speechRankingGrain ?? speechRankingGrain(input.question)
+  if (grain) {
+    const prefix = grain === 'speaker' ? 'person:' : 'party:'
+    const rows = facts.flatMap(f => {
+      const m = f.source.kind === 'count' && /^(.+?): ([\d,]+) ((?:chamber speeches|speeches and committee turns|committee-hearing turns)\b.*)/.exec(f.text)
+      return m && f.source.entities?.includes(prefix + m[1]) ? [{f,name:m[1],count:Number(m[2].replaceAll(',','')),basis:m[3]}] : []
+    }).filter((r,i,all)=>all.findIndex(other=>other.name===r.name&&other.basis===r.basis)===i)
+      .sort((a,b)=>(input.constraints?.superlative==='lowest'?1:-1)*(a.count-b.count)||a.name.localeCompare(b.name))
+    if (rows.length) return rows.slice(0,8).map((r,i)=>line(`${r.name} ${i===0?'led the recorded '+(grain==='speaker'?'member':'party')+' ranking, with':'recorded'} ${r.count.toLocaleString('en-AU')} ${r.basis.replace(/\b\d{4}-\d{2}-\d{2}\b/g, day)}`,[r.f]))
+  }
+  if (input.constraints?.industryRanking || /\b(?:which|what) industries\b/i.test(input.question)) {
+    const industries = facts.filter(f => /\b(?:led the classified industry ranking|recorded the next ranked industry total)\b/.test(f.text))
+    if (industries.length) return industries.map(f => line(f.text, [f]))
+  }
+  // A policy aggregate leads with its whole selection, then its bill/motion split and representative votes.
+  const policy = facts.filter(f => /^(?:Across \d[\d,]* matching |No matching divisions on )/.test(f.text) && /\/divisions\/index\.json$/.test(f.source.url)
+    || /^On .+, .+ (?:senators|members) voted \d[\d,]* ayes? and \d[\d,]* no(?:es)? on /.test(f.text) && /\/doc\/division-/.test(f.source.url))
+  if ((input.constraints?.policyVoteTopic || partyPolicyTopic(input.question)) && policy.some(f => /^(?:Across \d[\d,]* matching divisions? on |No matching divisions on )/.test(f.text))) return policy.map(f => line(f.text, [f]))
   const divisions = facts.flatMap(f => {
     const finding = /\/doc\/division-/.test(f.source.url) ? divisionFinding(f.text) : null
     return finding ? [{ f, finding }] : []
