@@ -11,6 +11,8 @@ const CLAUSE_VERB = /\b(?:is|are|was|were|be|has|have|had|can|cannot|could|will|
 export function sentenceFragment(text: string, entities: string[] = []): boolean {
   const plain = normalClaim(text.replace(/\[\d+\]/g, '').replace(/^[-*•]\s*/, ''))
   if (!plain) return true
+  // A clause left behind by a removed claim starts mid-sentence ("while a rebate…", "and Pasquale Minniti, …").
+  if (/^(?:[-*•]\s*)?(?:while|and|but|or|nor|whereas|which|who|whom|whose|although|though|because|including|plus)\b/.test(text.trimStart())) return true
   const name = plain.replace(/^(?:the|a|an) /, '')
   const words = plain.split(' ')
   if (/^(?:please )?(?:name|choose|specify|ask|check|select|try|tell|give|provide|narrow|clarify)\b/.test(plain) && words.length >= 2) return false
