@@ -1,5 +1,5 @@
 import {FEDERAL_RECEIPTS_NOTE} from './receipt-copy'
-import {donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorAssociatedTo,donorDisclosure,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {financialYear, receiptPeriodQuery, separateReceiptYears} from './receipt-period'
 
 type Node = DonorDisclosureRecord & { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
@@ -202,9 +202,9 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   if(filters.to && /^\d{4}$/.test(filters.to)) to=Number(filters.to)
   const donorIds=new Set(donors.map(n=>n.id)),partyIds=new Set(parties.map(n=>n.id))
   const totals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number}>()
-  const donorTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number}>()
+  const donorTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],associated?:string,total_aud:number,receipts:number}>()
   const industryTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number}>()
-  const flows: {donor_id:string,donor:string,donor_href:string|null,return_reference:string,party_id:string,party:string,total_aud:number,receipts:number}[]=[]
+  const flows: {donor_id:string,donor:string,donor_href:string|null,return_reference:string,party_id:string,party:string,associated?:string,total_aud:number,receipts:number}[]=[]
   let cents=0,count=0,first=Infinity,last=-Infinity,matching=0
   for(const edge of graph.edges) {
     const donor=nodes.get(edge.source),party=nodes.get(edge.target)
@@ -228,12 +228,15 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     const previous=totals.get(party.id)||{id:party.id,name:party.label,total_aud:0,receipts:0}
     previous.total_aud+=amount/100;previous.receipts+=receipts;totals.set(party.id,previous)
     const donorTotal=donorTotals.get(donor.id)||{id:donor.id,name:donor.label,href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),total_aud:0,receipts:0}
+    // The AEC register line rides only on receipts to the party the register ties the donor to (export rule 9).
+    const associated=donorAssociatedTo(donor,party.label)
+    if(associated)donorTotal.associated=associated
     donorTotal.total_aud+=amount/100;donorTotal.receipts+=receipts;donorTotals.set(donor.id,donorTotal)
     if(donor.industry) {
       const industryTotal=industryTotals.get(donor.industry)||{id:donor.industry,name:donor.industry.replaceAll('_',' '),total_aud:0,receipts:0}
       industryTotal.total_aud+=amount/100;industryTotal.receipts+=receipts;industryTotals.set(donor.industry,industryTotal)
     }
-    flows.push({donor_id:donor.id,donor:donor.label,donor_href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),party_id:party.id,party:party.label,total_aud:amount/100,receipts})
+    flows.push({donor_id:donor.id,donor:donor.label,donor_href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),party_id:party.id,party:party.label,...(associated?{associated}:{}),total_aud:amount/100,receipts})
   }
   const params=new URLSearchParams({jur:jurisdiction,type:'receipts'})
   if(industries.length===1)params.set('industry',industries[0])

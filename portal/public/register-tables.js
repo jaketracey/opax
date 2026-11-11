@@ -1,5 +1,5 @@
 import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=a8472268da';
-import {donorDisclosure} from './donor-disclosure.js?v=800932e746';
+import {donorDisclosure} from './donor-disclosure.js?v=18e84bb744';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(value).slice(0, 10) : null;

@@ -24,6 +24,8 @@ export type MapNode = {
   lastYear?: number | null
   /** Overrides the group colour (party nodes carry their party's colour). */
   colour?: string
+  /** Donors the AEC associated-entity register ties to a party they give to: the line shown with the name. */
+  associatedTag?: string
 }
 
 export type MapEdge = {

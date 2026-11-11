@@ -105,7 +105,7 @@ test.after(()=>rmSync(dir,{recursive:true,force:true}));
 test('voice period labels and separate years cannot become a wider total',()=>{
  const real=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
  const one=receiptAnswer(real,'gambling in financial year ending 2021','federal','https://opax.test');
- assert.equal(one.by_party.find(x=>x.name==='Labor').total_aud,457673);
+ assert.equal(one.by_party.find(x=>x.name==='Labor').total_aud,445573);
  for(const q of ['gambling in 2019–20 and 2021–22','gambling in January to June 2020','gambling on 2020-1-1','gambling in calendar year 2020','gambling on 1/1/2020','gambling on 30/06/2021','gambling on 2020.01.01','gambling in H1 2020','gambling in the 1st half of 2020']) assert.equal(receiptAnswer(real,q,'federal','https://opax.test').needs_period,true,q);
 });
 
@@ -177,11 +177,11 @@ test('voice lending questions cannot reuse mixed receipt totals',async()=>{
   assert.match(out.data.answer,/balances owed at 30 June/);
   assert.match(out.data.answer,/latest year/);
   assert.equal(out.data.total_aud,undefined);
-  assert.doesNotMatch(out.data.answer,/55,227,183/);
+  assert.doesNotMatch(out.data.answer,/42,540,985/);
   assert.match(out.sources[0].url,/graph\/aec-extras.json$/);
  }
  const receipt=await runVoiceTool('search_records',{query:'How much money from Westpac Banking Corporation to Labor?'},env,async()=>{throw Error('Unexpected network retrieval')});
- assert.equal(receipt.data.total_aud,55227183);
+ assert.equal(receipt.data.total_aud,42540985);
  assert.match(receipt.data.answer,/These federal totals mix donations with other receipts such as loans, so this is not a donation ranking/);
 });
 

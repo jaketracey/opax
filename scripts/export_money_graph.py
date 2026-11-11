@@ -67,6 +67,15 @@ Methodology / exclusion rules (all documented in the output's `meta` block):
    (money-donations-014). Rule 5 still judges map membership on the tags as
    classified, so this changes a colour, never which donors are shown.
 
+9. A donor that the AEC associated-entity register (parli.db `associated_entities`,
+   source 'aec_assoc_entity', loaded from the AEC's Associated Entity Returns)
+   lists as an associated entity of a party it gives to is flagged, never moved:
+   its receipts, totals, flows and rank stay exactly as they are, and the node
+   carries `associatedWith` (each party, the register's own names for the party
+   branches or divisions, the return years and the register link) and
+   `associatedTag`, the one line every surface shows beside the name. The same
+   rule applies to every party; a branch or division of the party counts.
+
 Node ids are 'donor:' + norm_key(label). Two donors whose labels share a key
 (an entity and an unresolved look-alike) get distinct ids: the second takes
 '~<entity id>' (or '~2') and meta.node_id_collisions counts them, so an id
@@ -255,6 +264,82 @@ def load_canonical(db) -> tuple[dict, dict]:
     alias = {r["alias_raw"]: r["entity_id"] for r in db.execute(
         "SELECT alias_raw, entity_id FROM ext_donor_aliases")}
     return alias, ents
+
+
+# ── rule 9: the AEC associated-entity register ───────────────────────────────
+ASSOCIATED_REGISTER_URL = "https://transparency.aec.gov.au/RegisterOfEntities?clientType=associatedentity"
+
+
+def load_associated_register(db, alias_to_entity: dict, exact_index: dict) -> dict:
+    """donor key (resolver entity id, and norm_key of the register spelling) ->
+    {canonical party: {party name as the register gives it: {financial years}}}."""
+    have = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='associated_entities'").fetchone()
+    if not have:
+        sys.stderr.write("export_money_graph: no associated_entities table; no donor is flagged\n")
+        return {}
+    # The party grammar the AEC extras loader uses for the same returns (Labor, Liberal, LNP, ...).
+    from parli.ingest.money_aec_extras import canon_party
+    reg: dict = defaultdict(lambda: defaultdict(lambda: defaultdict(set)))
+    for name, party, fy in db.execute(
+            "SELECT DISTINCT entity_name, associated_party, financial_year FROM associated_entities "
+            "WHERE source = 'aec_assoc_entity'"):
+        canon = canon_party(party)
+        if not canon or not (name or "").strip():
+            continue
+        for key in {resolve_alias(name.strip(), alias_to_entity, exact_index), norm_key(name)} - {None, ""}:
+            reg[key][canon][party.strip()].add(fy or "")
+    return reg
+
+
+def _fy(fy: str) -> str:
+    """'2009-2010' (older AEC returns) and '2009-10' read the same: '2009-10'."""
+    m = re.match(r"^(\d{4})\s*-\s*(\d{2,4})$", (fy or "").strip())
+    return f"{m.group(1)}-{m.group(2)[-2:]}" if m else (fy or "").strip()
+
+
+def _join(names: list[str]) -> str:
+    return names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+
+
+def associated_fields(d: dict, register: dict) -> dict:
+    """Rule 9: the register entries that tie donor `d` to a party it gives to.
+
+    The tag names the party as the register does when it names one or two party
+    entries, and the party's map label with a count when it names more (a union
+    registered against seven Labor branches); every entry is in registerParties.
+    The years are the financial years of the associated-entity returns."""
+    found: dict = defaultdict(lambda: defaultdict(set))
+    for key in {d.get("eid")} | {norm_key(n) for n in d["names"]}:
+        for canon, parties in register.get(key, {}).items():
+            if canon in d["parties"]:
+                for party, years in parties.items():
+                    found[canon][party] |= {_fy(y) for y in years if y}
+    if not found:
+        return {}
+    links, phrases = [], []
+    for canon in sorted(found, key=lambda c: -d["parties"][c]["total"]):
+        # One spelling per register entry ('... Inc' and '... Inc.' are one), the most recent return's first.
+        by_norm: dict = {}
+        for party, years in found[canon].items():
+            k = norm_key(party)
+            prev = by_norm.get(k)
+            latest = max(years, default="")
+            if prev is None or latest > prev[1]:
+                by_norm[k] = (party, latest, (prev[2] if prev else set()) | years)
+            else:
+                by_norm[k] = (prev[0], prev[1], prev[2] | years)
+        entries = sorted(by_norm.values(), key=lambda e: (e[1], e[0]), reverse=True)
+        names = [e[0] for e in entries]
+        years = sorted(y for e in entries for y in e[2])
+        first, last = (years[0], years[-1]) if years else (None, None)
+        links.append({"party": canon, "registerParties": names, "firstYear": first, "lastYear": last,
+                      "source": "aec_assoc_entity", "url": ASSOCIATED_REGISTER_URL})
+        span = ("" if not first else f"{first} return" if first == last else f"returns {first} to {last}")
+        who = _join(names) if len(names) <= 2 else canon
+        extra = f"{len(names)} party entries" if len(names) > 2 else ""
+        detail = "; ".join(x for x in (span, extra) if x)
+        phrases.append(f"associated entity of {who}, per AEC register" + (f" ({detail})" if detail else ""))
+    return {"associatedWith": links, "associatedTag": "; ".join(phrases)}
 
 
 # ── the grants layer (parli.ingest.grant_recipients + the grant tables) ──────
@@ -508,6 +593,7 @@ def main() -> None:
     db.row_factory = sqlite3.Row
     alias_to_entity, entities = load_canonical(db)
     exact_index = exact_alias_index(alias_to_entity)
+    register = load_associated_register(db, alias_to_entity, exact_index)
 
     base = """
         FROM donations
@@ -673,6 +759,7 @@ def main() -> None:
     eid_to_node: dict = {}
     used_ids = {n["id"] for n in nodes}
     collisions = 0
+    associated_nodes = 0
     for d in picked:
         display = d["canonical"]
         if not display:
@@ -705,8 +792,11 @@ def main() -> None:
             "count": d["count"],
             **year_fields(d),
             **({"via": "public_money", "publicMoney": round(d["public_money"])} if d.get("via") else {}),
+            **associated_fields(d, register),
             "aliases": others,
         })
+        if "associatedTag" in nodes[-1]:
+            associated_nodes += 1
         for party, p in sorted(d["parties"].items(), key=lambda kv: -kv[1]["total"]):
             edges.append({
                 "source": node_id,
@@ -796,6 +886,13 @@ def main() -> None:
             "edge_count": len(edges),
             **grants_meta,
             **contracts_meta,
+            "associated_entities": (
+                "Rule 9: a donor the AEC associated-entity register lists as an associated entity of a party it "
+                "gives to (any branch or division of it) is flagged, not moved: node.associatedWith and "
+                "node.associatedTag; receipts, totals, flows and rank are unchanged. The same rule applies to every party."
+            ),
+            "associated_entity_nodes": associated_nodes,
+            "associated_register_url": ASSOCIATED_REGISTER_URL,
             "party_totals_note": (
                 "Party node totals cover all cleaned AEC rows assigned to a party except public funding "
                 "identified by the reported donor name and payments by entities the resolver knows as "

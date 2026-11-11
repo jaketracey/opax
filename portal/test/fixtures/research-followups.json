@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "source": "/graph/money.json",
-  "source_sha256": "ed267871f612004e354105ba2af250eb5b5a3cfbe86db12ea0325375c4aff861",
-  "source_revision": "c6348c2213a65691555f241196c960d23ecd4671",
-  "source_generated": "2026-10-18",
-  "donation_layer_sha256": "4bfbe0a13eec4628a097c8f0cb353591d978ded35cdbc6502c50536cb719926e",
-  "guard": "donation layer of the money graph (test/money-guard.mjs): donor and party nodes without their contracts, grants and publicMoney totals, donor-to-party flows, and the meta rows describing them; the weekly public-money overlay is outside it. Pinned 2026-11-10 against the 2026-10-18 export, whose donation layer is unchanged.",
+  "source_sha256": "fcd9baefc8ab9048197ebb606302808fffac8a633dc1457112390e9845a65aeb",
+  "source_revision": "6243c86f2a441b12b1862196ddff027723a5e935",
+  "source_generated": "2026-11-11",
+  "donation_layer_sha256": "8002fa5d22fe6054cca4a5a5b7bf924218e0111c7b4b5c0c935c23bb5c6de8a5",
+  "guard": "donation layer of the money graph (test/money-guard.mjs): donor and party nodes without their contracts, grants and publicMoney totals, donor-to-party flows, and the meta rows describing them; the weekly public-money overlay is outside it. Re-pinned 2026-11-11 against the 2026-11-11 export: the AEC-only receipt rule (d786784a2) and the AEC associated-entity flag (export rule 9) changed the donation layer; each changed turn is reviewed in the PR.",
   "gold_method": "partyDonations tool, exact published selection, federal disclosed receipts; no inference of gifts or influence",
   "conversations": [
     {
@@ -45,8 +45,8 @@
               "href": "/subject/donor/Westpac%20Banking%20Corporation",
               "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
               "industry": "finance",
-              "total_aud": 55227183,
-              "receipts": 500
+              "total_aud": 42540985,
+              "receipts": 471
             }
           ],
           "tool_query": {
@@ -66,12 +66,13 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Shop Distributive & Allied Employees' Association Vic Branch",
+              "donor": "Shop Distributive & Allied Employees Association",
+              "associated_entity": "associated entity of Labor, per AEC register (returns 2009-10 to 2024-25; 8 party entries)",
               "href": "/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
               "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
               "industry": "unions",
-              "total_aud": 974058,
-              "receipts": 13
+              "total_aud": 960208,
+              "receipts": 11
             }
           ],
           "tool_query": {
@@ -101,8 +102,8 @@
               "href": "/subject/donor/Duncan%20Turpie",
               "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 6982366,
-              "receipts": 90
+              "total_aud": 5486278,
+              "receipts": 69
             }
           ],
           "tool_query": {
@@ -127,104 +128,88 @@
               "href": "/subject/donor/Duncan%20Turpie",
               "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 6982366,
-              "receipts": 90
+              "total_aud": 5486278,
+              "receipts": 69
             },
             {
               "donor": "Graeme Wood",
               "href": "/subject/donor/Graeme%20Wood",
               "return_reference": "AEC annual return · 2018-19 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 5712574,
-              "receipts": 25
+              "total_aud": 3286787,
+              "receipts": 18
             },
             {
               "donor": "Ruth Greble",
               "href": "/subject/donor/Ruth%20Greble",
               "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 3456419,
-              "receipts": 124
+              "total_aud": 2731619,
+              "receipts": 112
             },
             {
               "donor": "Electrical Trades Union",
               "href": "/subject/donor/Electrical%20Trades%20Union%20of%20Australia",
               "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
               "industry": "unions",
-              "total_aud": 3238538,
-              "receipts": 28
-            },
-            {
-              "donor": "Chilla Bulbeck",
-              "href": "/subject/donor/Chilla%20Bulbeck",
-              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
-              "industry": "individual",
-              "total_aud": 2256071,
-              "receipts": 73
-            },
-            {
-              "donor": "NSW Efa",
-              "href": "/subject/donor/NSW%20Efa",
-              "return_reference": "AEC annual return · 2010-11 · https://transparency.aec.gov.au/",
-              "industry": "individual",
-              "total_aud": 2139546,
-              "receipts": 2
+              "total_aud": 2718538,
+              "receipts": 26
             },
             {
               "donor": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division",
               "href": "/subject/donor/Communications%2C%20Electrical%20and%20Plumbing%20Union%20of%20Australia",
               "return_reference": "AEC annual return · 2023-24 · https://transparency.aec.gov.au/",
               "industry": "unions",
-              "total_aud": 1855000,
-              "receipts": 8
+              "total_aud": 1795000,
+              "receipts": 7
             },
             {
-              "donor": "Anna Milanowicz",
-              "href": "/subject/donor/Anna%20Milanowicz",
-              "return_reference": "AEC annual return · 2013-14 · https://transparency.aec.gov.au/",
+              "donor": "Bulbeck, Chilla",
+              "href": "/subject/donor/Bulbeck%2C%20Chilla",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 1200000,
-              "receipts": 6
+              "total_aud": 1634022,
+              "receipts": 69
+            },
+            {
+              "donor": "NSW Efa",
+              "href": "/subject/donor/NSW%20Efa",
+              "return_reference": "AEC annual return · 2010-11 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 1069773,
+              "receipts": 1
             },
             {
               "donor": "Norman Pater",
               "href": "/subject/donor/Norman%20Pater",
               "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 900000,
-              "receipts": 6
+              "total_aud": 800000,
+              "receipts": 5
+            },
+            {
+              "donor": "Milanowicz, Anna",
+              "href": "/subject/donor/Milanowicz%2C%20Anna",
+              "return_reference": "AEC annual return · 2013-14 · https://transparency.aec.gov.au/",
+              "industry": "individual",
+              "total_aud": 800000,
+              "receipts": 4
             },
             {
               "donor": "CFMEU Mining & Energy Division",
               "href": "/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union",
               "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
               "industry": "unions",
-              "total_aud": 534000,
-              "receipts": 15
+              "total_aud": 404000,
+              "receipts": 12
             },
             {
               "donor": "Bendigo & Adelaide Bank Limited",
               "href": "/subject/donor/Bendigo%20and%20Adelaide%20Bank%20Limited",
               "return_reference": "AEC annual return · 2012-13 · https://transparency.aec.gov.au/",
               "industry": "finance",
-              "total_aud": 391796,
-              "receipts": 71
-            },
-            {
-              "donor": "Australian Manufacturing Workers Union",
-              "href": "/subject/donor/Australian%20Manufacturing%20Workers%27%20Union",
-              "return_reference": "AEC annual return · 2023-24 · https://transparency.aec.gov.au/",
-              "industry": "unions",
-              "total_aud": 190908,
-              "receipts": 8
-            },
-            {
-              "donor": "Commonwealth Bank of Australia",
-              "href": "/subject/donor/Commonwealth%20Bank%20of%20Australia",
-              "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 174352,
-              "receipts": 8
+              "total_aud": 325124,
+              "receipts": 68
             },
             {
               "donor": "Suncorp Group Limited",
@@ -235,12 +220,28 @@
               "receipts": 6
             },
             {
-              "donor": "Macquarie Telecom",
+              "donor": "Australian Manufacturing Workers Union",
+              "href": "/subject/donor/Australian%20Manufacturing%20Workers%27%20Union",
+              "return_reference": "AEC annual return · 2023-24 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 160908,
+              "receipts": 7
+            },
+            {
+              "donor": "Commonwealth Bank of Australia",
+              "href": "/subject/donor/Commonwealth%20Bank%20of%20Australia",
+              "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 152878,
+              "receipts": 6
+            },
+            {
+              "donor": "Macquarie Technology Group LTD",
               "href": "/subject/donor/Macquarie%20Technology%20Group%20Ltd",
               "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
               "industry": "finance",
-              "total_aud": 86000,
-              "receipts": 8
+              "total_aud": 58000,
+              "receipts": 6
             }
           ]
         }
@@ -258,12 +259,13 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 40608922,
-              "receipts": 433
+              "donor": "Vapold Pty Ltd",
+              "associated_entity": "associated entity of Liberal Party of Australia (Victorian Division), per AEC register (returns 2008-09 to 2024-25)",
+              "href": "/subject/donor/Vapold%20Pty%20Ltd",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "other",
+              "total_aud": 27790108,
+              "receipts": 34
             }
           ],
           "tool_query": {
@@ -272,20 +274,21 @@
         },
         {
           "question": "how much was that?",
-          "standalone": "How much did Westpac Banking Corporation give to the Liberal Party?",
+          "standalone": "How much did Vapold Pty Ltd give to the Liberal Party?",
           "context_all": [
             "Liberal",
-            "Westpac"
+            "Vapold"
           ],
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 40608922,
-              "receipts": 433
+              "donor": "Vapold Pty Ltd",
+              "associated_entity": "associated entity of Liberal Party of Australia (Victorian Division), per AEC register (returns 2008-09 to 2024-25)",
+              "href": "/subject/donor/Vapold%20Pty%20Ltd",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "other",
+              "total_aud": 27790108,
+              "receipts": 34
             }
           ],
           "tool_query": {
@@ -307,12 +310,13 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Shop Distributive & Allied Employees' Association Vic Branch",
+              "donor": "Shop Distributive & Allied Employees Association",
+              "associated_entity": "associated entity of Labor, per AEC register (returns 2009-10 to 2024-25; 8 party entries)",
               "href": "/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
               "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
               "industry": "unions",
-              "total_aud": 974058,
-              "receipts": 13
+              "total_aud": 960208,
+              "receipts": 11
             }
           ],
           "tool_query": {
@@ -335,8 +339,8 @@
               "href": "/subject/donor/Duncan%20Turpie",
               "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 310000,
-              "receipts": 4
+              "total_aud": 210000,
+              "receipts": 3
             }
           ],
           "tool_query": {
@@ -362,8 +366,8 @@
               "href": "/subject/donor/Duncan%20Turpie",
               "return_reference": "AEC annual return · 2023-24 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 935135,
-              "receipts": 15
+              "total_aud": 765135,
+              "receipts": 12
             }
           ],
           "tool_query": {
@@ -526,8 +530,8 @@
               "href": "/subject/donor/Westpac%20Banking%20Corporation",
               "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
               "industry": "finance",
-              "total_aud": 55227183,
-              "receipts": 500
+              "total_aud": 42540985,
+              "receipts": 471
             }
           ],
           "tool_query": {
