@@ -4720,6 +4720,7 @@ function sharedAssetJson<T>(env: Env, path: string): Promise<T> {
   if (path === '/suppliers.json') return loadSuppliersFile(env) as Promise<T>
   if (path.startsWith('/growth/supplier-rows/')) return supplierBucket<T>(env, path)
   if (path === '/bills/index.json') return loadBills(env).then((bills) => bills.file as T)
+  if (BILL_FILE_RE.test(path)) return keptAssetJson<T>(billFileMemo, 32, env, path)
   return assetJson<T>(env, path)
 }
 
@@ -4876,7 +4877,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   const counts: string[] = []
   if (b.divisions) counts.push(`${num(b.divisions)} division${b.divisions === 1 ? '' : 's'}`)
   if (b.speeches) counts.push(`${num(b.speeches)} speech${b.speeches === 1 ? '' : 'es'}`)
-  const detail = b.has_summary ? await assetJson<{ summary?: { sentences?: string[] } }>(env, `/bills/${encodeURIComponent(key)}.json`).catch(() => null) : null
+  const detail = b.has_summary ? await sharedAssetJson<{ summary?: { sentences?: string[] } }>(env, `/bills/${encodeURIComponent(key)}.json`).catch(() => null) : null
   const summary = detail?.summary?.sentences?.[0]?.trim()
   // The share card keeps the short count line; the description says what the page holds.
   const recordLine = counts.length ? `${andList(counts)} in the record.` : 'The official record, on OPAX.'
@@ -5330,18 +5331,23 @@ async function agencyMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
  * Recently read supplier buckets. One supplier request reads its bucket three times (the address
  * check, the head and the page), so the last few are kept; failures are not.
  */
-const supplierBucketMemo = new Map<string, Promise<unknown>>()
-function supplierBucket<T>(env: Env, path: string): Promise<T> {
-  let kept = supplierBucketMemo.get(path)
+/** A small asset file kept per isolate: the oldest of `limit` goes first, and a failed read is not kept. */
+function keptAssetJson<T>(memo: Map<string, Promise<unknown>>, limit: number, env: Env, path: string): Promise<T> {
+  let kept = memo.get(path)
   if (!kept) {
-    if (supplierBucketMemo.size >= 16) supplierBucketMemo.delete(supplierBucketMemo.keys().next().value!)
+    if (memo.size >= limit) memo.delete(memo.keys().next().value!)
     const read = assetJson<T>(env, path)
-    supplierBucketMemo.set(path, read)
-    read.catch(() => { if (supplierBucketMemo.get(path) === read) supplierBucketMemo.delete(path) })
+    memo.set(path, read)
+    read.catch(() => { if (memo.get(path) === read) memo.delete(path) })
     kept = read
   }
   return kept as Promise<T>
 }
+const supplierBucketMemo = new Map<string, Promise<unknown>>()
+const supplierBucket = <T>(env: Env, path: string): Promise<T> => keptAssetJson<T>(supplierBucketMemo, 16, env, path)
+// One bill's file (p50 7 KB, at most 125 KB): a bill page reads it for the head's summary line and again for its body.
+const billFileMemo = new Map<string, Promise<unknown>>()
+const BILL_FILE_RE = /^\/bills\/(?!index\.json$)[^/]+\.json$/
 
 /**
  * The row a supplier id names, from its bucket of /suppliers.json (public/supplier-row-buckets.js),
