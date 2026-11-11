@@ -1,8 +1,12 @@
 import ExpoModulesCore
 import UIKit
 
-private func onMain(_ body: @escaping () -> Void) {
-  if Thread.isMainThread { body() } else { DispatchQueue.main.async(execute: body) }
+private func onMain(_ body: @escaping @MainActor () -> Void) {
+  if Thread.isMainThread {
+    MainActor.assumeIsolated { body() }
+  } else {
+    DispatchQueue.main.async { MainActor.assumeIsolated { body() } }
+  }
 }
 
 /// The last published traits, readable from the JavaScript thread. The sync
@@ -59,7 +63,7 @@ private struct Region: Equatable {
 /// as the root. Reading in updateConstraints opts into UIKit invalidation.
 @available(iOS 27.1, *)
 private final class RootRegionObserver: UIView {
-  var onChange: ((Bool) -> Void)?
+  var onChange: (@MainActor (Bool) -> Void)?
 
   override func updateConstraints() {
     let foldable = !reservedRegions(kind: .division, options: .includeInactive).isEmpty
@@ -74,6 +78,7 @@ private final class RootRegionObserver: UIView {
 }
 #endif
 
+@MainActor
 private final class WindowTraitsObserver {
   private weak var window: UIWindow?
   private weak var preferredScene: UIWindowScene?
@@ -87,6 +92,8 @@ private final class WindowTraitsObserver {
   private var rootObserver: UIView?
 #endif
 
+  nonisolated init() {}
+
   func start() {
     guard !observing else { return }
     observing = true
@@ -98,17 +105,22 @@ private final class WindowTraitsObserver {
     ]
     notifications = names.map { name in
       NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] notification in
-        if name == UIWindow.didBecomeKeyNotification,
-           let window = notification.object as? UIWindow {
-          self?.preferredScene = window.windowScene
-        } else if name == UIScene.didActivateNotification,
-                  let scene = notification.object as? UIWindowScene {
-          self?.preferredScene = scene
-        }
-        // Key-window changes can arrive while UIKit is transferring focus.
-        DispatchQueue.main.async { [weak self] in
-          guard let self, self.observing else { return }
-          _ = self.refresh()
+        // Delivered on the main queue (queue: .main).
+        MainActor.assumeIsolated {
+          if name == UIWindow.didBecomeKeyNotification,
+             let window = notification.object as? UIWindow {
+            self?.preferredScene = window.windowScene
+          } else if name == UIScene.didActivateNotification,
+                    let scene = notification.object as? UIWindowScene {
+            self?.preferredScene = scene
+          }
+          // Key-window changes can arrive while UIKit is transferring focus.
+          DispatchQueue.main.async { [weak self] in
+            MainActor.assumeIsolated {
+              guard let self, self.observing else { return }
+              _ = self.refresh()
+            }
+          }
         }
       }
     }
@@ -245,7 +257,9 @@ public final class OpaxDuoModule: Module {
     OnCreate { onMain { self.observer.refresh() } }
 
     Function("getWindowTraits") { () -> [String: Any] in
-      if Thread.isMainThread { return self.observer.refresh() }
+      if Thread.isMainThread {
+        return MainActor.assumeIsolated { self.observer.refresh() }
+      }
       onMain { self.observer.refresh() }
       return TraitsCache.shared.get()
     }
