@@ -1,0 +1,41 @@
+{
+ "_note": "The party-members entry under the division records' long spelling, as published at 4d19a7a86 (graph/party-members.json). Refreshed division exports fold this spelling into 'One Nation' (11 November 2026), so the alias case is a fixture.",
+ "Pauline Hanson's One Nation Party": [
+  {
+   "name": "Barnaby Joyce",
+   "slug": "barnaby-joyce",
+   "last": "2026-09-17",
+   "divisions": 12
+  },
+  {
+   "name": "David Farley",
+   "slug": "david-farley",
+   "last": "2026-09-17",
+   "divisions": 81
+  },
+  {
+   "name": "Malcolm Roberts",
+   "slug": "malcolm-roberts",
+   "last": "2026-09-17",
+   "divisions": 69
+  },
+  {
+   "name": "Pauline Hanson",
+   "slug": "pauline-hanson",
+   "last": "2026-09-17",
+   "divisions": 32
+  },
+  {
+   "name": "Sean Bell",
+   "slug": "sean-bell",
+   "last": "2026-09-17",
+   "divisions": 69
+  },
+  {
+   "name": "Tyron Whitten",
+   "slug": "tyron-whitten",
+   "last": "2026-09-17",
+   "divisions": 69
+  }
+ ]
+}
