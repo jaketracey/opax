@@ -22,7 +22,7 @@ import {
   isAccessibilityCategory,
   rhythm,
 } from '../../design/tokens';
-import { isPad, useLayout, useScreenMargin } from '../../design/adaptive';
+import { useLayout, useScreenMargin } from '../../design/adaptive';
 import { LaunchHandoff } from '../../launch/LaunchHandoff';
 import { releaseSplash } from '../../launch/splash';
 import { welcomeSeatRoute } from '../../navigation/routes';
@@ -72,7 +72,7 @@ export function WelcomePage({
   const advancing = useRef(false);
   const accessible = isAccessibilityCategory(fontScale);
   const pinned = continuePinned(fontScale);
-  const wide = isPad && layout.regular;
+  const wide = layout.regular;
   // The short welcome is the same page with Continue only (first-launch
   // 4.5 D2): the same ground.
   const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;
@@ -172,6 +172,8 @@ export function WelcomePage({
           styles.scroll,
           {
             paddingHorizontal: margin,
+            paddingLeft: margin + insets.left,
+            paddingRight: margin + insets.right,
             paddingTop: insets.top + (wide ? rhythm.section : 56),
             // Unpinned, the scroll's end leaves the whole button above the
             // home indicator.
@@ -263,6 +265,8 @@ export function WelcomePage({
             styles.foot,
             {
               paddingHorizontal: margin,
+              paddingLeft: margin + insets.left,
+              paddingRight: margin + insets.right,
               backgroundColor: ground,
               paddingBottom: Math.max(insets.bottom, rhythm.block),
             },

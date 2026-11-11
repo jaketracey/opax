@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -22,6 +23,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import { useAdaptiveDevice } from '../design/adaptive';
+import { ReservedRegionArea, useReservedRegions } from '../design/fold-area';
 import { useReduceMotionSetting } from '../design/accessibility';
 import { paletteFor } from '../design/palette';
 import { fonts } from '../design/tokens.generated';
@@ -59,8 +63,10 @@ const pendingCap = 300;
 
 /**
  * The launch cover: the native splash's layers (the star and the "OPAX"
- * wordmark on navy) drawn in the same place, so hiding the native splash
- * shows no seam, then one of two sequences (timing.ts):
+ * wordmark on navy). Existing phones draw them in the native position;
+ * adaptive displays clear their safe area and reserved regions. See
+ * navigation/DUO.md for the native launch-screen limit. Then one of two
+ * sequences runs (timing.ts):
  *
  * - `short`: hold until `ready` (never past `handoff.latestFade` when
  *   `latest`), then crossfade out.
@@ -77,30 +83,47 @@ const pendingCap = 300;
  * without a fade. `pending`: the sequence is not decided yet; the first frame
  * is the same either way, so the cover draws and only motion waits.
  */
-export function LaunchHandoff({
-  ready,
-  latest = false,
-  instant = false,
-  sequence = 'short',
-  onDone,
-  testID = 'launch-handoff',
-}: {
+export function LaunchHandoff(props: LaunchHandoffProps) {
+  return (
+    <ReservedRegionArea
+      style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
+    >
+      <LaunchCover {...props} />
+    </ReservedRegionArea>
+  );
+}
+
+type LaunchHandoffProps = {
   ready: boolean;
   latest?: boolean;
   instant?: boolean;
   sequence?: LaunchSequence;
   onDone: () => void;
   testID?: string;
-}) {
+};
+
+function LaunchCover({
+  ready,
+  latest = false,
+  instant = false,
+  sequence = 'short',
+  onDone,
+  testID = 'launch-handoff',
+}: LaunchHandoffProps) {
   const frame = useWindowDimensions();
+  const adaptive = useAdaptiveDevice();
+  const insets = useContext(SafeAreaInsetsContext);
+  const regions = useReservedRegions();
   const layout = useMemo(
     () =>
       splashLayout({
         width: frame.width,
         height: frame.height,
         fontScale: frame.fontScale,
+        safeArea: adaptive ? (insets ?? undefined) : undefined,
+        regions,
       }),
-    [frame.width, frame.height, frame.fontScale],
+    [frame.width, frame.height, frame.fontScale, adaptive, insets, regions],
   );
   const reduced = useReduceMotionSetting();
   const [loaded, setLoaded] = useState(0);
@@ -133,7 +156,8 @@ export function LaunchHandoff({
     [t, exit],
   );
 
-  // Hide the native splash under the identical layers, once. Declared before
+  // Hide the native splash once the layers draw. Adaptive display placement
+  // can differ from the view-centred native storyboard. Declared before
   // the effects below so `shownAt` is set when they first run.
   useEffect(() => {
     if (!shown || hidden.current) return;
@@ -238,12 +262,19 @@ export function LaunchHandoff({
   }, []);
   const onLoad = useCallback(() => setLoaded((n) => n + 1), []);
 
-  const motion = reduced === false;
+  const motion = reduced === false && layout.travelClear;
+  const scaleExit =
+    motion &&
+    ![...regions.divisions, ...regions.occlusions].some(
+      (region) => region.active,
+    );
   const fieldStyle = useAnimatedStyle(() => ({
     opacity: 1 - exit.get(),
   }));
   const contentStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: motion ? lerp(1, splash.exitScale, exit.get()) : 1 }],
+    transform: [
+      { scale: scaleExit ? lerp(1, splash.exitScale, exit.get()) : 1 },
+    ],
   }));
   const { star, canvas } = layout;
   const starShift = {

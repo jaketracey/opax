@@ -1,19 +1,28 @@
 import { splashCopy } from './copy';
 import { splashGeometry as geometry } from './geometry.generated';
 import { splash } from './timing';
+import {
+  emptyReservedRegions,
+  placeClear,
+  sidesOf,
+  type Rect,
+  type ReservedRegions,
+} from '../design/fold';
 
 /**
  * Where everything on the animated splash starts and settles, as plain
  * numbers from the window size and the text size, so the component's
  * worklets only interpolate and tests can read the same positions.
  *
- * The start is the native splash: the 200 x 120 lockup centred on the
- * screen, the star on its 60pt square and the "OPAX" wordmark at 30pt. Each
+ * The start uses the native splash's 200 x 120 artwork, the star on its
+ * 60pt square and the "OPAX" wordmark at 30pt. On adaptive displays the
+ * lockup clears the safe area and local reserved regions (navigation/DUO.md
+ * describes the native storyboard's placement limit). Each
  * letter's pen comes from geometry.generated.ts, where CoreText put it, so
  * four live glyphs drawn at those pens are the wordmark image.
  *
  * The end is the full name, one word a line, left-aligned as a block
- * centred on the screen, with the star settled above it. The letter of OPAX
+ * centred in the safe content area, with the star settled above it. The letter of OPAX
  * in each word (the X of eXchange is its second glyph) is the travelling
  * glyph; the rest of the word fades in beside it.
  */
@@ -21,6 +30,9 @@ export interface Frame {
   width: number;
   height: number;
   fontScale: number;
+  /** Supplied for adaptive displays; legacy phone artwork stays unchanged. */
+  safeArea?: { top: number; bottom: number; left: number; right: number };
+  regions?: ReservedRegions;
 }
 export interface Point {
   x: number;
@@ -47,6 +59,8 @@ export interface Line {
   rest: { text: string; x: number };
 }
 export interface SplashLayout {
+  /** Crossfade when a straight unfold would pass through a reserved region. */
+  travelClear: boolean;
   /** The name's font size. */
   size: number;
   lineHeight: number;
@@ -91,12 +105,39 @@ export function nameFontSize({ width, fontScale }: Frame): number {
 }
 
 export function splashLayout(frame: Frame): SplashLayout {
-  const size = nameFontSize(frame);
-  const lineHeight = Math.round(name.leading * size);
-  const canvas = {
-    x: (frame.width - geometry.canvas.width) / 2,
-    y: (frame.height - geometry.canvas.height) / 2,
+  const insets = frame.safeArea ?? { top: 0, bottom: 0, left: 0, right: 0 };
+  const regions = frame.regions ?? emptyReservedRegions;
+  const safe: Rect = {
+    x: insets.left,
+    y: insets.top,
+    width: Math.max(0, frame.width - insets.left - insets.right),
+    height: Math.max(0, frame.height - insets.top - insets.bottom),
   };
+  // Fit the full name on the preferred side before placing its fixed group.
+  let fitting = safe;
+  for (const division of regions.divisions.filter((region) => region.active)) {
+    const sides = sidesOf(division, fitting);
+    const [first, second] =
+      'leading' in sides
+        ? [sides.leading, sides.trailing]
+        : [sides.top, sides.bottom];
+    fitting =
+      first.width * first.height > second.width * second.height
+        ? first
+        : second;
+  }
+  const size = nameFontSize({ ...frame, width: fitting.width });
+  const lineHeight = Math.round(name.leading * size);
+  const placedCanvas = placeClear(
+    {
+      x: fitting.x + (fitting.width - geometry.canvas.width) / 2,
+      y: fitting.y + (fitting.height - geometry.canvas.height) / 2,
+      ...geometry.canvas,
+    },
+    regions,
+    safe,
+  );
+  const canvas = { x: placedCanvas.x, y: placedCanvas.y };
   const starFrom = {
     x: canvas.x + geometry.mark.x,
     y: canvas.y + geometry.mark.y,
@@ -110,10 +151,23 @@ export function splashLayout(frame: Frame): SplashLayout {
     top: 0,
   };
   const total = starSize + name.gap + block.height;
-  const top = (frame.height - total) / 2;
-  const starTo = { x: (frame.width - starSize) / 2, y: top, size: starSize };
-  block.left = (frame.width - block.width) / 2;
-  block.top = top + starSize + name.gap;
+  const settled = placeClear(
+    {
+      x: fitting.x + (fitting.width - block.width) / 2,
+      y: fitting.y + (fitting.height - total) / 2,
+      width: block.width,
+      height: total,
+    },
+    regions,
+    safe,
+  );
+  const starTo = {
+    x: settled.x + (settled.width - starSize) / 2,
+    y: settled.y,
+    size: starSize,
+  };
+  block.left = settled.x;
+  block.top = settled.y + starSize + name.gap;
   const ascent = geometry.font.ascent * size;
   const glyph = { height: glyphHeight * size, ascent };
   const lines = geometry.words.map((word, index): Line => {
@@ -136,7 +190,30 @@ export function splashLayout(frame: Frame): SplashLayout {
       rest: { text: word.text.slice(at + 1), x: pen(at + 1) },
     };
   });
+  const flight = {
+    x: Math.min(canvas.x, settled.x),
+    y: Math.min(canvas.y, settled.y),
+    right: Math.max(
+      canvas.x + geometry.canvas.width,
+      settled.x + settled.width,
+    ),
+    bottom: Math.max(
+      canvas.y + geometry.canvas.height,
+      settled.y + settled.height,
+    ),
+  };
+  const travelClear = ![...regions.divisions, ...regions.occlusions].some(
+    (region) =>
+      region.active &&
+      region.width > 0 &&
+      region.height > 0 &&
+      flight.x < region.x + region.width &&
+      flight.right > region.x &&
+      flight.y < region.y + region.height &&
+      flight.bottom > region.y,
+  );
   return {
+    travelClear,
     size,
     lineHeight,
     glyph,
