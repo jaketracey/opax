@@ -86,3 +86,16 @@ test('a speech question with speech citations is never replaced',()=>{
  const out=guardClaimMeasures(payload(answer,[speech]))
  assert.equal(out.answer,answer)
 })
+test('a failing sentence inside a bullet removes the whole bullet, not half of it',()=>{
+ const a='- John Howard said the GST would stay at 10 per cent.\n',b='- He said Olympic tickets would carry GST. SOCOG received $682 in disclosed receipts, while a rebate would not extend to premium tickets.\n',c='- He argued it was fairer.'
+ const answer=a+b+c,la=Array.from(a).length,lb=Array.from(b).length,lc=Array.from(c).length
+ const out=guardClaimMeasures(payload(answer,[speech],{'speech/t/body/0':[[2,la-1],[la+2,la+lb-1],[la+lb+2,la+lb+lc]]}))
+ assert.equal(out.answer,a+c)
+ const kept=Array.from(out.answer),ranges=out.citations['speech/t/body/0']
+ assert.deepEqual(ranges.map(([s,e])=>kept.slice(s,e).join('')),['John Howard said the GST would stay at 10 per cent.','He argued it was fairer.'])
+})
+test('a failing last bullet takes its preceding line break with it',()=>{
+ const a='- John Howard said the GST would replace a raft of inefficient taxes.\n',b='- The Liberal Party received $682 in disclosed receipts, while donations rose.'
+ const out=guardClaimMeasures(payload(a+b,[speech],{'speech/t/body/0':[[2,Array.from(a).length-1],[Array.from(a).length+2,Array.from(a+b).length]]}))
+ assert.equal(out.answer,a.trimEnd())
+})
