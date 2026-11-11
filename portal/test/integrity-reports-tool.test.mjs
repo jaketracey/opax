@@ -224,3 +224,14 @@ test('a report whose operation had public hearings carries a transcript summary'
   await invalid({ view: 'transcripts', subject: 'council' });
   await invalid({ view: 'transcripts', record_id: 'act-ic-2026-07-23-operation-kingfisher' });
 });
+
+test('integrity transcript paging is stable at the edges', async () => {
+  const seen = [];
+  for (let offset = 0; offset !== null;) {
+    const out = await call({ view: 'transcripts', body: 'NSW LECC', limit: 8, offset }); cited(out);
+    assert.equal(out.total, 24); seen.push(...out.rows.map(r => r.title)); offset = out.next_offset;
+  }
+  assert.equal(new Set(seen).size, 24);
+  const past = await call({ view: 'transcripts', body: 'NSW LECC', offset: 99 });
+  assert.equal(past.rows.length, 0); assert.equal(past.total, 24); assert.equal(past.next_offset, null);
+});

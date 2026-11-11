@@ -178,3 +178,19 @@ test('transcripts view needs a commission and rejects recommendation filters', a
   await invalid({ view: 'transcripts', commission: 'robodebt', number: '1' });
   await invalid({ view: 'transcripts', commission: 'robodebt', status: 'Implemented' });
 });
+
+test('transcript paging is stable at the edges: first page, last page and past the end', async () => {
+  const all = [];
+  for (let offset = 0; offset !== null;) {
+    const out = await call({ view: 'transcripts', commission: 'nsw-healthcare-funding', limit: 8, offset }); cited(out);
+    assert.equal(out.total, 71); all.push(...out.rows); offset = out.next_offset;
+  }
+  assert.equal(all.length, 71); assert.equal(new Set(all.map(r => r.key)).size, 71);
+  const last = await call({ view: 'transcripts', commission: 'nsw-healthcare-funding', limit: 8, offset: 64 }); cited(last);
+  assert.equal(last.rows.length, 7); assert.equal(last.next_offset, null);
+  const past = await call({ view: 'transcripts', commission: 'nsw-healthcare-funding', offset: 500 });
+  assert.equal(past.rows.length, 0); assert.equal(past.total, 71); assert.equal(past.next_offset, null);
+  for (const r of all) { assert.ok(r.date && r.pages >= 1 && /^https:\/\//.test(r.pdf_url) && typeof r.publisher_redacted === 'boolean'); }
+  const vic = await call({ view: 'transcripts', commission: 'vic-major-infrastructure' }); cited(vic);
+  assert.ok(vic.rows.every(r => r.order_notes?.some(n => /Non-publication orders/.test(n))));
+});

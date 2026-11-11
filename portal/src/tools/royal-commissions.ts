@@ -59,7 +59,8 @@ function summaryCite(env: ToolEnv, c: RecordRow): ToolCitation {
 
 const courtFor = (c: RecordRow, key: unknown) => records(c.court_context).filter(x => x.applies_to === key).map(x => ({ text: x.text, source_url: sourceUrl(object(x.cite).url) }))
 
-const byDate = (ds: RecordRow[]) => [...ds].sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')))
+// newest first, ties by key, so an offset names the same row on every call
+const byDate = (ds: RecordRow[]) => [...ds].sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')) || String(a.key).localeCompare(String(b.key)))
 const latest = (c: RecordRow) => byDate(records(c.transcripts))
 
 /** A profile carries the count, date range and newest few; view=transcripts pages through the rest. */
@@ -73,8 +74,11 @@ function transcriptSummary(c: RecordRow): RecordRow {
 function transcriptOut(c: RecordRow, d: RecordRow): RecordRow {
   const file = object(records(d.files)[0])
   return { commission: c.name, commission_id: c.id, label: TRANSCRIPT_LABEL, key: d.key, title: d.title, date: d.date ?? null, date_basis: BASIS[String(d.date_basis)] ?? d.date_basis ?? null,
-    hearing: d.hearing ?? null, page_url: sourceUrl(d.page_url), pdf_url: sourceUrl(file.url), pages: file.pages ?? null, rights: d.rights ?? null }
+    hearing: d.hearing ?? null, page_url: sourceUrl(d.page_url), pdf_url: sourceUrl(file.url), pages: file.pages ?? null, rights: d.rights ?? null,
+    publisher_redacted: /redact/i.test(`${file.url ?? ''} ${d.title ?? ''}`), ...(orderNotes(c).length ? { order_notes: orderNotes(c) } : {}) }
 }
+/** The commission's own notes about non-publication or suppression orders travel with each transcript. */
+const orderNotes = (c: RecordRow) => (Array.isArray(c.notes) ? c.notes as unknown[] : []).map(String).filter(n => /non-publication|suppression|publication order/i.test(n)).map(n => clip(n, 300))
 
 function transcriptCite(t: RecordRow): ToolCitation {
   return { kind: 'record', url: String(t.pdf_url ?? t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${t.date})` : ''}${t.pages ? `, ${t.pages} pages` : ''}. ${TRANSCRIPT_LABEL}.`, 400) }
