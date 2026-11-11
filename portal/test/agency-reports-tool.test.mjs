@@ -100,8 +100,21 @@ test('editions, companions and unread scans are labelled', async () => {
   assert.equal(docs.rows[0].edition, 'prior_edition'); assert.ok(docs.rows[0].integrity_follow_up);
   const sa = await call({ view: 'documents', jurisdiction: 'SA' });
   assert.ok(sa.rows.some(r => r.companion_of)); assert.ok(sa.rows.some(r => r.companions));
+});
+
+test('figures read from a scan say so: OCR provenance on the row, the citation and the notes', async () => {
   const nt = await call({ view: 'documents', jurisdiction: 'NT' });
-  assert.equal(nt.rows[0].status, 'not_read_no_text'); assert.match(nt.citations[1].text, /scan without a text layer/);
+  cited(nt);
+  assert.equal(nt.rows[0].status, 'read'); assert.equal(nt.rows[0].text_source, 'ocr');
+  assert.match(nt.citations[1].text, /on-device OCR/);
+  const facts = await call({ view: 'facts', jurisdiction: 'NT', metric: 'investigations_commenced' });
+  cited(facts);
+  assert.equal(facts.rows[0].extraction.method, 'ocr');
+  assert.match(facts.citations[1].text, /scanned page, read by on-device OCR/);
+  assert.match(facts.notes.join(' '), /from a scan/);
+  const ai = await call({ view: 'facts', agency: 'NSW ICAC', query: 'assumed identity' });
+  cited(ai);
+  assert.ok(ai.rows.every(r => r.extraction && r.value === null));
 });
 
 test('coverage lists every jurisdiction held', async () => {

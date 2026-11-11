@@ -1,0 +1,76 @@
+{
+ "report_id": "nsw-independent-commission-against-corruption-2025-26-assumed-identities-return",
+ "read_by": "gov-reports lead from on-device OCR, page image checked, 2026-11-11",
+ "pages_read": "all",
+ "not_found": [],
+ "facts": [
+  {
+   "metric": "operational_other",
+   "label_as_published": "authority to acquire and use an assumed identity was granted",
+   "value_as_published": "One",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 1,
+   "quote": "(a) One authority to acquire and use an assumed identity was granted;",
+   "value": null,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "authority to acquire and use an assumed identity was varied",
+   "value_as_published": "No",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 1,
+   "quote": "(b) No authority to acquire and use an assumed identity was varied;",
+   "value": null,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "authorities to acquire and use an assumed identity were cancelled",
+   "value_as_published": "Two",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 1,
+   "quote": "(c) Two authorities to acquire and use an assumed identity were cancelled;",
+   "value": null,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "applications for an authority were refused",
+   "value_as_published": "No",
+   "unit": "count",
+   "period": "2025/2026",
+   "page": 1,
+   "quote": "(e) No applications for an authority were refused;",
+   "value": null,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  }
+ ],
+ "notes": [
+  "A one-page section 35(1) report under the Law Enforcement and National Security (Assumed Identities) Act 2010; a scan with no text layer, read by Apple Vision OCR and checked against the page image. Counts are printed as words, so value is null.",
+  "Item (f) states the audit of each authority found no fraud or other unlawful activity; it is a statement, not a count, and is not recorded as a figure."
+ ]
+}

@@ -61,11 +61,36 @@ cited page (whitespace normalised); the printed value is a whole figure inside t
 `value` is that number with no scaling; the label, column, band, name, position and
 consultant appear on the page; and a Transparency Portal body carries no pay, staffing or
 finance figure. A figure that cannot be quoted cleanly is dropped and its metric listed in
-`not_found`. Scanned pages without a text layer are not read (no OCR).
+`not_found`. Scanned documents without a text layer are read only through the OCR path
+below.
 
 Rules for readers: no adding, subtracting, converting or rounding; no totals of a gender
 split; no allegations, subjects of investigations or findings about any person; labels and
 figures are the report's own.
+
+## Scanned documents (on-device OCR)
+
+A PDF with no text layer is read on the Mac, with nothing sent to a cloud service:
+
+    python -m parli.ingest.agency_ocr render --id <report_id>   # pdftoppm, 300 dpi page images
+    python -m parli.ingest.agency_ocr vision --id <report_id>   # Apple Vision (scripts/ocr/vision_ocr.swift)
+    python -m parli.ingest.agency_ocr rows   --id <report_id>   # data/agency-reports/ocr/<report_id>.json
+
+Vision runs `VNRecognizeTextRequest` at the accurate level with language correction off, so
+figures are not rewritten from a dictionary (it has no en-AU model; en-US is its English).
+Page images and raw Vision output stay in the cache beside the PDF
+(`~/.cache/autoresearch/agency-reports/ocr/<sha256>/`); the committed OCR file holds each
+page's text twice, in column reading order and as left-to-right rows, so a table row reads
+as its label and figures. `page_text` uses it when the PDF has no text layer, so OCR
+figures pass the same verbatim checks against the OCR text.
+
+A local vision model is the second reader (`scripts/ocr/vlm_read.py`, loopback only; on
+11 Nov 2026 Qwen3.8-Flash-Next 2.75bpw served by sushi). Every OCR figure carries
+`extraction: {method: "ocr", engine, check}`, where `check` is `both_readers_agree`,
+`page_image_checked` or both; the checker refuses a figure from a scanned document without
+it. The tool and the public JSON say a figure came from a scan. Anything the readers or the
+page image leave uncertain (chart values tied to their category only by colour, cells OCR
+dropped) is left out and noted.
 
 ## Export
 
@@ -99,8 +124,9 @@ reserved reproduction and Territory Stories attribution).
   both the Portal and the integrity dataset; the Inspector of the NACC read in full).
 * NSW 20, Victoria 6, and one each from Qld, WA, SA (plus its financial statements), Tas,
   ACT and NT integrity commissions.
-* 36 documents read, 797 figures. Not read: the NT ICAC annual report and the NSW ICAC
-  assumed identities return (scans without a text layer).
+* 36 documents read, 797 figures, at intake. The NT ICAC annual report and the NSW ICAC
+  assumed identities return are scans without a text layer; they were read later the same
+  day by on-device OCR (26 and 4 figures).
 * IBAC and WA CCC are 2024-25 editions (`prior_edition`): their 2025-26 reports were not
   available at intake.
 

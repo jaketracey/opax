@@ -1,0 +1,459 @@
+{
+ "report_id": "nt-integrity-nt-northern-territory-government-2025-26-annual-report",
+ "read_by": "gov-reports lead from on-device OCR, every page image checked, 2026-11-11",
+ "pages_read": "all (pages 31 and 32 are blank or the back cover)",
+ "not_found": [
+  "head_remuneration",
+  "named_remuneration",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "executive_average_remuneration",
+  "staff_headcount",
+  "consultancy_total",
+  "consultancy",
+  "public_hearings",
+  "referrals_to_prosecution",
+  "recommendations_made"
+ ],
+ "facts": [
+  {
+   "metric": "staff_fte",
+   "label_as_published": "full time equivalent (FTE)",
+   "value_as_published": "23.6",
+   "unit": "fte",
+   "period": "pay period 26, 2025-26",
+   "page": 7,
+   "quote": "The Office of the ICAC had 23.6 full time equivalent (FTE) staff as at pay period 26 of the 2025-26 financial year",
+   "value": 23.6,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "Allegations received",
+   "value_as_published": "530",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Allegations received 300 530",
+   "value": 530,
+   "column_as_published": "Actual",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Assessments completed within 20 business days of receipt of report",
+   "value_as_published": "100%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Assessments completed within 20 business days of receipt of report ≥ 90% 100% Met",
+   "value": 100,
+   "column_as_published": "Actual",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Average time (in days) to complete an investigation",
+   "value_as_published": "463",
+   "unit": "days",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Average time (in days) to complete an investigation 365 463",
+   "value": 463,
+   "column_as_published": "Actual",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Referrals to other public bodies with a direction to report back",
+   "value_as_published": "45",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Referrals to other public bodies with a direction to report back 40 45",
+   "value": 45,
+   "column_as_published": "Actual",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Reviews or evaluations completed",
+   "value_as_published": "1",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Reviews or evaluations completed 4 1",
+   "value": 1,
+   "column_as_published": "Actual",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Percentage of review recommendations accepted by agencies",
+   "value_as_published": "100%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Percentage of review recommendations accepted by agencies ≥ 90% 100% Met",
+   "value": 100,
+   "column_as_published": "Actual",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Education and prevention activities conducted",
+   "value_as_published": "181",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Education and prevention activities conducted 100 181",
+   "value": 181,
+   "column_as_published": "Actual",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Satisfaction rate of participants on face to face and online learning sessions",
+   "value_as_published": "84%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "Satisfaction rate of participants on face to face and online learning sessions ≥ 75% 84% Met",
+   "value": 84,
+   "column_as_published": "Actual",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "contacts",
+   "value_as_published": "494",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 10,
+   "quote": "In 2025-26, the Operations Unit received 494 contacts, consisting of:",
+   "value": 494,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "reports",
+   "value_as_published": "411",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 10,
+   "quote": "Of the 411 reports received, 150 (36%) were made in accordance with mandatory reporting directions.",
+   "value": 411,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "made in accordance with mandatory reporting directions",
+   "value_as_published": "150",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 10,
+   "quote": "Of the 411 reports received, 150 (36%) were made in accordance with mandatory reporting directions.",
+   "value": 150,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "referred to a referral entity",
+   "value_as_published": "66",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 13,
+   "quote": "Of the allegations assessed during the reporting period, 66 were referred to a referral entity.",
+   "value": 66,
+   "note": "allegations",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "referral notices",
+   "value_as_published": "59",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 13,
+   "quote": "These referrals were made through 59 referral notices, issued under section 25 of the ICAC Act.",
+   "value": 59,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "active investigations",
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "at 30 June 2026",
+   "page": 14,
+   "quote": "As at 30 June 2026 there were 7 active investigations.",
+   "value": 7,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "investigations_finalised",
+   "label_as_published": "investigations were finalised",
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 14,
+   "quote": "During the reporting period, 3 investigations were finalised and 8 new investigations were commenced.",
+   "value": 3,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "investigations_commenced",
+   "label_as_published": "new investigations were commenced",
+   "value_as_published": "8",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 14,
+   "quote": "During the reporting period, 3 investigations were finalised and 8 new investigations were commenced.",
+   "value": 8,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "search warrants issued",
+   "value_as_published": "no",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 14,
+   "quote": "There were no search warrants issued during the reporting period.",
+   "value": null,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)",
+    "second_reader_note": "the second reader did not transcribe this sentence; checked against the page image"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "section 34 notices",
+   "value_as_published": "15",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "During the 2025-26 reporting period, 15 section 34 notices were issued requiring a person to attend for examination.",
+   "value": 15,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Notice to produce financial records",
+   "value_as_published": "8",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "Notice to produce financial records 8",
+   "value": 8,
+   "column_as_published": "2025-26",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "non-disclosure directions issued under section 147",
+   "value_as_published": "16",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "The 16 non-disclosure directions issued under section 147",
+   "value": 16,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "total_income",
+   "label_as_published": "TOTAL INCOME",
+   "value_as_published": "5 383",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026; ICAC Operations output group segment of the Integrity NT statement (no separate statements were prepared for the OICAC)",
+   "page": 24,
+   "quote": "TOTAL INCOME 5 383",
+   "value": 5383,
+   "column_as_published": "2026",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "value_as_published": "2 892",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026; ICAC Operations output group segment of the Integrity NT statement (no separate statements were prepared for the OICAC)",
+   "page": 24,
+   "quote": "Employee expenses 2 892",
+   "value": 2892,
+   "column_as_published": "2026",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "TOTAL EXPENSES",
+   "value_as_published": "4 268",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026; ICAC Operations output group segment of the Integrity NT statement (no separate statements were prepared for the OICAC)",
+   "page": 24,
+   "quote": "TOTAL EXPENSES 4 268",
+   "value": 4268,
+   "column_as_published": "2026",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "NET SURPLUS",
+   "value_as_published": "1 115",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026; ICAC Operations output group segment of the Integrity NT statement (no separate statements were prepared for the OICAC)",
+   "page": 24,
+   "quote": "NET SURPLUS 1 115",
+   "value": 1115,
+   "column_as_published": "2026",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "separation rate",
+   "value_as_published": "25%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 25,
+   "quote": "separation rate was 25% in 2025-26",
+   "value": 25,
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "both_readers_agree_and_page_image_checked",
+    "second_reader": "Qwen3.8-Flash-Next 2.75bpw via sushi (local, on device)"
+   }
+  }
+ ],
+ "notes": [
+  "The report is a scan with no text layer; page text is Apple Vision OCR (data/agency-reports/ocr/). Every figure was read against the page image.",
+  "Figure 2 (allegations by improper conduct type, p.11) is a ring chart whose categories are given only by colour, so its counts are not recorded.",
+  "Table 2 (FTE by business unit, p.7) OCR dropped and misread cells; the 23.6 FTE comes from the running text on the same page, which matches the table's 2025-26 total in the page image.",
+  "p.24 running text says the output group's total expenses were '$4,268 million'; Table 11 on the same page prints 4 268 under ($000). The table figure is recorded.",
+  "Figure 6 (notices to request information and items, p.14) shows 24 for 2025-26 in the page image; it is not recorded because the OCR text does not tie the bar label to its value cleanly."
+ ]
+}

@@ -60,7 +60,7 @@ const docTitle = (d: RecordRow) => `${d.agency} (${d.jurisdiction}) ${d.reportin
 function docRow(env: ToolEnv, d: RecordRow): RecordRow {
   return { report_id: d.id, agency: d.agency, jurisdiction: d.jurisdiction, reporting_year: d.reporting_year, kind: d.kind, edition: d.edition, edition_label: EDITION[String(d.edition)] ?? d.edition,
     ...(d.edition_note ? { edition_note: d.edition_note } : {}), status: d.status, facts: d.facts, not_found: d.not_found, pages: d.pages,
-    source_url: sourceUrl(d.source_url), catalogue_url: sourceUrl(d.catalogue_url),
+    source_url: sourceUrl(d.source_url), catalogue_url: sourceUrl(d.catalogue_url), ...(d.text_source ? { text_source: d.text_source } : {}),
     ...(d.companion_of ? { companion_of: d.companion_of } : {}), ...(Array.isArray(d.companions) && d.companions.length ? { companions: d.companions } : {}),
     ...(d.integrity_record ? { integrity_record: d.integrity_record, integrity_follow_up: { tool: 'integrity_reports', view: 'report', record_id: object(d.integrity_record).record_id } } : {}),
     ...(d.portal_body_id ? { portal_body_id: d.portal_body_id, portal_follow_up: { tool: 'annual_reports', body: d.portal_body_id } } : {}),
@@ -72,9 +72,10 @@ function docCite(d: RecordRow): ToolCitation {
   const read = d.status === 'read'
     ? `OPAX read ${d.facts} ${Number(d.facts) === 1 ? 'figure' : 'figures'} from it, each quoted with its page.`
     : d.status === 'not_read_no_text' ? 'The file is a scan without a text layer, so OPAX has not read figures from it.' : 'OPAX has not read figures from it.'
+  const scan = d.text_source === 'ocr' ? ' The file is a scan: its text was read by on-device OCR and each figure was checked against the page image.' : ''
   const links = [d.integrity_record ? 'Its findings and recommendations, if any, are in the integrity reports dataset.' : '',
     d.portal_body_id ? 'Its pay, staffing and finance figures are in the Transparency Portal annual reports dataset.' : ''].filter(Boolean).join(' ')
-  return { kind: 'record', url: String(sourceUrl(d.source_url)), text: clip(`The ${docTitle(d)}, ${EDITION[String(d.edition)] ?? d.edition}${d.edition_note ? ` (${d.edition_note.toString().replace(/\.$/, '')})` : ''}, ${d.pages} pages. ${read} ${links}`, 600) }
+  return { kind: 'record', url: String(sourceUrl(d.source_url)), text: clip(`The ${docTitle(d)}, ${EDITION[String(d.edition)] ?? d.edition}${d.edition_note ? ` (${d.edition_note.toString().replace(/\.$/, '')})` : ''}, ${d.pages} pages. ${read}${scan} ${links}`, 600) }
 }
 
 const extras = (f: RecordRow) => [f.name ? `${f.name}${f.position ? `, ${f.position}` : ''}` : '', f.band ? `band ${f.band}` : '', f.counterparty ? `${f.counterparty}${f.purpose ? ` (${clip(f.purpose, 120)})` : ''}` : ''].filter(Boolean).join('; ')
@@ -82,12 +83,13 @@ function factRow(f: RecordRow): RecordRow {
   return { fact_id: f.id, report_id: f.report_id, agency: f.agency, jurisdiction: f.jurisdiction, reporting_year: f.reporting_year, edition: f.edition, metric: f.metric,
     label: f.label, column: f.column ?? null, value: f.value ?? null, value_as_published: f.value_as_published, unit: f.unit, period: f.period ?? null,
     ...Object.fromEntries(['name', 'position', 'band', 'counterparty', 'purpose', 'note'].filter(k => f[k]).map(k => [k, clip(f[k], 300)])),
-    page: f.page, quote: f.quote, source_url: sourceUrl(f.source_url) }
+    page: f.page, quote: f.quote, ...(f.extraction ? { extraction: f.extraction } : {}), source_url: sourceUrl(f.source_url) }
 }
 /** One plain sentence: who, which report and page, then the quote that holds the figure. */
 function factCite(f: RecordRow): ToolCitation {
   const what = [extras(f), f.column ? `column "${f.column}"` : '', f.period ? String(f.period) : ''].filter(Boolean).join(', ')
-  return { kind: 'record', url: String(f.source_url), text: clip(`The ${f.agency} (${f.jurisdiction}) ${f.reporting_year} report, page ${f.page}, prints ${f.value_as_published} (${UNIT[String(f.unit)] ?? f.unit}) under "${clip(f.label, 140)}"${what ? `, ${what}` : ''}: "${f.quote}"`, 800) }
+  const scan = f.extraction ? ' (a scanned page, read by on-device OCR and checked against the page image)' : ''
+  return { kind: 'record', url: String(f.source_url), text: clip(`The ${f.agency} (${f.jurisdiction}) ${f.reporting_year} report, page ${f.page}${scan}, prints ${f.value_as_published} (${UNIT[String(f.unit)] ?? f.unit}) under "${clip(f.label, 140)}"${what ? `, ${what}` : ''}: "${f.quote}"`, 800) }
 }
 
 export const tool: ToolDefinition = {
@@ -159,6 +161,7 @@ export const tool: ToolDefinition = {
     if (unread.length) notes.push(clip(`Not read (no text layer or not yet read): ${unread.map(d => docTitle(d)).join('; ')}.`, 500))
     if (docs.some(d => d.portal_body_id)) notes.push(`${cthHint} For a linked Commonwealth body only operational figures are here.`)
     if (docs.some(d => d.integrity_body)) notes.push('Integrity commission figures here are operational counts in each commission\'s own terms; their findings and recommendations are in integrity_reports.')
+    if (rows.some(r => r.extraction)) notes.push('Figures marked extraction come from a scanned report with no text layer: the quote is the OCR reading of the page, checked against the page image. Quote the figure as the report\'s and say it is from a scan.')
     if (rows.some(r => r.value === null)) notes.push('value is null where the report prints a band, a range or a word; value_as_published holds the text.')
     if (!all.length) notes.push('No figure matched. Try view=documents for what was read and not found in each report.')
     return publishedResult(rows, cites, { view: 'facts', total: all.length, offset, next_offset: offset + rows.length < all.length ? offset + rows.length : null, snapshot, notes })

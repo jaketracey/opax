@@ -37,14 +37,15 @@ SCHEMA = 1
 # the display codes the integrity and royal commission datasets use
 JUR = {"Cth": "Cth", "NSW": "NSW", "VIC": "Vic", "QLD": "Qld", "WA": "WA", "SA": "SA", "TAS": "Tas", "ACT": "ACT", "NT": "NT"}
 ORDER = list(JUR.values())
-EXTRA = ("name", "position", "band", "counterparty", "purpose", "note")
+EXTRA = ("name", "position", "band", "counterparty", "purpose", "note", "extraction")
 CAVEATS = [
     "Each figure is as the report prints it: no adding, scaling, rounding or conversion. value is null when the report prints a band, a range or a word.",
     "Units differ by report (dollars, $'000, $ million); the unit field says which, and figures in different units must not be compared without it.",
     "Reports define staff, executives and remuneration differently (headcount or FTE, at 30 June or over the year, packages or salary), so figures are not comparable across agencies or jurisdictions without reading each label.",
     "A metric in not_found was looked for and not found in that document; it may be published elsewhere (for example a separate financial statements file or website table).",
     "Commonwealth bodies on the Transparency Portal keep their pay, staffing and finance figures in the annual_reports dataset; their PDFs here are linked to it and carry operational figures only.",
-    "Integrity commission annual reports here carry operational counts only. Findings and recommendations are in the integrity reports dataset, quoted there; nothing here is an allegation or a finding about any person.",
+    "A figure with an extraction field comes from a scan with no text layer: it was read by on-device OCR (Apple Vision, with a local vision model as a second reader) and checked against the page image; its quote is the OCR text.",
+    "Integrity commission annual reports here carry their operational counts, staffing and finance figures. Findings and recommendations are in the integrity reports dataset, quoted there; nothing here is an allegation or a finding about any person.",
 ]
 
 
@@ -105,6 +106,7 @@ def main(argv=None) -> int:
             **({"edition_note": row["edition_note"]} if row.get("edition_note") else {}),
             "source_url": row["source_url"], "catalogue_url": row.get("catalogue_url"),
             "pages": row["pages"], "sha256": row["sha256"], "bytes": row["bytes"], "acquisition": row.get("acquisition"),
+            **({"text_source": "ocr"} if any(f.get("extraction") for f in facts) else {}),
             "status": status, "facts": len(facts), "not_found": sorted((doc or {}).get("not_found", [])),
             **({"companion_of": row["companion_of"]} if row.get("companion_of") else {}),
             **({"companions": companions} if companions else {}),

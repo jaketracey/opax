@@ -38,3 +38,28 @@ def test_page_text_reads_control_characters_as_spaces(tmp_path, monkeypatch):
     (tmp_path / "text" / "abc.json").write_text(_json.dumps(["\u0007Fatalities\u00073"]))
     monkeypatch.setattr(ar, "CACHE", tmp_path)
     assert ar.page_text({"sha256": "abc"}) == [" Fatalities 3"]
+
+
+def test_scanned_figures_need_ocr_provenance(monkeypatch):
+    from parli.ingest import agency_reports as ar
+    fact = {"metric": "operational_other", "label_as_published": "contacts", "value_as_published": "494", "unit": "count",
+            "page": 1, "quote": "received 494 contacts", "value": 494}
+    monkeypatch.setattr(ar, "scanned", lambda row: True)
+    errs = ar.check_fact(dict(fact), ["the unit received 494 contacts"], {"sha256": "x"})
+    assert any("extraction" in e for e in errs)
+    ok = dict(fact, extraction={"method": "ocr", "engine": "Apple Vision (on device)", "check": "page_image_checked"})
+    assert ar.check_fact(ok, ["the unit received 494 contacts"], {"sha256": "x"}) == []
+    bad = dict(fact, extraction={"method": "ocr", "engine": "x", "check": "looked fine"})
+    assert any("extraction needs" in e for e in ar.check_fact(bad, ["the unit received 494 contacts"], {"sha256": "x"}))
+
+
+def test_ocr_text_backs_scanned_documents():
+    from parli.ingest import agency_reports as ar
+    rows = ar.intake_rows()
+    for rid in ("nt-integrity-nt-northern-territory-government-2025-26-annual-report",
+                "nsw-independent-commission-against-corruption-2025-26-assumed-identities-return"):
+        doc = ar.load_facts(rid)
+        assert doc and doc["facts"], rid
+        assert all(f.get("extraction", {}).get("method") == "ocr" for f in doc["facts"]), rid
+        ocr = json.loads((ar.DATA / "ocr" / f"{rid}.json").read_text())
+        assert ocr["sha256"] == rows[rid]["sha256"]

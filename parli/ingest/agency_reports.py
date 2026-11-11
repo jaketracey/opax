@@ -210,8 +210,28 @@ def page_text(row) -> list[str]:
     path = CACHE / "text" / (row["sha256"] + ".json")
     if not path.exists():
         pdf_pages((CACHE / "files" / f"{row['sha256']}.pdf").read_bytes(), CACHE)
+    pages = json.loads(path.read_text())
+    ocr = DATA / "ocr" / f"{row.get('report_id')}.json"
+    if not any(t.strip() for t in pages) and ocr.exists():
+        # a scan with no text layer: on-device OCR text (parli.ingest.agency_ocr), both renderings
+        data = json.loads(ocr.read_text())
+        if data.get("sha256") == row["sha256"]:
+            by_page = {p["page"]: p["text"] + "\n\n" + p.get("rows", "") for p in data["pages"]}
+            pages = [by_page.get(i + 1, "") for i in range(len(pages))]
     # some PDF text layers carry control characters (BEL before table labels); read them as spaces
-    return [CONTROL.sub(" ", t) for t in json.loads(path.read_text())]
+    return [CONTROL.sub(" ", t) for t in pages]
+
+
+# how an OCR figure was confirmed: both readers (Vision and the local vision model) agree, or a person checked the page image
+OCR_CHECKS = {"both_readers_agree", "page_image_checked", "both_readers_agree_and_page_image_checked"}
+
+
+def scanned(row) -> bool:
+    """True when the PDF has no text layer (its page text, if any, comes from OCR)."""
+    if not row.get("sha256"):
+        return False
+    path = CACHE / "text" / (row["sha256"] + ".json")
+    return path.exists() and not any(t.strip() for t in json.loads(path.read_text()))
 
 
 CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
@@ -276,6 +296,11 @@ def check_fact(fact, pages, row) -> list[str]:
     for k in ("name", "position", "band", "counterparty", "column_as_published"):
         if fact.get(k) and not verbatim(str(fact[k]), pages[page - 1]):
             errs.append(f"{k} {fact[k]!r} is not on the cited page")
+    ex = fact.get("extraction")
+    if scanned(row) and not ex:
+        errs.append("a figure from a scan needs extraction (method ocr, engine, check)")
+    if ex and not (ex.get("method") == "ocr" and ex.get("engine") and ex.get("check") in OCR_CHECKS):
+        errs.append(f"extraction needs method 'ocr', an engine and check in {sorted(OCR_CHECKS)}")
     if row.get("portal_body_id") and m in PORTAL_METRICS:
         errs.append("the Transparency Portal already publishes this figure for this body; link, do not duplicate")
     return errs
