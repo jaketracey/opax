@@ -1,3 +1,8 @@
+require 'rubygems/version'
+
+sdk_version = `xcrun --sdk iphoneos --show-sdk-version 2>/dev/null`.strip
+vertical_bars = !sdk_version.empty? && Gem::Version.new(sdk_version) >= Gem::Version.new('27.1')
+
 Pod::Spec.new do |s|
   s.name = 'OpaxRootBar'
   s.version = '0.1.0'
@@ -14,6 +19,7 @@ Pod::Spec.new do |s|
   s.source_files = '**/*.swift'
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
-    'SWIFT_COMPILATION_MODE' => 'wholemodule'
+    'SWIFT_COMPILATION_MODE' => 'wholemodule',
+    'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => vertical_bars ? '$(inherited) OPAX_VERTICAL_BARS' : '$(inherited)'
   }
 end

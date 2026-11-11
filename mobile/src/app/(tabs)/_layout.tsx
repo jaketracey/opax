@@ -4,6 +4,7 @@ import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { OpaxIPad } from '../../../modules/opax-ipad';
+import { isPad } from '../../design/adaptive';
 import { designFlags } from '../../design/flags';
 import { dispatchKeyCommand } from '../../design/keyboard';
 import { colors } from '../../design/tokens';
@@ -21,11 +22,12 @@ import { setSelectedTab } from '../../navigation/link-tab';
 // The native tab bar keeps system type and offers the Large Content Viewer
 // at accessibility text sizes. On iPad the same tabs are UIKit's
 // sidebar-adaptable bar: a sidebar (or the top tab bar, which the reader can
-// expand into it) on regular width, and this bottom bar in a compact window.
-// `sidebarAdaptable` has no effect on iPhone.
+// expand into it) on regular width, and the system tab bar in a compact window.
+// Duo keeps the system tab bar on both displays, including a vertical bar.
+// Only iPad opts into the adaptable sidebar.
 export default function TabsLayout() {
   useEffect(() => {
-    void OpaxIPad?.configureWordSafeSidebarLabels();
+    if (isPad) void OpaxIPad?.configureWordSafeSidebarLabels();
   }, []);
   // Warm Money map links open in the selected tab (navigation/link-tab.ts).
   const segments = useSegments() as string[];
@@ -67,7 +69,7 @@ export default function TabsLayout() {
   );
   return (
     <NativeTabs
-      sidebarAdaptable
+      sidebarAdaptable={isPad}
       minimizeBehavior="onScrollDown"
       tintColor={colors.navy}
     >

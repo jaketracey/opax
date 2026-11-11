@@ -25,9 +25,27 @@ private final class BarBacking: UIView {
 
 public final class OpaxRootBarModule: Module {
   private var backings: [String: BarBacking] = [:]
+  private let verticalBar = VerticalBarObserver()
 
   public func definition() -> ModuleDefinition {
     Name("OpaxRootBar")
+    Events("onVerticalBarEdge")
+
+    OnCreate { DispatchQueue.main.async { self.verticalBar.refresh() } }
+    Function("getVerticalBarEdge") { () -> String in self.verticalBar.snapshot() }
+    OnStartObserving {
+      DispatchQueue.main.async {
+        self.verticalBar.emit = { [weak self] edge in
+          guard let self else { return }
+          if edge != "unspecified" {
+            self.backings.values.forEach { $0.removeFromSuperview() }
+          }
+          self.sendEvent("onVerticalBarEdge", ["edge": edge])
+        }
+        self.verticalBar.start()
+      }
+    }
+    OnStopObserving { DispatchQueue.main.async { self.verticalBar.stop() } }
 
     AsyncFunction("update") { (identifier: String, progress: Double, ground: UIColor, divider: UIColor) in
       guard #available(iOS 26, *) else { return }
@@ -46,7 +64,10 @@ public final class OpaxRootBarModule: Module {
     OnDestroy {
       let backings = Array(self.backings.values)
       self.backings.removeAll()
-      DispatchQueue.main.async { backings.forEach { $0.removeFromSuperview() } }
+      DispatchQueue.main.async {
+        self.verticalBar.stop()
+        backings.forEach { $0.removeFromSuperview() }
+      }
     }
   }
 
@@ -95,6 +116,12 @@ public final class OpaxRootBarModule: Module {
       return
     }
     let bar = navigation.navigationBar
+    // Side bars use UIKit's appearance and title. Never extend a horizontal
+    // backing across their content, including before the JS trait event.
+    guard verticalBar.snapshot() == "unspecified", bar.bounds.width >= bar.bounds.height else {
+      backing.removeFromSuperview()
+      return
+    }
     UIView.performWithoutAnimation {
       // A sibling below the bar protects the content, never UIKit's title or
       // buttons. Cover the status strip as well as any stacked search field.

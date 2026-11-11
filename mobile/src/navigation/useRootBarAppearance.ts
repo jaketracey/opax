@@ -14,9 +14,15 @@ import {
 } from 'react';
 import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import { RootBar } from '../../modules/opax-root-bar';
+import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { colors } from '../design/tokens';
-import { glassBar, largeTitleBar, opaqueBar, tabRootGround } from './chrome';
+import {
+  barScrollEdges,
+  glassBar,
+  largeTitleBar,
+  opaqueBar,
+  tabRootGround,
+} from './chrome';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
 
@@ -133,14 +139,18 @@ export function useRootBarAppearance(
       ? route
       : undefined;
   const headerHeight = useContext(HeaderHeightContext) ?? 0;
+  const barEdge = useVerticalBarEdge();
+  const verticalBar = barEdge !== 'unspecified';
   const top = useContext(SafeAreaInsetsContext)?.top ?? 0;
   const frame = useWindowDimensions();
   const pad = Platform.OS === 'ios' && Platform.isPad;
   const landscapePhone = !pad && frame.width > frame.height;
-  const compactHeight = Math.max(
-    getDefaultHeaderHeight(frame, false, top),
-    top + (pad ? 50 : landscapePhone ? 32 : 44),
-  );
+  const compactHeight = verticalBar
+    ? 0
+    : Math.max(
+        getDefaultHeaderHeight(frame, false, top),
+        top + (pad ? 50 : landscapePhone ? 32 : 44),
+      );
   const collapsedHeight =
     compactHeight +
     (pinnedSearch ? stackedSearchHeight + stackedSearchSlack : 1);
@@ -157,6 +167,7 @@ export function useRootBarAppearance(
     setter: typeof setOptions;
     colour: ColorValue;
     largeTitleEnabled: boolean;
+    barEdge: typeof barEdge;
   }>(undefined);
   const name = root?.name ?? '';
   const colour =
@@ -173,7 +184,7 @@ export function useRootBarAppearance(
       applied.current = undefined;
       return;
     }
-    if (headerHeight > collapsedHeight) {
+    if (!verticalBar && headerHeight > collapsedHeight) {
       const previous = expandedRoute.current;
       expandedRoute.current = {
         key: rootKey,
@@ -208,31 +219,39 @@ export function useRootBarAppearance(
       (reference?.key === rootKey &&
         reference.collapsedHeight === collapsedHeight &&
         headerHeight <= collapsedHeight);
-    const progress = collapsed
-      ? 1
-      : sameLayout && reference
-        ? Math.min(
-            1,
-            Math.max(
-              0,
-              (reference.expandedHeight - headerHeight - 0.5) /
-                Math.max(1, reference.expandedHeight - collapsedHeight - 0.5),
-            ),
-          )
-        : 0;
+    const progress = verticalBar
+      ? 0
+      : collapsed
+        ? 1
+        : sameLayout && reference
+          ? Math.min(
+              1,
+              Math.max(
+                0,
+                (reference.expandedHeight - headerHeight - 0.5) /
+                  Math.max(1, reference.expandedHeight - collapsedHeight - 0.5),
+              ),
+            )
+          : 0;
     nativeValues.current = { progress, colour };
-    if (identifier && largeTitleEnabled && navigation?.isFocused())
+    if (
+      identifier &&
+      largeTitleEnabled &&
+      !verticalBar &&
+      navigation?.isFocused()
+    )
       void RootBar?.update(identifier, progress, colour, colors.dividerSubtle);
     const previous = applied.current;
     if (
       previous?.key === rootKey &&
       previous.setter === setOptions &&
       previous.colour === colour &&
-      previous.largeTitleEnabled === largeTitleEnabled
+      previous.largeTitleEnabled === largeTitleEnabled &&
+      previous.barEdge === barEdge
     )
       return;
     setOptions(
-      largeTitleEnabled
+      largeTitleEnabled && !verticalBar
         ? {
             ...largeTitleBar(colour),
             // Legacy headerLargeTitle callers must also override the stack's
@@ -240,13 +259,22 @@ export function useRootBarAppearance(
             headerLargeTitleEnabled: true,
             unstable_nativeProps: { testID: identifier },
           }
-        : opaqueBar(colour),
+        : {
+            ...opaqueBar(colour),
+            ...(verticalBar
+              ? {
+                  headerTransparent: false,
+                  scrollEdgeEffects: barScrollEdges(barEdge),
+                }
+              : {}),
+          },
     );
     applied.current = {
       key: rootKey,
       setter: setOptions,
       colour,
       largeTitleEnabled,
+      barEdge,
     };
   }, [
     rootKey,
@@ -262,9 +290,11 @@ export function useRootBarAppearance(
     frame.fontScale,
     frame.width,
     frame.height,
+    verticalBar,
+    barEdge,
   ]);
   useLayoutEffect(() => {
-    if (!identifier || !ownsBar || !largeTitleEnabled) return;
+    if (!identifier || !ownsBar || !largeTitleEnabled || verticalBar) return;
     const focus = navigation?.addListener('focus', () => {
       const { progress, colour } = nativeValues.current;
       void RootBar?.update(identifier, progress, colour, colors.dividerSubtle);
@@ -278,7 +308,7 @@ export function useRootBarAppearance(
       blur?.();
       clear();
     };
-  }, [identifier, ownsBar, largeTitleEnabled, navigation]);
+  }, [identifier, ownsBar, largeTitleEnabled, navigation, verticalBar]);
   return !!root;
 }
 
