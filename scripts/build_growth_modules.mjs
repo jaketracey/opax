@@ -8,6 +8,7 @@ import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../p
 import {AGENCY_TOP_SUPPLIERS_PATH,agencyTopRows} from '../portal/public/agency-top-suppliers.js';
 import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath,votesBucketPath,VOTES_NAMES_PATH} from '../portal/public/recent-votes-buckets.js';
 import {PARTY_MONEY_BUCKETS,partyFold,partyMoneyBucket,partyMoneyBucketPath} from '../portal/public/party-money-buckets.js';
+import {SUPPLIER_ID_RE,supplierRowsPath} from '../portal/public/supplier-row-buckets.js';
 import {partyMoneyData} from '../portal/public/register-tables.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 /** A money graph's party-receipt buckets as [path, contents] pairs (portal/public/party-money-buckets.js). */
@@ -25,7 +26,7 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  const read=async p=>sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p),'utf8'));
  const output=join(root,'growth');
  await rm(output,{recursive:true,force:true});
- for(const dir of ['sponsors','agencies','person-bills','recent-votes','votes'])await mkdir(join(output,dir),{recursive:true});
+ for(const dir of ['sponsors','agencies','person-bills','recent-votes','votes','supplier-rows'])await mkdir(join(output,dir),{recursive:true});
  const sizes=[];
  const write=async (path,data)=>{
   const json=JSON.stringify(data)+'\n', bytes=Buffer.byteLength(json);
@@ -147,6 +148,16 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   for(const entry of Object.entries(voteFile))if(!entry[0].startsWith('_'))buckets[recentVotesBucket(entry[0])].push(entry);
   for(const [i,entries] of buckets.entries())await write(votesBucketPath(i),{people:Object.fromEntries(entries)});
  }
+ // Supplier pages and their heads read their id's bucket of the index (portal/public/supplier-row-buckets.js), not the 7.6 MB file.
+ const supplierRows=new Map(Array.from({length:256},(_,i)=>[supplierRowsPath(i.toString(16).padStart(2,'0')),[]]));
+ const supplierIds=new Set();
+ for(const row of supplierDirectory.suppliers){
+  if(!SUPPLIER_ID_RE.test(row?.id))throw new Error('Invalid supplier id: '+row?.id);
+  if(supplierIds.has(row.id))throw new Error('Duplicate supplier id: '+row.id);
+  supplierIds.add(row.id);supplierRows.get(supplierRowsPath(row.id)).push(row);
+ }
+ const supplierMeta={generated_at:supplierDirectory.meta?.generated_at,generated:supplierDirectory.meta?.generated,source:supplierDirectory.meta?.source};
+ for(const [path,rows] of supplierRows)await write(path,{meta:supplierMeta,suppliers:rows});
  // Profiles read their party's receipt rows from these buckets (portal/public/party-money-buckets.js), not the graphs.
  for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json']){
   const graph=path==='/graph/money.json'?money:await read(path.slice(1)).catch(error=>{if(error.code==='ENOENT')return null;throw error});
