@@ -335,6 +335,101 @@ describe('visibleLabels', () => {
     expect(visibleLabels(slots, camera, viewport, box)).toEqual({ name: 1 });
   });
 
+  test.each(['name', 'cluster'] as const)(
+    '%s boxes clear either 60pt side rail, including the full trailing width',
+    (kind) => {
+      // Express positions as the laid-out box's left edge, including the
+      // different offsets for a disc name and a centred cluster label.
+      const atLeft = (key: string, left: number, y: number) =>
+        slot(key, kind, left + (kind === 'cluster' ? box.width / 2 : -6), y);
+      const slots = [
+        atLeft('leading-covered', 65, 80),
+        atLeft('leading-clear', 66, 160),
+        atLeft('trailing-clear', 254, 240),
+        atLeft('trailing-covered', 255, 320),
+      ];
+      const shown = (left: number, right: number) =>
+        visibleLabels(
+          slots,
+          camera,
+          { ...viewport, insets: { top: 0, right, bottom: 0, left } },
+          box,
+        );
+      expect(shown(60, 0)).toEqual({
+        'leading-clear': 1,
+        'trailing-clear': 1,
+        'trailing-covered': 1,
+      });
+      expect(shown(0, 60)).toEqual({
+        'leading-covered': 1,
+        'leading-clear': 1,
+        'trailing-clear': 1,
+      });
+      expect(shown(60, 60)).toEqual({
+        'leading-clear': 1,
+        'trailing-clear': 1,
+      });
+    },
+  );
+
+  test('rail clipping uses the transformed box and does not let a hidden focus block a clear name', () => {
+    const slots = [
+      slot('covered', 'focus', 20, 50),
+      slot('clear', 'name', 30, 50),
+    ];
+    expect(
+      visibleLabels(
+        slots,
+        { tx: 10, ty: 20, k: 2 },
+        {
+          ...viewport,
+          insets: { top: 0, right: 60, bottom: 0, left: 60 },
+        },
+        box,
+      ),
+    ).toEqual({ clear: 1 });
+  });
+
+  test('zero safe sides preserve the exact record, order, partial edges and bottom clearance', () => {
+    const slots = [
+      slot('focus', 'focus', 100, 100),
+      slot('overlap', 'name', 100, 100),
+      slot('left', 'name', -40, 200),
+      slot('right', 'name', 400, 300),
+      slot('top', 'cluster', 200, 0),
+      slot('boundary', 'name', 100, 484),
+      slot('below', 'name', 100, 485),
+    ];
+    // Captured from the previous bottom-only visibility test. Top remains
+    // a camera margin, without changing the labels' existing overdraw.
+    expect(
+      JSON.stringify(
+        visibleLabels(
+          slots,
+          camera,
+          {
+            ...viewport,
+            insets: { top: 100, right: 0, bottom: 100, left: 0 },
+          },
+          box,
+        ),
+      ),
+    ).toBe('{"focus":1,"top":1,"left":1,"right":1,"boundary":1}');
+    expect(
+      JSON.stringify(
+        visibleLabels(
+          slots,
+          camera,
+          {
+            ...viewport,
+            insets: { top: 100, right: 0, bottom: 0, left: 0 },
+          },
+          box,
+        ),
+      ),
+    ).toBe(JSON.stringify(visibleLabels(slots, camera, viewport, box)));
+  });
+
   test('returns a plain record of keys, and on the real slots keeps the focus', () => {
     const party = model.nodes.find((n) => n.kind === 'party')!.index;
     const slots = labelSlots(model, layout.centres, at, party);
@@ -383,7 +478,11 @@ test('visibleLabels hides a name that would hang under the panel', () => {
     visibleLabels(
       slots,
       camera,
-      { width: 400, height: 800, insets: { bottom: 200 } },
+      {
+        width: 400,
+        height: 800,
+        insets: { top: 0, right: 0, bottom: 200, left: 0 },
+      },
       box,
     ),
   ).toEqual({ a: 1 });

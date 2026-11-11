@@ -577,9 +577,9 @@ function MapMode({
                 Math.min(peek, panelMaxHeight ?? peek) +
                 rhythm.tight
               : below + peek + rhythm.tight,
-            left: (managed ? (safe?.left ?? 0) : 0) + rhythm.tight,
+            left: (safe?.left ?? 0) + rhythm.tight,
             right:
-              (managed ? (safe?.right ?? 0) : 0) +
+              (safe?.right ?? 0) +
               (horizontalControls ? rhythm.tight : 44 + rhythm.block * 2),
           },
     [
@@ -770,7 +770,9 @@ function MapMode({
                 MINI_HEIGHT + rhythm.block * 2)
               ? null
               : {
-                  left: (managed ? pose.controls.x : 0) + rhythm.block,
+                  left:
+                    (managed ? pose.controls.x : (safe?.left ?? 0)) +
+                    rhythm.block,
                   bottom: managed
                     ? (stage.height || window.height) -
                       pose.controls.y -
@@ -784,7 +786,8 @@ function MapMode({
         <SafeAreaView
           // The stack's opaque bar already sits above the stage: a top
           // edge here would count the status bar twice and push the card
-          // down the map.
+          // down the map. The frame owns the safe sides so its absolute
+          // controls clear a side rail too, without counting padding twice.
           edges={managed ? [] : ['bottom']}
           pointerEvents="box-none"
           style={[
@@ -798,7 +801,7 @@ function MapMode({
                   right: undefined,
                   bottom: undefined,
                 }
-              : null,
+              : { left: safe?.left ?? 0, right: safe?.right ?? 0 },
           ]}
           testID="money-map-chrome"
         >

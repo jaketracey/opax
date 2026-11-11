@@ -1,5 +1,6 @@
 import { associatedLine, donorAssociated } from '../../../api/associated';
 import { partyMapColour } from '../ported/palette';
+import type { Insets } from './camera';
 import type { Centre } from './layout';
 import { otherEnd, PARTIES, PUBLIC_MONEY, type MapModel } from './model';
 
@@ -157,7 +158,7 @@ export function clearRim(
 export function visibleLabels(
   slots: readonly LabelSlot[],
   camera: { tx: number; ty: number; k: number },
-  viewport: { width: number; height: number; insets?: { bottom: number } },
+  viewport: { width: number; height: number; insets?: Insets },
   box: { width: number; height: number },
 ): Record<string, 1> {
   'worklet';
@@ -165,8 +166,11 @@ export function visibleLabels(
   const keptX: number[] = [];
   const keptY: number[] = [];
   const keptH: number[] = [];
-  // Nothing hangs under the panel or the tab bar: the map may run beneath
-  // them, but a name half under glass reads as a fault.
+  // Nothing hangs under the panel or a side rail: the map may run beneath
+  // them, but a name half under glass reads as a fault. Zero safe sides
+  // retain the existing partial off-screen and top-edge visibility.
+  const safeLeft = viewport.insets?.left ?? 0;
+  const safeRight = viewport.insets?.right ?? 0;
   const bottom =
     viewport.height - (viewport.insets ? viewport.insets.bottom : 0);
   // A long name wraps inside the box: its height is counted in lines, as
@@ -201,6 +205,9 @@ export function visibleLabels(
         slot.kind === 'cluster' ? sy - box.height - 4 : sy - box.height / 2;
       // Its last line must clear the panel's edge, with a little air.
       if (top + h > bottom - 6) continue;
+      if (safeLeft > 0 && left < safeLeft + 6) continue;
+      if (safeRight > 0 && left + box.width > viewport.width - safeRight - 6)
+        continue;
       const cy = top + h / 2;
       let clear = true;
       for (let i = 0; i < keptX.length; i++)

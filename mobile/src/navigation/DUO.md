@@ -58,11 +58,6 @@ These files were inspected and left to their owners:
   `isPad`, so it cannot appear on a phone-regular inner display. At line 432
   the custom floating composer protects only the bottom edge, or no edge
   while the keyboard is open, and can reach under a side bar.
-- `src/features/money/MoneyScreen.tsx:517`: the viewport's left and right
-  insets are fixed control margins and do not include the window's safe sides.
-  At line 691 the custom chrome applies only the bottom safe-area edge.
-- `src/features/money/map/labels.ts:160`: label visibility accepts only a
-  bottom inset, so it cannot exclude a large leading or trailing bar inset.
 
 No additional asymmetric-inset arithmetic was found in Today, Your MP or the
 split files searched for this shell audit.
