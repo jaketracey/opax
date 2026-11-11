@@ -2,7 +2,7 @@
 import { clip, fold, siteUrl } from './record-common'
 import { object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'
-import { pageHits, textIndex, textMatches, type TextHits } from './transcript-text'
+import { dayWords, pageHits, spanWords, textIndex, textMatches, type TextHits } from './transcript-text'
 
 const VIEWS = ['list', 'profile', 'recommendations', 'transcripts'] as const
 const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
@@ -43,7 +43,7 @@ async function full(env: ToolEnv, row: RecordRow): Promise<RecordRow> {
 }
 
 const people = (c: RecordRow) => records(c.commissioners).map(x => `${x.name} (${x.role})`).join('; ')
-const dated = (label: string, v: unknown) => v ? `${label} ${v}` : null
+const dated = (label: string, v: unknown) => v ? `${label} ${dayWords(v)}` : null
 
 function summaryOut(c: RecordRow): RecordRow {
   return { id: c.id, name: c.name, inquiry_type: TYPES[String(c.inquiry_type)] ?? c.inquiry_type, jurisdiction: c.jurisdiction_name, established: c.established ?? null, commissioners: c.commissioners,
@@ -86,12 +86,13 @@ function transcriptCite(t: RecordRow): ToolCitation {
   const text = t.text_matches as TextHits | undefined
   if (text?.hits.length) {
     const where = (h: TextHits['hits'][number]) => `transcript page ${h.transcript_page ?? '?'} (PDF page ${h.pdf_page})`
+    // A speaker's label leaves the quoted words; the hearing turn names who spoke.
     const body = text.quote_policy === 'quote'
-      ? text.hits.map(h => `${where(h)}: "${h.excerpt}"`).join(' ')
+      ? text.hits.map(h => `${where(h)}, hearing turn${h.speaker ? ` by ${h.speaker}` : ''}: "${h.excerpt}"`).join(' ')
       : `the words appear on ${text.hits.map(where).join(' and ')}. Not quoted: the publisher's transcript records a non-publication order, a direction not to publish or a pseudonymous witness; read the publisher's edition.`
-    return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${t.date})` : ''}, ${body}`, 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.` }
+    return { kind: 'record', url: text.hits[0].url, text: `${clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}, ${body}`, 900)} ${TRANSCRIPT_LABEL}. ${text.attribution}.` }
   }
-  return { kind: 'record', url: String(t.pdf_url ?? t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${t.date})` : ''}${t.pages ? `, ${t.pages} pages` : ''}. ${TRANSCRIPT_LABEL}.`, 400) }
+  return { kind: 'record', url: String(t.pdf_url ?? t.page_url), text: clip(`${t.commission}, ${t.title}${t.date ? ` (${dayWords(t.date)})` : ''}${t.pages ? `, ${t.pages} pages` : ''}. ${TRANSCRIPT_LABEL}.`, 400) }
 }
 
 function recOut(c: RecordRow, r: RecordRow, reports: Map<string, RecordRow>): RecordRow {
@@ -162,9 +163,9 @@ export const tool: ToolDefinition = {
       if (est) citations.push({ kind: 'record', url: String(object(est.cite).url), text: clip(`${c.name}: "${est.quote}" (${object(est.cite).document}, page ${object(est.cite).page}).`, 600) })
       for (const x of records(c.court_context)) citations.push({ kind: 'record', url: String(object(x.cite).url), text: clip(`Court context for ${c.name}, as ${object(x.cite).document} states it: "${x.text}"`, 900) })
       if (records(c.commissioners).length) citations.push({ kind: 'record', url: String(object(records(c.commissioners)[0].cite).url), text: clip(`${c.name} commissioners as ${object(records(c.commissioners)[0].cite).document ?? 'the cited document'} names them: ${people(c)}.`, 600) })
-      for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${d.date})` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
+      for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${dayWords(d.date)})` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
       const span = transcriptSummary(c)
-      if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `${c.name}: ${span.count} hearing transcript${span.count === 1 ? '' : 's'} listed, dated ${span.first_date === span.last_date ? span.first_date : `${span.first_date} to ${span.last_date}`} (view=transcripts lists them). ${TRANSCRIPT_LABEL}.` })
+      if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `${c.name}: ${span.count} hearing transcript${span.count === 1 ? '' : 's'} listed, dated ${spanWords(span.first_date, span.last_date)} (view=transcripts lists them). ${TRANSCRIPT_LABEL}.` })
       return publishedResult([row], citations, { view: 'profile', total: 1, offset: 0, next_offset: null, snapshot, notes: [...several, NOTE] })
     }
 
@@ -179,7 +180,7 @@ export const tool: ToolDefinition = {
         const text = ix && found?.keys.has(String(d.key)) ? await pageHits(env, ix, String(d.key), found.terms) : null
         return text ? { ...row, text_matches: text } : row
       }))
-      const span = transcriptSummary(c), range = span.first_date ? `, dated ${span.first_date === span.last_date ? span.first_date : `${span.first_date} to ${span.last_date}`}` : ''
+      const span = transcriptSummary(c), range = span.first_date ? `, dated ${spanWords(span.first_date, span.last_date)}` : ''
       const count = `${c.name}: ${all.length} hearing transcript${all.length === 1 ? '' : 's'} listed${range}${hits.length !== all.length ? `; ${hits.length} match` : ''} (OPAX projection, snapshot ${snapshot}). ${TRANSCRIPT_LABEL}.`
       return publishedResult(picked, [{ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: count }, ...picked.map(transcriptCite)],
         { view: 'transcripts', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot,

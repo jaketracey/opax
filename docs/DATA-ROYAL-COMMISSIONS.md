@@ -164,6 +164,13 @@ page only; every citation links the publisher's PDF at that page and ends with t
 and the CC BY attribution. Every other commission's transcripts stay listed with a link to
 the publisher.
 
+An excerpt stays inside one speaker's turn. The turn's label ("MS HOGAN-DORAN:") is taken
+out of the quoted words and given as `speaker` ("Ms Hogan-Doran", with the label as printed
+in `speaker_label`), and the citation reads "hearing turn by Ms Hogan-Doran". A turn that
+began on an earlier page has no speaker on that hit. Counts and dates in the tool's text
+use words ("27 September 2022 to 10 March 2023"). In Ask, an answer whose facts are only
+transcript listing rows is given in the tool's own lines rather than rewritten.
+
 ### Particular care
 
 * The ACT Board of Inquiry report: the ACT Government page states that "On 4 March 2024,
