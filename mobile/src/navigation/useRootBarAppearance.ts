@@ -14,6 +14,8 @@ import {
 } from 'react';
 import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import { RootBar } from '../../modules/opax-root-bar';
+import { colors } from '../design/tokens';
 import { glassBar, largeTitleBar, opaqueBar, tabRootGround } from './chrome';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
@@ -27,20 +29,23 @@ const stackedSearchHeight = 56;
 const stackedSearchSlack = 12;
 const searches = new WeakMap<
   object,
-  { pinned: boolean; listeners: Set<() => void> }
+  {
+    value: { pinned: boolean; largeTitle?: boolean };
+    listeners: Set<() => void>;
+  }
 >();
 
 function searchState(navigation: object) {
   let state = searches.get(navigation);
   if (!state) {
-    state = { pinned: false, listeners: new Set() };
+    state = { value: { pinned: false }, listeners: new Set() };
     searches.set(navigation, state);
   }
   return state;
 }
 
 /**
- * RouteOptions and Screen can be siblings. Share only the search row's layout
+ * RouteOptions and Screen can be siblings. Share the search row's layout
  * from the actual route options, keyed by the route's navigation object.
  * Screen remains the sole appearance owner for Search, including its changing
  * idle/results ground. Bills and Ask retain their RouteOptions owner.
@@ -54,19 +59,28 @@ export function useRootBarSearchOptions(
     search?.hideWhenScrolling === false && search.placement === 'stacked';
   useLayoutEffect(() => {
     // Like setOptions, an omitted property leaves the existing option intact.
-    if (!navigation || !options || !('headerSearchBarOptions' in options))
-      return;
+    if (!navigation || !options) return;
     const state = searchState(navigation);
-    if (state.pinned === pinned) return;
-    state.pinned = pinned;
+    const value = { ...state.value };
+    if ('headerSearchBarOptions' in options) value.pinned = pinned;
+    if ('headerLargeTitleEnabled' in options || 'headerLargeTitle' in options)
+      value.largeTitle =
+        options.headerLargeTitleEnabled ?? options.headerLargeTitle;
+    if (
+      state.value.pinned === value.pinned &&
+      state.value.largeTitle === value.largeTitle
+    )
+      return;
+    state.value = value;
     state.listeners.forEach((listener) => listener());
   }, [navigation, options, pinned]);
 }
 
 /**
  * Screen supplies its ground. Bills and Ask use this from RouteOptions because
- * their FlatList/ScrollView does not use Screen. Only appearance transitions
- * change options, including each root's first shrink from its expanded height.
+ * their FlatList/ScrollView does not use Screen. Explicit large-title list
+ * destinations also use RouteOptions; Screen defers to that owner. Scrolling
+ * only updates a native backing, never route appearances.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(
@@ -75,12 +89,12 @@ export function useRootBarAppearance(
     ground,
     disabled = false,
     names = roots,
-    largeTitleEnabled = true,
+    owner = 'screen',
   }: {
     ground?: ColorValue;
     disabled?: boolean;
     names?: readonly string[];
-    largeTitleEnabled?: boolean;
+    owner?: 'screen' | 'options';
   } = {},
 ) {
   const navigation = useContext(NavigationContext);
@@ -95,11 +109,13 @@ export function useRootBarAppearance(
     },
     [navigation],
   );
-  const pinnedSearch = useSyncExternalStore(
+  const rootOptions = useSyncExternalStore(
     subscribe,
-    () => (navigation ? (searches.get(navigation)?.pinned ?? false) : false),
-    () => false,
+    () => (navigation ? searchState(navigation).value : emptyOptions),
+    () => emptyOptions,
   );
+  const pinnedSearch = rootOptions.pinned;
+  const largeTitleEnabled = rootOptions.largeTitle ?? true;
   const route = useContext(NavigationRouteContext);
   const state = route ? navigation?.getState() : undefined;
   // Every tab uses the shared route inventory. Account and other sheet stacks
@@ -111,8 +127,9 @@ export function useRootBarAppearance(
     !disabled &&
     glassBar() &&
     tabStack &&
-    route?.key === state?.routes[0]?.key &&
-    names.includes(route?.name ?? '')
+    ((route?.key === state?.routes[0]?.key &&
+      names.includes(route?.name ?? '')) ||
+      rootOptions.largeTitle === true)
       ? route
       : undefined;
   const headerHeight = useContext(HeaderHeightContext) ?? 0;
@@ -139,14 +156,20 @@ export function useRootBarAppearance(
     key: string;
     setter: typeof setOptions;
     colour: ColorValue;
-    collapsed: boolean;
     largeTitleEnabled: boolean;
-    scrolled: boolean;
   }>(undefined);
-  const colour = ground ?? tabRootGround(root?.name ?? '');
+  const name = root?.name ?? '';
+  const colour =
+    ground ??
+    (roots.includes(name) || name === 'leads'
+      ? tabRootGround(name)
+      : colors.paper);
+  const ownsBar = owner === 'options' || rootOptions.largeTitle === undefined;
   const rootKey = root?.key;
+  const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
+  const nativeValues = useRef({ progress: 0, colour });
   useLayoutEffect(() => {
-    if (!rootKey) {
+    if (!rootKey || !ownsBar) {
       applied.current = undefined;
       return;
     }
@@ -170,44 +193,60 @@ export function useRootBarAppearance(
             : headerHeight,
       };
     }
-    // NativeStack starts with an estimated inline height before UIKit reports
-    // the expanded bar. Do not mistake that first estimate for a collapse.
+    const reference = expandedRoute.current;
+    const sameLayout =
+      reference?.key === rootKey &&
+      reference?.collapsedHeight === collapsedHeight &&
+      reference?.fontScale === frame.fontScale &&
+      reference?.width === frame.width &&
+      reference?.height === frame.height;
+    // Header height is UIKit's collapse offset, including search-field motion.
+    // Ignore rounding at rest and clamp overscroll. Initial inline estimates
+    // have no expanded reference and must leave the title clear.
     const collapsed =
       landscapePhone ||
-      (expandedRoute.current?.key === rootKey &&
-        expandedRoute.current.collapsedHeight === collapsedHeight &&
+      (reference?.key === rootKey &&
+        reference.collapsedHeight === collapsedHeight &&
         headerHeight <= collapsedHeight);
-    // Native layout reports the settled expanded height even if the last JS
-    // scroll event was missed. Half a point ignores subpixel rounding at rest.
-    const scrolled =
-      expandedRoute.current?.key === rootKey &&
-      expandedRoute.current.collapsedHeight === collapsedHeight &&
-      expandedRoute.current.fontScale === frame.fontScale &&
-      expandedRoute.current.width === frame.width &&
-      expandedRoute.current.height === frame.height &&
-      headerHeight < expandedRoute.current.expandedHeight - 0.5;
+    const progress = collapsed
+      ? 1
+      : sameLayout && reference
+        ? Math.min(
+            1,
+            Math.max(
+              0,
+              (reference.expandedHeight - headerHeight - 0.5) /
+                Math.max(1, reference.expandedHeight - collapsedHeight - 0.5),
+            ),
+          )
+        : 0;
+    nativeValues.current = { progress, colour };
+    if (identifier && largeTitleEnabled && navigation?.isFocused())
+      void RootBar?.update(identifier, progress, colour, colors.dividerSubtle);
     const previous = applied.current;
     if (
       previous?.key === rootKey &&
       previous.setter === setOptions &&
       previous.colour === colour &&
-      previous.collapsed === collapsed &&
-      previous.largeTitleEnabled === largeTitleEnabled &&
-      previous.scrolled === scrolled
+      previous.largeTitleEnabled === largeTitleEnabled
     )
       return;
     setOptions(
       largeTitleEnabled
-        ? largeTitleBar(colour, collapsed, scrolled)
+        ? {
+            ...largeTitleBar(colour),
+            // Legacy headerLargeTitle callers must also override the stack's
+            // explicit inline default, which takes precedence in Expo Router.
+            headerLargeTitleEnabled: true,
+            unstable_nativeProps: { testID: identifier },
+          }
         : opaqueBar(colour),
     );
     applied.current = {
       key: rootKey,
       setter: setOptions,
       colour,
-      collapsed,
       largeTitleEnabled,
-      scrolled,
     };
   }, [
     rootKey,
@@ -215,11 +254,34 @@ export function useRootBarAppearance(
     colour,
     headerHeight,
     collapsedHeight,
-    landscapePhone,
+    ownsBar,
+    identifier,
     largeTitleEnabled,
+    navigation,
+    landscapePhone,
     frame.fontScale,
     frame.width,
     frame.height,
   ]);
+  useLayoutEffect(() => {
+    if (!identifier || !ownsBar || !largeTitleEnabled) return;
+    const focus = navigation?.addListener('focus', () => {
+      const { progress, colour } = nativeValues.current;
+      void RootBar?.update(identifier, progress, colour, colors.dividerSubtle);
+    });
+    const clear = () => {
+      void RootBar?.remove(identifier);
+    };
+    const blur = navigation?.addListener('blur', clear);
+    return () => {
+      focus?.();
+      blur?.();
+      clear();
+    };
+  }, [identifier, ownsBar, largeTitleEnabled, navigation]);
   return !!root;
 }
+
+const emptyOptions: { pinned: boolean; largeTitle?: boolean } = {
+  pinned: false,
+};

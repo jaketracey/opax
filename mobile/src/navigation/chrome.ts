@@ -56,29 +56,26 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
  * Keep both appearances transparent while expanded. A scroll-edge background
  * also suppresses the title, even with a transparent standard appearance.
  * The screen supplies the page ground beneath the native scroll edge.
- * A native height change adds the standard colour on collapse and clears it
- * on return. Empty styles replace the navigator's opaque defaults.
- * A soft edge leaves the large title clear at rest. Shrinking below the known
- * expanded height selects the protective hard edge; a settled full height or
- * overscroll restores soft. A permanently hard edge paints a divider at rest.
- * Soft alone blurs only the status strip, leaving content sharp behind the
- * title. Switching the edge keeps both expanded appearances background-free.
+ * Empty styles replace the navigator's opaque defaults. Keep them and the
+ * soft edge stable throughout scrolling: replacing an appearance or switching
+ * hard/soft applies without animation. A permanently hard edge paints a
+ * divider at rest. Soft alone protects only the status strip.
+ * useRootBarAppearance fades a native backing and divider beneath the bar,
+ * following its collapse height. This protects the collapsed title without
+ * covering large titles, inserting a React headerBackground or colouring an
+ * appearance, including during the return to the top.
  */
-export const largeTitleBar = (
-  ground: ColorValue = colors.paper,
-  collapsed = false,
-  scrolled = collapsed,
-) =>
+export const largeTitleBar = (ground: ColorValue = colors.paper) =>
   glassBar()
     ? {
-        headerStyle: collapsed ? { backgroundColor: ground } : {},
+        headerStyle: {},
         headerLargeStyle: {},
         contentStyle: { backgroundColor: ground },
         headerTransparent: true,
-        headerShadowVisible: true,
+        headerShadowVisible: false,
         headerLargeTitleShadowVisible: false,
         scrollEdgeEffects: {
-          top: collapsed || scrolled ? ('hard' as const) : ('soft' as const),
+          top: 'soft' as const,
           bottom: 'soft' as const,
         },
       }
