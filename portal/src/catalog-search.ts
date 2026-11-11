@@ -8,6 +8,13 @@ export interface CatalogRecord {
   machine?: boolean
 }
 type Meta = [string, number, number, string, string, string, string]
+/** meta-core.json: each record's kind (an index into `kinds`) and closing year, all an unfiltered search reads. */
+interface MetaCore { kinds: string[]; kind: number[]; to: (number | null)[] }
+/** The record fields a search needs: its kind, its sort year and whether it passes the request's filters. */
+interface CatalogMeta { length: number; kind(id: number): string; year(id: number): number | null; matches(id: number): boolean }
+// Filters that read more than a record's kind. Without any of them a search needs only
+// meta-core.json (2 MB) rather than meta.json (13 MB, about 38 MB once parsed).
+const FULL_META_FILTERS = ['state','party','speaker','topic','from','to']
 interface Manifest { version: string; count: number; counts: Record<string,number>; coverage: string; recordShardSize: number }
 // Bounded isolate cache: metadata plus at most eight token partitions. Record
 // shards live only for their request, so browsing cannot grow memory forever.
@@ -48,11 +55,22 @@ export async function searchCatalog(url: URL, assets: Fetcher, options: { anyTer
   const manifest=await asset<Manifest>(assets,'/search-catalog/manifest.json',true)
   if(!/^[a-f0-9]{16}$/.test(manifest.version))throw new Error('Invalid search index')
   const base='/search-catalog/'+manifest.version+'/'
-  const [metadata,...partitions]=await Promise.all([
-    asset<Meta[]>(assets,base+'meta.json',true),
+  const params=url.searchParams
+  const fullMeta=async():Promise<CatalogMeta>=>{
+    const rows=await asset<Meta[]>(assets,base+'meta.json',true)
+    return {length:rows.length,kind:id=>rows[id][0],year:id=>rows[id][2],matches:id=>matchesCatalogFilters(rows[id],params)}
+  }
+  const coreMeta=async():Promise<CatalogMeta>=>{
+    const core=await asset<MetaCore>(assets,base+'meta-core.json',true).catch(()=>null)
+    // A catalogue built before meta-core.json existed (or an unreadable copy) answers from meta.json as before.
+    if(!core || !Array.isArray(core.kinds) || !Array.isArray(core.kind) || !Array.isArray(core.to) || core.kind.length!==core.to.length)return fullMeta()
+    const selected=params.get('kind')||'all'
+    return {length:core.kind.length,kind:id=>core.kinds[core.kind[id]],year:id=>core.to[id],matches:id=>selected==='all' || selected===core.kinds[core.kind[id]]}
+  }
+  const [meta,...partitions]=await Promise.all([
+    FULL_META_FILTERS.some(key=>params.get(key)) ? fullMeta() : coreMeta(),
     ...terms.map(t=>asset<Record<string,number[]>>(assets,base+'terms-'+bucket(t)+'.json',true)),
-  ])
-  const meta=metadata as Meta[]
+  ]) as [CatalogMeta,...Record<string,number[]>[]]
   let scores: Float32Array | null = null
   for(let i=0;i<terms.length;i++){
     const term=terms[i], partition=partitions[i] as Record<string,number[]>
@@ -79,9 +97,9 @@ export async function searchCatalog(url: URL, assets: Fetcher, options: { anyTer
   const limit=options.perKind ?? 200
   let total=0
   if(scores)for(let id=0;id<scores.length;id++){
-    if(!scores[id]||!matchesCatalogFilters(meta[id],url.searchParams))continue
+    if(!scores[id]||!meta.matches(id))continue
     total++
-    const group=options.perKind ? meta[id][0] : 'all'
+    const group=options.perKind ? meta.kind(id) : 'all'
     if(!heaps.has(group))heaps.set(group,[])
     const heap=heaps.get(group)!
     if(heap.length<limit){
@@ -97,6 +115,6 @@ export async function searchCatalog(url: URL, assets: Fetcher, options: { anyTer
   const shardIds=[...new Set(selected.map(([id])=>Math.floor(id/manifest.recordShardSize)))]
   // Bound concurrent asset reads, including the 200-row export request.
   for(let i=0;i<shardIds.length;i+=6)await Promise.all(shardIds.slice(i,i+6).map(async id=>shards.set(id,await asset<CatalogRecord[]>(assets,base+'records-'+id+'.json'))))
-  const records=selected.map(([id,score])=>({...shards.get(Math.floor(id/manifest.recordShardSize))![id%manifest.recordShardSize],score,sort_date:String(meta[id][2]||'')}))
+  const records=selected.map(([id,score])=>({...shards.get(Math.floor(id/manifest.recordShardSize))![id%manifest.recordShardSize],score,sort_date:String(meta.year(id)||'')}))
   return {results:records,total,truncated:total>200,coverage:manifest.coverage,version:manifest.version,counts:manifest.counts}
 }

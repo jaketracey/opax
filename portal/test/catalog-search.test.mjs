@@ -7,7 +7,7 @@ import {programRecord,programKey} from '../../scripts/build_search_catalog.mjs';
 import {reportsPublished} from '../../scripts/reports_flag.mjs';
 const assets={fetch:async request=>{
  const path=new URL(request.url).pathname;
- assert.match(path,/^\/search-catalog\/(manifest\.json|[a-f0-9]{16}\/(meta|terms-\d+|records-\d+)\.json)$/);
+ assert.match(path,/^\/search-catalog\/(manifest\.json|[a-f0-9]{16}\/(meta|meta-core|terms-\d+|records-\d+)\.json)$/);
  try{return new Response(await readFile(new URL('../public'+path,import.meta.url)),{headers:{'content-type':'application/json'}})}catch{return new Response('missing',{status:404})}
 }};
 const find=(q,params={})=>searchCatalog(new URL('https://opax.com.au/api/search-all?'+new URLSearchParams({q,kind:'all',...params})),assets);
@@ -151,4 +151,32 @@ test('the 226 active invited projects resolve to the GO7867 program view, invite
  assert.doesNotMatch(JSON.stringify(invited),/rort|pork|bias/i);
  const found=await find('Chisholm Cricket',{kind:'grant'});
  assert.ok(found.results.some(r=>r.record_id==='mlci-invitation-001'&&r.href===view));
+});
+
+test('unfiltered searches read meta-core.json and return exactly what meta.json gives; filters read meta.json',async()=>{
+ const kinds=['grant','contract','person'],states=['qld','vic',''];
+ const meta=Array.from({length:600},(_,i)=>[kinds[i%3],2000+i%20,i%7?2001+i%25:null,states[i%3],i%5?'labor':'greens','',i%4?'health':'']);
+ const records=meta.map((m,i)=>({kind:m[0],title:'Record '+i,href:'/r/'+i,snippet:'',slug:'r-'+i,resource:'r'+i,...(i%9?{date:'20'+String(10+i%15)+'-01-01'}:{})}));
+ const terms=Object.fromEntries(Array.from({length:64},(_,b)=>[b,{}]));
+ for(let id=0;id<meta.length;id++){(terms[bucket('water')].water??=[]).push(id,1+id%3);(terms[bucket('wattle')].wattle??=[]).push(id,id%2?8:1);if(id%2===0)(terms[bucket('bridge')].bridge??=[]).push(id,id%11?1:8)}
+ const kindIndex=new Map(kinds.map((k,i)=>[k,i]));
+ const files={meta,'meta-core':{kinds,kind:meta.map(m=>kindIndex.get(m[0])),to:meta.map(m=>m[2])},...Object.fromEntries(Object.entries(terms).map(([b,p])=>['terms-'+b,p]))};
+ for(let i=0;i<meta.length;i+=256)files['records-'+i/256]=records.slice(i,i+256);
+ // Separate module instances, so each keeps its own isolate cache: one catalogue has meta-core.json, one predates it.
+ const withCore=await import('../src/catalog-search.ts?core'),without=await import('../src/catalog-search.ts?full');
+ const seen=[];
+ const catalog=core=>({fetch:async request=>{
+  const path=new URL(request.url).pathname;if(core)seen.push(path.split('/').pop());
+  if(path==='/search-catalog/manifest.json')return Response.json({version:'0123456789abcdef',count:meta.length,counts:{},recordShardSize:256,coverage:'fixture'});
+  const name=path.split('/').pop().replace(/\.json$/,'');
+  return name in files && (core || name!=='meta-core') ? Response.json(files[name]) : new Response('missing',{status:404});
+ }});
+ const url=params=>new URL('https://opax.com.au/api/search-all?'+new URLSearchParams(params));
+ const unfiltered=[{q:'water'},{q:'wat'},{q:'water bridge'},{q:'water',kind:'grant'},{q:'wattle',kind:'person'},{q:'water',state:''}];
+ const filtered=[{q:'water',state:'qld'},{q:'water',party:'Greens'},{q:'water',from:'2010'},{q:'water',to:'2005'},{q:'water',topic:'health'},{q:'water bridge',kind:'grant',from:'2012'}];
+ for(const [cases,metaRead] of [[unfiltered,false],[filtered,true]]){
+  for(const params of cases)for(const options of [{},{perKind:2},{anyTerms:true,perKind:16}])
+   assert.deepEqual(await withCore.searchCatalog(url(params),catalog(true),options),await without.searchCatalog(url(params),catalog(false),options),JSON.stringify(params));
+  assert.ok(seen.includes('meta-core.json'));assert.equal(seen.includes('meta.json'),metaRead);
+ }
 });
