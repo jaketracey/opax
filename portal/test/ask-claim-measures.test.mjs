@@ -59,3 +59,30 @@ test('a joined claim needs both measures and an attributed quotation remains a s
  const reported='A senator said Labor received $100 from gambling donors.'
  assert.equal(guardClaimMeasures(payload(reported,[speech])).answer,reported)
 })
+test('one unsupported sentence is removed and the rest of the answer stands',()=>{
+ const first='John Howard said the GST would replace a raft of inefficient taxes. ',second='The government received $682 in disclosed receipts.',third=' He argued it was fairer.'
+ const answer=first+second+third
+ const a=Array.from(first).length,b=a+Array.from(second).length,c=Array.from(answer).length
+ const out=guardClaimMeasures(payload(answer,[speech],{'speech/t/body/0':[[0,a-1],[b+1,c]]}))
+ assert.equal(out.answer,'John Howard said the GST would replace a raft of inefficient taxes. He argued it was fairer.')
+ assert.notEqual(out.answer_decision,'limitation')
+ const ranges=out.citations['speech/t/body/0']
+ assert.equal(ranges.length,2)
+ const kept=Array.from(out.answer)
+ assert.equal(kept.slice(ranges[0][0],ranges[0][1]).join(''),'John Howard said the GST would replace a raft of inefficient taxes.'.slice(0,a-1))
+ assert.equal(kept.slice(ranges[1][0],ranges[1][1]).join(''),'He argued it was fairer.')
+ assert.deepEqual(out.sources.map(s=>s.resource),['speech'])
+})
+test('a removed sentence takes its own citations and sources with it',()=>{
+ const first='Labor MPs gave 682 speeches labelled gambling. ',second='Labor received $682 in disclosed receipts.'
+ const answer=first+second,a=Array.from(first).length,c=Array.from(answer).length
+ const out=guardClaimMeasures(payload(answer,[count,speech],{'count/t/body/0':[[0,a-1]],'speech/t/body/0':[[a,c]]}))
+ assert.equal(out.answer,'Labor MPs gave 682 speeches labelled gambling.')
+ assert.deepEqual(Object.keys(out.citations),['count/t/body/0'])
+ assert.deepEqual(out.sources.map(s=>s.resource),['count'])
+})
+test('a speech question with speech citations is never replaced',()=>{
+ const answer='John Howard said on 13 August 1998 that the GST would be part of a new tax system. He told the House it would lower income tax.'
+ const out=guardClaimMeasures(payload(answer,[speech]))
+ assert.equal(out.answer,answer)
+})
