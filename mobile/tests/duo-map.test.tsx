@@ -30,7 +30,8 @@ import { MoneyMap, forgetCameras } from '../src/features/money/map/MoneyMap';
 import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapLabels } from '../src/features/money/map/MoneyMapLabels';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
-import { layoutFor } from '../src/features/money/map/layout';
+import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
+import { layoutBounds, layoutFor } from '../src/features/money/map/layout';
 import {
   cameraAt,
   fitCamera,
@@ -452,6 +453,97 @@ test('outer controls and legend fit 320pt with independent safe edges and a shor
   expect(panel.findByType(ScrollView).props.scrollEnabled).toBe(true);
   expect(tree.root.findByProps({ testID: 'money-map-legend' })).toBeDefined();
 });
+
+test.each([
+  ['leading', 60, 0, false],
+  ['trailing', 0, 60, false],
+  ['leading', 60, 0, true],
+  ['trailing', 0, 60, true],
+] as const)(
+  'MoneyScreen fit, centre and chrome clear a 60pt %s rail (left %s, right %s, adaptive %s)',
+  async (_side, left, right, adaptive) => {
+    setWindowTraitsOverride(
+      adaptive
+        ? { horizontal: 'compact', vertical: 'regular', verticalBars: true }
+        : null,
+    );
+    resetAdaptiveDeviceForTests();
+    mockWidth = 380;
+    mockHeight = 560;
+    const { tree } = await screen(emptyReservedRegions, {
+      top: 0,
+      bottom: 20,
+      left,
+      right,
+    });
+    stageLayout(tree, mockWidth, mockHeight);
+    const top = tree.root.findAllByType(View).find(
+      (node) =>
+        node.props.onLayout &&
+        StyleSheet.flatten(node.props.style)?.paddingTop === 8,
+    )!;
+    const panel = tree.root.findByType(MoneyMapPanel);
+    act(() => {
+      top.props.onLayout({ nativeEvent: { layout: { height: 100 } } });
+      panel.props.onPeekHeight(120);
+      panel.parent!.props.onLayout({
+        nativeEvent: { layout: { y: 400, height: 140 } },
+      });
+    });
+    const stage = tree.root.findByType(MoneyMap);
+    const view = { width: 380, height: 560, insets: stage.props.insets };
+    expect(view.insets).toEqual({
+      top: adaptive ? 172 : 108,
+      bottom: 148,
+      left: left + 8,
+      right: right + (adaptive ? 8 : 76),
+    });
+    const chrome = tree.root.findByProps({ testID: 'money-map-chrome' });
+    const frame = StyleSheet.flatten(chrome.props.style);
+    expect(frame.left).toBe(left);
+    expect(frame.width ?? 380 - frame.left - frame.right).toBe(320);
+    // Both the absolute control band and full-width panel belong to that
+    // safe frame. Neither receives the safe sides a second time.
+    const controls = tree.root.findByType(MoneyMapControls);
+    expect(chrome.findByType(MoneyMapControls) === controls).toBe(true);
+    expect(chrome.findByType(MoneyMapPanel) === panel).toBe(true);
+    expect(StyleSheet.flatten(panel.parent!.props.style).width).toBe('100%');
+    expect(stage.props.overview.left).toBe(left + 16);
+
+    act(() => controls.props.onZoomIn());
+    act(() => controls.props.onFit());
+    const graph = stage.props.graph;
+    const layout = layoutFor(graph, 1);
+    const indices = stage.props.model.nodes.map((node: { id: string }) =>
+      graph.nodes.findIndex((n: { id: string }) => n.id === node.id),
+    );
+    const bounds = layoutBounds(layout, indices);
+    expect(liveCamera(tree)).toEqual(fitCamera(bounds, view));
+    const centre = viewportCentre(view);
+    const fitted = worldToScreen(
+      liveCamera(tree),
+      (bounds.minX + bounds.maxX) / 2,
+      (bounds.minY + bounds.maxY) / 2,
+    );
+    expect(fitted.x).toBeCloseTo(centre.x, 9);
+    expect(fitted.y).toBeCloseTo(centre.y, 9);
+
+    act(() => controls.props.onSearch());
+    act(() =>
+      tree.root.findByType(MoneyMapSearch).props.onChoose('party:Labor'),
+    );
+    const selected = graph.nodes.findIndex(
+      (n: { id: string }) => n.id === 'party:Labor',
+    );
+    const focused = worldToScreen(
+      liveCamera(tree),
+      layout.x[selected]!,
+      layout.y[selected]!,
+    );
+    expect(focused.x).toBeCloseTo(centre.x, 9);
+    expect(focused.y).toBeCloseTo(centre.y, 9);
+  },
+);
 
 test('phone rule without regions retains the original insets, vertical controls and unrestricted panel', async () => {
   setWindowTraitsOverride(null);

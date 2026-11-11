@@ -5,7 +5,14 @@ import {
   type SkPicture,
 } from '@shopify/react-native-skia';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Platform,
   StyleSheet,
@@ -15,6 +22,7 @@ import {
   type AccessibilityActionInfo,
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import Animated, {
   Easing,
   FadeIn,
@@ -173,6 +181,9 @@ export function MoneyMap({
 }: MoneyMapProps) {
   const reduced = useReduceMotion();
   const adaptive = useAdaptiveDevice();
+  const safe = useContext(SafeAreaInsetsContext);
+  const safeLeft = safe?.left ?? 0;
+  const safeRight = safe?.right ?? 0;
   const regions = useReservedRegions();
   const palette = paletteFor('light');
   const window = useWindowDimensions();
@@ -706,9 +717,20 @@ export function MoneyMap({
   useAnimatedReaction(
     () => ({ tx: tx.value, ty: ty.value, k: k.value }),
     (camera) => {
-      allowed.value = visibleLabels(slots, camera, viewportSV.value, box);
+      const viewport = viewportSV.value;
+      allowed.value = visibleLabels(
+        slots,
+        camera,
+        {
+          ...viewport,
+          // Camera margins reserve the floating controls too. Only a safe
+          // side clips labels, preserving their existing phone placement.
+          insets: { ...viewport.insets, left: safeLeft, right: safeRight },
+        },
+        box,
+      );
     },
-    [slots, box],
+    [slots, box, safeLeft, safeRight],
   );
   // At the fit the whole map is in view, so the overview only earns its
   // corner once the reader has come in closer.

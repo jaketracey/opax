@@ -1,12 +1,21 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { apiClient } from '../src/api/runtime';
+import * as adaptiveLayout from '../src/design/adaptive';
+import * as accessibility from '../src/design/accessibility';
 import MoneyScreen, { moneyMapLabel } from '../src/features/money/MoneyScreen';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
 import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
+import {
+  cameraAt,
+  fitCamera,
+  viewportCentre,
+  type Insets,
+} from '../src/features/money/map/camera';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import { buildModel, type MapNode } from '../src/features/money/map/model';
 import {
@@ -77,11 +86,20 @@ jest.mock('expo-router', () => {
 });
 
 const graph = decodeMoneyGraph(pinned('/graph/money.json'));
-async function render() {
+async function render(safe?: Insets) {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     renderer = TestRenderer.create(
-      withNavigationOptions(<MoneyScreen />, () => undefined),
+      withNavigationOptions(
+        safe ? (
+          <SafeAreaInsetsContext.Provider value={safe}>
+            <MoneyScreen />
+          </SafeAreaInsetsContext.Provider>
+        ) : (
+          <MoneyScreen />
+        ),
+        () => undefined,
+      ),
     );
   });
   return renderer;
@@ -119,6 +137,101 @@ test('the Map view: the stage, the floating card with the picker, the controls a
   expect(props.accessibilityLabel).toMatch(/^Money map: [\d,]+ discs and/);
   act(() => r.unmount());
 });
+
+test.each([
+  ['iPhone', 390, 844, false, 0],
+  ['iPhone', 390, 844, false, 34],
+  ['iPad', 1024, 1366, true, 0],
+  ['iPad', 1024, 1366, true, 34],
+] as const)(
+  '%s at %sx%s (adaptive %s, bottom %s) retains identical geometry with zero safe sides',
+  async (_device, width, height, pad, bottom) => {
+    const layout = jest.spyOn(adaptiveLayout, 'useLayout').mockReturnValue({
+      rule: pad ? 'pad' : 'phone',
+      size: pad ? 'regular' : 'compact',
+      regular: pad,
+      wide: false,
+      width,
+      height,
+      window: { width, height },
+      landscape: false,
+    });
+    const adaptive = jest
+      .spyOn(adaptiveLayout, 'useAdaptiveDevice')
+      .mockReturnValue(pad);
+    const large = jest
+      .spyOn(accessibility, 'useAccessibilitySize')
+      .mockReturnValue(false);
+    let r: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      r = await render({ top: 0, right: 0, bottom, left: 0 });
+      const root = r.root;
+      const panel = r.root.findByType(MoneyMapPanel);
+      const top = r.root.findAllByType(View).find(
+        (node) =>
+          node.props.onLayout &&
+          StyleSheet.flatten(node.props.style)?.paddingTop === 8,
+      )!;
+      act(() => {
+        byTestID(root, 'money-screen')!.props.onLayout({
+          nativeEvent: { layout: { width, height } },
+        });
+        top.props.onLayout({ nativeEvent: { layout: { height: 140 } } });
+        panel.props.onPeekHeight(180);
+      });
+      act(() =>
+        panel.parent!.props.onLayout({
+          nativeEvent: { layout: { y: height - bottom - 200, height: 200 } },
+        }),
+      );
+      const legacy = {
+        width,
+        height,
+        insets: { top: 148, right: 76, bottom: bottom + 188, left: 8 },
+      };
+      const viewport = { width, height, insets: stage().insets };
+      expect(viewport).toStrictEqual(legacy);
+      const bounds = { minX: -200, minY: -100, maxX: 200, maxY: 100 };
+      const camera = { tx: 20, ty: -30, k: 2.5 };
+      expect(fitCamera(bounds, viewport)).toStrictEqual(
+        fitCamera(bounds, legacy),
+      );
+      expect(cameraAt(camera, 25, -40, viewport)).toStrictEqual(
+        cameraAt(camera, 25, -40, legacy),
+      );
+      expect(viewportCentre(viewport)).toStrictEqual({
+        x: width / 2 - 34,
+        y: (height - bottom - 40) / 2,
+      });
+      expect(stage().overview).toStrictEqual({ left: 16, bottom: bottom + 196 });
+      const frame = StyleSheet.flatten(
+        byTestID(r.root, 'money-map-chrome')!.props.style,
+      );
+      expect(frame).toStrictEqual(
+        pad
+          ? {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: undefined,
+              bottom: undefined,
+              width,
+              height: height - bottom,
+            }
+          : { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+      );
+      expect(StyleSheet.flatten(panel.parent!.props.style)).toStrictEqual(
+        pad ? { width: '100%', maxWidth: 480 } : { width: '100%' },
+      );
+    } finally {
+      const mounted = r;
+      if (mounted) act(() => mounted.unmount());
+      layout.mockRestore();
+      adaptive.mockRestore();
+      large.mockRestore();
+    }
+  },
+);
 
 test('the control stack drives the stage through commands, each with a new seq', async () => {
   const r = await render();
