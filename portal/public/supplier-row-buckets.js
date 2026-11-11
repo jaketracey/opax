@@ -10,3 +10,5 @@ export const SUPPLIER_ID_RE = /^s-[a-f0-9]{20}$/;
 export const SUPPLIER_ROW_BUCKETS = 256;
 /** The bucket for a supplier id or a two-digit hex prefix. */
 export const supplierRowsPath = (id) => `/growth/supplier-rows/${String(id).replace(/^s-/, '').slice(0, 2)}.json`;
+/** The index's meta alone (totals, dates, source): what the money summary pages print. */
+export const SUPPLIERS_META_PATH = '/growth/supplier-rows/meta.json';

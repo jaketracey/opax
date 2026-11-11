@@ -8,7 +8,7 @@ import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../p
 import {AGENCY_TOP_SUPPLIERS_PATH,agencyTopRows} from '../portal/public/agency-top-suppliers.js';
 import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath,votesBucketPath,VOTES_NAMES_PATH} from '../portal/public/recent-votes-buckets.js';
 import {PARTY_MONEY_BUCKETS,partyFold,partyMoneyBucket,partyMoneyBucketPath} from '../portal/public/party-money-buckets.js';
-import {SUPPLIER_ID_RE,supplierRowsPath} from '../portal/public/supplier-row-buckets.js';
+import {SUPPLIER_ID_RE,supplierRowsPath,SUPPLIERS_META_PATH} from '../portal/public/supplier-row-buckets.js';
 import {partyMoneyData} from '../portal/public/register-tables.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 /** A money graph's party-receipt buckets as [path, contents] pairs (portal/public/party-money-buckets.js). */
@@ -158,6 +158,8 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  }
  const supplierMeta={generated_at:supplierDirectory.meta?.generated_at,generated:supplierDirectory.meta?.generated,source:supplierDirectory.meta?.source};
  for(const [path,rows] of supplierRows)await write(path,{meta:supplierMeta,suppliers:rows});
+ // The home, map and money pages print the index's totals and dates, not its 22,000 rows.
+ await write(SUPPLIERS_META_PATH,{meta:supplierDirectory.meta});
  // Profiles read their party's receipt rows from these buckets (portal/public/party-money-buckets.js), not the graphs.
  for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json']){
   const graph=path==='/graph/money.json'?money:await read(path.slice(1)).catch(error=>{if(error.code==='ENOENT')return null;throw error});

@@ -17,7 +17,7 @@ import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-car
 import {agencyTopRows, type AgencyTopRow} from '../public/agency-top-suppliers.js'
 import {recentVotesBucket, recentVotesBucketPath, votesBucketPath, VOTES_NAMES_PATH} from '../public/recent-votes-buckets.js'
 import {partyFold, partyMoneyBucket, partyMoneyBucketPath} from '../public/party-money-buckets.js'
-import {SUPPLIER_ID_RE, supplierRowsPath} from '../public/supplier-row-buckets.js'
+import {SUPPLIER_ID_RE, supplierRowsPath, SUPPLIERS_META_PATH} from '../public/supplier-row-buckets.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -474,7 +474,10 @@ export async function renderMoneyAnswer(title: string, read: ReadAsset): Promise
     const receipts=graph.edges.filter(e=>ids.has(e.source) && !e.grant && !e.flow)
     body+=`<h2>${label} disclosed receipts</h2><p>${currency(receipts.reduce((sum,e)=>sum+e.total,0))} across ${count(receipts.length)} donor-to-party totals on this map. ${parties.length} parties. Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
   }
-  const suppliers=await read<{meta:{generated_at:string;total:number;contract_count:number;source:string;published_from:string;published_to:string}}>('/suppliers.json')
+  // The index's meta from its own small file (public/supplier-row-buckets.js), else the 7.6 MB index.
+  type SuppliersMeta = {meta:{generated_at:string;total:number;contract_count:number;source:string;published_from:string;published_to:string}}
+  const small=await optional<SuppliersMeta>(read,SUPPLIERS_META_PATH)
+  const suppliers=small?.meta ? small : await read<SuppliersMeta>('/suppliers.json')
   const m=suppliers.meta
   body+=`<h2>Commonwealth contracts</h2><p>${currency(m.total)} in recorded awards across ${count(m.contract_count)} contracts. Notices published ${escapeHtml(m.published_from)} to ${escapeHtml(m.published_to)}. Exported ${escapeHtml(m.generated_at.slice(0,10))}. Source: ${escapeHtml(m.source)}.</p><p>${link('/subject/supplier','Government suppliers')} · ${link('/subject/agency','Government agencies')} · ${link('/money/grants','Grant records')} · ${link('/ask','Ask about the record')} · ${link('/methods','Sources and methods')}</p>`
   return {html:answerBlock(title,'Public disclosure records, dated totals and original sources. Federal and state returns are never summed.',body)}
