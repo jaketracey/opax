@@ -6,7 +6,7 @@ import {sponsorPerson} from '../portal/public/sponsor-person.js';
 import {sponsorSummaryPath,growthSummaryPath,normalisedName,personQuestions,billQuestions,latestBillVotes} from '../portal/public/growth-modules.js';
 import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../portal/public/supplier-growth.js';
 import {AGENCY_TOP_SUPPLIERS_PATH,agencyTopRows} from '../portal/public/agency-top-suppliers.js';
-import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath} from '../portal/public/recent-votes-buckets.js';
+import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath,votesBucketPath,VOTES_NAMES_PATH} from '../portal/public/recent-votes-buckets.js';
 import {PARTY_MONEY_BUCKETS,partyFold,partyMoneyBucket,partyMoneyBucketPath} from '../portal/public/party-money-buckets.js';
 import {partyMoneyData} from '../portal/public/register-tables.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
@@ -25,7 +25,7 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  const read=async p=>sourceRead ? sourceRead(p) : JSON.parse(await readFile(join(root,p),'utf8'));
  const output=join(root,'growth');
  await rm(output,{recursive:true,force:true});
- for(const dir of ['sponsors','agencies','person-bills','recent-votes'])await mkdir(join(output,dir),{recursive:true});
+ for(const dir of ['sponsors','agencies','person-bills','recent-votes','votes'])await mkdir(join(output,dir),{recursive:true});
  const sizes=[];
  const write=async (path,data)=>{
   const json=JSON.stringify(data)+'\n', bytes=Buffer.byteLength(json);
@@ -138,6 +138,14 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   const buckets=Array.from({length:RECENT_VOTES_BUCKETS},()=>[]);
   for(const entry of Object.entries(recent.people))buckets[recentVotesBucket(entry[0])].push(entry);
   for(const [i,entries] of buckets.entries())await write(recentVotesBucketPath(i),{_meta:recent._meta,people:Object.fromEntries(entries)});
+ }
+ // Profiles read the name index, then their own buckets of votes.json, not the whole file.
+ const voteFile=votes;
+ if(voteFile?._names){
+  await write(VOTES_NAMES_PATH,{_names:voteFile._names});
+  const buckets=Array.from({length:RECENT_VOTES_BUCKETS},()=>[]);
+  for(const entry of Object.entries(voteFile))if(!entry[0].startsWith('_'))buckets[recentVotesBucket(entry[0])].push(entry);
+  for(const [i,entries] of buckets.entries())await write(votesBucketPath(i),{people:Object.fromEntries(entries)});
  }
  // Profiles read their party's receipt rows from these buckets (portal/public/party-money-buckets.js), not the graphs.
  for(const path of ['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json']){
