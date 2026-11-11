@@ -1,0 +1,154 @@
+{
+ "report_id": "vic-melbourne-port-lessor-pty-ltd-2025-26-annual-report",
+ "read_by": "extraction lane from on-device OCR, every page image checked, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "named_remuneration",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "executive_average_remuneration",
+  "staff_fte",
+  "staff_headcount",
+  "employee_expenses"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "2026",
+   "value": 199369,
+   "value_as_published": "199,369",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 9,
+   "quote": "Total income from transactions 199,369 198,191",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 135305,
+   "value_as_published": "135,305",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 9,
+   "quote": "Total expenses from transactions 135,305 109,343",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result for the period",
+   "column_as_published": "2026",
+   "value": 64064,
+   "value_as_published": "64,064",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 9,
+   "quote": "Net result for the period 64,064 88,848",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred during the year ended 30 June 2026 in relation to these consultancies",
+   "value": 600210,
+   "value_as_published": "$600,210",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 2,
+   "quote": "The total expenditure incurred during the year ended 30 June 2026 in relation to these consultancies is $600,210 (excluding GST).",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "KPMG",
+   "column_as_published": "Expenditure 2026",
+   "value": 273320,
+   "value_as_published": "273,320",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 2,
+   "quote": "KPMG economic advice 273,320 273,320",
+   "counterparty": "KPMG",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Scyne Advisory",
+   "column_as_published": "Expenditure 2026",
+   "value": 110735,
+   "value_as_published": "110,735",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 2,
+   "quote": "Accounting advisory services, including 110,735 42,265 Scyne Advisory climate reporting 153,000",
+   "counterparty": "Scyne Advisory",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Minter Ellison",
+   "column_as_published": "Expenditure 2026",
+   "value": 93946,
+   "value_as_published": "93,946",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 2,
+   "quote": "Minter Ellison Legal services 93,946 93,946",
+   "counterparty": "Minter Ellison",
+   "purpose": "Legal services",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "efficiency dividends",
+   "value": 0.2,
+   "value_as_published": "$0.2 million",
+   "unit": "millions_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 6,
+   "quote": "the Company paid efficiency dividends of $0.2 million to the Department of Treasury and Finance (DTF), Victoria (2025: Nil).",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  }
+ ],
+ "notes": [
+  "The report is printed as images throughout (no page has a text layer), so the page text is Apple Vision OCR (data/agency-reports/ocr/). Every figure was read against the page image.",
+  "Consultancies (p.2): the table's columns are Total approved project fee, Expenditure 2026 and Future expenditure committed; the recorded values are the Expenditure 2026 column, matched to the page image. OCR placed Scyne Advisory's 110,735 and 42,265 on the line above its name; the cells agree with the image. Houston Kemp (Regulatory advice) is not recorded: the image shows 122,209 for Expenditure 2026 but OCR reads it as '122,20ęął'.",
+  "Purposes are given only where the OCR text prints them whole on the consultant's line: KPMG's 'Commercial economic advice' and Scyne Advisory's 'Accounting advisory services, including climate reporting disclosures support' are split across lines in the OCR text.",
+  "The Company had no employees in 2026, and no remuneration was paid to the Director by the Company (pp.2 and 32), so there are no pay, staff or employee expense figures."
+ ]
+}

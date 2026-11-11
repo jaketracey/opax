@@ -1,0 +1,159 @@
+{
+ "report_id": "vic-hesse-rural-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 18588310,
+   "value_as_published": "18,588,310",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 64,
+   "quote": "Total revenue and income from transactions 18,588,310 18,144,416"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value": -19424891,
+   "value_as_published": "(19,424,891)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 64,
+   "quote": "Total Expenses from transactions (19,424,891) (19,124,124)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -14218394,
+   "value_as_published": "(14,218,394)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 64,
+   "quote": "Employee expenses 3.1(a) (14,218,394) (13,358,725)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net and comprehensive result",
+   "column_as_published": "2026",
+   "value": -905616,
+   "value_as_published": "(905,616)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 64,
+   "quote": "Net and comprehensive result (905,616) (952,836)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "June Current Month FTE*",
+   "value": 119.03,
+   "value_as_published": "119.03",
+   "unit": "fte",
+   "period": "June 2026 current month FTE",
+   "page": 41,
+   "quote": "Total 112.49 119.03 110.99 118.01"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 101,
+   "quote": "Total number of executives 4 2"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 439161,
+   "value_as_published": "439,161",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 101,
+   "quote": "Total remuneration i 439,161 317,482"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 751150,
+   "value_as_published": "751,150",
+   "unit": "dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 103,
+   "quote": "Total compensation - KMPs i 751,150 585,969"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to the consultancy",
+   "value": 85626,
+   "value_as_published": "$85,626",
+   "unit": "dollars",
+   "period": "2025-26 (3 consultancies of $10,000 or greater, Exc GST)",
+   "page": 57,
+   "quote": "in relation to the consultancy was $85,626 (Exc GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Cranham & Co",
+   "column_as_published": "Expenditure 2025-26 (Exc GST)",
+   "value": 40455,
+   "value_as_published": "$40,455",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 57,
+   "quote": "Cranham & Co Strategic Planning Facilitation 01/04/2026 30/06/2026 $40,000 $40,455 $6,000",
+   "counterparty": "Cranham & Co",
+   "purpose": "Strategic Planning Facilitation"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Ansell Strategic",
+   "column_as_published": "Expenditure 2025-26 (Exc GST)",
+   "value": 26500,
+   "value_as_published": "$26,500",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 57,
+   "quote": "Ansell Strategic Separation of Winchelsea Hostel & Nursing Home Society Inc. 01/07/2025 01/07/2025 $26,500 $26,500 $0",
+   "counterparty": "Ansell Strategic",
+   "purpose": "Separation of Winchelsea Hostel & Nursing Home Society Inc."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "K & L Gates",
+   "column_as_published": "Expenditure 2025-26 (Exc GST)",
+   "value": 18671,
+   "value_as_published": "$18,671",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 57,
+   "quote": "K & L Gates Separation of Winchelsea Hostel & Nursing Home Society Inc. 01/10/2025 31/10/2025 $18,671 $18,671 $0",
+   "counterparty": "K & L Gates",
+   "purpose": "Separation of Winchelsea Hostel & Nursing Home Society Inc."
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Number of occupational violence incidents reported.",
+   "value": 27,
+   "value_as_published": "27",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 41,
+   "quote": "Number of occupational violence incidents reported. 27"
+  }
+ ]
+}

@@ -1,0 +1,217 @@
+{
+ "report_id": "vic-east-wimmera-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "staff_headcount",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 47455,
+   "value_as_published": "47,455",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 52,
+   "quote": "Total revenue and income from transactions 47,455 43,724"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -50981,
+   "value_as_published": "(50,981)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 52,
+   "quote": "Total expenses from transactions (50,981) (48,658)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -34532,
+   "value_as_published": "(34,532)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 52,
+   "quote": "Employee expenses 3.1 (a) (34,532) (32,328)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -3452,
+   "value_as_published": "(3,452)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 52,
+   "quote": "Net result (3,452) (5,081)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "TOTAL",
+   "column_as_published": "2026",
+   "value": 255,
+   "value_as_published": "255",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 25,
+   "quote": "TOTAL 255 240 247 223"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 5,
+   "value_as_published": "5",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 88,
+   "quote": "Total number of executives 5 5"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 951,
+   "value_as_published": "951",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 88,
+   "quote": "Total remuneration i 951 679"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+   "value": 171230,
+   "value_as_published": "$171,230",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies is $171,230 (excl. GST)"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (under $10,000)",
+   "value": 5812,
+   "value_as_published": "$5,812",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies is $5,812 (excl. GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "K & K Consulting Pty",
+   "column_as_published": "Expenditure 2024-25 (excluding GST)",
+   "value": 40828,
+   "value_as_published": "$40,828",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "K & K Consulting Pty Accreditation review & support Oct-25 Oct-25 $40,828 $40,828 $0",
+   "counterparty": "K & K Consulting Pty",
+   "purpose": "Accreditation review & support"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Inspire HQ Pty Ltd",
+   "column_as_published": "Expenditure 2024-25 (excluding GST)",
+   "value": 12747,
+   "value_as_published": "$12,747",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "Inspire HQ Pty Ltd Human resources advisory services Jul-25 Jun-26 $12,747 $12,747 $0",
+   "counterparty": "Inspire HQ Pty Ltd",
+   "purpose": "Human resources advisory services"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Inspire HW Pty Ltd",
+   "column_as_published": "Expenditure 2024-25 (excluding GST)",
+   "value": 25564,
+   "value_as_published": "$25,564",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "Inspire HW Pty Ltd Human resources advisory services – Investigation Nov-25 Nov-25 $25,564 $25,564 $0",
+   "counterparty": "Inspire HW Pty Ltd",
+   "purpose": "Human resources advisory services – Investigation"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Jomo Advisory",
+   "column_as_published": "Expenditure 2024-25 (excluding GST)",
+   "value": 49841,
+   "value_as_published": "$49,841",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "Jomo Advisory Strategic Planning facilitation & stakeholder engagement, strategic review Feb-26 Jun-26 $49,841 $49,841 $0",
+   "counterparty": "Jomo Advisory",
+   "purpose": "Strategic Planning facilitation & stakeholder engagement, strategic review"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "The Trustee for Canterbury Laing Family Trust",
+   "column_as_published": "Expenditure 2024-25 (excluding GST)",
+   "value": 20250,
+   "value_as_published": "$20,250",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "The Trustee for Canterbury Laing Family Trust VMO/GP Clinical Review May-26 May-26 $20,250 $20,250 $0",
+   "counterparty": "The Trustee for Canterbury Laing Family Trust",
+   "purpose": "VMO/GP Clinical Review"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Federation University",
+   "column_as_published": "Expenditure 2024-25 (excluding GST)",
+   "value": 22000,
+   "value_as_published": "$22,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 44,
+   "quote": "Federation University Research Collaboration Mapping Population Jun-26 Jun-26 $22,000 $22,000 $0",
+   "counterparty": "Federation University",
+   "purpose": "Research Collaboration Mapping Population"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Small Rural Acute",
+   "value": 373,
+   "value_as_published": "373",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 20,
+   "quote": "Small Rural Acute 373 National Weighted Activity Unit"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Residential Aged Care Occupied Beddays",
+   "value": 27708,
+   "value_as_published": "27,708",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 20,
+   "quote": "Residential Aged Care Occupied Beddays 27,708 Beddays"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "HACC",
+   "value": 3153,
+   "value_as_published": "3,153",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 20,
+   "quote": "HACC 3,153 Service Days"
+  }
+ ]
+}

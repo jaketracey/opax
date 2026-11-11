@@ -1,0 +1,141 @@
+{
+ "report_id": "vic-vits-languageloop-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "staff_fte",
+  "consultancy_total",
+  "consultancy",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 31459383,
+   "value_as_published": "31,459,383",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 32,
+   "quote": "Total revenue and income from transactions 2.1 31,459,383 32,121,964"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 30331024,
+   "value_as_published": "30,331,024",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 32,
+   "quote": "Total expenses from transactions 30,331,024 30,020,700"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 5486446,
+   "value_as_published": "5,486,446",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 32,
+   "quote": "Employee expenses 3.3 5,486,446 5,282,151"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result from continuing operations",
+   "column_as_published": "2026",
+   "value": 1111195,
+   "value_as_published": "1,111,195",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 32,
+   "quote": "Net result from continuing operations 1,111,195 2,076,341"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "head office staff",
+   "value": 49,
+   "value_as_published": "49",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "dedicated team of 49 head office staff"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 2,
+   "value_as_published": "2",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 48,
+   "quote": "Total number of executives 2 2"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total Remuneration",
+   "column_as_published": "2026",
+   "value": 1173384,
+   "value_as_published": "1,173,384",
+   "unit": "dollars",
+   "period": "2025-26 (executives)",
+   "page": 48,
+   "quote": "Total Remuneration(a) 1,173,384 1,058,182"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total Remuneration",
+   "column_as_published": "2026",
+   "value": 552264,
+   "value_as_published": "552,264",
+   "unit": "dollars",
+   "period": "2025-26 (compensation of key management personnel)",
+   "page": 48,
+   "quote": "Compensation of KMPs 2026 2025 Total Remuneration 552,264 522,796"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "on-site interpreting assignments",
+   "value": 174000,
+   "value_as_published": "174,000",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 16,
+   "quote": "over 174,000 on-site interpreting assignments"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "telephone interpreting assignments",
+   "value": 312000,
+   "value_as_published": "312,000",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 17,
+   "quote": "over 312,000 telephone interpreting assignments"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "video conference sessions",
+   "value": 8800,
+   "value_as_published": "8,800",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 17,
+   "quote": "more than 8,800 video conference sessions"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "interpreters and translators",
+   "value": 3988,
+   "value_as_published": "3,988",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 15,
+   "quote": "network of more than 3,988 interpreters and translators"
+  }
+ ]
+}

@@ -1,0 +1,101 @@
+{
+ "report_id": "vic-heywood-rural-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 18398,
+   "value_as_published": "18,398",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Total revenue and income from transactions 18,398 17,340"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value": -19017,
+   "value_as_published": "(19,017)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Total Expenses from transactions (19,017) (17,550)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -13922,
+   "value_as_published": "(13,922)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Employee expenses 3.1(a) (13,922) (12,870)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -670,
+   "value_as_published": "(670)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 68,
+   "quote": "Net result (670) (199)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "TOTAL",
+   "column_as_published": "2026",
+   "value": 100.25,
+   "value_as_published": "100.25",
+   "unit": "fte",
+   "period": "June 2026 (June current month FTE)",
+   "page": 31,
+   "quote": "TOTAL 94.01 100.25 92.47 99.98"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 324,
+   "value_as_published": "324",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 90,
+   "quote": "Total compensation - KMPs i 324 284"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to this consultancy",
+   "value": 19250,
+   "value_as_published": "$19,250",
+   "unit": "dollars",
+   "period": "2025-26 (1 consultancy of $10,000 or greater, excl. GST)",
+   "page": 46,
+   "quote": "The total expenditure incurred during 2025-26 in relation to this consultancy is $19,250 (excl. GST)."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (ex GST)",
+   "counterparty": "Triplex Consulting",
+   "purpose": "Development of HRH Strategic & Operational Risk register",
+   "value": 19250,
+   "value_as_published": "$19,250",
+   "unit": "dollars",
+   "period": "2025-26 (ex GST)",
+   "page": 46,
+   "quote": "Triplex Consulting Development of HRH Strategic & Operational Risk register 01-02-2026 30-06-2026 $19,250 $19,250 $0.00"
+  }
+ ]
+}

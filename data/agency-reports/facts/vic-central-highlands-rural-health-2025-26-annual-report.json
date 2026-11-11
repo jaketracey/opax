@@ -1,0 +1,110 @@
+{
+ "report_id": "vic-central-highlands-rural-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_fte",
+  "staff_headcount",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "2026 $000",
+   "value": 75984,
+   "value_as_published": "75,984",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 28,
+   "quote": "Total revenue 75,984 73,907"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses",
+   "column_as_published": "2026 $000",
+   "value": 80876,
+   "value_as_published": "80,876",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 28,
+   "quote": "Total expenses 80,876 73,796"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -56524,
+   "value_as_published": "(56,524)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 57,
+   "quote": "Employee expenses 3.1 (a) (56,524) (52,746)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026 $000",
+   "value": -4712,
+   "value_as_published": "-4,712",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 28,
+   "quote": "Net result -4,712 274"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Total number of executives 7 8"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 1770,
+   "value_as_published": "1,770",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 98,
+   "quote": "Total remuneration i 1,770 1,704"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "consultancies where the total fees payable to the consultants were $10,000 or greater",
+   "value": null,
+   "value_as_published": "nil",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 29,
+   "quote": "there were nil consultancies where the total fees payable to the consultants were $10,000 or greater"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "theatre separations",
+   "value": 489,
+   "value_as_published": "489",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 16,
+   "quote": "a total of 489 theatre separations"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "gynaecological surgical separations",
+   "value": 80,
+   "value_as_published": "80",
+   "unit": "count",
+   "period": "2025-26 (with Kyneton Hospital)",
+   "page": 16,
+   "quote": "there were 80 gynaecological surgical separations"
+  }
+ ]
+}

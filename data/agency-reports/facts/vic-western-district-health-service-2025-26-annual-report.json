@@ -1,0 +1,188 @@
+{
+ "report_id": "vic-western-district-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total Revenue and Income from transactions",
+   "column_as_published": "2026",
+   "value": 143528,
+   "value_as_published": "143,528",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Total Revenue and Income from transactions 143,528 130,543"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value": -150566,
+   "value_as_published": "(150,566)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Total Expenses from transactions (150,566) (136,826)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -102229,
+   "value_as_published": "(102,229)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Employee expenses 3.1(a) (102,229) (93,582)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -6615,
+   "value_as_published": "(6,615)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 48,
+   "quote": "Net result (6,615) (6,173)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "June Current Month FTE",
+   "value": 767.88,
+   "value_as_published": "767.88",
+   "unit": "fte",
+   "period": "June 2026 (current month FTE)",
+   "page": 18,
+   "quote": "Total 767.88 663.25 693.8 646.2"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 10,
+   "value_as_published": "10",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Total number of executives 10 7"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 1743,
+   "value_as_published": "1,743",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Total remuneration i 1,743 1,440"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 2242,
+   "value_as_published": "2,242",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 62,
+   "quote": "Total compensation - KMPs i 2,242 1,942"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Total expenditure incurred during this period for these consultancies",
+   "value": 214559,
+   "value_as_published": "$214,559",
+   "unit": "dollars",
+   "period": "2025-26 (six consultancies of $10,000 or greater, excluding GST)",
+   "page": 27,
+   "quote": "Total expenditure incurred during this period for these consultancies was $214,559 (excluding GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "column_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 85000,
+   "value_as_published": "85,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 27,
+   "quote": "Boroko Consulting Pty Ltd Merger Project Support 1/07/2025 30/04/2026 85,000 85,000",
+   "counterparty": "Boroko Consulting Pty Ltd",
+   "purpose": "Merger Project Support"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "column_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 18600,
+   "value_as_published": "18,600",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 27,
+   "quote": "Stewart Brown Support at Home Price Review 1/07/2025 31/03/2026 18,600 18,600",
+   "counterparty": "Stewart Brown",
+   "purpose": "Support at Home Price Review"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "column_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 12600,
+   "value_as_published": "12,600",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 27,
+   "quote": "Stokes Perna Building Compliance DFFH 5 Yearly audits 1/06/2025 31/07/2025 12,600 12,600",
+   "counterparty": "Stokes Perna",
+   "purpose": "Building Compliance DFFH 5 Yearly audits"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "column_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 50188,
+   "value_as_published": "50,188",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 27,
+   "quote": "Kelloway Lonsdale Pty Ltd Merger Project Support 1/07/2025 30/04/2026 50,188 50,188",
+   "counterparty": "Kelloway Lonsdale Pty Ltd",
+   "purpose": "Merger Project Support"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "column_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 22500,
+   "value_as_published": "22,500",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 27,
+   "quote": "Power Solutions Dtd Pty Ltd VCDC Costing Services 1/07/2025 30/06/2026 22,500 22,500",
+   "counterparty": "Power Solutions Dtd Pty Ltd",
+   "purpose": "VCDC Costing Services"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excluding GST)",
+   "column_as_published": "Expenditure 2025-26 (excluding GST)",
+   "value": 25672,
+   "value_as_published": "25,672",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 27,
+   "quote": "Impact Collaborative Pty/Ltd Strategic Plan Development 1/06/2026 31/12/2026 25,672 25,672",
+   "counterparty": "Impact Collaborative Pty/Ltd",
+   "purpose": "Strategic Plan Development"
+  }
+ ]
+}

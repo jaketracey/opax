@@ -1,0 +1,197 @@
+{
+ "report_id": "vic-victorian-academy-of-teaching-and-leadership-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 48935956,
+   "value_as_published": "48,935,956",
+   "unit": "dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 58,
+   "quote": "Total revenue and income from transactions 48,935,956 58,494,536"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 49852587,
+   "value_as_published": "49,852,587",
+   "unit": "dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 58,
+   "quote": "Total expenses from transactions 49,852,587 52,600,004"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 25717553,
+   "value_as_published": "25,717,553",
+   "unit": "dollars",
+   "period": "financial year ended 30 June 2026",
+   "page": 58,
+   "quote": "Employee expenses 3.2.1 25,717,553 25,794,407"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result from transactions",
+   "column_as_published": "2026",
+   "value": -916631,
+   "value_as_published": "(916,631)",
+   "unit": "dollars",
+   "period": "financial year ended 30 June 2026 (net result from transactions; comprehensive result also (916,631))",
+   "page": 58,
+   "quote": "Net result from transactions (916,631) 5,894,532"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "column_as_published": "Jun 26",
+   "value": 97,
+   "value_as_published": "97",
+   "unit": "people",
+   "period": "Jun 26 (Table 6: Comparative workforce data)",
+   "page": 42,
+   "quote": "Total employees 97"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "column_as_published": "Jun 26",
+   "value": 94.7,
+   "value_as_published": "94.7",
+   "unit": "fte",
+   "period": "Jun 26 (Table 6: Comparative workforce data)",
+   "page": 42,
+   "quote": "Total employees 97 94.7"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+   "value": null,
+   "value_as_published": "$400,000 – $419,999",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 80,
+   "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of the Academy during the reporting period was in the range: $400,000 – $419,999"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 2,
+   "value_as_published": "2",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 81,
+   "quote": "Total number of executives 2"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 727821,
+   "value_as_published": "727,821",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 81,
+   "quote": "Total remuneration 1 727,821"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 818231,
+   "value_as_published": "818,231",
+   "unit": "dollars",
+   "period": "2025-26 (compensation of KMP)",
+   "page": 82,
+   "quote": "Compensation of KMP 2026 2025 $ $ Total remuneration 4 818,231"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred for the 12-month period ending 30 June 2026 in relation to these consultancies",
+   "value": 47000,
+   "value_as_published": "$47,000",
+   "unit": "dollars",
+   "period": "12-month period ending 30 June 2026 (one consultancy of $10,000 or greater, excluding GST)",
+   "page": 47,
+   "quote": "The total expenditure incurred for the 12-month period ending 30 June 2026 in relation to these consultancies was $47,000"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "The Trustee for Sedo Unit Trust",
+   "column_as_published": "Expenditure Jul 2025 – Jun 2026 (excl. GST)",
+   "value": 47000,
+   "value_as_published": "$47,000",
+   "unit": "dollars",
+   "period": "Jul 2025 – Jun 2026",
+   "page": 47,
+   "quote": "Lean procurement process improvement project $59,000 $47,000 $12,000",
+   "counterparty": "The Trustee for Sedo Unit Trust",
+   "purpose": "Lean procurement process improvement project"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Number of assistant principals participating in leadership development programs at the Academy of Teaching and Leadership (day length or longer)",
+   "column_as_published": "2025–26 actual",
+   "value": 1817,
+   "value_as_published": "1,817",
+   "unit": "count",
+   "period": "2025-26 actual (2025 calendar year)",
+   "page": 25,
+   "quote": "Number of assistant principals participating in leadership development programs at the Academy of Teaching and Leadership (day length or longer) 1,000 1,817"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Number of principals participating in leadership development programs at the Victorian Academy of Teaching and Leadership (day length or longer)",
+   "column_as_published": "2025–26 actual",
+   "value": 1758,
+   "value_as_published": "1,758",
+   "unit": "count",
+   "period": "2025-26 actual (2025 calendar year)",
+   "page": 25,
+   "quote": "Number of principals participating in leadership development programs at the Victorian Academy of Teaching and Leadership (day length or longer) 1,100 1,758"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Number of teaching service staff who are not principals or assistant principals participating in leadership development programs at the Victorian Academy of Teaching and Leadership (day length or longer)",
+   "column_as_published": "2025–26 actual",
+   "value": 5754,
+   "value_as_published": "5,754",
+   "unit": "count",
+   "period": "2025-26 actual (2025 calendar year)",
+   "page": 25,
+   "quote": "Number of teaching service staff who are not principals or assistant principals participating in leadership development programs at the Victorian Academy of Teaching and Leadership (day length or longer) 3,000 5,754"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Number of participants in the Teaching Excellence Program",
+   "column_as_published": "2025–26 actual",
+   "value": 499,
+   "value_as_published": "499",
+   "unit": "count",
+   "period": "2025-26 actual (2025 calendar year)",
+   "page": 25,
+   "quote": "Number of participants in the Teaching Excellence Program 400 499"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Number of teaching service staff participating in short-form Academy professional learning",
+   "column_as_published": "2025–26 actual",
+   "value": 4962,
+   "value_as_published": "4,962",
+   "unit": "count",
+   "period": "2025-26 actual (2025 calendar year)",
+   "page": 25,
+   "quote": "Number of teaching service staff participating in short-form Academy professional learning 3,000 4,962"
+  }
+ ]
+}

@@ -1,0 +1,133 @@
+{
+ "report_id": "vic-west-gippsland-catchment-management-authority-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_count"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total income from transactions",
+   "column_as_published": "2026",
+   "value": 13939736,
+   "value_as_published": "13,939,736",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 69,
+   "quote": "Total income from transactions 13,939,736 10,838,658"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 12826493,
+   "value_as_published": "12,826,493",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 69,
+   "quote": "Total expenses from transactions 12,826,493 10,539,058"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 5819284,
+   "value_as_published": "5,819,284",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 69,
+   "quote": "Employee expenses 3.1.1 5,819,284 5,297,907"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 1277326,
+   "value_as_published": "1,277,326",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 69,
+   "quote": "Net result 1,277,326 382,340"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "FTE",
+   "value": 36.8,
+   "value_as_published": "36.8",
+   "unit": "fte",
+   "period": "last pay period in June 2026",
+   "page": 49,
+   "quote": "Total 44 36.8 42 34.8"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total",
+   "column_as_published": "(headcount)",
+   "value": 44,
+   "value_as_published": "44",
+   "unit": "people",
+   "period": "last pay period in June 2026",
+   "page": 49,
+   "quote": "Total 44 36.8 42 34.8"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total",
+   "column_as_published": "2026",
+   "value": 964909,
+   "value_as_published": "964,909",
+   "unit": "dollars",
+   "period": "2025-26 (compensation of key management personnel)",
+   "page": 93,
+   "quote": "Compensation of key management personnel 2026 2025 $ $ Total 964,909 938,926"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 77420,
+   "value_as_published": "$77,420",
+   "unit": "dollars",
+   "period": "2025-26 (two consultancies of $10,000 or greater, excl. GST)",
+   "page": 54,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies is $77,420 (excluding GST)."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "counterparty": "Natural Capital and Climate",
+   "purpose": "Powlett ALM Business Case",
+   "value": 67420,
+   "value_as_published": "$67,420",
+   "unit": "dollars",
+   "period": "2025-26 (excl. GST)",
+   "page": 54,
+   "quote": "Natural Capital and Climate Powlett ALM Business Case 06/03/2026 01/12/2026 $134,840 $67,420 $67,420"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "counterparty": "Deliberate Impact",
+   "purpose": "Facilitation Services",
+   "value": 10000,
+   "value_as_published": "$10,000",
+   "unit": "dollars",
+   "period": "2025-26 (excl. GST)",
+   "page": 54,
+   "quote": "Deliberate Impact Facilitation Services 09/06/2026 09/06/2026 $10,000 $10,000 nil"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "planning permit referrals and flood advice requests",
+   "value": 1019,
+   "value_as_published": "1,019",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 6,
+   "quote": "we processed 1,019 planning permit referrals and flood advice requests"
+  }
+ ]
+}

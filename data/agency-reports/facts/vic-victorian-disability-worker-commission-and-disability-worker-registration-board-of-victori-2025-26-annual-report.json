@@ -1,0 +1,144 @@
+{
+ "report_id": "vic-victorian-disability-worker-commission-and-disability-worker-registration-board-of-victori-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "executive_remuneration_total",
+  "total_expenses",
+  "total_income",
+  "employee_expenses",
+  "net_result",
+  "consultancy_total",
+  "consultancy",
+  "public_hearings",
+  "referrals_to_prosecution",
+  "recommendations_made"
+ ],
+ "facts": [
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "column_as_published": "Table 5: Workforce data as of June 2026",
+   "value": 52,
+   "value_as_published": "52",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 27,
+   "quote": "Total employees 52 50.3 37 8 43.6 7 6.7"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "column_as_published": "Table 5: Workforce data as of June 2026",
+   "value": 50.3,
+   "value_as_published": "50.3",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 27,
+   "quote": "Total employees 52 50.3 37 8 43.6 7 6.7"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Executives",
+   "column_as_published": "Table 5: Workforce data as of June 2026",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 27,
+   "quote": "Executives 1 1 0 0 0 1 1 Total employees 52 50.3 37 8 43.6 7 6.7"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "complaints",
+   "value": 117,
+   "value_as_published": "117",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 8,
+   "quote": "433 enquiries 406 closed 117 complaints 133 closed† 68 notifications 76 closed†"
+  },
+  {
+   "metric": "matters_received",
+   "label_as_published": "notifications",
+   "value": 68,
+   "value_as_published": "68",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 8,
+   "quote": "433 enquiries 406 closed 117 complaints 133 closed† 68 notifications 76 closed†"
+  },
+  {
+   "metric": "investigations_commenced",
+   "label_as_published": "new investigations begun",
+   "value": 20,
+   "value_as_published": "20",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 8,
+   "quote": "19 investigations underway 20 new investigations begun 82% increase* 29 completed"
+  },
+  {
+   "metric": "investigations_finalised",
+   "label_as_published": "completed",
+   "value": 29,
+   "value_as_published": "29",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 8,
+   "quote": "20 new investigations begun 82% increase* 29 completed 314% increase*"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "enquiries",
+   "value": 433,
+   "value_as_published": "433",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 8,
+   "quote": "433 enquiries 406 closed 117 complaints 133 closed† 68 notifications 76 closed†"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Interim Prohibition Orders made",
+   "value": 27,
+   "value_as_published": "27",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 8,
+   "quote": "27 Interim Prohibition Orders made involving 11 unregistered disability workers"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Prohibition Orders",
+   "value": 12,
+   "value_as_published": "12",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 8,
+   "quote": "12 Prohibition Orders 140% increase*"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "registered disability workers",
+   "value": 1083,
+   "value_as_published": "1,083",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 8,
+   "quote": "1,083 registered disability workers, a 7% increase*"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "new applications for disability worker registration",
+   "value": 453,
+   "value_as_published": "453",
+   "unit": "count",
+   "period": "2025–26",
+   "page": 8,
+   "quote": "453 new applications for disability worker registration"
+  }
+ ]
+}

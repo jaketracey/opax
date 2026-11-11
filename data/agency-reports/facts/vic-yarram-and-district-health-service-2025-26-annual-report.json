@@ -1,0 +1,189 @@
+{
+ "report_id": "vic-yarram-and-district-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount",
+  "named_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 26877757,
+   "value_as_published": "26,877,757",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 62,
+   "quote": "Total revenue and income from transactions 26,877,757 24,059,705"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value": -27867721,
+   "value_as_published": "(27,867,721)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 62,
+   "quote": "Total Expenses from transactions (27,867,721) (24,301,000)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -17852777,
+   "value_as_published": "(17,852,777)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 62,
+   "quote": "Employee expenses 3.1(a) (17,852,777) (15,312,845)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -930071,
+   "value_as_published": "(930,071)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 62,
+   "quote": "Net result (930,071) (174,734)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total:",
+   "column_as_published": "Current Month FTE",
+   "value": 133.41,
+   "value_as_published": "133.41",
+   "unit": "fte",
+   "period": "June 2026 (current month FTE)",
+   "page": 24,
+   "quote": "Total: 136.06 133.41 129.33 126.08"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 92,
+   "quote": "Total number of executives 3 3"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 509823,
+   "value_as_published": "509,823",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 92,
+   "quote": "Total remuneration i 509,823 670,776"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 856924,
+   "value_as_published": "856,924",
+   "unit": "dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 93,
+   "quote": "Total compensation - KMPs i 856,924 1,006,527"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Consultancies Over $10,000",
+   "value": 327438,
+   "value_as_published": "$327,438",
+   "unit": "dollars",
+   "period": "2025-2026 (6 consultancies of $10,000 or greater, excl GST)",
+   "page": 28,
+   "quote": "The total expenditure incurred during 2025-2026 in relation to these consultancies is $327,438 (excl GST)"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "PKF Integrity Services BMNS Pty Ltd",
+   "column_as_published": "EXPENDITURE 2025-2026 (EX GST)",
+   "value": 12188,
+   "value_as_published": "$12,188",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 28,
+   "quote": "PKF Integrity Services BMNS Pty Ltd Review stores operations 01.07.2025 30.06.2026 $0 $12,188",
+   "counterparty": "PKF Integrity Services BMNS Pty Ltd",
+   "purpose": "Review stores operations"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Williams & Burns Contracting Pty Ltd",
+   "column_as_published": "EXPENDITURE 2025-2026 (EX GST)",
+   "value": 18800,
+   "value_as_published": "$18,800",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 28,
+   "quote": "Williams & Burns Contracting Pty Ltd Audit of HVAC system 01.07.2025 30.06.2026 $0 $18,800",
+   "counterparty": "Williams & Burns Contracting Pty Ltd",
+   "purpose": "Audit of HVAC system"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Latrobe Regional Health",
+   "column_as_published": "EXPENDITURE 2025-2026 (EX GST)",
+   "value": 132862,
+   "value_as_published": "$132,862",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 28,
+   "quote": "Latrobe Regional Health Finance, Payroll Services 01.07.2025 30.06.2026 $0 $132,862",
+   "counterparty": "Latrobe Regional Health",
+   "purpose": "Finance, Payroll Services"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "HLB Mann Judd Pty Ltd",
+   "column_as_published": "EXPENDITURE 2025-2026 (EX GST)",
+   "value": 37400,
+   "value_as_published": "$37,400",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 28,
+   "quote": "HLB Mann Judd Pty Ltd Review of internal controls 01.07.2025 30.06.2026 $0 $37,400",
+   "counterparty": "HLB Mann Judd Pty Ltd",
+   "purpose": "Review of internal controls"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "POP Architecture",
+   "column_as_published": "EXPENDITURE 2025-2026 (EX GST)",
+   "value": 96499,
+   "value_as_published": "$96,499",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 28,
+   "quote": "POP Architecture St Elmo’s refurb design work 01.07.2025 30.06.2026 $0 $96,499",
+   "counterparty": "POP Architecture",
+   "purpose": "St Elmo’s refurb design work"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Latrobe Valley Drafting",
+   "column_as_published": "EXPENDITURE 2025-2026 (EX GST)",
+   "value": 29689,
+   "value_as_published": "$29,689",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 28,
+   "quote": "Latrobe Valley Drafting Crossley House refurb design work 01.07.2025 30.06.2026 $0 $29,689",
+   "counterparty": "Latrobe Valley Drafting",
+   "purpose": "Crossley House refurb design work"
+  }
+ ]
+}

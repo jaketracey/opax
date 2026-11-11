@@ -211,19 +211,29 @@ def page_text(row) -> list[str]:
     if not path.exists():
         pdf_pages((CACHE / "files" / f"{row['sha256']}.pdf").read_bytes(), CACHE)
     pages = json.loads(path.read_text())
-    ocr = DATA / "ocr" / f"{row.get('report_id')}.json"
-    if not any(t.strip() for t in pages) and ocr.exists():
-        # a scan with no text layer: on-device OCR text (parli.ingest.agency_ocr), both renderings
-        data = json.loads(ocr.read_text())
-        if data.get("sha256") == row["sha256"]:
-            by_page = {p["page"]: p["text"] + "\n\n" + p.get("rows", "") for p in data["pages"]}
-            pages = [by_page.get(i + 1, "") for i in range(len(pages))]
+    filled = ocr_pages(row)
+    if filled:
+        # pages with no text layer: on-device OCR text (parli.ingest.agency_ocr), both renderings
+        data = json.loads((DATA / "ocr" / f"{row.get('report_id')}.json").read_text())
+        by_page = {p["page"]: p["text"] + "\n\n" + p.get("rows", "") for p in data["pages"]}
+        pages = [by_page.get(i + 1, "") if i + 1 in filled else t for i, t in enumerate(pages)]
     # some PDF text layers carry control characters (BEL before table labels); read them as spaces
     return [CONTROL.sub(" ", t) for t in pages]
 
 
 # how an OCR figure was confirmed: both readers (Vision and the local vision model) agree, or a person checked the page image
 OCR_CHECKS = {"both_readers_agree", "page_image_checked", "both_readers_agree_and_page_image_checked"}
+
+
+def ocr_pages(row) -> set[int]:
+    """Physical pages (1-based) with no text layer whose text comes from the committed OCR file. A report
+    printed partly as images (a scanned body with only the auditor's opinion as text) is read page by page."""
+    if not row.get("sha256") or not row.get("report_id"):
+        return set()
+    path, ocr = CACHE / "text" / (row["sha256"] + ".json"), DATA / "ocr" / f"{row['report_id']}.json"
+    if not path.exists() or not ocr.exists() or json.loads(ocr.read_text()).get("sha256") != row["sha256"]:
+        return set()
+    return {i + 1 for i, t in enumerate(json.loads(path.read_text())) if not t.strip()}
 
 
 def scanned(row) -> bool:
@@ -297,7 +307,7 @@ def check_fact(fact, pages, row) -> list[str]:
         if fact.get(k) and not verbatim(str(fact[k]), pages[page - 1]):
             errs.append(f"{k} {fact[k]!r} is not on the cited page")
     ex = fact.get("extraction")
-    if scanned(row) and not ex:
+    if (scanned(row) or page in ocr_pages(row)) and not ex:
         errs.append("a figure from a scan needs extraction (method ocr, engine, check)")
     if ex and not (ex.get("method") == "ocr" and ex.get("engine") and ex.get("check") in OCR_CHECKS):
         errs.append(f"extraction needs method 'ocr', an engine and check in {sorted(OCR_CHECKS)}")

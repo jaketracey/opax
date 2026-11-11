@@ -1,0 +1,187 @@
+{
+ "report_id": "vic-australian-centre-for-the-moving-image-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "consultancy_total",
+  "consultancy",
+  "executive_average_remuneration"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 43916373,
+   "value_as_published": "43,916,373",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 122,
+   "quote": "Total revenue and income from transactions 43,916,373 37,264,194"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -45660764,
+   "value_as_published": "(45,660,764)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 122,
+   "quote": "Total expenses from transactions (45,660,764) (42,128,096)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -23330712,
+   "value_as_published": "(23,330,712)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 122,
+   "quote": "Employee expenses 3.2.1 (23,330,712) (21,240,226)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result from continuing operations",
+   "column_as_published": "2026",
+   "value": -1683216,
+   "value_as_published": "(1,683,216)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 122,
+   "quote": "Net result from continuing operations (1,683,216) (4,626,816)"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "column_as_published": "June 2026",
+   "value": 251,
+   "value_as_published": "251",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 108,
+   "quote": "Total employees 251 135.5 78 46 109.6 127 25.9"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "column_as_published": "June 2026",
+   "value": 135.5,
+   "value_as_published": "135.5",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 108,
+   "quote": "Total employees 251 135.5 78 46 109.6 127 25.9"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Accountable Officer",
+   "value": null,
+   "value_as_published": "$480,000-$490,000",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 146,
+   "quote": "Accountable Officer Remuneration received or receivable by the Accountable Officer in connection with the management of ACMI during the reporting period was in the range $480,000-$490,000"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 3,
+   "value_as_published": "3",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 146,
+   "quote": "Total number of executives 3 3"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (a)",
+   "column_as_published": "2026",
+   "value": 660047,
+   "value_as_published": "660,047",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 146,
+   "quote": "Total remuneration (a) 660,047 783,133"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total (a)",
+   "column_as_published": "2026",
+   "value": 1144083,
+   "value_as_published": "1,144,083",
+   "unit": "dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 147,
+   "quote": "Compensation of KMPs 2026 2025 $ $ Total (a) 1,144,083 1,211,326"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Executives",
+   "column_as_published": "Executives",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 110,
+   "quote": "$200,000 - $219,999 1",
+   "band": "$200,000 - $219,999"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Executives",
+   "column_as_published": "Executives",
+   "value": 2,
+   "value_as_published": "2",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 110,
+   "quote": "$260,000 - $279,999 2",
+   "band": "$260,000 - $279,999"
+  },
+  {
+   "metric": "executive_band",
+   "label_as_published": "Executives",
+   "column_as_published": "Executives",
+   "value": 1,
+   "value_as_published": "1",
+   "unit": "people",
+   "period": "2025-26",
+   "page": 110,
+   "quote": "$400,000 - $419,999 1",
+   "band": "$400,000 - $419,999"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "visitors are tourists to Victoria",
+   "value": null,
+   "value_as_published": "439k",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "439k visitors are tourists to Victoria"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Interactions with the ACMI Collection",
+   "value": null,
+   "value_as_published": "320k+",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "320k+ Interactions with the ACMI Collection"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Volunteer Hours",
+   "value": null,
+   "value_as_published": "11.5k",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 18,
+   "quote": "11.5k Volunteer Hours"
+  }
+ ]
+}

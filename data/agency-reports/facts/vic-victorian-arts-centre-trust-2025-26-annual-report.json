@@ -1,0 +1,159 @@
+{
+ "report_id": "vic-victorian-arts-centre-trust-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 142801,
+   "value_as_published": "142,801",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 74,
+   "quote": "Total revenue and income from transactions 142,801 132,666"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -141006,
+   "value_as_published": "(141,006)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 74,
+   "quote": "Total expenses from transactions (141,006) (135,256)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefit expenses",
+   "column_as_published": "2026",
+   "value": -59977,
+   "value_as_published": "(59,977)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 74,
+   "quote": "Employee benefit expenses 3.2 (59,977) (58,577)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 2091,
+   "value_as_published": "2,091",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 74,
+   "quote": "Net result 2,091 (1,596)"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Accountable Officer",
+   "value": null,
+   "value_as_published": "$460,000 – $470,000",
+   "unit": "dollars",
+   "period": "FY2026",
+   "page": 109,
+   "quote": "The remuneration of the Accountable Officer was in the range of $460,000 – $470,000"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration (a)",
+   "column_as_published": "2026",
+   "value": 1250,
+   "value_as_published": "1,250",
+   "unit": "thousands_of_dollars",
+   "period": "FY2026",
+   "page": 109,
+   "quote": "Total remuneration (a) 1,250 1,266"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 6,
+   "value_as_published": "6",
+   "unit": "count",
+   "period": "FY2026",
+   "page": 109,
+   "quote": "Total number of executives 6 5"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Compensation of KMPs (a)",
+   "column_as_published": "2026",
+   "value": 1712,
+   "value_as_published": "1,712",
+   "unit": "thousands_of_dollars",
+   "period": "FY2026",
+   "page": 110,
+   "quote": "Compensation of KMPs (a) 2026 $’000s 2025 $’000s Total 1,712 1,716"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "column_as_published": "Number (headcount)",
+   "value": 721,
+   "value_as_published": "721",
+   "unit": "people",
+   "period": "June 2026",
+   "page": 116,
+   "quote": "Total employees 721 451 252 36 278 92 58 341 115"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "column_as_published": "FTE",
+   "value": 451,
+   "value_as_published": "451",
+   "unit": "fte",
+   "period": "June 2026",
+   "page": 116,
+   "quote": "Total employees 721 451 252 36 278 92 58 341 115"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "Details of consultancies (valued at $10,000 or greater)",
+   "value": 488582,
+   "value_as_published": "$488,582",
+   "unit": "dollars",
+   "period": "FY2026",
+   "page": 120,
+   "quote": "The total expenditure incurred during FY2026 in relation to these consultancies was $488,582 (excluding GST)"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "39,309 visitors, achieving 131% of its target",
+   "value": 39309,
+   "value_as_published": "39,309",
+   "unit": "people",
+   "period": "FY2026",
+   "page": 35,
+   "quote": "39,309 visitors, achieving 131% of its target"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "A total of 524 objects were acquired",
+   "value": 524,
+   "value_as_published": "524",
+   "unit": "count",
+   "period": "FY2026",
+   "page": 32,
+   "quote": "A total of 524 objects were acquired"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "The Families and Children program welcomed more than 24,000 visitors over summer",
+   "value": 24000,
+   "value_as_published": "24,000",
+   "unit": "people",
+   "period": "FY2026",
+   "page": 32,
+   "quote": "The Families and Children program welcomed more than 24,000 visitors over summer"
+  }
+ ]
+}

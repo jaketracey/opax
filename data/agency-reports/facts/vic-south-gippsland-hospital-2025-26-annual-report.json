@@ -1,0 +1,122 @@
+{
+ "report_id": "vic-south-gippsland-hospital-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_fte",
+  "staff_headcount",
+  "consultancy_total",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 19116007,
+   "value_as_published": "19,116,007",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 46,
+   "quote": "Total revenue and income from transactions 19,116,007 16,751,160"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value": -20307826,
+   "value_as_published": "(20,307,826)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 46,
+   "quote": "Total Expenses from transactions (20,307,826) (17,724,890)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -14137420,
+   "value_as_published": "(14,137,420)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 46,
+   "quote": "Employee expenses 3.1(a) (14,137,420) (12,917,052)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -1163162,
+   "value_as_published": "(1,163,162)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 46,
+   "quote": "Net result (1,163,162) (929,397)"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 69,
+   "quote": "Total number of executives 4 3"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 585372,
+   "value_as_published": "585,372",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 69,
+   "quote": "Total remuneration i 585,372 432,136"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 910747,
+   "value_as_published": "910,747",
+   "unit": "dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 70,
+   "quote": "Total compensation - KMPs i 910,747 724,296"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "admissions, excluding births",
+   "value": 977,
+   "value_as_published": "977",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 10,
+   "quote": "There were 977 admissions, excluding births"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "presentations",
+   "value": 2859,
+   "value_as_published": "2,859",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 10,
+   "quote": "Our Urgent Care Centre has experienced 2,859 presentations."
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "procedures",
+   "value": 825,
+   "value_as_published": "825",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 10,
+   "quote": "to provide 825 procedures to our local community"
+  }
+ ]
+}

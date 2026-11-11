@@ -1,0 +1,99 @@
+{
+ "report_id": "vic-omeo-district-health-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "employee_expenses",
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total",
+  "head_remuneration",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "2026 $000",
+   "value": 12059,
+   "value_as_published": "12,059",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (financial year ended 30 June 2026)",
+   "page": 17,
+   "quote": "Total revenue 12,059"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses",
+   "column_as_published": "2026 $000",
+   "value": 11654,
+   "value_as_published": "11,654",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (financial year ended 30 June 2026)",
+   "page": 17,
+   "quote": "Total expenses 11,654"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026 $000",
+   "value": 469,
+   "value_as_published": "469",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (financial year ended 30 June 2026)",
+   "page": 17,
+   "quote": "Net result 469"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Grand Total",
+   "column_as_published": "June Current Month FTE",
+   "value": 51.34,
+   "value_as_published": "51.34",
+   "unit": "fte",
+   "period": "June 2026 (June current month FTE)",
+   "page": 11,
+   "quote": "Grand Total 47.12 51.34"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 16086,
+   "value_as_published": "$16,086",
+   "unit": "dollars",
+   "period": "2025-26 (4 consultancies under $10,000; no consultancy of $10,000 or greater), excluding GST",
+   "page": 18,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies is $16,086"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "increase in acute inpatient bed days",
+   "value": 122,
+   "value_as_published": "122%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 3,
+   "quote": "122% increase in acute inpatient bed days"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "increase in Transition Care bed days",
+   "value": 223,
+   "value_as_published": "223%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 3,
+   "quote": "223% increase in Transition Care bed days"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "increase in Urgent Care Centre presentations",
+   "value": 39,
+   "value_as_published": "39%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 3,
+   "quote": "39% increase in Urgent Care Centre presentations"
+  }
+ ]
+}

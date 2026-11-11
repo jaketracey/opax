@@ -1,0 +1,125 @@
+{
+ "report_id": "vic-northeast-health-wangaratta-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "292,115",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 41,
+   "quote": "Total revenue and income from transactions 292,115 276,874",
+   "value": 292115
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value_as_published": "(294,798)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 41,
+   "quote": "Total expenses from transactions (294,798) (277,008)",
+   "value": -294798
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value_as_published": "(206,872)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 41,
+   "quote": "Employee expenses 3.1 (a) (206,872) (193,072)",
+   "value": -206872
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value_as_published": "(2,284)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 41,
+   "quote": "Net result (2,284) (200)",
+   "value": -2284
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Grand Total",
+   "column_as_published": "2026",
+   "value_as_published": "1171",
+   "unit": "fte",
+   "period": "June 2026 (June current month FTE)",
+   "page": 11,
+   "quote": "Grand Total 1135 1171 1120 1155",
+   "value": 1171
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 81,
+   "quote": "Total number of executives 7 7",
+   "value": 7
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration i",
+   "column_as_published": "2026",
+   "value_as_published": "1,477",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 81,
+   "quote": "Total remuneration i 1,477 1,598",
+   "value": 1477
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-2026 in relation to these consultancies",
+   "value_as_published": "$86,750",
+   "unit": "dollars",
+   "period": "2025-2026 (2 consultancies of $10,000 or greater)",
+   "page": 21,
+   "quote": "The total expenditure incurred during 2025-2026 in relation to these consultancies is $86,750 (excl. GST)",
+   "value": 86750
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Amplify",
+   "column_as_published": "Expenditure 2025-2026 (excl. GST)",
+   "value_as_published": "$59,250",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 21,
+   "quote": "Amplify Procurement and Supply Hub feasibility $59,250 $59,250 Nil",
+   "counterparty": "Amplify",
+   "purpose": "Procurement and Supply Hub feasibility",
+   "value": 59250
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Impact Collaborative",
+   "column_as_published": "Expenditure 2025-2026 (excl. GST)",
+   "value_as_published": "$27,500",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 21,
+   "quote": "Impact Collaborative Outpatient Clinic review – current state and future state $27,500 $27,500 $42,604",
+   "counterparty": "Impact Collaborative",
+   "purpose": "Outpatient Clinic review – current state and future state",
+   "value": 27500
+  }
+ ]
+}

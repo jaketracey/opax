@@ -1,0 +1,161 @@
+{
+ "report_id": "vic-kyabram-district-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band",
+  "head_remuneration",
+  "staff_headcount"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue",
+   "column_as_published": "2026",
+   "value": 43221,
+   "value_as_published": "43221",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (financial year ended 30 June 2026)",
+   "page": 16,
+   "quote": "Total revenue 43221"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses",
+   "column_as_published": "2026",
+   "value": 42994,
+   "value_as_published": "42994",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (financial year ended 30 June 2026)",
+   "page": 16,
+   "quote": "Total expenses 42994"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 342,
+   "value_as_published": "342",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (financial year ended 30 June 2026)",
+   "page": 16,
+   "quote": "Total other economic flows 115 94 126 (22) 251 Net result 342"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": 30136,
+   "value_as_published": "30,136",
+   "unit": "thousands_of_dollars",
+   "period": "2026 (financial year ended 30 June 2026)",
+   "page": 48,
+   "quote": "Employee expenses 3.1(a) 30,136"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "value": 223.83,
+   "value_as_published": "223.83",
+   "unit": "fte",
+   "period": "June 2026 (June current month FTE)",
+   "page": 14,
+   "quote": "Ancillary Staff (Allied Health) 28.91 26.34 32.98 27.08 Total 202.95 223.83"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 76,
+   "quote": "Total number of executives 7"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 1107,
+   "value_as_published": "1,107",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 76,
+   "quote": "Total remuneration i 1,107"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "The total expenditure incurred during 2025-2026 in relation to these consultancies",
+   "value": 24500,
+   "value_as_published": "$24,500",
+   "unit": "dollars",
+   "period": "2025-2026 (one consultancy of $10,000 or greater, excl. GST)",
+   "page": 17,
+   "quote": "The total expenditure incurred during 2025-2026 in relation to these consultancies is $24,500"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Introba Fire Engineers",
+   "column_as_published": "Expenditure 2025-26 (excl. GST)",
+   "value": 24500,
+   "value_as_published": "$24,500",
+   "unit": "dollars",
+   "period": "2025-2026",
+   "page": 17,
+   "quote": "5 Yearly fire audit and fire safety handbook update May 2025 January 2026 $24,500 $24,500 -",
+   "counterparty": "Introba Fire Engineers",
+   "purpose": "5 Yearly fire audit and fire safety handbook update"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Acute care achieved",
+   "value": 101,
+   "value_as_published": "101%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "Acute care achieved 101% of service target"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "urgent care presentations totalling",
+   "value": 5600,
+   "value_as_published": "5,600",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "urgent care presentations totalling 5,600"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "increase in Hospital in the Home activity",
+   "value": 23,
+   "value_as_published": "23%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "a 23% increase in Hospital in the Home activity"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Sheridan Aged Care continued strong occupancy of",
+   "value": 98.3,
+   "value_as_published": "98.3%",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "Sheridan Aged Care continued strong occupancy of 98.3%"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "KyCare provided",
+   "value": 7905,
+   "value_as_published": "7905",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 5,
+   "quote": "KyCare provided 7905 hours of service to client homes"
+  }
+ ]
+}

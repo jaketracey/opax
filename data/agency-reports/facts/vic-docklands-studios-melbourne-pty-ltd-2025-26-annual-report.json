@@ -1,0 +1,151 @@
+{
+ "report_id": "vic-docklands-studios-melbourne-pty-ltd-2025-26-annual-report",
+ "read_by": "extraction lane from on-device OCR, every page image checked, 2026-11-12",
+ "pages_read": "all (page 2 is blank)",
+ "not_found": [
+  "head_remuneration",
+  "named_remuneration",
+  "executive_band",
+  "executive_count",
+  "executive_average_remuneration",
+  "staff_fte",
+  "staff_headcount",
+  "consultancy_total",
+  "consultancy"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total operating revenue",
+   "value": 11218045,
+   "value_as_published": "$11,218,045",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 10,
+   "quote": "Total operating revenue for the year was $11,218,045 (2025: $9,417,934).",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefit expenses",
+   "column_as_published": "2026",
+   "value": -2129602,
+   "value_as_published": "(2,129,602)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 20,
+   "quote": "Employee benefit expenses 3.1 (2,129,602) (1,912,154)",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -11197720,
+   "value_as_published": "(11,197,720)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 20,
+   "quote": "Total expenses from transactions (11,197,720) (10,792,698)",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 21106,
+   "value_as_published": "21,106",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 20,
+   "quote": "Net result 21,106 (1,374,378)",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total amount",
+   "column_as_published": "2026",
+   "value": 505971,
+   "value_as_published": "$505,971",
+   "unit": "dollars",
+   "period": "reporting period ended 30 June 2026",
+   "page": 47,
+   "quote": "Total number of responsible persons 6 4 Total amount $505,971 $400,460",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "operating profit (or EBITDA)",
+   "value": 5603925,
+   "value_as_published": "$5,603,925",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 10,
+   "quote": "This leaves an operating profit (or EBITDA) of $5,603,925 (2025: $3,759,078).",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "renewable electricity",
+   "value": 100,
+   "value_as_published": "100",
+   "unit": "percent",
+   "period": "2025-26",
+   "page": 9,
+   "quote": "with the site supplied with 100 per cent renewable electricity during the year.",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "of the 2026-27 budgeted facilities revenue has been confirmed",
+   "value": 78,
+   "value_as_published": "78%",
+   "unit": "percent",
+   "period": "at the date of the report (26 August 2026)",
+   "page": 10,
+   "quote": "At the date of this report, 78% of the 2026-27 budgeted facilities revenue has been confirmed",
+   "extraction": {
+    "method": "ocr",
+    "engine": "Apple Vision (on device)",
+    "check": "page_image_checked"
+   }
+  }
+ ],
+ "notes": [
+  "The report is printed as images, apart from the auditor's pages (pp.13, 18 and 19), so the page text is Apple Vision OCR (data/agency-reports/ocr/). Every figure was read against the page image.",
+  "Total income: OCR misread the comprehensive operating statement cell (p.20) as '11,218,045łć'. The page image shows 11,218,045, which the Directors' Report (p.10) states as 'Total operating revenue for the year was $11,218,045'; that sentence is recorded.",
+  "Consultants (note 3.2, p.28): the page image shows 347,039 ($) for 2026, but OCR reads '347,03ął', so consultancy_total is not recorded. The report has no table of consultancies valued at $10,000 or greater.",
+  "The five-year financial summary (p.9) is not used: OCR moved the 2025 figure for income from licensing onto the wrong line and misread several cells. The finance totals come from the comprehensive operating statement (p.20).",
+  "Executive remuneration total is the responsible persons table total (directors and the Chief Executive Officer as Accountable Officer, ministers excluded, p.47); note 8.4 gives the same key management personnel figure (p.48), where OCR reads it as '505,971ł'.",
+  "The responsible persons income band table (p.47) is not recorded as executive bands: it covers the board and the Accountable Officer together and does not tie a band to the Chief Executive Officer, and OCR dropped the '-' cells so the 2026 and 2025 columns cannot be told apart for the $320,000 and $390,000 bands.",
+  "The report does not state staff numbers (FTE or headcount)."
+ ]
+}

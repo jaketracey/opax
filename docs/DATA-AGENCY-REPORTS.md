@@ -81,8 +81,10 @@ figures are not rewritten from a dictionary (it has no en-AU model; en-US is its
 Page images and raw Vision output stay in the cache beside the PDF
 (`~/.cache/autoresearch/agency-reports/ocr/<sha256>/`); the committed OCR file holds each
 page's text twice, in column reading order and as left-to-right rows, so a table row reads
-as its label and figures. `page_text` uses it when the PDF has no text layer, so OCR
-figures pass the same verbatim checks against the OCR text.
+as its label and figures. `page_text` uses it for every page that has no text layer
+(the whole document for a scan, or only the image pages of a mixed PDF), so OCR figures
+pass the same verbatim checks against the OCR text, and the checker asks for the
+`extraction` note on any figure cited to such a page.
 
 A local vision model is the second reader (`scripts/ocr/vlm_read.py`, loopback only; on
 11 Nov 2026 Qwen3.8-Flash-Next 2.75bpw served by sushi). Every OCR figure carries
@@ -170,8 +172,32 @@ bands without tying a band to the chief executive, so `head_remuneration` is usu
 `not_found` for them. Mildura Base's financial statement pages have no usable text
 layer; its money figures come from the readable five-year summary.
 
-The other 102 catalogued reports (smaller rural health services, catchment authorities,
-cemetery trusts, arts and sport bodies and others) are the next waves.
+A fifth batch took the rest (`intake-2026-11-12-vic-tabled-wave5.json`, 113 reports,
+10,541 pages). The catalogue was refreshed first (`catalogue-vic-2026-11-12.json`, window
+1 July to 12 November 2026): 17 annual reports had been tabled since 11 November, two of
+them departments already held, so the 102 left from the fourth batch became 113. They are
+the smaller rural and regional health services, Peter MacCallum, HealthShare and Oral
+Health Victoria, seven water corporations, eight catchment management authorities, four
+cemetery trusts, the arts, museum, library and sport trusts, the ports and rolling stock
+companies, North East Link State Tolling, the VEC, AMES, the ACFE Board, VITS LanguageLoop
+and others; 1,531 figures read. All 196 annual reports in the catalogue are now held; the
+18 statutory reports it also lists are not part of this dataset.
+
+Three of these reports have no text layer at all (the Victorian Convention and Event
+Trust, Docklands Studios Melbourne and Melbourne Port Lessor). They were read by the OCR
+path below, with each figure checked against its page image; 32 figures, and cells the
+OCR misread were left out. Several others have a text layer on most pages but print some
+statement pages as images or with an unreadable encoding (Mallee Track Health pp 43 to 72,
+Boort District Health, Omeo District Health, Colac Area Health, South Gippsland Water
+pp 86 to 129, East Gippsland Water pp 97 to 137, Mallee CMA pp 96 to 100). Their money
+figures come from the readable five-year summary or are listed in `not_found`; those pages
+can be read by OCR later.
+
+Consultancy tables print each counterparty as the body names it. Where a body engaged a
+sole trader, the row carries that person's name as printed in the body's own disclosure
+table (Portland District Health and Alpine Health, for example); nothing else is said
+about them. Where a consultancy table prints "-" for expenditure in the year, the row uses
+the column the body did fill (for example the total approved fee) and names that column.
 
 ## Catalogue hosts and OPAXBot, 11 November 2026
 

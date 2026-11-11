@@ -1,0 +1,126 @@
+{
+ "report_id": "vic-north-east-link-state-tolling-corporation-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "staff_headcount",
+  "executive_band",
+  "consultancy_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "30 JUNE 2026",
+   "value": 3031,
+   "value_as_published": "3,031",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 22,
+   "quote": "Total revenue and income from transactions 3,031 3,797"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "30 JUNE 2026",
+   "value": -35267,
+   "value_as_published": "(35,267)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 22,
+   "quote": "Total expenses from transactions (35,267) (27,461)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefit expenses",
+   "column_as_published": "30 JUNE 2026",
+   "value": -15499,
+   "value_as_published": "(15,499)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 22,
+   "quote": "Employee benefit expenses 2.1 (15,499) (8,567)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "30 JUNE 2026",
+   "value": -31918,
+   "value_as_published": "(31,918)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 22,
+   "quote": "Net result (31,918) (23,731)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Comparative workforce data",
+   "value": 73,
+   "value_as_published": "73",
+   "unit": "fte",
+   "period": "as at 30 June 2026",
+   "page": 58,
+   "quote": "As at 30 June 2026, STC had a total of 73 Full Time Equivalent (FTE) employees"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives (a)",
+   "column_as_published": "2026 ($'000)",
+   "value": 7,
+   "value_as_published": "7",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 51,
+   "quote": "Total number of executives (a) 7 7"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026 ($'000)",
+   "value": 2710,
+   "value_as_published": "2,710",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 51,
+   "quote": "Total remuneration 2,710 2,149"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration of KMPs",
+   "column_as_published": "2026 ($'000)",
+   "value": 3547,
+   "value_as_published": "3,547",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 53,
+   "quote": "Total remuneration of KMPs 3,547 2,941"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Limebridge Australia Pty Ltd",
+   "column_as_published": "TOTAL APPROVED FEE (EXCL GST)",
+   "value": 67050,
+   "value_as_published": "$67,050",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Limebridge Australia Pty Ltd Professional Services $67,050",
+   "counterparty": "Limebridge Australia Pty Ltd",
+   "purpose": "Professional Services"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Tenet Advisory and Investment Pty Ltd",
+   "column_as_published": "TOTAL APPROVED FEE (EXCL GST)",
+   "value": 211140,
+   "value_as_published": "$211,140",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 61,
+   "quote": "Tenet Advisory and Investment Pty Ltd Professional Services $211,140",
+   "counterparty": "Tenet Advisory and Investment Pty Ltd",
+   "purpose": "Professional Services"
+  }
+ ]
+}

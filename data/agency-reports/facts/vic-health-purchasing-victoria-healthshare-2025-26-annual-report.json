@@ -1,0 +1,242 @@
+{
+ "report_id": "vic-health-purchasing-victoria-healthshare-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 253709279,
+   "value_as_published": "253,709,279",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 76,
+   "quote": "Total revenue and income from transactions 253,709,279 232,406,543"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": -254131904,
+   "value_as_published": "(254,131,904)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 76,
+   "quote": "Total expenses from transactions (254,131,904) (236,997,081)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -56683053,
+   "value_as_published": "(56,683,053)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 76,
+   "quote": "Employee expenses 3.1(a) (56,683,053) (53,257,717)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "NET RESULT",
+   "column_as_published": "2026",
+   "value": -1171541,
+   "value_as_published": "(1,171,541)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 76,
+   "quote": "NET RESULT (1,171,541) (4,692,502)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total",
+   "column_as_published": "June 26 Full-time equivalent",
+   "value": 312.8,
+   "value_as_published": "312.8",
+   "unit": "fte",
+   "period": "June 2026 (last full pay period; includes agency/casual)",
+   "page": 62,
+   "quote": "Total 324.0 327.4 328.2 312.8 342 324"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total number of payroll employees",
+   "column_as_published": "June 26 Full-time equivalent",
+   "value": 293.1,
+   "value_as_published": "293.1",
+   "unit": "fte",
+   "period": "June 2026 (last full pay period)",
+   "page": 62,
+   "quote": "Total number of payroll employees 287.6 296.3 289 293.1 303 304"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total",
+   "column_as_published": "Headcount",
+   "value": 324,
+   "value_as_published": "324",
+   "unit": "people",
+   "period": "June 2026 (last full pay period; includes agency/casual)",
+   "page": 62,
+   "quote": "Total 324.0 327.4 328.2 312.8 342 324"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total number of payroll employees",
+   "column_as_published": "Headcount",
+   "value": 304,
+   "value_as_published": "304",
+   "unit": "people",
+   "period": "June 2026 (last full pay period)",
+   "page": 62,
+   "quote": "Total number of payroll employees 287.6 296.3 289 293.1 303 304"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 8,
+   "value_as_published": "8",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 112,
+   "quote": "Total number of executives 8 10"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 1822275,
+   "value_as_published": "1,822,275",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 112,
+   "quote": "Total remuneration (i) 1,822,275 1,357,600"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total compensation - KMPs",
+   "column_as_published": "2026",
+   "value": 2535509,
+   "value_as_published": "2,535,509",
+   "unit": "dollars",
+   "period": "2025-26 (key management personnel)",
+   "page": 113,
+   "quote": "Total compensation - KMPs(i) 2,535,509 2,229,818"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 0.826,
+   "value_as_published": "$0.826 million",
+   "unit": "millions_of_dollars",
+   "period": "2025-26 (five consultancies of $10,000 or greater, excl. GST)",
+   "page": 64,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies was $0.826 million (excluding GST)."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure",
+   "counterparty": "ACFEC",
+   "purpose": "Design of reference manual and training material including presentations and assessment framework to deliver a TAFE Cert IV in Procurement and Contracting Course for the benefit of Health Service staff.",
+   "value": 192000,
+   "value_as_published": "$192,000",
+   "unit": "dollars",
+   "period": "2025-26 (ex GST)",
+   "page": 64,
+   "quote": "ACFEC Design of reference manual and training material including presentations and assessment framework to deliver a TAFE Cert IV in Procurement and Contracting Course for the benefit of Health Service staff. Mar 2026 May 2026 $192,000 $192,000"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure",
+   "counterparty": "Korda Mentha Pty Ltd",
+   "purpose": "Consulting services to provide review, assessment and development of management plan to support the network operating model, network charging model and common catalogue business case.",
+   "value": 139454,
+   "value_as_published": "$139,454",
+   "unit": "dollars",
+   "period": "2025-26 (ex GST)",
+   "page": 64,
+   "quote": "Jul 2025 May 2026 $139,454 $139,454"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure",
+   "counterparty": "Amplify Pro-curement Pty Ltd",
+   "purpose": "To identify and implement operational improvements to deliver greater structural and process simplicity; enable better data capture and analysis to support decision making; and be responsive to the needs of health services and foster increased collaboration.",
+   "value": 154510,
+   "value_as_published": "$154,510",
+   "unit": "dollars",
+   "period": "2025-26 (ex GST)",
+   "page": 64,
+   "quote": "Oct 2025 Apr 2026 $154,510 $154,510"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure",
+   "counterparty": "Q5 Australia Pty Ltd",
+   "purpose": "Assess the effectiveness of HSV's current operations, including structure, activities, costs, culture and workforce, against strategic priorities and mapping to future opportunities; providing an evidence-based view of current performance, areas for improvement and/or realignment and a roadmap of where to focus next, coupled with a quantifiable baseline to track progress over time.",
+   "value": 313139,
+   "value_as_published": "$313,139",
+   "unit": "dollars",
+   "period": "2025-26 (ex GST)",
+   "page": 65,
+   "quote": "Jan 2026 Apr 2026 $313,139 $313,139"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure",
+   "counterparty": "Verus Australia Pty Ltd",
+   "purpose": "To support HSV in developing an integrated HSQMS manual that is practical for frontline logistics operations, aligned with relevant standards and compliance obligations and capable of supporting continuous improvement as the business evolves.",
+   "value": 26740,
+   "value_as_published": "$26,740",
+   "unit": "dollars",
+   "period": "2025-26 (ex GST)",
+   "page": 65,
+   "quote": "Jun 2026 Jun 2026 $26,740 $26,740"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "new supplier agreements",
+   "value": 356,
+   "value_as_published": "356",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 10,
+   "quote": "Entered into 356 new supplier agreements"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "total deliveries made across the logistics network",
+   "value": 6069,
+   "value_as_published": "6,069",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "6,069 total deliveries made across the logistics network"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "order lines shipped to Victorian health services",
+   "value": 1327973,
+   "value_as_published": "1,327,973",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "1,327,973 order lines shipped to Victorian health services"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Customer engagement contacts with HSV",
+   "value": 11064,
+   "value_as_published": "11,064",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "Customer engagement contacts with HSV: 11,064"
+  }
+ ]
+}

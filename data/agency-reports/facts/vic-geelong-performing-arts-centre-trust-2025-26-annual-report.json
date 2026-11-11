@@ -1,0 +1,162 @@
+{
+ "report_id": "vic-geelong-performing-arts-centre-trust-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "executive_band",
+  "executive_count",
+  "executive_remuneration_total"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 17236999,
+   "value_as_published": "17,236,999",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 98,
+   "quote": "Total revenue and income from transactions 17,236,999 17,869,164"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total expenses from transactions",
+   "column_as_published": "2026",
+   "value": 23725762,
+   "value_as_published": "23,725,762",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 98,
+   "quote": "Total expenses from transactions 23,725,762 22,427,064"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee benefits",
+   "column_as_published": "2026",
+   "value": 11074381,
+   "value_as_published": "11,074,381",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 98,
+   "quote": "Employee benefits 3.2.1 11,074,381 10,097,332"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": -6488763,
+   "value_as_published": "(6,488,763)",
+   "unit": "dollars",
+   "period": "year ended 30 June 2026",
+   "page": 98,
+   "quote": "Net result (6,488,763) (4,557,900)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "Total employees",
+   "column_as_published": "FTE",
+   "value": 100,
+   "value_as_published": "100",
+   "unit": "fte",
+   "period": "last full pay period in June 2026",
+   "page": 78,
+   "quote": "Total employees 214 100 66 11 71 137 28"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "Total employees",
+   "column_as_published": "Headcount",
+   "value": 214,
+   "value_as_published": "214",
+   "unit": "people",
+   "period": "last full pay period in June 2026",
+   "page": 78,
+   "quote": "Total employees 214 100 66 11 71 137 28"
+  },
+  {
+   "metric": "head_remuneration",
+   "label_as_published": "Remuneration received or receivable by the Accountable Officer",
+   "value": null,
+   "value_as_published": "$320,000–$329,999",
+   "unit": "dollars",
+   "period": "2025-26",
+   "page": 126,
+   "quote": "Remuneration received or receivable by the Accountable Officer in connection with the management of the Trust during the reporting period was in the range: $320,000–$329,999"
+  },
+  {
+   "metric": "consultancy_total",
+   "label_as_published": "total expenditure incurred during 2025-26 in relation to these consultancies",
+   "value": 34000,
+   "value_as_published": "$34,000",
+   "unit": "dollars",
+   "period": "2025-26 (two consultancies of $10,000 or greater, excl. GST)",
+   "page": 81,
+   "quote": "The total expenditure incurred during 2025-26 in relation to these consultancies is $34,000 (excluding GST)."
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "counterparty": "Department of Transport and Planning",
+   "purpose": "Land and Building Valuation",
+   "value": 19,
+   "value_as_published": "19",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (AUD ‘000, excl. GST)",
+   "page": 81,
+   "quote": "Department of Transport and Planning Land and Building Valuation 19 19 Completed"
+  },
+  {
+   "metric": "consultancy",
+   "label_as_published": "Expenditure 2025-26 (excl. GST)",
+   "counterparty": "In-Sightx",
+   "purpose": "Customer Insights Study",
+   "value": 15,
+   "value_as_published": "15",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26 (AUD ‘000, excl. GST)",
+   "page": 81,
+   "quote": "In-Sightx Customer Insights Study 1 June 2025 8 August 2025 29 15 Completed"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "attendees",
+   "value": 285241,
+   "value_as_published": "285,241",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 14,
+   "quote": "including 285,241 attendees to 1,935 performances and events"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "performances and events",
+   "value": 1935,
+   "value_as_published": "1,935",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 14,
+   "quote": "including 285,241 attendees to 1,935 performances and events"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "visits",
+   "value": 659126,
+   "value_as_published": "659,126",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 14,
+   "quote": "we attracted more than 659,126 visits"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "attendees",
+   "value": 2256,
+   "value_as_published": "2,256",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 6,
+   "quote": "our Creative Learning program welcomed 2,256 attendees"
+  }
+ ]
+}

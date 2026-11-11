@@ -1,0 +1,148 @@
+{
+ "report_id": "vic-west-wimmera-health-service-2025-26-annual-report",
+ "read_by": "extraction lane, 2026-11-12",
+ "pages_read": "all",
+ "not_found": [
+  "head_remuneration",
+  "consultancy_total",
+  "executive_band"
+ ],
+ "facts": [
+  {
+   "metric": "total_income",
+   "label_as_published": "Total revenue and income from transactions",
+   "column_as_published": "2026",
+   "value": 76702,
+   "value_as_published": "76,702",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 70,
+   "quote": "Total revenue and income from transactions 76,702 64,713"
+  },
+  {
+   "metric": "total_expenses",
+   "label_as_published": "Total Expenses from transactions",
+   "column_as_published": "2026",
+   "value": -75075,
+   "value_as_published": "(75,075)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 70,
+   "quote": "Total Expenses from transactions (75,075) (70,660)"
+  },
+  {
+   "metric": "employee_expenses",
+   "label_as_published": "Employee expenses",
+   "column_as_published": "2026",
+   "value": -54375,
+   "value_as_published": "(54,375)",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 70,
+   "quote": "Employee expenses 3.1 (54,375) (50,668)"
+  },
+  {
+   "metric": "net_result",
+   "label_as_published": "Net result",
+   "column_as_published": "2026",
+   "value": 1918,
+   "value_as_published": "1,918",
+   "unit": "thousands_of_dollars",
+   "period": "year ended 30 June 2026",
+   "page": 70,
+   "quote": "Net result 1,918 (5,647)"
+  },
+  {
+   "metric": "staff_fte",
+   "label_as_published": "individual staff employed and 431 FTE",
+   "value": 431,
+   "value_as_published": "431",
+   "unit": "fte",
+   "period": "as at 30 June 2026",
+   "page": 17,
+   "quote": "There were 638 individual staff employed and 431 FTE as at 30 June 2026"
+  },
+  {
+   "metric": "staff_headcount",
+   "label_as_published": "individual staff employed",
+   "value": 638,
+   "value_as_published": "638",
+   "unit": "people",
+   "period": "as at 30 June 2026",
+   "page": 17,
+   "quote": "There were 638 individual staff employed and 431 FTE as at 30 June 2026"
+  },
+  {
+   "metric": "executive_count",
+   "label_as_published": "Total number of executives",
+   "column_as_published": "2026",
+   "value": 4,
+   "value_as_published": "4",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 99,
+   "quote": "Total number of executives 4 5"
+  },
+  {
+   "metric": "executive_remuneration_total",
+   "label_as_published": "Total remuneration",
+   "column_as_published": "2026",
+   "value": 1187,
+   "value_as_published": "1,187",
+   "unit": "thousands_of_dollars",
+   "period": "2025-26",
+   "page": 99,
+   "quote": "Total remuneration i 1,187 1,266"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Residential Aged Care Bed Days",
+   "value": 42298,
+   "value_as_published": "42,298",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "42,298 Residential Aged Care Bed Days"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Acute Separations",
+   "value": 1592,
+   "value_as_published": "1,592",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "1,592 Acute Separations"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Urgent Care Presentations",
+   "value": 1690,
+   "value_as_published": "1,690",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "1,690 Urgent Care Presentations"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Operations Performed",
+   "value": 489,
+   "value_as_published": "489",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "489 Operations Performed"
+  },
+  {
+   "metric": "operational_other",
+   "label_as_published": "Meals Prepared",
+   "value": 161384,
+   "value_as_published": "161,384",
+   "unit": "count",
+   "period": "2025-26",
+   "page": 11,
+   "quote": "161,384 Meals Prepared"
+  }
+ ]
+}
