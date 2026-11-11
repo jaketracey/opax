@@ -166,7 +166,7 @@ test('pending counts cannot credit committee parliamentarians in catalog, descri
     personAt:(people,name)=>people.byFold.get(name.toLowerCase()),personPath:(_people,name)=>'/subject/person/'+name,
     photoIdFor:()=>null,creditLine:async()=>null,
     loadPeople: async()=>({people:roster.people,byFold:new Map(roster.people.map(p=>[p.name.toLowerCase(),p]))}),
-    loadMoney: async()=>null, loadPhotos: async()=>({}),
+    loadMoney: async()=>null, loadMoneyParties: async()=>null, loadPhotos: async()=>({}),
     foldName:s=>s.toLowerCase(), slugIndex:()=>({slugOf:new Map()}),
     personTitle:(name)=>name, hasInterestsRegister:async()=>false, personRole:()=>null,
     num:n=>String(n), years:(a,b)=>`${a}–${b}`, andList:a=>a.join(', '),
