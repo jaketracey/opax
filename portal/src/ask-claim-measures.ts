@@ -60,7 +60,10 @@ export function claimMeasureConsistent(text:string,evidence:Evidence[]):boolean 
 
 export const MEASURE_GAP='OPAX cannot support that answer with the cited records. Speech, vote, mention and topic counts cannot establish financial amounts, and financial amounts cannot establish those counts.'
 
-/** Citation offsets use Unicode code points. One-character footnotes own their preceding sentence. */
+/** Citation offsets use Unicode code points. One-character footnotes own their preceding sentence.
+ * A sentence whose measure its own citations cannot support is removed with its
+ * citation ranges. The rest of the answer stands. MEASURE_GAP replaces the whole
+ * answer only when no cited sentence survives. */
 export function guardClaimMeasures<T extends Record<string,unknown>>(payload:T):T {
  if(typeof payload.answer!=='string')return payload
  const answer=payload.answer,points=Array.from(answer)
@@ -77,17 +80,40 @@ export function guardClaimMeasures<T extends Record<string,unknown>>(payload:T):
  }
  // Check each sentence independently, including clauses with no numeric amount.
  const parts=sentenceParts(answer)
- for(const part of parts){
+ const cut:{start:number;end:number}[]=[]
+ parts.forEach((part,index)=>{
   const text=part.text
-  if(!claims(text).size)continue
+  if(!claims(text).size)return
   const start=Array.from(answer.slice(0,part.at)).length,end=start+Array.from(text).length
   const own=bindings.filter(b=>b.start<end&&b.end>start).map(b=>b.source)
   // Existing passage and overview contracts allow uncited speech points. This
   // check must still reject speech claims whose citations contain only money.
-  if(!own.length&&!claims(text).has('money')&&(!sources.length||!sources.every(s=>evidenceMeasures(s).has('money'))))continue
-  if(!claimMeasureConsistent(text,own)){
-   return {...payload,answer:MEASURE_GAP,answer_status:'evidence_gap',answer_decision:'limitation',citations:{},sources:[],...(payload.research&&typeof payload.research==='object'?{research:{...payload.research,sources:[]}}:{})}
+  if(!own.length&&!claims(text).has('money')&&(!sources.length||!sources.every(s=>evidenceMeasures(s).has('money'))))return
+  if(claimMeasureConsistent(text,own))return
+  // Remove the sentence and the space up to the next sentence (or the end).
+  const next=parts[index+1]
+  cut.push({start,end:next?Array.from(answer.slice(0,next.at)).length:points.length})
+ })
+ if(!cut.length)return payload
+ const gap={...payload,answer:MEASURE_GAP,answer_status:'evidence_gap',answer_decision:'limitation',citations:{},sources:[],...(payload.research&&typeof payload.research==='object'?{research:{...payload.research,sources:[]}}:{})}
+ const removed=(i:number)=>cut.some(c=>i>=c.start&&i<c.end)
+ const shift=(i:number)=>{let n=0;for(const c of cut)n+=Math.max(0,Math.min(i,c.end)-c.start);return i-n}
+ const kept=points.filter((_,i)=>!removed(i)).join('').trimEnd()
+ const length=Array.from(kept).length
+ const nextCitations:Record<string,[number,number][]>={}
+ for(const [id,raw] of Object.entries(citations)){
+  if(!Array.isArray(raw))continue
+  const ranges:[number,number][]=[]
+  for(const range of raw){
+   if(!Array.isArray(range)||range.length!==2||!range.every(Number.isSafeInteger))continue
+   const start=Math.min(shift(range[0]),length),end=Math.min(shift(range[1]),length)
+   if(end>start)ranges.push([start,end])
   }
+  if(ranges.length)nextCitations[id]=ranges
  }
- return payload
+ if(!kept.trim()||!Object.keys(nextCitations).length)return gap
+ const cited=(s:{resource?:string})=>Object.keys(nextCitations).some(id=>s.resource===id||id.startsWith(s.resource+'/'))
+ const everCited=(s:{resource?:string})=>Object.keys(citations).some(id=>s.resource===id||id.startsWith(s.resource+'/'))
+ const nextSources=sources.filter(s=>cited(s)||!everCited(s))
+ return {...payload,answer:kept,citations:nextCitations,sources:nextSources} as T
 }
