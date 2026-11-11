@@ -395,6 +395,7 @@ export default function Today() {
       onLayout={() => releaseSplash('today')}
       column="wide"
       grouped
+      clampScrollOnContentChange
       scrollRef={dots.scrollRef}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />

@@ -236,7 +236,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: rhythm.heading,
     minHeight: minimumTarget,
-    paddingVertical: rhythm.row,
+    paddingTop: rhythm.row,
+    paddingBottom: rhythm.row + rhythm.heading,
   },
   content: {
     flex: 1,

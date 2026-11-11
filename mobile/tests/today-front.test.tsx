@@ -10,6 +10,7 @@ import {
 import { ApiError } from '../src/api/errors';
 import { formatDate } from '../src/design/format';
 import { InsetGroup } from '../src/design/layout';
+import { SurfaceContext } from '../src/design/row-padding';
 import { Icon } from '../src/design/icon';
 import { PersonRow } from '../src/design/people';
 import { symbols } from '../src/design/symbols';
@@ -22,6 +23,7 @@ import { Text } from '../src/design/text';
 import { BillFeed, billRowText } from '../src/features/today/BillFeed';
 import {
   DeclarationGroup,
+  DeclarationEntry,
   LONG_ENTRY,
   declarationsForRoute,
   entryPreview,
@@ -378,9 +380,10 @@ describe('Just declared', () => {
           node.props.accessible === false &&
           node.props.accessibilityRole === 'link',
       );
-      expect(StyleSheet.flatten(pressable.props.style).paddingVertical).toBe(
-        rhythm.row,
-      );
+      expect(StyleSheet.flatten(pressable.props.style)).toMatchObject({
+        paddingTop: rhythm.row,
+        paddingBottom: rhythm.row + rhythm.heading,
+      });
       const name = host(root, 'today-declaration-person-0-name')[0]!;
       const words = host(root, 'today-declaration-text-0')[0]!;
       const meta = host(root, 'today-declaration-change-0')[0]!;
@@ -401,6 +404,80 @@ describe('Just declared', () => {
       expect(router.push).toHaveBeenLastCalledWith(
         declarationsForRoute(item.name),
       );
+    },
+  );
+  test.each([1, 3.571])(
+    'every grouped row keeps the larger bottom inset when its meta wraps at font scale %s',
+    (fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ ...standard, fontScale });
+      const { root } = render(
+        <SurfaceContext.Provider value="sunken">
+          <InsetGroup>
+            {items.map((entry, index) => (
+              <DeclarationEntry
+                key={entry.id}
+                item={{
+                  ...entry,
+                  category: 'Sponsored travel or hospitality',
+                  date: '2026-10-09',
+                  kind: 'addition',
+                }}
+                index={index}
+              />
+            ))}
+          </InsetGroup>
+        </SurfaceContext.Provider>,
+      );
+      for (const index of items.keys()) {
+        const meta = host(root, `today-declaration-change-${index}`)[0]!;
+        expect(strings(meta)).toBe(
+          'Sponsored travel or hospitality · added 9 Oct',
+        );
+        const lineHeight =
+          StyleSheet.flatten(meta.props.style).lineHeight * fontScale;
+        const height = lineHeight * 2;
+        // Supply a two-line native measurement, including at AX5. Jest does
+        // not lay out native glyphs; the row must leave space after both lines.
+        act(() => {
+          meta.props.onLayout({
+            nativeEvent: { layout: { x: 0, y: 100, width: 240, height } },
+          });
+          meta.props.onTextLayout({
+            nativeEvent: {
+              lines: ['Sponsored travel or ', 'hospitality · added 9 Oct'].map(
+                (text, line) => ({
+                  text,
+                  x: 0,
+                  y: line * lineHeight,
+                  width: 240,
+                  height: lineHeight,
+                }),
+              ),
+            },
+          });
+        });
+        const row = host(root, `today-declaration-${index}`)[0]!;
+        const pressable = row.find(
+          (node) =>
+            node.type === 'View' &&
+            node.props.accessible === false &&
+            node.props.accessibilityRole === 'link',
+        );
+        const style = StyleSheet.flatten(pressable.props.style);
+        expect(style.paddingTop).toBe(rhythm.row);
+        expect(style.paddingBottom).toBe(rhythm.row + rhythm.heading);
+        expect(style.paddingBottom).toBeGreaterThan(style.paddingTop);
+        expect(style.height).toBeUndefined();
+        expect(style.maxHeight).toBeUndefined();
+        expect(StyleSheet.flatten(meta.props.style).minHeight).toBe(
+          Math.ceil(height) + 1,
+        );
+        expect(meta.props.allowFontScaling).toBe(true);
+        expect(meta.props.maxFontSizeMultiplier).toBe(0);
+        expect(meta.props.numberOfLines).toBeUndefined();
+      }
     },
   );
   test('a long entry shows its opening, cut at a word, in the record’s words', () => {

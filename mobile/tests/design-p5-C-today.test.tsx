@@ -375,7 +375,8 @@ describe('declaration identities in Today and the full feed', () => {
             node.props.accessibilityRole === 'link',
         );
         expect(StyleSheet.flatten(pressable.props.style)).toMatchObject({
-          paddingVertical: rhythm.row,
+          paddingTop: rhythm.row,
+          paddingBottom: rhythm.row + rhythm.heading,
           paddingHorizontal: 16,
           marginHorizontal: -16,
         });
