@@ -243,7 +243,7 @@ export const tool: ToolDefinition = {
       }
       all.sort((a, b) => String(b.hearing_date).localeCompare(String(a.hearing_date)) || String(a.title).localeCompare(String(b.title)))
       const rows = all.slice(offset, offset + limit), cases = new Set(all.map(r => `${r.body}: ${r.case}`))
-      const count = `OPAX lists ${all.length} public hearing transcript${all.length === 1 ? '' : 's'}${tb.length === 1 ? ` from the ${tb[0].name} (${tb[0].short})` : ''}${args.operation || args.query ? ` matching "${clip(args.operation ?? args.query, 80)}"` : ''}, from ${cases.size} case${cases.size === 1 ? '' : 's'}, newest first. ${TRANSCRIPT_LABEL}.`
+      const count = `OPAX lists ${all.length} public hearing transcript${all.length === 1 ? '' : 's'}${tb.length === 1 ? ` from the ${tb[0].name} (${tb[0].short})` : ''}${args.operation || args.query ? ` matching "${clip(args.operation ?? args.query, 80)}"` : ''}, from ${cases.size} case${cases.size === 1 ? '' : 's'}${all.length ? `, dated ${all.at(-1)!.hearing_date} to ${all[0].hearing_date}` : ''}, newest first. ${TRANSCRIPT_LABEL}.`
       return publishedResult(rows, [{ kind: 'count', url: indexUrl, text: count }, ...rows.map(transcriptCite)], { view: 'transcripts', total: all.length, offset, next_offset: offset + rows.length < all.length ? offset + rows.length : null, snapshot,
         notes: [NOTE, 'Transcripts are listed as each commission published them, with its redactions and orders; OPAX links the publisher\'s copy. What a witness or counsel says is evidence or submission, never a finding; only a report states findings.', ...(all.length ? [] : ['No listed transcript matches. Coverage is the transcripts supplied so far, not every hearing.'])] })
     }

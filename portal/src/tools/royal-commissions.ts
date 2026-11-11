@@ -149,6 +149,8 @@ export const tool: ToolDefinition = {
       for (const x of records(c.court_context)) citations.push({ kind: 'record', url: String(object(x.cite).url), text: clip(`Court context for ${c.name}, as ${object(x.cite).document} states it: "${x.text}"`, 900) })
       if (records(c.commissioners).length) citations.push({ kind: 'record', url: String(object(records(c.commissioners)[0].cite).url), text: clip(`${c.name} commissioners as ${object(records(c.commissioners)[0].cite).document ?? 'the cited document'} names them: ${people(c)}.`, 600) })
       for (const d of [...records(c.reports), ...records(c.responses), ...latest(c).slice(0, 2)].slice(0, 6)) citations.push({ kind: 'record', url: String(sourceUrl(d.page_url) ?? ix.url), text: clip(`${d.title}${d.date ? ` (${BASIS[String(d.date_basis)] ?? 'dated'} ${d.date})` : ''}${d.kind === 'hearing_transcript' ? `. ${TRANSCRIPT_LABEL}` : ''}.`, 400) })
+      const span = transcriptSummary(c)
+      if (span.count) citations.push({ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: `${c.name}: ${span.count} hearing transcript${span.count === 1 ? '' : 's'} listed, dated ${span.first_date === span.last_date ? span.first_date : `${span.first_date} to ${span.last_date}`} (view=transcripts lists them). ${TRANSCRIPT_LABEL}.` })
       return publishedResult([row], citations, { view: 'profile', total: 1, offset: 0, next_offset: null, snapshot, notes: [...several, NOTE] })
     }
 
@@ -157,7 +159,8 @@ export const tool: ToolDefinition = {
       const all = byDate(records(c.transcripts))
       const hits = all.filter(d => (!args.words || wordsMatch(args.words, [d.title, d.hearing, d.date])))
       const picked = hits.slice(offset, offset + limit).map(d => transcriptOut(c, d))
-      const count = `${c.name}: ${all.length} hearing transcript${all.length === 1 ? '' : 's'} listed${hits.length !== all.length ? `; ${hits.length} match` : ''} (OPAX projection, snapshot ${snapshot}). ${TRANSCRIPT_LABEL}.`
+      const span = transcriptSummary(c), range = span.first_date ? `, dated ${span.first_date === span.last_date ? span.first_date : `${span.first_date} to ${span.last_date}`}` : ''
+      const count = `${c.name}: ${all.length} hearing transcript${all.length === 1 ? '' : 's'} listed${range}${hits.length !== all.length ? `; ${hits.length} match` : ''} (OPAX projection, snapshot ${snapshot}). ${TRANSCRIPT_LABEL}.`
       return publishedResult(picked, [{ kind: 'count', url: siteUrl(env, String(matched[0].file)), text: count }, ...picked.map(transcriptCite)],
         { view: 'transcripts', total: hits.length, offset, next_offset: offset + picked.length < hits.length ? offset + picked.length : null, snapshot,
           notes: [...several, NOTE, 'Transcripts are listed newest first with the publisher\'s page and PDF. What a witness or counsel says in a hearing is evidence or submission, not a finding of the commission.', ...(hits.length ? [] : ['No listed transcript matches. Try fewer words.'])] })
