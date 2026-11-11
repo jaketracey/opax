@@ -8363,6 +8363,19 @@ function loadBillTitles() {
   return billTitlesPromise;
 }
 
+/** The bill export's date (the index's generated_at) from /growth/bills-date.json
+ *  (public/bill-titles.js), not the 1.8 MB index. The index's own date when it is already
+ *  loaded, or when the date file is unreadable. */
+let billsDatePromise = null;
+function loadBillsDate() {
+  if (billsIndexPromise) return billsIndexPromise.then((d) => d?.generated_at || "");
+  billsDatePromise ??= fetch("/growth/bills-date.json", { cache: "no-cache" })
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    .then((d) => (typeof d?.generated_at === "string" ? d.generated_at : loadBillsIndex().then((i) => i?.generated_at || "")))
+    .then((date) => { if (!date) billsDatePromise = null; return date; });
+  return billsDatePromise;
+}
+
 /** One bill's full record; null when the projection has no such file (404). Any other
  *  failure rejects and is not kept, so the bill page can say so and a retry fetches again. */
 function fetchBill(key) {
@@ -9183,13 +9196,14 @@ async function openBill(key, manageFocus) {
   if (manageFocus) $("bill-title")?.focus();
   showPageLoader("bill-loader", "Opening the bill.");
   // The bills export's date dates every block it supplies (principle 4). The
-  // index is the export's one dated file, fetched alongside the bill itself.
+  // index carries it; the release build copies it to a small file (loadBillsDate),
+  // fetched alongside the bill itself.
   // The ask block's privacy file is keyed by the bill, so it is read with it, not after it.
   await Promise.all([growthModulesReady,voteTablesReady]);
   if (generation !== billTextGeneration) return;
-  let bill, billsIndex;
+  let bill, billsDate;
   try {
-    [bill, billsIndex] = await Promise.all([fetchBill(key),loadBillsIndex().catch(()=>null)]);
+    [bill, billsDate] = await Promise.all([fetchBill(key),loadBillsDate().catch(()=>"")]);
   } catch {
     if (billView !== view || generation !== billTextGeneration) return;
     clearPageLoader("bill-loader");
@@ -9218,7 +9232,7 @@ async function openBill(key, manageFocus) {
     setCrumbs(crumbsFor("/bills", "Not found"));
     return;
   }
-  bill.exportedAt = billsIndex?.generated_at || "";
+  bill.exportedAt = billsDate || "";
   if (billView !== view || generation !== billTextGeneration) return;
   const title = bill.title || bill.short_title || key;
   // Landed here from outside: keep the Worker's search title (see BOOT_META).

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync, existsSync} from 'node:fs';
 import {renderPersonAnswer} from '../src/seo-content.ts';
 import {personIndex} from '../src/person-slug.ts';
-import {BILL_TITLES_PATH, billTitlesFile} from '../public/bill-titles.js';
+import {BILL_TITLES_PATH, billTitlesFile, BILLS_DATE_PATH, billsDateFile} from '../public/bill-titles.js';
 
 // A server-rendered profile parsed /bills/index.json (1.8 MB) for four fields: each bill's key,
 // title, aliases and jurisdiction (12 Nov 2026). The release build keeps them in
@@ -78,4 +78,40 @@ test('bill titles: the app loads the titles file for a profile, the whole index 
   const b = app(new Set(['/growth/bill-titles.json']));
   assert.deepEqual((await b.loadBillTitles()).bills, [{key: '/bills/index.json'}]);
   assert.deepEqual(b.fetched, ['/growth/bill-titles.json', '/bills/index.json']);
+});
+
+// A bill page read the whole index (1.8 MB, 142 KB compressed) for one field, its generated_at.
+test('bills date: the index date and nothing else', () => {
+  assert.equal(BILLS_DATE_PATH, '/growth/bills-date.json');
+  assert.deepEqual(billsDateFile({generated_at: '2026-11-11T19:00:00+00:00', count: 2, bills: [{key: 'a'}]}), {generated_at: '2026-11-11T19:00:00+00:00'});
+  assert.throws(() => billsDateFile({bills: []}));
+  if (existsSync(new URL('bills/index.json', pub))) assert.deepEqual(billsDateFile(readFile('/bills/index.json')), {generated_at: readFile('/bills/index.json').generated_at});
+});
+
+test('bills date: the app reads the date file for a bill page, the whole index without it or once loaded', async () => {
+  const {default: ts} = await import('typescript');
+  const {runInNewContext} = await import('node:vm');
+  const src = readFileSync(new URL('app.js', pub), 'utf8');
+  const sf = ts.createSourceFile('app.js', src, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+  const want = new Set(['billsIndexPromise', 'loadBillsIndex', 'billsDatePromise', 'loadBillsDate']);
+  const code = sf.statements.filter(n => ts.isFunctionDeclaration(n) ? want.has(n.name?.text) : ts.isVariableStatement(n) && n.declarationList.declarations.some(d => want.has(d.name.getText(sf)))).map(n => n.getText(sf)).join('\n');
+  const app = (missing, dates = {}) => {
+    const fetched = [];
+    const ctx = {fetch: async path => { fetched.push(path); return missing.has(path) ? new Response('x', {status: 404}) : new Response(JSON.stringify({generated_at: dates[path] ?? path, bills: []})); }};
+    runInNewContext(code + '\nthis.api = {loadBillsIndex, loadBillsDate};', ctx);
+    return {...ctx.api, fetched};
+  };
+  const a = app(new Set());
+  assert.equal(await a.loadBillsDate(), '/growth/bills-date.json');
+  assert.equal(await a.loadBillsDate(), '/growth/bills-date.json');
+  assert.deepEqual(a.fetched, ['/growth/bills-date.json'], 'one small request, kept');
+  await a.loadBillsIndex();
+  assert.equal(await a.loadBillsDate(), '/bills/index.json', 'the loaded index date');
+  const b = app(new Set(['/growth/bills-date.json']));
+  assert.equal(await b.loadBillsDate(), '/bills/index.json');
+  assert.deepEqual(b.fetched, ['/growth/bills-date.json', '/bills/index.json']);
+  const c = app(new Set(['/growth/bills-date.json', '/bills/index.json']));
+  assert.equal(await c.loadBillsDate(), '', 'no date when neither loads');
+  assert.equal(await c.loadBillsDate(), '');
+  assert.equal(c.fetched.length, 4, 'a failure is not kept');
 });
