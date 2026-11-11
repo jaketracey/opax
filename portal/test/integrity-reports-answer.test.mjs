@@ -61,8 +61,29 @@ test('a NACC overview keeps its count and named operations; a wrong count is sti
     assert.equal(api.groundAnswerPayload(p,q).answer,answer)
   }
   assert.ok(auditPayload(q,payload('The NACC has published 12 investigation reports.',sources)).findings.some(f=>f.value==='12'))
-  const myrtle=sources.find(s=>/Myrtleford/.test(s.snippet))
+  const myrtle=sources.find(s=>/^National Anti-Corruption Commission .*Myrtleford/.test(s.snippet))
   assert.match(myrtle.snippet,/in March 2026 \(month taken from the publisher's file path\)/)
+})
+
+// r1 of the 2026-11-11 re-check cited the bodies view, which gave counts but no report names.
+test('a commission with 8 reports or fewer is named report by report, with dates, in both overview views',async()=>{
+  const q='What has the NACC published in its investigation reports?'
+  const names=['Operation Pentecost (2026-05-13)','Operation Young (2026-05-11)','Operation Pelican (2026-04-08)','Operation Myrtleford (March 2026, no day given)','Operation Kingscliff (2025-06-30)','Operation Elektra (2025-06-11)','Operation Wilson (2025-02-12)','Operation Bannister (2024-10-09)']
+  for(const args of [{view:'bodies',body:'NACC'},{view:'reports',body:'NACC',limit:3}]){
+    const sources=await sourcesFor([args])
+    const overview=sources.find(s=>/^OPAX holds 8 /.test(s.snippet))
+    assert.ok(overview,JSON.stringify(args))
+    assert.ok(overview.snippet.includes('They are '+names.slice(0,-1).join(', ')+' and '+names.at(-1)+'.'),overview.snippet)
+    assert.doesNotMatch(overview.snippet,/^[^:]{2,140}:\s*\$?\d|\d{2}:\d{2}/)
+    const answer='The National Anti-Corruption Commission (NACC) has published 8 investigation reports: Operation Pentecost (13 May 2026), Operation Young (11 May 2026), Operation Pelican (8 April 2026), Operation Myrtleford (March 2026), Operation Kingscliff (30 June 2025), Operation Elektra (11 June 2025), Operation Wilson (12 February 2025) and Operation Bannister (9 October 2024).'
+    const p=payload(answer,sources)
+    assert.deepEqual(auditPayload(q,p).findings,[],JSON.stringify(args))
+    assert.equal(api.groundAnswerPayload(p,q).answer,answer)
+    assert.ok(auditPayload(q,payload('The NACC has published 12 investigation reports.',sources)).findings.some(f=>f.value==='12'))
+  }
+  // a large commission keeps the count sentence only
+  const nsw=(await sourcesFor([{view:'bodies',body:'NSW ICAC'}])).find(s=>/^OPAX holds \d+ reports/.test(s.snippet))
+  assert.doesNotMatch(nsw.snippet,/They are/)
 })
 
 // q3 and q5 of 2026-11-11 opened "A further opinion of police misconduct ..." and "It also found ..."

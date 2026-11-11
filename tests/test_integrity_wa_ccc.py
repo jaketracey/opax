@@ -90,6 +90,24 @@ def test_no_opinion_statements_are_no_finding():
         assert common.verbatim(f["text"], pages[f["cite"]["page"] - 1])
 
 
+def test_opinion_ending_in_colon_keeps_the_matters_that_follow():
+    # Report on Serious Misconduct by a Senior Police Officer, page 11: the opinion is completed by a numbered list
+    page = ("8 \nThe Commission has formed an opinion of police misconduct on two \nmatters: \n1. \n"
+            "DSS Blaine's misuse of a State asset, a motor vehicle, in breach of \npolicy; and \n2. \n"
+            "DSS Blaine's repeated disclosure of confidential information. \n \n \n11 CCM Act s 4.")
+    found = wa_ccc.extract_opinions(["CCC REPORT\n1\n", page], "u", "Senior officer report")
+    assert [(f["label"], f["text"], f["cite"]["page"]) for f in found] == [(
+        "opinion of police misconduct",
+        "The Commission has formed an opinion of police misconduct on two matters: 1. DSS Blaine's misuse of a "
+        "State asset, a motor vehicle, in breach of policy; and 2. DSS Blaine's repeated disclosure of "
+        "confidential information.", 2)]
+    assert common.verbatim(found[0]["text"], page)
+    # a colon with nothing completing it in the same block stays as stated
+    alone = "1\nThe Commission has formed an opinion of police misconduct on two matters: \n \nNext heading"
+    assert [f["text"] for f in wa_ccc.extract_opinions([alone], "u", "d")] == [
+        "The Commission has formed an opinion of police misconduct on two matters:"]
+
+
 def test_may_have_occurred_and_whether_are_not_opinions():
     # a report whose only "may have occurred" text is about miscarriages of justice yields no opinion
     url, pages = _pages("aviemore")

@@ -83,6 +83,15 @@ function countSentence(n: number, noun: [string, string], args: Record<string, u
   return `OPAX holds ${n} ${n === 1 ? noun[0] : noun[1]}${parts.length ? ' ' + parts.join(', ') : ''}${extra}${n > 1 ? ', newest first' : ''} (records as at ${String(snapshot ?? '').slice(0, 10)}).`
 }
 
+// a commission with this many reports or fewer is named report by report in an overview
+const NAMED_MAX = 8
+const reportWhen = (r: RecordRow) => r.date ? String(r.date) : r.period ? `${periodText(r.period)}, no day given` : 'no date given'
+/** "Operation Pentecost (2026-05-13), ... and Operation Myrtleford (March 2026, no day given)" */
+function namedReports(rows: RecordRow[]): string {
+  const names = rows.map(r => `${r.operation ? String(r.operation) : `"${clip(r.title, 120)}"`} (${reportWhen(r)})`)
+  return names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}` : names.join('')
+}
+
 // the commission's full name beside its short form, so an answer may use either
 const who = (row: RecordRow) => row.commission && row.commission !== row.body ? `${row.commission} (${row.body})` : String(row.body)
 
@@ -164,9 +173,18 @@ export const tool: ToolDefinition = {
 
     if (args.view === 'bodies') {
       const bodies = matchBodies(ix, args.body, args.jurisdiction)
-      const rows = bodies.slice(offset, offset + limit).map(b => ({ code: b.code, body: b.short, commission: b.name, jurisdiction: b.jurisdiction, status: b.status, counts: b.counts, earliest: b.earliest ?? null, latest: b.latest ?? null, licence: b.licence, gaps: Array.isArray(b.gaps) ? b.gaps.map(g => clip(g, 300)) : [], site: b.site, snapshot_at: b.snapshot_at }))
-      const cites: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: `${ix.bodies.length} commissions in the OPAX integrity report projection: ${ix.bodies.filter(b => b.status === 'loaded').length} loaded, ${gaps.length} not loaded because of a source gap (snapshot ${snapshot}).` },
-        ...rows.map(b => ({ kind: 'record' as const, url: String(sourceUrl(b.site) ?? indexUrl), text: clip(b.status === 'loaded' ? `${b.body} (${b.jurisdiction}): ${object(b.counts).records} reports and statements${b.earliest ? ` from ${b.earliest} to ${b.latest}` : ''}, ${object(b.counts).findings} findings or opinions, ${object(b.counts).recommendations} recommendations, ${object(b.counts).responses} response or implementation documents.` : `${b.body} (${b.jurisdiction}): not loaded. ${b.gaps[0] ?? ''}`, 600) }))]
+      const held = (b: RecordRow) => ix.reports.filter(r => r.body === b.code)
+      const rows = bodies.slice(offset, offset + limit).map(b => ({ code: b.code, body: b.short, commission: b.name, jurisdiction: b.jurisdiction, status: b.status, counts: b.counts, earliest: b.earliest ?? null, latest: b.latest ?? null, licence: b.licence, gaps: Array.isArray(b.gaps) ? b.gaps.map(g => clip(g, 300)) : [], site: b.site, snapshot_at: b.snapshot_at,
+        ...(b.status === 'loaded' && held(b).length <= NAMED_MAX ? { reports: held(b).map(r => ({ record_id: r.id, title: r.title, operation: r.operation ?? null, date: r.date ?? null, ...(r.date ? {} : { period: r.period ?? null }) })) } : {}) }))
+      // plain sentences with the commission's full name; a small commission's reports are named
+      const bodySentence = (b: RecordRow) => {
+        const c = object(b.counts), list = Array.isArray(b.reports) ? b.reports as RecordRow[] : []
+        const n = (v: unknown, one: string, many: string) => `${v} ${Number(v) === 1 ? one : many}`
+        const head = `OPAX holds ${n(c.records, 'report or statement', 'reports and statements')} from the ${b.commission} (${b.body})${b.earliest ? `, dated ${b.earliest === b.latest ? b.earliest : `${b.earliest} to ${b.latest}`}` : ''}, with ${n(c.findings, 'finding or opinion', 'findings or opinions')}, ${n(c.recommendations, 'recommendation', 'recommendations')} and ${n(c.responses, 'response or implementation document', 'response or implementation documents')}.`
+        return clip(list.length ? `${head} ${list.length === 1 ? 'It is' : 'They are'} ${namedReports(list)}.` : head, 1400)
+      }
+      const cites: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: `OPAX holds reports from ${ix.bodies.length} integrity commissions; ${ix.bodies.filter(b => b.status === 'loaded').length} are loaded and ${gaps.length} ${gaps.length === 1 ? 'is' : 'are'} not loaded because of a source gap (records as at ${String(snapshot ?? '').slice(0, 10)}).` },
+        ...rows.map(b => ({ kind: 'record' as const, url: String(sourceUrl(b.site) ?? indexUrl), text: b.status === 'loaded' ? bodySentence(b) : clip(`${b.body} (${b.jurisdiction}): not loaded. ${b.gaps[0] ?? ''}`, 600) }))]
       return publishedResult(rows, cites, { view: 'bodies', total: bodies.length, offset, next_offset: offset + rows.length < bodies.length ? offset + rows.length : null, snapshot, notes: ['Counts are what OPAX extracted, not the number each commission has published in total; see each body\'s gaps and the not_extracted statuses.'] })
     }
 
@@ -196,7 +214,8 @@ export const tool: ToolDefinition = {
     if (args.view === 'reports') {
       const matched = ix.reports.filter(r => reportMatches(ix, r, args, codes))
       const rows = matched.slice(offset, offset + limit).map(r => reportRow(env, ix, r))
-      const cites: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: countSentence(matched.length, ['integrity commission report or statement', 'integrity commission reports and statements'], args, bodies.length < ix.bodies.length ? bodies : [], snapshot) }, ...rows.map(reportCite)]
+      const named = matched.length > 1 && matched.length <= NAMED_MAX ? ` They are ${namedReports(matched)}.` : ''
+      const cites: ToolCitation[] = [{ kind: 'count', url: indexUrl, text: countSentence(matched.length, ['integrity commission report or statement', 'integrity commission reports and statements'], args, bodies.length < ix.bodies.length ? bodies : [], snapshot) + named }, ...rows.map(reportCite)]
       if ((args.since || args.until) && matched.some(r => !r.date)) notes.push('Some reports matched by the month or year their commission says they were made public; the source gives no day (see period).')
       if (matched.length && matched.length <= 2) {
         // a named report: carry its findings and recommendations so one call answers "what did it find"

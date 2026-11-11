@@ -198,6 +198,36 @@ def tidy_sentence(s, page=""):
     return s.strip()
 
 
+LIST_MARKER = re.compile(r"^\(?(?:\d{1,2}|[a-z]|[ivx]{1,4})$")
+
+
+def colon_continuation(s, page):
+    """The text that completes an opinion stated with a closing colon ("on two matters:").
+
+    Taken verbatim from the lines that follow on the same page, up to the first full stop that
+    ends a sentence (not a list marker such as "1."), and only within the same block of text.
+    """
+    lines = page.splitlines()
+    for j, line in enumerate(lines):
+        tail = common.clean(line)
+        if not tail or not tail.endswith(":") or not s.endswith(tail):
+            continue
+        block = []
+        for nxt in lines[j + 1:]:
+            if not nxt.strip():
+                break
+            block.append(nxt)
+        text = common.flat("\n".join(block))
+        for m in re.finditer(r"\.(?=\d{0,3}(?:\s|$))", text):
+            word = text[:m.start()].rsplit(" ", 1)[-1]
+            if LIST_MARKER.match(word):
+                continue
+            out = text[:m.end()].strip()
+            return out if 10 <= len(out) <= 600 else ""
+        return ""
+    return ""
+
+
 def extract_opinions(pages, pdf_url, doc_title):
     """Sentences in which the Commission states an opinion of misconduct it formed, or that it formed none."""
     out, seen = [], set()
@@ -218,8 +248,12 @@ def extract_opinions(pages, pdf_url, doc_title):
             if key in seen:
                 continue
             seen.add(key)
+            text_ = s
+            if s.endswith(":"):
+                more = colon_continuation(s, page)
+                text_ = s + " " + more if more else s
             try:
-                out.append(common.finding(opinion_label(s, kind), kind, s,
+                out.append(common.finding(opinion_label(s, kind), kind, text_,
                                           common.cite(f"{pdf_url}#page={i}", doc_title, i), page))
             except ValueError:
                 continue  # the sentence spans a removed paragraph number or heading line: not verbatim as one span
