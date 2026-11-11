@@ -133,6 +133,7 @@ import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, cr
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
 import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js'
+import { MONEY_GRAPH_PATHS, MONEY_PARTIES_PATH } from '../public/money-parties.js'
 import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
@@ -4177,16 +4178,12 @@ function loadPeople(env: Env): Promise<PeopleData> {
   return peopleMemo
 }
 
-let moneyMemo: Promise<MoneyData> | null = null
-function loadMoney(env: Env): Promise<MoneyData> {
-  moneyMemo ??= Promise.all(
-    ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json', '/graph/money.tas.json'].map((p) =>
-      assetJson<{ meta?: { generated?: string; sourceShort?: string }; nodes: MoneyNode[] }>(env, p),
-    ),
-  )
-    .then((files) => {
-      const donors = new Map<string, MoneyEntry>()
-      const parties = new Map<string, MoneyEntry>()
+type MoneyFile<N> = { meta?: { generated?: string; sourceShort?: string }; nodes: N[] }
+/** Donors and parties by folded name across the money graphs, in MONEY_GRAPH_PATHS order. */
+function moneyIndex<N extends { label: string; kind: string; aliases?: string[]; lookup_names?: string[] }>(files: MoneyFile<N>[]) {
+      type Entry = N & { sourceShort: string; generated: string }
+      const donors = new Map<string, Entry>()
+      const parties = new Map<string, Entry>()
       let generated = ''
       files.forEach((f, i) => {
         const sourceShort = f.meta?.sourceShort ?? 'AEC returns'
@@ -4210,7 +4207,11 @@ function loadMoney(env: Env): Promise<MoneyData> {
         }
       })
       return { generated, donors, parties }
-    })
+}
+let moneyMemo: Promise<MoneyData> | null = null
+function loadMoney(env: Env): Promise<MoneyData> {
+  moneyMemo ??= Promise.all(MONEY_GRAPH_PATHS.map((p) => assetJson<MoneyFile<MoneyNode>>(env, p)))
+    .then((files) => moneyIndex(files))
     .catch((err) => {
       moneyMemo = null
       throw err
@@ -4396,8 +4397,26 @@ async function creditLine(env: Env, id: string | null): Promise<string | null> {
   const who = c.artist || c.credit || 'author not recorded'
   return `Photo: ${who}${c.licence ? `, ${c.licence}` : ''}, via Wikimedia Commons`
 }
-const partyColour = (moneyData: MoneyData | null, party: string | null | undefined): string | null =>
-  party ? moneyData?.parties.get(foldName(party))?.colour ?? null : null
+type MoneyParties = Map<string, { colour?: string }>
+/**
+ * Each party's swatch, for the dot on a person or speech share card. The release build keeps the
+ * graphs' party nodes in /growth/money-parties.json (about 10 KB), so a cold isolate does not parse
+ * the four money graphs (2.9 MB) for a colour. Without that file, the graphs as before.
+ */
+let moneyPartiesMemo: Promise<MoneyParties> | null = null
+function loadMoneyParties(env: Env): Promise<MoneyParties> {
+  if (moneyMemo) return moneyMemo.then((money) => money.parties)
+  moneyPartiesMemo ??= assetJson<{ files?: MoneyFile<Pick<MoneyNode, 'label' | 'kind' | 'colour'>>[] }>(env, MONEY_PARTIES_PATH)
+    .then((data) => {
+      if (!Array.isArray(data.files) || data.files.length !== MONEY_GRAPH_PATHS.length) throw new Error('money parties: unexpected layout')
+      return moneyIndex(data.files).parties as MoneyParties
+    })
+    .catch(() => loadMoney(env).then((money) => money.parties))
+    .catch((error) => { moneyPartiesMemo = null; throw error })
+  return moneyPartiesMemo
+}
+const partyColour = (parties: MoneyParties | null, party: string | null | undefined): string | null =>
+  party ? parties?.get(foldName(party))?.colour ?? null : null
 
 // --- text helpers ------------------------------------------------------------
 
@@ -5123,10 +5142,10 @@ async function hasInterestsRegister(env: Env, name: string, pid: string | undefi
 }
 
 async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
-  const [people, photos, moneyData] = await Promise.all([
+  const [people, photos, moneyParties] = await Promise.all([
     loadPeople(env).catch(() => null),
     loadPhotos(env).catch(() => null),
-    loadMoney(env).catch(() => null),
+    loadMoneyParties(env).catch(() => null),
   ])
   const p = (people ? personAt(people, name) : null)
   // Not a roster person (or the roster is unreadable): the typed name is never repeated back.
@@ -5190,7 +5209,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       lines: [[p.party, where].filter(Boolean).join(' · '), ...(p.speech_scope ? [] : [`${p.speech_count_basis ? 'Transcript aggregate' : 'Collected records'}: ${years(p.first, p.last)}`])],
       ...(p.speech_count_basis ? {} : { stat: { value: num(p.speeches ?? 0), label: 'speeches in the Opax record' } }),
       ...(p.representation?.some(r => r.jurisdiction === 'vic') ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}),
-      dot: partyColour(moneyData, p.party),
+      dot: partyColour(moneyParties, p.party),
       portraitId,
       credit,
     },
@@ -5742,7 +5761,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   // names them (often surname only); their words are evidence, not a speech.
   const committee = r.labels.speaker_type === 'witness' || /committee/.test(String(r.labels.chamber ?? ''))
   const who = [r.labels.party, chamber].filter(Boolean).join(', ')
-  const [photos, moneyData] = await Promise.all([loadPhotos(env).catch(() => null), loadMoney(env).catch(() => null)])
+  const [photos, moneyParties] = await Promise.all([loadPhotos(env).catch(() => null), loadMoneyParties(env).catch(() => null)])
   const witness = isWitness({ speaker_type: r.labels.speaker_type, chamber: r.labels.chamber,
     person_id: typeof r.metadata.person_id === 'string' || typeof r.metadata.person_id === 'number' ? r.metadata.person_id : null })
   const portraitId = r.speaker && !isUnattributed(r) && !witness ? photoIdFor(photos, r.speaker) : null
@@ -5774,7 +5793,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       // says: the second line is the summary when the record has one, else the length.
       lines: [mixed ? r.debate || 'Parliamentary debate' : [r.labels.party, chamber].filter(Boolean).join(' · '), r.summary?.trim() || `${words[0].toUpperCase()}${words.slice(1)} from ${recordOf}.`],
       ...(saRestricted ? {sourceNotice:{label:SA_EXCERPT_LABEL,url:saOfficialUrl(r)}} : {}),
-      dot: partyColour(moneyData, r.labels.party),
+      dot: partyColour(moneyParties, r.labels.party),
       portraitId,
       credit: await creditLine(env, portraitId),
     },

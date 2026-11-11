@@ -9,6 +9,7 @@ import {AGENCY_TOP_SUPPLIERS_PATH,agencyTopRows} from '../portal/public/agency-t
 import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath,votesBucketPath,VOTES_NAMES_PATH,bucketLayout} from '../portal/public/recent-votes-buckets.js';
 import {PARTY_MONEY_BUCKETS,partyFold,partyMoneyBucket,partyMoneyBucketPath} from '../portal/public/party-money-buckets.js';
 import {SUPPLIER_ID_RE,supplierRowsPath,SUPPLIERS_META_PATH} from '../portal/public/supplier-row-buckets.js';
+import {MONEY_GRAPH_PATHS,MONEY_PARTIES_PATH,moneyPartiesFile} from '../portal/public/money-parties.js';
 import {partyMoneyData} from '../portal/public/register-tables.js';
 import {TOPIC_NAMES} from '../portal/src/topic-names.mjs';
 /** A money graph's party-receipt buckets as [path, contents] pairs (portal/public/party-money-buckets.js). */
@@ -168,6 +169,10 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   await mkdir(join(output,'party-money',path.split('/').pop().replace(/\.json$/,'')),{recursive:true});
   for(const [file,data] of partyMoneyBucketFiles(path,graph))await write(file,data);
  }
+ // Share cards take a party's colour from the graphs' party nodes, not the four graphs (portal/public/money-parties.js).
+ // A missing graph writes no file: the Worker then reads the graphs, as before.
+ const moneyGraphs=await Promise.all(MONEY_GRAPH_PATHS.map(path=>path==='/graph/money.json'?money:read(path.slice(1)).catch(error=>{if(error.code==='ENOENT')return null;throw error})));
+ if(moneyGraphs.every(graph=>Array.isArray(graph?.nodes)))await write(MONEY_PARTIES_PATH,moneyPartiesFile(moneyGraphs));
  console.log(JSON.stringify({files:sizes.length,largest:Math.max(...sizes.map(s=>s.bytes)),donorIndexBytes:sizes[0].bytes}));
  return sizes;
 }
