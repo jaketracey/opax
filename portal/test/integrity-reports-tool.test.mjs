@@ -36,7 +36,7 @@ const withFindings = Object.values(files).flatMap(f => f.records).filter(r => r.
 const withRecs = Object.values(files).flatMap(f => f.records).filter(r => r.recommendations.length);
 
 test('registry lists integrity_reports under the bumped version', () => {
-  assert.match(api.TOOL_REGISTRY_VERSION, /integrity-reports/);
+  assert.ok(Number(/^structured-tools-(\d+)-/.exec(api.TOOL_REGISTRY_VERSION)?.[1]) >= 11, api.TOOL_REGISTRY_VERSION);
   const tool = api.listTools().find(t => t.name === 'integrity_reports');
   assert.ok(tool); assert.ok(tool.inputSchema.examples.length >= 3);
 });

@@ -20,7 +20,7 @@ import traceback
 
 from parli.ingest.integrity import common, manual
 
-ADAPTERS = ("nacc", "nsw_icac", "qld_ccc", "wa_ccc", "sa_icac", "tas_ic", "act_ic", "nt_icac")
+ADAPTERS = ("nacc", "nsw_icac", "vic_ibac", "qld_ccc", "wa_ccc", "sa_icac", "tas_ic", "act_ic", "nt_icac")
 
 
 def refresh_body(code, offline=False, allow_shrink=False, refetch_pdfs=False):

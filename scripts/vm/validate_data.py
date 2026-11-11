@@ -1044,6 +1044,26 @@ def check_integrity_reports() -> list[str]:
     return errs
 
 
+def check_royal_commissions() -> list[str]:
+    """Royal commissions projection: the index keeps 90% of its commissions and recommendations against HEAD,
+    and every commission file the index names parses; one with recommendations keeps 90% of its HEAD count."""
+    rel = PUBLIC + "/royal-commissions"
+    errs = _check_json(rel + "/index.json", keys=("meta.counts.recommendations", "meta.snapshot_at"), counts=("commissions",), ratio=0.9)
+    errs += _check_json(rel + "/manifest.json", keys=("counts.recommendations", "files"), counts=("counts.recommendations",), ratio=0.9)
+    doc, err = _load_json(rel + "/index.json")
+    if err:
+        return errs
+    for row in doc.get("commissions", []):
+        name = str(row.get("file", "")).rsplit("/", 1)[-1]
+        if not re.fullmatch(r"commission-[a-z0-9-]+\.json", name):
+            errs.append(f"{rel}/index.json names an invalid file {row.get('file')!r}")
+            continue
+        loaded = ((row.get("counts") or {}).get("recommendations") or 0) > 0
+        errs += _check_json(f"{rel}/{name}", keys=("commission.id", "commission.inquiry_type", "commission.reports", "commission.transcripts", "commission.court_context"),
+                            counts=("commission.recommendations",) if loaded else (), ratio=0.9)
+    return errs
+
+
 def check_evidence() -> list[str]:
     from scripts.vm.evidence_guard import check
     try:
@@ -1190,7 +1210,7 @@ def check_promoted_hub(name):
         return [str(error)]
 
 
-CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "annual-reports": check_annual_reports, "integrity-reports": check_integrity_reports, "budget": lambda: check_promoted_hub("budget"), "vic-gifts": lambda: check_promoted_hub("vic-gifts"), "bills-tas": lambda: check_promoted_hub("bills-tas"), "bills-act": lambda: check_promoted_hub("bills-act"), "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
+CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check_audit, "annual-reports": check_annual_reports, "integrity-reports": check_integrity_reports, "royal-commissions": check_royal_commissions, "budget": lambda: check_promoted_hub("budget"), "vic-gifts": lambda: check_promoted_hub("vic-gifts"), "bills-tas": lambda: check_promoted_hub("bills-tas"), "bills-act": lambda: check_promoted_hub("bills-act"), "evidence": check_evidence, "votes": check_votes, "divisions": check_divisions, "seovotes": check_seovotes,
           "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,

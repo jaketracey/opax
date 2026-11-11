@@ -15,7 +15,7 @@
 # shellcheck shell=bash
 
 # order = the order they are validated in
-DATA_GROUPS=(bills instruments audit annual-reports integrity-reports budget vic-gifts bills-tas bills-act evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity video)
+DATA_GROUPS=(bills instruments audit annual-reports integrity-reports royal-commissions budget vic-gifts bills-tas bills-act evidence votes divisions seovotes corpus wrangler money grants suppliers access expenses interests fits speakers people pay discovery taxcharity video)
 
 declare -A GROUP_PATHS=(
   [bills]="portal/public/bills"
@@ -23,6 +23,7 @@ declare -A GROUP_PATHS=(
   [audit]="portal/public/audit" # weekly QAO index + HTML recommendations; no DB/KB writes
   [annual-reports]="portal/public/annual-reports" # weekly Transparency Portal (Commonwealth annual reports); no DB/KB writes
   [integrity-reports]="portal/public/integrity-reports" # weekly integrity commission reports (parli/ingest/integrity); no DB/KB writes
+  [royal-commissions]="portal/public/royal-commissions" # weekly tabled royal commission reports + vic.gov.au status; manual documents carried forward; no DB/KB writes
   [budget]="portal/public/budget" # reviewed staged snapshot, promoted after exports
   [vic-gifts]="portal/public/vic-gifts" # reviewed periods and exact Victorian roster links
   [bills-tas]="portal/public/bills-tas" # reviewed factual bill metadata and original links

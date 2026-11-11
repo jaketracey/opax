@@ -9,8 +9,9 @@ any agency response or implementation document the commission publishes. Ask and
 MCP read them through the `integrity_reports` tool.
 
 Victoria's IBAC uses the same schema, exporter, tool and validator (adapter
-`vic_ibac`, added separately). Royal commissions and other inquiries are a separate
-dataset (`portal/public/royal-commissions/`) and are not part of this one.
+`vic_ibac`), read from the copies tabled in the Parliament of Victoria. Royal
+commissions and other inquiries are a separate dataset
+(`portal/public/royal-commissions/`) and are not part of this one.
 
 ## Rules the data follows
 
@@ -57,6 +58,7 @@ published in total.
 | Commission | Reports and statements | Dates | Findings (reports with) | Recommendations (reports with) | Responses (reports with) | Source |
 | --- | --- | --- | --- | --- | --- | --- |
 | NACC (Cth) | 8 | 2024-10-09 to 2026-05-13 | 19 (8) | 4 (2) | 0 (0) | Manual supplement (8 reports); automated gap |
+| IBAC (Vic) | 91 | 2013-10-15 to 2026-10-15 | 0 (0) | 110 (22) | 4 (3) | Parliament of Victoria tabled copies; Sandon progress report from the manual supplement |
 | NSW ICAC (NSW) | 233 | 1994-03-01 to 2026-08-28 | 104 (27) | 340 (25) | 102 (27) | www.icac.nsw.gov.au |
 | Qld CCC (Qld) | 107 | 1991-04-18 to 2026-11-09 | 1 (1) | 121 (9) | 4 (4) | www.ccc.qld.gov.au |
 | WA CCC (WA) | 147 | 2004-12-17 to 2026-10-01 | 113 (53) | 148 (45) | 21 (20) | www.ccc.wa.gov.au |
@@ -64,7 +66,7 @@ published in total.
 | Tas Integrity Commission (Tas) | 2 | 2025-12-02 to 2026-10-29 | 46 (1) | 92 (1) | 1 (1) | Manual supplement (2); automated gap |
 | ACT Integrity Commission (ACT) | 12 | 2022-02-03 to 2026-07-23 | 15 (12) | 0 (0) | 0 (0) | www.integrity.act.gov.au |
 | NT ICAC (NT) | 1 | 2026-10-22 to 2026-10-22 | 0 (0) | 0 (0) | 0 (0) | Manual supplement (1); automated gap |
-| **Total** | 647 | | 314 | 1058 | 129 | |
+| **Total** | 738 | | 314 | 1168 | 133 | |
 
 ### Gaps and limits
 
@@ -83,6 +85,19 @@ published in total.
   report (Tabled Paper 877) is included from the manual supplement. Investigation
   reports and public statements are not included; Tabled Papers 875 and 876 are
   still to be supplied.
+* **IBAC (Vic).** www.ibac.vic.gov.au answered OPAXBot with HTTP 403 (CloudFront) on
+  11 November 2026, for its pages and its robots.txt. OPAX reads IBAC's reports from
+  the copies tabled in the Parliament of Victoria (tabled documents database), with the
+  Government's tabled responses attached by operation name. Publications IBAC does not
+  table (research and prevention reports, recommendation-progress pages, agency
+  responses published only on its site) are not loaded. Some tabled papers have no
+  online document; the Special report on Operation Sandon is one ("available upon
+  request" from the Parliament), so its recommendations are not loaded. The Victorian
+  Government's Operation Sandon January 2025 progress report is attached to that record
+  as a government response (`progress_report`) from the manual supplement; it is the
+  Government's progress report to IBAC, not an IBAC report, and it is undated beyond
+  "January 2025", so its date is left empty. Findings and opinions are not extracted:
+  IBAC states them in narrative form and OPAX does not label them by inference.
 * **NSW ICAC.** robots.txt disallows `/reports`; investigation pages and
   `/ArticleDocuments` PDFs are allowed and used. Reports made public before 2016 are
   not online (the ICAC keeps a summary only), so those records hold the summary.
@@ -112,6 +127,7 @@ Each body's full gap list is in `index.json` (`bodies[].gaps`) and in `view=bodi
 | Commission | Terms | How OPAX uses the material |
 | --- | --- | --- |
 | NACC | CC BY 4.0 (page 2 of each report), except the Coat of Arms, logo, third-party material, trade marks and images | Verbatim extracts with attribution |
+| IBAC | IBAC copyright in each report; tabled copies published by the Parliament of Victoria (https://www.parliament.vic.gov.au/copyright/). The Sandon progress report carries no reuse notice | Short verbatim recommendations with citations and links; the Sandon progress report is listed and linked only |
 | NSW ICAC | Copyright, all rights reserved apart from fair dealing | Short verbatim findings and recommendations with citations and links (needs Jake's confirmation; see follow-ups) |
 | Qld CCC | Website material CC BY 4.0 unless otherwise noted | Verbatim extracts with attribution |
 | WA CCC | Commission copyright in each report; fair dealing only; no website licence page | Short verbatim extracts with citations and links |
@@ -126,7 +142,10 @@ Where a commission's host does not answer OPAXBot, the OPAX maintainer may downl
 reports in a browser from the publisher's own site and supply byte-identical copies
 with a manifest (source URL, sha256, page count, reuse terms). The first supply is
 dated 11 November 2026: eight NACC investigation reports, the Tasmanian Karamu report
-and 2025-26 annual report, and the NT 2025-26 annual report.
+and 2025-26 annual report, the NT 2025-26 annual report, and the Victorian Government's
+Operation Sandon January 2025 progress report (www.vic.gov.au; recorded in
+`vic_ibac.MANUAL_RESPONSES` as a response on the IBAC Sandon record, with its sha256,
+and read from `<cache>/manual/vic_ibac/`).
 
 * `python -m parli.ingest.integrity.manual build --intake <dir>` checks each file's
   sha256 against the manifest, copies it to `<cache>/manual/<body>/` (outside git),
@@ -156,11 +175,14 @@ and 2025-26 annual report, and the NT 2025-26 annual report.
 * SA Royal Commission into Domestic, Family and Sexual Violence (royal commissions dataset).
 * Tasmanian Commission of Inquiry into child sexual abuse volumes (royal commissions dataset).
 * NSW Special Commission of Inquiry into Healthcare Funding (royal commissions dataset).
-* Victoria (IBAC) lands through the `vic_ibac` adapter.
+* IBAC publications that are not tabled, and the Special report on Operation Sandon
+  itself (no online tabled copy; www.ibac.vic.gov.au refuses OPAXBot).
+* Per-recommendation status in the Operation Sandon progress report (listed as a
+  document; status not parsed).
 
 ## Code and files
 
-* Adapters: `parli/ingest/integrity/<body>.py` (`nacc`, `nsw_icac`, `qld_ccc`,
+* Adapters: `parli/ingest/integrity/<body>.py` (`nacc`, `nsw_icac`, `vic_ibac`, `qld_ccc`,
   `wa_ccc`, `sa_icac`, `tas_ic`, `act_ic`, `nt_icac`), shared code in `common.py`.
   Each exports `BODY`, `GAPS`, `MIN_RECORDS`, optional `KNOWN_GAP`, and
   `collect(client)`.
@@ -179,8 +201,8 @@ and 2025-26 annual report, and the NT 2025-26 annual report.
   checked by `scripts/vm/validate_data.py`.
 * Tool: `portal/src/tools/integrity-reports.ts`. Views `reports`, `report`
   (`part=findings|recommendations|responses|documents`), `findings`,
-  `recommendations`, `bodies`. Registry version
-  `structured-tools-11-integrity-reports`.
+  `recommendations`, `bodies`. Registered since
+  `structured-tools-11-integrity-reports` (now `structured-tools-12-royal-commissions`).
 * Tests: `tests/test_integrity_*.py` (offline fixtures; the network is blocked) and
   `portal/test/integrity-reports-tool.test.mjs`.
 

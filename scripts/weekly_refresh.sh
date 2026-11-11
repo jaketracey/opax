@@ -47,7 +47,7 @@ ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 # exit 3 from these means the source refused to change the register (empty or shrunken upstream; for ipea, a
 # quarter whose data.gov.au licence changed): the last good rows are kept, so it is reported as stale, not failed
 # (periodic-refresh.md, exit codes)
-STALE_OK=",integrity_reports,x_integrity_reports,transparency_portal,transparency_legacy,x_annual_reports,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
+STALE_OK=",integrity_reports,x_integrity_reports,transparency_portal,transparency_legacy,x_annual_reports,royal_commissions,x_royal_commissions,frl_acts,frl_instruments,x_instruments,qao_reports,qao_bodies,x_audit,donations_qld,donations_vic,donations_tas,donations_apply,lobbyists_fetch,lobbyists_apply,fits_fetch,fits_apply,rosters_fetch,qld_contracts,ipea,x_people,"
 
 # log, count, run_step, FAILED_STEPS, STEP_DELTA (shared with daily_refresh.sh)
 . "$REPO/scripts/lib/refresh_lib.sh"
@@ -130,6 +130,18 @@ if [ "$want_weekly" = 1 ]; then
       log "[integrity_reports] some bodies held or paused; their last good snapshots are exported"
     run_step x_integrity_reports "" "$EXPORT" dir portal/public/integrity-reports -- \
       "$PY" scripts/export_integrity_reports.py
+  fi
+  # Royal commissions (parli/ingest/royal_commissions.py): tabled reports from the Parliament of Victoria's tabled
+  # documents database, vic.gov.au response and status pages and treasury.gov.au, as the registry names them. ~300
+  # paced requests (PDFs are reused from the cache outside git), a snapshot with count and shrink guards (exit 3 keeps
+  # the last good one), then the public projection. No DB or KB writes.
+  if [ -z "$(git ls-tree --name-only HEAD -- portal/public/royal-commissions 2>/dev/null)" ]; then
+    log "[royal_commissions/x_royal_commissions] SKIP: projection not yet tracked on main"
+  elif run_step royal_commissions "" "$PY" -m parli.ingest.royal_commissions refresh; then
+    run_step x_royal_commissions "" "$EXPORT" dir portal/public/royal-commissions -- \
+      "$PY" scripts/export_royal_commissions.py
+  else
+    log "[x_royal_commissions] SKIP: royal commissions acquisition held; last good export kept"
   fi
   # QAO phase 1. Phase 2 is inert until its loader and phase-2 catalogue are tracked.
   if [ -z "$(git ls-tree --name-only HEAD -- portal/public/audit 2>/dev/null)" ]; then
