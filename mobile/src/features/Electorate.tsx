@@ -300,22 +300,12 @@ function ElectorateContent({
 
 function ElectorateSkeleton() {
   return (
-    <View testID="electorate-loading" style={{ gap: rhythm.section }}>
-      <Skeleton
-        shape="card"
-        count={1}
-        label="Loading the electorate"
-        onSunken
-      />
-      <Skeleton
-        shape="text"
-        count={3}
-        label="Loading the electorate"
-        onSunken
-      />
-      <Skeleton shape="people" count={1} label="Loading the members" onSunken />
-      <Skeleton shape="rows" count={2} label="Loading the elections" onSunken />
-    </View>
+    <Skeleton
+      shape="electorate-profile"
+      label="Loading the electorate"
+      testID="electorate-loading"
+      onSunken
+    />
   );
 }
 
