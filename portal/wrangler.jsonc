@@ -133,7 +133,9 @@
     // Nanjing IDC): ~7 paid Asks a day.
     // From Oct 2026 a Tencent Cloud Singapore fleet (AS132203) made ~30 paid Asks a day
     // from 43.172.194-198.x and 43.173.173-182.x; those /24s are refused here (Jake, 21 Oct).
-    "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24,43.172.194.0/23,43.172.196.0/23,43.172.198.0/24,43.173.173.0/24,43.173.174.0/23,43.173.176.0/22,43.173.180.0/23,43.173.182.0/24",
+    // On 11 Nov it moved to 161.120.171-188.x (same AS132203), ~100 paid Asks an hour;
+    // the exact /24 cover joins the list under the same decision.
+    "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24,43.172.194.0/23,43.172.196.0/23,43.172.198.0/24,43.173.173.0/24,43.173.174.0/23,43.173.176.0/22,43.173.180.0/23,43.173.182.0/24,161.120.171.0/24,161.120.172.0/22,161.120.176.0/21,161.120.184.0/22,161.120.188.0/24",
     // Generative model per pipeline. Edit here, no code change. Values are
     // platform model names. "openai-compatible" is the KB's one OpenRouter
     // slot (model_id @preset/opax-pro = DeepSeek V4 Pro pinned to DeepSeek,
@@ -190,7 +192,7 @@
         "REPORTS_APP_DATA": "true",
         "INDEXNOW_EPOCH_VERSION": "1794337098262",
         "INDEXNOW_ENABLED": "false",
-        "INDEXNOW_DRY_RUN": "true", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934", "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24,43.172.194.0/23,43.172.196.0/23,43.172.198.0/24,43.173.173.0/24,43.173.174.0/23,43.173.176.0/22,43.173.180.0/23,43.173.182.0/24" },
+        "INDEXNOW_DRY_RUN": "true", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934", "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24,43.172.194.0/23,43.172.196.0/23,43.172.198.0/24,43.173.173.0/24,43.173.174.0/23,43.173.176.0/22,43.173.180.0/23,43.173.182.0/24,161.120.171.0/24,161.120.172.0/22,161.120.176.0/21,161.120.184.0/22,161.120.188.0/24" },
       "ratelimits": [],
       // Never post from staging; triggers would otherwise be inherited.
       "triggers": { "crons": [] },

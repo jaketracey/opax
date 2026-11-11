@@ -110,5 +110,13 @@ test('the Tencent Cloud Singapore fleet loses the model routes, nothing else', a
   for (const ip of ['43.172.193.255', '43.172.199.1', '43.173.172.255', '43.173.183.1']) {
     assert.equal(networkBlock(from(ip), env, '/api/ask'), null, `neighbour ${ip} stays open`);
   }
+  for (const ip of ['161.120.171.4', '161.120.172.88', '161.120.175.200', '161.120.176.3', '161.120.183.250', '161.120.184.17', '161.120.187.9', '161.120.188.66']) {
+    assert.equal(networkBlock(from(ip), env, '/api/ask')?.status, 403, ip);
+  }
+  assert.equal(networkBlock(from('161.120.180.12', '/api/followups'), env, '/api/followups')?.status, 403);
+  assert.equal(networkBlock(from('161.120.180.12', '/api/search'), env, '/api/search'), null, 'retrieval stays open on the new range');
+  for (const ip of ['161.120.170.255', '161.120.189.1']) {
+    assert.equal(networkBlock(from(ip), env, '/api/ask'), null, `neighbour ${ip} stays open`);
+  }
   assert.equal(networkBlock(from('117.20.68.92', '/api/ask', 4764), env, '/api/ask'), null, 'an Australian reader can still ask');
 });
