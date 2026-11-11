@@ -1,9 +1,20 @@
 import ExpoModulesCore
 import UIKit
 
-private func onMain<T>(_ body: () -> T) -> T {
-  if Thread.isMainThread { return body() }
-  return DispatchQueue.main.sync(execute: body)
+private func onMain(_ body: @escaping () -> Void) {
+  if Thread.isMainThread { body() } else { DispatchQueue.main.async(execute: body) }
+}
+
+/// The last published traits, readable from the JavaScript thread. The sync
+/// getter never waits on the main thread (it may itself be waiting on
+/// JavaScript during a synchronous layout), so it returns this snapshot and
+/// schedules a refresh; the event carries any change.
+private final class TraitsCache {
+  static let shared = TraitsCache()
+  private let lock = NSLock()
+  private var value: [String: Any] = ["horizontal": "compact", "vertical": "compact", "foldable": false]
+  func get() -> [String: Any] { lock.lock(); defer { lock.unlock() }; return value }
+  func set(_ next: [String: Any]) { lock.lock(); value = next; lock.unlock() }
 }
 
 private struct WindowTraits: Equatable {
@@ -144,7 +155,10 @@ private final class WindowTraitsObserver {
       }
     }
 #if OPAX_RESERVED_REGIONS
-    if #available(iOS 27.1, *), let root = key?.rootViewController?.view {
+    // The observer sits on the window itself, behind the root view: React
+    // Native mounts its own children into the root view by index, so an
+    // extra subview there would shift them.
+    if #available(iOS 27.1, *), let root = key {
       foldable = !root.reservedRegions(kind: .division, options: .includeInactive).isEmpty
       if rootObserver?.superview !== root {
         rootObserver?.removeFromSuperview()
@@ -174,6 +188,7 @@ private final class WindowTraitsObserver {
     )
     if traits != last {
       last = traits
+      TraitsCache.shared.set(traits.payload)
       emit?(traits.payload)
     }
     return traits.payload
@@ -227,7 +242,13 @@ public final class OpaxDuoModule: Module {
     Name("OpaxDuo")
     Events("onWindowTraits")
 
-    Function("getWindowTraits") { onMain { self.observer.refresh() } }
+    OnCreate { onMain { self.observer.refresh() } }
+
+    Function("getWindowTraits") { () -> [String: Any] in
+      if Thread.isMainThread { return self.observer.refresh() }
+      onMain { self.observer.refresh() }
+      return TraitsCache.shared.get()
+    }
 
     OnStartObserving {
       onMain {

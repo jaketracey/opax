@@ -6,6 +6,9 @@ const reviewedNativeModules = Object.freeze({
   // UIKit backing and divider only; no transport or new permissions.
   'modules/opax-root-bar/index.ts': Object.freeze(['OpaxRootBar']),
   'modules/opax-voice/index.ts': Object.freeze(['OpaxVoice']),
+  // Window size classes and reserved-region geometry only; no transport,
+  // permissions or data (iPhone Duo, reviewed 11 Nov 2026).
+  'modules/opax-duo/index.ts': Object.freeze(['OpaxDuo']),
 });
 
 // The voice core's URLSession transports are reviewed exceptions. Its two test
