@@ -101,7 +101,7 @@ async function openAssociatedEntity(name: string) {
   router.push(associatedEntityRoute(name, graph));
 }
 
-/** The Parliamentarians directory filtered to a party's sitting members. */
+/** Sitting party members across federal, state and territory parliaments. */
 export const partyMembersRoute = (label: string, sitting = true): Href => ({
   pathname: '/directory',
   params: {
@@ -519,7 +519,7 @@ function PartyContent({
       about={() => ({
         title: 'Members',
         notes: [
-          'Current members use their current party. The directory is updated periodically. Undated affiliations appear separately as recorded; former members are excluded.',
+          'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded; former members are excluded.',
           view.rosterAsAt
             ? `Roster as at ${formatDate(view.rosterAsAt)}.`
             : null,

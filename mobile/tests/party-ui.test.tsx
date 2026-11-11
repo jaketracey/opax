@@ -21,10 +21,17 @@ import { moneyAccessibilityLabel } from '../src/design/format';
 import { partyColors } from '../src/design/palette';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import { Screen, TitleAnchor } from '../src/design/layout';
+import { StatStrip } from '../src/design/record';
 import { ContentUnavailable } from '../src/design/states';
 import { textStyles } from '../src/design/tokens';
 import { DivisionSplits, RecordedParty } from '../src/features/bills/parts';
-import { PartyPage, faceCandidates, loadFaces } from '../src/features/Party';
+import {
+  PartyPage,
+  faceCandidates,
+  loadFaces,
+  partyMembersRoute,
+} from '../src/features/Party';
+import { ProfileBlock } from '../src/features/people/Block';
 import { decodeMoneyGraph } from '../src/features/money/data';
 import {
   firstLineOffset,
@@ -112,6 +119,44 @@ async function render(input = 'Labor') {
   });
   return renderer;
 }
+
+test.each([
+  ['Animal Justice Party', 1],
+  ['Legalise Cannabis Victoria', 2],
+  ['Libertarian Party', 1],
+])(
+  '%s shows the state-only count in the stat and Members row',
+  async (label, count) => {
+    jest
+      .mocked(runtime.partyPage)
+      .mockResolvedValueOnce(await api.partyPage(label));
+    const r = await render(label);
+    expect(r.root.findByType(StatStrip).props.tiles).toContainEqual(
+      expect.objectContaining({
+        value: String(count),
+        label: count === 1 ? 'sitting member' : 'sitting members',
+        testID: 'party-figure-members',
+      }),
+    );
+    const row = r.root
+      .findAllByType(LinkRow)
+      .find((n) => n.props.testID === 'party-current-count')!;
+    expect(row.props.title).toBe(
+      `${count} ${count === 1 ? 'sitting member' : 'sitting members'}`,
+    );
+    const href = {
+      pathname: '/directory',
+      params: { kind: 'person', party: label, sitting: '1' },
+    };
+    expect(partyMembersRoute(label)).toEqual(href);
+    expect(row.props.href).toEqual(href);
+    const block = r.root
+      .findAllByType(ProfileBlock)
+      .find((n) => n.props.id === 'party-members')!;
+    expect(block.props.action).toMatchObject({ label: 'See all', href });
+    act(() => r.unmount());
+  },
+);
 
 test('a loaded party heading reveals its named bar title when it scrolls under the header', async () => {
   let finishLoading!: (loaded: typeof view) => void;

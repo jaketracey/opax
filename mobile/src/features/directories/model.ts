@@ -7,6 +7,11 @@ import type {
 } from '../../api/catalog-decoders';
 import type { PersonProfile } from '../../api/person-identity';
 import { rosterChambersFor } from '../../api/person-identity';
+import {
+  partyName,
+  sameMemberParty,
+  sittingPartyMembers,
+} from '../../api/party-page';
 import { nameKey, nameValues } from '../../api/ids';
 import {
   billFoldText,
@@ -25,6 +30,7 @@ import { chamberName, jurisdictionName } from '../../design/parliament';
 import { isPartyLabel } from '../../design/party';
 import type { PartyFile } from './party-file';
 import { stageTitle } from '../bills/divisions';
+export { partyName } from '../../api/party-page';
 
 export type DirectoryKind = 'person' | 'party' | 'electorate';
 export const directoryKind = (value: unknown): DirectoryKind =>
@@ -66,6 +72,8 @@ export interface PeopleRow {
   profile: PersonProfile;
   row: Roster['people'][number] | undefined;
   parties: string[];
+  /** Confirmed current affiliations, from the shared party membership list. */
+  sittingParties: string[];
   /** Parliaments sat in: "federal", "nsw". */
   parliaments: string[];
   /** States and territories represented: "nsw", "vic". */
@@ -95,6 +103,17 @@ export function peopleRows(
   votes: Votes,
   portraits: ReturnType<typeof buildPortraitIndex>,
 ): PeopleRow[] {
+  const sitting = new Map(
+    sittingPartyMembers(
+      d.roster.data,
+      d.people.data,
+      d.slugs.data,
+      d.manifest.data,
+    ).map(({ profile, seats }) => [
+      profile.canonicalPersonId ?? profile.rosterPersonId ?? profile.name,
+      [...new Set(seats.map((s) => s.party))],
+    ]),
+  );
   const named = new Map<string, Roster['people']>();
   for (const row of d.roster.data.people) {
     const key = nameKey(row.name);
@@ -216,9 +235,18 @@ export function peopleRows(
         ...(person?.electorates ?? []).map((s) => s.chamber),
       ]),
     ].filter((c) => c !== 'senate_committee');
+    const sittingParties =
+      sitting.get(
+        profile.canonicalPersonId ?? profile.rosterPersonId ?? profile.name,
+      ) ?? [];
     const parties = [
       ...new Set(
-        [row?.party, ...(row?.parties ?? [])].filter((p): p is string => !!p),
+        [
+          ...sittingParties,
+          row?.party,
+          ...(row?.parties ?? []),
+          ...(person?.electorates ?? []).map((s) => s.party),
+        ].filter((p): p is string => !!p),
       ),
     ];
     const house = (person?.electorates ?? []).find(
@@ -237,6 +265,7 @@ export function peopleRows(
       profile,
       row,
       parties,
+      sittingParties,
       parliaments,
       states,
       chambers,
@@ -381,41 +410,27 @@ export function electorateSections(
   return sections;
 }
 
-// Codes the registers write for a party, spelled out for the filter sheet.
-const partyNames: Record<string, string> = {
-  lnp: 'Liberal National Party of Queensland',
-  jln: 'Jacqui Lambie Network',
-  dlp: 'Democratic Labour Party',
-  kap: 'Katter’s Australian Party',
-  uap: 'United Australia Party',
-  clp: 'Country Liberal Party',
-  alp: 'Australian Labor Party',
-  ind: 'Independent',
-};
-/** A party's full name where the register writes a code ("LNP"). */
-export function partyName(label: string): string {
-  const name = label.trim();
-  return partyNames[name.toLowerCase()] ?? name;
-}
-const sameParty = (a: string, b: string) =>
-  nameKey(partyName(a)) === nameKey(partyName(b));
 export function matchingPeople(rows: PeopleRow[], f: Filters, query: string) {
   const party = filterValue(f, 'party');
   const parliament = filterValue(f, 'parliament');
   const chamber = filterValue(f, 'chamber');
   const state = filterValue(f, 'state');
   const sort = filterValue(f, 'sort') || 'name';
+  const sitting = filterValue(f, 'sitting');
   return rows
     .filter(
       (p) =>
         matches(p.text, query) &&
-        (!party || p.parties.some((x) => sameParty(x, party))) &&
+        (!party ||
+          (sitting ? p.sittingParties : p.parties).some((x) =>
+            sameMemberParty(x, party),
+          )) &&
         (!parliament || p.parliaments.includes(parliament)) &&
         (!chamber || p.chambers.includes(chamber)) &&
         (!state || p.states.includes(state)) &&
         (!filterValue(f, 'votes') || p.divisions > 0) &&
         // The dated status only: an undated party is not called sitting.
-        (!filterValue(f, 'sitting') || sittingGroup(p) === 'sitting'),
+        (!sitting || sittingGroup(p) === 'sitting'),
     )
     .sort(
       (a, b) =>
@@ -435,15 +450,23 @@ export interface PartyRow {
   key: string;
   name: string;
   speeches: number;
+  /** Unique sitting members across federal, state and territory parliaments. */
   members: number;
   money: Record<string, { total: number; source: string; asAt: string }>;
   total: number;
 }
 /** Parties only: "Independent" and presiding roles are not listed. */
 export function partyRows(
-  roster: Roster,
+  directory: Pick<Directory, 'roster' | 'people' | 'slugs' | 'manifest'>,
   files: Record<string, PartyFile>,
 ): PartyRow[] {
+  const { roster, people, slugs, manifest } = directory;
+  const sitting = sittingPartyMembers(
+    roster.data,
+    people.data,
+    slugs.data,
+    manifest.data,
+  );
   const rows = new Map<string, PartyRow>();
   const get = (name: string) => {
     let p = rows.get(name);
@@ -463,7 +486,8 @@ export function partyRows(
           (jur === 'federal' ? 'AEC returns' : jur.toUpperCase()),
         asAt: file.meta.generated,
       };
-  for (const p of roster.people)
+  for (const { seats } of sitting) for (const seat of seats) get(seat.party);
+  for (const p of roster.data.people)
     if (
       p.party &&
       (rosterChambersFor(p).some((c) => !!chamberName(c, 'federal')) ||
@@ -475,13 +499,16 @@ export function partyRows(
         ))
     ) {
       const r = get(p.party);
-      r.members++;
       r.speeches += p.speeches ?? 0;
     }
-  for (const p of rows.values())
+  for (const p of rows.values()) {
+    p.members = sitting.filter((m) =>
+      m.seats.some((s) => sameMemberParty(s.party, p.name)),
+    ).length;
     p.total =
       p.money.federal?.total ??
       Math.max(0, ...Object.values(p.money).map((m) => m.total));
+  }
   return [...rows.values()].filter((p) => isPartyLabel(p.name));
 }
 export function matchingParties(rows: PartyRow[], f: Filters, query: string) {
@@ -545,7 +572,9 @@ export function matchingElectorates(
         (!status || e.status === status) &&
         (!party ||
           e.representatives.some(
-            (r) => !!r.party && sameParty(r.party, party),
+            (r) =>
+              !!r.party &&
+              nameKey(partyName(r.party)) === nameKey(partyName(party)),
           )) &&
         (!filterValue(f, 'results') || (e.election_count ?? 0) > 0),
     )

@@ -5,7 +5,12 @@ import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import DirectoryScreen from '../src/features/directories/DirectoryScreen';
-import { peopleFacets, peopleRows } from '../src/features/directories/model';
+import {
+  partyRows,
+  peopleFacets,
+  peopleRows,
+} from '../src/features/directories/model';
+import { PartyDirectoryRow } from '../src/features/directories/DirectoryRows';
 import {
   loadDirectory,
   type DirectoryRecord,
@@ -93,6 +98,15 @@ const directory: DirectoryRecord = {
   partial: false,
   sources: [],
 };
+const parties = partyRows(
+  {
+    manifest: record(manifest),
+    roster: record(roster),
+    people: record(people),
+    slugs: record(slugs),
+  },
+  {},
+);
 async function open() {
   jest.mocked(loadDirectory).mockResolvedValue(directory);
   let r!: TestRenderer.ReactTestRenderer;
@@ -188,6 +202,48 @@ test('the party page arrives filtered to its sitting members, said in one line',
   });
   await act(async () => r.unmount());
 });
+
+test.each([
+  ['Animal Justice Party', ['Georgie Purcell']],
+  ['Legalise Cannabis Victoria', ['David Ettershank', 'Rachel Payne']],
+  ['Libertarian Party', ['David Limbrick']],
+])(
+  '%s lists and labels its state-only sitting members',
+  async (label, names) => {
+    mockParams.party = label;
+    mockParams.sitting = '1';
+    const r = await open();
+    expect(
+      r.root
+        .findAllByType(PersonRow)
+        .map((row) => row.props.name)
+        .sort(),
+    ).toEqual([...names].sort());
+    const line = r.root.find(
+      (n) => n.props.testID === 'directory-filter-line' && n.props.variant,
+    );
+    expect(strings(line)).toBe(
+      `${label} · Sitting members only · ${names.length} ${names.length === 1 ? 'parliamentarian' : 'parliamentarians'}`,
+    );
+    expect(strings(r.root)).not.toContain('No results');
+    await act(async () => r.unmount());
+
+    let row!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      row = TestRenderer.create(
+        <PartyDirectoryRow item={parties.find((p) => p.name === label)!} />,
+      );
+    });
+    const detail = `${names.length} ${names.length === 1 ? 'sitting member' : 'sitting members'}`;
+    expect(strings(row.root)).toContain(detail);
+    expect(
+      row.root.findAll(
+        (n) => n.props.accessibilityLabel === `${label}, ${detail}`,
+      ).length,
+    ).toBeGreaterThan(0);
+    await act(async () => row.unmount());
+  },
+);
 
 test('sitting members lead under sticky sections; rows say party then place', async () => {
   const r = await open();

@@ -142,7 +142,7 @@ export const PersonDirectoryRow = memo(function PersonDirectoryRow(
   );
 });
 
-/** "{n} members on record" under the party's dot and full name; no money. */
+/** "{n} sitting members" under the party's dot and full name; no money. */
 export const PartyDirectoryRow = memo(function PartyDirectoryRow({
   item,
   selected,
@@ -150,7 +150,7 @@ export const PartyDirectoryRow = memo(function PartyDirectoryRow({
 }: RowProps<PartyRow>) {
   const slug = partySlug(item.name);
   const follow = useRowFollow('party', slug, item.name);
-  const detail = `${counted(item.members, 'member', 'members')} on record`;
+  const detail = counted(item.members, 'sitting member');
   return (
     <LinkRow
       title=""

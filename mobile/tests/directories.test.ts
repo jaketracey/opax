@@ -64,7 +64,7 @@ const partyFiles = {
   qld: decodePartyFile(JSON.parse(bytes('/graph/money.qld.json').toString())),
   vic: decodePartyFile(JSON.parse(bytes('/graph/money.vic.json').toString())),
 };
-const parties = partyRows(roster, partyFiles);
+const parties = partyRows(directory, partyFiles);
 const grayndler = index.electorates.find((e) => e.name === 'Grayndler')!;
 const seat = d.decodeElectorate(pinned(grayndler.detail_url));
 const bill = d.decodeBill(pinned('/bills/au-federal-r7534.json'));
@@ -324,6 +324,143 @@ describe('static directory transforms', () => {
     expect(labor.map((p) => p.name)).toContain('Anthony Albanese');
     expect(labor.map((p) => p.name)).not.toContain('Julia Gillard');
   });
+  test.each([
+    ['Animal Justice Party', ['Georgie Purcell']],
+    ['Legalise Cannabis Victoria', ['David Ettershank', 'Rachel Payne']],
+    ['Libertarian Party', ['David Limbrick']],
+  ])('%s counts and lists its state-only sitting members', (label, names) => {
+    const members = partyMembers(label, roster, people, slugs, manifest);
+    const row = parties.find((p) => p.name === label)!;
+    const found = matchingPeople(persons, { party: label, sitting: '1' }, '');
+    expect(members.currentCount).toBe(names.length);
+    expect(members.current.every((m) => m.jurisdiction === 'vic')).toBe(true);
+    expect(row.members).toBe(names.length);
+    expect(found.map((p) => p.name).sort()).toEqual([...names].sort());
+    expect(found.every((p) => p.sittingParties.includes(label))).toBe(true);
+    expect(
+      matchingParties(parties, { has_members: '1' }, '').includes(row),
+    ).toBe(true);
+    expect(peopleFacets(persons)[0]!.choices).toContainEqual({
+      label,
+      value: label,
+    });
+  });
+  test('all parties share the same sitting people on the page, row and filtered list', () => {
+    for (const row of parties) {
+      const members = partyMembers(row.name, roster, people, slugs, manifest);
+      const found = matchingPeople(
+        persons,
+        { party: row.name, sitting: '1' },
+        '',
+      );
+      expect({ party: row.name, count: row.members }).toEqual({
+        party: row.name,
+        count: members.currentCount,
+      });
+      expect({
+        party: row.name,
+        ids: found.map((p) => p.profile.canonicalPersonId).sort(),
+      }).toEqual({
+        party: row.name,
+        ids: [
+          ...new Set(
+            members.current.map(
+              (p) =>
+                d.joinPerson(p.slug, slugs, roster, people, manifest)
+                  .canonicalPersonId,
+            ),
+          ),
+        ].sort(),
+      });
+    }
+  });
+  test('sitting party filters use current seats rather than past roster affiliations', () => {
+    const changedRoster = {
+      ...roster,
+      people: [
+        ...roster.people.filter((p) => p.name !== 'Georgie Purcell'),
+        { name: 'Georgie Purcell', party: 'Past Party' },
+      ],
+    };
+    const changed = { ...directory, roster: record(changedRoster) };
+    const rows = peopleRows(
+      changed,
+      catalogs.votes!,
+      buildPortraitIndex({
+        manifest,
+        people,
+        roster: changedRoster,
+        slugs,
+        photoPeople: catalogs.photoPeople!,
+        photoCredits: catalogs.photoCredits!,
+      }),
+    );
+    expect(
+      matchingPeople(rows, { party: 'Past Party', sitting: '1' }, ''),
+    ).toEqual([]);
+    expect(
+      matchingPeople(rows, { party: 'Past Party' }, '').map((p) => p.name),
+    ).toContain('Georgie Purcell');
+    expect(
+      matchingPeople(
+        rows,
+        { party: 'Animal Justice Party', sitting: '1' },
+        '',
+      ).map((p) => p.name),
+    ).toEqual(['Georgie Purcell']);
+  });
+  test('multiple seat observations and profile aliases still count a state member once', () => {
+    const duplicated = {
+      ...people,
+      people: people.people.map((p) =>
+        p.name === 'Georgie Purcell'
+          ? {
+              ...p,
+              aliases: [...p.aliases, 'Georgie A Purcell'],
+              electorates: [...p.electorates, ...p.electorates],
+            }
+          : p,
+      ),
+    };
+    const aliases = {
+      ...slugs,
+      slugs: { ...slugs.slugs, 'georgie-a-purcell': 'Georgie A Purcell' },
+    };
+    const changed = {
+      ...directory,
+      people: record(duplicated),
+      slugs: record(aliases),
+    };
+    const rows = peopleRows(
+      changed,
+      catalogs.votes!,
+      buildPortraitIndex({
+        manifest,
+        roster,
+        people: duplicated,
+        slugs: aliases,
+        photoPeople: catalogs.photoPeople!,
+        photoCredits: catalogs.photoCredits!,
+      }),
+    );
+    const members = partyMembers(
+      'Animal Justice Party',
+      roster,
+      duplicated,
+      aliases,
+      manifest,
+    );
+    expect(members.current).toHaveLength(2);
+    expect(members.currentCount).toBe(1);
+    expect(
+      partyRows(changed, partyFiles).find(
+        (p) => p.name === 'Animal Justice Party',
+      )?.members,
+    ).toBe(1);
+    expect(
+      matchingPeople(rows, { party: 'Animal Justice Party', sitting: '1' }, ''),
+    ).toHaveLength(1);
+  });
   test('former members carry the same status, so their labels read alike', () => {
     // Abbott, Howard, Turnbull and Costello read "Formerly LIB" while Hockey
     // read "LIB": the rule is now one party label for all of them.
@@ -400,8 +537,8 @@ describe('static directory transforms', () => {
       }
     },
   );
-  test('parties contain party nodes and roster labels; no donors; commission receipts are never summed', () => {
-    expect(parties.length).toBe(18);
+  test('parties include party nodes, roster labels and sitting affiliations; commission receipts are never summed', () => {
+    expect(parties.length).toBe(24);
     // Independent is not a party (people.md 2.4).
     expect(parties.map((p) => p.name)).not.toContain('Independent');
     expect(
@@ -410,6 +547,11 @@ describe('static directory transforms', () => {
           roster.people.some((r) => r.party === p.name) ||
           Object.values(partyFiles).some((f) =>
             f.parties.some((n) => n.label === p.name),
+          ) ||
+          people.people.some((person) =>
+            person.electorates.some(
+              (seat) => seat.current && seat.party === p.name,
+            ),
           ),
       ),
     ).toBe(true);
@@ -457,15 +599,19 @@ describe('static directory transforms', () => {
   test('committee-only names do not count as parliamentary party members', () => {
     const rows = partyRows(
       {
-        ...roster,
-        people: [
-          {
-            name: 'A Committee Witness',
-            party: 'Labor',
-            chambers: ['senate_committee'],
-            speeches: 100,
-          },
-        ],
+        ...directory,
+        roster: record({
+          ...roster,
+          people: [
+            {
+              name: 'A Committee Witness',
+              party: 'Labor',
+              chambers: ['senate_committee'],
+              speeches: 100,
+            },
+          ],
+        }),
+        people: record({ ...people, people: [] }),
       },
       partyFiles,
     );

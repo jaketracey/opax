@@ -8,7 +8,11 @@ import type {
   Roster,
   Slugs,
 } from './catalog-decoders';
-import { joinPerson, rosterChambersFor } from './person-identity';
+import {
+  joinPerson,
+  rosterChambersFor,
+  type PersonProfile,
+} from './person-identity';
 import { memberSlugFor } from './catalog-search';
 import {
   billDedupeDivisions,
@@ -19,6 +23,26 @@ import { isPartyLabel, samePartyLabel } from '../design/party';
 import { nameKey } from './ids';
 import { individualDonorsLabel } from '../privacy/donorEntity';
 export { resolveParty } from '../design/party';
+
+// Codes in the parliamentary roster, expanded for membership comparisons.
+const partyNames: Record<string, string> = {
+  lnp: 'Liberal National Party of Queensland',
+  jln: 'Jacqui Lambie Network',
+  dlp: 'Democratic Labour Party',
+  kap: 'Katter’s Australian Party',
+  uap: 'United Australia Party',
+  clp: 'Country Liberal Party',
+  alp: 'Australian Labor Party',
+  ind: 'Independent',
+};
+/** A party's full name where the register writes a code ("LNP"). */
+export function partyName(label: string): string {
+  const name = label.trim();
+  return partyNames[name.toLowerCase()] ?? name;
+}
+export const sameMemberParty = (a: string, b: string) =>
+  samePartyLabel(partyName(a), partyName(b)) ||
+  nameKey(partyName(a)) === nameKey(partyName(b));
 
 export function partyLabels(
   roster: Roster,
@@ -44,10 +68,21 @@ export function partyMembers(
   slugs: Slugs,
   manifest: Manifest,
 ) {
-  const current: PartyMember[] = [],
-    recorded: PartyMember[] = [];
-  const seen = new Set<string>();
+  const sitting = sittingPartyMembers(roster, people, slugs, manifest, label);
+  const current: PartyMember[] = sitting.flatMap((p) =>
+    p.seats.map((s) => ({
+      name: s.name,
+      slug: s.slug,
+      jurisdiction: s.jurisdiction,
+      chamber: s.chamber,
+      place: s.place,
+      asAt: s.asAt,
+    })),
+  );
+  const recorded: PartyMember[] = [];
   const sources = new Map<string, Manifest['sources'][number]>();
+  for (const { profile } of sitting)
+    for (const source of profile.sources) sources.set(source.source_id, source);
   const currentNames = new Set(
     people.people
       .filter((p) => p.electorates.some((s) => s.current))
@@ -77,6 +112,63 @@ export function partyMembers(
           seatKey(seat.jurisdiction, seat.chamber, seat.electorate),
         );
   }
+  for (const p of partyMemberProfiles(roster, people, slugs, manifest)) {
+    if (p.partyStatus !== 'unknown') continue;
+    if (p.party && samePartyLabel(p.party, label)) {
+      // A recorded seat now held by someone else rules out only its own
+      // parliament and chamber: a former federal MP can sit in a state house
+      // whose seats carry no dated data (Janelle Saffin: Page, then Lismore).
+      const houses = new Map<string, boolean>();
+      for (const r of p.rosterRow?.representation ?? []) {
+        const house = `${r.jurisdiction}|${r.chamber}`;
+        houses.set(
+          house,
+          (houses.get(house) ?? false) ||
+            (!!r.electorate &&
+              currentSeats.has(
+                seatKey(r.jurisdiction, r.chamber, r.electorate),
+              )),
+        );
+      }
+      if (
+        !p.name.trim().includes(' ') ||
+        currentNames.has(nameKey(p.name)) ||
+        (houses.size > 0 && [...houses.values()].every(Boolean))
+      )
+        continue;
+      recorded.push({
+        name: p.name,
+        slug: p.slug,
+        // Undated roster places can mix state and federal records. Show the
+        // recorded name without assigning unverified representation.
+        jurisdiction: '',
+        chamber: '',
+        place: '',
+        asAt: roster.meta.generated,
+      });
+      for (const source of p.sources) sources.set(source.source_id, source);
+    }
+  }
+  const order = (a: PartyMember, b: PartyMember) =>
+    `${a.jurisdiction}|${a.chamber}|${a.name}`.localeCompare(
+      `${b.jurisdiction}|${b.chamber}|${b.name}`,
+      'en-AU',
+    );
+  return {
+    current: current.sort(order),
+    recorded: recorded.sort(order),
+    currentCount: sitting.length,
+    sources: [...sources.values()],
+  };
+}
+
+function* partyMemberProfiles(
+  roster: Roster,
+  people: PeopleCatalog,
+  slugs: Slugs,
+  manifest: Manifest,
+): Generator<PersonProfile> {
+  const seen = new Set<string>();
   // Full-name profiles precede surname stubs for the same canonical ID.
   const orderedSlugs = Object.keys(slugs.slugs).sort(
     (a, b) =>
@@ -113,93 +205,64 @@ export function partyMembers(
       !p.rosterRow?.representation?.length
     )
       continue;
-    if (p.partyStatus === 'former') continue;
-    const seats = p.seats.filter(
-      (s) => s.party && samePartyLabel(s.party, label),
-    );
-    const before = current.length + recorded.length;
-    if (p.partyStatus === 'current') {
-      // A current seat establishes only its own affiliation. The APH current
-      // flag establishes a federal affiliation only when party_now names it.
-      if (seats.length)
-        for (const s of seats)
-          current.push({
+    yield p;
+  }
+}
+
+/** Unique sitting people and their current federal, state and territory affiliations. */
+export function sittingPartyMembers(
+  roster: Roster,
+  people: PeopleCatalog,
+  slugs: Slugs,
+  manifest: Manifest,
+  label?: string,
+) {
+  const members: {
+    profile: PersonProfile;
+    seats: (PartyMember & { party: string })[];
+  }[] = [];
+  for (const p of partyMemberProfiles(roster, people, slugs, manifest)) {
+    if (p.partyStatus !== 'current') continue;
+    const seats: (PartyMember & { party: string })[] = [];
+    // A current seat establishes only its own affiliation. The APH current
+    // flag establishes a federal affiliation only when party_now names it.
+    if (p.seats.length) {
+      for (const s of p.seats)
+        if (s.party && (!label || sameMemberParty(s.party, label)))
+          seats.push({
             name: p.name,
-            slug,
+            slug: p.slug,
+            party: s.party,
             jurisdiction: s.jurisdiction,
             chamber: s.chamber,
             place: s.name,
             asAt: s.as_of,
           });
-      else if (
-        !p.seats.length &&
-        p.rosterRow?.current === true &&
-        p.rosterRow.party_now &&
-        samePartyLabel(p.rosterRow.party_now, label)
-      ) {
-        const chambers = rosterChambersFor(p.rosterRow).filter((c) =>
-          ['representatives', 'senate'].includes(c),
-        );
-        for (const chamber of chambers)
-          current.push({
-            name: p.name,
-            slug,
-            jurisdiction: 'federal',
-            chamber,
-            place:
-              p.rosterRow.representation?.find(
-                (r) => r.jurisdiction === 'federal' && r.chamber === chamber,
-              )?.electorate ?? '',
-            asAt: roster.meta.generated,
-          });
-      }
-    } else if (p.party && samePartyLabel(p.party, label)) {
-      // A recorded seat now held by someone else rules out only its own
-      // parliament and chamber: a former federal MP can sit in a state house
-      // whose seats carry no dated data (Janelle Saffin: Page, then Lismore).
-      const houses = new Map<string, boolean>();
-      for (const r of p.rosterRow?.representation ?? []) {
-        const house = `${r.jurisdiction}|${r.chamber}`;
-        houses.set(
-          house,
-          (houses.get(house) ?? false) ||
-            (!!r.electorate &&
-              currentSeats.has(
-                seatKey(r.jurisdiction, r.chamber, r.electorate),
-              )),
-        );
-      }
-      if (
-        !p.name.trim().includes(' ') ||
-        currentNames.has(nameKey(p.name)) ||
-        (houses.size > 0 && [...houses.values()].every(Boolean))
-      )
-        continue;
-      recorded.push({
-        name: p.name,
-        slug,
-        // Undated roster places can mix state and federal records. Show the
-        // recorded name without assigning unverified representation.
-        jurisdiction: '',
-        chamber: '',
-        place: '',
-        asAt: roster.meta.generated,
-      });
+    } else if (
+      p.rosterRow?.current === true &&
+      p.rosterRow.party_now &&
+      (!label || sameMemberParty(p.rosterRow.party_now, label))
+    ) {
+      const chambers = rosterChambersFor(p.rosterRow).filter((c) =>
+        ['representatives', 'senate'].includes(c),
+      );
+      for (const chamber of chambers)
+        seats.push({
+          name: p.name,
+          slug: p.slug,
+          party: p.rosterRow.party_now,
+          jurisdiction: 'federal',
+          chamber,
+          place:
+            p.rosterRow.representation?.find(
+              (r) => r.jurisdiction === 'federal' && r.chamber === chamber,
+            )?.electorate ?? '',
+          asAt: roster.meta.generated,
+        });
     }
-    if (current.length + recorded.length > before)
-      for (const source of p.sources) sources.set(source.source_id, source);
+    if (seats.length) members.push({ profile: p, seats });
   }
-  const order = (a: PartyMember, b: PartyMember) =>
-    `${a.jurisdiction}|${a.chamber}|${a.name}`.localeCompare(
-      `${b.jurisdiction}|${b.chamber}|${b.name}`,
-      'en-AU',
-    );
-  return {
-    current: current.sort(order),
-    recorded: recorded.sort(order),
-    currentCount: new Set(current.map((p) => p.slug)).size,
-    sources: [...sources.values()],
-  };
+  return members;
 }
 export interface PartyMember {
   name: string;
