@@ -123,8 +123,46 @@ with file-size suffixes such as "(PDF, 840KB)" removed and generic link text
 
 The `royal_commissions` tool's profile now carries a transcript summary (count, date
 range, newest three); `view=transcripts` pages through the rest, newest first, with
-`words`, `since` and `until`. Every transcript row and citation carries the label
+`words` and `offset`. Every transcript row and citation carries the label
 "Hearing transcript: evidence, not findings".
+
+### Transcript text for the CC BY commissions, 12 November 2026
+
+The Antisemitism and Social Cohesion and Robodebt royal commissions (Commonwealth
+material) and the NSW Healthcare Funding inquiry (NSW Premier's Department) license their
+own material under CC BY 4.0, so OPAX publishes and searches the text of their 171
+transcripts. `scripts/build_transcript_fulltext.py` reads the verified manual PDFs and
+writes `portal/public/transcripts/`:
+
+- `index.json`: the transcripts, the attribution and copyright page for each commission,
+  the tokeniser's stopwords and the terms too common to post;
+- `terms/<nn>.json`: term to transcripts, sharded by FNV-1a of the term;
+- `<commission>/<key>.json`: one transcript, with each PDF page's own transcript page
+  number (for example "P-4899" or "6189"), its text, and term to pages.
+
+Text is the publisher's text layer with the margin line numbers, running headers and
+footers removed; the words are not changed and redactions are the publisher's. The Epiq
+word-index pages at the back of the NSW transcripts (2,071 pages) are dropped.
+
+Where the publisher's own transcript records a non-publication or suppression order, a
+direction not to publish, or a witness giving evidence under a pseudonym, the transcript
+is marked `quote_policy: "no_quotes"`. Its file carries the pages and the term index but no
+text, and the tool points to the hearing and page with the order notice instead of a
+quotation. The test is deliberately broad: any such mention anywhere in the transcript
+counts. "De-identified" and "anonymity" alone do not, as they describe data.
+
+| Inquiry | Transcripts | Quotable | Pointed to by page only |
+| --- | --- | --- | --- |
+| Antisemitism and Social Cohesion | 53 | 16 | 37 |
+| Robodebt | 47 | 29 | 18 |
+| NSW Healthcare Funding | 71 | 62 | 9 |
+
+`royal_commissions` view=transcripts matches `words` against the text of these
+transcripts as well as the title and date. Each matching transcript carries up to two
+pages with a verbatim excerpt (280 characters at most) or, for a no-quote transcript, the
+page only; every citation links the publisher's PDF at that page and ends with the label
+and the CC BY attribution. Every other commission's transcripts stay listed with a link to
+the publisher.
 
 ### Particular care
 

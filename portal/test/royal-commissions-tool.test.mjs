@@ -10,7 +10,7 @@ globalThis.fetch = async () => { throw Error('Royal commissions tool tests must 
 test.after(() => { globalThis.fetch = savedFetch; });
 const cache = new Map();
 async function asset(path) {
-  assert.match(path, /^\/royal-commissions\/[a-z0-9-]+\.json$/);
+  assert.match(path, /^\/(royal-commissions\/[a-z0-9-]+|transcripts\/(index|terms\/\d{2}|[a-z0-9-]+\/transcript-[a-z0-9-]+))\.json$/);
   if (!cache.has(path)) cache.set(path, JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8')));
   return cache.get(path);
 }
@@ -193,4 +193,54 @@ test('transcript paging is stable at the edges: first page, last page and past t
   for (const r of all) { assert.ok(r.date && r.pages >= 1 && /^https:\/\//.test(r.pdf_url) && typeof r.publisher_redacted === 'boolean'); }
   const vic = await call({ view: 'transcripts', commission: 'vic-major-infrastructure' }); cited(vic);
   assert.ok(vic.rows.every(r => r.order_notes?.some(n => /Non-publication orders/.test(n))));
+});
+
+test('CC BY transcripts are searchable by their text: verbatim excerpts with page citations, no quotes where an order is noted', async () => {
+  const ix = await asset('/transcripts/index.json');
+  assert.equal(ix.docs.length, 171);
+  const out = await call({ view: 'transcripts', commission: 'robodebt', words: 'income averaging', limit: 8 }); cited(out);
+  assert.ok(out.total > 20 && out.total <= 47);
+  assert.ok(out.notes.some(n => /transcript text \(CC BY 4\.0\)/.test(n)));
+  let quoted = 0, withheld = 0;
+  for (const [i, r] of out.rows.entries()) {
+    const t = r.text_matches; assert.ok(t?.hits.length, r.key);
+    const doc = await asset(t.file); const cite = out.citations[i + 1];
+    assert.match(cite.text, /Hearing transcript: evidence, not findings\. © Commonwealth of Australia, Royal Commission into the Robodebt Scheme, licensed under CC BY 4\.0\.$/);
+    assert.match(cite.url, /^https:\/\/robodebt\.royalcommission\.gov\.au\/.+\.pdf#page=\d+$/);
+    assert.equal(r.text_url, `https://opax.test${t.file}`); assert.equal(r.quote_policy, doc.quote_policy);
+    for (const h of t.hits) {
+      const page = doc.pages.find(p => p.n === h.pdf_page); assert.ok(page); assert.equal(h.transcript_page, page.folio);
+      if (doc.quote_policy === 'quote') {
+        const body = h.excerpt.replace(/^\.\.\./, '').replace(/\.\.\.$/, '');
+        assert.ok(page.text.replace(/\s+/g, ' ').includes(body), 'excerpt is verbatim'); assert.ok(h.excerpt.length <= 290); quoted++;
+      } else {
+        assert.equal(h.excerpt, null); assert.equal(page.text, undefined); withheld++;
+        assert.match(cite.text, /Not quoted: the publisher's transcript records a non-publication order/); assert.ok(!cite.text.includes(': "'));
+      }
+    }
+  }
+  assert.ok(quoted && withheld, `${quoted} quoted, ${withheld} withheld`);
+  const nsw = await call({ view: 'transcripts', commission: 'nsw-healthcare-funding', words: 'ambulance ramping' }); cited(nsw);
+  assert.ok(nsw.citations.slice(1).every(c => /© State of New South Wales Premier's Department/.test(c.text)));
+  const common = await call({ view: 'transcripts', commission: 'robodebt', words: 'the and' }); cited(common, false);
+  assert.ok(common.notes.some(n => /too common/.test(n)));
+  const dated = await call({ view: 'transcripts', commission: 'robodebt', words: '2023-03' }); cited(dated);
+  assert.equal(dated.total, 9); assert.ok(dated.rows.every(r => !r.text_matches));
+  const other = await call({ view: 'transcripts', commission: 'perth casino', words: 'casino' }); cited(other);
+  assert.ok(other.rows.every(r => !r.text_matches && !r.text_url));
+});
+
+test('every CC BY transcript has a text file and every no-quote file holds no page text', async () => {
+  const ix = await asset('/transcripts/index.json');
+  for (const id of ['cth-antisemitism', 'cth-robodebt', 'nsw-healthcare-funding']) {
+    const c = (await asset(`/royal-commissions/commission-${id}.json`)).commission;
+    for (const t of c.transcripts) {
+      assert.ok(t.full_text, t.key); const doc = await asset(t.full_text.url);
+      assert.equal(doc.key, t.key); assert.equal(doc.pdf_url, t.files[0].url); assert.equal(doc.label, 'Hearing transcript: evidence, not findings');
+      assert.match(doc.attribution, /licensed under CC BY 4\.0$/);
+      if (doc.quote_policy === 'no_quotes') { assert.ok(doc.order_pages.length && doc.order_notice); assert.ok(doc.pages.every(p => p.text === undefined)); }
+      else assert.ok(doc.pages.some(p => p.text?.length > 200));
+    }
+    assert.equal(ix.docs.filter(d => d.commission === id).length, c.transcripts.length);
+  }
 });

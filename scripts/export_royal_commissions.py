@@ -39,7 +39,7 @@ CAVEATS = [
     "Status appears only where a government publishes an official status for that recommendation, in the government's own words. Where none is published the status is unknown, not unimplemented.",
     "A government response or implementation report is listed as a document; OPAX does not grade whether a recommendation was accepted or implemented.",
     "Commissions listed with recommendations not_extracted may still have made recommendations; OPAX could not read them reliably from an official copy it can reach.",
-    "Hearing transcripts are evidence given to a commission, not its findings. OPAX lists them as documents only and extracts nothing from them.",
+    "Hearing transcripts are evidence given to a commission, not its findings. OPAX lists them as documents; where the publisher licenses them under CC BY 4.0 (Robodebt, Antisemitism and Social Cohesion, NSW Healthcare Funding) their text is searchable under /transcripts/, except that a transcript recording a non-publication order or a pseudonymous witness is pointed to by page and not quoted.",
     "Where a court has ruled on parts of a report, the ruling is recorded in court_context exactly as the cited official page states it, and travels with the report.",
     "Documents marked as a manual publisher download were supplied by the OPAX maintainer from the publisher's own site, where that host refuses OPAX's automated agent. Each is cited to the publisher's URL and checked against its recorded SHA-256.",
     "Boards and commissions of inquiry are listed with royal commissions as comparable public inquiries; inquiry_type gives each body's actual type.",
@@ -107,6 +107,15 @@ def summary(c, file):
     }
 
 
+def full_text():
+    """(commission, key) -> {url, quote_policy} for transcripts with public text (scripts/build_transcript_fulltext.py)."""
+    path = OUT.parent / "transcripts" / "index.json"
+    if not path.exists():
+        return {}
+    ix = json.loads(path.read_text(encoding="utf-8"))
+    return {(d["commission"], d["key"]): {"url": d["file"], "quote_policy": d["quote_policy"]} for d in ix["docs"]}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--snapshot", default=str(rc.CACHE / "snapshot.json"))
@@ -133,6 +142,11 @@ def main(argv=None):
 
     commissions.sort(key=lambda c: (JURISDICTION_ORDER.index(c["jurisdiction"]), -int((c["established"] or {}).get("date", "0000")[:4] or 0),
                                     c["final_report_date"] or c["interim_report_date"] or "", c["id"]))
+    text = full_text()
+    for c in commissions:
+        for t in c["transcripts"]:
+            if (c["id"], t["key"]) in text:
+                t["full_text"] = text[(c["id"], t["key"])]
     files, rows = {}, []
     for c in commissions:
         name = f"commission-{c['id']}.json"
