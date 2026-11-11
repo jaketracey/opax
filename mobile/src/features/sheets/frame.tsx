@@ -66,6 +66,9 @@ export function SheetFrame({
     styles.content,
     {
       paddingHorizontal: margin,
+      // A fitted View has no scroll view to apply UIKit's horizontal insets.
+      paddingLeft: margin + (fitted ? insets.left : 0),
+      paddingRight: margin + (fitted ? insets.right : 0),
       paddingTop: fitted && compact ? rhythm.tight : rhythm.group,
       paddingBottom: fitted
         ? compact && Platform.OS === 'ios'

@@ -9,6 +9,10 @@ import TestRenderer from 'react-test-renderer';
 
 let mockHighText = false;
 let mockFontScale = 1;
+jest.mock('../modules/opax-root-bar', () => ({
+  ...jest.requireActual('../modules/opax-root-bar'),
+  useVerticalBarEdge: () => 'unspecified',
+}));
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
   useHighTextContrast: () => mockHighText,
@@ -245,7 +249,7 @@ describe('Android bars', () => {
   );
   const chromeFor = (os: 'android' | 'ios', fontScale: number) => {
     mockFontScale = fontScale;
-    // A hook with no state: call it as a function.
+    // Window dimensions and bar traits are supplied by the mocks above.
     return asPlatform(os, () => chrome.useStackChrome());
   };
   afterEach(() => {

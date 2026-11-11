@@ -29,6 +29,10 @@ import {
 import { accountSnapshot } from '../features/account/store';
 import { voiceLinked } from '../voice/linked';
 import { canShare } from './share';
+import {
+  useVerticalBarEdge,
+  type VerticalBarEdge,
+} from '../../modules/opax-root-bar';
 
 /**
  * Header styling shared by every stack, using the selected heading face
@@ -37,6 +41,18 @@ import { canShare } from './share';
 /** iOS 26 and later: the system glass bar and scroll edge effects. */
 export const glassBar = () =>
   Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) >= 26;
+
+/** Protect the content edge where UIKit actually places the bar. */
+export function barScrollEdges(edge: VerticalBarEdge) {
+  return edge === 'unspecified'
+    ? { top: 'hard' as const, bottom: 'soft' as const }
+    : {
+        top: 'soft' as const,
+        bottom: 'soft' as const,
+        left: edge === 'leading' ? ('hard' as const) : ('soft' as const),
+        right: edge === 'trailing' ? ('hard' as const) : ('soft' as const),
+      };
+}
 
 /**
  * Colour UIKit's standard and scroll-edge appearances, without inserting a
@@ -100,6 +116,7 @@ export const androidBar = {
 
 export function useStackChrome() {
   const { fontScale } = useWindowDimensions();
+  const barEdge = useVerticalBarEdge();
   const category = contentSizeCategory(fontScale);
   const sizes = {
     largeTitle: largeTitleSizes[category],
@@ -137,7 +154,7 @@ export function useStackChrome() {
     // through the title and bar buttons. The hard edge is UIKit's own opaque
     // boundary with a divider. The bottom stays soft at the minimising tab
     // bar. The visible native appearance uses the page ground, without a blur.
-    scrollEdgeEffects: { top: 'hard' as const, bottom: 'soft' as const },
+    scrollEdgeEffects: barScrollEdges(barEdge),
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
     headerBackButtonDisplayMode: 'default' as const,
@@ -163,6 +180,8 @@ const openTalk = () => router.push('/talk');
 // Expo preserves extra item properties through to the native dictionary.
 // RNSBarButtonItem must map testID to accessibilityIdentifier for iOS test
 // selectors. identifier alone only matches items across UIKit transitions.
+// Always supply label with an icon: Expo maps it to UIKit's title, which
+// vertical bars and overflow menus need independently of accessibilityLabel.
 export type TestableHeaderItem = NativeStackHeaderItem & { testID?: string };
 
 /** Account is outermost. A root has room for just one feature action. */

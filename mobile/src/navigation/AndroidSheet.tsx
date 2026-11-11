@@ -51,7 +51,11 @@ export function AndroidBottomSheet({
         <View
           style={[
             styles.panel,
-            { paddingBottom: insets.bottom + rhythm.tight },
+            {
+              paddingBottom: insets.bottom + rhythm.tight,
+              paddingLeft: insets.left,
+              paddingRight: insets.right,
+            },
           ]}
           accessibilityViewIsModal
           testID={testID}

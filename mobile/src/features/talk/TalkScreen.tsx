@@ -21,17 +21,22 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import { router, useFocusEffect, type Href } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import {
   Button,
   Composer,
   InlineError,
   MachinePill,
   Text,
-  isPad,
   useAccessibilitySize,
   useReduceMotion,
 } from '../../design/primitives';
+import { useAdaptiveDevice, useLayout } from '../../design/adaptive';
+import { placeClear, type Rect } from '../../design/fold';
+import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import { designFlags } from '../../design/flags';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { closeSheetItem, androidHeaderBar } from '../../navigation/chrome';
@@ -72,6 +77,7 @@ import {
 import { takeConsentAfterSignIn, takeStartAfterConsent } from './consent-store';
 import { leaveTalk } from './leave';
 import { publishTalk, resetTalk, takeChosenSource } from './live';
+import { talkDockPlacement } from './geometry';
 
 type Action =
   | 'start'
@@ -116,9 +122,26 @@ function exampleQuestion(): string | null {
 export default function TalkScreen({
   onReportAnswer = reportAnswer,
 }: { onReportAnswer?: ReportAnswer } = {}) {
+  return (
+    <SafeAreaView edges={['left', 'right']} style={styles.page}>
+      <ReservedRegionArea style={styles.page}>
+        <TalkContent onReportAnswer={onReportAnswer} />
+      </ReservedRegionArea>
+    </SafeAreaView>
+  );
+}
+
+function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
   const call = useTalk();
   const { snapshot: s } = call;
   const insets = useSafeAreaInsets();
+  const adaptive = useAdaptiveDevice();
+  const layoutRule = useLayout();
+  const regions = useReservedRegions();
+  const [body, setBody] = useState<Rect | null>(null);
+  const [dock, setDock] = useState<{ width: number; height: number } | null>(
+    null,
+  );
   const reduceMotion = useReduceMotion();
   const large = useAccessibilitySize();
   const [queuedSource, setQueuedSource] = useState<VoiceSource | null>(null);
@@ -126,9 +149,7 @@ export default function TalkScreen({
   const [notice, setNotice] = useState<string | null>(null);
   const [captions, setCaptions] = useCaptionsPreference();
   const [screenReader, setScreenReader] = useState(false);
-  const [stage, setStage] = useState<{ width: number; height: number } | null>(
-    null,
-  );
+  const [stage, setStage] = useState<Rect | null>(null);
   const priorAnnouncement = useRef('');
   const statusNode = useRef<View>(null);
   const captionsList = useRef<ScrollView>(null);
@@ -431,11 +452,15 @@ export default function TalkScreen({
   ]);
 
   const onStage = (event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
+    const { x, y, width, height } = event.nativeEvent.layout;
     setStage((prior) =>
-      prior && prior.width === width && prior.height === height
+      prior &&
+      prior.x === x &&
+      prior.y === y &&
+      prior.width === width &&
+      prior.height === height
         ? prior
-        : { width, height },
+        : { x, y, width, height },
     );
   };
   const cap = large ? ORB_AX : ORB_MAX;
@@ -444,6 +469,32 @@ export default function TalkScreen({
   const orbSize = stage
     ? Math.max(0, Math.min(stage.width, stage.height - below, cap))
     : 0;
+  const bottom = Math.max(insets.bottom, rhythm.block);
+  const dockPlacement =
+    body && dock
+      ? talkDockPlacement(body, dock, bottom, layout.screenMargin, regions)
+      : { paddingBottom: bottom, translateX: 0 };
+  const stageBounds =
+    body && stage
+      ? {
+          x: body.x + stage.x,
+          y: body.y + stage.y,
+          width: stage.width,
+          height: stage.height,
+        }
+      : null;
+  const orbWanted = stageBounds
+    ? {
+        x: stageBounds.x + (stageBounds.width - orbSize) / 2,
+        y: stageBounds.y + (stageBounds.height - orbSize - below) / 2,
+        width: orbSize,
+        height: orbSize + below,
+      }
+    : null;
+  const orbClear =
+    orbWanted && stageBounds
+      ? placeClear(orbWanted, regions, stageBounds)
+      : null;
   const statusProps = {
     ref: statusNode,
     accessible: true,
@@ -486,10 +537,21 @@ export default function TalkScreen({
       <RouteOptions options={screenOptions} />
       <View
         testID="talk-sheet"
+        onLayout={({ nativeEvent: { layout: next } }) =>
+          setBody((prior) =>
+            prior &&
+            prior.x === next.x &&
+            prior.y === next.y &&
+            prior.width === next.width &&
+            prior.height === next.height
+              ? prior
+              : next,
+          )
+        }
         style={[
           styles.body,
-          isPad ? styles.pad : null,
-          { paddingBottom: Math.max(insets.bottom, rhythm.block) },
+          layoutRule.regular ? styles.pad : null,
+          { paddingBottom: dockPlacement.paddingBottom },
         ]}
       >
         {compact ? (
@@ -570,9 +632,24 @@ export default function TalkScreen({
             <TranscriptEdge />
           </View>
         ) : (
-          <View style={styles.stage} onLayout={onStage}>
+          <View
+            style={[styles.stage, adaptive ? { minHeight: 0 } : null]}
+            onLayout={onStage}
+          >
             {/* Absolute, so the orb never props the stage open. */}
-            <View style={styles.orbFrame}>
+            <View
+              style={[
+                styles.orbFrame,
+                orbClear && orbWanted
+                  ? {
+                      transform: [
+                        { translateX: orbClear.x - orbWanted.x },
+                        { translateY: orbClear.y - orbWanted.y },
+                      ],
+                    }
+                  : null,
+              ]}
+            >
               {compact ? null : (
                 <View
                   {...statusProps}
@@ -605,7 +682,19 @@ export default function TalkScreen({
           </View>
         )}
         <ScrollView
-          style={styles.dockScroll}
+          style={[
+            styles.dockScroll,
+            { transform: [{ translateX: dockPlacement.translateX }] },
+          ]}
+          onLayout={({ nativeEvent: { layout: next } }) =>
+            setDock((prior) =>
+              prior &&
+              prior.width === next.width &&
+              prior.height === next.height
+                ? prior
+                : { width: next.width, height: next.height },
+            )
+          }
           contentContainerStyle={styles.dock}
           keyboardShouldPersistTaps="handled"
           // Sized to its content; it scrolls only when AX text needs it.

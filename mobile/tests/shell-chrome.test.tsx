@@ -56,6 +56,7 @@ const { colors } = tokens;
 
 jest.mock('../modules/opax-root-bar', () => ({
   RootBar: { update: jest.fn(), remove: jest.fn() },
+  useVerticalBarEdge: () => 'unspecified',
 }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,

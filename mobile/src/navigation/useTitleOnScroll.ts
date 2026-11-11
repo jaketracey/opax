@@ -2,6 +2,7 @@ import {
   createContext,
   createElement,
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -24,6 +25,9 @@ import { useNamedBackTitle } from './useNamedBackOptions';
 import { useHeaderBottom } from '../design/useHeaderBottom';
 import { useReduceMotionSetting } from '../design/accessibility';
 import { colors, motion, textStyles } from '../design/tokens';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import { useVerticalBarEdge } from '../../modules/opax-root-bar';
+import { useAdaptiveDevice } from '../design/adaptive';
 
 /** H1 bottom edge in the scroll content's coordinates. Screen provides this. */
 export const TitleAnchorContext = createContext<
@@ -150,8 +154,14 @@ export function BarTitle({
 }) {
   const reduceMotion = useReduceMotionSetting();
   const { width, fontScale } = useWindowDimensions();
+  const insets = useContext(SafeAreaInsetsContext);
+  const adaptive = useAdaptiveDevice();
+  const safeWidth =
+    adaptive || insets?.left !== insets?.right
+      ? width - (insets?.left ?? 0) - (insets?.right ?? 0)
+      : width;
   const room = barTitleWidth(
-    width,
+    safeWidth,
     trailing,
     trailingWidth,
     backTitle,
@@ -241,6 +251,7 @@ export function useTitleOnScroll(
   const backTitle =
     Platform.OS === 'ios' ? (backTitleOverride ?? namedBackTitle) : undefined;
   const headerHeight = useHeaderBottom();
+  const verticalBar = useVerticalBarEdge() !== 'unspecified';
   const [anchor, setAnchor] = useState<number | null>(null);
   const shown = useRef(false);
   const offset = useRef(0);
@@ -258,7 +269,7 @@ export function useTitleOnScroll(
   }, []);
   const updateShown = useCallback(
     (next: boolean) => {
-      if (!title || next === shown.current) return;
+      if (!title || verticalBar || next === shown.current) return;
       shown.current = next;
       setOptions(
         Platform.OS === 'android'
@@ -275,9 +286,10 @@ export function useTitleOnScroll(
             },
       );
     },
-    [title, setOptions, trailing, trailingWidth, backTitle],
+    [title, setOptions, trailing, trailingWidth, backTitle, verticalBar],
   );
   const measureHeading = useCallback(() => {
+    if (verticalBar) return;
     const request = ++measurementRequest.current;
     const node = ref?.current;
     // A virtualised heading can unmount above the viewport. Keep its
@@ -297,9 +309,15 @@ export function useTitleOnScroll(
       // window coordinates only, with 1 pt slack.
       updateShown(pageY + height / 2 <= headerHeight + 1);
     });
-  }, [ref, headerHeight, updateShown]);
+  }, [ref, headerHeight, updateShown, verticalBar]);
   useLayoutEffect(() => {
     if (!title) return;
+    // UIKit owns title sizing and placement on the rail. HeaderHeightContext
+    // remains a height and cannot be used as a horizontal collapse boundary.
+    if (verticalBar) {
+      setOptions({ title: routeTitle, headerTitle: title });
+      return invalidateMeasurements;
+    }
     if (!windowRef)
       shown.current = anchor !== null && offset.current + headerHeight > anchor;
     const visible = shown.current;
@@ -334,6 +352,7 @@ export function useTitleOnScroll(
     windowRef,
     measureHeading,
     invalidateMeasurements,
+    verticalBar,
   ]);
   const onScroll = useCallback(
     (event: number | NativeSyntheticEvent<NativeScrollEvent>) => {
