@@ -1,5 +1,6 @@
 import {
   array,
+  boolean,
   count,
   date,
   dict,
@@ -84,7 +85,25 @@ const context = shape({
   applies_to: optional(nonempty),
   cite: decodeReportCitation,
 });
+const rights: Decoder<PublishedValue> = (value) =>
+  typeof value === 'string' ? text(value) : fields(value);
 const document = shape({
+  role: optional(nonempty),
+  document_kind: optional(nonempty),
+  pages: optional(positive),
+  bytes: optional(count),
+  acquisition: optional(text),
+  rights: optional(rights),
+  note: optional(text),
+  status: optional(text),
+  date_quote: optional(text),
+  date_cite: optional(decodeReportCitation),
+  recommendations: optional(count),
+  recommendations_status: optional(text),
+  publisher: optional(text),
+  tabled_in: optional(text),
+  recommendation: optional(text),
+  status_as_published: optional(text),
   key: optional(nonempty),
   kind: optional(nonempty),
   title: optional(nonempty),
@@ -94,9 +113,56 @@ const document = shape({
   url: optional(url),
   text: optional(text),
   cite: optional(decodeReportCitation),
-  files: optional(array(shape({ url, name: optional(nonempty) }))),
+  files: optional(
+    array(
+      shape({
+        url,
+        name: optional(nonempty),
+        pages: optional(positive),
+        bytes: optional(count),
+      }),
+    ),
+  ),
 });
 const record = shape({
+  inquiry_type: optional(text),
+  report_type: optional(text),
+  type_as_published: optional(text),
+  kind: optional(text),
+  site: optional(url),
+  url: optional(url),
+  pages: optional(positive),
+  bytes: optional(count),
+  edition: optional(text),
+  status: optional(text),
+  not_found: optional(array(text)),
+  period: optional(text),
+  acquisition: optional(text),
+  rights: optional(rights),
+  established: optional(
+    shape({
+      date: optional(date),
+      quote: optional(text),
+      cite: optional(decodeReportCitation),
+    }),
+  ),
+  commissioners: optional(
+    array(
+      shape({
+        name: nonempty,
+        role: optional(text),
+        quote: optional(text),
+        cite: optional(decodeReportCitation),
+      }),
+    ),
+  ),
+  interim_report_date: optional(date),
+  final_report_date: optional(date),
+  status_as_published: optional(text),
+  status_source: optional(
+    shape({ url, name: optional(text), pages: optional(positive) }),
+  ),
+  reference_pages: optional(array(shape({ url, title: nonempty }))),
   findings: optional(array(finding)),
   recommendations: optional(array(recommendation)),
   findings_status: optional(nonempty),
@@ -122,6 +188,7 @@ const record = shape({
 });
 const fact = shape({
   id: nonempty,
+  metric: optional(nonempty),
   label: nonempty,
   quote: nonempty,
   unit: nonempty,
@@ -189,6 +256,8 @@ const table = shape({
   unit: nonempty,
   source_url: url,
   source_file: optional(nonempty),
+  source_page: optional(url),
+  licence: optional(text),
   entity_as_published: optional(text),
   rows: array(tableRow),
 });
@@ -198,6 +267,55 @@ const snapshot: Decoder<string> = (value) => {
     ? date(`${input.slice(0, 4)}-${input.slice(4, 6)}-${input.slice(6)}`)
     : date(input);
 };
+// Additive transcript metadata follows the publisher registry's hearing_date,
+// first_date and last_date fields. No transcript text or witness fields are read.
+const transcriptDay = shape({
+  id: nonempty,
+  hearing_date: date,
+  title: optional(nonempty),
+  case: optional(nonempty),
+  pages: optional(positive),
+  url,
+  page_url: optional(url),
+  orders: optional(array(url)),
+  notes: optional(array(nonempty)),
+  publisher_redacted: optional(boolean),
+});
+const transcriptSummary = shape({
+  count,
+  first_date: nullable(date),
+  last_date: nullable(date),
+  items: array(transcriptDay),
+  next_offset: nullable(count),
+});
+export function decodeReportTranscripts(value: unknown) {
+  const result = transcriptSummary(value);
+  if (
+    (result.count > 0 && (!result.first_date || !result.last_date)) ||
+    (result.first_date &&
+      result.last_date &&
+      result.first_date > result.last_date) ||
+    result.items.length > result.count ||
+    (result.next_offset !== null &&
+      (result.next_offset === 0 || result.next_offset >= result.count)) ||
+    new Set(result.items.map((item) => item.id)).size !== result.items.length
+  )
+    invalid();
+  for (const item of result.items) {
+    if (
+      (!item.title && !item.case) ||
+      !result.first_date ||
+      !result.last_date ||
+      item.hearing_date < result.first_date ||
+      item.hearing_date > result.last_date
+    )
+      invalid();
+  }
+  return result;
+}
+export type ReportTranscripts = ReturnType<typeof decodeReportTranscripts>;
+export type TranscriptDay = ReportTranscripts['items'][number];
+
 const detail = shape({
   schema: (value: unknown) => (value === 1 ? (1 as const) : invalid()),
   kind: matching(/^report$/),
@@ -213,8 +331,11 @@ const detail = shape({
   citation: decodeReportCitation,
   snapshot_at: snapshot,
   caveats: array(text),
+  transcripts: optional(decodeReportTranscripts),
   publisher: shape({
     name: nonempty,
+    short: optional(text),
+    type_as_published: optional(text),
     jurisdiction_name: optional(text),
     gaps: optional(array(text)),
   }),
@@ -226,6 +347,14 @@ const detail = shape({
 export function decodeReport(value: unknown) {
   const result = detail(value);
   if (!result.slug.startsWith(result.report_type.replace(/_/g, '-') + '-'))
+    invalid();
+  const summary = result.transcripts;
+  if (
+    summary &&
+    (summary.next_offset === null
+      ? summary.items.length !== summary.count
+      : summary.next_offset !== summary.items.length)
+  )
     invalid();
   const r = object(object(value).record);
   if (['royal_commission', 'integrity_report'].includes(result.report_type)) {

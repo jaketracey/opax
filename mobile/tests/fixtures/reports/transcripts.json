@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "kind": "report",
+  "report_type": "integrity_report",
+  "slug": "integrity-report-nacc-2026-04-08-operation-pelican",
+  "title": "Operation Pelican investigation report",
+  "body": "National Anti-Corruption Commission",
+  "jurisdiction": "Cth",
+  "date": "2026-04-08",
+  "date_basis": "dated",
+  "year": null,
+  "snippet": "Operation Pelican investigation report",
+  "citation": {
+    "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+    "document": "Operation Pelican investigation report"
+  },
+  "snapshot_at": "2026-11-11T05:46:07+00:00",
+  "caveats": [
+    "Each record is what the commission published. Findings, opinions and statements are quoted in the report's own words and carry the report's own label; OPAX does not summarise, grade or reword them.",
+    "Allegations are not findings. A commission's finding or opinion of corrupt conduct or misconduct is not a finding that a person is guilty of a criminal offence, and the commissions say so in their reports.",
+    "Commissions use different statutory terms (for example serious corrupt conduct in New South Wales, serious misconduct opinions in Western Australia). Do not compare counts across commissions as if the terms were the same.",
+    "A list marked not_extracted is unknown, not empty: the report may contain findings or recommendations that OPAX could not extract reliably (scanned pages, unusual layouts). stated_none means the report itself says there are none.",
+    "Bodies and public roles named in a report are recorded as the report names them. OPAX adds no names and does not create pages for private individuals.",
+    "Responses and implementation status appear only where the commission publishes them; their absence does not mean an agency did not respond."
+  ],
+  "publisher": {
+    "code": "nacc",
+    "name": "National Anti-Corruption Commission",
+    "short": "NACC",
+    "jurisdiction": "Cth",
+    "site": "https://www.nacc.gov.au",
+    "status": "loaded",
+    "gaps": [
+      "www.nacc.gov.au gave the identifying OPAXBot agent no response on 11 November 2026 (HTTP/1.1 timeouts, HTTP/2 stream resets), so its investigation reports and statements are not collected automatically.",
+      "Eight investigation reports are included from a manual publisher download supplied by the OPAX maintainer on 11 November 2026 (cited to their nacc.gov.au URLs). Later reports and NACC statements are not included.",
+      "webarchive.nla.gov.au answered the identifying agent with HTTP 403, so the official archive copy is not used either."
+    ],
+    "licence": {
+      "status": "CC BY 4.0 (stated in each report)",
+      "url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "National Anti-Corruption Commission",
+      "note": "Page 2 of each report licenses the material under CC BY 4.0, except the Commonwealth Coat of Arms, the Commission's logo, third-party material, trade marks and images."
+    },
+    "counts": {
+      "records": 8,
+      "findings": 19,
+      "recommendations": 4,
+      "responses": 0,
+      "by_type": {
+        "investigation_report": 8
+      },
+      "finding_kinds": {
+        "finding": 9,
+        "no_finding": 10
+      },
+      "status": {
+        "findings_status": {
+          "extracted": 8
+        },
+        "recommendations_status": {
+          "not_extracted": 5,
+          "extracted": 2,
+          "stated_none": 1
+        },
+        "responses_status": {
+          "not_checked": 8
+        }
+      },
+      "with_findings": 8,
+      "with_recommendations": 2,
+      "with_responses": 0
+    },
+    "earliest": "2024-10-09",
+    "latest": "2026-05-13",
+    "snapshot_at": "2026-11-11T04:59:13+00:00",
+    "file": "/integrity-reports/reports-nacc.json"
+  },
+  "record": {
+    "id": "nacc-2026-04-08-operation-pelican",
+    "body": "nacc",
+    "jurisdiction": "Cth",
+    "title": "Operation Pelican investigation report",
+    "operation": "Operation Pelican",
+    "report_type": "investigation_report",
+    "type_as_published": "Investigation Report",
+    "date": "2026-04-08",
+    "date_basis": "dated",
+    "page_url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+    "pdf_url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+    "summary": null,
+    "documents": [
+      {
+        "role": "report",
+        "title": "Operation Pelican investigation report",
+        "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+        "status": "ready",
+        "sha256": "0f784fe6dc59b8bb83daceb63ca9708736fce516878e4d91bb9583564920834b",
+        "bytes": 582697,
+        "pages": 30,
+        "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+        "captured": "2026-11-11"
+      }
+    ],
+    "subjects": [
+      {
+        "name": "an employee of a Commonwealth company",
+        "kind": "public_role",
+        "cite": {
+          "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+          "document": "Operation Pelican Investigation Report",
+          "page": 1
+        }
+      }
+    ],
+    "findings": [],
+    "findings_status": "not_extracted",
+    "recommendations": [],
+    "recommendations_status": "not_extracted",
+    "responses": [],
+    "responses_status": "not_checked",
+    "notes": [
+      "Source document supplied as a manual publisher download supplied by the OPAX maintainer, 11 Nov 2026, from the publisher URL cited.",
+      "Apart from Mr Erasery and WSA, the report states that it uses pseudonyms (page 4)."
+    ],
+    "acquisition": "manual publisher download supplied by the OPAX maintainer, 11 Nov 2026",
+    "rights": {
+      "statement": "Copyright Commonwealth of Australia; licensed under Creative Commons Attribution 4.0 International, except the Commonwealth Coat of Arms, the Commission's logo, third-party material, trade marks and images (report page 2).",
+      "licence": "CC BY 4.0",
+      "attribution": "National Anti-Corruption Commission"
+    }
+  },
+  "facts": [],
+  "tables": [],
+  "headline": null,
+  "transcripts": {
+    "count": 3,
+    "first_date": "2019-02-04",
+    "last_date": "2019-03-01",
+    "next_offset": 2,
+    "items": [
+      {
+        "id": "gloucester-2019-03-01",
+        "hearing_date": "2019-03-01",
+        "title": "Operation Gloucester hearing transcript, 1 March 2019",
+        "case": "Operation Gloucester",
+        "pages": 48,
+        "url": "https://www.ibac.vic.gov.au/media/1068/download",
+        "page_url": "https://www.ibac.vic.gov.au/operation-gloucester",
+        "publisher_redacted": false,
+        "orders": ["https://www.ibac.vic.gov.au/media/401/download"],
+        "notes": ["Subject to the publisher’s non-publication order."]
+      },
+      {
+        "id": "gloucester-2019-02-28",
+        "hearing_date": "2019-02-28",
+        "case": "Operation Gloucester",
+        "pages": 67,
+        "url": "https://www.ibac.vic.gov.au/media/1067/download",
+        "orders": []
+      }
+    ]
+  }
+}
