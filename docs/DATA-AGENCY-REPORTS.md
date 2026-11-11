@@ -143,3 +143,23 @@ intake manifest for its robots.txt and catalogue page once, as OPAXBot
 Refused hosts are not tried by any other route; NSW, Qld, WA and NT agency coverage depends
 on maintainer intakes or on each agency's own site answering OPAXBot.
 
+## Commonwealth latest year against AGOR, 11 November 2026
+
+`agor-reconciliation-2026-11-11.json` compares the AGOR register (Department of Finance,
+as at 30 June 2026, from the maintainer's intake) with the Transparency Portal bodies in
+the `annual_reports` dataset (snapshot 10 November 2026), counting only bodies AGOR marks
+as preparing and tabling an annual report:
+
+| AGOR class | Bodies reporting | Matched to a Portal body | With a 2025-26 report on the Portal |
+| --- | --- | --- | --- |
+| A. Primary body | 190 | 188 | 94 |
+| B. Secondary statutory structure | 70 | 4 | 2 |
+| C. Secondary non-statutory structure | 15 | 0 | 0 |
+
+The unmatched class A bodies are the Defence and Veterans' Service Commission (created
+29 September 2025) and Export Finance Australia (a name difference). The 94 class A bodies
+without a 2025-26 Portal report have not yet published it there; the weekly Portal refresh
+picks them up as they appear, and the file lists them for a later check. Class B and C
+bodies mostly report inside a parent's annual report or outside the Portal; they are a
+later wave for this dataset.
+

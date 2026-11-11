@@ -1,0 +1,2102 @@
+{
+ "as_of_agor": "2026-06-30",
+ "portal_snapshot": "20261110",
+ "classes": {
+  "A": {
+   "agor_bodies_reporting": 190,
+   "matched_to_portal": 188,
+   "with_2025_26_report": 94
+  },
+  "B": {
+   "agor_bodies_reporting": 70,
+   "matched_to_portal": 4,
+   "with_2025_26_report": 2
+  },
+  "C": {
+   "agor_bodies_reporting": 15,
+   "matched_to_portal": 0,
+   "with_2025_26_report": 0
+  }
+ },
+ "unmatched": [
+  {
+   "class": "A",
+   "agor_id": "O-009296",
+   "title": "Defence and Veterans' Service Commission",
+   "portfolio": "Defence",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000859",
+   "title": "Export Finance Australia (EFA)",
+   "portfolio": "Foreign Affairs and Trade",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003037",
+   "title": "Office of the Aboriginal Land Commissioner",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "National Indigenous Australians Agency"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003033",
+   "title": "Executive Director Township Leasing",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "National Indigenous Australians Agency"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004657",
+   "title": "Aged Care Complaints Commissioner",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Aged Care Quality and Safety Commission"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002175",
+   "title": "Rural Industries Research and Development Corporation Selection Committee",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Rural Industries Research and Development Corporation (trading as AgriFutures Australia)"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002158",
+   "title": "Grains Research and Development Corporation Selection Committee",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Grains Research and Development Corporation"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002155",
+   "title": "Fisheries Research and Development Corporation Selection Committee",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Fisheries Research and Development Corporation"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002153",
+   "title": "Cotton Research and Development Corporation Selection Committee",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Cotton Research and Development Corporation"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002205",
+   "title": "National Archives of Australia Advisory Council",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "National Archives of Australia"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002198",
+   "title": "Australian Institute of Police Management",
+   "portfolio": "Home Affairs",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Australian Federal Police"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003440",
+   "title": "Australian Criminal Intelligence Commission Board",
+   "portfolio": "Home Affairs",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Australian Criminal Intelligence Commission"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004529",
+   "title": "Australian Anti-Slavery Commissioner",
+   "portfolio": "Attorney-General's",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Attorney-General's Department"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004530",
+   "title": "Inspector of the National Anti-Corruption Commission",
+   "portfolio": "Attorney-General's",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Attorney-General's Department"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003035",
+   "title": "Independent National Security Legislation Monitor",
+   "portfolio": "Attorney-General's",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Attorney-General's Department"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002197",
+   "title": "Administrative Review Council",
+   "portfolio": "Attorney-General's",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Attorney-General's Department"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-000603",
+   "title": "Family Law Council",
+   "portfolio": "Attorney-General's",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Attorney-General's Department"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002218",
+   "title": "eSafety Commissioner",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Australian Communications and Media Authority"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002283",
+   "title": "Director of Military Prosecutions",
+   "portfolio": "Defence",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Defence"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002286",
+   "title": "Judge Advocate General and Deputy Judge Advocate Generals",
+   "portfolio": "Defence",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Defence"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002311",
+   "title": "Tuition Protection Service Advisory Board",
+   "portfolio": "Education",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Education"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002312",
+   "title": "Tuition Protection Service Director",
+   "portfolio": "Education",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Education"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002324",
+   "title": "Asbestos and Silica Safety and Eradication Council",
+   "portfolio": "Employment and Workplace Relations",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Asbestos and Silica Safety and Eradication Agency"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002380",
+   "title": "Commonwealth Superannuation Scheme",
+   "portfolio": "Finance",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Finance"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002381",
+   "title": "Defence Force Retirement and Death Benefits Scheme",
+   "portfolio": "Finance",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Finance"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002385",
+   "title": "Military Superannuation and Benefits Scheme",
+   "portfolio": "Finance",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Finance"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002386",
+   "title": "Public Sector Superannuation Accumulation Plan",
+   "portfolio": "Finance",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Finance"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002387",
+   "title": "Public Sector Superannuation Scheme",
+   "portfolio": "Finance",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Finance"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002518",
+   "title": "Australian Safeguards and Non-Proliferation Office",
+   "portfolio": "Foreign Affairs and Trade",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Foreign Affairs and Trade"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002566",
+   "title": "Office of the Gene Technology Regulator",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Health, Disability and Ageing"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002555",
+   "title": "Australian Digital Health Agency - Clinical and Technical Advisory Committee",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "D. Statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Australian Digital Health Agency"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002556",
+   "title": "Australian Digital Health Agency - Consumer Advisory Committee",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "D. Statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Australian Digital Health Agency"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002557",
+   "title": "Australian Digital Health Agency - Jurisdictional Advisory Committee",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "D. Statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Australian Digital Health Agency"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002558",
+   "title": "Australian Digital Health Agency - Privacy Security and Advisory Committee",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "D. Statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Australian Digital Health Agency"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003702",
+   "title": "Office of the National Rural Health Commissioner",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Health, Disability and Ageing"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-001937",
+   "title": "National Health and Medical Research Council - Embryo Research and Licensing Com",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "National Health and Medical Research Council"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004371",
+   "title": "Independent Health and Aged Care Pricing Authority Aged Care Advisory Committee",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Independent Health and Aged Care Pricing Authority"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004115",
+   "title": "Independent Health and Aged Care Pricing Authority Clinical Advisory Committee",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Independent Health and Aged Care Pricing Authority"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003647",
+   "title": "Cancer Australia Advisory Council",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "D. Statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Cancer Australia"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004244",
+   "title": "Australian Organ and Tissue Donation and Transplantation Advisory Board",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "D. Statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Organ and Tissue Authority"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002584",
+   "title": "Administrator of the National Health Funding Pool",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "National Health Funding Body"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-000742",
+   "title": "Industry Innovation and Science Australia",
+   "portfolio": "Industry, Science and Resources",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Industry, Science and Resources"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002649",
+   "title": "National Offshore Petroleum Titles Administrator",
+   "portfolio": "Industry, Science and Resources",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Industry, Science and Resources"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003517",
+   "title": "National Offshore Petroleum Safety and Environmental Management Authority Board",
+   "portfolio": "Industry, Science and Resources",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "National Offshore Petroleum Safety and Environmental Management Authority"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-001955",
+   "title": "International Air Services Commission",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-000628",
+   "title": "Public Lending Right Committee",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-000621",
+   "title": "Classification Board",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-000622",
+   "title": "Classification Review Board",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003043",
+   "title": "Remuneration Tribunal",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Australian Public Service Commission"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003032",
+   "title": "Defence Force Remuneration Tribunal",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Australian Public Service Commission"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004084",
+   "title": "Office of the Merit Protection Commissioner",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Australian Public Service Commission"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003808",
+   "title": "Food and Grocery Code of Conduct",
+   "portfolio": "Treasury",
+   "type": "D. Statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of the Treasury"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003115",
+   "title": "Australian Statistics Advisory Council",
+   "portfolio": "Treasury",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Australian Bureau of Statistics"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004477",
+   "title": "National Housing Supply and Affordability Council",
+   "portfolio": "Treasury",
+   "type": "D. Statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Department of the Treasury"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004273",
+   "title": "Motor Vehicle Service and Repair Information Scheme Adviser",
+   "portfolio": "Treasury",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of the Treasury"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003135",
+   "title": "Takeovers Panel",
+   "portfolio": "Treasury",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of the Treasury"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-001973",
+   "title": "Companies Auditors Disciplinary Board",
+   "portfolio": "Treasury",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of the Treasury"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003143",
+   "title": "Defence Services Homes Insurance Scheme",
+   "portfolio": "Veterans' Affairs (part of the Defence Portfolio)",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Veterans' Affairs"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003959",
+   "title": "Veterans' Review Board",
+   "portfolio": "Veterans' Affairs (part of the Defence Portfolio)",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Veterans' Affairs"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003130",
+   "title": "Payments System Board of the Reserve Bank of Australia",
+   "portfolio": "Treasury",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Reserve Bank of Australia"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003153",
+   "title": "Repatriation Commission",
+   "portfolio": "Veterans' Affairs (part of the Defence Portfolio)",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Veterans' Affairs"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003154",
+   "title": "Repatriation Medical Authority",
+   "portfolio": "Veterans' Affairs (part of the Defence Portfolio)",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Veterans' Affairs"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003112",
+   "title": "Australian Energy Regulator Board",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Australian Energy Regulator"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002361",
+   "title": "National Environment Protection Council",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Climate Change, Energy, the Environment and Water"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-002313",
+   "title": "Student Identifiers Registrar",
+   "portfolio": "Employment and Workplace Relations",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Employment and Workplace Relations"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-000664",
+   "title": "Safety, Rehabilitation and Compensation Commission",
+   "portfolio": "Employment and Workplace Relations",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Department of Employment and Workplace Relations"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004225",
+   "title": "Inspector-General of Water Compliance",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Climate Change, Energy, the Environment and Water"
+  },
+  {
+   "class": "B",
+   "agor_id": "B-004733",
+   "title": "Sydney Airport Demand Management Compliance Committee",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes, but not tabled",
+   "parent": null
+  },
+  {
+   "class": "C",
+   "agor_id": "B-002288",
+   "title": "Phoenix Australia - Centre for Posttraumatic Mental Health",
+   "portfolio": "Defence",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Defence"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-002291",
+   "title": "Woomera Prohibited Area Advisory Board",
+   "portfolio": "Defence",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Defence"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-002292",
+   "title": "Asia Pacific Centre for Military Law",
+   "portfolio": "Defence",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Defence"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-002176",
+   "title": "SAFEMEAT",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Agriculture, Fisheries and Forestry"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-002376",
+   "title": "Australian Political Exchange Council",
+   "portfolio": "Finance",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Department of Finance"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-004040",
+   "title": "APEC Business Advisory Council (ABAC)",
+   "portfolio": "Foreign Affairs and Trade",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Foreign Affairs and Trade"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-002634",
+   "title": "Australia Telescope National Facility Steering Committee",
+   "portfolio": "Industry, Science and Resources",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Commonwealth Scientific and Industrial Research Organisation"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-004124",
+   "title": "Indian Ocean Territories Health Service Community Advisory Committee",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-003163",
+   "title": "Study of Health Outcomes in Aircraft Maintenance Personnel Serum Management Comm",
+   "portfolio": "Veterans' Affairs (part of the Defence Portfolio)",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Veterans' Affairs"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-003166",
+   "title": "Veterans Mental Health Clinical Reference Group",
+   "portfolio": "Veterans' Affairs (part of the Defence Portfolio)",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Veterans' Affairs"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-004226",
+   "title": "Mental Health Expert Advisory Group",
+   "portfolio": "Veterans' Affairs (part of the Defence Portfolio)",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Veterans' Affairs"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-003149",
+   "title": "Gulf War Serum Management Committee",
+   "portfolio": "Veterans' Affairs (part of the Defence Portfolio)",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Veterans' Affairs"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-000683",
+   "title": "Rock Art Foundation Committee",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": "Department of Climate Change, Energy, the Environment and Water"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-000684",
+   "title": "Australian Energy Infrastructure Commissioner",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes",
+   "parent": "Department of Climate Change, Energy, the Environment and Water"
+  },
+  {
+   "class": "C",
+   "agor_id": "B-004256",
+   "title": "Regional Education Commissioner",
+   "portfolio": "Education",
+   "type": "F. Non-statutory advisory structure",
+   "annual_report": "Yes, but not tabled",
+   "parent": null
+  }
+ ],
+ "matched_without_2025_26": [
+  {
+   "class": "A",
+   "agor_id": "O-008894",
+   "title": "National Commission for Aboriginal and Torres Strait Islander Children and Young People",
+   "portfolio": "Social Services",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_commission_for_aboriginal_and_torres_stra",
+   "portal_years": [
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-008367",
+   "title": "Office of the Inspector-General of Aged Care",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "office_of_the_inspector_general_of_aged_care",
+   "portal_years": [
+    "2023-24"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-008274",
+   "title": "National Reconstruction Fund Corporation",
+   "portfolio": "Industry, Science and Resources",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_reconstruction_fund_corporation",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-008101",
+   "title": "High Speed Rail Authority",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "high_speed_rail_authority",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-007760",
+   "title": "Northern Territory Aboriginal Investment Corporation",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "northern_territory_aboriginal_investment_corporati_e7bb662",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-007695",
+   "title": "Domestic, Family and Sexual Violence Commission",
+   "portfolio": "Social Services",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "domestic__family_and_sexual_violence_commission",
+   "portal_years": [
+    "2022-23",
+    "2023-24"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-007608",
+   "title": "National Emergency Management Agency",
+   "portfolio": "Home Affairs",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_emergency_management_agency",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-007311",
+   "title": "Department of Climate Change, Energy, the Environment and Water",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "department_of_climate_change__energy__the_environm_e4d2b70",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-004664",
+   "title": "WSA Co Limited",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "C. Commonwealth company",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "wsa_co_ltd",
+   "portal_years": [
+    "2022-23",
+    "2023-24"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000941",
+   "title": "Productivity Commission",
+   "portfolio": "Treasury",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "productivity_commission",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000940",
+   "title": "Office of the Australian Accounting Standards Board",
+   "portfolio": "Treasury",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "office_of_the_australian_accounting_standards_boar_00fa6c8",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000939",
+   "title": "Office of the Auditing and Assurance Standards Board",
+   "portfolio": "Treasury",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "office_of_the_auditing_and_assurance_standards_boa_17974c4",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000938",
+   "title": "National Competition Council",
+   "portfolio": "Treasury",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_competition_council",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000937",
+   "title": "Inspector-General of Taxation",
+   "portfolio": "Treasury",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "inspector_general_of_taxation",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000924",
+   "title": "Department of Social Services",
+   "portfolio": "Social Services",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "department_of_social_services",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000923",
+   "title": "Wreck Bay Aboriginal Community Council",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "wreck_bay_aboriginal_community_council",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000921",
+   "title": "Tiwi Land Council",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "tiwi_land_council",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000920",
+   "title": "Outback Stores Pty Ltd",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "C. Commonwealth company",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "outback_stores_pty_ltd",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000918",
+   "title": "Office of the Inspector-General of Intelligence and Security",
+   "portfolio": "Attorney-General's",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "office_of_the_inspector_general_of_intelligence_an_570b9a3",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000916",
+   "title": "Office of National Intelligence",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes - but not tabled",
+   "parent": null,
+   "portal_id": "office_of_national_intelligence",
+   "portal_years": []
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000915",
+   "title": "Northern Land Council",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "northern_land_council",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000914",
+   "title": "National Australia Day Council Limited",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "C. Commonwealth company",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_australia_day_council_limited",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000912",
+   "title": "Indigenous Business Australia",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "indigenous_business_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000907",
+   "title": "Anindilyakwa Land Council",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "anindilyakwa_land_council",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000906",
+   "title": "Aboriginal Hostels Limited",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "C. Commonwealth company",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "aboriginal_hostels_limited",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000904",
+   "title": "Parliamentary Budget Office",
+   "portfolio": "Parliamentary Departments (not a portfolio)",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "parliamentary_budget_office",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000902",
+   "title": "Department of the House of Representatives",
+   "portfolio": "Parliamentary Departments (not a portfolio)",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "department_of_the_house_of_representatives",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000900",
+   "title": "National Transport Commission",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_transport_commission",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000899",
+   "title": "National Capital Authority",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_capital_authority",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000897",
+   "title": "Infrastructure Australia",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "infrastructure_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000896",
+   "title": "Civil Aviation Safety Authority",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "civil_aviation_safety_authority",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000895",
+   "title": "Australian Transport Safety Bureau",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_transport_safety_bureau__atsb_",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000892",
+   "title": "Airservices Australia",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "airservices_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000891",
+   "title": "Department of Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "department_of_infrastructure__transport__regional__d42363f",
+   "portal_years": [
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000889",
+   "title": "National Offshore Petroleum Safety and Environmental Management Authority",
+   "portfolio": "Industry, Science and Resources",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_offshore_petroleum_safety_and_environment_2626d4b",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000884",
+   "title": "Australian Institute of Marine Science",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_institute_of_marine_science",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000876",
+   "title": "National Health and Medical Research Council",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_health_and_medical_research_council__nhmr",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000875",
+   "title": "National Blood Authority",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_blood_authority",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000873",
+   "title": "Food Standards Australia New Zealand",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "food_standards_australia_new_zealand",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000871",
+   "title": "Australian Sports Foundation Limited",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "C. Commonwealth company",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_sports_foundation_limited",
+   "portal_years": [
+    "2022-23",
+    "2023-24"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000865",
+   "title": "Australian Institute of Health and Welfare",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_institute_of_health_and_welfare",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000861",
+   "title": "Department of Health, Disability and Ageing",
+   "portfolio": "Health, Disability and Ageing",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "department_of_health__disability_and_ageing",
+   "portal_years": [
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000860",
+   "title": "Tourism Australia",
+   "portfolio": "Foreign Affairs and Trade",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "tourism_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000858",
+   "title": "Australian Trade and Investment Commission (Austrade)",
+   "portfolio": "Foreign Affairs and Trade",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_trade_and_investment_commission__austra_db9d33d",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000857",
+   "title": "Australian Secret Intelligence Service",
+   "portfolio": "Foreign Affairs and Trade",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes - but not tabled",
+   "parent": null,
+   "portal_id": "australian_secret_intelligence_service",
+   "portal_years": []
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000853",
+   "title": "Commonwealth Superannuation Corporation (CSC)",
+   "portfolio": "Finance",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "commonwealth_superannuation_corporation__csc_",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000849",
+   "title": "Sydney Harbour Federation Trust",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "sydney_harbour_federation_trust",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000848",
+   "title": "Great Barrier Reef Marine Park Authority",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "great_barrier_reef_marine_park_authority",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000847",
+   "title": "Director of National Parks",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "director_of_national_parks",
+   "portal_years": [
+    "2022-23",
+    "2023-24"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000842",
+   "title": "Australian Renewable Energy Agency",
+   "portfolio": "Climate Change, Energy, the Environment and Water",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_renewable_energy_agency",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000840",
+   "title": "Workplace Gender Equality Agency",
+   "portfolio": "Prime Minister and Cabinet",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "workplace_gender_equality_agency",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000839",
+   "title": "Seafarers Safety, Rehabilitation and Compensation Authority",
+   "portfolio": "Employment and Workplace Relations",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "seafarers_safety__rehabilitation_and_compensation__f4fe134",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000836",
+   "title": "Fair Work Commission",
+   "portfolio": "Employment and Workplace Relations",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "fair_work_commission",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000829",
+   "title": "Australian Skills Quality Authority (National Vocational Education and Training Regulator)",
+   "portfolio": "Employment and Workplace Relations",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "legacy_australian_skills_quality_authority",
+   "portal_years": []
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000827",
+   "title": "Australian National University",
+   "portfolio": "Education",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_national_university",
+   "portal_years": [
+    "2020-21",
+    "2021-22"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000824",
+   "title": "Australian Curriculum, Assessment and Reporting Authority",
+   "portfolio": "Education",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_curriculum__assessment_and_reporting_au_d49bc5e",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000823",
+   "title": "Department of Education",
+   "portfolio": "Education",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "department_of_education",
+   "portal_years": [
+    "2018-19"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000822",
+   "title": "Royal Australian Navy Relief Trust Fund",
+   "portfolio": "Defence",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "royal_australian_navy_relief_trust_fund",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000821",
+   "title": "Royal Australian Navy Central Canteens Board (Royal Australian Navy Central Canteens Fund)",
+   "portfolio": "Defence",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "royal_australian_navy_central_canteens_board",
+   "portal_years": [
+    "2022-23",
+    "2023-24"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000820",
+   "title": "Royal Australian Air Force Welfare Trust Fund",
+   "portfolio": "Defence",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "royal_australian_air_force_welfare_trust_fund",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000819",
+   "title": "Royal Australian Air Force Veterans' Residences Trust Fund",
+   "portfolio": "Defence",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "royal_australian_air_force_veterans__residences_tr_201cd83",
+   "portal_years": [
+    "2022-23",
+    "2023-24"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000818",
+   "title": "RAAF Welfare Recreational Company",
+   "portfolio": "Defence",
+   "type": "C. Commonwealth company",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "raaf_welfare_recreational_company",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000816",
+   "title": "Australian Strategic Policy Institute Limited",
+   "portfolio": "Defence",
+   "type": "C. Commonwealth company",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_strategic_policy_institute_ltd",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000815",
+   "title": "Australian Military Forces Relief Trust Fund",
+   "portfolio": "Defence",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_military_forces_relief_trust_fund",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000814",
+   "title": "Army and Air Force Canteen Service",
+   "portfolio": "Defence",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "army_and_air_force_canteen_service__frontline_defe",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000813",
+   "title": "AAF Company (Trustee of Army Amenities Fund and Messes Trust Fund)",
+   "portfolio": "Defence",
+   "type": "C. Commonwealth company",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "aaf_company",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000812",
+   "title": "Department of Defence",
+   "portfolio": "Defence",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "department_of_defence",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000811",
+   "title": "Special Broadcasting Service Corporation",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "special_broadcasting_service_corporation",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000809",
+   "title": "NBN Co Limited",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "C. Commonwealth company",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "nbn_co_limited",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000808",
+   "title": "National Portrait Gallery of Australia",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_portrait_gallery_of_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000806",
+   "title": "National Library of Australia",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_library_of_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000805",
+   "title": "National Gallery of Australia",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_gallery_of_australia",
+   "portal_years": [
+    "2022-23",
+    "2023-24"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000804",
+   "title": "National Film and Sound Archive of Australia",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_film_and_sound_archive_of_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000803",
+   "title": "Old Parliament House",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "old_parliament_house",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000800",
+   "title": "Australian National Maritime Museum",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_national_maritime_museum",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000797",
+   "title": "Australian Broadcasting Corporation",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_broadcasting_corporation",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000796",
+   "title": "Creative Australia",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "creative_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000793",
+   "title": "Office of the Director of Public Prosecutions",
+   "portfolio": "Attorney-General's",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "office_of_the_director_of_public_prosecutions__cdp",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000792",
+   "title": "Office of the Australian Information Commissioner",
+   "portfolio": "Attorney-General's",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "office_of_the_australian_information_commissioner",
+   "portal_years": [
+    "2022-23",
+    "2023-24"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000790",
+   "title": "National Archives of Australia",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "national_archives_of_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000789",
+   "title": "Federal Court of Australia",
+   "portfolio": "Attorney-General's",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "federal_court_of_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000788",
+   "title": "Australian Transaction Reports and Analysis Centre (AUSTRAC)",
+   "portfolio": "Home Affairs",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_transaction_reports_and_analysis_centre_d166741",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000787",
+   "title": "Australian Security Intelligence Organisation",
+   "portfolio": "Home Affairs",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_security_intelligence_organisation",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000786",
+   "title": "Australian Law Reform Commission",
+   "portfolio": "Attorney-General's",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_law_reform_commission",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000783",
+   "title": "Australian Financial Security Authority",
+   "portfolio": "Treasury",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "australian_financial_security_authority",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000778",
+   "title": "Attorney-General's Department",
+   "portfolio": "Attorney-General's",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "attorney_general_s_department",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000777",
+   "title": "Rural Industries Research and Development Corporation (trading as AgriFutures Australia)",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "rural_industries_research_and_development_corporat_c01bd82",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000775",
+   "title": "Grains Research and Development Corporation",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "grains_research_and_development_corporation",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000774",
+   "title": "Fisheries Research and Development Corporation",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "fisheries_research_and_development_corporation",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000773",
+   "title": "Cotton Research and Development Corporation",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "cotton_research_and_development_corporation",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-000771",
+   "title": "Wine Australia",
+   "portfolio": "Agriculture, Fisheries and Forestry",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "wine_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-006537",
+   "title": "Office of the Special Investigator",
+   "portfolio": "Attorney-General's",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "office_of_the_special_investigator",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-006003",
+   "title": "Sport Integrity Australia",
+   "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport & Arts",
+   "type": "A. Non-corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "sport_integrity_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "A",
+   "agor_id": "O-005022",
+   "title": "Housing Australia",
+   "portfolio": "Treasury",
+   "type": "B. Corporate Commonwealth entity",
+   "annual_report": "Yes",
+   "parent": null,
+   "portal_id": "housing_australia",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003592",
+   "title": "Seafarers Safety, Rehabilitation and Compensation Authority",
+   "portfolio": "Employment and Workplace Relations",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Seafarers Safety, Rehabilitation and Compensation Authority",
+   "portal_id": "seafarers_safety__rehabilitation_and_compensation__f4fe134",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  },
+  {
+   "class": "B",
+   "agor_id": "B-003484",
+   "title": "Fair Work Commission",
+   "portfolio": "Employment and Workplace Relations",
+   "type": "E. Statutory office holder, offices and committees",
+   "annual_report": "Yes",
+   "parent": "Fair Work Commission",
+   "portal_id": "fair_work_commission",
+   "portal_years": [
+    "2023-24",
+    "2024-25"
+   ]
+  }
+ ]
+}
