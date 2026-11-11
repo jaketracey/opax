@@ -54,7 +54,7 @@ test('RESEARCH_LOOP off is byte-identical to the current path in JSON and SSE',a
 });
 test('route counts use templates; app decoders accept loop JSON, SSE, and fallback',async()=>{
  h.env.RESEARCH_LOOP='route';
- for(const stream of [false,true]){globalThis.__researchModel=counted();const before=plannerCalls,mq=modelQuota,aq=quota,response=await post(q,stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop',JSON.stringify(logs.filter(r=>r.kind==='research_loop_fallback')));assert.equal(body.answered,true);assert.match(body.answer,/Taylor Example(?: recorded|:) 87/);assert.equal(plannerCalls,before);assert.equal(modelQuota,mq+3);assert.equal(quota,aq+1);assert.equal(response.headers.get('x-opax-cache'),'MISS');if(stream)assert.match(raw,/"phase":"step"/);await flush();}
+ for(const stream of [false,true]){globalThis.__researchModel=counted();const before=plannerCalls,mq=modelQuota,aq=quota,response=await post(q,stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);assert.equal(body.research.mode,'loop',JSON.stringify(logs.filter(r=>r.kind==='research_loop_fallback')));assert.equal(body.answered,true);assert.match(body.answer,/Taylor Example(?: recorded|:| led the recorded member ranking, with) 87/);assert.equal(plannerCalls,before);assert.equal(modelQuota,mq+2);assert.equal(quota,aq+1);assert.equal(response.headers.get('x-opax-cache'),'MISS');if(stream)assert.match(raw,/"phase":"step"/);await flush();}
  delete h.env.OPENROUTER_API_KEY;const response=await post(),body=await response.json();native(body);assert.equal(body.research.mode,'planner');assert.ok(body.research.trail.length);assert.ok(body.research.sources.every(source=>body.sources.some(s=>s.href===source.url)));h.env.OPENROUTER_API_KEY='test-only-placeholder';await flush();
 });
 test('ordinary and non-speech questions go through qualitative search/answer in route mode',async()=>{
@@ -70,7 +70,7 @@ test('stepped old-path failures retain their executed research trail in ordinary
 test('shadow serves the planner and logs the loop facts, figures, time, tokens and cost',async()=>{
  h.env.RESEARCH_LOOP='off';const previous=Date.now;Date.now=()=>1791900000000;let baseline;
  try{baseline=await(await post()).text();h.env.RESEARCH_LOOP='shadow';globalThis.__researchModel=counted();const response=await post();assert.equal(await response.text(),baseline);await flush();}finally{Date.now=previous;}
- const record=logs.findLast(r=>r.kind==='research_loop_shadow');assert.ok(record);assert.equal(record.loop.mode,'loop');assert.deepEqual(record.loop.chosen_facts,[1]);assert.deepEqual(record.loop.tokens,{input:30,output:15});assert.equal(typeof record.loop.cost_usd,'number');assert.ok(record.planner.steps.length);assert.equal(typeof record.agreement.facts,'boolean');assert.equal(typeof record.agreement.figures,'boolean');assert.doesNotMatch(JSON.stringify(record),/Example|gambling|housing|api key|test-only|https:/);
+ const record=logs.findLast(r=>r.kind==='research_loop_shadow');assert.ok(record);assert.equal(record.loop.mode,'loop');assert.deepEqual(record.loop.chosen_facts,[1]);assert.deepEqual(record.loop.tokens,{input:20,output:10});assert.equal(typeof record.loop.cost_usd,'number');assert.ok(record.planner.steps.length);assert.equal(typeof record.agreement.facts,'boolean');assert.equal(typeof record.agreement.figures,'boolean');assert.doesNotMatch(JSON.stringify(record),/Example|gambling|housing|api key|test-only|https:/);
 });
 test('SSE cancellation aborts an active fake model and never runs the old path',async()=>{
  h.env.RESEARCH_LOOP='route';let start,signal;const started=new Promise(r=>start=r);globalThis.__researchModel=new MockLanguageModelV4({doGenerate:options=>{signal=options.abortSignal;start();return new Promise(()=>{})}});
@@ -100,9 +100,9 @@ test('authenticated loop and old overrides serve JSON/SSE with usage and never r
   for(const override of ['loop','old'])for(const stream of [false,true]){
    const fake=counted();globalThis.__researchModel=fake;const before=plannerCalls,shadowRecords=logs.filter(r=>r.kind==='research_loop_shadow').length;
    const response=await evalPost(override,stream),raw=await response.text(),body=stream?decodeStream(raw):JSON.parse(raw);native(body);
-   assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('x-opax-cache'),'BYPASS');assert.equal(body.research.mode,override==='loop'?'loop':'planner');assert.match(body.answer,/Taylor Example(?: recorded|:) 87/);
-   assert.deepEqual(body.research.tokens,override==='loop'?{input:30,output:15}:{input:11,output:6});assert.equal(typeof body.research.cost_usd,'number');assert.equal(typeof body.research.ms,'number');assert.ok(body.research.trail.length);
-   assert.equal(plannerCalls,before+(override==='old'?1:0));assert.equal(fake.doGenerateCalls.length,override==='loop'?3:0);await flush();assert.equal(logs.filter(r=>r.kind==='research_loop_shadow').length,shadowRecords,'overrides do not launch a shadow');
+   assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('x-opax-cache'),'BYPASS');assert.equal(body.research.mode,override==='loop'?'loop':'planner');assert.match(body.answer,/Taylor Example(?: recorded|:| led the recorded member ranking, with) 87/);
+   assert.deepEqual(body.research.tokens,override==='loop'?{input:20,output:10}:{input:11,output:6});assert.equal(typeof body.research.cost_usd,'number');assert.equal(typeof body.research.ms,'number');assert.ok(body.research.trail.length);
+   assert.equal(plannerCalls,before+(override==='old'?1:0));assert.equal(fake.doGenerateCalls.length,override==='loop'?2:0);await flush();assert.equal(logs.filter(r=>r.kind==='research_loop_shadow').length,shadowRecords,'overrides do not launch a shadow');
   }
   assert.deepEqual(reads,[]);assert.deepEqual(writes,[]);
  }finally{globalThis.caches=previousCaches;delete h.env.GENERATION_CACHE;}
@@ -124,7 +124,7 @@ test('unauthorized or invalid research headers are ignored in both JSON and SSE'
    h.env.RESEARCH_LOOP='off';const baseline=await(await post(q,stream)).text();
    for(const [override,auth] of [['loop',null],['old','Bearer wrong'],['invalid','Bearer fixture-operator']]){
     h.env.RESEARCH_LOOP='shadow';const fake=counted();globalThis.__researchModel=fake;
-    const response=await evalPost(override,stream,q,auth);assert.equal(await response.text(),baseline);assert.notEqual(response.headers.get('x-opax-cache'),'BYPASS');await flush();assert.equal(fake.doGenerateCalls.length,3,'unauthorized old must not suppress global shadow');
+    const response=await evalPost(override,stream,q,auth);assert.equal(await response.text(),baseline);assert.notEqual(response.headers.get('x-opax-cache'),'BYPASS');await flush();assert.equal(fake.doGenerateCalls.length,2,'unauthorized old must not suppress global shadow');
    }
    const secret=h.env.DAILY_POST_OPERATOR_SECRET;delete h.env.DAILY_POST_OPERATOR_SECRET;
    globalThis.__researchModel=counted();assert.equal(await(await evalPost('loop',stream)).text(),baseline);await flush();h.env.DAILY_POST_OPERATOR_SECRET=secret;
@@ -157,7 +157,7 @@ test('shadow skips unmetered requests, samples at default 0.2, and fails closed 
  const attempt=async()=>{const fake=counted();globalThis.__researchModel=fake;await(await post()).text();await flush();return fake.doGenerateCalls.length};
  try{
   delete h.env.ASK_LIMITER;assert.equal(await attempt(),0);h.env.ASK_LIMITER={limit:async()=>{throw Error('fixture limiter unavailable')}};assert.equal(await attempt(),0);h.env.ASK_LIMITER=limiter;
-  delete h.env.RESEARCH_LOOP_SHADOW_RATE;Math.random=()=>0.2;assert.equal(await attempt(),0);Math.random=()=>0.19;assert.equal(await attempt(),3);
+  delete h.env.RESEARCH_LOOP_SHADOW_RATE;Math.random=()=>0.2;assert.equal(await attempt(),0);Math.random=()=>0.19;assert.equal(await attempt(),2);
   h.env.RESEARCH_LOOP_SHADOW_RATE='0';assert.equal(await attempt(),0);h.env.RESEARCH_LOOP_SHADOW_RATE='invalid';assert.equal(await attempt(),0);h.env.RESEARCH_LOOP_SHADOW_RATE='1';
   h.env.RESEARCH_LOOP_DAILY_USD='0';assert.equal(await attempt(),0);delete h.env.RESEARCH_LOOP_DAILY_USD;
   h.env.COMMUNITY_DB={prepare(){throw Error('fixture unavailable ledger')}};assert.equal(await attempt(),0);assert.ok(logs.some(r=>r.reason==='daily_budget_unavailable'));

@@ -17,7 +17,7 @@ import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-20-receipts-complete-records'
+export const ANSWER_WRITING_VERSION = 'written-answer-21-depth-and-grain'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -154,6 +154,7 @@ const finish = (s: string) => /[.!?]$/.test(s) ? s : s+'.'
 export const payRate = (s: string) => /^(.+?): (\$\d(?:[\d,]*\d)?(?:\.\d+)?) a year as (.+?), (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2});/.exec(s)
 const day = (s: string) => new Date(s+'T00:00:00Z').toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})
 function coverageApplies(text:string,input:WritingInput):boolean {
+  if (/^Title selection:|^Industry totals cover classified sources/i.test(text)) return true
   const tally=input.facts.some(f=>!f.coverage&&/\bin ([\d,]+) divisions\b/i.test(f.text)&&Number(/\bin ([\d,]+) divisions\b/i.exec(f.text)![1].replaceAll(',',''))>1)
   const divisionCount=tally||/\b(?:how many|count|number|total|most|all|every)\b/i.test(input.question)&&/\b(?:votes?|divisions?)\b/i.test(input.question)
   const speechCount=input.facts.some(f=>!f.coverage&&f.source.kind==='count')
@@ -173,6 +174,8 @@ function coverageSentence(input: WritingInput): WrittenSentence | undefined {
 function basisSentence(all:WritingFact[]):WrittenSentence|undefined {
   const text=all.map(f=>f.text.replace(UNCONFIRMED_PERIOD,'')).join(' ').trim()
   if(!text)return
+  // These aggregates declare their exact selection and exclusions. Do not replace them with a generic caveat.
+  if (/^Title selection:|^Industry totals cover classified sources/i.test(text)) return {text,facts:all.map(f=>f.id),coverage:true}
   if (/salary|pay records/i.test(text)) {
     const from = /(?:start on|cover) (\d{4}-\d{2}-\d{2}|\d+ \w+ \d{4})/.exec(text)?.[1]
     return {text:`OPAX's federal pay records${from ? ' start on '+from+' and' : ''} cover salary entitlements and exclude allowances, expenses, superannuation and outside income.`, facts:all.map(f=>f.id), coverage:true}

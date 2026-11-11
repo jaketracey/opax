@@ -6,7 +6,7 @@ import { readToolAsset, type StructuredToolResult, type ToolArgs, type ToolDefin
 
 type Amount = [number, number]
 interface ReceiptSeries { total: number; count: number; byYear?: Record<string, Amount>; undated?: Amount }
-type MoneyNode = DonorDisclosureRecord & ReceiptSeries & { id: string; label: string; kind: string }
+type MoneyNode = DonorDisclosureRecord & ReceiptSeries & { id: string; label: string; kind: string; industry?: string }
 interface MoneyEdge extends ReceiptSeries { source: string; target: string }
 interface MoneyGraph { nodes: MoneyNode[]; edges: MoneyEdge[]; meta?: { generated?: string; coverage?: string } }
 interface TotalRow { party?: string; donor?: string; associated_entity?: string; year?: number; total_aud: number; receipts: number; period: string }
@@ -59,7 +59,7 @@ export const tool: ToolDefinition = {
     to_year: { type: 'integer', minimum: 1900, maximum: 2099, description: 'Last FY starting year, inclusive.' },
     since: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Optional first complete FY boundary, YYYY-07-01. Other boundaries return a coverage limitation.' },
     until: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Optional last complete FY boundary, YYYY-06-30. Other boundaries return a coverage limitation.' },
-    group_by: { type: 'string', enum: ['party', 'donor', 'year'], description: 'Default: one total for a named party/donor, otherwise rank parties. year returns every observed FY in chronological order.' },
+    group_by: { type: 'string', enum: ['party', 'donor', 'year', 'industry'], description: 'Default: one total for a named party/donor, otherwise rank parties. industry sums every selected donor flow by its industry, excluding individuals, unclassified sources and associated entities of the recipient; use for which industries gave most. year returns every observed FY in chronological order.' },
     limit: { type: 'integer', minimum: 1, maximum: 20, description: 'Maximum ranked entities, default 5. Year series retain all observed years.' },
   }, examples: [{ party: 'Nationals', financial_year: '2017-18' }, { group_by: 'party', from_year: 2022, to_year: 2022 },
     { party: 'Labor', group_by: 'donor', limit: 3 }, { donor: 'Mineralogy Pty Ltd', group_by: 'year', from_year: 2018, to_year: 2022 }] },
@@ -85,6 +85,36 @@ export const tool: ToolDefinition = {
       if (args[field] && matches.length !== 1) return limitations(env, matches.length ? `The disclosed ${field} name ${args[field]} is ambiguous; use its published graph ID.` : `OPAX has no published ${field} receipt aggregate matching ${args[field]}.`)
     }
     const party = parties[0], donor = donors[0], group = String(args.group_by ?? (donor ? 'donor' : 'party'))
+    if (group === 'industry') {
+      if (donor) return limitations(env, 'An industry ranking cannot be restricted to one donor.')
+      const nodes = new Map(graph.nodes.map(n => [n.id, n])), sums = new Map<string, Amount>()
+      let excluded = 0
+      for (const edge of graph.edges) {
+        const source = nodes.get(edge.source), recipient = nodes.get(edge.target)
+        if (source?.kind !== 'donor' || recipient?.kind !== 'party' || party && edge.target !== party.id) continue
+        const sized = amount(edge, from, to, requested.dated)
+        if (!sized || sized[0] <= 0) continue
+        const industry = source.industry
+        if (!industry || ['other', 'individual'].includes(industry) || donorAssociatedTo(source, recipient.label)) { excluded += sized[0]; continue }
+        const held = sums.get(industry) ?? [0, 0]
+        sums.set(industry, [held[0] + sized[0], held[1] + sized[1]])
+      }
+      const ranked = [...sums].map(([industry, [total_aud, receipts]]) => ({ industry, total_aud, receipts, period, ...(party ? { party: party.label } : {}) }))
+        .sort((a, b) => b.total_aud - a.total_aud || a.industry.localeCompare(b.industry))
+      const rows = ranked.slice(0, Number(args.limit) || 5)
+      const notes = ['Industry totals cover classified sources within the published donor selection, not every AEC receipt. They exclude individuals, unclassified sources and associated entities of the recipient party. Industry labels are OPAX classifications, not AEC categories.',
+        'These are mixed disclosed receipts, including more than gifts; they do not establish influence or personal payments to politicians.']
+      if (!rows.length) return { ...limitations(env, `No classified industry receipts are available for ${party?.label ?? 'federal parties'} in ${period}.`, notes), coverage }
+      const citations = rows.map((row, i) => {
+        const label = row.industry.replaceAll('_', ' ').replace(/^./, c => c.toUpperCase())
+        const params = new URLSearchParams({ jur: 'federal', type: 'receipts', industry: row.industry, from: String(from), to: String(to) })
+        if (party) params.set('party', party.id)
+        return { kind: 'export' as const, value: row.total_aud, url: siteUrl(env, '/money?' + params),
+          text: `${label} ${i === 0 ? 'led the classified industry ranking' : 'recorded the next ranked industry total'}, with ${aud(row.total_aud)} in federal disclosed receipts${party ? ' to ' + party.label : ''} in financial years ${period} (1 July ${from} to 30 June ${to + 1}), across ${row.receipts.toLocaleString('en-AU')} receipts in the published donor selection.` }
+      })
+      return { rows, citations, notes, coverage, period, group_by: group, matched: ranked.length, truncated: rows.length < ranked.length,
+        excluded_non_industry_aud: excluded, query: { file: '/graph/money.json', from_year: from, to_year: to, party: party?.label } }
+    }
     const notes = ['Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence.',
       'Financial-year keys are the starting year; election returns can be assigned to their polling or event year.']
     const edgeScope = !!(party && (donor || group === 'donor')) || !!(donor && group === 'party')

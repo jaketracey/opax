@@ -8,6 +8,7 @@ import { clip, fold, siteUrl } from './record-common'
 import { inWindow, object, publishedResult, records, sourceUrl, validWindow, type RecordRow } from './published-records'
 import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
 import { pressHeadlineAndText, pressTitle } from '../press-title'
+import { joinedSourceName } from '../source-text-fidelity'
 
 const SLUG = /^(?:speech-\d+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+)$/
 const COMMITTEES = ['senate_committee', 'joint_committee', 'house_committee']
@@ -135,6 +136,9 @@ export const tool: ToolDefinition = {
       }
       const window = excerpt(text, String(args.query ?? ''), args.record_id ? 4000 : 650, args.text_offset as number | undefined)
       if (!window.text) continue
+      // Some legacy corpus text has already lost a compound-name dash. Never silently repair a quotation.
+      // Search another original instead; an explicit record read still exposes the source as stored.
+      if (!args.record_id && joinedSourceName(window.text, String(args.query ?? ''))) continue
       const sa = isSaHansard(r)
       if (sa) {
         if (args.text_offset) Object.assign(window, excerpt(text, String(args.query ?? ''), 650, 0))

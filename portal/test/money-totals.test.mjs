@@ -323,3 +323,25 @@ test('invalid FY arguments fail with -32602 before reading money data', async ()
   }
   assert.equal(f.state.reads, 0);
 });
+
+test('industry rankings sum all selected flows before limiting, preserving period and excluding non-industries', async () => {
+  const data = structuredClone(graph)
+  data.nodes.find(n => n.id === 'donor:alpha-holdings').industry = 'mining'
+  data.nodes.find(n => n.id === 'donor:beta-association').industry = 'mining'
+  data.nodes.find(n => n.id === 'donor:gamma-example').industry = 'property'
+  data.nodes.find(n => n.id === 'donor:older-disclosure').industry = 'property'
+  data.nodes.find(n => n.id === 'donor:beta-association').associatedTag = 'Associated entity of Liberal'
+  data.nodes.find(n => n.id === 'donor:beta-association').associatedWith = [{party:'Liberal'}]
+  data.edges.push(edge('donor:beta-association','party:Liberal',{2017:[9999,1]}))
+  const env = { asset: async () => data, origin: 'https://opax.com.au' }
+  const result = await api.callTool(env, 'money_totals', { party: 'Liberal', financial_year: '2017-18', group_by: 'industry' })
+  assert.deepEqual(result.rows.map(r => [r.industry,r.total_aud]), [['property',400],['mining',180]])
+  assert.match(result.citations[0].text, /^Property led the classified industry ranking/)
+  assert.match(result.citations[0].text, /2017-18/)
+  assert.equal(new URL(result.citations[0].url).searchParams.get('industry'),'property')
+  const labor = await api.callTool(env, 'money_totals', { party: 'Labor', from_year: 2017, to_year: 2018, group_by: 'industry', limit: 1 })
+  assert.equal(labor.rows[0].total_aud,670)
+  assert.match(labor.notes.join(' '), /not every AEC receipt/)
+  data.nodes.find(n => n.id === 'donor:gamma-example').industry = 'individual'
+  assert.equal((await api.callTool(env, 'money_totals', { party:'Liberal',financial_year:'2017-18',group_by:'industry' })).rows[0].industry,'mining')
+})

@@ -475,3 +475,33 @@ test('the Ask loop answers a large real division from its facts without exceedin
   assert.ok(modelBytes < objectBytes);
   t.diagnostic(`Complete 144-member feedback: ${modelBytes} bytes in model tuples, ${objectBytes} bytes with canonical objects; model result cap 16384 bytes.`);
 });
+
+test('policy voting aggregates the full union of bill and motion matches, not the representative row limit', async () => {
+  const greens = vote => [member('Greens Example', 'Greens', vote)]
+  const rows = [
+    division({key:'federal-senate-501',date:'2022-09-08',name:'Climate Change Bill 2022 - Second Reading',bills:[{...bill,title:'Climate Change Bill 2022'}],members:greens('aye')}),
+    division({key:'federal-senate-502',date:'2022-09-08',name:'Climate Change Bill 2022 - Opposition amendment',bills:[],members:greens('no')}),
+    division({key:'federal-senate-503',date:'2019-12-02',name:'Motions — Climate change',bills:[],members:greens('no')}),
+    division({key:'federal-senate-504',date:'2011-11-08',name:'Clean Energy Bill 2011 - Second Reading',bills:[],members:greens('aye')}),
+    division({key:'federal-senate-505',date:'2024-01-01',name:'Housing motion',bills:[],members:greens('aye')}),
+    division({key:'federal-senate-506',date:'2023-01-01',name:'Carbon motion',bills:[],members:[member('A','Greens','aye'),member('B','Greens','no')]}),
+    division({key:'federal-senate-507',date:'2023-02-01',name:'Emissions motion',bills:[],members:[member('Other','Labor','aye')]}),
+  ]
+  const f=fixture(rows)
+  const result=await api.callTool(f.env,'division',{operation:'policy_votes',party:'Greens',title:'climate',limit:1})
+  assert.equal(result.total,6)
+  assert.deepEqual(result.summary,{divisions:6,aye:2,no:2,tied:1,unrecorded:1,split:1,partial:0})
+  assert.equal(result.by_kind.find(r=>r.category==='bill').divisions,3)
+  assert.equal(result.by_kind.find(r=>r.category==='motion').divisions,3)
+  assert.ok(result.rows.length>1)
+  assert.ok(result.rows.some(r=>r.title==='Motions — Climate change'))
+  assert.ok(result.citations.every(c=>!c.text.includes('—')))
+  assert.match(result.citations[0].text,/across 6 matching divisions/)
+  assert.ok(result.citations[0].related.length>=4)
+  assert.ok(result.citations.some(c=>c.text.includes('Clean Energy Bill 2011')))
+  assert.match(result.notes.join(' '),/not support for or opposition/)
+  const scoped=await api.callTool(f.env,'division',{operation:'policy_votes',party:'Greens',title:'climate',since:'2022-01-01',until:'2022-12-31'})
+  assert.equal(scoped.total,2)
+  f.assets['/divisions/index.json'].divisions.find(d=>d.key==='federal-senate-502').duplicate_of='federal-senate-501'
+  assert.equal((await api.callTool(f.env,'division',{operation:'policy_votes',party:'Greens',title:'climate'})).total,5)
+})
