@@ -97,7 +97,7 @@ import { networkBlock } from './network-block'
 import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
-import { CATALOG_KINDS, searchCatalog } from './catalog-search'
+import { CATALOG_KINDS, searchCatalog, searchCatalogPaged, type CatalogRecord, type CatalogStub } from './catalog-search'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { runAgentic, classifyAgentic, agenticCacheKey, resolveNamedScope, type NamedScope, inferPeriod, bounded, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
@@ -631,8 +631,15 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   docUrl.searchParams.set('page', '1')
   docUrl.searchParams.set('per', options.suggest ? '20' : '200')
   if (options.suggest) { docUrl.searchParams.set('mode', 'keyword'); docUrl.searchParams.set('top_k', '20') }
+  const sort = url.searchParams.get('sort') || 'relevance'
+  // Relevance and date order need no more than a record's rank and date, so the catalogue
+  // reads only the records on the page shown. Title and type order read all 200, as before.
+  const paged = !options.suggest && (sort === 'relevance' || sort === 'newest' || sort === 'oldest')
+  const catalogSearch = () => paged
+    ? searchCatalogPaged(url, env.ASSETS).then(found => ({ ...found, results: found.stubs }))
+    : searchCatalog(url, env.ASSETS, options.suggest ? { perKind: 2 } : {})
   const tasks = await Promise.allSettled([
-    localWanted ? searchCatalog(url, env.ASSETS, options.suggest ? { perKind: 2 } : {}) : Promise.resolve(null),
+    localWanted ? catalogSearch() : Promise.resolve(null),
     documentsWanted ? (async () => {
       const req = new Request(docUrl, request)
       const response = env.STAGING_API ? await env.STAGING_API.fetch(req) : await apiSearch(req, docUrl, env, ctx, options)
@@ -648,8 +655,14 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   if (!catalog && !documents && warnings.length) return json({ error: 'Search is temporarily unavailable. Please try again.' }, 503)
   // Reciprocal ranks combine lexical records with semantic document retrieval;
   // their native scores are different scales and must never be compared.
+  // A paged catalogue row is a stub until it is on the page shown; this maps it to its record ID.
+  const stubIds = new Map<object, number>()
   const combined = [
-    ...(catalog?.results || []).map((r, i) => ({ ...r, score: 1 / (10 + i), sort_date: r.date || r.sort_date || '' })),
+    ...(catalog?.results || []).map((r: CatalogRecord | CatalogStub, i: number) => {
+      const row = { ...r, score: 1 / (10 + i), sort_date: r.date || r.sort_date || '' }
+      if (paged) stubIds.set(row, (r as CatalogStub).id)
+      return row
+    }),
     ...(documents?.results || []).map((r, i) => ({ ...r, score: 1 / (10.5 + i), sort_date: r.date || '' })),
   ]
   if (options.suggest) {
@@ -665,7 +678,6 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
         + (row.kind === 'page' ? 2 : profiles.has(row.kind) ? 1 : 0)
     }
   }
-  const sort = url.searchParams.get('sort') || 'relevance'
   // Select the same relevance window before sorting, so changing order never
   // replaces matches or changes the count between pages.
   combined.sort((a, b) => compareSearchResults(a, b, 'relevance'))
@@ -673,7 +685,7 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   // profile repeatedly for several matching records or source variants.
   const seen = new Set<string>(), kinds = new Map<string, number>()
   const diverse = options.suggest ? combined.filter(row => {
-    const href = row.href || '/doc/' + encodeURIComponent(row.slug)
+    const href = row.href || '/doc/' + encodeURIComponent(row.slug!)
     if (seen.has(href) || (kinds.get(row.kind) || 0) >= 2) return false
     seen.add(href); kinds.set(row.kind, (kinds.get(row.kind) || 0) + 1)
     return true
@@ -684,8 +696,20 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   const page = Math.min(pageCount, Number(url.searchParams.get('page') || 1))
   const years: Record<string, number> = {}
   for (const row of rows) { const y = row.date?.slice(0, 4) || ''; if (/^\d{4}$/.test(y)) years[y] = (years[y] || 0) + 1 }
+  let shown = rows.slice((page - 1) * per, page * per)
+  const stubs = shown.filter(row => stubIds.has(row))
+  if (stubs.length && catalog && 'records' in catalog) {
+    const read = await catalog.records(stubs.map(row => stubIds.get(row)!))
+    // The row searchCatalog would have built: the record, then its rank score and sort date.
+    shown = shown.map(row => {
+      const id = stubIds.get(row)
+      if (id === undefined) return row
+      const record = read.get(id)!
+      return { ...record, score: row.score, sort_date: record.date || row.sort_date }
+    })
+  }
   return json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
-    results: rows.slice((page - 1) * per, page * per), count: rows.slice((page - 1) * per, page * per).length,
+    results: shown, count: shown.length,
     total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
     years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
   })

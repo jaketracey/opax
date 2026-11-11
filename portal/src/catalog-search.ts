@@ -47,9 +47,11 @@ export function matchesCatalogFilters(meta: Meta, params: URLSearchParams): bool
   if(params.get('to') && (!from || from>Number(params.get('to'))))return false
   return true
 }
+/** A catalogue search ranked but not yet read: the best IDs and what reading them needs. */
+interface RankedCatalog { manifest: Manifest; base: string; meta: CatalogMeta; selected: [number, number][]; total: number }
 // Ask uses union matching and a per-kind window so contracts cannot crowd out
 // receipts or interests. The public search keeps its exact AND semantics.
-export async function searchCatalog(url: URL, assets: Fetcher, options: { anyTerms?: boolean; perKind?: number } = {}) {
+async function rankCatalog(url: URL, assets: Fetcher, options: { anyTerms?: boolean; perKind?: number } = {}): Promise<RankedCatalog> {
   const terms=tokens(url.searchParams.get('q'))
   if(terms.length>16)throw new Error('Use up to 16 search words')
   const manifest=await asset<Manifest>(assets,'/search-catalog/manifest.json',true)
@@ -110,11 +112,47 @@ export async function searchCatalog(url: URL, assets: Fetcher, options: { anyTer
       while(true){let child=parent*2+1;if(child>=heap.length)break;if(child+1<heap.length&&compare(heap[child+1],heap[child])<0)child++;if(compare(heap[parent],heap[child])<=0)break;[heap[parent],heap[child]]=[heap[child],heap[parent]];parent=child}
     }
   }
-  const matches=[...heaps.values()].flat().sort((a,b)=>compare(b,a)).map(id=>[id,scores![id]])
-  const selected=matches.slice(0,200), shards=new Map<number,CatalogRecord[]>()
-  const shardIds=[...new Set(selected.map(([id])=>Math.floor(id/manifest.recordShardSize)))]
+  const matches=[...heaps.values()].flat().sort((a,b)=>compare(b,a)).map(id=>[id,scores![id]] as [number, number])
+  return {manifest,base,meta,selected:matches.slice(0,200),total}
+}
+/** The records for these IDs, read a shard at a time. Record shards live only for their request. */
+async function readRecords(assets: Fetcher, ranked: RankedCatalog, ids: number[]): Promise<Map<number, CatalogRecord>> {
+  const size=ranked.manifest.recordShardSize, shards=new Map<number,CatalogRecord[]>()
+  const shardIds=[...new Set(ids.map(id=>Math.floor(id/size)))]
   // Bound concurrent asset reads, including the 200-row export request.
-  for(let i=0;i<shardIds.length;i+=6)await Promise.all(shardIds.slice(i,i+6).map(async id=>shards.set(id,await asset<CatalogRecord[]>(assets,base+'records-'+id+'.json'))))
-  const records=selected.map(([id,score])=>({...shards.get(Math.floor(id/manifest.recordShardSize))![id%manifest.recordShardSize],score,sort_date:String(meta.year(id)||'')}))
+  for(let i=0;i<shardIds.length;i+=6)await Promise.all(shardIds.slice(i,i+6).map(async id=>shards.set(id,await asset<CatalogRecord[]>(assets,ranked.base+'records-'+id+'.json'))))
+  return new Map(ids.map(id=>[id,shards.get(Math.floor(id/size))![id%size]]))
+}
+export async function searchCatalog(url: URL, assets: Fetcher, options: { anyTerms?: boolean; perKind?: number } = {}) {
+  const ranked=await rankCatalog(url,assets,options)
+  const {manifest,meta,selected,total}=ranked
+  const read=await readRecords(assets,ranked,selected.map(([id])=>id))
+  const records=selected.map(([id,score])=>({...read.get(id)!,score,sort_date:String(meta.year(id)||'')}))
   return {results:records,total,truncated:total>200,coverage:manifest.coverage,version:manifest.version,counts:manifest.counts}
+}
+
+/** One ranked catalogue result before its record is read: enough to order it by relevance or date and count its year. */
+export interface CatalogStub { id: number; kind: string; date?: string; sort_date: string; title?: undefined; href?: undefined; slug?: undefined }
+/** dates.json stores a record's date as YYYYMMDD; 0 means it has none, -1 one that number cannot hold. */
+const dateText = (value: number) => { const s=String(value); return s.slice(0,4)+'-'+s.slice(4,6)+'-'+s.slice(6,8) }
+/**
+ * searchCatalog for a page of results. A broad word's best 200 records span 50 to 70 record
+ * shards (about 5 MB); ordering and counting them needs only each record's date, which
+ * dates.json holds, so `records` reads just the shards behind the rows a page shows.
+ * Without a usable dates.json every selected record is read up front, as searchCatalog does.
+ */
+export async function searchCatalogPaged(url: URL, assets: Fetcher) {
+  const ranked=await rankCatalog(url,assets)
+  const {manifest,meta,selected,total}=ranked
+  const ids=selected.map(([id])=>id)
+  const dates=await asset<number[]>(assets,ranked.base+'dates.json',true).catch(()=>null)
+  const usable=Array.isArray(dates) && dates.length===meta.length && ids.every(id=>Number.isInteger(dates[id]) && dates[id]>=0)
+  const early=usable ? null : await readRecords(assets,ranked,ids)
+  const stubs: CatalogStub[]=ids.map(id=>{
+    const year=String(meta.year(id)||'')
+    const date=early ? early.get(id)!.date ?? undefined : dates![id] ? dateText(dates![id]) : undefined
+    return {id,kind:meta.kind(id),date:date || undefined,sort_date:date || year || ''}
+  })
+  const records=async(rows: number[])=>early ? new Map(rows.map(id=>[id,early.get(id)!])) : readRecords(assets,ranked,rows)
+  return {stubs,records,total,truncated:total>200,coverage:manifest.coverage,version:manifest.version,counts:manifest.counts}
 }
