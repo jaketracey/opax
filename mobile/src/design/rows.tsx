@@ -816,40 +816,53 @@ export function RecordRow({
           ) : null}
         </Content>
         {speaker ? (
-          <View style={[styles.line, stacked ? styles.stacked : null]}>
+          <View style={styles.recordSpeakerSlot}>
             {speaker.portrait}
-            {speaker.href ? (
-              <Pressable
-                accessibilityRole="link"
-                accessibilityLabel={`Open ${speaker.name}`}
-                testID={testID && `${testID}-speaker`}
-                onPress={(event) => {
-                  event.stopPropagation();
-                  speakerLink.open();
-                }}
-                style={styles.recordSpeaker}
-              >
-                <Text wordSafe variant="secondary" tone="link">
-                  {speaker.name}
-                </Text>
-              </Pressable>
-            ) : (
-              <Text
-                wordSafe
-                variant="secondary"
-                testID={testID && `${testID}-speaker`}
-              >
-                {speaker.name}
-              </Text>
-            )}
-            {speaker.party ? (
-              <PartyLabel
-                party={speaker.party}
-                status="unknown"
-                nested
-                linked={speaker.linkedParty ?? false}
-              />
-            ) : null}
+            <View style={styles.recordSpeakerWords}>
+              {speaker.href ? (
+                <Pressable
+                  accessibilityRole="link"
+                  accessibilityLabel={`Open ${speaker.name}`}
+                  testID={testID && `${testID}-speaker`}
+                  onPress={(event) => {
+                    event.stopPropagation();
+                    speakerLink.open();
+                  }}
+                  style={[
+                    styles.recordSpeaker,
+                    speaker.party ? styles.recordSpeakerNameEnd : null,
+                  ]}
+                >
+                  <Text wordSafe variant="secondary" tone="link">
+                    {speaker.name}
+                  </Text>
+                </Pressable>
+              ) : (
+                <View
+                  style={speaker.party ? styles.recordSpeakerNameEnd : null}
+                >
+                  <Text
+                    wordSafe
+                    variant="secondary"
+                    testID={testID && `${testID}-speaker`}
+                  >
+                    {speaker.name}
+                  </Text>
+                </View>
+              )}
+              {speaker.party ? (
+                <View style={styles.recordSpeakerParty}>
+                  <PartyLabel
+                    party={speaker.party}
+                    status="unknown"
+                    nested
+                    compact
+                    linked={speaker.linkedParty ?? false}
+                    testID={testID && `${testID}-speaker-party`}
+                  />
+                </View>
+              ) : null}
+            </View>
           </View>
         ) : null}
       </View>
@@ -1222,12 +1235,29 @@ const styles = StyleSheet.create({
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },
   recordContent: { gap: rhythm.line },
   recordTarget: { minHeight: minimumTarget, minWidth: minimumTarget },
+  recordSpeakerSlot: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  recordSpeakerWords: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: 'column',
+    gap: rhythm.line,
+  },
   recordSpeaker: {
     minHeight: minimumTarget,
     minWidth: minimumTarget,
     justifyContent: 'center',
     flexShrink: 1,
   },
+  // Keep the text close while the two links retain separate full-size targets.
+  recordSpeakerNameEnd: {
+    minHeight: minimumTarget,
+    justifyContent: 'flex-end',
+  },
+  recordSpeakerParty: { minHeight: minimumTarget },
   line: {
     flexDirection: 'row',
     flexWrap: 'wrap',
