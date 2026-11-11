@@ -28,6 +28,7 @@ import { ApiError } from '../src/api/errors';
 import { apiClient, catalogs as runtime } from '../src/api/runtime';
 import { isPartialCatalog } from '../src/api/validation';
 import { copy } from '../src/design/copy';
+import { Icon } from '../src/design/icon';
 import { chamberName } from '../src/design/parliament';
 import {
   Card,
@@ -60,11 +61,14 @@ import {
   categorySource,
   discoverPath,
   discoveryAsOf,
+  decodeLeadSupplierAliases,
   isCategory,
   leadCardFigure,
   leadCategories,
   leadEvidenceFor,
   leadFor,
+  leadSupplierAliasPaths,
+  leadSupplierRoute,
   leadSections,
   leadsAbout,
   leadsFor,
@@ -73,7 +77,10 @@ import {
   searchLeads,
   supplierPath,
 } from '../src/features/leads/model';
-import { decodeAgencies } from '../src/features/money-public/data';
+import {
+  decodeAgencies,
+  decodeAgency,
+} from '../src/features/money-public/data';
 import { publicDiscovery } from '../src/features/money-public/discovery';
 import { money } from '../src/features/money-public/runtime';
 import MoneyItem, {
@@ -97,8 +104,10 @@ import {
 import { leadsKindRoute, moneyRoute } from '../src/navigation/routes/money-map';
 import { partyRoute } from '../src/navigation/routes/people';
 import {
+  agencyListRoute,
   agencyRoute,
   moneyItemRoute,
+  moneyRecordRoute,
 } from '../src/navigation/routes/public-money';
 import { sheetPayload } from '../src/navigation/sheets';
 import {
@@ -127,7 +136,7 @@ jest.mock('../src/api/image-policy', () => ({
 }));
 // The lead page looks its agency up in the agency directory.
 jest.mock('../src/features/money-public/runtime', () => ({
-  money: { agencies: jest.fn() },
+  money: { agencies: jest.fn(), agency: jest.fn() },
 }));
 // No step on Leads or a lead leaves the app.
 jest.mock('../src/navigation/external', () => ({
@@ -180,6 +189,10 @@ const companies = shown.signals.filter(
 ).length;
 const evidence = signals.flatMap((s) => s.evidence);
 const agencies = decodeAgencies(pinned('/agencies.json'));
+const homeAgency = agencies.agencies.find(
+  (agency) => agency.name === 'Department of Home Affairs',
+)!;
+const homeProfile = decodeAgency(pinned(homeAgency.path));
 
 // A catalog client over the pinned files; `fail` refuses the named paths.
 function fixture(fail: string[] = []) {
@@ -225,6 +238,16 @@ beforeEach(() => {
     stale: false,
     savedAt: 200,
   } as Awaited<ReturnType<typeof money.agencies>>);
+  jest.mocked(money.agency).mockReset();
+  jest.mocked(money.agency).mockImplementation(async (id) => {
+    const entry = agencies.agencies.find((agency) => agency.id === id)!;
+    return {
+      data: { meta: agencies.meta, profile: decodeAgency(pinned(entry.path)) },
+      asOf: null,
+      stale: false,
+      savedAt: 200,
+    };
+  });
 });
 afterEach(() => forgetMoneyGraphs());
 
@@ -674,6 +697,127 @@ describe('leads', () => {
       contracts: { value: 9102500, records: 4 },
       note: 'Different money flows and reporting periods. A shared name doesn’t show that one led to the other.',
     });
+  });
+  test('supplier destinations use the recorded supplier id and agency, including the full list', () => {
+    const comparison = leadFor(signals[2]!)!.comparison;
+    if (comparison.type !== 'concentration')
+      throw new Error('Expected a concentration');
+    for (const row of comparison.rows.filter((row) => !row.other)) {
+      const supplier = homeProfile.suppliers.find(
+        (supplier) => supplier.name.toLowerCase() === row.name.toLowerCase(),
+      )!;
+      expect(leadSupplierRoute(row, homeProfile)).toEqual({
+        pathname: '/money-record',
+        params: {
+          rid: supplier.id,
+          agency: homeProfile.id,
+          name: supplier.name,
+        },
+      });
+    }
+    const [row] = comparison.rows;
+    expect(
+      leadSupplierRoute({ ...row!, name: `  ${row!.name}  ` }, homeProfile),
+    ).toEqual(leadSupplierRoute(row!, homeProfile));
+    expect(leadSupplierRoute(comparison.rows[5]!, homeProfile)).toEqual({
+      pathname: '/agency-list',
+      params: {
+        id: homeProfile.id,
+        kind: 'suppliers',
+        name: homeProfile.name,
+      },
+    });
+  });
+  test('unresolved, ambiguous and individual suppliers have no destination or search fallback', () => {
+    const comparison = leadFor(signals[2]!)!.comparison;
+    if (comparison.type !== 'concentration')
+      throw new Error('Expected a concentration');
+    const row = comparison.rows[0]!;
+    const supplier = homeProfile.suppliers.find(
+      (supplier) => supplier.name.toLowerCase() === row.name.toLowerCase(),
+    )!;
+    expect(leadSupplierRoute(row, null)).toBeNull();
+    expect(leadSupplierRoute(comparison.rows[5]!, null)).toBeNull();
+    expect(
+      leadSupplierRoute(row, { id: homeAgency.id, name: homeAgency.name }),
+    ).toBeNull();
+    expect(
+      leadSupplierRoute({ ...row, name: 'No matching supplier' }, homeProfile),
+    ).toBeNull();
+    expect(
+      leadSupplierRoute(
+        { ...row, name: 'Secure Journeys Limited' },
+        homeProfile,
+      ),
+    ).toBeNull();
+    expect(
+      leadSupplierRoute(row, {
+        ...homeProfile,
+        suppliers: [supplier, { ...supplier, id: 'another-id' }],
+      }),
+    ).toBeNull();
+    expect(
+      leadSupplierRoute(row, {
+        ...homeProfile,
+        suppliers: [{ ...supplier, organisation: false }],
+      }),
+    ).toBeNull();
+    expect(
+      leadSupplierRoute({ ...row, supplierPath: null }, homeProfile),
+    ).toBeNull();
+  });
+  test('recorded supplier aliases resolve to an agency id, while a similar name alone does not', () => {
+    const lead = leadFor(signals[2]!)!;
+    if (lead.comparison.type !== 'concentration')
+      throw new Error('Expected a concentration');
+    const row = lead.comparison.rows[0]!;
+    const supplier = homeProfile.suppliers.find(
+      (supplier) => supplier.name.toLowerCase() === row.name.toLowerCase(),
+    )!;
+    const agency = {
+      ...homeProfile,
+      suppliers: [{ ...supplier, name: 'Secure Journeys Services' }],
+    };
+    expect(leadSupplierRoute(row, agency)).toBeNull();
+    expect(leadSupplierAliasPaths(lead, agency)).toEqual([
+      '/suppliers/5a.json',
+    ]);
+    const aliases = decodeLeadSupplierAliases({
+      profiles: {
+        [supplier.id]: {
+          id: supplier.id,
+          aliases: [row.name],
+          lookup_names: ['Another recorded name'],
+        },
+      },
+    });
+    expect(aliases[supplier.id]).toEqual([row.name, 'Another recorded name']);
+    expect(leadSupplierRoute(row, { ...agency, aliases })).toEqual(
+      moneyRecordRoute(
+        { rid: supplier.id, agency: agency.id },
+        'Secure Journeys Services',
+      ),
+    );
+    expect(
+      leadSupplierRoute(row, {
+        ...agency,
+        aliases: { 's-unrelated': [row.name] },
+      }),
+    ).toBeNull();
+    expect(leadSupplierAliasPaths(lead, homeProfile)).toEqual([]);
+    expect(
+      leadSupplierAliasPaths(lead, {
+        ...agency,
+        suppliers: Array.from({ length: 5 }, () => agency.suppliers[0]!),
+      }),
+    ).toEqual([]);
+    for (const profile of [
+      { id: 's-other', aliases: [row.name] },
+      { id: supplier.id, aliases: 'not an array' },
+    ])
+      expect(() =>
+        decodeLeadSupplierAliases({ profiles: { [supplier.id]: profile } }),
+      ).toThrow();
   });
   test('a single period reads once in the figure label', () => {
     const chart = signals[1]!.chart!;
@@ -1322,9 +1466,11 @@ describe('a lead’s page', () => {
           }),
         );
         const row = byTestID(renderer.root, 'lead-chart-cell-0');
-        expect(StyleSheet.flatten(row.props.style).flexDirection).toBe(
-          direction,
-        );
+        expect(
+          StyleSheet.flatten(
+            byTestID(renderer.root, 'lead-chart-cell-0-layout').props.style,
+          ).flexDirection,
+        ).toBe(direction);
         expect(row.props.accessibilityLabel).toBe(
           'Mineralogy Pty Ltd, $124,655,455 · 78.4% · 230 records',
         );
@@ -1343,6 +1489,78 @@ describe('a lead’s page', () => {
         act(() => renderer.unmount());
         Dimensions.set({ window: previous });
       }
+    },
+  );
+  test.each([false, true])(
+    'a long supplier name wraps in its column with amount and share together (linked: %s)',
+    async (linked) => {
+      const comparison = leadFor(signals[2]!)!.comparison;
+      if (comparison.type !== 'concentration')
+        throw new Error('Expected a concentration');
+      const name = 'SANOFI-AVENTIS AUSTRALIA PTY LTD';
+      const renderer = await render(
+        <ConcentrationChart
+          comparison={{
+            ...comparison,
+            rows: [
+              { ...comparison.rows[0]!, name, value: 137100000, share: 3.3 },
+            ],
+          }}
+          rowHref={
+            linked
+              ? () =>
+                  moneyRecordRoute(
+                    { rid: 'sanofi', agency: homeAgency.id },
+                    name,
+                  )
+              : undefined
+          }
+          testID="lead-chart"
+        />,
+      );
+      const root = renderer.root;
+      const row = byTestID(root, 'lead-chart-row-0');
+      const label = byTestID(root, 'lead-chart-row-0-label');
+      const figures = byTestID(root, 'lead-chart-row-0-figures');
+      const supplierName = label.findAllByType(DesignText)[0]!;
+      expect(supplierName.props.children).toBe(name);
+      expect(supplierName.props.wordSafe).toBe(true);
+      expect(supplierName.props.numberOfLines).toBeUndefined();
+      expect(StyleSheet.flatten(supplierName.props.style)).toMatchObject({
+        flex: 1,
+        minWidth: 0,
+      });
+      expect(StyleSheet.flatten(label.props.style)).toMatchObject({
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        alignItems: 'flex-start',
+      });
+      expect(StyleSheet.flatten(figures.props.style)).toMatchObject({
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        flexShrink: 0,
+      });
+      const values = figures.findAllByType(DesignText);
+      expect(values.map((value) => value.props.children)).toEqual([
+        '$137.1m',
+        '3.3%',
+      ]);
+      for (const value of values) {
+        expect(value.props.numberOfLines).toBe(1);
+        expect(StyleSheet.flatten(value.props.style).flexShrink).toBe(0);
+      }
+      expect(
+        StyleSheet.flatten(row.props.style).minHeight,
+      ).toBeGreaterThanOrEqual(44);
+      expect(row.props.accessibilityLabel).toBe(
+        `${name}, 137.1 million dollars, 3.3 percent`,
+      );
+      expect(
+        row
+          .findAllByType(Icon)
+          .some((icon) => icon.props.name === 'chevron.right'),
+      ).toBe(linked);
+      act(() => renderer.unmount());
     },
   );
   test('a party lead: meta, subject, takeaway, the party’s page, its figure and chart', async () => {
@@ -1620,6 +1838,34 @@ describe('a lead’s page', () => {
     expect(byTestID(root, 'lead-chart-row-0').props.accessibilityLabel).toBe(
       'SECURE JOURNEYS PTY LTD, 2.3 billion dollars, 38.7 percent',
     );
+    expect(money.agency).toHaveBeenCalledWith(
+      agency.id,
+      false,
+      expect.any(AbortSignal),
+    );
+    for (let index = 0; index < 5; index++) {
+      const row = byTestID(root, `lead-chart-row-${index}`);
+      expect(row.props.accessibilityRole).toBe('link');
+      expect(
+        StyleSheet.flatten(row.props.style).minHeight,
+      ).toBeGreaterThanOrEqual(44);
+      const supplier = homeProfile.suppliers.find(
+        (supplier) =>
+          supplier.name.toLowerCase() === texts(row)[0]!.toLowerCase(),
+      )!;
+      expect(hrefOf(root, `lead-chart-row-${index}`)).toEqual(
+        moneyRecordRoute(
+          { rid: supplier.id, agency: agency.id },
+          supplier.name,
+        ),
+      );
+    }
+    const otherHref = agencyListRoute(agency.id, 'suppliers', agency.name);
+    expect(hrefOf(root, 'lead-chart-row-5')).toEqual(otherHref);
+    const supplierHref = hrefOf(root, 'lead-chart-row-0');
+    await press(root, 'lead-table-toggle');
+    expect(hrefOf(root, 'lead-chart-cell-0')).toEqual(supplierHref);
+    expect(hrefOf(root, 'lead-chart-cell-5')).toEqual(otherHref);
     // A contracts lead has no money-map row.
     expect(has(root, 'lead-money-map')).toBe(false);
     act(() => renderer.unmount());
@@ -1629,7 +1875,200 @@ describe('a lead’s page', () => {
     const again = await render(<LeadDetail />);
     expect(has(again.root, 'lead-subject')).toBe(false);
     expect(has(again.root, 'lead-chart')).toBe(true);
+    for (let index = 0; index < 6; index++) {
+      expect(hrefOf(again.root, `lead-chart-row-${index}`)).toBeUndefined();
+      expect(
+        byTestID(again.root, `lead-chart-row-${index}`).props.accessibilityRole,
+      ).toBeUndefined();
+    }
     act(() => again.unmount());
+  });
+  test('an unavailable supplier profile keeps named rows static and Other opens the agency list', async () => {
+    jest.mocked(money.agency).mockRejectedValueOnce(new Error('offline'));
+    mockParams.id = signals[2]!.id;
+    const renderer = await render(<LeadDetail />);
+    const root = renderer.root;
+    expect(hrefOf(root, 'lead-subject')).toEqual(
+      agencyRoute(homeAgency.id, homeAgency.name),
+    );
+    for (let index = 0; index < 5; index++) {
+      expect(hrefOf(root, `lead-chart-row-${index}`)).toBeUndefined();
+      expect(
+        byTestID(root, `lead-chart-row-${index}`).props.accessibilityRole,
+      ).toBeUndefined();
+    }
+    const otherHref = agencyListRoute(
+      homeAgency.id,
+      'suppliers',
+      homeAgency.name,
+    );
+    expect(hrefOf(root, 'lead-chart-row-5')).toEqual(otherHref);
+    await press(root, 'lead-table-toggle');
+    expect(hrefOf(root, 'lead-chart-cell-0')).toBeUndefined();
+    expect(hrefOf(root, 'lead-chart-cell-5')).toEqual(otherHref);
+    expectNoWeb();
+    act(() => renderer.unmount());
+  });
+  test('a late supplier profile cannot add the previous agency’s routes to a different lead', async () => {
+    let complete!: (record: Awaited<ReturnType<typeof money.agency>>) => void;
+    jest.mocked(money.agency).mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          complete = resolve;
+        }),
+    );
+    mockParams.id = signals[2]!.id;
+    const renderer = await render(<LeadDetail />);
+    const signal = jest.mocked(money.agency).mock.calls[0]![2]!;
+    expect(hrefOf(renderer.root, 'lead-chart-row-5')).toEqual(
+      agencyListRoute(homeAgency.id, 'suppliers', homeAgency.name),
+    );
+    mockParams.id = signals[1]!.id;
+    await act(async () =>
+      renderer.update(
+        withNavigationOptions(<LeadDetail />, (options) => {
+          mockOptions = options;
+        }),
+      ),
+    );
+    expect(signal.aborted).toBe(true);
+    await act(async () =>
+      complete({
+        data: { meta: agencies.meta, profile: homeProfile },
+        asOf: null,
+        stale: false,
+        savedAt: 200,
+      }),
+    );
+    expect(hrefOf(renderer.root, 'lead-subject')).toEqual(
+      partyRoute('United Australia Party'),
+    );
+    for (let index = 0; index < 6; index++)
+      expect(hrefOf(renderer.root, `lead-chart-row-${index}`)).toBeUndefined();
+    act(() => renderer.unmount());
+  });
+  test.each(['recorded', 'different', 'unavailable'])(
+    'the Health suppliers open their records using a checked source alias (%s)',
+    async (alias) => {
+      const signal = signals.find(
+        (signal) =>
+          signal.chart?.group_label ===
+          'Department of Health, Disability and Ageing',
+      )!;
+      const agency = agencies.agencies.find(
+        (agency) => agency.name === signal.chart!.group_label,
+      )!;
+      const supplierIds = [
+        's-080bce177f3677949a10',
+        's-3a526e2d700c22013a71',
+        's-4ab45a8e989b36de2112',
+        's-8f22c19d3fc22a56c78a',
+        's-a5d4868a661a82881512',
+      ];
+      const suppliers = signal.chart!.participants.map(
+        (participant, index) => ({
+          id: supplierIds[index]!,
+          name: index === 2 ? 'Symbion Pharmacy Services' : participant.name,
+          organisation: true,
+          total: participant.value,
+          count: participant.record_count,
+        }),
+      );
+      const profile = {
+        ...homeProfile,
+        id: agency.id,
+        name: agency.name,
+        suppliers,
+      };
+      jest.mocked(money.agency).mockResolvedValueOnce({
+        data: { meta: agencies.meta, profile },
+        asOf: null,
+        stale: false,
+        savedAt: 200,
+      });
+      if (alias === 'unavailable')
+        jest.mocked(apiClient.get).mockRejectedValueOnce(new Error('offline'));
+      else
+        jest
+          .mocked(apiClient.get)
+          .mockImplementationOnce(async (_path, decode) => ({
+            data: decode({
+              profiles: {
+                [supplierIds[2]!]: {
+                  id: supplierIds[2],
+                  aliases: [
+                    alias === 'recorded'
+                      ? 'SYMBION PTY LTD'
+                      : 'Unrelated supplier',
+                  ],
+                },
+              },
+            }),
+            stale: false,
+            asOf: null,
+            savedAt: 200,
+          }));
+      mockParams.id = signal.id;
+      const renderer = await render(<LeadDetail />);
+      expect(apiClient.get).toHaveBeenLastCalledWith(
+        '/suppliers/4a.json',
+        decodeLeadSupplierAliases,
+        false,
+        { signal: expect.any(AbortSignal) },
+      );
+      for (const [index, supplier] of suppliers.entries()) {
+        const href =
+          index === 2 && alias !== 'recorded'
+            ? undefined
+            : moneyRecordRoute(
+                { rid: supplier.id, agency: agency.id },
+                supplier.name,
+              );
+        expect(hrefOf(renderer.root, `lead-chart-row-${index}`)).toEqual(href);
+      }
+      expect(hrefOf(renderer.root, 'lead-chart-row-5')).toEqual(
+        agencyListRoute(agency.id, 'suppliers', agency.name),
+      );
+      expectNoWeb();
+      act(() => renderer.unmount());
+    },
+  );
+  test('a named supplier absent from the agency profile remains static', async () => {
+    const signal = signals[2]!;
+    mock.discovery.mockResolvedValueOnce({
+      data: {
+        ...shown,
+        signals: [
+          {
+            ...signal,
+            chart: {
+              ...signal.chart!,
+              participants: signal.chart!.participants.map(
+                (participant, index) =>
+                  index === 0
+                    ? { ...participant, name: 'No matching supplier' }
+                    : participant,
+              ),
+            },
+          },
+        ],
+      },
+      asOf: null,
+      stale: false,
+      savedAt: 200,
+    });
+    mockParams.id = signal.id;
+    const renderer = await render(<LeadDetail />);
+    expect(hrefOf(renderer.root, 'lead-chart-row-0')).toBeUndefined();
+    expect(
+      byTestID(renderer.root, 'lead-chart-row-0').props.accessibilityRole,
+    ).toBeUndefined();
+    expect(hrefOf(renderer.root, 'lead-chart-row-1')).toMatchObject({
+      pathname: '/money-record',
+      params: { agency: homeAgency.id },
+    });
+    expectNoWeb();
+    act(() => renderer.unmount());
   });
   test('companies in both: two flows side by side, never added, the donor’s money record', async () => {
     rememberMoneyGraph(

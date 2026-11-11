@@ -1,12 +1,15 @@
-import { useState } from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import type { Href } from 'expo-router';
+import { useState, type ReactNode } from 'react';
+import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import {
   counted,
   formatMoney,
   formatMoneyCompact,
   formatPercent,
 } from '../../design/format';
-import { LinkRow, Text } from '../../design/primitives';
+import { Icon } from '../../design/icon';
+import { LinkRow, RowLink, Text } from '../../design/primitives';
+import { symbols } from '../../design/symbols';
 import {
   accents,
   chartRoles,
@@ -26,15 +29,17 @@ const MIN_TWO_COLUMN_TABLE_WIDTH = 600;
 /**
  * A concentration's share chart: the five largest named participants and
  * the rest, each a bar on a common 0 to 100% scale with its amount and
- * share in words beside it. The bars are a picture of the rows, not links
- * (the lead's subject row and its example records are the ways on). "Show
- * as table" lists the same rows to the dollar, with record counts.
+ * share in words beside it. Resolved suppliers open their records, and
+ * Other opens the agency's supplier list. "Show as table" retains those
+ * destinations and lists the same rows to the dollar, with record counts.
  */
 export function ConcentrationChart({
   comparison,
+  rowHref,
   testID,
 }: {
   comparison: Concentration;
+  rowHref?: (row: ChartRow) => Href | null;
   testID: string;
 }) {
   const [table, setTable] = useState(false);
@@ -63,32 +68,36 @@ export function ConcentrationChart({
               .filter(Boolean)
               .join(' · ');
             return (
-              <View
+              <ChartRowTarget
                 key={`${row.name}-${index}`}
-                accessible
-                accessibilityLabel={`${row.name}, ${value}`}
+                href={rowHref?.(row)}
+                label={`${row.name}, ${value}`}
                 testID={`${testID}-cell-${index}`}
-                style={[
-                  styles.tableRow,
-                  stacked ? styles.stackedRow : styles.columns,
-                ]}
               >
-                <Text
-                  wordSafe
-                  variant="body"
-                  style={stacked ? undefined : styles.column}
+                <View
+                  testID={`${testID}-cell-${index}-layout`}
+                  style={[
+                    styles.tableRow,
+                    stacked ? styles.stackedRow : styles.columns,
+                  ]}
                 >
-                  {row.name}
-                </Text>
-                <Text
-                  wordSafe
-                  variant="strong"
-                  tabular
-                  style={stacked ? undefined : [styles.column, styles.value]}
-                >
-                  {value}
-                </Text>
-              </View>
+                  <Text
+                    wordSafe
+                    variant="body"
+                    style={stacked ? undefined : styles.column}
+                  >
+                    {row.name}
+                  </Text>
+                  <Text
+                    wordSafe
+                    variant="strong"
+                    tabular
+                    style={stacked ? undefined : [styles.column, styles.value]}
+                  >
+                    {value}
+                  </Text>
+                </View>
+              </ChartRowTarget>
             );
           })}
         </View>
@@ -98,6 +107,7 @@ export function ConcentrationChart({
             <ChartBar
               key={`${row.name}-${index}`}
               row={row}
+              href={rowHref?.(row)}
               testID={`${testID}-row-${index}`}
             />
           ))}
@@ -113,58 +123,129 @@ export function ConcentrationChart({
   );
 }
 
-function ChartBar({ row, testID }: { row: ChartRow; testID: string }) {
-  return (
+/** A single accessible target, with the app's standard record navigation. */
+function ChartRowTarget({
+  href,
+  label,
+  testID,
+  children,
+}: {
+  href?: Href | null;
+  label: string;
+  testID: string;
+  children: ReactNode;
+}) {
+  const content = (
+    <>
+      <View style={styles.content}>{children}</View>
+      {href ? (
+        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
+      ) : null}
+    </>
+  );
+  return href ? (
+    <RowLink href={href} preview={false}>
+      <Pressable
+        accessible
+        accessibilityRole="link"
+        accessibilityLabel={label}
+        testID={testID}
+        style={({ pressed }) => [
+          styles.target,
+          pressed ? { backgroundColor: colors.sunken } : null,
+        ]}
+      >
+        {content}
+      </Pressable>
+    </RowLink>
+  ) : (
     <View
       accessible
-      accessibilityLabel={chartRowLabel(row)}
+      accessibilityLabel={label}
       testID={testID}
-      style={styles.bar}
+      style={styles.target}
     >
-      <View style={styles.barLabel}>
-        <Text
-          wordSafe
-          variant={row.other ? 'body' : 'strong'}
-          style={styles.grow}
-        >
-          {row.name}
-        </Text>
-        <Text variant="strong" tabular>
-          {formatMoneyCompact(row.value)}
-        </Text>
-        <Text variant="footnote" tabular>
-          {formatPercent(row.share)}
-        </Text>
-      </View>
-      <View
-        style={styles.track}
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-      >
-        <View
-          style={[
-            styles.fill,
-            {
-              width: `${Math.max(0, Math.min(100, row.share))}%`,
-              backgroundColor: row.other
-                ? colors[chartRoles.contrast]
-                : colors[accents.money.ink],
-            },
-          ]}
-        />
-      </View>
+      {content}
     </View>
+  );
+}
+
+function ChartBar({
+  row,
+  href,
+  testID,
+}: {
+  row: ChartRow;
+  href?: Href | null;
+  testID: string;
+}) {
+  return (
+    <ChartRowTarget href={href} label={chartRowLabel(row)} testID={testID}>
+      <View style={styles.bar}>
+        <View style={styles.barLabel} testID={`${testID}-label`}>
+          <Text
+            wordSafe
+            variant={row.other ? 'body' : 'strong'}
+            style={styles.grow}
+          >
+            {row.name}
+          </Text>
+          <View style={styles.figures} testID={`${testID}-figures`}>
+            <Text
+              variant="strong"
+              tabular
+              numberOfLines={1}
+              style={styles.figure}
+            >
+              {formatMoneyCompact(row.value)}
+            </Text>
+            <Text
+              variant="footnote"
+              tabular
+              numberOfLines={1}
+              style={styles.figure}
+            >
+              {formatPercent(row.share)}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={styles.track}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
+          <View
+            style={[
+              styles.fill,
+              {
+                width: `${Math.max(0, Math.min(100, row.share))}%`,
+                backgroundColor: row.other
+                  ? colors[chartRoles.contrast]
+                  : colors[accents.money.ink],
+              },
+            ]}
+          />
+        </View>
+      </View>
+    </ChartRowTarget>
   );
 }
 
 const styles = StyleSheet.create({
   chart: { gap: rhythm.tight },
+  target: {
+    minHeight: minimumTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+  },
+  content: { flex: 1, minWidth: 0 },
   tableRow: { minHeight: minimumTarget, paddingVertical: rhythm.row },
   stackedRow: { flexDirection: 'column', gap: rhythm.line },
   columns: { flexDirection: 'row', alignItems: 'baseline', gap: rhythm.block },
   column: { flex: 1, minWidth: 0 },
   value: { textAlign: 'right' },
-  grow: { flexGrow: 1, flexShrink: 1 },
+  grow: { flex: 1, minWidth: 0 },
   bar: {
     minHeight: minimumTarget,
     paddingVertical: rhythm.tight,
@@ -172,10 +253,18 @@ const styles = StyleSheet.create({
   },
   barLabel: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
+  figures: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    flexShrink: 0,
     alignItems: 'baseline',
     gap: rhythm.tight,
   },
+  figure: { flexShrink: 0 },
   track: {
     height: 8,
     borderRadius: radii.bar,
