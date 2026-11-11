@@ -1,9 +1,11 @@
-/* The Senate video card (video-card.js): a navy poster with a play glyph, the
-   title, the date and the source, until pressed; then the Senate's player at
-   16:9. No thumbnail: an image would load from Google before play. The poster
+/* The Senate video card (video-card.js): the video's YouTube thumbnail under a
+   navy scrim, with a play glyph, the title, the date and the source, until
+   pressed; then the Senate's player at 16:9. Without the image (blocked, or
+   slow) it is the plain navy poster. The poster
    holds 16:9 as a minimum (aspect-ratio with min-height auto), so a long title
    or large text grows the card instead of clipping the glyph. */
-.video-section .video-note { font: var(--type-fine); color: var(--ink-soft); margin: 0 0 var(--space-row); max-width: 46rem; }
+.video-section .video-note { font: var(--type-fine); color: var(--ink-soft); margin: 0 0 var(--space-group); max-width: 46rem; }
+.video-section > .ui-section-title + .video-cards { margin-top: var(--space-group); }
 .video-cards { display: grid; gap: var(--space-group); grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); max-width: 60rem; }
 .video-card { margin: 0; min-width: 0; }
 .video-frame { background: var(--navy); border-radius: var(--radius-md); }
@@ -13,7 +15,16 @@
   gap: var(--space-row); width: 100%; aspect-ratio: 16 / 9; margin: 0; padding: var(--sp-16);
   border: 0; border-radius: inherit; background: var(--navy); color: var(--on-navy); text-align: left; cursor: pointer;
   font: inherit; transition: background-color var(--duration-quick) var(--ease-standard);
+  position: relative; overflow: hidden; isolation: isolate;
 }
+/* hqdefault is 4:3 with the 16:9 picture letterboxed; cover crops the bars away. */
+.video-thumb { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+.video-facade::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to top, color-mix(in srgb, var(--navy) 94%, transparent) 0%, color-mix(in srgb, var(--navy) 55%, transparent) 55%, color-mix(in srgb, var(--navy) 25%, transparent) 100%);
+  transition: opacity var(--duration-quick) var(--ease-standard);
+}
+.video-facade:hover::before { opacity: 0.85; }
 .video-facade:hover { background: var(--navy-raised); }
 .video-facade:focus-visible { outline: var(--border-focus) solid var(--bronze-bright); outline-offset: calc(-2 * var(--border-focus)); }
 .video-play { width: var(--size-control); height: var(--size-control); flex-shrink: 0; }
@@ -29,9 +40,10 @@
 .video-more { margin: var(--space-row) 0 0; font: var(--type-strong); }
 .video-more a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 @media (prefers-reduced-motion: reduce) {
-  .video-facade { transition: none; }
+  .video-facade, .video-facade::before { transition: none; }
 }
 @media (forced-colors: active) {
+  .video-thumb, .video-facade::before { display: none; }
   .video-facade { border: var(--border-hairline) solid ButtonText; }
   .video-play circle { stroke: ButtonText; }
   .video-play path { fill: ButtonText; }
