@@ -38,3 +38,39 @@ test('a profile reads its own buckets of votes and recorded votes and renders wh
  assert.equal(both.reads.filter(path=>path.startsWith('/growth/recent-votes/')).length,2);
  assert.equal(both.reads.filter(path=>/^\/growth\/votes\/\d+\.json$/.test(path)).length,2);
 });
+
+test('a browser profile reads the same votes and recorded votes from its buckets as from the whole files', async () => {
+ const {votesSlice,recentVotesSlice,bucketLayout}=await import('../public/recent-votes-buckets.js');
+ const {personVoteKeys,personVoteRecords}=await import('../public/vote-tables.js');
+ const meta={content_changed_at:'2026-11-10T16:43:32Z',latest_division_date:'2026-11-10',schema:1};
+ const whole={...votes,_meta:meta};
+ // The buckets as the release build writes them (scripts/build_growth_modules.mjs).
+ const voteSplit=Array.from({length:RECENT_VOTES_BUCKETS},()=>[]);
+ for(const entry of Object.entries(whole))if(!entry[0].startsWith('_'))voteSplit[recentVotesBucket(entry[0])].push(entry);
+ const recentSplit=Array.from({length:RECENT_VOTES_BUCKETS},()=>[]);
+ for(const entry of Object.entries(recent.people))recentSplit[recentVotesBucket(entry[0])].push(entry);
+ const built={[VOTES_NAMES_PATH]:{_names:whole._names,_meta:meta},
+  ...Object.fromEntries(voteSplit.map((entries,i)=>[votesBucketPath(i),{...bucketLayout(i),people:Object.fromEntries(entries)}])),
+  ...Object.fromEntries(recentSplit.map((entries,i)=>[recentVotesBucketPath(i),{_meta:recent._meta,...bucketLayout(i),people:Object.fromEntries(entries)}]))};
+ const reader=files=>{const reads=[];return {reads,read:async path=>{reads.push(path);return files[path] ?? null}}};
+ for(const [name,pid] of [['Example Member','2'],['Member 7','p7'],['Nobody','none'],['Example Member',null]]){
+  const {read,reads}=reader(built);
+  const slice=await votesSlice(read,names=>personVoteKeys(name,pid,names));
+  const keys=personVoteKeys(name,pid,slice);
+  assert.deepEqual(keys,personVoteKeys(name,pid,whole),name);
+  assert.deepEqual(keys.map(k=>slice[k]),keys.map(k=>whole[k]),name);
+  assert.deepEqual(slice._meta,meta);
+  const recentPart=keys.length?await recentVotesSlice(read,keys):null;
+  assert.deepEqual(personVoteRecords(keys,slice,recentPart),personVoteRecords(keys,whole,recent),name);
+  assert.ok(reads.every(path=>path.startsWith('/growth/')),'never the whole files');
+ }
+ // Anything unreadable, or split another way, leaves the caller to read the whole files.
+ const keysFor=names=>personVoteKeys('Example Member','2',names);
+ assert.equal(await votesSlice(reader({...built,[VOTES_NAMES_PATH]:{_names:whole._names}}).read,keysFor),null,'no _meta');
+ assert.equal(await votesSlice(reader({...built,[votesBucketPath(recentVotesBucket('2'))]:null}).read,keysFor),null,'a missing bucket');
+ const other={...built[votesBucketPath(recentVotesBucket('2'))],_of:RECENT_VOTES_BUCKETS*2};
+ assert.equal(await votesSlice(reader({...built,[votesBucketPath(recentVotesBucket('2'))]:other}).read,keysFor),null,'another layout');
+ const moved={...built[recentVotesBucketPath(recentVotesBucket('2'))],_bucket:recentVotesBucket('2')+1};
+ assert.equal(await recentVotesSlice(reader({...built,[recentVotesBucketPath(recentVotesBucket('2'))]:moved}).read,['2']),null,'another bucket');
+ assert.equal(await recentVotesSlice(reader(built).read,[]),null);
+});

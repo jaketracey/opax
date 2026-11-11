@@ -6,7 +6,7 @@ import {sponsorPerson} from '../portal/public/sponsor-person.js';
 import {sponsorSummaryPath,growthSummaryPath,normalisedName,personQuestions,billQuestions,latestBillVotes} from '../portal/public/growth-modules.js';
 import {agencyGrants,publishedSupplierIndex,publishedAgencySuppliers} from '../portal/public/supplier-growth.js';
 import {AGENCY_TOP_SUPPLIERS_PATH,agencyTopRows} from '../portal/public/agency-top-suppliers.js';
-import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath,votesBucketPath,VOTES_NAMES_PATH} from '../portal/public/recent-votes-buckets.js';
+import {RECENT_VOTES_BUCKETS,recentVotesBucket,recentVotesBucketPath,votesBucketPath,VOTES_NAMES_PATH,bucketLayout} from '../portal/public/recent-votes-buckets.js';
 import {PARTY_MONEY_BUCKETS,partyFold,partyMoneyBucket,partyMoneyBucketPath} from '../portal/public/party-money-buckets.js';
 import {SUPPLIER_ID_RE,supplierRowsPath} from '../portal/public/supplier-row-buckets.js';
 import {partyMoneyData} from '../portal/public/register-tables.js';
@@ -138,15 +138,16 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
  if(recent?.people){
   const buckets=Array.from({length:RECENT_VOTES_BUCKETS},()=>[]);
   for(const entry of Object.entries(recent.people))buckets[recentVotesBucket(entry[0])].push(entry);
-  for(const [i,entries] of buckets.entries())await write(recentVotesBucketPath(i),{_meta:recent._meta,people:Object.fromEntries(entries)});
+  for(const [i,entries] of buckets.entries())await write(recentVotesBucketPath(i),{_meta:recent._meta,...bucketLayout(i),people:Object.fromEntries(entries)});
  }
  // Profiles read the name index, then their own buckets of votes.json, not the whole file.
  const voteFile=votes;
  if(voteFile?._names){
-  await write(VOTES_NAMES_PATH,{_names:voteFile._names});
+  // The name index carries votes.json's _meta too: a profile's source line reads it (public/app.js).
+  await write(VOTES_NAMES_PATH,{_names:voteFile._names,...(voteFile._meta?{_meta:voteFile._meta}:{})});
   const buckets=Array.from({length:RECENT_VOTES_BUCKETS},()=>[]);
   for(const entry of Object.entries(voteFile))if(!entry[0].startsWith('_'))buckets[recentVotesBucket(entry[0])].push(entry);
-  for(const [i,entries] of buckets.entries())await write(votesBucketPath(i),{people:Object.fromEntries(entries)});
+  for(const [i,entries] of buckets.entries())await write(votesBucketPath(i),{...bucketLayout(i),people:Object.fromEntries(entries)});
  }
  // Supplier pages and their heads read their id's bucket of the index (portal/public/supplier-row-buckets.js), not the 7.6 MB file.
  const supplierRows=new Map(Array.from({length:256},(_,i)=>[supplierRowsPath(i.toString(16).padStart(2,'0')),[]]));
