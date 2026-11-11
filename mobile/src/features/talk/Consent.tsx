@@ -10,6 +10,7 @@ import {
 import { router } from 'expo-router';
 import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import {
   Button,
   ErrorState,
@@ -82,7 +83,11 @@ export function ConsentSheet() {
   // scrolls and the two buttons stay above the home indicator (7.7).
   const { height: window } = useWindowDimensions();
   const header = useContext(HeaderHeightContext) || SHEET_HEADER;
-  const maxHeight = Math.max(0, window - insets.top - header);
+  const verticalBar = useVerticalBarEdge() !== 'unspecified';
+  const maxHeight = Math.max(
+    0,
+    window - insets.top - (verticalBar ? 0 : header),
+  );
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
   const [under, setUnder] = useState(false);
@@ -122,9 +127,20 @@ export function ConsentSheet() {
     dismiss();
   };
   return (
-    <View style={[styles.sheet, { maxHeight }]} testID="talk-consent-sheet">
+    <View
+      style={[
+        styles.sheet,
+        {
+          maxHeight,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}
+      testID="talk-consent-sheet"
+    >
       <ScrollView
         style={styles.scroll}
+        contentInsetAdjustmentBehavior="never"
         contentContainerStyle={styles.body}
         onLayout={(event) => {
           size.current.view = event.nativeEvent.layout.height;

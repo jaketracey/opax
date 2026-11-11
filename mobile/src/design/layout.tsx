@@ -28,6 +28,7 @@ import {
   type ViewProps,
 } from 'react-native';
 import { opaqueBar } from '../navigation/chrome';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
 import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
@@ -39,6 +40,7 @@ import {
   RegionProvider,
   SidebarSafe,
   useColumnChoice,
+  useAdaptiveDevice,
   useLayout,
   useMeasuredRegion,
 } from './adaptive';
@@ -81,20 +83,40 @@ import { useStableKeyboard } from './useStableKeyboard';
  * `breakout` is how far a figure in a readable column may reach past each
  * side to fill the wide one (the money map's scene); 0 on compact.
  */
-export function useScreenColumn(own: keyof typeof columns = 'readable') {
+export function useScreenColumn(
+  own: keyof typeof columns = 'readable',
+  automaticInsets = true,
+) {
   const column = useColumnChoice(own);
   const [onLayout, region] = useMeasuredRegion();
   const outer = useLayout();
-  const width = region?.width ?? outer.width;
+  const insets = useContext(SafeAreaInsetsContext);
+  const inPane = useSplitPane() !== null;
+  const adaptive = useAdaptiveDevice();
+  // SidebarSafe and split panes already own their horizontal safe area.
+  // UIKit adjusts a phone scroll view on each side, including a vertical bar.
+  const nativeSides =
+    Platform.OS === 'ios' &&
+    outer.rule !== 'pad' &&
+    !inPane &&
+    (adaptive || insets?.left !== insets?.right);
+  const left = nativeSides ? (insets?.left ?? 0) : 0;
+  const right = nativeSides ? (insets?.right ?? 0) : 0;
+  const width = Math.max(0, (region?.width ?? outer.width) - left - right);
   const regular = sizeClassFor(width, outer.rule) === 'regular';
   const inset = regular
     ? Math.max(rhythmRegular.screen, Math.round((width - columns[column]) / 2))
     : width < 414
       ? 16
       : 20;
-  const content = { paddingHorizontal: inset };
+  const content = {
+    paddingHorizontal: inset,
+    ...(!automaticInsets
+      ? { paddingLeft: inset + left, paddingRight: inset + right }
+      : {}),
+  };
   const inner = region
-    ? { width: region.width - inset * 2, height: region.height }
+    ? { width: Math.max(0, width - inset * 2), height: region.height }
     : null;
   const breakout = columnBreakout(width, column, outer.rule);
   // Inside a split pane: its Back and actions, first in the content.
@@ -143,7 +165,10 @@ export function Screen({
   /** The content column on regular width: `readable` (700pt) or `wide`. */
   column?: keyof typeof columns;
 }) {
-  const { onLayout, content, inner, bar, regular } = useScreenColumn(column);
+  const { onLayout, content, inner, bar, regular } = useScreenColumn(
+    column,
+    contentInsetAdjustmentBehavior !== 'never',
+  );
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
