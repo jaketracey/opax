@@ -1,8 +1,9 @@
 // The Senate's own videos, click to play: one card the Worker prints (sitting weeks,
-// a person's server answer) and app.js prints (the person page). Until a reader
-// presses play nothing is requested from YouTube: no thumbnail, no preconnect, no
-// script. Pressing play swaps in the Senate's player from youtube-nocookie.com, the
-// one frame source the CSP allows (public/_headers, CSP_PAGE in src/index.ts).
+// a person's server answer) and app.js prints (the person page). The poster shows the
+// video's YouTube thumbnail (i.ytimg.com, allowed in img-src); no player script loads
+// until a reader presses play. Pressing play swaps in the Senate's player from
+// youtube-nocookie.com, the one frame source the CSP allows (public/_headers, CSP_PAGE
+// in src/index.ts).
 // Rows come from /video/senate.json (scripts/senate_video/).
 import { shortDate } from './format.js';
 
@@ -11,6 +12,7 @@ const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 export const embedUrl = (id) => `${EMBED_ORIGIN}/embed/${id}?autoplay=1`;
 export const watchUrl = (id) => `https://www.youtube.com/watch?v=${id}`;
+export const thumbUrl = (id) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 
 /** Question Time on the week's days, one per day (the newest upload wins), in day order. */
 export function sittingVideos(videos, start, end) {
@@ -47,6 +49,7 @@ export function videoCardHTML(v, { person = null } = {}) {
   const meta = [day, 'Australian Senate · YouTube'].filter(Boolean).join(' · ');
   return `<figure class="video-card" data-video-card>`
     + `<div class="video-frame"><button type="button" class="video-facade" data-video-id="${esc(v.id)}" data-video-title="${esc(v.title)}">`
+    + `<img class="video-thumb" src="${esc(thumbUrl(v.id))}" alt="" width="480" height="360" loading="lazy" decoding="async" referrerpolicy="no-referrer">`
     + `<svg class="video-play" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="23"/><path d="M19 14.5v19L34 24z"/></svg>`
     + `<span class="video-text"><span class="visually-hidden">Play video: </span><span class="video-title">${esc(v.title)}</span>`
     + `<span class="video-meta">${esc(meta)}</span></span></button></div>`

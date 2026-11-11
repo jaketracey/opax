@@ -14,7 +14,7 @@ import { trail } from './nav-model.mjs'
 export const VIDEO_PATH = '/video/senate'
 const CHANNEL = 'https://www.youtube.com/@AuSenate'
 const YOUTUBE_TERMS = 'https://www.youtube.com/t/terms'
-const NOTE = 'Question Time and senators’ first speeches, as published by the Senate Public Information Office on YouTube. The player loads only when you press play.'
+const NOTE = 'Question Time and senators’ first speeches, as published by the Senate Public Information Office on YouTube.'
 const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/
 /** What the page needs of a roster row: the name its link prints. */
 interface Person { name: string; full?: string | null }
