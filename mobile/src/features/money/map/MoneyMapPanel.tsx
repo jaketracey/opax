@@ -151,6 +151,7 @@ export function MoneyMapPanel({
   legend,
   sourceLine,
   stageHeight,
+  maxHeight,
   expanded,
   onExpanded,
   onClear,
@@ -163,6 +164,8 @@ export function MoneyMapPanel({
   legend: ReactNode;
   sourceLine: ReactNode;
   stageHeight: number;
+  /** The space below fixed controls in the current clear interaction region. */
+  maxHeight?: number;
   expanded: boolean;
   onExpanded: (expanded: boolean) => void;
   onClear: () => void;
@@ -176,9 +179,10 @@ export function MoneyMapPanel({
   const entityLink = useRecordLink(entityRoute ?? undefined);
   const [peek, setPeek] = useState(0);
   const height = useSharedValue(0);
-  const target = expanded
+  const wanted = expanded
     ? Math.max(peek, Math.round(stageHeight * EXPANDED_SHARE))
     : peek;
+  const target = maxHeight === undefined ? wanted : Math.min(wanted, maxHeight);
   useEffect(() => {
     if (!peek) return;
     height.value = reduced
@@ -244,7 +248,11 @@ export function MoneyMapPanel({
   ) : null;
   return (
     <Animated.View
-      style={[styles.panel, style]}
+      style={[
+        styles.panel,
+        style,
+        maxHeight === undefined ? null : { maxHeight },
+      ]}
       testID={focus ? 'money-map-panel-focus' : 'money-map-panel'}
     >
       <GestureDetector gesture={drag}>
@@ -259,7 +267,9 @@ export function MoneyMapPanel({
         </Pressable>
       </GestureDetector>
       <ScrollView
-        scrollEnabled={expanded}
+        scrollEnabled={
+          expanded || (maxHeight !== undefined && peek > maxHeight)
+        }
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >

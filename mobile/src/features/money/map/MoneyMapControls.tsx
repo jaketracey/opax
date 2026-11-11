@@ -13,21 +13,26 @@ export function MoneyMapControls({
   onZoomIn,
   onZoomOut,
   onFit,
+  horizontal = false,
 }: {
   onSearch: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onFit: () => void;
+  horizontal?: boolean;
 }) {
   return (
-    <View style={styles.stack} testID="money-map-controls">
+    <View
+      style={[styles.stack, horizontal ? styles.horizontal : null]}
+      testID="money-map-controls"
+    >
       <IconButton
         symbol={symbols.search}
         accessibilityLabel="Search the map"
         onPress={onSearch}
         testID="money-map-search"
       />
-      <View style={styles.rule} />
+      <View style={[styles.rule, horizontal ? styles.verticalRule : null]} />
       <IconButton
         symbol="plus.circle"
         accessibilityLabel="Zoom in"
@@ -40,7 +45,7 @@ export function MoneyMapControls({
         onPress={onZoomOut}
         testID="money-map-zoom-out"
       />
-      <View style={styles.rule} />
+      <View style={[styles.rule, horizontal ? styles.verticalRule : null]} />
       <IconButton
         symbol={symbols.fitMap}
         accessibilityLabel="Show the whole map"
@@ -52,6 +57,17 @@ export function MoneyMapControls({
 }
 
 const styles = StyleSheet.create({
+  horizontal: {
+    flexDirection: 'row',
+    paddingVertical: 0,
+    paddingHorizontal: 2,
+  },
+  verticalRule: {
+    width: hairline,
+    height: 20,
+    marginVertical: 0,
+    marginHorizontal: 2,
+  },
   stack: {
     backgroundColor: colors.raised,
     borderRadius: radii.capsule,

@@ -14,9 +14,15 @@ export class TapRouter {
     private readonly onSingle: (x: number, y: number) => void,
     private readonly onDouble: (x: number, y: number) => void,
     private readonly window = DOUBLE_TAP_MS,
+    private readonly accepts: (x: number, y: number) => boolean = () => true,
   ) {}
 
   tap(x: number, y: number, at = Date.now()) {
+    if (!this.accepts(x, y)) {
+      this.cancel();
+      this.last = null;
+      return 'ignored' as const;
+    }
     const next: TapPoint = { x, y, at };
     if (isDoubleTap(this.last, next, this.window)) {
       this.last = null;
@@ -28,7 +34,7 @@ export class TapRouter {
     this.last = next;
     this.pending = setTimeout(() => {
       this.pending = null;
-      this.onSingle(x, y);
+      if (this.accepts(x, y)) this.onSingle(x, y);
     }, this.window);
     return 'pending' as const;
   }
