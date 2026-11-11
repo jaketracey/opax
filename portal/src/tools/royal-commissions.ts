@@ -71,17 +71,17 @@ function recCite(r: RecordRow): ToolCitation {
 
 export const tool: ToolDefinition = {
   name: 'royal_commissions',
-  description: 'Royal commissions and comparable public inquiries (Commonwealth and Victorian royal commissions, plus a Western Australian royal commission, a Queensland commission of inquiry and an ACT board of inquiry): establishment date, commissioners, interim and final report dates and links, numbered recommendations in the commission\'s own words with the report page, the official implementation status where a government publishes one for that recommendation (Victoria\'s Royal Commission into Family Violence tracker), government responses and implementation reports, hearing transcripts of a sitting commission (listed as documents; evidence, not findings), and court rulings on parts of a report quoted from the official page. view=list lists commissions (filter jurisdiction or words in the name); view=profile gives one commission\'s reports, responses, transcripts, court context and facts; view=recommendations searches recommendation text (words, number, status, report) within one commission or across all. Status is unknown unless a government publishes it.',
+  description: 'Royal commissions and comparable public inquiries (Cth, Vic, WA; a Qld commission and an ACT board of inquiry): dates, commissioners, reports, numbered recommendations verbatim with page, official status only where a government publishes one, government responses, hearing transcripts of a sitting commission (evidence, not findings) and court rulings on a report. Views: list, profile (one commission), recommendations (words, number, status). Status is unknown unless published.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     view: { type: 'string', enum: [...VIEWS] },
-    commission: { type: 'string', minLength: 2, maxLength: 160, description: 'Commission id from a row, or words in its name, e.g. "family violence", "disability", "banking".' },
+    commission: { type: 'string', minLength: 2, maxLength: 160, description: 'Id or words in its name, e.g. "robodebt".' },
     jurisdiction: { type: 'string', enum: [...JURISDICTIONS] },
-    words: { type: 'string', minLength: 2, maxLength: 160, description: 'Words that must all appear in the recommendation text.' },
-    number: { type: 'string', pattern: '^\\d{1,3}(?:\\.\\d{1,3})?$', description: 'Recommendation number as the report numbers it, e.g. "12" or "4.1".' },
-    report: { type: 'string', pattern: '^[a-z0-9-]{2,40}$', description: 'Report key from a profile row (for commissions with several reports).' },
-    status: { type: 'string', minLength: 2, maxLength: 60, description: 'Words in the published status, e.g. "Implemented".' },
+    words: { type: 'string', minLength: 2, maxLength: 160, description: 'Words in the recommendation text.' },
+    number: { type: 'string', pattern: '^\\d{1,3}(?:\\.\\d{1,3})?$', description: 'As the report numbers it, e.g. "4.1".' },
+    report: { type: 'string', pattern: '^[a-z0-9-]{2,40}$', description: 'Report key from a profile row.' },
+    status: { type: 'string', minLength: 2, maxLength: 60, description: 'Words in the published status.' },
     limit: { type: 'integer', minimum: 1, maximum: 8 }, offset: { type: 'integer', minimum: 0, maximum: 5000 },
-  }, required: ['view'], examples: [{ view: 'list' }, { view: 'profile', commission: 'family violence' }, { view: 'recommendations', commission: 'family violence', words: 'information sharing' }, { view: 'recommendations', words: 'National Disability Insurance Scheme', jurisdiction: 'Cth' }, { view: 'recommendations', commission: 'robodebt', number: '23.1' }] },
+  }, required: ['view'], examples: [{ view: 'list' }, { view: 'profile', commission: 'family violence' }, { view: 'recommendations', commission: 'robodebt', number: '23.1' }] },
   identifierFields: ['commission'],
   validate: args => (args.view === 'profile' ? !!args.commission && !args.words && !args.number && !args.status : true) &&
     (args.view === 'list' ? !args.words && !args.number && !args.status && !args.report : true) &&
