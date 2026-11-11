@@ -199,6 +199,7 @@ export function SearchScreen({
             ? {
                 headerSearchBarOptions: {
                   ...search,
+                  obscureBackground: false,
                   placement: searchBarPlacement(),
                 },
               }
