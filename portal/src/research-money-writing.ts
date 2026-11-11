@@ -46,6 +46,8 @@ export function receiptWritingLines(input: WritingInput, available = input.facts
 
 /** Label both ends of an explicit award relation for the independent claim reader. */
 export function moneyEvidenceRows(text: string, url = ''): string[] {
+  const industry = /^(.+?) (?:led the classified industry ranking|recorded the next ranked industry total), with (\$[\d,.]+) in federal disclosed receipts.*? in (financial years? .+?) \((1 July \d{4} to 30 June \d{4})\), across ([\d,]+) receipts? in the published donor selection\.$/.exec(text)
+  if (industry) return [`${industry[1]}: ${industry[2]} in federal disclosed receipts across ${industry[5]} receipts in ${industry[3]} (${industry[4]}).`]
   const total = /^(.+?) received (\$[\d,.]+) in published (Queensland Government grant and assistance expenditure|federal grant award values), (.+?) \(([\d,]+) (?:expenditure rows?|award records?);/.exec(text)
   if (total) return [`${total[1]}: ${total[2]} in ${total[3]} across ${total[5]} records in ${total[4].replace(/^all published years, /, '')}.`]
   const profile = /^Grant: (.+?) [—–] (\$[\d,.]+ across [\d,]+ grant records)\./.exec(text)

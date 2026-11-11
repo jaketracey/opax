@@ -9,6 +9,7 @@ import { inWindow, object, publishedResult, records, sourceUrl, validWindow, typ
 import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
 import { pressHeadlineAndText, pressTitle } from '../press-title'
 import { joinedSourceName } from '../source-text-fidelity'
+import { titledSpeaker } from '../ask-member-label'
 
 const SLUG = /^(?:speech-\d+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+)$/
 const COMMITTEES = ['senate_committee', 'joint_committee', 'house_committee']
@@ -48,11 +49,14 @@ async function original(env: ToolEnv, slug: string): Promise<RecordRow> {
   const { labels, meta, speaker, date } = metadata(data)
   if (labels.kind && labels.kind !== (slug.startsWith('press-') ? 'press_release' : 'speech')) throw new Error('Corpus kind mismatch')
   const unattributed = isUnattributed({ ...labels, ...meta })
+  const title = pressTitle(slug, typeof data.title === 'string' ? data.title : slug)
+  const namedSpeaker = !unattributed && !speaker && slug.startsWith('speech-')
+    ? titledSpeaker(title, await readToolAsset(env, '/parliamentarians.json').catch(() => null)) : undefined
   // PM Transcripts titles stored entity-encoded (speeches-press-005): decoded at read time.
   const press = pressHeadlineAndText(slug, meta.headline, body)
   const recordMeta = press.headline === meta.headline ? meta : { ...meta, headline: press.headline }
-  return { slug, title: pressTitle(slug, typeof data.title === 'string' ? data.title : slug), speaker: unattributed ? null : speaker || null, date: date || null, labels, metadata: recordMeta,
-    source_url: sourceUrl(meta.source_url) ?? sourceUrl(object(data.origin).url), speaker_attribution: unattributed ? String(labels.speaker_type ?? 'unattributed') : 'source collaborator',
+  return { slug, title, speaker: unattributed ? null : speaker || namedSpeaker || null, date: date || null, labels, metadata: recordMeta,
+    source_url: sourceUrl(meta.source_url) ?? sourceUrl(object(data.origin).url), speaker_attribution: unattributed ? String(labels.speaker_type ?? 'unattributed') : namedSpeaker ? 'record title' : 'source collaborator',
     text: press.text, kind: slug.startsWith('press-') ? 'press_release' : 'speech' }
 }
 function excerpt(text: string, query: string, size: number, offset?: number) {
@@ -126,8 +130,9 @@ export const tool: ToolDefinition = {
       if (args.chamber && labels.chamber !== args.chamber || parties?.length && !parties.includes(String(meta.party_on_day ?? labels.party))) continue
       const scope = personScope(person)
       if (!inWindow(r.date, args) || args.jurisdiction && labels.state !== args.jurisdiction || args.kind === 'speech' && !args.record_id && args.venue !== 'all' && committee !== (args.venue === 'committee')) continue
-      if (aliases.length && (!aliases.some(n => fold(n) === fold(r.speaker)) || r.kind === 'speech' && (r.speaker_attribution !== 'source collaborator' || scope && !belongsToScope({ ...labels, ...meta, kind: 'speech', state: String(labels.state ?? ''), chamber: String(labels.chamber ?? ''), speaker: String(r.speaker ?? ''), date: String(r.date ?? '') }, scope)))) continue
-      const own = r.kind === 'speech' && r.speaker_attribution === 'source collaborator'
+      const named = r.speaker_attribution === 'source collaborator' || r.speaker_attribution === 'record title'
+      if (aliases.length && (!aliases.some(n => fold(n) === fold(r.speaker)) || r.kind === 'speech' && (!named || scope && !belongsToScope({ ...labels, ...meta, kind: 'speech', state: String(labels.state ?? ''), chamber: String(labels.chamber ?? ''), speaker: String(r.speaker ?? ''), date: String(r.date ?? '') }, scope)))) continue
+      const own = r.kind === 'speech' && named
       const text = own ? firstSpeechTurn(String(r.text)) : String(r.text)
       if (!text.trim()) continue
       if (!args.record_id && args.query) {
