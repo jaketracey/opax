@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { AccessibilityInfo } from 'react-native';
 import { client, catalogs } from '../../api/runtime';
-import { requestFocus } from '../../design/keyboard';
+import { requestFocus, takeFocusRequest } from '../../design/keyboard';
 import { askConsentRoute } from '../../navigation/routes/ask';
 import { AskController } from './controller';
 import { askConsentGiven, giveAskConsent } from './consent';
@@ -127,19 +127,35 @@ export function askNow(
   }
   const running = askSession.snapshot().busy;
   askSession.arrive(question, scopeOptions(scope), { queue: true });
-  requestFocus('ask-status');
   if (running) {
+    // VoiceOver goes to the waiting line, not the other answer's status.
+    requestFocus('ask-waiting');
     AccessibilityInfo.announceForAccessibilityWithOptions(
       `${askNowCopy.waits}.`,
       { queue: true },
     );
     return;
   }
-  void askQuestion(question, { fromDraft: true }).then(refused);
+  void sendDraftNow();
 }
-/** A refused send (the Person check) leaves the question to edit. */
-function refused(error: string | null) {
+/**
+ * Sends the composer's question with VoiceOver bound for the answer's
+ * status. The status takes the request when the answer starts; when the send
+ * never starts (the consent sheet, a refused Person), the request is dropped
+ * so a later answer does not take focus.
+ */
+async function sendDraftNow() {
+  requestFocus('ask-status');
+  let error: string | null = null;
+  try {
+    error = await askQuestion(askSession.snapshot().draft, {
+      fromDraft: true,
+    });
+  } finally {
+    takeFocusRequest('ask-status');
+  }
   if (!error) return;
+  // A refused send (the Person check) leaves the question to edit.
   requestFocus('ask');
   AccessibilityInfo.announceForAccessibilityWithOptions(error, {
     queue: true,
@@ -149,7 +165,8 @@ function refused(error: string | null) {
 async function sendQueued() {
   const s = askSession.snapshot();
   if (s.busy || !s.draft.trim()) return;
-  refused(await askQuestion(s.draft, { fromDraft: true }));
+  takeFocusRequest('ask-waiting');
+  await sendDraftNow();
 }
 
 export const inputCopy = {

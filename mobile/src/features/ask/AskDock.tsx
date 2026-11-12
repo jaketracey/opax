@@ -11,6 +11,7 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import { IconButton } from '../../design/controls';
+import { useAccessibilityFocusRequest } from '../../design/keyboard';
 import { formatCount } from '../../design/format';
 import { Icon } from '../../design/icon';
 import { InlineError } from '../../design/states';
@@ -132,10 +133,9 @@ export function AskDock({
   const empty = !s.draft.trim();
   // A tapped question waiting for the running answer says when it goes.
   const freshLabel = s.queued ? composerCopy.queued : composerCopy.fresh;
-  const line = [
-    s.fresh ? freshLabel : null,
-    ...tags.map((tag) => tag.value),
-  ]
+  // A tapped question that waits puts VoiceOver on this line (`askNow`).
+  const waitingLine = useAccessibilityFocusRequest('ask-waiting');
+  const line = [s.fresh ? freshLabel : null, ...tags.map((tag) => tag.value)]
     .filter(Boolean)
     .join(' · ');
   const chrome =
@@ -199,6 +199,7 @@ export function AskDock({
             <View style={styles.chips}>
               {s.fresh ? (
                 <Pressable
+                  ref={waitingLine}
                   accessibilityRole="button"
                   accessibilityLabel={freshLabel}
                   accessibilityHint="Opens Options"
@@ -258,6 +259,7 @@ export function AskDock({
       ) : line ? (
         <View style={styles.optionsLine}>
           <Pressable
+            ref={s.fresh ? waitingLine : undefined}
             accessibilityRole="button"
             accessibilityLabel={spoken}
             accessibilityHint="Opens Options"

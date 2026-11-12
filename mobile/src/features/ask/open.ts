@@ -46,9 +46,7 @@ export function useAskNow() {
   const go = useGoToAsk();
   const offline = useOffline();
   return (scope: Scope) =>
-    go(scope, (session, entry) =>
-      session.askNow(scope, entry, { offline }),
-    );
+    go(scope, (session, entry) => session.askNow(scope, entry, { offline }));
 }
 
 /** True when a visible label is itself the question that would be asked. */
