@@ -10,18 +10,11 @@ const metrics =
     ? requireOptionalNativeModule<TextMetrics>('OpaxTextMetrics')
     : null;
 
-// Older development binaries may lack the bridge. Only pre-14 Android has a
-// safe linear fallback. NaN disables fitting on newer binaries until rebuilt,
-// rather than trusting a queued event as a reference or assuming linear SP.
-export function spToDp(sp: number, fontScale: number): number {
-  return (
-    metrics?.spToDp(sp) ??
-    (Number(Platform.Version) < 34 ? sp * fontScale : NaN)
-  );
+// Older binaries and Expo Go may lack the bridge. Absence means no expected
+// scale: fitting uses measured lines, retaining content/frame/identity checks.
+export function spToDp(sp: number, _fontScale: number): number | undefined {
+  return metrics?.spToDp(sp);
 }
-export function dpToSp(dp: number, fontScale: number): number {
-  return (
-    metrics?.dpToSp(dp) ??
-    (Number(Platform.Version) < 34 ? dp / fontScale : NaN)
-  );
+export function dpToSp(dp: number, _fontScale: number): number | undefined {
+  return metrics?.dpToSp(dp);
 }

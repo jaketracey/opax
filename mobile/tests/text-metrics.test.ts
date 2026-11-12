@@ -33,11 +33,11 @@ test('uses native conversion of the actual SP size and its inverse, without a li
   expect(dpToSp).toHaveBeenCalledWith(33.6);
 });
 
-test('old binaries only fall back to linear conversion before Android 14', () => {
+test('a missing module provides no expected conversion on either Android scaling model', () => {
   const metrics = load(null);
-  expect(metrics.spToDp(28, 2)).toBeNaN();
-  expect(metrics.dpToSp(33.6, 2)).toBeNaN();
+  expect(metrics.spToDp(28, 2)).toBeUndefined();
+  expect(metrics.dpToSp(33.6, 2)).toBeUndefined();
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 33 });
-  expect(metrics.spToDp(28, 1.3)).toBeCloseTo(36.4);
-  expect(metrics.dpToSp(36.4, 1.3)).toBeCloseTo(28);
+  expect(metrics.spToDp(28, 1.3)).toBeUndefined();
+  expect(metrics.dpToSp(36.4, 1.3)).toBeUndefined();
 });

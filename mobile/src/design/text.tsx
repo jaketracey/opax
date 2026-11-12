@@ -202,7 +202,7 @@ export interface WordSafeInstance {
 }
 export const wordSafeStart = (
   key: string,
-  full: number,
+  full = 0,
   gen = 0,
 ): WordSafeState => ({
   key,
@@ -246,7 +246,8 @@ function provenToFit(state: WordSafeState): WordSafeState {
  * mid-word break measured at the size now drawn, and never at or below the
  * reader's default size, where there is nothing to step down to (a layout
  * from a larger size delivered late included). The first measurement must
- * also match the expected full scale, never an inferred scale from an event.
+ * also match the expected full scale when native conversion is available.
+ * Without it, retain the measurement-backed baseline used by older binaries.
  * Returns `state` itself when nothing changes.
  */
 export function wordSafeOnLines(
@@ -256,10 +257,11 @@ export function wordSafeOnLines(
   content: string,
   baseLineHeight: number,
   fontScale: number,
+  validateScale = true,
 ): WordSafeState {
   if (at.key !== state.key || at.gen !== state.gen || !lines.length)
     return state;
-  if (!Number.isFinite(state.full) || state.full <= 0) return state;
+  if (!Number.isFinite(state.full) || state.full < 0) return state;
   if (fontScale <= 1 || !state.fullFrame) return state;
   if (compact(lines.map((line) => line.text).join('')) !== compact(content))
     return state;
@@ -277,7 +279,11 @@ export function wordSafeOnLines(
   )
     return restart(state);
   const drawnAt = state.cap || state.full;
-  if (drawnAt && Math.abs(measuredAt - drawnAt) > MEASURED_AT_TOLERANCE)
+  if (
+    validateScale &&
+    drawnAt &&
+    Math.abs(measuredAt - drawnAt) > MEASURED_AT_TOLERANCE
+  )
     return state;
   if (breaksMidWord(lines)) {
     const next = nextWordSafeCap(lines[0]!.height, baseLineHeight);
@@ -286,8 +292,8 @@ export function wordSafeOnLines(
       ...state,
       gen: state.gen + 1,
       cap: next,
-      // Only a measurement already validated against the expected role ramp
-      // may refine the baseline to native two-place line-height rounding.
+      // Native conversion validates the ramp when available. Otherwise this
+      // first matching frame/content pair supplies the measured baseline.
       full: state.cap ? state.full : measuredAt,
       frame: 0,
       word: 0,
@@ -382,14 +388,15 @@ export function Text({
   const content = textContent(props.children);
   const titleCap = titleSizeCap(variant, fontScale);
   const baseLineHeight = role.lineHeight + LINE_HEIGHT_NUDGE;
+  const rampScale = textRampScale(
+    role.dynamicTypeRamp,
+    fontScale,
+    given.maxFontSizeMultiplier ?? 0,
+    Platform.OS,
+    baseLineHeight * titleCap,
+  );
   const expectedFull =
-    textRampScale(
-      role.dynamicTypeRamp,
-      fontScale,
-      given.maxFontSizeMultiplier ?? 0,
-      Platform.OS,
-      baseLineHeight * titleCap,
-    ) * titleCap;
+    rampScale === undefined ? undefined : rampScale * titleCap;
   const key = `${fontScale}|${width}|${variant}|${bold}|${drawnFamily}|${given.maxFontSizeMultiplier}|${content}`;
   // The state machine runs at event time in a ref, so frames and lines that
   // change nothing drawn never render; `shown` re-renders on a new generation.
@@ -427,7 +434,8 @@ export function Text({
   const capScale =
     wordSafe && cap && full
       ? Platform.OS === 'android'
-        ? androidCapScale(baseLineHeight, cap, fontScale)
+        ? (androidCapScale(baseLineHeight, cap, fontScale) ??
+          (cap / full) * titleCap)
         : (cap / full) * titleCap
       : titleCap;
   const heightKey = `${key}|${cap}|${scale}`;
@@ -500,6 +508,7 @@ export function Text({
         content,
         role.lineHeight + LINE_HEIGHT_NUDGE,
         fontScale,
+        expectedFull !== undefined,
       ),
     );
   };

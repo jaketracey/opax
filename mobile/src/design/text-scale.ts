@@ -47,10 +47,11 @@ export function textRampScale(
   // RN Android's TextAttributeProps converts explicit lineHeight from SP
   // without maxFontSizeMultiplier; the ceiling applies to fontSize only.
   // Our event guard compares line heights, so preserve that native scale.
-  if (os !== 'ios')
-    return lineHeightSp === undefined
-      ? NaN
-      : spToDp(lineHeightSp, fontScale) / lineHeightSp;
+  if (os !== 'ios') {
+    if (lineHeightSp === undefined) return undefined;
+    const height = spToDp(lineHeightSp, fontScale);
+    return height === undefined ? undefined : height / lineHeightSp;
+  }
   const points = sizes[ramp];
   const full = points[index[contentSizeCategory(fontScale)]]! / points[3]!;
   return maxFontSizeMultiplier >= 1
@@ -64,5 +65,6 @@ export function androidCapScale(
   cap: number,
   fontScale: number,
 ) {
-  return dpToSp(baseSp * cap, fontScale) / baseSp;
+  const sp = dpToSp(baseSp * cap, fontScale);
+  return sp === undefined ? undefined : sp / baseSp;
 }
