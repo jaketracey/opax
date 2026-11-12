@@ -45,6 +45,12 @@ office string, not a party).
 
 ## Refresh
 
+The offline state-party repair and its chamber-level coverage limits are documented in
+[State member party gaps, 12 November 2026](reports/2026-11-12-state-party-gaps.md).
+The weekly source-profile stage regenerates reviewed missing affiliations from
+dated official state rosters. These observations do not add current flags or
+party windows for historical speeches.
+
 The APH member-list refresh is paused pending permission (10 Oct 2026).
 Do not re-run the historical Firecrawl fetches. Once honest direct access is
 authorised, re-fetch and re-run the diff (`/tmp/aph_diff.json` on desktop was the
