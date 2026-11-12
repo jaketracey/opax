@@ -415,7 +415,7 @@ export class AskController {
     };
     this.running = run;
     this.measure('opax_ask_started', run);
-    const user: Turn = { role: 'user', text: q, options: o };
+    const user: Turn = { role: 'user', text: q, options: o, at: run.started };
     this.update({
       id: this.state.id || this.io.id(),
       thread: [...before, user],

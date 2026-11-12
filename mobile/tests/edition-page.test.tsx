@@ -382,13 +382,39 @@ describe('edition page text helpers', () => {
       ]),
     ).toBeNull();
     expect(plateLine(line, ['This bill would keep  funding grants.'])).toBe(
-      'Passed 18 Sep 2026.',
+      'Passed 18 Sep 2026',
     );
-    expect(plateLine(line)).toBe(line);
+    expect(plateLine(line)).toBe(line.slice(0, -1));
     expect(plateLine('Liberal · Mitchell, NSW', ['Something else.'])).toBe(
       'Liberal · Mitchell, NSW',
     );
     expect(plateLine(null, ['x'])).toBeNull();
+  });
+  test('a bill rail already showing its latest stage uses the portfolio as the detail', () => {
+    const bill = {
+      ...edition,
+      kind: 'bill' as const,
+      facts: {
+        ...edition.facts,
+        kicker: 'Bill · Education portfolio',
+        events: [{ date: '18 Sep 2026', text: 'Royal Assent' }],
+      },
+    };
+    expect(plateLine('Passed 18 Sep 2026.', [], bill)).toBe(
+      'Education portfolio',
+    );
+    expect(
+      plateLine('Passed 18 Sep 2026.', [], {
+        ...bill,
+        facts: { ...bill.facts, kicker: null },
+      }),
+    ).toBeNull();
+    expect(
+      plateLine('Passed 18 Sep 2026.', [], {
+        ...bill,
+        facts: { ...bill.facts, events: [] },
+      }),
+    ).toBe('Passed 18 Sep 2026');
   });
   test('the timeline caption covers its first and latest stage, with no source suffix', () => {
     expect(eventDay('12 Aug 2026')).toBe('2026-08-12');
@@ -559,7 +585,7 @@ describe('the replacement edition card', () => {
         <EditionCard edition={ready} today="2026-10-05" />,
       );
       const line = host(root, 'today-edition-line')[0]!;
-      expect(line.props.children).toBe('Passed 18 Sep 2026.');
+      expect(line.props.children).toBe('Education portfolio');
       expect(line.props.allowFontScaling).toBe(true);
       expect(line.props.dynamicTypeRamp).toBe('subheadline');
       expect(line.props.maxFontSizeMultiplier).toBe(0);

@@ -1252,20 +1252,40 @@ test('a failed follow-up hides the previous Ask next and holds Try again while O
   expect(texts().join(' ')).not.toContain('Try again shortly.');
   const retry = one('ask-retry');
   expect(retry.props.disabled).toBe(true);
-  expect(retry.props.accessibilityHint).toBe('Available in a moment');
+  expect(retry.props.accessibilityHint).toBe(
+    'Available when the countdown ends',
+  );
   expect(askSession.snapshot().thread).toHaveLength(2);
 });
 
-test('a blocked question offers no Try again', async () => {
-  jest
-    .mocked(client.askPost)
-    .mockRejectedValueOnce(new AskFailure('blocked', 'Forbidden (403)'));
-  await mount();
-  await type('A fixture question?');
-  await press('ask-submit');
-  expect(texts()).toContain("This question couldn't be sent.");
-  expect(byId('ask-retry')).toEqual([]);
-});
+test.each(['401', '403', 'redirect'])(
+  'a generic %s block offers Edit question with no rewording reason, keeping the draft and focus',
+  async (block) => {
+    const restore = immediateFocusRequests();
+    try {
+      jest
+        .mocked(client.askPost)
+        .mockRejectedValueOnce(
+          new AskFailure('blocked', `Request blocked (${block})`),
+        );
+      await mount();
+      await type('A fixture question?');
+      await press('ask-submit');
+      expect(texts()).toContain("This question couldn't be sent.");
+      expect(byId('ask-retry')).toEqual([]);
+      expect(byId('ask-blocked-reason')).toEqual([]);
+      expect(texts().join(' ')).not.toContain('rewording');
+      const before = one('ask-question').props.value;
+      jest.mocked(TextInput.prototype.focus).mockClear();
+      await press('ask-edit-question');
+      expect(TextInput.prototype.focus).toHaveBeenCalled();
+      expect(one('ask-question').props.value).toBe(before);
+      expect(before).toBe('A fixture question?');
+    } finally {
+      restore();
+    }
+  },
+);
 
 test('an arrival while an answer runs waits in the composer and sends a new conversation', async () => {
   let finish: (v: unknown) => void = () => {};

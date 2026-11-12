@@ -10,6 +10,9 @@ import {
 import { ApiError } from '../src/api/errors';
 import { formatDate } from '../src/design/format';
 import { InsetGroup } from '../src/design/layout';
+import { Tile } from '../src/design/card';
+import { Button } from '../src/design/controls';
+import { SeatInvitation } from '../src/features/today/SeatInvitation';
 import { SurfaceContext } from '../src/design/row-padding';
 import { Icon } from '../src/design/icon';
 import { PersonRow } from '../src/design/people';
@@ -175,6 +178,70 @@ describe('the date line', () => {
     expect(offline.findAllByType(OfflineLine)).toHaveLength(1);
   });
 });
+
+test.each([1, 3.571])(
+  'Tile chevrons share the title row at font scale %s',
+  (fontScale) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ ...standard, fontScale });
+    const { root } = render(
+      <Tile
+        title="A long tile title that wraps"
+        line="A description under the title"
+        symbol="text.bubble"
+        ink="navy"
+        href="/ask"
+      />,
+    );
+    const title = root
+      .findAllByType(Text)
+      .find((n) => n.props.children === 'A long tile title that wraps')!;
+    const description = root
+      .findAllByType(Text)
+      .find((n) => n.props.children === 'A description under the title')!;
+    const row = title.parent!;
+    expect(StyleSheet.flatten(row.props.style).flexDirection).toBe('row');
+    expect(StyleSheet.flatten(title.props.style).flex).toBe(1);
+    const chevron = row.findByType(Icon);
+    expect(chevron.props).toMatchObject({
+      name: 'chevron.right',
+      size: 13,
+      weight: 'semibold',
+      tone: 'inkFaint',
+    });
+    expect(row.findAllByType(Text)).not.toContain(description);
+    act(() =>
+      title.props.onTextLayout({
+        nativeEvent: { lines: [{ height: 24 * fontScale }] },
+      }),
+    );
+    expect(StyleSheet.flatten(chevron.parent!.props.style)).toMatchObject({
+      height: 24 * fontScale,
+      justifyContent: 'center',
+    });
+  },
+);
+
+test.each([1, 3.571])(
+  'Use my location is centred with a 44 pt target at font scale %s',
+  (fontScale) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ ...standard, fontScale });
+    const { root } = render(<SeatInvitation />);
+    const button = root
+      .findAllByType(Button)
+      .find((n) => n.props.testID === 'today-invitation-location')!;
+    expect(StyleSheet.flatten(button.parent!.props.style).alignSelf).toBe(
+      'center',
+    );
+    const target = host(root, 'today-invitation-location')[0]!;
+    expect(
+      StyleSheet.flatten(target.props.style).minHeight,
+    ).toBeGreaterThanOrEqual(44);
+  },
+);
 
 describe('the foot', () => {
   test('PageFoot’s Today variant: the independence line and Report a correction, nothing else', () => {

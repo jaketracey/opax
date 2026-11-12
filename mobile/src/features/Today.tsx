@@ -63,7 +63,6 @@ import { editionTier, sydneyDay, type SydneyDate } from './today/rules';
 import { SurfaceGrid } from './today/SurfaceGrid';
 import { SeatInvitation } from './today/SeatInvitation';
 import { TodayReports, useTodayReports } from './today/TodayBlock';
-import { VoiceCard } from './today/VoiceCard';
 import { VotesBlock } from './today/VotesBlock';
 import { StateSeatCard, YourMPCard } from './today/YourMPCard';
 import { saveChoice } from './your-mp/choice-store';
@@ -382,7 +381,6 @@ export default function Today() {
       case 'ask':
         return (
           <Fragment key={name}>
-            <VoiceCard />
             <AskBlock today={today} />
           </Fragment>
         );

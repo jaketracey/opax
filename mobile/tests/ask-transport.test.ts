@@ -3,6 +3,7 @@ import { CatalogCache } from '../src/api/cache';
 import { ApiClient } from '../src/api/client';
 import { decodeAnswer } from '../src/features/ask/model';
 import { askErrorCopy } from '../src/features/ask/turn-copy';
+import { AskFailure } from '../src/features/ask/stream';
 const origin = 'http://127.0.0.1:8940';
 const payload = { answer: 'Recorded answer', citations: {}, sources: [] };
 function response(status: number, raw: unknown = payload, extras: object = {}) {
@@ -81,6 +82,105 @@ test('redirects, cross-origin replies and unreviewed paths fail closed before an
   await expect(api(t).get('/api/followups', (x) => x)).rejects.toThrow();
   expect(t).not.toHaveBeenCalled();
 });
+
+test.each([
+  ['60', 60_000],
+  ['Thu, 01 Jan 1970 00:02:40 GMT', 60_000],
+  ['Thursday, 01-Jan-70 00:02:40 GMT', 60_000],
+  ['Thu Jan  1 00:02:40 1970', 60_000],
+  [null, 30_000],
+  ['', 30_000],
+  ['invalid', 30_000],
+  ['-1', 30_000],
+  ['1.5', 30_000],
+  ['999999999999999999999999999', 30_000],
+  ['1970-01-01T00:02:40Z', 30_000],
+  ['0', 0],
+  ['Thu, 01 Jan 1970 00:00:00 GMT', 0],
+] as const)(
+  'rate limit Retry-After %s is anchored to the response deadline',
+  async (header, wait) => {
+    jest.useFakeTimers();
+    jest.setSystemTime(100_000);
+    const t = jest.fn().mockResolvedValue(
+      response(
+        429,
+        { error: 'Private server text' },
+        {
+          headers: {
+            get: (key: string) =>
+              key === 'retry-after' ? header : 'application/json',
+          },
+        },
+      ),
+    );
+    try {
+      const failure = await api(t)
+        .askPost('/api/ask?stream=1', {}, controller().signal)
+        .catch((error) => error);
+      expect(failure).toBeInstanceOf(AskFailure);
+      expect(failure).toMatchObject({
+        code: 'rate-limited',
+        retryAt: 100_000 + wait,
+      });
+      expect(t).toHaveBeenCalledTimes(1);
+      expect(jest.getTimerCount()).toBe(0);
+    } finally {
+      jest.useRealTimers();
+    }
+  },
+);
+
+test('the retry deadline starts when the response arrives, after any request wait', async () => {
+  jest.useFakeTimers();
+  jest.setSystemTime(100_000);
+  let respond!: (value: Response) => void;
+  const t = jest.fn(
+    () =>
+      new Promise<Response>((resolve) => {
+        respond = resolve;
+      }),
+  );
+  const pending = api(t)
+    .askPost('/api/ask?stream=1', {}, controller().signal)
+    .catch((error) => error);
+  try {
+    await jest.advanceTimersByTimeAsync(5000);
+    respond(response(429, {}, { headers: { get: () => '60' } }));
+    expect(await pending).toMatchObject({
+      code: 'rate-limited',
+      retryAt: 165_000,
+    });
+    expect(jest.getTimerCount()).toBe(0);
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
+test.each([
+  [401, {}],
+  [403, {}],
+  [302, {}],
+  [200, { redirected: true }],
+] as const)(
+  'HTTP %s block with %j never infers content rejection from status or raw error text',
+  async (status, extras) => {
+    const t = jest
+      .fn()
+      .mockResolvedValue(
+        response(status, { error: 'Try rewording your question' }, extras),
+      );
+    const failure = await api(t)
+      .askPost('/api/ask?stream=1', {}, controller().signal)
+      .catch((error) => error);
+    expect(failure).toBeInstanceOf(AskFailure);
+    if (!(failure instanceof AskFailure)) throw failure;
+    expect(askErrorCopy(failure)).toEqual({
+      message: "This question couldn't be sent.",
+      retry: false,
+    });
+  },
+);
 test('the same submitted request can return JSON without a synchronous fallback call', async () => {
   const t = jest.fn().mockResolvedValue(response(200));
   expect(

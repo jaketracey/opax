@@ -78,7 +78,7 @@ export interface LinkRowProps extends Navigation {
   /** Money amounts use the stronger trailing figure treatment. */
   valueEmphasis?: boolean;
   symbol?: SFSymbol;
-  symbolInk?: Accent;
+  symbolInk?: Accent | 'navy';
   external?: External | boolean;
   destructive?: boolean;
   disabled?: boolean;
@@ -183,7 +183,11 @@ export function LinkRow({
           size={20}
           maxScale={1.5}
           tone={
-            ink && designFlags.categorySymbols ? accents[ink].ink : 'inkSoft'
+            ink === 'navy'
+              ? 'navy'
+              : ink && designFlags.categorySymbols
+                ? accents[ink].ink
+                : 'inkSoft'
           }
           {...(ink ? { type: 'hierarchical' as const } : {})}
         />

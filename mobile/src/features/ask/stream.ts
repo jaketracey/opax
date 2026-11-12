@@ -47,6 +47,8 @@ export type AskReason =
   | 'network'
   | 'server'
   | 'no_answer';
+/** Fallback only when a rate-limit response has no valid Retry-After. */
+export const busyWait = 30_000;
 export class AskFailure extends Error {
   constructor(
     public code:
@@ -68,6 +70,10 @@ export class AskFailure extends Error {
           : code === 'empty'
             ? 'no_answer'
             : 'server',
+    /** Absolute device-clock deadline, kept with the failure across remounts. */
+    public retryAt: number | undefined = code === 'rate-limited'
+      ? Date.now() + busyWait
+      : undefined,
   ) {
     super(message);
   }
