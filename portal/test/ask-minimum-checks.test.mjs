@@ -127,5 +127,56 @@ test('the model’s own direct answer leads record facts and written record pros
   assert.match(cite('fact-1/t/body/0')[0],/^The Royal Commission into the Robodebt Scheme reported on 7 July 2023\.$/)
   assert.match(cite('speech-11/t/body/0')[0],/Kate Thwaites said/)
   const citedLead={...points,citations:{'speech-11/t/body/0':[[2,20]]}}
-  assert.equal(api.leadWithModelAnswer({answer,citations:{}},citedLead).answer,answer,'a cited first point is not moved')
+  assert.match(api.leadWithModelAnswer({answer,citations:{}},citedLead).answer,/^- Scott Morrison/,'a cited first point leads too')
+})
+
+// Research that ends early still answers: a scripted model, local stubs for records and the knowledge base.
+const loopDeps=(m,options={})=>{
+  const pid='b'.repeat(32)+'/t/body/0-120',passage='The department paid about $30 million for the Leppington Triangle land, ten times its value, the Auditor-General found.'
+  let plannerCalls=0
+  const deps={asset:async()=>null,
+    kb:async(path,body)=>options.emptyKb?{resources:{}}:{resources:{[pid.split('/')[0]]:{slug:'speech-9',title:'Leppington Triangle',fields:{body:{paragraphs:{[pid]:{text:passage}}}}}},fulltext:{total:100,facets:{'/u/o':{'/u/o/Taylor Example':87,'/u/o/Pat Example':13}}}},
+    generate:async()=>{plannerCalls++;throw new Error('the old planner must not run')},
+    research:Object.assign(api.createResearch({inputPrice:0.1,outputPrice:0.3,model:m,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown(),readRecord:async()=>({text:passage,speaker:'Jordan Sample'}),...options}),{write:undefined})}
+  return {deps,pid,passage,get plannerCalls(){return plannerCalls}}
+}
+const ask=(q,deps)=>api.runAgentic(q,deps,async()=>{},40_000,api.inferPeriod(q),{},scope)
+
+test('a failed tool call at round 3 with passages held still gives a real answer from them',async()=>{
+  const q='Who was responsible for the Leppington Triangle land purchase?'
+  const m=new MockLanguageModelV4({doGenerate:[
+    reply([call('search',{query:'Leppington Triangle purchase'},'a')]),
+    reply([call('search',{query:'Leppington Triangle Auditor-General'},'b')]),
+    reply([call('corpus_records',{query:'Leppington Triangle',limit:999},'c')]),
+    reply([call('answer',{points:[{claim:'The Department of Infrastructure bought the Leppington Triangle for about $30 million, ten times its value, under the Morrison government.'}]},'d')]),
+  ]})
+  const f=loopDeps(m,{steps:3}),run=await ask(q,f.deps)
+  assert.equal(choice(m.doGenerateCalls[3]),'answer','research stopped at the round cap; the final call answers')
+  assert.equal(run.answered,true);assert.equal(f.plannerCalls,0)
+  assert.match(run.answer,/^- The Department of Infrastructure bought the Leppington Triangle/)
+  assert.doesNotMatch(run.answer,/do not identify|selected facts|cannot establish/i)
+  const prompt=JSON.stringify(m.doGenerateCalls[3].prompt)
+  assert.ok(prompt.includes('ten times its value'),'the final call is given the passages research held')
+  assert.match(prompt,/for who, name the people and their roles/)
+})
+
+test('a count run that fails late keeps the facts it gathered, with no budget line',async()=>{
+  const q='Who speaks most about gambling in NSW across the whole record?'
+  const m=new MockLanguageModelV4({doGenerate:[reply([call('count_speeches',{topic:'gambling',state:'nsw',group_by:'speaker'},'a')]),()=>{throw new Error('provider went away')}]})
+  const f=loopDeps(m),run=await ask(q,f.deps)
+  assert.equal(run.answered,true);assert.equal(f.plannerCalls,0)
+  assert.match(run.answer,/Taylor Example: 87/)
+  assert.doesNotMatch(run.answer,/budget/i)
+})
+
+test('research that gathered nothing answers from general knowledge, and the note says the records were not reached',async()=>{
+  const q='What happened with the Leppington Triangle purchase?'
+  const m=new MockLanguageModelV4({doGenerate:[
+    reply([call('search',{query:'Leppington Triangle'},'a')]),
+    reply([call('answer',{points:[{claim:'The Commonwealth bought the Leppington Triangle in 2018 for about $30 million, and the Auditor-General later found it paid ten times its value.'}]},'b')]),
+  ]})
+  const f=loopDeps(m,{steps:1,emptyKb:true}),run=await ask(q,f.deps)
+  assert.equal(run.answered,true);assert.equal(f.plannerCalls,0)
+  assert.match(run.answer,/Auditor-General later found/)
+  assert.equal(run.qualitative.coverage.note,'OPAX’s records were not reached for this question, so this answer draws on general knowledge.')
 })

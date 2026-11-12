@@ -56,15 +56,13 @@ export function leadWithFinding<T extends Record<string,unknown>>(payload:T,ques
   return plainAnswerPayload(rewriteAnswerPayload({...payload,answer:written,citations},replace=>replace(/^Another (?=(?:says|said|reports|describes)\b)/g,'A selected passage ')))
 }
 
-/** The model's own direct answer (the uncited first line of its points) leads an answer that also carries record
+/** The model's own direct answer (the first line of its points, cited or not) leads an answer that also carries record
  * facts or written record prose, which follow as the supporting record. A permutation: citations move with their text. */
 export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,points:{answer?:unknown;citations?:unknown}|undefined):T {
   if(typeof payload.answer!=='string'||typeof points?.answer!=='string')return payload
   const pointText=points.answer,first=/^[^\n]+/.exec(pointText)?.[0]
   if(!first)return payload
   const firstEnd=Array.from(first).length
-  const cited=Object.values((points.citations??{}) as Record<string,unknown>).some(ranges=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<firstEnd))
-  if(cited)return payload
   const answer=payload.answer,at=answer.indexOf(first)
   if(at<=0)return payload
   const chars=Array.from(answer),from=Array.from(answer.slice(0,at)).length,until=from+firstEnd
