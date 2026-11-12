@@ -1,0 +1,156 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-sa-domestic-family-sexual-violence",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into Domestic, Family and Sexual Violence",
+ "body": "Royal Commission into Domestic, Family and Sexual Violence",
+ "source": {
+  "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+  "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+  "sha256": "0fc1b04a8ade400c089876215bf8dbd95320ddc07e797d29511ad90a68890c75",
+  "pages": 664,
+  "rights": "© Government of South Australia 2025. All material presented in this publication is provided under a Creative Commons Attribution 4.0 Australia license (imprint, page 2)."
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 10,
+  "last_page": 99,
+  "link": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Royal Commission into Domestic, Family and Sexual Violence was asked how the state could improve its systems to prevent and respond to violence and support recovery and healing.",
+    "cites": [
+     {
+      "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+      "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+      "page": 21
+     }
+    ],
+    "section": "Establishment of the Commission"
+   },
+   {
+    "text": "The inquiry examined the extent of violence, its gendered drivers and risk factors, and how funding, service structures and coordination could change.",
+    "cites": [
+     {
+      "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+      "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+      "page": 13
+     }
+    ],
+    "section": "Forewords"
+   },
+   {
+    "text": "The Commission concluded that the system was underfunded and fragmented, with crisis responses receiving more attention than prevention and early intervention.",
+    "cites": [
+     {
+      "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+      "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+      "page": 106
+     }
+    ],
+    "section": "The call to action"
+   },
+   {
+    "text": "It also identified gaps in services for children and limited capacity to assess victim-survivors’ longer-term recovery needs.",
+    "cites": [
+     {
+      "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+      "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+      "page": 14
+     },
+     {
+      "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+      "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+      "page": 503
+     }
+    ]
+   },
+   {
+    "text": "The Commission made 136 recommendations covering government leadership, prevention, early intervention, responses to violence, and recovery and healing.",
+    "cites": [
+     {
+      "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+      "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+      "page": 16
+     },
+     {
+      "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+      "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+      "page": 31
+     },
+     {
+      "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+      "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+      "page": 33
+     }
+    ],
+    "section": "The Commission’s Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Despite decades of reform, the system remains underfunded, fragmented and reactive – driven more by crisis response than by prevention and early intervention.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+     "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+     "page": 106
+    }
+   },
+   {
+    "quote": "South Australia does not have a statewide risk assessment and management framework.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+     "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+     "page": 104
+    }
+   },
+   {
+    "quote": "Services for children who have experienced domestic, family and sexual violence are almost non-existent.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+     "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+     "page": 14
+    }
+   },
+   {
+    "quote": "There is almost no capacity within the current system to work with victim-survivors to identify their medium- to longer-term needs.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+     "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+     "page": 503
+    }
+   },
+   {
+    "quote": "The Commission considers that primary prevention approaches are a necessary and critical part of the domestic, family and sexual violence systems.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.royalcommissiondfsv.sa.gov.au/__data/assets/pdf_file/0006/1174695/With-Courage-Report.pdf",
+     "document": "With courage: South Australia’s vision beyond violence. Report of the Royal Commission into Domestic, Family and Sexual Violence",
+     "page": 591
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:38:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": null
+ }
+}

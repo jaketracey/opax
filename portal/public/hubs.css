@@ -139,6 +139,7 @@ div.hub-coverage { margin-top: var(--space-group); }
 .vic-candidates > li { display: grid; grid-template-columns: 2.5ch minmax(0, 1fr); align-items: baseline; gap: var(--space-tight); min-height: var(--size-target); box-sizing: border-box; padding: var(--space-row) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 .vic-candidate-no { color: var(--ink-soft); font: var(--type-metadata); font-variant-numeric: tabular-nums; text-align: right; }
 .vic-candidate-name { font: var(--type-strong); }
+.vic-candidates-region > li { grid-template-columns: minmax(0, 1fr); }
 /* Wide screens: the finder and the key dates side by side above the seat list,
    their titles on one line. */
 @media (min-width: 1000px) {

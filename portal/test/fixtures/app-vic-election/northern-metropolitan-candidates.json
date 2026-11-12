@@ -1,0 +1,396 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-12",
+  "kind": "region",
+  "slug": "northern-metropolitan",
+  "name": "Northern Metropolitan",
+  "web_url": "https://opax.com.au/vic-election-2026/northern-metropolitan",
+  "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/northern-metropolitan-region",
+  "electorate_url": "/subject/electorate/vic-vic-lc-vic-northern-metropolitan",
+  "roster_date": "2026-09-09",
+  "formerly": null,
+  "created": false,
+  "boundary_note": null,
+  "region": null,
+  "districts": [
+    {
+      "kind": "district",
+      "slug": "broadmeadows",
+      "name": "Broadmeadows",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-broadmeadows",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Kathleen Matthews-Ward",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 15.45
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "brunswick",
+      "name": "Brunswick",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-brunswick",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Tim Read",
+        "party": "Greens"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Greens",
+        "margin": 13.46
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "essendon",
+      "name": "Essendon",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-essendon",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Danny Pearson",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 12.45
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "greenvale",
+      "name": "Greenvale",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-greenvale",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Iwan Walters",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 6.92
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "kalkallo",
+      "name": "Kalkallo",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-kalkallo",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Ros Spence",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 16.43
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "melbourne",
+      "name": "Melbourne",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-melbourne",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Ellen Sandell",
+        "party": "Greens"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Greens",
+        "margin": 10.19
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "northcote",
+      "name": "Northcote",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-northcote",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Kat Theophanous",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 0.22
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "pascoe-vale",
+      "name": "Pascoe Vale",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-pascoe-vale",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Anthony Cianflone",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 2.02
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "preston",
+      "name": "Preston",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-preston",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Nathan Lambert",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 2.09
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "richmond",
+      "name": "Richmond",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-richmond",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Gabrielle de Vietri",
+        "party": "Greens"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Greens",
+        "margin": 7.32
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "thomastown",
+      "name": "Thomastown",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-thomastown",
+      "region": "Northern Metropolitan",
+      "member": {
+        "name": "Bronwyn Halfpenny",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 16
+      },
+      "candidates": 0
+    }
+  ],
+  "result": null,
+  "candidates": {
+    "published": "2026-11-10",
+    "url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/northern-metropolitan-region/nominations",
+    "list": [
+      {
+        "name": "Avery Quill",
+        "party": "Example Alliance",
+        "group": "A",
+        "group_name": "Example Alliance"
+      },
+      {
+        "name": "Rowan Ketch",
+        "party": "Example Alliance",
+        "group": "A",
+        "group_name": "Example Alliance"
+      },
+      {
+        "name": "Wren Halloway",
+        "party": null,
+        "group": "B",
+        "group_name": null
+      },
+      {
+        "name": "Marlow Fen",
+        "party": null,
+        "group": "Z",
+        "group_name": null
+      },
+      {
+        "name": "Arden Vale",
+        "party": "Independent",
+        "group": null,
+        "group_name": null
+      },
+      {
+        "name": "Ellis Cove",
+        "party": null,
+        "group": null,
+        "group_name": null
+      }
+    ]
+  },
+  "members": [
+    {
+      "name": "Enver Erdogan",
+      "party": "Labor",
+      "slug": "enver-erdogan",
+      "href": "/subject/person/enver-erdogan",
+      "source_url": "https://www.parliament.vic.gov.au/members/enver-erdogan/",
+      "speeches": {
+        "count": 325,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 57,
+        "ayes": 18,
+        "noes": 39
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-24",
+          "title": "That this house:",
+          "href": "/doc/division-vic-lc-2026-09-24-1",
+          "vote": "no",
+          "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+        }
+      ]
+    },
+    {
+      "name": "Anasina Gray-Barberio",
+      "party": "Greens",
+      "slug": "anasina-gray-barberio",
+      "href": "/subject/person/anasina-gray-barberio",
+      "source_url": "https://www.parliament.vic.gov.au/members/anasina-gray-barberio/",
+      "speeches": {
+        "count": 224,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 59,
+        "ayes": 25,
+        "noes": 34
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-24",
+          "title": "That this house:",
+          "href": "/doc/division-vic-lc-2026-09-24-1",
+          "vote": "aye",
+          "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+        }
+      ]
+    },
+    {
+      "name": "Evan Mulholland",
+      "party": "Liberal",
+      "slug": "evan-mulholland",
+      "href": "/subject/person/evan-mulholland",
+      "source_url": "https://www.parliament.vic.gov.au/members/evan-mulholland/",
+      "speeches": {
+        "count": 588,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 52,
+        "ayes": 35,
+        "noes": 17
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-24",
+          "title": "That this house:",
+          "href": "/doc/division-vic-lc-2026-09-24-1",
+          "vote": "aye",
+          "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+        }
+      ]
+    },
+    {
+      "name": "Adem Somyurek",
+      "party": "Independent",
+      "slug": "adem-somyurek",
+      "href": "/subject/person/adem-somyurek",
+      "source_url": "https://www.parliament.vic.gov.au/members/adem-somyurek/",
+      "speeches": {
+        "count": 12,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 1,
+        "ayes": 1,
+        "noes": 0
+      },
+      "recent_votes": []
+    },
+    {
+      "name": "Sheena Watt",
+      "party": "Labor",
+      "slug": "sheena-watt",
+      "href": "/subject/person/sheena-watt",
+      "source_url": "https://www.parliament.vic.gov.au/members/sheena-watt/",
+      "speeches": {
+        "count": 333,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 55,
+        "ayes": 16,
+        "noes": 39
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-24",
+          "title": "That this house:",
+          "href": "/doc/division-vic-lc-2026-09-24-1",
+          "vote": "no",
+          "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+        }
+      ]
+    }
+  ],
+  "results_fetched": "2026-10-13",
+  "speech_updated": "2026-10-18",
+  "division_start": "2026-08-14",
+  "division_end": "2026-09-24"
+}
