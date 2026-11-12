@@ -8,6 +8,7 @@ import {
   type VoiceLevels,
   type VoiceResult,
   type VoiceSnapshot,
+  type VoiceSource,
   type VoiceStatus,
 } from './types';
 const invalid = () => {
@@ -29,6 +30,17 @@ const string = (value: unknown, cap: number): string =>
   typeof value === 'string' && value.length <= cap ? value : invalid();
 const member = <T extends string>(value: unknown, choices: readonly T[]): T =>
   choices.includes(value as T) ? (value as T) : invalid();
+/** An optional display label: kept when a non-blank string within `cap`, otherwise left out (never fails the source). */
+const label = (value: unknown, cap: number): string | undefined =>
+  typeof value === 'string' && value.trim() && value.length <= cap
+    ? value
+    : undefined;
+const sourceLabels = [
+  ['recordTitle', 880],
+  ['speaker', 120],
+  ['date', 24],
+  ['type', 40],
+] as const;
 const nullable = <T>(
   value: unknown,
   decode: (value: unknown) => T,
@@ -132,14 +144,22 @@ export function mapEvent(value: unknown): VoiceEvent | null {
           sources: v.sources.map((source) => {
             const s = object(source);
             const path = string(s.path, 1800);
+            // The native allow-list (Evidence.swift, Evidence.kt): a path native
+            // keeps but this refused would drop every source in the call.
             if (
-              !/^\/(?:doc\/[^/?#]+|bill\/[^/?#]+|subject\/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)\/[^/?#]+|money(?:\/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|search|connections|topics|parties|journey\/[^/?#]+)\/?(?:[?#].*)?$/.test(
+              !/^\/(?:doc\/[^/?#]+|bill\/[^/?#]+|subject\/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)\/[^/?#]+|money(?:\/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|search|connections|topics|parties|reports(?:\/[^/?#]+)?|journey\/[^/?#]+|ask)\/?(?:[?#].*)?$/.test(
                 path,
               ) ||
               /%[01][0-9a-f]|%7f/i.test(path)
             )
               return invalid();
-            return { title: string(s.title, 440), path };
+            // Ask's labels when the tool sent them; a bad one is left out.
+            const out: VoiceSource = { title: string(s.title, 440), path };
+            for (const [key, cap] of sourceLabels) {
+              const value = label(s[key], cap);
+              if (value !== undefined) out[key] = value;
+            }
+            return out;
           }),
         };
       }
