@@ -26,6 +26,8 @@ export function sentenceFragment(text: string, entities: string[] = []): boolean
   if (names.every(word => /^(?:and|of|the|for|to|a|an)$/.test(word) || /^\p{Lu}/u.test(word))) return true
   // Accept ordinary finite verbs beyond the common record vocabulary.
   if (CLAUSE_VERB.test(plain) || /\b\p{L}+(?:ed|es|s)\b/u.test(plain)) return false
+  // A byline left after a hard clause removal still needs a stated position.
+  if (/^going by (?:his|her|their|the) record\b/.test(plain)) return true
   if (entities.some(entity => { const full = normalClaim(entity).replace(/^the /, ''); return full === name || full.startsWith(name + ' ') })) return true
   // Labelled numerical findings are used in checked record lists.
   if (/:\s*\$?\d/.test(text)) return false

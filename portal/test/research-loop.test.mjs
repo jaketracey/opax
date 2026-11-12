@@ -114,11 +114,11 @@ function qualitativeFixture(responses,passageText=text){const f=fixtures(model(r
 test('qualitative search/answer retains passage ids and ordinary source/citation fields; search verifies its hits',async()=>{
  const f=qualitativeFixture([reply([call('search',{query:'housing affordability'})]),reply([call('answer',valid)])]),run=await f.run(),payload=api.agenticAskPayload(run,'housing');assert.equal(run.answered,true);assert.equal(run.answer_source,'model');assert.deepEqual(payload.citations,{[id]:[[0,text.length]]});assert.equal(payload.sources[0].resource,p.resource);assert.equal(payload.research.sources[0].url,p.url);assert.equal(payload.research.sources[0].speaker,'Pat Example');
 });
-test('a fabricated quote never reaches the reader in quotation marks; an unbound citation finds its passage; no extra turn',async()=>{
- // Loosened 16 Oct: the draft stands uncited, unquoted, instead of being replaced by the record list.
+test('a non-literal quote keeps its marks uncited; an unbound citation finds its passage; no extra turn',async()=>{
+ // A soft quotation finding keeps the draft uncited, with its quote marks.
  const f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',{text:'"Invented testimony that never occurred in this record."',citations:[{id,quote:text,start:0,end:55}]})]),reply([call('answer',valid)])]),run=await f.run(),body=api.agenticAskPayload(run,'housing');
  assert.equal(run.research.mode,'loop');assert.equal(run.answered,true);assert.equal(f.model.doGenerateCalls.length,2);assert.equal(run.research.rounds,2);
- assert.equal(run.answer,'- Invented testimony that never occurred in this record.');assert.doesNotMatch(run.answer,/["“”]/);assert.deepEqual(body.citations,{});assert.equal(body.answer_status,'uncited');assert.equal(run.research.answer_stats.mode,'uncited');
+ assert.equal(run.answer,'- "Invented testimony that never occurred in this record."');assert.deepEqual(body.citations,{});assert.equal(body.answer_status,'uncited');assert.equal(run.research.answer_stats.mode,'uncited');
  // A citation to an unknown id is re-bound to the one verified passage holding its quote, and stays cited.
  const g=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',{...valid,citations:[{...valid.citations[0],id:'unknown/t/body/0'}]})]),reply([call('answer',valid)])]),bound=await g.run();
  assert.equal(g.model.doGenerateCalls.length,2);assert.equal(bound.answer,'- '+text);assert.ok(bound.qualitative.citations[id]);assert.equal(bound.qualitative.answer_status,undefined);assert.equal(bound.research.answer_stats.repairs.passage_reselected,1);
@@ -126,10 +126,10 @@ test('a fabricated quote never reaches the reader in quotation marks; an unbound
 test('with nothing usable retrieved, a failed answer gets one repair and then the old path',async()=>{
  const draft={...valid,citations:[{...valid.citations[0],id:'unknown/t/body/0'}]},f=qualitativeFixture([reply([call('search',{query:'housing'})]),reply([call('answer',draft)]),reply([call('answer',draft)])],offTopic),run=await f.run();assert.equal(run.research.mode,'planner');assert.equal(f.failures[0].reason,'grounding');assert.equal(f.events.filter(e=>e.step?.tool==='answer'&&e.step.state==='failed').length,2);
 });
-test('a fabricated quotation is unquoted and kept as cited paraphrase, never kept in quotation marks',async()=>{
+test('a non-literal quotation retains its marks and loses its citation',async()=>{
  const passages=new Map([[id,{...p,speaker:'Pat Example'}]]),why=[],tally=api.emptyTally();
  const out=api.verifyResearchPoints([{claim:'Pat Example said “housing affordability safeguards matter most of all”.',id,quote:'stronger housing affordability safeguards'}],passages,'What does the record say about housing affordability?',emptyScope,undefined,{people:[{name:'Pat Example'}]},r=>why.push(r),tally);
- assert.equal(out.answer,'- Pat Example said housing affordability safeguards matter most of all.');assert.deepEqual(tally.repairs,{unquoted:1});assert.equal(tally.points_kept,1);
+ assert.equal(out.answer,'- Pat Example said “housing affordability safeguards matter most of all”.');assert.deepEqual(tally.repairs,{quote_uncited:1});assert.equal(tally.points_uncited,1);assert.deepEqual(out.citations,{});
  // A real quotation keeps its marks, re-cased to the passage.
  const kept=api.verifyResearchPoints([{claim:'Pat Example called for “STRONGER housing affordability safeguards”.',id,quote:'housing affordability safeguards'}],passages,'housing affordability?',emptyScope);
  assert.equal(kept.answer,'- Pat Example called for “stronger housing affordability safeguards”.');

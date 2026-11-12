@@ -39,7 +39,7 @@ for (const [id, key, claim, quote] of [
     reply([call('answer', { facts: [1], points: [{ claim, id: passageId, quote }] })]),
   ] });
   let writes = 0;
-  const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) },
+  const research = Object.assign(api.createResearch({ model, inputPrice: 0.1, outputPrice: 0.3, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) },
     readRecord: async () => ({ text: passage.snippet, speaker: passage.speaker, labels: { kind: 'speech' }, metadata: { date: passage.date } }),
   }), { write: async () => { writes++; throw Error('Checked speech points already answer the question'); } });
   const deps = { asset: local, origin: 'https://opax.test', toolEnv: { ASSETS: assets }, research,

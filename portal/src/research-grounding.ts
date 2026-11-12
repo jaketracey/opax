@@ -8,7 +8,7 @@ import type {QualitativeAnswer} from './research-types'
 import {rankingSourceMatches} from './research-ranking-scope.mjs'
 import {plainCoverageRefusal} from './research-coverage'
 import {atomsFromText,sentenceFragment} from './research-claims'
-import {contentWords,passageExcerpt} from './research-evidence'
+import {contentWords,passageExcerpt,overviewSentence,personQuestionTopic} from './research-evidence'
 import {readableDate} from './tools/record-common'
 import {researchTrace} from './research-trace'
 import {questionPerson,sourceAboutPerson,identityPerson} from './ask-followup'
@@ -154,13 +154,6 @@ export function cleanAnswerShape(payload:Record<string,unknown>):Record<string,u
   return {...cleaned,citations,sources}
 }
 type SelectedSource=WritingInput['facts'][number]['source']
-/** Keep source sentences intact rather than finishing a truncated word window with punctuation. */
-function overviewSentence(text:string,question:string){
-  return (text.match(/[^.!?]+[.!?]/g)??[]).flatMap(part=>{
-    const sentence=part.trim(),candidate=passageExcerpt(sentence,question,40)
-    return candidate?.text===sentence&&candidate.score&&/^[\p{Lu}\p{N}]/u.test(sentence)&&!sentenceFragment(sentence)&&!/["“”—]/.test(sentence)?[candidate]:[]
-  }).sort((a,b)=>b.score-a.score)[0]
-}
 /** Every monetary fallback sentence needs selected evidence for its own owner/amount association. */
 function citeFallbackMoney(payload:Record<string,unknown>,question:string,selected:SelectedSource[]):Record<string,unknown> {
   const research=payload.research as {mode?:string;coherence?:{fallback?:boolean}}|undefined
@@ -294,13 +287,27 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   if(person&&!selected.length)return {...result,answer:'OPAX has no selected record that answers this question about '+person+'.',answer_decision:'limitation',citations:{},sources:[],coherence:{...((result.coherence??{}) as object),fallback:true,method:'no_subject_record'}}
   if(!selected.length)return titleOnly?{...result,answer:'The selected records provide titles and dates, but no passage answering this question.',answer_decision:'limitation',citations:{},sources:[],coherence:{fallback:true,method:'no_topic_passage'}}:result
   // Speaker names and dates locate records; the topic selects their words.
-  const about=/\b(?:about|on)\s+(.+?)[?.!]*$/i.exec(question)?.[1]??question.replace(person??'','')
+  const positionTopic=personQuestionTopic(question)
+  const about=positionTopic??question.replace(person??'','')
   const quoted=selected.flatMap(source=>{
     const excerpt=overviewSentence(source.snippet,about)??passageExcerpt(source.snippet,about,40)
     return source.speaker&&source.date&&excerpt&&(excerpt.score||!contentWords(about).size)&&!/excerpt omitted/i.test(excerpt.text)?[{source,excerpt}]:[]
-  })
+  }).slice(0,5)
   const {answer_status:_status,...rest}=result
-  if(!quoted.length)return {...rest,answer:`The selected speeches${person?' by '+person:''} do not mention ${about.replace(/[?.!]+$/,'')} directly.`,answer_decision:'limitation',citations:{},sources:selected.map(s=>({...s,cited:false})),coherence:{...((result.coherence??{}) as object),fallback:true,method:'no_topic_passage'}}
+  if(!quoted.length){
+    let answer=positionTopic?`The selected speeches${person?' by '+person:''} do not mention ${positionTopic.replace(/[?.!]+$/,'')} directly.`:
+      `The selected speeches${person?' by '+person:''} do not directly answer “${question.replace(/[?.!]+$/,'')}”.`
+    const citations:Record<string,[number,number][]>={},closest=selected.filter(s=>s.date).slice(0,3)
+    if(closest.length)answer+=' The closest are '
+    for(const [i,s]of closest.entries()){
+      if(i)answer+=i===closest.length-1?' and ':', '
+      const from=Array.from(answer).length
+      answer+=`${s.speaker??person??'the selected speaker'}: ${s.title??'speech'}${s.date?' ('+readableDate(s.date)+')':''}`
+      citations[`${s.resource}/t/body/0`]=[[from,Array.from(answer).length]]
+    }
+    if(closest.length)answer+='.'
+    return {...rest,answer,answer_decision:'limitation',citations,sources:closest.map(s=>({...s,cited:true})),coherence:{...((result.coherence??{}) as object),fallback:true,method:'no_topic_passage'}}
+  }
   let answer='';const citations:Record<string,[number,number][]>={}
   for(const {source,excerpt}of quoted){
     answer+=(answer?'\n\n':'');const from=Array.from(answer).length

@@ -3,6 +3,7 @@ import {PERSON_PATHS} from '../public/canonical-urls.js'
 const norm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[‘’]/g,"'").replace(/[^\p{L}\p{N}]+/gu,' ').trim()
 // This generated index binds public parliamentarians.json names and their canonical slugs.
 const rosterPeople=new Map(Object.entries(PERSON_PATHS.exact).flatMap(([name,path])=>[[norm(name),path],[norm(path.split('/').at(-1)),path]]))
+export const isRosterPerson=name=>rosterPeople.has(norm(name))
 const samePerson=(a,b)=>!!a&&!!b&&(norm(a)===norm(b)||rosterPeople.has(norm(a))&&rosterPeople.get(norm(a))===rosterPeople.get(norm(b)))
 const escape=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
 const months=['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -68,14 +69,14 @@ function figures(text){
   const cuts=[0,...[...text.matchAll(/;\s*|,?\s+(?:and|while|but|whereas)\s+(?=[A-Z])/g)].map(m=>m.index+m[0].length),text.length],start=cuts.filter(n=>n<=at).at(-1),end=cuts.find(n=>n>at),local=text.slice(start,end)
   if(metric==='speeches'||metric==='share'){const topic=/housing|gambling|immigration|climate|mining(?:-energy)?|tax(?:-budget)?|budget/i.exec(local)?.[0]?.toLowerCase()??/housing|gambling|immigration|climate|mining(?:-energy)?|tax(?:-budget)?|budget/i.exec(text)?.[0]?.toLowerCase();if(topic)metric+='/'+(topic==='tax'||topic==='budget'?'tax-budget':topic)}
   const vote=/(all aye|all no|split) (?:in )?$/i.exec(head)?.[1];if(vote)metric='votes/'+norm(vote)
-  const owner=partyName(/^\s+(?:dollars?\s+)?(?:to (?:the )?)?(Labor|Liberal|Coalition|Greens|Nationals|ALP)\b/i.exec(tail)?.[1])
+  const owner=partyName(/^\s+(?:dollars?\s+)?(?:to (?:the )?)?(Labor|Liberal|Coalition|Greens|Nationals|ALP)\b/i.exec(tail)?.[1]??givingRecipient(text,at))
   out.push({value:String(n*scale*(/^\s*decades?\b/i.test(tail)?10:1)),unit,metric,owner,at,end:at+raw.length,raw})
  }
  for(const f of out){const next=out.find(n=>n.at>f.at)?.at??text.length,following=dates.filter(p=>p.at>=f.end&&p.at<next);f.period=following.length?following:dates.filter(p=>p.end<=f.at).slice(-1)}
  return out
 }
 const parties=['Labor','Liberal','Coalition','Greens','Nationals','ALP','LNP','Australian Conservatives','Australian Democrats','One Nation','Centre Alliance','Independent']
-const reportingPredicate=/\b(?:said|says|say|argu(?:ed|es)|called for|described|cited|reported|explained|introduced|presented|proposed|linked|challenged|recalled|not(?:ed|ing|es)|put a motion|disputed|asked|supported|opposed|criticised|criticized|framed|set out|told|words (?:were|are))\b/i
+export const reportingPredicate=/\b(?:said|say(?:s|ing)?|told|tell\w*|argu\w*|call\w*|describ\w*|cited|cites|citing|report\w*|explain\w*|introduc\w*|present\w*|propos\w*|link\w*|challeng\w*|recall\w*|not(?:ed|ing|es)|put a motion|disput\w*|ask\w*|support\w*|oppos\w*|critici[sz]\w*|fram\w*|set out|stat(?:ed|es|ing)|announc\w*|confirm\w*|reaffirm\w*|blam\w*|declar\w*|assert\w*|suggest\w*|maintain\w*|add(?:ed|s|ing)(?=\s+(?:that|[“"‘]))|repl(?:ied|ies|ying)|respond\w*|accus\w*|attack\w*|prais\w*|welcom\w*|nam(?:ed|es|ing)|warn\w*|believ\w*|want\w*|think\w*|treat\w*|ti(?:es|ed)|favou?r\w*|advocat\w*|pledge\w*|promise\w*|demand\w*|reject\w*|defend\w*|urge\w*|insist\w*|claim\w*|would|will|words (?:were|are))\b/i
 const financialPredicate=/\b(?:paid|receiv(?:ed|es|ing|e)|secur(?:ed|es|ing|e)|got|won|earn(?:ed|s|ing)?|given|donat(?:ed|es|ing|e)|collected|accepted)\b/i
 const partyMentions=text=>mentions(text,parties).map(n=>({...n,name:partyName(n.name)}))
 function amountOwners(text,f,known=[]){
@@ -116,6 +117,11 @@ function givingActor(text,f,names,firstPerson){
  const preceding=mentions(before.slice(0,verb.index),names),actor=preceding.at(-1)
  return actor&&/^\s*(?:\w+ly\s*)*$/.test(before.slice(actor.end,verb.index))?actor.name:undefined
 }
+function givingRecipient(text,at){
+ const target=/\b(?:gave|donated(?: to)?|provided(?: to)?|contributed(?: to)?|paid)\s+(?:the\s+)?([^.!?;$]+?)\s*$/i.exec(text.slice(0,at))?.[1]
+ const names=target&&/^\p{Lu}/u.test(target)?nounPhrases(target):[]
+ return names.length===1?names[0].name.replace(/^(Labor|Liberal) Party$/,'$1'):undefined
+}
 function recordName(name,row){
  const n=norm(name),text=norm(row.text),title=norm(row.title)
  if(!n)return false
@@ -132,7 +138,8 @@ function reporterIn(text,scope,named,rows,until=scope.end){
  const subject=scope.owner
  if(!subject){
   const speakers=[...new Set(rows.map(r=>r.speaker).filter(Boolean))]
-  if(speakers.length===1&&/\b(?:he|she)\s+(?:(?:also|then|further)\s+)?(?:said|told|argued|called|criticised|warned|noted)\b/i.test(text.slice(scope.start,until)))return speakers[0]
+  const context=text.slice(scope.start,until),pronoun=/\b(?:he|she)\s+(?:(?:also|then|further|has|had)\s+)*/i.exec(context)
+  if(speakers.length===1&&pronoun&&reportingPredicate.exec(context.slice(pronoun.index+pronoun[0].length))?.index===0)return speakers[0]
  }
  if(!personName(subject,rows))return undefined
  const actor=named.find(n=>n.name===subject&&n.at>=scope.start)??named.find(n=>n.name===subject)
@@ -152,7 +159,7 @@ function evidenceRows(payload){
    const label=/^\s*[-*]?\s*([^:|]{2,140}):/.exec(line)?.[1]
    const table=/^\|/.test(line)?line.split('|').map(s=>s.trim()).filter(Boolean):[]
    const receipt=/^Disclosed receipt: (.+?) → (.+?) [—–] \$/.exec(line),donor=/^Donor: (.+?) [—–]/.exec(line)
-   const giving=!['speech','bill'].includes(source.kind)&&/^(.+?) gave (?:Liberal|Labor|One Nation|Greens|Nationals|Coalition) \$/.exec(line)
+   const giving=!['speech','bill'].includes(source.kind)&&/^(.+?) (?:gave|donated(?: to)?|provided(?: to)?|contributed(?: to)?|paid) (?:the )?\p{Lu}[^$.!?;]* \$/u.exec(line)
    const tableDonor=/\|\s*(?:Source|Donor)\s*\|/i.test(text)
    const current=/^(.+?) \([^)]+\), [^:]+: base salary/.exec(line)?.[1]
    // Annual report remuneration rows: the person owns the figure and the reporting body published it.
@@ -253,7 +260,7 @@ export function auditPayload(question,payload,{roster=[]}={}){
    if(descriptor(text,named.find(n=>n.name===name)))continue
    const candidates=selected.filter(r=>recordName(name,r)||samePerson(r.speaker,name)||modifier&&r.speaker===speaker)
    const nameAt=named.find(n=>n.name===name)?.at??0,scope=claimScope(text,nameAt,named,speakers)
-   const attribution=scope.owner===name&&(personName(name,selected)||!recordSubject(name,selected)&&reportingPredicate.test(text.slice(nameAt,scope.end)))&&(!!reporterIn(text,scope,named,selected)||!numeric.some(f=>f.at>=scope.start&&f.at<scope.end))&&selected.some(r=>['speech','bill'].includes(r.kind))
+   const attribution=scope.owner===name&&(personName(name,selected)||!recordSubject(name,selected)&&reportingPredicate.exec(text.slice(nameAt+name.length,scope.end).trimStart().replace(/^[’']s\s+/,''))?.index===0)&&(!!reporterIn(text,scope,named,selected)||!numeric.some(f=>f.at>=scope.start&&f.at<scope.end))&&selected.some(r=>['speech','bill'].includes(r.kind))
    add({type:'entity',entity:name,metric:attribution?'attribution':'identity',value:name,period:[],text,offset:sentenceAt+nameAt},attribution?candidates.filter(r=>samePerson(r.speaker,name)&&topicsMatch(text.slice(scope.start,scope.end),r)):candidates,'named entity or speaker/topic association is not established by selected evidence')
   }
   for(const f of numeric){

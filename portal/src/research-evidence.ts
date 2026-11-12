@@ -7,9 +7,39 @@ import { withoutSaPlaceholder } from '../public/sa-hansard.js'
 import type { Passage, QualitativeAnswer } from './research-types'
 import {isPlaceNameMention} from './ask-person-slot'
 import { broadTopicOverview } from './ask-answer-grain'
+import {quotationSpans,unclosedQuoteOffset} from './research-claim-audit.mjs'
+import {sentenceFragment} from './research-claims'
+import {readableDate} from './tools/record-common'
 
 export interface AnswerCitation { id: string; quote: string; start: number; end: number }
 export interface AnswerDraft { text: string; citations: AnswerCitation[] }
+/** Recover whole written sentences when model citation offsets overlap or cut through words. */
+export function rangedAnswerPoints(draft:AnswerDraft,passages:Map<string,Passage>):AnswerPoint[] {
+  const citations=draft.citations.filter(c=>c&&typeof c.id==='string'&&typeof c.quote==='string')
+  if(!citations.length)return []
+  const quotes=quotationSpans(draft.text),parts:{text:string;start:number;end:number}[]=[]
+  let start=0
+  for(const {index,segment}of new Intl.Segmenter('en-AU',{granularity:'sentence'}).segment(draft.text)){
+    const end=index+segment.length
+    if(quotes.some(q=>end>q.at&&end<q.end))continue
+    const text=draft.text.slice(start,end).replace(/\s+/g,' ').trim().replace(/^(?:[-*•]+\s+)+/,'')
+    if(text)parts.push({text,start,end})
+    start=end
+  }
+  const speakers=[...new Set([...passages.values()].map(p=>p.speaker).filter((s):s is string=>!!s))]
+  const points:AnswerPoint[]=[]
+  for(const part of parts){
+    const speaker=speakers.map(name=>({name,at:part.text.indexOf(name)})).filter(s=>s.at>=0).sort((a,b)=>a.at-b.at)[0]?.name
+    const own=speaker?citations.filter(c=>passages.get(c.id)?.speaker===speaker):[]
+    const words=contentWords(part.text)
+    const ranked=(own.length?own:citations).map(c=>({c,score:overlap(words,contentWords(c.quote)),range:Number.isSafeInteger(c.start)&&Number.isSafeInteger(c.end)&&c.start<part.end&&c.end>part.start?1:0}))
+      .sort((a,b)=>b.score-a.score||b.range-a.range)
+    const c=ranked[0].c,previous=points.at(-1)
+    if(previous?.id===c.id&&previous.claim.length+part.text.length<1199)previous.claim+=' '+part.text
+    else points.push({claim:part.text,id:c.id,quote:c.quote})
+  }
+  return points
+}
 const normal = (text: string) => text.normalize('NFC').replace(/\s+/g, ' ').trim()
 const TITLE = /^(?:Mr|Mrs|Ms|Miss|Dr|Prof|Senator|Minister|Treasurer|Premier|Member|Hon)\.?$/
 const CLAIM_VERB = /\b(?:said|says|say|argued?|argues|supported?|supports|opposed?|opposes|voted?|votes|called|calls|proposed?|proposes|announced?|claimed?|claims|stated?|states|described?|describes|warned?|warns|critici[sz]ed?|backed|backs|rejected?|rejects|committed|promised?|promises|believes?|wants?|urged?|urges|is|was|were|are|has|had|have|will|would)\b/i
@@ -63,6 +93,14 @@ const stem = (w: string) => w.slice(0, 6)
 export const contentWords = (text: string) => new Set((text.normalize('NFKC').toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []).filter(w => w.length >= 4 && !STOP.has(w)).map(stem))
 const overlap = (a: Set<string>, b: Set<string>) => [...a].filter(w => b.has(w)).length
 const words = (text: string) => [...text.matchAll(/[\p{L}\p{N}]+(?:['’][\p{L}]+)?/gu)].map(m => ({ w: m[0].toLowerCase().replace(/’/g, "'"), start: m.index!, end: m.index! + m[0].length }))
+export const personQuestionTopic=(question:string)=>/^What (?:would|does|has|did) .+? (?:say|think|said)(?: about| on)?\s+(.+?)[?.!]*$/i.exec(question)?.[1]
+/** Prefer complete topical sentences to metadata and short context-dependent fragments. */
+export function overviewSentence(text:string,question:string,minWords=0){
+  return (text.match(/[^.!?]+[.!?]/g)??[]).flatMap(part=>{
+    const sentence=part.trim(),candidate=passageExcerpt(sentence,question,40)
+    return candidate?.text===sentence&&candidate.score&&words(sentence).length>=minWords&&/^[\p{Lu}\p{N}]/u.test(sentence)&&!sentenceFragment(sentence)&&!/["“”—]/.test(sentence)?[candidate]:[]
+  }).sort((a,b)=>b.score-a.score)[0]
+}
 /** The exact passage text for the longest run of the needle's words found in order in the passage (at least
  * `min` words, or every word of a shorter needle); null when no such run exists. Case, punctuation and spacing
  * differences are absorbed; the returned span is always a verbatim substring of the passage. */
@@ -96,8 +134,7 @@ export function passageExcerpt(text: string, about: string, max = 25): { text: s
   return best
 }
 const QUOTED = /["“]([^"”\n]+)["”]|‘([^’\n]+)’|(^|[\s(])'([^'\n]+)'(?=$|[\s.,;:!?)])/g
-/** Quoted text in a claim stays quoted only when it is verbatim in the cited passage (re-cased to the passage);
- * otherwise its quotation marks go and it stands as paraphrase. */
+/** Re-case verbatim quotations to the passage; preserve other words and marks for the uncited point. */
 export function repairQuotes(claim: string, evidence: string, note: (label: string) => void): string {
   return claim.replace(QUOTED, (match, dq?: string, sq?: string, lead?: string, aq?: string) => {
     const inner = dq ?? sq ?? aq ?? ''
@@ -106,8 +143,8 @@ export function repairQuotes(claim: string, evidence: string, note: (label: stri
       if (exact !== inner) note('quote_recased')
       return `${lead ?? ''}“${exact}”`
     }
-    note('unquoted')
-    return `${lead ?? ''}${inner}`
+    note('quote_uncited')
+    return match
   })
 }
 const STATEMENT = '(?:said|says|told|tells|stated|states|argued|argues|claimed|claims|warned|warns|described|describes|called|calls|asserted|insisted|declared|wrote|accused|urged|suggested|maintained|added|replied|responded|asked|criticised|criticized|attacked|rejected|welcomed|praised|framed|emphasised|emphasized|noted|cited|quoted|presented|introduced|moved|highlighted|stressed|defended|dismissed|questioned|condemned|raised|outlined|explained|announced|pledged|promised|expressed|acknowledged|conceded|labelled|labeled|branded|recalled|reported|backed|supported|opposed|proposed|argue|say|tell|claim|warn|describe|call|urge|insist)'
@@ -179,13 +216,10 @@ export function repairCausal(claim: string, speaker: string | undefined, note: (
 
 /** points_kept counts cited points; points_uncited the points kept without a citation, by the soft check each
  * failed (uncited). salvaged names the loop stop an answer was rescued from. */
-/** Every quotation mark goes: the words stand as paraphrase. */
-export const unquoted = (claim: string) => claim.replace(QUOTED, (_m, dq?: string, sq?: string, lead?: string, aq?: string) => `${lead ?? ''}${dq ?? sq ?? aq ?? ''}`)
-/** Quotation marks outside a matched pair (a truncated claim) go too: no stray mark reads as a quotation. */
-const strayQuotesOut = (claim: string) => {
-  let out = '', last = 0
-  for (const m of claim.matchAll(QUOTED)) { out += claim.slice(last, m.index).replace(/["“”]/g, '') + m[0]; last = m.index! + m[0].length }
-  return (out + claim.slice(last).replace(/["“”]/g, '')).replace(/\s{2,}/g, ' ').trim()
+/** A loose quotation keeps its words and punctuation, including a missing closing mark. */
+const balancedLooseQuote = (claim: string) => {
+  const at=unclosedQuoteOffset(claim),mark=claim[at]
+  return at<0?claim:mark==='“'?claim+'”':mark==='‘'?claim+'’':mark==='"'||mark==="'"?claim+mark:claim.slice(0,at)+claim.slice(at+1)
 }
 /** An unsupported figure comes out where that is a clean cut: a parenthetical holding it, or the trailing clauses
  * (after a comma, semicolon or dash) that carry it, leaving a sentence of five words or more. Null when no such cut
@@ -288,7 +322,7 @@ export function namedDecline(question: string, named: NamedScope): 'named_ambigu
   return named.ambiguous ? 'named_ambiguous' : unresolvedPersonAsked(question, named) ? 'named_unresolved' : null
 }
 /** Jake's standing lines: these drop the point whatever else it has going for it. Every other failed check is
- * soft: the point stays, unquoted where its quotation is not verbatim, and uncited. */
+ * soft: the point and its quotation marks stay, uncited. */
 const HARD = new Set(['sa_placeholder', 'named_ambiguous', 'named_unresolved', 'causal_claim', 'speaker_not_named', 'claim_speaker_mismatch'])
 
 /** Repair, then verify: each point is mended in code where it can be (quote marks, quote span, speaker, party,
@@ -341,8 +375,7 @@ export function verifyResearchPoints(points: unknown, passages: Map<string, Pass
       else soft = 'quote_not_in_passage'
     }
     claim = repairQuotes(claim, evidence, note)
-    claim = repairCausal(claim, speaker, note)
-    if (claim === null) return drop('causal_claim')
+    if (causalUnattributed(claim)) return drop('causal_claim')
     claim = repairAttribution(claim, speaker, roster, note)
     if (claim === null) return drop('claim_speaker_mismatch')
     const party = repairParty(claim, speaker, passage.party, note)
@@ -358,8 +391,7 @@ export function verifyResearchPoints(points: unknown, passages: Map<string, Pass
     }
     const figures = (text: string) => positionPointSupported(text, evidence, '', passage!.date, passage!.text)
     let failed = soft ? undefined : strict(claim)
-    // A misquote becomes paraphrase; an unsupported figure comes out where that is a clean cut.
-    if (failed === 'claim_quote_unsupported' || failed === 'claim_quote_not_literal') { claim = unquoted(claim); note('unquoted'); failed = strict(claim) }
+    // An unsupported quotation stays uncited; an unsupported figure comes out where that is a clean cut.
     if (failed === 'figure_unsupported') {
       const cut = withoutUnsupportedFigures(claim, figures)
       if (!cut) return drop('figure_unsupported')
@@ -371,7 +403,7 @@ export function verifyResearchPoints(points: unknown, passages: Map<string, Pass
     for (const label of done) bump(tally.repairs, label)
     if (!soft) { kept.push({ claim, id, quote }); return }
     // An uncited point still meets every hard line on its own, and states no figure its passage lacks.
-    claim = strayQuotesOut(claim)
+    claim = balancedLooseQuote(claim)
     if (!/[\p{L}\p{N}]/u.test(claim)) return drop('shape')
     if (withoutSaPlaceholder(claim) !== claim) return drop('sa_placeholder')
     if (named.people.length && !isNamed(people, speaker)) return drop('speaker_not_named')
@@ -413,29 +445,30 @@ export function verifyResearchPoints(points: unknown, passages: Map<string, Pass
 export function recordPassagesAnswer(passages: Map<string, Passage>, question: string, named: NamedScope, positionQuery?: string, limit = 3): QualitativeAnswer | null {
   if (named.ambiguous || unresolvedPersonAsked(question, named)) return null
   const position = !!positionQuery || named.people.length > 0 || /\b(?:propos\w*|positions?|polic(?:y|ies)|supported|opposed)\b/i.test(question)
-  const topic = positionQuery || question
+  const requested=positionQuery||question
+  const topic = personQuestionTopic(requested)??named.people.reduce((text,name)=>text.replaceAll(name,''),requested)
   const topicWords = contentWords(topic)
   const candidates = [...passages.values()].filter(p => originalContext(p.id) && withoutSaPlaceholder(p.text) === p.text &&
     (!named.people.length || !!p.speaker && named.people.some(n => normal(n).toLowerCase() === normal(p.speaker!).toLowerCase())))
-    .map(p => { const evidence = position ? firstSpeechTurn(p.text) : p.text, excerpt = passageExcerpt(evidence, topic); return { p, excerpt, score: (excerpt?.score ?? 0) + overlap(topicWords, contentWords(evidence)) } })
+    .map(p => { const evidence = position ? firstSpeechTurn(p.text) : p.text, excerpt = overviewSentence(evidence,topic,8)??passageExcerpt(evidence, topic,40); return { p, excerpt, score: (excerpt?.score ?? 0) + overlap(topicWords, contentWords(evidence)) } })
     .filter(c => c.excerpt && c.excerpt.text.length >= 20 && c.score > 0 && !/["“”]/.test(c.excerpt.text))
     .sort((a, b) => b.score - a.score || String(b.p.date ?? '').localeCompare(String(a.p.date ?? '')))
   const chosen: typeof candidates = []
-  for (const c of candidates) if (chosen.length < limit && !chosen.some(x => x.p.slug === c.p.slug)) chosen.push(c)
+  for (const c of candidates) if (chosen.length < Math.min(limit,5) && !chosen.some(x => x.p.slug === c.p.slug)) chosen.push(c)
   if (!chosen.length) return null
   let text = 'What the record says:'
   const citations: QualitativeAnswer['citations'] = {}
   for (const { p, excerpt } of chosen) {
     text += '\n- '
     const start = Array.from(text).length
-    text += `${p.date ? `In ${p.date.slice(0, 4)}, ` : ''}${p.speaker ?? 'a speaker'}${p.party ? ` (${p.party})` : ''} said: “${excerpt!.text}”`
+    text += `${p.date ? `On ${readableDate(p.date)}, ` : ''}${p.speaker ?? 'a speaker'}${p.party ? ` (${p.party})` : ''} said: “${excerpt!.text}”`
     ;(citations[p.id] ??= []).push([start, Array.from(text).length])
   }
   return { answer: text, citations, sources: sourcesOf(chosen.map(c => c.p)) }
 }
 
 /** The named-politician position path's draft when no point passed its checks (16 Oct): each point the model wrote
- * stands as an uncited line, unquoted unless verbatim and without figures its passages lack, unless it crosses a
+ * stands as an uncited line, retaining quotation marks and without figures its passages lack, unless it crosses a
  * hard line (another named person speaking, unattributed causation, the SA placeholder). Null when none is left. */
 export function loosePositionPoints(drafted: { text: string; citations: { id: string; quote: string }[] }[], sources: { id: string; snippet: string; date?: string }[], speaker: string, question: string, roster: unknown): { text: string; ids: string[] }[] | null {
   const out: { text: string; ids: string[] }[] = []
@@ -445,10 +478,9 @@ export function loosePositionPoints(drafted: { text: string; citations: { id: st
     // on the verified path: a neighbouring sentence's figure cannot support it. Otherwise any of its passages may.
     const quotes = point.citations.filter(c => own.some(s => s.id === c.id && normal(s.snippet).includes(normal(c.quote)))).map(c => c.quote)
     const evidence = isPositionDetailQuestion(question) && quotes.length ? quotes.join('\n') : cited.map(s => s.snippet).join('\n')
-    let text: string | null = strayQuotesOut(repairQuotes(point.text.replace(/\s+/g, ' ').trim(), evidence, () => {}))
+    let text: string | null = balancedLooseQuote(repairQuotes(point.text.replace(/\s+/g, ' ').trim(), evidence, () => {}))
     if (!/[\p{L}\p{N}]/u.test(text) || withoutSaPlaceholder(text) !== text) continue
-    text = repairCausal(text, speaker, () => {})
-    if (text === null) continue
+    if (causalUnattributed(text)) continue
     text = repairAttribution(text, speaker, roster, () => {})
     if (text === null) continue
     text = withoutUnsupportedFigures(text, t => positionPointSupported(t, evidence, question, cited[0]?.date ?? ''))

@@ -37,16 +37,16 @@ test('unverifiable position recovery does not turn fabricated excerpts into cita
  assert.equal(out.answer,'**From their speeches**\n\n- Example MP proposed a five-year GST moratorium for essential building materials for homes up to $1 million. (11 Feb 2025)');
  const none=harness(JSON.stringify({points:[]}));assert.equal(await none.recover(payload,{query:'housing'},{}),null);assert.equal(none.calls,1,'an empty draft is not retried');
 });
-test('a soft-failing position summary is unquoted and loses figures its passage lacks; hard lines still drop the point',async()=>{
+test('a soft-failing position summary keeps quote marks and loses unsupported figures; hard lines still drop it',async()=>{
  const text='Example MP said “GST should go on every building material”, at a cost of $9 billion, and proposed a five-year GST moratorium.';
  const out=await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote:'not in the speech at all, made up'}]}]})).recover(payload,{query:'housing'},{});
- assert.equal(out.answer_status,'uncited');assert.doesNotMatch(out.answer,/[“”"]|\$9 billion/);assert.match(out.answer,/^\*\*From their speeches\*\*\n\n- Example MP said GST should go on every building material\./);
+ assert.equal(out.answer_status,'uncited');assert.doesNotMatch(out.answer,/\$9 billion/);assert.match(out.answer,/^\*\*From their speeches\*\*\n\n- Example MP said “GST should go on every building material”\./);
  // Words put in another member's mouth (a verbatim quotation): nothing is left, so the repair turn runs.
  const h=harness(JSON.stringify({points:[{text:'Casey Sample said “I propose a five-year moratorium on GST for essential building materials”.',citations:[{id:'s1',quote:'not in the speech at all, made up'}]}]}));
  assert.equal(await h.recover(payload,{query:'housing'},{}),null);assert.equal(h.calls,2);assert.match(h.request.body.prompt.user,/previous attempt failed verification/);
- // Unattributed influence stands only as what the speaker said.
+ // Unattributed influence is a hard line even with a selected speaker.
  const causal=await harness(JSON.stringify({points:[{text:'Donations influenced the GST moratorium on building materials.',citations:[{id:'s1',quote:'not in the speech at all, made up'}]}]})).recover(payload,{query:'housing'},{});
- assert.match(causal.answer,/- Example MP said donations influenced the GST moratorium on building materials\./);
+ assert.equal(causal,null);
 });
 test('a first draft that crosses a hard line is written again and the verified retry is used',async()=>{
  const answers=[JSON.stringify({points:[{text:'Casey Sample said “I propose a five-year moratorium on GST for essential building materials”.',citations:[{id:'s1',quote:'This fabricated sentence does not exist in the speech.'}]}]}),draft()];let calls=0;const phases=[];

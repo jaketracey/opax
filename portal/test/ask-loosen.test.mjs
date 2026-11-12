@@ -1,4 +1,4 @@
-// The loosened Ask contract (16 Oct): an answer beats no answer. Soft checks keep a point (unquoted, uncited);
+// The loosened Ask contract: soft checks keep a point and its quote marks, uncited;
 // hard lines (wrong person, a person the question cannot pin down, unattributed influence) still drop it or decline.
 // Invented people and passages only; mock models, no live calls.
 import test from 'node:test';
@@ -47,11 +47,11 @@ test('all points fail soft checks: an uncited answer, answered, with no repair t
  assert.equal(body.research.mode,'loop');assert.equal(body.research.answer_stats.mode,'uncited');assert.equal(body.research.answer_stats.points_uncited,2);assert.deepEqual(body.research.answer_stats.uncited,{quote_not_in_passage:2});
 });
 
-test('a misquote becomes a paraphrase: cited when it still restates the passage, uncited when it does not',()=>{
+test('a non-literal quote keeps its marks and stays uncited even when it restates the passage',()=>{
  const a=verify([{claim:'Robin Example said “poker machine losses must be capped at a dollar a spin”.',id,quote:'cap poker machine losses at one dollar a spin'}]);
- assert.equal(a.lines[0],'Robin Example said poker machine losses must be capped at a dollar a spin.');assert.ok(a.out.citations[id]);assert.equal(a.out.answer_status,undefined);assert.equal(a.tally.repairs.unquoted,1);
+ assert.equal(a.lines[0],'Robin Example said “poker machine losses must be capped at a dollar a spin”.');assert.deepEqual(a.out.citations,{});assert.equal(a.out.answer_status,'uncited');assert.equal(a.tally.repairs.quote_uncited,1);
  const b=verify([{claim:'Robin Example said “online betting advertising should be banned outright”.',id,quote:'online betting advertising should be banned'}]);
- assert.equal(b.lines[0],'Robin Example said online betting advertising should be banned outright.');assert.doesNotMatch(b.out.answer,/[“”"]/);assert.equal(b.out.answer_status,'uncited');assert.deepEqual(b.out.citations,{});
+ assert.equal(b.lines[0],'Robin Example said “online betting advertising should be banned outright”.');assert.equal(b.out.answer_status,'uncited');assert.deepEqual(b.out.citations,{});
  // A quotation the cited passage does hold keeps its marks, even on an uncited line.
  const c=verify([{claim:'Robin Example on online betting: “Mandatory precommitment will protect families”.',id,quote:'not in the passage at all'}]);
  assert.match(c.out.answer,/“Mandatory precommitment will protect families”/);
@@ -118,7 +118,7 @@ test('a loop timeout before any draft answers from the verified passages it alre
  let n=0;
  const f=loop(async()=>++n===1?reply([call('search',{query:'poker machine reform'})]):new Promise(()=>{}),{wallMs:250});
  const run=await f.run();
- assert.equal(run.answered,true);assert.match(run.answer,/^What the record says:\n- In 2012, Robin Example \(Australian Labor Party\) said: “/);
+ assert.equal(run.answered,true);assert.match(run.answer,/^What the record says:\n- On 10 May 2012, Robin Example \(Australian Labor Party\) said: “/);
  assert.equal(run.research.answer_stats.mode,'record_list');assert.equal(run.research.answer_stats.salvaged,'timeout');
 });
 

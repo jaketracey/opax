@@ -75,13 +75,13 @@ test('aggregate selection limits survive writing and repeated final-boundary che
  assert.match(out.coverage.note,/Title selection: climate; carbon/)
  assert.match(out.coverage.note,/not support for or opposition/)
 })
-test('broad topic fallback quotes six distinct dated records when hard findings empty the draft',()=>{
+test('broad topic fallback caps distinct dated records at five when hard findings empty the draft',()=>{
  const q='What has parliament said about the Murray–Darling Basin?'
  const sources=Array.from({length:6},(_,i)=>({resource:'speech-'+i,kind:'speech',title:`Murray–Darling Basin debate ${i}, 201${i}-10-25`,date:`201${i}-10-25`,speaker:`Speaker ${i}`,url:`https://www.aph.gov.au/record/${i}`,href:`https://www.aph.gov.au/record/${i}`,snippet:'The Murray–Darling Basin needs better water management.',cited:true}))
  const lines=sources.map(s=>`On ${s.date}, ${s.speaker} said “The Basin belongs to Martians”.`),answer=lines.join('\n')
  const out=api.groundAnswerPayload({answer,answer_decision:'answer',sources,citations:Object.fromEntries(sources.map(s=>[s.resource+'/t/body/0',[[0,answer.length]]]))},q)
  assert.equal(out.coherence.method,'cited_passage_excerpts')
- assert.equal(Object.keys(out.citations).length,6)
+ assert.equal(Object.keys(out.citations).length,5)
  assert.match(out.answer,/On 25 October 2010, Speaker 0 said “The Murray–Darling Basin needs better water management\.”/)
  assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b/)
  assert.doesNotMatch(out.answer,/Martians/)

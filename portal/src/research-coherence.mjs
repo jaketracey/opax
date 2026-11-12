@@ -15,7 +15,7 @@ export function answerDecision(payload) {
 }
 /** A question asserting that money bought or moved something: the hard line that stays a decline. */
 const CAUSAL_ASK=/\b(?:buy|bought|bribe\w*|because|influenc\w*|caus(?:e|ed|ing)|sw[ae]y\w*)\b|\bchang\w* (?:how|what|the way|whether)\b|\bin return\b|\bin exchange for\b|\bpaid for (?:access|votes?|influence)\b/i
-export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led to|resulted in|secured)\b/i
+export const CAUSAL = /\b(?:bought|bribe\w*|in exchange for|because of (?:the|these|their) donations?|donations? (?:caused|influenced|explain\w*)|paid for (?:access|votes?|influence))\b|\b(?:donat\w*|money|funding)\b.*\b(?:influenc\w*|caus\w*|led (?:[^.!?;]*? )?to|resulted in|secured)\b/i
 /** An explicit claim that money moved something: declined outright. Questions about votes and positions are a matter of shape, not of this list. */
 export const causalAsk=question=>CAUSAL_ASK.test(question)
 // What receipts cannot answer: anything about a vote, a position or why, and a yes/no question that is not about giving or receiving.

@@ -113,5 +113,5 @@ test('a new named head in a pay conversation uses annual reports when the prior 
 test('display punctuation never changes words inside retained quotation marks',async()=>{
  const answer='The member said “We agree—on this issue.”'
  const p=await(await api.withAnswerLanguage(Response.json({answer,citations:{},sources:[]}))).json()
- assert.doesNotMatch(p.answer,/—|[“”]/);assert.match(p.answer,/We agree, on this issue/)
+ assert.equal(p.answer,answer)
 })

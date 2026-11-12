@@ -38,12 +38,12 @@ const payload=()=>{
  const answer='In his 2004 Governor-General\'s speech contribution, Andrew Murray said “The Basin belongs to Martians”.'
  return {answer,answer_decision:'answer',citations:{'speech-1/t/body/0':[[0,Array.from(answer).length]]},sources:[structuredClone(source)]}
 }
-test('a misquotation stays as an uncited paraphrase instead of becoming record titles',()=>{
+test('a misquotation keeps its quote marks uncited instead of becoming record titles',()=>{
  const input=payload(),snapshot=structuredClone(input),out=api.groundAnswerPayload(input,question)
  assert.deepEqual(input,snapshot)
  assert.equal(out.answer_status,'uncited')
- assert.match(out.answer,/Andrew Murray said The Basin belongs to Martians/)
- assert.doesNotMatch(out.answer,/[“”]|The record dated/)
+ assert.match(out.answer,/Andrew Murray said “The Basin belongs to Martians”/)
+ assert.doesNotMatch(out.answer,/The record dated/)
  assert.deepEqual(out.citations,{})
  assert.equal(api.sentenceFragment(out.answer),false)
  const ranges=Object.values(out.citations).flat()

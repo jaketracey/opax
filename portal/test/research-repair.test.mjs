@@ -25,13 +25,13 @@ test('quote: a near-verbatim citation quote is re-spanned to the passage words; 
   assert.equal(b.tally.points_kept, 1); assert.equal(b.tally.repairs.quote_reselected, 1);
 });
 
-test('quote marks: verbatim words stay quoted (re-cased); anything else loses its marks, never stays quoted', () => {
+test('quote marks: verbatim words are re-cased; non-literal words keep their marks uncited', () => {
   const { lines, tally } = run([
     { claim: 'Robin Example said we must “CAP POKER MACHINE LOSSES at one dollar a spin”.', id, quote: 'cap poker machine losses' },
     { claim: 'Robin Example said “precommitment is the only answer to poker machine harm”.', id, quote: 'Mandatory precommitment will protect families' }]);
   assert.equal(lines[0], 'Robin Example said we must “cap poker machine losses at one dollar a spin”.');
-  assert.equal(lines[1], 'Robin Example said precommitment is the only answer to poker machine harm.');
-  assert.equal(tally.repairs.quote_recased, 1); assert.equal(tally.repairs.unquoted, 1);
+  assert.equal(lines[1], 'Robin Example said “precommitment is the only answer to poker machine harm”.');
+  assert.equal(tally.repairs.quote_recased, 1); assert.equal(tally.repairs.quote_uncited, 1);
 });
 
 test('speaker: unquoted words put to another member are rewritten to the cited speaker; quoted words in another mouth are dropped', () => {
@@ -61,9 +61,9 @@ test('party: a wrong singular party descriptor becomes the speaker\'s name; a wr
   assert.equal(b.out.answer_status, 'uncited'); assert.deepEqual(b.out.citations, {}); assert.equal(b.tally.uncited.claim_party_mismatch, 1); assert.deepEqual(b.tally.drops, {});
 });
 
-test('causal: an unattributed causal claim becomes what the cited speaker said; with no speaker it is dropped', () => {
+test('causal: an unattributed causal claim is dropped with or without a selected speaker', () => {
   const a = run([{ claim: 'In 2012, industry donations influenced the poker machine reform vote.', id, quote: 'The industry has fought every reform.' }]);
-  assert.equal(a.lines[0], 'In 2012, Robin Example said industry donations influenced the poker machine reform vote.'); assert.equal(a.tally.repairs.causal_attributed, 1);
+  assert.equal(a.out, null); assert.equal(a.tally.drops.causal_claim, 1);
   const b = run([{ claim: 'Industry donations influenced the poker machine reform vote.', id: other, quote: 'The industry has fought every reform.' }]);
   assert.equal(b.out, null); assert.equal(b.tally.drops.causal_claim, 1);
 });
@@ -91,13 +91,27 @@ test('nothing survives but verified passages exist: two or three passages answer
   const out = api.recordPassagesAnswer(passages, question, scope);
   const lines = out.answer.split('\n');
   assert.equal(lines[0], 'What the record says:');
-  assert.match(lines[1], /^- In 2012, Robin Example \(Australian Labor Party\) said: “[^”]+”$/);
+  assert.match(lines[1], /^- On 10 May 2012, Robin Example \(Australian Labor Party\) said: “[^”]+”$/);
   for (const line of lines.slice(1)) { const quoted = /“([^”]+)”/.exec(line)[1]; assert.ok(speech.includes(quoted), quoted); }
   assert.ok(out.citations[id]);
   // A named person's question answers only from that person's passages, never another speaker's.
   assert.equal(api.recordPassagesAnswer(passages, 'What has Casey Sample said about poker machines?', { ...scope, people: ['Casey Sample'] }), null);
   assert.equal(api.recordPassagesAnswer(passages, 'What has been said about wind farms?', scope), null);
 });
+
+test('record passage fallback caps quotations at five even when its caller requests eight',()=>{
+  const records=new Map(Array.from({length:8},(_,i)=>{const resource=i.toString(16).repeat(32),key=resource+'/t/body/0-300';return [key,{...passage,id:key,resource,slug:'speech-'+i}]}))
+  const out=api.recordPassagesAnswer(records,question,scope,undefined,8)
+  assert.equal(Object.keys(out.citations).length,5);assert.equal(out.sources.length,5)
+})
+
+for(const question of ['What has Robin Example said about coal?','What would Robin Example say about coal?'])test('record fallback selects topic words rather than a speaker notice: '+question,()=>{
+  const statement='Coal mining is worsening climate change and needs to end.'
+  const p={...passage,text:'Robin Example asked the Prime Minister a question. '+statement}
+  const out=api.recordPassagesAnswer(new Map([[id,p]]),question,{...scope,people:['Robin Example']})
+  assert.match(out.answer,/On 10 May 2012, Robin Example/)
+  assert.ok(out.answer.includes('“'+statement+'”'));assert.doesNotMatch(out.answer,/asked the Prime Minister/)
+})
 
 test('telemetry: one compact answer record and fallback counts, labels and counts only, never text', async () => {
   const logs = [], old = console.log; console.log = v => logs.push(v);

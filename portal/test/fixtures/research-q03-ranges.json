@@ -1,0 +1,81 @@
+{
+  "draft": {
+    "text": "Across the record, Labor and the Coalition sit on opposite sides of the nuclear power debate. Labor speakers attack nuclear as dangerous, expensive, too slow and a threat to the renewable energy transition, while Coalition speakers, as quoted by Labor members, present nuclear as scientifically necessary and central to Australia's future energy mix.\n\nThe clearest Labor statement is Justine Elliot's (2019-09-09), who said she rose \"to condemn this government's dangerous plans to develop a nuclear power industry in Australia\", adding that \"The fact is nuclear power is dangerous and expensive and it would consume vast amounts of precious water\" and that she stood \"with my community in firm opposition to nuclear power.\" Jerome Laxale (2024-06-25) framed the opposition around speed and renewables, saying \"It's been six days since the Liberals launched their nuclear crusade\" and offering \"three reasons why I oppose nuclear power\", including that \"The Liberals' nuclear plans will give coal-fired power a new lease on life, and that would be catastrophic for our efforts to combat climate change\" and that \"nuclear will essentially halt our transition to renewable energy.\"\n\nEd Husic (2024-06-27) quoted the Coalition position in the House, citing the member for Mitchell: \"The science is absolutely clear that nuclear power will be an integral part of humanity's future.\" Tania Lawrence (2023-11-27) set out the Labor alternative in positive terms, citing renewable rollout to \"support the transition to 82 per cent renewable power by 2030\", record investments in solar, wind, green hydrogen and storage, and 400 community batteries.\n\nSo the recorded divide is one of both policy and framing: Labor argues nuclear is unsafe, costly, water-intensive and a delay to renewables, while the Coalition position quoted in the record treats nuclear as scientifically justified and an integral part of the future energy mix. The material limitation is that the record is a ranked sample of Hansard passages, heavily weighted to Labor speakers, so the Coalition side is documented mainly through Labor members quoting Coalition members rather than through first-person Coalition speeches in the retrieved set.",
+    "citations": [
+      {
+        "id": "speech-379914/t/body/0-646",
+        "quote": "I rise to condemn this government's dangerous plans to develop a nuclear power industry in Australia. We're seeing intensifying pressure from the Liberals and Nationals, at all levels of government, pushing this very toxic agenda. The fact is nuclear power is dangerous and expensive and it would consume vast amounts of precious water at a time when Australia faces increased water security threats",
+        "start": 0,
+        "end": 646
+      },
+      {
+        "id": "speech-1582057/t/body/0-649",
+        "quote": "It's been six days since the Liberals launched their nuclear crusade. I want to let Bennelong know three reasons why I oppose nuclear power—no memes, just facts. Firstly, we do not have another 15 to 20 years to give coal-fired power free reign in our electricity grid. The Liberals' nuclear plans will give coal-fired power a new lease on life, and that would be catastrophic for our efforts to combat climate change. Secondly, nuclear will essentially halt our transition to renewable energy.",
+        "start": 0,
+        "end": 649
+      },
+      {
+        "id": "speech-1583160/t/body/391-710",
+        "quote": "We also had the member for Mitchell say: The science is absolutely clear that nuclear power will be an integral part of humanity's future. That's not just my view; it's the view of many important people and scientists …",
+        "start": 391,
+        "end": 710
+      },
+      {
+        "id": "speech-1566367/t/body/1774-2421",
+        "quote": "We've rolled out six offshore wind zones across Australia to support the transition to 82 per cent renewable power by 2030. We've made record investments in renewables—solar, wind, green hydrogen and storage, transmission through Rewiring the Nation, capacity, and research.",
+        "start": 1774,
+        "end": 2421
+      }
+    ]
+  },
+  "sources": [
+    {
+      "resource": "speech-379914",
+      "slug": "speech-379914",
+      "title": "Justine Elliot — 2019-09-09",
+      "href": "https://opax.com.au/doc/speech-379914",
+      "url": "https://opax.com.au/doc/speech-379914",
+      "snippet": "I rise to condemn this government's dangerous plans to develop a nuclear power industry in Australia. We're seeing intensifying pressure from the Liberals and Nationals, at all levels of government, pushing this very toxic agenda. The fact is nuclear power is dangerous and expensive and it would consume vast amounts of precious water at a time when Australia faces increased water security threats due to the gross mismanagement by this government and of course the very harsh impacts of climate change. I stand with my community in firm opposition to nuclear power. Locals were rightly angry when the issue was recently raised in question time",
+      "cited": true,
+      "kind": "speech",
+      "date": "2019-09-09",
+      "speaker": "Justine Elliot"
+    },
+    {
+      "resource": "speech-1566367",
+      "slug": "speech-1566367",
+      "title": "Tania Lawrence — PRIVATE MEMBERS' BUSINESS — 2023-11-27",
+      "href": "https://opax.com.au/doc/speech-1566367",
+      "url": "https://opax.com.au/doc/speech-1566367",
+      "snippet": "to ensure emissions reductions by our largest carbon emitters. We've rolled out six offshore wind zones across Australia to support the transition to 82 per cent renewable power by 2030. We've made record investments in renewables—solar, wind, green hydrogen and storage, transmission through Rewiring the Nation, capacity, and research. We've launched Australia's first Electric Vehicle Strategy and are reviewing our fuel efficiency standards. And we're installing 400 community batteries around Australia to enable households to share in the generation of solar energy. And, yes, there is a lot more, but, of course, I only have five minutes to",
+      "cited": true,
+      "kind": "speech",
+      "date": "2023-11-27",
+      "speaker": "Tania Lawrence"
+    },
+    {
+      "resource": "speech-1582057",
+      "slug": "speech-1582057",
+      "title": "Jerome Laxale — STATEMENTS BY MEMBERS — 2024-06-25",
+      "href": "https://opax.com.au/doc/speech-1582057",
+      "url": "https://opax.com.au/doc/speech-1582057",
+      "snippet": "It's been six days since the Liberals launched their nuclear crusade. I want to let Bennelong know three reasons why I oppose nuclear power—no memes, just facts. Firstly, we do not have another 15 to 20 years to give coal-fired power free reign in our electricity grid. The Liberals' nuclear plans will give coal-fired power a new lease on life, and that would be catastrophic for our efforts to combat climate change. Secondly, nuclear will essentially halt our transition to renewable energy. Nuclear power cannot be switched off, and, as we continue to install more solar panels on homes, the addition of nuclear power would literally blow up the",
+      "cited": false,
+      "kind": "speech",
+      "date": "2024-06-25",
+      "speaker": "Jerome Laxale"
+    },
+    {
+      "resource": "speech-1583160",
+      "slug": "speech-1583160",
+      "title": "Ed Husic — QUESTIONS WITHOUT NOTICE — 2024-06-27",
+      "href": "https://opax.com.au/doc/speech-1583160",
+      "url": "https://opax.com.au/doc/speech-1583160",
+      "snippet": "and then chips scientists who use spreadsheets with evidence and facts as living in a fantasy land. We also had the member for Mitchell say: The science is absolutely clear that nuclear power will be an integral part of humanity's future. That's not just my view; it's the view of many important people and scientists …",
+      "cited": false,
+      "kind": "speech",
+      "date": "2024-06-27",
+      "speaker": "Ed Husic"
+    }
+  ]
+}

@@ -14,8 +14,9 @@ const payload=(answer,extra={})=>({answer,answer_decision:'answer',sources:[stru
 for(const [label,answer,expected]of [
  ['weak topic association','Avery Example said immigration needed attention.','Avery Example said immigration needed attention.'],
  ['identity mention','The Example Housing Authority needs reform.','The Example Housing Authority needs reform.'],
- ['misquotation','Avery Example said “Housing affordability calls for affordable homes”.','Avery Example said Housing affordability calls for affordable homes.'],
- ['malformed quotation','Avery Example said “Housing affordability calls for affordable homes.','Avery Example said Housing affordability calls for affordable homes.'],
+ ['misquotation','Avery Example said “Housing affordability calls for affordable homes”.','Avery Example said “Housing affordability calls for affordable homes”.'],
+ ['malformed quotation','Avery Example said “Housing affordability calls for affordable homes.','Avery Example said “Housing affordability calls for affordable homes.”'],
+ ['stray closing quotation','Avery Example said housing affordability calls for affordable homes”.','Avery Example said housing affordability calls for affordable homes.'],
  ['unsupported date','On 4 May 2025, Avery Example said housing needs more homes.','Avery Example said housing needs more homes.'],
 ])test(`soft ${label} keeps the point without a citation`,()=>{
  const input=payload(answer),snapshot=structuredClone(input),out=api.groundAnswerPayload(input,question)
@@ -53,7 +54,7 @@ for(const stream of [false,true])test('malformed quotes are repaired before JSON
  const p=payload('Avery Example said “Housing needs more homes.'),headers={'content-type':'text/event-stream'}
  const response=stream?new Response('event: done\ndata: '+JSON.stringify(p)+'\n\n',{headers}):Response.json(p)
  const wire=await(await api.withAnswerLanguage(response,question)).text(),out=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
- assert.equal(out.answer,'Avery Example said Housing needs more homes.');assert.equal(out.answer_status,'uncited')
+ assert.equal(out.answer,'Avery Example said “Housing needs more homes.”');assert.equal(out.answer_status,'uncited')
 })
 
 for(const [label,answer]of [
@@ -89,7 +90,7 @@ test('a name match alone is not an on-topic passage',()=>{
  const s={...source,snippet:'Avery Example thanked the committee for its work.'},answer='The record dated 27 September 2022 is '+s.title+'.'
  const out=api.groundAnswerPayload(payload(answer,{sources:[s]}),question)
  assert.equal(out.answer_decision,'limitation');assert.match(out.answer,/selected speeches.*do not mention housing affordability directly/i)
- assert.doesNotMatch(out.answer,/The record dated/);assert.deepEqual(out.citations,{})
+ assert.doesNotMatch(out.answer,/The record dated/);assert.match(out.answer,/The closest are/);assert.ok(out.citations['s1/t/body/0'])
 })
 
 test('excerpt selection uses the topic rather than the speaker name',()=>{
@@ -97,8 +98,8 @@ test('excerpt selection uses the topic rather than the speaker name',()=>{
  assert.ok(out.answer.includes(`“${quote}”`));assert.doesNotMatch(out.answer,/thanked the committee/)
 })
 
-test('person fallback gives every cited record its own dated quotation',()=>{
- const sources=Array.from({length:5},(_,i)=>({...source,resource:'s'+i,date:`202${i}-09-27`}))
+test('person fallback caps dated quotations at five',()=>{
+ const sources=Array.from({length:8},(_,i)=>({...source,resource:'s'+i,date:`202${i}-09-27`}))
  const out=api.groundAnswerPayload(payload('',{sources}),question)
  assert.equal(out.sources.length,5);assert.equal(Object.keys(out.citations).length,5)
  assert.equal((out.answer.match(/said “/g)??[]).length,5)
@@ -135,7 +136,7 @@ for(const stream of [false,true])for(const cache of [false,true])for(const fallb
 test('both writers describe hypothetical questions as documented positions',()=>{
  const prompt=JSON.parse(api.writingPrompt({question,period:{kind:'all',label:''},facts:[]}))
  assert.match(prompt.contract,/what would.*say\/think/i);assert.match(prompt.contract,/Going by.*record/)
- assert.match(prompt.contract,/on-topic words/)
+ assert.match(prompt.contract,/on-topic words/);assert.match(prompt.contract,/plain reporting verbs.*rank or rate a person only where a cited record does/)
 })
 
 test('person statement eval rejects title lists, unrelated quotes and the wrong speaker',()=>{
@@ -143,6 +144,7 @@ test('person statement eval rejects title lists, unrelated quotes and the wrong 
  const check=(answer,sources=[source])=>runCheck(c,{answer,payload:{answer,sources},ev:{entries:[],cited:[]}}).status
  assert.equal(check(`On 27 September 2022, Avery Example said “${quote}”`),'pass')
  assert.equal(check('Avery Example called for more homes to improve housing affordability.'),'pass')
+ assert.equal(check(`Avery Example blames the housing affordability crisis on supply, saying “${quote}”`),'pass')
  assert.equal(check('The record dated 27 September 2022 is '+source.title+'.'),'fail')
  assert.equal(check('Avery Example said “Thank you for your work”.'),'fail')
  assert.equal(check(`Blake Sample said “${quote}”`),'fail')

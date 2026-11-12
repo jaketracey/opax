@@ -20,7 +20,7 @@ import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
 import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL } from './transcript-answer'
-import { verifyResearchAnswer, verifyResearchPoints, unresolvedPersonAsked, recordPassagesAnswer, namedDecline, emptyTally, type AnswerDraft, type AnswerPoint } from './research-evidence'
+import { verifyResearchAnswer, verifyResearchPoints, rangedAnswerPoints, unresolvedPersonAsked, recordPassagesAnswer, namedDecline, emptyTally, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
 import { researchReservationUsd, researchTurnReservationUsd } from './research-budget'
@@ -442,12 +442,8 @@ export function createResearch(options: ResearchOptions): Research {
       if (overview) facts = facts.filter(f=>f.tool!=='find_records'&&!overviewContextOnly(f.fact.text)).filter((f,i,all)=>all.findIndex(other=>other.fact.cite.url===f.fact.cite.url)===i).slice(0,2)
       const tally = stats.answer = emptyTally()
       const { named } = context
-      // A text answer that fails as a whole is read again point by point, one point per citation range.
-      const ranged = () => Array.isArray(args.citations) && typeof args.text === 'string' ? (args.citations as unknown[]).flatMap(raw => {
-        const c = object(raw), chars = Array.from(args.text as string)
-        return Number.isSafeInteger(c.start) && Number.isSafeInteger(c.end) && (c.start as number) >= 0 && (c.end as number) > (c.start as number)
-          ? [{ claim: chars.slice(c.start as number, c.end as number).join('').replace(/\s+/g, ' ').replace(/^[-*•\s]+/, '').trim(), id: c.id, quote: c.quote }] : []
-      }) : []
+      // A text answer that fails as a whole is recovered as complete sentences against the selected passages.
+      const ranged = () => Array.isArray(args.citations) && typeof args.text === 'string' ? rangedAnswerPoints(args as unknown as AnswerDraft,passages) : []
       const points = focus || hearing ? null : Array.isArray(args.points) ? verifyResearchPoints(overview ? args.points.slice(0,8-facts.length) : args.points, passages, question, named, options.positionQuery, roster, why, tally)
         : typeof args.text === 'string' && Array.isArray(args.citations) ? verifyResearchAnswer(args as unknown as AnswerDraft, passages, question, named, options.positionQuery, roster, why)
           ?? (ranged().length ? verifyResearchPoints(ranged(), passages, question, named, options.positionQuery, roster, why, tally) : null) : null
