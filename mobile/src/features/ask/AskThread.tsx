@@ -38,7 +38,6 @@ export function legacyDate(
 // A failure owns its deadline and announcement across component remounts.
 const failureKeys = new WeakMap<object, number>();
 const announcedRetries = new WeakSet<AskFailure>();
-const arrivedQuestions = new WeakSet<Turn>();
 let nextKey = 0;
 function errorKey(failure: object) {
   if (!failureKeys.has(failure)) failureKeys.set(failure, ++nextKey);
@@ -159,49 +158,32 @@ function RetryButton({
   );
 }
 
-/** Consume the first text once per submitted question, including fast/background arrivals. */
+/** A tap only for words that took this long after the question. */
+const slowArrival = 3000;
+/** Felt as the words appear: an arrival seen later than this stays silent. */
+const arrivalLate = 1000;
+
+/**
+ * One light haptic when a slow answer's first words appear. The arrival is
+ * the controller's (`s.firstText`), consumed once per question, including
+ * fast, failed and background arrivals. A view that mounts after the words
+ * came counts them as felt, so a remount never taps again or late.
+ */
 function useAnswerArrival(s: AskState) {
-  const waiting = useRef<{
-    question: Turn;
-    started: number | undefined;
-    arrived: boolean;
-  } | null>(null);
+  const felt = useRef(s.firstText);
+  const first = s.firstText;
+  const failed = !!(s.error || s.clarify);
   useEffect(() => {
-    if (s.error || s.clarify) {
-      waiting.current = null;
-      return;
-    }
-    const latest = s.thread.at(-1);
+    if (!first || felt.current === first) return;
+    felt.current = first;
     if (
-      s.busy &&
-      latest?.role === 'user' &&
-      waiting.current?.question !== latest
+      !failed &&
+      first.waited >= slowArrival &&
+      Date.now() - first.at < arrivalLate &&
+      AppState.currentState === 'active'
     )
-      waiting.current = {
-        question: latest,
-        started: latest.at,
-        arrived: false,
-      };
-    const run = waiting.current;
-    const text = s.busy
-      ? s.streaming
-      : latest?.role === 'answer' && s.thread.at(-2) === run?.question
-        ? latest.text
-        : '';
-    if (run && !run.arrived && text.trim()) {
-      run.arrived = true;
-      const alreadyArrived = arrivedQuestions.has(run.question);
-      arrivedQuestions.add(run.question);
-      if (
-        !alreadyArrived &&
-        run.started !== undefined &&
-        Date.now() - run.started >= 3000 &&
-        AppState.currentState === 'active'
-      )
-        haptic('light');
-    }
-    if (!s.busy) waiting.current = null;
-  }, [s]);
+      haptic('light');
+  }, [first, failed]);
 }
 
 /**

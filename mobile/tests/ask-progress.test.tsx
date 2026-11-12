@@ -357,6 +357,105 @@ test('a delayed mount uses the question submission time for the arrival haptic',
   expect(jest.mocked(haptic).mock.calls).toEqual([['light']]);
 });
 
+test.each([0, 2000])(
+  'a remount %i ms after the first words arrived away never taps',
+  async (away) => {
+    start();
+    act(() => jest.advanceTimersByTime(5000));
+    hideThread();
+    act(() => handlers.delta('First words.'));
+    act(() => jest.advanceTimersByTime(away));
+    showThread();
+    expect(haptic).not.toHaveBeenCalled();
+    act(() => handlers.delta(' More words.'));
+    hideThread();
+    showThread();
+    await complete();
+    expect(haptic).not.toHaveBeenCalled();
+  },
+);
+
+test('a remount after a whole answer arrived away never taps', async () => {
+  start();
+  act(() => jest.advanceTimersByTime(5000));
+  hideThread();
+  await complete();
+  showThread();
+  expect(haptic).not.toHaveBeenCalled();
+});
+
+test('a remount after the first-text tap never taps again', async () => {
+  start();
+  act(() => jest.advanceTimersByTime(5000));
+  act(() => handlers.delta('First words.'));
+  expect(jest.mocked(haptic).mock.calls).toEqual([['light']]);
+  for (const wait of [0, 500, 5000]) {
+    hideThread();
+    act(() => jest.advanceTimersByTime(wait));
+    showThread();
+  }
+  act(() => handlers.delta(' More words.'));
+  await complete();
+  hideThread();
+  showThread();
+  expect(jest.mocked(haptic).mock.calls).toEqual([['light']]);
+});
+
+test('the controller keeps the first-text arrival per question, across a recovery', async () => {
+  start();
+  expect(controller.snapshot().firstText).toBeNull();
+  act(() => jest.advanceTimersByTime(4000));
+  act(() => handlers.delta('  '));
+  expect(controller.snapshot().firstText).toBeNull();
+  act(() => handlers.delta('First words.'));
+  const first = controller.snapshot().firstText;
+  expect(first).toEqual({ at: 104_000, waited: 4000 });
+  act(() => jest.advanceTimersByTime(1000));
+  act(() => {
+    handlers.retry();
+    handlers.delta('Rewritten words.');
+  });
+  await complete();
+  expect(controller.snapshot().firstText).toBe(first);
+  start();
+  expect(controller.snapshot().firstText).toBeNull();
+  act(() => jest.advanceTimersByTime(3500));
+  await complete();
+  expect(controller.snapshot().firstText).toEqual({
+    at: 108_500,
+    waited: 3500,
+  });
+});
+
+test.each([
+  [0, true],
+  [999, true],
+  [1000, false],
+  [60_000, false],
+])(
+  'an arrival first seen %i ms after it came taps: %s (never a late tap)',
+  (late, taps) => {
+    const s = { ...controller.snapshot(), firstText: null };
+    const view = (firstText: { at: number; waited: number } | null) => (
+      <AskThread
+        s={{ ...s, firstText }}
+        chat={undefined}
+        profiles={profiles}
+        names={[]}
+        topics={[]}
+        paneShowsSources={false}
+        onAsk={noop}
+        onRetry={noop}
+        onTurnLayout={noop}
+        minHeight={0}
+      />
+    );
+    act(() => tree.update(view(null)));
+    act(() => tree.update(view({ at: Date.now() - late, waited: 5000 })));
+    expect(jest.mocked(haptic).mock.calls).toEqual(taps ? [['light']] : []);
+  },
+);
+
 test('Stop consumes the wait and ignores late text and completion', async () => {
   start();
   act(() => jest.advanceTimersByTime(5000));
