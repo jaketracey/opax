@@ -195,7 +195,7 @@
    "key": "federal-representatives-3792",
    "date": "2015-06-04",
    "house": "representatives",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Second reading",
    "ayes": 74,
    "noes": 46,

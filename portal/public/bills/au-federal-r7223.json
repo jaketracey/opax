@@ -543,7 +543,7 @@
    "key": "federal-senate-10478",
    "date": "2024-11-28",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Second reading",
    "ayes": 33,
    "noes": 24,
