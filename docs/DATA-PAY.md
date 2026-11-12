@@ -124,3 +124,59 @@ close a period in `loadings.json` if an office changed). The Handbook refuses cl
 identify as scripts and caps pages at 100 rows; the snapshot is cached under
 `~/.cache/autoresearch/pay/`. `pay.json` is a static asset, so a rebuild ships with the next
 `npm run deploy`; calculated answers are never cached, so a new file is live at once.
+
+# What secretaries and agency heads are paid
+
+"Who is the highest paid agency head?" is answered the same way: by instrument.
+`portal/public/pay-offices.json` (built by `scripts/build_pay_offices.py`) holds the rates
+the Remuneration Tribunal sets, read from the latest compilation of four determinations on
+the Federal Register of Legislation:
+
+| Determination | What it gives | Clause |
+|---|---|---|
+| Departmental Secretaries (Classification Structure and Terms and Conditions) | PM&C and Treasury: a fixed amount. Every other department: its level, and the level's two pay points as a range | s 11, Tables 2A and 2B |
+| Remuneration and Allowances for Holders of Full-time Public Office | each office's total remuneration, and special provisions (some for a named holder) | s 10, Table 2A; s 11, Table 2B |
+| Specified Statutory Offices (Remuneration and Allowances) | Chief of the Defence Force, Commissioner of Taxation, Auditor-General, Australian Statistician | s 9, Table 2A |
+| Principal Executive Offices (Classification Structure and Terms and Conditions) | bands A to E as ranges; band E has no upper limit | s 12, Table 2A |
+
+Every row carries the instrument's FRL id, its compilation id and date, and its clause.
+Every amount is **total remuneration**: the Tribunal's measure, which includes the employer
+superannuation contribution and benefits. A parliamentarian's salary in `pay.json` does not
+include superannuation, so a comparison says the two measure different things.
+
+* A Level 3 or 4 secretary's pay point is set by the Secretary of PM&C in a separate
+  instrument, so those offices are shown as their level's range and ranked by its top.
+* Principal Executive Office holders are paid within a band by their employing body, and the
+  Minister assigns each office to a band by declaration. The determination does not list
+  them, so only the bands are held.
+* A holder is recorded only where the determination names one (a personal rate or loading in
+  Table 2B, a superannuation salary in Table 3B, accommodation in Table 5A), with the clause
+  and the date checked. Nobody else's holder is filled in; departments' own pages are a
+  follow-up.
+* `head` marks an office that leads a body: deputies, members of a commission someone else
+  chairs, the service chiefs under the CDF and state electoral officers are not heads. It is a
+  reading of the title, used for "agency head" rankings, not a legal category.
+* Not covered: judges, the Governor-General, and bodies that set executive pay outside the
+  Tribunal (such as the Reserve Bank). Actual pay, including performance pay, is in each body's
+  annual report (`annual_reports`).
+
+Ask answers these from `portal/src/ask-pay-offices.ts`, called first by `paidAnswer`: a
+ranking (agency heads, public servants, secretaries, "top 10"), a named office ("the
+Secretary of the Department of Finance", "the Commonwealth Ombudsman", "the head of the
+ACCC"), two offices compared, an office compared with a parliamentary post or a named
+parliamentarian (the parliamentary side comes from `pay.json`), and the PEO bands. A dated
+question about an office goes to the record, never to a politician's salary. `payEvidence`
+hands the model the office records for looser questions, `parliamentary_pay` returns the
+rates when given an office, and the search catalogue carries one `pay` row per office plus
+two rankings. Loose questions about office pay carry `:office-pay-v1` in their cache key.
+
+Rerun when the Tribunal makes or amends a determination (each June for 1 July, and whenever a
+compilation is registered):
+
+    python3 scripts/build_pay_offices.py --refresh   # ~12 FRL requests, cached under /tmp/opax-frl-pay-offices
+    python3 -m unittest scripts/test_build_pay_offices.py
+    cd portal && node --test test/ask-pay-offices.test.mjs
+
+The script finds the newest in-force determination by title on the FRL API, so a new year's
+determination is picked up without a code change. It sends OPAX's User-Agent, makes at most
+one request a second, and stops if the register refuses.
