@@ -6,6 +6,8 @@ Import shared components from `design/primitives`. Feature-specific modules use 
 
 The eighteen roles are `largeTitle`, `inlineTitle`, `pageTitle`, `recordTitle`, `recordHeading`, `sectionTitle`, `subsectionTitle`, `groupHeader`, `name`, `rowRecord`, `recordText`, `body`, `strong`, `secondary`, `footnote`, `capsule`, `figure` and `tileFigure`. OPAX's words use the platform interface face. Record titles and verbatim passages use Merriweather; figures use tabular interface digits. `Heading` supplies the header trait and title anchoring. `wordSafe` retains whole words at large text sizes.
 
+Text fitting updates font size, line height and the iOS rounding floor in place. Keep native text and chart accessibility elements mounted across content, width and Dynamic Type changes so VoiceOver and TalkBack retain focus. Measurement identities belong in state and event callbacks, never in focusable elements' React keys. Chart probes may still re-key for new font metrics because their entire container is hidden from accessibility on both platforms.
+
 Use `rhythm`: line 4, tight and heading 8, row 11, block 16, group 24, section 36 and screen 20. Screen margins are 16 below 414 points and 20 above. Regular-width columns use `rhythmRegular`. There is no spacing scale or legacy text-role surface.
 
 `npm run tokens` builds the mobile target through `scripts/build-design-tokens.mjs`. Shared values come from `../docs/design/design-tokens.json`. Mobile omits the shared source's transitional web aliases and supplies photograph ground and scrim roles. The generation check compares the complete generated output.

@@ -830,11 +830,11 @@ describe('word-safe text', () => {
       const firstCap = text().props.onTextLayout;
       layout(broken(2.07, [300, 12]));
       expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
-      // Events from the earlier native instances, as Fabric delivers them.
+      // Callbacks captured by earlier measurement generations.
       act(() => fullSizeText(broken(2.3, [300, 12])));
       act(() => firstCap(broken(2.07, [300, 12])));
       expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
-      // A layout at another size arriving at the current instance is ignored.
+      // A layout at another size arriving at the current callback is ignored.
       layout(broken(2.3, [300, 12]));
       layout(broken(1.3, [300, 12]));
       expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
@@ -850,7 +850,7 @@ describe('word-safe text', () => {
       const ax5Text = text().props.onTextLayout;
       act(() => setSize(1));
       expect(ratio()).toBe(1);
-      // The AX5 layout, from the old instance and through the current one.
+      // The AX5 layout, through both the old and current callbacks.
       act(() => ax5Text(broken(2.07, [198, 14])));
       layout(broken(2.07, [198, 14]));
       expect(ratio()).toBe(1);
@@ -864,7 +864,7 @@ describe('word-safe text', () => {
       // To a smaller accessibility size, where the heading's ramp is 2.0.
       act(() => setSize(2.643));
       expect(ratio()).toBe(1);
-      // The old instance's AX5 layout cannot set this size's uncapped value.
+      // The old callback's AX5 layout cannot set this size's uncapped value.
       act(() => ax5Text(broken(2.07, [198, 14])));
       expect(ratio()).toBe(1);
       layout(broken(2.0, [198, 14]));

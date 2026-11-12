@@ -1,5 +1,10 @@
 import { act, createElement } from 'react';
-import { Text as NativeText, Platform, StyleSheet } from 'react-native';
+import {
+  Dimensions,
+  Text as NativeText,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import * as accessibility from '../src/design/accessibility';
 import {
@@ -12,6 +17,96 @@ import {
   wordSafeStart,
 } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
+
+test.each(['ios', 'android'] as const)(
+  '%s: text keeps its native accessibility element across fitting, layout, size and content changes',
+  (os) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    const resize = (width: number, fontScale: number) =>
+      act(() =>
+        Dimensions.set({
+          window: { ...window, width, fontScale },
+          screen: { ...screen, width, fontScale },
+        }),
+      );
+    try {
+      for (const variant of ['largeTitle', 'recordHeading', 'body'] as const) {
+        resize(390, 2.3);
+        const accessibility = {
+          accessible: true,
+          accessibilityRole: 'header' as const,
+          accessibilityLabel: 'Record heading',
+          accessibilityHint: 'The published record',
+          accessibilityLanguage: 'en-AU',
+        };
+        const renderText = (content: string, wordSafe = true) =>
+          createElement(Text, { ...accessibility, variant, wordSafe }, content);
+        let renderer!: TestRenderer.ReactTestRenderer;
+        act(() => {
+          renderer = TestRenderer.create(renderText('Representation'));
+        });
+        const native = renderer.root.findByType(NativeText);
+        const originalCallback = native.props.onTextLayout;
+        const base = textStyles[variant].lineHeight + LINE_HEIGHT_NUDGE;
+        const layout = (at: number) => ({
+          nativeEvent: {
+            lines: [
+              { text: 'Representatio', width: 198, height: base * at },
+              { text: 'n', width: 14, height: base * at },
+            ],
+          },
+        });
+        const expectSameElement = () => {
+          expect(renderer.root.findByType(NativeText)).toBe(native);
+          expect(native.props).toMatchObject(accessibility);
+        };
+        act(() =>
+          native.props.onLayout({
+            nativeEvent: {
+              layout: { x: 0, y: 0, width: 200, height: base * 4.6 },
+            },
+          }),
+        );
+        act(() => native.props.onTextLayout(layout(2.3)));
+        expectSameElement();
+        expect(StyleSheet.flatten(native.props.style).fontSize).toBeCloseTo(
+          textStyles[variant].fontSize * 0.9,
+        );
+        // A delayed full-size event cannot drive another shrink at this cap.
+        act(() => native.props.onTextLayout(layout(2.3)));
+        expect(StyleSheet.flatten(native.props.style).fontSize).toBeCloseTo(
+          textStyles[variant].fontSize * 0.9,
+        );
+        resize(844, 2.3);
+        expectSameElement();
+        expect(StyleSheet.flatten(native.props.style).fontSize).toBe(
+          textStyles[variant].fontSize,
+        );
+        act(() => renderer.update(renderText('Updated record heading')));
+        expectSameElement();
+        expect(native.props.children).toBe('Updated record heading');
+        resize(390, 1);
+        act(() => originalCallback(layout(2.3)));
+        expectSameElement();
+        expect(StyleSheet.flatten(native.props.style).fontSize).toBe(
+          textStyles[variant].fontSize,
+        );
+        // Enabling fitting after mount must also preserve the element.
+        act(() => renderer.update(renderText('Updated record heading', false)));
+        expectSameElement();
+        act(() => renderer.update(renderText('Updated record heading')));
+        expectSameElement();
+        act(() => renderer.unmount());
+      }
+    } finally {
+      Object.defineProperty(Platform, 'OS', descriptor);
+      act(() => Dimensions.set({ window, screen }));
+    }
+  },
+);
 
 // React Native ceils a text's measured height to the pixel grid and TextKit
 // draws into exactly that height. The room left for the last line is the

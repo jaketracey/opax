@@ -173,10 +173,10 @@ export function titleSizeCap(
 
 /**
  * A word-safe text's state for one identity: text size, window width, role,
- * weight and text. Every change of cap starts a new generation, drawn by a
- * new native Text (its React key), so each layout event names the instance
- * that measured it: Fabric delivers a late event to the props of the
- * instance that emitted it, never to its replacement's.
+ * weight and text. Every change of cap starts a logical generation. Event
+ * callbacks capture that generation; content and measured line height also
+ * reject stale layouts. Generations must never key the native Text: replacing
+ * it destroys the accessibility element and loses VoiceOver/TalkBack focus.
  */
 export interface WordSafeState {
   key: string;
@@ -193,7 +193,7 @@ export interface WordSafeState {
   frame: number;
   word: number;
 }
-/** The native instance an event came from. */
+/** The measurement identity captured by an event callback. */
 export interface WordSafeInstance {
   key: string;
   gen: number;
@@ -236,7 +236,7 @@ function provenToFit(state: WordSafeState): WordSafeState {
 }
 
 /**
- * The state after one line measurement. Only the instance now drawn counts,
+ * The state after one line measurement. Only the generation now drawn counts,
  * and only for this text. The cap only steps down, in 10% steps, after a
  * mid-word break measured at the size now drawn, and never at or below the
  * reader's default size, where there is nothing to step down to (a layout
@@ -284,7 +284,7 @@ export function wordSafeOnLines(
 }
 
 /**
- * The state after a frame. A capped instance draws one font and one text, so
+ * The state after a frame. A capped generation draws one font and one text, so
  * any widening of its frame is its column widening: start again from full
  * size and step down afresh, which also restores a larger cap after a
  * narrower column widens again. A frame from the full-size generation, even
@@ -372,7 +372,7 @@ export function Text({
   const { cap, full } = drawn;
   const instance: WordSafeInstance = { key: drawn.key, gen: drawn.gen };
   const advance = (step: (state: WordSafeState) => WordSafeState) => {
-    // An event from an instance of an earlier identity, delivered late.
+    // A callback from an earlier measurement identity, delivered late.
     if (instance.key !== committedKey.current) return;
     if (machine.current.key !== instance.key) {
       const earlier = machine.current;
@@ -493,8 +493,6 @@ export function Text({
   };
   return (
     <NativeText
-      // One native instance per generation (see WordSafeState).
-      key={wordSafe ? `${drawn.key}|${drawn.gen}` : undefined}
       // Names and party abbreviations are read with Australian English rules.
       accessibilityLanguage="en-AU"
       {...probe.props}

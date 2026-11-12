@@ -49,6 +49,45 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
+test('chart accessibility elements survive a Dynamic Type change', () => {
+  const r = render(
+    <>
+      <StageTimeline
+        {...proof}
+        stages={[
+          { label: 'Introduced', date: '1 Oct 2026' },
+          { label: 'Passed', date: '7 Nov 2026' },
+        ]}
+        latestIndex={1}
+      />
+      <BarSeries
+        {...proof}
+        data={data}
+        ink="ink"
+        format={String}
+        tableTitle="Monthly totals"
+      />
+    </>,
+  );
+  const elements = () =>
+    r.root.findAll(
+      (node) =>
+        node.type === RN.View &&
+        node.props.accessible === true &&
+        /Introduced|Passed|October, 5|November, 10/.test(
+          node.props.accessibilityLabel ?? '',
+        ),
+    );
+  const before = elements();
+  expect(before).toHaveLength(4);
+  act(() =>
+    RN.Dimensions.set({
+      window: { ...RN.Dimensions.get('window'), fontScale: 3.571 },
+    }),
+  );
+  elements().forEach((node, index) => expect(node).toBe(before[index]));
+});
+
 test.each(['default', 'spark'] as const)(
   'BarSeries %s has the requested geometry and table presentation',
   (variant) => {
