@@ -10,6 +10,7 @@ import {
   useTodayRendered,
 } from '../src/analytics/timing';
 import type { TimedRoute } from '../src/analytics/events';
+import { analyticsNow } from '../src/analytics/startup';
 
 let mockNow = 100;
 let mockEnabled = true;
@@ -19,7 +20,7 @@ jest.mock('../src/analytics', () => ({
   track: (...args: unknown[]) => mockTrack(...args),
 }));
 jest.mock('../src/analytics/startup', () => ({
-  analyticsNow: () => mockNow,
+  analyticsNow: jest.fn(() => mockNow),
   bundleStartedAt: 0,
 }));
 type Listener = (event?: unknown) => void;
@@ -247,28 +248,141 @@ test.each([true, false])(
   },
 );
 
-test('cold start reports once through Today remounts and effect replay', () => {
-  function Today() {
-    useTodayRendered();
-    return null;
-  }
-  let tree!: TestRenderer.ReactTestRenderer;
-  mockNow = 700;
-  act(() => {
-    tree = TestRenderer.create(
-      <StrictMode>
-        <Today />
-      </StrictMode>,
-    );
+// Each isolated runtime models a cold JS launch, rather than resetting
+// production timing state through a test-only API.
+function coldLaunch(first: string, preloadToday = false) {
+  jest.isolateModules(() => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const ReactRuntime = require('react') as typeof import('react');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const Renderer =
+      require('react-test-renderer') as typeof import('react-test-renderer');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const contexts =
+      require('expo-router/react-navigation') as typeof import('expo-router/react-navigation');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const timing =
+      require('../src/analytics/timing') as typeof import('../src/analytics/timing');
+    const todayRoute = { key: 'today-launch', name: 'index' };
+    const tab = first === 'index' ? 'today' : first;
+    const state = {
+      index: 0,
+      routes: [
+        {
+          key: 'tabs',
+          name: '(tabs)',
+          state: {
+            index: 1,
+            routes: [
+              {
+                key: 'inactive',
+                name: '(today)',
+                state: { routes: [todayRoute] },
+              },
+              {
+                key: 'selected',
+                name: `(${tab})`,
+                state: {
+                  routes: [
+                    first === 'index'
+                      ? todayRoute
+                      : { key: 'other-launch', name: first },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    };
+    jest.spyOn(mockNavigation, 'getRootState').mockReturnValue(state as never);
+    function Today() {
+      timing.useTodayRendered();
+      return null;
+    }
+    function Root({ showToday }: { showToday: boolean }) {
+      timing.useNavigationTiming();
+      return showToday
+        ? ReactRuntime.createElement(
+            contexts.NavigationContext.Provider,
+            {
+              value: mockNavigation as never,
+            },
+            ReactRuntime.createElement(
+              contexts.NavigationRouteContext.Provider,
+              {
+                value: todayRoute,
+              },
+              ReactRuntime.createElement(Today),
+            ),
+          )
+        : null;
+    }
+    let tree!: import('react-test-renderer').ReactTestRenderer;
+    mockNow = 700;
+    focused = !preloadToday;
+    Renderer.act(() => {
+      tree = Renderer.create(
+        ReactRuntime.createElement(
+          ReactRuntime.StrictMode,
+          null,
+          ReactRuntime.createElement(Root, {
+            showToday: first === 'index' || preloadToday,
+          }),
+        ),
+      );
+    });
+    mockNow = 50_000;
+    focused = true;
+    emit('focus');
+    Renderer.act(() => {
+      tree.update(ReactRuntime.createElement(Root, { showToday: true }));
+    });
+    Renderer.act(() => {
+      tree.unmount();
+    });
+    Renderer.act(() => {
+      tree = Renderer.create(
+        ReactRuntime.createElement(Root, { showToday: true }),
+      );
+    });
+    Renderer.act(() => {
+      tree.unmount();
+    });
   });
-  act(() => {
-    tree.unmount();
-  });
-  mockNow = 900;
-  act(() => {
-    TestRenderer.create(<Today />);
-  });
+}
+
+test('cold start reports once when Today is the first focused route', () => {
+  coldLaunch('index');
   expect(mockTrack.mock.calls).toEqual([
     ['opax_app_start', { duration_ms: 700 }],
   ]);
+});
+
+test.each(['your-mp', 'bills', 'search', 'ask', 'person/[slug]'])(
+  'a cold launch into %s cannot become a cold-start sample when Today opens later',
+  (first) => {
+    coldLaunch(first);
+    expect(mockTrack).not.toHaveBeenCalled();
+  },
+);
+
+test('Today preloaded behind another launch tab cannot report on later focus', () => {
+  coldLaunch('your-mp', true);
+  expect(mockTrack).not.toHaveBeenCalled();
+});
+
+test('rerendering a pending screen does not read the clock again to initialise its ref', () => {
+  let tree!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    tree = TestRenderer.create(<App ready={false} />);
+  });
+  jest.mocked(analyticsNow).mockClear();
+  act(() => {
+    tree.update(<App ready={false} />);
+  });
+  act(() => {
+    tree.update(<App ready={false} />);
+  });
+  expect(analyticsNow).not.toHaveBeenCalled();
 });

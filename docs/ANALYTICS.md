@@ -123,7 +123,7 @@ false and `$geoip_disable` true.
 | `opax_chip` | `chip_kind` (`ask`), `placement` (`ask` or `today`) |
 | `opax_voice_card` | `action` (`open`), `account` (`signed_in` or `signed_out`) |
 | `opax_route_error` | `error_class`: fixed constructor-name category; `route_pattern`: a fixed route-file pattern such as `/person/[slug]`; optional `error_message`: an exact, content-free diagnostic from a fixed allowlist, at most 80 characters |
-| `opax_app_start` | `duration_ms`: JS entry to the first committed Today render, once per cold JS runtime |
+| `opax_app_start` | `duration_ms`: JS entry to the first committed Today render, only when Today is the first focused route of a cold JS runtime |
 | `opax_screen_ready` | `route_pattern`: one of `/`, `/person/[slug]`, `/bill/[key]`, `/your-mp`, `/search`, `/ask`; `duration_ms`: navigation to the first content commit, at most once per sampled visit |
 
 `from_section` is the first segment of the current route (`today` for the
@@ -168,10 +168,13 @@ native process crashes, asynchronous exceptions and OS terminations are not
 captured by Router boundaries. Exception autocapture remains disabled.
 
 `mobile/index.js` timestamps the start of JS entry evaluation before importing
-Router. `opax_app_start` ends at Today's first React commit, even if Today is
-still showing its loading state. It is a JS cold-start measurement, not native
+Router. `opax_app_start` ends at Today's first focused React commit, even if
+Today is still showing its loading state. It sends only when Today is the
+launch's first focused route. It is a JS cold-start measurement, not native
 process launch time, splash-dismissal time or a warm foreground measurement.
-A deep-link launch reports only if Today actually renders during that runtime.
+A launch into any other tab or detail route is marked spent without sending;
+opening Today later cannot turn reading or navigation time into cold-start
+latency. A preloaded Today behind another focused route does not send either.
 
 Screen timing uses cheap monotonic JS timestamps (Date.now only as a fallback).
 The root navigation state notification supplies the start; on initial mount
