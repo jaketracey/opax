@@ -353,7 +353,9 @@ test('bill SSR links dated divisions to their member records and preserves relat
   assert.match(html,/href="\/doc\/division-federal-senate-10701"/);
   assert.match(html,/Limitation of debate, 19 Aug 2026/);
   const bill=await get('/bill/au-federal-r7537');
-  for(const fact of ['Andrew Gee','Independent Members','Introduced','Second reading','Machine-written','2026-09-07','Other bills from this sponsor']) assert.ok(bill.includes(fact),fact);
+  for(const fact of ['Andrew Gee','Introduced','Second reading','Machine-written','2026-09-07','Other bills from this sponsor']) assert.ok(bill.includes(fact),fact);
+  assert.match(bill,/href="\/subject\/party\/independent"[^>]*>Independent<\/a>/);
+  assert.doesNotMatch(bill,/Independent Members/);
   // The pill says it once; no sentence beside it repeats it.
   assert.match(bill,/<span class="ui-machine-pill" title="[^"]+">.*Machine-written<span class="visually-hidden">, not part of the record<\/span><\/span> As at 2026-09-07\./);
   assert.doesNotMatch(bill,/>Written by a model|not the record\b/);

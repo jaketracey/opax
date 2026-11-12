@@ -144,7 +144,7 @@
    "key": "federal-senate-3877",
    "date": "2015-08-17",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Second reading",
    "ayes": 33,
    "noes": 33,
