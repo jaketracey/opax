@@ -2,8 +2,8 @@
 """Offline, reviewed state-party observations, never inferred service windows.
 
 The state Hansards often omit party. A complete full name in a dated official
-roster can supply the directory's recorded affiliation, without asserting a
-current flag or a party on any other speech date. Weekly exports regenerate
+roster can supply a recorded affiliation only within the reviewed term guard.
+Profiles spanning earlier terms stay empty until dated party history exists. Weekly exports regenerate
 only per-record changes reviewed in roster_accept.json.
 """
 import argparse
@@ -66,7 +66,25 @@ def matches(row, observation):
             and row['first'] <= int(observation['as_of'][:4]) <= row['last'])
 
 
-def proposal(row, records):
+def snapshot_window(row, source, reviewed):
+    """A snapshot cannot back-fill earlier terms through profile.party fallbacks.
+
+    Year-only speech bounds cannot prove a speech followed an election within
+    that year. Require a later year, or an explicitly reviewed first-term case.
+    Victorian parties already resolve from the dated seat roster and stay there.
+    """
+    window = reviewed.get('snapshot_party_windows', {}).get(source['chamber'])
+    if not window or source['as_of'] < window['start']:
+        return False
+    if row['first'] > int(window['start'][:4]):
+        return True
+    first_term = window.get('first_terms', {}).get(row['name'])
+    return bool(first_term and row['first'] >= int(first_term['start'][:4]))
+
+
+def proposal(row, records, reviewed=None):
+    if reviewed is None:
+        reviewed = json.loads((ROOT / 'scripts/roster_service.json').read_text())
     if any(row.get(k) for k in ('party', 'party_now', 'parties', 'recorded_parties', 'affiliations',
                                 'identity_basis', 'speech_scope', 'prints', 'witness_rows', 'separated_witnesses')):
         return None
@@ -80,6 +98,10 @@ def proposal(row, records):
     if len(identities) != 1 or len(parties) != 1 or not next(iter(parties)):
         return None
     source = latest[0]
+    if not snapshot_window(row, source, reviewed):
+        return None
+    from parli.ingest.speech_hygiene import clean_party
+    party = clean_party(source['party']) or source['party']
     representation = copy.deepcopy(row.get('representation', []))
     if not any(r.get('jurisdiction') == source['jurisdiction'] and r.get('chamber') == source['chamber']
                and fold(r.get('electorate')) == fold(source['electorate']) for r in representation):
@@ -87,7 +109,7 @@ def proposal(row, records):
                                electorate=source['electorate'], state=source['jurisdiction'].upper(),
                                as_of=source['as_of'], source_url=source['source_url'],
                                basis='Official parliamentary roster on the stated date; full name and chamber verified'))
-    return dict(party=source['party'], representation=representation), source
+    return dict(party=party, representation=representation), source
 
 
 def group_problem(name, group, row, root=ROOT):
@@ -105,7 +127,8 @@ def group_problem(name, group, row, root=ROOT):
                 original.pop(field, None)
             else:
                 original[field] = before
-        result = proposal(original, observations(bundle, state))
+        reviewed = json.loads((Path(root) / 'scripts/roster_service.json').read_text())
+        result = proposal(original, observations(bundle, state), reviewed)
         if not result or original['name'] != name:
             return 'no unambiguous full-name official state-party observation'
         values, source = result
@@ -117,7 +140,7 @@ def group_problem(name, group, row, root=ROOT):
     return None
 
 
-def enrich(doc, accept, bundle, state):
+def enrich(doc, accept, bundle, state, reviewed=None):
     out = copy.deepcopy(doc)
     by = {r['name']: r for r in out['people']}
     records = observations(bundle, state)
@@ -130,7 +153,7 @@ def enrich(doc, accept, bundle, state):
                 continue
             # Raw export may have an empty or independently derived seat. Do
             # not copy reviewed values blindly: the source must reproduce them.
-            result = proposal(row, records)
+            result = proposal(row, records, reviewed)
             if result:
                 values, _ = result
                 row.update(values)

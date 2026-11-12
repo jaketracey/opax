@@ -12,7 +12,7 @@ from scripts.roster_state_parties import audit, enrich, group_problem, observati
 
 def fixture(tmp_path):
     row = dict(name='Alex Example', speeches=20, states=['nsw'], chambers=['nsw_lc'],
-               first=2022, last=2026, representation=[])
+               first=2024, last=2026, representation=[])
     state = dict(snapshots=[dict(jurisdiction='nsw', chamber='nsw_lc', as_of='2026-09-25',
                                 source_url='https://www.parliament.nsw.gov.au/fixture.pdf', members=[
                                     dict(name='Alex Example', aliases=['Alexander Example'],
@@ -26,8 +26,8 @@ def fixture(tmp_path):
         reference_url='/electorates/releases/fixture/reference.json', files={'reference.json': hashlib.sha256(raw).hexdigest()})))
     (tmp_path / 'scripts').mkdir()
     (tmp_path / 'scripts/roster_state_evidence.json').write_text(json.dumps(state))
-    for name in ['roster_service', 'roster_witness_service']:
-        (tmp_path / f'scripts/{name}.json').write_text('{}')
+    (tmp_path / 'scripts/roster_service.json').write_text(json.dumps({'snapshot_party_windows': {'nsw_lc': {'start': '2023-03-25'}}}))
+    (tmp_path / 'scripts/roster_witness_service.json').write_text('{}')
     values, source = proposal(row, observations(bundle, state))
     group = dict(evidence='snapshot', url=source['source_url'], checked='2026-11-12', as_of=source['as_of'],
                  fields={k: [row.get(k), v] for k, v in values.items() if row.get(k) != v})
@@ -118,3 +118,53 @@ def test_published_reviewed_state_parties_are_reproduced_from_offline_sources():
     assert rath['party'] == 'Liberal'
     assert rath['representation'][0]['as_of'] == '2026-09-25'
     assert not {'current', 'party_now', 'affiliations'} & rath.keys()
+
+
+@pytest.mark.parametrize('name,first', [
+    ('Tania Mihailuk', 2015), ('Jeremy Buckingham', 2015),
+    ('Rod Roberts', 2019), ('Taylor Martin', 2017),
+])
+def test_real_party_changers_have_no_snapshot_party_on_earlier_speeches(name, first):
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    doc = json.loads((root / 'portal/public/parliamentarians.json').read_text())
+    row = next(r for r in doc['people'] if r['name'] == name)
+    assert row['first'] == first
+    assert not any(row.get(k) for k in ('party', 'party_now', 'affiliations'))
+    state = json.loads((root / 'scripts/roster_state_evidence.json').read_text())
+    assert proposal(row, observations(reference(), state)) is None
+    assert not any(g['evidence'] == 'state-party-snapshot' for g in roster_accept.load()['records'].get(name, []))
+
+
+def test_term_year_is_held_without_a_reviewed_first_term_exception(tmp_path):
+    row, state, bundle, _, _ = fixture(tmp_path)
+    records = observations(bundle, state)
+    assert proposal(dict(row, first=2023), records) is None
+    assert proposal(dict(row, first=2024), records)
+    assert proposal(row, records, {}) is None
+
+
+def test_victorian_party_stays_in_the_dated_seat_catalog(tmp_path):
+    row, state, bundle, _, _ = fixture(tmp_path)
+    state['snapshots'][0].update(jurisdiction='vic', chamber='vic_lc')
+    assert proposal(dict(row, states=['vic'], chambers=['vic_lc']), observations(bundle, state)) is None
+    accept = roster_accept.load()
+    for name, groups in accept['records'].items():
+        for group in groups:
+            if group['evidence'] == 'state-party-snapshot':
+                assert 'parliament.nsw.gov.au' in group['url']
+
+
+@pytest.mark.parametrize('variants,canonical', [
+    (["Pauline Hanson's One Nation", 'One Nation'], 'One Nation'),
+    (['Legalise Cannabis', 'Legalise Cannabis Victoria'], 'Legalise Cannabis'),
+    (['Libertarian', 'Libertarian Party'], 'Libertarian Party'),
+    (['Shooters, Fishers and Farmers', 'Shooters, Fishers and Farmers Party'], 'Shooters, Fishers and Farmers Party'),
+])
+def test_snapshot_writes_use_shared_canonical_party_labels(tmp_path, variants, canonical):
+    from parli.ingest.speech_hygiene import clean_party
+    row, state, bundle, _, _ = fixture(tmp_path)
+    for variant in variants:
+        assert clean_party(variant) == canonical
+        state['snapshots'][0]['members'][0]['party'] = variant
+        assert proposal(row, observations(bundle, state))[0]['party'] == canonical

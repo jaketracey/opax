@@ -112,3 +112,28 @@ test('the person page reads the same fallback, only for a record with no party o
   const electorates = readFileSync(new URL('../public/electorates.js', import.meta.url), 'utf8');
   assert.match(electorates, /export \{ rosterSeatParty \} from '\.\/roster-party\.js/);
 });
+
+
+test('earlier NSW speeches cannot inherit snapshot parties through the profile fallback',()=>{
+ const roster=JSON.parse(readFileSync(new URL('../public/parliamentarians.json',import.meta.url),'utf8'));
+ // Mirror sponsors.ts recorded ?? profile.party and the web profile fallback.
+ for(const [name,date,oldParty] of [['Tania Mihailuk','2017-01-01','Labor'],['Jeremy Buckingham','2016-01-01','Greens'],['Rod Roberts','2019-06-01','One Nation'],['Taylor Martin','2018-01-01','Liberal']]) {
+  const profile=roster.people.find(p=>p.name===name);
+  assert.ok(profile,name);
+  assert.equal(null ?? profile.party,undefined,name+' '+date);
+  assert.equal(oldParty ?? profile.party,oldParty);
+  assert.equal(datedAffiliationParty({kind:'speech',state:'nsw',chamber:'nsw_lc',date},profile),null);
+ }
+ const rath=roster.people.find(p=>p.name==='Chris Rath');
+ assert.equal(null ?? rath.party,'Liberal');
+});
+
+test('Moira Deeming retains the date on the pinned Victorian roster affiliation',async()=>{
+ const roster=JSON.parse(readFileSync(new URL('../public/parliamentarians.json',import.meta.url),'utf8'));
+ const manifest=JSON.parse(readFileSync(new URL('../public/electorates/manifest.json',import.meta.url),'utf8'));
+ const index=JSON.parse(readFileSync(new URL('../public'+manifest.index_url,import.meta.url),'utf8'));
+ const member=roster.people.find(p=>p.name==='Moira Deeming');
+ assert.equal(member.party,undefined);
+ assert.equal(partyLine(member,index.electorates),'Independent (parliamentary roster as at 9 Sep 2026)');
+ assert.match(await partyItemOf(member,index.electorates),/Independent \(parliamentary roster as at 9 Sep 2026\)/);
+});

@@ -38,7 +38,7 @@ import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, grou
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { machineLabelHTML } from './labels.js?v=1ef33cf9c3'
+import { machineLabelHTML } from './labels.js?v=6a4764139d'
 
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026

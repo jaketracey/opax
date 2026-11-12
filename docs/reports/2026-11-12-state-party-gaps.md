@@ -1,61 +1,65 @@
 # State member party gaps, 12 November 2026
 
-Chris Rath's checked-in public profile now records Liberal, sourced to the NSW Legislative Council member list dated 25 September 2026 already held in `scripts/roster_state_evidence.json`. No parliamentary source was refetched or production data changed.
+Chris Rath keeps his sourced Liberal affiliation. Profiles with speeches predating the reviewed NSW Council term are held back until dated party history is available. Victorian profiles again use the dated seat-roster affiliation. No parliamentary source was refetched and no production data changed.
 
-## Cause and display path
+## Cause and reviewed correction
 
-The cached NSW loader explicitly writes an empty speech party because the fragments do not supply it (`parli/ingest/nsw_hansard.py`). Rath's cached member stub also has an empty party; the two cached Wikidata term rows do not supply one either. All 276 speeches on `nsw_chris_rath` have an empty raw party and no canonical party. The directory has 275 eligible speeches after its existing corpus rules. Its profile previously had no party, person ID or representation.
+The NSW loader writes an empty speech party because its Hansard fragments omit it. Rath's cached member stub and both cached Wikidata term observations also omit party. All 276 speeches on `nsw_chris_rath` have an empty raw party and no canonical party. The directory has 275 eligible speeches after existing corpus rules. The repo's official NSW Council list of 25 September 2026 names Rath as Liberal.
 
-The independently reviewed NSW Council list already names Rath as Liberal. That list was available to identity repair, but full-name profiles with no party were not generally enriched from it. The electorate release has current Victorian rosters, but no NSW roster, so a seat-catalog fallback cannot supply Rath's affiliation.
+The native reader's `sponsors.ts` uses `recorded ?? profile.party`; the web also falls back to the profile party. The earlier change therefore supplied today's undated party to earlier speeches. Testing only the separate `datedAffiliationParty` helper did not cover that fallback.
 
-Read-only inspection of the available `origin/ios/app` code confirms the reader uses `DocumentReader`'s `Speaker`, `sponsorRows`, then `personPartyFor`: an explicit speech label takes precedence, otherwise the joined profile's recorded party can be shown. Both inputs were empty for Rath. This is a data omission, rather than a party-window rejection by that reader. This inspection does not establish the exact TestFlight build's source revision. No mobile files or other worktrees were changed.
+The correction takes the conservative hold-back option. `scripts/roster_service.json` records the Council term boundary of 25 March 2023, using its existing parliamentary election-analysis source. `roster_state_parties.py` requires speech coverage to begin in a later calendar year. Coverage beginning during the election year is held because year precision cannot distinguish speeches before and after the election. A reviewed first-term exception preserves Rath: both cached `ext_state_roster` rows for Wikidata Q111482817 record entry on 24 March 2022, fetched 21 September 2026. His party is sourced separately to the official Council list. These observations do not supply party histories for other members.
 
-The portal's separate `datedAffiliationParty` helper deliberately requires dated service covering a speech. A roster snapshot does not meet that rule. That guard remains in place: the new directory affiliation is not a claim about the party on every historical speech date.
+Eleven reviewed Council fills remain. Tania Mihailuk, Jeremy Buckingham, Rod Roberts and Taylor Martin have no undated party from this repair, so empty speech parties cannot fall back to their later affiliation. Their earlier Labor, Greens, One Nation and Liberal periods require sourced dated history before publication. This deliberately leaves more party gaps than the rejected implementation.
 
-## Change
+All Victorian snapshot-party writes are removed. The existing verified seat catalog still supplies the affiliation with its date and source. Moira Deeming consequently reads `Independent (parliamentary roster as at 9 Sep 2026)`. That dated observation is retained without claiming to describe a later official profile.
 
-`scripts/roster_state_parties.py` reads the active, digest-checked electorate reference and existing reviewed state extracts. It fills a missing directory party only for an exact full name or explicit source alias, in its own state and chamber, where the snapshot overlaps the profile's recorded years. It refuses initials, surname prints, mixed parliaments, witnesses, ambiguous identities or parties, and existing party histories. A member's recorded move between the two houses of one state is allowed.
+The weekly source-profile stage and the per-record accept list remain the installation path. Each retained group rechecks the term guard, exact source name or explicit alias, chamber, party, date and source URL. Weak names, witnesses, ambiguous joins and existing curated histories remain protected. Removed groups do not regenerate. The public directory was rebuilt from the prior reviewed roster through `roster_source_profiles.py` and `roster_overlay.py`, rather than editing generated person rows individually.
 
-There are 161 reviewed per-record additions through `scripts/roster_accept.json`. The additions affect 39 NSW Council profiles and 122 Victorian name entries. Only `party` and, where needed, dated `representation` change. Speech counts, speech labels, person IDs, current flags and party service windows are preserved. The 39 new representation entries carry the observation date and public source URL. A previously protected Victorian record remains held; its party already resolves from the electorate catalog.
+New writes pass through the shared `parli.ingest.speech_hygiene.clean_party` canonical labels. Its alias table now also covers Legalise Cannabis/Victoria, Libertarian/Libertarian Party and both Shooters, Fishers and Farmers spellings; its existing One Nation aliases cover Pauline Hanson's spelling. John Ruddick is written as Libertarian Party. Tests cover every requested pair.
 
-The existing weekly source-profile stage regenerates these observations. The accept gate rechecks each source value, URL and date before installation. Its exception for an empty neutral profile applies only to this verified full-name rule. Other curated protections remain in force. A stale or changed source cannot overwrite the reviewed shipped value.
+## Counts per chamber
 
-Dated service identity matching also reads explicit catalog aliases. This keeps a preferred name and its documented legal spelling together during repair, without adding fuzzy name matches. A legal middle name cannot become another member's given-name alias. Testimony after bounded parliamentary service remains unattributed; a reviewed ongoing career is preserved. The existing fixed research-export totals now include 36 additional sourced representation profiles; no research export was published.
+These counts use unique members in the latest official 2026 list already held for each chamber. They measure the directory plus the existing seat-catalog fallback. They describe the source dates, not a verified census on 12 November. An unavailable source means unknown, never zero.
 
-## Counts and limits
-
-Counts below are unique members named by the latest available 2026 official list for each chamber. They measure party availability through the directory and the app's existing seats-first catalog fallback. They are observations on the source date, not a verified national membership census on 12 November. A full-name profile which cannot be safely joined counts as a gap. Surname similarity never supplies a party.
-
-| Chamber | Source date | Listed members | No resolved party before | After | No safely joined directory profile |
+| Chamber | Source date | Members | No party before initial repair | Rejected repair | Corrected |
 | --- | --- | ---: | ---: | ---: | ---: |
 | ACT Legislative Assembly | 2026-10-06 | 25 | 7 | 7 | 7 |
 | NSW Legislative Assembly | Unavailable | Unknown | Unknown | Unknown | Unknown |
-| NSW Legislative Council | 2026-09-25 | 41 | 39 | 1 | 0 |
+| NSW Legislative Council | 2026-09-25 | 41 | 39 | 1 | 28 |
 | NT Legislative Assembly | Unavailable | Unknown | Unknown | Unknown | Unknown |
 | Queensland Legislative Assembly | 2026-06-02 | 93 | 27 | 27 | 27 |
 | SA House of Assembly | Unavailable | Unknown | Unknown | Unknown | Unknown |
 | SA Legislative Council | Unavailable | Unknown | Unknown | Unknown | Unknown |
 | Tasmania House of Assembly | Unavailable | Unknown | Unknown | Unknown | Unknown |
 | Tasmania Legislative Council | Unavailable | Unknown | Unknown | Unknown | Unknown |
-| Victoria Legislative Assembly | 2026-09-09 | 88 | 0 | 0 | 1 |
+| Victoria Legislative Assembly | 2026-09-09 | 88 | 0 | 0 | 0 |
 | Victoria Legislative Council | 2026-09-09 | 40 | 0 | 0 | 0 |
 | WA Legislative Assembly | Unavailable | Unknown | Unknown | Unknown | Unknown |
 | WA Legislative Council | Unavailable | Unknown | Unknown | Unknown | Unknown |
-| Measured chambers | Various | 287 | 73 | 35 | 35 |
+| Measured chambers | Various | 287 | 73 | 35 | 62 |
 
-Victorian catalog parties already resolved, including one member with no safely joined directory row. Counting only missing directory party fields, before the catalog fallback, gives ACT 7 to 7; NSW Council 39 to 1; Queensland 27 to 27; Victorian Assembly 67 to 1; Victorian Council 40 to 0. Multiple printed name entries can refer to one source-listed member.
+Directory-only gaps, before the seat fallback, are ACT 7 → 7, NSW Council 39 → 28, Queensland 27 → 27, Victorian Assembly 67 → 67 and Victorian Council 40 → 40. Safely unmatched directory profiles remain ACT 7, NSW Council 0, Queensland 27, Victorian Assembly 1 and Victorian Council 0. The unmatched Victorian member still has a party in the seat catalog.
 
-The remaining NSW Council gap is Ben Franklin: the directory's own-speech coverage ends in 2022, before the 2026 snapshot. This change does not invent an overlapping service window. The ACT and Queensland gaps include guarded surname aggregates and unresolved source-name joins, as well as absent profiles. These need identity evidence, rather than guessed parties. The safely unmatched Victorian directory member still has a party in the seat catalog.
+Count reconciliation: the rejected repair removed 38 NSW party gaps and affected 123 Victorian chamber entries. Counting actual per-record writes in commit `e389477d9` gives 39 NSW Council profiles and 122 Victorian profiles (82 Assembly and 40 Council). Penny Sharpe already resolved through the separate Sharpe row, explaining 39 writes but 38 fewer NSW gaps. Jaclyn Symes has both Victorian chambers, explaining 122 profiles but 123 chamber entries. Counts must distinguish these units. Classifying a profile by its first chamber also misclassifies members who moved between houses. All 122 Victorian profile writes and 28 NSW profile writes have now been withdrawn; 11 NSW fills remain.
 
-No qualifying 2026 official current membership list is held by this pipeline for the eight chambers marked unavailable. Older SA records, undated NSW member-cache entries, empty coverage and Wikidata terms with no recorded end date cannot establish their current membership. A complete all-chamber census remains unavailable under the offline source constraint.
+Ben Franklin's speech coverage ends in 2022, outside the snapshot. The other NSW gaps include the deliberately held earlier careers. ACT and Queensland gaps include guarded surname aggregates and unresolved full-name joins. No qualifying current 2026 list is held for the eight unavailable chambers. Older rosters, empty tables and open-ended Wikidata terms cannot establish current membership under the offline source constraint.
 
-Reproduce the audit with `python3 scripts/roster_state_parties.py --audit <roster.json>`. The before roster is commit `1bdb0a8c4`; the after roster is this change. The JSON includes both directory-only gaps and catalog-assisted gaps, with unknown values represented as null. Names are omitted from audit output.
+Reproduce counts with `python3 scripts/roster_state_parties.py --audit <roster.json>`. The initial baseline is `1bdb0a8c4`; the rejected repair is `e389477d9`; corrected counts use this tree. All versions retain 1,619 people and 669,898 attributed speeches.
+
+## Name resolution and callers
+
+An exact normalised full printed name now takes priority over an alias on another row. Sophie Panopoulos therefore resolves to her own 147-speech row for Ask's person-quotes filter and `find_people`, despite also being an alias of Sophie Mirabella. Fuzzy alternatives remain visible. Distinct exact owners and shared aliases remain ambiguous.
+
+`git grep 'rosterPerson(' portal/src` finds one production caller, `research-loop.ts`'s person-quotes tool. An ambiguous surname such as Bishop now returns null instead of guessing Julie Bishop by speech count. The caller returns its existing instruction to try `find_people`; that tool supplies candidates and a clarification question. No caller requires the old surname guess. Exact full names, explicit legal/preferred aliases, same-ID spellings and surname ambiguity have regression tests.
 
 ## Validation
 
-From `portal/`, `npx tsc --noEmit` and `uv run --project .. npm test` pass: 4,726 tests, zero failures. `npm run check` also passes, including types, design tokens, asset stamps, donor index and statute title checks. There is no portal lint script.
+Main `023fc9b51` was merged, without rebasing, in `beb605e1d`. On the merged tree, `npx wrangler types`, `npm run build:release` and `npx tsc --noEmit` pass. The release build includes `build:search` and the photo identity preflight. Unrelated generated changes to events, the grants-map licence, supplier tie ordering and voice assets were restored, and asset stamps checked again. The search catalog contains 1,619 people.
 
-The final Python pipeline run passes 140 tests and 958 subtests:
+The full portal suite passes 4,744 tests with zero failures using `uv run --project .. npm test -- --test-concurrency=1` from `portal/`. The default and eight-worker runs each hit the directory harness's existing 15-second child deadline under shared-host contention and were stopped. That suite also passes separately: nine tests, including the timed-out case. No harness deadline or assertion was changed.
+
+The roster Python run passes 179 tests and 964 subtests:
 
 ```sh
 uv run --with pytest pytest -q \
@@ -63,13 +67,11 @@ uv run --with pytest pytest -q \
   scripts/test_roster_overlay.py scripts/test_roster_main_preservation.py \
   scripts/test_enrich_profile_jurisdictions.py scripts/test_roster_identity.py \
   scripts/test_export_parliamentarians.py tests/test_grants_research.py \
-  tests/test_roster_profile_reconciliation.py
+  tests/test_roster_profile_reconciliation.py parli/tests/test_speech_hygiene.py
 ```
 
-The identity and frozen-roster suites also pass separately: 52 tests and 63 subtests. The frozen audit retains zero unexplained clean-record changes. Tests cover source movement, ambiguity, witnesses, chamber and date boundaries, preferred/legal names, and a legal middle name which belongs to someone else's given name.
+The focused portal run passes 73 tests. Tests cover the four real NSW party-changing profiles and Rath through the actual flat-party fallback, the term-year boundary, all retained source groups, the dated Deeming profile, canonical party labels and both Ask resolver consumers. `roster_accept.py --check` reports 880 applied groups, 19 reviewed new rows and zero problems. All pre-existing accept groups, new people and drops are preserved; comparison with `1bdb0a8c4` finds only the 11 approved party/representation changes.
 
-`uv run --with pytest pytest -q scripts/test_roster_export_wrappers.py` passes: four tests and five subtests in 7 minutes 42 seconds. Both box-shaped database scenarios exercise normal weekly preservation and the raw review override. They retain all shipped records, keep unscoped witnesses neutral and preserve the reviewed preferred-name identity.
+`nice -n 10 uv run --with pytest pytest -q scripts/test_roster_export_wrappers.py` passes separately: four tests and five subtests in 570.12 seconds. Both scenarios exercise the actual weekly preservation path and raw review export. The first concurrent attempt exceeded the existing 300-second deadline on scenario A's raw export; the isolated run passes with that deadline and all assertions unchanged.
 
-Public files were regenerated through `scripts/roster_source_profiles.py`, `scripts/roster_overlay.py`, `npm --prefix portal run build:search`, `npm --prefix portal run build:methods` and `npm --prefix portal run stamp`. The final data comparison confirms the same 1,619 people and 669,898 attributed speeches; only the reviewed party and representation fields change. Existing accepted groups, new-person entries and reviewed drops are preserved.
-
-No source refresh, production write, deploy, push or device run was performed. Native display behaviour still needs the orchestrator's device check after integration.
+No source refresh, production write, deploy, push or device run was performed. The orchestrator retains the native device check and any remote publication.
