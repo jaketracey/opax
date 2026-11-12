@@ -21,8 +21,6 @@ export function hearingEvidenceQuestion(question: string): boolean {
   })
 }
 
-export const HEARING_EVIDENCE_GAP = 'OPAX did not retrieve usable hearing transcript passages for this question. Parliamentary debates, bills and motions do not establish what witnesses told the commission.'
-export const hearingEvidenceText = (text: string) => text.includes(TRANSCRIPT_LABEL) && text.includes('transcript page')
 
 const EXCERPT = /\btranscript page \S+/
 export interface TranscriptTurn { speaker: string; day?: string; date?: string; page: string; excerpt: string }
