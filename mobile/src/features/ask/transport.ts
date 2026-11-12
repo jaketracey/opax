@@ -2,11 +2,11 @@ import { AskFailure, AskStream, type StreamHandlers } from './stream';
 
 // portal/src/index.ts: the lighter retrieval can take 50 s. The position
 // path can silently fall through from a 40 s recovery to 40 s reasoning.
-// Allow both plus 5 s; cap the whole submission (including retry) separately.
+// Allow both plus 5 s; cap the pre-text wait (including retry) separately.
 export const ASK_STALL_MS = 85_000;
 export const ASK_DEADLINE_MS = 120_000;
 
-/** One submission, at most two requests, with one deadline across both. */
+/** One submission, at most two requests, with one pre-text deadline across both. */
 export async function postAsk(
   url: string,
   send: (signal: AbortSignal) => Promise<Response>,
@@ -15,6 +15,7 @@ export async function postAsk(
 ): Promise<unknown> {
   let everShown = false;
   let deadlineExpired = false;
+  const deadlineAt = Date.now() + ASK_DEADLINE_MS;
   let interrupt: ((failure: AskFailure) => void) | undefined;
   const cancel = () => interrupt?.(new AskFailure('cancelled', 'Cancelled.'));
   if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
@@ -88,7 +89,12 @@ export async function postAsk(
         ...on,
         progress: arm,
         delta: (text) => {
-          if (text.trim()) everShown = shown = true;
+          if (text.trim()) {
+            // Once words are visible, steady progress may take longer than
+            // the initial wait budget. Only a stall should cut it short.
+            clearTimeout(deadline);
+            everShown = shown = true;
+          }
           on.delta(text);
         },
         retry: () => {
@@ -160,6 +166,12 @@ export async function postAsk(
           !(error instanceof AskFailure) ||
           !['stall', 'network'].includes(error.reason ?? '')
         )
+          throw error;
+        // A paid stall retry needs enough time for recovery to be worthwhile.
+        // The 85 s client stall leaves just 35 s of the pre-text budget,
+        // below the 60 s recovery allowance: offer Try again instead.
+        // Quick network failures or earlier reported stalls can still recover.
+        if (error.reason === 'stall' && deadlineAt - Date.now() < 60_000)
           throw error;
         on.retry();
         on.stage('Searching again');

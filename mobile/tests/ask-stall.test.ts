@@ -3,6 +3,7 @@ import { CatalogCache } from '../src/api/cache';
 import { ApiClient } from '../src/api/client';
 import { AskController } from '../src/features/ask/controller';
 import { decodeChat, type ChatStore } from '../src/features/ask/model';
+import { AskFailure } from '../src/features/ask/stream';
 import { ASK_DEADLINE_MS, ASK_STALL_MS } from '../src/features/ask/transport';
 
 const origin = 'http://127.0.0.1:8940';
@@ -72,59 +73,97 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('progress then a stall preserves partial text and aborts without retrying', async () => {
+test.each([20_000, 70_000])(
+  'a token at %i ms then a stall preserves partial text, even past the pre-text deadline',
+  async (firstTokenAt) => {
+    const stream = new FakeStream();
+    const transport = jest.fn().mockResolvedValue(stream.response());
+    const handlers = on();
+    const pending = api(transport)
+      .askPost('/api/ask?stream=1', {}, new AbortController().signal, handlers)
+      .catch((error: unknown) => error);
+    await jest.advanceTimersByTimeAsync(firstTokenAt);
+    stream.event('status', { phase: 'writing' });
+    stream.event('delta', { text: 'A partial answer' });
+    await flush();
+    await jest.advanceTimersByTimeAsync(ASK_STALL_MS - 1);
+    expect(transport.mock.calls[0]![1].signal.aborted).toBe(false);
+    await jest.advanceTimersByTimeAsync(1);
+    expect(await pending).toMatchObject({ code: 'partial', reason: 'stall' });
+    expect(handlers.delta).toHaveBeenCalledWith('A partial answer');
+    expect(transport).toHaveBeenCalledTimes(1);
+    expect(stream.reader.cancel).toHaveBeenCalledTimes(1);
+    expect(stream.reader.releaseLock).toHaveBeenCalledTimes(1);
+    expect(jest.getTimerCount()).toBe(0);
+  },
+);
+
+test('keep-alives and empty frames cannot postpone a stall or justify a short paid retry', async () => {
   const stream = new FakeStream();
   const transport = jest.fn().mockResolvedValue(stream.response());
   const handlers = on();
   const pending = api(transport)
     .askPost('/api/ask?stream=1', {}, new AbortController().signal, handlers)
     .catch((error: unknown) => error);
-  await jest.advanceTimersByTimeAsync(20_000);
-  stream.event('status', { phase: 'writing' });
-  stream.event('delta', { text: 'A partial answer' });
-  await flush();
-  await jest.advanceTimersByTimeAsync(ASK_STALL_MS - 1);
-  expect(transport.mock.calls[0]![1].signal.aborted).toBe(false);
-  await jest.advanceTimersByTimeAsync(1);
-  expect(await pending).toMatchObject({ code: 'partial', reason: 'stall' });
-  expect(handlers.delta).toHaveBeenCalledWith('A partial answer');
-  expect(transport).toHaveBeenCalledTimes(1);
-  expect(stream.reader.cancel).toHaveBeenCalledTimes(1);
-  expect(stream.reader.releaseLock).toHaveBeenCalledTimes(1);
-  expect(jest.getTimerCount()).toBe(0);
-});
-
-test('keep-alives, empty tokens, unknown stages and malformed frames do not postpone a stall', async () => {
-  const streams = [new FakeStream(), new FakeStream()];
-  const transport = jest
-    .fn()
-    .mockResolvedValueOnce(streams[0]!.response())
-    .mockResolvedValueOnce(streams[1]!.response());
-  const handlers = on();
-  const pending = api(transport)
-    .askPost('/api/ask?stream=1', {}, new AbortController().signal, handlers)
-    .catch((error: unknown) => error);
   const ping = setInterval(
     () =>
-      streams.forEach((stream) => {
-        stream.raw(
-          ': keep-alive\n\nevent: ping\ndata: {}\n\nevent: delta\ndata: {"text":""}\n\nevent: status\ndata: {"phase":"ping"}\n\ndata: malformed\n\n',
-        );
-      }),
+      stream.raw(
+        ': keep-alive\n\nevent: ping\ndata: {}\n\nevent: delta\ndata: {"text":""}\n\nevent: status\ndata: {"phase":"ping"}\n\ndata: malformed\n\n',
+      ),
     5_000,
   );
   await jest.advanceTimersByTimeAsync(ASK_STALL_MS - 1);
   expect(transport).toHaveBeenCalledTimes(1);
+  expect(transport.mock.calls[0]![1].signal.aborted).toBe(false);
   await jest.advanceTimersByTimeAsync(1);
-  expect(transport).toHaveBeenCalledTimes(2);
+  expect(await pending).toMatchObject({ code: 'timeout', reason: 'stall' });
+  expect(transport).toHaveBeenCalledTimes(1);
   expect(transport.mock.calls[0]![1].signal.aborted).toBe(true);
-  expect(handlers.retry).toHaveBeenCalledTimes(1);
-  await jest.advanceTimersByTimeAsync(ASK_DEADLINE_MS - ASK_STALL_MS);
-  expect(await pending).toMatchObject({ reason: 'deadline' });
-  expect(transport.mock.calls[1]![1].signal.aborted).toBe(true);
+  expect(handlers.retry).not.toHaveBeenCalled();
   clearInterval(ping);
   expect(jest.getTimerCount()).toBe(0);
 });
+
+// Inject a stream-reported stall before the client's own 85 s guard. This
+// exercises both sides of the recovery budget, including the exact boundary.
+test.each([
+  { elapsed: 60_000, retry: true },
+  { elapsed: 60_001, retry: false },
+])(
+  'a stream reports a stall at $elapsed ms: automatic retry is $retry',
+  async ({ elapsed, retry }) => {
+    const first = new FakeStream();
+    first.reader.read.mockImplementationOnce(
+      () =>
+        new Promise((_resolve, reject) => {
+          setTimeout(
+            () =>
+              reject(
+                new AskFailure('timeout', 'Fixture stream stalled.', 'stall'),
+              ),
+            elapsed,
+          );
+        }),
+    );
+    const second = new FakeStream();
+    second.event('done', answer);
+    const transport = jest
+      .fn()
+      .mockResolvedValueOnce(first.response())
+      .mockResolvedValueOnce(second.response());
+    const handlers = on();
+    const pending = api(transport)
+      .askPost('/api/ask?stream=1', {}, new AbortController().signal, handlers)
+      .catch((error: unknown) => error);
+    await jest.advanceTimersByTimeAsync(elapsed);
+    expect(transport).toHaveBeenCalledTimes(retry ? 2 : 1);
+    expect(handlers.retry).toHaveBeenCalledTimes(retry ? 1 : 0);
+    if (retry) expect(await pending).toEqual(answer);
+    else
+      expect(await pending).toMatchObject({ code: 'timeout', reason: 'stall' });
+    expect(jest.getTimerCount()).toBe(0);
+  },
+);
 
 test('a valid step resets the stall window', async () => {
   const stream = new FakeStream();
@@ -350,3 +389,46 @@ test.each(['evidence_gap', 'no_answer'])(
     expect(jest.getTimerCount()).toBe(0);
   },
 );
+
+test('automatic retry clears the first attempt record count while searching again', async () => {
+  const first = new FakeStream();
+  const status = `event: status\ndata: ${JSON.stringify({ phase: 'retrieved', sources: [{ title: 'Fixture one' }, { title: 'Fixture two' }] })}\n\n`;
+  first.reader.read
+    .mockResolvedValueOnce({
+      value: new TextEncoder().encode(status),
+      done: false,
+    })
+    .mockRejectedValueOnce(new Error('Fixture connection lost'));
+  const second = new FakeStream();
+  const transport = jest
+    .fn()
+    .mockResolvedValueOnce(first.response())
+    .mockResolvedValueOnce(second.response());
+  const client = api(transport);
+  let store: ChatStore = { v: 1, active: null, chats: [] };
+  const controller = new AskController({
+    post: client.askPost.bind(client),
+    read: () => store,
+    save: async (next) => {
+      store = next;
+    },
+    id: () => 'fixture-chat',
+    now: Date.now,
+  });
+  const counts: number[] = [];
+  controller.subscribe(() => counts.push(controller.snapshot().reading));
+  const asking = controller.submit(question);
+  await flush();
+  expect(counts).toContain(2);
+  expect(transport).toHaveBeenCalledTimes(2);
+  expect(controller.snapshot()).toMatchObject({
+    busy: true,
+    reading: 0,
+    streaming: '',
+    steps: [],
+  });
+  second.event('done', answer);
+  await asking;
+  expect(store.chats[0]?.thread).toHaveLength(2);
+  expect(jest.getTimerCount()).toBe(0);
+});

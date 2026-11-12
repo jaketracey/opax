@@ -455,7 +455,7 @@ export class AskController {
             },
             retry: () => {
               if (mine === this.sequence)
-                this.update({ streaming: '', steps: [] });
+                this.update({ streaming: '', steps: [], reading: 0 });
             },
             reading: (reading) => {
               if (mine === this.sequence) this.update({ reading });
