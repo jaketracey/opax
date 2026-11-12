@@ -57,6 +57,30 @@ test('official report page and API share the schema 1 record, independent of res
     const text=stripTags(html);for(const rec of data.record.recommendations)assert.ok(text.includes(escapeHtml(rec.text)));
   }
 });
+test('official report roots are public server HTML with clean canonicals, noindex query views and share cards', async () => {
+  for(const path of ['/official-reports','/official-reports/royal-commissions','/official-reports/integrity','/official-reports/annual-reports','/official-reports/agency-reports']) {
+    for(const query of ['', '?q=zzznomatchingreport', '?page=2']) {
+      const response=await worker.fetch(new Request(origin+path+query),{...env,REPORTS_ENABLED:'false'},{waitUntil(){}});
+      assert.equal(response.status,200,path+query);const html=await response.text();
+      assert.ok(html.includes('href="'+origin+path+'"'));
+      assert.equal(/<meta name="robots" content="noindex">/.test(html),Boolean(query));
+      assert.match(html,/official-reports.css/);assert.doesNotMatch(html,/data-colour-scheme|href="\/report-records\.css"/);assert.match(html,/og:image[^>]+content="https:\/\/opax.com.au\/og\//);
+      assert.doesNotMatch(html,/<script[^>]+src="\/(?:app|spa-entry|spa-shell)\.js/);
+      const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];
+      assert.doesNotMatch(main,/An association does not prove influence/);
+      if(!query) assert.match(main,path==='/official-reports' ? /or-collection/ : /href="\/report\//);
+      if(query.startsWith('?q=') && path!=='/official-reports') assert.match(main,/No (?:reports|inquiries) match/);
+    }
+  }
+});
+test('official report record breadcrumbs link to the record type root in HTML and schema',async()=>{
+  for(const [slug,root,label] of [['royal-commission-cth-robodebt','royal-commissions','Royal commissions'],['annual-report-department-of-defence-2024-25','annual-reports','Annual reports'],['integrity-report-'+(await read('/integrity-reports/index.json')).reports[0].id,'integrity','Integrity reports'],['agency-report-'+(await read('/agency-reports/index.json')).documents[0].id,'agency-reports','Agency reports']]) {
+    const html=await get('/report/'+slug);
+    const crumbs=html.match(/<nav class="crumbs prerender-crumbs"[\s\S]*?<\/nav>/)[0];
+    assert.ok(crumbs.includes('href="/official-reports/'+root+'"'));assert.ok(crumbs.includes(label));assert.doesNotMatch(crumbs,/>Search</);
+    assert.ok(html.includes('"name":"'+label+'","item":"'+origin+'/official-reports/'+root+'"') || html.includes(origin+'/official-reports/'+root));
+  }
+});
 test('search-all returns official report rows for web and native API consumers',async()=>{
   const currentEnv={...env,STAGING_API:{fetch:async()=>Response.json({results:[{kind:'speech',slug:'speech-existing',title:'Existing speech',date:'2024-01-01'}],truncated:false})}};
   for(const [query,type,title] of [['robodebt','royal_commission','Royal Commission into the Robodebt Scheme'],['IBAC','integrity_report',null],['Department of Defence','annual_report',null]]){
