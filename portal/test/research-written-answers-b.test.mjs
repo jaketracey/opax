@@ -23,7 +23,7 @@ test('B roster ownership rejects Bill Shorten borrowing Avery’s words on every
  assert.ok(audit.findings.some(f=>f.type==='quote'&&f.entity==='Bill Shorten'))
  for(const path of paths){
   const {out,wire}=await boundary(input,'What did Bill Shorten say?',path)
-  assert.doesNotMatch(out.answer,/Bill Shorten|I support/)
+  assert.doesNotMatch(out.answer,/Bill Shorten said|I support/);assert.match(out.answer,/no selected record/)
   assert.deepEqual(out.citations,{})
   assert.ok(out.sources.every(s=>!s.cited))
   if(path.stream)assert.doesNotMatch(wire,/event: delta/)

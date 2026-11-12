@@ -38,15 +38,15 @@ const payload=()=>{
  const answer='In his 2004 Governor-General\'s speech contribution, Andrew Murray said “The Basin belongs to Martians”.'
  return {answer,answer_decision:'answer',citations:{'speech-1/t/body/0':[[0,Array.from(answer).length]]},sources:[structuredClone(source)]}
 }
-test('a rejected clause yields cited record titles and dates, with no orphaned lead',()=>{
+test('a misquotation stays as an uncited paraphrase instead of becoming record titles',()=>{
  const input=payload(),snapshot=structuredClone(input),out=api.groundAnswerPayload(input,question)
  assert.deepEqual(input,snapshot)
- assert.equal(out.coherence.method,'cited_record_titles')
- assert.match(out.answer,/17 November 2004/);assert.match(out.answer,/Address in Reply/)
- assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b/)
- assert.doesNotMatch(out.answer,/Martians|In his|Governor-General/)
+ assert.equal(out.answer_status,'uncited')
+ assert.match(out.answer,/Andrew Murray said The Basin belongs to Martians/)
+ assert.doesNotMatch(out.answer,/[“”]|The record dated/)
+ assert.deepEqual(out.citations,{})
  assert.equal(api.sentenceFragment(out.answer),false)
- const ranges=Object.values(out.citations).flat();assert.ok(ranges.length)
+ const ranges=Object.values(out.citations).flat()
  for(const [from,to] of ranges)assert.ok(from>=0&&to>from&&to<=Array.from(out.answer).length)
  const again=api.groundAnswerPayload(structuredClone(out),question)
  assert.equal(again.answer,out.answer);assert.deepEqual(again.citations,out.citations)
@@ -72,10 +72,10 @@ test('a named speaker surname repair preserves Murray-Darling as a place',()=>{
  assert.match(out.answer,/Andrew Murray said the Murray-Darling Basin/)
  assert.doesNotMatch(out.answer,/Andrew Murray-Darling/)
 })
-test('a soft-check survivor cannot ship an uncited factual point',()=>{
+test('a soft-check survivor ships as an uncited point',()=>{
  const out=api.groundAnswerPayload({...payload(),answer:'Andrew Murray said the river needed reform.',answer_status:'uncited',citations:{},sources:[{...source,cited:false}]},question)
- assert.equal(out.coherence.method,'cited_record_titles');assert.ok(Object.keys(out.citations).length)
- assert.doesNotMatch(out.answer,/said the river needed reform/)
+ assert.equal(out.answer,'Andrew Murray said the river needed reform.')
+ assert.equal(out.answer_status,'uncited');assert.deepEqual(out.citations,{})
 })
 test('annual speech rows retain their own year, rather than the search start date',()=>{
  const series=[['2018',1062],['2019',928],['2020',1780],['2021',2070],['2023',2040]]

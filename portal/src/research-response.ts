@@ -1,7 +1,9 @@
 import { claimClauses, proseClaimKeys } from './research-claims'
 import { appendWrittenPoints, proseFallback, rawToolEcho, tokens, writingFacts } from './research-writing'
 import { plainAnswerPayload, rewriteAnswerPayload, displayAnswerPayload } from './research-language'
-import { groundAnswerPayload } from './research-grounding'
+import { groundAnswerPayload,hasTitleOnlyAnswer } from './research-grounding'
+import {prepareClaimPolicy} from './research-claim-policy'
+import {unclosedQuoteOffset} from './research-claim-audit.mjs'
 import {protectedDecision,answerDecision} from './research-coherence.mjs'
 import {sentenceParts} from './research-claim-audit.mjs'
 import type { QualitativeAnswer } from './research-types'
@@ -55,7 +57,7 @@ export async function withPlannerResearch(response: Response, previous?: Researc
 export async function withAnswerLanguage(response: Response,question?:string,askedAs?:string): Promise<Response> {
   return mapResearchResponse(response, payload=>{
     payload=ensureAnswerText(payload,question)
-    if(!question){const out=displayAnswerPayload(ensureAnswerText(plainAnswerPayload(payload)));return askedAs?{...out,asked_as:askedAs}:out}
+    if(!question){const migrated=hasTitleOnlyAnswer(payload)?groundAnswerPayload(payload,''):payload;const out=displayAnswerPayload(ensureAnswerText(plainAnswerPayload(migrated)));return askedAs?{...out,asked_as:askedAs}:out}
     const prepared=protectedDecision(payload)?payload:normaliseWrittenPayload(payload,question)
     const out=displayAnswerPayload(ensureAnswerText(normaliseCoveragePayload(groundAnswerPayload(prepared,question),question),question))
     return askedAs?{...out,asked_as:askedAs}:out
@@ -260,6 +262,7 @@ export function normaliseCoveragePayload(payload:Record<string,unknown>,question
 
 /** Keep the fallback model's prose, removing repeated claims and financial figure sets before replay. */
 export function normaliseWrittenPayload(payload: Record<string, unknown>,question?:string): Record<string, unknown> {
+  if(unclosedQuoteOffset(String(payload.answer??''))>=0)payload=prepareClaimPolicy(payload,question??'')
   payload=plainAnswerPayload(normaliseCoveragePayload(payload,question))
   if (typeof payload.answer !== 'string' || !payload.answer.trim()) return payload
   if(!protectedDecision(payload)&&rawToolEcho(payload.answer)){

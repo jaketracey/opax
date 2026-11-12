@@ -21,7 +21,8 @@ for(const answer of [
  const input=payload(answer)
  assert.ok(auditPayload('What did they say?',input).findings.length,answer)
  const out=await(await api.withAnswerLanguage(Response.json({...input,research:{mode:'planner',failure:'grounding'}}),'What did they say?')).json()
- assert.notEqual(out.answer,answer)
+ if(/words were/.test(answer)){assert.match(out.answer,/Blake Sample[’']s words were I oppose the bill/);assert.equal(out.answer_status,'uncited');assert.deepEqual(out.citations,{})}
+ else assert.notEqual(out.answer,answer)
  assert.equal(auditPayload('What did they say?',out).findings.length,0)
 })
 test('r2 one atom must support the owner, quote and date together',()=>{

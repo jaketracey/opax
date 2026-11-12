@@ -208,6 +208,19 @@ export function runCheck(c, ctx) {
   const { answer, payload, ev, roster, names } = ctx
   const t = answer
   switch (c.type) {
+    case 'person_statement': {
+      const topic=fold(c.topic), topical=text=>topic.split(/\s+/).some(w=>w.length>=3&&fold(text).includes(w.slice(0,6)))
+      const words=text=>new Set((fold(text).match(/[a-z]+/g)??[]).filter(w=>w.length>=4&&!['said','says','about','would','think','record','speech','speeches'].includes(w)).map(w=>w.slice(0,6)))
+      const records=(payload.sources??[]).filter(s=>fold(s.speaker)===fold(c.person)&&topical(s.snippet??''))
+      const statements=sentencesOf(t).map(s=>s.text).filter(s=>(mentions(s,c.person)||mentions(t,c.person)&&/^(?:(?:In|On) [^,]+,? )?(?:[Hh]e|[Ss]he)\b/.test(s))&&topical(s)&&!/The record dated|\bis .*\b(?:BILLS|STATEMENTS BY SENATORS)\b/.test(s)&&/\b(?:said|says|argu\w*|call\w*|support\w*|oppos\w*|criticis\w*|link\w*|want\w*|warn\w*|believ\w*|describ\w*|ties|treats|documented position|reject\w*)\b/i.test(s))
+      const supported=statements.some(s=>records.some(r=>{
+        const quotes=[...s.matchAll(/[“"]([^”"]+)[”"]/g)].map(m=>m[1])
+        const evidence=words(r.snippet),shared=[...words(s.replaceAll(c.person,''))].filter(w=>evidence.has(w)).length
+        if(quotes.length)return quotes.some(q=>fold(r.snippet).includes(fold(q))&&(topical(q)||shared>=3))
+        return shared>=3
+      }))
+      return {status:supported?'pass':'fail',detail:supported?'on-topic statement matches the named speaker record':'missing an on-topic quoted or paraphrased position by the named person'}
+    }
     case 'no_tool_echo': case 'no_duplicates': case 'direct_first_sentence': return {status:answerStyleChecks(ctx.question ?? '', t, ev)[c.type],detail:'answer-writing contract'}
     case 'mentions': {
       const all = (c.all ?? []).filter((n) => !mentions(t, n)), any = c.any ? c.any.some((n) => mentions(t, n)) : true

@@ -21,11 +21,11 @@ function fixtures(m,options={}) {
 test('loop answer instructions require a direct first point, unique facts and separate coverage notes',async()=>{
  const f=fixtures(model([reply([call('decline',{reason:'ambiguous'})])]));await f.run();
  const generation=f.model.doGenerateCalls[0],instructions=JSON.stringify(generation.prompt.filter(p=>['system','developer'].includes(p.role)));
- assert.match(instructions,/first point directly answers the question with the requested name, date or outcome/);
- assert.match(instructions,/never restate the question/);
- assert.match(instructions,/never paste raw tool rows/);
+ assert.match(instructions,/Lead with the requested name, date, position or outcome in complete prose/);
+ assert.match(instructions,/what would X say\/think about Y/);
+ assert.match(instructions,/on-topic words with their recorded name and date/);
  assert.match(instructions,/Select each fact once/);
- assert.match(instructions,/Each figure comes from one selected fact with its supporting citation/);
+ assert.match(instructions,/Copy figures and literal quotations from their supporting record/);
  assert.match(instructions,/response coverage note carries relevant limitations, only when the answer depends on them/);
  assert.doesNotMatch(instructions,/opening with the passage year/);
  const answer=generation.tools.find(t=>t.name==='answer');

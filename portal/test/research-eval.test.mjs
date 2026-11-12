@@ -24,7 +24,7 @@ const grade = (id, mode) => gradeRow(q(id), payload(id, mode), { roster, parties
 
 test('the eval set is small, mixed, complete and routes as declared', async () => {
   assert.equal(evals.schema, 1)
-  assert.ok(evals.questions.length >= 10 && evals.questions.length <= 21, `${evals.questions.length} questions`)
+  assert.ok(evals.questions.length >= 10 && evals.questions.length <= 26, `${evals.questions.length} questions`)
   assert.equal(new Set(evals.questions.map((x) => x.id)).size, evals.questions.length)
   assert.ok(evals.questions.filter((x) => x.kind === 'multi_hop').length >= 6)
   assert.ok(evals.questions.filter((x) => x.kind === 'qualitative').length >= 5)
@@ -32,7 +32,7 @@ test('the eval set is small, mixed, complete and routes as declared', async () =
   for (const x of evals.questions) {
     assert.ok(x.question.trim() && x.expected_tools.length && x.must.length && Array.isArray(x.must_not) && x.rubric.usefulness && x.rubric.citations && x.rubric.correctness, x.id)
     for (const t of x.expected_tools) assert.ok(tools.has(t), `${x.id}: unknown tool ${t}`)
-    for (const c of x.must) assert.ok(['mentions', 'terms', 'fact', 'years', 'names', 'period', 'caveat', 'sources', 'source_parties', 'decline'].includes(c.type), `${x.id}: unknown check ${c.type}`)
+    for (const c of x.must) assert.ok(['mentions', 'terms', 'fact', 'years', 'names', 'period', 'caveat', 'sources', 'source_parties', 'decline', 'person_statement', 'must_not', 'direct_first_sentence'].includes(c.type), `${x.id}: unknown check ${c.type}`)
     for (const c of x.must.filter((c) => c.type === 'fact')) new RegExp(c.match, c.flags ?? '')
   }
   for (const [axis, r] of Object.entries(evals.rubric)) if (axis !== 'overall') assert.ok(r.pass && r.partial && r.fail, axis)

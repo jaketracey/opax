@@ -75,14 +75,14 @@ test('aggregate selection limits survive writing and repeated final-boundary che
  assert.match(out.coverage.note,/Title selection: climate; carbon/)
  assert.match(out.coverage.note,/not support for or opposition/)
 })
-test('broad topic title fallback can retain six distinct cited records when summaries are cut',()=>{
+test('broad topic fallback quotes six distinct dated records when hard findings empty the draft',()=>{
  const q='What has parliament said about the Murray–Darling Basin?'
  const sources=Array.from({length:6},(_,i)=>({resource:'speech-'+i,kind:'speech',title:`Murray–Darling Basin debate ${i}, 201${i}-10-25`,date:`201${i}-10-25`,speaker:`Speaker ${i}`,url:`https://www.aph.gov.au/record/${i}`,href:`https://www.aph.gov.au/record/${i}`,snippet:'The Murray–Darling Basin needs better water management.',cited:true}))
  const lines=sources.map(s=>`On ${s.date}, ${s.speaker} said “The Basin belongs to Martians”.`),answer=lines.join('\n')
  const out=api.groundAnswerPayload({answer,answer_decision:'answer',sources,citations:Object.fromEntries(sources.map(s=>[s.resource+'/t/body/0',[[0,answer.length]]]))},q)
- assert.equal(out.coherence.method,'cited_record_titles')
+ assert.equal(out.coherence.method,'cited_passage_excerpts')
  assert.equal(Object.keys(out.citations).length,6)
- assert.match(out.answer,/The record dated 25 October 2010 is Murray–Darling Basin debate 0, 25 October 2010\./)
+ assert.match(out.answer,/On 25 October 2010, Speaker 0 said “The Murray–Darling Basin needs better water management\.”/)
  assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b/)
  assert.doesNotMatch(out.answer,/Martians/)
 })
@@ -154,8 +154,8 @@ test('a possessive topic frame cannot steal the speaker or ownership of later qu
  assert.ok(audit.findings.some(f=>f.entity==='Basin Plan'),'unsupported framing still fails')
  const out=api.groundAnswerPayload(payload,'What has parliament said about the Murray–Darling Basin?')
  assert.match(out.answer,/Penny Wong said the basin “needs more water”, and described it as “in crisis”/)
- assert.doesNotMatch(out.answer,/implementation|record dated/)
- assert.equal(api.auditPayload('What has parliament said about the Murray–Darling Basin?',out).findings.length,0)
+ assert.equal(out.answer,answer)
+ assert.equal(out.answer_status,'uncited');assert.deepEqual(out.citations,{})
  for(const [a,b]of Object.values(out.citations).flat())assert.ok(a>=0&&b>a&&b<=Array.from(out.answer).length)
  const wrong={...payload,answer:'Sarah Hanson-Young’s words were “needs more water”.'}
  assert.ok(api.auditPayload('What was said?',wrong).findings.some(f=>f.type==='quote'&&f.entity==='Sarah Hanson-Young'))
@@ -203,7 +203,7 @@ test('named-person overview depth leaves exact-bill and unresolved-person guards
  assert.equal(api.personOverviewHint('What has David Gillespie said about the bill?',['David Gillespie'],true),'')
 })
 
-test('a loop person overview retains four verified dated records after verbose claims are removed',()=>{
+test('a useful loop person answer keeps its two cited records without adding spare passages',()=>{
  const q='What has Senator Penny Wong said about the Pacific?'
  const complete='I have in my first year as foreign minister visited every member of the Pacific Islands Forum, some of them more than once, and I have said the same things.'
  const phrases=['Pacific priorities guide our partnerships.','Pacific sovereignty matters to regional security.','Climate change is a Pacific priority.',complete+' Our Pacific partnerships will']
@@ -211,9 +211,9 @@ test('a loop person overview retains four verified dated records after verbose c
  const answer='Penny Wong said “Pacific priorities guide our partnerships.”\nPenny Wong said “Pacific sovereignty matters to regional security.”'
  const payload={answer,answer_decision:'answer',research:{mode:'loop'},answer_scope:{people:['Penny Wong']},sources,citations:{'speech-0/t/body/0':[[0,answer.indexOf('\n')]],'speech-1/t/body/0':[[answer.indexOf('\n')+1,answer.length]]}}
  const out=api.groundAnswerPayload(payload,q)
- assert.equal(out.sources.filter(s=>s.cited).length,4)
- assert.match(out.answer,/13 November 2024/);assert.match(out.answer,/13 November 2025/)
- assert.ok(out.answer.includes(complete));assert.doesNotMatch(out.answer,/and I”|partnerships will”/)
+ assert.equal(out.sources.filter(s=>s.cited).length,2)
+ assert.equal(out.answer,answer)
+ assert.doesNotMatch(out.answer,/13 November 2024|13 November 2025|partnerships will”/)
  assert.equal(api.auditPayload(q,out).findings.length,0)
  const refusal=api.groundAnswerPayload({...payload,answer:'I cannot provide private information.',answer_decision:'refusal'},q)
  assert.equal(refusal.answer,'I cannot provide private information.')
