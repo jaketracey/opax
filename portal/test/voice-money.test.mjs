@@ -64,7 +64,12 @@ test('industry totals sum receipt edges once and exclude public money and node t
 test('year and party filters resummate dated receipts without lifetime or undated amounts',()=>{
  assert.equal(answer('gambling in 2020').total_aud,260);
  assert.equal(answer('gambling to Labor in 2020').total_aud,60);
- assert.equal(answer('gambling since 2021').total_aud,40);
+ // "since 2021" starts at the financial year that includes January 2021 (2020–21);
+ // a labelled financial year starts at that year.
+ assert.equal(answer('gambling since 2021').total_aud,300);
+ assert.deepEqual(answer('gambling since 2021').requested_years,{from:2020,to:2021});
+ assert.match(answer('gambling since 2021').period_reading,/^Reading “since 2021” as the 2020–21 to 2021–22 disclosure years/);
+ assert.equal(answer('gambling since 2021–22').total_aud,40);
  assert.equal(answer('gambling before 2021').total_aud,260);
  assert.equal(answer('gambling in 2019').total_aud,0);
  assert.match(answer('gambling in 2019').answer,/choose a held period/);
@@ -79,7 +84,10 @@ test('known donors, parties, aliases and jurisdictions retain their scope',()=>{
  assert.equal(receiptJurisdiction('Victoria gambling'),'vic');
  assert.equal(receiptJurisdiction('NSW gambling'),null);
  assert.equal(receiptJurisdiction('federal and Queensland gambling'),null);
- assert.equal(answer('gambling over the last 20 years').needs_period,true);
+ const twenty=answer('gambling over the last 20 years');
+ assert.equal(twenty.needs_period,undefined);assert.deepEqual(twenty.requested_years,{from:2002,to:2021});
+ assert.match(twenty.period_reading,/last 20 published disclosure years, 2002–03 to 2021–22/);
+ assert.ok(twenty.period_options.some(o=>o.label==='All years'&&o.from===null&&o.to===null));
 });
 test('money tools distinguish donation limitations from mixed receipt exploration before speech search',async()=>{
  const env={COMMUNITY_ORIGIN:'https://opax.test',ASSETS:{fetch:async()=>Response.json(graph)}};
@@ -156,10 +164,12 @@ test('missing compound party identities never become shorter parties or all reci
  assert.deepEqual(controlled.selected_parties,['Liberal']);assert.equal(controlled.total_aud,250);
 });
 
-test('party aliases shared by distinct identities require a full name',()=>{
+test('a party alias shared by distinct identities answers for one party, says which, and offers the other',()=>{
  const shared={...graph,nodes:[...graph.nodes.map(n=>n.id==='labor'?{...n,aliases:['Example Party']}:n),{id:'new',kind:'party',label:'New Party',aliases:['Example Party']}]};
  const r=receiptAnswer(shared,'Example Party donations','federal','https://opax.test');
- assert.equal(r.needs_scope,true);assert.equal(r.total_aud,undefined);assert.deepEqual(r.sources,[]);
+ assert.equal(r.needs_scope,undefined);assert.deepEqual(r.selected_parties,['Labor']);
+ assert.match(r.scope_reading,/matches Labor and New Party in this map; this answer is for Labor, the party with the most disclosed receipts/);
+ assert.deepEqual(r.scope_options,[{label:'New Party',party:'New Party'}]);assert.match(r.answer,/this answer is for Labor/);
  assert.deepEqual(receiptAnswer(shared,'New Party donations','federal','https://opax.test').selected_parties,['New Party']);
 });
 
