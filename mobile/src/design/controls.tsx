@@ -1858,11 +1858,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // A count on the call controls' Sources: fixed size, the label says it.
+  // A count on the call controls' Sources (the button's label says it too).
+  // It sits in the button's own top-right corner (empty, the button is a
+  // circle), never outside its frame: the Talk dock is a ScrollView, which
+  // clipped a badge drawn above the button (Jake, TestFlight, 13 Nov).
   badge: {
     position: 'absolute',
-    top: -4,
-    right: -4,
+    top: 0,
+    right: 0,
     minWidth: 22,
     minHeight: 22,
     paddingHorizontal: 6,

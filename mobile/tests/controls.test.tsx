@@ -227,6 +227,12 @@ test.each([undefined, 14])(
       .filter((node) => node.props.variant === 'capsule');
     expect(badges).toHaveLength(badge ? 1 : 0);
     if (badge) {
+      // Inside the button's frame: a clipping parent (the Talk dock's
+      // ScrollView) must not cut the count off.
+      const capsule = RN.StyleSheet.flatten(badges[0]!.parent!.props.style);
+      expect(capsule.position).toBe('absolute');
+      expect(capsule.top).toBeGreaterThanOrEqual(0);
+      expect(capsule.right).toBeGreaterThanOrEqual(0);
       expect(badges[0]!.props.allowFontScaling).not.toBe(false);
       expect(
         RN.StyleSheet.flatten(badges[0]!.props.style).fontSize,
