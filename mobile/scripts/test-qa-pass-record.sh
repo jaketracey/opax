@@ -6,7 +6,7 @@ SCRIPTS=$(cd "$(dirname "$0")" && pwd)
 SCRATCH=$(mktemp -d "${TMPDIR:-/tmp}/opax-qa-record-test.XXXXXX")
 trap '/bin/rm -rf "$SCRATCH"' EXIT
 python3 - "$SCRIPTS" "$SCRATCH" "$(command -v node)" <<'PYTEST'
-import datetime, json, os, shutil, subprocess, sys, time
+import datetime, json, os, shlex, shutil, subprocess, sys, time
 from pathlib import Path
 
 scripts, scratch, real_node = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
@@ -54,6 +54,7 @@ for name in ('test-qa-lock.sh', 'test-e2e.sh', 'test-jest-retry.sh', 'test-qa-pa
 executable(seed/'mobile/scripts/jest-retry.sh', 'printf "%s\\n" "$@" > "$QA_TEST_JEST_ARGS"\n')
 write(seed/'mobile/src/client.ts', 'export const value = 1;\n')
 write(seed/'mobile/package-lock.json', '{}\n')
+write(seed/'mobile/patches/privacy-patches.json', '{}\n')
 write(seed/'mobile/.maestro/flow.yaml', 'appId: au.com.opax.app\n')
 write(seed/'mobile/tests/fixtures/value.json', '{}\n')
 for name in ('analytics-events', 'no-wrapping-columns', 'deprecated-recipes', 'design-tokens', 'money-routes', 'follows-changes'):
@@ -70,7 +71,7 @@ case "${1:-}" in --test|scripts/build-design-tokens.mjs) echo "node $*" >> "$QA_
 exec "$QA_TEST_REAL_NODE" "$@"
 ''')
 executable(bin_dir/'npm', '''echo "npm $*" >> "$QA_TEST_TRACE"
-[ "$*" != "run ${QA_TEST_NPM_FAIL:-none}" ] || exit 17
+[ "${1:-}" != run ] || [ "${2:-}" != "${QA_TEST_NPM_FAIL:-none}" ] || exit 17
 ''')
 executable(bin_dir/'xcrun', '''echo "xcrun $*" >> "$QA_TEST_TRACE"
 case "$*" in
@@ -133,9 +134,40 @@ key = record('key')
 assert key == record('key', extra={'OPAX_PASTE_LOCK': '/scratch/other-lock', 'OPAX_NODE_PATH': '/scratch/node',
                                   'OPAX_QA_PASS_RECORD_DIR': '/scratch/other-records', 'OPAX_BUILD_GATE': '/scratch/gate'})
 ok('lock, path and record controls do not change the input key')
-miss({'OPAX_RELEASE_COMMIT': base})
-assert 'unset OPAX_QA_PASS_RECORD_DIR' in (mobile/'scripts/release-ios.sh').read_text()
-ok('releases refuse shared records even if local configuration restores the directory')
+# Populate valid records for the release environment, then observe Python file
+# opens while running the real QA entry point in that release context. Local
+# configuration deliberately restores the shared record directory.
+release_env = {'OPAX_RELEASE_COMMIT': base}
+saved_records = {p.name: p.read_bytes() for p in records.glob('*.json')}
+local.write_text('OPAX_QA_PASS_RECORD_DIR='+shlex.quote(str(records))+'\n')
+for stage in ('gate', 'harness'):
+    release_key = record('key', stage, release_env).strip()
+    payload = dict(data, stage=stage, key=release_key, command='release record sentinel', exit_code=0,
+                   written=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
+    write(records/f'{stage}-{release_key}.json', json.dumps(payload))
+audit = scratch/'audit'; audit.mkdir()
+audit_log = scratch/'record-opens'
+write(audit/'sitecustomize.py', """import os, sys
+prefix = os.environ['QA_TEST_RECORD_PREFIX'] + os.sep
+def observe(event, args):
+    if event == 'open' and isinstance(args[0], str) and args[0].startswith(prefix):
+        with open(os.environ['QA_TEST_RECORD_OPENS'], 'a') as log: log.write(args[0]+'\\n')
+sys.addaudithook(observe)
+""")
+audit_env = dict(release_env, PYTHONPATH=str(audit), QA_TEST_RECORD_PREFIX=str(records),
+                 QA_TEST_RECORD_OPENS=str(audit_log))
+# A positive control proves the observer is active before the release run.
+command(['python3', '-c', 'import sys; open(sys.argv[1]).read()', str(records/f'gate-{record("key", extra=release_env).strip()}.json')], mobile, audit_env)
+assert audit_log.exists() and audit_log.read_text(); audit_log.unlink()
+trace.write_text('')
+output = command(['bash', 'scripts/qa.sh'], mobile, audit_env)
+assert not audit_log.exists() and 'skipped:' not in output
+assert all('npm run '+gate in trace.read_text() for gate in ('typecheck', 'lint', 'test'))
+assert 'test-privacy-scan.py' in trace.read_text()
+local.unlink()
+for path in records.glob('*.json'): path.unlink()
+for name, contents in saved_records.items(): (records/name).write_bytes(contents)
+ok('release QA never opens matching records even when local config restores the directory')
 command(['bash', 'scripts/qa-pass-record.sh', 'write', 'gate', '17', 'npm test'], mobile, expect=1)
 ok('a failed command cannot mint a pass')
 # Use the real qa.sh, with all external gates replaced by offline stubs.
@@ -158,6 +190,35 @@ assert 'test-qa-pass-record.sh' not in trace.read_text() and 'test-android-flows
 assert 'test-android-harness.py' in trace.read_text() and 'check-release-bundle.sh --android' in trace.read_text()
 command(['git', 'reset', '--hard', base], repo)
 ok('a committed Maestro edit cannot skip Android checks on a harness record')
+patch = mobile/'patches/privacy-patches.json'
+record('write', 'harness')
+patch.write_text('{"changed":true}\n')
+command(['git', 'add', '.'], repo); command(['git', 'commit', '-qm', 'Edited privacy patches'], repo)
+miss(stage='harness')
+trace.write_text(''); command(['bash', 'scripts/qa.sh'], mobile)
+assert 'test-privacy-scan.py' in trace.read_text() and 'test-qa-pass-record.sh' in trace.read_text()
+command(['git', 'reset', '--hard', base], repo)
+ok('a patches-only commit invalidates and reruns the harness')
+for arguments in (['tests/one.test.ts'], ['-t', 'pattern'], ['--maxWorkers=6', 'tests/one.test.ts']):
+    for path in records.glob('gate-*.json'): path.unlink()
+    trace.write_text(''); command(['bash', 'scripts/qa.sh', *arguments], mobile)
+    assert 'npm run test -- '+' '.join(arguments) in trace.read_text()
+    assert 'npm run typecheck\n' in trace.read_text() and 'npm run lint\n' in trace.read_text()
+    assert not list(records.glob('gate-*.json'))
+ok('subset arguments reach only Jest and cannot write a full gate record')
+for arguments in (['--maxWorkers=6'], ['-w', '6'], []):
+    for path in records.glob('gate-*.json'): path.unlink()
+    trace.write_text(''); command(['bash', 'scripts/qa.sh', *arguments], mobile)
+    matches = list(records.glob('gate-*.json')); assert len(matches) == 1
+    recorded = json.loads(matches[0].read_text())
+    assert recorded['exit_code'] == 0
+    assert shlex.split(recorded['command'])[-(len(arguments)+1):] == ['--', *arguments]
+ok('full runs with worker budgets write a gate record containing their arguments')
+before = {p.name: p.read_bytes() for p in records.glob('gate-*.json')}
+trace.write_text(''); command(['bash', 'scripts/qa.sh', 'tests/one.test.ts'], mobile)
+assert 'npm run test -- tests/one.test.ts' in trace.read_text()
+assert before == {p.name: p.read_bytes() for p in records.glob('gate-*.json')}
+ok('a subset runs despite an existing full record and does not overwrite it')
 source.write_text(source.read_text()+'// changed\n')
 command(['bash', 'scripts/jest-changed.sh', 'HEAD'], mobile)
 args = (scratch/'jest-args').read_text().splitlines()
@@ -188,6 +249,41 @@ b.unlink()
 result = command(['bash', 'scripts/lint.sh', 'src/a.mjs'], mobile, expect=1)
 assert 'import/no-unresolved' in result
 ok('a warm lint cache still fails an unchanged importer after tracked dependency deletion')
+# Use the actual Hermes rule and TypeScript parser, with an unchanged caller
+# whose imported return type switches from number[] to MapIterator<number>.
+config_source = (scripts.parent/'eslint.config.js').read_text()
+hermes = config_source.split('const hermesBuiltins = ', 1)[1].split('\nmodule.exports = defineConfig', 1)[0]
+parser = json.dumps(command([real_node, '-p',
+    "require.resolve('@typescript-eslint/parser', {paths:[require.resolve('eslint-config-expo/flat')]})"], scripts.parent).strip())
+write(mobile/'eslint.config.js', 'const hermesBuiltins = '+hermes+'\n'+
+      'module.exports = [{files:["src/**/*.ts"], languageOptions:{parser:require('+parser+'),'+
+      'parserOptions:{project:"./tsconfig.json",tsconfigRootDir:__dirname}},'+
+      'plugins:{opax:{rules:{"hermes-builtins":hermesBuiltins}}},rules:{"opax/hermes-builtins":"error"}}];\n')
+write(mobile/'tsconfig.json', json.dumps({'compilerOptions': {'noEmit': True, 'strict': True,
+      'target': 'ESNext', 'module': 'NodeNext', 'moduleResolution': 'NodeNext', 'lib': ['ESNext'], 'types': []},
+      'include': ['src/**/*.ts']}))
+caller = mobile/'src/zz/a.ts'; dependency = mobile/'src/zz/b.ts'
+write(caller, "import { values } from './b';\nexport const mapped = (m: Map<string, number>) => values(m).map(x => x);\n")
+array_version = 'export const values = (m: Map<string, number>) => [...m.values()];\n'
+iterator_version = 'export const values = (m: Map<string, number>) => m.values();\n'
+write(dependency, array_version)
+command(['git', 'add', '.'], repo); command(['git', 'commit', '-qm', 'Hermes cross-file fixture'], repo)
+command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile)
+command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile)
+dependency.write_text(iterator_version)
+command(['git', 'add', '.'], repo); command(['git', 'commit', '-qm', 'Iterator return type'], repo)
+assert 'Hermes lacks Iterator.map' in command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile, expect=1)
+assert 'Hermes lacks Iterator.map' in command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile,
+                                             {'OPAX_LINT_NO_CACHE': '1'}, expect=1)
+dependency.write_text(array_version)
+command(['git', 'add', '.'], repo); command(['git', 'commit', '-qm', 'Restore array return type'], repo)
+command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile)
+command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile)
+dependency.write_text(iterator_version)
+assert 'Hermes lacks Iterator.map' in command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile, expect=1)
+command(['git', 'add', '.'], repo)
+assert 'Hermes lacks Iterator.map' in command(['bash', 'scripts/lint.sh', 'src/zz/a.ts'], mobile, expect=1)
+ok('warm Hermes cache observes committed, unstaged and staged cross-file type changes')
 # The incremental typecheck must observe a newly introduced type error.
 write(mobile/'tsconfig.json', json.dumps({'compilerOptions': {'noEmit': True, 'strict': True,
       'incremental': True, 'tsBuildInfoFile': 'node_modules/.cache/typecheck.tsbuildinfo', 'types': []},

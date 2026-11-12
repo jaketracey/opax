@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 # Optional clean-tree QA records. Gate keys use the whole tree; harness keys
-# use mobile/scripts. Both include tool versions, the installed dependency lock,
+# use mobile/scripts and mobile/patches. Both include tool versions and the
+# installed dependency lock,
 # ignored .qa.local.env bytes and sorted OPAX_*, EXPO_*, CI and NODE_* values.
 # Lock/path controls and OPAX_QA_PASS_RECORD_* are excluded. Only hashes of
 # local inputs are stored, never environment values or local configuration.
+# node_modules hashing covers only .package-lock.json, not installed file bytes.
+# Manual dependency edits with that lock unchanged do not invalidate a record;
+# postinstall patches must be deterministic. Releases always run QA afresh.
 #
 #   qa-pass-record.sh key <gate|harness>
 #   qa-pass-record.sh write <stage> <exit-code> <command>
@@ -27,7 +31,9 @@ tree_clean() { [ -z "$(git status --porcelain --untracked-files=all)" ]; }
 stage_tree() {
   case "$STAGE" in
     gate) git rev-parse 'HEAD^{tree}' ;;
-    harness) git rev-parse "HEAD:$(git rev-parse --show-prefix)scripts" ;;
+    harness)
+      git rev-parse "HEAD:$(git rev-parse --show-prefix)scripts" \
+        "HEAD:$(git rev-parse --show-prefix)patches" | /usr/bin/shasum -a 256 | cut -d' ' -f1 ;;
   esac
 }
 record_key() {

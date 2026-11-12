@@ -282,7 +282,7 @@ run_lane keep-other 01
 wait_for "$MOBILE/private/qa/keep-other/exit-status"
 [ "$(cat "$MOBILE/private/qa/keep-other/exit-status")" = 1 ] && [ ! -e "$LOCK" ] || fail 'different simulator was admitted'
 [ ! -e "$SCRATCH/keep-other.boot" ] && [ ! -e "$SCRATCH/keep-other.shutdown" ] && [ "$(cat "$SCRATCH/booted/device")" = lane-a ] || fail 'refused run touched a device'
-grep -q 'another device is booted' "$SCRATCH/keep-other.log" || fail 'boot refusal lacks explanation'
+grep -q 'harness kept UDID lane-a' "$SCRATCH/keep-other.log" || fail 'boot refusal lacks explanation'
 unset MOCK_UDID
 run_lane keep-reuse 01
 check_rc keep-reuse 0
