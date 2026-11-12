@@ -122,7 +122,7 @@ function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:stri
   cite('How the two years were compared','/methods',`${party}: ${fy(earlier.year)} ${aud(earlier.total_aud)}; ${fy(later.year)} ${aud(later.total_aud)}. Change: ${aud(difference)}. ${result.period_note}`)
   const context=moneyContext({...result,by_donor:[...new Map([...earlier.by_donor,...later.by_donor].map(d=>[d.id,d])).values()]},years)
   answer+=`\n\n${context}`
-  answer+='\n\n| Financial year | Disclosed receipts | Records |\n| --- | ---: | ---: |'
+  answer+=`\n\n| Financial year | ${receiptMeasureHeading(result.measure,false,'comparison')} | Records |\n| --- | ---: | ---: |`
   for(const row of [earlier,later]) {
     answer+=`\n| ${fy(row.year)} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
     const url=new URL(row.sources[0].url)
@@ -173,7 +173,7 @@ function comparedMoneyAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:str
   const bounds=result.requested_years
   const context=moneyContext(result)
   answer+=`\n\n${context}`
-  answer+=`\n\n| ${partyComparison?'Recipient party':'Source industry'} | Disclosed receipts | Records |\n| --- | ---: | ---: |`
+  answer+=`\n\n| ${partyComparison?'Recipient party':'Source industry'} | ${receiptMeasureHeading(result.measure,false,'comparison')} | Records |\n| --- | ---: | ---: |`
   for(const row of rows) {
     const identity=result.by_donor.find(d=>d.id===row.id);
       const donorName=identity ? (identity.href ? `[${plain(row.name)}](${new URL(identity.href,'https://opax.com.au').href})` : plain(row.name)) : plain(row.name);
@@ -361,9 +361,9 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
     for(const row of rows)appendRow(row)
     const more=ranked.length-rows.length
     if(more){
-      const rest=ranked.slice(rows.length),amount=rest.reduce((sum,r)=>sum+r.total_aud,0),records=rest.reduce((sum,r)=>sum+r.receipts,0),all=rest.reduce((sum,r)=>sum+r.all_types_aud,0)
+      const rest=ranked.slice(rows.length),amount=rest.reduce((sum,r)=>sum+r.total_aud,0),records=rest.reduce((sum,r)=>sum+r.receipts,0),all=rest.reduce((sum,r)=>sum+r.all_types_aud,0),other=rest.reduce((sum,r)=>sum+r.other_receipts_aud,0)
       const start=Array.from(answer).length,includesLoans=result.measure==='receipts_all'&&industry==='finance'?' (includes loans)':''
-      answer+=`\n| Other ${fromDonors||allFlows?'sources':'parties'} (${more} more on the map) | ${aud(amount)}${includesLoans} | ${share(amount)} | ${result.typed&&result.measure!=='receipts_all'?aud(all):records.toLocaleString('en-AU')} |`
+      answer+=`\n| Other ${fromDonors||allFlows?'sources':'parties'} (${more} more on the map) | ${aud(amount)}${includesLoans} | ${share(amount)} | ${result.typed&&result.measure!=='receipts_all'?aud(all)+(other>=all/2&&other>0?' (includes loans)':''):records.toLocaleString('en-AU')} |`
       cite(start,'Remaining sources',result.sources[0].url,`${aud(amount)} in ${measure_label}, ${period}; ${records} records across ${more} sources; share ${share(amount)}.`)
     }
     const start=Array.from(answer).length,includesLoans=result.measure==='receipts_all'&&industry==='finance'?' (includes loans)':''

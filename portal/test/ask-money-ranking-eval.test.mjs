@@ -11,24 +11,65 @@ for(const c of moneyRankingCases)test('money accuracy and directness: '+c.id,asy
  assert.deepEqual(score.errors,[],c.question+'\n'+result?.answer)
  assert.equal(score.accuracy,true);assert.equal(score.directness,3)
 })
-test('typed year cells choose recipient-side donations and all-types columns instead of legacy totals',async()=>{
- const typed={meta:{generated:'2026-11-12',receipt_type_coverage:{first_year:2020,last_year:2021}},nodes:[
-  {id:'source:a',label:'Example One Ltd',kind:'donor',industry:'gambling'},
-  {id:'source:b',label:'Example Two Ltd',kind:'donor',industry:'gambling'},
-  {id:'party:a',label:'Example Party One',kind:'party'},
-  {id:'party:b',label:'Example Party Two',kind:'party'},
- ],edges:[
-  {source:'source:a',target:'party:a',total:999999,count:99,byYear:{1998:[999999,99]},by_type:{donation:{2020:[100.25,1],2021:[200,1]},other_receipt:{2020:[900,1]},public_funding:{2020:[50000,1]}}},
-  {source:'source:b',target:'party:b',total:888888,count:88,by_type:{donation:{byYear:{2020:[500,2]}},subscription:{2021:[20,1]}}},
- ]}
- const out=await api.industryMoneyAnswer({question:'Who takes the most money from gambling?'},{fetch:async()=>Response.json(typed)})
- assert.equal(out.answer_status,'calculated');assert.equal(out.measure,'donations')
- assert.match(out.answer,/Example Party Two.*\$500.*donations received.*2020–21 to 2021–22/)
- assert.match(out.answer,/\| Example Party One \| \$300.25 \| 38% \| \$1,200.25 \(includes loans\) \|/)
- assert.match(out.answer,/\| Total, 2 parties \| \$800.25 \| 100% \| \$1,720.25 \(includes loans\) \|/)
- assert.doesNotMatch(out.answer,/999,999|888,888|50,000|1998/)
- assert.equal(out.money_facts.measure,'donations');assert.equal(out.money_facts.measure_label,out.measure_label)
- assert.match(out.answer,/all receipt types on the money map/)
+// Public exporter subset from receipt-types a51f2d872; amounts and typed cells are unchanged.
+const typedGraph=JSON.parse(await readFile(new URL('./fixtures/money-ranking-exporter.json',import.meta.url)))
+const typedAssets={fetch:async()=>Response.json(typedGraph)}
+const typedCases=moneyRankingCases.filter(c=>c.industry)
+for(const c of typedCases)test('exporter money accuracy and directness: '+c.id,async()=>{
+ const result=await api.federalPartyMoneyAnswer({question:c.question},typedAssets)
+ const score=scoreMoneyRanking(result,graphRanking(typedGraph,c),c,typedGraph)
+ assert.deepEqual(score.errors,[],c.question+'\n'+result?.answer)
+ assert.equal(score.accuracy,true);assert.equal(score.directness,3)
+})
+test('real exporter gambling ranking matches independent reconciliation and ignores poisoned legacy fields',async()=>{
+ const poisoned=structuredClone(typedGraph)
+ poisoned.edges.forEach(e=>Object.assign(e,{total:999999999,count:999999,firstYear:1900,lastYear:2099,byYear:{2020:[999999999,999999]}}))
+ for(const g of [typedGraph,poisoned]){
+  const out=await api.industryMoneyAnswer({question:'Who takes the most money from the gambling lobby?'},{fetch:async()=>Response.json(g)})
+  assert.equal(out.answer_status,'calculated');assert.equal(out.measure,'donations')
+  assert.match(out.answer,/^\*\*Liberal\*\*.*\$1,093,352.*donations received/)
+  for(const [name,amount]of [['Liberal','1,093,352'],['Labor','1,067,066'],['Nationals','258,500'],['LNP','50,000']])assert.ok(out.answer.includes(`| ${name} | $${amount} |`))
+  assert.match(out.answer,/\| Total, 4 parties \| \$2,468,918 \| 100% \| \$8,668,512 \(includes loans\) \|/)
+  assert.equal(out.money_facts.measure,'donations');assert.equal(out.money_facts.measure_label,out.measure_label)
+ }
+})
+test('typed remaining sources sum Other Receipt before qualifying their all-types cell',async()=>{
+ const c=typedCases.find(c=>c.id==='banks-labor-1'),out=await api.federalPartyMoneyAnswer({question:c.question},typedAssets)
+ const expected=graphRanking(typedGraph,c)
+ const all=expected.allCents-expected.rows.reduce((s,r)=>s+r.allCents,0),other=expected.otherCents-expected.rows.reduce((s,r)=>s+r.otherCents,0)
+ assert.ok(other>=all/2&&other>0,'real finance remainder exercises the qualifier')
+ const row=out.answer.split('\n').find(l=>l.startsWith('| Other sources'))
+ assert.ok(row.endsWith(`$${(all/100).toLocaleString('en-AU')} (includes loans) |`),row)
+})
+test('typed comparison headings name donations in party and financial-year renderers',async()=>{
+ for(const question of ['Who gets more gambling money, Labor or Liberal?','How did gambling money to Labor change from 2020 to 2021?']){
+  const out=await api.rankedMoneyAnswer({question},typedAssets)
+  assert.equal(out.answer_status,'calculated',out?.answer);assert.equal(out.measure,'donations')
+  assert.match(out.answer,/\| (?:Recipient party|Financial year) \| Donations \| Records \|/)
+ }
+})
+test('comparison headings label untyped and typed all-types measures',async()=>{
+ const allTypes=structuredClone(typedGraph)
+ for(const edge of allTypes.edges){
+  if(!edge.by_type)continue
+  edge.by_type={unknown:Object.values(edge.by_type).reduce((sum,v)=>sum+v,0)}
+  for(const [period,types]of Object.entries(edge.by_type_year))edge.by_type_year[period]={unknown:Object.values(types).reduce(([amount,count],[a,c])=>[amount+a,count+c],[0,0])}
+ }
+ for(const dataset of [assets,{fetch:async()=>Response.json(allTypes)}])for(const question of ['Who gets more gambling money, Labor or Liberal?','How did gambling money to Labor change from 2020 to 2021?']){
+  const out=await api.rankedMoneyAnswer({question},dataset)
+  assert.equal(out.answer_status,'calculated');assert.equal(out.measure,'receipts_all')
+  assert.match(out.answer,/\| (?:Recipient party|Financial year) \| All receipt types \| Records \|/)
+ }
+})
+test('typed oracle catches incorrect labels, periods, secondary amounts and loan qualifiers',async()=>{
+ const c=typedCases[0],expected=graphRanking(typedGraph,c),out=await api.federalPartyMoneyAnswer({question:c.question},typedAssets)
+ for(const defect of [
+  {...out,measure:'receipts_all'},
+  {...out,measure_label:'disclosed receipts, all types'},
+  {...out,answer:out.answer.replaceAll('1998–99 to 2024–25','2000–01 to 2024–25')},
+  {...out,answer:out.answer.replaceAll('$3,538,879','$3,538,880')},
+  {...out,answer:out.answer.replace(/(\| Liberal[^\n]+) \(includes loans\)/,'$1')},
+ ])assert.equal(scoreMoneyRanking(defect,expected,c,typedGraph).accuracy,false)
 })
 test('an empty requested period shows explicitly held-period figures and retains unmatched requested coverage',async()=>{
  const out=await api.federalPartyMoneyAnswer({question:'Who takes the most money from gambling in 1900?'},assets)

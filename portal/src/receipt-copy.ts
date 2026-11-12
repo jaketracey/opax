@@ -9,7 +9,8 @@ export function receiptMeasureLabel(measure:string,industry?:string):string {
   if(industry==='unions')return 'disclosed receipts, all types (donations, affiliation fees and other receipts)'
   return 'disclosed receipts, all types (donations, loans and other receipts)'
 }
-export function receiptMeasureHeading(measure:string,finance=false):string {
+export function receiptMeasureHeading(measure:string,finance=false,context:'ranking'|'comparison'='ranking'):string {
+  if(context==='comparison'&&measure==='receipts_all')return 'All receipt types'
   return measure==='donations'?'Donations':measure==='other_receipts'?'Other receipts (includes loans)':measure==='subscriptions'?'Subscriptions':finance?'Disclosed receipts (includes loans)':'Disclosed receipts'
 }
 export const receiptDollars=(n:number)=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',minimumFractionDigits:Number.isInteger(n)?0:2,maximumFractionDigits:2}).format(n)
