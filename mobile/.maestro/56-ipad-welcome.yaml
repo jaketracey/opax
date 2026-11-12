@@ -70,6 +70,8 @@ name: 56 iPad welcome, full screen in a centred column in both orientations, Con
       id: seat-state-nsw
     timeout: 10000
 - assertVisible: New South Wales
+# The list is not a dead end: "Not now" stays in its bar.
+- assertVisible: Not now
 - takeScreenshot: ${EVIDENCE}/56-browse-nsw
 - scrollUntilVisible:
     element:

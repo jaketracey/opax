@@ -6,6 +6,8 @@ import {
   screenName,
   scrubEvent,
   sectionOf,
+  scrubErrorMessage,
+  ERROR_MESSAGE_MAX_LENGTH,
   type AnalyticsContext,
 } from '../src/analytics/events';
 
@@ -20,6 +22,21 @@ const context: AnalyticsContext = {
 const question = 'Did Senator Example vote against the 2031 housing bill?';
 
 describe('cleanEvent', () => {
+  test.each(['stall', 'deadline', 'network', 'server', 'no_answer'])(
+    'Ask reasons accept only the fixed vocabulary: %s',
+    (reason) => {
+      for (const event of ['opax_ask_completed', 'opax_ask_failed']) {
+        expect(cleanEvent(event, { reason, question })).toEqual({ reason });
+        const scrubbed = scrubEvent(
+          { event, properties: { reason, question, error: question } },
+          context,
+        );
+        expect(scrubbed?.properties?.reason).toBe(reason);
+        expect(JSON.stringify(scrubbed)).not.toContain(question);
+        expect(cleanEvent(event, { reason: question })).toEqual({});
+      }
+    },
+  );
   test('keeps only listed events', () => {
     expect(cleanEvent('opax_question', { question })).toBeNull();
     expect(cleanEvent('$autocapture')).toBeNull();
@@ -74,6 +91,63 @@ describe('cleanEvent', () => {
       });
   });
 
+  test('first run: the step, how it ended and which control chose, as fixed words only', () => {
+    expect(
+      cleanEvent('opax_first_run', {
+        step: 'seat',
+        outcome: 'chosen',
+        method: 'location',
+      }),
+    ).toEqual({ step: 'seat', outcome: 'chosen', method: 'location' });
+    expect(
+      cleanEvent('opax_first_run', { step: 'state', outcome: 'skipped' }),
+    ).toEqual({ step: 'state', outcome: 'skipped' });
+    // A seat, a state, a postcode, a position or typed text is never kept,
+    // whether as an extra property or in place of a listed one.
+    expect(
+      cleanEvent('opax_first_run', {
+        step: 'welcome',
+        outcome: 'skipped',
+        seat: 'Example Seat',
+        state: 'nsw',
+        postcode: '2042',
+        query: '2042',
+        latitude: -33.9,
+        longitude: 151.1,
+      }),
+    ).toEqual({ step: 'welcome', outcome: 'skipped' });
+    for (const value of ['Example Seat', 'nsw', '2042', '-33.9,151.1', 2042])
+      expect(
+        cleanEvent('opax_first_run', {
+          step: value,
+          outcome: value,
+          method: value,
+        }),
+      ).toEqual({});
+    const scrubbed = scrubEvent(
+      {
+        event: 'opax_first_run',
+        properties: {
+          step: 'seat',
+          outcome: 'chosen',
+          method: 'search',
+          seat: 'Example Seat',
+          postcode: '2042',
+          $screen_name: '/welcome/seat',
+        },
+      },
+      context,
+    );
+    expect(scrubbed?.properties).toMatchObject({
+      step: 'seat',
+      outcome: 'chosen',
+      method: 'search',
+      $screen_name: '/welcome/seat',
+    });
+    expect(JSON.stringify(scrubbed)).not.toContain('Example Seat');
+    expect(JSON.stringify(scrubbed)).not.toContain('2042');
+  });
+
   test('every rule rejects free text', () => {
     for (const [event, rules] of Object.entries(eventFields)) {
       const properties = Object.fromEntries(
@@ -87,6 +161,91 @@ describe('cleanEvent', () => {
 });
 
 describe('scrubEvent', () => {
+  test('error messages must exactly match a short content-free diagnostic', () => {
+    expect(scrubErrorMessage('Network request failed')).toBe(
+      'Network request failed',
+    );
+    for (const unsafe of [
+      question,
+      'Jane Citizen',
+      'ask?q=private',
+      'jo@example.org',
+      'https://example.org/record/private',
+      'Network request failed: Jane Citizen',
+      'Network request failed\nprivate',
+      'x'.repeat(ERROR_MESSAGE_MAX_LENGTH + 1),
+      42,
+    ]) {
+      expect(scrubErrorMessage(unsafe)).toBeUndefined();
+      expect(cleanEvent('opax_route_error', { error_message: unsafe })).toEqual(
+        {},
+      );
+      expect(
+        scrubEvent(
+          { event: 'opax_route_error', properties: { error_message: unsafe } },
+          context,
+        )?.properties?.error_message,
+      ).toBeUndefined();
+    }
+    expect(
+      scrubEvent(
+        {
+          event: 'opax_route_error',
+          properties: { error_message: 'Network request failed' },
+        },
+        context,
+      )?.properties?.error_message,
+    ).toBe('Network request failed');
+  });
+
+  test('timing events keep only bounded durations and fixed top-screen templates', () => {
+    expect(
+      cleanEvent('opax_app_start', { duration_ms: 123.4, question }),
+    ).toEqual({ duration_ms: 123 });
+    for (const duration_ms of [-1, Infinity, NaN, 3_600_001, '123'])
+      expect(cleanEvent('opax_app_start', { duration_ms })).toEqual({});
+    for (const route_pattern of [
+      '/person/jane-citizen',
+      '/bill/private',
+      '/search?q=private',
+      question,
+    ]) {
+      expect(cleanEvent('opax_screen_ready', { route_pattern })).toEqual({});
+      expect(
+        scrubEvent(
+          {
+            event: 'opax_screen_ready',
+            properties: { route_pattern, $screen_name: '/person/jane-citizen' },
+          },
+          context,
+        )?.properties,
+      ).not.toHaveProperty('route_pattern');
+    }
+    expect(
+      scrubEvent(
+        {
+          event: 'opax_screen_ready',
+          properties: {
+            route_pattern: '/person/[slug]',
+            duration_ms: 50,
+            $screen_name: '/person/jane-citizen',
+            question,
+          },
+        },
+        context,
+      )?.properties,
+    ).toMatchObject({ route_pattern: '/person/[slug]', duration_ms: 50 });
+    expect(
+      scrubEvent(
+        {
+          event: 'opax_screen_ready',
+          properties: { $screen_name: '/person/jane-citizen' },
+        },
+        context,
+      )?.properties,
+    ).not.toHaveProperty('$screen_name');
+  });
+
   test('drops SDK events that are not on the list', () => {
     for (const event of [
       '$autocapture',

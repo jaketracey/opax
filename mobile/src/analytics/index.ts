@@ -8,6 +8,7 @@ import {
   screenName,
   scrubEvent,
   sectionOf,
+  scrubErrorMessage,
   type AnalyticsContext,
   type AnalyticsEvent,
   type EventProperties,
@@ -16,9 +17,8 @@ import { routeErrorPattern } from './route-patterns';
 
 /**
  * Anonymous product analytics (docs/ANALYTICS.md, "iOS and Android app").
- * Only production builds, and development builds made with OPAX_ANALYTICS=1,
- * carry `extra.analytics`; e2e builds never do, so they create no client and
- * send nothing. The host is the opax.com.au/ingest proxy, never PostHog's.
+ * Only configured production release builds create a client. Debug bundles,
+ * dev clients, e2e, and missing/zero build numbers always fail closed.
  */
 type AnalyticsConfig = {
   host: string;
@@ -33,13 +33,15 @@ export function analyticsConfig(extra: unknown): AnalyticsConfig | null {
     typeof host !== 'string' ||
     typeof projectToken !== 'string' ||
     !/^phc_[A-Za-z0-9]{20,64}$/.test(projectToken) ||
-    (environment !== 'production' && environment !== 'development')
+    environment !== 'production'
   )
     return null;
   try {
     const url = new URL(host);
     if (
       url.protocol !== 'https:' ||
+      url.hostname !== 'opax.com.au' ||
+      url.port ||
       url.pathname !== '/ingest' ||
       url.search ||
       url.hash ||
@@ -103,8 +105,36 @@ export function analyticsOptions(
 }
 
 /** Whether this build sends anonymous analytics (About says so only then). */
-export const analyticsEnabled = () =>
-  analyticsConfig(Constants.expoConfig?.extra) !== null;
+export function analyticsEnabled() {
+  const config = Constants.expoConfig;
+  const extra = config?.extra;
+  const validBuild = (value: unknown) =>
+    (typeof value === 'string' || typeof value === 'number') &&
+    /^[1-9][0-9]{0,9}$/.test(String(value));
+  const platformBuild =
+    Platform.OS === 'android'
+      ? config?.android?.versionCode
+      : config?.ios?.buildNumber;
+  // Constants already exposes the iOS binary's immutable CFBundleVersion.
+  // Android SDK 57 exposes only the embedded config here (no new module).
+  const nativeBuild =
+    Platform.OS === 'ios'
+      ? Constants.platform?.ios?.buildNumber
+      : platformBuild;
+  return (
+    !__DEV__ &&
+    !Constants.debugMode &&
+    Constants.executionEnvironment !== 'storeClient' &&
+    (Platform.OS === 'ios' || Platform.OS === 'android') &&
+    extra?.variant === 'production' &&
+    validBuild(extra?.appBuild) &&
+    validBuild(platformBuild) &&
+    validBuild(nativeBuild) &&
+    String(extra?.appBuild) === String(platformBuild) &&
+    String(extra?.appBuild) === String(nativeBuild) &&
+    analyticsConfig(extra) !== null
+  );
+}
 
 let client: PostHog | null | undefined;
 let currentScreen: string | null = null;
@@ -112,7 +142,9 @@ function analytics(): PostHog | null {
   if (client !== undefined) return client;
   client = null;
   try {
-    const config = analyticsConfig(Constants.expoConfig?.extra);
+    const config = analyticsEnabled()
+      ? analyticsConfig(Constants.expoConfig?.extra)
+      : null;
     if (config)
       client = new PostHog(
         config.projectToken,
@@ -143,9 +175,8 @@ export function track<E extends AnalyticsEvent>(
   }
 }
 
-/** The existing iOS build gate and both payload scrubbers apply here too. */
+/** The shared release gate and both payload scrubbers apply here too. */
 export function reportRouteError(error: unknown, segments: readonly string[]) {
-  if (Platform.OS !== 'ios') return;
   try {
     const constructor =
       error !== null && typeof error === 'object'
@@ -154,6 +185,9 @@ export function reportRouteError(error: unknown, segments: readonly string[]) {
     track('opax_route_error', {
       error_class: constructor,
       route_pattern: routeErrorPattern(screenName(segments)) ?? '/other',
+      error_message: scrubErrorMessage(
+        error instanceof Error ? error.message : undefined,
+      ),
     });
   } catch {
     /* Reporting must never break the recoverable state. */

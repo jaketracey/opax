@@ -198,6 +198,19 @@ test('opening reader loads one record; similar loads only on tap and reopening t
     view.root.findByProps({ testID: 'doc-similar' }).props.onToggle(true);
   });
   expect(records.similar).toHaveBeenCalledTimes(1);
+  expect(
+    view.root
+      .findAllByType(Text)
+      .some((node) => node.props.children === 'No similar speeches found.'),
+  ).toBe(true);
+  expect(
+    view.root
+      .findAllByType(Text)
+      .some(
+        (node) =>
+          node.props.children === "Similar speeches couldn't be loaded.",
+      ),
+  ).toBe(false);
   await act(async () => {
     view.root.findByProps({ testID: 'doc-similar' }).props.onToggle(false);
   });
@@ -401,7 +414,7 @@ test('real request client sends one GET per action, shares in-flight and session
   expect(transport).toHaveBeenCalledTimes(1);
   await repository.similar(speech, new Set(['gambling']));
   expect(transport).toHaveBeenLastCalledWith(
-    expect.stringContaining('kind=speech&per=6&topic=gambling'),
+    expect.stringContaining('kind=speech&per=6&top_k=20&topic=gambling'),
     expect.objectContaining({
       method: 'GET',
       credentials: 'omit',

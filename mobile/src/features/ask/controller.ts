@@ -3,6 +3,7 @@ import {
   decodeAnswer,
   decodeFollowups,
   defaultOptions,
+  isNoAnswer,
   requestBody,
   sourcePassage,
   titleFor,
@@ -25,7 +26,7 @@ function followupPassages(data: Answer) {
   if (
     data.money_ranking ||
     data.pay_answer ||
-    !data.answer ||
+    isNoAnswer(data) ||
     ['needs_scope', 'needs_period'].includes(data.answer_status || '')
   )
     return [];
@@ -454,7 +455,7 @@ export class AskController {
             },
             retry: () => {
               if (mine === this.sequence)
-                this.update({ streaming: '', steps: [] });
+                this.update({ streaming: '', steps: [], reading: 0 });
             },
             reading: (reading) => {
               if (mine === this.sequence) this.update({ reading });
@@ -468,7 +469,10 @@ export class AskController {
         source_count:
           data.answer_status === 'needs_question' ? 0 : data.sources.length,
         has_answer:
-          data.answer_status !== 'needs_question' && !!data.answer.trim(),
+          data.answer_status !== 'needs_question' && !isNoAnswer(data),
+        ...(data.answer_status !== 'needs_question' && isNoAnswer(data)
+          ? { reason: 'no_answer' }
+          : {}),
       });
       if (data.answer_status === 'needs_question') {
         // Nothing was searched or written: the conversation stays as it was,
@@ -504,9 +508,7 @@ export class AskController {
         stage: null,
         streaming: '',
         nextLoading: passages.length > 0,
-        error: !data.answer
-          ? new AskFailure('empty', 'No answer was written this time.')
-          : null,
+        error: null,
       });
       await this.persist();
       if (mine !== this.sequence) return;
@@ -524,6 +526,7 @@ export class AskController {
           : new AskFailure('invalid', 'The answer could not be read.');
       this.measure('opax_ask_failed', run, {
         cancelled: failure.code === 'cancelled',
+        ...(failure.reason ? { reason: failure.reason } : {}),
       });
       // The failed question returns to the composer only when it is empty.
       const restore = !this.state.draft.trim();

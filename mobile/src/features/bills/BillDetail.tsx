@@ -1,4 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
+import { useScreenReady } from '../../analytics/timing';
 import { Host, Menu, Button as SwiftButton } from '@expo/ui/swift-ui';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
@@ -199,6 +200,7 @@ export default function BillDetail({
     [key],
   );
   const { record, error, refreshing, refresh, retry } = useCatalogRecord(load);
+  useScreenReady('/bill/[key]', !!record || !!error, !embedded);
   const [directory, setDirectory] = useState<SponsorDirectory | null>();
   const view = record?.data;
   const identity = view?.identity.data ?? null;
@@ -312,7 +314,7 @@ export default function BillDetail({
       ]
     : [];
   const failed = notFound || (error && !record);
-  // Share sits in the bar beside ⋯ and Ask about this bill is a row: iOS 26's
+  // Share sits in the bar beside ⋯ and Ask about this bill is a button: iOS 26's
   // floating tab bar stays up on pushes, and covered a bottom toolbar.
   const barShare = Platform.OS === 'ios' && canShare && !failed;
   return (
@@ -420,7 +422,7 @@ export default function BillDetail({
             name={name}
             titleRef={embedded ? undefined : titleRef}
             onTitleLayout={embedded ? undefined : barTitle.onTitleLayout}
-            onAsk={Platform.OS === 'ios' || embedded ? ask : undefined}
+            onAsk={ask}
             directory={directory}
             savedAt={savedAt}
             stale={
@@ -443,13 +445,8 @@ export default function BillDetail({
           />
         ) : null}
       </Screen>
-      {embedded || failed || Platform.OS === 'ios' ? null : (
-        <BillToolbar
-          onAsk={ask}
-          onShare={share}
-          canAsk={!!title}
-          canShare={!!identity}
-        />
+      {embedded || failed || Platform.OS === 'ios' || !canShare ? null : (
+        <BillToolbar onShare={share} canShare={!!identity} />
       )}
     </>
   );
@@ -502,28 +499,24 @@ export function PaneMenu({
 }
 
 /**
- * Android's bottom bar: Ask about this bill and Share. iOS puts Share in the
- * navigation bar and Ask in a row, where the tab bar cannot cover them.
+ * Android keeps Share in its bottom bar. Ask follows the summary on every
+ * platform; iOS keeps Share in the navigation bar above the floating tab bar.
  */
 function BillToolbar({
-  onAsk,
   onShare,
-  canAsk,
   canShare: shareReady,
 }: {
-  onAsk: () => void;
   onShare: () => void;
-  canAsk: boolean;
   canShare: boolean;
 }) {
   return (
-    <SafeAreaView edges={['bottom']} style={styles.toolbar}>
-      <Button
-        label="Ask about this bill"
-        onPress={onAsk}
-        disabled={!canAsk}
-        testID="bill-ask"
-      />
+    <SafeAreaView
+      edges={['bottom']}
+      style={[
+        styles.toolbar,
+        Platform.OS === 'android' ? styles.androidToolbar : null,
+      ]}
+    >
       {canShare ? (
         <Button
           label="Share"
@@ -682,6 +675,19 @@ function BillPage({
       </View>
       <Consultation view={view} />
       <Summary view={view} savedAt={savedAt} />
+      {onAsk ? (
+        <View style={styles.textRow}>
+          <Button
+            label="Ask about this bill"
+            variant="primary"
+            symbol={symbols.ask}
+            accessibilityLabel={`Ask about this bill: ${name}`}
+            accessibilityHint="Opens Ask with a question drafted"
+            onPress={onAsk}
+            testID="bill-ask"
+          />
+        </View>
+      ) : null}
       <View style={styles.textRow}>
         <LinkRow
           title="Bill text"
@@ -690,15 +696,6 @@ function BillPage({
           onPress={() => bills.openText(identity.key, name)}
           testID="bill-read-text"
         />
-        {onAsk ? (
-          <LinkRow
-            title="Ask about this bill"
-            symbol={symbols.ask}
-            accessibilityHint="Opens Ask with a question drafted"
-            onPress={onAsk}
-            testID="bill-ask"
-          />
-        ) : null}
       </View>
       <KeyDates
         view={view}
@@ -2078,4 +2075,5 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.tight,
     backgroundColor: colors.paper,
   },
+  androidToolbar: { flexWrap: 'wrap', gap: rhythm.tight },
 });

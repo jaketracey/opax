@@ -422,6 +422,9 @@ test.each([
     (x) => x.props.testID === 'money-record-more',
   )[0]!;
   expect(more.findAllByType(LinkRow)).toContain(row);
+  expect(more.findAllByProps({ testID: 'money-record-search' })).toHaveLength(
+    0,
+  );
   await act(async () => r.unmount());
 });
 

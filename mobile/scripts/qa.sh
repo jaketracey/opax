@@ -6,6 +6,10 @@ export EXPO_NO_TELEMETRY=1
 echo 'OPAX QA: release tooling'
 nice -n 10 python3 scripts/test-release-tooling.py
 nice -n 10 python3 scripts/test-privacy-scan.py
+echo 'OPAX QA: Android flow preparation'
+nice -n 10 node --test scripts/test-android-flows.mjs
+nice -n 10 python3 scripts/test-android-harness.py
+nice -n 10 python3 scripts/test-android-results.py
 echo 'OPAX QA: shared-host lock'
 nice -n 10 bash scripts/test-qa-lock.sh
 echo 'OPAX QA: simulator lifetime'
@@ -22,3 +26,5 @@ for gate in typecheck lint test qa-static qa-advisories; do
     nice -n 10 npm run "$gate"
   fi
 done
+echo 'OPAX QA: Android production export'
+nice -n 10 bash scripts/check-release-bundle.sh --android

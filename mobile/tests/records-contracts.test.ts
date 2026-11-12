@@ -238,6 +238,7 @@ test.each([
   '/api/recent',
   '/api/search?q=Bill&kind=speech&per=6',
   '/api/search?q=Bill&kind=speech&per=6&topic=gambling',
+  '/api/search?q=Bill&kind=speech&per=6&top_k=20&topic=gambling',
 ])('exact reviewed record request passes: %s', (p) =>
   expect(() => assertAllowedPath(p)).not.toThrow(),
 );
@@ -252,6 +253,10 @@ test.each([
   '/api/search?q=x&kind=speech&per=7',
   '/api/search?q=x&kind=speech&per=6&per=6',
   '/api/search?q=x&kind=speech&per=6&mode=keyword',
+  '/api/search?q=x&kind=speech&per=6&top_k=20&mode=keyword',
+  '/api/search?q=x&kind=speech&per=6&top_k=200&mode=keyword',
+  '/api/search?q=x&kind=speech&per=6&top_k=20&mode=semantic',
+  '/api/search?q=x&kind=speech&per=6&top_k=20&mode=keyword&top_k=20',
   '/api/search?q=x&kind=speech&per=6&topic=../private',
   '/api/brief?ids=x',
   '/api/resource/%73peech-1',

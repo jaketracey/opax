@@ -162,6 +162,7 @@ export function AskThread({
         legacy={legacyDate(turn, i, thread, chat)}
         profiles={profiles}
         paneShowsSources={paneShowsSources}
+        onRephrase={fillComposer}
       />
     );
   const row = (turn: Turn, i: number) =>

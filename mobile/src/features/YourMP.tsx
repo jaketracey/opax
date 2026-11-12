@@ -1,4 +1,5 @@
 import { RouteOptions } from '../navigation/preview';
+import { useScreenReady } from '../analytics/timing';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -121,6 +122,10 @@ export default function YourMP() {
     () => catalogs.yourMP(federal!.electorate_id, stateSeatIds),
     attempt,
   );
+  useScreenReady(
+    '/your-mp',
+    seat.status !== 'loading' && (!home || view.status !== 'loading'),
+  );
   const electorate = useBlock<ElectorateView>(
     home ? federal!.detail_url : null,
     async () => (await catalogs.electorateFor(federal!.detail_url)).data,
@@ -198,6 +203,13 @@ export default function YourMP() {
         (index) => {
           if (index === 0) run();
         },
+      );
+    else if (Platform.OS === 'android')
+      confirmAction(
+        title,
+        [{ title: 'Forget', destructive: true, onPress: run }],
+        undefined,
+        message,
       );
     else confirmAction(title, [{ title: 'Forget', onPress: run }]);
   }, [seat]);

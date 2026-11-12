@@ -1,9 +1,9 @@
+import { Pressable } from './pressable';
 import { router, type Href } from 'expo-router';
 import type { ReactNode } from 'react';
 import { isValidElement, useState } from 'react';
 import {
   Image,
-  Pressable,
   StyleSheet,
   View,
   useColorScheme,

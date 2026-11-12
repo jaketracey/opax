@@ -1,0 +1,4 @@
+appId: au.com.opax.app
+name: Android dismiss the search IME before navigation
+---
+- hideKeyboard

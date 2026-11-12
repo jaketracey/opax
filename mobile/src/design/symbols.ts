@@ -3,6 +3,10 @@ import type { SFSymbol as NativeSFSymbol } from 'expo-symbols';
 /** One symbol per meaning. Money uses the iOS 18.4 fallback until simulator verification.
  * Journey follow 13 retires bell.badge in favour of bell. */
 export const symbols = Object.freeze({
+  selected: 'checkmark',
+  increment: 'plus.circle',
+  decrement: 'minus.circle',
+  loading: 'ellipsis',
   photo: 'photo',
   australianMoney: 'australiandollarsign.circle',
   mute: 'mic.slash',

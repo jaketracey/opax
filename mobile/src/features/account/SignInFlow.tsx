@@ -1,5 +1,11 @@
 import { useRef, useState } from 'react';
-import { AccessibilityInfo, Keyboard, StyleSheet, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Keyboard,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {
   Button,
   ErrorState,
@@ -213,7 +219,9 @@ export function CodeStep({
           onChangeText={changeCode}
           testID="account-sign-in-code"
           textContentType="oneTimeCode"
-          autoComplete="one-time-code"
+          autoComplete={
+            Platform.OS === 'android' ? 'email-otp' : 'one-time-code'
+          }
           keyboardType="number-pad"
           autoFocus
           selectTextOnFocus

@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
+import { useNavigation, usePreventRemove } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { confirmAction } from '../src/design/menu';
 import {
@@ -66,6 +67,11 @@ jest.mock('../src/voice', () => ({
   requestDeletionCode: jest.fn(),
   deleteAccount: jest.fn(),
   subscribe: jest.fn(() => () => {}),
+}));
+jest.mock('expo-router/react-navigation', () => ({
+  ...jest.requireActual('expo-router/react-navigation'),
+  usePreventRemove: jest.fn(),
+  useNavigation: jest.fn(() => ({ dispatch: jest.fn() })),
 }));
 let mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => {
@@ -667,7 +673,12 @@ describe('Sign in by code', () => {
     expect(router.dismissTo).toHaveBeenCalledWith('/talk');
     expect(takeConsentAfterSignIn()).toBe(true);
   });
-  test.each([{}, { return: 'account' }, { return: 'talk' }, { return: 'dismiss' }])(
+  test.each([
+    {},
+    { return: 'account' },
+    { return: 'talk' },
+    { return: 'dismiss' },
+  ])(
     'Account keeps its existing sign-in copy with params %j',
     async (params) => {
       mockParams = params;
@@ -765,6 +776,26 @@ describe('Sign in by code', () => {
     // Reading clears it.
     expect(takeConsentAfterSignIn()).toBe(false);
   });
+  test.each(['android', 'ios'] as const)(
+    '%s supplies its emailed-code autofill hint',
+    async (os) => {
+      const original = Platform.OS;
+      Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+      try {
+        const renderer = await codeStep(jest.fn());
+        expect(field(renderer, 'account-sign-in-code').props).toMatchObject({
+          autoComplete: os === 'android' ? 'email-otp' : 'one-time-code',
+          textContentType: 'oneTimeCode',
+          keyboardType: 'number-pad',
+        });
+      } finally {
+        Object.defineProperty(Platform, 'OS', {
+          configurable: true,
+          value: original,
+        });
+      }
+    },
+  );
   test('step 2: the code field is one-time-code and paste friendly, and a full code signs in', async () => {
     const onSignedIn = jest.fn();
     const renderer = await codeStep(onSignedIn);
@@ -941,6 +972,77 @@ describe('Delete account', () => {
     await press(renderer, 'account-delete-final');
     await confirmLast();
   }
+  test.each(['android', 'ios'] as const)(
+    '%s keeps the deletion request on screen with Android system Back blocked',
+    async (os) => {
+      const original = Platform.OS;
+      Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+      const prevent = jest.mocked(usePreventRemove);
+      prevent.mockClear();
+      let resolve!: (
+        result: Awaited<ReturnType<typeof voice.deleteAccount>>,
+      ) => void;
+      mocked.deleteAccount.mockReturnValueOnce(
+        new Promise((done) => {
+          resolve = done;
+        }),
+      );
+      try {
+        const renderer = await codeStep();
+        expect(prevent.mock.lastCall?.[0]).toBe(
+          os === 'android' ? false : undefined,
+        );
+        await deleteWith(renderer, '01234567');
+        if (os === 'android') {
+          expect(prevent).toHaveBeenLastCalledWith(true, expect.any(Function));
+          expect(router.dismissTo).not.toHaveBeenCalled();
+          const dispatch = jest.mocked(useNavigation).mock.lastCall;
+          expect(dispatch).toBeDefined();
+          const nav = jest.mocked(useNavigation).mock.results.at(-1)!.value;
+          act(() =>
+            prevent.mock.lastCall![1]({
+              data: { action: { type: 'GO_BACK' } },
+            }),
+          );
+          expect(nav.dispatch).not.toHaveBeenCalled();
+        } else {
+          expect(prevent).not.toHaveBeenCalled();
+        }
+        await act(async () => resolve({ ok: false, error: 'network' }));
+        expect(prevent.mock.lastCall?.[0]).toBe(
+          os === 'android' ? false : undefined,
+        );
+      } finally {
+        Object.defineProperty(Platform, 'OS', {
+          configurable: true,
+          value: original,
+        });
+      }
+    },
+  );
+  test('Android lets the completed deletion return to Account through its guard', async () => {
+    const original = Platform.OS;
+    Object.defineProperty(Platform, 'OS', {
+      configurable: true,
+      value: 'android',
+    });
+    try {
+      const renderer = await codeStep();
+      await deleteWith(renderer, '01234567');
+      const navigation = jest.mocked(useNavigation).mock.results.at(-1)!.value;
+      const action = { type: 'POP_TO', payload: { name: 'account' } };
+      act(() =>
+        jest.mocked(usePreventRemove).mock.lastCall![1]({ data: { action } }),
+      );
+      expect(navigation.dispatch).toHaveBeenCalledWith(action);
+      expect(router.dismissTo).toHaveBeenCalledWith('/account');
+    } finally {
+      Object.defineProperty(Platform, 'OS', {
+        configurable: true,
+        value: original,
+      });
+    }
+  });
   test('step 1 says what is deleted and kept, then emails a code', async () => {
     const renderer = await render(<DeleteIntro />);
     for (const line of [
@@ -998,6 +1100,26 @@ describe('Delete account', () => {
       '/account/delete',
     );
   });
+  test.each(['android', 'ios'] as const)(
+    '%s supplies its emailed deletion-code autofill hint',
+    async (os) => {
+      const original = Platform.OS;
+      Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+      try {
+        const renderer = await codeStep();
+        expect(field(renderer, 'account-deletion-code').props).toMatchObject({
+          autoComplete: os === 'android' ? 'email-otp' : 'one-time-code',
+          textContentType: 'oneTimeCode',
+          keyboardType: 'number-pad',
+        });
+      } finally {
+        Object.defineProperty(Platform, 'OS', {
+          configurable: true,
+          value: original,
+        });
+      }
+    },
+  );
   test('step 2: a hidden-label code field, then a deliberate, confirmed Delete', async () => {
     const renderer = await codeStep();
     expect(field(renderer, 'account-deletion-code').props).toMatchObject({

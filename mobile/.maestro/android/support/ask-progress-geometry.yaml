@@ -1,0 +1,12 @@
+appId: au.com.opax.app
+name: Android Ask question and status remain visible above the composer
+---
+# UIKit's search-geometry probe does not exist on Android. Require the actual
+# active turn and its progress/error label; retain a capture for inset review.
+- assertVisible:
+    id: ask-user-question|ask-failed-question
+- assertVisible:
+    id: ask-status|ask-error
+- assertVisible:
+    id: ask-question
+- takeScreenshot: ${EVIDENCE}/30-android-progress-insets

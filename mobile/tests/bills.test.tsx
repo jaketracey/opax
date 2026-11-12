@@ -20,6 +20,7 @@ import { formatDate } from '../src/design/format';
 import { MachinePill } from '../src/design/labels';
 import {
   RegionProvider,
+  Button,
   SourceLine,
   StatusCapsule,
 } from '../src/design/primitives';
@@ -528,7 +529,7 @@ const openAllStages = (root: ReactTestInstance) =>
 
 describe('loading a bill (4.3)', () => {
   // The bar's items (Share beside ⋯) as label: disabled, and whether the
-  // "Ask about this bill" row is drawn. iOS draws no bottom toolbar.
+  // "Ask about this bill" button is drawn. iOS draws no bottom toolbar.
   const actions = (root: ReactTestInstance) => {
     const options = root.findAllByType(RouteOptions).at(-1)!.props.options as {
       unstable_headerRightItems?: () => { label: string; disabled?: boolean }[];
@@ -578,7 +579,7 @@ describe('loading a bill (4.3)', () => {
     expect(statusText(root).text).not.toMatch(/\d{4}/);
     expect(host(root, 'bill-follow-off')).toHaveLength(1);
     expect(host(root, 'bill-loading')).toHaveLength(1);
-    // Share and ⋯ wait for the bill; the Ask row comes with the page.
+    // Share and ⋯ wait for the bill; the Ask button comes with the page.
     expect(actions(root)).toEqual({
       Share: true,
       More: true,
@@ -757,7 +758,7 @@ describe('the bill page', () => {
     },
   );
 
-  test('iOS draws no bottom toolbar a tab bar would cover: Share is beside ⋯, Ask is a row', async () => {
+  test('iOS draws no bottom toolbar a tab bar would cover: Share is beside ⋯, Ask is a button', async () => {
     const root = await render();
     expect(root.findAllByType(Stack.Toolbar)).toHaveLength(0);
     const options = root.findAllByType(RouteOptions).at(-1)!.props.options;
@@ -768,7 +769,19 @@ describe('the bill page', () => {
         node.props.testID === 'bill-ask' &&
         typeof node.props.onPress === 'function',
     );
-    expect(ask.props.title).toBe('Ask about this bill');
+    expect(ask.props.label).toBe('Ask about this bill');
+    expect(ask.props.accessibilityLabel).toContain('Ask about this bill:');
+    expect(
+      root
+        .findAllByType(Button)
+        .find((node) => node.props.testID === 'bill-ask')!.props.variant,
+    ).toBe('primary');
+    const ids = root
+      .findAll((node) => typeof node.type === 'string' && node.props.testID)
+      .map((node) => node.props.testID);
+    expect(ids.indexOf('bill-ask')).toBeGreaterThan(
+      ids.indexOf('bill-summary-text'),
+    );
   });
   test('the bar title is the short name, anchored on the H1', async () => {
     mockParams.key = 'au-federal-r7534';

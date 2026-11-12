@@ -24,6 +24,7 @@ import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
 import { NavigationContext } from 'expo-router/react-navigation';
 import {
+  Button,
   Disclosure,
   Heading,
   InlineError,
@@ -335,7 +336,7 @@ export default function BillTextReader({
           ]
         : []),
       // Contents leads More on iPhone; Version always stays in the bar.
-      // Ask about this bill stays a row under the floating tab bar.
+      // Ask about this bill is a button after In short, above the text.
       more,
     ];
   };
@@ -433,16 +434,6 @@ export default function BillTextReader({
                   {stageText(shown.stage_label)}
                 </Text>
               ) : null}
-              {askRow ? (
-                <View style={styles.rows}>
-                  <LinkRow
-                    title="Ask about this bill"
-                    symbol={symbols.ask}
-                    onPress={ask}
-                    testID="bill-text-ask"
-                  />
-                </View>
-              ) : null}
               {summary ? (
                 <View style={styles.block} testID="bill-text-summary">
                   <SectionHeader
@@ -490,6 +481,19 @@ export default function BillTextReader({
                       </View>
                     </Disclosure>
                   ) : null}
+                </View>
+              ) : null}
+              {askRow ? (
+                <View style={styles.block}>
+                  <Button
+                    label="Ask about this bill"
+                    variant="primary"
+                    symbol={symbols.ask}
+                    accessibilityLabel={`Ask about this bill: ${manifest.title}`}
+                    accessibilityHint="Opens Ask with a question drafted"
+                    onPress={ask}
+                    testID="bill-text-ask"
+                  />
                 </View>
               ) : null}
               {current?.enrichment ? (

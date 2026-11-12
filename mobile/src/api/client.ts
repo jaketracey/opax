@@ -2,11 +2,8 @@ import { fetch as expoFetch } from 'expo/fetch';
 import { throwIfAborted } from './abort';
 import { ReadSession } from './read-session';
 import { phoneCopy } from '../design/phone-copy';
-import {
-  AskFailure,
-  AskStream,
-  type StreamHandlers,
-} from '../features/ask/stream';
+import type { StreamHandlers } from '../features/ask/stream';
+import { postAsk } from '../features/ask/transport';
 import { isExplorePaidPath } from '../features/explore/policy';
 import { isPeoplePaidPath } from '../features/people/policy';
 import { summaryStreamBody } from '../features/search/decoders';
@@ -530,7 +527,7 @@ export class ApiClient {
       };
     throw lastError;
   }
-  /** Explicit submission only. One HTTP request, no retry or disk cache. */
+  /** Explicit submission only. Bounded Ask recovery, never a disk cache. */
   async askPost(
     path: string,
     body: object,
@@ -539,42 +536,14 @@ export class ApiClient {
   ): Promise<unknown> {
     assertAskPostPath(path);
     const url = allowedURL(this.options.origin, path);
-    if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
-    const request = new AbortController();
-    let rejectInterrupted!: (failure: AskFailure) => void;
-    const interrupted = new Promise<never>((_resolve, reject) => {
-      rejectInterrupted = reject;
-    });
-    const cancel = () => {
-      request.abort();
-      rejectInterrupted(new AskFailure('cancelled', 'Cancelled.'));
-    };
-    signal.addEventListener('abort', cancel, { once: true });
-    // The Worker has its own bounded retries. This bounds a stalled
-    // connection, JSON body or reader, without issuing another paid request.
-    // It is a stall timer: every chunk that arrives restarts it, so a long
-    // answer that is still being written is never cut off.
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const arm = () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        request.abort();
-        rejectInterrupted(
-          new AskFailure('timeout', 'The answer took too long.'),
-        );
-      }, 120_000);
-    };
-    arm();
-    const waiting = <T>(operation: Promise<T>) =>
-      Promise.race([operation, interrupted]);
-    let shown = false;
-    try {
-      const response = await waiting(
+    return postAsk(
+      url,
+      (requestSignal) =>
         this.transport(url, {
           method: 'POST',
           credentials: 'omit',
           redirect: 'manual',
-          signal: request.signal,
+          signal: requestSignal,
           headers: {
             'Content-Type': 'application/json',
             Accept: on ? 'text/event-stream' : 'application/json',
@@ -585,80 +554,9 @@ export class ApiClient {
           },
           body: JSON.stringify(body),
         }),
-      );
-      if (
-        response.redirected ||
-        (response.status >= 300 && response.status < 400) ||
-        (response.url && response.url !== url)
-      )
-        throw new AskFailure('blocked', 'The answer request was blocked.');
-      if (!response.ok) {
-        throw new AskFailure(
-          response.status === 429
-            ? 'rate-limited'
-            : response.status === 403 || response.status === 401
-              ? 'blocked'
-              : 'invalid',
-          `Request failed (${response.status}).`,
-        );
-      }
-      if (
-        !on ||
-        !response.headers.get('content-type')?.includes('text/event-stream')
-      )
-        return await waiting(response.json());
-      if (!response.body)
-        throw new AskFailure('invalid', 'No answer came back.');
-      on.stage('Searching the record');
-      const stream = new AskStream({
-          ...on,
-          delta: (text) => {
-            if (text) shown = true;
-            on.delta(text);
-          },
-          retry: () => {
-            shown = false;
-            on.retry();
-          },
-        }),
-        decoder = new TextDecoder(),
-        reader = response.body.getReader();
-      try {
-        for (;;) {
-          const { value, done } = await waiting(reader.read());
-          if (done) break;
-          arm();
-          stream.push(decoder.decode(value, { stream: true }));
-          if (stream.done) break;
-        }
-        stream.push(decoder.decode(), true);
-        return stream.result();
-      } finally {
-        void reader.cancel().catch(() => undefined);
-        reader.releaseLock();
-      }
-    } catch (e) {
-      if (signal.aborted) throw new AskFailure('cancelled', 'Cancelled.');
-      if (request.signal.aborted)
-        throw new AskFailure(
-          shown ? 'partial' : 'timeout',
-          shown
-            ? 'The answer stream ended early.'
-            : 'The answer took too long.',
-        );
-      if (e instanceof AskFailure) throw e;
-      if (shown)
-        throw new AskFailure('partial', 'The answer stream ended early.');
-      if (e instanceof SyntaxError)
-        throw new AskFailure('invalid', 'The answer could not be read.');
-      throw new AskFailure(
-        'offline',
-        'The record could not be reached. Check your connection and try again.',
-      );
-    } finally {
-      clearTimeout(timer);
-      signal.removeEventListener('abort', cancel);
-    }
+      signal,
+      on,
+    );
   }
   private async readBytes(
     response: Response,

@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  AccessibilityInfo,
   Platform,
   Pressable,
   StyleSheet,
@@ -30,6 +31,7 @@ import { haptic } from '../../design/haptics';
 import { billStatus } from '../../design/parliament';
 import {
   BillRow,
+  Button,
   Disclosure,
   Heading,
   InlineError,
@@ -45,8 +47,7 @@ import {
   VoteSplit,
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
-import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { headerItems, shareItem } from '../../navigation/chrome';
 import {
   billRoute,
@@ -85,6 +86,7 @@ import {
 } from './ReaderList';
 import { recordBarItems } from './RecordActions';
 import { RecordLoadError } from './RecordLoadError';
+import { FindControls } from './FindControls';
 import { records } from './runtime';
 import { recordCaveat, recordOriginal, recordSource } from './source';
 import { useRead } from './useRead';
@@ -120,6 +122,22 @@ const machineNote = (doc: DocumentRecord) =>
     : doc.labels.kind === 'speech'
       ? 'Written by a model from this speech. It is not part of the record.'
       : 'Written by a model. It is not part of the record.';
+
+function askLabel(doc: DocumentRecord, headline: string) {
+  const subjects: Record<string, string> = {
+    speech: 'this speech',
+    division: 'this division',
+    bill_text: 'this bill text',
+    press_release: 'this release',
+    government_release: 'this release',
+    research_report: 'this report',
+    grant_invitation: 'this grant invitation',
+    grant_award: 'this grant award',
+    contract: 'this contract',
+    legal: 'this legal record',
+  };
+  return `Ask about ${subjects[recordKind(doc)] ?? 'this record'}: ${headline}`;
+}
 /** First paint waits this long for the speaker's roster match (records.md 2.3). */
 const SPEAKER_WINDOW = 400;
 const titleKey = (value: string) =>
@@ -196,8 +214,12 @@ function useFind(
   query: string,
   first: number,
   passage = false,
+  automatic = false,
 ) {
-  const matches = useMemo(() => findMatches(parts, query), [parts, query]);
+  const matches = useMemo(
+    () => findMatches(parts, query, { tolerant: automatic }),
+    [parts, query, automatic],
+  );
   const [open, setOpen] = useState(!passage && !!query);
   const [index, setIndex] = useState(first);
   const [engaged, setEngaged] = useState(false);
@@ -211,6 +233,8 @@ function useFind(
   const reveal = (at: number) => {
     const match = matches[at];
     if (!match) return;
+    if (Platform.OS === 'ios')
+      AccessibilityInfo.announceForAccessibility(`Match ${at + 1} of ${total}`);
     setJump((old) => ({
       index: match.part,
       attempt: (old?.attempt ?? 0) + 1,
@@ -238,14 +262,19 @@ function useFind(
     reveal(next);
   };
   return {
-    open: open && !!query,
+    open: open && !!query && (!automatic || total > 0),
     query,
     total,
     current,
     jump: jump ?? citationJump,
     marks:
       (open || passage) && query
-        ? { query, current: matches[current] ?? null, passage }
+        ? {
+            query,
+            current: matches[current] ?? null,
+            passage,
+            tolerant: automatic,
+          }
         : null,
     goTo: () => {
       setEngaged(true);
@@ -268,6 +297,7 @@ export default function DocumentReader({
     q?: string;
     match?: string;
     passage?: string;
+    find?: string;
   }>();
   const slug = recordSlug ?? params.slug ?? '';
   const load = useCallback(
@@ -321,6 +351,7 @@ export default function DocumentReader({
         : findQuery(params.q),
     Math.max(0, Number(params.match) || 0),
     !!passage,
+    !passage && params.find === 'auto',
   );
   // opax://doc-cite/<slug> arrives as /doc/<slug>?cite=1: the record first,
   // then Citation formats over it, so Done lands on the record.
@@ -342,11 +373,10 @@ export default function DocumentReader({
   };
   const android = Platform.OS === 'android';
   // iOS draws no bottom toolbar: iOS 26's floating tab bar stays up on
-  // pushes and covered it. Ask about this is a row in the header, Share
+  // pushes and covered it. Ask about this follows the summary, Share
   // sits beside ⋯, and the find bar's controls take the bar while open.
   const askRow = embedded || android || ios;
   const findBar = ios && !embedded && !!shown && find.open;
-  const headerBottom = useHeaderBottom();
   return (
     <>
       {embedded ? null : (
@@ -391,6 +421,16 @@ export default function DocumentReader({
           }}
         />
       )}
+      {android && !embedded && shown && find.open ? (
+        <FindControls
+          query={find.query}
+          current={find.current}
+          total={find.total}
+          onPrevious={find.previous}
+          onNext={find.next}
+          onDone={find.done}
+        />
+      ) : null}
       <ReaderList
         testID="doc-reader"
         parts={shown ? parts : []}
@@ -408,15 +448,34 @@ export default function DocumentReader({
           ) : !shown ? (
             <ReaderSkeleton />
           ) : (
-            <ReaderHeader
-              doc={shown}
-              headline={headline}
-              speaker={speaker.row}
-              titleRef={titleRef}
-              onTitleLayout={embedded ? undefined : title.onTitleLayout}
-              askRow={askRow ? ask : null}
-              hasText={parts.length > 0}
-            />
+            <>
+              {ios && !embedded && find.open ? (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={findLabel(find)}
+                  accessibilityHint={find.total ? 'Go to match' : undefined}
+                  disabled={!find.total}
+                  onPress={find.goTo}
+                  testID="doc-find-status"
+                  style={styles.findStatus}
+                >
+                  <Text variant="secondary" tabular wordSafe>
+                    {find.total
+                      ? `${find.query} · ${find.current + 1} of ${find.total}`
+                      : `No matches for ${find.query}`}
+                  </Text>
+                </Pressable>
+              ) : null}
+              <ReaderHeader
+                doc={shown}
+                headline={headline}
+                speaker={speaker.row}
+                titleRef={titleRef}
+                onTitleLayout={embedded ? undefined : title.onTitleLayout}
+                askRow={askRow ? ask : null}
+                hasText={parts.length > 0}
+              />
+            </>
           )
         }
         footer={
@@ -436,32 +495,15 @@ export default function DocumentReader({
           ) : null
         }
       />
-      {findBar ? (
-        <View
-          pointerEvents="box-none"
-          style={[styles.findLine, { top: headerBottom + rhythm.tight }]}
-        >
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={findLabel(find)}
-            accessibilityHint="Go to match"
-            onPress={find.goTo}
-            testID="doc-find-status"
-            style={styles.findPill}
-          >
-            <Text variant="secondary" tabular wordSafe>
-              {`${find.query} · ${find.total ? find.current + 1 : 0} of ${find.total}`}
-            </Text>
-          </Pressable>
-        </View>
-      ) : null}
     </>
   );
 }
 
 type Find = ReturnType<typeof useFind>;
 const findLabel = (find: Find) =>
-  `Match ${find.total ? find.current + 1 : 0} of ${find.total} for ${find.query}`;
+  find.total
+    ? `Match ${find.current + 1} of ${find.total} for ${find.query}`
+    : `No matches for ${find.query}`;
 /** The find bar's controls, in the navigation bar while it is open. */
 function findItems(find: Find): NativeStackHeaderItem[] {
   return [
@@ -602,12 +644,9 @@ function ReaderHeader({
           {caveat}
         </Text>
       ) : null}
-      {askRow || organisation ? (
+      {organisation ? (
         <View style={styles.rows}>
-          {askRow ? (
-            <LinkRow title="Ask about this" onPress={askRow} testID="doc-ask" />
-          ) : null}
-          {organisation ? <OrganisationRow {...organisation} /> : null}
+          <OrganisationRow {...organisation} />
         </View>
       ) : null}
       {votes ? (
@@ -625,24 +664,34 @@ function ReaderHeader({
       ) : null}
       {doc.summary ? (
         <View style={styles.block}>
-          <Disclosure
-            key={doc.slug}
-            label="In short"
+          <SectionHeader
+            title="In short"
             testID="doc-brief"
-            defaultOpen
             accessory={
               <MachinePill
                 note={{ title: 'Machine-written', body: [machineNote(doc)] }}
                 testID="doc-brief-label"
               />
             }
-          >
-            <View style={styles.brief}>
-              <Text selectable variant="body">
-                {doc.summary}
-              </Text>
-            </View>
-          </Disclosure>
+          />
+          <View style={styles.brief} testID="doc-brief-body">
+            <Text selectable variant="body">
+              {doc.summary}
+            </Text>
+          </View>
+        </View>
+      ) : null}
+      {askRow ? (
+        <View style={styles.block}>
+          <Button
+            label="Ask about this"
+            variant="primary"
+            symbol={symbols.ask}
+            accessibilityLabel={askLabel(doc, headline)}
+            accessibilityHint="Opens Ask with a question drafted"
+            onPress={askRow}
+            testID="doc-ask"
+          />
         </View>
       ) : null}
       {doc.labels.kind === 'bill_text' && doc.metadata.complete === false ? (
@@ -1028,21 +1077,10 @@ function Similar({ doc }: { doc: DocumentRecord }) {
 }
 
 const styles = StyleSheet.create({
-  findLine: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  findPill: {
+  findStatus: {
     minHeight: minimumTarget,
     justifyContent: 'center',
-    paddingHorizontal: rhythm.block,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    backgroundColor: colors.raised,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.dividerSubtle,
+    marginBottom: rhythm.block,
   },
   meta: { marginBottom: rhythm.line },
   speaker: { marginTop: rhythm.block },

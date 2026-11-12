@@ -11,6 +11,7 @@ import { colors } from '../../design/tokens';
 import { requestSearchTabReset } from '../../features/search/tab-reset';
 import { AndroidTabs } from '../../navigation/AndroidTabs';
 import { setSelectedTab } from '../../navigation/link-tab';
+export { RouteErrorBoundary as ErrorBoundary } from '../../navigation/RouteErrorBoundary';
 // Search takes the system role on iOS 26; older iOS and Android keep five tabs.
 // Deviation: the role gives the detached search item on iOS 26, but on iOS 27
 // UIKit draws a .search system item inline in the full bar (it still stands

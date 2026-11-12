@@ -26,6 +26,7 @@ import fixtures from '../scripts/fixtures/records/contracts.json';
 import { catalogs } from '../src/api/runtime';
 import {
   BillRow,
+  Button,
   ContentUnavailable,
   Heading,
   InsetGroup,
@@ -199,7 +200,9 @@ test('one meta line says the kind and the chamber; the date is in the source lin
   expect(drawn).not.toMatch(/Speech date|View original|More by this speaker/);
   expect(view.root.findAllByProps({ testID: 'doc-date' })).toHaveLength(0);
   // The title is the record's own words, in the record face.
-  const title = view.root.findByType(Heading);
+  const title = view.root
+    .findAllByType(Heading)
+    .find((node) => node.props.testID === 'doc-title')!;
   expect(title.props).toMatchObject({ level: 1, testID: 'doc-title' });
   expect(title.props.kind).toBeUndefined();
   await act(async () => view.unmount());
@@ -456,7 +459,7 @@ test('bill text opens on its text with the stage, one source line and the bar it
     identifier: 'bill-text-version',
   });
   // iOS draws no bottom toolbar a tab bar would cover: Ask about this bill
-  // is a row and Contents is first in ⋯, leaving Version in the bar.
+  // is a button and Contents is first in ⋯, leaving Version in the bar.
   expect(
     view.root.findAll((node) => (node.type as unknown) === 'Toolbar'),
   ).toHaveLength(0);
@@ -695,6 +698,20 @@ test('In short retains the recorded version caveat when the reader changes bill 
   );
   expect(textOfId(view, 'bill-text-summary-text')).toBe(
     'Fixture summary sentence.',
+  );
+  const ask = view.root
+    .findAllByType(Button)
+    .find((node) => node.props.testID === 'bill-text-ask')!;
+  expect(ask.props).toMatchObject({
+    variant: 'primary',
+    label: 'Ask about this bill',
+    accessibilityHint: 'Opens Ask with a question drafted',
+  });
+  const ids = view.root
+    .findAll((node) => typeof node.type === 'string' && node.props.testID)
+    .map((node) => node.props.testID);
+  expect(ids.indexOf('bill-text-ask')).toBeGreaterThan(
+    ids.indexOf('bill-text-summary-text'),
   );
   expect(summary.sentences).toEqual(['Fixture summary sentence.']);
   await act(async () => view.unmount());
@@ -968,7 +985,7 @@ test('the bar holds Share and ⋯: Cite inline, Copy link, Open on the website',
   const view = await mount(<DocumentReader />);
   expect(barLabels()).toEqual(['Share', 'More']);
   // iOS draws no bottom toolbar, which the floating tab bar would cover:
-  // Ask about this is a row, and Share (where it can) sits beside ⋯.
+  // Ask about this is a button, and Share (where it can) sits beside ⋯.
   expect(
     view.root.findAll((node) => (node.type as unknown) === 'Toolbar'),
   ).toHaveLength(0);

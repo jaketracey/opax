@@ -871,7 +871,7 @@ test('Screen-provided content anchors keep the baseline threshold', () => {
   expect(inline().props.shown).toBe(false);
 });
 
-test('Android keeps its baseline content-coordinate measurement and string title', async () => {
+test('Android pushed bars keep a small title visible across scroll positions', async () => {
   const original = Platform.OS;
   try {
     Platform.OS = 'android';
@@ -881,11 +881,11 @@ test('Android keeps its baseline content-coordinate measurement and string title
     expect(native.measure).toHaveBeenCalledTimes(1);
     await native.answer(0, 200);
     act(() => hook.onScroll(179));
-    expect(header()).toBe('');
+    expect(header()).toBe('Votes in parliament');
     act(() => hook.onScroll(181));
     expect(header()).toBe('Votes in parliament');
     act(() => hook.onScroll(0));
-    expect(header()).toBe('');
+    expect(header()).toBe('Votes in parliament');
     act(() => view!.unmount());
     view = undefined;
   } finally {
@@ -893,7 +893,7 @@ test('Android keeps its baseline content-coordinate measurement and string title
   }
 });
 
-test('Android Screen.barTitle keeps its content anchor rather than measuring window coordinates', () => {
+test('Android Screen.barTitle stays visible while its content anchor scrolls', () => {
   const original = Platform.OS;
   Platform.OS = 'android';
   const options: Record<string, unknown> = {};
@@ -924,7 +924,7 @@ test('Android Screen.barTitle keeps its content anchor rather than measuring win
       });
       anchor.props.onLayout(headingLayout);
     });
-    expect(options.headerTitle).toBe('');
+    expect(options.headerTitle).toBe('Members');
     const scroll = (y: number) =>
       act(() =>
         view!.root
@@ -932,11 +932,11 @@ test('Android Screen.barTitle keeps its content anchor rather than measuring win
           .props.onScroll({ nativeEvent: { contentOffset: { y } } }),
       );
     scroll(155);
-    expect(options.headerTitle).toBe('');
+    expect(options.headerTitle).toBe('Members');
     scroll(157);
     expect(options.headerTitle).toBe('Members');
     scroll(0);
-    expect(options.headerTitle).toBe('');
+    expect(options.headerTitle).toBe('Members');
     act(() => view!.unmount());
     view = undefined;
   } finally {

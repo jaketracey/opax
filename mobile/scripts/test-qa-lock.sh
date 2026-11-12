@@ -8,6 +8,10 @@ SCRATCH=$(mktemp -d "${TMPDIR:-/tmp}/opax-qa-lock-test.XXXXXX")
 LOCK="$SCRATCH/paste.lock"
 STATE="$LOCK.opax"
 WORKTREE=$(basename "$(cd "$SCRIPTS/../.." && pwd)")
+# These are observation bounds, rather than protocol timing assertions. WSL
+# can delay the sampled active clock while three Android devices are busy.
+WAIT_DEFAULT=15
+[ "$(uname -s)" != Linux ] || WAIT_DEFAULT=60
 LIVE=()
 cleanup() {
   for pid in "${LIVE[@]:-}"; do [ -n "$pid" ] && { kill "$pid"; wait "$pid"; } 2>/dev/null || true; done
@@ -25,6 +29,39 @@ fail() {
   for f in "$SCRATCH"/*.log "$SCRATCH"/*.trace; do [ -f "$f" ] && { echo "--- $f" >&2; cat "$f" >&2; }; done
   exit 1
 }
+
+# Keep the public shell API used by Linux builds, even when merging changes
+# first tested on macOS. Check the real host and both platform branches.
+if ! (
+  source "$SCRIPTS/qa-lock.sh" || exit 1
+  for entry in qa_native_lock_run qa_assert_native_lock; do
+    declare -F "$entry" >/dev/null || { echo "Missing function: $entry" >&2; exit 1; }
+  done
+  unset OPAX_LOAD_PROBE
+  load=$(qa_load5) || exit 1
+  [[ "$load" =~ ^[0-9]+$ ]] || { echo "Non-numeric host load: $load" >&2; exit 1; }
+  for platform in Linux Darwin; do
+    (
+      uname() { printf '%s\n' "$platform"; }
+      awk() {
+        if [ "${2:-}" = /proc/loadavg ]; then
+          [ "$platform" = Linux ] || return 1
+          printf '3.21 47.89 8.76 1/100 1234\n' | command awk "$1"
+        else
+          command awk "$@"
+        fi
+      }
+      /usr/sbin/sysctl() {
+        [ "$platform" = Darwin ] && [ "$*" = '-n vm.loadavg' ] || return 1
+        printf '{ 3.21 47.89 8.76 }\n'
+      }
+      [ "$(qa_load5)" = 47 ] || { echo "Wrong five-minute load for $platform" >&2; exit 1; }
+    ) || exit 1
+  done
+); then
+  fail "native-lock functions and Linux/macOS five-minute load probes"
+fi
+pass "native-lock functions exist and Linux/macOS load probes return the five-minute integer"
 
 # Lock state as other processes see it: opax (owner file), foreign (no owner), free.
 cat > "$SCRATCH/state.sh" <<'EOF'
@@ -89,14 +126,14 @@ run_locked() {
   LIVE+=("$!")
 }
 wait_for() {
-  local deadline=$((SECONDS + ${2:-15}))
+  local deadline=$((SECONDS + ${2:-$WAIT_DEFAULT}))
   until [ -e "$1" ]; do [ "$SECONDS" -lt "$deadline" ] || return 1; sleep 0.1; done
 }
 wait_for_line() {
-  local deadline=$((SECONDS + ${3:-15}))
+  local deadline=$((SECONDS + ${3:-$WAIT_DEFAULT}))
   until grep -q -- "$2" "$1" 2>/dev/null; do [ "$SECONDS" -lt "$deadline" ] || return 1; sleep 0.1; done
 }
-rc_of() { wait_for "$SCRATCH/$1.rc" "${2:-15}" || fail "$1 did not finish"; cat "$SCRATCH/$1.rc"; }
+rc_of() { wait_for "$SCRATCH/$1.rc" "${2:-$WAIT_DEFAULT}" || fail "$1 did not finish"; cat "$SCRATCH/$1.rc"; }
 dead_pid() { bash -c 'echo $$'; }
 no_litter() { [ -z "$(/bin/ls "$STATE" 2>/dev/null | grep -v '^reap$')" ]; }
 inode() {

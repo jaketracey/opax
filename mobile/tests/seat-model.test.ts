@@ -11,8 +11,10 @@ import {
   houseSeats,
   isStateCode,
   locationAnswer,
+  looksLikePostcode,
   matchLeads,
   matchSeats,
+  noMatchCopy,
   regionOf,
   seatCopy,
   seatLabel,
@@ -182,6 +184,52 @@ describe('copy', () => {
     expect(seatLabel(seat('Grayndler'), seatCopy.fromLocation)).toBe(
       'Grayndler. Anthony Albanese, Labor. From your location.',
     );
+  });
+});
+
+describe('a miss', () => {
+  test('digits are a postcode being typed; no electorate or member has any', () => {
+    for (const text of ['2', '20', '204', '2042', ' 0800 '])
+      expect(looksLikePostcode(text)).toBe(true);
+    for (const text of ['', 'Grayndler', '2042 Newtown', '20422', 'St 2'])
+      expect(looksLikePostcode(text)).toBe(false);
+    // The claim behind the rule, against the pinned release.
+    for (const s of electorates) expect(/\d/.test(s.name)).toBe(false);
+    expect(matchSeats(electorates, '2042')).toEqual([]);
+    expect(matchLeads(electorates, '2042')).toEqual([]);
+  });
+  test('a postcode and a name each get a plain line and the ways on', () => {
+    expect(noMatchCopy('2042')).toEqual({
+      title: 'OPAX can’t look up postcodes yet.',
+      help: 'Use your location, or check your address with the AEC to find your electorate’s name.',
+    });
+    expect(noMatchCopy('Marrickville')).toEqual({
+      title: 'No matching electorate or member.',
+      help: 'Suburbs and postcodes can’t be looked up yet. Use your location, or check your address with the AEC to find your electorate’s name.',
+    });
+    // Browse by state has no location row, so its line names the AEC only.
+    expect(noMatchCopy('2042', { location: false }).help).toBe(
+      'Check your address with the AEC to find your electorate’s name.',
+    );
+    expect(noMatchCopy('Marrickville', { location: false }).help).toBe(
+      'Suburbs and postcodes can’t be looked up yet. Check your address with the AEC to find your electorate’s name.',
+    );
+  });
+  test('the new words are plain: no em dashes, no exclamation marks, no blame', () => {
+    for (const text of [
+      seatCopy.noPostcode,
+      seatCopy.noPlaces,
+      seatCopy.noMatchNext,
+      seatCopy.noMatchAec,
+      seatCopy.why,
+      seatCopy.later,
+      seatCopy.laterNote,
+    ]) {
+      expect(text).not.toMatch(/[—–!]/);
+      expect(text).not.toMatch(/\b(invalid|wrong|error|failed|must|sorry)\b/i);
+      // Typographic apostrophes, as the app ships them.
+      expect(text).not.toContain("'");
+    }
   });
 });
 

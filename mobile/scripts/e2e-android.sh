@@ -9,31 +9,61 @@ source scripts/qa-java.sh
 AVD=${1:?Usage: e2e-android.sh OPAX_Pixel_API36|OPAX_API34 [01 02 03 07 08 13 25 26 32 38 39 40]}; shift
 case "$AVD" in OPAX_Pixel_API36|OPAX_API34) ;; *) echo 'Use an OPAX Android device' >&2; exit 2 ;; esac
 configure_java
+for selector in "$@"; do
+  if [ "$selector" = --all-android ]; then
+    export OPAX_ANDROID_CONTINUE_ON_FAILURE=1 OPAX_ANDROID_SUITE_ONLY=1
+  fi
+done
+export PATH="$HOME/.maestro/bin:$PATH"
+if [ "$(uname -s)" = Linux ]; then
+  export OPAX_ANDROID_EMULATOR_PORT=${OPAX_ANDROID_EMULATOR_PORT:-$([ "$AVD" = OPAX_API34 ] && echo 5602 || echo 5604)}
+  export OPAX_ANDROID_METRO_PORT=${OPAX_ANDROID_METRO_PORT:-8183}
+  export OPAX_FIXTURE_PORT=${OPAX_FIXTURE_PORT:-8920}
+fi
 export EXPO_NO_TELEMETRY=1 MAESTRO_CLI_NO_ANALYTICS=true MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
 export OPAX_LOAD_LIMIT=140 OPAX_PASTE_WAIT_SECONDS=7200
 RUN=${OPAX_QA_RUN:-android-bringup}
 OUT="$PWD/private/qa/$RUN"
 mkdir -p "$OUT"
-/bin/rm -f "$OUT/exit-status" "$OUT/cancelled" "$OUT/device-runner" "$OUT/device-owner" "$OUT/device-shutdown"
+/bin/rm -f "$OUT/exit-status" "$OUT/cancelled" "$OUT/device-runner" "$OUT/device-owner" "$OUT/device-shutdown" "$OUT/device-started" "$OUT/private-adb.json"
 echo "$$" > "$OUT/device-run-pid"
 WAITER_PID=
+cleanup_adb_socket() {
+  local socket
+  if [ -f "$OUT/private-adb.json" ]; then
+    socket=$(python3 scripts/android-adb-socket.py socket "$OUT/private-adb.json") || return 1
+    export ADB_SERVER_SOCKET=$socket
+  fi
+}
 finish() {
-  local rc=$? device= started= deadline
+  local rc=$? device= started= deadline serial=
   trap - EXIT
   trap '' INT TERM HUP
   if [ -n "$WAITER_PID" ]; then
     touch "$OUT/cancelled"
+    if [ "$(uname -s)" = Linux ] && [ -f "$OUT/device-started" ]; then
+      # Reset before interrupting a blocked driver. A later group fallback
+      # must never kill our emulator while a font-2 run remains configured.
+      serial=emulator-${OPAX_ANDROID_EMULATOR_PORT:-5602}
+      if cleanup_adb_socket; then
+        timeout 10 "$ANDROID_HOME/platform-tools/adb" -s "$serial" shell settings put system font_scale 1.0 >> "$OUT/parent-restore.log" 2>&1 || true
+        timeout 10 "$ANDROID_HOME/platform-tools/adb" -s "$serial" shell settings get system font_scale >> "$OUT/parent-restore.log" 2>&1 || true
+      fi
+    fi
     if [ -f "$OUT/device-runner" ]; then
       device=$(sed -n '1p' "$OUT/device-runner")
       started=$(sed -n '2p' "$OUT/device-runner")
       if [ -n "$started" ] && [ "$(/bin/ps -o lstart= -p "$device")" = "$started" ]; then
         kill -TERM "$device" 2>/dev/null || true
-        deadline=$((SECONDS + 60))
+        deadline=$((SECONDS + ${OPAX_ANDROID_DEVICE_STOP_SECONDS:-60}))
         while [ "$(/bin/ps -o lstart= -p "$device" 2>/dev/null)" = "$started" ]; do
           [ "$SECONDS" -lt "$deadline" ] || { rc=1; break; }
           sleep 0.1
         done
       fi
+    fi
+    if [ "$(uname -s)" = Linux ] && [ -f "$OUT/device-started" ] && [ ! -f "$OUT/device-shutdown" ]; then
+      if cleanup_adb_socket && timeout 20 "$ANDROID_HOME/platform-tools/adb" -s "$serial" emu kill >> "$OUT/parent-restore.log" 2>&1; then touch "$OUT/device-shutdown"; fi
     fi
     kill -TERM -- "-$WAITER_PID" 2>/dev/null || true
     wait "$WAITER_PID" 2>/dev/null || true
@@ -54,7 +84,12 @@ fi
 perl -e 'setpgrp(0, 0) or die "setpgrp: $!\n"; exec @ARGV' bash -c '
 source scripts/qa-env.sh
 source scripts/qa-lock.sh
-qa_paste_lock_run "$@"
+if [ "$(uname -s)" = Linux ]; then
+  # Desktop emulators are isolated by serial/ports; no Mac-wide pasteboard lock.
+  "$@"
+else
+  qa_paste_lock_run "$@"
+fi
 ' _ bash "$PWD/scripts/e2e-android-device.sh" "$AVD" "$OUT" "$@" &
 WAITER_PID=$!
 rc=0

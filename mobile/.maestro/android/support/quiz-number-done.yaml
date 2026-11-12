@@ -1,0 +1,8 @@
+appId: au.com.opax.app
+name: Android submit the numeric quiz guess with the IME Done action
+---
+- pressKey: Enter
+- extendedWaitUntil:
+    notVisible:
+      id: quiz-number
+    timeout: 10000

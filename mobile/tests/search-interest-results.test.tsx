@@ -279,7 +279,7 @@ test.each(['reader', 'source'])(
     );
     if (fallback === 'reader')
       expect(router.push).toHaveBeenCalledWith(
-        docRoute('speech-828012', undefined, { q: 'shares' }),
+        docRoute('speech-828012', undefined, { q: 'shares', find: 'auto' }),
       );
     else expect(openSource).toHaveBeenCalledWith(row.url, row.source);
   },

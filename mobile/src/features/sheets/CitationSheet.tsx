@@ -1,5 +1,10 @@
 import type { NativeStackHeaderItem } from 'expo-router';
-import { closeSheetItem, headerItems } from '../../navigation/chrome';
+import { Platform } from 'react-native';
+import {
+  androidHeaderBar,
+  closeSheetItem,
+  headerItems,
+} from '../../navigation/chrome';
 import { useSheetPayload } from '../../navigation/sheets';
 import { MissingPayload, SheetFrame } from './frame';
 
@@ -31,6 +36,14 @@ export function citationBar(
     ]),
     unstable_headerLeftItems: () =>
       citation.previous || citation.next ? [previous, next] : [],
+    ...(Platform.OS === 'android'
+      ? {
+          headerLeft: () =>
+            androidHeaderBar(
+              citation.previous || citation.next ? [previous, next] : [],
+            ),
+        }
+      : {}),
   };
 }
 export default function CitationSheet() {
