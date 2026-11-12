@@ -11,8 +11,7 @@ const built = await build({ stdin: { contents: [
   "export {inferPeriod} from './src/ask-period'",
   "export {callTool,getAskTool} from './src/tools'",
   "export {matchesCatalogFilters} from './src/catalog-search'",
-  "export {writingFacts,proseFallback,verifyWrittenAnswer,boundFigures,writingPrompt} from './src/research-writing'",
-  "export {claimMeasureConsistent} from './src/ask-claim-measures'",
+  "export {writingFacts,proseFallback,verifyWrittenAnswer,writingPrompt} from './src/research-writing'",
   "export {groundAnswerPayload} from './src/research-grounding'",
   "export {transcriptTurns,transcriptListingOnly,hearingEvidenceQuestion,TRANSCRIPT_LABEL} from './src/transcript-answer'",
 ].join(';'), resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, format: 'esm', platform: 'browser' })
@@ -99,16 +98,14 @@ test('transcript writing uses separate attributed turns, preserves licence in ca
   assert.match(out.answer,/evidence, not findings/);assert.doesNotMatch(out.answer,/©|CC BY|PDF page|OPAX lists|^-/m)
   validRanges(out)
   const grounded=api.groundAnswerPayload(out,input().question);assert.match(grounded.answer,/Ms Preston/);validRanges(grounded)
-  assert.ok(api.boundFigures('Ms Preston said on hearing day 46 (10 March 2023): “Income averaging did not make sense to me.”',[f[0]]))
-  assert.equal(api.boundFigures('Ms Preston said on hearing day 99: “Income averaging did not make sense to me.”',[f[0]]),false)
-  assert.equal(api.boundFigures('Ms Preston said on hearing day 46: “Invented evidence.”',[f[0]]),false)
   assert.match(api.writingPrompt(input()),/question by counsel or a commissioner is a question/)
 })
-test('writer accepts a named, dated transcript summary without relaxing quotation validation',()=>{
+test('writer accepts a named, dated transcript summary; an unverified quotation stays as paraphrase',()=>{
   const raw={answer_decision:'answer',sentences:[{text:'Ms Preston said on hearing day 46 (10 March 2023) that “Income averaging did not make sense to me.”',facts:[1]}]}
   const out=api.verifyWrittenAnswer(raw,input());assert.ok(out);assert.match(out.answer,/Ms Preston/);validRanges(out)
   const bad=api.verifyWrittenAnswer({...raw,sentences:[{...raw.sentences[0],text:'Ms Preston said on hearing day 46 that “A fabricated quote.”'}]},input())
-  assert.ok(!bad||!bad.answer.includes('fabricated'))
+  const grounded=api.groundAnswerPayload(bad,input().question)
+  assert.match(grounded.answer,/Ms Preston said on hearing day 46 that A fabricated quote/);assert.doesNotMatch(grounded.answer,/“A fabricated/)
 })
 test('suppression, non-publication and pseudonymous records never provide quote facts',()=>{
   for(const reason of ['suppression order','non-publication order','pseudonymous witness']){
@@ -138,7 +135,7 @@ test('a transcript document id with an exact quote selects the record for writin
   validRanges(out.qualitative)
 })
 
-test('repeated final grounding of an unsplit transcript record never restores the tool block',()=>{
+test('repeated final grounding of an unsplit transcript record never restores the tool block, and keeps the draft as paraphrase',()=>{
   const source={resource:'fact-1',slug:'',kind:'record',title:text,snippet:text,url:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',href:'https://robodebt.royalcommission.gov.au/transcript.pdf#page=15',cited:true}
   const fallback=api.proseFallback({...input(),facts:[{id:1,text,source}]})
   assert.doesNotMatch(fallback.answer,/PDF page|CC BY|transcript page|©/)
@@ -147,14 +144,8 @@ test('repeated final grounding of an unsplit transcript record never restores th
   const draft='Invented Witness said “A fabricated quote.” on hearing day 99.'
   let out={answer:draft,answer_decision:'answer',citations:{'fact-1/t/body/0':[[0,Array.from(draft).length]]},sources:[source]}
   for(let i=0;i<3;i++)out=api.groundAnswerPayload(out,input().question)
-  assert.doesNotMatch(out.answer,/PDF page|CC BY|transcript page|©|fabricated/)
-  assert.match(out.answer,/Ms Preston said on hearing day 46/);validRanges(out)
-})
-
-test('a registered gift value is a declaration, while an alleged payment still needs financial evidence',()=>{
-  const source={kind:'record',url:'https://www.aph.gov.au/interest-register',snippet:'Alex Antic (Senate) declared gifts: Scholarship of $3,300.'}
-  assert.equal(api.claimMeasureConsistent('Alex Antic declared gifts including a scholarship of $3,300.',[source]),true)
-  assert.equal(api.claimMeasureConsistent('Alex Antic received $3,300 in political donations.',[source]),false)
+  assert.doesNotMatch(out.answer,/PDF page|CC BY|transcript page|©|“/)
+  assert.match(out.answer,/^Invented Witness said A fabricated quote/);validRanges(out)
 })
 
 test('Victorian ministerial gifts also filter chamber and register period before pagination',async()=>{

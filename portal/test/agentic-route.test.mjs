@@ -47,7 +47,7 @@ test('off and classifier misses keep normal Ask; no steps and no done.agentic',a
 });
 test('route mode streams real steps and a normal cited done payload, caches it in KV, and logs no text',async()=>{
  h.env.AGENTIC_ASK_MODE='route';const r=await post(question,true);assert.equal(r.status,200);const f=frames(await r.text()),done=f.find(x=>x.event==='done').data;
- assert.equal(done.answered,true);assert.match(done.answer,/current parliament since July 2025/);assert.ok(done.citations);assert.ok(done.sources.some(s=>s.href.includes('/search?')));
+ assert.equal(done.answered,true);assert.match(done.answer,/across the whole record/);assert.ok(done.citations);assert.ok(done.sources.some(s=>s.href.includes('/search?')));
  assert.ok(f.some(x=>x.data.phase==='step'&&x.data.step.state==='running'));assert.ok(f.some(x=>x.data.phase==='step'&&x.data.step.state==='done'));
  assert.ok(!f.some(x=>['planning','plan'].includes(x.data.phase)));assert.equal(done.facts,undefined);assert.equal(done.tokens,undefined);
  assert.equal(done.agentic.steps[0].label,'Counting by speaker');await flush();assert.ok(shared.size);assert.equal(logs.at(-1).values.length,4);assert.doesNotMatch(JSON.stringify(logs),/gambling|Example|question text|answer/);

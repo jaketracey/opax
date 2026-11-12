@@ -12,10 +12,10 @@ const helpers=await import('data:text/javascript;base64,'+Buffer.from(bundle.out
 const evidenceBundle=await build({entryPoints:[new URL('../src/position-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
 const evidenceHelpers=await import('data:text/javascript;base64,'+Buffer.from(evidenceBundle.outputFiles[0].text).toString('base64'));
 const researchBundle=await build({entryPoints:[new URL('../src/research-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
-const {loosePositionPoints}=await import('data:text/javascript;base64,'+Buffer.from(researchBundle.outputFiles[0].text).toString('base64'));
+const {repairQuotes}=await import('data:text/javascript;base64,'+Buffer.from(researchBundle.outputFiles[0].text).toString('base64'));
 // Invented roster: the indexed speaker and one other member.
 const roster={people:[{name:'Example MP'},{name:'Casey Sample'}]};
-const loose={loosePositionPoints,loadPeople:async()=>roster};
+const loose={repairQuotes,loadPeople:async()=>roster};
 const source=await readFile(new URL('../src/index.ts',import.meta.url),'utf8');
 const start=source.indexOf('async function recoverPositionAnswer(');
 const code=source.slice(start,source.indexOf('/** A short overview grounded',start));
@@ -37,30 +37,32 @@ test('unverifiable position recovery does not turn fabricated excerpts into cita
  assert.equal(out.answer,'**From their speeches**\n\n- Example MP proposed a five-year GST moratorium for essential building materials for homes up to $1 million. (11 Feb 2025)');
  const none=harness(JSON.stringify({points:[]}));assert.equal(await none.recover(payload,{query:'housing'},{}),null);assert.equal(none.calls,1,'an empty draft is not retried');
 });
-test('a soft-failing position summary is unquoted and loses figures its passage lacks; hard lines still drop the point',async()=>{
+test('a failing position summary stands uncited as written: quote marks come off words its passage lacks, nothing else is cut',async()=>{
+ // Minimum checks: no figure removal, no wrong-speaker or causal cuts, and no repair turn.
  const text='Example MP said “GST should go on every building material”, at a cost of $9 billion, and proposed a five-year GST moratorium.';
  const out=await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote:'not in the speech at all, made up'}]}]})).recover(payload,{query:'housing'},{});
- assert.equal(out.answer_status,'uncited');assert.doesNotMatch(out.answer,/[“”"]|\$9 billion/);assert.match(out.answer,/^\*\*From their speeches\*\*\n\n- Example MP said GST should go on every building material\./);
- // Words put in another member's mouth (a verbatim quotation): nothing is left, so the repair turn runs.
+ assert.equal(out.answer_status,'uncited');assert.doesNotMatch(out.answer,/[“”"]/);assert.equal(out.answer,'**From their speeches**\n\n- Example MP said GST should go on every building material, at a cost of $9 billion, and proposed a five-year GST moratorium. (11 Feb 2025)');
+ // Words the passage holds verbatim keep their quote marks, whoever the point names; no repair turn runs.
  const h=harness(JSON.stringify({points:[{text:'Casey Sample said “I propose a five-year moratorium on GST for essential building materials”.',citations:[{id:'s1',quote:'not in the speech at all, made up'}]}]}));
- assert.equal(await h.recover(payload,{query:'housing'},{}),null);assert.equal(h.calls,2);assert.match(h.request.body.prompt.user,/previous attempt failed verification/);
- // Unattributed influence stands only as what the speaker said.
+ const named=await h.recover(payload,{query:'housing'},{});assert.equal(h.calls,1);assert.equal(named.answer_status,'uncited');assert.match(named.answer,/- Casey Sample said “I propose a five-year moratorium on GST for essential building materials”\./);
+ // An unattributed influence claim stands as written.
  const causal=await harness(JSON.stringify({points:[{text:'Donations influenced the GST moratorium on building materials.',citations:[{id:'s1',quote:'not in the speech at all, made up'}]}]})).recover(payload,{query:'housing'},{});
- assert.match(causal.answer,/- Example MP said donations influenced the GST moratorium on building materials\./);
+ assert.match(causal.answer,/- Donations influenced the GST moratorium on building materials\./);
 });
-test('a first draft that crosses a hard line is written again and the verified retry is used',async()=>{
+test('a first draft that once crossed a hard line now stands uncited, with no second writing turn',async()=>{
  const answers=[JSON.stringify({points:[{text:'Casey Sample said “I propose a five-year moratorium on GST for essential building materials”.',citations:[{id:'s1',quote:'This fabricated sentence does not exist in the speech.'}]}]}),draft()];let calls=0;const phases=[];
  const recover=runInNewContext(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';recoverPositionAnswer',{saEvidenceRecord,saEvidenceText,...helpers,...evidenceHelpers,...loose,shortDate,POSITION_GROUNDING:'Ground positions.',AbortSignal,Intl,Date,kbFetch:async()=>{calls++;return Response.json({answer:answers.shift()})}});
  const out=await recover(payload,{query:'housing'},{},async(event,data)=>{phases.push([event,data])});
- assert.equal(calls,2);assert.match(out.answer,/five-year/);assert.equal(out.sources[0].cited,true);
- assert.equal(JSON.stringify(phases),JSON.stringify([['status',{phase:'writing',attempt:2}]]));
+ assert.equal(calls,1);assert.match(out.answer,/Casey Sample said “I propose a five-year moratorium/);assert.equal(out.answer_status,'uncited');assert.equal(out.sources[0].cited,false);
+ assert.deepEqual(phases,[]);
 });
-test('a general question may state a figure from elsewhere in the same verified speech; a detail follow-up may not',async()=>{
+test('a general question may state a figure from elsewhere in the same verified speech; on a detail follow-up the point stands uncited',async()=>{
  const speech=quote+' The scheme would help around 55,000 households across 30,000 tenancies.';
  const text='Example MP proposed a five-year GST moratorium on building materials, saying the scheme would help around 55,000 households.';
  const general=await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote}]}]})).recover({...payload,sources:[{...payload.sources[0],snippet:speech}]},{query:'housing',position_question:'What did he say about housing?'},{});
  assert.match(general.answer,/55,000/);assert.equal(general.sources[0].snippet,quote);
- assert.equal(await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote}]}]})).recover({...payload,sources:[{...payload.sources[0],snippet:speech}]},{query:'housing cap',position_question:'What cap did he propose?'},{}),null);
+ const detail=await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote}]}]})).recover({...payload,sources:[{...payload.sources[0],snippet:speech}]},{query:'housing cap',position_question:'What cap did he propose?'},{});
+ assert.equal(detail.answer_status,'uncited');assert.equal(Object.keys(detail.citations).length,0);assert.match(detail.answer,/55,000/);
  assert.equal(evidenceHelpers.positionPointSupported('He said the scheme would help 55,000 households.',quote,'What did he say about housing?','',speech),true);
  assert.equal(evidenceHelpers.positionPointSupported('He said the scheme would help 55,000 households.',quote,'What did he say about housing?','',''),false);
  assert.equal(evidenceHelpers.positionPointSupported('He said the scheme would help 55,000 households.',quote,'How much would it cost?','',speech),false);
@@ -99,8 +101,9 @@ test('the first ranked sources fit the provider query limit without removing the
  assert.equal(h.calls,1);assert.ok(h.request.body.query.length<=2000);assert.ok(user.length<=60000+40);assert.ok(user.includes(quote));assert.ok(user.includes('"id":"s8"'));assert.ok(!user.includes('"id":"s10"'));
  assert.ok(user.endsWith('{question}'));const body=user.slice(0,user.lastIndexOf('{question}'));assert.ok(!/(^|[^{])\{(?!\{)/.test(body)&&!/(^|[^}])\}(?!\})/.test(body),'literal braces are doubled for the format-style template');
 });
-test('a record title alone cannot serve as a verified position quotation',async()=>{
- const h=harness(draft());assert.equal(await h.recover({...payload,sources:[{...payload.sources[0],title:quote,snippet:'This speech contains only a discussion of parliamentary procedure and no housing proposal.'}]},{query:'housing'},{}),null);
+test('a record title alone cannot serve as a verified position quotation: the point stands uncited',async()=>{
+ const h=harness(draft()),out=await h.recover({...payload,sources:[{...payload.sources[0],title:quote,snippet:'This speech contains only a discussion of parliamentary procedure and no housing proposal.'}]},{query:'housing'},{});
+ assert.equal(out.answer_status,'uncited');assert.equal(Object.keys(out.citations).length,0);assert.ok(out.sources.every(s=>!s.cited));
 });
 test('an irrelevant policy point cannot discard or contaminate the verified housing proposal',async()=>{
  const unrelated='I called for an inquiry into the NDIS and its support coordination costs.';
@@ -146,16 +149,17 @@ test('duration fallback uses the policy term and never a cost horizon',()=>{
  }
 });
 
-test('generated duration cannot borrow a different costing horizon from its excerpt',async()=>{
+test('generated duration cannot borrow a different costing horizon from its excerpt into a cited point',async()=>{
  const evidence=quote+' This plan will cost $1.4 billion over the next four years.';
  for(const text of ['The GST moratorium would last four years.','The housing plan would cost $1.4 billion over four years.']){
   const h=harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote:evidence}]}]}));
-  assert.equal(await h.recover({...payload,sources:[{...payload.sources[0],snippet:evidence}]},{query:'housing affordability duration',position_question:'How long would it last?'},{}),null);
+  const out=await h.recover({...payload,sources:[{...payload.sources[0],snippet:evidence}]},{query:'housing affordability duration',position_question:'How long would it last?'},{});
+  assert.equal(out.answer_status,'uncited');assert.equal(Object.keys(out.citations).length,0);
  }
  assert.equal(evidenceHelpers.positionPointSupported('The GST moratorium would last five years.',evidence,'How long would it last?'),true);
 });
 
-test('eligibility answers retain the criteria and deferred threshold instead of a rent formula',async()=>{
+test('eligibility answers retain the criteria and deferred threshold instead of a rent formula; generated categories stand uncited',async()=>{
  const eligible='Under this legislation a proportion of such residential developments will be normally reserved for qualifying, income-eligible Australians to be housed at below-market rents.';
  const rent='Affordable housing is a rental dwelling rented at a maximum of 75% of market rent or 30% of tenant household income, if that is lower.';
  const rules='Maximum allowable household incomes will be specified under regulations.';
@@ -164,15 +168,16 @@ test('eligibility answers retain the criteria and deferred threshold instead of 
   ['He defined affordable housing as rent at 75% of market rent or 30% of household income, whichever is lower.',rent],
   ['Income-eligible Australians would qualify for affordable housing.',eligible],
   ['Australians with incomes below 30% of market rent would be eligible; income limits would be specified under regulations.',eligible+' '+rent+' '+rules]
- ])assert.equal(await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote}]}]})).recover({...payload,sources:rows},{query:'housing affordability',position_question:'Who would be eligible?'},{}),null);
+ ]){const out=await harness(JSON.stringify({points:[{text,citations:[{id:'s1',quote}]}]})).recover({...payload,sources:rows},{query:'housing affordability',position_question:'Who would be eligible?'},{});assert.equal(out.answer_status,'uncited',text);assert.equal(Object.keys(out.citations).length,0)}
  const valid='He proposed housing for qualifying, income-eligible Australians, with maximum household incomes to be specified under regulations.';
- assert.equal(await harness(JSON.stringify({points:[{text:valid,citations:[{id:'s1',quote:eligible},{id:'s1',quote:rules}]}]})).recover({...payload,sources:rows},{query:'housing affordability',position_question:'Who would be eligible?'},{}),null,'eligibility details use original excerpts, not generated categories');
+ const generated=await harness(JSON.stringify({points:[{text:valid,citations:[{id:'s1',quote:eligible},{id:'s1',quote:rules}]}]})).recover({...payload,sources:rows},{query:'housing affordability',position_question:'Who would be eligible?'},{});
+ assert.equal(generated.answer_status,'uncited','eligibility details are cited only from original excerpts, not generated categories');
  for(const group of ['veterans','pensioners','families with children'])assert.equal(evidenceHelpers.positionPointSupported(`Income-eligible Australians including ${group} would qualify; limits would be specified under regulations.`,eligible+' '+rules,'Who would be eligible?'),false);
  const quoted=fallback({...payload,sources:rows},'housing affordability','Who would be eligible?');assert.match(quoted.answer,/income-eligible/);assert.match(quoted.answer,/regulations/);assert.doesNotMatch(quoted.answer,/75%|30%/);assert.equal(Object.values(quoted.citations)[0].length,2);
  assert.equal(fallback({...payload,sources:[{...payload.sources[0],snippet:rent}]},'housing affordability','Who would be eligible?'),null);
 });
 
-test('a cap follow-up cannot borrow an unquoted waiting period or substitute another immigration policy',async()=>{
+test('a cap follow-up whose points fail verification keeps every drafted point, uncited',async()=>{
  const cap="One Nation's policy is to cap immigration at approximately 130,000 per year, numbers we can actually accommodate.";
  const other='Under our policy, immigration from nations known to foster extremism will be prohibited.';
  const h=harness(JSON.stringify({points:[
@@ -180,9 +185,9 @@ test('a cap follow-up cannot borrow an unquoted waiting period or substitute ano
   {text:'Example MP proposed prohibiting immigration from nations known to foster extremism.',citations:[{id:'s2',quote:other}]}
  ]}));
  const rows=[{...payload.sources[0],snippet:cap+' A separate eight-year proposal was discussed.'},{...payload.sources[0],href:'/doc/speech-2',snippet:other}];
- // Loosened 16 Oct: the unquoted waiting period comes out of the uncited point; the other policy still answers nothing about a cap.
+ // Minimum checks: no figure or topic cuts; the draft stands as written, uncited.
  const out=await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{});
- assert.equal(out.answer_status,'uncited');assert.equal(out.answer,'**From their speeches**\n\n- Example MP proposed capping immigration at 130,000 per year. (11 Feb 2025)');
+ assert.equal(out.answer_status,'uncited');assert.equal(out.answer,'**From their speeches**\n\n- Example MP proposed capping immigration at 130,000 per year, with an eight-year waiting period for citizenship. (11 Feb 2025)\n- Example MP proposed prohibiting immigration from nations known to foster extremism. (11 Feb 2025)');
 });
 
 test('a supported cap survives while unrelated immigration policies are omitted',async()=>{
@@ -203,7 +208,7 @@ test('rent definitions retain both quoted percentages and their lower-of conditi
  assert.equal(evidenceHelpers.positionPointSupported('Rent would be capped at 80% of market rent.',evidence,'What rent limit did he propose?'),false);
 });
 
-test('two points citing the same speech cannot borrow each others excerpts',async()=>{
+test('two points citing the same speech cannot borrow each others excerpts into a citation; they stand uncited',async()=>{
  const cap='We propose an immigration cap of 130,000 per year.';
  const other='We propose stricter immigration screening to exclude security threats.';
  const h=harness(JSON.stringify({points:[
@@ -211,9 +216,9 @@ test('two points citing the same speech cannot borrow each others excerpts',asyn
   {text:'Example MP proposed stricter immigration screening.',citations:[{id:'s1',quote:other}]}
  ]}));
  const rows=[{...payload.sources[0],snippet:cap+' '+other+' An eight-year period was mentioned elsewhere.'}];
- // Loosened 16 Oct: uncited, and the eight-year period outside the point's own excerpt comes out.
+ // Minimum checks: uncited, with the drafted text kept as written.
  const out=await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{});
- assert.equal(out.answer_status,'uncited');assert.equal(out.answer,'**From their speeches**\n\n- Example MP proposed an immigration cap of 130,000 per year. (11 Feb 2025)');
+ assert.equal(out.answer_status,'uncited');assert.equal(out.answer,'**From their speeches**\n\n- Example MP proposed an immigration cap of 130,000 per year, with an eight-year waiting period. (11 Feb 2025)\n- Example MP proposed stricter immigration screening. (11 Feb 2025)');
 });
 
 test('discarded points do not leave their excerpts in the surviving source citation',async()=>{
@@ -227,13 +232,13 @@ test('discarded points do not leave their excerpts in the surviving source citat
  assert.match(out.answer,/130,000/);assert.doesNotMatch(out.answer,/screening/);assert.equal(out.sources[0].snippet,cap);
 });
 
-test('a source month cannot support an unquoted eight-year policy duration',async()=>{
+test('a source month cannot support an unquoted eight-year policy duration in a cited point',async()=>{
  const cap="One Nation's policy is to cap immigration at approximately 130,000 per year, numbers we can actually accommodate.";
  const h=harness(JSON.stringify({points:[{text:'Example MP proposed capping immigration at approximately 130,000 per year, with an eight-year waiting period for citizenship.',citations:[{id:'s1',quote:cap}]}]}));
  const rows=[{...payload.sources[0],date:'2025-08-26',snippet:cap}];
- // Loosened 16 Oct: the point stands uncited without the unquoted duration.
+ // Minimum checks: the point stands uncited, as written.
  const out=await h.recover({...payload,sources:rows},{query:'immigration cap',position_question:'What cap did she propose?'},{});
- assert.equal(out.answer_status,'uncited');assert.doesNotMatch(out.answer,/eight/);assert.match(out.answer,/approximately 130,000 per year\. \(26 Aug 2025\)$/);
+ assert.equal(out.answer_status,'uncited');assert.equal(Object.keys(out.citations).length,0);assert.match(out.answer,/approximately 130,000 per year, with an eight-year waiting period for citizenship\. \(26 Aug 2025\)$/);
  assert.equal(evidenceHelpers.positionPointSupported('The immigration cap would be 2025 per year.',cap,'What cap did she propose?','2025-08-26'),false);
 });
 
@@ -244,23 +249,6 @@ test('the speech year is accepted as a date phrase but never as a policy quantit
  assert.equal(evidenceHelpers.positionPointSupported('Albanese criticised the 2014 Abbott budget for adding a $7 co-payment to see a doctor.',budget,'What has he said about Medicare?','2014-05-27'),true);
  assert.equal(evidenceHelpers.positionPointSupported('The immigration cap would be 2014 per year.','We will cap arrivals.','What cap did he propose?','2014-05-27'),false);
 });
-
-test('a failed summary over real speeches lists them with on-topic excerpts instead of a bare gap',async()=>{
- const askBundle=await build({entryPoints:[new URL('../src/ask-evidence.ts',import.meta.url).pathname],bundle:true,write:false,format:'esm',platform:'node'});
- const askHelpers=await import('data:text/javascript;base64,'+Buffer.from(askBundle.outputFiles[0].text).toString('base64'));
- const excerptStart=source.indexOf('function positionExcerptsAnswer(');
- const excerptCode=source.slice(excerptStart,source.indexOf('/** Recover a position',excerptStart));
- const excerpts=runInNewContext(ts.transpileModule(excerptCode,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';positionExcerptsAnswer',{...askHelpers,Intl,Date});
- const rows=[{...payload.sources[0],resource:'r1',snippet:'I rise to speak on housing affordability. Rents have doubled and young people cannot buy a home.'},
-  {...payload.sources[0],resource:'r2',href:'/doc/speech-2',snippet:'The immigration cap will be 130,000 per year, and that is final.'},
-  {...payload.sources[0],resource:'r3',href:'/doc/speech-3',snippet:'Housing supply must rise; we will build more homes near transport.'}];
- const out=excerpts({...payload,sources:rows},'housing');
- assert.equal(out.answer_status,'evidence_only');assert.match(out.answer,/^I couldn’t verify a summary of their position/);
- assert.equal(out.sources.length,3);assert.ok(out.sources.find(s=>s.resource==='r1').cited);assert.ok(out.sources.find(s=>s.resource==='r3').cited);assert.equal(out.sources.find(s=>s.resource==='r2').cited,false);
- for(const [id,ranges] of Object.entries(out.citations)){assert.ok(out.sources.some(s=>s.resource===id&&s.cited));for(const [start,end] of ranges)assert.ok(start>=0&&end<=Array.from(out.answer).length);}
- assert.equal(excerpts({...payload,sources:[]},'housing'),null);
-});
-
 
 test('cost fallback quotes the proposal and its own nearby estimate together',()=>{
  const cost='This plan will cost $1.4 billion over the next four years.';
