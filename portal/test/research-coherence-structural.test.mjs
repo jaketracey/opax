@@ -43,13 +43,14 @@ test('a figure given to the wrong donor is corrected from the one cited money re
  const answer='Avery Example gave One Nation $161,787.',out=api.groundAnswerPayload({answer,sources:structuredClone(hanson.payload.sources),citations:{'fact-1/t/body/0':[[0,answer.length]]}},question)
  assert.equal(out.answer,'Westpac Banking Corporation gave One Nation $161,787.');assert.equal(auditPayload(question,out).findings.length,0)
 })
-for(const decision of ['clarification',undefined,'answer'])test(`writer figure-free text survives without a retry: ${decision??'legacy'}`,async()=>{
+// A draft for "who gives the most" that drops the requested dollar figure gives way to the facts-only version.
+for(const decision of ['clarification',undefined,'answer'])test(`writer figure-free text gives way to the headline figure, without a retry: ${decision??'legacy'}`,async()=>{
  const answer=variants[1],model=new MockLanguageModelV4({doGenerate:()=>({content:[{type:'text',text:JSON.stringify({answer_decision:decision,sentences:[{text:answer,facts:[1]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]})})
  const facts=hanson.payload.sources.flatMap((source,i)=>source.snippet.split('\n').map((text,j)=>({id:i*100+j+1,text,source,coverage:source.resource==='coverage'})))
  const write=api.createAnswerWriter({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})}}),stats={rounds:1,tokens:{input:0,output:0}}
  const out=await write({question,period:{kind:'all',label:''},facts},stats,undefined,3000)
- for(const sentence of answer.split(/(?<=\?)\s+/))assert.ok(out.answer.includes(sentence),sentence)
- assert.equal(out.answer_decision,decision??'answer');assert.equal(model.doGenerateCalls.length,1)
+ assert.match(out.answer,/^Westpac Banking Corporation\b[^\n]*\$161,787/);assert.doesNotMatch(out.answer,/Which financial year/)
+ assert.equal(model.doGenerateCalls.length,1)
 })
 test('GOLD-M03 monetary sentences from speech passages are kept, cited or not',()=>{
  const f=JSON.parse(fs.readFileSync(new URL('./fixtures/research-coherence-m03.json',import.meta.url))),input=structuredClone(f.payload),snapshot=structuredClone(input),out=api.groundAnswerPayload(input,f.question)
@@ -64,9 +65,9 @@ for(const text of ['Bill Shorten said “I support the bill”.','Westpac bought
  const write=api.createAnswerWriter({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})}}),out=await write({question,period:{kind:'all',label:''},facts:[{id:1,text:source.snippet,source}]},{rounds:1,tokens:{input:0,output:0}},undefined,3000)
  assert.equal(out.answer,text);assert.equal(out.answer_decision,'refusal');assert.equal(model.doGenerateCalls.length,1)
 })
-for(const text of ['Avery Example received $999,999.','National Australia Bank provided disclosed funding: $19,715.'])test('a written money sentence is kept rather than swapped for the selected records: '+text,async()=>{
+for(const text of ['Avery Example received $999,999.','National Australia Bank provided disclosed funding: $19,715.'])test('a written money sentence that drops the requested top figure gives way to the facts-only version: '+text,async()=>{
  const model=new MockLanguageModelV4({doGenerate:()=>({content:[{type:'text',text:JSON.stringify({answer_decision:'answer',sentences:[{text,facts:[1,201]}]})}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:10},outputTokens:{total:10}},warnings:[]})})
  const facts=hanson.payload.sources.flatMap((source,i)=>source.snippet.split('\n').map((text,j)=>({id:i*100+j+1,text,source,coverage:source.resource==='coverage'})))
  const write=api.createAnswerWriter({model,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})}}),out=await write({question,period:{kind:'all',label:''},facts},{rounds:1,tokens:{input:0,output:0}},undefined,3000)
- assert.equal(out.answer,text);assert.equal(out.answer_decision,'answer');assert.equal(model.doGenerateCalls.length,1)
+ assert.match(out.answer,/^Westpac Banking Corporation\b[^\n]*\$161,787/);assert.equal(out.answer_decision,'answer');assert.equal(model.doGenerateCalls.length,1)
 })

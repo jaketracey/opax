@@ -2,6 +2,7 @@ import { generateText } from 'ai'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
 import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, type WritingInput } from './research-writing'
+const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
 import type { ResearchOptions } from './research-loop'
@@ -29,6 +30,28 @@ export function createAnswerWriter(options: ResearchOptions) {
       return ground({...facts,coherence:{...facts.coherence,fallback:true}})
     }, credits=options.creditCooldown ?? researchCreditCooldown
     if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback()
+    const required=proseFallback(input),lead=required.answer.split('\n')[0]
+    const headlineRequired=/highest|most|top|largest|biggest|how much/i.test(input.question)&&!/cannot|not identified|do not identify/i.test(lead)
+    const ownerFigure=(fact:WritingInput['facts'][number])=>{
+      const receipt=fact.source.receipt
+      if(receipt)return {owner:receipt.source,amount:'$'+receipt.amount.toLocaleString('en-AU'),party:receipt.party}
+      const rate=/^([^:]+): (\$[\d,]+)/.exec(fact.text) ?? /^(.+?) (?:received|provided) (\$[\d,]+)/.exec(fact.text)
+      return rate?{owner:rate[1],amount:rate[2]}:null
+    }
+    const named=input.facts.filter(f=>{const pair=ownerFigure(f);return pair&&input.question.toLowerCase().includes(pair.owner.toLowerCase())&&(!pair.party||input.question.toLowerCase().includes(pair.party.toLowerCase()))})
+    const recipientFacts=/\b(?:which|what) parties\b/i.test(input.question)?input.facts.flatMap(f=>{const m=/^Disclosed receipt:\s*(.+?)\s*→\s*(.+?)\s*—/.exec(f.text);return m?[{f,party:m[2]}]:[]}):[]
+    const requiredIds=new Set([...recipientFacts.map(r=>r.f.id),...named.map(f=>f.id),...(headlineRequired?Object.entries(required.citations).filter(([,ranges])=>ranges.some(([a])=>a<lead.length)).flatMap(([id])=>input.facts.filter(f=>id===(f.evidenceId??f.source.resource+'/t/body/0')).map(f=>f.id)):[])])
+    const recipients=recipientFacts.map(r=>r.party)
+    const keepsHeadline=(answer:string)=>recipients.every(p=>answer.toLowerCase().includes(p.toLowerCase()))&&input.facts.filter(f=>requiredIds.has(f.id)).every(f=>{const pair=ownerFigure(f);return !pair||answer.includes(pair.owner)&&answer.includes(pair.amount)})
+    // A recorded vote count keeps its split: "aye 6, no 7" is the answer to how someone voted, and a writer
+    // sentence that words it differently ("6 aye and 7 no") loses it to the figure checks.
+    const voteFacts=input.facts.filter(f=>!f.coverage&&(f.atoms??[]).some(a=>VOTE_METRICS.has(a.metric)))
+    const keepsVotes=(answer:string)=>voteFacts.every(f=>(f.atoms??[]).filter(a=>VOTE_METRICS.has(a.metric)).every(a=>new RegExp(`\\b${a.metric.replace('_',' ')} (?:in )?${a.value}\\b`,'i').test(answer)))
+    if(voteFacts.length&&keepsVotes(required.answer))voteFacts.forEach(f=>requiredIds.add(f.id))
+    // The writer's draft keeps the requested dollar figure and the aye/no split; one that drops them gives way to the
+    // facts-only version, which carries them. That protects content and never swaps in a limitation.
+    const keepsAll=(payload:QualitativeAnswer)=>keepsHeadline(payload.answer)&&(!voteFacts.length||!keepsVotes(required.answer)||keepsVotes(payload.answer))
+    const withRequired=(checked:QualitativeAnswer)=>required.answer_decision==='limitation'||keepsAll(checked)?checked:ground(required)
     const activeInput=input
     let prompt=writingPrompt(input)
     const startedWriting=Date.now()
@@ -71,7 +94,7 @@ export function createAnswerWriter(options: ResearchOptions) {
         researchTrace('writer.verify', {question:input.question,raw,verified})
         if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback()}
         researchTrace('writer.audit',{question:input.question,counts:auditPayload(input.question,verified).counts})
-        return ground(verified)
+        return withRequired(ground(verified))
       }catch(error){
         if(isResearchCreditError(error)){credits.exhaust();receipt=0;stats.usageUnknown=false;if(turn)Object.assign(turn,{input:0,output:0,cost_usd:0})}
         return fallback()

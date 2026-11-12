@@ -48,15 +48,15 @@ test('a draft of the tool wording, in either direction, passes the audit that us
   assert.deepEqual(auditPayload(gambling,written).findings,[]);assert.ok(api.groundAnswerPayload(written,gambling).answer.includes('$2,371,237'))
  }
 })
-test('a written figure the cited record does not hold is kept as written, in one pass',async()=>{
+test('a draft that drops the requested top figure gives way to the facts-only version, in one pass',async()=>{
  const {model,write}=writer(()=>({answer_decision:'answer',sentences:[{text:'Tabcorp Holdings Limited provided $9,999,999.',facts:[1]},{text:'These are disclosed receipts.',facts:[4],coverage:true}]}))
  const out=await write(moneyInput(gambling,'Labor'),stats(),undefined,3000)
- assert.equal(model.doGenerateCalls.length,1);assert.match(out.answer,/\$9,999,999/);assert.doesNotMatch(out.answer,/cannot establish/)
+ assert.equal(model.doGenerateCalls.length,1);assert.match(out.answer,/^Tabcorp Holdings Limited provided the most disclosed funding to Labor: \$2,371,237/);assert.doesNotMatch(out.answer,/\$9,999,999|cannot establish/)
 })
-test('a writer\'s own limitation is kept as written',async()=>{
+test('a writer limitation that drops the requested figure gives way to the facts, never the reverse',async()=>{
  const text='The selected records do not establish a ranking of companies.',{write}=writer(()=>({answer_decision:'limitation',sentences:[{text,facts:[1,2,3]}]}))
  const out=await write(moneyInput(gambling,'Labor'),stats(),undefined,3000)
- assert.equal(out.answer,text);assert.equal(out.answer_decision,'limitation')
+ assert.match(out.answer,/^Tabcorp Holdings Limited provided the most disclosed funding to Labor: \$2,371,237/);assert.doesNotMatch(out.answer,/do not establish/);assert.equal(out.answer_decision,'answer')
 })
 test('with no model at all the facts still answer',async()=>{
  const write=api.createAnswerWriter({modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>null}})
