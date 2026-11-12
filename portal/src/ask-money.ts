@@ -82,7 +82,7 @@ function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:stri
     return clarify('Choose one recipient party and, optionally, one donor or industry for the year comparison. For example: “How did gambling receipts to Labor change from 2020 to 2021?”','needs_scope')
   }
   const rows=years.map(year=>{
-    const one=receiptAnswer(graph,query,result.jurisdiction,'https://opax.com.au',{...input,from:String(year),to:String(year)})
+    const one=receiptAnswer(graph,query,result.jurisdiction,'https://opax.com.au',{...input,from:String(year),to:String(year),measure:result.measure})
     return one&&!('needs_scope' in one)&&!('needs_period' in one)?{year,...one}:null
   })
   const [earlier,later]=rows
@@ -261,6 +261,12 @@ export async function rankedMoneyAnswer(input: RecordQuestion, assets: Fetcher) 
   if(comparisonQuestion(query))return comparedMoneyAnswer(result,graph,query,file)
   if(result.selected_parties.length>1) return null
   if(result.selected_industries.length>1) return null
+  return calculatedMoneyAnswer(result,graph,query,file,input)
+}
+
+/** Render the calculator's validated selection for every money ranking route. */
+export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,query:string,file:string,input:RecordQuestion) {
+  const jurisdiction=result.jurisdiction
   const donorIntent = !/\b(?:receiv\w*|takes?|gets?)\b/i.test(query) && (/\b(?:biggest|largest|top)\b[^?.]{0,60}\bdonors?\b/i.test(query) || (/^who\s+donat\w*\b/i.test(query) && !/\bto who(?:m)?\b/i.test(query)))
   const fromDonors=result.selected_parties.length>0 || donorIntent
   const allFlows=!result.selected_parties.length && !result.selected_industries.length && !result.selected_donors.length && !fromDonors

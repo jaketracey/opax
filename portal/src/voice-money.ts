@@ -3,8 +3,9 @@ import {donorAssociatedTo,donorDisclosure,returnReference,type DonorDisclosureRe
 import {financialYear, receiptPeriodQuery, separateReceiptYears} from './receipt-period'
 
 type Node = DonorDisclosureRecord & { id:string; label:string; kind:string; industry?:string; group?:string; aliases?:string[] }
-type Edge = { source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
-export type ReceiptGraph = { meta:Record<string,unknown>; nodes:Node[]; edges:Edge[] }
+export type ReceiptEdge = { receipt_type?:string; receiptType?:string; source:string; target:string; total:number; count:number; flow?:string; grant?:boolean; firstYear?:number; lastYear?:number; byYear?:Record<string,number[]> }
+export type ReceiptMeasure = 'donations'|'disclosed_receipts'
+export type ReceiptGraph = { meta:Record<string,unknown>; nodes:Node[]; edges:ReceiptEdge[] }
 export function isReceiptGraph(data:Record<string,unknown>): data is Record<string,unknown>&ReceiptGraph {
   return !!data.meta&&typeof data.meta==='object'&&Array.isArray(data.nodes)&&Array.isArray(data.edges)
     &&data.nodes.every(n=>n&&typeof n==='object'&&typeof n.id==='string'&&typeof n.label==='string'&&typeof n.kind==='string')
@@ -158,8 +159,16 @@ export async function receiptGraphForQuestion(query:string, load:(file:string)=>
   return selected
 }
 
+/** Receipt types describe the whole edge, including its financial-year cells. */
+function edgeReceiptType(edge:ReceiptEdge):'donation'|'other'|null {
+  const type=normal(edge.receipt_type??edge.receiptType??'')
+  if(['donation','donations','gift','gifts'].includes(type))return 'donation'
+  if(['other receipt','other receipts','loan','loans','subscription','subscriptions','affiliation fee','affiliation fees'].includes(type))return 'other'
+  return null
+}
+
 /** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */
-export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string; compareYears?:boolean} = {}) {
+export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string; compareYears?:boolean; measure?:ReceiptMeasure} = {}) {
   if(lendingQuestion(query))return {needs_scope:true,answer:jurisdiction==='federal'?'The published records cannot establish how much was lent. Federal debt records report balances owed at 30 June, not new lending, and name only the latest year’s largest creditors. Mixed receipt totals cannot establish loan amounts.':'The receipt records cannot establish how much was lent; a separate record identifying loans and their basis is needed.',sources:jurisdiction==='federal'?[{title:'AEC debt records: balance owed at 30 June; latest year only',url:origin+'/graph/aec-extras.json'}]:[],jurisdiction}
   if(!Array.isArray(graph.nodes)||!Array.isArray(graph.edges)) return null
   const periodQuery=receiptPeriodQuery(query)
@@ -205,8 +214,18 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const donorTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],associated?:string,total_aud:number,receipts:number}>()
   const industryTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number}>()
   const flows: {donor_id:string,donor:string,donor_href:string|null,return_reference:string,party_id:string,party:string,associated?:string,total_aud:number,receipts:number}[]=[]
+  const eligible=graph.edges.filter(edge=>{
+    const donor=nodes.get(edge.source),party=nodes.get(edge.target)
+    if(edge.flow||edge.grant||donor?.kind!=='donor'||party?.kind!=='party'||(donors.length&&!donorIds.has(donor.id))||(parties.length&&!partyIds.has(party.id))||(industries.length&&!donors.length))return false
+    if(from===undefined&&to===undefined)return Number.isFinite(edge.total)&&Number.isFinite(edge.count)&&!!(edge.total||edge.count)
+    return Object.entries(edge.byYear??{}).some(([year,value])=>Number(year)>=(from??0)&&Number(year)<=(to??9999)&&Number.isFinite(value[0])&&Number.isFinite(value[1])&&!!(value[0]||value[1]))
+  })
+  // Prefer typed donations once every matching edge has a recognised type.
+  // Partial typing retains the complete receipts measure for this selection.
+  const measure:ReceiptMeasure=filters.measure==='disclosed_receipts'?'disclosed_receipts':eligible.length>0&&eligible.every(edge=>edgeReceiptType(edge)!==null)&&(filters.measure==='donations'||eligible.some(edge=>edgeReceiptType(edge)==='donation'))?'donations':'disclosed_receipts'
   let cents=0,count=0,first=Infinity,last=-Infinity,matching=0
-  for(const edge of graph.edges) {
+  for(const edge of eligible) {
+    if(measure==='donations'&&edgeReceiptType(edge)!=='donation')continue
     const donor=nodes.get(edge.source),party=nodes.get(edge.target)
     if(edge.flow||edge.grant||donor?.kind!=='donor'||party?.kind!=='party'||(donors.length&&!donorIds.has(donor.id))||(parties.length&&!partyIds.has(party.id))) continue
     // A named industry with no visible donors must never select every industry.
@@ -254,7 +273,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
       as_of: typeof graph.meta.generated === 'string' ? graph.meta.generated.slice(0, 10) : null,
       requested_since: from === undefined ? undefined : `${from}-01-01`, requested_until: to === undefined ? undefined : `${to}-12-31`,
       matched: matching > 0, basis: 'financial_year_start', note: 'Years identify financial years by starting year, not calendar-year totals; only matching recorded receipts in the published selection.' },
-    total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
+    measure,total_aud:cents/100,receipts:count,period,requested_years:{from:from??null,to:to??null},jurisdiction,subject,
     by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     by_donor:[...donorTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     by_industry:[...industryTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
