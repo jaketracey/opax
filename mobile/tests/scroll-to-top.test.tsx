@@ -2,7 +2,13 @@ import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { act } from 'react';
-import { Platform, ScrollView, Text as NativeText } from 'react-native';
+import {
+  Dimensions,
+  PixelRatio,
+  Platform,
+  ScrollView,
+  Text as NativeText,
+} from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import ts from 'typescript';
@@ -78,6 +84,58 @@ test.each(['ios', 'android'] as const)(
     } finally {
       act(() => renderer?.unmount());
       Object.defineProperty(Platform, 'OS', descriptor);
+    }
+  },
+);
+
+test.each([
+  ['iPhone portrait', 'ios', false, 390, 844, 47, 91],
+  ['Dynamic Island iPhone', 'ios', false, 402, 874, 62, 62 - 5 - 1 / 3 + 44],
+  ['iPhone landscape', 'ios', false, 844, 390, 47, 32],
+  ['iPad', 'ios', true, 1024, 1366, 24, 143],
+  ['Android', 'android', false, 402, 874, 24, 143],
+] as const)(
+  '%s: only an explicitly inline iPhone limits a stale expanded header',
+  (_device, os, pad, width, height, top, compact) => {
+    const platform = jest.replaceProperty(Platform, 'OS', os);
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+    const pixels = jest.spyOn(PixelRatio, 'get').mockReturnValue(3);
+    const window = Dimensions.get('window');
+    let renderer!: TestRenderer.ReactTestRenderer;
+    let bottom = 0;
+    function Probe({ inline }: { inline: boolean }) {
+      bottom = useHeaderBottom(inline);
+      return null;
+    }
+    const page = (inline: boolean, header = 143) => (
+      <SafeAreaInsetsContext.Provider
+        value={{ top, bottom: 34, left: 0, right: 0 }}
+      >
+        <HeaderHeightContext.Provider value={header}>
+          <Probe inline={inline} />
+        </HeaderHeightContext.Provider>
+      </SafeAreaInsetsContext.Provider>
+    );
+    try {
+      act(() => {
+        Dimensions.set({ window: { ...window, width, height } });
+        renderer = TestRenderer.create(page(false));
+      });
+      expect(bottom).toBe(143);
+      act(() => renderer.update(page(true)));
+      expect(bottom).toBeCloseTo(compact);
+      act(() => renderer.update(page(true, compact)));
+      expect(bottom).toBeCloseTo(compact);
+      act(() => renderer.update(page(false)));
+      expect(bottom).toBe(143);
+    } finally {
+      act(() => {
+        renderer?.unmount();
+        Dimensions.set({ window });
+      });
+      pixels.mockRestore();
+      idiom.mockRestore();
+      platform.restore();
     }
   },
 );

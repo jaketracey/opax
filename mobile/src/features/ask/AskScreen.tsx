@@ -5,6 +5,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -94,6 +95,7 @@ export default function AskScreen() {
     askSession.snapshot,
     askSession.snapshot,
   );
+  const idle = !s.thread.length && !s.busy && !s.error && !s.clarify;
   const saved = useSyncExternalStore(
     subscribeChats,
     chatsSnapshot,
@@ -103,7 +105,6 @@ export default function AskScreen() {
   const signedIn = !!account.status?.signedIn;
   const params =
     useLocalSearchParams<Partial<Record<keyof AskScope | 'entry', string>>>();
-  const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
   const { height: windowHeight } = useWindowDimensions();
   const [readFailed, setReadFailed] = useState(false);
@@ -135,6 +136,7 @@ export default function AskScreen() {
   const docked =
     adaptive &&
     sizeClassFor(room?.width ?? outer.width, outer.rule) === 'regular';
+  const headerBottom = useHeaderBottom(!idle && !docked);
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
     useKeyboardOverlap(root);
@@ -204,14 +206,24 @@ export default function AskScreen() {
     wasBusy.current = s.busy;
   }, [s.busy]);
   // The new question goes just under the bar once its turn is laid out.
-  const reveal = (laidOut = true) => {
-    if (!pin.current) return;
-    if (laidOut) pin.current = false;
-    scroll.current?.scrollTo({
-      y: Math.max(turnY.current - headerBottom - rhythm.heading, -headerBottom),
-      animated: !reduceMotion,
-    });
-  };
+  const reveal = useCallback(
+    (laidOut = true) => {
+      if (!pin.current) return;
+      if (laidOut) pin.current = false;
+      scroll.current?.scrollTo({
+        y: Math.max(
+          turnY.current - headerBottom - rhythm.heading,
+          -headerBottom,
+        ),
+        animated: !reduceMotion,
+      });
+    },
+    [headerBottom, reduceMotion],
+  );
+  const latestReveal = useRef(reveal);
+  useLayoutEffect(() => {
+    latestReveal.current = reveal;
+  }, [reveal]);
   useEffect(() => {
     if (!topRequest) return;
     pin.current = false;
@@ -222,7 +234,11 @@ export default function AskScreen() {
     pin.current = true;
     // These frames may beat layout and still have the previous turn's y.
     // Keep the measured reveal pending so it wins in either order.
-    requestAnimationFrame(() => requestAnimationFrame(() => reveal(false)));
+    // Send starts in the idle render. Read the committed conversation's
+    // geometry here rather than capturing that render's expanded header.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => latestReveal.current(false)),
+    );
   };
   // A claim moves just above the half-height citation sheet's top edge.
   const revealClaim = useCallback(
@@ -271,7 +287,6 @@ export default function AskScreen() {
       setTopRequest((n) => n + 1);
     }
   }
-  const idle = !s.thread.length && !s.busy && !s.error && !s.clarify;
   useKeyCommand(
     'ask-reselect',
     () => {
@@ -389,9 +404,10 @@ export default function AskScreen() {
               onNew: newConversation,
               onHistory: () => router.push(conversationsRoute),
             }),
-            // Two panes: an inline title (a large title over two scroll views
-            // collapses with whichever scrolls first).
-            ...(adaptive ? { headerLargeTitleEnabled: !docked } : null),
+            // Only the idle list keeps a large title. Two panes stay inline.
+            ...(Platform.OS === 'ios'
+              ? { headerLargeTitleEnabled: idle && !docked }
+              : null),
           }}
         />
         <AskRevealContext.Provider value={revealClaim}>
