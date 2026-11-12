@@ -510,7 +510,7 @@ check "exit 0" test "$NRC" -eq 0
 check "a nightly commit reached origin" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh $TODAY: '"
 check "commit subject names the growth" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q 'speech +50'"
 check "corpus.json carries the new total" bash -c "git --git-dir='$ORIGIN' show main:portal/public/corpus.json | python3 -c 'import json,sys; c=json.load(sys.stdin); assert c[\"expected_resources\"]==$BASE_TOTAL+50 and c[\"version\"]==\"$TODAY\" and c[\"collected_speeches\"]==$BASE_SPEECH+50'"
-check "corpus.json is in the pushed commit (that is what triggers deploy.yml)" bash -c "git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -qx portal/public/corpus.json"
+check "corpus.json is in the pushed commit (part of the push that starts deploy.yml)" bash -c "git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -qx portal/public/corpus.json"
 check "CACHE_EPOCH bumped in both places" bash -c "[ \$(git --git-dir='$ORIGIN' show main:portal/wrangler.jsonc | grep -c '\"CACHE_EPOCH\": \"$TODAY-nightly\"') -eq 2 ]"
 check "bills went through with briefs restored" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status_as_of\"]==\"2026-09-28\" and d[\"speeches\"][0][\"brief\"]==\"Brief 1-0\"'"
 check "bill deltas are in the summary commit" bash -c "git --git-dir='$ORIGIN' log -1 --format=%s main | grep -q 'bills: 0 new, 3 changed, 0 titles filled, 0 sponsor IDs filled'"
@@ -997,7 +997,7 @@ OPAX_TODAY=2026-09-20 FAKE_WEEKLY_MODE=ok nightly
 check "Sunday 2026-09-20 (not the first): weekly only" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = weekly ]"
 check "exit 0 and the group's file was published" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101'"
 check "the commit subject names the group" bash -c "git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q 'speakers'"
-check "corpus.json changed with it (that starts the deploy)" bash -c "git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -qx portal/public/corpus.json"
+check "corpus.json changed with it (part of the push that starts the deploy)" bash -c "git --git-dir='$ORIGIN' diff --name-only main~1 main | grep -qx portal/public/corpus.json"
 check "the log says which groups ran" grep -q 'periodic groups tonight: weekly' "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
 new_sandbox s24c
 OPAX_TODAY=2026-09-06 FAKE_WEEKLY_MODE=ok nightly

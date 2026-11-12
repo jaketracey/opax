@@ -9,8 +9,9 @@
 #     hand-started run (12 Nov 2026: merges #293 and #296 both needed one); or
 #   * someone runs it by hand (Actions > Deploy > Run workflow, or `gh workflow run deploy.yml`).
 # Pushes that only touch docs, tests, tooling or the Python ingest code (parli/, enrich/, tools/)
-# do not deploy. Never triggered by
-# pull_request: this repository is public and the job holds the Cloudflare deploy token.
+# do not deploy; a push that only fixes portal tests needs a hand-started run if it should ship.
+# Never triggered by pull_request: this repository is public and the job holds the Cloudflare
+# deploy token.
 # Several merges close together queue in the deploy-production group below; the first step
 # skips a run when main's head is already deployed or deploying, so they collapse to one deploy.
 # A human's own `npm run deploy` from a laptop still works as before.

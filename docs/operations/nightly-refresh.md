@@ -765,7 +765,7 @@ Failed fetches never blank an existing brief. `index.json` is written in the com
 
 **Deploy workflow** (`.github/workflows/deploy.yml`): starts on a push to `main` that changes what the Worker is built from (`portal/`
 except tests and markdown, `scripts/`, the Python version and lock, the ACT invoice release, the ingest user agent and
-the design tokens; the full list is the workflow's `paths`), so merged portal and data PRs deploy themselves, or by hand (Actions → Deploy → Run workflow); never on pull_request (the repo is public and the job holds the Cloudflare
+the design tokens; the full list is the workflow's `paths`), so merged portal and data PRs deploy themselves (a push that only changes portal tests or markdown does not deploy; run it by hand if needed), or by hand (Actions → Deploy → Run workflow); never on pull_request (the repo is public and the job holds the Cloudflare
 token). Concurrency group `deploy-production`, no cancellation. The restamp commit it pushes back is pushed with
 the job's `GITHUB_TOKEN` (whose pushes start no workflows), carries `[skip ci]`, and the job refuses to run for the bot's own pushes, so it cannot loop. Restamps
 commit only `portal/public/*.html` and the analytics bundles: `voice.js` and `chunks/` are left alone because esbuild bakes the
