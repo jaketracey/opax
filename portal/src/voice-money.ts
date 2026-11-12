@@ -237,7 +237,8 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
   const totals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
   const donorTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],associated?:string,total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
   const industryTotals=new Map<string,{id:string,name:string,href?:string|null,return_reference?:string,returnReferences?:unknown[],total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
-  const flows: {donor_id:string,donor:string,donor_href:string|null,return_reference:string,party_id:string,party:string,associated?:string,total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}[]=[]
+  // One row per donor-to-party pair: typed edges are split by receipt type above and merged back here.
+  const flows=new Map<string,{donor_id:string,donor:string,donor_href:string|null,return_reference:string,party_id:string,party:string,associated?:string,total_aud:number,receipts:number,all_types_aud:number,other_receipts_aud:number}>()
   const eligible=receiptEdges(graph).filter(edge=>{
     const donor=nodes.get(edge.source),party=nodes.get(edge.target)
     if(edge.flow||edge.grant||donor?.kind!=='donor'||party?.kind!=='party'||(donors.length&&!donorIds.has(donor.id))||(parties.length&&!partyIds.has(party.id))||(industries.length&&!donors.length))return false
@@ -287,7 +288,9 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
       const industryTotal=industryTotals.get(donor.industry)||{id:donor.industry,name:donor.industry.replaceAll('_',' '),total_aud:0,receipts:0,all_types_aud:0,other_receipts_aud:0}
       industryTotal.all_types_aud+=allAmount/100;industryTotal.other_receipts_aud+=otherAmount/100;industryTotal.total_aud+=amount/100;industryTotal.receipts+=receipts;industryTotals.set(donor.industry,industryTotal)
     }
-    flows.push({donor_id:donor.id,donor:donor.label,donor_href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),party_id:party.id,party:party.label,...(associated?{associated}:{}),total_aud:amount/100,receipts,all_types_aud:allAmount/100,other_receipts_aud:otherAmount/100})
+    const flowKey=donor.id+'|'+party.id,flow=flows.get(flowKey)
+    if(flow){flow.total_aud+=amount/100;flow.receipts+=receipts;flow.all_types_aud+=allAmount/100;flow.other_receipts_aud+=otherAmount/100}
+    else flows.set(flowKey,{donor_id:donor.id,donor:donor.label,donor_href:donorDisclosure(donor).href,return_reference:returnReference((donor.returnReferences || []).find(ref=>!from || Number(String(ref.year).slice(0,4))>=from && (!to || Number(String(ref.year).slice(0,4))<=to)) || donor.returnReferences?.[0] || {}),party_id:party.id,party:party.label,...(associated?{associated}:{}),total_aud:amount/100,receipts,all_types_aud:allAmount/100,other_receipts_aud:otherAmount/100})
   }
   const params=new URLSearchParams({jur:jurisdiction,type:'receipts'})
   if(industries.length===1)params.set('industry',industries[0])
@@ -310,7 +313,7 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     by_party:[...totals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     by_donor:[...donorTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
     by_industry:[...industryTotals.values()].map(t=>({...t,total_aud:Math.round(t.total_aud*100)/100,all_types_aud:Math.round(t.all_types_aud*100)/100,other_receipts_aud:Math.round(t.other_receipts_aud*100)/100})).sort((a,b)=>b.total_aud-a.total_aud),
-    flows:flows.sort((a,b)=>b.total_aud-a.total_aud),
+    flows:[...flows.values()].sort((a,b)=>b.total_aud-a.total_aud),
     selected_donors:donors.map(d=>d.label),
     selected_parties:parties.map(p=>p.label),
     selected_industries:industries,
