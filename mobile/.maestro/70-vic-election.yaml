@@ -116,7 +116,12 @@ env:
       - assertVisible: '.*corrections@opax.com.au.*'
       - tapOn:
           id: BackButton
-      - tapOn: '.*Cancel.*'
+      # Leave the native search: iOS 26 labels the button "Cancel", iOS 27
+      # draws an X labelled "Close". Neither is ours to give a test id, so
+      # tap whichever is there.
+      - tapOn:
+          text: '(Cancel|Close)'
+          optional: true
       - scrollUntilVisible:
           element:
             id: vic-election-region-southern-metropolitan

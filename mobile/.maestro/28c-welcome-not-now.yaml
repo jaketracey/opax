@@ -46,15 +46,18 @@ name: 28c Welcome Not now lands on a finished Today, the invitation after Bills
     visibilityPercentage: 10
     centerElement: true
     speed: 20
-- assertNotVisible:
-    id: today-invitation
+# Order, not geometry: with Bills centred the next card is always partly in
+# view, so check the invitation comes after Bills rather than off screen.
 - scrollUntilVisible:
     element:
       id: today-invitation
     timeout: 90000
     visibilityPercentage: 10
-    centerElement: true
     speed: 20
+- assertVisible:
+    id: today-invitation
+    below:
+      id: today-bills
 - takeScreenshot: ${EVIDENCE}/28c-invitation-after-bills
 # The rest of 13e's "after Not now": day 8 puts it back in its own slot.
 - launchApp:
