@@ -200,11 +200,18 @@ function summaryPart(r: ReportDetail, mainDocument: string): Part | null {
 
 // ---- documents (commission reports, responses, transcripts; integrity documents)
 function documentRow(d: RecordRow, mainDocument: string, extra = '', flag = true): string {
-  const href = url(d.page_url) || url(d.url)
+  const page = url(d.page_url) || url(d.url)
   const title = d.title || human(d.key || d.kind || d.role) || 'Document'
   const kind = human(d.document_kind || d.kind || d.role)
   const files = records(d.files)
-  const meta = [kind && kind !== title ? esc(kind) : '', d.date ? dated(d.date_basis, d.date) : '', finite(d.pages) ? plural(d.pages, 'page') : ''].filter(Boolean).join(' · ')
+  // One file: the title opens it, and pages, type and size follow, as on transcript rows. The record's own page
+  // (often a parliament's tabled-document listing) closes the meta line when it is not the file itself.
+  const lone = files.length === 1 ? object(files[0]) : null, file = lone ? url(lone.url) : ''
+  const href = file || page
+  const pages = d.pages ?? lone?.pages
+  const fileMeta = lone ? `${file && isPdf(file) ? 'PDF' : 'File'}${bytes(lone.bytes) ? `, ${esc(bytes(lone.bytes))}` : ''}` : ''
+  const pageLink = file && page && page !== file ? link(page, `Page on ${host(page)}`).replace('</a>', `<span class="visually-hidden">: ${esc(title)}</span></a>`) : ''
+  const meta = [kind && kind !== title ? esc(kind) : '', d.date ? dated(d.date_basis, d.date) : '', finite(pages) ? plural(pages, 'page') : '', fileMeta, pageLink].filter(Boolean).join(' · ')
   const detail = kv([
     ['Recommendations', d.recommendations != null ? esc(d.recommendations) : ''],
     ['Recommendations status', d.recommendations_status ? esc(human(d.recommendations_status)) : ''],
@@ -218,8 +225,8 @@ function documentRow(d: RecordRow, mainDocument: string, extra = '', flag = true
   return `<li class="rr-doc"><h3 class="rr-doc-title">${href ? link(href, title) : esc(title)}</h3>` +
     (flag && d.kind === 'hearing_transcript' ? text('Hearing transcript: evidence, not findings.', 'rr-doc-flag') : '') +
     (meta ? `<p class="rr-doc-meta">${meta}</p>` : '') +
-    (files.length ? `<ul class="rr-doc-files" role="list">${files.map(f => `<li>${link(f.url, `${isPdf(String(f.url)) ? 'PDF' : 'File'}: ${f.name || 'report file'}`)}${[finite(f.pages) ? plural(f.pages, 'page') : '', bytes(f.bytes)].filter(Boolean).map(x => ` · ${esc(x)}`).join('')}</li>`).join('')}</ul>` : '') +
-    (d.text ? text(d.text) : '') + (d.cite && url(object(d.cite).url) !== href ? citeLine(d.cite, mainDocument) : '') +
+    (files.length > 1 ? `<ul class="rr-doc-files" role="list">${files.map((f, i) => `<li>${link(f.url, `${isPdf(String(f.url)) ? 'PDF' : 'File'} ${i + 1} of ${files.length}`)}${[finite(f.pages) ? plural(f.pages, 'page') : '', bytes(f.bytes)].filter(Boolean).map(x => ` · ${esc(x)}`).join('')}</li>`).join('')}</ul>` : '') +
+    (d.text ? text(d.text) : '') + (d.cite && ![href, page].includes(url(object(d.cite).url)) ? citeLine(d.cite, mainDocument) : '') +
     extra + (detail ? `<details class="ui-disclosure rr-doc-detail"><summary>Document details</summary><div class="ui-disclosure-body">${detail}</div></details>` : '') + `</li>`
 }
 const documentList = (docs: RecordRow[], mainDocument: string) => `<ul class="rr-docs" role="list">${docs.map(d => documentRow(d, mainDocument)).join('')}</ul>`
