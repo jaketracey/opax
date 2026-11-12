@@ -8,6 +8,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 import ts from 'typescript';
+import * as partyPage from '../public/party-page.js';
 
 const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
 const parsed = ts.createSourceFile('app.js', app, ts.ScriptTarget.Latest, true);
@@ -20,6 +21,7 @@ function page(names, extra = '') {
   const dom = new JSDOM(`<!doctype html><html><body><div id="subject-body"></div></body></html>`,
     { url: 'https://opax.com.au/subject/topic', runScripts: 'outside-only' });
   const { window } = dom;
+  window.__partyPage = partyPage;
   const requested = [];
   window.fetch = (path, init = {}) => new Promise((_resolve, reject) => {
     requested.push(path);
@@ -73,22 +75,33 @@ test('the topics index renders every topic without counts when /api/topics stall
 });
 
 test('the parties directory builds without speech figures when /api/parties stalls', async () => {
-  const { app } = page(['buildPartiesDirectory', 'yearSpan', 'anyPartyDotHTML', 'fmtMoney'], `
+  const { app, window } = page(['buildPartiesDirectory', 'yearSpan', 'anyPartyDotHTML', 'fmtMoney'], `
     const loadMoneyFile = async (jur) => jur === 'federal' ? { nodes: [{ kind: 'party', label: 'Example Party', total: 1000, count: 2, firstYear: 2020, lastYear: 2024 }], edges: [] } : null;
     const loadParliamentarians = async () => ({ people: [{ name: 'Example Member', party: 'Example Party' }] });
-    const MONEY_JURISDICTIONS = { federal: { label: 'Federal' } };
+    const loadPartyPage = async () => window.__partyPage;
+    const loadPartyMembers = async () => ({parties: {'Fixture Parliamentary Party': [{name: 'Fixture Person'}]}});
+    const MONEY_JURISDICTIONS = { federal: { label: 'Federal', file: '/graph/money.json' },
+      qld: { file: '/graph/money.qld.json' }, vic: { file: '/graph/money.vic.json' }, tas: { file: '/graph/money.tas.json' } };
     const STATE_NOT_SUMMED = '', AEC_NOTE = '';
     const partyDotHTML = () => '', partyColour = () => '', partyClass = () => '';
     const byNumDesc = (get) => (a, b) => (get(b) || 0) - (get(a) || 0);
     const moneyFor = (row) => row._total;
     const byName = (a, b) => a._sortName.localeCompare(b._sortName);`);
+  const stalled = window.fetch;
+  window.fetch = (path, init) => {
+    assert.notEqual(path, '/divisions/index.json', 'the directory never reads the large division index');
+    return stalled(path, init);
+  };
   const spec = await app.buildPartiesDirectory();
   assert.equal(spec.lede, 'Speech counts are updating.');
   assert.ok(!spec.sorts.some(([key]) => key === 'speeches'), 'no speech sort');
   assert.ok(!spec.filters.find((f) => f.key === 'show').options.some(([key]) => key === 'speeches'));
   const row = spec.row(spec.items[0]);
   assert.doesNotMatch(row, /speech/, 'no "0 speeches" figure');
-  assert.match(row, /in the directory/);
+  assert.match(row, /parliamentarian.*in the record/);
+  const parliamentary = spec.items.find(p => p.label === 'Fixture Parliamentary Party');
+  assert.ok(parliamentary, 'parliamentary-only parties remain discoverable while live speech counts stall');
+  assert.equal(window.__partyPage.partyPageCoverage({label: parliamentary.label, roster: false, divisions: true, money: false}), 'Recorded divisions. No party-level disclosure file held by OPAX.');
 });
 
 test('the topic page and every module that waits on an aggregate bound the wait', () => {

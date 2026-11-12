@@ -5,6 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {rosterSeatParty} from '../public/roster-party.js';
+import {datedAffiliationParty} from '../public/speech-attribution.js';
 import {renderPersonAnswer, renderDirectory, partyLine} from '../src/seo-content.ts';
 
 const seat = (over = {}) => ({
@@ -25,6 +26,18 @@ const reader = (electorates) => async (path) => {
 };
 const descriptionOf = async (p, electorates) => (await renderPersonAnswer(p, reader(electorates), new Map())).description;
 const partyItemOf = async (p, electorates) => /<h2>Party and representation<\/h2><ul><li>([\s\S]*?)<\/li>/.exec((await renderPersonAnswer(p, reader(electorates), new Map())).html)?.[1];
+
+test('published state affiliation reaches the profile without inventing speech-date party evidence', async () => {
+  const roster = JSON.parse(readFileSync(new URL('../public/parliamentarians.json', import.meta.url), 'utf8'));
+  const member = roster.people.find(p => p.name === 'Chris Rath');
+  assert.equal(partyLine(member), 'Liberal (recorded affiliation)');
+  assert.equal(await partyItemOf(member, []), '<a href="/subject/party/liberal">Liberal (recorded affiliation)</a>');
+  assert.equal(member.representation[0].as_of, '2026-09-25');
+  assert.equal(member.party_now, undefined);
+  for (const date of ['2022-05-10', '2026-09-25', '2026-11-12']) {
+    assert.equal(datedAffiliationParty({kind:'speech', state:'nsw', chamber:'nsw_lc', date}, member), null);
+  }
+});
 
 test('a state member with no party takes the verified roster party, dated and linked', async () => {
   assert.deepEqual(rosterSeatParty(person(), [seat()]), {party: 'Example Party', as_of: '2026-09-09', electorate: 'Fixtureton',
@@ -87,8 +100,8 @@ test('a party the person record already carries is unchanged by the roster', asy
 test('the person directory uses the same fallback', async () => {
   const url = new URL('https://opax.com.au/subject/person');
   const {html} = await renderDirectory('person', url, reader([seat()]), [person(), person({name: 'Jo Former'})], new Map(), {});
-  assert.match(html, /Alex Example<\/a> — Example Party \(parliamentary roster as at 9 Sep 2026\)/);
-  assert.match(html, /Jo Former<\/a> — Party not recorded/);
+  assert.match(html, /Alex Example<\/a>: Example Party \(parliamentary roster as at 9 Sep 2026\)/);
+  assert.match(html, /Jo Former<\/a>: Party not recorded/);
 });
 
 test('the person page reads the same fallback, only for a record with no party of its own', () => {
@@ -98,4 +111,29 @@ test('the person page reads the same fallback, only for a record with no party o
   assert.match(app, /if \(seatParty\) party = seatParty\.party;/);
   const electorates = readFileSync(new URL('../public/electorates.js', import.meta.url), 'utf8');
   assert.match(electorates, /export \{ rosterSeatParty \} from '\.\/roster-party\.js/);
+});
+
+
+test('earlier NSW speeches cannot inherit snapshot parties through the profile fallback',()=>{
+ const roster=JSON.parse(readFileSync(new URL('../public/parliamentarians.json',import.meta.url),'utf8'));
+ // Mirror sponsors.ts recorded ?? profile.party and the web profile fallback.
+ for(const [name,date,oldParty] of [['Tania Mihailuk','2017-01-01','Labor'],['Jeremy Buckingham','2016-01-01','Greens'],['Rod Roberts','2019-06-01','One Nation'],['Taylor Martin','2018-01-01','Liberal']]) {
+  const profile=roster.people.find(p=>p.name===name);
+  assert.ok(profile,name);
+  assert.equal(null ?? profile.party,undefined,name+' '+date);
+  assert.equal(oldParty ?? profile.party,oldParty);
+  assert.equal(datedAffiliationParty({kind:'speech',state:'nsw',chamber:'nsw_lc',date},profile),null);
+ }
+ const rath=roster.people.find(p=>p.name==='Chris Rath');
+ assert.equal(null ?? rath.party,'Liberal');
+});
+
+test('Moira Deeming retains the date on the pinned Victorian roster affiliation',async()=>{
+ const roster=JSON.parse(readFileSync(new URL('../public/parliamentarians.json',import.meta.url),'utf8'));
+ const manifest=JSON.parse(readFileSync(new URL('../public/electorates/manifest.json',import.meta.url),'utf8'));
+ const index=JSON.parse(readFileSync(new URL('../public'+manifest.index_url,import.meta.url),'utf8'));
+ const member=roster.people.find(p=>p.name==='Moira Deeming');
+ assert.equal(member.party,undefined);
+ assert.equal(partyLine(member,index.electorates),'Independent (parliamentary roster as at 9 Sep 2026)');
+ assert.match(await partyItemOf(member,index.electorates),/Independent \(parliamentary roster as at 9 Sep 2026\)/);
 });

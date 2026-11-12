@@ -2,7 +2,7 @@
  * Handbook posts). Public servants' pay is not held: the tool says so and names where it is published. */
 import { datedPay } from '../pay-history'
 import type { PayData as HistoricalPayData } from '../ask-pay'
-import { personUrl } from '../../public/canonical-urls.js'
+import { personUrl } from '../../public/party-page.js'
 import { aud, clip, fold, readableRange, siteUrl, tableRows } from './record-common'
 import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
 

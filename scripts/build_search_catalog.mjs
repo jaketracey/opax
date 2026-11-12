@@ -83,7 +83,7 @@ export function interestHref(register, person, speakerNames) {
 }
 
 export function personSpeechCount(p) {
- return p.speech_count_basis ? 'No exact speech count yet; own-house, in-service speeches only.' : `${p.speeches.toLocaleString()} speeches in the record.`;
+ return p.roster_only ? 'Parliamentary service profile; no speech total yet.' : p.speech_count_basis ? 'No exact speech count yet; own-house, in-service speeches only.' : `${p.speeches.toLocaleString()} speeches in the record.`;
 }
 
 // Return references stay in the record's source url and the data export; the
@@ -109,7 +109,7 @@ export function accessDonorHref(donorNames, name, fallback) {
 async function main() {
  const roster = await read('parliamentarians.json');
  const identity=personIndex(roster.people); peopleIndex=identity; canonicalPeople=identity.slugOf; canonicalAliases=new Map([...identity.addresses].map(([name,p])=>[name,identity.slugOf.get(p.name)]));
- for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:[p.name,...(Object.hasOwn(PERSON_SEARCH_ALIASES,p.name)?PERSON_SEARCH_ALIASES[p.name]:[])].join(' '),from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
+ for(const p of roster.people) add('person:'+p.name,'person',p.full||p.name,personHref(p.name),`${p.party_now||p.party||''}. ${(p.states||[]).join(', ')}. ${personSpeechCount(p)}${p.representation?.length?' Recorded representation: '+p.representation.map(r=>`${r.electorate}${r.state?', '+r.state:''}, ${r.jurisdiction}, ${r.chamber}`).join('; ')+'. Roster affiliations may include past seats and do not establish current tenure.':''}`,{aliases:[...new Set([p.name,...(p.aliases||[]),...(Object.hasOwn(PERSON_SEARCH_ALIASES,p.name)?PERSON_SEARCH_ALIASES[p.name]:[])])].join(' '),from:p.first,to:p.last,state:p.states,parties:[p.party_now||p.party||''],speakers:[p.name],source:'Parliamentarian directory',dateLabel:p.speech_scope?'':(p.roster_only?'Recorded service: ':p.speech_count_basis?'Transcript years: ':'')+period(p.first,p.last)});
  const donorRecords=[];
  for(const [jur,file] of [['federal','money.json'],['qld','money.qld.json'],['vic','money.vic.json'],['tas','money.tas.json']]) {
   const graph=await read('graph/'+file), byId=new Map(graph.nodes.map(n=>[n.id,n]));
