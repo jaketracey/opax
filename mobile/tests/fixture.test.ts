@@ -18,33 +18,36 @@ import {
 } from '../src/features/today/votes';
 import { files, pinned, servedFiles } from './pinned';
 let child: ChildProcess;
+let primaryFixture: ReturnType<typeof startFixture>;
 let output = '';
 let port = 0; // Each unit-test fixture reserves its own loopback port atomically.
-// Concurrent mobile lanes can spend most of 15 seconds loading the fixture.
-// Give process readiness headroom; HTTP limits and response assertions stay fixed.
+// Bound process readiness separately from HTTP and per-test budgets.
 const fixtureStartupTimeout = 30_000;
 const fixtureTestTimeout = 40_000;
 // HTTP completion and the child process's stderr pipe are independent. Wait
 // for the actual refusal log rather than assuming it reached Jest first.
-function waitForOutput(expected: string): Promise<void> {
-  if (output.includes(expected)) return Promise.resolve();
+function waitForOutput(
+  expected: string,
+  source = { child, log: () => output },
+): Promise<void> {
+  if (source.log().includes(expected)) return Promise.resolve();
   return new Promise((resolve, reject) => {
     const finish = (error?: Error) => {
       clearTimeout(timer);
-      child.stdout!.removeListener('data', check);
-      child.stderr!.removeListener('data', check);
+      source.child.stdout!.removeListener('data', check);
+      source.child.stderr!.removeListener('data', check);
       if (error) reject(error);
       else resolve();
     };
     const check = () => {
-      if (output.includes(expected)) finish();
+      if (source.log().includes(expected)) finish();
     };
     const timer = setTimeout(
       () => finish(new Error(`Missing fixture refusal: ${expected}`)),
       3000,
     );
-    child.stdout!.on('data', check);
-    child.stderr!.on('data', check);
+    source.child.stdout!.on('data', check);
+    source.child.stderr!.on('data', check);
   });
 }
 function request(
@@ -73,50 +76,15 @@ function request(
   });
 }
 beforeAll(async () => {
-  child = spawn(
-    process.execPath,
-    ['--import', 'tsx', 'scripts/fixture-server.ts'],
-    {
-      cwd: resolve(__dirname, '..'),
-      env: {
-        ...process.env,
-        OPAX_FIXTURE_PORT: String(port),
-        OPAX_TARGET_PLATFORM: 'ios',
-      },
-      stdio: ['ignore', 'pipe', 'pipe'],
-    },
-  );
-  await new Promise<void>((resolve, reject) => {
-    const timer = setTimeout(
-      () => reject(new Error('Fixture startup timeout')),
-      fixtureStartupTimeout,
-    );
-    const receive = (chunk: Buffer) => {
-      output += chunk.toString();
-      const ready = /OPAX_FIXTURE_READY port=(\d+)/.exec(output);
-      if (ready) {
-        port = Number(ready[1]);
-        clearTimeout(timer);
-        resolve();
-      }
-    };
-    child.stdout!.on('data', receive);
-    child.stderr!.on('data', receive);
-    child.once('error', reject);
-    child.once('exit', (code) => {
-      clearTimeout(timer);
-      reject(new Error(`Fixture exited ${code}: ${output}`));
-    });
-  });
+  primaryFixture = startFixture('pinned', 0, { OPAX_TARGET_PLATFORM: 'ios' });
+  child = primaryFixture.child;
+  const receive = (chunk: Buffer) => (output += chunk.toString());
+  child.stdout!.on('data', receive);
+  child.stderr!.on('data', receive);
+  await primaryFixture.ready;
+  port = primaryFixture.port();
 }, fixtureTestTimeout);
-afterAll(async () => {
-  if (child && child.exitCode === null) {
-    await new Promise<void>((resolve) => {
-      child.once('exit', () => resolve());
-      child.kill('SIGTERM');
-    });
-  }
-});
+afterAll(() => primaryFixture?.stop());
 test('year-photo manifest and pinned WebP subset are served as free static files; absent pictures stay offline', async () => {
   const manifest = await request('/years/pictures.json');
   expect(manifest.status).toBe(200);
@@ -320,6 +288,7 @@ test('fixture rejects POST even for an approved GET catalog', async () => {
     req.end();
   });
   expect(status).toBe(404);
+  await waitForOutput('OUTSIDE_ALLOW_LIST POST /pay.json');
   expect(output).toContain('OUTSIDE_ALLOW_LIST POST /pay.json');
 });
 
@@ -331,6 +300,7 @@ test('a production Host header is rejected even on the loopback socket', async (
     (await request('/parliamentarians.json', { Host: `10.0.2.2:${port}` }))
       .status,
   ).toBe(404);
+  await waitForOutput('Host is outside the loopback fixture boundary');
   expect(output).toContain('Host is outside the loopback fixture boundary');
 });
 
@@ -356,10 +326,14 @@ function startFixture(
   );
   let log = '';
   const ready = new Promise<void>((resolve, reject) => {
-    const timer = setTimeout(
-      () => reject(new Error('Fixture startup timeout')),
-      fixtureStartupTimeout,
-    );
+    const timer = setTimeout(() => {
+      reject(
+        new Error(
+          `Fixture startup timeout after ${fixtureStartupTimeout}ms: ${log}`,
+        ),
+      );
+      child.kill('SIGTERM');
+    }, fixtureStartupTimeout);
     const receive = (chunk: Buffer) => {
       log += chunk.toString();
       const ready = /OPAX_FIXTURE_READY port=(\d+)/.exec(log);
@@ -371,6 +345,10 @@ function startFixture(
     };
     child.stdout!.on('data', receive);
     child.stderr!.on('data', receive);
+    child.once('error', (error) => {
+      clearTimeout(timer);
+      reject(error);
+    });
     child.once('exit', (code) => {
       clearTimeout(timer);
       reject(new Error(`Fixture exited ${code}: ${log}`));
@@ -384,7 +362,7 @@ function startFixture(
     log: () => log,
     port: () => port,
     stop: () =>
-      child.exitCode === null
+      child.pid && child.exitCode === null && child.signalCode === null
         ? new Promise<void>((resolve) => {
             child.once('exit', () => resolve());
             child.kill('SIGTERM');
@@ -459,7 +437,10 @@ describe('the no-edition fixture', () => {
       'public, max-age=60, must-revalidate',
     );
     expect(result.headers.etag).toBeUndefined();
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await waitForOutput(
+      `"path":"${editionPath}","status":404,"allowed":true`,
+      fixture,
+    );
     expect(fixture.log()).not.toContain('OUTSIDE_ALLOW_LIST');
     expect(fixture.log()).toContain(
       `"path":"${editionPath}","status":404,"allowed":true`,

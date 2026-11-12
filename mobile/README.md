@@ -52,6 +52,9 @@ scripts/e2e.sh --list-iphone
 scripts/e2e.sh <simulator-udid> --all-iphone
 ```
 
+`npm run qa -- --maxWorkers=8` forwards Jest options to the test stage. The
+default is two workers; explicit worker limits also work with `npm test`.
+
 With no journeys, `e2e.sh` runs 01-04 only. `--all-iphone` runs every iPhone
 journey that shares the default fixture and text size, in one locked device run
 that stops at the first failure. `--list-iphone` prints that list and the
@@ -646,7 +649,11 @@ update the file, hash, size and fetch time together.
 
 Fixture startup and tests read git blobs at `fixture-snapshot.json`'s `sourceCommit`,
 then verify SHA-256 and byte size; worktree/nightly catalog changes cannot alter
-the pinned journeys. Keep that commit in the local git object database. To repin
+the pinned journeys. One `git cat-file --batch` reads a snapshot's blobs; verified
+bytes are cached atomically under `mobile/node_modules/.cache/opax-fixture/<sourceCommit>/`
+(git-ignored). Each disk read verifies the hash and size again, repairing corrupt
+entries from git. A read-only cache still uses one verified batch in memory.
+Deleting the cache is safe. Keep that commit in the local git object database. To repin
 deliberately, review a new local commit, set `sourceCommit`, and recompute **every**
 existing path's hash and size from `git show <commit>:portal/public<path>`
 (`shasum -a 256` and `wc -c`), adding complete reviewed files as needed. Run `npm run qa`.
