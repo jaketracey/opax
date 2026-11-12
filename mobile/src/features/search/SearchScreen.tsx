@@ -12,6 +12,8 @@ import type { SearchBarCommands } from 'react-native-screens';
 import { Screen } from '../../design/primitives';
 import { searchTabRole, useFocusRequest } from '../../design/keyboard';
 import { useListSearchBar } from '../../design/search-bar';
+import { scrollToTop } from '../../design/scroll-to-top';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, rootHeaderItems } from '../../navigation/chrome';
 import { resultsRoute } from '../../navigation/routes/search';
 import { useAccount } from '../account/store';
@@ -71,6 +73,7 @@ export function SearchScreen({
   const textRef = useRef('');
   const cancelling = useRef(false);
   const scroll = useRef<ScrollView>(null);
+  const headerBottom = useHeaderBottom();
   const input = useRef<TextInput>(null);
   const [tabReset, setTabReset] = useState(0);
   const applied = useRef<string | null>(null);
@@ -116,13 +119,13 @@ export function SearchScreen({
     }
     // A query that arrived by link never enters Recent (4.5).
     if (!link) recentSearches.add(words, nextScope);
-    scroll.current?.scrollTo({ y: 0, animated: false });
+    scrollToTop(scroll.current, headerBottom);
   }
   function chooseScope(next: Scope) {
     if (!submitted) return;
     setSubmitted({ ...submitted, scope: next });
     recentSearches.setScope(submitted.q, next);
-    scroll.current?.scrollTo({ y: 0, animated: false });
+    scrollToTop(scroll.current, headerBottom);
   }
   function cancel() {
     // A cleared field goes back to idle; otherwise the results return.

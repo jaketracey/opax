@@ -37,6 +37,7 @@ import { useFocusRequest, useKeyCommand } from '../../design/keyboard';
 import { useScreenColumn } from '../../design/layout';
 import { SurfaceContext } from '../../design/row-padding';
 import { colors, rhythm } from '../../design/tokens';
+import { scrollToTop } from '../../design/scroll-to-top';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { askHeaderItems } from '../../navigation/chrome';
 import { talkSignInRoute } from '../../navigation/routes/account';
@@ -196,8 +197,6 @@ export default function AskScreen() {
   useEffect(() => {
     wasBusy.current = s.busy;
   }, [s.busy]);
-  const scrollToTop = () =>
-    scroll.current?.scrollTo({ y: -headerBottom, animated: false });
   // The new question goes just under the bar once its turn is laid out.
   const reveal = () => {
     if (!pin.current) return;
@@ -208,7 +207,7 @@ export default function AskScreen() {
     });
   };
   useEffect(() => {
-    if (topRequest) scrollToTop();
+    if (topRequest) scrollToTop(scroll.current, headerBottom);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topRequest]);
   const pinTurn = () => {

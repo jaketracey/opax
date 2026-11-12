@@ -12,6 +12,8 @@ import {
   copy,
 } from '../../design/primitives';
 import { colors, radii, rhythm } from '../../design/tokens';
+import { scrollToTop } from '../../design/scroll-to-top';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { isOffline } from '../CatalogState';
 import { ExploreChrome } from './parts';
 import { readExploreChoices, saveExploreChoice } from './repository';
@@ -71,6 +73,7 @@ export default function TimeMachine() {
     linked ? (params.photo ?? null) : null,
   );
   const scroll = useRef<ScrollView>(null);
+  const headerBottom = useHeaderBottom();
   useEffect(() => {
     if (year !== null) return;
     let active = true;
@@ -82,12 +85,15 @@ export default function TimeMachine() {
       active = false;
     };
   }, [year]);
-  const setYear = useCallback((next: number) => {
-    setYearState(next);
-    setPhoto(null);
-    saveExploreChoice({ year: next });
-    scroll.current?.scrollTo({ y: 0, animated: false });
-  }, []);
+  const setYear = useCallback(
+    (next: number) => {
+      setYearState(next);
+      setPhoto(null);
+      saveExploreChoice({ year: next });
+      scrollToTop(scroll.current, headerBottom);
+    },
+    [headerBottom],
+  );
   return (
     <>
       {/* Share and Copy link carry the year shown, as a year link opens. */}
