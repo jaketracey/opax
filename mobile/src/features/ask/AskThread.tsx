@@ -18,12 +18,8 @@ import { fillComposer } from './AskIdle';
 import type { AskState } from './controller';
 import type { Chat, Turn } from './model';
 import type { AskPerson } from './people';
-import {
-  askErrorCopy,
-  busyWait,
-  clarifyCopy,
-  showAnsweredAs,
-} from './turn-copy';
+import type { AskFailure } from './stream';
+import { askErrorCopy, clarifyCopy, showAnsweredAs } from './turn-copy';
 
 /** A legacy answer's date: the first from `created`, later ones bound by `updated`. */
 export function legacyDate(
@@ -39,8 +35,10 @@ export function legacyDate(
     : { at: chat.updated, bound: true };
 }
 
-// Each failure is a new object: a fresh key restarts Try again's wait.
+// A failure owns its deadline and announcement across component remounts.
 const failureKeys = new WeakMap<object, number>();
+const announcedRetries = new WeakSet<AskFailure>();
+const arrivedQuestions = new WeakSet<Turn>();
 let nextKey = 0;
 function errorKey(failure: object) {
   if (!failureKeys.has(failure)) failureKeys.set(failure, ++nextKey);
@@ -84,26 +82,31 @@ export function QuestionLine({
   );
 }
 
-/** Try again, held for 30 s after "OPAX is busy right now." Keyed by failure. */
+const secondsUntil = (deadline: number | undefined) =>
+  deadline === undefined
+    ? 0
+    : Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+
+/** Count from the rate-limit failure's deadline, including after a remount. */
 function RetryButton({
-  wait,
+  failure,
   onPress,
 }: {
-  wait: boolean;
+  failure: AskFailure;
   onPress: () => void;
 }) {
-  const [deadline] = useState(() => Date.now() + (wait ? busyWait : 0));
-  const [remaining, setRemaining] = useState(wait ? busyWait / 1000 : 0);
-  const announced = useRef(false);
+  const deadline = failure.retryAt;
+  const wait = failure.code === 'rate-limited';
+  const [remaining, setRemaining] = useState(() => secondsUntil(deadline));
   useEffect(() => {
     if (!wait) return;
     const tick = () => {
-      const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      const seconds = secondsUntil(deadline);
       setRemaining(seconds);
       if (seconds === 0) {
         clearInterval(timer);
-        if (!announced.current) {
-          announced.current = true;
+        if (!announcedRetries.has(failure)) {
+          announcedRetries.add(failure);
           AccessibilityInfo.announceForAccessibilityWithOptions(
             'You can try again now',
             { queue: true },
@@ -114,7 +117,7 @@ function RetryButton({
     const timer = setInterval(tick, 1000);
     tick();
     return () => clearInterval(timer);
-  }, [wait, deadline]);
+  }, [wait, deadline, failure]);
   if (!wait)
     return (
       <Button
@@ -156,7 +159,7 @@ function RetryButton({
 function useAnswerArrival(s: AskState) {
   const waiting = useRef<{
     question: Turn;
-    started: number;
+    started: number | undefined;
     arrived: boolean;
   } | null>(null);
   useEffect(() => {
@@ -172,7 +175,7 @@ function useAnswerArrival(s: AskState) {
     )
       waiting.current = {
         question: latest,
-        started: Date.now(),
+        started: latest.at,
         arrived: false,
       };
     const run = waiting.current;
@@ -183,7 +186,11 @@ function useAnswerArrival(s: AskState) {
         : '';
     if (run && !run.arrived && text.trim()) {
       run.arrived = true;
+      const alreadyArrived = arrivedQuestions.has(run.question);
+      arrivedQuestions.add(run.question);
       if (
+        !alreadyArrived &&
+        run.started !== undefined &&
         Date.now() - run.started >= 3000 &&
         AppState.currentState === 'active'
       )
@@ -327,16 +334,6 @@ export function AskThread({
               message={failure.message}
               testID="ask-error"
             />
-            {failure.reason ? (
-              <Text
-                variant="secondary"
-                tone="inkSoft"
-                wordSafe
-                testID="ask-blocked-reason"
-              >
-                {failure.reason}
-              </Text>
-            ) : null}
             {s.error!.code === 'blocked' ? (
               <Button
                 label="Edit question"
@@ -348,7 +345,7 @@ export function AskThread({
             {failure.retry ? (
               <RetryButton
                 key={errorKey(s.error!)}
-                wait={s.error!.code === 'rate-limited'}
+                failure={s.error!}
                 onPress={onRetry}
               />
             ) : null}

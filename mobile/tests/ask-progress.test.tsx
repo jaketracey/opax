@@ -10,6 +10,7 @@ import { AskProgress } from '../src/features/ask/AskProgress';
 import { AskThread } from '../src/features/ask/AskThread';
 import { AskController } from '../src/features/ask/controller';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
+import { postAsk } from '../src/features/ask/transport';
 import { askErrorCopy } from '../src/features/ask/turn-copy';
 
 jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
@@ -55,6 +56,30 @@ function start() {
   act(() => {
     request = controller.submit('A synthetic question?');
   });
+}
+const hideThread = () => act(() => tree.update(<></>));
+const showThread = () => act(() => tree.update(<Thread />));
+async function rateFailure(retryAfter: string | null) {
+  const failure = await postAsk(
+    'http://127.0.0.1:8940/api/ask?stream=1',
+    async () =>
+      ({
+        status: 429,
+        ok: false,
+        headers: { get: () => retryAfter },
+      }) as unknown as Response,
+    new AbortController().signal,
+  ).catch((error) => error);
+  expect(failure).toBeInstanceOf(AskFailure);
+  return failure as AskFailure;
+}
+async function rejectBusy(retryAfter: string | null) {
+  const failure = await rateFailure(retryAfter);
+  await act(async () => {
+    fail(failure);
+    await request;
+  });
+  return failure;
 }
 async function complete() {
   await act(async () => {
@@ -110,13 +135,10 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-test('busy counts down in tabular figures, enables at zero and announces only once', async () => {
+test('Retry-After 60 counts down in tabular figures and announces once at the server deadline', async () => {
   start();
-  await act(async () => {
-    fail(new AskFailure('rate-limited', 'Private server text'));
-    await request;
-  });
-  expect(label()).toBe('Try again in 30 s');
+  await rejectBusy('60');
+  expect(label()).toBe('Try again in 60 s');
   expect(retry().props.disabled).toBe(true);
   expect(retry().props.accessibilityLiveRegion).toBe('none');
   expect(retry().props.accessibilityLabel).toBe('Try again');
@@ -124,7 +146,7 @@ test('busy counts down in tabular figures, enables at zero and announces only on
     tree.root.findAllByType(Text).find((n) => n.props.children === label())!
       .props.tabular,
   ).toBe(true);
-  act(() => jest.advanceTimersByTime(29_000));
+  act(() => jest.advanceTimersByTime(59_000));
   expect(label()).toBe('Try again in 1 s');
   expect(retry().props.disabled).toBe(true);
   expect(
@@ -149,16 +171,94 @@ test('busy counts down in tabular figures, enables at zero and announces only on
   await complete();
 });
 
-test('blocked reasons use known categories and never raw server text', () => {
+test.each(['network', 'server', undefined] as const)(
+  'generic blocked reason %s does not imply a content rejection',
+  (reason) => {
+    expect(
+      askErrorCopy(
+        new AskFailure('blocked', 'Try rewording private server text', reason),
+      ),
+    ).toEqual({
+      message: "This question couldn't be sent.",
+      retry: false,
+    });
+  },
+);
+
+test('Retry-After HTTP date counts down to the absolute server deadline', async () => {
+  start();
+  const retryAt = Date.now() + 60_000;
+  const failure = await rejectBusy(new Date(retryAt).toUTCString());
+  expect(failure.retryAt).toBe(retryAt);
+  expect(label()).toBe('Try again in 60 s');
+  act(() => jest.advanceTimersByTime(59_000));
+  expect(label()).toBe('Try again in 1 s');
+  expect(retry().props.disabled).toBe(true);
+  act(() => jest.advanceTimersByTime(1000));
+  expect(label()).toBe('Try again');
+  expect(retry().props.disabled).toBe(false);
+});
+
+test.each([null, 'invalid', '-1', '1.5'])(
+  'Retry-After %s uses a 30 second fallback from the failure',
+  async (header) => {
+    start();
+    const receivedAt = Date.now();
+    const failure = await rejectBusy(header);
+    expect(failure.retryAt).toBe(receivedAt + 30_000);
+    expect(label()).toBe('Try again in 30 s');
+    act(() => jest.advanceTimersByTime(29_000));
+    expect(retry().props.disabled).toBe(true);
+    act(() => jest.advanceTimersByTime(1000));
+    expect(label()).toBe('Try again');
+    expect(retry().props.disabled).toBe(false);
+  },
+);
+
+test.each(['60', null])(
+  'retry deadline survives a part-way remount with header %s',
+  async (header) => {
+    start();
+    const failure = await rejectBusy(header);
+    const duration = header ? 60 : 30;
+    act(() => jest.advanceTimersByTime(10_000));
+    hideThread();
+    act(() => jest.advanceTimersByTime(10_000));
+    showThread();
+    expect(controller.snapshot().error).toBe(failure);
+    expect(label()).toBe(`Try again in ${duration - 20} s`);
+    act(() => jest.advanceTimersByTime((duration - 21) * 1000));
+    expect(label()).toBe('Try again in 1 s');
+    expect(retry().props.disabled).toBe(true);
+    expect(
+      AccessibilityInfo.announceForAccessibilityWithOptions,
+    ).not.toHaveBeenCalled();
+    act(() => jest.advanceTimersByTime(1000));
+    expect(label()).toBe('Try again');
+    expect(retry().props.disabled).toBe(false);
+    expect(
+      AccessibilityInfo.announceForAccessibilityWithOptions,
+    ).toHaveBeenCalledTimes(1);
+    hideThread();
+    act(() => jest.advanceTimersByTime(60_000));
+    showThread();
+    expect(label()).toBe('Try again');
+    expect(
+      AccessibilityInfo.announceForAccessibilityWithOptions,
+    ).toHaveBeenCalledTimes(1);
+  },
+);
+
+test('a new question cancels the old countdown and its announcement', async () => {
+  start();
+  await rejectBusy('60');
+  act(() => jest.advanceTimersByTime(5000));
+  start();
+  act(() => jest.advanceTimersByTime(60_000));
   expect(
-    askErrorCopy(new AskFailure('blocked', 'Private server text', 'network'))
-      ?.reason,
-  ).toBe('You can try again when you are online.');
-  expect(
-    askErrorCopy(new AskFailure('blocked', 'Private server text', 'server'))
-      ?.reason,
-  ).toBe('Try rewording your question with public details.');
-  expect(askErrorCopy({ code: 'blocked' })?.reason).toBeUndefined();
+    AccessibilityInfo.announceForAccessibilityWithOptions,
+  ).not.toHaveBeenCalled();
+  await complete();
 });
 
 test('the three answer skeleton bars use raised on the sunken ground', () => {
@@ -195,6 +295,22 @@ test.each([2999, 3000, 8000])(
 test('a final answer without streamed text also taps once after a long wait', async () => {
   start();
   act(() => jest.advanceTimersByTime(3000));
+  await complete();
+  expect(jest.mocked(haptic).mock.calls).toEqual([['light']]);
+});
+
+test('a delayed mount uses the question submission time for the arrival haptic', async () => {
+  hideThread();
+  const sentAt = Date.now();
+  start();
+  expect(controller.snapshot().thread.at(-1)?.at).toBe(sentAt);
+  act(() => jest.advanceTimersByTime(2800));
+  showThread();
+  act(() => jest.advanceTimersByTime(200));
+  act(() => handlers.delta('First words.'));
+  expect(jest.mocked(haptic).mock.calls).toEqual([['light']]);
+  hideThread();
+  showThread();
   await complete();
   expect(jest.mocked(haptic).mock.calls).toEqual([['light']]);
 });
