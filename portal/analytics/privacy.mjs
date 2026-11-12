@@ -18,7 +18,7 @@ const fields = {
   opax_ask_completed: ['from_section', 'duration_ms', 'source_count', 'has_answer', 'is_overview_intent'],
   opax_ask_failed: ['from_section', 'duration_ms', 'cancelled'],
   opax_search_started: ['page', 'filter_count'],
-  opax_search_completed: ['page', 'result_count', 'total_count', 'duration_ms'],
+  opax_search_completed: ['page', 'result_count', 'total_count', 'duration_ms', 'had_suggestion', 'suggestion_kind'],
   opax_search_failed: ['page', 'duration_ms'],
   opax_export: ['format', 'row_count'],
   table_sort: ['table_id', 'page_type'],
@@ -39,6 +39,8 @@ export function cleanEvent(event, props = {}) {
   const clean = {};
   for (const key of fields[event]) {
     const value = props[key];
+    if (key === 'had_suggestion') { if (typeof value === 'boolean') clean[key] = value; continue; }
+    if (key === 'suggestion_kind') { if (['did_you_mean', 'scope', 'ask', 'none'].includes(value)) clean[key] = value; continue; }
     if (event === 'opax_ask_followup_click') {
       if (key === 'position' && Number.isInteger(value) && value >= 1 && value <= 4) clean[key] = value;
       if (key === 'kind' && ['speech', 'vote', 'recent', 'compare', 'detail'].includes(value)) clean[key] = value;

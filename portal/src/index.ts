@@ -106,6 +106,7 @@ import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
 import { CATALOG_KINDS, searchCatalog, searchCatalogPaged, type CatalogRecord, type CatalogStub } from './catalog-search'
+import { emptySearchSuggestions } from './search-recovery'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { runAgentic, classifyAgentic, agenticCacheKey, resolveNamedScope, type NamedScope, inferPeriod, bounded, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
@@ -737,6 +738,8 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
     results: shown, count: shown.length,
     total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
     years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
+    ...(catalog?.matched_query ? { matched_query: catalog.matched_query } : {}),
+    ...(!rows.length && !options.suggest ? { suggestions: await emptySearchSuggestions(url.searchParams.get('q') || '', env.ASSETS, catalog || undefined) } : {}),
     ...(documents?.mode_used ? { mode_used: documents.mode_used } : {}),
     ...(documents?.fallback ? { fallback: documents.fallback } : {}),
   })
