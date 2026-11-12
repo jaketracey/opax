@@ -51,8 +51,18 @@ internal object VoiceBridgeValue {
     )
     is VoiceEvent.Sources -> mapOf(
       "type" to "sources",
-      "sources" to event.sources.map { mapOf("title" to it.title, "path" to it.path) },
+      "sources" to event.sources.map(::source),
     )
+  }
+
+  /** Title and path, plus Ask's labels only when the tool sent them (older results project exactly as before). */
+  fun source(value: VoiceSource): Map<String, Any?> = buildMap {
+    put("title", value.title)
+    put("path", value.path)
+    value.recordTitle?.let { put("recordTitle", it) }
+    value.speaker?.let { put("speaker", it) }
+    value.date?.let { put("date", it) }
+    value.type?.let { put("type", it) }
   }
 
   /** Two rounded loudness values: coarse enough to animate, never audio. */

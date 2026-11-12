@@ -50,6 +50,16 @@ class VoiceBridgeValueTests : SafeVoiceTestCase() {
     assertEquals("status", event["type"]); assertTrue(event.containsKey("status") && event["status"] == null)
   }
 
+  @Test fun sourcesProjectAskFieldsOnlyWhenPresent() {
+    val shipped = VoiceSource("Public record", "/money/receipts")
+    val labelled = VoiceSource("Example office pay: every step since 1999", "/ask?q=x", recordTitle = "Example office pay: every step since 1999", date = "1999–2026", type = "Pay record")
+    @Suppress("UNCHECKED_CAST")
+    val sources = VoiceBridgeValue.event(VoiceEvent.Sources(listOf(shipped, labelled)))["sources"] as List<Map<String, Any?>>
+    assertEquals(mapOf("title" to "Public record", "path" to "/money/receipts"), sources[0])
+    assertEquals(setOf("title", "path", "recordTitle", "date", "type"), sources[1].keys)
+    assertEquals("Pay record", sources[1]["type"]); assertEquals("1999–2026", sources[1]["date"])
+  }
+
   /** Not in Swift's tests: the level projection's clamp and half-away-from-zero rounding. */
   @Test fun levelsAreTwoRoundedUnitValues() {
     assertEquals(mapOf("input" to 0.44, "output" to 1.0), VoiceBridgeValue.levels(0.444f, 0.995f))

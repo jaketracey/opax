@@ -36,8 +36,22 @@ class DecodingException : Exception("Invalid response")
 data class TranscriptTurn(val role: Role, val id: Long, val text: String) {
   enum class Role { user, agent }
 }
-/** A validated OPAX record path, never a signed URL. */
-data class VoiceSource(val title: String, val path: String)
+/**
+ * A validated OPAX record path, never a signed URL, with what an Ask source row carries when the voice tool sends
+ * it: the plain record title, the speaker or body, the date (a day, month, year or short label such as "1999–2026")
+ * and the record type ("Speech", "Pay record"). Older tool results send title and path only.
+ */
+data class VoiceSource(
+  val title: String,
+  val path: String,
+  val recordTitle: String? = null,
+  val speaker: String? = null,
+  val date: String? = null,
+  val type: String? = null,
+) {
+  /** Carries any of Ask's source fields, not only a title and path. */
+  internal val labelled get() = recordTitle != null || speaker != null || date != null || type != null
+}
 
 /** The only surface the Expo bridge forwards. Contains neither audio nor credentials. */
 sealed class VoiceEvent {
