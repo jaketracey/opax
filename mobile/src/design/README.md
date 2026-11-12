@@ -22,7 +22,7 @@ Use `FigureBlock` for a subject figure and `StatTile` or `StatStrip` for related
 
 Every block has one dated `SourceLine`. It opens the `/source` route through `navigation/sheets`, with originals, plain notes, the selection rule and a Sources and licences link. Licence text belongs in the Licence sheet. Use `MachinePill` and `/machine-note` for machine-written text. Methodology opens `/rule`; there are no in-place source or info modals.
 
-Sheets use a native bar, plain Done and the shared detents. Account, Licence and Ask retain their own sunken ground. On iOS 26 a supported `headerBackground` draws that ground while the native header remains transparent, preserving large titles. The hard top scroll edge retains legibility over scrolled text. Earlier iOS versions use the opaque bar appearance.
+Form sheets use a native paper bar over sunken content, plain Done and the shared detents. On iOS 26 and later, the five tab roots and explicit large-title lists use transparent native appearances with the system's soft scroll edge. No background or divider follows a JS scroll threshold. Reduce Transparency or Increase Contrast selects a constant solid backing below a large-title bar, preserving its title. The settings are read asynchronously using the shared accessibility store. Record and inline screens retain a non-translucent bar and hard edge for legibility over serif record text, as decided after the wave 2 captures. Earlier iOS versions and Android keep their bar behaviour.
 
 ## State and controls
 

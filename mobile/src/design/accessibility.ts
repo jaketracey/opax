@@ -8,6 +8,7 @@ function setting(
   event:
     | 'boldTextChanged'
     | 'reduceMotionChanged'
+    | 'reduceTransparencyChanged'
     | 'darkerSystemColorsChanged'
     | 'highTextContrastChanged',
 ) {
@@ -60,6 +61,13 @@ const increaseContrast = setting(
     AccessibilityInfo.isDarkerSystemColorsEnabled?.() ?? Promise.resolve(false),
   'darkerSystemColorsChanged',
 );
+const reduceTransparency = setting(
+  () =>
+    Platform.OS === 'ios'
+      ? AccessibilityInfo.isReduceTransparencyEnabled()
+      : Promise.resolve(false),
+  'reduceTransparencyChanged',
+);
 // Android's "High contrast text". iOS never reports it (Increase Contrast
 // resolves there natively through DynamicColorIOS).
 const highTextContrast = setting(
@@ -85,6 +93,20 @@ export function useIncreaseContrast(): boolean {
     increaseContrast.get,
     increaseContrast.get,
   );
+}
+export function useReduceTransparency(): boolean {
+  return useSyncExternalStore(
+    reduceTransparency.subscribe,
+    reduceTransparency.get,
+    reduceTransparency.get,
+  );
+}
+
+/** Either iOS legibility setting requests a solid navigation background. */
+export function useSolidBar(): boolean {
+  const reduced = useReduceTransparency();
+  const contrast = useIncreaseContrast();
+  return Platform.OS === 'ios' && (reduced || contrast);
 }
 /**
  * Android's High contrast text. Android colours are plain hex values (no

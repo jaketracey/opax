@@ -45,14 +45,17 @@ export const glassBar = () =>
   Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) >= 26;
 
 /** Protect the content edge where UIKit actually places the bar. */
-export function barScrollEdges(edge: VerticalBarEdge) {
+export function barScrollEdges(
+  edge: VerticalBarEdge,
+  active: 'hard' | 'soft' | 'hidden' = 'hard',
+) {
   return edge === 'unspecified'
-    ? { top: 'hard' as const, bottom: 'soft' as const }
+    ? { top: active, bottom: 'soft' as const }
     : {
         top: 'soft' as const,
         bottom: 'soft' as const,
-        left: edge === 'leading' ? ('hard' as const) : ('soft' as const),
-        right: edge === 'trailing' ? ('hard' as const) : ('soft' as const),
+        left: edge === 'leading' ? active : ('soft' as const),
+        right: edge === 'trailing' ? active : ('soft' as const),
       };
 }
 
@@ -74,16 +77,15 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
  * Keep both appearances transparent while expanded. A scroll-edge background
  * also suppresses the title, even with a transparent standard appearance.
  * The screen supplies the page ground beneath the native scroll edge.
- * Empty styles replace the navigator's opaque defaults. Keep them and the
- * soft edge stable throughout scrolling: replacing an appearance or switching
- * hard/soft applies without animation. A permanently hard edge paints a
- * divider at rest. Soft alone protects only the status strip.
- * useRootBarAppearance fades a native backing and divider beneath the bar,
- * following its collapse height. This protects the collapsed title without
- * covering large titles, inserting a React headerBackground or colouring an
- * appearance, including during the return to the top.
+ * Empty styles replace the navigator's opaque defaults. UIKit owns the soft
+ * edge throughout scrolling; no collapse threshold, backing or hairline is
+ * added. For accessibility only, useRootBarAppearance supplies a solid native
+ * sibling below the bar, preserving the large title and automatic insets.
  */
-export const largeTitleBar = (ground: ColorValue = colors.paper) =>
+export const largeTitleBar = (
+  ground: ColorValue = colors.paper,
+  solid = false,
+) =>
   glassBar()
     ? {
         headerStyle: {},
@@ -92,11 +94,30 @@ export const largeTitleBar = (ground: ColorValue = colors.paper) =>
         headerTransparent: true,
         headerShadowVisible: false,
         headerLargeTitleShadowVisible: false,
-        scrollEdgeEffects: {
-          top: 'soft' as const,
-          bottom: 'soft' as const,
-        },
+        scrollEdgeEffects: barScrollEdges(
+          'unspecified',
+          solid ? 'hidden' : 'soft',
+        ),
       }
+    : opaqueBar(ground);
+
+/** Tab roots whose large title is disabled, including iPad split layouts. */
+export const scrollBar = (
+  ground: ColorValue = colors.paper,
+  solid = false,
+  edge: VerticalBarEdge = 'unspecified',
+) =>
+  glassBar()
+    ? solid
+      ? {
+          ...opaqueBar(ground),
+          headerTransparent: false,
+          scrollEdgeEffects: barScrollEdges(edge, 'hidden'),
+        }
+      : {
+          ...largeTitleBar(ground),
+          scrollEdgeEffects: barScrollEdges(edge, 'soft'),
+        }
     : opaqueBar(ground);
 
 /** Initial tab grounds, also used by roots with their own scrolling view. */
@@ -129,8 +150,8 @@ export function useStackChrome() {
     ...(Platform.OS === 'android'
       ? { headerTitleAlign: 'left' as const, statusBarStyle: 'dark' as const }
       : {}),
-    // Inline and sheet bars must not inherit Expo's transparent form-sheet
-    // default. Large-title roots opt into translucency for native collapse.
+    // Pushed, inline and sheet layouts reserve space for a solid native bar.
+    // Tab roots and explicit large-title lists opt into translucency separately.
     headerTransparent: false,
     ...opaqueBar(),
     headerTitleStyle: {
@@ -154,11 +175,11 @@ export function useStackChrome() {
         : {}),
       color: colors.ink,
     },
-    // Deviation from shell.md 2.3 (soft top): the wave 2 captures showed the
-    // soft top edge active but too light, with serif record text legible
-    // through the title and bar buttons. The hard edge is UIKit's own opaque
-    // boundary with a divider. The bottom stays soft at the minimising tab
-    // bar. The visible native appearance uses the page ground, without a blur.
+    // Wave 2 found the soft top edge too light over serif record text: the
+    // record remained readable through the title and bar buttons. Keep the
+    // hard edge and matching opaque ground on record and inline screens.
+    // Tab roots and sans large-title lists use the soft edge.
+    // The bottom stays soft at the minimising tab bar.
     scrollEdgeEffects: barScrollEdges(barEdge),
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,

@@ -6,6 +6,7 @@ import {
   ActionSheetIOS,
   Dimensions,
   Linking,
+  Platform,
   Text as NativeText,
   ScrollView,
   StyleSheet,
@@ -20,7 +21,7 @@ import { InsetGroup } from '../src/design/layout';
 import { LinkRow } from '../src/design/rows';
 import { SourceLine } from '../src/design/source';
 import { Text } from '../src/design/text';
-import { minimumTarget, rhythm } from '../src/design/tokens';
+import { colors, minimumTarget, rhythm } from '../src/design/tokens';
 import CitationSheet, {
   citationBar,
 } from '../src/features/sheets/CitationSheet';
@@ -338,6 +339,37 @@ test('S3 detents, grabber, scroll expansion and accessible short sheets', () => 
     routeSheetOptions({ citation: true }).sheetLargestUndimmedDetentIndex,
   ).toBe(0);
 });
+
+test.each([26, 27])(
+  'iOS %s sheets keep a paper bar above sunken content at every detent',
+  (version) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    try {
+      for (const variant of [
+        {},
+        { short: true },
+        { short: true, accessible: true },
+        { table: true },
+        { citation: true },
+      ]) {
+        const options = routeSheetOptions(variant);
+        expect(options).not.toHaveProperty('scrollEdgeEffects');
+        expect(options).toMatchObject({
+          headerTransparent: false,
+          headerStyle: { backgroundColor: colors.paper },
+          headerLargeStyle: { backgroundColor: colors.paper },
+          contentStyle: { backgroundColor: colors.sunken },
+        });
+      }
+    } finally {
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
 test('rule paragraphs carry the grouped cell padding and minimum height', () => {
   presentSheet({ kind: 'rule', rule: 'Newest records first.' });
   mockParams = { key: lastKey() };

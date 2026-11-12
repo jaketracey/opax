@@ -24,12 +24,16 @@ import {
 } from '../follows/changes';
 import { copyText } from '../records/actions';
 import type { ProfileView } from './model';
+import { registerHolderLine } from './model';
 
 export interface LatestRecord extends FollowRecord {
   action: string;
   detail: string;
   href?: Href;
+  holderLine?: string;
 }
+type ActivityRecord = FollowRecord & { holders?: string[] };
+type DeclarationRecord = ActivityRecord & { holders: string[] };
 const recordSymbols: Record<FollowRecord['kind'], SFSymbol> = {
   vote: symbols.vote,
   register: symbols.interests,
@@ -40,7 +44,7 @@ const recordSymbols: Record<FollowRecord['kind'], SFSymbol> = {
   return: symbols.bills,
   member: symbols.person,
 };
-export function latestRecord(record: FollowRecord): LatestRecord | null {
+export function latestRecord(record: ActivityRecord): LatestRecord | null {
   let action = record.action ?? '';
   let detail = record.detail ?? record.stage ?? record.chamber ?? '';
   let href: Href | undefined;
@@ -78,7 +82,17 @@ export function latestRecord(record: FollowRecord): LatestRecord | null {
     /^(second|third) reading(?: amendment)?/i,
     (words) => words[0]!.toUpperCase() + words.slice(1).toLowerCase(),
   );
-  return { ...record, action, detail, href };
+  const holderLine =
+    record.kind === 'register'
+      ? registerHolderLine(record.holders, record.operation)
+      : undefined;
+  return {
+    ...record,
+    action,
+    detail,
+    href,
+    ...(holderLine ? { holderLine } : {}),
+  };
 }
 /** Existing profile data only. No speech or undated statement enters Lately. */
 export function latestRecords(
@@ -86,7 +100,7 @@ export function latestRecords(
   bills?: BillIndex,
   limit = 5,
 ): LatestRecord[] {
-  const records: FollowRecord[] = [];
+  const records: ActivityRecord[] = [];
   const votes = profile.blocks.votes;
   if (votes.status !== 'error')
     for (const position of ['for', 'against'] as const)
@@ -117,14 +131,42 @@ export function latestRecords(
         });
       }
   const interests = profile.blocks.interests;
+  // The register can repeat a declaration for different household holders.
+  // Collapse identical activity here and retain the distinct holders for the
+  // merged row, preserving every source row on the full register page. Compare the full
+  // text before previews or limits; additions and removals remain distinct.
+  const declarationIds = new Map<string, DeclarationRecord>();
+  const declarations = new Map<string, DeclarationRecord>();
   if (interests.status !== 'error' && interests.data)
     for (const [category, bucket] of Object.entries(interests.data.buckets))
       for (const row of bucket.items) {
         if (!row.date || (row.kind !== 'addition' && row.kind !== 'deletion'))
           continue;
-        records.push({
+        const key =
+          row.key ?? (row.id !== undefined ? `register:${row.id}` : undefined);
+        const ids: string[] = [];
+        if (row.key) ids.push(`key:${row.key}`);
+        if (row.id !== undefined) ids.push(`id:${row.id}`);
+        const identity = JSON.stringify([
+          profile.personId ?? profile.slug,
+          category,
+          row.date,
+          row.kind,
+          row.description,
+        ]);
+        const duplicate =
+          ids.map((id) => declarationIds.get(id)).find(Boolean) ??
+          declarations.get(identity);
+        if (duplicate) {
+          if (!duplicate.holders.includes(row.holder))
+            duplicate.holders.push(row.holder);
+          for (const id of ids) declarationIds.set(id, duplicate);
+          declarations.set(identity, duplicate);
+          continue;
+        }
+        const record: DeclarationRecord = {
           key:
-            (row as typeof row & { key?: string }).key ??
+            key ??
             `register:${category}:${row.date}:${row.kind}:${row.holder}:${row.description}`,
           kind: 'register',
           date: row.date,
@@ -132,7 +174,11 @@ export function latestRecords(
           category,
           operation: row.kind,
           slug: profile.slug ?? undefined,
-        });
+          holders: [row.holder],
+        };
+        for (const id of ids) declarationIds.set(id, record);
+        declarations.set(identity, record);
+        records.push(record);
       }
   for (const bill of bills?.bills ?? []) {
     const raw = bill as typeof bill & { sponsor_person_id?: string };
@@ -185,7 +231,8 @@ export function LatestRow({
   useRowInset(44);
   const date = changeDate(record.date, undefined, true);
   const detail = [record.detail, date].filter(Boolean).join(' · ');
-  const label = `${record.action}. ${record.title}. ${record.detail ? `${record.detail}, ` : ''}${new Date(`${record.date.slice(0, 10)}T12:00:00`).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}.`;
+  const holderLabel = record.holderLine?.replace(/^Declared by /, 'By ');
+  const label = `${record.action}. ${record.title}. ${holderLabel ? `${holderLabel}. ` : ''}${record.detail ? `${record.detail}, ` : ''}${new Date(`${record.date.slice(0, 10)}T12:00:00`).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}.`;
   const row = (
     <Pressable
       testID={testID}
@@ -225,6 +272,11 @@ export function LatestRow({
             ? record.title.slice(0, 79).trimEnd() + '…'
             : record.title}
         </Text>
+        {record.holderLine ? (
+          <Text wordSafe variant="secondary">
+            {record.holderLine}
+          </Text>
+        ) : null}
         <Text variant="secondary">{detail}</Text>
       </View>
       <Icon

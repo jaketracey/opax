@@ -1,11 +1,13 @@
 import { Stack, type NativeStackNavigationOptions } from 'expo-router';
 import { Platform } from 'react-native';
+import { colors } from '../../design/tokens';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
 import {
   closeSheetItem,
   glassBar,
   headerItems,
   largeTitleBar,
+  opaqueBar,
   pendingHeaderOptions,
   rootHeaderItems,
   shortSheet,
@@ -218,6 +220,7 @@ export function screen(
 export const sheetOptions: NativeStackNavigationOptions = {
   headerShown: true,
   ...shortSheet,
+  ...opaqueBar(colors.paper),
   ...headerItems(() => [closeSheetItem()]),
   ...(Platform.OS === 'android'
     ? { header: AndroidReadingHeader, headerRight: () => null }

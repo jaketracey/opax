@@ -264,8 +264,16 @@ describe('Android bars', () => {
   );
   const chromeFor = (os: 'android' | 'ios', fontScale: number) => {
     mockFontScale = fontScale;
-    // Window dimensions and bar traits are supplied by the mocks above.
-    return asPlatform(os, () => chrome.useStackChrome());
+    return asPlatform(os, () => {
+      let options!: ReturnType<typeof chrome.useStackChrome>;
+      function Probe() {
+        options = chrome.useStackChrome();
+        return null;
+      }
+      const renderer = render(<Probe />);
+      act(() => renderer.unmount());
+      return options;
+    });
   };
   afterEach(() => {
     mockFontScale = 1;

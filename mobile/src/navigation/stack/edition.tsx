@@ -16,7 +16,7 @@ export function editionScreens() {
       // The page ground stops below the native bar. During overscroll the
       // glass scroll edge can sample Today behind that band, even with opaque
       // native appearances. This inline route needs a permanent backing,
-      // independent of the large-title root's fading native backing.
+      // independent of the tab roots' soft scroll edge.
       ...(glassBar()
         ? {
             headerBackground: () => (

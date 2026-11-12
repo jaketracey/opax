@@ -1,6 +1,5 @@
 import type { NativeStackNavigationOptions } from 'expo-router';
 import {
-  getDefaultHeaderHeight,
   HeaderHeightContext,
   NavigationContext,
   NavigationRouteContext,
@@ -9,34 +8,20 @@ import {
   useCallback,
   useContext,
   useLayoutEffect,
-  useRef,
   useSyncExternalStore,
 } from 'react';
-import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import { useWindowDimensions, type ColorValue } from 'react-native';
+import { useSolidBar } from '../design/accessibility';
 import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { colors } from '../design/tokens';
-import {
-  barScrollEdges,
-  glassBar,
-  largeTitleBar,
-  opaqueBar,
-  tabRootGround,
-} from './chrome';
+import { glassBar, largeTitleBar, scrollBar, tabRootGround } from './chrome';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
 
-// Estimate the stacked search row independently of the large title.
-// Integrated/automatic fields can live in the bar or tab bar instead.
-const stackedSearchHeight = 56;
-// The row has not been measured on this iOS runtime, so allow 12 pt headroom.
-// Even at the smallest Dynamic Type size, the expanded large title adds at
-// least about 40 pt, keeping its height well above this collapsed threshold.
-const stackedSearchSlack = 12;
 const searches = new WeakMap<
   object,
   {
-    value: { pinned: boolean; largeTitle?: boolean };
+    value: { largeTitle?: boolean };
     listeners: Set<() => void>;
   }
 >();
@@ -44,14 +29,20 @@ const searches = new WeakMap<
 function searchState(navigation: object) {
   let state = searches.get(navigation);
   if (!state) {
-    state = { value: { pinned: false }, listeners: new Set() };
+    state = { value: {}, listeners: new Set() };
     searches.set(navigation, state);
   }
   return state;
 }
 
+// A sibling RouteOptions can disable the title after Screen renders but
+// before its layout effects run. Never apply chrome from that stale read.
+function currentLargeTitle(navigation: object | undefined) {
+  return !navigation || searchState(navigation).value.largeTitle !== false;
+}
+
 /**
- * RouteOptions and Screen can be siblings. Share the search row's layout
+ * RouteOptions and Screen can be siblings. Share large-title ownership
  * from the actual route options, keyed by the route's navigation object.
  * Screen remains the sole appearance owner for Search, including its changing
  * idle/results ground. Bills and Ask retain their RouteOptions owner.
@@ -60,33 +51,26 @@ export function useRootBarSearchOptions(
   options: NativeStackNavigationOptions | undefined,
 ) {
   const navigation = useContext(NavigationContext);
-  const search = options?.headerSearchBarOptions;
-  const pinned =
-    search?.hideWhenScrolling === false && search.placement === 'stacked';
   useLayoutEffect(() => {
     // Like setOptions, an omitted property leaves the existing option intact.
     if (!navigation || !options) return;
     const state = searchState(navigation);
     const value = { ...state.value };
-    if ('headerSearchBarOptions' in options) value.pinned = pinned;
     if ('headerLargeTitleEnabled' in options || 'headerLargeTitle' in options)
       value.largeTitle =
         options.headerLargeTitleEnabled ?? options.headerLargeTitle;
-    if (
-      state.value.pinned === value.pinned &&
-      state.value.largeTitle === value.largeTitle
-    )
-      return;
+    if (state.value.largeTitle === value.largeTitle) return;
     state.value = value;
     state.listeners.forEach((listener) => listener());
-  }, [navigation, options, pinned]);
+  }, [navigation, options]);
 }
 
 /**
  * Screen supplies its ground. Bills and Ask use this from RouteOptions because
- * their FlatList/ScrollView does not use Screen. Explicit large-title list
- * destinations also use RouteOptions; Screen defers to that owner. Scrolling
- * only updates a native backing, never route appearances.
+ * their FlatList/ScrollView does not use Screen. The five tab roots and
+ * explicit large-title lists opt in; record and inline screens keep the
+ * stack's opaque bar. Scrolling belongs to UIKit, never JS collapse thresholds
+ * or route appearance updates.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(
@@ -120,8 +104,6 @@ export function useRootBarAppearance(
     () => (navigation ? searchState(navigation).value : emptyOptions),
     () => emptyOptions,
   );
-  const pinnedSearch = rootOptions.pinned;
-  const largeTitleEnabled = rootOptions.largeTitle ?? true;
   const route = useContext(NavigationRouteContext);
   const state = route ? navigation?.getState() : undefined;
   // Every tab uses the shared route inventory. Account and other sheet stacks
@@ -138,166 +120,88 @@ export function useRootBarAppearance(
       rootOptions.largeTitle === true)
       ? route
       : undefined;
+  const largeTitleEnabled = !!root && (rootOptions.largeTitle ?? true);
   const headerHeight = useContext(HeaderHeightContext) ?? 0;
+  const { width, height, fontScale } = useWindowDimensions();
   const barEdge = useVerticalBarEdge();
   const verticalBar = barEdge !== 'unspecified';
-  const top = useContext(SafeAreaInsetsContext)?.top ?? 0;
-  const frame = useWindowDimensions();
-  const pad = Platform.OS === 'ios' && Platform.isPad;
-  const landscapePhone = !pad && frame.width > frame.height;
-  const compactHeight = verticalBar
-    ? 0
-    : Math.max(
-        getDefaultHeaderHeight(frame, false, top),
-        top + (pad ? 50 : landscapePhone ? 32 : 44),
-      );
-  const collapsedHeight =
-    compactHeight +
-    (pinnedSearch ? stackedSearchHeight + stackedSearchSlack : 1);
-  const expandedRoute = useRef<{
-    key: string;
-    collapsedHeight: number;
-    expandedHeight: number;
-    fontScale: number;
-    width: number;
-    height: number;
-  }>(undefined);
-  const applied = useRef<{
-    key: string;
-    setter: typeof setOptions;
-    colour: ColorValue;
-    largeTitleEnabled: boolean;
-    barEdge: typeof barEdge;
-  }>(undefined);
+  const solid = useSolidBar();
   const name = root?.name ?? '';
   const colour =
-    ground ??
-    (roots.includes(name) || name === 'leads'
-      ? tabRootGround(name)
-      : colors.paper);
-  const ownsBar = owner === 'options' || rootOptions.largeTitle === undefined;
+    ground ?? (roots.includes(name) ? tabRootGround(name) : colors.paper);
+  const ownsBar =
+    owner === 'options' ||
+    rootOptions.largeTitle === undefined ||
+    (name === 'search' && rootOptions.largeTitle === false);
   const rootKey = root?.key;
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
-  const nativeValues = useRef({ progress: 0, colour });
+
   useLayoutEffect(() => {
-    if (!rootKey || !ownsBar) {
-      applied.current = undefined;
-      return;
-    }
-    if (!verticalBar && headerHeight > collapsedHeight) {
-      const previous = expandedRoute.current;
-      expandedRoute.current = {
-        key: rootKey,
-        collapsedHeight,
-        fontScale: frame.fontScale,
-        width: frame.width,
-        height: frame.height,
-        // Retain the first expanded measurement until the route, threshold,
-        // font scale or window size changes. Overscroll must not raise it.
-        expandedHeight:
-          previous?.key === rootKey &&
-          previous.collapsedHeight === collapsedHeight &&
-          previous.fontScale === frame.fontScale &&
-          previous.width === frame.width &&
-          previous.height === frame.height
-            ? previous.expandedHeight
-            : headerHeight,
-      };
-    }
-    const reference = expandedRoute.current;
-    const sameLayout =
-      reference?.key === rootKey &&
-      reference?.collapsedHeight === collapsedHeight &&
-      reference?.fontScale === frame.fontScale &&
-      reference?.width === frame.width &&
-      reference?.height === frame.height;
-    // Header height is UIKit's collapse offset, including search-field motion.
-    // Ignore rounding at rest and clamp overscroll. Initial inline estimates
-    // have no expanded reference and must leave the title clear.
-    const collapsed =
-      landscapePhone ||
-      (reference?.key === rootKey &&
-        reference.collapsedHeight === collapsedHeight &&
-        headerHeight <= collapsedHeight);
-    const progress = verticalBar
-      ? 0
-      : collapsed
-        ? 1
-        : sameLayout && reference
-          ? Math.min(
-              1,
-              Math.max(
-                0,
-                (reference.expandedHeight - headerHeight - 0.5) /
-                  Math.max(1, reference.expandedHeight - collapsedHeight - 0.5),
-              ),
-            )
-          : 0;
-    nativeValues.current = { progress, colour };
     if (
-      identifier &&
-      largeTitleEnabled &&
-      !verticalBar &&
-      navigation?.isFocused()
-    )
-      void RootBar?.update(identifier, progress, colour, colors.dividerSubtle);
-    const previous = applied.current;
-    if (
-      previous?.key === rootKey &&
-      previous.setter === setOptions &&
-      previous.colour === colour &&
-      previous.largeTitleEnabled === largeTitleEnabled &&
-      previous.barEdge === barEdge
+      !rootKey ||
+      !ownsBar ||
+      largeTitleEnabled !== currentLargeTitle(navigation)
     )
       return;
     setOptions(
       largeTitleEnabled && !verticalBar
         ? {
-            ...largeTitleBar(colour),
-            // Legacy headerLargeTitle callers must also override the stack's
-            // explicit inline default, which takes precedence in Expo Router.
+            ...largeTitleBar(colour, solid),
+            // Override the stack's inline default for legacy callers too.
             headerLargeTitleEnabled: true,
             unstable_nativeProps: { testID: identifier },
           }
-        : {
-            ...opaqueBar(colour),
-            ...(verticalBar
-              ? {
-                  headerTransparent: false,
-                  scrollEdgeEffects: barScrollEdges(barEdge),
-                }
-              : {}),
-          },
+        : scrollBar(colour, solid, barEdge),
     );
-    applied.current = {
-      key: rootKey,
-      setter: setOptions,
-      colour,
-      largeTitleEnabled,
-      barEdge,
-    };
   }, [
     rootKey,
+    ownsBar,
+    navigation,
     setOptions,
     colour,
-    headerHeight,
-    collapsedHeight,
-    ownsBar,
+    solid,
     identifier,
     largeTitleEnabled,
-    navigation,
-    landscapePhone,
-    frame.fontScale,
-    frame.width,
-    frame.height,
     verticalBar,
     barEdge,
   ]);
+  // A coloured UIKit appearance hides large titles on iOS 26. Only the
+  // accessibility fallback needs this native sibling. Header-height updates
+  // resize it, without deriving opacity or changing any route appearances.
   useLayoutEffect(() => {
-    if (!identifier || !ownsBar || !largeTitleEnabled || verticalBar) return;
+    if (
+      !identifier ||
+      !ownsBar ||
+      !currentLargeTitle(navigation) ||
+      verticalBar ||
+      !solid
+    )
+      return;
+    if (navigation?.isFocused()) void RootBar?.setSolid?.(identifier, colour);
+  }, [
+    identifier,
+    ownsBar,
+    largeTitleEnabled,
+    verticalBar,
+    solid,
+    colour,
+    headerHeight,
+    width,
+    height,
+    fontScale,
+    navigation,
+  ]);
+  useLayoutEffect(() => {
+    if (
+      !identifier ||
+      !ownsBar ||
+      !currentLargeTitle(navigation) ||
+      verticalBar ||
+      !solid
+    )
+      return;
     const focus = navigation?.addListener('focus', () => {
-      const { progress, colour } = nativeValues.current;
-      void RootBar?.update(identifier, progress, colour, colors.dividerSubtle);
+      void RootBar?.setSolid?.(identifier, colour);
     });
     const clear = () => {
       void RootBar?.remove(identifier);
@@ -306,12 +210,28 @@ export function useRootBarAppearance(
     return () => {
       focus?.();
       blur?.();
-      clear();
     };
-  }, [identifier, ownsBar, largeTitleEnabled, navigation, verticalBar]);
+  }, [
+    identifier,
+    ownsBar,
+    largeTitleEnabled,
+    navigation,
+    verticalBar,
+    solid,
+    colour,
+  ]);
+  // Screen can hand appearance ownership to its child RouteOptions after
+  // the large-title option arrives. That transfer must not remove the solid
+  // sibling that the new owner has just applied. Its lifetime follows the
+  // route and accessibility mode, independently of appearance ownership.
+  useLayoutEffect(() => {
+    if (!identifier || !currentLargeTitle(navigation) || verticalBar || !solid)
+      return;
+    return () => {
+      void RootBar?.remove(identifier);
+    };
+  }, [identifier, largeTitleEnabled, navigation, verticalBar, solid]);
   return !!root;
 }
 
-const emptyOptions: { pinned: boolean; largeTitle?: boolean } = {
-  pinned: false,
-};
+const emptyOptions: { largeTitle?: boolean } = {};

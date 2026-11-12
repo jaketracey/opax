@@ -487,7 +487,7 @@ function MapMode({
 }) {
   const setOptions = useSafeSetOptions();
   useLayoutEffect(() => {
-    setOptions(opaqueBar(colors.paper));
+    setOptions({ ...opaqueBar(colors.paper), headerTransparent: false });
   }, [setOptions]);
   const navigation = useNavigation();
   const router = useRouter();

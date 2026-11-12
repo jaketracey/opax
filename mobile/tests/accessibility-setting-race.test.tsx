@@ -5,6 +5,7 @@ import {
   useBoldText,
   useIncreaseContrast,
   useReduceMotion,
+  useReduceTransparency,
 } from '../src/design/accessibility';
 
 afterEach(() => jest.restoreAllMocks());
@@ -16,6 +17,12 @@ test.each([
     'isDarkerSystemColorsEnabled',
     'darkerSystemColorsChanged',
     useIncreaseContrast,
+  ],
+  [
+    'Reduce Transparency',
+    'isReduceTransparencyEnabled',
+    'reduceTransparencyChanged',
+    useReduceTransparency,
   ],
   [
     'Reduce Motion',

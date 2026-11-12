@@ -1,6 +1,7 @@
 import { withNavigationOptions } from './navigation-options';
 import { act } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
+import { colors } from '../src/design/tokens';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { apiClient } from '../src/api/runtime';
@@ -86,7 +87,10 @@ jest.mock('expo-router', () => {
 });
 
 const graph = decodeMoneyGraph(pinned('/graph/money.json'));
-async function render(safe?: Insets) {
+async function render(
+  safe?: Insets,
+  observe: (options: Record<string, unknown>) => void = () => undefined,
+) {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     renderer = TestRenderer.create(
@@ -98,7 +102,7 @@ async function render(safe?: Insets) {
         ) : (
           <MoneyScreen />
         ),
-        () => undefined,
+        observe,
       ),
     );
   });
@@ -138,6 +142,32 @@ test('the Map view: the stage, the floating card with the picker, the controls a
   act(() => r.unmount());
 });
 
+test.each([26, 27])(
+  'the iOS %s money map explicitly reserves a non-transparent bar',
+  async (version) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    let options: Record<string, unknown> = {};
+    try {
+      renderer = await render(undefined, (value) => {
+        options = value;
+      });
+      expect(options).toMatchObject({
+        headerTransparent: false,
+        headerStyle: { backgroundColor: colors.paper },
+      });
+      expect(byTestID(renderer.root, 'money-map-card')).toBeDefined();
+    } finally {
+      if (renderer) act(() => renderer!.unmount());
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
+
 test.each([
   ['iPhone', 390, 844, false, 0],
   ['iPhone', 390, 844, false, 34],
@@ -167,11 +197,13 @@ test.each([
       r = await render({ top: 0, right: 0, bottom, left: 0 });
       const root = r.root;
       const panel = r.root.findByType(MoneyMapPanel);
-      const top = r.root.findAllByType(View).find(
-        (node) =>
-          node.props.onLayout &&
-          StyleSheet.flatten(node.props.style)?.paddingTop === 8,
-      )!;
+      const top = r.root
+        .findAllByType(View)
+        .find(
+          (node) =>
+            node.props.onLayout &&
+            StyleSheet.flatten(node.props.style)?.paddingTop === 8,
+        )!;
       act(() => {
         byTestID(root, 'money-screen')!.props.onLayout({
           nativeEvent: { layout: { width, height } },
@@ -203,7 +235,10 @@ test.each([
         x: width / 2 - 34,
         y: (height - bottom - 40) / 2,
       });
-      expect(stage().overview).toStrictEqual({ left: 16, bottom: bottom + 196 });
+      expect(stage().overview).toStrictEqual({
+        left: 16,
+        bottom: bottom + 196,
+      });
       const frame = StyleSheet.flatten(
         byTestID(r.root, 'money-map-chrome')!.props.style,
       );

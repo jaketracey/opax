@@ -46,7 +46,7 @@ import { barScrollEdges } from '../src/navigation/chrome';
 let mockBarEdge = 'unspecified';
 let mockReducedMotion = true;
 jest.mock('../modules/opax-root-bar', () => ({
-  RootBar: { update: jest.fn(), remove: jest.fn() },
+  RootBar: { setSolid: jest.fn(), remove: jest.fn() },
   useVerticalBarEdge: () => mockBarEdge,
 }));
 jest.mock('../modules/opax-duo', () => ({
@@ -529,15 +529,14 @@ describe('system navigation on both displays', () => {
         </NavigationRouteContext.Provider>
       </NavigationContext.Provider>,
     );
-    expect(RootBar?.update).not.toHaveBeenCalled();
+    expect(RootBar?.setSolid).not.toHaveBeenCalled();
     expect(mockSetOptions).toHaveBeenCalledWith(
       expect.objectContaining({ headerTitle: 'Bills' }),
     );
     expect(mockSetOptions).toHaveBeenCalledWith(
       expect.objectContaining({
-        headerStyle: expect.objectContaining({
-          backgroundColor: expect.anything(),
-        }),
+        headerStyle: {},
+        headerTransparent: true,
       }),
     );
   });
