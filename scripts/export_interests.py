@@ -80,6 +80,7 @@ import sqlite3
 import sys
 import unicodedata
 from datetime import date
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.member_ids import aliases as member_id_aliases, canonical as member_id  # noqa: E402
@@ -396,13 +397,56 @@ def is_nil_row(fields_json, desc):
     return not desc or is_nil_values([desc])
 
 
+def holder_value(value):
+    """Keep the non-empty wire string required by the released iOS 1.1.3 decoders.
+
+    The web's interestHolder display adapter treats this sentinel as absent.
+    Changing these four shared fields to null breaks existing installations.
+    """
+    if not value or not str(value).strip() or str(value).strip().lower() == "unspecified":
+        return "unspecified"
+    return value
+
+
+def replay_export(source, output):
+    """Reproject retained public inputs when the local DB predates them.
+
+    Keep source dates, counts, ordering and all non-holder values. This cannot
+    recover uncapped declarations and must never claim to refresh the register.
+    """
+    source, output = Path(source), Path(output)
+    index = json.loads((source / "index.json").read_text())
+    names = ["index.json", "recent.json", "ties-by-donor.json",
+             *(f"{key}.json" for key in index["people"])]
+
+    def normalise(value):
+        if isinstance(value, dict):
+            return {k: holder_value(v) if k == "holder" else normalise(v) for k, v in value.items()}
+        if isinstance(value, list):
+            return [normalise(v) for v in value]
+        return value
+
+    # Read everything before writing, including when replaying in place.
+    files = {name: normalise(json.loads((source / name).read_text())) for name in names}
+    output.mkdir(parents=True, exist_ok=True)
+    for name, value in files.items():
+        (output / name).write_text(json.dumps(value, ensure_ascii=False, separators=(",", ":")))
+    return index["_meta"]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out")
     parser.add_argument("--money", default="portal/public/graph/money.json")
     parser.add_argument("--access", default="portal/public/access.json")
     parser.add_argument("--fits", default="portal/public/fits.json")
+    parser.add_argument("--from-export", help="replay a retained interests directory without changing its source dates or coverage; requires --out")
     args = parser.parse_args()
+    if args.from_export:
+        if not args.out:
+            parser.error("--from-export requires --out")
+        print(json.dumps(replay_export(args.from_export, args.out)), file=sys.stderr)
+        return
     registries = load_tie_registers(args.money, args.access, args.fits)
     tie_flows = registries[-1]
     con = sqlite3.connect(DB, uri=True)
@@ -467,7 +511,7 @@ def main():
             p["alterations"]["added"] += 1
         elif r["kind"] == "deletion":
             p["alterations"]["deleted"] += 1
-        item = {"holder": r["holder"] or "unspecified", "description": description(r["fields_json"], r["description"]),
+        item = {"holder": holder_value(r["holder"]), "description": description(r["fields_json"], r["description"]),
                 "kind": r["kind"], "date": r["date_declared"], "page": r["page"]}
         if r["ocr"]:
             item["ocr"] = 1
@@ -498,7 +542,7 @@ def main():
                     "kind": primary_kind,
                     "kinds": kinds,
                     "register": {
-                        "holder": r["holder"] or "unspecified",
+                        "holder": holder_value(r["holder"]),
                         "category": b,
                         "description": description(r["fields_json"], r["description"], None),
                         "kind": r["kind"],
@@ -536,7 +580,7 @@ def main():
                     reverse[donor["label"]].append({
                         "id": d["key"], "name": p["name"], "jurisdiction": p["jurisdiction"],
                         "chamber": p["chamber"], "parliament": p["parliament"],
-                        "holder": r["holder"] or "unspecified", "category": b,
+                        "holder": holder_value(r["holder"]), "category": b,
                         "description": tie["register"]["description"], "kind": r["kind"],
                         "date": r["date_declared"], "url": row_url,
                     })
@@ -545,7 +589,7 @@ def main():
             recent_item = {
                 "id": r["id"], "person_id": d["key"], "name": p["name"],
                 "jurisdiction": p["jurisdiction"], "chamber": p["chamber"],
-                "parliament": p["parliament"], "holder": r["holder"] or "unspecified",
+                "parliament": p["parliament"], "holder": holder_value(r["holder"]),
                 "bucket": b, "kind": r["kind"], "date": r["date_declared"],
                 "description": description(r["fields_json"], r["description"], None),
                 "url": row_url, "page": r["page"],

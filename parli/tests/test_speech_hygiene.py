@@ -271,6 +271,14 @@ class AttributionHygieneTests(unittest.TestCase):
         self.assertEqual(clean_party("Australian Labor Party"), "Labor")
         self.assertEqual(clean_party("Pauline Hanson's One Nation Party"), "One Nation")
         self.assertEqual(clean_party("Democratic Labor Party"), "DLP")
+        for variants, canonical in [
+            (["Legalise Cannabis", "Legalise Cannabis Victoria"], "Legalise Cannabis"),
+            (["Libertarian", "Libertarian Party"], "Libertarian Party"),
+            (["Shooters, Fishers and Farmers", "Shooters, Fishers and Farmers Party"], "Shooters, Fishers and Farmers Party"),
+        ]:
+            for variant in variants:
+                with self.subTest(variant=variant):
+                    self.assertEqual(clean_party(variant), canonical)
         self.assertIsNone(clean_party("Shadow Minister for Defence"))
         self.assertIsNone(clean_party("ALP; NAT from 1917"))
         self.assertIsNone(clean_party("UNKNOWN"))

@@ -2,14 +2,15 @@ import {supplierContractsHTML} from '../public/contracts-table.js'
 import {decodeHTMLStrict} from 'entities'
 import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import { shortDate } from '../public/format.js'
-import { personUrl, partyUrl } from '../public/canonical-urls.js'
+import { personUrl, partyUrl } from '../public/party-page.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
+import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import {rosterSeatParty, type RosterSeatParty} from '../public/roster-party.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
-import {chamberLabel, machineLabelHTML} from '../public/labels.js'
+import {chamberLabel, machineLabelHTML} from '../public/party-page.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js'
 import {divisionTableConfig, voteTableConfig, personVoteKeys, personVoteRecords, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
@@ -19,6 +20,7 @@ import {recentVotesBucket, recentVotesBucketPath, votesBucketPath, VOTES_NAMES_P
 import {partyFold, partyMoneyBucket, partyMoneyBucketPath} from '../public/party-money-buckets.js'
 import {SUPPLIER_ID_RE, supplierRowsPath, SUPPLIERS_META_PATH} from '../public/supplier-row-buckets.js'
 import {BILL_TITLES_PATH} from '../public/bill-titles.js'
+import {readPartyPages, partyPageCoverage} from '../public/party-page.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -57,7 +59,7 @@ interface Votes { name: string; jurisdiction: string; for?: Vote[]; against?: Vo
 interface RecentVotes { _meta: { schema: number; source: string; coverage: string }; people: Record<string, { name: string; jurisdiction: string; recent: Vote[] }> }
 interface Interest {
   source_url?: string; total: number; as_at?: string; ocr_rows?: number; unread_pages?: number;
-  buckets: Record<string, { count: number; items: { description: string; holder?: string; kind?: string; page?: number; date?: string; url?: string }[] }>;
+  buckets: Record<string, { count: number; items: { description: string; holder?: string | null; kind?: string; page?: number; date?: string; url?: string }[] }>;
 }
 interface MoneyNode { id: string; label: string; kind: string; industry?: string; aliases?: string[]; total: number }
 interface MoneyGraph { meta: { sourceShort?: string; source?: string; coverage?: string; source_url?: string }; nodes: MoneyNode[]; edges: { source: string; target: string; total: number; grant?: boolean; flow?: string }[] }
@@ -186,7 +188,7 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
   const page = Number.isSafeInteger(requested) && requested > 0 ? Math.min(requested,pageCount) : 1
   const href = (n: number) => { const next = new URL(url); next.searchParams.set('page', String(n)); return next.pathname + next.search }
   const prev = page > 1 ? href(page - 1) : undefined, next = page < pageCount ? href(page + 1) : undefined
-  const body = `<p>${count(rows.length)} entries. Page ${page} of ${pageCount}.</p><ul>${rows.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(r => `<li>${link(r.href,r.label)}${r.detail ? ` — ${escapeHtml(r.detail)}` : ''}</li>`).join('')}</ul>` +
+  const body = `<p>${count(rows.length)} entries. Page ${page} of ${pageCount}.</p><ul>${rows.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(r => `<li>${link(r.href,r.label)}${r.detail ? `: ${escapeHtml(r.detail)}` : ''}</li>`).join('')}</ul>` +
     `<nav aria-label="Directory pages">${prev ? link(prev,'Previous page','prev') : ''}${prev && next ? ' · ' : ''}${next ? link(next,'Next page','next') : ''}</nav>`
   return { html: answerBlock(title,description,body), prev, next, page }
 }
@@ -325,13 +327,13 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const sponsor = sponsorFor(b,people)
   // Only the party the export recorded for the sponsor on the day (bills-001):
   // the roster's current party is not evidence for an earlier bill.
-  const party = b.sponsor_party
+  const party = b.sponsor_party && sponsorParties.includes(b.sponsor_party) ? b.sponsor_party : null
   // A private member's "(s) ..." sponsor print is not a portfolio (bills-007).
   const portfolio = b.portfolio && !/^\s*\(s\)/.test(b.portfolio) ? b.portfolio : ''
   const description = `${human(b.status || 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${portfolio ? `${portfolio} portfolio.` : ''}`
   const coSponsors = (b.sponsors || []).slice(1).map(s=>{
     const person = sponsorPerson(s.name, s.person_id ?? undefined, people) as Person | null
-    return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party ? ` (${escapeHtml(s.party)})` : '')
+    return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party && sponsorParties.includes(s.party) ? ` (${escapeHtml(s.party)})` : '')
   })
   let body = `<dl><dt>Sponsor</dt><dd>${sponsor ? link(personHref(sponsor,slugs),sponsor.name) : escapeHtml(b.sponsor || 'Not recorded')}</dd>${party ? `<dt>Sponsor's recorded party</dt><dd>${link(partyUrl(party),party)}</dd>` : ''}${coSponsors.length ? `<dt>Co-sponsors</dt><dd>${coSponsors.join(', ')}</dd>` : ''}<dt>Portfolio</dt><dd>${escapeHtml(portfolio || 'Not recorded')}</dd></dl>`
   const stages = billStageLines(b.key_dates || []).map(d=>`<li>${escapeHtml(d.label)} — ${escapeHtml(d.date)} (${escapeHtml(chamber(d.house))})${original(d.url)}</li>`)
@@ -407,11 +409,15 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
     }))).flat()
     return paginate(url,rows,'Grant recipients','Published grants by recipient. Awarded values are commitments, not payments. Source: GrantConnect and Queensland published grant records.')
   }
-  if (dir==='party' || dir==='donor') {
+  if (dir==='party') {
+    const pages = await readPartyPages(read)
+    return paginate(url,pages.map(p=>({href:p.href,label:p.name,detail:partyPageCoverage(p)})),'Parties and independents','Party affiliations in the parliamentary and political receipts records. Coverage differs by affiliation.')
+  }
+  if (dir==='donor') {
     const graphs = await Promise.all(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'].map(path=>read<MoneyGraph>(path)))
     const rows = new Map<string,{href:string;label:string;detail?:string}>()
-    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir) rows.set(fold(n.label),{href:dir==='party' ? partyUrl(n.label) : donorDisclosure(n).href || '',label:n.label})
-    return paginate(url,[...rows.values()],dir==='party' ? 'Parties' : 'Disclosed donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
+    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir) rows.set(fold(n.label),{href:donorDisclosure(n).href || '',label:n.label})
+    return paginate(url,[...rows.values()],'Disclosed donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
   }
   const sources: Record<string,[string,string,string]> = {supplier:['/suppliers.json','suppliers','Government suppliers'],agency:['/agencies.json','agencies','Government agencies'],campaigner:['/graph/campaigners.json','entities','Campaigners']}
   const source = sources[dir]

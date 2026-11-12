@@ -1,5 +1,6 @@
 import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=a8472268da';
 import {donorDisclosure} from './donor-disclosure.js?v=18e84bb744';
+import {interestHolder} from './interest-holder.js';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(value).slice(0, 10) : null;
@@ -59,15 +60,15 @@ export function auditTableConfig(records) {
 /** The register's source words are retained verbatim. */
 export function interestTableData(register) {
   const rows = [];
-  const holders = new Map([['self','Self'],['spouse','Spouse or partner'],['children','Dependent child'],['unspecified','Not specified']]);
+  const holders = new Map([['self','Self'],['spouse','Spouse or partner'],['children','Dependent child']]);
   const kinds = new Map([['statement','Statement'],['addition','Addition'],['deletion','Deletion']]);
   const label = (value, labels) => typeof value === 'string' && value.trim() ? labels.get(value.trim().toLowerCase()) || value : 'Not recorded';
   for (const [category,bucket] of Object.entries(register.buckets || {})) for (const item of bucket.items || []) {
     if (typeof item.description !== 'string') continue;
     const source = href(item.url) || href(register.source_url);
     rows.push({category:categoryLabels[category] || category.replaceAll('_',' '),item:item.description,
-      holder:typeof item.holder === 'string' ? item.holder : null,kind:typeof item.kind === 'string' ? item.kind : null,
-      holder_label:label(item.holder,holders),entry_type:label(item.kind,kinds),
+      holder:interestHolder(item.holder),kind:typeof item.kind === 'string' ? item.kind : null,
+      holder_label:interestHolder(item.holder) ? label(item.holder,holders) : 'Not stated',entry_type:label(item.kind,kinds),
       date:date(item.date) || date(register.as_at),source:source && item.page ? `${source.split('#')[0]}#page=${Number(item.page) || 1}` : source});
   }
   return {rows,omitted:0};

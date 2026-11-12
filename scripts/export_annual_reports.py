@@ -30,7 +30,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from parli.ingest.transparency_portal import CACHE, LICENCE_NCE, LICENCE_OWN, SITE, number, clean, footnote_free_name  # noqa: E402
+from parli.ingest.transparency_portal import CACHE, LICENCE_NCE, LICENCE_OWN, SITE, number, clean, footnote_free_name, projected_publication_date  # noqa: E402
 from parli.ingest.transparency_legacy import DATASETS_PAGE, SNAPSHOT as LEGACY_SNAPSHOT  # noqa: E402
 
 OUT = ROOT / "portal" / "public" / "annual-reports"
@@ -157,13 +157,40 @@ def unit_for(table):
     return "$'000", "stated in the table"
 
 
+def replay_export(source, out):
+    """Replay retained public inputs through the source date parser, offline.
+
+    Preserve the complete published coverage and observation timestamps when
+    the acquisition snapshot is unavailable locally. Other files stay byte exact.
+    """
+    source, out = Path(source), Path(out)
+    index = json.loads((source / "index.json").read_text())
+    manifest = json.loads((source / "manifest.json").read_text())
+    files = {name: (source / name).read_bytes() for name in manifest["files"] if name != "index.json"}
+    for body in index["bodies"]:
+        for report in body["reports"].values():
+            report["published_on"] = projected_publication_date(report.get("published_on"))
+    manifest["files"]["index.json"]["content_sha256"] = hashlib.sha256(
+        json.dumps([index["bodies"], index["headline"]], sort_keys=True).encode()).hexdigest()
+    out.mkdir(parents=True, exist_ok=True)
+    for name, data in files.items():
+        (out / name).write_bytes(data)
+    atomic(out / "index.json", index)
+    atomic(out / "manifest.json", manifest)
+    return index["meta"]["counts"]
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--snapshot", default=str(CACHE / "snapshot.json"))
     ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--legacy", default=str(LEGACY_SNAPSHOT), help="2018-19 to 2021-22 file snapshot (parli.ingest.transparency_legacy)")
     ap.add_argument("--no-legacy", action="store_true", help="publish without the 2018-19 to 2021-22 rows")
+    ap.add_argument("--from-export", help="replay a retained annual-reports directory without changing coverage or source dates")
     args = ap.parse_args(argv)
+    if args.from_export:
+        print(json.dumps(replay_export(args.from_export, args.out)))
+        return
     snap = json.loads(Path(args.snapshot).read_text())
     out = Path(args.out)
     stamp = re.sub(r"\D", "", snap["fetched_at"])[:8]
@@ -180,7 +207,7 @@ def main(argv=None):
             "acronyms": b["acronyms"], "status": b["status"],
             "portfolio": next((r["portfolio"] for r in reversed(b["reports"]) if r.get("portfolio")), None),
             "austender_agency_id": agency_by_name.get(norm_name(b["name"])),
-            "reports": {r["year"]: {"title": r["title"], "published_on": r["published_on"], "portfolio": r.get("portfolio"),
+            "reports": {r["year"]: {"title": r["title"], "published_on": projected_publication_date(r["published_on"]), "portfolio": r.get("portfolio"),
                                     "url": f"{SITE}/publications/{r['portfolio_slug']}/{code}/{r['web_url']}" if r.get("portfolio_slug") and r.get("web_url") else None}
                         for r in b["reports"]},
         }

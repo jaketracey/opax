@@ -18,7 +18,7 @@
  * No person is named here: the officials who gave evidence are named only in
  * their own hearing records, which these pages link to.
  */
-import { sourceLineHTML, statusLabelHTML } from '../public/labels.js'
+import { sourceLineHTML, statusLabelHTML } from '../public/party-page.js'
 import { shortDate } from '../public/format.js'
 import { escapeHtml as esc, safeHref, type ReadAsset } from './seo-content'
 import { trail } from './nav-model.mjs'
