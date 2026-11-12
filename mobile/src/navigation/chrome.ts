@@ -151,7 +151,7 @@ export function useStackChrome() {
       ? { headerTitleAlign: 'left' as const, statusBarStyle: 'dark' as const }
       : {}),
     // Pushed, inline and sheet layouts reserve space for a solid native bar.
-    // The five tab roots opt into translucency separately.
+    // Tab roots and explicit large-title lists opt into translucency separately.
     headerTransparent: false,
     ...opaqueBar(),
     headerTitleStyle: {
@@ -177,8 +177,8 @@ export function useStackChrome() {
     },
     // Wave 2 found the soft top edge too light over serif record text: the
     // record remained readable through the title and bar buttons. Keep the
-    // hard edge and matching opaque ground on pushed and inline screens.
-    // Only the five tab roots use the soft edge for the scrolling header art.
+    // hard edge and matching opaque ground on record and inline screens.
+    // Tab roots and sans large-title lists use the soft edge.
     // The bottom stays soft at the minimising tab bar.
     scrollEdgeEffects: barScrollEdges(barEdge),
     headerLargeTitleEnabled: false,

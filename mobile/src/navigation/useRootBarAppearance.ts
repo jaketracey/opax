@@ -61,9 +61,10 @@ export function useRootBarSearchOptions(
 
 /**
  * Screen supplies its ground. Bills and Ask use this from RouteOptions because
- * their FlatList/ScrollView does not use Screen. Only the five tab roots
- * opt in; pushed and inline screens retain the stack's opaque bar. Scrolling
- * belongs to UIKit, never JS collapse thresholds or route appearance updates.
+ * their FlatList/ScrollView does not use Screen. The five tab roots and
+ * explicit large-title lists opt in; record and inline screens keep the
+ * stack's opaque bar. Scrolling belongs to UIKit, never JS collapse thresholds
+ * or route appearance updates.
  * The setter must be the shared useSafeSetOptions guard.
  */
 export function useRootBarAppearance(
@@ -108,8 +109,9 @@ export function useRootBarAppearance(
     !disabled &&
     glassBar() &&
     tabStack &&
-    route?.key === state?.routes[0]?.key &&
-    names.includes(route?.name ?? '')
+    ((route?.key === state?.routes[0]?.key &&
+      names.includes(route?.name ?? '')) ||
+      rootOptions.largeTitle === true)
       ? route
       : undefined;
   const largeTitleEnabled = !!root && (rootOptions.largeTitle ?? true);
@@ -120,10 +122,7 @@ export function useRootBarAppearance(
   const solid = useSolidBar();
   const name = root?.name ?? '';
   const colour =
-    ground ??
-    (roots.includes(name) || name === 'leads'
-      ? tabRootGround(name)
-      : colors.paper);
+    ground ?? (roots.includes(name) ? tabRootGround(name) : colors.paper);
   const ownsBar = owner === 'options' || rootOptions.largeTitle === undefined;
   const rootKey = root?.key;
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
@@ -184,7 +183,6 @@ export function useRootBarAppearance(
     return () => {
       focus?.();
       blur?.();
-      clear();
     };
   }, [
     identifier,
@@ -195,6 +193,16 @@ export function useRootBarAppearance(
     solid,
     colour,
   ]);
+  // Screen can hand appearance ownership to its child RouteOptions after
+  // the large-title option arrives. That transfer must not remove the solid
+  // sibling that the new owner has just applied. Its lifetime follows the
+  // route and accessibility mode, independently of appearance ownership.
+  useLayoutEffect(() => {
+    if (!identifier || !largeTitleEnabled || verticalBar || !solid) return;
+    return () => {
+      void RootBar?.remove(identifier);
+    };
+  }, [identifier, largeTitleEnabled, verticalBar, solid]);
   return !!root;
 }
 

@@ -355,14 +355,16 @@ test.each([26, 27])(
         { short: true, accessible: true },
         { table: true },
         { citation: true },
-      ])
-        expect(routeSheetOptions(variant)).toMatchObject({
+      ]) {
+        const options = routeSheetOptions(variant);
+        expect(options).not.toHaveProperty('scrollEdgeEffects');
+        expect(options).toMatchObject({
           headerTransparent: false,
           headerStyle: { backgroundColor: colors.paper },
           headerLargeStyle: { backgroundColor: colors.paper },
           contentStyle: { backgroundColor: colors.sunken },
-          scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
         });
+      }
     } finally {
       Object.defineProperty(Platform, 'Version', descriptor);
     }

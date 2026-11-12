@@ -188,8 +188,7 @@ export function Screen({
   });
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
-    if (!inPane && !nativeRoot)
-      setOptions({ ...opaqueBar(colors[ground]), headerTransparent: false });
+    if (!inPane && !nativeRoot) setOptions(opaqueBar(colors[ground]));
   }, [setOptions, ground, inPane, nativeRoot]);
   const contentRoot = useRef<View>(null);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);

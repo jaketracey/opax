@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Stack, type NativeStackNavigationOptions } from 'expo-router';
 import {
   HeaderHeightContext,
   NavigationContext,
@@ -17,6 +17,7 @@ import {
   androidHeaderBar,
   askHeaderItems,
   glassBar,
+  headerItems,
   largeTitleBar,
   opaqueBar,
   pageItems,
@@ -58,8 +59,9 @@ const { colors } = tokens;
 
 jest.mock('../modules/opax-root-bar', () => ({
   RootBar: { setSolid: jest.fn(), remove: jest.fn() },
-  useVerticalBarEdge: () => 'unspecified',
+  useVerticalBarEdge: () => mockBarEdge,
 }));
+let mockBarEdge: 'unspecified' | 'leading' | 'trailing' = 'unspecified';
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
   Stack: Object.assign(
@@ -116,6 +118,7 @@ afterEach(() => {
   mockReducedMotion = false;
   mockSignedIn = false;
   mockVoiceLinked = true;
+  mockBarEdge = 'unspecified';
   jest.restoreAllMocks();
 });
 test.each(['(today)', '(your-mp)', '(bills)', '(search)'] as const)(
@@ -944,6 +947,7 @@ function fadePage(
   explicit = false,
   screenOwner = false,
   pinned = false,
+  extraOptions?: NativeStackNavigationOptions,
 ) {
   const route = { key: `${name}-root`, name };
   const listeners = new Map<string, Set<() => void>>();
@@ -969,7 +973,19 @@ function fadePage(
   const usesScreen =
     screenOwner || (!explicit && name !== 'bills' && name !== 'ask');
   const options = {
-    ...(explicit ? { headerLargeTitle: true } : { title: name }),
+    ...(explicit
+      ? (extraOptions ?? { headerLargeTitle: true })
+      : { title: name }),
+    // Your MP declares its large title inside Screen, not in a sibling.
+    ...(name === 'your-mp'
+      ? {
+          title: 'Your MP',
+          headerLargeTitleEnabled: true,
+          ...headerItems(() =>
+            rootHeaderItems({ segment: '(your-mp)', signedIn: false }),
+          ),
+        }
+      : {}),
     ...(pinned
       ? {
           headerSearchBarOptions: {
@@ -978,6 +994,7 @@ function fadePage(
           },
         }
       : {}),
+    ...extraOptions,
   };
   const ground = explicit
     ? screenOwner
@@ -991,11 +1008,12 @@ function fadePage(
           value={{ top: 24, bottom: 0, left: 0, right: 0 }}
         >
           <HeaderHeightContext.Provider value={height}>
-            {(!usesScreen || explicit || pinned) && (
+            {name !== 'your-mp' && (!usesScreen || explicit || pinned) && (
               <RouteOptions options={options} />
             )}
             {usesScreen && (
               <Screen grouped={name !== 'bills'}>
+                {name === 'your-mp' && <RouteOptions options={options} />}
                 <View />
               </Screen>
             )}
@@ -1048,6 +1066,7 @@ test.each(fadeCases)(
         ])
           act(() => renderer.update(page(height)));
         expect(navigation.setOptions).not.toHaveBeenCalled();
+        expect(RootBar!.remove).not.toHaveBeenCalled();
         expect(RootBar!.setSolid).not.toHaveBeenCalled();
       } finally {
         act(() => renderer.unmount());
@@ -1097,6 +1116,10 @@ test.each(tabCases)(
             headerLargeTitleEnabled: true,
           }),
         );
+        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        // A Screen -> child RouteOptions ownership transfer must never clear
+        // the backing while mounted, including before the first scroll.
+        expect(RootBar!.remove).not.toHaveBeenCalled();
         navigation.setOptions.mockClear();
         for (const height of [100, 68, 120, 144]) {
           act(() => renderer.update(page(height)));
@@ -1106,6 +1129,7 @@ test.each(tabCases)(
           );
         }
         expect(navigation.setOptions).not.toHaveBeenCalled();
+        expect(RootBar!.remove).not.toHaveBeenCalled();
         act(() => listeners.get('blur')!.forEach((listener) => listener()));
         expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
         navigation.isFocused.mockReturnValue(false);
@@ -1121,6 +1145,12 @@ test.each(tabCases)(
         expect(navigation.setOptions).toHaveBeenLastCalledWith(
           expect.objectContaining(largeTitleBar(ground)),
         );
+        jest.mocked(RootBar!.remove).mockClear();
+        jest.mocked(RootBar!.setSolid!).mockClear();
+        mockSolidBar = true;
+        act(() => renderer.update(page(100)));
+        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        expect(RootBar!.remove).not.toHaveBeenCalled();
       } finally {
         mockSolidBar = false;
         act(() => renderer.unmount());
@@ -1199,10 +1229,7 @@ test.each(['pushed screen', 'sheet'])(
     try {
       for (const height of [120, 90, 44, 120]) {
         act(() => renderer.update(page(height)));
-        expect(setOptions).toHaveBeenLastCalledWith({
-          ...opaqueBar(colors.sunken),
-          headerTransparent: false,
-        });
+        expect(setOptions).toHaveBeenLastCalledWith(opaqueBar(colors.sunken));
       }
     } finally {
       act(() => renderer.unmount());
@@ -1266,36 +1293,152 @@ test.each([26, 27])(
   },
 );
 
-test.each(['grants', 'leads', 'money-donors'])(
-  '%s cannot opt a pushed list into the root soft edge',
-  (name) =>
+test.each([
+  ['leads', 'Leads', { headerLargeTitle: true }, true],
+  ['money-donors', 'Donors', { headerLargeTitle: true }, false],
+  ['agencies', 'Government agencies', { headerLargeTitleEnabled: true }, false],
+  [
+    'connections',
+    'Programs and places',
+    { headerLargeTitleEnabled: true },
+    false,
+  ],
+  ['grants', 'Commonwealth grants', { headerLargeTitleEnabled: true }, false],
+  [
+    'grants-allocation',
+    'Community funding',
+    { headerLargeTitleEnabled: true },
+    false,
+  ],
+] as const)(
+  '%s retains a visible native large title and soft edge when pushed',
+  (name, title, options, screenOwner) =>
     withGlass(() => {
-      const { page, navigation } = fadePage(name, '(today)', true, true);
+      const { page, navigation } = fadePage(
+        name,
+        '(today)',
+        true,
+        screenOwner,
+        false,
+        { title, ...options },
+      );
       const renderer = tree(page(120));
       try {
-        // The mounted Screen owns the pushed list's opaque ground, even when
-        // RouteOptions requests a large title for that list.
-        const screen = renderer.root.findByType(Screen);
-        expect(screen.props.grouped).toBe(true);
         expect(RootBar!.setSolid).not.toHaveBeenCalled();
         const resolved = Object.assign(
           {},
           ...navigation.setOptions.mock.calls.map(([options]) => options),
         );
         expect(resolved).toMatchObject({
-          ...opaqueBar(colors.sunken),
-          headerTransparent: false,
+          ...largeTitleBar(colors.paper),
+          title,
+          headerLargeTitleEnabled: true,
+          // Opaque appearances suppress UIKit's iOS 26 large title.
+          headerStyle: {},
+          headerLargeStyle: {},
+          headerTransparent: true,
+          scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
         });
+        expect(resolved.headerStyle).toEqual({});
+        expect(resolved.headerLargeStyle).toEqual({});
+        expect(resolved).not.toHaveProperty('headerBackground');
+        expect(resolved).not.toHaveProperty('headerBlurEffect');
+        navigation.setOptions.mockClear();
+        for (const height of [100, 68, 120])
+          act(() => renderer.update(page(height)));
+        expect(navigation.setOptions).not.toHaveBeenCalled();
       } finally {
         act(() => renderer.unmount());
       }
     }),
 );
 
-test('form sheets explicitly retain the paper bar and hard top edge', () => {
-  expect(sheetOptions).toMatchObject({
-    ...opaqueBar(colors.paper),
-    headerTransparent: false,
-    scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
-  });
-});
+test.each(['unspecified', 'leading', 'trailing'] as const)(
+  'form sheets retain the paper bar and inherited %s edge',
+  (edge) => {
+    mockBarEdge = edge;
+    let chrome!: ReturnType<typeof useStackChrome>;
+    function Harness() {
+      chrome = useStackChrome();
+      return null;
+    }
+    const renderer = tree(<Harness />);
+    try {
+      expect(sheetOptions).not.toHaveProperty('scrollEdgeEffects');
+      const resolved = { ...chrome, ...sheetOptions };
+      expect(resolved.scrollEdgeEffects).toEqual(chrome.scrollEdgeEffects);
+      expect(resolved).toMatchObject({
+        ...opaqueBar(colors.paper),
+        headerTransparent: false,
+      });
+    } finally {
+      act(() => renderer.unmount());
+    }
+  },
+);
+
+test.each([18, 26, 27])(
+  'iOS %s Screen preserves the electorate route transparency from build 57',
+  (version) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    const route = { key: 'electorate', name: 'electorate/[id]' };
+    const navigation = {
+      isFocused: () => true,
+      addListener: () => () => {},
+      setOptions: jest.fn(),
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'root', name: 'your-mp' }, route],
+        routeNames: sharedScreens('(your-mp)', false).map(
+          (entry) => entry.props.name,
+        ),
+      }),
+    };
+    let registration!: NativeStackNavigationOptions;
+    // The route captures glassBar() at module load, just as on a cold launch.
+    jest.isolateModules(() => {
+      const { Platform: platform } =
+        jest.requireActual<typeof import('react-native')>('react-native');
+      Object.defineProperty(platform, 'Version', {
+        configurable: true,
+        value: version,
+      });
+      const { yourMpScreens } = jest.requireActual<
+        typeof import('../src/navigation/stack/your-mp')
+      >('../src/navigation/stack/your-mp');
+      registration = yourMpScreens('(your-mp)', false)
+        .find((entry) => entry.props.name === route.name)!
+        .props.options({ route, navigation });
+    });
+    const renderer = tree(
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <Screen grouped>
+            <View />
+          </Screen>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>,
+    );
+    try {
+      expect(navigation.setOptions).toHaveBeenLastCalledWith(
+        opaqueBar(colors.sunken),
+      );
+      const resolved = Object.assign(
+        {},
+        registration,
+        ...navigation.setOptions.mock.calls.map(([options]) => options),
+      );
+      expect(resolved).toMatchObject({
+        ...opaqueBar(colors.sunken),
+        headerTransparent: version >= 26,
+      });
+    } finally {
+      act(() => renderer.unmount());
+      Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);

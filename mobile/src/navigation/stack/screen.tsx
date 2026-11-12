@@ -4,7 +4,6 @@ import { colors } from '../../design/tokens';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
 import {
   closeSheetItem,
-  barScrollEdges,
   glassBar,
   headerItems,
   largeTitleBar,
@@ -222,7 +221,6 @@ export const sheetOptions: NativeStackNavigationOptions = {
   headerShown: true,
   ...shortSheet,
   ...opaqueBar(colors.paper),
-  scrollEdgeEffects: barScrollEdges('unspecified'),
   ...headerItems(() => [closeSheetItem()]),
   ...(Platform.OS === 'android'
     ? { header: AndroidReadingHeader, headerRight: () => null }

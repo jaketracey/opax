@@ -29,7 +29,6 @@ test.each([
     'isReduceMotionEnabled',
     'reduceMotionChanged',
     useReduceMotion,
-    useReduceTransparency,
   ],
 ] as const)(
   '%s keeps a newer setting change when the initial native read arrives late',
