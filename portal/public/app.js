@@ -10509,12 +10509,36 @@ function suggestionChip(q) {
 }
 
 /** Keep reviewed starting questions available after an answer, without repeats. */
+// When two questions ask the same thing: a copy of src/question-key.ts, kept
+// identical by test/question-key.test.mjs.
+// question-key:begin
+const QUESTION_YEAR = '(?:19|20)\\d{2}(?:\\s*[/–—‑-]\\s*(?:(?:19|20)\\d{2}|\\d{2}))?'
+const QUESTION_PERIODS = [
+  new RegExp('\\b(?:in|during|for|since|from|after|before|until|through|over|across|between|starting|beginning)?\\s*(?:the\\s+)?(?:fy\\s*|financial\\s+years?\\s+)?' + QUESTION_YEAR + '(?:\\s*(?:to|and|through|until|or|-|–)\\s*(?:the\\s+)?(?:fy\\s*|financial\\s+years?\\s+)?' + QUESTION_YEAR + ')?(?:\\s+(?:onwards?|and\\s+later|to\\s+date|to\\s+now))?', 'gi'),
+  /\b(?:in|over|during|for|across)?\s*(?:the\s+)?(?:last|past|previous|recent)\s+(?:\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|few|several|couple(?:\s+of)?|number\s+of)?\s*(?:financial\s+|disclosure\s+)?(?:years?|decade|months?|weeks?|days?)\b/gi,
+  /\b(?:in|during|for|over)?\s*(?:the\s+)?(?:this|current|latest|most\s+recent)\s+(?:financial\s+)?(?:year|decade)\b/gi,
+  /\b(?:in|over|across|for)?\s*(?:all\s+years|all\s+time|recent\s+years|recently|lately|these\s+days|nowadays)\b/gi,
+]
+function questionKey(question, withoutPeriod = false) {
+  let text = String(question || '').normalize('NFKC').toLowerCase().replace(/[‘’ʼ`]/g, "'")
+  if (withoutPeriod) for (const period of QUESTION_PERIODS) text = text.replace(period, ' ')
+  return text.replace(/^\s*(?:and|so|ok|okay|please)\s+/, '').replace(/[^a-z0-9']+/g, ' ').replace(/\s+/g, ' ').trim()
+}
+/** True when `candidate` repeats `asked`, or is `asked` without its period phrase. */
+function sameQuestion(candidate, asked) {
+  const key = questionKey(candidate)
+  return !!key && (key === questionKey(asked) || key === questionKey(asked, true))
+}
+// question-key:end
+
 function suggestedQuestions(asked = "", limit = 4) {
-  const seen = new Set([String(asked).trim().toLowerCase()]);
+  // "Ask something else" offers different questions: never the one just asked,
+  // a rewording of it in case or punctuation, or it without its period phrase.
+  const seen = new Set();
   return [...featuredSuggestions, ...suggestions].filter((question) => {
     if (typeof question !== "string") return false;
-    const key = question.trim().toLowerCase();
-    if (!key || seen.has(key)) return false;
+    const key = questionKey(question);
+    if (!key || seen.has(key) || (asked && sameQuestion(question, asked))) return false;
     seen.add(key);
     return true;
   }).slice(0, limit);
