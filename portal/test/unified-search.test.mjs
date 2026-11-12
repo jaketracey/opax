@@ -7,7 +7,7 @@ import {SEARCH_SORTS,compareSearchResults} from '../src/search-sort.ts';
 import {CATALOG_KINDS} from '../src/catalog-search.ts';
 import {tokens as catalogTokens} from '../src/catalog-query.mjs';
 const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
-const code=ts.transpileModule(source.slice(source.indexOf('async function apiUnifiedSearch'),source.indexOf('/** One /find at `topK` depth')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+const code=ts.transpileModule(source.slice(source.indexOf('async function apiUnifiedSearch'),source.indexOf('/** A bounded /find window')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function fixture({localError=false,docError=false,suggest=false,localRows}={}){
  const calls=[]; const requests=[]; const reads=[];
  const local={results:localRows || [{kind:'contract',slug:'catalog-1',title:'Woodside contract',href:'/subject/supplier/woodside',date:'2025-01-01'}],total:1,truncated:false,coverage:'Published snapshot',version:'test'};
