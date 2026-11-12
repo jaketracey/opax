@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "source": "/graph/money.json",
-  "source_sha256": "fcd9baefc8ab9048197ebb606302808fffac8a633dc1457112390e9845a65aeb",
+  "source_sha256": "be398173be9231af7d9efbe3dec00c4419c2b1c5be08976d27ee660c8018f540",
   "source_revision": "6243c86f2a441b12b1862196ddff027723a5e935",
   "source_generated": "2026-11-11",
-  "donation_layer_sha256": "8002fa5d22fe6054cca4a5a5b7bf924218e0111c7b4b5c0c935c23bb5c6de8a5",
-  "guard": "donation layer of the money graph (test/money-guard.mjs): donor and party nodes without their contracts, grants and publicMoney totals, donor-to-party flows, and the meta rows describing them; the weekly public-money overlay is outside it. Re-pinned 2026-11-11 against the 2026-11-11 export: the AEC-only receipt rule (d786784a2) and the AEC associated-entity flag (export rule 9) changed the donation layer; each changed turn is reviewed in the PR.",
+  "donation_layer_sha256": "99e5a1daa5fe50afd4fa544efdbcb405d1c3c02114a74a3c99b0a411c3ac00df",
+  "guard": "donation layer of the money graph (test/money-guard.mjs): donor and party nodes without their contracts, grants and publicMoney totals, donor-to-party flows, and the meta rows describing them; the weekly public-money overlay is outside it. Re-pinned 2026-11-11 against the 2026-11-11 export: the AEC-only receipt rule (d786784a2) and the AEC associated-entity flag (export rule 9) changed the donation layer; each changed turn is reviewed in the PR. Re-pinned 2026-11-12 for additive recipient-side receipt types. Every pre-existing graph field and gold answer is unchanged; source_revision identifies that legacy data baseline.",
   "gold_method": "partyDonations tool, exact published selection, federal disclosed receipts; no inference of gifts or influence",
   "conversations": [
     {
