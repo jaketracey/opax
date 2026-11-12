@@ -30,7 +30,7 @@ Form sheets use a native paper bar over sunken content, plain Done and the share
 
 `Skeleton` mirrors final content. `InlineError` is a quiet sentence plus a separate retry action. `ContentUnavailable` is reserved for whole screens and centres its action below accessibility sizes. `OfflineLine` appears once per page. `StatePageProvider` deduplicates the page announcement and resets it on pull to refresh; list roots have the same scope.
 
-`Button` uses primary, secondary, plain or destructive treatment. `FollowButton` owns the follow-store calls, limit handling and saved-state feedback. iOS choices use native segmented or pop-up controls; Android retains chips. Fields keep one visible label. `MonthPager`, `Composer` and the shared keyboard helpers retain accessible controls at large sizes.
+`Button` uses primary, secondary, plain or destructive treatment. `FollowButton` owns the follow-store calls, limit handling and saved-state feedback. iOS choices use native segmented or pop-up controls; Android retains chips. Fields keep one visible label. On iOS, `Field` puts its fill, radius and resting, focus and error borders on the input itself, including on grouped screens. A single field must not add an `InsetGroup` surface outside that boundary. `MonthPager`, `Composer` and the shared keyboard helpers retain accessible controls at large sizes.
 
 ## Navigation and checks
 

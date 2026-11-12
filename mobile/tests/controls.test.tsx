@@ -20,6 +20,8 @@ import { haptic } from '../src/design/haptics';
 import { symbols } from '../src/design/symbols';
 import { followWithFeedback, useFollows } from '../src/features/follows/store';
 import { showMenu } from '../src/design/menu';
+import { SurfaceContext } from '../src/design/row-padding';
+import { colors, radii } from '../src/design/tokens';
 
 jest.mock('../src/features/follows/useFollowStates', () => ({
   markSeenNow: jest.fn(),
@@ -121,6 +123,76 @@ test.each([false, true])(
     expect(RN.StyleSheet.flatten(field().props.style).borderWidth).toBe(1);
     act(() => field().props.onFocus({ nativeEvent: {} }));
     expect(RN.StyleSheet.flatten(field().props.style).borderWidth).toBe(1);
+  },
+);
+test.each(
+  [false, true].flatMap((grouped) =>
+    [1, 2.643].flatMap((scale) =>
+      (['text', 'code'] as const).map((variant) => ({
+        grouped,
+        scale,
+        variant,
+      })),
+    ),
+  ),
+)(
+  'Field has one surface for rest, focus and error: %j',
+  ({ grouped, scale, variant }) => {
+    size(scale);
+    const onFocus = jest.fn();
+    const onBlur = jest.fn();
+    const field = (error?: string) => (
+      <SurfaceContext.Provider value="sunken">
+        <Field
+          label="Email"
+          grouped={grouped}
+          variant={variant}
+          error={error}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          testID="email"
+        />
+      </SurfaceContext.Provider>
+    );
+    const r = render(field());
+    const input = () => r.root.findByType(RN.TextInput);
+    const style = () => RN.StyleSheet.flatten(input().props.style);
+    const boundary = {
+      backgroundColor: colors.raised,
+      borderRadius: grouped ? radii.container : radii.thumb,
+      borderCurve: 'continuous',
+      borderWidth: 1,
+    };
+    // A second raised ancestor is the original bug: InsetGroup padded the
+    // input's own white surface, leaving white outside its navy boundary.
+    let ancestor = input().parent;
+    while (ancestor) {
+      if (ancestor.type === RN.View) {
+        const parentStyle = RN.StyleSheet.flatten(ancestor.props.style);
+        expect(parentStyle?.backgroundColor).not.toBe(colors.raised);
+        expect(parentStyle?.outlineWidth).toBeUndefined();
+      }
+      expect(ancestor.props.onPress).toBeUndefined();
+      ancestor = ancestor.parent;
+    }
+    expect(style()).toMatchObject({
+      ...boundary,
+      borderColor: colors.lineControl,
+    });
+    act(() => input().props.onFocus({ nativeEvent: {} }));
+    expect(onFocus).toHaveBeenCalledTimes(1);
+    expect(style()).toMatchObject({ ...boundary, borderColor: colors.navy });
+    act(() => r.update(field('Check this value.')));
+    expect(style()).toMatchObject({ ...boundary, borderColor: colors.danger });
+    act(() => input().props.onBlur({ nativeEvent: {} }));
+    expect(onBlur).toHaveBeenCalledTimes(1);
+    expect(style()).toMatchObject({ ...boundary, borderColor: colors.danger });
+    act(() => r.update(field()));
+    expect(style()).toMatchObject({
+      ...boundary,
+      borderColor: colors.lineControl,
+    });
+    expect(input().props.testID).toBe('email');
   },
 );
 test.each([false, true])(
