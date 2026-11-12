@@ -3,6 +3,14 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { cleanEvent, beforeSend, safePath } from '../analytics/privacy.mjs';
 
+test('search recovery adds only a boolean and a fixed category, never queries or corrections',()=>{
+ const existing={page:1,result_count:0,total_count:0,duration_ms:42};
+ for(const kind of ['did_you_mean','scope','ask','none'])assert.deepEqual(
+  cleanEvent('opax_search_completed',{...existing,had_suggestion:kind!=='none',suggestion_kind:kind,query:'private question',suggestions:['private correction'],suggestion_label:'private',suggestion_href:'/ask?q=private'}),
+  {...existing,had_suggestion:kind!=='none',suggestion_kind:kind});
+ assert.deepEqual(cleanEvent('opax_search_completed',{had_suggestion:'private',suggestion_kind:'private'}),{});
+});
+
 test('queries, hash query parameters and unrecognized routes are not collected', () => {
   assert.equal(safePath('/search?q=private&speaker=someone#answer'), '/search');
   assert.equal(safePath('https://opax.com.au/#/ask?q=private'), '/ask');

@@ -48,6 +48,11 @@ export { webglAvailable }
  * The cells sum to `total` and `count`, so a year window re-sums the lot.
  */
 export type YearCell = [dollars: number, count: number]
+export type ReceiptMeasure = 'all_types' | 'donation_only'
+type TypedReceipts = {
+  by_type?: Record<string, number>
+  by_type_year?: Record<string, Record<string, YearCell>>
+}
 
 /** One node of the exported money.json graph. */
 /**
@@ -69,7 +74,7 @@ export type GrantsBlock = {
   jur?: string
 }
 
-export type MoneyNode = DonorDisclosureRecord & {
+export type MoneyNode = DonorDisclosureRecord & TypedReceipts & {
   id: string
   label: string
   /** 'grantor' is the central node public money flows out of. */
@@ -103,7 +108,7 @@ export type MoneyNode = DonorDisclosureRecord & {
   associatedTag?: string
 }
 
-export type MoneyEdge = {
+export type MoneyEdge = TypedReceipts & {
   source: string
   target: string
   total: number
@@ -135,6 +140,8 @@ export type MoneyScene = {
 }
 
 export type MoneyMapOptions = {
+  /** Typed federal receipts; public awards and older state graphs retain their own measure. */
+  receiptMeasure?: ReceiptMeasure
   /** Cancel a setup before it writes to a reused map container. */
   signal?: AbortSignal
   isCurrent?: () => boolean
@@ -253,7 +260,7 @@ const toMapEdge = (e: MoneyEdge): MapEdge => ({
   lastYear: e.lastYear,
 })
 
-type YearFigures = {
+type YearFigures = TypedReceipts & {
   total: number
   count: number
   firstYear: number | null
@@ -273,7 +280,10 @@ export function windowFigures<T extends YearFigures>(
   lo: number,
   hi: number,
   adjustForInflation = false,
+  receiptMeasure: ReceiptMeasure = 'all_types',
 ): T {
+  if (x.by_type) return typedReceiptFigures(x, lo, hi, adjustForInflation, receiptMeasure)
+  if (lo === -Infinity && hi === Infinity && !adjustForInflation) return x
   if (!x.byYear) return x
   let total = x.undated?.[0] ?? 0
   let count = x.undated?.[1] ?? 0
@@ -293,16 +303,60 @@ export function windowFigures<T extends YearFigures>(
   return { ...x, total, count, firstYear, lastYear, ...(byYear ? { byYear } : {}) }
 }
 
+const RECEIPT_EVENT_YEARS: Record<string, number> = { 'braddon by-election': 2018, 'wentworth by-election': 2018, 'eden-monaro by-election': 2020, 'fadden by-election': 2023 }
+
+function typedReceiptFigures<T extends YearFigures>(x: T, lo: number, hi: number, cpi: boolean, measure: ReceiptMeasure): T {
+  const wanted = (kind: string) => measure === 'all_types' || kind === 'donation_received'
+  const bounded = Number.isFinite(lo) || Number.isFinite(hi)
+  let total = 0, count = 0
+  let firstYear: number | null = null, lastYear: number | null = null
+  const byYear: Record<string, YearCell> = {}
+  for (const [period, types] of Object.entries(x.by_type_year || {})) {
+    // Annual keys are financial years; event keys use polling year. Named
+    // by-elections follow the exporter's documented polling-year fallback.
+    const year = Number(period.match(/\b(?:19|20)\d{2}\b/)?.[0]) || RECEIPT_EVENT_YEARS[period.toLowerCase()]
+    if (bounded && (!year || year < lo || year > hi)) continue
+    let dollars = 0, n = 0
+    for (const [kind, cell] of Object.entries(types)) {
+      if (!wanted(kind)) continue
+      dollars += cell[0]; n += cell[1]
+    }
+    const amount = cpi && year ? dollars * cpiMultiplier(year) : dollars
+    total += amount; count += n
+    if (year && n > 0) {
+      const cell = byYear[String(year)] ||= [0, 0]
+      cell[0] += amount; cell[1] += n
+      firstYear = firstYear === null ? year : Math.min(firstYear, year)
+      lastYear = lastYear === null ? year : Math.max(lastYear, year)
+    }
+  }
+  // Lifetime amounts use the authoritative by_type cells. Never substitute
+  // legacy total/byYear, including for an empty typed object or missing year.
+  if (!bounded && !cpi) total = Object.entries(x.by_type!).reduce((sum, [kind, amount]) => sum + (wanted(kind) ? amount : 0), 0)
+  return { ...x, total, count, firstYear, lastYear, byYear, undated: undefined }
+}
+
+export function receiptMeasureLabel(measure: ReceiptMeasure): string {
+  return measure === 'donation_only' ? 'Donation-only' : 'All receipt types'
+}
+
+/** One projection for map geometry, industry rankings, cards and the 2D fallback. */
+export function receiptGraphView(raw: MoneyGraph, measure: ReceiptMeasure = 'all_types', from = -Infinity, to = Infinity, cpi = false): MoneyGraph {
+  return { ...raw, nodes: raw.nodes.map(n => windowFigures(n, from, to, cpi, measure)),
+    edges: raw.edges.map(e => windowFigures(e, from, to, cpi, measure)) }
+}
+
 /**
  * The exported graph -> the engine's shape. Pure, so the smoke test can run
  * it (and the force sim on its output) in Node.
  */
-export function buildGraph(raw: MoneyGraph): {
+export function buildGraph(raw: MoneyGraph, measure: ReceiptMeasure = 'all_types'): {
   nodes: MapNode[]
   edges: MapEdge[]
   groupStyles: Map<string, GroupStyle>
   degrees: Map<string, number>
 } {
+  raw = receiptGraphView(raw, measure)
   const slots = new Map<string, number>()
   let slot = 0
   for (const group of CLUSTER_COLOURS.keys()) slots.set(group, slot++)
@@ -417,6 +471,7 @@ const CSS = `
    inside itself rather than running on beneath the scrub. */
 .mm-root[data-mm-chrome='full'] .mm-legend { max-height: calc(100% - 36px - var(--mm-scrub-h, 0px)); }
 .mm-legend-title { font: var(--type-label); color: var(--ink-soft); padding: 0 var(--space-tight) var(--space-line); }
+.mm-receipt-measure { display: grid; gap: var(--space-tight); padding: var(--space-tight); font: var(--type-label); }
 /* A section of the card ("Where it went", "In parliament"): a label under a
    hairline, flush with the card's text edge. Not the legend title, whose side
    padding exists to line it up with the chips. */
@@ -861,6 +916,9 @@ export async function mountMoneyMap(
   let scrubPending = 0
   let destroyed = false
   let researchFilters: MoneyFilters = opts.filters ?? (full && typeof location !== 'undefined' ? readMoneyFilters(new URLSearchParams(location.search)) : {})
+  let receiptMeasure: ReceiptMeasure = opts.receiptMeasure ?? 'all_types'
+  let measureControl: HTMLSelectElement | undefined
+  const hasReceiptTypes = (raw.meta.receipt_types as { available?: boolean } | undefined)?.available === true
 
   // Full maps own these three query parameters. Mini maps are embedded in
   // donor/party/front-page routes, so their scrub remains local to the embed.
@@ -881,6 +939,7 @@ export async function mountMoneyMap(
       yearHi = Math.max(a, b)
     }
     adjustForInflation = params.get('cpi') === '1'
+    if (params.has('receipt')) receiptMeasure = params.get('receipt') === 'donations' ? 'donation_only' : 'all_types'
   }
 
   const syncUrlState = () => {
@@ -900,6 +959,8 @@ export async function mountMoneyMap(
     }
     if (adjustForInflation) url.searchParams.set('cpi', '1')
     else url.searchParams.delete('cpi')
+    if (hasReceiptTypes && receiptMeasure === 'donation_only') url.searchParams.set('receipt', 'donations')
+    else url.searchParams.delete('receipt')
     history.replaceState(history.state, '', `${url.pathname}${url.search}${url.hash}`)
   }
 
@@ -1181,12 +1242,9 @@ export async function mountMoneyMap(
         ? e.total > 0
         : (e.firstYear ?? yearMin) <= yearHi && (e.lastYear ?? yearMax) >= yearLo)
     const recalculated = scrubbed || adjustForInflation
-    const windowNodes = recalculated
-      ? raw.nodes.map((n) => windowFigures(n, yearLo, yearHi, adjustForInflation))
-      : raw.nodes
-    const windowEdges = filterMoneyEdges({ ...raw, edges: (recalculated
-      ? raw.edges.map((e) => windowFigures(e, yearLo, yearHi, adjustForInflation))
-      : raw.edges)
+    const projected = receiptGraphView(raw, receiptMeasure, scrubbed ? yearLo : -Infinity, scrubbed ? yearHi : Infinity, adjustForInflation)
+    const windowNodes = projected.nodes
+    const windowEdges = filterMoneyEdges({ ...projected, edges: projected.edges
       .filter(inWindow)
       .filter((e) => grantsOn || !isGrantEdge(e)) }, { ...researchFilters, industry: activeGroup || undefined })
     const grantsByNode = new Map<string, GrantsBlock>()
@@ -1196,7 +1254,7 @@ export async function mountMoneyMap(
       if (n.contracts) contractsByNode.set(n.id, recalculated ? windowFigures(n.contracts, yearLo, yearHi, adjustForInflation) : n.contracts)
     }
     view = {
-      nodes: recalculated ? new Map(windowNodes.map((n) => [n.id, n])) : byId,
+      nodes: new Map(windowNodes.map((n) => [n.id, n])),
       edges: windowEdges,
       span: scrubbed ? yearSpan(yearLo, yearHi) : null,
       grants: grantsByNode,
@@ -1320,6 +1378,22 @@ export async function mountMoneyMap(
     words.isolate(activeGroup)
   }
   if (legend) {
+    if (hasReceiptTypes) {
+      const label = el('label', 'mm-receipt-measure', legend)
+      el('span', '', label).textContent = 'Party receipts'
+      measureControl = el('select', 'ui-select', label)
+      measureControl.setAttribute('aria-label', 'Receipt measure')
+      for (const value of ['all_types', 'donation_only'] as const) {
+        const option = el('option', '', measureControl)
+        option.value = value
+        option.textContent = receiptMeasureLabel(value)
+      }
+      measureControl.value = receiptMeasure
+      measureControl.addEventListener('change', () => {
+        receiptMeasure = measureControl!.value === 'donation_only' ? 'donation_only' : 'all_types'
+        pushData()
+      })
+    }
     const legendGroups = [...CLUSTER_COLOURS.keys()].filter(
       (group) => group !== 'parties' && group !== 'public money' && graph.groupStyles.has(group),
     )
@@ -1807,6 +1881,7 @@ export async function mountMoneyMap(
       ? 'Political party'
       : node.kind === 'grantor' ? 'Public money' : sentence(node.industry.replace(/_/g, ' ')))
     associatedLine(node)
+    if (hasReceiptTypes && (node.kind === 'donor' || node.kind === 'party')) el('p', 'mm-card-fine', card).textContent = receiptMeasureLabel(receiptMeasure)
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(node.total)
@@ -1947,7 +2022,7 @@ export async function mountMoneyMap(
     const style = clusterColour(group)
     const groupName = sentence(group)
     cardTitle(`${groupName} → ${party.label}`)
-    cardTag('Industry flow')
+    cardTag(hasReceiptTypes ? `${receiptMeasureLabel(receiptMeasure)} · Industry flow` : 'Industry flow')
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(edge.total ?? 0)
@@ -2050,6 +2125,7 @@ export async function mountMoneyMap(
     cardTitle(`${donor.label} → ${party.label}`)
     cardTag(`${sentence(donor.industry.replace(/_/g, ' '))} money`)
     associatedLine(donor)
+    if (hasReceiptTypes) el('p', 'mm-card-fine', card).textContent = receiptMeasureLabel(receiptMeasure)
 
     const total = el('div', 'mm-card-total', card)
     total.textContent = formatMoney(edge.total ?? 0)
@@ -2338,6 +2414,8 @@ export async function mountMoneyMap(
     yearHi = Math.max(from, to)
     yearsInUrl = scene?.from !== undefined || scene?.to !== undefined
     adjustForInflation = false
+    receiptMeasure = opts.receiptMeasure ?? 'all_types'
+    if (measureControl) measureControl.value = receiptMeasure
     grantsOn = hasGrants
     legend?.querySelector('.mm-grants-toggle')?.setAttribute('aria-pressed', String(grantsOn))
     syncScrubControls()
@@ -2416,6 +2494,8 @@ export async function mountMoneyMap(
         yearLo = Math.min(from, to); yearHi = Math.max(from, to)
         yearsInUrl = route.has('from') || route.has('to')
         adjustForInflation = route.get('cpi') === '1'
+        receiptMeasure = route.get('receipt') === 'donations' ? 'donation_only' : opts.receiptMeasure ?? 'all_types'
+        if (measureControl) measureControl.value = receiptMeasure
         syncScrubControls()
       }
       researchFilters = { ...filters }

@@ -1,3 +1,4 @@
+import {wordsInOrder} from './question-text.mjs'
 import {sentenceParts} from './research-claim-audit.mjs'
 // Pure answer-shape checks shared by the serving boundary and both evaluation arms.
 export const fold = (s) => String(s ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase()
@@ -57,7 +58,7 @@ export function answerStyleChecks(question, answer, evidence = {sources:[]}, req
   const topic=/\b(mining|gambling|housing|immigration|climate|tax|budget|contracts?|grants?|salary|income)\b/i.exec(question)?.[1]
   const topicalSource=topic&&(evidence.sources??[]).some(s=>s.cited&&s.speaker&&styleNormal(first).includes(styleNormal(s.speaker))&&new RegExp(topic,'i').test([s.title,s.snippet].join(' ')))
   const subjectTopic=limited||!topic||topicalSource||new RegExp(({salary:'salary|paid|pay',grants:'grants?',grant:'grants?',contracts:'contracts?',contract:'contracts?',immigration:'immigration|asylum|migrant|refugee',tax:'tax|GST',housing:'housing|homes?|rent|HAFF'})[topic.toLowerCase()]??topic,'i').test(first)
-  const comparative=/compar|versus|\bvs\b|this term.*last term|last term.*this term/i.test(question)||/between/i.test(question)&&/how (?:many|much)|counts?|salary|paid|speeches|contracts?|grants?/i.test(question)
+  const comparative=(/compar|versus|\bvs\b/i.test(question)||wordsInOrder(question,'this term','last term')||wordsInOrder(question,'last term','this term'))||/between/i.test(question)&&/how (?:many|much)|counts?|salary|paid|speeches|contracts?|grants?/i.test(question)
   const relation=limited||(!ranking&&!comparative)||/same|equal|more|fewer|compared|versus|higher|lower|than|highest|lowest|most|least|largest|biggest|top|fewest|led|leader|leads|ahead|ranked|tied/i.test(first)
   const quantitative=ranking||comparative||/how (?:many|much)|salary|paid|contracts?|grants?|median|population/i.test(question)
   const headline=limited||!quantitative||(!row?!amounts(answer).length&&!plainNumbers(answer).some(n=>!isYear(n)):[row.value,...(comparative?[...row.text.matchAll(/([\d.]+)%/g)].map(m=>m[1]):[])].some(v=>plainNumbers(first).includes(Number(v.replace(/[$,]/g,'')))))||!row&&(amounts(first).length>0||plainNumbers(first).some(n=>!isYear(n)))

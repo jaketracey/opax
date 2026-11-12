@@ -20,7 +20,13 @@ async function run() {
   // No network. Keep unrelated hydration pending; the actual script bodies,
   // module imports, DOM operations and event listeners all execute.
   const requests = [];
-  window.fetch = (url, init) => { requests.push(`${init?.method || 'GET'} ${url}`); if (workerData.probe === 'suggestions' && String(url).startsWith('/api/suggest?')) return Promise.resolve({ ok: true, json: async () => ({ results: [
+  const outcomes = [];
+  window.addEventListener('opax:analytics', e => outcomes.push(e.detail));
+  window.fetch = (url, init) => { requests.push(`${init?.method || 'GET'} ${url}`);
+    if (workerData.probe === 'search-empty' && String(url).startsWith('/api/search-all?')) return Promise.resolve({ok:true,json:async()=>({
+      results:[],count:0,total:0,years:{},suggestions:workerData.suggestions,
+    })});
+    if (workerData.probe === 'suggestions' && String(url).startsWith('/api/suggest?')) return Promise.resolve({ ok: true, json: async () => ({ results: [
     { kind: 'supplier', title: 'Example supplier', href: '/subject/supplier/example' },
     { kind: 'instrument', title: 'Example instrument', href: '/instrument/example' },
     { kind: 'speech', title: 'Example speech', slug: 'example-speech' },
@@ -82,7 +88,7 @@ async function run() {
     for (const url of deferredModules) await evaluateModule(url);
     if (workerData.probe && workerData.probe !== 'menus') {
       window.document.dispatchEvent(new window.Event('DOMContentLoaded'));
-      return await probes[workerData.probe](window, requests);
+      return await probes[workerData.probe](window, requests, outcomes);
     }
     if (workerData.probe === 'menus') {
       window.document.dispatchEvent(new window.Event('DOMContentLoaded'));
@@ -144,6 +150,29 @@ async function run() {
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const key = (window, target, k, more = {}) => target.dispatchEvent(new window.KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true, ...more }));
 const probes = {
+  async 'search-empty'(window, requests, outcomes) {
+    const doc=window.document;
+    for(let i=0;i<200 && !doc.getElementById('search-suggestions-heading');i++)await wait(10);
+    const box=doc.getElementById('search-empty');
+    const focus=doc.activeElement.id;
+    const links=[...box.querySelectorAll('a')].map(a=>({label:a.textContent,href:a.getAttribute('href')}));
+    const event=outcomes.find(e=>e.event==='opax_search_completed');
+    const before=requests.filter(r=>r.includes('/api/ask'));
+    const ask=[...box.querySelectorAll('a')].find(a=>a.textContent.startsWith('Ask OPAX:'));
+    ask?.click();
+    for(let i=0;i<200 && doc.getElementById('ask-input')?.value!=='Morgn Example';i++)await wait(10);
+    await wait(20);
+    const draft={query:doc.getElementById('ask-input').value,hidden:doc.getElementById('ask-result').hidden,requests:requests.filter(r=>r.includes('/api/ask')),path:window.location.pathname,search:window.location.search};
+    doc.getElementById('ask-form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
+    await wait(50);
+    return {hidden:box.hidden,focus,links,event,before,draft,after:requests.filter(r=>r.includes('/api/ask'))};
+  },
+  async 'ask-draft'(window, requests) {
+    const doc=window.document;
+    for(let i=0;i<200 && doc.getElementById('ask-input')?.value!=='Morgn Example';i++)await wait(10);
+    await wait(30);
+    return {query:doc.getElementById('ask-input').value,requests:requests.filter(r=>r.includes('/api/ask')),hidden:doc.getElementById('ask-result').hidden};
+  },
   async suggestions(window, requests) {
     const results = [];
     for (const prefix of ['mast', 'drawer']) {

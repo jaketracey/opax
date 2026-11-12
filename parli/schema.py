@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS donations (
     donor_type TEXT,  -- 'individual', 'organisation', 'other'
     industry TEXT,  -- manually or automatically classified
     source TEXT,  -- 'aec_annual', 'aec_election', 'aec_referendum', 'nsw', 'vic', 'qld'
+    state TEXT DEFAULT 'federal',
     donation_type TEXT DEFAULT 'direct'  -- 'direct', 'in_kind', 'other'
 );
 
@@ -631,6 +632,8 @@ def init_db(db: sqlite3.Connection) -> None:
     """Create all tables if they don't exist, and run migrations."""
     db.executescript(SCHEMA_SQL)
     migrate_add_state_column(db)
+    from parli.ingest.aec_receipts import migrate
+    migrate(db)
 
 
 def seed_topics(db: sqlite3.Connection) -> int:
