@@ -12,7 +12,7 @@ import io
 import json
 from pathlib import Path
 import re
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 from xml.etree import ElementTree as ET
 import zipfile
 
@@ -269,7 +269,15 @@ def act_bill_id(url):
     "/DownloadFile/b/db_65228/..." all name db_65228. Explanatory statements
     ("/es/") and Acts ("/a/") are different register items.
     """
-    match = re.search(r"legislation\.act\.gov\.au/(?:(?:View|DownloadFile)/)?b/(db_\d+)(?:[/?#]|$)", url or "", re.I)
+    try:
+        parsed = urlsplit(url or "")
+        if (parsed.scheme not in ("http", "https")
+                or parsed.hostname not in ("legislation.act.gov.au", "www.legislation.act.gov.au")
+                or parsed.username or parsed.password or parsed.port not in (None, 80, 443)):
+            return None
+    except ValueError:
+        return None
+    match = re.match(r"/(?:(?:View|DownloadFile)/)?b/(db_\d+)(?:/|$)", parsed.path, re.I)
     return match[1] if match else None
 
 
@@ -375,7 +383,7 @@ def act_bills(volume, summary, listing, receipts, parliament, licence):
                 if not u.startswith("http"):
                     continue
                 links.append(document(text(a), u, receipts["volume"]))
-                if not bill_url and re.search(r"legislation.act.gov.au/b/", u):
+                if not bill_url and act_bill_id(u) and urlsplit(u).path.lower().startswith("/b/"):
                     bill_url = u
         source_id = bill_url.rsplit("/", 1)[-1] if bill_url else None
         events = list(status["events"]) if status else []

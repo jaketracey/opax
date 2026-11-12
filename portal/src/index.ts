@@ -97,6 +97,8 @@ import { cacheKeyParams } from './cache-key'
 import { searchFind, type SearchRetrieval } from './search-find'
 import { communityMcp } from './community-mcp'
 import { expireVoiceSessions, voiceRoute } from './voice'
+import { voiceAsk } from './voice-ask'
+import { ASK_FALLBACK_FLOOR_MS, fallbackAllowanceMs, gatheredPayload, shortenedCaller, trustedCaller, type AskCaller } from './ask-caller-budget'
 import { appEdition } from './app-edition'
 import { appVicElection } from './app-vic-election'
 import { appManifest } from './app-manifest'
@@ -107,6 +109,7 @@ import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
 import { CATALOG_KINDS, searchCatalog, searchCatalogPaged, type CatalogRecord, type CatalogStub } from './catalog-search'
+import { emptySearchSuggestions } from './search-recovery'
 import { retrieveAskRecords, recordContext, recordSources, RECORD_GROUNDING, integrityQuestion, type AskRecords } from './ask-records'
 import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { runAgentic, classifyAgentic, agenticCacheKey, resolveNamedScope, type NamedScope, inferPeriod, bounded, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
@@ -738,6 +741,8 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
     results: shown, count: shown.length,
     total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
     years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
+    ...(catalog?.matched_query ? { matched_query: catalog.matched_query } : {}),
+    ...(!rows.length && !options.suggest ? { suggestions: await emptySearchSuggestions(url.searchParams.get('q') || '', env.ASSETS, catalog || undefined) } : {}),
     ...(documents?.mode_used ? { mode_used: documents.mode_used } : {}),
     ...(documents?.fallback ? { fallback: documents.fallback } : {}),
   })
@@ -1617,7 +1622,7 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   // rides the KB's OpenRouter slot: generation bills to OpenRouter only.
   body.generative_model = askModel
   const store = (payload: AskPayload): void => {
-    if (cacheKey && cacheableAnswer(payload)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
+    if (cacheKey && cacheableAnswer(payload) && !UNSHARED_ASK_REQUESTS.has(request)) storeGenerationCache(env, ctx, cacheKey, json(payload), ASK_CACHE_TTL)
   }
   if (isPositionBody(body)) {
     // Read and bound original speaking turns before generation. A cached answer
@@ -6637,7 +6642,12 @@ async function apiAgenticGold(request: Request, env: Env, ctx: ExecutionContext)
   const run = await executeAgentic(input, env, ctx, undefined, request.signal)
   return json(linkAskSources(agenticAskPayload(run, q), run.source_links, SITE_ORIGIN))
 }
-async function apiAskRouted(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
+/** Requests whose answers apiAsk must not store in the shared cache: fallbacks run within a shortened caller budget. */
+const UNSHARED_ASK_REQUESTS = new WeakSet<Request>()
+/** `caller` is an internal caller's deadline (voice's ask_opax in this Worker); otherwise only the staging hop's
+ * budget header with ASK_INTERNAL_SECRET sets one, counted from now. A public budget header is ignored. */
+async function apiAskRouted(request: Request, url: URL, env: Env, ctx: ExecutionContext, caller?: AskCaller): Promise<Response> {
+  caller ??= await trustedCaller(request, env.ASK_INTERNAL_SECRET)
   const override = request.headers.get('x-opax-research')
   const usage = (override === 'loop' || override === 'old') && await operatorAuthorized(request, env) ? researchEvalState() : undefined
   // Operator evals may also pick a model from RESEARCH_LOOP_MODEL_ALLOW and a provider sort for this request only.
@@ -6657,7 +6667,7 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
     if (identity) return identityResponse(identity, request)
     const money=await federalPartyMoneyAnswer(body.value as AskInput,selected.ASSETS)
     if(money)return federalPartyMoneyResponse(money,request)
-    return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx)
+    return apiAskRoutedCore(replayPost(request, body.text), url, body.value, selected, ctx, undefined, caller)
   }
   const served=await serve()
   if (served.headers.has('x-opax-identity-route')) return usage ? withResearchEval(served, () => ({ ...researchEvalUsage(usage), model: 'deterministic-identity' })) : served
@@ -6667,11 +6677,12 @@ async function apiAskRouted(request: Request, url: URL, env: Env, ctx: Execution
   // Operator evals also see which model and routing the loop used.
   return usage ? withResearchEval(response, () => ({ ...researchEvalUsage(usage), model: researchModelKey(selected.RESEARCH_LOOP_MODEL_ID, selected.RESEARCH_LOOP_PROVIDER, selected.RESEARCH_LOOP_REASONING) })) : response
 }
-async function apiAskRoutedCore(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext, onRun?: (run: AgenticPayload) => void): Promise<Response> {
+async function apiAskRoutedCore(request: Request, url: URL, input: Record<string, unknown>, env: Env, ctx: ExecutionContext, onRun?: (run: AgenticPayload) => void, caller?: AskCaller): Promise<Response> {
   const started = Date.now()
   let question = String(input.question).trim()
   let quotaTaken = false
-  const fallback = () => apiAsk(request.clone(), env, ctx, undefined, undefined, quotaTaken)
+  const unshared = (r: Request) => { if (shortenedCaller(caller)) UNSHARED_ASK_REQUESTS.add(r); return r }
+  const fallback = () => apiAsk(unshared(request.clone()), env, ctx, undefined, undefined, quotaTaken)
   const loopRoute = env.RESEARCH_LOOP === 'route'
   if (env.RESEARCH_LOOP === 'shadow') {
     const shadowClient = new AbortController()
@@ -6688,7 +6699,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
         return result
       },
     } } : {}) }
-    const response = await apiAskRoutedCore(request, url, input, servedEnv, ctx, run => { planner = run })
+    const response = await apiAskRoutedCore(request, url, input, servedEnv, ctx, run => { planner = run }, caller)
     const rate = env.RESEARCH_LOOP_SHADOW_RATE === undefined ? 0.2 : Number(env.RESEARCH_LOOP_SHADOW_RATE)
     const sampled = response.ok && response.headers.get('x-opax-cache') !== 'HIT' && readerQuota && Number.isFinite(rate) && rate > 0 && Math.random() < Math.min(1, rate)
     if (sampled) {
@@ -6737,7 +6748,9 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
   }
   // The loop attempt is bounded separately; failed research must not subtract
   // its wall time from the old path's two 40s attempts plus verification.
-  let budget = new AskDeadline(Math.max(0, AGENTIC_BUDGET_MS - (Date.now() - started)), request.signal)
+  // An internal caller with less time (voice's ask_opax) shortens both allowances, counted from its own deadline.
+  const callerEnd = caller?.deadline
+  let budget = new AskDeadline(Math.max(0, Math.min(AGENTIC_BUDGET_MS - (Date.now() - started), callerEnd === undefined ? Infinity : callerEnd - Date.now())), request.signal)
   let lastResearch: ResearchPayload | undefined, failureLogged = false
   const trackRun = (run: AgenticPayload) => { lastResearch = run.research; failureLogged ||= !!run.research_failure; onRun?.(run) }
   const routedFallback = async (research?: ResearchPayload) => {
@@ -6747,18 +6760,31 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       if (!failureLogged) { failureLogged = true; await recordResearchFailure(question, failure) }
     }
     if (request.signal.aborted) return json({ error: 'The request was cancelled.', research }, 503)
-    if (loopRoute) { budget.dispose(); budget = new AskDeadline(90_000, request.signal) }
+    const allowance = fallbackAllowanceMs(callerEnd)
+    // Too little of the caller's time left to retrieve and write: answer with what research gathered.
+    if (callerEnd !== undefined && allowance < ASK_FALLBACK_FLOOR_MS) {
+      const gathered = gatheredPayload(research)
+      return gathered ? json(gathered) : json({ error: 'The answer took too long. Please try again.', research }, 503)
+    }
+    if (loopRoute) { budget.dispose(); budget = new AskDeadline(allowance, request.signal) }
     try { return await budget.run(async () => {
       const period = agenticPeriod(input, true)
       const fallbackInput = loopRoute && period.kind !== 'all' ? { ...input, from: period.since?.slice(0, 4), to: period.until?.slice(0, 4), since: period.since, until: period.until } : undefined
-      const response = await apiAsk(new Request(request, { signal: budget.signal }), env, ctx, fallbackInput as AskInput | undefined, budget, quotaTaken, loopRoute)
+      const response = await apiAsk(unshared(new Request(request, { signal: budget.signal })), env, ctx, fallbackInput as AskInput | undefined, budget, quotaTaken, loopRoute)
       const safe = loopRoute && response.status === 504 ? new Response(response.body, { status: 503, headers: response.headers }) : response
+      // A fallback that timed out inside the caller's time (504/503) still leaves what research found.
+      const gathered = callerEnd !== undefined && (safe.status === 503 || safe.status === 504) ? gatheredPayload(research) : null
+      if (gathered) { await safe.body?.cancel().catch(() => {}); return json(gathered) }
       // Ordinary RAG consumption is observed for operator evals. Otherwise,
       // keep total usage unknown; per-turn telemetry still describes the loop.
       const scopedFallback = loopRoute ? await withFallbackPeriod(safe, agenticPeriod(input, true)) : safe
       return loopRoute || research?.trail.length ? withPlannerResearch(scopedFallback, research ? { ...research, ms: Date.now() - started, tokens: null, cost_usd: null } : undefined) : scopedFallback
     }) } catch (error) {
-      if (!loopRoute || request.signal.aborted) throw error
+      if (request.signal.aborted) throw error
+      // Out of the caller's time: offer what research found rather than nothing.
+      const gathered = callerEnd === undefined ? null : gatheredPayload(research)
+      if (gathered) return json(gathered)
+      if (!loopRoute) throw error
       return json({ error: 'The record is temporarily unavailable. Please try again.', research: { ...research, mode: 'planner', failure: research?.failure ?? 'timeout' } }, 503)
     }
   }
@@ -6812,7 +6838,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       const finalPayload=linkAskSources(withTranscriptNote(loopRoute?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
-      if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
+      if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
       return response
     }
     if (!streaming) {
@@ -7244,7 +7270,7 @@ export default {
       if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)
       if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
       return display(await route(local, target, env, ctx), target)
-    }))
+    }, voiceAsk(env, (ask, caller) => apiAskRouted(ask, new URL(ask.url), env, ctx, caller))))
     if (url.pathname === '/mcp') return communityResponse(await communityMcp(request, env, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })

@@ -1,3 +1,4 @@
+import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import type { RecordQuestion } from './ask-records'
 import { receiptPeriodQuery } from './receipt-period'
 import { receiptAnswer, receiptDonorChoices, unmatchedReceiptRankingScope, type ReceiptGraph } from './voice-money'
@@ -83,7 +84,7 @@ export function fundingFollowUp(input:RecordQuestion,graph:ReceiptGraph,jurisdic
       continue
     }
     if(!selected || !fundingContinuation(original)) { selected=undefined;continue }
-    let fragment=original.trim().replace(/^(?:and\s+)?(?:(?:what|how)\s+about\s+)/i,'').replace(/^and\s+/i,'').replace(/[?]+$/,'').replace(/\s+please$/i,'').trim()
+    let fragment=trimQuestionEnd(questionSpaces(original).replace(/^(?:and )?(?:(?:what|how) about )/i,'').replace(/^and /i,''),'?').replace(/ please$/i,'').trim()
     // This bounded continuation changes only a shared period, never one side
     // of a pair or an unrecognised qualifier.
     if(selected.compareParties && !comparisonPeriodOnly(fragment)) { selected=undefined;continue }
