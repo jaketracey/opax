@@ -94,6 +94,8 @@ test('claim audit adverbs cannot backtrack over joined or failing word runs',asy
 test('table query names are parsed by delimiter under 50 ms',async()=>{
   const key='a.f.'.repeat(25_000)+'x', params=new URLSearchParams([[key,'a'],[key,'b']])
   assert.ok((await fast(()=>repeatedTableKeys(params,null))).has(key))
+  const broken='a.f.'.repeat(8_000)+'\nx', invalid=new URLSearchParams([[broken,'a'],[broken,'b']])
+  assert.deepEqual([...(await fast(()=>repeatedTableKeys(invalid,null)))],[])
   assert.deepEqual([...repeatedTableKeys(new URLSearchParams('t.q=a&t.q=b&t.f.x=a&t.f.x=b'),null)],['t.q','t.f.x'])
 })
 
@@ -130,8 +132,8 @@ test('SEO heading and breadcrumb labels stay inert at the HTML output boundary',
 test('pay and no-answer links reject external origins, credentials and URL control characters',()=>{
   const source=readFileSync(new URL('../public/app.js',import.meta.url),'utf8')
   const slice=(a,b)=>source.slice(source.indexOf(a),source.indexOf(b,source.indexOf(a)))
-  const dom=new JSDOM('<main></main>'),{document}=dom.window,root=document.querySelector('main')
-  const api=runInNewContext(slice('function safeAnswerLink','\n/** Render links')+slice('function renderNoAnswer','\nfunction renderAnswer(')+slice('function renderPayNextSteps','\nfunction renderMoneyNextSteps')+';({renderNoAnswer,renderPayNextSteps})',{document,URL})
+  const dom=new JSDOM('<main></main>',{url:'https://opax.com.au/ask'}),{document,location}=dom.window,root=document.querySelector('main')
+  const api=runInNewContext(slice('function safeAnswerLink','\n/** Render links')+slice('function renderNoAnswer','\nfunction renderAnswer(')+slice('function renderPayNextSteps','\nfunction renderMoneyNextSteps')+';({renderNoAnswer,renderPayNextSteps})',{document,location,URL})
   for(const href of ['//outside.test/path','/\\outside.test/path','javascript:example','https://opax.com.au@outside.test/','/money\npath','/subject/person/a/../../money']){
     root.replaceChildren();api.renderPayNextSteps(root,[{href,label:'Open'}])
     for(const a of root.querySelectorAll('a'))assert.equal(new URL(a.getAttribute('href'),'https://opax.com.au').origin,'https://opax.com.au')
@@ -139,7 +141,26 @@ test('pay and no-answer links reject external origins, credentials and URL contr
     assert.equal(root.querySelector('a').getAttribute('href'),'/ask?view=search')
   }
   root.replaceChildren();api.renderPayNextSteps(root,[{href:'/money?from=2020',label:'Receipts'}])
-  assert.equal(root.querySelector('a').getAttribute('href'),'/money?from=2020')
+  assert.equal(root.querySelector('a').href,'https://opax.com.au/money?from=2020')
   api.renderNoAnswer(root,{next_step:{href:'/subject/person/avery-example',label:'Avery Example'}})
   assert.equal(root.querySelector('a').getAttribute('href'),'/subject/person/avery-example')
+})
+
+for(const [name,path,expectedPath] of [['normalised slashes','/money/..//outside.test/path','//outside.test/path'],['encoded slashes','/money/..%2F%2Foutside.test/path','/money/..%2F%2Foutside.test/path'],['backslash','/money/..\\outside.test','/outside.test']])test(`pay links assign explicit same-origin URLs after ${name}`,()=>{
+  const source=readFileSync(new URL('../public/app.js',import.meta.url),'utf8')
+  const slice=(a,b)=>source.slice(source.indexOf(a),source.indexOf(b,source.indexOf(a)))
+  for(const origin of ['https://opax.com.au','https://www.opax.com.au','http://127.0.0.1:8912']){
+    const dom=new JSDOM('<main></main>',{url:origin+'/ask'}),{document,location}=dom.window,root=document.querySelector('main')
+    const api=runInNewContext(slice('function safeAnswerLink','\n/** Render links')+slice('function renderPayNextSteps','\nfunction renderMoneyNextSteps')+';({renderPayNextSteps})',{document,location,URL})
+    api.renderPayNextSteps(root,[{href:path,label:'Open records'}])
+    const a=root.querySelector('a')
+    assert.ok(a,'an internal pay path remains available')
+    // Verify the assigned attribute too: a second parse must retain the origin.
+    assert.equal(a.getAttribute('href'),origin+expectedPath)
+    assert.equal(new URL(a.getAttribute('href'),location.href).origin,origin)
+    assert.equal(a.origin,origin)
+    assert.equal(a.textContent,'Open records')
+    root.replaceChildren();api.renderPayNextSteps(root,[{href:'/subject/person/avery-example?year=2020',label:'Avery Example'}])
+    assert.equal(root.querySelector('a').href,origin+'/subject/person/avery-example?year=2020')
+  }
 })

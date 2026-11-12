@@ -2640,6 +2640,7 @@ function safeAnswerLink(href) {
     // Encode each URL component explicitly before it is written into the DOM.
     // Decode individual components first so an existing %3A or %20 is not doubled.
     const path = url.pathname.split("/").map(part => encodeURIComponent(decodeURIComponent(part))).join("/");
+    if (path.startsWith("//")) return null;
     const query = [...url.searchParams].map(([key, value]) => encodeURIComponent(key) + "=" + encodeURIComponent(value)).join("&");
     const hash = url.hash ? "#" + encodeURIComponent(decodeURIComponent(url.hash.slice(1))) : "";
     return path + (query ? "?" + query : "") + hash;
@@ -10578,8 +10579,13 @@ const PAY_CALCULATION_NOTE = "Opax worked these salaries out from the Remunerati
 /** The fixed next steps under a pay answer: links the Worker chose (src/ask-pay.ts). */
 function renderPayNextSteps(container, steps) {
   const links = (Array.isArray(steps) ? steps : []).flatMap((step) => {
-    const href = typeof step?.href === "string" && step.href.startsWith("/") ? safeAnswerLink(step.href) : null;
-    return href && step.label ? [{href, label:step.label}] : [];
+    if (typeof step?.href !== "string" || !step.href.startsWith("/") || /[\u0000-\u0020]/.test(step.href) || !step.label) return [];
+    try {
+      const url = new URL(step.href, location.origin);
+      if (url.origin !== location.origin || url.username || url.password) return [];
+      // Keep the origin when serialising: a normalised path can start with //.
+      return [{href:url.href, label:step.label}];
+    } catch { return []; }
   });
   if (!links.length) return;
   const nav = document.createElement("nav");

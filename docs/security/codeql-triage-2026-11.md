@@ -28,8 +28,8 @@ Paths in braces abbreviate parallel filenames. Test basenames are under `portal/
 | `js/incomplete-hostname-regexp` | 3 | `portal/test/{home-data,ask-person-overview}.test.mjs` | test-only | 0 | Host patterns select static stub replies in offline tests; they are not production allowlists. |
 | `py/incomplete-hostname-regexp` | 2 | `scripts/state_bills/stage.py`, `parli/ingest/qao_reports.py` | real | 2 | ACT bill source selection and QAO copyright exemptions consume fetched HTML. Both now parse URLs and compare exact scheme, hostname, credentials, port and path; ACT identifiers are matched on the parsed path only. |
 | `js/xss-through-exception` | 2 | `portal/test/{video-archive-browser,senate-video-browser}.mjs` | test-only | 0 | Browser QA servers bind loopback and disable external network. Exception responses are not production code. Any reuse as a public server would require a plain-text content type or escaped HTML. |
-| `js/client-side-unvalidated-url-redirection` | 2 | `portal/public/app.js` (`renderPayNextSteps`, `renderNoAnswer`) | real (1), false positive hardened (1) | 2 | Pay links admitted an external origin via path-prefix checking. Reuse safeAnswerLink, which parses with new URL and checks the exact origin before producing encoded local paths. The no-answer profile was already anchored to a local prefix; it now uses the same parser and a single profile path segment. |
-| `js/xss` | 2 | `portal/public/app.js` (same two link assignments) | real (1), false positive hardened (1) | 2 | Same remediation as the redirection rule. Labels remain textContent; unsafe schemes, foreign hosts, credentials and URL control characters do not become links. |
+| `js/client-side-unvalidated-url-redirection` | 2 | `portal/public/app.js` (`renderPayNextSteps`, `renderNoAnswer`) | real (1), false positive hardened (1) | 2 | Pay links (#102) are parsed against location.origin, checked for that exact origin and assigned as absolute URLs so path normalisation cannot turn the assigned value into a network-path reference. The shared safeAnswerLink helper also rejects reconstructed network-path references. The no-answer profile (#136) was already anchored to a local prefix; it uses that helper and a single profile path segment. |
+| `js/xss` | 2 | `portal/public/app.js` (same two link assignments) | real (1), false positive hardened (1) | 2 | The same URL hardening covers pay assignment #103 and profile assignment #135. Labels remain textContent; executable schemes, foreign hosts, credentials and URL control characters do not become links. No direct JavaScript execution path was demonstrated at either original sink; the real defect is untrusted navigation. |
 | `js/double-escaping` | 1 | `portal/src/daily-post.ts` | real | 1 | Sequential decoding could reinterpret a reference created by an earlier replacement and could throw on invalid code points. The existing entities dependency now decodes exactly once. |
 | `js/unvalidated-dynamic-method-call` | 1 | `portal/public/app.js` (`directory` comparator) | false positive | 0 | URL sort values are validated against spec.sorts before reading a Map whose values are application-defined comparators. The fallback is also an application-defined comparator; user input cannot name an object method. |
 | `js/functionality-from-untrusted-source` | 162 | `data/staged/bills-tas/snapshots/*.html` (162 files) | false positive | 0 | All 162 refer to the same versioned jQuery CDN script in captured Parliament of Tasmania HTML. Snapshots are provenance inputs parsed with BeautifulSoup, outside the portal/public asset root. No script is executed. Rewriting source snapshots would invalidate their hashes and provenance. The class would be real if a snapshot were served as active HTML, passed to a script-enabled browser, or copied into executable assets. Any such promotion requires script removal or an explicitly pinned script plus integrity verification. |
@@ -87,6 +87,32 @@ Acceptance review against the brief:
 4. **Done:** all 162 script alerts are offline source snapshots. Their common CDN reference and non-executing parse path were verified. The class decision states what would make it real; no executable unpinned loader exists in this alert set.
 5. **Done:** 202 unique dismissal proposals match inventory alert numbers: 179 false positive and 23 used in tests. None was applied.
 6. **Done for the portal:** normal routing and page tests stay green; unrelated tracked build output is restored. Apart from `app.js` and `datatable-query.js`, browser-file changes contain content stamps only. **Not done: a green whole-repository Python gate**, for the unrelated failures above. No deployment, production write or alert-state change occurred.
+
+
+
+## Review fix round 1, 13 November 2026
+
+P1: pay next-step paths are now parsed directly against the current `location.origin`, checked for an exact origin match and assigned as absolute URLs. Keeping the authority through serialisation prevents path normalisation from creating an external redirect on the anchor's second parse. `safeAnswerLink` also rejects a reconstructed network-path reference for its other callers. Normal pay destinations and labels stay the same, including on local preview origins. This completes the pay-link remediation for #102 and #103; the profile hardening for #135 and #136 remains unchanged. No additional alert or dismissal is claimed.
+
+Three separate pay-link contract tests cover normalised duplicate separators, encoded separators and a backslash, on the OPAX, www and loopback preview origins. Each fails against the previous branch head `5dce1cf99` and passes after this fix. Only the normalised duplicate-separator case demonstrated an external redirect before this round; the other two were already inert and now also verify explicit absolute assignment and retention of an internal destination. Normal profile links retain their destinations. The shared-helper regression independently rejects the reconstructed network-path case.
+
+P2: the namespaced table-key timing test now includes a long key with a line break. Running that exact test with main's original table parser from `496fbe4dc` fails the 50 ms assertion at **267.61 ms**. The branch parser passes the assertion and returns no recognised duplicate key for that input class. The earlier matching-key case is retained.
+
+| Gate | Round 1 result |
+| --- | --- |
+| `npx wrangler types` | Pass. |
+| `npm run build:release` | Pass. Unrelated generated records, dependency licence and voice output restored. Only the necessary app stamp remains in index.html. |
+| `npx tsc --noEmit` | Pass. |
+| `npm test -- --test-concurrency=3` | Pass: **4,783 tests**, zero failures. |
+| `node --test test/codeql-inputs.test.mjs` after the full suite | Pass: **14 tests**, zero failures, including the timing assertions. |
+| Focused input, answer-link and next-step suites before the gates | Pass: 25 tests. |
+| `git diff --check` | Pass. |
+
+Acceptance self-review:
+
+1. **Done:** pay links retain an explicit checked origin through URL normalisation and DOM assignment. All three requested input classes have individual regressions that fail on the previous head and pass now; production, www and preview origins and normal pay destinations are checked.
+2. **Done:** the added line-break key reproduces main's slow failure and passes on the branch under 50 ms.
+3. **Done:** the 17 rule totals, 38 remediated instances and all 202 dismissal proposals are unchanged, with the URL remediation explanation above updated for #102, #103, #135 and #136. The proposals remain 179 false positive and 23 used in tests. No alert state was changed. No Python implementation changed in this round; the previously documented baseline Python failures are unchanged. Fresh CodeQL analyser closure remains unverified.
 
 
 ## Proposed dismissals
