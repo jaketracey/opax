@@ -25,7 +25,10 @@ import { Screen } from '../design/layout';
 import { ContentUnavailable } from '../design/states';
 import { rhythm } from '../design/tokens';
 import { releaseSplash } from '../launch/splash';
-import { welcomeDeclinedThisLaunch } from '../onboarding/state';
+import {
+  useWelcomeDeclinedAt,
+  welcomeDeclinedThisLaunch,
+} from '../onboarding/state';
 import { EditionSkeleton } from './edition/EditionCard';
 import { TodayEditionCard } from './today/FeaturedPeopleCard';
 import { FollowingSection } from './follows/FollowingSection';
@@ -94,6 +97,7 @@ interface Launch {
  * pin the edition cache, its age and the welcome's "Not now" day.
  */
 function useLaunch(day: SydneyDate): Launch | null {
+  const liveDeclinedAt = useWelcomeDeclinedAt();
   const [launch, setLaunch] = useState<Launch | null>(null);
   useEffect(() => {
     let active = true;
@@ -166,7 +170,15 @@ function useLaunch(day: SydneyDate): Launch | null {
         .catch(() => undefined);
     }, []),
   );
-  return launch;
+  // Closing the welcome does not wait for disk, and a parent modal need not
+  // refocus the tab. The live choice wins over any launch/focus read already
+  // in flight, including one that started before Today was ready.
+  return launch && liveDeclinedAt
+    ? {
+        ...launch,
+        invitation: { ...launch.invitation, welcomeDeclinedAt: liveDeclinedAt },
+      }
+    : launch;
 }
 
 /** E2E captures only: the seat `OPAXSeat` names, chosen once per launch. */
