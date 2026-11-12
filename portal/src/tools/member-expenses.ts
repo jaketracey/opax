@@ -1,5 +1,5 @@
 /** IPEA expenses grouped by reporting quarter, rather than the transaction date. */
-import { personUrl } from '../../public/canonical-urls.js'
+import { personUrl } from '../../public/party-page.js'
 import { aud, clip, fold, readableRange, siteUrl } from './record-common'
 import { readToolAsset, type ToolArgs, type ToolDefinition } from './types'
 

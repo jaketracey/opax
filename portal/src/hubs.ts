@@ -1,4 +1,4 @@
-import { sourceLineHTML, machineLabelHTML, statusLabelHTML } from '../public/labels.js'
+import { sourceLineHTML, machineLabelHTML, statusLabelHTML } from '../public/party-page.js'
 import { shortDate, shortMoney } from '../public/format.js'
 import { houseName, orderedWeeks, day, sydneyDay } from '../public/hubs-data.js'
 import { sponsorPerson, type SponsorCandidate } from '../public/sponsor-person.js'

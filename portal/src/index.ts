@@ -15,8 +15,8 @@ import { identityAnswer, identityResponse } from './ask-identity'
 import { loosePositionPoints, claimAttributionOk, repairCausal } from './research-evidence'
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
-import { chamberLabel, PARTY_MAP } from '../public/labels.js'
-import {partySpeechLabel, readPartyPages, resolvePartyPage, type PartyPage} from '../public/party-page.js'
+import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
+import {partySpeechLabel, partyMembers, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, type PartyPage} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -85,7 +85,7 @@ import { communityRoute } from './community'
 import { reviewerLoginEnabled } from './community-auth'
 import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
-import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
+import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
@@ -3772,7 +3772,7 @@ const CHAMBER_NAMES: Record<string, string> = {
 // router and the crumb labels; the two lists have to name the same kinds.
 const DIRECTORY_KINDS: Record<string, string> = {
   person: 'Parliamentarians',
-  party: 'Parties',
+  party: 'Parties and independents',
   donor: 'Receipt sources',
   supplier: 'Government suppliers',
   agency: 'Government agencies',
@@ -4663,7 +4663,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       } else if (route.dir === 'electorate') {
         description = 'Australian electorates, their representatives, election results and Census context. Browse by parliament and chamber, with dated sources and explicit historical coverage.'
       } else if (route.dir === 'party') {
-        description = 'Australian political parties in the record: speeches, members and disclosed receipts, party by party, from Hansard and electoral commission returns.'
+        description = 'Parties and independents in the parliamentary record: recorded affiliations, speeches and disclosed receipts where held. Independents are not a party organisation.'
       } else if (route.dir === 'agency') {
         const data = await loadAgencies(env).catch(() => null)
         if (!data) return base({ title: 'Government agencies · OPAX', description: 'The agency list is temporarily unavailable. Please try again.', status: 503 })
@@ -5040,8 +5040,8 @@ async function loadPartyPages(env: Env): Promise<PartyPage[]> {
 // Retain older bill-source addresses outside the directory's verified party
 // inventory. Adding crawl discovery must not remove an existing record URL.
 async function loadPartyLabels(env: Env): Promise<string[]> {
-  partyLabelsMemo ??= Promise.all([loadMoney(env),loadPeople(env),loadBills(env),assetJson<{parties?:string[]}>(env,'/divisions/index.json').catch(()=>null)]).then(([money,people,bills,divisions])=>[...new Set([
-    ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party || ''),...(divisions?.parties || [])
+  partyLabelsMemo ??= Promise.all([loadMoney(env),loadPeople(env),loadBills(env),loadPartyPages(env)]).then(([money,people,bills,pages])=>[...new Set([
+    ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party || ''),...pages.flatMap(p=>p.aliases)
   ].filter(Boolean))]).catch(error=>{partyLabelsMemo=null;throw error})
   return partyLabelsMemo
 }
@@ -5515,14 +5515,15 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     display = disclosureRecord ? donorDisclosure(disclosureRecord).name : name
   }
   const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : node && donorDisclosure(node).href ? new URL(donorDisclosure(node).href!,SITE_ORIGIN).href : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
-  const title = `${display} · OPAX`
+  const independent = dir === 'party' && isIndependent(display)
+  const heading = dir === 'party' ? partyDisplayName(display) : display
+  const title = `${heading} · OPAX`
   let facts: string
   let tail = ''
-  const ldType = dir==='donor' ? 'Dataset' : 'Organization'
+  const ldType = dir==='donor' ? 'Dataset' : independent ? 'CollectionPage' : 'Organization'
   let card: CardSpec
   let memberNames: string[] = []
   if (dir === 'party') {
-    const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
     // Speeches as the search index labels them (scripts/build_party_speeches.mjs), so the page promises
     // what its members said only where the record holds it: "Reason Party" has money, no Hansard.
     const indexed = await assetJson<{ parties?: Record<string, number> }>(env, '/graph/party-speeches.json').catch(() => null)
@@ -5530,24 +5531,24 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     // The division records name those who sat for a party the roster files elsewhere
     // (scripts/build_party_index.mjs): one senator's own party has its senator.
     const recorded = await assetJson<{ parties?: Record<string, { name: string }[]> }>(env, '/graph/party-members.json').catch(() => null)
-    const known = new Set(members.flatMap((p) => [p.name, p.full ?? ''].filter(Boolean).map(foldName)))
-    const voted = Object.entries(recorded?.parties ?? {}).filter(([label]) => foldName(label) === foldName(display))
-      .flatMap(([, rows]) => rows.map((r) => r.name)).filter((n) => !known.has(foldName(n)))
-    memberNames = [...new Set([...members.filter((p) => p.current).map((p) => p.name), ...members.map((p) => p.name), ...voted])]
+    // Shared with the browser directory and party page: a distinct person may
+    // have recorded affiliations with more than one party across their career.
+    const members = partyMembers(display, {roster: people, divisions: recorded})
+    memberNames = [...members.current, ...members.former].map(p=>p.name)
     const parts: string[] = []
-    const count = members.length + new Set(voted.map(foldName)).size
+    const count = memberNames.length
     if (count) parts.push(`${num(count)} parliamentarian${count === 1 ? '' : 's'}${speeches ? ` and ${num(speeches)} speeches` : ''} in the record`)
     if (node) parts.push(`${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
     if (parts.length) {
-      facts = `${display}: ${parts.join('; ')}.`
-      tail = speeches && node ? 'What its members said, and who paid.' : speeches ? 'What its members said.' : node ? 'Who paid.' : ''
+      facts = independent ? `${heading}: ${INDEPENDENTS_DESCRIPTION} ${parts.join('; ')}.` : `${heading}: ${parts.join('; ')}.`
+      tail = independent ? (speeches ? 'Their recorded speeches.' : '') : speeches && node ? 'What its members said, and who paid.' : speeches ? 'What its members said.' : node ? 'Who paid.' : ''
     } else {
-      facts = `${display} in the OPAX record of Australian parliamentary speeches and disclosed political receipts.`
+      facts = independent ? INDEPENDENTS_DESCRIPTION : `${heading} in the OPAX record of Australian parliamentary speeches and disclosed political receipts.`
     }
     card = {
-      kicker: 'Political party',
-      title: display,
-      lines: parts.length ? parts : ['In the OPAX record of Australian parliamentary speeches and disclosed political receipts.'],
+      kicker: independent ? 'Independent parliamentarians' : 'Political party',
+      title: heading,
+      lines: independent ? [INDEPENDENTS_DESCRIPTION, ...parts] : parts.length ? parts : ['In the OPAX record of Australian parliamentary speeches and disclosed political receipts.'],
       dot: node?.colour ?? null,
     }
   } else if (node) {
@@ -5587,9 +5588,9 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     canonical,
     ogType: 'profile',
     status: 200,
-    jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
-    prerender: prerenderBlock(display,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}`
-      : memberNames.length ? `<h2>Members</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul>${indexLinks()}` : indexLinks()) + table,
+    jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
+    prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}`
+      : memberNames.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>${indexLinks()}` : indexLinks()) + table,
     card,
   }
 }

@@ -1,5 +1,5 @@
 /** Registers of members' interests (federal and Queensland) from the public register exports. */
-import { personUrl } from '../../public/canonical-urls.js'
+import { personUrl } from '../../public/party-page.js'
 import { clip, fold, siteUrl } from './record-common'
 import { ASK_CHAMBERS, canonicalChamber } from '../ask-chamber'
 import { readToolAsset, type ToolCitation, type ToolDefinition, type ToolEnv } from './types'

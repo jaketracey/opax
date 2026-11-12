@@ -188,3 +188,13 @@ test('the real app renders a published one-member party outside the money map: i
   }
   assert.ok(doc.querySelector('a[href*="kind=speech"][href*="party="]'), 'a link to their speeches');
 });
+
+test('the app presents independents as parliamentarians outside a party organisation', {timeout: 120_000}, async () => {
+  const result = await renderEntry('/subject/party/independent', '#party-members li.dir-row');
+  assert.deepEqual(result.errors, []);
+  const doc = new JSDOM(result.html).window.document;
+  assert.equal(doc.querySelector('#subject-title').textContent, 'Independents');
+  assert.ok(doc.body.textContent.includes('Parliamentarians who sat without a party. Not a party organisation.'));
+  assert.equal(doc.querySelector('#party-members h3').textContent, 'Parliamentarians');
+  assert.doesNotMatch(doc.body.textContent, /What its members said/);
+});

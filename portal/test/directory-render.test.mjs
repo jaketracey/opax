@@ -65,8 +65,34 @@ test('the browser party directory uses every canonical page and explains parliam
   assert.deepEqual(result.errors, []);
   const listed = [...result.html.matchAll(/class="source-title dir-name"[^>]*href="(\/subject\/party\/[^"?]+)"/g)].map(m => m[1]);
   assert.deepEqual(listed.sort(), pages.map(p => p.href).sort());
-  assert.match(result.html, /No party-level disclosure file held by OPAX\./);
-  assert.match(result.html, /recorded divisions/);
+  const {JSDOM} = await import('jsdom');
+  const doc = new JSDOM(result.html).window.document;
+  for (const slug of ['australian-conservatives', 'australian-motoring-enthusiast-party', 'derryn-hinchs-justice-party', 'gerard-rennick-people-first', 'liberal-democratic-party']) {
+    const row = doc.querySelector(`a[href="/subject/party/${slug}"]`).closest('li');
+    assert.equal(row.querySelector('.result-meta').textContent, 'Recorded divisions. No party-level disclosure file held by OPAX.');
+  }
+  assert.equal(doc.querySelector('a[href="/subject/party/independent"]').closest('li').querySelector('.result-meta').textContent, 'Parliamentarians who sat without a party. Not a party organisation.');
+  assert.equal(doc.querySelector('a[href="/subject/party/dlp"]').textContent.trim(), 'Democratic Labour Party');
+});
+
+test('directory membership includes previous affiliations and division-only people once each', { timeout: 20000 }, async () => {
+  const manifest = JSON.parse(readFileSync(new URL('../public/electorates/manifest.json', import.meta.url), 'utf8'));
+  const result = await render('party', {html: true, files: {
+    '/parliamentarians.json': {people: [
+      {name: 'Alex Example', pid: 'fixture-1', party: 'JLN', party_now: 'Independent', current: true, speeches: 0},
+      {name: 'Example', pid: 'fixture-1', party: 'Jacqui Lambie Network', speeches: 0},
+    ]},
+    [manifest.people_url]: {people: []},
+    '/graph/party-members.json': {parties: {'Jacqui Lambie Network': [{name: 'Alex Example'}, {name: 'Casey Fixture'}]}},
+  }});
+  assert.deepEqual(result.errors, []);
+  const {JSDOM} = await import('jsdom');
+  const doc = new JSDOM(result.html).window.document;
+  for (const [slug, expected] of [['jacqui-lambie-network', '2parliamentarians in the record'], ['independent', '1parliamentarian in the record']]) {
+    const row = doc.querySelector(`a[href="/subject/party/${slug}"]`).closest('li');
+    const count = [...row.querySelectorAll('.dir-fig')].find(n => n.textContent.includes('parliamentarian'));
+    assert.equal(count.textContent, expected);
+  }
 });
 
 // Jake, 16 Oct: the Parliamentarians bar keeps search, Party, Parliament, Chamber

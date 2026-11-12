@@ -5325,7 +5325,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=ba09591748'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=95c67c918b'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5567,8 +5567,8 @@ async function renderRosterParty(segment, key, body) {
     return;
   }
   // A code the roster files under ("JLN", "DLP") is titled with the party's own name.
-  const code = /^[A-Z]{2,5}$/.test(label) ? uiLabels.PARTY_MAP[label.toLowerCase()]?.[1] : null;
-  $("subject-title").textContent = (code && uiLabels.PARTY_NAMES[code]?.[1]) || label;
+  const independent = partyPage.isIndependent(label);
+  $("subject-title").textContent = partyPage.partyDisplayName(label);
   const canonical = subjectHash("party", label);
   if (canonical && canonical !== location.pathname) replaceRoute(canonical);
   currentSubjectKey = key = `party:${label}`;
@@ -5580,8 +5580,8 @@ async function renderRosterParty(segment, key, body) {
   const first = Math.min(...everyone.map((m) => m.first || 9999));
   const last = Math.max(0, ...everyone.map((m) => m.last || 0));
   subjectTag(body).innerHTML = [
-    partyChipHTML(label, { full: true }) || `<span>${esc(label)}</span>`,
-    first < 9999 ? `<span class="entry-active">Members in the record ${esc(yearSpan(first, last))}</span>` : "",
+    independent ? `<span>${esc(partyPage.INDEPENDENTS_DESCRIPTION)}</span>` : partyChipHTML(label, { full: true }) || `<span>${esc(label)}</span>`,
+    first < 9999 ? `<span class="entry-active">${independent ? 'Parliamentarians' : 'Members'} in the record ${esc(yearSpan(first, last))}</span>` : "",
   ].filter(Boolean).join(" · ");
   body.querySelector(".subject-head").insertAdjacentHTML("beforeend", `<div class="page-actions entry-actions">
     ${speeches ? actionBtn("search", partySpeechSearch(speeches.label), "Their speeches", { primary: true }) : ""}
@@ -5589,7 +5589,7 @@ async function renderRosterParty(segment, key, body) {
       { href: askHash(`What has parliament said about ${partyAskName(label)}?`), label: "Ask what parliament said about them" },
       { href: searchHash(`"${label}"`, {}), label: "Search mentions in the record" },
       { href: "/subject/party", label: "All parties" },
-    ], "More about this party")}
+    ], independent ? "More about independents" : "More about this party")}
   </div>`);
   box.classList.add("entry-rail");
   box.innerHTML = entryRailHTML();
@@ -7279,7 +7279,7 @@ function topicIndexDescription(slug) {
 // DIR_CHUNK with a "Show more" button so 1,400 people stay instant.
 
 const DIRECTORY_KINDS = {
-  person: "Parliamentarians", party: "Parties", donor: "Receipt sources", supplier: "Suppliers", agency: "Agencies",
+  person: "Parliamentarians", party: "Parties and independents", donor: "Receipt sources", supplier: "Suppliers", agency: "Agencies",
   campaigner: "Campaigners & third parties", electorate: "Electorates",
 };
 let electorateModulePromise;
@@ -7737,9 +7737,9 @@ async function buildPeopleDirectory() {
 /** Parties use the same canonical page inventory as server HTML and the sitemap.
  * The live facet enriches those pages with speech counts. */
 async function buildPartiesDirectory() {
-  const [fed, qld, vic, tas, live, dir, catalogue] = await Promise.all([
+  const [fed, qld, vic, tas, live, dir, catalogue, divisions] = await Promise.all([
     loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadMoneyFile("tas"),
-    aggregateApi("/api/parties").catch(() => null), loadParliamentarians(), loadPartyPage(),
+    aggregateApi("/api/parties").catch(() => null), loadParliamentarians(), loadPartyPage(), loadPartyMembers(),
   ]);
   const counted = Boolean(live?.parties?.length);
   const files = [["federal", fed], ["qld", qld], ["vic", vic], ["tas", tas]].filter(([, d]) => d?.nodes);
@@ -7747,11 +7747,16 @@ async function buildPartiesDirectory() {
     const jur = Object.keys(MONEY_JURISDICTIONS).find(j => MONEY_JURISDICTIONS[j].file === path);
     if (jur) return loadMoneyFile(jur);
     if (path === '/parliamentarians.json') return dir;
+    if (path === '/graph/party-members.json') return divisions;
     const response = await fetch(path);
     if (!response.ok) throw new Error('Party records unavailable');
     return response.json();
   });
-  const parties = new Map(pages.map(page => [page.label, { label: page.label, colour: null, speeches: 0, members: 0, money: {}, _coverage: catalogue.partyPageCoverage(page), _sortName: page.label.toLowerCase() }]));
+  const parties = new Map(pages.map(page => {
+    const members = catalogue.partyMembers(page.label, {roster: dir, divisions});
+    return [page.label, { label: page.label, name: page.name, colour: null, speeches: 0, members: members.current.length + members.former.length,
+      money: {}, _coverage: catalogue.partyPageCoverage(page), _sortName: page.name.toLowerCase() }];
+  }));
   const get = label => parties.get(catalogue.resolvePartyPage(label, pages)?.label);
   for (const [jur, data] of files) {
     for (const n of data.nodes) if (n.kind === "party") {
@@ -7766,7 +7771,6 @@ async function buildPartiesDirectory() {
     }
   }
   for (const r of live?.parties || []) { const p = get(r.label); if (p) p.speeches += r.count || 0; }
-  for (const person of dir?.people || []) { const p = get(person.party_now || person.party); if (p) p.members += 1; }
   const items = [...parties.values()];
   const colours = new Map(items.filter((p) => p.colour).map((p) => [p.label, p.colour]));
   const sourceShort = { federal: "AEC returns", qld: (qld?.meta?.sourceShort) || "ECQ", vic: (vic?.meta?.sourceShort) || "VEC", tas:(tas?.meta?.sourceShort)||"TEC" };
@@ -7790,12 +7794,12 @@ async function buildPartiesDirectory() {
     ].filter(Boolean).join(" · ");
     const figs = [
       counted ? `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>` : "",
-      `<span class="dir-fig"><b>${num(p.members)}</b>in the directory</span>`,
+      `<span class="dir-fig"><b>${num(p.members)}</b>parliamentarian${p.members === 1 ? '' : 's'} in the record</span>`,
       ...jurs.map((j) => `<span class="dir-fig"><b>${esc(fmtMoney(p.money[j].total))}</b>${esc(sourceShort[j] || j)}</span>`),
     ].join("");
     return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
-        <a class="source-title dir-name" ${entityHrefAttr(subjectHash("party", p.label))}>${anyPartyDotHTML(p.label, colours)}${esc(p.label)}</a>
+        <a class="source-title dir-name" ${entityHrefAttr(subjectHash("party", p.label))}>${anyPartyDotHTML(p.label, colours)}${esc(p.name)}</a>
         <span class="result-meta">${meta}</span>
       </div>
       <div class="dir-figs">${figs}</div>
@@ -7803,29 +7807,29 @@ async function buildPartiesDirectory() {
   };
 
   return {
-    title: "Parties",
-    name: (p) => p.label, href: (p) => subjectHash("party", p.label), hint: () => "",
+    title: "Parties and independents",
+    name: (p) => p.name, href: (p) => subjectHash("party", p.label), hint: () => "",
     lede: counted ? "" : "Speech counts are updating.",
     items,
-    text: (p) => p.label,
+    text: (p) => `${p.name} ${p.label}`,
     filters: [
       { key: "jur", label: "Disclosures",
         options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"], ["tas", "Tasmania (TEC)"]],
         test: (p, v) => Boolean(p.money[v]) },
       { key: "show", label: "Show",
-        options: [...(counted ? [["speeches", "With speeches in the record"]] : []), ["members", "With members in the directory"], ["money", "With disclosed receipts"]],
+        options: [...(counted ? [["speeches", "With speeches in the record"]] : []), ["members", "With parliamentarians in the record"], ["money", "With disclosed receipts"]],
         test: (p, v) => v === "speeches" ? p.speeches > 0 : v === "members" ? p.members > 0 : Object.keys(p.money).length > 0 },
     ],
     sorts: [
       ...(counted ? [["speeches", "Most speeches", byNumDesc((p) => p.speeches)]] : []),
       ["donations", "Most disclosed receipts", byNumDesc(moneyFor)],
-      ["members", "Most members", byNumDesc((p) => p.members)],
+      ["members", "Most parliamentarians", byNumDesc((p) => p.members)],
       ["name", "Name A-Z", byName],
     ],
     row,
     fineprint: `Speech counts use each speech's party label; a speech with no party label (many state Hansard
-      rows) is not counted, and a party with speeches but no disclosure file (independents, parties that wound up
-      before 1998) still lists. Receipts are per commission and are not summed: ${esc(STATE_NOT_SUMMED)}
+      rows) is not counted. Affiliations with speeches but no disclosure file still appear.
+      ${esc(catalogue.PARTY_MEMBER_SCOPE)} Receipts are per commission and are not summed: ${esc(STATE_NOT_SUMMED)}
       ${esc(AEC_NOTE)}`,
   };
 }

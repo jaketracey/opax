@@ -87,8 +87,8 @@ test('a party the person record already carries is unchanged by the roster', asy
 test('the person directory uses the same fallback', async () => {
   const url = new URL('https://opax.com.au/subject/person');
   const {html} = await renderDirectory('person', url, reader([seat()]), [person(), person({name: 'Jo Former'})], new Map(), {});
-  assert.match(html, /Alex Example<\/a> — Example Party \(parliamentary roster as at 9 Sep 2026\)/);
-  assert.match(html, /Jo Former<\/a> — Party not recorded/);
+  assert.match(html, /Alex Example<\/a>: Example Party \(parliamentary roster as at 9 Sep 2026\)/);
+  assert.match(html, /Jo Former<\/a>: Party not recorded/);
 });
 
 test('the person page reads the same fallback, only for a record with no party of its own', () => {

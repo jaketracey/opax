@@ -172,6 +172,17 @@ test('report transcripts API: the app envelope, top level and paged, newest firs
 const prerenderBody = html => html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</main>'));
 function checkHtml(html){assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.doesNotMatch(html,/id="panel-ask"|id="panel-privacy"|Ask &amp; search the record/);const graph=JSON.parse(html.match(/<script[^>]*id="ld-page"[^>]*>(.*?)<\/script>/s)[1]);assert.ok(graph['@graph'].some(n=>n['@type']==='BreadcrumbList'));return graph['@graph'];}
 
+test('independents are a parliamentary collection in server HTML and structured data', async () => {
+  const html = await get('/subject/party/independent');
+  assert.match(html, /<h1>Independents<\/h1>/);
+  assert.ok(html.includes('Parliamentarians who sat without a party. Not a party organisation.'));
+  assert.doesNotMatch(prerenderBody(html), /its members|<h2>Members<\/h2>/);
+  const graph = checkHtml(html);
+  assert.ok(graph.some(n => n['@type'] === 'CollectionPage' && n.url === origin + '/subject/party/independent'));
+  assert.ok(!graph.some(n => n['@type'] === 'Organization' && /independent/i.test(n.name || '')));
+  assert.match(await get('/subject/party/dlp'), /<h1>Democratic Labour Party<\/h1>/);
+});
+
 test('mobile voting asset retains schema 1 and the shipped per-person keys',async()=>{
   const data=await read('/votes.json');assert.equal(data._meta.schema,1);
   assert.deepEqual(Object.keys(data._meta).sort(),['content_changed_at','latest_division_date','latest_division_date_by_jurisdiction','schema']);

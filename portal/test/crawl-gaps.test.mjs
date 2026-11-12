@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {readPartyPages, canonicalPartyPages, resolvePartyPage} from '../public/party-page.js';
+import {readPartyPages, canonicalPartyPages, resolvePartyPage, partyPageCoverage, partyMembers} from '../public/party-page.js';
 import {renderDirectory} from '../src/seo-content.ts';
 import {officialReportCrawlEntries} from '../../scripts/official_report_crawl.mjs';
 import {sitemapFiles, latestDate, exportDate} from '../../scripts/build_crawl_catalog.mjs';
@@ -40,6 +40,51 @@ test('party_now, recorded roster labels and division parties survive without mon
   });
   assert.deepEqual(pages.map(p => p.label), ["Australia's Voice", 'DLP', 'Gerard Rennick People First', 'Jacqui Lambie Network', 'One Nation']);
   assert.equal(resolvePartyPage('pauline-hansons-one-nation-party', pages).label, 'One Nation');
+});
+
+test('directory discovery uses the small party-member export and tolerates its absence', async () => {
+  const requested = [];
+  const assets = {
+    '/parliamentarians.json': {people: [{name: 'Fixture Member', party: 'Labor', party_now: 'Independent'}]},
+    '/graph/party-members.json': {parties: {'Fixture Parliamentary Party': [{name: 'Fixture Person'}]}},
+  };
+  const reader = async path => {
+    requested.push(path);
+    if (path.startsWith('/graph/money')) return {nodes: []};
+    if (assets[path]) return assets[path];
+    throw Error('Unavailable fixture');
+  };
+  const pages = await readPartyPages(reader);
+  assert.ok(pages.some(p => p.label === 'Fixture Parliamentary Party'));
+  assert.ok(!requested.includes('/divisions/index.json'));
+  delete assets['/graph/party-members.json'];
+  assert.deepEqual((await readPartyPages(reader)).map(p => p.label), ['Independent', 'Labor']);
+});
+
+test('directory coverage is exact, capitalised, and distinguishes independents from organisations', async () => {
+  const pages = await readPartyPages(read);
+  for (const label of ['Australian Conservatives', 'Australian Motoring Enthusiast Party', "Derryn Hinch's Justice Party", 'Gerard Rennick People First', 'Liberal Democratic Party']) {
+    assert.equal(partyPageCoverage(pages.find(p => p.label === label)), 'Recorded divisions. No party-level disclosure file held by OPAX.');
+  }
+  assert.equal(partyPageCoverage(pages.find(p => p.label === 'Independent')), 'Parliamentarians who sat without a party. Not a party organisation.');
+  assert.equal(pages.find(p => p.label === 'DLP').name, 'Democratic Labour Party');
+  const directory = await renderDirectory('party', new URL('https://opax.test/subject/party'), read, [], new Map(), {});
+  assert.ok(directory.html.includes('Parliamentarians who sat without a party. Not a party organisation.'));
+  assert.ok(directory.html.includes('>Democratic Labour Party</a>'));
+  assert.ok(!directory.html.includes('—'));
+});
+
+test('one membership rule preserves previous affiliations and joins aliases by person ID', () => {
+  const roster = {people: [
+    {name: 'Alex Example', pid: 'fixture-1', party: 'JLN', party_now: 'Independent', current: true},
+    {name: 'Example', pid: 'fixture-1', party: 'Jacqui Lambie Network'},
+  ]};
+  const divisions = {parties: {'Jacqui Lambie Network': [{name: 'Alex Example'}, {name: 'Casey Fixture'}]}};
+  const previous = partyMembers('Jacqui Lambie Network', {roster, divisions});
+  assert.equal(previous.current.length, 0);
+  assert.deepEqual(previous.former.map(p => p.name).sort(), ['Alex Example', 'Casey Fixture']);
+  const now = partyMembers('Independent', {roster, divisions});
+  assert.deepEqual(now.current.map(p => p.name), ['Alex Example']);
 });
 
 test('official report discovery uses public indexed records and their dates, with bounded indexed sitemap files', async () => {
