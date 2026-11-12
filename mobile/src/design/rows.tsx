@@ -4,6 +4,7 @@ import { useRecordLink } from '../navigation/record-link';
 import { useState, type ReactNode } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useOpenAsk } from '../features/ask/open';
+import { useRowIsMyMember } from '../features/your-mp/MyMemberContext';
 import { openSource } from '../navigation/external';
 import { useAccessibilitySize } from './accessibility';
 import { Hoverable, useHover } from './adaptive';
@@ -21,7 +22,7 @@ import {
 } from './format';
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { StatusCapsule } from './labels';
-import { PartyLabel, Portrait } from './people';
+import { PartyLabel, personRowSlug, Portrait, YourMPMark } from './people';
 import { isPartyLabel } from './party';
 import { partyRoute } from '../navigation/routes/people';
 import { router } from 'expo-router';
@@ -674,6 +675,9 @@ export function RecordRow({
   const cellStyle = useRowCellStyle();
   const recordLink = useRecordLink(href);
   const speakerLink = useRecordLink(speaker?.href);
+  const speakerYourMP = useRowIsMyMember(
+    personRowSlug(speaker?.href, speaker?.portrait),
+  );
   const separateSpeaker =
     !!speaker?.href || (!!speaker?.linkedParty && isPartyLabel(speaker.party));
   useRowInset(leading && !stacked ? 46 : 16);
@@ -691,6 +695,7 @@ export function RecordRow({
     excerpt?.text,
     speaker?.name,
     speaker?.party,
+    !speaker?.href && speakerYourMP ? 'Your MP' : null,
   ]
     .filter(Boolean)
     .join(', ');
@@ -828,7 +833,7 @@ export function RecordRow({
               {speaker.href ? (
                 <Pressable
                   accessibilityRole="link"
-                  accessibilityLabel={`Open ${speaker.name}`}
+                  accessibilityLabel={`Open ${speaker.name}${speakerYourMP ? ', Your MP' : ''}`}
                   testID={testID && `${testID}-speaker`}
                   onPress={(event) => {
                     event.stopPropagation();
@@ -866,6 +871,14 @@ export function RecordRow({
                     linked={speaker.linkedParty ?? false}
                     testID={testID && `${testID}-speaker-party`}
                   />
+                </View>
+              ) : null}
+              {speakerYourMP ? (
+                <View
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                >
+                  <YourMPMark testID={testID && `${testID}-speaker-your-mp`} />
                 </View>
               ) : null}
             </View>

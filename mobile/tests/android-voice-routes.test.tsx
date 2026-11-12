@@ -17,6 +17,11 @@ type Captured = {
   guards: { guard: boolean; names: string[] }[];
 };
 const mockCaptured: Captured = { screens: [], guards: [] };
+// Root chrome tests keep saved-seat reads local and independent of build services.
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  useSeat: () => ({ status: 'none' }),
+  savedSeatDirectory: () => null,
+}));
 jest.mock('expo-router', () => {
   const { Children, isValidElement } = jest.requireActual('react');
   function Stack({ children }: { children: ReactNode }) {

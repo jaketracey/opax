@@ -7,7 +7,7 @@ import { decodeCorpus } from '../src/api/catalog-decoders';
 import { Catalogs } from '../src/api/catalogs';
 import type { ApiClient, RecordResult } from '../src/api/client';
 import { dataAsOf } from '../src/api/client';
-import { Screen, SuggestionRow } from '../src/design/primitives';
+import { Screen, PersonRow } from '../src/design/primitives';
 import { Skeleton } from '../src/design/states';
 import About from '../src/features/About';
 import Electorate from '../src/features/Electorate';
@@ -222,9 +222,9 @@ test('a later Search focus restores identity context without native refreshing',
   );
   const albanese = () =>
     renderer.root
-      .findAllByType(SuggestionRow)
+      .findAllByType(PersonRow)
       .find((row) => row.props.name === 'Anthony Albanese')!.props;
-  expect(albanese().secondary ?? '').not.toContain('Labor');
+  expect(albanese().party ?? '').not.toContain('Labor');
   const control = () => renderer.root.findByType(Screen).props.refreshControl;
   await act(async () => {
     mockFocus.cleanup?.();
@@ -232,11 +232,10 @@ test('a later Search focus restores identity context without native refreshing',
   });
   expect(mock.suggestionSourcesOnFocus).toHaveBeenCalledTimes(2);
   expect(control().props.refreshing).toBe(false);
-  expect(albanese().secondary ?? '').not.toContain('Labor');
+  expect(albanese().party ?? '').not.toContain('Labor');
   await act(async () => recovered.resolve(ready));
-  expect(albanese().secondary).toBe(
-    'Labor · Member for Grayndler, New South Wales',
-  );
+  expect(albanese().party).toBe('Labor');
+  expect(albanese().place).toBe('Member for Grayndler, New South Wales');
   expect(control().props.refreshing).toBe(false);
   expect(mock.suggestionSources).not.toHaveBeenCalled();
   await act(async () => renderer.unmount());

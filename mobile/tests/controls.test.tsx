@@ -18,7 +18,7 @@ import { Icon } from '../src/design/icon';
 import { Text } from '../src/design/text';
 import { haptic } from '../src/design/haptics';
 import { symbols } from '../src/design/symbols';
-import { follow, useFollows } from '../src/features/follows/store';
+import { followWithFeedback, useFollows } from '../src/features/follows/store';
 import { showMenu } from '../src/design/menu';
 
 jest.mock('../src/features/follows/useFollowStates', () => ({
@@ -29,6 +29,7 @@ jest.mock('../src/features/follows/store', () => ({
   useFollows: jest.fn(() => []),
   followKey: jest.fn(() => 'bill:b'),
   follow: jest.fn(),
+  followWithFeedback: jest.fn(),
   unfollow: jest.fn(),
 }));
 jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
@@ -428,7 +429,9 @@ test('MonthPager on iOS is a content row, never a bottom toolbar the tab bar wou
 });
 test('FollowButton retains its feature logic and presents the exact follow-limit copy', async () => {
   jest.mocked(useFollows).mockReturnValue([]);
-  jest.mocked(follow).mockResolvedValue('limit');
+  jest
+    .mocked(followWithFeedback)
+    .mockResolvedValue({ status: 'limit', showMessage: false });
   const r = render(
     <FollowButton kind="bill" id="b" title="A bill" testID="follow" />,
   );
@@ -647,8 +650,8 @@ test('the follow limit comes from the store and Edit Following is driven by its 
   );
   jest.mocked(useFollows).mockReturnValue([]);
   jest
-    .mocked(follow)
-    .mockResolvedValueOnce('limit')
+    .mocked(followWithFeedback)
+    .mockResolvedValueOnce({ status: 'limit', showMessage: false })
     .mockRejectedValueOnce(new Error('storage'));
   const r = render(
     <FollowButton kind="bill" id="b" title="A bill" testID="follow" />,

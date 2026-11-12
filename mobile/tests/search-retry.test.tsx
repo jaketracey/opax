@@ -269,7 +269,7 @@ test('Try again repeats a failed person open at its row, without searching', asy
   await type('Anthony Albanese');
   const row = () =>
     r.root
-      .findAllByType(SuggestionRow)
+      .findAllByType(PersonRow)
       .find((s) => s.props.name === 'Anthony Albanese')!;
   await act(async () => row().props.onPress());
   expect(openSuggestedPerson).toHaveBeenCalledTimes(1);
@@ -313,11 +313,10 @@ test('people suggestions carry party and place in the row', async () => {
   const r = await mount();
   await type('Anthony Albanese');
   const row = r.root
-    .findAllByType(SuggestionRow)
+    .findAllByType(PersonRow)
     .find((s) => s.props.name === 'Anthony Albanese')!;
-  expect(row.props.secondary).toBe(
-    'Labor · Member for Grayndler, New South Wales',
-  );
+  expect(row.props.party).toBe('Labor');
+  expect(row.props.place).toBe('Member for Grayndler, New South Wales');
   await act(async () => r.unmount());
 });
 

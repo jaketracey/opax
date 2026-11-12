@@ -310,7 +310,6 @@ export function cleanPassage(text: string | undefined) {
  */
 export const PROFILE_SECTIONS = [
   'votes',
-  'speeches',
   'interests',
   'pay',
   'expenses',
@@ -361,6 +360,22 @@ export function roleLine(
   return others ? `${now.post} and ${others} more` : now.post;
 }
 
+/** Last dated representation, with no guessed place or service years. */
+export function formerMemberLine(identity: PersonProfile): string | null {
+  if (identity.partyStatus !== 'former') return null;
+  const row = seatRows(identity).at(-1);
+  if (row) return [row.title, row.detail].filter(Boolean).join(', ');
+  const last = identity.rosterRow?.representation?.at(-1);
+  if (!last) return 'Former member';
+  const state = last.state
+    ? (jurisdictionName(last.state) ?? last.state)
+    : null;
+  const place = [last.electorate, state].filter(Boolean).join(', ');
+  return place
+    ? `Former ${last.chamber === 'senate' ? 'senator' : 'member'} for ${place}`
+    : 'Former member';
+}
+
 /**
  * Pay's line: the post and the rate's own effective date from the
  * instrument, never the date the post began. Salaries re-index each 1 July,
@@ -401,6 +416,19 @@ const stateOf = (
   )?.state;
   return state ? (jurisdictionName(state) ?? state) : null;
 };
+function lastDatedRepresentation(seats: PersonProfile['seats']) {
+  const latest = seats
+    .flatMap((seat) =>
+      (seat.periods ?? []).map((period) => ({ seat, ...period })),
+    )
+    .sort(
+      (a, b) =>
+        (a.end ?? '').localeCompare(b.end ?? '') ||
+        (a.start ?? '').localeCompare(b.start ?? ''),
+    )
+    .at(-1)?.seat;
+  return latest ? [latest] : seats.slice(-1);
+}
 /**
  * One row a seat: "Member for Grayndler" / "New South Wales, since 2 Mar
  * 1996"; "Senator for Victoria"; a state seat names its house. A former
@@ -414,7 +442,7 @@ export function seatRows(
   const shown = current.length
     ? current
     : identity.partyStatus === 'former'
-      ? identity.seats.slice(-1)
+      ? lastDatedRepresentation(identity.seats)
       : identity.seats;
   return shown.map((seat) => {
     const senator = seat.chamber === 'senate';

@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Screen, InsetGroup } from '../../design/layout';
 import {
   ContentUnavailable,
@@ -28,6 +28,7 @@ import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { ownsRowPadding, useRowCellStyle } from '../../design/row-padding';
 import { headerItems, pageMenu } from '../../navigation/chrome';
 import { familyNameKey, useFaceURIs } from '../your-mp/FaceStackRow';
+import { useSavedMember } from '../your-mp/useIsMyMember';
 import { savedSeatDirectory, useSeat } from '../your-mp/useSeat';
 import { FollowRow } from './FollowRow';
 import type { FollowState } from './markers';
@@ -35,6 +36,7 @@ import { sortChanges } from './changes';
 import { useFollowStates, markAllSeen } from './useFollowStates';
 import {
   clearFollows,
+  followWithFeedback,
   followKey,
   unfollow,
   type Follow,
@@ -52,7 +54,7 @@ const kindGroups: [FollowKind, string][] = [
 ];
 export const NOTHING_FOLLOWED_TITLE = 'Nothing followed yet';
 export const NOTHING_FOLLOWED =
-  'Tap Follow on a person, bill, party or electorate to see what changes.';
+  'Follow a person, bill, party or electorate to see what changes.';
 const SAVE_FAILED = () =>
   phoneCopy("Your follows couldn't be saved on this iPhone.");
 
@@ -132,6 +134,7 @@ export default function Following() {
   const [refresh, setRefresh] = useState(0);
   const { follows, states, sources, refreshing } = useFollowStates(refresh);
   const own = useOwnMemberIds();
+  const member = useSavedMember();
   const reduceMotion = useReduceMotion();
   const [editing, setEditing] = useState(params.edit === '1');
   const [busy, setBusy] = useState(false);
@@ -196,6 +199,18 @@ export default function Following() {
       ]);
   };
 
+  const followMember = () => {
+    if (!member?.canonicalPersonId || busy) return;
+    void save(async () => {
+      const result = await followWithFeedback({
+        kind: 'person',
+        id: member.canonicalPersonId!,
+        title: member.name,
+      });
+      if (result.status === 'followed') haptic('success');
+    }, 1);
+  };
+
   const failedAll =
     !!sources?.error &&
     sources.error.code !== 'offline' &&
@@ -209,6 +224,7 @@ export default function Following() {
   return (
     <Screen
       grouped
+      centred={follows !== null && count === 0}
       testID="follows-screen"
       refreshControl={
         <RefreshControl
@@ -285,6 +301,11 @@ export default function Following() {
           symbol="bell"
           title={NOTHING_FOLLOWED_TITLE}
           body={NOTHING_FOLLOWED}
+          action={{
+            label: member ? `Follow ${member.name}` : 'Find your MP',
+            onPress: member ? followMember : () => router.push('/seat'),
+            testID: 'follows-empty-action',
+          }}
           testID="follows-empty"
         />
       ) : (

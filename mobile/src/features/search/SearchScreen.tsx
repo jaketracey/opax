@@ -1,3 +1,4 @@
+import { MyMemberProvider } from '../your-mp/useIsMyMember';
 import { RouteOptions } from '../../navigation/preview';
 import { useScreenReady } from '../../analytics/timing';
 import {
@@ -63,7 +64,7 @@ export function searchPhase(
  * suggestions while typing, and results in four scopes on the Search key. Editing keeps the
  * results under the suggestions; Cancel returns to them unchanged.
  */
-export function SearchScreen({
+function SearchContent({
   onRows,
 }: {
   /** iPad: the result rows' routes, for the pane and the keyboard. */
@@ -287,5 +288,15 @@ export function SearchScreen({
         )}
       </Screen>
     </>
+  );
+}
+
+export function SearchScreen(
+  props: React.ComponentProps<typeof SearchContent>,
+) {
+  return (
+    <MyMemberProvider>
+      <SearchContent {...props} />
+    </MyMemberProvider>
   );
 }

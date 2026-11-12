@@ -97,24 +97,30 @@ export default function Layout() {
     });
   }, []);
   if (!loaded && !error) return null;
+  // Seat services start with the app, rather than with route discovery.
+  const { MyMemberProvider } =
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('../features/your-mp/useIsMyMember') as typeof import('../features/your-mp/useIsMyMember');
   return (
     <SafeAreaProvider>
-      <StatusBar style={Platform.OS === 'android' ? 'dark' : 'auto'} />
-      <View style={styles.app}>
-        <AndroidMenuHost />
-        <ExternalURLProbe />
-        {isPad ? <KeyboardShortcuts /> : null}
-        <Stack
-          screenOptions={{
-            ...chrome,
-            headerShown: false,
-            contentStyle: { backgroundColor: colors.paper },
-          }}
-        >
-          {[...rootScreens(chrome)]}
-        </Stack>
-        {handedOver ? null : <RootLaunchHandoff onDone={endHandoff} />}
-      </View>
+      <MyMemberProvider>
+        <StatusBar style={Platform.OS === 'android' ? 'dark' : 'auto'} />
+        <View style={styles.app}>
+          <AndroidMenuHost />
+          <ExternalURLProbe />
+          {isPad ? <KeyboardShortcuts /> : null}
+          <Stack
+            screenOptions={{
+              ...chrome,
+              headerShown: false,
+              contentStyle: { backgroundColor: colors.paper },
+            }}
+          >
+            {[...rootScreens(chrome)]}
+          </Stack>
+          {handedOver ? null : <RootLaunchHandoff onDone={endHandoff} />}
+        </View>
+      </MyMemberProvider>
     </SafeAreaProvider>
   );
 }

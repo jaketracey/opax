@@ -21,6 +21,11 @@ import MoneyRecord from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/mone
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
 import { publicMoneyScreens } from '../src/navigation/stack/public-money';
 
+// Root chrome tests keep saved-seat reads local and independent of build services.
+jest.mock('../src/features/your-mp/useSeat', () => ({
+  useSeat: () => ({ status: 'none' }),
+  savedSeatDirectory: () => null,
+}));
 jest.mock('../src/features/money/MoneyRecord', () => () => null);
 
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);

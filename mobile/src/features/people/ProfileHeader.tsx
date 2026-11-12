@@ -189,7 +189,7 @@ export function ProfileHeader({
             variant="secondary"
             style={centred ? styles.centredText : null}
             testID={
-              role === 'Former member' ? `${testID}-former` : `${testID}-role`
+              role.startsWith('Former ') ? `${testID}-former` : `${testID}-role`
             }
           >
             {role}

@@ -139,16 +139,15 @@ export function StatTile({
       >
         {value}
       </Text>
-      <View
-        style={{ flexDirection: 'row', alignItems: 'center', gap: rhythm.line }}
-      >
-        <Text wordSafe variant="footnote" style={{ flexShrink: 1 }}>
-          {label}
-        </Text>
+      <Text wordSafe variant="footnote">
+        {label}
         {onPress ? (
-          <Icon name={statChevron} size={13} maxScale={1.5} tone="inkFaint" />
+          <>
+            {'\u00a0'}
+            <Icon name={statChevron} size={13} maxScale={1.5} tone="inkFaint" />
+          </>
         ) : null}
-      </View>
+      </Text>
     </>
   );
   const props = {

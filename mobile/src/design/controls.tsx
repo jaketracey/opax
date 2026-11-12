@@ -22,6 +22,8 @@ import {
   type RefObject,
 } from 'react';
 import {
+  AccessibilityInfo,
+  Animated,
   ActivityIndicator,
   Keyboard,
   findNodeHandle,
@@ -31,6 +33,7 @@ import {
   TextInput,
   View,
   useWindowDimensions,
+  useAnimatedValue,
   type AccessibilityState,
   type TextInputProps,
 } from 'react-native';
@@ -367,7 +370,7 @@ export function FollowButton({
   testID?: string;
 }) {
   // Load the engine only when a follow control is mounted.
-  const { FOLLOW_LIMIT, follow, followKey, unfollow, useFollows } =
+  const { FOLLOW_LIMIT, followWithFeedback, followKey, unfollow, useFollows } =
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     require('../features/follows/store') as typeof import('../features/follows/store');
   const { markSeenNow } =
@@ -382,6 +385,33 @@ export function FollowButton({
   const [limitReached, setLimitReached] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const marked = useRef(false);
+  const reduceMotion = useReduceMotion();
+  const opacity = useAnimatedValue(1);
+  const [confirmation, setConfirmation] = useState(false);
+  useEffect(() => {
+    if (!confirmation) return;
+    opacity.setValue(reduceMotion ? 1 : 0);
+    const animation = Animated.sequence([
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: reduceMotion ? 0 : 150,
+        useNativeDriver: true,
+      }),
+      Animated.delay(4000),
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: reduceMotion ? 0 : 150,
+        useNativeDriver: true,
+      }),
+    ]);
+    animation.start(({ finished }) => {
+      if (finished) {
+        setMessage(null);
+        setConfirmation(false);
+      }
+    });
+    return () => animation.stop();
+  }, [confirmation, opacity, reduceMotion]);
   useEffect(() => {
     if (!current) marked.current = false;
     else if (!marked.current) {
@@ -392,19 +422,31 @@ export function FollowButton({
   async function toggle() {
     setBounce(false);
     setBusy(true);
+    setConfirmation(false);
+    opacity.setValue(1);
     setMessage(null);
     setLimitReached(false);
     try {
       if (following) {
         await unfollow(key);
-      } else if ((await follow({ kind, id, title })) === 'limit') {
-        setLimitReached(true);
-        setMessage(
-          `You can follow up to ${FOLLOW_LIMIT}. Unfollow one to add this.`,
-        );
       } else {
-        setBounce(true);
-        haptic('success');
+        const result = await followWithFeedback({ kind, id, title });
+        if (result.status === 'limit') {
+          setLimitReached(true);
+          setMessage(
+            `You can follow up to ${FOLLOW_LIMIT}. Unfollow one to add this.`,
+          );
+        } else if (result.status === 'followed') {
+          setBounce(true);
+          haptic('success');
+          if (result.showMessage) {
+            const line = 'Changes will show on Today.';
+            opacity.setValue(reduceMotion ? 1 : 0);
+            setMessage(line);
+            setConfirmation(true);
+            AccessibilityInfo.announceForAccessibility(line);
+          }
+        }
       }
     } catch {
       setMessage(phoneCopy('Your follows could not be saved on this iPhone.'));
@@ -430,9 +472,11 @@ export function FollowButton({
         testID={`${testID}-${following ? 'on' : 'off'}`}
       />
       {message ? (
-        <Text wordSafe variant="footnote" testID={`${testID}-message`}>
-          {message}
-        </Text>
+        <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
+          <Text wordSafe variant="footnote" testID={`${testID}-message`}>
+            {message}
+          </Text>
+        </Animated.View>
       ) : null}
       {limitReached ? (
         <Button

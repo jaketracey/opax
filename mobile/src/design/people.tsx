@@ -1,3 +1,4 @@
+import { useRowIsMyMember } from '../features/your-mp/MyMemberContext';
 import { Pressable } from './pressable';
 import { router, type Href } from 'expo-router';
 import type { ReactNode } from 'react';
@@ -400,6 +401,21 @@ export function PartyLabel({
   );
 }
 
+/** Shared mark under the party line; the row owns its spoken suffix. */
+export function YourMPMark({ testID }: { testID?: string }) {
+  return (
+    <View
+      testID={testID}
+      style={{ flexDirection: 'row', alignItems: 'center', gap: rhythm.line }}
+    >
+      <Icon name={symbols.yourMP} size={13} tone="inkSoft" />
+      <Text wordSafe variant="footnote" tone="inkSoft">
+        Your MP
+      </Text>
+    </View>
+  );
+}
+
 export interface PersonRowProps {
   name: string;
   portrait?: ReactNode;
@@ -451,7 +467,19 @@ function PersonLink({
     </RowLink>
   );
 }
-/** One anatomy for every roster member. Callers decide whether this is Your MP. */
+/** Shared row identity for profile links and portrait-only member slots. */
+export function personRowSlug(href?: Href, portrait?: ReactNode) {
+  const portraitSlug = isValidElement<{ slug?: string }>(portrait)
+    ? portrait.props.slug
+    : undefined;
+  return typeof href === 'object' && 'params' in href
+    ? String(href.params?.slug ?? '')
+    : typeof href === 'string'
+      ? href.split('/').pop()
+      : portraitSlug;
+}
+
+/** One anatomy for every roster member, including the saved-seat mark. */
 export function PersonRow({
   name,
   portrait,
@@ -465,7 +493,7 @@ export function PersonRow({
   partyHref,
   menu = 'person',
   zoomSource,
-  yourMP = false,
+  yourMP: suppliedYourMP = false,
   onPress,
   select,
   accessibilityLabel,
@@ -476,15 +504,9 @@ export function PersonRow({
   highlighted,
   statusShown = false,
 }: PersonRowProps) {
-  const portraitSlug = isValidElement<{ slug?: string }>(portrait)
-    ? portrait.props.slug
-    : undefined;
-  const slug =
-    typeof href === 'object' && 'params' in href
-      ? String(href.params?.slug ?? '')
-      : typeof href === 'string'
-        ? href.split('/').pop()
-        : portraitSlug;
+  const slug = personRowSlug(href, portrait);
+  const ownMember = useRowIsMyMember(slug);
+  const yourMP = suppliedYourMP || ownMember;
   const path = dragPath ?? (slug ? `/subject/person/${slug}` : undefined);
   const stacked = useAccessibilitySize();
   const highlight = useRowHighlight();
@@ -500,14 +522,18 @@ export function PersonRow({
       : { party, status: partyStatus ?? ('unknown' as const), formerly };
   const former = statusShown ? null : formerMember(context?.status);
   const label =
-    accessibilityLabel ??
+    (accessibilityLabel
+      ? [accessibilityLabel, yourMP ? 'Your MP' : null]
+          .filter(Boolean)
+          .join(', ')
+      : undefined) ??
     [
       name,
-      yourMP ? 'Your MP' : null,
       context ? partyText(context).spoken : null,
       former,
       place,
       detail,
+      yourMP ? 'Your MP' : null,
     ]
       .filter(Boolean)
       .join(', ');
@@ -536,12 +562,7 @@ export function PersonRow({
           >
             {name}
           </Text>
-          {yourMP ? (
-            <Text wordSafe variant="secondary">
-              Your MP
-            </Text>
-          ) : null}
-          {context || former || place || detail ? (
+          {context || yourMP || former || place || detail ? (
             <View
               style={[
                 styles.personDetails,
@@ -557,6 +578,9 @@ export function PersonRow({
                   href={partyHref}
                   testID={testID && `${testID}-party`}
                 />
+              ) : null}
+              {yourMP ? (
+                <YourMPMark testID={testID && `${testID}-your-mp`} />
               ) : null}
               {former ? (
                 <Text

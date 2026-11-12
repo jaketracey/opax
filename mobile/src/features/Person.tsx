@@ -17,7 +17,12 @@ import { catalogs } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, ReadableColumn } from '../design/adaptive';
 import { Disclosure } from '../design/disclosure';
-import { counted, formatCount, formatMoney } from '../design/format';
+import {
+  counted,
+  formatCount,
+  formatMoney,
+  formatYearRange,
+} from '../design/format';
 import {
   Group,
   Screen,
@@ -32,14 +37,9 @@ import { ContentUnavailable, InlineError, Skeleton } from '../design/states';
 import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
 import { useHeaderBottom } from '../design/useHeaderBottom';
-import { headerItems, pageItems } from '../navigation/chrome';
+import { closeSheetItem, headerItems, pageItems } from '../navigation/chrome';
 import { openOnWeb } from '../navigation/external';
-import {
-  billRoute,
-  electorateRoute,
-  partyRoute,
-  personSpeechesRoute,
-} from '../navigation/routes';
+import { billRoute, electorateRoute, partyRoute } from '../navigation/routes';
 import { shareRecord } from '../navigation/share';
 import { CachedPortrait } from './CachedPortrait';
 import { AddedSinceGroup } from './follows/AddedSinceGroup';
@@ -69,7 +69,7 @@ import {
   stripSources,
   voteRowKey,
   votesCount,
-  votesSince,
+  formerMemberLine,
   type ProfileArrival,
   type ProfileSection,
 } from './people/model';
@@ -163,7 +163,7 @@ export async function loadProfile(slug: string): Promise<Loaded | null> {
     return null;
   // A former member outside the dated release still has the records held
   // by their roster ID and names: votes, party receipts, pay.
-  const profile: ProfileView = person.data.canonicalPersonId
+  let profile: ProfileView = person.data.canonicalPersonId
     ? await catalogs.profileFor(person.data.canonicalPersonId)
     : await catalogs.rosterProfileFor(person.data);
   if (!person.data.canonicalPersonId) {
@@ -175,6 +175,22 @@ export async function loadProfile(slug: string): Promise<Loaded | null> {
   const released = directory?.people.data.people.find(
     (p) => p.person_id === person.data.canonicalPersonId,
   );
+  const profileIdentity = profile.blocks.identity.data;
+  if (
+    profileIdentity?.partyStatus === 'former' &&
+    released?.electorates.length
+  ) {
+    profile = {
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        identity: {
+          ...profile.blocks.identity,
+          data: { ...profileIdentity, seats: released.electorates },
+        },
+      },
+    };
+  }
   const sitting = person.data.partyStatus !== 'former';
   const house = person.data.seats.find(
     (s) => s.current && s.jurisdiction === 'federal' && s.chamber !== 'senate',
@@ -279,15 +295,27 @@ export function ProfileScreen({
           options={{
             // The back button on the next page names this one.
             title: name ?? '',
+            ...(load.status === 'not-found'
+              ? {
+                  headerShown: true,
+                  headerLargeTitleEnabled: false,
+                  headerTitle: 'No profile',
+                }
+              : {}),
             ...headerItems(
-              identity
-                ? pageItems({
-                    name: identity.name,
-                    share: () =>
-                      void shareRecord({ path: webPath, title: identity.name }),
-                    menu,
-                  })
-                : undefined,
+              load.status === 'not-found'
+                ? () => [closeSheetItem()]
+                : identity
+                  ? pageItems({
+                      name: identity.name,
+                      share: () =>
+                        void shareRecord({
+                          path: webPath,
+                          title: identity.name,
+                        }),
+                      menu,
+                    })
+                  : undefined,
             ),
           }}
         />
@@ -295,6 +323,7 @@ export function ProfileScreen({
       {load.status !== 'ready' ? (
         <Screen
           column="wide"
+          centred={load.status === 'not-found'}
           testID="person-pending-screen"
           barTitle={load.status === 'not-found' ? 'No profile' : undefined}
           refreshControl={
@@ -308,7 +337,7 @@ export function ProfileScreen({
                   pathname: '/search',
                   params: {
                     q: routeName ?? slug.replace(/-/g, ' '),
-                    kind: 'all',
+                    scope: 'people',
                   },
                 })
               }
@@ -419,6 +448,7 @@ function ProfileContent({
   const headerBottom = useHeaderBottom();
   const reduceMotion = useReduceMotion();
   const yourMP = useIsMyMember(slug);
+  const formerLine = formerMemberLine(identity);
   const former = identity.partyStatus === 'former';
   const sitting = sittingFederal(identity);
 
@@ -628,7 +658,7 @@ function ProfileContent({
           },
         ]
       : []),
-    ...seatRows(identity).map((seat, i) => ({
+    ...(formerLine ? [] : seatRows(identity)).map((seat, i) => ({
       kind: 'seat' as const,
       title: seat.title,
       detail: seat.detail,
@@ -651,11 +681,10 @@ function ProfileContent({
   // The strip: each tile reads its section's selector and jumps there.
   const tiles: StatTileProps[] = [];
   const votes = votesCount(profile);
-  const since = votesSince(profile);
   if (votes !== null && b.votes.status !== 'error')
     tiles.push({
       value: formatCount(votes),
-      label: `${votes === 1 ? 'vote' : 'votes'}${since ? ` since ${since}` : ''}`,
+      label: `${votes === 1 ? 'division' : 'divisions'} voted in`,
       onPress: b.votes.status !== 'unlinked' ? () => jump('votes') : undefined,
       testID: 'person-figure-votes',
     });
@@ -696,8 +725,6 @@ function ProfileContent({
             b.votes.status === 'error' ||
             sitting)
         );
-      case 'speeches':
-        return true;
       case 'interests':
         return (
           b.interests.status !== 'unlinked' &&
@@ -832,14 +859,6 @@ function ProfileContent({
         }}
       </ProfileBlock>
     ),
-    speeches: () => (
-      <LinkRow
-        title="Speeches"
-        symbol="quote.bubble"
-        href={personSpeechesRoute(slug, identity.name)}
-        testID="person-speeches"
-      />
-    ),
     interests: () => (
       <ProfileBlock
         title="Declared interests"
@@ -916,7 +935,7 @@ function ProfileContent({
     more: () => (
       <MoreFromRecord
         subject={{ person: slug, name: identity.name }}
-        kinds={['mentions']}
+        kinds={['speeches', 'mentions']}
         topics
         testID="person-more"
       />
@@ -955,7 +974,7 @@ function ProfileContent({
                 retryKey={attempt}
               />
             }
-            role={roleLine(profile, former)}
+            role={formerLine ?? roleLine(profile, former)}
             yourMP={yourMP}
             identityRows={identityRows}
             follow={
@@ -965,7 +984,14 @@ function ProfileContent({
             titleTestID="person-screen-title"
           />
         </TitleAnchor>
-        {tiles.length ? (
+        {tiles.length === 1 ? (
+          <LinkRow
+            title={`${tiles[0]!.value} ${tiles[0]!.label}${tiles[0]!.testID === 'person-figure-votes' && b.votes.data?.years.length ? `, ${formatYearRange(b.votes.data.years[0]!, b.votes.data.years.at(-1)!)}` : ''}`}
+            onPress={tiles[0]!.onPress}
+            accessory={tiles[0]!.onPress ? 'chevron' : 'none'}
+            testID={tiles[0]!.testID}
+          />
+        ) : tiles.length ? (
           <StatStrip tiles={tiles} testID="person-figures" />
         ) : null}
       </ReadableColumn>

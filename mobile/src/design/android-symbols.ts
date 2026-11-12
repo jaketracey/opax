@@ -4,6 +4,7 @@ import type { SFSymbol } from './symbols';
 // Same meaning as the iOS symbol; Material Symbols are bundled by expo-symbols.
 export const androidSymbols: Record<SFSymbol, AndroidSymbol> = {
   photo: 'image',
+  'person.crop.circle.badge.questionmark': 'person_search',
   'australiandollarsign.circle': 'payments',
   'mic.slash': 'mic_off',
   'lock.fill': 'lock',

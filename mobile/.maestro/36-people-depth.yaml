@@ -1,7 +1,7 @@
 appId: au.com.opax.app
 name: 36 Person speeches, mentions, topics, ministerial diary and expense categories
 ---
-# Speeches is its own row and pushes the paged record list. Mentions and
+# Speeches is under More from the record and pushes the paged record list. Mentions and
 # Topics sit in "More from the record" at the page's foot, so each is found
 # scrolling down.
 - launchApp:

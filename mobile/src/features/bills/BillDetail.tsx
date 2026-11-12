@@ -352,6 +352,7 @@ export default function BillDetail({
         />
       )}
       <Screen
+        centred={notFound}
         testID={view ? 'bill-screen' : 'bill-pending-screen'}
         scrollRef={scroll}
         onScroll={(y) => {

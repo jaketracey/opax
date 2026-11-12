@@ -12,12 +12,12 @@ export function PersonNotFound({ onSearch }: { onSearch: () => void }) {
   return (
     <View style={styles.page}>
       <ContentUnavailable
-        symbol="person.crop.circle"
+        symbol="person.crop.circle.badge.questionmark"
         title="This person isn’t in OPAX"
         body="Profiles cover people who have served in an Australian parliament."
         testID="person-not-found"
         action={{
-          label: 'Search',
+          label: 'Search parliamentarians',
           onPress: onSearch,
           testID: 'person-not-found-search',
           containerTestID: 'person-not-found-action',
