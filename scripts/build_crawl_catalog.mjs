@@ -8,6 +8,7 @@ import { personNameKey } from '../portal/public/canonical-urls.js';
 import { splitSpeakers } from '../portal/public/speech-attribution.js';
 import { TOPIC_NAMES } from '../portal/src/topic-names.mjs';
 import { fileKey } from '../portal/public/grants.js';
+import {resolveProgram, programKey} from '../portal/public/facts/grant-programs.js';
 import {foldDonorName} from '../portal/public/donor-entity.js';
 import { renderPersonAnswer } from '../portal/src/seo-content.ts';
 
@@ -18,6 +19,8 @@ import { clearedGiftRegisters } from '../portal/src/vic-gifts.ts';
 import { clearedStateBills } from '../portal/src/state-bills.ts';
 import { REPORT_COLLECTIONS, reportRoot } from '../portal/public/official-reports-model.js';
 import { reportsPublished } from './reports_flag.mjs';
+import { readPartyPages } from '../portal/public/party-page.js';
+import { officialReportCrawlEntries } from './official_report_crawl.mjs';
 
 export const ORIGIN = 'https://opax.com.au';
 export const SITEMAP_LIMIT = 49_999;
@@ -33,6 +36,26 @@ export const billLastmod = (bill, cutoff) => latestDate([bill.updated_at,bill.st
 const xml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 const fold = s => s.normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+
+/** Reviewed person IDs connect the vote export's names to the roster's addresses. */
+export function personPaths(people, votes, samePerson = {}) {
+  const identity = personIndex(people);
+  const exact = Object.fromEntries([...identity.byName].map(([name, p]) => [name, `/subject/person/${identity.slugOf.get(p.name)}`]));
+  const folded = Object.fromEntries([...identity.addresses].map(([name, p]) => [name, exact[p.name]]));
+  const byId = new Map();
+  for (const p of people) {
+    const pid = p.pid || samePerson[personNameKey(p.name)]?.key;
+    if (!pid) continue;
+    const previous = byId.get(String(pid));
+    if (!previous || (p.speeches || 0) > (previous.speeches || 0)) byId.set(String(pid), p);
+  }
+  for (const [pid, vote] of Object.entries(votes)) {
+    const p = byId.get(pid);
+    const key = personNameKey(vote.name);
+    if (p && key && !folded[key]) folded[key] = exact[p.name];
+  }
+  return {exact, folded};
+}
 
 export function sitemapFiles(groups, limit = SITEMAP_LIMIT) {
   if (!Number.isInteger(limit) || limit < 1 || limit > SITEMAP_LIMIT) throw new Error('Invalid sitemap limit');
@@ -180,10 +203,9 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
     people.push({name:p.name,pid:p.legacy_person_id || p.person_id,speeches:0,party:current[0].party || null,states:[...new Set(current.map(e=>e.jurisdiction))],chambers:[...new Set(current.map(e=>e.chamber))],first:null,last:null,rosterOnly:{asOf:current[0].as_of,seats:current.map(e=>e.name)}});
     known.add(personNameKey(p.name));
   }
-  const identity = personIndex(people);
-  const personPaths = { exact: Object.fromEntries([...identity.byName].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])), folded: Object.fromEntries([...identity.addresses].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])) };
-  await writeFile(join(root,'person-paths.js'), '// Generated from the roster and reviewed aliases by build:crawl.\nexport const PERSON_PATHS = '+JSON.stringify(personPaths)+';\n');
-  const groups = Object.fromEntries(['people','parties','electorates','bills','divisions','grant-programs','grant-recipients','topics-reports','static','suppliers','donors','campaigners','agencies'].map(t=>[t,[]]));
+  const {same_person: samePerson} = JSON.parse(await readFile(new URL('./person_identity.json', import.meta.url), 'utf8'));
+  await writeFile(join(root,'person-paths.js'), '// Generated from the roster and reviewed aliases by build:crawl.\nexport const PERSON_PATHS = '+JSON.stringify(personPaths(people, votes, samePerson))+';\n');
+  const groups = Object.fromEntries(['people','parties','electorates','bills','divisions','grant-programs','grant-recipients','official-reports','topics-reports','static','suppliers','donors','campaigners','agencies'].map(t=>[t,[]]));
   const fallbacks=Object.fromEntries(Object.keys(groups).map(type=>[type,0]));
   const fallbackPaths=new Set();
   const add = (type,path,date,priority,fallback) => {
@@ -249,17 +271,16 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
     const named = namedDonors(html);
     snapshot.set(path,hash({...base,...(named.length ? {donors:named} : {})}));
   }
-  const partyLabels = new Map(), donors = new Map();
+  const donors = new Map();
   for (const name of ['money.json','money.qld.json','money.vic.json']) {
     const money = await read(`graph/${name}`);
     for (const n of money.nodes) {
       if (!validId(n.label)) continue;
-      const map = n.kind === 'party' ? partyLabels : n.kind === 'donor' ? donors : null;
+      const map = n.kind === 'donor' ? donors : null;
       if (map && !map.has(fold(n.label))) map.set(fold(n.label),{label:n.label,date:money.meta.generated});
     }
   }
-  for (const p of people) if (validId(p.party) && !partyLabels.has(fold(p.party))) partyLabels.set(fold(p.party),{label:p.party,date:peopleDate});
-  for (const p of partyLabels.values()) if (p.label.length <= 120) add('parties',`/subject/party/${personSlug(p.label)}`,null,undefined,p.date);
+  for (const p of await readPartyPages(read)) add('parties',p.href,null,undefined,p.lastmod || peopleDate);
   for (const p of donors.values()) if (p.label.length <= 120) add('donors',`/subject/donor/${encodeURIComponent(p.label)}`,null,undefined,p.date);
   for (const s of seats.electorates) add('electorates',s.url,latestDate([s.updated_at,s.representation_as_of,s.latest_election,s.abolished,s.established],seatManifest.generated),undefined,seatManifest.generated);
   const divisions = new Map();
@@ -302,8 +323,11 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
     for (const p of data.programs || []) {
       if (!validId(p.id)) continue;
       // Only indexed programs with an actual exported profile get discovery URLs.
-      const profile=await read(`grants/${jur}/programs/${p.key || fileKey(p.id).replace(/^x-/, '')}.json`);
-      add('grant-programs','/money/grants?' + new URLSearchParams({jur,program:p.id}),latestDate((profile.grants || []).flatMap(g=>[g.published,g.updated_at,g.s]),data.meta.generated),undefined,data.meta.generated);
+      const row=resolveProgram(data.programs,p.id);
+      if (!row) throw new Error(`Unresolved grant program: ${p.id}`);
+      const profile=await read(`grants/${jur}/programs/${row.key || programKey(row.id)}.json`);
+      if (profile.id !== row.id) throw new Error(`Grant program identity mismatch: ${p.id}`);
+      add('grant-programs','/money/grants?' + new URLSearchParams({jur,program:row.id}),latestDate((profile.grants || []).flatMap(g=>[g.published,g.updated_at,g.s]),data.meta.generated),undefined,data.meta.generated);
     }
   }
   const supplierShards=new Map();
@@ -322,7 +346,8 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
     if (!previous || (c.years?.length || 0) > (previous.years?.length || 0)) campaignerNames.set(fold(c.name),c);
   }
   for (const c of campaignerNames.values()) add('campaigners',`/subject/campaigner/${encodeURIComponent(c.name)}`,latestDate([c.updated_at,c.filed_at],campaigners.meta.generated),undefined,campaigners.meta.generated);
-  // The reports are in the sitemap only while they are published.
+  for (const r of await officialReportCrawlEntries(optional)) add('official-reports',r.path,latestDate([r.updated,r.date],r.snapshot),undefined,r.snapshot);
+  // The separate investigations are in the sitemap only while they are published.
   for (const r of published ? reports.reports : []) add('topics-reports',`/reports/${r.slug}`,r.updated,undefined,r.generated_at || corpus.version);
   for (const slug of Object.keys(TOPIC_NAMES)) add('topics-reports',`/subject/topic/${slug}`,null,undefined,corpus.version);
   for (const path of ['/official-reports',...Object.keys(REPORT_COLLECTIONS).map(reportRoot),'/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map',...(published ? ['/reports'] : []),'/explore','/money/contracts','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);

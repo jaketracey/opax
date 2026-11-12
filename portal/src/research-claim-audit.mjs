@@ -1,5 +1,5 @@
 // Pure selected-evidence audit, shared by the final boundary and the offline report.
-import {PERSON_PATHS} from '../public/canonical-urls.js'
+import {PERSON_PATHS} from '../public/party-page.js'
 const norm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[‘’]/g,"'").replace(/[^\p{L}\p{N}]+/gu,' ').trim()
 // This generated index binds public parliamentarians.json names and their canonical slugs.
 const rosterPeople=new Map(Object.entries(PERSON_PATHS.exact).flatMap(([name,path])=>[[norm(name),path],[norm(path.split('/').at(-1)),path]]))
@@ -85,7 +85,7 @@ function amountOwners(text,f,known=[]){
  // Receipt subjects remain recipients even when a later 'to' phrase states a purpose.
  const receipt=[...before.matchAll(/\b(?:receiv(?:ed|es|ing|e)|secur(?:ed|es|ing|e)|got|won|earn(?:ed|s|ing)?|(?:was|were|been)\s+(?:paid|given|awarded))\b/gi)].at(-1)
  if(receipt){const actors=known.length?exactNames(before.slice(0,receipt.index)):nounPhrases(before.slice(0,receipt.index)),actor=actors.at(-1)
-  if(actor&&/^\s*(?:\w+ly\s*)*$/.test(before.slice(actor.end,receipt.index)))return [actor.name]
+  if(actor&&adverbsOnly(before.slice(actor.end,receipt.index)))return [actor.name]
  }
  // An explicit object after 'to' owns a receipt, regardless of who uttered it.
  const target=f.unit==='count'?'(?:to|for)':'to'
@@ -114,7 +114,7 @@ function givingActor(text,f,names,firstPerson){
  if(!verb||/\b(?:was|were|been|be)\s*$/i.test(before.slice(0,verb.index)))return undefined
  if(firstPerson&&/\bI\s*$/.test(before.slice(0,verb.index)))return firstPerson
  const preceding=mentions(before.slice(0,verb.index),names),actor=preceding.at(-1)
- return actor&&/^\s*(?:\w+ly\s*)*$/.test(before.slice(actor.end,verb.index))?actor.name:undefined
+ return actor&&adverbsOnly(before.slice(actor.end,verb.index))?actor.name:undefined
 }
 function recordName(name,row){
  const n=norm(name),text=norm(row.text),title=norm(row.title)
@@ -311,3 +311,6 @@ export function auditPayload(question,payload,{roster=[]}={}){
  }
  return {claims,findings,counts:{claims:claims.length,figures:claims.filter(c=>c.type==='figure').length,entities:claims.filter(c=>c.type==='entity').length,periods:claims.filter(c=>c.type==='period').length,quotes:claims.filter(c=>c.type==='quote').length,unverified:findings.length}}
 }
+
+// Each token must be an adverb; consume each word once, including joined adverbs.
+export const adverbsOnly = text => text.split(/\s+/).every(word => !word || /^\w+ly$/.test(word))

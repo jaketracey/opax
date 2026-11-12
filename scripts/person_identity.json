@@ -12,7 +12,8 @@
     "patrick conaghan": {"key": "10922", "why": "Pat Conaghan (Cowper from 2019); OpenAustralia lists him as Patrick John Conaghan; the linker gave 10903, Rex Patrick"},
     "patrick farmer": {"key": "10212", "why": "Pat Farmer (Macarthur 2001-2010); OpenAustralia lists him as Patrick Francis Farmer; the linker gave 10903, Rex Patrick"},
     "peter sidebottom": {"key": "10583", "why": "Sid Sidebottom (Braddon), printed with his first name Peter in 1998-99"},
-    "robert baldwin": {"key": "10026", "why": "Bob Baldwin (Paterson); OpenAustralia lists him as Robert Charles Baldwin; the linker gave 10545, Stuart Robert"}
+    "robert baldwin": {"key": "10026", "why": "Bob Baldwin (Paterson); OpenAustralia lists him as Robert Charles Baldwin; the linker gave 10545, Stuart Robert"},
+    "r.a. simms": {"key": "10842", "why": "Robert Andrew Simms, federal Greens senator 2015-2016 and SA Legislative Council member from 2021; the same person is printed with initials in SA Hansard"}
   },
   "wrong_face": {
     "10080": "Tony Burke's portrait (byte-identical to 10081), not Anna Burke",

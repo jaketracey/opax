@@ -8,6 +8,7 @@ import {tableSchema,tableName,quote,arrayColumns} from './table-schema.mjs';
 import {moneyFlowType} from '../portal/public/money-records.js';
 import {instrumentTableRows} from '../portal/public/instruments.js';
 import {categoryMembers} from '../portal/public/register-tables.js';
+import {interestHolder} from '../portal/public/interest-holder.js';
 import {donorDisclosure} from '../portal/public/donor-disclosure.js';
 import {contractTitle, placeholderContract, ausTenderURL} from '../portal/public/contracts-table.js';
 import {divisionRows,votingRows,personVoteRecords} from '../portal/public/vote-tables.js';
@@ -21,7 +22,7 @@ export async function interestTableRows(root) {
     const v = await read('interests/' + file);
     for (const [category, bucket] of Object.entries(v.buckets || {})) for (const [i, item] of (bucket.items || []).entries()) {
       const date = item.date || v.as_at || null;
-      const row = {id: `${file.slice(0, -5)}:${category}:${i}`, name: v.name, category, holder: item.holder || '', jurisdiction: v.jurisdiction, chamber: v.chamber, description: item.description || '', date, year: Number(String(date || '').slice(0, 4)) || null, url: v.source_url || ''};
+      const row = {id: `${file.slice(0, -5)}:${category}:${i}`, name: v.name, category, holder: interestHolder(item.holder), jurisdiction: v.jurisdiction, chamber: v.chamber, description: item.description || '', date, year: Number(String(date || '').slice(0, 4)) || null, url: v.source_url || ''};
       rows.push({row});
     }
   }

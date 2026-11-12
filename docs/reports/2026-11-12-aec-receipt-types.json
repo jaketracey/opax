@@ -1,0 +1,1920 @@
+{
+  "fetches": [],
+  "cached_archives": [
+    {
+      "archive": "AllAnnualData.zip",
+      "bytes": 2571182,
+      "sha256": "96d035fe5165054b95150280c41b785fe5653b63fa6b3e822d5ba376b7788096",
+      "files": [
+        {
+          "file": "Associated Entity Returns.csv",
+          "columns": [
+            "Financial Year",
+            "Name",
+            "Lodged on behalf of",
+            "AssociatedParties",
+            "Total Receipts",
+            "Total Payments",
+            "Total Debts",
+            "Discretionary Benefits",
+            "Capital Contributions"
+          ],
+          "rows": 4363
+        },
+        {
+          "file": "Capital Contributions.csv",
+          "columns": [
+            "Financial Year",
+            "Return Type",
+            "Name",
+            "Contributor",
+            "Value"
+          ],
+          "rows": 245
+        },
+        {
+          "file": "Detailed Debts.csv",
+          "columns": [
+            "Financial Year",
+            "Return Type",
+            "Name",
+            "Creditor Name",
+            "Amount owed",
+            "Financial or Non-financial institution"
+          ],
+          "rows": 14678
+        },
+        {
+          "file": "Detailed Discretionary Benefits.csv",
+          "columns": [
+            "Financial Year",
+            "Return Type",
+            "Name",
+            "Received From",
+            "Date",
+            "Value"
+          ],
+          "rows": 857
+        },
+        {
+          "file": "Detailed Receipts.csv",
+          "columns": [
+            "Financial Year",
+            "Return Type",
+            "Recipient Name",
+            "Received From",
+            "Receipt Type",
+            "Value"
+          ],
+          "rows": 124237
+        },
+        {
+          "file": "Donations Made.csv",
+          "columns": [
+            "Financial Year",
+            "Donor Name",
+            "Donation Made To",
+            "Date",
+            "Value"
+          ],
+          "rows": 66126
+        },
+        {
+          "file": "Donor Donations Received.csv",
+          "columns": [
+            "Financial Year",
+            "Name",
+            "Donation Received From",
+            "Date",
+            "Value"
+          ],
+          "rows": 575
+        },
+        {
+          "file": "Donor Returns.csv",
+          "columns": [
+            "Financial Year",
+            "Name",
+            "Lodged on behalf of",
+            "Total Donations Made",
+            "Total Donations Received"
+          ],
+          "rows": 13252
+        },
+        {
+          "file": "MemberOfParliamentReturns.csv",
+          "columns": [
+            "Financial Year",
+            "Return Type",
+            "Name",
+            "Total Donations Received",
+            "Number of Donors"
+          ],
+          "rows": 52
+        },
+        {
+          "file": "Party Returns.csv",
+          "columns": [
+            "Financial Year",
+            "Name",
+            "Party Group",
+            "Total Receipts",
+            "Total Payments",
+            "Total Debts",
+            "Total Discretionary Benefits"
+          ],
+          "rows": 2229
+        },
+        {
+          "file": "Significant Third Party Returns.csv",
+          "columns": [
+            "Financial Year",
+            "Return Type",
+            "ClientFileId",
+            "Name",
+            "ABN",
+            "ACN",
+            "Lodged on behalf of",
+            "Total Receipts",
+            "Total Payments",
+            "Total Debts",
+            "Total Discretionary Benefits",
+            "Electoral Expenditure"
+          ],
+          "rows": 275
+        },
+        {
+          "file": "Third Party Donations Received.csv",
+          "columns": [
+            "Financial Year",
+            "Name",
+            "Donation Received From",
+            "Date",
+            "Value"
+          ],
+          "rows": 1186
+        },
+        {
+          "file": "Third Party Returns.csv",
+          "columns": [
+            "Financial Year",
+            "ClientFileId",
+            "Name",
+            "ABN",
+            "ACN",
+            "Total Expenditure",
+            "Electoral Expenditure Cat. 1",
+            "Electoral Expenditure Cat. 2",
+            "Electoral Expenditure Cat. 3",
+            "Electoral Expenditure Cat. 4",
+            "Electoral Expenditure Cat. 5",
+            "Total Gifts Received",
+            "ClientType"
+          ],
+          "rows": 742
+        }
+      ]
+    },
+    {
+      "archive": "AllElectionsData.zip",
+      "bytes": 820417,
+      "sha256": "df540377ac1050259fc6d727338ae0d00248b9d6a791db4ff0b02c928dbf30f9",
+      "files": [
+        {
+          "file": "Donor Donations Made.csv",
+          "columns": [
+            "Event",
+            "Donor Code",
+            "Donor Name",
+            "Donated To",
+            "Donated To Date Of Gift",
+            "Donated To Gift Value"
+          ],
+          "rows": 1372
+        },
+        {
+          "file": "Donor Donations Received.csv",
+          "columns": [
+            "Event",
+            "Donor Code",
+            "Donor Name",
+            "Gift From Name",
+            "Gift From Date Of Gift",
+            "Gift From Gift Value"
+          ],
+          "rows": 471
+        },
+        {
+          "file": "Donor Return.csv",
+          "columns": [
+            "Event",
+            "Donor Code",
+            "Donor Name",
+            "Total Donations Made",
+            "Total Donations Received"
+          ],
+          "rows": 204
+        },
+        {
+          "file": "Media Advertisement Details.csv",
+          "columns": [
+            "Event",
+            "Media ID",
+            "Name",
+            "Business Name",
+            "Return Type",
+            "Advertiser",
+            "Advertiser Type",
+            "Date Run",
+            "Amount"
+          ],
+          "rows": 15119
+        },
+        {
+          "file": "Media Returns.csv",
+          "columns": [
+            "Event",
+            "Media ID",
+            "Name",
+            "Business Name",
+            "Return Type",
+            "Total Amount"
+          ],
+          "rows": 2575
+        },
+        {
+          "file": "Senate Groups and Candidate Discretionary Benefits.csv",
+          "columns": [
+            "Event",
+            "Return Type (Candidate/Senate Group)",
+            "Name",
+            "Discretionary Benefits Received From",
+            "Date",
+            "Amount"
+          ],
+          "rows": 4
+        },
+        {
+          "file": "Senate Groups and Candidate Donations.csv",
+          "columns": [
+            "Event",
+            "Return Type (Candidate/Senate Group)",
+            "Name",
+            "Donor Name",
+            "Date Of Gift",
+            "Gift Value"
+          ],
+          "rows": 2267
+        },
+        {
+          "file": "Senate Groups and Candidate Expenses.csv",
+          "columns": [
+            "Event",
+            "Return Type (Candidate/Senate Group)",
+            "Name",
+            "Total Electoral Expenditure",
+            "Broadcasting Cost",
+            "Publishing Cost",
+            "Display Ad Cost",
+            "Direct Mailing",
+            "Campaign Material Costs",
+            "Opinion Polls"
+          ],
+          "rows": 16177
+        },
+        {
+          "file": "Senate Groups and Candidate Return Summary.csv",
+          "columns": [
+            "Event",
+            "Return Type (Candidate/Senate Group)",
+            "Name",
+            "Party ID",
+            "Party Name",
+            "Electorate Name",
+            "Electorate State",
+            "Nil Return",
+            "Amendment No",
+            "Total Gift Value",
+            "Number Of Donors",
+            "Total Electoral Expenditure",
+            "Discretionary Benefits Received"
+          ],
+          "rows": 16184
+        },
+        {
+          "file": "Third Party Return Donations Made.csv",
+          "columns": [
+            "Event",
+            "Third Party Code",
+            "Third Party Name",
+            "Client ID",
+            "Name",
+            "Date Of Donation",
+            "Donation Value"
+          ],
+          "rows": 734
+        },
+        {
+          "file": "Third Party Return Donations Received.csv",
+          "columns": [
+            "Event",
+            "Third Party Code",
+            "Third Party Name",
+            "Donor Id",
+            "Donor Name",
+            "Date Of Gift",
+            "Gift Value"
+          ],
+          "rows": 27
+        },
+        {
+          "file": "Third Party Return Expenditure.csv",
+          "columns": [
+            "Event",
+            "Third Party Code",
+            "Third Party Name",
+            "Broadcasting Cost",
+            "Publishing Cost",
+            "Display Ad Cost",
+            "Direct Mailing",
+            "Campaign Material Costs",
+            "Opinion Polls"
+          ],
+          "rows": 204
+        }
+      ]
+    },
+    {
+      "archive": "AllReferendumData.zip",
+      "bytes": 25312,
+      "sha256": "aa5d7b2861beb7377c5434359b3e3142f77d4726ec913bc4a1d2f32b462327cf",
+      "files": [
+        {
+          "file": "Referendum Donations Made.csv",
+          "columns": [
+            "Event",
+            "Donor Name",
+            "Donated to name",
+            "Date",
+            "Value"
+          ],
+          "rows": 541
+        },
+        {
+          "file": "Referendum Donor Returns.csv",
+          "columns": [
+            "Event",
+            "Event ID",
+            "Name",
+            "ClientFileID",
+            "ABN",
+            "ACN",
+            "Total donations made"
+          ],
+          "rows": 230
+        },
+        {
+          "file": "Referendum Entity Donations Received.csv",
+          "columns": [
+            "Event",
+            "Name",
+            "Donor name",
+            "Date",
+            "Value"
+          ],
+          "rows": 564
+        },
+        {
+          "file": "Referendum Entity Returns.csv",
+          "columns": [
+            "Event",
+            "Event ID",
+            "Name",
+            "ClientFileID",
+            "ABN",
+            "ACN",
+            "Total donations received",
+            "Total number of donors",
+            "Total referendum expenditure"
+          ],
+          "rows": 89
+        }
+      ]
+    }
+  ],
+  "annual_detailed_rows_by_type_and_financial_year": [
+    {
+      "financial_year": "1998-1999",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 2641,
+      "aud": 68346390.0
+    },
+    {
+      "financial_year": "1998-1999",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 1008,
+      "aud": 38677306.0
+    },
+    {
+      "financial_year": "1998-1999",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 55,
+      "aud": 40013794.0
+    },
+    {
+      "financial_year": "1998-1999",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 5,
+      "aud": 11129.0
+    },
+    {
+      "financial_year": "1999-2000",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 579,
+      "aud": 15400829.0
+    },
+    {
+      "financial_year": "1999-2000",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 1270,
+      "aud": 40083803.0
+    },
+    {
+      "financial_year": "1999-2000",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 22,
+      "aud": 2129052.0
+    },
+    {
+      "financial_year": "1999-2000",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 800,
+      "aud": 12993396.0
+    },
+    {
+      "financial_year": "2000-2001",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 1019,
+      "aud": 18198029.0
+    },
+    {
+      "financial_year": "2000-2001",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 1777,
+      "aud": 40949869.0
+    },
+    {
+      "financial_year": "2000-2001",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 8,
+      "aud": 144025.0
+    },
+    {
+      "financial_year": "2000-2001",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 274,
+      "aud": 9190589.0
+    },
+    {
+      "financial_year": "2001-2002",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 1276,
+      "aud": 27989564.0
+    },
+    {
+      "financial_year": "2001-2002",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 1186,
+      "aud": 52983972.0
+    },
+    {
+      "financial_year": "2001-2002",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 45,
+      "aud": 38958642.0
+    },
+    {
+      "financial_year": "2001-2002",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 1739,
+      "aud": 31965866.0
+    },
+    {
+      "financial_year": "2002-2003",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 1267,
+      "aud": 16248349.0
+    },
+    {
+      "financial_year": "2002-2003",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 1968,
+      "aud": 71525864.0
+    },
+    {
+      "financial_year": "2002-2003",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 18,
+      "aud": 3370492.0
+    },
+    {
+      "financial_year": "2002-2003",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 3,
+      "aud": 187631.0
+    },
+    {
+      "financial_year": "2002-2003",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 1281,
+      "aud": 25423289.0
+    },
+    {
+      "financial_year": "2003-2004",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 1328,
+      "aud": 23778516.0
+    },
+    {
+      "financial_year": "2003-2004",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3270,
+      "aud": 77416077.0
+    },
+    {
+      "financial_year": "2003-2004",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 52,
+      "aud": 3290545.0
+    },
+    {
+      "financial_year": "2003-2004",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 175,
+      "aud": 2320025.0
+    },
+    {
+      "financial_year": "2003-2004",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 220,
+      "aud": 3320841.0
+    },
+    {
+      "financial_year": "2004-2005",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 2576,
+      "aud": 37385678.0
+    },
+    {
+      "financial_year": "2004-2005",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3836,
+      "aud": 89262749.0
+    },
+    {
+      "financial_year": "2004-2005",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 67,
+      "aud": 44033938.0
+    },
+    {
+      "financial_year": "2004-2005",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 51,
+      "aud": 1039003.0
+    },
+    {
+      "financial_year": "2004-2005",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 60,
+      "aud": 441564.0
+    },
+    {
+      "financial_year": "2005-2006",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 532,
+      "aud": 13903896.0
+    },
+    {
+      "financial_year": "2005-2006",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 2297,
+      "aud": 95913800.0
+    },
+    {
+      "financial_year": "2005-2006",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 8,
+      "aud": 1915784.0
+    },
+    {
+      "financial_year": "2005-2006",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 80,
+      "aud": 1547117.0
+    },
+    {
+      "financial_year": "2005-2006",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 42,
+      "aud": 1192911.0
+    },
+    {
+      "financial_year": "2006-2007",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 301,
+      "aud": 26910815.0
+    },
+    {
+      "financial_year": "2006-2007",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 2606,
+      "aud": 242144450.0
+    },
+    {
+      "financial_year": "2006-2007",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 6,
+      "aud": 6993295.0
+    },
+    {
+      "financial_year": "2006-2007",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 115,
+      "aud": 5419350.0
+    },
+    {
+      "financial_year": "2006-2007",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 12,
+      "aud": 540000.0
+    },
+    {
+      "financial_year": "2007-2008",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 606,
+      "aud": 48491918.0
+    },
+    {
+      "financial_year": "2007-2008",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 2235,
+      "aud": 284308640.0
+    },
+    {
+      "financial_year": "2007-2008",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 30,
+      "aud": 27383012.0
+    },
+    {
+      "financial_year": "2007-2008",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 129,
+      "aud": 6249978.0
+    },
+    {
+      "financial_year": "2007-2008",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 23,
+      "aud": 6719528.0
+    },
+    {
+      "financial_year": "2008-2009",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 350,
+      "aud": 21362467.0
+    },
+    {
+      "financial_year": "2008-2009",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 2277,
+      "aud": 240287842.0
+    },
+    {
+      "financial_year": "2008-2009",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 7,
+      "aud": 361080.0
+    },
+    {
+      "financial_year": "2008-2009",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 57,
+      "aud": 7603212.0
+    },
+    {
+      "financial_year": "2009-2010",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 81,
+      "aud": 5037989.0
+    },
+    {
+      "financial_year": "2009-2010",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 288,
+      "aud": 16574326.0
+    },
+    {
+      "financial_year": "2009-2010",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3190,
+      "aud": 221267295.0
+    },
+    {
+      "financial_year": "2009-2010",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 5,
+      "aud": 691405.0
+    },
+    {
+      "financial_year": "2009-2010",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 1,
+      "aud": 165.0
+    },
+    {
+      "financial_year": "2009-2010",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 4,
+      "aud": 476801.0
+    },
+    {
+      "financial_year": "2010-2011",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 8,
+      "aud": 3246361.0
+    },
+    {
+      "financial_year": "2010-2011",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 734,
+      "aud": 42858899.0
+    },
+    {
+      "financial_year": "2010-2011",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3616,
+      "aud": 353571597.0
+    },
+    {
+      "financial_year": "2010-2011",
+      "aec_receipt_type": "Public Funding",
+      "normalised_type": "public_funding",
+      "rows": 7,
+      "aud": 4325771.0
+    },
+    {
+      "financial_year": "2010-2011",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 1,
+      "aud": 14176.0
+    },
+    {
+      "financial_year": "2010-2011",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 1,
+      "aud": 165000.0
+    },
+    {
+      "financial_year": "2011-12",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 1,
+      "aud": 4800000.0
+    },
+    {
+      "financial_year": "2011-12",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 233,
+      "aud": 13841626.0
+    },
+    {
+      "financial_year": "2011-12",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3657,
+      "aud": 290701014.0
+    },
+    {
+      "financial_year": "2011-12",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 43,
+      "aud": 8205885.0
+    },
+    {
+      "financial_year": "2011-12",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 1,
+      "aud": 480036.0
+    },
+    {
+      "financial_year": "2012-13",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 2,
+      "aud": 293182.0
+    },
+    {
+      "financial_year": "2012-13",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 445,
+      "aud": 21631689.0
+    },
+    {
+      "financial_year": "2012-13",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3625,
+      "aud": 288468538.0
+    },
+    {
+      "financial_year": "2012-13",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 112,
+      "aud": 8986001.0
+    },
+    {
+      "financial_year": "2013-14",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 20,
+      "aud": 11065860.0
+    },
+    {
+      "financial_year": "2013-14",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 825,
+      "aud": 66440000.0
+    },
+    {
+      "financial_year": "2013-14",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3654,
+      "aud": 335711450.0
+    },
+    {
+      "financial_year": "2013-14",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 86,
+      "aud": 8092697.0
+    },
+    {
+      "financial_year": "2013-14",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 1,
+      "aud": 23000.0
+    },
+    {
+      "financial_year": "2014-15",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 1,
+      "aud": 1500.0
+    },
+    {
+      "financial_year": "2014-15",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 470,
+      "aud": 29858243.0
+    },
+    {
+      "financial_year": "2014-15",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 4000,
+      "aud": 308729945.0
+    },
+    {
+      "financial_year": "2014-15",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 118,
+      "aud": 9501358.0
+    },
+    {
+      "financial_year": "2014-15",
+      "aec_receipt_type": "Unspecified",
+      "normalised_type": "unspecified",
+      "rows": 1,
+      "aud": 33298.0
+    },
+    {
+      "financial_year": "2015-16",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 1,
+      "aud": 100000.0
+    },
+    {
+      "financial_year": "2015-16",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 1145,
+      "aud": 32992179.0
+    },
+    {
+      "financial_year": "2015-16",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3428,
+      "aud": 309042903.0
+    },
+    {
+      "financial_year": "2015-16",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 55,
+      "aud": 1097764.0
+    },
+    {
+      "financial_year": "2016-17",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 2,
+      "aud": 172250.0
+    },
+    {
+      "financial_year": "2016-17",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 421,
+      "aud": 15291300.0
+    },
+    {
+      "financial_year": "2016-17",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3572,
+      "aud": 357992377.0
+    },
+    {
+      "financial_year": "2016-17",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 73,
+      "aud": 2026733.0
+    },
+    {
+      "financial_year": "2017-18",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 1,
+      "aud": 75000.0
+    },
+    {
+      "financial_year": "2017-18",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 705,
+      "aud": 18212678.0
+    },
+    {
+      "financial_year": "2017-18",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 4081,
+      "aud": 325999456.0
+    },
+    {
+      "financial_year": "2017-18",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 115,
+      "aud": 2442094.0
+    },
+    {
+      "financial_year": "2018-19",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 3,
+      "aud": 213082.0
+    },
+    {
+      "financial_year": "2018-19",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 1206,
+      "aud": 137706256.0
+    },
+    {
+      "financial_year": "2018-19",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 4915,
+      "aud": 960801806.0
+    },
+    {
+      "financial_year": "2018-19",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 66,
+      "aud": 3282497.0
+    },
+    {
+      "financial_year": "2019-20",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 353,
+      "aud": 15896645.0
+    },
+    {
+      "financial_year": "2019-20",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 3717,
+      "aud": 559739719.0
+    },
+    {
+      "financial_year": "2019-20",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 199,
+      "aud": 16962455.0
+    },
+    {
+      "financial_year": "2020-21",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 2,
+      "aud": 79400.0
+    },
+    {
+      "financial_year": "2020-21",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 709,
+      "aud": 21524027.0
+    },
+    {
+      "financial_year": "2020-21",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 4262,
+      "aud": 537519860.0
+    },
+    {
+      "financial_year": "2020-21",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 234,
+      "aud": 18392343.0
+    },
+    {
+      "financial_year": "2021-22",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 3,
+      "aud": 329904.0
+    },
+    {
+      "financial_year": "2021-22",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 1656,
+      "aud": 185943747.0
+    },
+    {
+      "financial_year": "2021-22",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 4659,
+      "aud": 528823069.0
+    },
+    {
+      "financial_year": "2021-22",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 58,
+      "aud": 4913613.0
+    },
+    {
+      "financial_year": "2022-23",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 379,
+      "aud": 25779053.0
+    },
+    {
+      "financial_year": "2022-23",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 5241,
+      "aud": 691974926.0
+    },
+    {
+      "financial_year": "2022-23",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 62,
+      "aud": 6230456.0
+    },
+    {
+      "financial_year": "2023-24",
+      "aec_receipt_type": null,
+      "normalised_type": "unknown",
+      "rows": 15,
+      "aud": 579667.0
+    },
+    {
+      "financial_year": "2023-24",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 773,
+      "aud": 21920348.0
+    },
+    {
+      "financial_year": "2023-24",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 5956,
+      "aud": 529557834.0
+    },
+    {
+      "financial_year": "2023-24",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 58,
+      "aud": 1838549.0
+    },
+    {
+      "financial_year": "2024-25",
+      "aec_receipt_type": "Donation Received",
+      "normalised_type": "donation_received",
+      "rows": 2565,
+      "aud": 165416429.0
+    },
+    {
+      "financial_year": "2024-25",
+      "aec_receipt_type": "Other Receipt",
+      "normalised_type": "other_receipt",
+      "rows": 6667,
+      "aud": 1058256197.0
+    },
+    {
+      "financial_year": "2024-25",
+      "aec_receipt_type": "Subscription",
+      "normalised_type": "subscription",
+      "rows": 60,
+      "aud": 1935531.0
+    }
+  ],
+  "recipient_kinds": [
+    {
+      "source": "aec_annual",
+      "recipient_kind": "associated_entity",
+      "return_type": "Associated Entity Return",
+      "rows": 50631,
+      "aud": 4656195514.0
+    },
+    {
+      "source": "aec_annual",
+      "recipient_kind": "member_of_parliament",
+      "return_type": "Member of HOR Return",
+      "rows": 57,
+      "aud": 1573476.0
+    },
+    {
+      "source": "aec_annual",
+      "recipient_kind": "political_campaigner",
+      "return_type": "Political Campaigner Return",
+      "rows": 3306,
+      "aud": 934488825.0
+    },
+    {
+      "source": "aec_annual",
+      "recipient_kind": "political_party",
+      "return_type": "Political Party Return",
+      "rows": 65124,
+      "aud": 3330245274.0
+    },
+    {
+      "source": "aec_annual",
+      "recipient_kind": "significant_third_party",
+      "return_type": "Significant Third Party Return",
+      "rows": 5119,
+      "aud": 1569984076.0
+    },
+    {
+      "source": "aec_annual",
+      "recipient_kind": "third_party",
+      "return_type": "Third Party Return",
+      "rows": 1186,
+      "aud": 508152134.0
+    },
+    {
+      "source": "aec_election",
+      "recipient_kind": "candidate",
+      "return_type": "Candidate",
+      "rows": 2252,
+      "aud": 32598359.0
+    },
+    {
+      "source": "aec_election",
+      "recipient_kind": "senate_group",
+      "return_type": "Senate Group",
+      "rows": 15,
+      "aud": 171548.0
+    },
+    {
+      "source": "aec_election",
+      "recipient_kind": "third_party",
+      "return_type": "Third Party Return",
+      "rows": 27,
+      "aud": 1062036.0
+    },
+    {
+      "source": "aec_referendum",
+      "recipient_kind": "referendum_entity",
+      "return_type": "Referendum Entity Return",
+      "rows": 564,
+      "aud": 62802624.0
+    }
+  ],
+  "donor_cross_checks": [
+    {
+      "archive": "AllAnnualData",
+      "file": "Donations Made.csv",
+      "rows": 66126,
+      "potential_exact_overlap_rows": 2059
+    },
+    {
+      "archive": "AllAnnualData",
+      "file": "Donor Donations Received.csv",
+      "rows": 575,
+      "potential_exact_overlap_rows": 71
+    },
+    {
+      "archive": "AllElectionsData",
+      "file": "Donor Donations Made.csv",
+      "rows": 1372,
+      "potential_exact_overlap_rows": 1109
+    },
+    {
+      "archive": "AllElectionsData",
+      "file": "Donor Donations Received.csv",
+      "rows": 471,
+      "potential_exact_overlap_rows": 0
+    },
+    {
+      "archive": "AllElectionsData",
+      "file": "Third Party Return Donations Made.csv",
+      "rows": 734,
+      "potential_exact_overlap_rows": 49
+    },
+    {
+      "archive": "AllReferendumData",
+      "file": "Referendum Donations Made.csv",
+      "rows": 541,
+      "potential_exact_overlap_rows": 39
+    }
+  ],
+  "cross_check_note": "Potential overlaps compare exact source, donor, recipient, amount and normalised financial year/event; annual detail has no gift date, so this is not proof of gift identity. Cross-check rows contribute zero to the typed measure.",
+  "legacy_backfill": {
+    "ambiguous": 317,
+    "cross_check_match": 53803,
+    "recipient_match": 106467,
+    "separate_match": 763,
+    "unmatched": 9413
+  },
+  "full_party_receipts_scope": "All cached Political Party Return itemised recipient receipts, uncapped donors. Exact existing recipient-party mappings and existing canonical donor industry tags. No donor declarations, public bodies, internal party transfers, nonpositive amounts or reviewed outliers. Property is OPAX's broad property/construction tag, not a reviewed developer-only list. Mining excludes the separate fossil_fuels tag.",
+  "selection_rule": "Both scopes use aec_receipt_selection.ReceiptSelection.exclusion, including per-name public-funding and party-name exclusions even when another alias of the entity is visible. The map additionally requires an existing donor-party edge. Visible industry tags remain the released graph node tags; uncapped tags follow industry_method.",
+  "industry_method": "Resolve donor names with the existing exact alias index. Sum existing AEC-row amounts by classified industry for each donor entity, ignoring other/unidentified; largest tag wins. Resolver-kind union forces unions. No new industry labels are inferred from the CSV.",
+  "full_party_receipts_exclusions": {
+    "nonparty_or_unmapped_recipient": 2113,
+    "flagged_review": 25,
+    "government_or_internal": 7856,
+    "blank_or_nonpositive": 1
+  },
+  "industries_full_party_receipts": {
+    "gambling": {
+      "all_types": {
+        "aud": 12343894.0,
+        "top5": [
+          {
+            "recipient": "Labor",
+            "aud": 6409548.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 5332306.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 493740.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 108300.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 4152439.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 2044652.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 1686287.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 371500.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 50000.0
+          }
+        ]
+      }
+    },
+    "mining": {
+      "all_types": {
+        "aud": 90652171.0,
+        "top5": [
+          {
+            "recipient": "United Australia Party",
+            "aud": 62900932.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 13613255.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 7397094.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 3326342.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 3112548.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 79462801.0,
+        "top5": [
+          {
+            "recipient": "United Australia Party",
+            "aud": 61988301.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 9870697.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 2812030.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 2411248.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 2108525.0
+          }
+        ]
+      }
+    },
+    "property": {
+      "all_types": {
+        "aud": 83695970.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 36174596.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 34182976.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 8737755.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 4447543.0
+          },
+          {
+            "recipient": "One Nation",
+            "aud": 107720.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 49844949.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 26669924.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 19990255.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 1564000.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 1535050.0
+          },
+          {
+            "recipient": "One Nation",
+            "aud": 57720.0
+          }
+        ]
+      }
+    },
+    "unions": {
+      "all_types": {
+        "aud": 210513010.0,
+        "top5": [
+          {
+            "recipient": "Labor",
+            "aud": 205729173.0
+          },
+          {
+            "recipient": "Greens",
+            "aud": 3026036.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 1038508.0
+          },
+          {
+            "recipient": "Katter's Australian Party",
+            "aud": 499000.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 145293.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 78098936.0,
+        "top5": [
+          {
+            "recipient": "Labor",
+            "aud": 74594600.0
+          },
+          {
+            "recipient": "Greens",
+            "aud": 2606036.0
+          },
+          {
+            "recipient": "Katter's Australian Party",
+            "aud": 499000.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 222690.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 130110.0
+          }
+        ]
+      }
+    },
+    "tobacco": {
+      "all_types": {
+        "aud": 3259332.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 2179572.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 654060.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 425700.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 2151325.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 1316365.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 470260.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 364700.0
+          }
+        ]
+      }
+    },
+    "finance": {
+      "all_types": {
+        "aud": 203671178.0,
+        "top5": [
+          {
+            "recipient": "Labor",
+            "aud": 95791344.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 80315511.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 12130011.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 11928169.0
+          },
+          {
+            "recipient": "Greens",
+            "aud": 2122561.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 39059336.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 21996436.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 12962952.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 2176116.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 1154491.0
+          },
+          {
+            "recipient": "Greens",
+            "aud": 672341.0
+          }
+        ]
+      }
+    }
+  },
+  "industries_visible_graph_receipts": {
+    "gambling": {
+      "all_types": {
+        "aud": 8668512.0,
+        "top5": [
+          {
+            "recipient": "Labor",
+            "aud": 4699593.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 3538879.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 343740.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 86300.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 2468918.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 1093352.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 1067066.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 258500.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 50000.0
+          }
+        ]
+      }
+    },
+    "mining": {
+      "all_types": {
+        "aud": 78848025.0,
+        "top5": [
+          {
+            "recipient": "United Australia Party",
+            "aud": 62538157.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 7106319.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 4111089.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 2514262.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 2298198.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 71825110.0,
+        "top5": [
+          {
+            "recipient": "United Australia Party",
+            "aud": 61625526.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 5358259.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 1647498.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 1613477.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 1330350.0
+          }
+        ]
+      }
+    },
+    "property": {
+      "all_types": {
+        "aud": 57138641.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 24411319.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 21932400.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 7168327.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 3626595.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 37664539.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 20670215.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 15196824.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 1143000.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 654500.0
+          }
+        ]
+      }
+    },
+    "unions": {
+      "all_types": {
+        "aud": 184916932.0,
+        "top5": [
+          {
+            "recipient": "Labor",
+            "aud": 181802496.0
+          },
+          {
+            "recipient": "Greens",
+            "aud": 2791226.0
+          },
+          {
+            "recipient": "Katter's Australian Party",
+            "aud": 320000.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 3210.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 70298062.0,
+        "top5": [
+          {
+            "recipient": "Labor",
+            "aud": 67541836.0
+          },
+          {
+            "recipient": "Greens",
+            "aud": 2436226.0
+          },
+          {
+            "recipient": "Katter's Australian Party",
+            "aud": 320000.0
+          }
+        ]
+      }
+    },
+    "tobacco": {
+      "all_types": {
+        "aud": 2946112.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 2044852.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 538060.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 363200.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 1918825.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 1243865.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 372760.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 302200.0
+          }
+        ]
+      }
+    },
+    "finance": {
+      "all_types": {
+        "aud": 169586920.0,
+        "top5": [
+          {
+            "recipient": "Labor",
+            "aud": 82267799.0
+          },
+          {
+            "recipient": "Liberal",
+            "aud": 64102300.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 10982297.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 10209821.0
+          },
+          {
+            "recipient": "Katter's Australian Party",
+            "aud": 1017881.0
+          }
+        ]
+      },
+      "donation_only": {
+        "aud": 24731335.0,
+        "top5": [
+          {
+            "recipient": "Liberal",
+            "aud": 14402567.0
+          },
+          {
+            "recipient": "Labor",
+            "aud": 8694783.0
+          },
+          {
+            "recipient": "Nationals",
+            "aud": 1335985.0
+          },
+          {
+            "recipient": "LNP",
+            "aud": 270000.0
+          },
+          {
+            "recipient": "Greens",
+            "aud": 28000.0
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import {receiptPeriodQuery} from './receipt-period'
 
 /** Closed question grammar. It reads user intent, never answer prose or citations. */
@@ -16,7 +17,7 @@ const auxiliaries='(?:(?:(?:has|have|had)(?: been)?|(?:is|are|was|were)(?: being
 const actions=auxiliaries+verbs
 const roles='(?:(?:financial|political) )?(?:donors?|backers?|supporters?|benefactors?|funders?|contributors?)'
 const fixedTypos:Record<string,string>={teh:'the',hte:'the',waht:'what',moeny:'money',donatoins:'donations',dontes:'donates'}
-const normal=(q:string)=>q.normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim().replace(/[?!.]+$/,'').replace(/^please /,'').replace(/ please$/,'').replace(/^and /,'').replace(/\b(?:teh|hte|waht|moeny|donatoins|dontes)\b/g,word=>fixedTypos[word]).replace(/\b([a-z]+s)'(?=\s|$)/g,"$1's").replace(/^who've /,'who have ')
+const normal=(q:string)=>trimQuestionEnd(questionSpaces(q.normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'"))).replace(/^please /,'').replace(/ please$/,'').replace(/^and /,'').replace(/\b(?:teh|hte|waht|moeny|donatoins|dontes)\b/g,word=>fixedTypos[word]).replace(/\b([a-z]+s)'(?=\s|$)/g,"$1's").replace(/^who've /,'who have ')
 const escape=(s:string)=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
 function exactRankingQuestion(q:string):string|null {
  // An explicit state jurisdiction never enters this federal route.

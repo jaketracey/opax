@@ -90,8 +90,7 @@ NET_ADJUSTMENTS_NOTE = (
 
 HONORIFIC_RE = re.compile(
     r"^(?:(?:the|senator|hon|mr|mrs|ms|miss|dr|lady|sir|dame|prof|professor)\.?\s+)+", re.I)
-POSTNOMINAL_RE = re.compile(
-    r"(?:\s+(?:MP|AC|AO|AM|OAM|QC|KC|SC|DSC|CSC|CBE|OBE|MBE|KCMG|RFD|ED|JP|OAM))+$")
+POSTNOMINALS = frozenset("MP AC AO AM OAM QC KC SC DSC CSC CBE OBE MBE KCMG RFD ED JP".split())
 NICKNAMES = {
     "patrick": ["pat"], "robert": ["bob", "rob"], "anthony": ["tony"], "james": ["jim"],
     "christopher": ["chris"], "michael": ["mike"], "william": ["bill"], "joshua": ["josh"],
@@ -108,9 +107,10 @@ ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}")
 def clean_name(member_name):
     """'The Hon Anthony ALBANESE MP' -> 'anthony albanese'."""
     s = HONORIFIC_RE.sub("", (member_name or "").strip())
-    s = POSTNOMINAL_RE.sub("", s)
-    s = re.sub(r"\s+", " ", s).strip().lower()
-    return s
+    words = s.split()
+    while len(words) > 1 and words[-1] in POSTNOMINALS:
+        words.pop()
+    return " ".join(words).lower()
 
 
 def display_name(key):

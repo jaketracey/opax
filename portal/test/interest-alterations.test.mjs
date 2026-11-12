@@ -28,23 +28,45 @@ test('the published Bowen rows retain the dependent holder, deletion and additio
  assert.equal(applyQuery(rows,config,{filters:{entry_type:['Deletion']}}).total,1);
 });
 
-test('statement, missing, unspecified and unknown legacy values stay distinct; correction wording does not invent an entry type',()=>{
+test('missing and legacy placeholder holders are absent; stated holders and entry types stay distinct',()=>{
  const items=[
   {description:'Statement row',holder:'self',kind:'statement'},
   {description:'Partner row',holder:'spouse',kind:'addition'},
-  {description:'Unspecified row',holder:'unspecified',kind:'deletion'},
+  {description:'Legacy placeholder row',holder:'unspecified',kind:'deletion'},
   {description:'Legacy row'},
   {description:'Unknown row',holder:'<unknown-holder>',kind:'<unknown-kind>'},
   {description:'Correction: this was on 04/07/26, not 14/07/2026.',holder:'self',kind:'addition'},
  ];
  const {rows}=interestTableData({source_url:'https://fixture.test/statement',as_at:'2026-09-15',buckets:{other:{items}}});
- assert.deepEqual(rows.map(r=>r.holder_label),['Self','Spouse or partner','Not specified','Not recorded','<unknown-holder>','Self']);
+ assert.deepEqual(rows.map(r=>r.holder_label),['Self','Spouse or partner','Not stated','Not stated','<unknown-holder>','Self']);
+ assert.equal(rows[2].holder,null);assert.equal(rows[3].holder,null);
  assert.deepEqual(rows.map(r=>r.entry_type),['Statement','Addition','Deletion','Not recorded','<unknown-kind>','Addition']);
  assert.equal(rows[4].holder,items[4].holder);assert.equal(rows[4].kind,items[4].kind);
  assert.equal(rows[5].item,items[5].description);assert.equal(rows[5].date,'2026-09-15');
  const html=registerTableHTML(interestTableConfig(rows));
  assert.ok(!html.includes('<unknown-holder>'));assert.ok(!html.includes('<unknown-kind>'));
  assert.ok(html.includes('&lt;unknown-holder&gt;'));
+});
+
+test('Worker register JSON and server-rendered tables show a null holder as Not stated',async()=>{
+ const register={name:'Alex Example',source_url:'https://fixture.test/register.pdf',as_at:'2026-10-13',total:1,
+  buckets:{gifts:{count:1,items:[{holder:null,description:'Example conference hospitality',kind:'addition',date:'2026-10-12',page:2}]}}};
+ const response=await api.interestRegisterResponse(new Request('https://fixture.test/api/register/interests?pid=12345'),{fetch:async()=>Response.json(register)});
+ assert.equal(response.status,200);
+ const {rows}=await response.json();
+ assert.equal(rows.length,1);assert.equal(rows[0].holder,null);assert.equal(rows[0].holder_label,'Not stated');
+ assert.equal(rows[0].item,register.buckets.gifts.items[0].description);
+ assert.equal(rows[0].source,register.source_url+'#page=2');
+ const person={name:register.name,pid:'12345',states:['nsw'],chambers:['representatives']};
+ const read=async path=>path==='/interests/12345.json'?register:path==='/interests/index.json'?{people:{'12345':{}},_by_name:{}}:null;
+ const rendered=await api.renderPersonAnswer(person,read,new Map());
+ const dom=new JSDOM(rendered.html);
+ try{
+  const table=dom.window.document.querySelector('#ssr-interests-table');
+  assert.ok(table);assert.match(table.textContent,/Not stated/);
+  assert.doesNotMatch(table.textContent,/unspecified|\bnull\b/i);
+  assert.ok(table.querySelector('a[href="https://fixture.test/register.pdf#page=2"]'));
+ }finally{dom.window.close();}
 });
 
 test('the recorded King correction retains its addition classification and notification date',async()=>{

@@ -902,6 +902,11 @@ def main() -> None:
         "nodes": nodes,
         "edges": edges,
     }
+    try:
+        from scripts.aec_receipt_types import attach_receipt_types
+    except ModuleNotFoundError:
+        from aec_receipt_types import attach_receipt_types
+    attach_receipt_types(db, out)
     json.dump(attach_donor_disclosures(db,out,"federal"), sys.stdout, ensure_ascii=False, separators=(",", ":"))
     sys.stdout.write("\n")
 
