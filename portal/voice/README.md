@@ -112,6 +112,12 @@ npm run voice:agent -- --agent <agent_id> --apply    # back up, then apply, then
    runs the dry run again and exits non-zero unless every tool is `same` and
    attached and the prompt is unchanged.
 
+The plan raises a PROBLEM, and `--apply` is refused before any backup or
+write, when an attached tool of a configured name posts to another origin: it
+may be the other environment's tool, and updating it would repoint that agent
+too. The tool secret is only ever taken from tools that post to this
+environment's origin.
+
 To undo, restore from the backup the apply printed. It is a dry run without
 `--apply`, and it backs up the current state first:
 

@@ -36,9 +36,15 @@ export const promptText = config => Array.isArray(config.prompt) ? config.prompt
 /** Prompts compare equal when only line-end and trailing whitespace differ (the provider may normalise them). */
 export const samePrompt = (a, b) => typeof a === 'string' && typeof b === 'string' && a.replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '').trim() === b.replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '').trim()
 
-/** The secret id an OPAX tool already sends as x-opax-voice-token. */
-export function existingSecretId(tools) {
+/** The origin a webhook tool posts to, or null. */
+export function toolOrigin(tool) {
+  try { return new URL(tool?.api_schema?.url).origin } catch { return null }
+}
+
+/** The secret id an OPAX tool of this environment already sends as x-opax-voice-token; another environment's never. */
+export function existingSecretId(tools, origin) {
   for (const tool of tools) {
+    if (origin && toolOrigin(tool) !== origin) continue
     const header = tool?.api_schema?.request_headers?.['x-opax-voice-token']
     if (header && typeof header === 'object' && typeof header.secret_id === 'string') return header.secret_id
   }
@@ -67,7 +73,7 @@ function lineDiff(before, after) {
 export function planSync(config, agent, attached, {origin, secretId, workspace = []}) {
   const prompt = agent?.conversation_config?.agent?.prompt ?? {}
   const inline = Array.isArray(prompt.tools) ? prompt.tools : []
-  const secret = secretId ?? existingSecretId([...attached.map(t => t.tool_config), ...inline, ...workspace.map(t => t.tool_config)])
+  const secret = secretId ?? existingSecretId([...attached.map(t => t.tool_config), ...inline, ...workspace.map(t => t.tool_config)], origin)
   const desired = renderTools(config, {origin, secretId: secret})
   const byName = new Map(attached.map(t => [t.tool_config?.name, t]))
   const attachedIds = new Set(attached.map(t => t.id))
@@ -86,6 +92,10 @@ export function planSync(config, agent, attached, {origin, secretId, workspace =
     agent_id: agent?.agent_id, origin, secret_id: secret, tools, kept, inline_replaced: inlineReplaced,
     prompt: {changed, diff: changed ? lineDiff(prompt.prompt, want) : [], text: want},
     problems: [
+      // An attached tool of a configured name that posts elsewhere may be shared with another environment's agent:
+      // updating it would repoint that agent too. Detach or replace it in the dashboard first.
+      ...attached.filter(t => names.has(t.tool_config?.name) && t.tool_config?.type !== 'system' && toolOrigin(t.tool_config) !== origin)
+        .map(t => `${t.tool_config.name} (${t.id}) is attached but posts to ${toolOrigin(t.tool_config) ?? 'no URL'}, not ${origin}. It may be another environment's tool; apply refused.`),
       ...(secret ? [] : ['No tool secret id: no OPAX tool sends x-opax-voice-token. Pass --secret-id <provider secret id>.']),
       ...desired.filter(t => { try { return !new URL(t.api_schema.url).pathname.startsWith('/api/voice/tools/') } catch { return true } }).map(t => `${t.name}: URL is not under /api/voice/tools/.`),
     ],
