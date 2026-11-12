@@ -1,13 +1,18 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {readFile} from 'node:fs/promises'
-import {localApi,assets} from './ask-lobby-money-harness.mjs'
+import {localApi} from './ask-lobby-money-harness.mjs'
 import {moneyRankingCases} from './fixtures/money-ranking-cases.mjs'
 import {graphRanking,scoreMoneyRanking} from './money-ranking-eval.mjs'
-const api=await localApi(),graph=JSON.parse(await readFile(new URL('../public/graph/money.json',import.meta.url)))
-for(const c of moneyRankingCases)test('money accuracy and directness: '+c.id,async()=>{
- const result=await api.federalPartyMoneyAnswer({question:c.question},assets)
- const score=scoreMoneyRanking(result,graphRanking(graph,c),c,graph)
+import {typedMoney,untypedMoney,moneyAssets} from './money-graph-data.mjs'
+// The full published export is typed; the untyped run strips its receipt-type fields (the pre-#310 file).
+const api=await localApi(),graph=typedMoney(),assets=moneyAssets('typed')
+const untypedGraph=untypedMoney(),untypedAssets=moneyAssets('untyped')
+for(const [label,g,store] of [['typed',graph,assets],['untyped',untypedGraph,untypedAssets]])for(const c of moneyRankingCases)test(`money accuracy and directness (${label}): ${c.id}`,async()=>{
+ const result=await api.federalPartyMoneyAnswer({question:c.question},store)
+ const expected=graphRanking(g,c)
+ assert.equal(expected.typed,label==='typed')
+ const score=scoreMoneyRanking(result,expected,c,g)
  assert.deepEqual(score.errors,[],c.question+'\n'+result?.answer)
  assert.equal(score.accuracy,true);assert.equal(score.directness,3)
 })
@@ -55,7 +60,7 @@ test('comparison headings label untyped and typed all-types measures',async()=>{
   edge.by_type={unknown:Object.values(edge.by_type).reduce((sum,v)=>sum+v,0)}
   for(const [period,types]of Object.entries(edge.by_type_year))edge.by_type_year[period]={unknown:Object.values(types).reduce(([amount,count],[a,c])=>[amount+a,count+c],[0,0])}
  }
- for(const dataset of [assets,{fetch:async()=>Response.json(allTypes)}])for(const question of ['Who gets more gambling money, Labor or Liberal?','How did gambling money to Labor change from 2020 to 2021?']){
+ for(const dataset of [untypedAssets,{fetch:async()=>Response.json(allTypes)}])for(const question of ['Who gets more gambling money, Labor or Liberal?','How did gambling money to Labor change from 2020 to 2021?']){
   const out=await api.rankedMoneyAnswer({question},dataset)
   assert.equal(out.answer_status,'calculated');assert.equal(out.measure,'receipts_all')
   assert.match(out.answer,/\| (?:Recipient party|Financial year) \| All receipt types \| Records \|/)
@@ -72,18 +77,22 @@ test('typed oracle catches incorrect labels, periods, secondary amounts and loan
  ])assert.equal(scoreMoneyRanking(defect,expected,c,typedGraph).accuracy,false)
 })
 test('an empty requested period shows explicitly held-period figures and retains unmatched requested coverage',async()=>{
- const out=await api.federalPartyMoneyAnswer({question:'Who takes the most money from gambling in 1900?'},assets)
- assert.equal(out.answer_status,'calculated');assert.match(out.answer,/^Held-period figures:/)
- assert.match(out.answer,/\$9,324,627/);assert.equal(out.coverage.matched,false)
- assert.equal(out.coverage.requested_since,'1900-01-01');assert.match(out.answer,/from=1998&to=2024/)
+ // Typed: the held-period lead is Liberal's gambling donations; untyped fallback: Labor's disclosed receipts of all types.
+ for(const [store,lead] of [[assets,/^Held-period figures: \*\*Liberal\*\* leads parties receiving money from gambling-linked sources: \*\*\$1,093,352\*\* in donations received/],[untypedAssets,/^Held-period figures: \*\*Labor\*\*.*\$9,324,627/]]){
+  const out=await api.federalPartyMoneyAnswer({question:'Who takes the most money from gambling in 1900?'},store)
+  assert.equal(out.answer_status,'calculated');assert.match(out.answer,lead)
+  assert.equal(out.coverage.matched,false)
+  assert.equal(out.coverage.requested_since,'1900-01-01');assert.match(out.answer,/from=1998&to=2024/)
+ }
 })
 test('accuracy and directness scores detect independent numeric and presentation defects',async()=>{
  const c=moneyRankingCases[0],expected=graphRanking(graph,c),out=await api.federalPartyMoneyAnswer({question:c.question},assets)
- const wrong=scoreMoneyRanking({...out,answer:out.answer.replace('$9,324,627','$9,324,628')},expected,c,graph)
+ assert.ok(out.answer.includes('$1,093,352'))
+ const wrong=scoreMoneyRanking({...out,answer:out.answer.replace('$1,093,352','$1,093,353')},expected,c,graph)
  assert.equal(wrong.accuracy,false);assert.equal(wrong.directness,3)
  const late=scoreMoneyRanking({...out,answer:'The record is incomplete. '+out.answer},expected,c,graph)
  assert.equal(late.directness,1)
- const noMap=scoreMoneyRanking({...out,answer:out.answer.replace(/\[See these on the money map\]\([^)]+\)/,'')},expected,c,graph)
+ const noMap=scoreMoneyRanking({...out,answer:out.answer.replace(/\[See all receipt types on the money map\]\([^)]+\)/,'')},expected,c,graph)
  assert.equal(noMap.directness,1)
 })
 test('an exact current member resolves to party-level figures and their declared-interests page',async()=>{
@@ -91,7 +100,7 @@ test('an exact current member resolves to party-level figures and their declared
  const p=roster.people.find(p=>p.current&&p.states.includes('federal')&&p.party_now==='Labor')
  const out=await api.industryMoneyAnswer({question:`How much has ${p.name} received from gambling?`},assets)
  assert.equal(out.answer_status,'calculated');assert.match(out.answer,/^AEC returns record this money at party level\./)
- assert.ok(out.answer.includes(`${p.name}’s party, Labor`));assert.match(out.answer,/\$9,324,627/)
+ assert.ok(out.answer.includes(`${p.name}’s party, Labor`));assert.match(out.answer,/Labor\*\*, received \*\*\$1,067,066\*\* in donations received \(AEC receipt type: Donation Received\)/)
  assert.ok(out.answer.includes('/declared?'+new URLSearchParams({person:p.name})))
 })
 test('top ten source questions retain the requested row count',async()=>{

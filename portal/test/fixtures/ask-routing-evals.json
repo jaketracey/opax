@@ -8102,20 +8102,20 @@
         },
         {
           "type": "matches",
-          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types",
-          "why": "Lead with a labelled calculated receipt figure."
+          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\)",
+          "why": "Lead with a labelled calculated donation figure."
         },
         {
           "type": "matches",
-          "match": "\\| (?:Source|Recipient) \\| Disclosed receipts"
+          "match": "\\| (?:Source|Recipient) \\| Donations \\| Share \\| All receipt types \\|"
         },
         {
           "type": "matches",
-          "match": "See these on the money map"
+          "match": "See all receipt types on the money map"
         },
         {
           "type": "must_not",
-          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types)",
+          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\))",
           "why": "The first sentence carries the figure and measure."
         }
       ],
@@ -8123,7 +8123,7 @@
         "682 chamber speeches",
         "617 chamber speeches"
       ],
-      "local_match": "disclosed receipts, all types",
+      "local_match": "donations received (AEC receipt type: Donation Received)",
       "provenance": {
         "file": "Money answer shape, 12 November 2026",
         "id": "money-ranking-labelled-figures"
@@ -8146,20 +8146,20 @@
         },
         {
           "type": "matches",
-          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types",
-          "why": "Lead with a labelled calculated receipt figure."
+          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\)",
+          "why": "Lead with a labelled calculated donation figure."
         },
         {
           "type": "matches",
-          "match": "\\| (?:Source|Recipient) \\| Disclosed receipts"
+          "match": "\\| (?:Source|Recipient) \\| Donations \\| Share \\| All receipt types \\|"
         },
         {
           "type": "matches",
-          "match": "See these on the money map"
+          "match": "See all receipt types on the money map"
         },
         {
           "type": "must_not",
-          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types)",
+          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\))",
           "why": "The first sentence carries the figure and measure."
         }
       ],
@@ -8167,7 +8167,7 @@
         "682 chamber speeches",
         "617 chamber speeches"
       ],
-      "local_match": "disclosed receipts, all types",
+      "local_match": "donations received (AEC receipt type: Donation Received)",
       "provenance": {
         "file": "Money answer shape, 12 November 2026",
         "id": "money-ranking-labelled-figures"
@@ -8190,20 +8190,20 @@
         },
         {
           "type": "matches",
-          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types",
-          "why": "Lead with a labelled calculated receipt figure."
+          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\)",
+          "why": "Lead with a labelled calculated donation figure."
         },
         {
           "type": "matches",
-          "match": "\\| (?:Source|Recipient) \\| Disclosed receipts"
+          "match": "\\| (?:Source|Recipient) \\| Donations \\| Share \\| All receipt types \\|"
         },
         {
           "type": "matches",
-          "match": "See these on the money map"
+          "match": "See all receipt types on the money map"
         },
         {
           "type": "must_not",
-          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types)",
+          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\))",
           "why": "The first sentence carries the figure and measure."
         }
       ],
@@ -8211,7 +8211,7 @@
         "682 chamber speeches",
         "617 chamber speeches"
       ],
-      "local_match": "disclosed receipts, all types",
+      "local_match": "donations received (AEC receipt type: Donation Received)",
       "provenance": {
         "file": "Money answer shape, 12 November 2026",
         "id": "money-ranking-labelled-figures"
@@ -8234,20 +8234,20 @@
         },
         {
           "type": "matches",
-          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types",
-          "why": "Lead with a labelled calculated receipt figure."
+          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\)",
+          "why": "Lead with a labelled calculated donation figure."
         },
         {
           "type": "matches",
-          "match": "\\| (?:Source|Recipient) \\| Disclosed receipts"
+          "match": "\\| (?:Source|Recipient) \\| Donations \\| Share \\| All receipt types \\|"
         },
         {
           "type": "matches",
-          "match": "See these on the money map"
+          "match": "See all receipt types on the money map"
         },
         {
           "type": "must_not",
-          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types)",
+          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\))",
           "why": "The first sentence carries the figure and measure."
         }
       ],
@@ -8255,7 +8255,7 @@
         "682 chamber speeches",
         "617 chamber speeches"
       ],
-      "local_match": "disclosed receipts, all types",
+      "local_match": "donations received (AEC receipt type: Donation Received)",
       "provenance": {
         "file": "Money answer shape, 12 November 2026",
         "id": "money-ranking-labelled-figures"
@@ -8278,20 +8278,20 @@
         },
         {
           "type": "matches",
-          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types",
-          "why": "Lead with a labelled calculated receipt figure."
+          "match": "^[^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\)",
+          "why": "Lead with a labelled calculated donation figure."
         },
         {
           "type": "matches",
-          "match": "\\| (?:Source|Recipient) \\| Disclosed receipts"
+          "match": "\\| (?:Source|Recipient) \\| Donations \\| Share \\| All receipt types \\|"
         },
         {
           "type": "matches",
-          "match": "See these on the money map"
+          "match": "See all receipt types on the money map"
         },
         {
           "type": "must_not",
-          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*disclosed receipts, all types)",
+          "match": "^(?![^.!?]*\\$[\\d,]+[^.!?]*donations received \\(AEC receipt type: Donation Received\\))",
           "why": "The first sentence carries the figure and measure."
         }
       ],
@@ -8299,7 +8299,7 @@
         "682 chamber speeches",
         "617 chamber speeches"
       ],
-      "local_match": "disclosed receipts, all types",
+      "local_match": "donations received (AEC receipt type: Donation Received)",
       "provenance": {
         "file": "Money answer shape, 12 November 2026",
         "id": "money-ranking-labelled-figures"
