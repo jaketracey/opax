@@ -48,6 +48,27 @@ test('missing and legacy placeholder holders are absent; stated holders and entr
  assert.ok(html.includes('&lt;unknown-holder&gt;'));
 });
 
+test('Worker register JSON and server-rendered tables show a null holder as Not stated',async()=>{
+ const register={name:'Alex Example',source_url:'https://fixture.test/register.pdf',as_at:'2026-10-13',total:1,
+  buckets:{gifts:{count:1,items:[{holder:null,description:'Example conference hospitality',kind:'addition',date:'2026-10-12',page:2}]}}};
+ const response=await api.interestRegisterResponse(new Request('https://fixture.test/api/register/interests?pid=12345'),{fetch:async()=>Response.json(register)});
+ assert.equal(response.status,200);
+ const {rows}=await response.json();
+ assert.equal(rows.length,1);assert.equal(rows[0].holder,null);assert.equal(rows[0].holder_label,'Not stated');
+ assert.equal(rows[0].item,register.buckets.gifts.items[0].description);
+ assert.equal(rows[0].source,register.source_url+'#page=2');
+ const person={name:register.name,pid:'12345',states:['nsw'],chambers:['representatives']};
+ const read=async path=>path==='/interests/12345.json'?register:path==='/interests/index.json'?{people:{'12345':{}},_by_name:{}}:null;
+ const rendered=await api.renderPersonAnswer(person,read,new Map());
+ const dom=new JSDOM(rendered.html);
+ try{
+  const table=dom.window.document.querySelector('#ssr-interests-table');
+  assert.ok(table);assert.match(table.textContent,/Not stated/);
+  assert.doesNotMatch(table.textContent,/unspecified|\bnull\b/i);
+  assert.ok(table.querySelector('a[href="https://fixture.test/register.pdf#page=2"]'));
+ }finally{dom.window.close();}
+});
+
 test('the recorded King correction retains its addition classification and notification date',async()=>{
  const register=JSON.parse(await readFile(new URL('../public/interests/10884.json',import.meta.url),'utf8'));
  const item=register.buckets.travel.items.find(i=>i.description.includes('Correction to a 7th of August'));
