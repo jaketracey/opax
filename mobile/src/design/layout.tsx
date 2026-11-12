@@ -525,7 +525,10 @@ export function SectionHeader({
   return (
     <View
       style={
-        compact ? [bandStyle, { minHeight: 0, marginBottom: 0 }] : bandStyle
+        // Stacked at AX sizes, the header keeps its own margin to the group.
+        compact && !stacked
+          ? [bandStyle, { minHeight: 0, marginBottom: 0 }]
+          : bandStyle
       }
     >
       <Heading

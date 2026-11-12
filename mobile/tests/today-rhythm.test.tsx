@@ -4,7 +4,12 @@ import TestRenderer from 'react-test-renderer';
 import { SectionHeader } from '../src/design/layout';
 import { SourceAffordance, SourceLine } from '../src/design/source';
 import { Heading, Text } from '../src/design/text';
-import { minimumTarget, textStyles } from '../src/design/tokens';
+import {
+  isAccessibilityCategory,
+  minimumTarget,
+  rhythm,
+  textStyles,
+} from '../src/design/tokens';
 import { TodayBlock } from '../src/features/today/TodayBlock';
 
 beforeEach(() => {
@@ -56,6 +61,43 @@ test('Today: header text to group is 8 pt while See all keeps its 44 pt target',
     .findAllByProps({ testID: 'today-records' })
     .find((node) => node.type === View)!;
   expect(StyleSheet.flatten(container.props.style).gap).toBe(8);
+});
+
+test('Today at an accessibility text size: the stacked header keeps its -8 pt margin to the group', () => {
+  const fontScale = 3.1; // AX5
+  expect(isAccessibilityCategory(fontScale)).toBe(true);
+  jest
+    .mocked(useWindowDimensions)
+    .mockReturnValue({ width: 402, height: 874, scale: 3, fontScale });
+  const root = render();
+  const header = root.findByType(SectionHeader);
+  expect(header.props.compact).toBe(true);
+  const band = StyleSheet.flatten(header.findByType(View).props.style);
+  expect(rhythm.heading - rhythm.block).toBe(-8);
+  expect(band.marginBottom).toBe(-8);
+  expect(band.minHeight).toBeUndefined();
+  // The same as an uncompacted header at this size.
+  let plain!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    plain = TestRenderer.create(
+      <SectionHeader
+        title="Records"
+        action={{ accessibilityLabel: 'See all records', onPress: jest.fn() }}
+      />,
+    );
+  });
+  expect(band).toEqual(
+    StyleSheet.flatten(plain.root.findByType(View).props.style),
+  );
+  // The stacked See all keeps its full target with no negative margin.
+  const action = header.find(
+    (node) =>
+      node.props.accessibilityLabel === 'See all records' &&
+      typeof node.props.style === 'function',
+  );
+  const target = StyleSheet.flatten(action.props.style({ pressed: false }));
+  expect(target.minHeight).toBe(minimumTarget);
+  expect(target.marginVertical).toBeUndefined();
 });
 
 test.each([18, 36, 60])(
