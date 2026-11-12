@@ -21,7 +21,11 @@ import {
   citationSheetLeft,
 } from '../src/features/ask/citation-state';
 import { copyCitation } from '../src/features/ask/cite';
-import type { Source, Turn } from '../src/features/ask/model';
+import {
+  decodeAnswer,
+  type Source,
+  type Turn,
+} from '../src/features/ask/model';
 import type { AskPerson } from '../src/features/ask/people';
 import { copyText } from '../src/features/records/actions';
 import { shareRecord } from '../src/navigation/share';
@@ -531,36 +535,49 @@ test('an empty answer describes the search, offers rephrasing and Search, and re
   expect(none.words()).not.toContain('listed below');
 });
 
-test('an explicit evidence gap uses the actual scope and a returned rephrase suggestion', () => {
-  const onRephrase = jest.fn();
-  const suggestion = 'What did parliament say about the fixture bill in 2025?';
+test('a written evidence gap keeps its answer and ready announcement', () => {
+  const limitation = 'No verified position in the selected speeches.';
   const turn = answer({
-    answer: 'No verified position in the selected speeches.',
+    answer: limitation,
     answer_status: 'evidence_gap',
-    scope: {
-      kind: 'speech',
-      speaker: 'Sam Placeholder',
-      state: 'vic',
-      from: '2025',
-      to: '2025',
-    },
-    asked_as: 'What was said about the fixture bill in 2025?',
-    suggested_question: suggestion,
+    sources: [],
   });
-  const { words, ids, press } = draw(turn, false, onRephrase);
-  expect(ids('ask-no-answer').length).toBeGreaterThan(0);
-  expect(ids('ask-machine-label')).toHaveLength(0);
-  expect(words()).toContain(
-    'Searched OPAX speeches for “What was said about the fixture bill in 2025?”.',
-  );
-  expect(words()).toContain('Person: Sam Placeholder');
-  expect(words()).toContain('Parliament: Victoria');
-  expect(words()).toContain('Years: 2025');
-  act(() => press('ask-rephrase'));
-  expect(onRephrase).toHaveBeenCalledWith(suggestion);
-  expect(answerReadyAnnouncement(turn)).toBe(
-    'No answer found. Rephrase your question or search OPAX.',
-  );
+  const { words, ids } = draw(turn);
+  expect(words()).toContain(limitation);
+  expect(ids('ask-answer-1').length).toBeGreaterThan(0);
+  expect(ids('ask-machine-label').length).toBeGreaterThan(0);
+  expect(ids('ask-no-answer')).toHaveLength(0);
+  expect(ids('ask-error-empty')).toHaveLength(0);
+  expect(words()).not.toContain('No written answer came back');
+  expect(answerReadyAnnouncement(turn)).toBe('Answer ready, no records cited');
+});
+
+test('a cited evidence gap retains its limitation text, citation marks and cited record links', () => {
+  const limitation =
+    'The selected records do not establish that no receipts occurred.';
+  const payload = {
+    answer: limitation,
+    answer_status: 'evidence_gap',
+    money_ranking: true,
+    model_written: false,
+    citations: { 'r1/f/text/0': [[0, limitation.length]] },
+    sources: [source(1, true)],
+  };
+  const turn = answer(decodeAnswer(payload));
+  const { words, ids, renderer, press } = draw(turn);
+  expect(words()).toContain(limitation);
+  expect(words()).toContain('Records cited (1)');
+  expect(words()).not.toContain('Records found');
+  expect(ids('ask-no-answer')).toHaveLength(0);
+  expect(ids('ask-citation-1').length).toBeGreaterThan(0);
+  expect(
+    renderer.root.findAllByType(CitationMark).map((mark) => mark.props.label),
+  ).toEqual(['1']);
+  act(() => press('ask-citation-mark-1'));
+  expect(citationSelection()).toMatchObject({ turn: 'fixture-chat:1', n: 1 });
+  expect(turn.result?.answer).toBe(payload.answer);
+  expect(turn.result?.citations).toEqual(payload.citations);
+  expect(answerReadyAnnouncement(turn)).toBe('Answer ready, 1 record cited');
 });
 
 test('on iPad with the pane the column hides Records cited', () => {

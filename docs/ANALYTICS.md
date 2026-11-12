@@ -117,8 +117,9 @@ home screen); anything else becomes `other`. `scope` is one of the fixed search
 scopes. Counts are integers from 0 to 1,000,000 and durations are milliseconds
 up to an hour; any other value is dropped. Ask outcome `reason` accepts only
 `stall`, `deadline`, `network`, `server` or
-`no_answer`. No-answer completions use `has_answer: false`; cancellations
-omit the reason. Automatic transport recovery shares one lifecycle event pair.
+`no_answer`. Completions with blank answer text use `has_answer: false`
+and `reason: no_answer`. Written `evidence_gap` answers retain `has_answer: true`
+and omit that reason. Cancellations omit the reason. Automatic transport recovery shares one lifecycle event pair.
 The app never calls identify.
 Person profiles, session replay, touch and text autocapture, exception capture, surveys and feature flags
 are off, and GeoIP is disabled. The install ID is a random UUID made by the SDK and kept in the

@@ -91,12 +91,9 @@ export type AnswerFigure = {
   source?: string;
   path?: string;
 };
-/** `evidence_gap` is the Worker's explicit outcome, even with explanatory text. */
+/** Status describes the answer's limits; only blank text means no answer. */
 export function isNoAnswer(data: Pick<Answer, 'answer' | 'answer_status'>) {
-  return (
-    !data.answer.trim() ||
-    ['evidence_gap', 'no_answer'].includes(data.answer_status ?? '')
-  );
+  return !data.answer.trim();
 }
 export type Turn = {
   role: 'user' | 'answer';

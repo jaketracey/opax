@@ -257,8 +257,8 @@ test('a second network failure is terminal and manual retry keeps the question o
 test.each([
   { answer: '' },
   { answer: ' \n ' },
-  { answer: 'No verified position.', answer_status: 'evidence_gap' },
-  { answer: 'No evidence.', answer_status: 'no_answer' },
+  { answer: ' \n ', answer_status: 'evidence_gap' },
+  { answer: '', answer_status: 'no_answer' },
 ])(
   'a no-answer done payload is saved once with scope and a private-safe outcome: %j',
   async (outcome) => {
@@ -299,6 +299,53 @@ test.each([
       'opax_ask_completed',
       expect.objectContaining({ has_answer: false, reason: 'no_answer' }),
     );
+    expect(JSON.stringify(measure.mock.calls)).not.toContain(question);
+    expect(jest.getTimerCount()).toBe(0);
+  },
+);
+
+test.each(['evidence_gap', 'no_answer'])(
+  'written text with status %s is an answer in history and analytics',
+  async (answer_status) => {
+    const stream = new FakeStream();
+    const limitation =
+      'The selected fixture records do not establish that no receipts occurred.';
+    const payload = {
+      ...answer,
+      answer: limitation,
+      answer_status,
+      money_ranking: true,
+      citations: { 'fixture-record/f/text/0': [[0, limitation.length]] },
+      sources: [
+        { resource: 'fixture-record', title: 'Fixture receipts', cited: true },
+      ],
+    };
+    stream.event('done', payload);
+    const transport = jest.fn().mockResolvedValue(stream.response());
+    const client = api(transport);
+    let store: ChatStore = { v: 1, active: null, chats: [] };
+    const measure = jest.fn();
+    const controller = new AskController({
+      post: client.askPost.bind(client),
+      read: () => store,
+      save: async (next) => {
+        store = next;
+      },
+      id: () => 'fixture-chat',
+      now: Date.now,
+      measure,
+    });
+    await controller.submit(question);
+    expect(transport).toHaveBeenCalledTimes(1);
+    expect(store.chats[0]?.thread[1]?.text).toBe(payload.answer);
+    expect(store.chats[0]?.thread[1]?.result?.citations).toEqual(
+      payload.citations,
+    );
+    expect(measure).toHaveBeenLastCalledWith(
+      'opax_ask_completed',
+      expect.objectContaining({ has_answer: true, source_count: 1 }),
+    );
+    expect(measure.mock.calls.at(-1)![1]).not.toHaveProperty('reason');
     expect(JSON.stringify(measure.mock.calls)).not.toContain(question);
     expect(jest.getTimerCount()).toBe(0);
   },

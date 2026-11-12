@@ -119,7 +119,7 @@ export function AnswerView({
   profiles: Map<string, AskPerson>;
   /** iPad regular width: the pane lists the sources, so the column does not. */
   paneShowsSources?: boolean;
-  onRephrase?: (question: string) => void;
+  onRephrase: (question: string) => void;
 }) {
   const pane = useAskPane();
   const self = useRef<View>(null);
@@ -313,7 +313,7 @@ export function AnswerView({
               detail="Try naming a person, bill or topic and a year."
               symbol="square.and.pencil"
               onPress={() =>
-                onRephrase?.(data.suggested_question?.trim() || question.text)
+                onRephrase(data.suggested_question?.trim() || question.text)
               }
               testID="ask-rephrase"
             />

@@ -89,6 +89,7 @@ test('People and speech sources show only verified roster portraits', async () =
         index={1}
         chat="fixture-chat"
         profiles={profiles}
+        onRephrase={jest.fn()}
       />,
     );
   });
