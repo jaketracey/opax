@@ -45,9 +45,9 @@ class GrantsResearchTests(unittest.TestCase):
         rows=list(records(data,directory))
         # Reviewed, fixed totals: catches accidental publication loss or growth.
         # 18 Oct 2026: +18 roster profiles, the former senators (and Vanessa Bleyer) accepted in scripts/roster_accept.json.
-        self.assertEqual(len(rows),1463)
-        self.assertEqual(len({r['slug'] for r in rows}),1463)
-        self.assertEqual(sum(r['slug'].startswith('roster-profile-') for r in rows),995)
+        self.assertEqual(len(rows),1464)
+        self.assertEqual(len({r['slug'] for r in rows}),1464)
+        self.assertEqual(sum(r['slug'].startswith('roster-profile-') for r in rows),996)
         for r in rows:
             self.assertTrue(r['origin']['url'].startswith('https://'))
             self.assertEqual(r['origin']['source_id'],'opax-grants-research')

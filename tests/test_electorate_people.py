@@ -101,9 +101,11 @@ def test_service_records_join_the_members_table_by_openaustralia_id(tmp_path):
     # The candidacy links through the reviewed name, and nobody else's.
     contest = b.rows["contests"]["contest_1"]["candidates"]
     assert contest[0]["person_id"] == shorten["person_id"] and contest[1]["person_id"] is None
-    # No members-table row for Griffiths (OpenAustralia 10268): a standalone person, no borrowed id.
+    # No members-table row for Griffiths: the reviewed service supplement supplies
+    # his own OpenAustralia 10268, never the contaminated wragge surname id.
     griffiths = b.rows["people"][terms[stable_id("term", "oa:226")]["person_id"]]
-    assert griffiths["name"] == "Alan Gordon Griffiths" and "legacy_person_id" not in griffiths
+    assert griffiths["name"] == "Alan Gordon Griffiths" and griffiths["legacy_person_id"] == "10268"
+    assert "Alan Griffiths" in griffiths["aliases"]
     # Two people named Anthony Smith: the Casey member joins 10592 by id; the Dickson member joins
     # neither 10592 nor the surname stub a first-and-last-name match would have given him.
     assert b.rows["people"][terms[stable_id("term", "oa:486")]["person_id"]]["legacy_person_id"] == "10592"

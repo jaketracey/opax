@@ -1,5 +1,5 @@
 /** Conservative roster matching. Confidence is a ranking score, not a probability. */
-interface RosterName { name: string; pid?: string; speeches?: number | null }
+interface RosterName { name: string; pid?: string; speeches?: number | null; aliases?: string[] }
 interface Name { words: string[]; suffix: string | null; key: string }
 export interface NameCandidate<T> { person: T; confidence: number }
 export interface NameResolution<T> {
@@ -111,7 +111,7 @@ export function resolvePersonName<T extends RosterName>(value: string, people: r
   for (const person of people) {
     const name = parseName(person.name), key = person.pid ? `pid:${person.pid}` : `name:${name.key}`
     const aliases = identities.get(key) ?? []
-    aliases.push({ person, name })
+    aliases.push({ person, name }, ...(person.aliases ?? []).map(alias => ({ person, name: parseName(alias) })))
     identities.set(key, aliases)
   }
   const ranked: { person: T; score: number; full: boolean }[] = []

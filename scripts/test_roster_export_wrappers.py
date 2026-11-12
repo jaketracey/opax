@@ -18,11 +18,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 COPIED = ["scripts/vm/export_step.sh", "scripts/vm/export_people.sh", "scripts/vm/keep_if_unchanged.py",
-          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/roster_overlay.py", "scripts/roster_accept.py", "scripts/roster_accept.json", "scripts/enrich_profile_jurisdictions.py",
+          "scripts/export_parliamentarians.py", "scripts/roster_identity.py", "scripts/roster_fold.py", "scripts/roster_source_profiles.py", "scripts/roster_overlay.py", "scripts/roster_accept.py", "scripts/roster_accept.json", "scripts/enrich_profile_jurisdictions.py",
           "scripts/roster_service.json", "scripts/roster_witness_service.json", "scripts/roster_state_evidence.json", "portal/public/electorates/manifest.json",
           "portal/public/electorates/releases/b56417062ccc33cf/reference.json",
           "scripts/person_identity.json", "portal/public/research/mlci.json", "portal/public/votes.json",
           "portal/public/pay.json", "portal/public/electorates/releases/b56417062ccc33cf/people.json"]
+# Copy the active immutable release too; older fixtures intentionally remain pinned.
+_active = json.loads((ROOT / 'portal/public/electorates/manifest.json').read_text())
+COPIED += ['portal/public' + _active[k] for k in ('reference_url', 'people_url')]
 ROSTER = "portal/public/parliamentarians.json"
 SITTING = [("Anthony Albanese", "10007"), ("Pat Conaghan", "10922")]
 
@@ -77,7 +80,7 @@ class RealWrapperTests(unittest.TestCase):
         env.pop("OPAX_ROSTER_PREVIOUS", None)
         env["OPAX_ROSTER_ACCEPT"] = "1" if accept else ""
         r = subprocess.run(["bash", "scripts/vm/export_step.sh", "json", ROSTER, "bash", "scripts/vm/export_people.sh"],
-                           cwd=box, env=env, capture_output=True, text=True, timeout=120)
+                           cwd=box, env=env, capture_output=True, text=True, timeout=getattr(self, "EXPORT_TIMEOUT", 120))
         path = box / ROSTER
         return r.returncode, r.stderr, path.read_bytes() if path.exists() else None
 
@@ -105,11 +108,20 @@ class RealWrapperTests(unittest.TestCase):
         code, err, shipped = self.export(box, accept=True)
         self.assertEqual(code, 0, err)
         rows = json.loads(shipped)["people"]
-        self.assertEqual({r["name"] for r in rows}, {n for n, _ in SITTING})
-        self.assertFalse(any(r.get("pid") for r in rows), "the override ships exactly what the export said")
+        self.assertEqual({r["name"] for r in rows}, {n for n, _ in SITTING} | {'Alan Griffiths'})
+        self.assertFalse(any(r.get("pid") for r in rows if r['name'] != 'Alan Griffiths'),
+                         "the override cannot supply missing speech-derived identities")
+        alan = next(r for r in rows if r['name'] == 'Alan Griffiths')
+        self.assertEqual(alan['pid'], '10268')
+        self.assertEqual(alan['speeches'], 0)
+        self.assertTrue(alan['roster_only'])
+        self.assertEqual(json.loads(shipped)['meta']['people'], len(rows))
 
 
 class ShippedIdentityReplayTests(unittest.TestCase):
+    # The full frozen roster runs both identity passes on a shared desktop.
+    # Keep the short safety fixtures at 120s; the large replay gets five minutes.
+    EXPORT_TIMEOUT = 300
     sandbox = RealWrapperTests.sandbox
     export = RealWrapperTests.export
     def populate_replay(self, box, scenario):
@@ -241,7 +253,12 @@ class ShippedIdentityReplayTests(unittest.TestCase):
                 self.assertEqual({p['name'] for p in shipped} - by.keys(), renamed, 'every shipped row survives or is folded')
                 # "D'Ambrosio" is now folded into its spelling twin 'D’Ambrosio' (members-electorates-011), so it is
                 # read under that row and is no longer a separate identity change.
-                self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford'})
+                # The raw export also neutralises the weak Tollner print when the
+                # fixture register cannot reconcile Dave/David. The byte-for-byte
+                # weekly assertion above preserves the reviewed shipped identity.
+                self.assertEqual(set(changes),{'Blandthorn','McDermott','Robinson','Crawford','Tollner'})
+                for field in ('pid', 'full', 'party', 'representation'):
+                    self.assertFalse(by['Tollner'].get(field), field)
                 print(f'Reviewer replay {scenario}: SHIPPED {len(actual)} records, {len(scoped)}/16 scoped; 5 identity differences / cap25; zero unscoped split identities; Robinson/Crawford below own-service floor',file=sys.stderr)
 
 

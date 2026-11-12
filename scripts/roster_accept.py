@@ -20,7 +20,8 @@ A field absent from a record is written null (the roster never holds a JSON null
     the shipped, unmodified record for every group (never one an earlier group changed), and across a record's
     groups, two that touch the same field, or one that touches a protection field (PROTECTION_FIELDS: name, full,
     prints, speech scope and basis, dated party, identity basis, aliases, identity evidence), hold every group on
-    the record. Each group on its own (group_problem): every value is type-checked (value_problem); corpus
+    the record. An aliases-only group may pass only when catalog-aliases evidence verifies its additive names
+    against one published source person with the same pid and roster name. Each group on its own (group_problem): every value is type-checked (value_problem); corpus
     evidence is re-checked by rule (corpus_reason: a count may only rise, a fall needs a presiding officer named in
     the evidence, a witness partition must conserve the transcript aggregate, only committee chambers may be added,
     no identity field); identity evidence needs a source URL and a check date; no group removes an identity value,
@@ -54,6 +55,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 ACCEPT = ROOT / "scripts" / "roster_accept.json"
 SHIPPED = ROOT / "portal" / "public" / "parliamentarians.json"
 
@@ -79,9 +81,9 @@ _TEXT = {"party", "full", "party_now", "pid", "speech_count_basis", "identity_ba
 _TEXTS = {"chambers", "states", "parties", "recorded_parties", "prints", "aliases"}
 _RECORDS = {"representation", "affiliations", "identity_evidence"}
 _SUMMARIES = {"transcript", "separated_witnesses", "speech_scope"}
-FIELD_TYPES = _COUNT | _TEXT | _TEXTS | _RECORDS | _SUMMARIES | {"current"}
+FIELD_TYPES = _COUNT | _TEXT | _TEXTS | _RECORDS | _SUMMARIES | {"current", "roster_only"}
 NEW_ROW_FIELDS = {"name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid", "current",
-                  "party_now", "representation", "full", "recorded_parties"}
+                  "party_now", "representation", "full", "recorded_parties", "aliases", "roster_only"}
 
 
 def empty():
@@ -303,7 +305,7 @@ def _blank(value):
     return value is None or value in ("", [], {})
 
 
-def group_problem(name, group, evidence, row, curated, roster=True):
+def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
     """None when `group`, on its own, may apply to the shipped, unmodified `row` (None: no such record; roster
     False: no roster to check against), else why it is held. judge() adds the rules across a record's groups."""
     if not _shaped(group):
@@ -325,8 +327,15 @@ def group_problem(name, group, evidence, row, curated, roster=True):
             return "identity evidence without a source URL and check date"
     except (TypeError, KeyError, ValueError, AttributeError):
         return "malformed group values"
+    if "roster_only" in fields:
+        return "source-only status belongs to a reviewed new service profile"
     if any(f in IDENTITY_FIELDS and not _blank(a) and _blank(b) for f, (a, b) in fields.items()):
         return "it removes an identity value"
+    if ev.get("rule") == "catalog-aliases":
+        from scripts.roster_source_profiles import alias_problem
+        why = alias_problem(name, group, row, root)
+        if why:
+            return why
     if not roster:
         return None
     if row is None:
@@ -367,6 +376,8 @@ def _new_row_problem(name, entry, evidence, shipped_names):
     parts = name.split()
     if row.get("name") != name or len(parts) < 2 or not any(c.islower() for c in parts[0]) or len(parts[0].strip(".")) < 2:
         return "a new row needs a full name (not a surname or initials print)"
+    if row.get("roster_only") and row.get("speeches") != 0:
+        return "a source-only service profile cannot attribute speeches"
     extra = sorted(set(row) - NEW_ROW_FIELDS)
     if extra:
         return "a new row may not carry " + ", ".join(extra)
@@ -429,7 +440,8 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
     groups: [(name, index, group, why)] and new rows: [(name, entry, why)], why None for a change that may apply.
     Every check reads the shipped, unmodified record, never one other groups have changed; and across a record's
     groups, two that touch the same field, or one that touches a protection field (PROTECTION_FIELDS), hold every
-    group on the record. With shipped_people None, only what can be judged without a roster is."""
+    group on the record, except the verified additive catalog-aliases rule above.
+    With shipped_people None, only what can be judged without a roster is."""
     why = shape(accept)
     if why:
         return why, [], []
@@ -448,14 +460,19 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
         verdicts = []
         for i, g in enumerate(entries):
             try:
-                why = group_problem(name, g, evidence, row, curated, roster=have is not None)
+                why = group_problem(name, g, evidence, row, curated, roster=have is not None, root=root)
             except Exception as err:  # noqa: BLE001 - a group that cannot be judged is held
                 why = f"malformed group ({type(err).__name__})"
             verdicts.append((name, i, g, why))
         fields = [f for g in entries if _shaped(g) for f in g["fields"]]
+        # Only a separately verified additive source-alias group may touch aliases.
+        # Every other protection, and overlapping groups, retain the original fail-closed rule.
+        protection = {f for _n, _i, g, why in verdicts if _shaped(g) for f in g["fields"]
+                      if not (why is None and f == "aliases" and set(g["fields"]) == {"aliases"}
+                              and evidence.get(g["evidence"], {}).get("rule") == "catalog-aliases")}
         whole = ("two groups touch the same field, so every group on the record is held" if len(fields) != len(set(fields))
-                 else "a group touches a protection field (" + ", ".join(sorted(set(fields) & PROTECTION_FIELDS)) +
-                 "), so every group on the record is held" if set(fields) & PROTECTION_FIELDS else None)
+                 else "a group touches a protection field (" + ", ".join(sorted(protection & PROTECTION_FIELDS)) +
+                 "), so every group on the record is held" if protection & PROTECTION_FIELDS else None)
         groups += [(n, i, g, why or whole) for n, i, g, why in verdicts]
     new = []
     for name, entry in accept.get("new", {}).items():
