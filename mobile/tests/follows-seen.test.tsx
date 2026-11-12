@@ -332,11 +332,15 @@ test('NewDot has New label; latest rows share the dated, clamped and routed anat
 });
 
 test.each([
-  [['self', 'spouse'], 'Declared by the member and their spouse or partner'],
-  [['self', 'self'], undefined],
+  [
+    ['self', 'spouse'],
+    'Declared by the member and their spouse or partner',
+    'By the member and their spouse or partner',
+  ],
+  [['self', 'self'], undefined, undefined],
 ] as const)(
   'LatestRows includes merged holder wording visually and in its accessible label: %s',
-  (holders, line) => {
+  (holders, line, spokenLine) => {
     const latest = latestRecord({
       key: 'synthetic-gift',
       kind: 'register',
@@ -358,7 +362,8 @@ test.each([
     )[0]!.props.accessibilityLabel;
     if (line) {
       expect(words).toContain(line);
-      expect(label).toContain(line);
+      expect(label).toContain(`${spokenLine}.`);
+      expect(label).not.toContain('Declared by');
     } else {
       expect(words.join(' ')).not.toContain('Declared by');
       expect(label).not.toContain('Declared by');

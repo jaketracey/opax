@@ -231,7 +231,8 @@ export function LatestRow({
   useRowInset(44);
   const date = changeDate(record.date, undefined, true);
   const detail = [record.detail, date].filter(Boolean).join(' · ');
-  const label = `${record.action}. ${record.title}. ${record.holderLine ? `${record.holderLine}. ` : ''}${record.detail ? `${record.detail}, ` : ''}${new Date(`${record.date.slice(0, 10)}T12:00:00`).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}.`;
+  const holderLabel = record.holderLine?.replace(/^Declared by /, 'By ');
+  const label = `${record.action}. ${record.title}. ${holderLabel ? `${holderLabel}. ` : ''}${record.detail ? `${record.detail}, ` : ''}${new Date(`${record.date.slice(0, 10)}T12:00:00`).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}.`;
   const row = (
     <Pressable
       testID={testID}
