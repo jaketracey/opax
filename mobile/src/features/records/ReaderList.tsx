@@ -16,6 +16,7 @@ import {
 } from '../../design/primitives';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, rhythm } from '../../design/tokens';
+import { entityMatches } from './find';
 export interface ReaderPart {
   id: string;
   text: string;
@@ -25,6 +26,8 @@ export interface ReaderPart {
 export interface ReaderFind {
   query: string;
   passage?: boolean;
+  tolerant?: boolean;
+  aliases?: readonly string[];
   current: { part: number; start: number } | null;
 }
 // Bound Android's selectable paragraph measurement and JS batches. The source
@@ -61,12 +64,18 @@ function textMatches(text: string, needle: string) {
 }
 
 /** Every match of `query` in the parts, in reading order. */
-export function findMatches(parts: readonly ReaderPart[], query: string) {
+export function findMatches(
+  parts: readonly ReaderPart[],
+  query: string,
+  options?: Pick<ReaderFind, 'tolerant' | 'aliases'>,
+) {
   const needle = query.trim().toLocaleLowerCase('en-AU');
   const found: { part: number; start: number }[] = [];
   if (!needle) return found;
   parts.forEach((part, index) => {
-    for (const match of textMatches(part.text, needle))
+    for (const match of options?.tolerant
+      ? entityMatches(part.text, [query, ...(options.aliases ?? [])])
+      : textMatches(part.text, needle))
       found.push({ part: index, start: match.start });
   });
   return found;
@@ -85,7 +94,9 @@ function Marked({
   if (!query) return <>{text}</>;
   const spans: ReactNode[] = [];
   let from = 0;
-  for (const match of textMatches(text, query)) {
+  for (const match of find?.tolerant
+    ? entityMatches(text, [find.query, ...(find.aliases ?? [])])
+    : textMatches(text, query)) {
     const current =
       find?.current?.part === index && find.current.start === match.start;
     spans.push(

@@ -30,6 +30,7 @@ import { haptic } from '../../design/haptics';
 import { billStatus } from '../../design/parliament';
 import {
   BillRow,
+  Button,
   Disclosure,
   Heading,
   InlineError,
@@ -45,8 +46,7 @@ import {
   VoteSplit,
 } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
-import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
-import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { headerItems, shareItem } from '../../navigation/chrome';
 import {
   billRoute,
@@ -88,6 +88,7 @@ import { RecordLoadError } from './RecordLoadError';
 import { records } from './runtime';
 import { recordCaveat, recordOriginal, recordSource } from './source';
 import { useRead } from './useRead';
+import { findAliases } from './find';
 
 // The web's taxonomy; unknown topics must not alter the search request.
 const topics = new Set([
@@ -196,8 +197,13 @@ function useFind(
   query: string,
   first: number,
   passage = false,
+  automatic = false,
+  aliases: readonly string[] = [],
 ) {
-  const matches = useMemo(() => findMatches(parts, query), [parts, query]);
+  const matches = useMemo(
+    () => findMatches(parts, query, { tolerant: automatic, aliases }),
+    [parts, query, automatic, aliases],
+  );
   const [open, setOpen] = useState(!passage && !!query);
   const [index, setIndex] = useState(first);
   const [engaged, setEngaged] = useState(false);
@@ -238,14 +244,20 @@ function useFind(
     reveal(next);
   };
   return {
-    open: open && !!query,
+    open: open && !!query && (!automatic || total > 0),
     query,
     total,
     current,
     jump: jump ?? citationJump,
     marks:
       (open || passage) && query
-        ? { query, current: matches[current] ?? null, passage }
+        ? {
+            query,
+            current: matches[current] ?? null,
+            passage,
+            tolerant: automatic,
+            aliases,
+          }
         : null,
     goTo: () => {
       setEngaged(true);
@@ -268,6 +280,8 @@ export default function DocumentReader({
     q?: string;
     match?: string;
     passage?: string;
+    find?: string;
+    aliases?: string;
   }>();
   const slug = recordSlug ?? params.slug ?? '';
   const load = useCallback(
@@ -312,6 +326,7 @@ export default function DocumentReader({
     }));
   }, [doc]);
   const passage = citedPassage ?? params.passage;
+  const aliases = useMemo(() => findAliases(params.aliases), [params.aliases]);
   const find = useFind(
     shown ? parts : [],
     passage
@@ -321,6 +336,8 @@ export default function DocumentReader({
         : findQuery(params.q),
     Math.max(0, Number(params.match) || 0),
     !!passage,
+    !passage && params.find === 'auto',
+    aliases,
   );
   // opax://doc-cite/<slug> arrives as /doc/<slug>?cite=1: the record first,
   // then Citation formats over it, so Done lands on the record.
@@ -342,11 +359,10 @@ export default function DocumentReader({
   };
   const android = Platform.OS === 'android';
   // iOS draws no bottom toolbar: iOS 26's floating tab bar stays up on
-  // pushes and covered it. Ask about this is a row in the header, Share
+  // pushes and covered it. Ask about this follows the summary, Share
   // sits beside ⋯, and the find bar's controls take the bar while open.
   const askRow = embedded || android || ios;
   const findBar = ios && !embedded && !!shown && find.open;
-  const headerBottom = useHeaderBottom();
   return (
     <>
       {embedded ? null : (
@@ -408,15 +424,34 @@ export default function DocumentReader({
           ) : !shown ? (
             <ReaderSkeleton />
           ) : (
-            <ReaderHeader
-              doc={shown}
-              headline={headline}
-              speaker={speaker.row}
-              titleRef={titleRef}
-              onTitleLayout={embedded ? undefined : title.onTitleLayout}
-              askRow={askRow ? ask : null}
-              hasText={parts.length > 0}
-            />
+            <>
+              {find.open ? (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={findLabel(find)}
+                  accessibilityHint={find.total ? 'Go to match' : undefined}
+                  disabled={!find.total}
+                  onPress={find.goTo}
+                  testID="doc-find-status"
+                  style={styles.findStatus}
+                >
+                  <Text variant="secondary" tabular wordSafe>
+                    {find.total
+                      ? `${find.query} · ${find.current + 1} of ${find.total}`
+                      : `No matches for ${find.query}`}
+                  </Text>
+                </Pressable>
+              ) : null}
+              <ReaderHeader
+                doc={shown}
+                headline={headline}
+                speaker={speaker.row}
+                titleRef={titleRef}
+                onTitleLayout={embedded ? undefined : title.onTitleLayout}
+                askRow={askRow ? ask : null}
+                hasText={parts.length > 0}
+              />
+            </>
           )
         }
         footer={
@@ -436,32 +471,15 @@ export default function DocumentReader({
           ) : null
         }
       />
-      {findBar ? (
-        <View
-          pointerEvents="box-none"
-          style={[styles.findLine, { top: headerBottom + rhythm.tight }]}
-        >
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={findLabel(find)}
-            accessibilityHint="Go to match"
-            onPress={find.goTo}
-            testID="doc-find-status"
-            style={styles.findPill}
-          >
-            <Text variant="secondary" tabular wordSafe>
-              {`${find.query} · ${find.total ? find.current + 1 : 0} of ${find.total}`}
-            </Text>
-          </Pressable>
-        </View>
-      ) : null}
     </>
   );
 }
 
 type Find = ReturnType<typeof useFind>;
 const findLabel = (find: Find) =>
-  `Match ${find.total ? find.current + 1 : 0} of ${find.total} for ${find.query}`;
+  find.total
+    ? `Match ${find.current + 1} of ${find.total} for ${find.query}`
+    : `No matches for ${find.query}`;
 /** The find bar's controls, in the navigation bar while it is open. */
 function findItems(find: Find): NativeStackHeaderItem[] {
   return [
@@ -602,12 +620,9 @@ function ReaderHeader({
           {caveat}
         </Text>
       ) : null}
-      {askRow || organisation ? (
+      {organisation ? (
         <View style={styles.rows}>
-          {askRow ? (
-            <LinkRow title="Ask about this" onPress={askRow} testID="doc-ask" />
-          ) : null}
-          {organisation ? <OrganisationRow {...organisation} /> : null}
+          <OrganisationRow {...organisation} />
         </View>
       ) : null}
       {votes ? (
@@ -625,24 +640,33 @@ function ReaderHeader({
       ) : null}
       {doc.summary ? (
         <View style={styles.block}>
-          <Disclosure
-            key={doc.slug}
-            label="In short"
+          <SectionHeader
+            title="In short"
             testID="doc-brief"
-            defaultOpen
             accessory={
               <MachinePill
                 note={{ title: 'Machine-written', body: [machineNote(doc)] }}
                 testID="doc-brief-label"
               />
             }
-          >
-            <View style={styles.brief}>
-              <Text selectable variant="body">
-                {doc.summary}
-              </Text>
-            </View>
-          </Disclosure>
+          />
+          <View style={styles.brief} testID="doc-brief-body">
+            <Text selectable variant="body">
+              {doc.summary}
+            </Text>
+          </View>
+        </View>
+      ) : null}
+      {askRow ? (
+        <View style={styles.block}>
+          <Button
+            label="Ask about this"
+            variant="primary"
+            symbol={symbols.ask}
+            accessibilityLabel={`Ask about ${recordKind(doc) === 'speech' ? 'this speech' : recordKind(doc) === 'division' ? 'this division' : recordKind(doc) === 'bill_text' ? 'this bill text' : 'this record'}: ${headline}`}
+            onPress={askRow}
+            testID="doc-ask"
+          />
         </View>
       ) : null}
       {doc.labels.kind === 'bill_text' && doc.metadata.complete === false ? (
@@ -1028,21 +1052,10 @@ function Similar({ doc }: { doc: DocumentRecord }) {
 }
 
 const styles = StyleSheet.create({
-  findLine: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  findPill: {
+  findStatus: {
     minHeight: minimumTarget,
     justifyContent: 'center',
-    paddingHorizontal: rhythm.block,
-    borderRadius: radii.capsule,
-    borderCurve: 'continuous',
-    backgroundColor: colors.raised,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.dividerSubtle,
+    marginBottom: rhythm.block,
   },
   meta: { marginBottom: rhythm.line },
   speaker: { marginTop: rhythm.block },

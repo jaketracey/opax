@@ -5,6 +5,7 @@ import { useReduceMotion } from '../src/design/accessibility';
 import { Text } from '../src/design/text';
 import { colors } from '../src/design/tokens';
 import { ReaderList, findMatches } from '../src/features/records/ReaderList';
+import { entityMatches, findAliases } from '../src/features/records/find';
 
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
@@ -14,6 +15,65 @@ const parts = [
   { id: 'one', text: 'Fixture first paragraph' },
   { id: 'two', text: 'Fixture second paragraph' },
 ];
+
+test.each([
+  ['Example & Co.', 'EXAMPLE and CO'],
+  ['Example and Co', 'Example & Co.'],
+  [
+    'CFMEU Construction & General Division VIC/TAS Branch',
+    'CFMEU Construction and General Division Victoria–Tasmania branch',
+  ],
+  ['Example, Workers (Union)', 'EXAMPLE WORKERS UNION'],
+  ['Constructor & Co', 'CONSTRUCTOR and CO'],
+])(
+  'entity find tolerates %s and preserves the exact source highlight',
+  async (query, spelling) => {
+    const text = `😀 Before ${spelling}; after.`;
+    const start = text.indexOf(spelling);
+    const matches = entityMatches(text, [query]);
+    const highlight = spelling.replace(/\.$/, '');
+    expect(matches).toEqual([{ start, end: start + highlight.length }]);
+    expect(
+      findMatches([{ id: 'entity', text }], query, { tolerant: true }),
+    ).toEqual([{ part: 0, start }]);
+    let view!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      view = TestRenderer.create(
+        <ReaderList
+          parts={[{ id: 'entity', text }]}
+          header={null}
+          testID="entity-reader"
+          find={{ query, tolerant: true, current: { part: 0, start } }}
+        />,
+      );
+    });
+    const marked = view.root
+      .findAllByType(Text)
+      .filter(
+        (node) =>
+          StyleSheet.flatten(node.props.style)?.backgroundColor ===
+          colors.navyWash,
+      );
+    expect(marked.map((node) => node.props.children)).toEqual([highlight]);
+    await act(async () => view.unmount());
+  },
+);
+
+test('aliases merge overlapping hits once, in reading order, without matching inside other names', () => {
+  expect(
+    entityMatches('A short Example Union and Example Workers Association.', [
+      'Example Union',
+      'Example Workers Association',
+      'Example Workers',
+    ]),
+  ).toEqual([
+    { start: 8, end: 21 },
+    { start: 26, end: 53 },
+  ]);
+  expect(entityMatches('Unrelated', ['related'])).toEqual([]);
+  expect(findAliases('{broken')).toEqual([]);
+  expect(findAliases('["Known alias", false, 42]')).toEqual(['Known alias']);
+});
 
 test('changing Reduce Motion preserves manual reading position and affects only the next jump', async () => {
   const scroll = jest

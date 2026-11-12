@@ -26,11 +26,15 @@ export class Records {
     decode: Decoder<T>,
     { fresh = false }: { fresh?: boolean } = {},
     signal?: AbortSignal,
+    timeoutMs?: number,
   ): Promise<RecordResult<T>> {
     return this.session.read(
       path,
       (requestSignal) =>
-        this.client.get(path, decode, fresh, { signal: requestSignal }),
+        this.client.get(path, decode, fresh, {
+          signal: requestSignal,
+          ...(timeoutMs ? { timeoutMs } : {}),
+        }),
       { fresh, signal, keepPrevious: true },
     ) as Promise<RecordResult<T>>;
   }
@@ -63,6 +67,11 @@ export class Records {
       q: titleSubject(doc) || doc.title,
       kind: 'speech',
       per: '6',
+      // The endpoint otherwise reranks 200 passages for a paged request.
+      // This panel only needs three records, with room to remove self/duplicates.
+      top_k: '20',
+      // Broad parliamentary headings can fail in upstream semantic retrieval.
+      mode: 'keyword',
     });
     const topic = doc.topics.find((slug) => knownTopics.has(slug));
     if (topic) params.set('topic', topic);
@@ -71,6 +80,7 @@ export class Records {
       decodeSimilar,
       undefined,
       signal,
+      15000,
     ).then((record) => {
       const seen = new Set([doc.slug]);
       return {

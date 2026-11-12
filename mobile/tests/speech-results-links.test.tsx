@@ -82,12 +82,12 @@ test.each([
     const view = render(<SpeechRow row={row} q="  housing  " index={0} />);
     const reader = view.getByRole('link');
     expect(speechRoute(row, '  housing  ')).toEqual(
-      docRoute('speech-828012', undefined, { q: 'housing' }),
+      docRoute('speech-828012', undefined, { q: 'housing', find: 'auto' }),
     );
     fireEvent.press(reader);
     expect(router.push).toHaveBeenCalledTimes(1);
     expect(router.push).toHaveBeenCalledWith(
-      docRoute('speech-828012', undefined, { q: 'housing' }),
+      docRoute('speech-828012', undefined, { q: 'housing', find: 'auto' }),
     );
     expect(view.UNSAFE_getByType(RecordRow).props.external).toBeUndefined();
   },
@@ -130,7 +130,9 @@ test('the opaque resource ID is not a reader slug; a source-only row opens its o
 test('other public record kinds also open the reader without an href', () => {
   for (const record of records.filter((row) => row.kind !== 'speech')) {
     const route = speechRoute(decodeRecord(record), 'housing');
-    expect(route).toEqual(docRoute(record.slug, undefined, { q: 'housing' }));
+    expect(route).toEqual(
+      docRoute(record.slug, undefined, { q: 'housing', find: 'auto' }),
+    );
   }
 });
 
@@ -231,12 +233,12 @@ test.each(['ios', 'android'] as const)(
     fireEvent.press(reader, { stopPropagation });
     expect(router.push).toHaveBeenCalledTimes(2);
     expect(router.push).toHaveBeenLastCalledWith(
-      docRoute(raw.slug, undefined, { q: 'housing' }),
+      docRoute(raw.slug, undefined, { q: 'housing', find: 'auto' }),
     );
     fireEvent.press(container);
     expect(router.push).toHaveBeenCalledTimes(3);
     expect(router.push).toHaveBeenLastCalledWith(
-      docRoute(raw.slug, undefined, { q: 'housing' }),
+      docRoute(raw.slug, undefined, { q: 'housing', find: 'auto' }),
     );
     await act(async () => {});
   },
@@ -337,6 +339,20 @@ test('a failed person catalogue does not prevent opening the speech', async () =
   await act(async () => {});
   fireEvent.press(view.getByRole('link'));
   expect(router.push).toHaveBeenCalledWith(
-    docRoute(raw.slug, undefined, { q: 'housing' }),
+    docRoute(raw.slug, undefined, { q: 'housing', find: 'auto' }),
+  );
+});
+
+test('an entity result carries its recorded aliases into tolerant automatic find', () => {
+  const row = decodeRecord({
+    ...raw,
+    aliases: ['Example Workers Association', 'EWA'],
+  });
+  expect(speechRoute(row, '  Example   Union ')).toEqual(
+    docRoute('speech-828012', undefined, {
+      q: 'Example Union',
+      find: 'auto',
+      aliases: ['Example Workers Association', 'EWA'],
+    }),
   );
 });

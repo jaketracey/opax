@@ -210,11 +210,11 @@ describe('bill header (P1-3)', () => {
         expect(style.alignSelf).toBe('flex-start');
       }
       // No navy primary on the page's header.
-      expect(
-        root.findAll(
-          (node) => node.type === Button && node.props.variant === 'primary',
-        ),
-      ).toHaveLength(0);
+      const primary = root.findAll(
+        (node) => node.type === Button && node.props.variant === 'primary',
+      );
+      expect(primary).toHaveLength(1);
+      expect(primary[0]!.props.testID).toBe('bill-ask');
       // "Bill text" is a navigation row, before the page's source line.
       const text = root.find(
         (node) =>

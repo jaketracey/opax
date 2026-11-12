@@ -34,7 +34,13 @@ export const SUMMARY_AFTER = 3;
 /** The reader for a result row, with the query for its find bar. */
 export function speechRoute(row: SearchRecord, q: string) {
   const slug = speechSlug(row);
-  return slug ? docRoute(slug, undefined, { q: q.trim() }) : null;
+  return slug
+    ? docRoute(slug, undefined, {
+        q: q.replace(/\s+/g, ' ').trim(),
+        find: 'auto',
+        aliases: row.aliases,
+      })
+    : null;
 }
 
 /** A speech or record as a `RecordRow` `compact`, opening the reader. */
