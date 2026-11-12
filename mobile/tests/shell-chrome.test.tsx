@@ -649,15 +649,133 @@ test.each([false, true])(
       expect(text.props.accessibilityElementsHidden).toBe(true);
       act(() => jest.advanceTimersByTime(1));
       expect(text.props.accessibilityElementsHidden).toBe(false);
-      // Late metrics still restore the measured title and its back mode.
+      // Late metrics apply to the next reveal, keeping this fallback stable.
       measureBarTitle(view, { [title]: 80, Bills: 30 });
-      expect(text.props.ellipsizeMode).toBe('clip');
+      expect(text.props.ellipsizeMode).toBe('tail');
       act(() => view.update(<BarTitle title={title} shown={false} />));
       expect(text.props.accessibilityElementsHidden).toBe(true);
     } finally {
       act(() => view?.unmount());
       jest.useRealTimers();
     }
+  },
+);
+describe.each([false, true])(
+  'late title metrics (Reduce Motion: %s)',
+  (reduced) => {
+    test.each([
+      [
+        'Short subject',
+        false,
+        { 'Short subject': 100 },
+        'Short subject',
+        'default',
+      ],
+      [
+        'Whole subject',
+        false,
+        { 'Whole subject': 170 },
+        'Whole subject',
+        'minimal',
+      ],
+      ['Whole subject', false, { 'Whole subject': 400 }, null, 'minimal'],
+      [
+        'Long subject with clause',
+        false,
+        {
+          'Long subject with clause': 400,
+          'Long subject with…': 300,
+          'Long subject…': 180,
+        },
+        'Long subject…',
+        'minimal',
+      ],
+      [
+        'Alexandra Sample',
+        true,
+        { 'Alexandra Sample': 400, Sample: 80 },
+        'Sample',
+        'minimal',
+      ],
+    ] as const)(
+    '%s (%s, %j) stays full through late metrics and uses them on the next reveal',
+      (title, person, widths, nextTitle, nextBackMode) => {
+        jest.useFakeTimers();
+        mockReducedMotion = reduced;
+        const animation = jest.spyOn(Animated, 'timing');
+        const original = Dimensions.get('window');
+        const navigation = { setOptions: jest.fn() };
+        const element = (shown: boolean) => (
+          <NavigationContext.Provider value={navigation as never}>
+            <BarTitle
+              title={title}
+              person={person}
+              shown={shown}
+              backTitle="Today"
+            />
+          </NavigationContext.Provider>
+        );
+        let view!: TestRenderer.ReactTestRenderer;
+        try {
+          act(() => {
+            Dimensions.set({
+              window: { ...original, width: 402, fontScale: 1 },
+            });
+            view = TestRenderer.create(element(true));
+          });
+          act(() => jest.advanceTimersByTime(450));
+          const text = view.root.findByType(Animated.Text);
+          const fallbackStyle = StyleSheet.flatten(text.props.style);
+          expect(text.props).toMatchObject({
+            children: title,
+            accessibilityLabel: title,
+            accessibilityElementsHidden: false,
+            importantForAccessibility: 'auto',
+            ellipsizeMode: 'tail',
+          });
+          const animationCount = animation.mock.calls.length;
+          measureBarTitle(view, { Today: 35, ...widths });
+          // Both the wording and the room remain latched, even when the
+          // newly measured retreat would cut or hide this title.
+          expect(text.props).toMatchObject({
+            children: title,
+            accessibilityLabel: title,
+            accessibilityElementsHidden: false,
+            importantForAccessibility: 'auto',
+            ellipsizeMode: 'tail',
+          });
+          expect(StyleSheet.flatten(text.props.style)).toMatchObject({
+            opacity: fallbackStyle.opacity,
+            maxWidth: fallbackStyle.maxWidth,
+          });
+          expect(animation).toHaveBeenCalledTimes(animationCount);
+          if (reduced) expect(fallbackStyle.opacity.__getValue()).toBe(1);
+          expect(navigation.setOptions).toHaveBeenLastCalledWith({
+            headerBackButtonDisplayMode: 'default',
+          });
+          act(() => jest.advanceTimersByTime(1000));
+          expect(text.props.accessibilityElementsHidden).toBe(false);
+          act(() => view.update(element(false)));
+          expect(text.props.accessibilityElementsHidden).toBe(true);
+          act(() => view.update(element(true)));
+          expect(text.props).toMatchObject({
+            children: nextTitle ?? title,
+            accessibilityLabel: title,
+            accessibilityElementsHidden: nextTitle === null,
+            ellipsizeMode: 'clip',
+          });
+          expect(navigation.setOptions).toHaveBeenLastCalledWith({
+            headerBackButtonDisplayMode: nextBackMode,
+          });
+        } finally {
+          act(() => {
+            view?.unmount();
+            Dimensions.set({ window: original });
+          });
+          jest.useRealTimers();
+        }
+      },
+    );
   },
 );
 test('native width probes have intrinsic height and stay hidden and untouchable', () => {

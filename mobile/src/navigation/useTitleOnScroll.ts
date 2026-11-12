@@ -159,27 +159,33 @@ export function BarTitle({
   const ready =
     candidates.every((text) => measured(text) !== undefined) &&
     (!backTitle || backWidth !== undefined);
+  const namedRoom = barTitleWidth(
+    safeWidth,
+    trailing,
+    trailingWidth,
+    backTitle,
+    backWidth,
+  );
   const [measurement, setMeasurement] = useState({
     key,
     shown,
-    ready,
     expired: false,
+    room: namedRoom,
   });
   // Invalidate an earlier wait before rendering a new title or reveal.
-  if (
-    measurement.key !== key ||
-    measurement.shown !== shown ||
-    measurement.ready !== ready
-  )
+  if (measurement.key !== key || measurement.shown !== shown)
     setMeasurement({
       key,
       shown,
-      ready,
       // Keep the outgoing title available throughout its existing fade.
       expired: measurement.key === key && !shown && measurement.expired,
+      room:
+        measurement.key === key && !shown && measurement.expired
+          ? measurement.room
+          : namedRoom,
     });
   useEffect(() => {
-    if (!measurement.shown || measurement.ready || measurement.expired) return;
+    if (!measurement.shown || ready || measurement.expired) return;
     // Native text layout can fail to report. Keep the previous full,
     // tail-truncated title available once the heading has left the content.
     const timeout = setTimeout(
@@ -190,15 +196,10 @@ export function BarTitle({
       300,
     );
     return () => clearTimeout(timeout);
-  }, [measurement]);
-  const fallback = !ready && measurement.expired;
-  const namedRoom = barTitleWidth(
-    safeWidth,
-    trailing,
-    trailingWidth,
-    backTitle,
-    backWidth,
-  );
+  }, [measurement, ready]);
+  // Once visible, keep the full fallback and its room for this reveal.
+  // Late native measurements take effect after the heading returns.
+  const fallback = measurement.expired;
   const minimalRoom = barTitleWidth(safeWidth, trailing, trailingWidth, '');
   const retreat = retreatBarTitle(
     title,
@@ -246,7 +247,11 @@ export function BarTitle({
           : { ...old, [`${key}:${text}`]: line.width },
       );
     };
-  const room = ready && shown ? retreat.room : namedRoom;
+  const room = fallback
+    ? measurement.room
+    : ready && shown
+      ? retreat.room
+      : namedRoom;
   return createElement(
     NativeView,
     { style: { maxWidth: room } },
@@ -265,7 +270,7 @@ export function BarTitle({
           { color: colors.ink, opacity: fits ? opacity : 0, maxWidth: room },
         ],
       },
-      shown && ready ? (retreat.text ?? title) : title,
+      shown && ready && !fallback ? (retreat.text ?? title) : title,
     ),
     createElement(
       ScrollView,
