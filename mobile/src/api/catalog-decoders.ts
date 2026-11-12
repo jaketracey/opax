@@ -546,6 +546,15 @@ const tie = shape({
   donor_id: optional(text),
   industry: maybeText,
 });
+// Whose entry it is (self, spouse, children). A register without a holder
+// column (the Senate's, Queensland's) has no holder: the interests export may
+// write null or leave the field out (docs/operations/interests-holder-
+// compatibility-2026-11-13.md), and a blank cell says the same. All three
+// decode to null so the row is kept; a holder of any other type still fails.
+const holder: Decoder<string | null> = (v) =>
+  v === undefined || v === null || (typeof v === 'string' && !v.trim())
+    ? null
+    : text(v);
 const registerRow = shape({
   // Optional identities are not yet sent by the portal. Ignore missing or
   // malformed hints without losing the otherwise valid register block.
@@ -558,7 +567,7 @@ const registerRow = shape({
       : typeof v === 'string' && v.trim()
         ? v
         : undefined,
-  holder: nonempty,
+  holder,
   description: text,
   kind: nonempty,
   page: optional(nullable(count)),
@@ -577,7 +586,7 @@ const detailTie = shape({
   fits_url: optional(url),
   lobbyist_jurisdictions: optional(strings),
   register: shape({
-    holder: nonempty,
+    holder,
     category: nonempty,
     description: text,
     kind: nonempty,
@@ -616,7 +625,7 @@ const recentDeclaration = shape({
   jurisdiction: nonempty,
   chamber: nonempty,
   parliament: count,
-  holder: nonempty,
+  holder,
   bucket: nonempty,
   kind: nonempty,
   date,
@@ -642,7 +651,7 @@ const donorTie = shape({
   jurisdiction: nonempty,
   chamber: nonempty,
   parliament: count,
-  holder: nonempty,
+  holder,
   category: nonempty,
   description: text,
   kind: nonempty,

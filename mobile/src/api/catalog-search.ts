@@ -288,7 +288,10 @@ export function catalogSearchRows(
             kind,
             title: `${p.name}: ${category.replaceAll('_', ' ')}`,
             href: href(p.name),
-            snippet: `${item.description}. ${item.holder}. ${item.kind}.`,
+            // A null holder leaves its cell empty, as the portal's search
+            // catalog does, so interestDetail still reads the action cell
+            // and "null" is never shown or matched.
+            snippet: `${item.description}. ${item.holder ?? ''}. ${item.kind}.`,
             slug: `${p.name}-${category}-${i}`,
             resource: '',
             source: 'Register of interests',
