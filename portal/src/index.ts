@@ -91,6 +91,7 @@ import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { htmlValidator, notModified } from './html-etag'
 import { cacheKeyParams } from './cache-key'
+import { searchFind, type SearchRetrieval } from './search-find'
 import { communityMcp } from './community-mcp'
 import { expireVoiceSessions, voiceRoute } from './voice'
 import { appEdition } from './app-edition'
@@ -502,7 +503,7 @@ const SEARCH_WINDOW_TOPK = 200 // retrieval depth once a caller pages
 const SEARCH_PER_DEFAULT = 20
 const SEARCH_PER_MAX = 200 // one request can still take the whole window (export)
 
-interface SearchWindow {
+interface SearchWindow extends SearchRetrieval {
   total: number
   truncated: boolean
   results: SearchResult[]
@@ -560,11 +561,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // from page 1's entry; the window key drops them so paging and re-sorting
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
-  // Retire windows/pages containing the old unnormalized, character-cut snippets.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1\n${keyParams(['nocache'])}`))
+  // Retire older snippets and windows without retrieval-mode metadata.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -583,9 +584,14 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   if (!win) {
     const limited = options.suggest ? null : await rateLimited(env.SEARCH_LIMITER, request)
     if (limited) return limited
-    win = await searchWindow(env, { q, mode, kind, topK, url, ...(options.suggest ? { reranker: 'noop' as const, signal: AbortSignal.any([request.signal, AbortSignal.timeout(1500)]) } : {}) })
-    if (!win) return json({ error: 'find failed' }, 502)
-    cacheStore(ctx, windowKey, json(win), SEARCH_WINDOW_CACHE_TTL)
+    win = await searchWindow(env, { q, mode, kind, topK, url, signal: request.signal, ...(options.suggest ? { reranker: 'noop' as const, signal: AbortSignal.any([request.signal, AbortSignal.timeout(1500)]) } : {}) })
+    if (!win) {
+      const unavailable = json({ error: 'find failed' }, 503)
+      unavailable.headers.set('retry-after', '5')
+      unavailable.headers.set('cache-control', 'no-store')
+      return unavailable
+    }
+    if (!win.fallback) cacheStore(ctx, windowKey, json(win), SEARCH_WINDOW_CACHE_TTL)
   }
 
   const ordered = [...win.results].sort((a, b) => compareSearchResults(a, b, sort))
@@ -600,6 +606,8 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const out = json({
     query: q,
     mode,
+    mode_used: win.mode_used,
+    ...(win.fallback ? { fallback: win.fallback } : {}),
     kind,
     sort,
     page: clamped,
@@ -613,7 +621,8 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     count: rows.length,
     results: rows,
   })
-  cacheStore(ctx, pageKey, out, SEARCH_CACHE_TTL)
+  if (win.fallback) out.headers.set('cache-control', 'no-store')
+  else cacheStore(ctx, pageKey, out, SEARCH_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
 }
 
@@ -651,7 +660,7 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
       const req = new Request(docUrl, request)
       const response = env.STAGING_API ? await env.STAGING_API.fetch(req) : await apiSearch(req, docUrl, env, ctx, options)
       if (!response.ok) throw new Error('Document search unavailable')
-      return await response.json() as { results: SearchResult[]; truncated: boolean }
+      return await response.json() as { results: SearchResult[]; truncated: boolean } & Partial<SearchRetrieval>
     })() : Promise.resolve(null),
   ])
   const catalog = tasks[0].status === 'fulfilled' ? tasks[0].value : null
@@ -659,7 +668,12 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   const warnings: string[] = []
   if (tasks[0].status === 'rejected') warnings.push('Financial and register search is temporarily unavailable. These results only cover documents.')
   if (tasks[1].status === 'rejected') warnings.push('Document search is temporarily unavailable. These results only cover the other published records.')
-  if (!catalog && !documents && warnings.length) return json({ error: 'Search is temporarily unavailable. Please try again.' }, 503)
+  if (!catalog && !documents && warnings.length) {
+    const unavailable = json({ error: 'Search is temporarily unavailable. Please try again.' }, 503)
+    unavailable.headers.set('retry-after', '5')
+    unavailable.headers.set('cache-control', 'no-store')
+    return unavailable
+  }
   // Reciprocal ranks combine lexical records with semantic document retrieval;
   // their native scores are different scales and must never be compared.
   // A paged catalogue row is a stub until it is on the page shown; this maps it to its record ID.
@@ -715,14 +729,18 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
       return { ...record, score: row.score, sort_date: record.date || row.sort_date }
     })
   }
-  return json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
+  const out = json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
     results: shown, count: shown.length,
     total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
     years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
+    ...(documents?.mode_used ? { mode_used: documents.mode_used } : {}),
+    ...(documents?.fallback ? { fallback: documents.fallback } : {}),
   })
+  out.headers.set('cache-control', 'no-store')
+  return out
 }
 
-/** One /find at `topK` depth, deduped to documents and ranked by score. */
+/** A bounded /find window at `topK` depth, deduped to documents and ranked by score. */
 async function searchWindow(
   env: Env,
   opts: { q: string; mode: string; kind: string; topK: number; url: URL; reranker?: 'noop'; signal?: AbortSignal },
@@ -769,14 +787,14 @@ async function searchWindow(
     if (speakers) body.filter_expression = scopedCollaborators(filters, { speakers })
   }
 
-  const res = await kbFetch(env, '/find', { body, signal: opts.signal })
-  if (!res.ok) return null
-  const found = (await res.json()) as {
+  const retrieval = await searchFind<{
     resources?: Record<string, FindResource & {
       computedmetadata?: { field_classifications?: { classifications?: { labelset: string; label: string }[] }[] }
     }>
     best_matches?: unknown[]
-  }
+  }>((body, signal) => kbFetch(env, '/find', { body, signal }), body, mode, opts.signal)
+  if (!retrieval) return null
+  const { found, ...status } = retrieval
 
   const results = Object.entries(found.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')) // enrichment output never surfaces as a result
@@ -866,7 +884,7 @@ async function searchWindow(
   await joinMixedSpeakers(results, env.ASSETS)
   results.sort((a, b) => b.score - a.score)
   // A full batch means retrieval hit its ceiling, not that the record is spent.
-  return { total: results.length, truncated: (found.best_matches?.length ?? 0) >= topK, results }
+  return { total: results.length, truncated: (found.best_matches?.length ?? 0) >= topK, results, ...status }
 }
 
 interface AskInput {

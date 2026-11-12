@@ -62,12 +62,17 @@ type SearchPage = {
   page_count: number; total: number; truncated: boolean; years: Record<string, number>;
   count: number; results: SearchResult[];
 };
+type SearchRetrieval = {
+  mode_used: 'keyword' | 'semantic' | 'hybrid';
+  fallback?: 'hybrid_timeout' | 'hybrid_error' | 'semantic_timeout' |
+    'semantic_error' | 'keyword_timeout' | 'keyword_error';
+};
 type CatalogRecord = {
   kind:string; title:string; href:string; snippet:string; slug:string; resource:string;
   date?:string|null; dateLabel?:string; source?:string; url?:string;
   record_id?:string; score?:number; sort_date?:string;
 };
-type UnifiedSearchPage = Omit<SearchPage, 'results'> & {
+type UnifiedSearchPage = Omit<SearchPage, 'results'> & Partial<SearchRetrieval> & {
   results:(SearchResult | CatalogRecord)[]; warnings:string[]; catalog_matches:number;
   coverage?:string; index_version?:string;
 };
@@ -84,7 +89,7 @@ type TopicProfile = {
 
 | Method and path | Parameters and response | Source / cost class | Auth; cache B/E; limits; blocks |
 | --- | --- | --- | --- |
-| GET `/api/search` | Search parameters; `SearchPage & {mode:string}`. Public slug filtering, a bounded retrieval window and reranking. | ARAG `/find`, including keyword mode and reranker. Model-backed retrieval; hybrid/semantic also use semantic retrieval. No answer writer here. | Public; 600/600 page, 3600 retrieval-window cache, epoch; `S120` on misses; `N`. |
+| GET `/api/search` | Search parameters; `SearchPage & {mode:string} & SearchRetrieval`. Public slug filtering, a bounded retrieval window and reranking. | ARAG `/find`, including keyword mode and reranker. Model-backed retrieval; hybrid/semantic also use semantic retrieval. No answer writer here. | Public; normal results: 600/600 page, 3600 retrieval-window cache, epoch; fallback results: no-store/none for page and window; `S120` on misses; `N`. |
 | GET `/api/search-all` | Search parameters; `UnifiedSearchPage`. Catalog kinds include person, party, donor, agency, supplier, receipt, contract, grant, bill, interest, expense, access, campaigner, report, pay. | ASSETS catalog for selected catalog-only kinds; `all`, bills and document kinds can also invoke `/api/search`. Cheap read for catalog-only selection; model-backed retrieval otherwise. | Public; no-store/none for combined response; `S120` before tasks, document miss can consume another search limit; `N`. |
 | GET `/api/person-slugs` | `{generated:string,slugs:Record<string,string>}`; names to canonical public slugs. Shape checked live. | ASSETS parliamentarians plus electorate roster augmentation; cheap read. | Public; 3600/none; no limiter; `N`. No ETag observed. |
 | GET `/api/resource/:slug` | Lowercase public slug. `Resource`; `news-*` is retired with 410. Supported source families include speech, legal, division, press, bill text and published research. | ARAG resource values, including stored machine summary; model-service read, no writer. Source-only in this lane. | Public; 3600/3600, epoch; no limiter; `N`. Supports cache bypass. |
@@ -100,6 +105,10 @@ type TopicProfile = {
 | GET `/api/news` | `{fetched_at,items:{title,url,source,published:string\|null,topic}[]}`, at most 12. | ABC and Guardian RSS on miss; cheap third-party read, no paid API key observed. | Public; 900/900 only for nonempty results; no limiter; `N`. |
 | GET/HEAD `/bill-texts/:bill_key/index.json` | Federal key `au-federal-*`; `{bill_key,title,generated_at,default_version_id,versions:BillVersion[],coverage_note}`. | ARAG catalog, at most ten pages of 100; model-service read. No static fallback is wired by the caller. | Public; 60/60, epoch; `S120` before cache lookup; `N`. |
 | GET/HEAD `/bill-texts/:bill_key/:version_id.json` | Version `[rs]digits-stage`; `{bill_key,title,version:BillVersion,text,sections:{id,title,text,source_url}[],complete:true,enrichment:object\|null}`. | ARAG original text, SHA-256 and character-count validation; optional validated stored enrichment. Model-service read, no writer. | Public; 3600/3600, epoch; `S120` before cache lookup; `N`. |
+
+Search reliability update (local implementation, 12 November 2026): `/api/search` keeps `mode` as requested and adds `mode_used` for the successful retrieval. A failed attempt adds `fallback`, naming the requested mode and `timeout` or `error`; HTTP errors, network failures and invalid JSON all count as errors. Semantic and hybrid attempts have a 6-second deadline covering fetch and response-body parsing, followed on failure by keyword-only retrieval with a 4-second deadline and `reranker: 'noop'`. Keyword requests can recover through a 6-second semantic attempt. If hybrid and then keyword fail, semantic-only recovery can use the remaining budget, so a failed keyword service does not discard working semantic retrieval. Every attempt uses the same query, depth and filters. The 6-second choice allows about 1.7 times the review's measured 3.58-second normal hybrid call; a shared 10-second upstream budget bounds all attempts together, leaving headroom under the app's 15-second deadline. This is a budget based on one normal latency measurement, not a measured percentile or an end-to-end response guarantee. Caller cancellation or a shorter caller budget stops retrieval without starting another mode.
+
+Fallback responses and their retrieval windows are not cached. Successful normal responses retain the cache lifetimes above. If both modes fail, `/api/search` returns 503 `{error:'find failed'}`, `Retry-After: 5` and `Cache-Control: no-store`. Unified `/api/search-all` carries `mode_used` and `fallback` when document retrieval supplied them, including the web, voice and MCP adapters; catalog-only searches omit them. Unified responses remain no-store, retain successful catalog results when document retrieval fails, and return a retryable, no-store 503 when no requested source can answer. Existing result, pagination, count and truncation fields are unchanged.
 
 `BillVersion` has `id`, `source_version`, `stage`, `stage_label`, nullable `date`, `source_url`, `format`, `status:'complete'`, `text_url`, nullable `characters/pages/sections`, `coverage_note` and `sha256`. The manifest lists complete collected versions, not every version Parliament has issued. Integrity failures return 502 and are not cached. Missing versions return 404.
 
