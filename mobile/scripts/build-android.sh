@@ -3,6 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
+source scripts/android-host.sh
 source scripts/android-gradle.sh
 VARIANT=${1:?Usage: build-android.sh development|e2e|production [--inside-gate]}
 case "$VARIANT" in
