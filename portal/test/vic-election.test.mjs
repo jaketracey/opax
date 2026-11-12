@@ -266,7 +266,8 @@ test('candidates appear only from a VEC list, in ballot paper order, with the al
     const hubs=new URL('../../scripts/hubs/',import.meta.url);
     for(const name of ['vic-election-2026.json','vic-results-2022.json','vic-places-2025.json'])await writeFile(join(dir,name),await readFile(new URL(name,hubs)));
     // Invented names: test fixtures never use real people.
-    await writeFile(join(dir,'vic-candidates-2026.json'),JSON.stringify({published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',districts:{Lowan:[{name:'Avery Quill',party:'Independent',email:'x@example.com'},{name:'Rowan Ketch',party:'Liberal'}]}}));
+    await writeFile(join(dir,'vic-candidates-2026.json'),JSON.stringify({published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',districts:{Lowan:[{name:'Avery Quill',party:'Independent',email:'x@example.com'},{name:'Rowan Ketch',party:'Liberal'}]},
+      regions:{'Eastern Victoria':[{name:'MOSS, Ren',party:'',group:'A',group_name:'',email:'hidden@example.test'},{name:'FERN, Iona',party:'',group:null,group_name:''}]}}));
     const out=await mkdtemp(join(tmpdir(),'vic-candidates-out-'));
     try {
       for(const path of ['electorates/manifest.json','parliamentarians.json','votes.json','divisions/index.json','interests/index.json','corpus.json','person-paths.js']){await mkdir(dirname(join(out,path)),{recursive:true});await writeFile(join(out,path),await readFile(new URL(path,root)));}
@@ -282,6 +283,10 @@ test('candidates appear only from a VEC list, in ballot paper order, with the al
       await buildVicElection(out,join(dir,'vic-election-2026.json'));
       const built=JSON.parse(await readFile(join(out,VIC_ELECTION_ASSET),'utf8'));const lowan=built.seats.find(s=>s.name==='Lowan');
       assert.deepEqual(lowan.candidates.list,[{name:'Avery Quill',party:'Independent'},{name:'Rowan Ketch',party:'Liberal'}]);
+      assert.equal(lowan.candidates.url,lowan.source_url+'/nominations');
+      const region=built.seats.find(s=>s.name==='Eastern Victoria');
+      assert.deepEqual(region.candidates.list,[{name:'MOSS, Ren',party:'',group:'A',group_name:''},{name:'FERN, Iona',party:'',group:null,group_name:''}]);
+      assert.equal(region.candidates.url,region.source_url+'/nominations');
       const html=renderVicElection(built,lowan).html;assert.match(html,/<h2 class="ui-section-title">Candidates<\/h2><p class="ui-section-note">In ballot paper order, as published by the VEC on 10 Nov 2026/);assert.ok(html.indexOf('Avery Quill')<html.indexOf('Rowan Ketch'));
       await writeFile(join(dir,'vic-candidates-2026.json'),JSON.stringify({published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',districts:{Nowhere:[{name:'Avery Quill'}]}}));
       await assert.rejects(buildVicElection(out,join(dir,'vic-election-2026.json')),/unknown constituency: Nowhere/);
@@ -295,7 +300,7 @@ test('published VEC input covers every seat and renders district and region cand
   for(const seat of data.seats){
     const list=source[seat.kind==='district'?'districts':'regions'][seat.name];
     assert.ok(list.length>0,seat.name);
-    assert.deepEqual(seat.candidates,{published:source.published,url:source.url,list});
+    assert.deepEqual(seat.candidates,{published:source.published,url:seat.source_url+'/nominations',list});
   }
   for(const name of ['Albert Park','Eastern Victoria']){
     const seat=data.seats.find(s=>s.name===name);
@@ -304,8 +309,32 @@ test('published VEC input covers every seat and renders district and region cand
     const document=new JSDOM(page.html).window.document;
     assert.deepEqual([...document.querySelectorAll('.vic-candidate-name')].map(n=>n.textContent),seat.candidates.list.map(c=>c.name));
     assert.match(document.querySelector('#candidates').textContent,/In ballot paper order/);
-    assert.equal(document.querySelector('#candidates a').href,source.url);
+    assert.equal(document.querySelector('#candidates a').href,seat.source_url+'/nominations');
+    if(seat.kind==='region')assert.equal(document.querySelectorAll('.vic-candidate-no, #candidates ol').length,0);
   }
+});
+
+test('Council headings retain group order, distinguish unnamed groups and Ungrouped, and never number candidates',async()=>{
+  const {JSDOM}=await import('jsdom');
+  const region=data.seats.find(s=>s.kind==='region');
+  const list=[
+    {name:'QUILL, Avery',party:'Australian Labor Party - Victorian Branch',group:'A',group_name:'Australian Labor Party'},
+    {name:'WREN, Sage',party:'Australian Labor Party - Victorian Branch',group:'A',group_name:'Australian Labor Party'},
+    {name:'MOSS, Ren',party:'',group:'B',group_name:''},
+    {name:'FERN, Iona',party:'',group:'B',group_name:''},
+    {name:'ASTER, Rowan',party:'',group:null,group_name:''},
+  ];
+  const html=renderVicElection(data,{...region,candidates:{published:'2026-11-11',url:region.source_url+'/nominations',list}}).html;
+  const doc=new JSDOM(html).window.document,section=doc.querySelector('#candidates');
+  assert.deepEqual([...section.querySelectorAll('h3')].map(n=>n.textContent),['Group A, Labor','Group B','Ungrouped']);
+  assert.deepEqual([...section.querySelectorAll('.vic-candidate-name')].map(n=>n.textContent),list.map(c=>c.name));
+  assert.equal(section.querySelectorAll('ol,.vic-candidate-no').length,0);
+  assert.equal(section.querySelectorAll('.party-alp').length,2);
+  assert.equal(section.querySelectorAll('.party').length,2);
+  for(const ul of section.querySelectorAll('ul'))assert.ok(doc.getElementById(ul.getAttribute('aria-labelledby')));
+  // Source group names are text, never markup, even when no party alias exists.
+  const escaped=renderVicElection(data,{...region,candidates:{published:'2026-11-11',url:region.source_url+'/nominations',list:[{name:'QUILL, Avery',party:'',group:'A',group_name:'<img src=x onerror=alert(1)>'}]}}).html;
+  assert.match(escaped,/Group A, &lt;img/);assert.doesNotMatch(escaped,/<img src=x/);
 });
 
 test('election detection identifies state election copy without treating federal records in Victoria as state electoral copy',()=>{

@@ -84,7 +84,8 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
       region:c.region || null,districts:c.districts || [],boundary_note:c.boundary_note || null,
       formerly:c.formerly || null,created:config.boundaries.created.includes(c.name) && !c.formerly,
       result:result ? {general:contest(result.general),since:contest(result.since) || null} : null,
-      candidates:list?.length ? {published:nominated.published,url:nominated.url,list:list.map(x=>({name:x.name,party:x.party || ''}))} : null,
+      candidates:list?.length ? {published:nominated.published,url:c.source_url.replace(/\/$/,'')+'/nominations',list:list.map(x=>({name:x.name,party:x.party || '',
+        ...c.kind === 'region' ? {group:x.group,group_name:x.group_name} : {}}))} : null,
       electorate_url:seat.url,roster_date:seat.representation_as_of,members};
   });
   const updated = latest([config.updated,nominated?.published,roster.meta.generated,roster.meta.representation?.updated,day(corpus.version),...seats.map(s=>s.roster_date)]);
