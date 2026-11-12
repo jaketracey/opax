@@ -7,7 +7,8 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { AccessibilityInfo } from 'react-native';
 import { router } from 'expo-router';
 import { useNetworkState } from 'expo-network';
-import { client } from '../src/api/runtime';
+import { catalogs, client } from '../src/api/runtime';
+import { askConsentGiven } from '../src/features/ask/consent';
 import { track } from '../src/analytics';
 import { takeFocusRequest } from '../src/design/keyboard';
 import { useRowHighlight } from '../src/design/row-padding';
@@ -114,6 +115,7 @@ beforeEach(() => {
   askSession.setDraft('');
   takeFocusRequest('ask');
   takeFocusRequest('ask-status');
+  takeFocusRequest('ask-waiting');
 });
 
 it('a Today starter opens Ask and asks its question at once', async () => {
@@ -121,7 +123,18 @@ it('a Today starter opens Ask and asks its question at once', async () => {
   const tree = await render(<AskBlock today={today} />);
   const row = rows(tree.root)[0]!;
   expect(row.props.accessibilityHint).toBe('Asks this question');
+  let finish!: (value: unknown) => void;
+  post.mockImplementationOnce(
+    () => new Promise((resolve) => (finish = resolve)),
+  );
   await act(async () => row.props.onPress());
+  await flush();
+  // While it runs, VoiceOver is bound for the answer's status, not the
+  // composer.
+  expect(askSession.snapshot().busy).toBe(true);
+  expect(takeFocusRequest('ask-status')).toBe(true);
+  expect(takeFocusRequest('ask')).toBe(false);
+  await act(async () => finish(answer('An answer from the record.')));
   await flush();
   expect(router.navigate).toHaveBeenCalledWith(
     expect.objectContaining({ pathname: '/ask' }),
@@ -130,9 +143,6 @@ it('a Today starter opens Ask and asks its question at once', async () => {
   const s = askSession.snapshot();
   expect(s.thread[0]).toMatchObject({ role: 'user', text: first });
   expect(s.draft).toBe('');
-  // VoiceOver goes to the answer's status, not the composer.
-  expect(takeFocusRequest('ask-status')).toBe(true);
-  expect(takeFocusRequest('ask')).toBe(false);
   // The chip event stays, and the send event a typed question gets is
   // added; neither carries the question.
   const events = jest.mocked(track).mock.calls;
@@ -301,9 +311,7 @@ it('a pressed row on a white group never takes the page colour', async () => {
   const grouped = designFlags.groupedSurfaces;
   designFlags.groupedSurfaces = true;
   try {
-    const { SurfaceContext } = jest.requireActual(
-      '../src/design/row-padding',
-    );
+    const { SurfaceContext } = jest.requireActual('../src/design/row-padding');
     const tree = await render(
       <SurfaceContext.Provider value="sunken">
         <InsetGroup>
@@ -319,7 +327,6 @@ it('a pressed row on a white group never takes the page colour', async () => {
   }
 });
 
-
 it('Search asks at once only when the row shows the typed question itself', () => {
   const typed = 'Who voted for the Fixture Bill?';
   expect(isVisibleQuestion(typed, askDraft(typed))).toBe(true);
@@ -327,4 +334,148 @@ it('Search asks at once only when the row shows the typed question itself', () =
   // the exact text that would be asked.
   expect(isVisibleQuestion('housing', askDraft('housing'))).toBe(false);
   expect(isVisibleQuestion('who voted', askDraft('who voted'))).toBe(false);
+});
+
+// Review round 1: a waiting question never goes into a failure.
+it.each([
+  ['rate limited', new AskFailure('rate-limited', 'Busy', 'server', 1)],
+  ['offline', new AskFailure('offline', 'No connection.')],
+  ['timed out', new AskFailure('timeout', 'Too slow.')],
+])(
+  'a running answer that fails (%s) keeps its failure, and the waiting question stays unsent',
+  async (_case, failure) => {
+    if (failure.code === 'rate-limited') failure.retryAt = Date.now() + 60_000;
+    let fail!: (reason: unknown) => void;
+    post.mockImplementationOnce(
+      () => new Promise((_resolve, reject) => (fail = reject)),
+    );
+    await act(async () => {
+      void askSession.submit('A question already running?');
+    });
+    const tree = await render(<AskBlock today={today} />);
+    await act(async () => rows(tree.root)[0]!.props.onPress());
+    await flush();
+    expect(askSession.snapshot().queued).toBe(true);
+    await act(async () => fail(failure));
+    await flush();
+    expect(asked()).toEqual(['A question already running?']);
+    const s = askSession.snapshot();
+    expect(s.error).toBe(failure);
+    expect(s.failed).toMatchObject({ question: 'A question already running?' });
+    expect(s).toMatchObject({ draft: first, fresh: true, queued: false });
+    if (failure.code === 'rate-limited')
+      expect(s.error?.retryAt).toBeGreaterThan(Date.now() + 50_000);
+    // Later, still nothing goes without the reader.
+    await flush();
+    expect(asked()).toEqual(['A question already running?']);
+    tree.unmount();
+  },
+);
+
+it('the waiting question goes when the answer is written, before its Ask next rows, which still reach the saved conversation', async () => {
+  let finish!: (value: unknown) => void;
+  let followups!: (value: unknown) => void;
+  post.mockImplementation((path: string) =>
+    path === '/api/followups'
+      ? new Promise((resolve) => (followups = resolve))
+      : asked().length === 1
+        ? new Promise((resolve) => (finish = resolve))
+        : Promise.resolve(answer('The second answer.')),
+  );
+  await act(async () => {
+    void askSession.submit('A question already running?');
+  });
+  const running = askSession.snapshot().id;
+  askSession.arrive(
+    'What has parliament said?',
+    { ...askSession.snapshot().options },
+    { queue: true },
+  );
+  await act(async () =>
+    finish({
+      answer: 'The first answer.',
+      answer_status: 'answered',
+      sources: [
+        {
+          resource: 'fixture-resource',
+          slug: 'fixture-record',
+          title: 'Fixture record',
+          snippet: 'A passage from the fixture record about the question.',
+        },
+      ],
+    }),
+  );
+  await flush();
+  // Sent while the first answer's Ask next rows are still loading.
+  expect(followups).toBeDefined();
+  expect(asked()).toEqual([
+    'A question already running?',
+    'What has parliament said?',
+  ]);
+  expect(askSession.snapshot().id).not.toBe(running);
+  await act(async () =>
+    followups({ questions: ['What did the committee find?'] }),
+  );
+  await flush();
+  const saved = jest
+    .mocked(saveChats)
+    .mock.calls.map(([store]) => store.chats.find((c) => c.id === running))
+    .filter(Boolean)
+    .at(-1)!;
+  expect(saved.thread.at(-1)).toMatchObject({
+    role: 'answer',
+    next: [{ question: 'What did the committee find?' }],
+  });
+  // The open conversation is the new one, untouched by the old rows.
+  expect(askSession.snapshot().thread.at(-1)?.next).toBeUndefined();
+});
+
+describe('VoiceOver focus for a tapped question', () => {
+  it('is dropped when the consent sheet opens instead of an answer', async () => {
+    jest.mocked(askConsentGiven).mockResolvedValueOnce(false);
+    const tree = await render(<AskBlock today={today} />);
+    await act(async () => rows(tree.root)[0]!.props.onPress());
+    await flush();
+    expect(router.push).toHaveBeenCalledWith({ pathname: '/consent' });
+    expect(post).not.toHaveBeenCalled();
+    expect(takeFocusRequest('ask-status')).toBe(false);
+    tree.unmount();
+  });
+
+  it('is dropped when the Person check refuses, and the composer takes it', async () => {
+    jest
+      .mocked(catalogs.roster)
+      .mockResolvedValueOnce({ data: { people: [] } } as never);
+    let askNow!: ReturnType<typeof useAskNow>;
+    function Entry() {
+      askNow = useAskNow();
+      return null;
+    }
+    const tree = await render(<Entry />);
+    await act(async () =>
+      askNow({
+        question: 'What did Alex Example say?',
+        speaker: 'Alex Example',
+      }),
+    );
+    await flush();
+    expect(post).not.toHaveBeenCalled();
+    expect(takeFocusRequest('ask-status')).toBe(false);
+    expect(takeFocusRequest('ask')).toBe(true);
+    expect(askSession.snapshot().draft).toBe('What did Alex Example say?');
+    tree.unmount();
+  });
+
+  it('goes to the waiting line, not the other answer’s status, while it waits', async () => {
+    post.mockImplementationOnce(() => new Promise(() => undefined));
+    await act(async () => {
+      void askSession.submit('A question already running?');
+    });
+    const tree = await render(<AskBlock today={today} />);
+    await act(async () => rows(tree.root)[0]!.props.onPress());
+    await flush();
+    expect(takeFocusRequest('ask-waiting')).toBe(true);
+    expect(takeFocusRequest('ask-status')).toBe(false);
+    tree.unmount();
+  });
 });
