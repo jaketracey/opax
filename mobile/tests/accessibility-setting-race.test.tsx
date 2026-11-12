@@ -5,6 +5,7 @@ import {
   useBoldText,
   useIncreaseContrast,
   useReduceMotion,
+  useReduceTransparency,
 } from '../src/design/accessibility';
 
 afterEach(() => jest.restoreAllMocks());
@@ -18,10 +19,17 @@ test.each([
     useIncreaseContrast,
   ],
   [
+    'Reduce Transparency',
+    'isReduceTransparencyEnabled',
+    'reduceTransparencyChanged',
+    useReduceTransparency,
+  ],
+  [
     'Reduce Motion',
     'isReduceMotionEnabled',
     'reduceMotionChanged',
     useReduceMotion,
+    useReduceTransparency,
   ],
 ] as const)(
   '%s keeps a newer setting change when the initial native read arrives late',

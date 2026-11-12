@@ -94,6 +94,7 @@ export function PhotoCreditsList() {
   return (
     <SidebarSafe style={styles.screen}>
       <RouteOptions
+        barGround={colors.paper}
         options={{
           title: text.photos,
           headerSearchBarOptions: search.options,

@@ -18,6 +18,7 @@ import {
   glassBar,
   largeTitleBar,
   opaqueBar,
+  scrollBar,
   pageItems,
   pageMenu,
   rootHeaderItems,
@@ -55,7 +56,7 @@ import {
 const { colors } = tokens;
 
 jest.mock('../modules/opax-root-bar', () => ({
-  RootBar: { update: jest.fn(), remove: jest.fn() },
+  RootBar: { setSolid: jest.fn(), remove: jest.fn() },
   useVerticalBarEdge: () => 'unspecified',
 }));
 jest.mock('expo-router', () => ({
@@ -82,8 +83,10 @@ jest.mock('../src/design/useHeaderBottom', () => ({
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
   useReduceMotionSetting: () => mockReducedMotion,
+  useSolidBar: () => mockSolidBar,
 }));
 let mockReducedMotion = false;
+let mockSolidBar = false;
 const mockBuild = {
   isProduction: false,
   isE2E: true,
@@ -399,7 +402,7 @@ test.each([
   [27, true],
   [27, false],
 ] as const)(
-  'iOS %s edition owns an opaque bar on its grouped=%s ground during overscroll',
+  'iOS %s edition extends its grouped=%s ground beneath a stable soft edge during overscroll',
   (version, grouped) => {
     const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
@@ -441,7 +444,6 @@ test.each([
       );
     }
     let renderer: TestRenderer.ReactTestRenderer | undefined;
-    let background: TestRenderer.ReactTestRenderer | undefined;
     try {
       expect(options).toMatchObject({
         title: 'Daily edition',
@@ -449,19 +451,12 @@ test.each([
         headerBackButtonDisplayMode: 'default',
         headerBackButtonMenuEnabled: true,
         headerLargeTitleEnabled: false,
-        headerTransparent: false,
-        ...opaqueBar(ground),
+        ...scrollBar(ground),
         contentStyle: { backgroundColor: ground },
-        scrollEdgeEffects: { top: 'hard', bottom: 'soft' },
+        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
       });
       expect(options).not.toHaveProperty('headerBlurEffect');
-      background = tree(options.headerBackground!());
-      const backing = background.root.findByType(View);
-      expect(backing.props.pointerEvents).toBe('none');
-      expect(StyleSheet.flatten(backing.props.style)).toMatchObject({
-        flex: 1,
-        backgroundColor: ground,
-      });
+      expect(options).not.toHaveProperty('headerBackground');
       renderer = tree(
         <NavigationContext.Provider value={navigation as never}>
           <NavigationRouteContext.Provider value={route}>
@@ -471,7 +466,7 @@ test.each([
           </NavigationRouteContext.Provider>
         </NavigationContext.Provider>,
       );
-      jest.mocked(RootBar!.update).mockClear();
+      jest.mocked(RootBar!.setSolid).mockClear();
       navigation.setOptions.mockClear();
       for (const [offset, y] of [
         [0, 120],
@@ -487,21 +482,17 @@ test.each([
           ...navigation.setOptions.mock.calls.map(([value]) => value),
         );
         expect(resolved).toMatchObject({
-          headerTransparent: false,
-          headerStyle: { backgroundColor: ground },
-          headerLargeStyle: { backgroundColor: ground },
+          ...scrollBar(ground),
           contentStyle: { backgroundColor: ground },
-          headerBackground: options.headerBackground,
         });
       }
       expect(navigation.setOptions).toHaveBeenCalledTimes(2);
       for (const [update] of navigation.setOptions.mock.calls)
         expect(Object.keys(update)).toEqual(['headerTitle']);
-      expect(RootBar!.update).not.toHaveBeenCalled();
+      expect(RootBar!.setSolid).not.toHaveBeenCalled();
       expect(largeTitleBar(ground).headerTransparent).toBe(true);
     } finally {
       if (renderer) act(() => renderer!.unmount());
-      if (background) act(() => background!.unmount());
       mockFlags.groupedSurfaces = previousGrouped;
       Object.defineProperty(Platform, 'Version', descriptor);
     }
@@ -1008,11 +999,10 @@ function fadePage(
     identifier: `opax-root-bar-${route.key}`,
   };
 }
-const fadeProgress = () => jest.mocked(RootBar!.update).mock.calls.at(-1)![1];
 function withGlass(test: () => void) {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
-  jest.mocked(RootBar!.update).mockClear();
+  jest.mocked(RootBar!.setSolid).mockClear();
   jest.mocked(RootBar!.remove).mockClear();
   try {
     test();
@@ -1022,10 +1012,10 @@ function withGlass(test: () => void) {
 }
 
 test.each(fadeCases)(
-  '%s %s fades continuously in both directions without changing route appearances',
+  '%s %s keeps UIKit soft edges through collapse, overscroll and reversal',
   (segment, name, explicit, screenOwner) =>
     withGlass(() => {
-      const { navigation, listeners, ground, page, identifier } = fadePage(
+      const { navigation, ground, page } = fadePage(
         name,
         segment,
         explicit,
@@ -1033,128 +1023,128 @@ test.each(fadeCases)(
       );
       const renderer = tree(page(68));
       try {
-        expect(fadeProgress()).toBe(0); // Initial inline estimate is not collapse.
-        expect(navigation.setOptions).toHaveBeenCalledWith({
-          ...largeTitleBar(ground),
-          headerLargeTitleEnabled: true,
-          unstable_nativeProps: { testID: identifier },
-        });
-        act(() => renderer.update(page(120)));
-        navigation.setOptions.mockClear();
-        for (const height of [119.75, 119.5, 120, 144, 120]) {
-          act(() => renderer.update(page(height)));
-          expect(fadeProgress()).toBe(0);
-        }
-        const values: number[] = [];
-        for (const height of [119, 110, 100, 85, 68]) {
-          act(() => renderer.update(page(height)));
-          values.push(fadeProgress());
-        }
-        expect(values).toEqual([...values].sort((a, b) => a - b));
-        expect(values[0]).toBeGreaterThan(0);
-        expect(values[2]).toBeGreaterThan(0.2);
-        expect(values[2]).toBeLessThan(0.8);
-        expect(values.at(-1)).toBe(1);
-        for (const height of [85, 100, 110, 119, 120]) {
-          const previous = fadeProgress();
-          act(() => renderer.update(page(height)));
-          expect(fadeProgress()).toBeLessThan(previous);
-        }
-        expect(fadeProgress()).toBe(0);
-        expect(navigation.setOptions).not.toHaveBeenCalled();
-        expect(RootBar!.update).toHaveBeenLastCalledWith(
-          identifier,
-          0,
-          ground,
-          colors.dividerSubtle,
+        expect(navigation.setOptions).toHaveBeenCalledWith(
+          expect.objectContaining({
+            ...largeTitleBar(ground),
+            headerLargeTitleEnabled: true,
+          }),
         );
-        act(() => listeners.get('blur')!.forEach((listener) => listener()));
-        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
-        navigation.isFocused.mockReturnValue(false);
-        jest.mocked(RootBar!.update).mockClear();
-        act(() => renderer.update(page(100)));
-        expect(RootBar!.update).not.toHaveBeenCalled();
-        navigation.isFocused.mockReturnValue(true);
-        act(() => listeners.get('focus')!.forEach((listener) => listener()));
-        expect(fadeProgress()).toBeGreaterThan(0);
+        navigation.setOptions.mockClear();
+        for (const height of [
+          120, 160, 120, 119.75, 119, 110, 100, 85, 68, 85, 100, 110, 120,
+        ])
+          act(() => renderer.update(page(height)));
+        expect(navigation.setOptions).not.toHaveBeenCalled();
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
       } finally {
         act(() => renderer.unmount());
       }
-      expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
     }),
-);
-
-test.each([
-  ['font scale', { fontScale: 2 }],
-  ['window width', { width: 380 }],
-  ['window height', { height: 820 }],
-] as const)('the fade resets after a change in %s', (_input, change) =>
-  withGlass(() => {
-    const window = Dimensions.get('window'),
-      display = Dimensions.get('screen');
-    Dimensions.set({
-      window: { ...window, width: 390, height: 844, fontScale: 1 },
-      screen: { ...display, width: 390, height: 844, fontScale: 1 },
-    });
-    const { page } = fadePage('index', '(today)');
-    const renderer = tree(page(120));
-    try {
-      act(() => renderer.update(page(90)));
-      expect(fadeProgress()).toBeGreaterThan(0);
-      act(() => {
-        Dimensions.set({
-          window: { ...window, ...change },
-          screen: { ...display, ...change },
-        });
-        renderer.update(page(112));
-      });
-      expect(fadeProgress()).toBe(0);
-      act(() => renderer.update(page(90)));
-      expect(fadeProgress()).toBeGreaterThan(0);
-      act(() => renderer.update(page(112)));
-      expect(fadeProgress()).toBe(0);
-      // Resizing while already collapsed must retain its protective backing.
-      act(() => renderer.update(page(68)));
-      expect(fadeProgress()).toBe(1);
-      act(() => {
-        Dimensions.set({
-          window: { ...Dimensions.get('window'), fontScale: 3 },
-          screen: { ...Dimensions.get('screen'), fontScale: 3 },
-        });
-        renderer.update(page(68));
-      });
-      expect(fadeProgress()).toBe(1);
-    } finally {
-      act(() => renderer.unmount());
-      Dimensions.set({ window, screen: display });
-    }
-  }),
 );
 
 test.each([41, 52, 85])(
-  'a pinned search field leaves its %s pt large title clear at rest',
+  'a pinned search field with a %s pt title never adds a backing',
   (titleHeight) =>
     withGlass(() => {
-      const { page } = fadePage('bills', '(bills)', false, false, true);
+      const { page, navigation } = fadePage(
+        'bills',
+        '(bills)',
+        false,
+        false,
+        true,
+      );
       const expanded = 68 + 56 + titleHeight;
       const renderer = tree(page(expanded));
       try {
-        expect(fadeProgress()).toBe(0);
-        act(() => renderer.update(page(expanded - 15)));
-        expect(fadeProgress()).toBeGreaterThan(0);
-        expect(fadeProgress()).toBeLessThan(1);
-        act(() => renderer.update(page(124)));
-        expect(fadeProgress()).toBe(1);
-        act(() => renderer.update(page(expanded)));
-        expect(fadeProgress()).toBe(0);
+        navigation.setOptions.mockClear();
+        for (const height of [expanded - 15, 124, expanded])
+          act(() => renderer.update(page(height)));
+        expect(navigation.setOptions).not.toHaveBeenCalled();
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
       } finally {
         act(() => renderer.unmount());
       }
     }),
 );
 
+test.each(tabCases)(
+  '%s %s keeps a solid accessibility backing across scroll and focus',
+  (segment, name) =>
+    withGlass(() => {
+      mockSolidBar = true;
+      const { page, navigation, identifier, ground, listeners } = fadePage(
+        name,
+        segment,
+      );
+      const renderer = tree(page(120));
+      try {
+        expect(navigation.setOptions).toHaveBeenCalledWith(
+          expect.objectContaining({
+            ...largeTitleBar(ground, true),
+            headerLargeTitleEnabled: true,
+          }),
+        );
+        navigation.setOptions.mockClear();
+        for (const height of [100, 68, 120, 144]) {
+          act(() => renderer.update(page(height)));
+          expect(RootBar!.setSolid).toHaveBeenLastCalledWith(
+            identifier,
+            ground,
+          );
+        }
+        expect(navigation.setOptions).not.toHaveBeenCalled();
+        act(() => listeners.get('blur')!.forEach((listener) => listener()));
+        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+        navigation.isFocused.mockReturnValue(false);
+        jest.mocked(RootBar!.setSolid).mockClear();
+        act(() => renderer.update(page(100)));
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        navigation.isFocused.mockReturnValue(true);
+        act(() => listeners.get('focus')!.forEach((listener) => listener()));
+        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        mockSolidBar = false;
+        act(() => renderer.update(page(100)));
+        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining(largeTitleBar(ground)),
+        );
+      } finally {
+        mockSolidBar = false;
+        act(() => renderer.unmount());
+      }
+    }),
+);
+
+test('the solid fallback follows a resize even if header height stays the same', () =>
+  withGlass(() => {
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    mockSolidBar = true;
+    const { page, navigation, identifier, ground } = fadePage(
+      'index',
+      '(today)',
+    );
+    const renderer = tree(page(68));
+    try {
+      navigation.setOptions.mockClear();
+      jest.mocked(RootBar!.setSolid).mockClear();
+      act(() =>
+        Dimensions.set({
+          window: { ...window, width: window.width + 80, fontScale: 3.571 },
+          screen: { ...screen, width: screen.width + 80, fontScale: 3.571 },
+        }),
+      );
+      expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+      expect(navigation.setOptions).not.toHaveBeenCalled();
+    } finally {
+      act(() => renderer.unmount());
+      mockSolidBar = false;
+      Dimensions.set({ window, screen });
+    }
+  }));
+
 test.each(['pushed screen', 'sheet'])(
-  '%s keeps both opaque colours on iOS 26',
+  '%s keeps the system soft edge on iOS 26',
   (kind) => {
     const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
@@ -1196,7 +1186,7 @@ test.each(['pushed screen', 'sheet'])(
     try {
       for (const height of [120, 90, 44, 120]) {
         act(() => renderer.update(page(height)));
-        expect(setOptions).toHaveBeenLastCalledWith(opaqueBar(colors.sunken));
+        expect(setOptions).toHaveBeenLastCalledWith(scrollBar(colors.sunken));
       }
     } finally {
       act(() => renderer.unmount());

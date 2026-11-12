@@ -27,13 +27,14 @@ import {
   type RefreshControlProps,
   type ViewProps,
 } from 'react-native';
-import { opaqueBar } from '../navigation/chrome';
+import { scrollBar } from '../navigation/chrome';
+import { useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
 import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
-import { useAccessibilitySize } from './accessibility';
+import { useAccessibilitySize, useSolidBar } from './accessibility';
 import {
   columnBreakout,
   columns,
@@ -182,14 +183,17 @@ export function Screen({
   const androidRoot = useAndroidRootScroll(androidScroll, colors[ground]);
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
+  const solid = useSolidBar();
+  const barEdge = useVerticalBarEdge();
   const nativeRoot = useRootBarAppearance(setOptions, {
     ground: colors[ground],
     disabled: inPane,
   });
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
-    if (!inPane && !nativeRoot) setOptions(opaqueBar(colors[ground]));
-  }, [setOptions, ground, inPane, nativeRoot]);
+    if (!inPane && !nativeRoot)
+      setOptions(scrollBar(colors[ground], solid, barEdge));
+  }, [setOptions, ground, inPane, nativeRoot, solid, barEdge]);
   const contentRoot = useRef<View>(null);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);

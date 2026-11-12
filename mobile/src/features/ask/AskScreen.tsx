@@ -378,6 +378,7 @@ export default function AskScreen() {
     <SurfaceContext.Provider value={ground}>
       <View ref={root} style={[styles.fill, groundStyle]} collapsable={false}>
         <RouteOptions
+          barGround={colors[ground]}
           options={{
             ...askHeaderItems({
               canStartNew: !s.busy && !idle,

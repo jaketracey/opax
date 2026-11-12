@@ -7,7 +7,6 @@ import { useRowHighlight } from '../../design/row-padding';
 import { useListSearchBar } from '../../design/search-bar';
 import { symbols } from '../../design/symbols';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
-import { opaqueBar } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 
 export const sourcesCopy = {
@@ -41,8 +40,10 @@ export const sourcesCopy = {
   tryPublisher: 'Check the spelling or try another publisher.',
 } as const;
 
-/** A plain reference list on paper, so its bar matches its ground. */
-export const paperBar: NativeStackNavigationOptions = opaqueBar(colors.paper);
+/** Screen owns the appearance; custom lists pass barGround to RouteOptions. */
+export const paperBar: NativeStackNavigationOptions = {
+  contentStyle: { backgroundColor: colors.paper },
+};
 
 /** Words in any order, ignoring case: "act legislative" finds both. */
 export function matches(

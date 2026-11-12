@@ -111,6 +111,7 @@ export default function PortraitsList() {
   return (
     <SidebarSafe style={styles.screen}>
       <RouteOptions
+        barGround={colors.paper}
         options={{
           title: text.portraits,
           headerSearchBarOptions: search.options,

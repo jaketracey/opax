@@ -1,30 +1,20 @@
 import ExpoModulesCore
 import UIKit
 
-private final class BarBacking: UIView {
-  let divider = UIView()
+private final class SolidBarBacking: UIView {
   weak var screen: UIView?
-  var progress: CGFloat = 0
 
   init() {
     super.init(frame: .zero)
-    alpha = 0
     isUserInteractionEnabled = false
     accessibilityElementsHidden = true
-    addSubview(divider)
   }
 
   required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-
-  override func layoutSubviews() {
-    super.layoutSubviews()
-    let pixel = 1 / (window?.screen.scale ?? traitCollection.displayScale)
-    divider.frame = CGRect(x: 0, y: bounds.height - pixel, width: bounds.width, height: pixel)
-  }
 }
 
 public final class OpaxRootBarModule: Module {
-  private var backings: [String: BarBacking] = [:]
+  private var backings: [String: SolidBarBacking] = [:]
   private let verticalBar = VerticalBarObserver()
 
   public func definition() -> ModuleDefinition {
@@ -47,13 +37,11 @@ public final class OpaxRootBarModule: Module {
     }
     OnStopObserving { DispatchQueue.main.async { MainActor.assumeIsolated { self.verticalBar.stop() } } }
 
-    AsyncFunction("update") { (identifier: String, progress: Double, ground: UIColor, divider: UIColor) in
+    AsyncFunction("setSolid") { (identifier: String, ground: UIColor) in
       guard #available(iOS 26, *) else { return }
-      let backing = self.backings[identifier] ?? BarBacking()
+      let backing = self.backings[identifier] ?? SolidBarBacking()
       self.backings[identifier] = backing
-      backing.progress = CGFloat(min(1, max(0, progress)))
       backing.backgroundColor = ground
-      backing.divider.backgroundColor = divider
       self.apply(identifier, backing: backing)
     }.runOnQueue(.main)
 
@@ -82,7 +70,7 @@ public final class OpaxRootBarModule: Module {
     return nil
   }
 
-  private func apply(_ identifier: String, backing: BarBacking, attempt: Int = 0) {
+  private func apply(_ identifier: String, backing: SolidBarBacking, attempt: Int = 0) {
     guard backings[identifier] === backing else { return }
     if backing.screen?.window == nil {
       let windows = UIApplication.shared.connectedScenes
@@ -131,12 +119,7 @@ public final class OpaxRootBarModule: Module {
       backing.frame = CGRect(x: barFrame.minX, y: top, width: barFrame.width, height: barFrame.maxY - top)
       backing.layoutIfNeeded()
     }
-    // Both colours share one alpha. A reversal starts at the presented alpha,
-    // so neither the ground nor the hairline can disappear in a single frame.
-    guard backing.alpha != backing.progress else { return }
-    UIView.animate(withDuration: 0.2, delay: 0,
-      options: [.beginFromCurrentState, .allowUserInteraction, .curveLinear]) {
-      backing.alpha = backing.progress
-    }
+    // This sibling exists only for Reduce Transparency or Increase Contrast.
+    // Its ground is always solid; normal scrolling uses UIKit's soft edge.
   }
 }
