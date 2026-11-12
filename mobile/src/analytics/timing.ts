@@ -96,7 +96,6 @@ export function useScreenReady(
   const firstRender = useRef<{ at: number | null } | null>(null);
   if (firstRender.current === null)
     firstRender.current = { at: analyticsNow() };
-  const initialRender = firstRender.current;
   const complete = useRef<(() => void) | null>(null);
   const contentReady = useRef(ready);
   useEffect(() => {
@@ -105,6 +104,7 @@ export function useScreenReady(
 
   useEffect(() => {
     if (!enabled || !navigation || !route || !analyticsEnabled()) return;
+    const initialRender = firstRender.current!;
     const finish = () => {
       const current = activeVisit?.key === route.key ? activeVisit.value : null;
       if (
@@ -154,7 +154,7 @@ export function useScreenReady(
       unsubscribeBlur();
       complete.current = null;
     };
-  }, [enabled, initialRender, navigation, pattern, route]);
+  }, [enabled, navigation, pattern, route]);
   useEffect(() => {
     if (ready) complete.current?.();
   }, [ready]);

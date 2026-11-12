@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { useSegments } from 'expo-router';
 import { useEffect, useRef } from 'react';
-import { NativeModules, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import PostHog, { type PostHogOptions } from 'posthog-react-native';
 import {
   cleanEvent,
@@ -125,7 +125,6 @@ export function analyticsEnabled() {
     !__DEV__ &&
     !Constants.debugMode &&
     Constants.executionEnvironment !== 'storeClient' &&
-    !NativeModules.EXDevLauncher &&
     (Platform.OS === 'ios' || Platform.OS === 'android') &&
     extra?.variant === 'production' &&
     validBuild(extra?.appBuild) &&

@@ -85,17 +85,25 @@ The token and host live in build config (`mobile/app.config.ts`,
 `extra.analytics`), never in `src/`. Only iOS production builds carry that
 config. Development and e2e builds never do, even with `OPAX_ANALYTICS=1`.
 The runtime also refuses to create a client when `__DEV__` or Expo debug mode
-is true, when running in Expo Go or a dev client (`storeClient` or the existing
-`EXDevLauncher` module, including a client reporting `bare`), when the
+is true, when the execution environment is `storeClient`, when the
 variant or analytics environment is not production, or when the build number
 is missing, zero, invalid or inconsistent between `extra.appBuild` and the
 platform config. iOS also checks the native binary's immutable CFBundleVersion
 from the existing Expo Constants module, including missing or zero values;
 SDK 57 exposes only embedded config for Android. This also blocks lifecycle
 events, not just explicit events.
-The old development opt-in and config-only runtime check could admit build-0
-traffic; both paths are now closed. Android stays off until its Google Play
-Data safety answers include analytics. Instrumentation and runtime gates are
+
+The cause of the observed build "0" traffic could not be confirmed from the
+anonymous data. The paths now closed are the old `OPAX_ANALYTICS=1` development
+opt-in, debug JS (`__DEV__`), Expo debug mode and `storeClient` execution,
+development/e2e or unknown variants, non-production analytics config, and
+missing, zero, invalid or mismatched configured/native build numbers. These
+are preventive gates, not a confirmed explanation of that historical traffic.
+`expo-dev-launcher` is not installed; there is no launcher module probe or
+native-module grant.
+
+Android stays off until its Google Play Data safety answers include analytics.
+Instrumentation and runtime gates are
 shared and tested for both iOS and Android; this lane does not enable Android
 ingestion or change Play Console answers.
 

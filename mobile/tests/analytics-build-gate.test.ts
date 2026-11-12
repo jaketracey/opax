@@ -53,17 +53,12 @@ afterAll(() => {
   Reflect.set(globalThis, '__DEV__', originalDev);
 });
 
-function exercise(platform: 'ios' | 'android' = 'ios', devClient = false) {
+function exercise(platform: 'ios' | 'android' = 'ios') {
   let enabled = false;
   jest.isolateModules(() => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { Platform, NativeModules } = require('react-native');
+    const { Platform } = require('react-native');
     const os = jest.replaceProperty(Platform, 'OS', platform);
-    if (devClient)
-      Object.defineProperty(NativeModules, 'EXDevLauncher', {
-        value: {},
-        configurable: true,
-      });
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const analytics = require('../src/analytics');
     enabled = analytics.analyticsEnabled();
@@ -74,7 +69,6 @@ function exercise(platform: 'ios' | 'android' = 'ios', devClient = false) {
       '[slug]',
     ]);
     os.restore();
-    if (devClient) Reflect.deleteProperty(NativeModules, 'EXDevLauncher');
   });
   return enabled;
 }
@@ -85,16 +79,6 @@ test.each(['ios', 'android'] as const)(
     expect(exercise(platform)).toBe(true);
     expect(mockClient).toHaveBeenCalledTimes(1);
     expect(mockCapture).toHaveBeenCalledTimes(2);
-  },
-);
-
-test.each(['ios', 'android'] as const)(
-  '%s dev launcher stays off even with release JS and production config',
-  (platform) => {
-    Constants.executionEnvironment =
-      'bare' as typeof Constants.executionEnvironment;
-    expect(exercise(platform, true)).toBe(false);
-    expect(mockClient).not.toHaveBeenCalled();
   },
 );
 

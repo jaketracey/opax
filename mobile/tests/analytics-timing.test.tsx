@@ -4,11 +4,7 @@ import {
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
-import {
-  useNavigationTiming,
-  useScreenReady,
-  useTodayRendered,
-} from '../src/analytics/timing';
+import { useNavigationTiming, useScreenReady } from '../src/analytics/timing';
 import type { TimedRoute } from '../src/analytics/events';
 import { analyticsNow } from '../src/analytics/startup';
 
@@ -254,14 +250,14 @@ function coldLaunch(first: string, preloadToday = false) {
   jest.isolateModules(() => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const ReactRuntime = require('react') as typeof import('react');
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const Renderer =
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       require('react-test-renderer') as typeof import('react-test-renderer');
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const contexts =
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       require('expo-router/react-navigation') as typeof import('expo-router/react-navigation');
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const timing =
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       require('../src/analytics/timing') as typeof import('../src/analytics/timing');
     const todayRoute = { key: 'today-launch', name: 'index' };
     const tab = first === 'index' ? 'today' : first;
