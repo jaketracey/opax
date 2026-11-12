@@ -146,4 +146,9 @@ jobs:
       - name: Test portal Python loaders
         if: matrix.shard == 1
         working-directory: .
-        run: python3 -m unittest discover -s portal/test -p '*_test.py'
+        run: |
+          if compgen -G 'portal/test/*_test.py' > /dev/null; then
+            python3 -m unittest discover -s portal/test -p '*_test.py'
+          else
+            echo 'No portal Python loader tests in this commit.' >> "$GITHUB_STEP_SUMMARY"
+          fi

@@ -23,6 +23,8 @@ The workflow does not deploy or call production services.
 The older portal on `ios/apple-design` predates `build:release`. For that tree,
 the workflow runs its complete pre-deploy sequence: search, social, grants map,
 analytics, voice and asset stamping. It never invokes the deploy script.
+That tree also predates the portal Python loaders. Discovery runs whenever
+`portal/test/*_test.py` files exist and otherwise reports their absence.
 
 Dates use `Australia/Melbourne` and the locale is `C.UTF-8`. Only the npm
 download cache is retained. Public source and fixture output can appear in logs;
