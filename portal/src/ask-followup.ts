@@ -4,10 +4,24 @@ import type {RemunerationRecord} from './research-types'
 
 const reportThenPay = (s: string) => { const t = s.toLowerCase(), at = t.indexOf('annual report'); return at >= 0 && t.indexOf('remuneration', at) >= 0 }
 const fold = (s: string) => s.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+/** Standalone identity grammar supplies a full name, never a first-name or surname search. */
+export function identityPerson(question: string): string | null {
+  if (question.length > 300) return null
+  let q = question.trim(), end = q.length
+  while (end && '?.!'.includes(q[end-1])) end--
+  q = q.slice(0,end)
+  const prefix = /^who (?:is|was) /i.exec(q)
+  if (!prefix) return null
+  const words = q.slice(prefix[0].length).trim().split(/\s+/)
+  while (['senator','mr','mrs','ms','dr','sir','dame'].includes((words[0] ?? '').toLowerCase().replace(/\.$/, ''))) words.shift()
+  if (words.length < 2 || words.length > 6 || !words.every(w => /^[\p{L}][\p{L}\p{M}.'’\-]*$/u.test(w))) return null
+  if (words.some(w => ['the','a','an','and','or','from','at','in','of','highest','paid','agency','head','who','what','is','was'].includes(w.toLowerCase()))) return null
+  return words.join(' ')
+}
 export function questionPerson(question: string): string | null {
   // Bounded input and unambiguous patterns: these run on reader text (CodeQL js/polynomial-redos).
-  const q=question.slice(0,300),bare=q.replace(/[?.!]+$/,'')
-  const person=requestedPersonSlot(q) ?? /\bwhat (?:did|does) (.+?) do\b/i.exec(q)?.[1]?.trim() ?? /^\s*who (?:is|was) (.+)$/i.exec(bare)?.[1]?.trim() ?? null
+  const q=question.slice(0,300)
+  const person=requestedPersonSlot(q) ?? /\bwhat (?:did|does) (.+?) do\b/i.exec(q)?.[1]?.trim() ?? identityPerson(question)
   return person&&!/^(?:the|a|an)\b|^(?:records?|reports?|transcripts?|bills?|it|he|she|they)$/i.test(person)?person:null
 }
 export type SourceTurn = ConversationTurn & {sources?: {cited?: boolean; snippet?: string; title?: string; speaker?: string; remuneration?: RemunerationRecord}[]}
@@ -34,7 +48,13 @@ export function remunerationFollowUp(question: string, turns: SourceTurn[]) {
 }
 
 /** A name must match in full; one shared first name is not the question's subject. */
-export function sourceAboutPerson(source: {speaker?: string; title?: string; snippet?: string; remuneration?: RemunerationRecord}, person: string): boolean {
+export function sourceAboutPerson(source: {speaker?: string; title?: string; snippet?: string; remuneration?: RemunerationRecord}, person: string, strictOwner = false): boolean {
+  // A structured owner takes precedence over incidental names in a larger snippet.
+  const owner = source.remuneration?.name ?? (strictOwner ? source.speaker : undefined)
+  if (owner) {
+    const wanted=fold(person).split(' '), recorded=fold(owner).split(' ')
+    return fold(owner)===fold(person) || wanted.length===2&&recorded.length>2&&wanted[0]===recorded[0]&&wanted[1]===recorded.at(-1)
+  }
   const text = ' ' + fold([source.speaker, source.title, source.snippet, source.remuneration?.name].filter(Boolean).join(' ')) + ' '
   const wanted=fold(person).split(' '),recorded=fold(source.speaker??source.remuneration?.name??'').split(' ')
   return text.includes(' ' + fold(person) + ' ') || wanted.length===2&&recorded.length>2&&wanted[0]===recorded[0]&&wanted[1]===recorded.at(-1)

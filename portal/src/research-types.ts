@@ -1,7 +1,11 @@
 import type { ClaimAtom } from './research-claims'
 import type { PlanStep, Period, NamedScope, Fact, Progress } from './agentic-ask'
 import type { ToolDeps, ToolResult } from './agentic-tools'
-export interface RemunerationRecord {record_id: string; name: string; body: string; position: string; year: string; total: number | null}
+export interface RemunerationRecord {
+  record_id: string; name: string; body: string; position: string; year: string; total: number | null
+  rank?: number; ranking_year?: string; historical?: boolean; latest_complete?: boolean
+  components?: Record<string, number | null>; checks?: string[]
+}
 
 /** One disclosed receipt as the tool holds it, so no reader of it has to parse the fact's wording. */
 export interface ReceiptFact {

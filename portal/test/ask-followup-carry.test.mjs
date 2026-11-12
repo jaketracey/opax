@@ -29,11 +29,11 @@ test('rewriter receives cited record hints for bills and commission transcripts'
  await api.rewriteFollowUp({question:'What does the first one cover?',context:[{author:'user',text:'List commission transcripts'},{author:'answer',text:'One transcript.',sources:[{resource:'rc-transcript-18',cited:true,title:'Commission transcript 18',snippet:'Evidence from the 2018 hearing.'}]}]},async p=>(prompt=p,'What does Commission transcript 18 cover?'))
  assert.match(prompt,/rc-transcript-18/);assert.match(prompt,/Commission transcript 18/);assert.match(prompt,/Evidence from the 2018 hearing/)
 })
-test('annual-report rendering preserves each person’s body, printed position, year and total',()=>{
- const s2={...source,resource:'fact-1',snippet:'S Rue (Chief Executive Officer), NBN Co Limited, 2019-20 annual report on the Transparency Portal: total remuneration $3,149,541.',remuneration:{...row,name:'S Rue',body:'NBN Co Limited',position:'Chief Executive Officer',year:'2019-20',total:3149541}}
+test('an agency-head ranking keeps its latest selected year separate from older pay',()=>{
+ const s2={...source,resource:'fact-1',snippet:'S Rue (Chief Executive Officer), NBN Co Limited, 2019-20 annual report on the Transparency Portal: total remuneration $3,149,541.',remuneration:{...row,record_id:row.record_id.replace('2025-26','2019-20'),name:'S Rue',body:'NBN Co Limited',position:'Chief Executive Officer',year:'2019-20',total:3149541}}
  const p=api.proseFallback({question:'what was the highest paid agency head',period:{kind:'all',label:''},facts:[{id:1,text:s2.snippet,source:s2},{id:2,text:source.snippet,source}]})
- assert.match(p.answer,/S Rue \(Chief Executive Officer\), NBN Co Limited.*3,149,541.*2019-20/)
- assert.match(p.answer,/Paul Graham \(Group CEO & MD\), Australian Postal Corporation.*3,127,416.*2025-26/);bound(p)
+ assert.doesNotMatch(p.answer,/S Rue|2019-20/)
+ assert.match(p.answer,/Paul Graham \(Group CEO & MD\), Australian Postal Corporation.*2025-26.*3,127,416/);bound(p)
  assert.equal(auditPayload('',p).findings.length,0)
 })
 test('appositive job titles and bodies cannot steal a named payee’s supported figure',()=>{
@@ -54,7 +54,7 @@ test('unrelated Reith and Paul Green records never become a Paul Graham title fa
  assert.match(p.answer,/no selected record/);assert.doesNotMatch(p.answer,/The record dated|Reith|Paul Green|^[-—]/m);assert.deepEqual(p.citations,{})
  const cached='The record dated 3 May 2018 is Paul Green, Modern Slavery Bill 2018, 3 May 2018.'
  const old=api.groundAnswerPayload({answer:cached,sources,citations:{'green/t/body/0':[[0,cached.length]]}},'Who is Paul Graham?')
- assert.match(old.answer,/no selected record/);assert.deepEqual(old.citations,{})
+ assert.match(old.answer,/no public record matching the full name Paul Graham/);assert.deepEqual(old.citations,{})
 })
 test('answer formatting removes dash bullets and prose em dashes with valid citation ranges',async()=>{
  const answer='- Paul Graham received total remuneration of $3,127,416 — in 2025-26.'

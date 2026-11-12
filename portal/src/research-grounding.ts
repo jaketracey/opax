@@ -13,7 +13,7 @@ import {broadTopicOverview} from './ask-answer-grain'
 import {isBillSpeechQuestion} from './ask-scope-intent'
 import {readableDate} from './tools/record-common'
 import {researchTrace} from './research-trace'
-import {questionPerson,sourceAboutPerson} from './ask-followup'
+import {questionPerson,sourceAboutPerson,identityPerson} from './ask-followup'
 
 // Metadata copied from a selected record is a citable record description,
 // rather than a model claim about the speaker's position.
@@ -219,7 +219,8 @@ function foundInput(payload:Record<string,unknown>,question:string):WritingInput
   const scope=payload.answer_scope as WritingInput['constraints'],found=(payload.research as {pre_writer_sources?:SelectedSource[]}|undefined)?.pre_writer_sources
   const sources=found?.length?found:((Array.isArray(payload.sources)?payload.sources:[]) as SelectedSource[]).filter(s=>s.cited===true)
   // writingFacts re-derives what it added to a receipt's snippet, so only the fact itself goes back in.
-  const facts=writingFacts({answer:'',citations:{},sources:sources.map(s=>({...s,cited:true,...(s.receipt?{snippet:s.snippet.split('\n')[0]}:{})}))})
+  const identity=identityPerson(question)
+  const facts=writingFacts({answer:'',citations:{},sources:sources.filter(s=>!identity||sourceAboutPerson(s,identity,true)).map(s=>({...s,cited:true,...(s.receipt?{snippet:s.snippet.split('\n')[0]}:{})}))})
   return {question,period:scope?.period??inferPeriod(question),facts,constraints:scope}
 }
 /** The terminal rule.
@@ -276,6 +277,13 @@ function answerFromFound(out:Record<string,unknown>,question:string,evidence:Rec
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
   researchTrace('grounding.input', {question,payload})
+  const identity=identityPerson(question)
+  if(identity&&answerDecision(payload)!=='refusal'){
+    const input=foundInput(payload,question)
+    if(!input.facts.some(f=>!f.coverage&&!f.metadata))return {...payload,answer:'OPAX found no public record matching the full name '+identity+'.',answer_decision:'limitation',citations:{},sources:[],coherence:{...((payload.coherence??{}) as object),fallback:true,method:'no_subject_record'}}
+    // Cached and legacy answers face the same selection rule as newly researched facts.
+    if(((payload.sources??[]) as SelectedSource[]).some(s=>s.cited&&!s.coverage&&!sourceAboutPerson(s,identity,true)))payload={...payload,...proseFallback(input)}
+  }
   let result=cleanAnswerShape(distinctSummary(answerFromFound(checkedAnswer(payload,question),question,payload)))
   const loose=['uncited','partly_cited'].includes(String(payload.answer_status))
   if(loose&&!protectedDecision(payload)){
