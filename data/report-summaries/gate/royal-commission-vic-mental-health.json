@@ -1,0 +1,121 @@
+{
+ "slug": "royal-commission-vic-mental-health",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Royal Commission into Victoria’s Mental Health System reviewed the whole system and developed proposals for reform.",
+    "pages": [
+     37
+    ],
+    "section": "4. Realising the Commission’s ambitions",
+    "support": "The Commission has had a unique opportunity to review the system in its entirety and to engage widely with people",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It considered service access, treatment, workforce capacity and the experiences of people living with mental illness, families and carers.",
+    "pages": [
+     12,
+     14,
+     24
+    ],
+    "section": "2. Major themes",
+    "support": "to understand the existing strengths and challenges of the system, as well as future needs and expectations.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that demand exceeded service capacity, community services were insufficient and people faced barriers to timely care.",
+    "pages": [
+     14
+    ],
+    "section": "2. Major themes",
+    "support": "The system is overwhelmed and cannot keep up with the number of people who seek treatment, care and support.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "It concluded that services depended too heavily on hospitals and crisis responses, with access affected by poverty and where people lived.",
+    "pages": [
+     10,
+     16
+    ],
+    "section": "Context for reform; Major themes",
+    "support": "Poverty and disadvantage make it particularly difficult for people to access services.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission made 65 final recommendations, building on nine interim recommendations, to expand community care, strengthen oversight and support leadership by people with lived experience.",
+    "pages": [
+     11,
+     26,
+     35
+    ],
+    "section": "Designing a new system; Transformational reform",
+    "support": "The Commission’s 65 recommendations in this final report (and the nine in the interim report) support this ambition.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The system is overwhelmed and cannot keep up with the number of people who seek treatment, care and support.",
+    "page": 14,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "The system is complex and fragmented and, for those who do manage to get into it, difficult to navigate.",
+    "page": 10,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "quote": "There is an excessive use of restrictive practices and compulsory treatment.",
+    "page": 24,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "Summary",
+   "first_page": 9,
+   "last_page": 38
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 3,
+  "findings_pass": 3,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

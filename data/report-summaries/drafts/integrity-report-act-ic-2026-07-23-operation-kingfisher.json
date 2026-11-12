@@ -1,0 +1,49 @@
+{
+  "slug": "integrity-report-act-ic-2026-07-23-operation-kingfisher",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": null,
+  "sentences": [
+    {
+      "text": "The ACT Integrity Commission investigated whether Education Directorate officials acted honestly and impartially during the 2019–2020 procurement for the Campbell Primary School Modernisation Project.",
+      "pages": [
+        6
+      ],
+      "section": "Introduction",
+      "support": "into whether public officials in the ACT Education \nDirectorate (EDU) failed to exercise their official functions honestly and or impartially",
+      "people": []
+    },
+    {
+      "text": "It examined the selection of Lendlease despite evaluation teams favouring Manteena, including communications involving ministerial staff, union officials and public servants.",
+      "pages": [
+        6,
+        10
+      ],
+      "section": "Introduction",
+      "support": "involved communications between the Minister’s office, \nunion officials, persons within EDU and the Directorate tasked with delivery of the \nProject",
+      "people": []
+    },
+    {
+      "text": "The Commission found that the then director-general and the minister's chief of staff engaged in serious corrupt conduct by improperly influencing the procurement and trying to conceal what occurred.",
+      "pages": [
+        10,
+        325,
+        329,
+        330
+      ],
+      "section": "Serious corrupt conduct",
+      "support": "Accordingly, the corrupt conduct of each \namounted to serious corrupt conduct.",
+      "people": []
+    },
+    {
+      "text": "The Commission declined to find that another official engaged in serious corrupt conduct, taking account of his later disclosures and efforts to correct the wrongdoing.",
+      "pages": [
+        330
+      ],
+      "section": "Serious corrupt conduct",
+      "support": "I have concluded \nthat it is not appropriate to find that Mr Green’s conduct, considered as a whole, \namounted to serious corrupt conduct.",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "No dedicated executive summary, overview or summary of findings was identified. The Introduction establishes the scope; the concluding findings are under “Was there corrupt conduct?” and “Serious corrupt conduct”. No Commission recommendations list was identified: the recommendations reproduced on PDF pages 293 and 296 belong to a probity audit. Existing OPAX findings are not duplicated. The official whose later disclosures were taken into account is not named in the summary."
+}

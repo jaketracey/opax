@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nacc-2025-06-30-operation-kingscliff",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Kingscliff investigation report",
+ "body": "National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Kingscliff%20-%20Investigation%20Report.pdf",
+  "document": "Operation Kingscliff investigation report",
+  "sha256": "1f8856191ea63a813f95f81cfea2fabdba2a0ca8b77a1abe3691019c19f83fb0",
+  "pages": 32,
+  "rights": "CC BY 4.0 (stated in each report)"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Kingscliff%20-%20Investigation%20Report.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The National Anti-Corruption Commission investigated whether a senior Home Affairs official improperly influenced the recruitment of her sister's fiancé and assisted her sister in another recruitment process.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Kingscliff%20-%20Investigation%20Report.pdf",
+      "document": "Operation Kingscliff investigation report",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission found that the official abused her office and misused official information, amounting to serious and systemic corrupt conduct.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Kingscliff%20-%20Investigation%20Report.pdf",
+      "document": "Operation Kingscliff investigation report",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission made no corrupt-conduct finding against the official's sister or her sister's fiancé.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Kingscliff%20-%20Investigation%20Report.pdf",
+      "document": "Operation Kingscliff investigation report",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission made three recommendations covering recruitment conflicts of interest, access to interview questions and changes to Home Affairs recruitment policies.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Kingscliff%20-%20Investigation%20Report.pdf",
+      "document": "Operation Kingscliff investigation report",
+      "page": 30
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:08:34+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "orchestrator-recheck-2"
+ }
+}

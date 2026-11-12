@@ -1,0 +1,72 @@
+{
+ "slug": "integrity-report-act-ic-2026-07-23-operation-kingfisher",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The ACT Integrity Commission investigated whether Education Directorate officials acted honestly and impartially during the 2019–2020 procurement for the Campbell Primary School Modernisation Project.",
+    "pages": [
+     6
+    ],
+    "section": "Introduction",
+    "support": "into whether public officials in the ACT Education \nDirectorate (EDU) failed to exercise their official functions honestly and or impartially",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined the selection of Lendlease despite evaluation teams favouring Manteena, including communications involving ministerial staff, union officials and public servants.",
+    "pages": [
+     6,
+     10
+    ],
+    "section": "Introduction",
+    "support": "involved communications between the Minister’s office, \nunion officials, persons within EDU and the Directorate tasked with delivery of the \nProject",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that the then director-general and the minister's chief of staff engaged in serious corrupt conduct by improperly influencing the procurement and trying to conceal what occurred.",
+    "pages": [
+     10,
+     325,
+     329,
+     330
+    ],
+    "section": "Serious corrupt conduct",
+    "support": "Accordingly, the corrupt conduct of each \namounted to serious corrupt conduct.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission declined to find that another official engaged in serious corrupt conduct, taking account of his later disclosures and efforts to correct the wrongdoing.",
+    "pages": [
+     330
+    ],
+    "section": "Serious corrupt conduct",
+    "support": "I have concluded \nthat it is not appropriate to find that Mr Green’s conduct, considered as a whole, \namounted to serious corrupt conduct.",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": null,
+ "report": [],
+ "counts": {
+  "sentences": 4,
+  "sentences_pass": 4,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": false
+ },
+ "clean": true
+}

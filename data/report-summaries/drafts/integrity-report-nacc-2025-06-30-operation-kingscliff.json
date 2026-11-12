@@ -1,0 +1,49 @@
+{
+  "slug": "integrity-report-nacc-2025-06-30-operation-kingscliff",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 5,
+    "last_page": 5
+  },
+  "sentences": [
+    {
+      "text": "The National Anti-Corruption Commission investigated whether a senior Home Affairs official improperly influenced the recruitment of her sister's fiancé and assisted her sister in another recruitment process.",
+      "pages": [
+        5
+      ],
+      "section": "Executive summary",
+      "support": "into whether a Senior Executive Service staff \nmember in the Department of Home Affairs had \nimproperly used her position",
+      "people": []
+    },
+    {
+      "text": "The Commission found that the official abused her office and misused official information, amounting to serious and systemic corrupt conduct.",
+      "pages": [
+        5
+      ],
+      "section": "Executive summary",
+      "support": "The findings that the official engaged in conduct \nwhich was an abuse of her office as a public \nofficial and a misuse of official information",
+      "people": []
+    },
+    {
+      "text": "The Commission made no corrupt-conduct finding against the official's sister or her sister's fiancé.",
+      "pages": [
+        5
+      ],
+      "section": "Executive summary",
+      "support": "The Commission did not find that the official’s \nsister or her fiancé engaged in corrupt conduct.",
+      "people": []
+    },
+    {
+      "text": "The Commission made three recommendations covering recruitment conflicts of interest, access to interview questions and changes to Home Affairs recruitment policies.",
+      "pages": [
+        30
+      ],
+      "section": "Recommendations",
+      "support": "Reduce the risk of undisclosed conflicts \nof interest in recruitment (whether by \ndeliberate intent, error or oversight) by:",
+      "people": []
+    }
+  ],
+  "findings": [],
+  "notes": "The report uses pseudonyms; the summary uses roles only. Existing OPAX findings are not duplicated."
+}

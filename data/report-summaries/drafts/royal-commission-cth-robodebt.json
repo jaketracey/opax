@@ -1,0 +1,78 @@
+{
+  "slug": "royal-commission-cth-robodebt",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Overview of Robodebt",
+    "first_page": 29,
+    "last_page": 35
+  },
+  "sentences": [
+    {
+      "text": "The Royal Commission into the Robodebt Scheme was asked to investigate how the scheme was created and run, responses to concerns, debt collection and its human and economic effects.",
+      "pages": [
+        11
+      ],
+      "section": "Introduction",
+      "support": "how risks and concerns in relation to it were dealt with and how complaints and challenges were managed by the Government",
+      "people": []
+    },
+    {
+      "text": "It examined income averaging, automated decisions, debt recovery and the roles of legal advisers and oversight agencies.",
+      "pages": [
+        11,
+        14
+      ],
+      "section": "Structure of the report",
+      "support": "What follows is some description and discussion of automated decision making and data matching",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that income averaging produced inaccurate debts using a method the social security legislation did not permit.",
+      "pages": [
+        699
+      ],
+      "section": "Closing observations",
+      "support": "not only were the resulting debts inaccurate, but the method of determining entitlement was not one which the Social Security Act permitted",
+      "people": []
+    },
+    {
+      "text": "The Commission concluded that the scheme caused trauma and was a costly failure of public administration.",
+      "pages": [
+        35
+      ],
+      "section": "Overview of Robodebt",
+      "support": "In essence, people were traumatised on the off-chance they might owe money. It was a costly failure of public administration, in both human and economic terms.",
+      "people": []
+    },
+    {
+      "text": "The Commission made 57 recommendations, including changes to recipient support, budget safeguards, automated decisions, debt recovery and public service accountability.",
+      "pages": [
+        19,
+        21,
+        22,
+        26
+      ],
+      "section": "List of Recommendations",
+      "support": "The following is a list of 57 recommendations of this Commission.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "It was a costly failure of public administration, in both human and economic terms.",
+      "page": 35,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The Scheme was approved by Cabinet and proceeded without the legislative change to support averaging which DSS had said was needed.",
+      "page": 31,
+      "kind": "finding"
+    },
+    {
+      "quote": "The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield.",
+      "page": 702,
+      "kind": "conclusion"
+    }
+  ],
+  "notes": "The report explicitly lists 57 recommendations on PDF page 19; meta.json records 56 recommendations on the OPAX page. The overview occupies PDF pages 29–35, followed by a blank verso. Citations use PDF page numbers."
+}

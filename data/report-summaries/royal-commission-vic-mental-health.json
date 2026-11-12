@@ -1,0 +1,149 @@
+{
+ "schema": 1,
+ "slug": "royal-commission-vic-mental-health",
+ "report_type": "royal_commission",
+ "subtype": "royal_commission",
+ "title": "Royal Commission into Victoria's Mental Health System",
+ "body": "Royal Commission into Victoria's Mental Health System",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+  "document": "Final Report",
+  "sha256": "915af6e814187b8986f0c1f164aecbe492137935fccbe23e06cc717efdc719f8",
+  "pages": 120,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 9,
+  "last_page": 38,
+  "link": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Royal Commission into Victoria’s Mental Health System reviewed the whole system and developed proposals for reform.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 37
+     }
+    ],
+    "section": "4. Realising the Commission’s ambitions"
+   },
+   {
+    "text": "It considered service access, treatment, workforce capacity and the experiences of people living with mental illness, families and carers.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 14
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 24
+     }
+    ],
+    "section": "2. Major themes"
+   },
+   {
+    "text": "The Commission found that demand exceeded service capacity, community services were insufficient and people faced barriers to timely care.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 14
+     }
+    ],
+    "section": "2. Major themes"
+   },
+   {
+    "text": "It concluded that services depended too heavily on hospitals and crisis responses, with access affected by poverty and where people lived.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 16
+     }
+    ],
+    "section": "Context for reform; Major themes"
+   },
+   {
+    "text": "The Commission made 65 final recommendations, building on nine interim recommendations, to expand community care, strengthen oversight and support leadership by people with lived experience.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 11
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 26
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+      "document": "Final Report",
+      "page": 35
+     }
+    ],
+    "section": "Designing a new system; Transformational reform"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The system is overwhelmed and cannot keep up with the number of people who seek treatment, care and support.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+     "document": "Final Report",
+     "page": 14
+    }
+   },
+   {
+    "quote": "The system is complex and fragmented and, for those who do manage to get into it, difficult to navigate.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+     "document": "Final Report",
+     "page": 10
+    }
+   },
+   {
+    "quote": "There is an excessive use of restrictive practices and compulsory treatment.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a28f5/globalassets/tabled-paper-documents/tabled-paper-5420/11097_rcvmhs_finalreport_execsummary_accessible_160221_jfmbg4mz.pdf",
+     "document": "Final Report",
+     "page": 24
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:08:34+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "orchestrator-recheck-2"
+ }
+}

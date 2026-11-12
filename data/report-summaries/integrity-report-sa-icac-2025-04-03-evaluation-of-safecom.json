@@ -1,0 +1,144 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2025-04-03-evaluation-of-safecom",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Evaluation of SAFECOM",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+  "document": "Evaluation of SAFECOM - Final Report",
+  "sha256": "37e26c0d4919d8b352216680d03dc99e289e1678de5ad11d293e9fa5fe755bdc",
+  "pages": 90,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 10,
+  "last_page": 10,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption evaluated SAFECOM, the Country Fire Service, Metropolitan Fire Service and State Emergency Service to help prevent corruption arising from conflicts of interest.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+      "document": "Evaluation of SAFECOM - Final Report",
+      "page": 20
+     }
+    ],
+    "section": "Chapter one: Evaluation introduction"
+   },
+   {
+    "text": "The evaluation examined how policies and procedures for managing conflicts of interest were developed, reviewed, communicated and enforced.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+      "document": "Evaluation of SAFECOM - Final Report",
+      "page": 20
+     }
+    ],
+    "section": "1.1 Evaluation terms of reference"
+   },
+   {
+    "text": "The Commission acknowledged improvements across all four agencies, including their adoption of a common policy for disclosing and managing conflicts.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+      "document": "Evaluation of SAFECOM - Final Report",
+      "page": 10
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "However, the Commission concluded that none of the agencies complied with that policy and that it was not effectively implemented or enforced.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+      "document": "Evaluation of SAFECOM - Final Report",
+      "page": 84
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission also found gaps in written communication and training for staff, volunteers and contractors.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+      "document": "Evaluation of SAFECOM - Final Report",
+      "page": 10
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It made 25 recommendations covering policies and procedures, communication, training, monitoring and compliance in managing conflicts of interest.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+      "document": "Evaluation of SAFECOM - Final Report",
+      "page": 10
+     }
+    ],
+    "section": "Executive summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The emergency services sector lacks consistent, clear and adequate guidance regarding the identification, disclosure and management of conflicts of interests.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+     "document": "Evaluation of SAFECOM - Final Report",
+     "page": 84
+    }
+   },
+   {
+    "quote": "The nature of induction and other training materials available to staff, volunteers and contractors in all agencies about their obligations to identify and disclose conflicts of interests requires improvement.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+     "document": "Evaluation of SAFECOM - Final Report",
+     "page": 84
+    }
+   },
+   {
+    "quote": "Only the MFS has a general conflict of interests disclosure form for employees to complete if they identify that they have any conflicts related to their work.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+     "document": "Evaluation of SAFECOM - Final Report",
+     "page": 84
+    }
+   },
+   {
+    "quote": "All four emergency services agencies have taken positive steps in recent years to improve management of conflicts of interests, including endorsing a generally sound Conflict of Interest and Disclosure Policy which applies uniformly across the sector.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0003/1143192/SAFECOM-Eval.pdf",
+     "document": "Evaluation of SAFECOM - Final Report",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:08:34+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "orchestrator-recheck-2"
+ }
+}

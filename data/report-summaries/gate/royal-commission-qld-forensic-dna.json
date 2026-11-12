@@ -1,0 +1,120 @@
+{
+ "slug": "royal-commission-qld-forensic-dna",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Commission of Inquiry into Forensic DNA Testing in Queensland assessed whether DNA collection, testing and analysis met best practice and why any failures occurred.",
+    "pages": [
+     13
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "whether the methods, systems and processes used in the collection, testing and analysis of DNA samples in Queensland were consistent with best practice",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "It examined laboratory practices, sample collection by police and medical practitioners, management and workplace culture.",
+    "pages": [
+     13,
+     14
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "the Queensland Police Service who collect samples at crimes scenes and from people, and medical professionals within Queensland Health who collect samples in cases of sexual assault",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The Commission found that the laboratory prioritised processing speed over scientific quality and had failed to obtain available evidence in some cases.",
+    "pages": [
+     13
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "The laboratory has, for some time, focused on throughput and quick reporting of results to the detriment of high-quality science.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The Commission found that the identified failures did not undermine the reliability of matches between crime scene DNA and reference samples, while the number of affected cases could not be quantified.",
+    "pages": [
+     13
+    ],
+    "section": "EXECUTIVE SUMMARY",
+    "support": "None of the failures I have identified call into question the reliability of a match",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The Commission made 123 recommendations covering scientific procedures, review of past cases, governance and funding, including an independent forensic science institute within the Department of Justice and Attorney-General.",
+    "pages": [
+     14,
+     69,
+     514,
+     518
+    ],
+    "section": "Recommendations",
+    "support": "The creation of the institute as an independent office within the Department of Justice and Attorney-General",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [
+  {
+   "i": 0,
+   "item": {
+    "quote": "The laboratory has, for some time, focused on throughput and quick reporting of results to the detriment of high-quality science.",
+    "page": 13,
+    "kind": "finding"
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "quote": "None of the failures I have identified call into question the reliability of a match between a crime scene sample and a person’s reference sample, the most probative evidence which often supports convictions.",
+    "page": 13,
+    "kind": "conclusion"
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "quote": "Cultural issues have had a negative impact on the scientific processes used and the results obtained.",
+    "page": 456,
+    "kind": "finding"
+   },
+   "why": []
+  }
+ ],
+ "own_summary": {
+  "item": {
+   "heading": "EXECUTIVE SUMMARY",
+   "first_page": 13,
+   "last_page": 14
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 3,
+  "findings_pass": 3,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

@@ -18,7 +18,7 @@ Draft shape:
 
 Every sentence must cite at least one PDF page of the report, and its support excerpt and every
 phrase it puts in quotation marks must appear verbatim on a cited page. Every findings quote must
-appear verbatim on its page. Further rules: names only as they appear on a cited page; no adverse
+appear verbatim on its page. Further rules: names and figures only as they appear on a cited page; no adverse
 statement about a named person unless the support states a finding or opinion; allegation, evidence
 or submission text never stated as fact; no run of 15+ words copied outside quotation marks; house
 style (no em dashes, no first person, no judgement words, no talk about "the pages").
@@ -76,6 +76,7 @@ BANNED = ["controversial", "unfortunately", "fortunately", "sadly", "radical", "
           "provided pages", "the source text", "the extracted text"]
 FIRST_PERSON = re.compile(r"\b(I|[Ww]e|[Oo]ur|[Uu]s|[Mm]y)\b")
 DASH = re.compile("—|\\s–\\s|\\s--\\s")
+NUMBER = re.compile(r"(?<![\w.])\d[\d,]*(?:\.\d+)?")
 QUOTED = re.compile(r'["“]([^"”]{3,600})["”]')
 
 
@@ -122,6 +123,23 @@ def on_pages(quote: str, pages: list[str], cited: list[int]) -> bool:
         if n < len(pages) and not contains(pages[n], quote) and contains(pages[n - 1] + "\n" + pages[n], quote):
             return True
     return False
+
+
+_UNITS = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen " \
+         "seventeen eighteen nineteen".split()
+_TENS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90}
+SPELLED = re.compile(r"\b(" + "|".join(_TENS) + r")(?:[\s-]+(" + "|".join(_UNITS[1:10]) + r"))?\b|\b(" + "|".join(_UNITS) + r")\b", re.I)
+
+
+def spelled(text: str) -> set[str]:
+    """Numbers written as words (up to ninety-nine), as digit strings."""
+    out = set()
+    for m in SPELLED.finditer(text):
+        if m.group(1):
+            out.add(str(_TENS[m.group(1).lower()] + (_UNITS.index(m.group(2).lower()) if m.group(2) else 0)))
+        else:
+            out.add(str(_UNITS.index(m.group(3).lower())))
+    return out
 
 
 def words(s: str) -> list[str]:
@@ -192,6 +210,10 @@ def check(draft: dict, pages: list[str], meta: dict) -> dict:
         if ALLEGATION_SRC.search(support) and not ALLEGATION_SENT.search(text) and not FINDING_WORDS.search(support):
             why.append("support is allegation, evidence or submission text but the sentence states it as fact")
         bare = QUOTED.sub(" ", text)
+        page_numbers = {m.group(0).replace(",", "").rstrip(".") for m in NUMBER.finditer(cited_text)} | spelled(cited_text)
+        for num in dict.fromkeys(m.group(0).replace(",", "").rstrip(".") for m in NUMBER.finditer(bare)):
+            if num not in page_numbers:
+                why.append(f"number {num} not on the cited pages")
         if DASH.search(bare):
             why.append("em dash")
         if any(b in text.lower() for b in BANNED):
@@ -258,6 +280,11 @@ def check(draft: dict, pages: list[str], meta: dict) -> dict:
     }
 
 
+def tidy(quote: str) -> str:
+    """A verbatim quote as a reader sees it: PDF line breaks and line-end hyphenation removed."""
+    return re.sub(r"\s+", " ", dehyphen(quote)).strip()
+
+
 def publish(draft: dict, res: dict, meta: dict, lane: str | None) -> dict:
     url = meta["url"]
     doc = meta.get("document") or meta["title"]
@@ -285,7 +312,7 @@ def publish(draft: dict, res: dict, meta: dict, lane: str | None) -> dict:
         },
         "findings": {"label": FINDINGS_LABEL,
                      "source": "already on the report page" if meta.get("opax_findings") else "quoted verbatim and checked",
-                     "items": [{"quote": f["quote"], "kind": f["kind"], "cite": cite(f["page"])} for f in quotes]},
+                     "items": [{"quote": tidy(f["quote"]), "kind": f["kind"], "cite": cite(f["page"])} for f in quotes]},
         "gate": {"checked_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
                  "dropped": [{"text": s["item"].get("text") if isinstance(s["item"], dict) else s["item"], "why": s["why"]}
                              for s in res["sentences"] if s["why"]]

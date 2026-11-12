@@ -1,0 +1,88 @@
+{
+  "slug": "integrity-report-sa-icac-2025-04-03-evaluation-of-safecom",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Executive summary",
+    "first_page": 10,
+    "last_page": 10
+  },
+  "sentences": [
+    {
+      "text": "The Independent Commission Against Corruption evaluated SAFECOM, the Country Fire Service, Metropolitan Fire Service and State Emergency Service to help prevent corruption arising from conflicts of interest.",
+      "pages": [
+        20
+      ],
+      "section": "Chapter one: Evaluation introduction",
+      "support": "to prevent or minimise corruption arising from conflicts of \ninterests.",
+      "people": []
+    },
+    {
+      "text": "The evaluation examined how policies and procedures for managing conflicts of interest were developed, reviewed, communicated and enforced.",
+      "pages": [
+        20
+      ],
+      "section": "1.1 Evaluation terms of reference",
+      "support": "The evaluation examined the policies and procedures of SAFECOM that apply to the \nCFS, MFS and SES in respect of the management of conflicts of interests.",
+      "people": []
+    },
+    {
+      "text": "The Commission acknowledged improvements across all four agencies, including their adoption of a common policy for disclosing and managing conflicts.",
+      "pages": [
+        10
+      ],
+      "section": "Executive summary",
+      "support": "including endorsing a generally sound \nConflict of Interest and Disclosure Policy which applies uniformly across the sector.",
+      "people": []
+    },
+    {
+      "text": "However, the Commission concluded that none of the agencies complied with that policy and that it was not effectively implemented or enforced.",
+      "pages": [
+        84
+      ],
+      "section": "Conclusion",
+      "support": "This Policy is not \neffectively implemented or enforced. None of the agencies are compliant with the Policy.",
+      "people": []
+    },
+    {
+      "text": "The Commission also found gaps in written communication and training for staff, volunteers and contractors.",
+      "pages": [
+        10
+      ],
+      "section": "Executive summary",
+      "support": "Overall, there is a lack of written communication and training materials available to staff, \nvolunteers and contractors in all agencies about conflicts of interests.",
+      "people": []
+    },
+    {
+      "text": "It made 25 recommendations covering policies and procedures, communication, training, monitoring and compliance in managing conflicts of interest.",
+      "pages": [
+        10
+      ],
+      "section": "Executive summary",
+      "support": "The Commission has made twenty-five recommendations to strengthen policies and \nprocedures, communication, training, monitoring and compliance relating to conflicts \nof interests.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "The emergency services sector lacks consistent, clear and adequate guidance regarding \nthe identification, disclosure and management of conflicts of interests.",
+      "page": 84,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "The nature of induction and other training materials available to staff, volunteers and \ncontractors in all agencies about their obligations to identify and disclose conflicts of \ninterests requires improvement.",
+      "page": 84,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "Only the MFS has a general conflict of interests disclosure form for employees to \ncomplete if they identify that they have any conflicts related to their work.",
+      "page": 84,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "All four emergency services agencies have taken positive steps in recent years to \nimprove management of conflicts of interests, including endorsing a generally sound \nConflict of Interest and Disclosure Policy which applies uniformly across the sector.",
+      "page": 10,
+      "kind": "finding"
+    }
+  ],
+  "notes": "The executive summary text is on PDF page 10; PDF page 9 is its section divider. The 25 recommendations on PDF pages 14-18 and the conclusion on PDF page 84 were read. No named individuals are included. No substantive text extraction problem was apparent in the sections used."
+}

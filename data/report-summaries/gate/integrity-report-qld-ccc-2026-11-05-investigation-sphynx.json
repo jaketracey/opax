@@ -1,0 +1,91 @@
+{
+ "slug": "integrity-report-qld-ccc-2026-11-05-investigation-sphynx",
+ "sentences": [
+  {
+   "i": 0,
+   "item": {
+    "text": "The Crime and Corruption Commission investigated how the Queensland Police Service decided to lease a commercial property at Stones Corner in Brisbane.",
+    "pages": [
+     2,
+     5,
+     6
+    ],
+    "section": "Overview of investigation",
+    "support": "Investigation Sphynx was a corruption investigation conducted by the CCC into the \ncircumstances and decisions giving rise to the QPS’s commitment to lease the premises",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 1,
+   "item": {
+    "text": "The CCC reported that the police service committed about $116 million over 15 years to premises subsequently assessed as unsuitable and never occupied by the service.",
+    "pages": [
+     5
+    ],
+    "section": "Executive summary",
+    "support": "The QPS committed to approximately \n$116 million in lease costs over 15 years to premises that were later found unfit for purpose \nand ultimately not occupied.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 2,
+   "item": {
+    "text": "The CCC identified failures in governance, scrutiny and due diligence, while finding no dishonesty, improper relationship or personal benefit involving any person.",
+    "pages": [
+     5
+    ],
+    "section": "Executive summary",
+    "support": "The investigation identified no dishonesty, improper relationship or personal benefit on the \npart of any person.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 3,
+   "item": {
+    "text": "The CCC made nine recommendations to the police service on leasing oversight, committee practices, financial authority, organisational culture and risk management.",
+    "pages": [
+     15
+    ],
+    "section": "Recommendations",
+    "support": "The CCC has made nine (9) recommendations directly to the QPS to address weaknesses and \nclose the loopholes which allowed the conduct to occur.",
+    "people": []
+   },
+   "why": []
+  },
+  {
+   "i": 4,
+   "item": {
+    "text": "The CCC also recommended two Queensland Government reviews covering accommodation policy and leasing approvals.",
+    "pages": [
+     5,
+     16
+    ],
+    "section": "The broader reforms required",
+    "support": "Review its Leasing Approval Policy to ensure it reflects broader policy changes and \ncontemporary practices",
+    "people": []
+   },
+   "why": []
+  }
+ ],
+ "findings": [],
+ "own_summary": {
+  "item": {
+   "heading": "Executive summary",
+   "first_page": 5,
+   "last_page": 5
+  },
+  "why": []
+ },
+ "report": [],
+ "counts": {
+  "sentences": 5,
+  "sentences_pass": 5,
+  "findings": 0,
+  "findings_pass": 0,
+  "own_summary_pass": true
+ },
+ "clean": true
+}

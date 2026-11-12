@@ -1,0 +1,86 @@
+{
+  "slug": "agency-report-cth-australian-public-service-commission-and-merit-protection-commissioner-2025-26-annual-report",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Commissioner’s review",
+    "first_page": 8,
+    "last_page": 9
+  },
+  "sentences": [
+    {
+      "text": "The Australian Public Service Commission and Merit Protection Commissioner reported on their work in 2025–26, covering public service capability, integrity, workforce management and employment reviews.",
+      "pages": [
+        8,
+        138,
+        145
+      ],
+      "section": "Commissioner’s review; About the MPC",
+      "support": "This report reflects our work to strengthen APS capability, \nmaintain public trust, support a high-performing workforce",
+      "people": []
+    },
+    {
+      "text": "The Commission assessed six measures of its performance and reported achieving four, substantially achieving one and partly achieving one.",
+      "pages": [
+        35
+      ],
+      "section": "Overview of our 2025–26 performance results",
+      "support": "we achieved the targets for 4 measures, substantially achieved the \ntargets for one measure, and partially achieved the targets for one measure.",
+      "people": []
+    },
+    {
+      "text": "The Merit Protection Commissioner reported receiving 109 applications to review Code of Conduct decisions and 199 applications concerning other employment decisions.",
+      "pages": [
+        144
+      ],
+      "section": "Our year at a glance",
+      "support": "We received 199 applications from  \nAPS employees seeking a review of  \nan employment decisions (other than  \nCode of Conduct decisions).",
+      "people": []
+    },
+    {
+      "text": "The Merit Protection Commissioner reported recommending that 40% of reviewed Code of Conduct breach or sanction decisions be set aside or varied.",
+      "pages": [
+        144,
+        157
+      ],
+      "section": "Our year at a glance; Review outcomes",
+      "support": "We set aside/varied 40% of decisions of \nCode of Conduct breaches and sanctions \nthat we reviewed.",
+      "people": []
+    },
+    {
+      "text": "The Merit Protection Commissioner concluded that recurring problems in these decisions showed a continuing gap in agencies' ability to manage misconduct and apply the Code of Conduct.",
+      "pages": [
+        140
+      ],
+      "section": "Merit Protection Commissioner’s foreword",
+      "support": "continues to highlight a \nsignificant capability gap in the management of misconduct and the application of the Code \nof Conduct.",
+      "people": []
+    },
+    {
+      "text": "The Merit Protection Commissioner reported that all recommendations it made to agency heads in 2025–26 were accepted and implemented.",
+      "pages": [
+        157
+      ],
+      "section": "Review outcomes",
+      "support": "All the recommendations made by the MPC to agency \nheads in 2025–26 were accepted and implemented.",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "However, we did observe that, once a declaration is made, the consideration of specific \nand relevant strategies on how to best manage the conflict is often cursory and \nseemingly perfunctory.",
+      "page": 163,
+      "kind": "finding"
+    },
+    {
+      "quote": "Overall, the Commission achieved its purpose for the reporting period.",
+      "page": 35,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "All the recommendations made by the MPC to agency \nheads in 2025–26 were accepted and implemented.",
+      "page": 157,
+      "kind": "finding"
+    }
+  ],
+  "notes": "This is a combined annual report, rather than an inquiry with a report-wide recommendations list; no overall recommendation count is inferred. The Commission’s review on PDF pages 8-9 is recorded as its own summary equivalent. The separate Merit Protection Commissioner’s foreword on PDF pages 140-141 and year-at-a-glance overview on PDF page 144 were also read, along with review findings and recommendations. Financial statement PDF pages 57-94 contain only headers or whitespace in the supplied text; PDF page 56 contains only the financial statements heading and header. No financial results are summarised. No named individuals are included."
+}

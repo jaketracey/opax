@@ -166,3 +166,19 @@ def test_cli_logs_history_and_exits_nonzero_on_failure(tmp_path):
     assert bad.returncode == 1 and "no page citation" in bad.stdout
     hist = (tmp_path / "data" / "gate" / "history.jsonl").read_text().splitlines()
     assert [json.loads(h)["clean"] for h in hist] == [True, False]
+
+
+def test_figures_must_appear_on_the_cited_pages():
+    assert one({**GOOD[2], "text": "The Commission made 5 recommendations to the council about how it buys goods."}) != []
+    page = PAGES[2] + "It made 4 recommendations in total, costing $1,200,000.\n"
+    res = g.check(draft(GOOD[:2] + [{**GOOD[2], "text": "The Commission made 4 recommendations costing $1,200,000 to implement."}]),
+                  PAGES[:2] + [page], META)
+    assert res["sentences"][2]["why"] == []
+
+
+def test_published_quotes_lose_pdf_line_breaks():
+    assert g.tidy("the con-\ntracts to her\n brother") == "the contracts to her brother"
+
+
+def test_spelled_numbers_on_the_page_count():
+    assert g.spelled("It made twenty-five recommendations and nine findings") >= {"25", "9"}

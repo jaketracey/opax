@@ -1,0 +1,172 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2022-07-20-tp6536-operation-watts-investigation-into-allegations-of-mis",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Watts: Investigation into allegations of misuse of electorate office and ministerial office staff and resources for branch stacking and other party-related activities",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+  "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+  "sha256": "e19b51127346138ea6a2d4acec209870dcd1f26c7a8280acfd288a1e39a50447",
+  "pages": 236,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC and the Victorian Ombudsman jointly investigated allegations that publicly funded staff and resources were used for ALP factional activity, including branch stacking.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 3
+     }
+    ],
+    "section": "Letter of transmittal"
+   },
+   {
+    "text": "The investigation focused on the Moderate Labor faction and examined staff deployment, employment practices and grants to associated community organisations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 146
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 166
+     }
+    ],
+    "section": "Conclusions and observations"
+   },
+   {
+    "text": "The two bodies found that staff were extensively diverted to factional work during paid hours and that two MPs breached conduct codes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 147
+     }
+    ],
+    "section": "Conclusions and observations"
+   },
+   {
+    "text": "The bodies could not quantify the misuse and said difficulties of proof prevented them from recommending prosecution.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 7
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "The bodies made 21 reform recommendations, including an ethics committee, an independent parliamentary integrity commissioner, tighter staff-employment rules and stronger grant oversight.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 178
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 191
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 202
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 203
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+      "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+      "page": 213
+     }
+    ],
+    "section": "Recommendations for reform"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There was extensive misuse of staff for factional or party-specific purposes during business hours.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+     "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+     "page": 147
+    }
+   },
+   {
+    "quote": "We concluded that two MPs breached one or more elements of the Ministerial Code of Conduct and the MPs’ Code of Conduct.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+     "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+     "page": 7
+    }
+   },
+   {
+    "quote": "Factional members or their relatives were given publicly funded employment in electorate or ministerial offices as a reward for recruiting members or working for the faction.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+     "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+     "page": 154
+    }
+   },
+   {
+    "quote": "It has not been possible to determine the extent of factional work done during office hours during the period under investigation, but it undoubtedly involved a very substantial misuse of public resources.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+     "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+     "page": 148
+    }
+   },
+   {
+    "quote": "Despite the allegations that were, in part, the reason for establishing Operation Watts, no evidence was uncovered that such grants were used to pay for ALP memberships.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a27e6/globalassets/tabled-paper-documents/tabled-paper-6536/operation_watts_special_report_final_xblt4jnb.pdf",
+     "document": "Operation_Watts_Special_Report_FINAL_XbLt4JnB",
+     "page": 156
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T08:08:34+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "orchestrator-recheck-2"
+ }
+}

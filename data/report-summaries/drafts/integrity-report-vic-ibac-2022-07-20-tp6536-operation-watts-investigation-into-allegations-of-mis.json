@@ -1,0 +1,90 @@
+{
+  "slug": "integrity-report-vic-ibac-2022-07-20-tp6536-operation-watts-investigation-into-allegations-of-mis",
+  "engine": "Codex (gpt-6.1-sol)",
+  "own_summary": {
+    "heading": "Foreword",
+    "first_page": 6,
+    "last_page": 8
+  },
+  "sentences": [
+    {
+      "text": "IBAC and the Victorian Ombudsman jointly investigated allegations that publicly funded staff and resources were used for ALP factional activity, including branch stacking.",
+      "pages": [
+        3
+      ],
+      "section": "Letter of transmittal",
+      "support": "Operation Watts, a coordinated investigation into allegations of misuse of ministerial and Members’ staff and other \nbudget entitlements for internal ALP purposes, including branch stacking",
+      "people": []
+    },
+    {
+      "text": "The investigation focused on the Moderate Labor faction and examined staff deployment, employment practices and grants to associated community organisations.",
+      "pages": [
+        146,
+        166
+      ],
+      "section": "Conclusions and observations",
+      "support": "The misconduct centred \non the appointment and misuse of electorate \nofficers and ministerial staff to pursue ML \nfactional agendas",
+      "people": []
+    },
+    {
+      "text": "The two bodies found that staff were extensively diverted to factional work during paid hours and that two MPs breached conduct codes.",
+      "pages": [
+        7,
+        147
+      ],
+      "section": "Conclusions and observations",
+      "support": "We concluded that two MPs breached one or more \nelements of the Ministerial Code of Conduct and the \nMPs’ Code of Conduct.",
+      "people": []
+    },
+    {
+      "text": "The bodies could not quantify the misuse and said difficulties of proof prevented them from recommending prosecution.",
+      "pages": [
+        7
+      ],
+      "section": "Foreword",
+      "support": "the difficulties in proof are such that we \ncannot recommend prosecution.",
+      "people": []
+    },
+    {
+      "text": "The bodies made 21 reform recommendations, including an ethics committee, an independent parliamentary integrity commissioner, tighter staff-employment rules and stronger grant oversight.",
+      "pages": [
+        178,
+        191,
+        202,
+        203,
+        213
+      ],
+      "section": "Recommendations for reform",
+      "support": "the government and the parliament work together to establish a Parliamentary Integrity \nCommissioner as an independent officer of the parliament",
+      "people": []
+    }
+  ],
+  "findings": [
+    {
+      "quote": "There was extensive misuse of staff for factional \nor party-specific purposes during business \nhours.",
+      "page": 147,
+      "kind": "finding"
+    },
+    {
+      "quote": "We concluded that two MPs breached one or more \nelements of the Ministerial Code of Conduct and the \nMPs’ Code of Conduct.",
+      "page": 7,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "Factional members or their relatives were given \npublicly funded employment in electorate or \nministerial offices as a reward for recruiting \nmembers or working for the faction.",
+      "page": 154,
+      "kind": "finding"
+    },
+    {
+      "quote": "It has not been possible to determine the \nextent of factional work done during office \nhours during the period under investigation, \nbut it undoubtedly involved a very substantial \nmisuse of public resources.",
+      "page": 148,
+      "kind": "conclusion"
+    },
+    {
+      "quote": "Despite the allegations that were, in part, the \nreason for establishing Operation Watts, no \nevidence was uncovered that such grants were \nused to pay for ALP memberships.",
+      "page": 156,
+      "kind": "finding"
+    }
+  ],
+  "notes": "This is a joint IBAC and Victorian Ombudsman report. The Foreword supplies the report-level summary; its prose ends on PDF page 8, with only a running header extracted on PDF page 9. Recommendations 1 to 21 were read in Chapter 8. The inability to quantify misuse and difficulties supporting prosecution are retained. The summary uses no personal names."
+}
