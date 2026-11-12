@@ -74,20 +74,40 @@ test('party router rejects retained malformed sponsor attributes', async () => {
     assert.equal(response.status,404,slug);
   }
 });
-test('bill server tables read standalone division tallies even when the bill snapshot is stale', async () => {
+test('grant programme catalogue is parsed once per isolate and an asset failure returns 404 with retry', async () => {
   const audit=JSON.parse(readFileSync(new URL('fixtures/portal-facts.json',import.meta.url)));
-  const {default:staleWorker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text+'\n// stale division fixture').toString('base64'));
-  const staleEnv={...env,ASSETS:{async fetch(request){
-    const path=new URL(request.url).pathname;
-    if(audit.divisions.some(row=>path===`/bills/${row.bill}.json`)) {
-      const file=structuredClone(await read(path));
-      for(const d of file.divisions) {d.ayes=999;d.noes=999;d.outcome='stale';}
-      return Response.json(file);
+  const {default:cachedWorker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text+'\n// programme catalogue cache').toString('base64'));
+  let reads=0,parses=0;
+  const cachedEnv={...env,ASSETS:{async fetch(request){
+    if(new URL(request.url).pathname==='/graph/grants.federal.json') {
+      reads++;
+      if(reads===1) return new Response('Unavailable',{status:503});
+      const response=await env.ASSETS.fetch(request);
+      response.json=async()=>{parses++;return read('/graph/grants.federal.json')};
+      return response;
     }
     return env.ASSETS.fetch(request);
   }}};
-  for(const bill of new Set(audit.divisions.map(row=>row.bill))) {
-    const response=await staleWorker.fetch(new Request(origin+'/bill/'+bill),staleEnv,{waitUntil(){}});
+  const request=id=>cachedWorker.fetch(new Request(origin+'/money/grants?'+new URLSearchParams({jur:'federal',program:id})),cachedEnv,{waitUntil(){}});
+  assert.equal((await request(audit.programs[0].id)).status,404);
+  for(const row of audit.programs) assert.equal((await request(row.id)).status,200,row.id);
+  assert.equal(reads,2);
+  assert.equal(parses,1);
+});
+test('bill server tables use reconciled embedded tallies even when every standalone file is unavailable', async () => {
+  const audit=JSON.parse(readFileSync(new URL('fixtures/portal-facts.json',import.meta.url)));
+  const {default:embeddedWorker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text+'\n// embedded division fixture').toString('base64'));
+  let standaloneReads=0;
+  const embeddedEnv={...env,ASSETS:{async fetch(request){
+    const path=new URL(request.url).pathname;
+    if(path.startsWith('/divisions/division-')) {
+      standaloneReads++;
+      return new Response('Unavailable',{status:404});
+    }
+    return env.ASSETS.fetch(request);
+  }}};
+  for(const bill of new Set(['au-federal-r5626',...audit.divisions.map(row=>row.bill)])) {
+    const response=await embeddedWorker.fetch(new Request(origin+'/bill/'+bill),embeddedEnv,{waitUntil(){}});
     assert.equal(response.status,200);
     const html=await response.text();
     assert.doesNotMatch(html,/>999</);
@@ -99,8 +119,9 @@ test('bill server tables read standalone division tallies even when the bill sna
       matched++;
       for(const [field,label] of [['ayes','Ayes'],['noes','Noes']]) assert.ok(row.includes(`data-value="${expected[field]}"`) || row.includes(`>${expected[field]}</span>`),`${expected.key}/${label}`);
     }
-    assert.ok(matched>0,bill);
+    if(bill!=='au-federal-r5626') assert.ok(matched>0,bill);
   }
+  assert.equal(standaloneReads,0);
 });
 test('About, coverage and Methods routes render new collections from the canonical panels', async () => {
   for (const path of ['/about','/stats','/methods']) {
@@ -415,7 +436,9 @@ test('bill SSR links dated divisions to their member records and preserves relat
   assert.match(html,/href="\/doc\/division-federal-senate-10701"/);
   assert.match(html,/Limitation of debate, 19 Aug 2026/);
   const bill=await get('/bill/au-federal-r7537');
-  for(const fact of ['Andrew Gee','Independent','Introduced','Second reading','Machine-written','2026-09-07','Other bills from this sponsor']) assert.ok(bill.includes(fact),fact);
+  for(const fact of ['Andrew Gee','Introduced','Second reading','Machine-written','2026-09-07','Other bills from this sponsor']) assert.ok(bill.includes(fact),fact);
+  assert.match(bill,/href="\/subject\/party\/independent"[^>]*>Independent<\/a>/);
+  assert.doesNotMatch(bill,/Independent Members/);
   // The pill says it once; no sentence beside it repeats it.
   assert.match(bill,/<span class="ui-machine-pill" title="[^"]+">.*Machine-written<span class="visually-hidden">, not part of the record<\/span><\/span> As at 2026-09-07\./);
   assert.doesNotMatch(bill,/>Written by a model|not the record\b/);

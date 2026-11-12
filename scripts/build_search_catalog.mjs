@@ -14,6 +14,8 @@ import { payPersonRecord, payPersonOrder, payGeneralRecords } from '../portal/sr
 import { reportsPublished } from './reports_flag.mjs';
 import { pageSearchRecords } from './search_catalog_pages.mjs';
 import { buildReportCatalog } from './build_report_catalog.mjs';
+import {programKey, resolveProgram} from '../portal/public/facts/grant-programs.js';
+export {programKey};
 const root = fileURLToPath(new URL('../portal/public/', import.meta.url));
 const read = async p => JSON.parse(await readFile(join(root,p),'utf8'));
 const files = async p => (await readdir(join(root,p))).filter(n=>n.endsWith('.json')).sort();
@@ -40,10 +42,11 @@ function add(key, kind, title, href, text, extra={}) {
 // Grant program rows (contract 2026-09-13, section 3): one record per listed program, kind grant.
 // The key mirrors the program file name rule in section 1; the slug is stable so the MCP can
 // recognise a program row without relying on catalog position.
-export const programKey = id => String(id).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);
-export function programRecord(jur, row, agencies=[]) {
+export function programRecord(jur, row, agencies=[], programs=[row]) {
  if (typeof row?.id !== 'string' || !row.id.trim() || /^(null|undefined)$/i.test(row.id)) return null;
- const id=row.id, key=programKey(id), name=String(row.n||id);
+ row=resolveProgram(programs,row.id);
+ if (!row) return null;
+ const id=row.id, key=row.key || programKey(id), name=String(row.n||id);
  const agency=Number.isInteger(row.ag)?agencies[row.ag]:typeof row.ag==='string'?row.ag:'';
  const cnc=Number(row.cnc)||0, selk=Number(row.selk)||0;
  const clause=selk>0?`; ${Math.round(100*cnc/selk)}% closed non-competitive where recorded`:'';
@@ -133,7 +136,7 @@ async function main() {
  }
  for(const jur of ['federal','qld']) {
   const index=await read(`graph/grants.${jur}.json`);
-  for(const p of index.programs||[]){const r=programRecord(jur,p,index.agencies||[]);if(!r)continue;add(r.key,r.kind,r.title,r.href,r.snippet,r.extra)}
+  for(const p of index.programs||[]){const r=programRecord(jur,p,index.agencies||[],index.programs);if(!r)continue;add(r.key,r.kind,r.title,r.href,r.snippet,r.extra)}
   for(const file of await files('grants/'+jur)) for(const r of Object.values(await read(`grants/${jur}/${file}`))) {
    if (typeof r.id !== 'string' || !r.id.trim() || /^(null|undefined)$/i.test(r.id)) continue;
    const href='/money/grants/'+jur+'/recipient/'+encodeURIComponent(r.id);

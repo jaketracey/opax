@@ -5,6 +5,7 @@ import tempfile
 import unittest
 import subprocess
 import sys
+from unittest.mock import patch
 
 from scripts import export_bills as export
 
@@ -15,9 +16,51 @@ AUDIT = json.loads((ROOT / 'portal/test/fixtures/portal-facts.json').read_text()
 class PublishedBillFacts(unittest.TestCase):
     def test_real_audit_labels_use_the_exporters_own_decode_and_map(self):
         self.assertEqual(len(AUDIT['parties']), 585)
+        index = json.loads((ROOT / 'portal/public/bills/index.json').read_text())
+        parties = {row['key']: row['sponsor_party'] for row in index['bills']}
         for row in AUDIT['parties']:
             with self.subTest(key=row['key'], raw=row['raw']):
                 self.assertEqual(export.sponsor_party_token(row['raw']), row['canonical'])
+                self.assertEqual(parties[row['key']], row['canonical'])
+
+    def test_retained_label_repair_never_infers_missing_affiliations(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            directory = Path(scratch)
+            raw = [None, "Australia&#39;s Voice", 'xx', 'monarchist',
+                   'Independent Members', 'Liberal', 'Australian Greens']
+            expected = [None, "Australia's Voice", None, None, 'Independent',
+                        'Liberal', 'Greens']
+            index = {'generated_at': '2026-10-04', 'bills': []}
+            for i, label in enumerate(raw):
+                key = f'example-{i}'
+                bill = {'key': key, 'sponsor': None, 'sponsor_person_id': 'known-person',
+                        'portfolio': '(s) MEMBER, Example, MP', 'sponsor_party': label,
+                        'sponsors': [{'name': 'Example', 'party': label}]}
+                (directory / f'{key}.json').write_text(json.dumps(bill))
+                index['bills'].append({'key': key, 'sponsor_party': label})
+            (directory / 'index.json').write_text(json.dumps(index))
+            # The CLI must select this offline path before opening even a DB.
+            result = subprocess.run([sys.executable, str(ROOT / 'scripts/export_bills.py'),
+                '--db', 'file:/nonexistent/db?mode=ro', '--normalise-sponsor-labels',
+                str(directory)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            repaired_index = json.loads((directory / 'index.json').read_text())
+            self.assertEqual(repaired_index['generated_at'], index['generated_at'])
+            self.assertEqual([row['sponsor_party'] for row in repaired_index['bills']], expected)
+            for i, party in enumerate(expected):
+                bill = json.loads((directory / f'example-{i}.json').read_text())
+                self.assertIsNone(bill['sponsor'])
+                self.assertEqual(bill['sponsor_party'], party)
+                self.assertEqual(bill['sponsors'][0]['party'], party)
+            self.assertEqual(export.normalise_sponsor_labels(directory), 0)
+
+    def test_twenty_originally_null_alrc_affiliations_stay_null(self):
+        directory = ROOT / 'portal/public/bills'
+        self.assertEqual(len(AUDIT['sponsor_party_null_keys']), 20)
+        for key in AUDIT['sponsor_party_null_keys']:
+            bill = json.loads((directory / f'{key}.json').read_text())
+            self.assertIsNone(bill['sponsor'], key)
+            self.assertIsNone(bill['sponsor_party'], key)
 
     def test_all_published_sponsors_use_canonical_tokens(self):
         directory = ROOT / 'portal/public/bills'
@@ -63,6 +106,12 @@ class PublishedBillFacts(unittest.TestCase):
             index = {'generated_at':'2026-10-04', 'bills':[{'key':'example'}]}
             (directory / 'index.json').write_text(json.dumps(index))
             (directory / 'example.json').write_text(json.dumps(bill))
+            check_command = [sys.executable, str(ROOT / 'scripts/export_bills.py'),
+                '--db', 'file:/nonexistent/db?mode=ro', '--check-division-facts', str(directory),
+                '--divisions', str(ROOT / 'portal/public/divisions')]
+            stale = subprocess.run(check_command, capture_output=True, text=True)
+            self.assertNotEqual(stale.returncode, 0)
+            self.assertIn('Bill division drift: example/federal-senate-3304/ayes', stale.stderr)
             result = subprocess.run([sys.executable, str(ROOT / 'scripts/export_bills.py'),
                 '--db','file:/nonexistent/db?mode=ro', '--refresh-division-facts',str(directory),
                 '--divisions',str(ROOT / 'portal/public/divisions')], capture_output=True, text=True)
@@ -71,6 +120,22 @@ class PublishedBillFacts(unittest.TestCase):
             self.assertEqual(repaired['divisions'][0]['ayes'], 37)
             self.assertEqual(json.loads((directory / 'index.json').read_text()), index)
             self.assertEqual(export.refresh_division_facts(directory, ROOT / 'portal/public/divisions'), 0)
+            self.assertEqual(subprocess.run(check_command, capture_output=True).returncode, 0)
+
+    def test_reconcile_checks_persisted_files_so_drift_fails_the_nightly_step(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            directory = Path(scratch)
+            (directory / 'index.json').write_text('{"bills":[{"key":"example"}]}')
+            (directory / 'example.json').write_text(json.dumps({'key': 'example', 'divisions': [
+                {'key': 'federal-senate-3304', 'ayes': 38, 'noes': 37, 'outcome': 'negative'}]}))
+            # A failed persistence step must not let an in-memory repair pass.
+            with patch.object(export, 'write_retained_bills', return_value=0):
+                with self.assertRaisesRegex(ValueError, 'Bill division drift: example/'):
+                    export.refresh_division_facts(directory, ROOT / 'portal/public/divisions')
+
+    def test_all_persisted_bill_tallies_pass_the_offline_build_check(self):
+        self.assertEqual(export.check_division_facts(ROOT / 'portal/public/bills',
+                         ROOT / 'portal/public/divisions'), (1003, 4230))
 
 
 if __name__ == '__main__':

@@ -3146,5 +3146,27 @@
       "ayes": 37,
       "noes": 37
     }
+  ],
+  "sponsor_party_null_keys": [
+    "au-federal-alrc-4132",
+    "au-federal-alrc-4134",
+    "au-federal-alrc-4135",
+    "au-federal-alrc-4138",
+    "au-federal-alrc-4139",
+    "au-federal-alrc-4140",
+    "au-federal-alrc-4141",
+    "au-federal-alrc-4143",
+    "au-federal-alrc-4144",
+    "au-federal-alrc-4149",
+    "au-federal-alrc-4150",
+    "au-federal-alrc-4157",
+    "au-federal-alrc-4158",
+    "au-federal-alrc-4159",
+    "au-federal-alrc-4167",
+    "au-federal-alrc-4168",
+    "au-federal-alrc-4169",
+    "au-federal-alrc-4172",
+    "au-federal-alrc-4173",
+    "au-federal-alrc-4177"
   ]
 }

@@ -8393,16 +8393,7 @@ function loadBillsDate() {
 function fetchBill(key) {
   if (!billFiles.has(key)) {
     const request = fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
-      .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); })
-      .then(async bill => {
-        if (!bill) return null;
-        const {withBillDivisions} = await import('/facts/bill-divisions.js?v=e43d7d4bee');
-        return withBillDivisions(bill, async path => {
-          const response = await fetch(path, {cache: 'no-cache'});
-          if (!response.ok) throw new Error(`division ${response.status}`);
-          return response.json();
-        });
-      });
+      .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); });
     request.catch(() => { if (billFiles.get(key) === request) billFiles.delete(key); });
     billFiles.set(key, request);
   }

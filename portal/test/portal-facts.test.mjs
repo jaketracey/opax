@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {resolveProgram, programKey} from '../public/facts/grant-programs.js';
-import {withBillDivisions} from '../public/facts/bill-divisions.js';
+import {runInNewContext} from 'node:vm';
+import {programRecord} from '../../scripts/build_search_catalog.mjs';
 import {renderBillAnswer} from '../src/seo-content.ts';
 
 const pub = new URL('../public/', import.meta.url);
@@ -39,42 +40,54 @@ test('case and truncated collisions stay distinct; unknown full IDs cannot borro
   assert.equal(resolveProgram(catalogue.programs, 'GO-unknown-program'), null);
 });
 
-test('all eight audit divisions use standalone totals and outcomes, even with stale embedded values', async () => {
+test('search program slugs retain the catalogue suffix for both Native Title programs', () => {
+  const pair = catalogue.programs.filter(p => p.id.toLowerCase() === 'activity:performance of native title representative body functions');
+  const records = pair.map(row => programRecord('federal', row, catalogue.agencies, catalogue.programs));
+  assert.equal(new Set(records.map(r => r.extra.slug)).size, 2);
+  for (const [i,row] of pair.entries()) assert.equal(records[i].extra.slug, `grant-program-federal-${row.key}`);
+});
+
+test('all eight audited embedded tallies match their standalone source records', async () => {
   assert.equal(audit.divisions.length, 8);
   for (const expected of audit.divisions) {
     const bill = await read(`/bills/${expected.bill}.json`);
-    const stale = {...bill, divisions: bill.divisions.map(d => ({...d, ayes: 999, noes: 999, outcome: 'stale'}))};
-    const joined = await withBillDivisions(stale, read);
-    const division = joined.divisions.find(d => d.key === expected.key);
+    const division = bill.divisions.find(d => d.key === expected.key);
     const source = await read(`/divisions/division-${expected.key}.json`);
     assert.equal(division.ayes, expected.ayes);
     assert.equal(division.noes, expected.noes);
     assert.equal(division.outcome, source.result);
-    assert.equal(division.stage, stale.divisions.find(d => d.key === expected.key).stage);
-    assert.doesNotMatch(renderBillAnswer(joined, [], new Map()).html, />999</);
   }
 });
 
-test('a missing or mismatched standalone division cannot reuse embedded totals', async () => {
-  const bill = {divisions: [{key: 'example', ayes: 99, noes: 1}]};
-  await assert.rejects(withBillDivisions(bill, async () => null), /identity mismatch/);
-  await assert.rejects(withBillDivisions(bill, async () => ({key:'another'})), /identity mismatch/);
-  await assert.rejects(withBillDivisions(bill, async () => {throw Error('unavailable');}), /unavailable/);
-  const unknownTotals = await withBillDivisions(bill, async () => ({key:'example'}));
-  assert.equal(unknownTotals.divisions[0].ayes, undefined);
-  assert.equal(unknownTotals.divisions[0].noes, undefined);
+test('the browser opens and caches r5626 with one bill request and no division requests', async () => {
+  const bill = await read('/bills/au-federal-r5626.json');
+  assert.equal(bill.divisions.length, 48);
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  const start = app.indexOf('function fetchBill(key)');
+  const code = app.slice(start, app.indexOf('/** The same record', start));
+  const requests = [];
+  const fetchBill = runInNewContext(code+';fetchBill', {billFiles:new Map(), fetch:async path => {
+    requests.push(path);
+    assert.equal(path, '/bills/au-federal-r5626.json');
+    return Response.json(bill);
+  }});
+  const opened = await fetchBill(bill.key);
+  assert.deepEqual(opened, bill);
+  assert.equal(await fetchBill(bill.key), opened);
+  assert.equal(requests.length, 1);
 });
 
 test('every bill with embedded divisions agrees with the standalone source', async () => {
   const index = await read('/bills/index.json');
   let bills = 0, divisions = 0;
-  for (const row of index.bills.filter(b => b.divisions)) {
+  for (const row of index.bills) {
     const bill = await read(`/bills/${row.key}.json`);
-    const joined = await withBillDivisions(bill, read);
-    bills++;
-    for (const [i, embedded] of bill.divisions.entries()) {
-      const canonical = joined.divisions[i];
-      for (const field of ['ayes', 'noes', 'outcome']) assert.equal(embedded[field], canonical[field], `${row.key}/${embedded.key}/${field}`);
+    if (bill.divisions?.length) bills++;
+    for (const embedded of bill.divisions || []) {
+      const canonical = await read(`/divisions/division-${embedded.key}.json`);
+      assert.equal(canonical.key, embedded.key);
+      for (const field of ['ayes', 'noes']) assert.equal(embedded[field], canonical[field], `${row.key}/${embedded.key}/${field}`);
+      assert.equal(embedded.outcome, canonical.result, `${row.key}/${embedded.key}/outcome`);
       divisions++;
     }
   }
@@ -89,10 +102,23 @@ test('audited party labels are canonical in index and detail; renderers reject d
     const bill = await read(`/bills/${expected.key}.json`);
     assert.equal(bill.sponsor_party, row.sponsor_party, expected.key);
     assert.ok(!bill.sponsor_party || allowed.includes(bill.sponsor_party), expected.key);
-    if (expected.canonical) assert.equal(bill.sponsor_party, expected.canonical, expected.key);
+    assert.equal(bill.sponsor_party, expected.canonical, expected.key);
   }
   for (const party of ['xx', 'monarchist', 'Australia&#39;s Voice']) {
     const html = renderBillAnswer({key:'example', title:'Example bill', sponsor_party:party}, [], new Map()).html;
     assert.doesNotMatch(html, /Sponsor's recorded party/);
   }
+});
+
+test('the 20 ALRC null sponsor parties remain null in detail, index and party selection', async () => {
+  const index = await read('/bills/index.json');
+  assert.equal(audit.sponsor_party_null_keys.length, 20);
+  for (const key of audit.sponsor_party_null_keys) {
+    const bill = await read(`/bills/${key}.json`);
+    assert.equal(bill.sponsor, null, key);
+    assert.equal(bill.sponsor_party, null, key);
+    assert.equal(index.bills.find(b => b.key === key).sponsor_party, null, key);
+    assert.doesNotMatch(renderBillAnswer(bill, [], new Map()).html, /Sponsor's recorded party/);
+  }
+  assert.equal(index.bills.filter(b => audit.sponsor_party_null_keys.includes(b.key) && b.sponsor_party === 'Independent').length, 0);
 });
