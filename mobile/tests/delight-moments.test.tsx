@@ -7,8 +7,9 @@ import {
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { Icon } from '../src/design/icon';
-import { PersonRow } from '../src/design/people';
+import { PersonRow, YourMPMark } from '../src/design/people';
 import { StatTile } from '../src/design/record';
+import { RecordRow } from '../src/design/rows';
 import { Text } from '../src/design/text';
 import { MyMemberProvider } from '../src/features/your-mp/useIsMyMember';
 import { useSeat } from '../src/features/your-mp/useSeat';
@@ -16,6 +17,7 @@ import * as seatModel from '../src/features/your-mp/model';
 import { MatchRow } from '../src/features/search/rows';
 import { formerMemberLine } from '../src/features/people/model';
 import type { PersonProfile } from '../src/api/person-identity';
+import { CachedPortrait } from '../src/features/CachedPortrait';
 
 const MEMBER = 'person_111111111111111111111111';
 const OTHER = 'person_222222222222222222222222';
@@ -178,6 +180,126 @@ test('a list resolves the seat once for a hundred rows', () => {
   act(() => r.unmount());
 });
 
+describe.each(['ios', 'android'] as const)('%s speaker slots', (platform) => {
+  test.each([
+    {
+      name: 'saved member by canonical ID',
+      href: { pathname: '/person/[slug]', params: { slug: MEMBER } },
+      yourMP: true,
+    },
+    {
+      name: 'saved member by slug',
+      href: '/person/casey-example',
+      yourMP: true,
+    },
+    {
+      name: 'another member with the same name',
+      href: { pathname: '/person/[slug]', params: { slug: OTHER } },
+      yourMP: false,
+    },
+    { name: 'non-parliamentarian', href: undefined, yourMP: false },
+  ] as const)(
+    '$name has the correct mark and spoken suffix',
+    ({ href, yourMP }) => {
+      jest.replaceProperty(Platform, 'OS', platform);
+      for (const fontScale of [1, 3.571]) {
+        jest
+          .mocked(useWindowDimensions)
+          .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+        const r = render(
+          <MyMemberProvider>
+            <RecordRow
+              meta="Speech"
+              speaker={{ name: 'Casey Example', party: 'Labor', href }}
+              testID="speech"
+            />
+          </MyMemberProvider>,
+        );
+        const marks = r.root
+          .findAllByType(Text)
+          .filter((n) => n.props.children === 'Your MP');
+        expect(marks).toHaveLength(yourMP ? 1 : 0);
+        const speaker = r.root.findAll(
+          (n) =>
+            typeof n.type === 'string' && n.props.testID === 'speech-speaker',
+        )[0]!;
+        if (href) {
+          expect(speaker.props.accessibilityRole).toBe('link');
+          expect(speaker.props.accessibilityLabel).toBe(
+            `Open Casey Example${yourMP ? ', Your MP' : ''}`,
+          );
+        } else {
+          expect(speaker.props.accessibilityRole).toBeUndefined();
+          expect(speaker.props.onPress).toBeUndefined();
+          expect(
+            r.root
+              .findAllByType(Icon)
+              .filter((n) => n.props.name === 'chevron.right'),
+          ).toHaveLength(0);
+          const row = r.root.findAll(
+            (n) => typeof n.type === 'string' && n.props.testID === 'speech',
+          )[0]!;
+          expect(row.props.accessibilityLabel).toBe(
+            'Speech, Casey Example, Labor',
+          );
+        }
+        if (yourMP) {
+          const texts = r.root.findAllByType(Text).map((n) => n.props.children);
+          expect(texts.indexOf('Your MP')).toBeGreaterThan(
+            texts.indexOf('Labor'),
+          );
+          expect(marks[0]!.props).toMatchObject({
+            variant: 'footnote',
+            tone: 'inkSoft',
+          });
+          expect(marks[0]!.props.numberOfLines).toBeUndefined();
+          expect(r.root.findByType(YourMPMark).parent!.props).toMatchObject({
+            accessibilityElementsHidden: true,
+            importantForAccessibility: 'no-hide-descendants',
+          });
+          expect(
+            r.root
+              .findAllByType(Icon)
+              .find((n) => n.props.name === 'building.columns')!.props,
+          ).toMatchObject({ size: 13, tone: 'inkSoft' });
+        }
+        act(() => r.unmount());
+      }
+    },
+  );
+
+  test.each([false, true])(
+    'a portrait-only member has a grouped spoken suffix with linked party: %s',
+    (linkedParty) => {
+      jest.replaceProperty(Platform, 'OS', platform);
+      const r = render(
+        <MyMemberProvider>
+          <RecordRow
+            meta="Speech"
+            speaker={{
+              name: 'Casey Example',
+              party: 'Labor',
+              portrait: (
+                <CachedPortrait name="Casey Example" slug={member.slug} />
+              ),
+              linkedParty,
+            }}
+            testID="speech"
+          />
+        </MyMemberProvider>,
+      );
+      expect(r.root.findAllByType(YourMPMark)).toHaveLength(1);
+      const row = r.root.findAll(
+        (n) => typeof n.type === 'string' && n.props.testID === 'speech',
+      )[0]!;
+      expect(row.props.accessibilityLabel).toBe(
+        'Speech, Casey Example, Labor, Your MP',
+      );
+      act(() => r.unmount());
+    },
+  );
+});
+
 test.each(['result', 'suggestion'] as const)(
   'Search %s uses the shared member row and its spoken suffix',
   (variant) => {
@@ -224,11 +346,25 @@ test('without a saved seat no row acquires the mark', () => {
         name="Casey Example"
         href={{ pathname: '/person/[slug]', params: { slug: MEMBER } }}
       />
+      <RecordRow
+        meta="Speech"
+        speaker={{
+          name: 'Casey Example',
+          party: 'Labor',
+          href: { pathname: '/person/[slug]', params: { slug: MEMBER } },
+        }}
+        testID="speech"
+      />
     </MyMemberProvider>,
   );
   expect(
     r.root.findAllByType(Text).filter((n) => n.props.children === 'Your MP'),
   ).toHaveLength(0);
+  expect(
+    r.root.findAll(
+      (n) => typeof n.type === 'string' && n.props.testID === 'speech-speaker',
+    )[0]!.props.accessibilityLabel,
+  ).toBe('Open Casey Example');
   act(() => r.unmount());
 });
 
@@ -268,5 +404,79 @@ test('former identity uses the last representation and its recorded periods', ()
   } as PersonProfile;
   expect(formerMemberLine(identity)).toBe(
     'Former member for Example Vale, Victoria, 1998 to 2013',
+  );
+});
+
+const formerSeats = [
+  {
+    name: 'Berowra',
+    electorate_id: SEAT,
+    current: false,
+    jurisdiction: 'federal',
+    chamber: 'representatives',
+    periods: [{ start: '1993-03-13', end: '2016-05-09' }],
+  },
+  {
+    name: 'Dundas',
+    electorate_id: 'el_222222222222222222222222',
+    current: false,
+    jurisdiction: 'federal',
+    chamber: 'representatives',
+    periods: [{ start: '1975-12-13', end: '1993-03-13' }],
+  },
+];
+function formerIdentity(seats: typeof formerSeats) {
+  return {
+    ...member,
+    partyStatus: 'former',
+    seats,
+    rosterRow: {
+      representation: seats.map((seat) => ({
+        electorate: seat.name,
+        state: 'NSW',
+      })),
+    },
+  } as PersonProfile;
+}
+
+test.each([
+  { order: 'alphabetical', seats: formerSeats },
+  { order: 'reversed', seats: [...formerSeats].reverse() },
+])('former identity selects the latest term from $order seats', ({ seats }) => {
+  expect(formerMemberLine(formerIdentity(seats))).toBe(
+    'Former member for Berowra, New South Wales, 1993 to 2016',
+  );
+  expect(seats.map((seat) => seat.name)).toEqual(
+    seats === formerSeats ? ['Berowra', 'Dundas'] : ['Dundas', 'Berowra'],
+  );
+});
+
+test('former identity breaks equal end dates by the latest start date', () => {
+  const seats = formerSeats.map((seat) => ({
+    ...seat,
+    periods: seat.periods.map((period) => ({ ...period, end: '2016-05-09' })),
+  }));
+  expect(formerMemberLine(formerIdentity(seats))).toBe(
+    'Former member for Berowra, New South Wales, 1993 to 2016',
+  );
+});
+
+test('former identity compares every term and prefers dated seats to undated ones', () => {
+  const seats = [
+    {
+      ...formerSeats[0]!,
+      periods: [
+        { start: '2001-11-10', end: '2016-05-09' },
+        { start: '1993-03-13', end: '1998-08-31' },
+      ],
+    },
+    {
+      ...formerSeats[1]!,
+      periods: [{ start: '2007-11-24', end: '2013-08-05' }],
+    },
+    { ...formerSeats[1]!, name: 'Example Vale', periods: [] },
+  ];
+  expect(formerMemberLine(formerIdentity(seats))).toBe(
+    'Former member for Berowra, New South Wales, 1993 to 2016',
   );
 });

@@ -467,6 +467,18 @@ function PersonLink({
     </RowLink>
   );
 }
+/** Shared row identity for profile links and portrait-only member slots. */
+export function personRowSlug(href?: Href, portrait?: ReactNode) {
+  const portraitSlug = isValidElement<{ slug?: string }>(portrait)
+    ? portrait.props.slug
+    : undefined;
+  return typeof href === 'object' && 'params' in href
+    ? String(href.params?.slug ?? '')
+    : typeof href === 'string'
+      ? href.split('/').pop()
+      : portraitSlug;
+}
+
 /** One anatomy for every roster member, including the saved-seat mark. */
 export function PersonRow({
   name,
@@ -492,15 +504,7 @@ export function PersonRow({
   highlighted,
   statusShown = false,
 }: PersonRowProps) {
-  const portraitSlug = isValidElement<{ slug?: string }>(portrait)
-    ? portrait.props.slug
-    : undefined;
-  const slug =
-    typeof href === 'object' && 'params' in href
-      ? String(href.params?.slug ?? '')
-      : typeof href === 'string'
-        ? href.split('/').pop()
-        : portraitSlug;
+  const slug = personRowSlug(href, portrait);
   const ownMember = useRowIsMyMember(slug);
   const yourMP = suppliedYourMP || ownMember;
   const path = dragPath ?? (slug ? `/subject/person/${slug}` : undefined);

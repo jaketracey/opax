@@ -416,6 +416,19 @@ const stateOf = (
   )?.state;
   return state ? (jurisdictionName(state) ?? state) : null;
 };
+function lastDatedRepresentation(seats: PersonProfile['seats']) {
+  const latest = seats
+    .flatMap((seat) =>
+      (seat.periods ?? []).map((period) => ({ seat, ...period })),
+    )
+    .sort(
+      (a, b) =>
+        (a.end ?? '').localeCompare(b.end ?? '') ||
+        (a.start ?? '').localeCompare(b.start ?? ''),
+    )
+    .at(-1)?.seat;
+  return latest ? [latest] : seats.slice(-1);
+}
 /**
  * One row a seat: "Member for Grayndler" / "New South Wales, since 2 Mar
  * 1996"; "Senator for Victoria"; a state seat names its house. A former
@@ -429,7 +442,7 @@ export function seatRows(
   const shown = current.length
     ? current
     : identity.partyStatus === 'former'
-      ? identity.seats.slice(-1)
+      ? lastDatedRepresentation(identity.seats)
       : identity.seats;
   return shown.map((seat) => {
     const senator = seat.chamber === 'senate';
