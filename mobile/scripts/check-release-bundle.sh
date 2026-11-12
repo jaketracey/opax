@@ -7,6 +7,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
+# Both production exports ignore local dotenv files, including through the gate.
 export OPAX_VARIANT=production EXPO_NO_TELEMETRY=1 EXPO_NO_DOTENV=1 CI=1
 android_export() {
   echo 'OPAX QA: android production export and bundle policy'

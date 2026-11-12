@@ -26,7 +26,6 @@ import {
   Animated,
   ActivityIndicator,
   Keyboard,
-  findNodeHandle,
   Platform,
   StyleSheet,
   Switch,
@@ -573,7 +572,7 @@ function MenuPicker<T extends string>({
                 }
               },
             })),
-            findNodeHandle(triggerRef.current) ?? undefined,
+            triggerRef.current ?? undefined,
             undefined,
             () => setMenuOpen(false),
           );

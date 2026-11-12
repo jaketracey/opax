@@ -1,4 +1,4 @@
-import { useRef, type Ref } from 'react';
+import { useCallback, useRef, useState, type Ref } from 'react';
 import {
   Platform,
   Pressable as NativePressable,
@@ -8,17 +8,46 @@ import {
 } from 'react-native';
 import { useHighTextContrast } from './accessibility';
 import { rememberMenuAnchor } from './menu-anchor';
-import { accents, colors, androidControls, type Role } from './tokens';
+import { accents, border, colors, androidControls, type Role } from './tokens';
 
-/** The shared touch surface. iOS receives exactly its original native props. */
+/** The shared touch surface; keyboard focus adds a layout-neutral outline. */
 export function Pressable({
   ref,
   ...props
 }: PressableProps & { ref?: Ref<View> }) {
-  return Platform.OS === 'android' ? (
-    <AndroidPressable ref={ref} {...props} />
-  ) : (
-    <NativePressable ref={ref} {...props} />
+  const [focused, setFocused] = useState(false);
+  const { style } = props;
+  const Component =
+    Platform.OS === 'android' ? AndroidPressable : NativePressable;
+  const focusStyle =
+    focused && !props.disabled && !props.accessibilityState?.disabled
+      ? {
+          outlineColor: colors.navy,
+          outlineWidth: border.focus,
+          outlineOffset: border.focus,
+          outlineStyle: 'solid' as const,
+        }
+      : undefined;
+  return (
+    <Component
+      {...props}
+      ref={ref}
+      onFocus={(event) => {
+        setFocused(true);
+        props.onFocus?.(event);
+      }}
+      onBlur={(event) => {
+        setFocused(false);
+        props.onBlur?.(event);
+      }}
+      style={
+        focusStyle
+          ? typeof style === 'function'
+            ? (state) => [style(state), focusStyle]
+            : [style, focusStyle]
+          : style
+      }
+    />
   );
 }
 function AndroidPressable({
@@ -26,6 +55,14 @@ function AndroidPressable({
   ...props
 }: PressableProps & { ref?: Ref<View> }) {
   const ownRef = useRef<View>(null);
+  const setRef = useCallback(
+    (node: View | null) => {
+      ownRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
   const contrast = useHighTextContrast();
   const { style, children, android_ripple } = props;
   const disabled = props.disabled || props.accessibilityState?.disabled;
@@ -49,11 +86,7 @@ function AndroidPressable({
     <NativePressable
       {...props}
       disabled={disabled}
-      ref={(node) => {
-        ownRef.current = node;
-        if (typeof ref === 'function') ref(node);
-        else if (ref) ref.current = node;
-      }}
+      ref={setRef}
       onPressIn={(event) => {
         ownRef.current?.measureInWindow((x, y, width, height) =>
           rememberMenuAnchor({ x, y, width, height }),

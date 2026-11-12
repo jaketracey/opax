@@ -7,6 +7,7 @@ import {
   Pressable as NativePressable,
   StyleSheet,
   TextInput,
+  UIManager,
   View,
 } from 'react-native';
 import {
@@ -14,6 +15,7 @@ import {
   Composer,
   Field,
   IconButton,
+  PopUpButton,
   SegmentedControl,
   SwitchRow,
 } from '../src/design/controls';
@@ -29,6 +31,7 @@ let mockFontScale = 1;
 jest.mock('react-native', () => {
   const rn = jest.requireActual('react-native');
   Object.defineProperty(rn.Platform, 'OS', { get: () => 'android' });
+  rn.UIManager.measureInWindow = jest.fn();
   return rn;
 });
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
@@ -316,6 +319,96 @@ test('popup menus remain anchored inside the viewport, expose menu items and dis
   fireEvent.press(r.getByTestId('android-menu-outside'));
   expect(r.queryByTestId('android-menu')).toBeNull();
 });
+
+test('MenuPicker measures its trigger instance and opens without the numeric UIManager path', () => {
+  const measure = jest
+    .spyOn(UIManager, 'measureInWindow')
+    .mockImplementation(() => {});
+  const change = jest.fn();
+  const trigger = {
+    measureInWindow: jest.fn((callback) => callback(42, 100, 120, 48)),
+  };
+  const r = render(
+    <View>
+      <PopUpButton
+        label="Status"
+        value="all"
+        options={[
+          { value: 'all', label: 'All' },
+          { value: 'passed', label: 'Passed' },
+        ]}
+        onChange={change}
+      />
+      <AndroidMenuHost />
+    </View>,
+  );
+  r.UNSAFE_getByType(Button).props.ref.current.measureInWindow =
+    trigger.measureInWindow;
+  try {
+    fireEvent.press(r.getByRole('button', { name: 'Status, All' }));
+    expect(trigger.measureInWindow).toHaveBeenCalled();
+    expect(measure).not.toHaveBeenCalled();
+    expect(styles(r.getByTestId('android-menu'))).toMatchObject({
+      left: 42,
+      top: 148,
+    });
+    expect(
+      r.getByRole('button', { name: 'Status, All' }).props.accessibilityState
+        .expanded,
+    ).toBe(true);
+    fireEvent.press(r.getByRole('menuitem', { name: 'Passed' }));
+    expect(change).toHaveBeenCalledWith('passed');
+    expect(r.queryByTestId('android-menu')).toBeNull();
+    expect(
+      r.getByRole('button', { name: 'Status, All' }).props.accessibilityState
+        .expanded,
+    ).toBe(false);
+  } finally {
+    measure.mockRestore();
+  }
+});
+
+test.each(['missing', 'invalid', 'throws', 'late'] as const)(
+  'numeric anchor measurement %s never prevents opening or reopens a dismissed menu',
+  (failure) => {
+    let complete!: (
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+    ) => void;
+    const measure = jest
+      .spyOn(UIManager, 'measureInWindow')
+      .mockImplementation((_tag, callback) => {
+        complete = callback;
+        if (failure === 'throws') throw new Error('detached view');
+        if (failure === 'invalid') callback(NaN, NaN, 0, 0);
+      });
+    const dismiss = jest.fn();
+    const r = render(<AndroidMenuHost />);
+    try {
+      act(() =>
+        showMenu(
+          'Status',
+          [{ title: 'All', onPress: noop }],
+          42,
+          undefined,
+          dismiss,
+        ),
+      );
+      expect(r.getByRole('menuitem', { name: 'All' })).toBeTruthy();
+      expect(Number.isFinite(styles(r.getByTestId('android-menu')).top)).toBe(
+        true,
+      );
+      fireEvent.press(r.getByTestId('android-menu-outside'));
+      if (failure === 'late') act(() => complete(42, 100, 120, 48));
+      expect(r.queryByTestId('android-menu')).toBeNull();
+      expect(dismiss).toHaveBeenCalledTimes(1);
+    } finally {
+      measure.mockRestore();
+    }
+  },
+);
 test.each([1, 1.3, 2])(
   'all type roles keep Public Sans or record serif, tabular figures and no Android height floor at %s',
   (scale) => {
