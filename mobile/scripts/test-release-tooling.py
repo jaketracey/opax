@@ -412,51 +412,69 @@ class ReleaseStepTests(unittest.TestCase):
                 step.run("export", mobile, out)
                 self.assertIn("-exportArchive", logged.call_args.args[0])
 
-    def test_export_environment_resolves_only_rsync_through_private_shim(self):
+    def export_env(self, mobile, caller_path, tool_dirs=None):
+        """Run the export step and return the environment handed to Popen."""
+        out = mobile / "output"
+        out.mkdir(exist_ok=True)
+        seen = []
+
+        def capture(command, **kwargs):  # The real run_logged -> Popen boundary.
+            self.assertIn("-exportArchive", command)
+            seen.append(kwargs["env"])
+            return Mock(stdout=io.StringIO(), wait=Mock(return_value=0))
+
+        # A stand-in keeps the /usr/bin/rsync check passing on hosts without it.
+        apple_rsync = mobile / "apple-rsync-check"
+        apple_rsync.write_text("#!/bin/sh\nexit 0\n")
+        apple_rsync.chmod(0o755)
+        with patch.dict(os.environ, {**self.values, "PATH": caller_path}), \
+             patch.object(step, "load_credentials"), patch.object(step, "clean_commit"), \
+             patch.object(step, "APPLE_RSYNC", apple_rsync), \
+             patch.object(step, "APPLE_TOOL_DIRS", tool_dirs or step.APPLE_TOOL_DIRS), \
+             patch("release_support.subprocess.Popen", side_effect=capture), \
+             contextlib.redirect_stdout(io.StringIO()):
+            step.run("export", mobile, out)
+            self.assertEqual(os.environ["PATH"], caller_path)
+        self.assertEqual(len(seen), 1)
+        return seen[0]
+
+    def test_export_environment_puts_usr_bin_before_every_homebrew_path(self):
+        self.assertEqual(step.APPLE_RSYNC, Path("/usr/bin/rsync"))
+        self.assertEqual(step.APPLE_TOOL_DIRS, ("/usr/bin", "/bin", "/usr/sbin", "/sbin"))
+        homebrew = ["/opt/homebrew/opt/rsync/bin", "/opt/homebrew/bin", "/opt/homebrew/sbin",
+                    "/usr/local/bin", "/home/linuxbrew/.linuxbrew/bin"]
+        others = ["/Users/dev/.nvm/versions/node/v24/bin", "/Users/dev/.local/bin"]
+        caller_path = os.pathsep.join([*homebrew, others[0], "/usr/bin/", "", "/bin",
+                                       "/usr/sbin", others[1], "/sbin", "/usr/bin"])
+        with tempfile.TemporaryDirectory() as d:
+            env = self.export_env(Path(d).resolve(), caller_path)
+        entries = env["PATH"].split(os.pathsep)
+        self.assertEqual(entries[0], "/usr/bin")
+        for entry in homebrew:
+            self.assertLess(entries.index("/usr/bin"), entries.index(entry), entry)
+        # Apple's directories appear once, ahead of the caller's other entries,
+        # which keep their order; an empty (current directory) entry is dropped.
+        self.assertEqual(entries, ["/usr/bin", "/bin", "/usr/sbin", "/sbin", *homebrew, *others])
+        self.assertNotIn("ASC_KEY_ID", env)
+
+    def test_export_resolves_apple_rsync_ahead_of_homebrew_rsync(self):
         with tempfile.TemporaryDirectory() as d:
             mobile = Path(d).resolve()
-            out = mobile / "output"
-            out.mkdir()
-            caller_bin = mobile / "bin"
-            caller_bin.mkdir()
-            for name in ("rsync", "xcodebuild"):
-                tool = caller_bin / name
-                tool.write_text("#!/bin/sh\nexit 93\n")
-                tool.chmod(0o755)
-            # Stand in for /usr/bin/rsync on every host, including Linux.
-            apple_rsync = mobile / "apple-rsync"
-            apple_rsync.write_text("#!/bin/sh\nexit 0\n")
-            apple_rsync.chmod(0o755)
-            caller_path = str(caller_bin) + os.pathsep + os.defpath
-            shim_paths = []
-
-            def inspect_environment(command, **kwargs):
-                env = kwargs["env"]  # Inspect the real run_logged -> Popen boundary.
-                self.assertIn("-exportArchive", command)
-                shim, inherited = env["PATH"].split(os.pathsep, 1)
-                self.assertEqual(inherited, caller_path)
-                shim_paths.append(Path(shim))
-                self.assertEqual(list(Path(shim).iterdir()), [Path(shim) / "rsync"])
-                self.assertEqual(Path(shim).stat().st_mode & 0o777, 0o700)
-                resolved = shutil.which("rsync", path=env["PATH"])
-                self.assertEqual(Path(resolved).resolve(), apple_rsync)
-                self.assertNotEqual(resolved, str(caller_bin / "rsync"))
-                self.assertEqual(shutil.which("xcodebuild", path=env["PATH"]),
-                                 str(caller_bin / "xcodebuild"))
-                self.assertNotIn("ASC_KEY_ID", env)
-                return Mock(stdout=io.StringIO(), wait=Mock(return_value=0))
-
-            self.assertEqual(step.APPLE_RSYNC, Path("/usr/bin/rsync"))
-            self.assertEqual(shutil.which("rsync", path=caller_path), str(caller_bin / "rsync"))
-            with patch.dict(os.environ, {**self.values, "PATH": caller_path}), \
-                 patch.object(step, "load_credentials"), patch.object(step, "clean_commit"), \
-                 patch.object(step, "APPLE_RSYNC", apple_rsync), \
-                 patch("release_support.subprocess.Popen", side_effect=inspect_environment) as popen, \
-                 contextlib.redirect_stdout(io.StringIO()):
-                step.run("export", mobile, out)
-                popen.assert_called_once()
-                self.assertEqual(os.environ["PATH"], caller_path)
-            self.assertFalse(shim_paths[0].exists())
+            # Stand-ins for /opt/homebrew/bin and /usr/bin, so this runs on any host.
+            homebrew_bin, apple_bin = mobile / "homebrew-bin", mobile / "apple-bin"
+            for folder, names in ((homebrew_bin, ("rsync", "node")), (apple_bin, ("rsync",))):
+                folder.mkdir()
+                for name in names:
+                    tool = folder / name
+                    tool.write_text("#!/bin/sh\nexit 0\n")
+                    tool.chmod(0o755)
+            caller_path = os.pathsep.join([str(homebrew_bin), str(apple_bin)])
+            self.assertEqual(shutil.which("rsync", path=caller_path), str(homebrew_bin / "rsync"))
+            env = self.export_env(mobile, caller_path, (str(apple_bin),))
+            self.assertEqual(env["PATH"], os.pathsep.join([str(apple_bin), str(homebrew_bin)]))
+            self.assertEqual(shutil.which("rsync", path=env["PATH"]), str(apple_bin / "rsync"))
+            # Tools only the caller provides still resolve from the caller's PATH.
+            self.assertEqual(shutil.which("node", path=env["PATH"]), str(homebrew_bin / "node"))
 
     def test_non_export_steps_preserve_caller_path(self):
         for name in ("dependencies", "prebuild", "archive", "upload"):

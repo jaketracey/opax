@@ -8,14 +8,24 @@ from pathlib import Path
 import plistlib
 import re
 import sys
-import tempfile
 
 sys.dont_write_bytecode = True
 from release_inputs import clean_commit, dependency_command, refuse_dotenv
 from release_support import ReleaseError, load_credentials, redact, run_logged
 
 
+# Xcode's export copies with whichever rsync PATH finds first and fails with
+# "Copy failed" under Homebrew rsync 3.x (12 Nov). The export step searches
+# Apple's tool directories first; every other step keeps the caller's PATH.
+APPLE_TOOL_DIRS = ("/usr/bin", "/bin", "/usr/sbin", "/sbin")
 APPLE_RSYNC = Path("/usr/bin/rsync")
+
+
+def export_path(caller_path):
+    """Apple's tool directories, then the caller's other PATH entries in order."""
+    rest = [entry for entry in caller_path.split(os.pathsep)
+            if entry and os.path.normpath(entry) not in APPLE_TOOL_DIRS]
+    return os.pathsep.join([*APPLE_TOOL_DIRS, *rest])
 
 
 def upload_verified(mobile, out, approved_commit, expected_voice_mode):
@@ -88,12 +98,8 @@ def run(step, mobile, out, expected_voice_mode=None):
     if step == "export":
         if not os.access(APPLE_RSYNC, os.X_OK):
             raise ReleaseError("Export requires Apple's executable /usr/bin/rsync.")
-        # Xcode's export copy requires Apple's rsync. Override only that tool;
-        # the rest of the caller's PATH and every other step stay unchanged.
-        with tempfile.TemporaryDirectory(prefix="opax-release-rsync-") as shim:
-            (Path(shim) / "rsync").symlink_to(APPLE_RSYNC)
-            env = {**os.environ, "PATH": shim + os.pathsep + os.environ.get("PATH", os.defpath)}
-            run_logged(cmd, out / f"{step}-command.log", public_env=True, env=env)
+        env = {**os.environ, "PATH": export_path(os.environ.get("PATH", os.defpath))}
+        run_logged(cmd, out / f"{step}-command.log", public_env=True, env=env)
     else:
         run_logged(cmd, out / f"{step}-command.log", public_env=True)
     if step == "dependencies":
