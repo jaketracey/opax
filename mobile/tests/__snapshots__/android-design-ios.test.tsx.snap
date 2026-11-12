@@ -3220,48 +3220,6 @@ exports[`iOS design at font scale 1 FollowButton retains its iOS output 1`] = `
       </Text>
     </View>
   </View>
-  <View
-    accessibilityElementsHidden={true}
-    collapsable={false}
-    importantForAccessibility="no-hide-descendants"
-    style={
-      {
-        "opacity": 0,
-      }
-    }
-  >
-    <Text
-      accessibilityLanguage="en-AU"
-      allowFontScaling={true}
-      dynamicTypeRamp="footnote"
-      maxFontSizeMultiplier={0}
-      onLayout={[Function]}
-      onTextLayout={[Function]}
-      style={
-        [
-          {
-            "color": {
-              "dynamic": {
-                "dark": "#A9AEA2",
-                "highContrastDark": "#ECEAE2",
-                "highContrastLight": "#23271F",
-                "light": "#575C52",
-              },
-            },
-            "flexShrink": 1,
-            "fontSize": 13,
-            "fontWeight": "400",
-            "lineHeight": 18.00100300902708,
-          },
-          null,
-          null,
-          undefined,
-        ]
-      }
-    >
-      Changes will show on Today.
-    </Text>
-  </View>
 </View>
 `;
 
@@ -10657,48 +10615,6 @@ exports[`iOS design at font scale 2 FollowButton retains its iOS output 1`] = `
         Follow
       </Text>
     </View>
-  </View>
-  <View
-    accessibilityElementsHidden={true}
-    collapsable={false}
-    importantForAccessibility="no-hide-descendants"
-    style={
-      {
-        "opacity": 0,
-      }
-    }
-  >
-    <Text
-      accessibilityLanguage="en-AU"
-      allowFontScaling={true}
-      dynamicTypeRamp="footnote"
-      maxFontSizeMultiplier={0}
-      onLayout={[Function]}
-      onTextLayout={[Function]}
-      style={
-        [
-          {
-            "color": {
-              "dynamic": {
-                "dark": "#A9AEA2",
-                "highContrastDark": "#ECEAE2",
-                "highContrastLight": "#23271F",
-                "light": "#575C52",
-              },
-            },
-            "flexShrink": 1,
-            "fontSize": 13,
-            "fontWeight": "400",
-            "lineHeight": 18.00100300902708,
-          },
-          null,
-          null,
-          undefined,
-        ]
-      }
-    >
-      Changes will show on Today.
-    </Text>
   </View>
 </View>
 `;
