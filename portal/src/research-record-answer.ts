@@ -4,6 +4,8 @@ import { requestedBillTitle, billTitleMatches } from './bill-title'
 import { billIntroductionListQuestion, recordCountKind, recordIntentText } from './ask-scope-intent'
 import { speechRankingGrain, partyPolicyTopic } from './ask-answer-grain'
 import type { QualitativeAnswer } from './research-types'
+import { identityPerson, sourceAboutPerson } from './ask-followup'
+import { agencyHeadRanking, isAgencyHead, remunerationName } from './ask-remuneration'
 
 /** A selected representative vote carries its complete source title, including procedural clauses. */
 export function divisionVoteSource(payload: Pick<QualitativeAnswer, 'sources' | 'citations'>, line: string, from: number, until: number) {
@@ -66,13 +68,46 @@ export function recordEvidenceText(text: string, url: string): string {
 export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null {
   input = { ...input, question: recordIntentText(input.question) }
   const facts = input.facts.filter(f => !f.coverage && !f.metadata)
-  const remuneration = facts.filter(f => f.source.remuneration)
+  const identity = identityPerson(input.question)
+  const remuneration = facts.filter(f => f.source.remuneration && (!identity || sourceAboutPerson(f.source, identity,true)))
+    .filter((f,i,all) => all.findIndex(other => other.source.remuneration!.record_id === f.source.remuneration!.record_id) === i)
   if (remuneration.length) {
+    const byYear = (a: WritingFact,b: WritingFact) => b.source.remuneration!.year.localeCompare(a.source.remuneration!.year) || (b.source.remuneration!.total??-1)-(a.source.remuneration!.total??-1)
+    if (identity) {
+      const grouped = new Map<string, WritingFact[]>()
+      for (const f of [...remuneration].sort(byYear)) {
+        const r=f.source.remuneration!, key=[r.body,r.position.toLowerCase().replace(/&/g,'and')].join('|')
+        grouped.set(key,[...(grouped.get(key)??[]),f])
+      }
+      return [...grouped.values()].map(group => {
+        const r=group[0].source.remuneration!, years=[...new Set(group.map(f=>f.source.remuneration!.year))]
+        return line(`${remunerationName(r.name)} is listed as ${r.position} at ${r.body} in the ${list(years)} annual ${years.length===1?'report':'reports'}`,group)
+      })
+    }
+    if (agencyHeadRanking(input.question) && !input.constraints?.people?.length) {
+      const heads=remuneration.filter(f=>isAgencyHead(f.source.remuneration!.position)&&f.source.remuneration!.total!=null)
+      const year=input.constraints?.remunerationYear ?? heads.find(f=>f.source.remuneration!.ranking_year)?.source.remuneration!.ranking_year ?? [...heads].sort(byYear)[0]?.source.remuneration!.year
+      const ranked=heads.filter(f=>f.source.remuneration!.year===year&&!f.source.remuneration!.historical).sort((a,b)=>b.source.remuneration!.total!-a.source.remuneration!.total!).slice(0,3)
+      if (ranked.length) {
+        const result=ranked.map((f,i)=>{
+          const r=f.source.remuneration!, amount='$'+r.total!.toLocaleString('en-AU')
+          return line(i===0 ? `${remunerationName(r.name)} (${r.position}), ${r.body}, had the highest reported total remuneration among agency heads in the published ${year} records${r.latest_complete ? ' (the latest largely tabled reporting year in this snapshot)' : ''}: ${amount}` : `${remunerationName(r.name)} (${r.position}), ${r.body}, ranked ${i===1?'second':'third'} with reported total remuneration of ${amount} for ${year}`,[f])
+        })
+        const older=heads.find(f=>f.source.remuneration!.historical&&f.source.remuneration!.year<year!&&f.source.remuneration!.total!>ranked[0].source.remuneration!.total!*1.25)
+        if(older){
+          const r=older.source.remuneration!, c=r.components??{}, parts=[['base salary','base_salary'],['bonuses','bonuses'],['other benefits','other_benefits'],['superannuation','superannuation'],['long service leave','long_service_leave'],['other long-term benefits','other_long_term'],['termination','termination']]
+            .filter(([,key])=>typeof c[key]==='number'&&(c[key]!==0||key==='termination')).map(([label,key])=>`${label} $${c[key]!.toLocaleString('en-AU')}`)
+          result.push(line(`${remunerationName(r.name)} (${r.position}), ${r.body}, separately had a larger reported total remuneration of $${r.total!.toLocaleString('en-AU')} in the older ${r.year} row${parts.length?' ('+parts.join(', ')+')':''}${r.checks?.some(c=>c.includes('do not add up'))?'; the published components do not add up to that total':''}`,[older]))
+        }
+        return result
+      }
+    }
+    const personal = new Set(remuneration.map(f=>f.source.remuneration!.name.toLowerCase())).size===1
     const ranked = /\b(?:highest|largest|biggest|top|most paid|paid most)\b/i.test(input.question)
-    const selected = ranked ? [...remuneration].sort((a,b)=>(b.source.remuneration!.total??-1)-(a.source.remuneration!.total??-1)) : remuneration
+    const selected = personal ? [...remuneration].sort(byYear) : ranked ? [...remuneration].sort((a,b)=>(b.source.remuneration!.total??-1)-(a.source.remuneration!.total??-1)) : remuneration
     return selected.map(f => {
       const r=f.source.remuneration!
-      return line(`${r.name} (${r.position}), ${r.body}, had reported total remuneration of ${r.total==null?'an unpublished amount':'$'+r.total.toLocaleString('en-AU')} for ${r.year}`,[f])
+      return line(`${remunerationName(r.name)} (${r.position}), ${r.body}, had reported total remuneration of ${r.total==null?'an unpublished amount':'$'+r.total.toLocaleString('en-AU')} for ${r.year}`,[f])
     })
   }
   const grain = input.constraints?.speechRankingGrain ?? speechRankingGrain(input.question)

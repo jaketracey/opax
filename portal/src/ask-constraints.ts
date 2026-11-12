@@ -6,6 +6,8 @@ import { requestedBillTitle, billTitleMatches } from './bill-title'
 import { recordIntentText, recordCountKind, billIntroductionListQuestion } from './ask-scope-intent'
 import { speechRankingGrain, partyPolicyTopic } from './ask-answer-grain'
 import { canonicalChamber, questionChamber } from './ask-chamber'
+import { identityPerson } from './ask-followup'
+import { agencyHeadRanking } from './ask-remuneration'
 export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
@@ -20,10 +22,15 @@ export interface AskConstraints {
   speechRankingGrain?: 'speaker' | 'party'
   industryRanking?: true
   policyVoteTopic?: string
+  identityPerson?: string
+  agencyHeadRanking?: true
+  remunerationYear?: string
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}, statuteTitles: ReadonlySet<string> | null = null): AskConstraints {
   question = named.resolvedQuestion ?? question
   const q = recordIntentText(question)
+  const identity = identityPerson(question), headRanking = agencyHeadRanking(question) && !named.people.length
+  const remuneration = {...(identity ? {identityPerson: identity} : {}), ...(headRanking ? {agencyHeadRanking: true as const, remunerationYear: question.slice(0,4000).match(/\b(?:19|20)\d{2}-\d{2}\b/)?.[0]} : {})}
   const { text, territory } = scopeAfterStatutes(question, statuteTitles), jurisdictionText = text.toLowerCase()
   const actUnfiltered = !statuteTitles?.size, state = actUnfiltered && filters.state === 'act' ? undefined : filters.state
   const detected = String(state || (/new south wales|\bnsw\b/.test(jurisdictionText) ? 'nsw' : /victoria|\bvic\b/.test(jurisdictionText) ? 'vic' : /queensland|\bqld\b/.test(jurisdictionText) ? 'qld' : /south australia|\bsa\b/.test(jurisdictionText) ? 'sa' : /western australia|\bwa\b/.test(jurisdictionText) ? 'wa' : /tasmania/.test(jurisdictionText) ? 'tas' : territory ? 'act' : /northern territory/.test(jurisdictionText) ? 'nt' : /federal|commonwealth/.test(jurisdictionText) ? 'federal' : '')) || undefined
@@ -38,11 +45,21 @@ export function extractAskConstraints(question: string, period: Period, named: N
   const grantRecipient = grantTotal ? (/\bgrants?\s+to\s+(.+?)(?=[?!]|\.\s|\s+(?:in|during|since|from|between)\s+(?:\d|financial|FY)|$)/i.exec(question)?.[1] ?? /\bhow much has\s+(.+?)\s+(?:received|been awarded)\s+in\s+(?:(?:federal|Commonwealth|Queensland Government)\s+)?grants?\b/i.exec(question)?.[1])?.trim().replace(/\.$/,'') : undefined
   return { period, dated: period.kind !== 'all' && !!(period.since || period.until), jurisdiction, chamber, party, people: named.people, locationState, stateGovernment, place, ...(speechRankingGrain(question) ? { speechRankingGrain: speechRankingGrain(question) } : {}), ...(party && partyPolicyTopic(question) ? { policyVoteTopic: partyPolicyTopic(question) } : {}), ...(/\b(?:which|what) industries\b/i.test(question) && /\b(?:gave|give|donat\w*|fund\w*|receipts?)\b/i.test(question) ? { industryRanking: true as const } : {}), ...(contractSupplier?{contractSupplier}:{}), ...(grantRecipient?{grantRecipient}:{}), recordKind: /\b(?:divisions?|vot(?:e|ed|es|ing))\b/i.test(q) ? 'division' : /\b(?:bills?|legislation)\b/i.test(q) ? 'bill' : undefined, exactBillTitle: requestedBillTitle(question) ?? undefined, ...(recordCountKind(q) ? { recordCountKind: recordCountKind(q) } : {}), ...(billIntroductionListQuestion(q) ? { listIntroductions: true as const } : {}), ...(named.resolvedQuestion ? { resolved_question: named.resolvedQuestion } : {}), ...(actUnfiltered ? { actUnfiltered: true as const } : {}),
     superlative: /\b(?:lowest|least|fewest|smallest|youngest)\b/.test(q) ? 'lowest' : /\b(?:highest|most|largest|biggest|oldest|top)\b/.test(q) ? 'highest' : undefined,
-    trend: /\b(?:trend|since|over time|each year|by year|changed?|increas\w*|decreas\w*)\b/.test(q) }
+    trend: /\b(?:trend|since|over time|each year|by year|changed?|increas\w*|decreas\w*)\b/.test(q), ...remuneration }
 }
 /** Restrict model arguments using only parameters the tool actually supports. */
 export function constrainStep(step: PlanStep, c: AskConstraints, properties: Record<string, unknown>): PlanStep {
   const a = { ...step.args }, has = (k: string) => Object.hasOwn(properties, k) && !(step.tool === 'public_finances' && a.dataset !== 'vic_gifts' && ['chamber','since','until'].includes(k))
+  if (c.identityPerson) {
+    if (step.tool === 'find_people') a.name = c.identityPerson
+    if (step.tool === 'find_records') a.query = c.identityPerson
+    if (step.tool === 'annual_reports' && !a.record_id) { a.view = 'remuneration'; a.person = c.identityPerson }
+  }
+  if (c.agencyHeadRanking && step.tool === 'annual_reports' && !a.record_id) {
+    a.view = 'agency_heads'
+    for (const key of ['person','position','body','min_total','year']) delete a[key]
+    if (c.remunerationYear) a.year = c.remunerationYear
+  }
   if (step.tool === 'count_speeches' && c.speechRankingGrain && has('group_by')) {
     a.group_by = c.speechRankingGrain
     if (!c.people.length) delete a.speaker

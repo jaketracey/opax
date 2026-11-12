@@ -28,7 +28,7 @@ import {answerDecision} from './research-coherence.mjs'
 import { isBillSpeechQuestion, isRecordCountQuestion, recordIntentText } from './ask-scope-intent'
 import { requestedPersonSlot } from './ask-person-slot'
 import {researchTrace} from './research-trace'
-import {remunerationFollowUp} from './ask-followup'
+import {remunerationFollowUp, identityPerson, sourceAboutPerson} from './ask-followup'
 import { resolvePersonName } from './person-name-matching'
 import { recordAnswerLines } from './research-record-answer'
 import { broadAbsenceQuestion, verifiedAbsenceCount, absenceClaim } from './research-absence'
@@ -343,7 +343,8 @@ export function createResearch(options: ResearchOptions): Research {
       if (classifyAgentic(question).shape === 'comparison' || isBillSpeechQuestion(question) || /\band (?:who|when|what|how)\b/i.test(question)) return null
       const { all, tools, coverage } = recordFacts()
       const facts = all.filter(f => tools.has(f.id) && !coverage.has(f.id) && (!absenceClaim(f.text) || !recoveryOwed() && (!broadAbsenceQuestion(question, constraints) || verifiedAbsenceCount(results)))).map(f => ({ id: f.id, text: f.text,
-        source: { resource: `fact-${f.id}`, slug: '', title: f.cite.label, href: f.cite.url, url: f.cite.url, snippet: f.text, kind: f.cite.kind, cited: true, ...(f.entities?.length ? { entities: f.entities } : {}) } }))
+        source: { resource: `fact-${f.id}`, slug: '', title: f.cite.label, href: f.cite.url, url: f.cite.url, snippet: f.text, kind: f.cite.kind, cited: true, ...(f.cite.remuneration ? {remuneration:f.cite.remuneration} : {}), ...(f.entities?.length ? { entities: f.entities } : {}) } }))
+        .filter(f => !constraints.identityPerson || sourceAboutPerson(f.source, constraints.identityPerson,true))
       const lines = recordAnswerLines({ question, period: context.period, constraints, facts })
       return lines?.length ? [...new Set(lines.flatMap(l => l.facts))] : null
     }
@@ -360,6 +361,7 @@ export function createResearch(options: ResearchOptions): Research {
         const fact = all.find(f => f.id === id), tool = tools.get(id)
         if (tool === 'count_records' && !/\b(?:bills?|legislation|divisions?|vot(?:e|ed|es|ing))\b/i.test(recordIntentText(question)) && !isRecordCountQuestion(question)) { why(`fact ${id}: count does not answer what was debated; use source passages`); return [] }
         if (!fact || !tool) { why(`fact ${id}: not a record fact`); return [] }
+        if (constraints.identityPerson && !sourceAboutPerson({title:fact.cite.label,snippet:fact.text,remuneration:fact.cite.remuneration},constraints.identityPerson,true)) { why(`fact ${id}: outside full-name identity`); return [] }
         if (absenceClaim(fact.text) && recoveryOwed()) { why(`fact ${id}: recover with a distinct lookup before stating absence`); return [] }
         if (broadAbsenceQuestion(question, constraints) && absenceClaim(fact.text) && !verifiedAbsenceCount(results)) { why(`fact ${id}: a whole-year, chamber or party absence needs a complete count or list; an empty narrow search is not absence`); return [] }
         if (context.named.ambiguous || unresolvedPersonAsked(question, context.named)) { why(`fact ${id}: named_unresolved`); return [] }
@@ -574,9 +576,12 @@ export function createResearch(options: ResearchOptions): Research {
       if (credits.blocked()) fail('research_credit_exhausted')
       if (!options.model) fail('missing_key')
       const carried = remunerationFollowUp(question, options.input?.context ?? [])
-      if (carried) {
-        await invoke({tool:'annual_reports',args:carried.record_id ? {view:'remuneration',record_id:carried.record_id} : {view:'remuneration',person:carried.person,...(carried.body?{body:carried.body}:{}),...(carried.year?{year:carried.year}:{}),limit:5}})
-        const row = results.flatMap(r => Array.isArray(r.data?.rows) ? r.data.rows as Record<string,unknown>[] : []).find(r => String(r.name).toLowerCase() === carried.person.toLowerCase())
+      const identity = identityPerson(question)
+      if (constraints.agencyHeadRanking) await invoke({tool:'annual_reports',args:{view:'agency_heads',...(constraints.remunerationYear?{year:constraints.remunerationYear}:{}),limit:3}})
+      if (carried || identity) {
+        const subject = carried ?? {person:identity!}
+        await invoke({tool:'annual_reports',args:subject.record_id ? {view:'remuneration',record_id:subject.record_id} : {view:'remuneration',person:subject.person,...(subject.body?{body:subject.body}:{}),...(subject.year?{year:subject.year}:{}),limit:5}})
+        const row = results.flatMap(r => Array.isArray(r.data?.rows) ? r.data.rows as Record<string,unknown>[] : []).find(r => String(r.name).toLowerCase() === subject.person.toLowerCase())
         if (row) {
           Object.assign(context.named,{people:[String(row.name)],ambiguous:false,unresolved:false})
           constraints.people=[String(row.name)]
