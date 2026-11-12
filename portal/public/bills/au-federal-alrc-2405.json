@@ -277,7 +277,7 @@
    "key": "federal-senate-2967",
    "date": "2013-06-25",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Second reading",
    "ayes": 11,
    "noes": 36,

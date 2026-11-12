@@ -275,7 +275,7 @@
    "key": "federal-senate-3827",
    "date": "2015-06-22",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Second reading",
    "ayes": 42,
    "noes": 21,

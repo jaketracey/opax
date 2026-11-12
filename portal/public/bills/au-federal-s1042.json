@@ -150,7 +150,7 @@
    "key": "federal-senate-4546",
    "date": "2017-02-13",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "In committee",
    "ayes": 43,
    "noes": 4,

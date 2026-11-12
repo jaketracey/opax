@@ -229,7 +229,7 @@
    "key": "federal-senate-3670",
    "date": "2015-02-09",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "In committee",
    "ayes": 31,
    "noes": 34,

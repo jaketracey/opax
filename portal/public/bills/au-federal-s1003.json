@@ -113,7 +113,7 @@
    "key": "federal-senate-3768",
    "date": "2015-05-11",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Second reading",
    "ayes": 36,
    "noes": 30,

@@ -105,7 +105,7 @@
    "key": "federal-representatives-3448",
    "date": "2014-09-30",
    "house": "representatives",
-   "question": "No motion text available",
+   "question": null,
    "stage": "Second reading",
    "ayes": 83,
    "noes": 53,

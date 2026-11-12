@@ -257,7 +257,7 @@
    "key": "federal-senate-4113",
    "date": "2016-03-01",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Second reading",
    "ayes": 37,
    "noes": 23,
