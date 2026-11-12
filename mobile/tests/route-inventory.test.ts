@@ -42,6 +42,7 @@ jest.mock('expo-router', () => {
     Redirect: () => null,
     useLocalSearchParams: jest.fn(),
     useRootNavigationState: () => ({ key: 'root' }),
+    useNavigationContainerRef: () => ({ isReady: () => false }),
     useSegments: () => [],
     router: { push: jest.fn(), back: jest.fn() },
   };

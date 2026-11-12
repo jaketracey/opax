@@ -1,4 +1,5 @@
 import { RouteOptions } from '../navigation/preview';
+import { useScreenReady } from '../analytics/timing';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -120,6 +121,10 @@ export default function YourMP() {
     seatKey,
     () => catalogs.yourMP(federal!.electorate_id, stateSeatIds),
     attempt,
+  );
+  useScreenReady(
+    '/your-mp',
+    seat.status !== 'loading' && (!home || view.status !== 'loading'),
   );
   const electorate = useBlock<ElectorateView>(
     home ? federal!.detail_url : null,

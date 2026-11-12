@@ -89,6 +89,20 @@ beforeAll(async () => {
     filter_count: 0,
     query: question,
   });
+  posthog.capture('opax_route_error', {
+    error_class: 'TypeError',
+    route_pattern: '/person/[slug]',
+    error_message: question,
+    stack: question,
+    $screen_name: '/person/jane-citizen',
+  });
+  posthog.capture('opax_app_start', { duration_ms: 250, question });
+  posthog.capture('opax_screen_ready', {
+    route_pattern: '/bill/[key]',
+    duration_ms: 120,
+    $screen_name: '/bill/private-record',
+    title: question,
+  });
   posthog.capture('$autocapture', { $el_text: question });
   posthog.capture('$exception', { $exception_message: question });
   posthog.capture('opax_question', { question });
@@ -138,6 +152,9 @@ test('only allowlisted events are sent, tagged with the platform and version', (
       'opax_ask_started',
       'opax_ask_completed',
       'opax_search_started',
+      'opax_route_error',
+      'opax_app_start',
+      'opax_screen_ready',
       '$screen',
     ]),
   );
@@ -148,6 +165,9 @@ test('only allowlisted events are sent, tagged with the platform and version', (
       'opax_ask_started',
       'opax_ask_completed',
       'opax_search_started',
+      'opax_route_error',
+      'opax_app_start',
+      'opax_screen_ready',
       '$screen',
     ]).toContain(name);
   for (const event of events)
@@ -166,4 +186,12 @@ test('only allowlisted events are sent, tagged with the platform and version', (
     .filter((event) => event.event === '$screen')
     .map((event) => event.properties.$screen_name);
   expect(screens).toEqual(['/other', '/person/[slug]']);
+  expect(
+    events.find((event) => event.event === 'opax_route_error')!.properties,
+  ).not.toHaveProperty('error_message');
+  for (const event of events.filter((event) => event.event.startsWith('opax_')))
+    expect(event.properties).not.toHaveProperty('$screen_name');
+  expect(sent.map((request) => request.body).join('')).not.toMatch(
+    /private-record|jane-citizen/,
+  );
 });

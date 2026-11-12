@@ -1,5 +1,6 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
+import { useScreenReady } from '../../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
@@ -109,6 +110,11 @@ export default function AskScreen() {
   const [profiles, setProfiles] = useState<Map<string, AskPerson>>(new Map());
   const [names, setNames] = useState<string[]>([]);
   const [dockHeight, setDockHeight] = useState(0);
+  const [contentReady, setContentReady] = useState(false);
+  useScreenReady('/ask', dockHeight > 0 && contentReady);
+  const onContentSizeChange = useCallback((width: number, height: number) => {
+    if (width > 0 && height > 0) setContentReady(true);
+  }, []);
   // Bar items are built during render, so New question touches no refs:
   // it asks for the top, and an effect scrolls there.
   const [topRequest, setTopRequest] = useState(0);
@@ -316,6 +322,7 @@ export default function AskScreen() {
         adaptive ? { minIndexForVisible: 0 } : undefined
       }
       onLayout={column.onLayout}
+      onContentSizeChange={onContentSizeChange}
       onScroll={(event) => {
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
         if (Platform.OS === 'android') androidRoot.onScroll(event);

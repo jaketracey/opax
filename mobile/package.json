@@ -2,7 +2,7 @@
   "name": "opax-mobile",
   "private": true,
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "index.js",
   "scripts": {
     "start": "expo start --localhost",
     "ios": "bash scripts/run-ios.sh",
