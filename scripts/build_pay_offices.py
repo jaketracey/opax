@@ -241,7 +241,6 @@ ALIASES = {
     "National Health and Medical Research Council": ["nhmrc"],
     "Australian Research Council": ["arc"],
     "Fair Work Commission": ["fwc"],
-    "Productivity Commission": ["pc"],
     "Services Australia": ["centrelink"],
     "National Anti-Corruption Commission": ["nacc"],
     "Australian Human Rights Commission": ["ahrc"],
@@ -269,7 +268,7 @@ def department(name: str) -> tuple[str, list[str]]:
         return "Attorney-General’s Department", ["attorney general", "attorney generals"]
     full = f"Department of {n}"
     first = re.split(r",| and ", n)[0]
-    keys = [fold(first)]
+    keys = [fold(n)] + ([fold(first)] if fold(first) != fold(n) else [])
     extra = {"Foreign Affairs and Trade": ["dfat", "foreign affairs"], "Veterans’ Affairs": ["veterans affairs", "veterans", "dva"],
              "Climate Change, Energy, the Environment and Water": ["dcceew", "environment", "energy"],
              "Home Affairs": ["home affairs"], "Social Services": ["social services", "dss"],
