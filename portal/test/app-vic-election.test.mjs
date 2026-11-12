@@ -155,7 +155,8 @@ test('injected candidates keep ballot order, normalise empty party to null, and 
 });
 
 test('unknown and invalid seat slugs answer JSON 404 without caching',async()=>{
-  for(const path of ['/seat/unknown','/seat/Albert-Park','/seat/albert--park','/seat/albert_park','/seat/%61lbert-park','/seat/%','/seat/','/seat/albert-park/extra','/unknown']) {
+  for(const path of ['/seat/unknown','/seat/Albert-Park','/seat/albert--park','/seat/albert_park','/seat/%61lbert-park','/seat/%','/seat/','/seat/albert-park/extra','/unknown',
+    '/unknown?q=Bass','/seat/Albert-Park?extra=1','/seat/albert-park/extra?q=Bass']) {
     const r=await get(path);assert.equal(r.status,404,path);assert.deepEqual(await r.json(),{error:'not_found'});
     assert.equal(r.headers.get('cache-control'),'no-store');
   }
@@ -177,6 +178,8 @@ for(const [q,name] of [['3350','find-3350'],['St Kilda','find-st-kilda'],['Bass'
 test('find trims and truncates q to 60 characters, and distinguishes empty place results',async()=>{
   assert.equal((await payload('/find?q=%20%20Bass%20%20')).q,'Bass');
   const q='x'.repeat(80);const api=await payload('/find?q='+q);assert.equal(api.q,q.slice(0,60));
+  const cut='x'.repeat(59)+' '+ 'following word';
+  assert.equal((await payload('/find?q='+encodeURIComponent(cut))).q,'x'.repeat(59));
   assert.equal(api.empty,'place');assert.deepEqual(api.hits,[]);
   assert.ok((await payload('/find?q=Metropolitan')).hits.some(h=>h.kind==='Region'));
 });
@@ -242,6 +245,75 @@ test('optional notice is null at launch and admits only plain text and HTTPS lin
   for(const bad of [{...notice,text:'x'.repeat(201)},{...notice,text:'<b>Update</b>'},{...notice,text:''},{...notice,link:{label:'bad',url:'http://example.com'}}]) {
     assert.equal((await get('',environment({...data,notice:bad}))).status,503);
   }
+});
+
+function changingEnvironment({conditional=true,etags=true}={}) {
+  const files={[VIC_ELECTION_ASSET]:structuredClone(data),[VIC_ELECTION_PLACES]:structuredClone(places)};
+  const versions={[VIC_ELECTION_ASSET]:0,[VIC_ELECTION_PLACES]:0},reads=[],parses=[];
+  return {VIC_ELECTION_HUB_ENABLED:'true',files,reads,parses,
+    replace(path,value){files[path]=value;versions[path]++;},
+    ASSETS:{async fetch(req){
+      const path=new URL(req.url).pathname;reads.push({path,tag:req.headers.get('if-none-match')});
+      const value=files[path];if(value instanceof Error)throw value;
+      const etag='"'+path+':'+versions[path]+'"',headers=etags?{etag}:{};
+      if(conditional&&etags&&req.headers.get('if-none-match')===etag)return new Response(null,{status:304,headers});
+      const encoded=JSON.stringify(value),response=new Response(encoded,{headers});
+      response.json=async()=>{parses.push(path);return JSON.parse(encoded);};
+      return response;
+    }}};
+}
+
+for(const conditional of [true,false]) {
+  test('parsed assets survive '+(conditional?'conditional 304':'unchanged 200 ETag')+' responses and refresh when either asset changes',async()=>{
+    const env=changingEnvironment({conditional});
+    await payload('/find?q=St%20Kilda',env);await payload('',env);await payload('/seat/albert-park',env);await payload('/find?q=3350',env);
+    assert.deepEqual(env.parses,[VIC_ELECTION_ASSET,VIC_ELECTION_PLACES]);
+    assert.ok(env.reads.filter(r=>r.path===VIC_ELECTION_ASSET).slice(1).every(r=>r.tag));
+    assert.ok(env.reads.filter(r=>r.path===VIC_ELECTION_PLACES).slice(1).every(r=>r.tag));
+    const first=await get('',env),updated='2026-11-13';
+    env.replace(VIC_ELECTION_ASSET,{...env.files[VIC_ELECTION_ASSET],updated});
+    const next=await get('',env);assert.equal((await next.json()).updated,updated);assert.notEqual(first.headers.get('etag'),next.headers.get('etag'));
+    await payload('/find?q=3350',env);
+    assert.deepEqual(env.parses,[VIC_ELECTION_ASSET,VIC_ELECTION_PLACES,VIC_ELECTION_ASSET,VIC_ELECTION_PLACES]);
+    env.replace(VIC_ELECTION_PLACES,{...env.files[VIC_ELECTION_PLACES],note:'Updated local places note.'});
+    assert.equal((await payload('/find?q=3350',env)).note,'Updated local places note.');
+    assert.equal(env.parses.at(-1),VIC_ELECTION_PLACES);
+    const other=changingEnvironment();
+    assert.equal((await payload('',other)).updated,data.updated);assert.deepEqual(other.parses,[VIC_ELECTION_ASSET]);
+  });
+}
+
+for(const etags of [true,false]) {
+  test('warm place searches reuse the fold cache '+(etags?'with ETags':'without ETags'),async()=>{
+    const env=changingEnvironment({etags});
+    const name=places.suburb.find(([name])=>!data.seats.some(s=>s.name===name||s.members.some(m=>m.name===name)))[0];
+    const original=String.prototype.normalize;let folds=0;
+    String.prototype.normalize=function(...args){if(String(this)===name)folds++;return original.apply(this,args);};
+    try {
+      await payload('/find?q=St%20Kilda',env);assert.equal(folds,1);
+      await payload('/find?q=3350',env);await payload('/find?q=Bass',env);assert.equal(folds,1);
+      env.replace(VIC_ELECTION_PLACES,{...env.files[VIC_ELECTION_PLACES],note:'Changed index.'});
+      assert.equal((await payload('/find?q=St%20Kilda',env)).note,'Changed index.');assert.equal(folds,2);
+      env.replace(VIC_ELECTION_ASSET,{...env.files[VIC_ELECTION_ASSET],updated:'2026-11-14'});
+      assert.equal((await payload('',env)).updated,'2026-11-14');
+    } finally {String.prototype.normalize=original;}
+  });
+}
+
+test('concurrent reads share pending parses and failed asset reads are retried without stale success',async()=>{
+  const env=changingEnvironment();
+  await Promise.all([payload('',env),payload('/seat/albert-park',env),payload('/find?q=3350',env),payload('/find?q=Bass',env)]);
+  assert.deepEqual(env.parses,[VIC_ELECTION_ASSET,VIC_ELECTION_PLACES]);
+  assert.equal(env.reads.filter(r=>r.path===VIC_ELECTION_ASSET).length,1);
+  const good=env.files[VIC_ELECTION_ASSET];
+  env.replace(VIC_ELECTION_ASSET,new Error('local read failed'));
+  assert.equal((await get('',env)).status,503);
+  env.replace(VIC_ELECTION_ASSET,{...good,updated:'2026-11-15'});
+  assert.equal((await payload('',env)).updated,'2026-11-15');
+  env.replace(VIC_ELECTION_PLACES,new Error('places unavailable'));
+  assert.equal((await payload('/find?q=Bass',env)).places_searched,false);
+  env.replace(VIC_ELECTION_PLACES,places);
+  assert.equal((await payload('/find?q=Bass',env)).places_searched,true);
 });
 
 test('shape pin covers every response and nested contract type; internal fields cannot leak',async()=>{
