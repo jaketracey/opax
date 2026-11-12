@@ -46,6 +46,7 @@ import { Group, InsetGroup } from './layout';
 import { showMenu } from './menu';
 import { phoneCopy } from './phone-copy';
 import { symbols } from './symbols';
+import { useRowHighlight } from './row-padding';
 import { Text, type TextTone } from './text';
 import {
   androidControls,
@@ -1388,6 +1389,7 @@ export function SwitchRow({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
+  const highlight = useRowHighlight();
   return (
     <Pressable
       accessibilityRole="switch"
@@ -1399,7 +1401,7 @@ export function SwitchRow({
       style={({ pressed }) => [
         styles.switchRow,
         stacked ? styles.switchRowStacked : null,
-        pressed && !disabled ? { backgroundColor: colors.sunken } : null,
+        pressed && !disabled ? { backgroundColor: highlight } : null,
       ]}
     >
       <View style={styles.switchText}>

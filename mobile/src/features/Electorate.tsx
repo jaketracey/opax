@@ -47,10 +47,11 @@ import { RowLink, rowMenus, type RowMenuAction } from '../design/row-link';
 import {
   ownsRowPadding,
   useRowCellStyle,
+  useRowHighlight,
   useRowInset,
 } from '../design/row-padding';
 import { symbols } from '../design/symbols';
-import { colors, minimumTarget, rhythm } from '../design/tokens';
+import { minimumTarget, rhythm } from '../design/tokens';
 import { headerItems, pageItems } from '../navigation/chrome';
 import { openOnWeb } from '../navigation/external';
 import {
@@ -825,6 +826,7 @@ function ElectionRow({
   testID: string;
 }) {
   const cellStyle = useRowCellStyle();
+  const highlight = useRowHighlight();
   useRowInset(0);
   const summary = electionSummary(record, jurisdiction);
   const winner = summary.winner;
@@ -878,7 +880,7 @@ function ElectionRow({
         style={({ pressed }) => [
           styles.electionRow,
           cellStyle,
-          pressed && { backgroundColor: colors.sunken },
+          pressed && { backgroundColor: highlight },
         ]}
       >
         <View style={styles.electionWords}>

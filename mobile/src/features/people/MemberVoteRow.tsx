@@ -4,10 +4,11 @@ import { StatusCapsule } from '../../design/labels';
 import { Icon } from '../../design/icon';
 import { symbols } from '../../design/symbols';
 import { RowLink } from '../../design/row-link';
+import { useRowHighlight } from '../../design/row-padding';
 import { Text } from '../../design/text';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { formatDate } from '../../design/format';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { NewDot } from '../follows/NewDot';
 
@@ -37,6 +38,7 @@ export function MemberVoteRow({
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
+  const highlight = useRowHighlight();
   const status = position === 'for' ? 'Voted for' : 'Voted against';
   const meta = date ? `${stage} · ${formatDate(date, 'short')}` : stage;
   // The row's own label replaces its children's, so the dot's "New" is said here.
@@ -81,7 +83,7 @@ export function MemberVoteRow({
         }
         testID={testID}
         style={({ pressed }) =>
-          pressed ? { backgroundColor: colors.sunken } : null
+          pressed ? { backgroundColor: highlight } : null
         }
       >
         {body}
