@@ -1,4 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
+import { useScreenReady } from '../../analytics/timing';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import {
   Keyboard,
@@ -60,6 +61,7 @@ export function SearchScreen({
   onRows?: Parameters<typeof ResultsView>[0]['onRows'];
 }) {
   const params = useLocalSearchParams<Record<string, string>>();
+  useScreenReady('/search', true);
   const [text, setText] = useState('');
   const [editing, setEditing] = useState(false);
   const [submitted, setSubmitted] = useState<{

@@ -6,6 +6,8 @@ import {
   screenName,
   scrubEvent,
   sectionOf,
+  scrubErrorMessage,
+  ERROR_MESSAGE_MAX_LENGTH,
   type AnalyticsContext,
 } from '../src/analytics/events';
 
@@ -87,6 +89,91 @@ describe('cleanEvent', () => {
 });
 
 describe('scrubEvent', () => {
+  test('error messages must exactly match a short content-free diagnostic', () => {
+    expect(scrubErrorMessage('Network request failed')).toBe(
+      'Network request failed',
+    );
+    for (const unsafe of [
+      question,
+      'Jane Citizen',
+      'ask?q=private',
+      'jo@example.org',
+      'https://example.org/record/private',
+      'Network request failed: Jane Citizen',
+      'Network request failed\nprivate',
+      'x'.repeat(ERROR_MESSAGE_MAX_LENGTH + 1),
+      42,
+    ]) {
+      expect(scrubErrorMessage(unsafe)).toBeUndefined();
+      expect(cleanEvent('opax_route_error', { error_message: unsafe })).toEqual(
+        {},
+      );
+      expect(
+        scrubEvent(
+          { event: 'opax_route_error', properties: { error_message: unsafe } },
+          context,
+        )?.properties?.error_message,
+      ).toBeUndefined();
+    }
+    expect(
+      scrubEvent(
+        {
+          event: 'opax_route_error',
+          properties: { error_message: 'Network request failed' },
+        },
+        context,
+      )?.properties?.error_message,
+    ).toBe('Network request failed');
+  });
+
+  test('timing events keep only bounded durations and fixed top-screen templates', () => {
+    expect(
+      cleanEvent('opax_app_start', { duration_ms: 123.4, question }),
+    ).toEqual({ duration_ms: 123 });
+    for (const duration_ms of [-1, Infinity, NaN, 3_600_001, '123'])
+      expect(cleanEvent('opax_app_start', { duration_ms })).toEqual({});
+    for (const route_pattern of [
+      '/person/jane-citizen',
+      '/bill/private',
+      '/search?q=private',
+      question,
+    ]) {
+      expect(cleanEvent('opax_screen_ready', { route_pattern })).toEqual({});
+      expect(
+        scrubEvent(
+          {
+            event: 'opax_screen_ready',
+            properties: { route_pattern, $screen_name: '/person/jane-citizen' },
+          },
+          context,
+        )?.properties,
+      ).not.toHaveProperty('route_pattern');
+    }
+    expect(
+      scrubEvent(
+        {
+          event: 'opax_screen_ready',
+          properties: {
+            route_pattern: '/person/[slug]',
+            duration_ms: 50,
+            $screen_name: '/person/jane-citizen',
+            question,
+          },
+        },
+        context,
+      )?.properties,
+    ).toMatchObject({ route_pattern: '/person/[slug]', duration_ms: 50 });
+    expect(
+      scrubEvent(
+        {
+          event: 'opax_screen_ready',
+          properties: { $screen_name: '/person/jane-citizen' },
+        },
+        context,
+      )?.properties,
+    ).not.toHaveProperty('$screen_name');
+  });
+
   test('drops SDK events that are not on the list', () => {
     for (const event of [
       '$autocapture',

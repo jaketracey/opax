@@ -1,6 +1,9 @@
 // Exact (source file, native module name) grants. Register new bridges only after
 // review; neither a reviewed file nor a module directory grants other names.
 const reviewedNativeModules = Object.freeze({
+  // Presence check only, to disable analytics in an existing Expo dev client.
+  // No module methods, permissions or transport are used or added.
+  'src/analytics/index.ts': Object.freeze(['EXDevLauncher']),
   'modules/opax-share/index.ts': Object.freeze(['OpaxShare']),
   'modules/opax-ipad/index.ts': Object.freeze(['OpaxIPad']),
   // UIKit backing and divider only; no transport or new permissions.

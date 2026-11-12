@@ -22,8 +22,8 @@ if (!['0', '1'].includes(e2eMicrophone))
   throw new Error('OPAX_E2E_MICROPHONE must be 0 or 1');
 const microphonePrompt =
   androidBuild && variant === 'e2e' && e2eMicrophone === '1';
-// Anonymous product analytics (docs/ANALYTICS.md): iOS production always, an
-// iOS development build only with OPAX_ANALYTICS=1, e2e never. Android stays
+// Anonymous product analytics (docs/ANALYTICS.md): iOS production only.
+// Development and e2e never carry analytics, even with OPAX_ANALYTICS=1. Android stays
 // off until its Google Play Data safety answers include analytics (the code is
 // shared; drop the androidBuild condition then). Events go through
 // the opax.com.au Worker proxy to PostHog project 507367 (Opax). The token is
@@ -33,8 +33,7 @@ if (!['0', '1'].includes(analyticsSwitch))
   throw new Error('OPAX_ANALYTICS must be 0 or 1');
 const analytics =
   !androidBuild &&
-  (variant === 'production' ||
-    (variant === 'development' && analyticsSwitch === '1'))
+  variant === 'production'
     ? {
         host: 'https://opax.com.au/ingest',
         projectToken: 'phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr',

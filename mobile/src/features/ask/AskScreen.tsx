@@ -1,4 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
+import { useScreenReady } from '../../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
   useCallback,
@@ -81,6 +82,7 @@ const announce = (text: string) =>
  * idle; within a session it keeps what was on screen.
  */
 export default function AskScreen() {
+  useScreenReady('/ask', true);
   const offline = useOffline();
   const atTop = useRef(true);
   const ground = askGround();

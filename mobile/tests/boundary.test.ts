@@ -263,6 +263,24 @@ test('reviewed bridges still reject dynamic names and proxy access', () => {
     expect(lintBoundary(shareModule, content).length).toBeGreaterThan(0);
   }
 });
+test('the analytics dev-client check grants only the exact existing module and source', () => {
+  const content = `import { NativeModules } from 'react-native'; const dev = !!NativeModules.EXDevLauncher`;
+  expect(scanSource('src/analytics/index.ts', content)).toEqual([]);
+  expect(lintBoundary('src/analytics/index.ts', content)).toEqual([]);
+  expect(scanSource('src/analytics/other.ts', content)).not.toEqual([]);
+  expect(
+    scanSource(
+      'src/analytics/index.ts',
+      content.replace('EXDevLauncher', 'Networking'),
+    ),
+  ).not.toEqual([]);
+  expect(
+    lintBoundary(
+      'src/analytics/index.ts',
+      content.replace('EXDevLauncher', 'Networking'),
+    ).length,
+  ).toBeGreaterThan(0);
+});
 test('registers only the shipped static voice loader', () => {
   const path = 'modules/opax-voice/index.ts';
   const content = `import { requireNativeModule } from 'expo'; requireNativeModule('OpaxVoice')`;

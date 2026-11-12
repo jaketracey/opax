@@ -83,16 +83,28 @@ carry no `Origin`, which the proxy already accepts). The SDK is
 `posthog-react-native`, pinned to an exact version with no native modules.
 The token and host live in build config (`mobile/app.config.ts`,
 `extra.analytics`), never in `src/`. Only iOS production builds carry that
-config; e2e builds never do, and a development build does only when made with
-`OPAX_ANALYTICS=1`. Android stays off until its Google Play Data safety answers
-include analytics.
+config. Development and e2e builds never do, even with `OPAX_ANALYTICS=1`.
+The runtime also refuses to create a client when `__DEV__` or Expo debug mode
+is true, when running in Expo Go or a dev client (`storeClient` or the existing
+`EXDevLauncher` module, including a client reporting `bare`), when the
+variant or analytics environment is not production, or when the build number
+is missing, zero, invalid or inconsistent between `extra.appBuild` and the
+platform config. iOS also checks the native binary's immutable CFBundleVersion
+from the existing Expo Constants module, including missing or zero values;
+SDK 57 exposes only embedded config for Android. This also blocks lifecycle
+events, not just explicit events.
+The old development opt-in and config-only runtime check could admit build-0
+traffic; both paths are now closed. Android stays off until its Google Play
+Data safety answers include analytics. Instrumentation and runtime gates are
+shared and tested for both iOS and Android; this lane does not enable Android
+ingestion or change Play Console answers.
 
 `mobile/src/analytics/events.ts` is the app's boundary, the counterpart of
 `analytics/events.js`. `cleanEvent` checks what app code asks to send; the
 SDK's `before_send` runs `scrubEvent`, which drops every event not listed below
 and rebuilds each payload from fixed lists, so SDK enrichment (deep-link URLs,
 screen sizes, locale, device name, flags, person and super properties) never
-leaves the phone. Every event carries `platform` (`ios`), `app` (`opax`),
+leaves the phone. Every event carries `platform` (`ios`, or `android` once enabled), `app` (`opax`),
 `app_version`, `app_build` and `environment`, with `$process_person_profile`
 false and `$geoip_disable` true.
 
@@ -110,7 +122,9 @@ false and `$geoip_disable` true.
 | `opax_source_open` | `from_section`, `destination` (`app` or `browser`) |
 | `opax_chip` | `chip_kind` (`ask`), `placement` (`ask` or `today`) |
 | `opax_voice_card` | `action` (`open`), `account` (`signed_in` or `signed_out`) |
-| `opax_route_error` | `error_class`: fixed constructor-name category; `route_pattern`: a fixed route-file pattern such as `/person/[slug]`; version is the common `app_version` |
+| `opax_route_error` | `error_class`: fixed constructor-name category; `route_pattern`: a fixed route-file pattern such as `/person/[slug]`; optional `error_message`: an exact, content-free diagnostic from a fixed allowlist, at most 80 characters |
+| `opax_app_start` | `duration_ms`: JS entry to the first committed Today render, once per cold JS runtime |
+| `opax_screen_ready` | `route_pattern`: one of `/`, `/person/[slug]`, `/bill/[key]`, `/your-mp`, `/search`, `/ask`; `duration_ms`: navigation to the first content commit, at most once per sampled visit |
 
 `from_section` is the first segment of the current route (`today` for the
 home screen); anything else becomes `other`. `scope` is one of the fixed search
@@ -126,24 +140,58 @@ network and proves a raw question cannot reach any request.
 boundary, including a new failure after Try again. It uses `track`, the same
 build-config gate (`extra.analytics`) and both privacy scrubbers; there is no
 separate analytics consent setting in the app. Voice consent does not enable
-analytics. Android, e2e and ordinary development builds send no report. No
+analytics. Android, e2e and all development builds send no report. No
 identify call, exception autocapture or new identifier is added.
 
-Its only event-specific properties are the constructor name and route pattern.
 `error_class` accepts the built-in Error constructors, `ApiError`,
 `PersonIdentityError`, `ChatSyncError` and `AskFailure`; unknown constructors
-become `other`. It never reads `error.name`, message, stack or cause. Patterns
-must match the fixed list in `mobile/src/analytics/route-patterns.ts`, checked
-against route files by a regression test. Expo Router segments supply the
-pattern; pathnames, parameters, slugs, names, questions, answers and other free
-text are never supplied. Unknown patterns become `/other`. The usual anonymous
-SDK ID, privacy flags and common build metadata still apply.
+become `other`. The report never reads `error.name`, stack or cause. It reads
+message only through `scrubErrorMessage`: exact messages such as "Network
+request failed" can pass; unknown, long or interpolated messages are dropped
+entirely. Truncating or redacting arbitrary prose cannot reliably remove names
+or user text. The same fixed message allowlist and 80-character ceiling run
+in both privacy scrubbers. The fallback never displays the error text.
 
-Reporting is wired to the Account, Talk, Community and Licence modal stacks
-through `mobile/src/navigation/RouteErrorBoundary.tsx`. The existing root and
-tab layouts still use the display-only `mobile/src/design/route-error.tsx`;
-their owner must add `useRouteErrorReporting(error)` there (or switch those
-exports to the reporting boundary) to cover failures caught at those levels.
+Patterns must match the fixed list in `mobile/src/analytics/route-patterns.ts`,
+checked against route files by a regression test. Expo Router segments supply
+the pattern; pathnames, parameters, slugs, names, questions, answers and other
+free text are never supplied. Unknown patterns become `/other`. The usual
+anonymous SDK ID, privacy flags and common build metadata still apply.
+
+Reporting is wired to the root layout, tab container, all five tab stacks
+(the shared array layout), nested Filters and Conversations layouts, and the
+Account, Talk, Community and Licence modal stacks through
+`mobile/src/navigation/RouteErrorBoundary.tsx`. It keeps the existing error
+screen and Try again action. A successful retry followed by a new failure
+can report again. These are recoverable JavaScript route render failures;
+native process crashes, asynchronous exceptions and OS terminations are not
+captured by Router boundaries. Exception autocapture remains disabled.
+
+`mobile/index.js` timestamps the start of JS entry evaluation before importing
+Router. `opax_app_start` ends at Today's first React commit, even if Today is
+still showing its loading state. It is a JS cold-start measurement, not native
+process launch time, splash-dismissal time or a warm foreground measurement.
+A deep-link launch reports only if Today actually renders during that runtime.
+
+Screen timing uses cheap monotonic JS timestamps (Date.now only as a fallback).
+The root navigation state notification supplies the start; on initial mount
+or when a notification is unavailable, the first screen render supplies it.
+A retained screen starts a fresh visit when it gains focus. The end is the
+first committed content or terminal empty/error state: Today's launch/seat
+read has settled, person profile and bill record reads have settled, Your MP
+has read its seat and primary representative block, or Search's Browse and
+Ask's composer have mounted. Background block refreshes and Ask/search request
+latency remain separate from screen readiness. Embedded iPad detail panes do
+not create screen visits.
+
+`SCREEN_READY_SAMPLE_RATE` in `mobile/src/analytics/timing.ts` is 0.1 (10%).
+It is chosen once per visit, kept only in memory, and does not add an identifier
+or persist a reader cohort. Each sampled visit sends at most one ready event;
+rerenders, refreshes and effect replay do not add events. Cold-start timing is
+one event per runtime and is not sampled. Timing events accept only the fixed
+route templates and finite durations from 0 to 3,600,000 ms; SDK screen context
+is removed. They use the same build gate and both privacy scrubbers as all
+other events, with no new modules, consent settings or text collection.
 
 The privacy manifest declares Product Interaction and Device ID, not linked,
 not used for tracking, purpose Analytics; `NSPrivacyTracking` stays false. The

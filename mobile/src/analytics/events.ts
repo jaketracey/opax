@@ -3,7 +3,7 @@
  * portal/analytics/privacy.mjs (docs/ANALYTICS.md). Only the event names
  * below leave the device, and each carries only its listed categories,
  * counts and flags. No question, search phrase, answer, title, postcode,
- * route parameter or error text is ever accepted: every value is checked
+ * route parameter or arbitrary error text is ever accepted: every value is checked
  * against a fixed list or a number range, and anything else is dropped.
  *
  * `cleanEvent` guards what app code asks to send. `scrubEvent` runs on the
@@ -67,6 +67,36 @@ const errorClasses = new Set([
 const errorClass: Rule = (value) =>
   typeof value === 'string' && errorClasses.has(value) ? value : 'other';
 
+export const ERROR_MESSAGE_MAX_LENGTH = 80;
+// Exact, content-free diagnostics only. Redacting arbitrary prose cannot
+// reliably remove record names or user text. Never truncate unsafe input.
+const errorMessages = new Set([
+  'Network request failed',
+  'Failed to fetch',
+  'The request timed out',
+  'Maximum call stack size exceeded',
+  'Rendered more hooks than during the previous render.',
+  'Rendered fewer hooks than expected.',
+  'Missing OPAX build configuration',
+]);
+export function scrubErrorMessage(value: unknown): string | undefined {
+  return typeof value === 'string' &&
+    value.length <= ERROR_MESSAGE_MAX_LENGTH &&
+    errorMessages.has(value)
+    ? value
+    : undefined;
+}
+
+export const timedRoutes = [
+  '/',
+  '/person/[slug]',
+  '/bill/[key]',
+  '/your-mp',
+  '/search',
+  '/ask',
+] as const;
+export type TimedRoute = (typeof timedRoutes)[number];
+
 /**
  * Where a search ran: speeches, every record type ("Type: All records"), or
  * one of the list groups in features/search/scopes.ts.
@@ -89,6 +119,12 @@ export const eventFields = {
   opax_route_error: {
     error_class: errorClass,
     route_pattern: routeErrorPattern,
+    error_message: scrubErrorMessage,
+  },
+  opax_app_start: { duration_ms: duration },
+  opax_screen_ready: {
+    route_pattern: oneOf(...timedRoutes),
+    duration_ms: duration,
   },
   opax_ask_started: { from_section: section, follow_up: flag },
   opax_ask_completed: {
@@ -259,7 +295,12 @@ export function scrubEvent<T extends CaptureEvent>(
   };
   // This report has its own fixed route allowlist. Do not inherit the SDK's
   // screen property, which is irrelevant here and may contain a pathname.
-  if (captured.event === 'opax_route_error') delete properties.$screen_name;
+  if (
+    captured.event === 'opax_route_error' ||
+    captured.event === 'opax_screen_ready' ||
+    captured.event === 'opax_app_start'
+  )
+    delete properties.$screen_name;
   if (captured.event === '$screen' && !properties.$screen_name) return null;
   return {
     ...captured,

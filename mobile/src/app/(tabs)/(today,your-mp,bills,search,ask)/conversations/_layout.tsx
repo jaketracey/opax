@@ -5,6 +5,7 @@ import {
   headerItems,
 } from '../../../../navigation/chrome';
 import { screen } from '../../../../navigation/stack/screen';
+export { RouteErrorBoundary as ErrorBoundary } from '../../../../navigation/RouteErrorBoundary';
 export default function Layout() {
   return (
     <Stack screenOptions={useStackChrome()}>
