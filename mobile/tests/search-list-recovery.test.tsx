@@ -13,7 +13,6 @@ import { bills, index, roster } from './pinned';
 import { withNavigationOptions } from './navigation-options';
 import { searchRouteFromWebPath } from '../src/navigation/routes/search';
 import { webSearchPath } from '../src/features/search/scopes';
-import { SpeechResults } from '../src/features/search/SpeechResults';
 
 let mockParams: Record<string, string | string[] | undefined> = {};
 jest.mock('expo-router', () => {
@@ -48,47 +47,6 @@ const ready = () => {
     provenance: { people: source, electorates: source, bills: source },
   } as Awaited<ReturnType<typeof catalogs.suggestionSources>>;
 };
-
-test.each(['all', 'speeches'])(
-  'a pushed %s entity search retains aliases until its query changes',
-  async (kind) => {
-    mockParams = {
-      kind,
-      q: 'Example Union',
-      aliases: JSON.stringify(['Example Workers Association']),
-    };
-    jest.mocked(catalogs.suggestionSourcesOnFocus).mockResolvedValue(ready());
-    jest.mocked(recordSearch.search).mockReturnValue(new Promise(() => {}));
-    let options: Record<string, unknown> = {};
-    let view!: TestRenderer.ReactTestRenderer;
-    await act(async () => {
-      view = TestRenderer.create(
-        withNavigationOptions(<ResultsScreen />, (next) => {
-          options = next;
-        }),
-      );
-    });
-    expect(view.root.findByType(SpeechResults).props.aliases).toEqual([
-      'Example Workers Association',
-    ]);
-    const search = options.headerSearchBarOptions as {
-      onSearchButtonPress: (event: { nativeEvent: { text: string } }) => void;
-    };
-    await act(async () =>
-      search.onSearchButtonPress({
-        nativeEvent: { text: 'A different query' },
-      }),
-    );
-    expect(view.root.findByType(SpeechResults).props.aliases).toEqual([]);
-    expect(recordSearch.search).toHaveBeenLastCalledWith(
-      'A different query',
-      expect.not.objectContaining({ aliases: expect.anything() }),
-      1,
-      'relevance',
-    );
-    await act(async () => view.unmount());
-  },
-);
 
 test('a shared media release search applies its type, mode and sort on arrival and reuse', async () => {
   const arrival = (sort: 'newest' | 'oldest') =>

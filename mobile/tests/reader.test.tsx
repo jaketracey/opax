@@ -567,36 +567,27 @@ test('an explicit find with no hits says No matches, with no zero-of-zero counte
 test.each([
   [
     'CFMEU Construction & General Division VIC/TAS Branch',
-    undefined,
     'CFMEU Construction and General Division Victoria–Tasmania branch',
   ],
-  [
-    'Example Union',
-    JSON.stringify(['Example Workers Association']),
-    'The Example Workers Association spoke.',
-  ],
-])(
-  'an arriving entity find matches tolerant spelling and recorded aliases: %s',
-  async (q, aliases, body) => {
-    mockParams = {
-      slug: speech.slug,
-      q: q!,
-      find: 'auto',
-      ...(aliases ? { aliases } : {}),
-    };
-    jest
-      .mocked(records.document)
-      .mockResolvedValue(record({ ...speech, text: body! }));
-    const view = await mount(<DocumentReader />);
-    expect(barItems().map((item) => item.label)).toContain('Done');
-    expect(text(view)).toContain('1 of 1');
-    expect(view.root.findByType(ReaderList).props.find.current).toEqual({
-      part: 0,
-      start: q === 'Example Union' ? 4 : 0,
-    });
-    await act(async () => view.unmount());
-  },
-);
+  ['Example & Co', 'Example and Co spoke.'],
+])('an arriving find matches tolerant spelling: %s', async (q, body) => {
+  mockParams = {
+    slug: speech.slug,
+    q: q!,
+    find: 'auto',
+  };
+  jest
+    .mocked(records.document)
+    .mockResolvedValue(record({ ...speech, text: body! }));
+  const view = await mount(<DocumentReader />);
+  expect(barItems().map((item) => item.label)).toContain('Done');
+  expect(text(view)).toContain('1 of 1');
+  expect(view.root.findByType(ReaderList).props.find.current).toEqual({
+    part: 0,
+    start: 0,
+  });
+  await act(async () => view.unmount());
+});
 
 test('a search arrival with no matching entity opens the normal speech and its actions', async () => {
   mockParams = { slug: speech.slug, q: 'An absent organisation', find: 'auto' };
@@ -661,7 +652,7 @@ test.each(
 );
 
 test.each(['ios', 'android'] as const)(
-  '%s Next and Previous announce the match position, including wraparound',
+  '%s Next and Previous announce once through the platform mechanism, including wraparound',
   async (os) => {
     const original = Platform.OS;
     Platform.OS = os;
@@ -683,15 +674,27 @@ test.each(['ios', 'android'] as const)(
               .props[which === 'Next' ? 'onNext' : 'onPrevious']();
         });
       };
+      const expectPosition = (position: number) => {
+        if (os === 'ios')
+          expect(announce).toHaveBeenLastCalledWith(`Match ${position} of 2`);
+        else {
+          expect(announce).not.toHaveBeenCalled();
+          const status = view.root
+            .findAllByType(NativeText)
+            .find((node) => node.props.testID === 'doc-find-status')!;
+          expect(status.props.accessibilityLiveRegion).toBe('polite');
+          expect(status.props.children).toBe(`Match ${position} of 2 for tax`);
+        }
+      };
       await step('Next');
-      expect(announce).toHaveBeenLastCalledWith('Match 1 of 2');
+      expectPosition(1);
       await step('Next');
-      expect(announce).toHaveBeenLastCalledWith('Match 2 of 2');
+      expectPosition(2);
       await step('Next');
-      expect(announce).toHaveBeenLastCalledWith('Match 1 of 2');
+      expectPosition(1);
       await step('Previous');
-      expect(announce).toHaveBeenLastCalledWith('Match 2 of 2');
-      expect(announce).toHaveBeenCalledTimes(4);
+      expectPosition(2);
+      expect(announce).toHaveBeenCalledTimes(os === 'ios' ? 4 : 0);
       await act(async () => view.unmount());
     } finally {
       announce.mockRestore();

@@ -3,24 +3,8 @@ import { partyRoute } from '../../navigation/routes/people';
 import { moneyRecordRoute } from '../../navigation/routes/public-money';
 import { resultsRoute } from '../../navigation/routes/search';
 import type { MoneyGraph } from './data';
-import { donorNodeFor, loadedMoneyGraph } from './lookup';
+import { donorNodeFor } from './lookup';
 import type { MapNode } from './map/model';
-import { findAliases } from '../records/find';
-
-/** Keep the entity's recorded spellings with a search, for in-page find only. */
-export function entitySearchRoute(
-  name: string,
-  graph: MoneyGraph | null = loadedMoneyGraph(),
-) {
-  const donor = donorNodeFor({ name }, graph);
-  const aliases = findAliases(
-    donor ? [donor.label, ...(donor.aliases ?? [])] : [],
-  ).filter((alias) => alias !== name);
-  return resultsRoute('all', {
-    q: name,
-    ...(aliases.length ? { aliases: JSON.stringify(aliases) } : {}),
-  });
-}
 
 /** A selected entity's page; the money record retains the map's window. */
 export function moneyMapEntityRoute(
@@ -43,5 +27,5 @@ export function associatedEntityRoute(name: string, graph: MoneyGraph | null) {
   const donor = donorNodeFor({ name }, graph);
   return donor
     ? moneyRecordRoute({ node: donor.id, jurisdiction: 'federal' }, donor.label)
-    : entitySearchRoute(name, graph);
+    : resultsRoute('all', { q: name });
 }

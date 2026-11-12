@@ -345,43 +345,16 @@ test('a failed person catalogue does not prevent opening the speech', async () =
   );
 });
 
-test('an entity result carries its recorded aliases into tolerant automatic find', () => {
+test('unpublished alias fields do not affect decoding or the reader route', () => {
   const row = decodeRecord({
     ...raw,
-    aliases: ['Example Workers Association', 'EWA'],
+    aliases: ['', 'EWA', null, 17],
   });
+  expect(row).not.toHaveProperty('aliases');
   expect(speechRoute(row, '  Example   Union ')).toEqual(
     docRoute('speech-828012', undefined, {
       q: 'Example Union',
       find: 'auto',
-      aliases: ['Example Workers Association', 'EWA'],
     }),
   );
 });
-
-test.each(['group', 'list'] as const)(
-  '%s results retain the arriving entity aliases in each reader link',
-  (variant) => {
-    const aliases = ['Example Workers Association'];
-    const view = render(
-      <SpeechResults
-        list={list()}
-        q="Example Union"
-        aliases={aliases}
-        filters={defaultSpeechFilters}
-        sort="relevance"
-        roster={roster}
-        variant={variant}
-        recover={recover}
-      />,
-    );
-    const row = view.UNSAFE_getByType(RecordRow);
-    expect(row.props.href).toEqual(
-      docRoute('speech-828012', undefined, {
-        q: 'Example Union',
-        find: 'auto',
-        aliases,
-      }),
-    );
-  },
-);

@@ -90,7 +90,6 @@ import { FindControls } from './FindControls';
 import { records } from './runtime';
 import { recordCaveat, recordOriginal, recordSource } from './source';
 import { useRead } from './useRead';
-import { findAliases } from './find';
 
 // The web's taxonomy; unknown topics must not alter the search request.
 const topics = new Set([
@@ -216,11 +215,10 @@ function useFind(
   first: number,
   passage = false,
   automatic = false,
-  aliases: readonly string[] = [],
 ) {
   const matches = useMemo(
-    () => findMatches(parts, query, { tolerant: automatic, aliases }),
-    [parts, query, automatic, aliases],
+    () => findMatches(parts, query, { tolerant: automatic }),
+    [parts, query, automatic],
   );
   const [open, setOpen] = useState(!passage && !!query);
   const [index, setIndex] = useState(first);
@@ -235,7 +233,8 @@ function useFind(
   const reveal = (at: number) => {
     const match = matches[at];
     if (!match) return;
-    AccessibilityInfo.announceForAccessibility(`Match ${at + 1} of ${total}`);
+    if (Platform.OS === 'ios')
+      AccessibilityInfo.announceForAccessibility(`Match ${at + 1} of ${total}`);
     setJump((old) => ({
       index: match.part,
       attempt: (old?.attempt ?? 0) + 1,
@@ -275,7 +274,6 @@ function useFind(
             current: matches[current] ?? null,
             passage,
             tolerant: automatic,
-            aliases,
           }
         : null,
     goTo: () => {
@@ -300,7 +298,6 @@ export default function DocumentReader({
     match?: string;
     passage?: string;
     find?: string;
-    aliases?: string;
   }>();
   const slug = recordSlug ?? params.slug ?? '';
   const load = useCallback(
@@ -345,7 +342,6 @@ export default function DocumentReader({
     }));
   }, [doc]);
   const passage = citedPassage ?? params.passage;
-  const aliases = useMemo(() => findAliases(params.aliases), [params.aliases]);
   const find = useFind(
     shown ? parts : [],
     passage
@@ -356,7 +352,6 @@ export default function DocumentReader({
     Math.max(0, Number(params.match) || 0),
     !!passage,
     !passage && params.find === 'auto',
-    aliases,
   );
   // opax://doc-cite/<slug> arrives as /doc/<slug>?cite=1: the record first,
   // then Citation formats over it, so Done lands on the record.

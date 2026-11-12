@@ -2,7 +2,6 @@ import { decodeMoneyGraph } from '../src/features/money/data';
 import type { MapNode } from '../src/features/money/map/model';
 import {
   associatedEntityRoute,
-  entitySearchRoute,
   moneyMapEntityRoute,
 } from '../src/features/money/record-routes';
 import {
@@ -11,12 +10,6 @@ import {
   resultsRoute,
 } from '../src/navigation/routes';
 import { pinned } from './pinned';
-import { findAliases } from '../src/features/records/find';
-import { findMatches } from '../src/features/records/ReaderList';
-import { speechRoute } from '../src/features/search/SpeechResults';
-import { decodeRecord } from '../src/features/search/decoders';
-
-jest.mock('../src/api/runtime', () => ({ catalogs: {}, portraits: {} }));
 
 const graph = decodeMoneyGraph(pinned('/graph/money.json'));
 
@@ -94,42 +87,4 @@ test('associated entity matching excludes withheld donors', () => {
   expect(
     associatedEntityRoute(withheld.label, { ...graph, nodes: [withheld] }),
   ).toEqual(resultsRoute('all', { q: withheld.label }));
-});
-
-test('a donor search carries graph aliases to a speech even when its search result has no aliases', () => {
-  const donor = graph.nodes.find(
-    (node) => node.kind === 'donor' && !node.withheld,
-  )!;
-  const named = {
-    ...graph,
-    nodes: [
-      {
-        ...donor,
-        label: 'Example Union',
-        aliases: ['Example Workers Association', 'EWA'],
-      },
-    ],
-  };
-  const search = entitySearchRoute('Example Union', named);
-  const params = search.params as Record<string, string>;
-  expect(search.params).toMatchObject({
-    q: 'Example Union',
-    aliases: JSON.stringify(['Example Workers Association', 'EWA']),
-  });
-  const row = decodeRecord({
-    slug: 'speech-1',
-    title: 'Example speech',
-    kind: 'speech',
-    resource: '',
-    snippet: '',
-  });
-  expect(row.aliases ?? []).toEqual([]);
-  const route = speechRoute(row, params.q!, findAliases(params.aliases))!;
-  expect(
-    findMatches(
-      [{ id: 'speech', text: 'The Example Workers Association spoke.' }],
-      route.params.q!,
-      { tolerant: true, aliases: findAliases(route.params.aliases) },
-    ),
-  ).toEqual([{ part: 0, start: 4 }]);
 });

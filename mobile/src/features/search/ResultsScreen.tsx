@@ -1,13 +1,6 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useLocalSearchParams } from 'expo-router';
-import {
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-  type RefObject,
-} from 'react';
+import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { Keyboard, Platform, ScrollView, type TextInput } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
 import { countLabel } from './present';
@@ -50,7 +43,6 @@ import {
 import { useSearchSources, type SearchSources } from './sources';
 import { useAndroidSearchKeyboard } from './useAndroidSearchKeyboard';
 import { speechSorts } from './speeches';
-import { findAliases } from '../records/find';
 
 /**
  * `/results/[kind]`, pushed in every stack (journeys/search.md 4.3): the
@@ -66,10 +58,6 @@ export function ResultsScreen() {
   const [target, setTarget] = useState<ResultsTarget>(initial);
   const [q, setQ] = useState(() => capQuery(params.q ?? ''));
   const [text, setText] = useState(q);
-  const aliases = useMemo(
-    () => (q === capQuery(params.q ?? '') ? findAliases(params.aliases) : []),
-    [q, params.q, params.aliases],
-  );
   const owner = `results-${useId()}`;
   const scroll = useRef<ScrollView>(null);
   const input = useRef<TextInput>(null);
@@ -121,7 +109,6 @@ export function ResultsScreen() {
     params.group,
     params.scope,
     params.q,
-    params.aliases,
     filtersFromParams(params),
     arrivalSort,
   ]);
@@ -183,7 +170,6 @@ export function ResultsScreen() {
         ) : target.scope ? (
           <ResultsView
             q={q}
-            aliases={aliases}
             scope={target.scope}
             onScope={(scope) => {
               setTarget({ scope });

@@ -20,6 +20,7 @@ import { billTextRoute } from '../src/navigation/routes';
 import { divisionHistoryRoute } from '../src/navigation/routes/bills';
 import { pinned, slugs } from './pinned';
 import { filterStore } from '../src/features/sheets/filter-model';
+import * as sharing from '../src/navigation/share';
 
 // Design pass 5, lane C (bills): the bill header's actions (P1-3), the
 // shared bill row (P2-8), a lapsed bill's last stop (P2-9), the list's
@@ -293,6 +294,40 @@ test('Android bills keep whole scope labels at 2x and wrap the bottom actions; i
     Platform.OS = original;
   }
 });
+
+test.each([true, false])(
+  'Android renders a Share toolbar only with share support: %s',
+  async (enabled) => {
+    const os = jest.replaceProperty(Platform, 'OS', 'android');
+    const share = jest.replaceProperty(sharing, 'canShare', enabled);
+    try {
+      mockParams.key = 'au-federal-r7534';
+      const detail = await render(<BillDetail />);
+      const bars = detail.findAll((node) => {
+        if (typeof node.type !== 'string' || !node.props.style) return false;
+        const style = StyleSheet.flatten(node.props.style);
+        return (
+          style?.flexWrap === 'wrap' &&
+          style?.justifyContent === 'space-between'
+        );
+      });
+      expect(bars).toHaveLength(enabled ? 1 : 0);
+      expect(
+        detail
+          .findAllByType(Button)
+          .filter((node) => node.props.testID === 'bill-share'),
+      ).toHaveLength(enabled ? 1 : 0);
+      expect(
+        detail
+          .findAllByType(Button)
+          .filter((node) => node.props.testID === 'bill-ask'),
+      ).toHaveLength(1);
+    } finally {
+      share.restore();
+      os.restore();
+    }
+  },
+);
 
 describe('how it moved: a terminal status names the last stop (P2-9)', () => {
   const entries = (last: string) => [

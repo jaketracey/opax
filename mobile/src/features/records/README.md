@@ -9,20 +9,24 @@ pane bar's ⋯ (`split/RecordDetail.tsx`) and part of a record row's menu. None
 of them fetches anything until Cite opens the record. `opax://doc-cite/<slug>`
 opens the record, then Citation formats over it.
 
-The reader's header is one meta line ("Speech · House of Representatives"),
-the title in the record face (`recordHeadline` in `model.ts`), the speaker as
-a person row, and one source line (`source.ts`) whose sheet holds the
-original, the record's date, the text's notes and the licence. In short is
-an always-visible section heading with the Machine-written pill.
-Ask about this is a primary button after its text, on iPhone, Android and
-in an iPad pane. Share is in the navigation bar. Organisation search links carry
-the donor graph's recorded aliases through search results to tolerant find.
-Find handles ampersands, punctuation and every state and territory abbreviation.
-If no whole-word variant matches anywhere, it uses the original literal substring.
-An unmatched arrival keeps the normal record actions. Find status occupies
-space in the iOS scrolling header, above the metadata, never over the content.
-Android keeps one status beside Previous, Next and Done outside the list.
-Embedded iPad panes hide the status. Each find jump announces its match position.
+The reader's header is one meta line ("Speech · House of Representatives"), the
+title in the record face (`recordHeadline` in `model.ts`), the speaker as a person
+row, and one source line (`source.ts`) whose sheet holds the original, the
+record's date, the text's notes and the licence. In short is an always-visible
+section heading with the Machine-written pill. Ask about this is a primary
+button after its text, on iPhone, Android and in an iPad pane. Share is in the
+navigation bar.
+
+Search arrivals use tolerant find for ampersands, punctuation, and state and
+territory abbreviations written in capitals. Matches cover whole source tokens,
+including every word in an abbreviation's expansion. If no whole-word variant
+matches anywhere, find uses the original literal substring. An unmatched arrival
+keeps the normal record actions.
+
+Find status occupies space in the iOS scrolling header, above the metadata,
+never over the content. Android keeps one status beside Previous, Next and Done
+outside the list. Embedded iPad panes hide the status. On iOS, each find jump
+announces its match position; Android uses the status's polite live region.
 An explicit find with no hits says No matches.
 
 The document source is preserved in contiguous, selectable text slices in a
@@ -76,14 +80,13 @@ Machine-written pill; how it was written is in the pill's sheet, worded for
 the record's kind. Divisions and other Markdown texts are read with their
 headings as part titles (`markdownParts` in `api/passage-text.ts`).
 
-The reader uses the shared rhythm, section headings for In short, primary
-Ask buttons, and a disclosure
-for related speeches. Similar speeches uses bounded hybrid retrieval with
-a 15-second deadline, matching Search. Failures retain the explicit retry state;
-successful empty results say No similar speeches found. Coverage, transcription
-and citation
-notes are in the source line's sheet; source terms live on Sources and
-licences. Full source text remains selectable and virtualised at every size.
+The reader uses the shared rhythm, section headings for In short, primary Ask
+buttons, and a disclosure for related speeches. Similar speeches uses bounded
+hybrid retrieval with a 15-second deadline, matching Search. Failures retain the
+explicit retry state; successful empty results say No similar speeches found.
+Coverage, transcription and citation notes are in the source line's sheet;
+source terms live on Sources and licences. Full source text remains selectable
+and virtualised at every size.
 
 Ask about this goes through `useOpenAsk`. It carries the web's document
 question into a draft; arrival never submits.

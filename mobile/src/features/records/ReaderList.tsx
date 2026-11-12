@@ -27,7 +27,6 @@ export interface ReaderFind {
   query: string;
   passage?: boolean;
   tolerant?: boolean;
-  aliases?: readonly string[];
   current: { part: number; start: number } | null;
 }
 // Bound Android's selectable paragraph measurement and JS batches. The source
@@ -67,14 +66,14 @@ function textMatches(text: string, needle: string) {
 export function findMatches(
   parts: readonly ReaderPart[],
   query: string,
-  options?: Pick<ReaderFind, 'tolerant' | 'aliases'>,
+  options?: Pick<ReaderFind, 'tolerant'>,
 ): { part: number; start: number }[] {
   const needle = query.trim().toLocaleLowerCase('en-AU');
   const found: { part: number; start: number }[] = [];
   if (!needle) return found;
   parts.forEach((part, index) => {
     for (const match of options?.tolerant
-      ? entityMatches(part.text, [query, ...(options.aliases ?? [])])
+      ? entityMatches(part.text, query)
       : textMatches(part.text, needle))
       found.push({ part: index, start: match.start });
   });
@@ -98,7 +97,7 @@ function Marked({
   const spans: ReactNode[] = [];
   let from = 0;
   for (const match of find?.tolerant
-    ? entityMatches(text, [find.query, ...(find.aliases ?? [])])
+    ? entityMatches(text, find.query)
     : textMatches(text, query)) {
     const current =
       find?.current?.part === index && find.current.start === match.start;
@@ -150,17 +149,13 @@ export function ReaderList({
   // Highlight with the same document-wide pass as the find counter, including
   // parts that are not mounted in the virtualised list yet.
   const query = find?.query;
-  const aliases = find?.aliases;
   const tolerantFind = find?.tolerant;
   const tolerant = useMemo(
     () =>
       !!tolerantFind &&
       !!query &&
-      parts.some(
-        (part) =>
-          entityMatches(part.text, [query, ...(aliases ?? [])]).length > 0,
-      ),
-    [parts, tolerantFind, query, aliases],
+      parts.some((part) => entityMatches(part.text, query).length > 0),
+    [parts, tolerantFind, query],
   );
   const marks =
     find?.tolerant && !tolerant ? { ...find, tolerant: false } : find;

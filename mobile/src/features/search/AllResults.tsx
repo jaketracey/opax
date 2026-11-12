@@ -75,7 +75,6 @@ export function allLocal(q: string, sources: MatchSources | null) {
  */
 export function AllResults({
   q,
-  aliases,
   sources,
   roster,
   filters,
@@ -87,7 +86,6 @@ export function AllResults({
   reports = null,
 }: {
   q: string;
-  aliases?: readonly string[];
   sources: (MatchSources & RowSources) | null;
   roster: Roster | null;
   filters: SpeechFilters;
@@ -198,7 +196,6 @@ export function AllResults({
             <SpeechResults
               list={speeches}
               q={q}
-              aliases={aliases}
               filters={filters}
               sort="relevance"
               roster={roster}

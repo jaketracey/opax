@@ -445,7 +445,7 @@ export default function BillDetail({
           />
         ) : null}
       </Screen>
-      {embedded || failed || Platform.OS === 'ios' ? null : (
+      {embedded || failed || Platform.OS === 'ios' || !canShare ? null : (
         <BillToolbar onShare={share} canShare={!!identity} />
       )}
     </>

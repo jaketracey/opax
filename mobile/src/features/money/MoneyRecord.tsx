@@ -63,6 +63,7 @@ import {
   moneyItemRoute,
   moneyRecordRoute,
 } from '../../navigation/routes/public-money';
+import { resultsRoute } from '../../navigation/routes/search';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { donorNotNamed, isOrganisationDonor } from '../../privacy/donorEntity';
 import { leadsAbout } from '../leads/model';
@@ -75,7 +76,6 @@ import type {
 import { useMoneyRecord } from './hooks';
 import { donorNodeFor, partyNodeFor } from './lookup';
 import { moneyPageMenu } from './menu';
-import { entitySearchRoute } from './record-routes';
 import {
   notFound,
   useAgencySupplier,
@@ -360,7 +360,7 @@ function Missing({
           (name
             ? {
                 label: `Search for ${name}`,
-                onPress: () => router.push(entitySearchRoute(name)),
+                onPress: () => router.push(resultsRoute('all', { q: name })),
               }
             : undefined)
         }
@@ -999,15 +999,6 @@ function NodeBody({
         </Text>
       ) : (
         <More>
-          {node.kind === 'donor' && isOrganisationDonor(node) ? (
-            <LinkRow
-              title="Search the record"
-              symbol="magnifyingglass"
-              href={entitySearchRoute(node.label, graph)}
-              accessibilityLabel={`Search the record for ${node.label}`}
-              testID="money-record-search"
-            />
-          ) : null}
           {node.kind === 'donor' && isOrganisationDonor(node) ? (
             <LinkRow
               title="Find on Wikipedia"

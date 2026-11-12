@@ -46,7 +46,6 @@ const recordShape = shape({
   date: optional(date),
   dateLabel: optional(text),
   speaker: optional(text),
-  aliases: optional(array(nonempty)),
   party: optional(text),
   state: optional(text),
   speaker_type: optional(text),
