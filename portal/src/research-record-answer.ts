@@ -9,7 +9,8 @@ import type { QualitativeAnswer } from './research-types'
 export function divisionVoteSource(payload: Pick<QualitativeAnswer, 'sources' | 'citations'>, line: string, from: number, until: number) {
   const text = line.replace(/^[-*]\s*/, '')
   if (!/^On .+, .+ (?:senators|members) voted \d[\d,]* ayes? and \d[\d,]* no(?:es)? on /.test(text)) return
-  return payload.sources.find(s => /\/doc\/division-/.test(s.url) && s.snippet.split('\n').includes(text)
+  const punctuation=(value:string)=>value.replace(/\s*—\s*/g,', ')
+  return payload.sources.find(s => /\/doc\/division-/.test(s.url) && s.snippet.split('\n').some(part=>punctuation(part)===punctuation(text))
     && Object.entries(payload.citations).some(([id, ranges]) => (id === s.resource || id.startsWith(s.resource + '/')) && ranges.some(([a, b]) => a < until && b > from)))
 }
 
@@ -65,6 +66,15 @@ export function recordEvidenceText(text: string, url: string): string {
 export function recordAnswerLines(input: WritingInput): WrittenSentence[] | null {
   input = { ...input, question: recordIntentText(input.question) }
   const facts = input.facts.filter(f => !f.coverage && !f.metadata)
+  const remuneration = facts.filter(f => f.source.remuneration)
+  if (remuneration.length) {
+    const ranked = /\b(?:highest|largest|biggest|top|most paid|paid most)\b/i.test(input.question)
+    const selected = ranked ? [...remuneration].sort((a,b)=>(b.source.remuneration!.total??-1)-(a.source.remuneration!.total??-1)) : remuneration
+    return selected.map(f => {
+      const r=f.source.remuneration!
+      return line(`${r.name} (${r.position}), ${r.body}, had reported total remuneration of ${r.total==null?'an unpublished amount':'$'+r.total.toLocaleString('en-AU')} for ${r.year}`,[f])
+    })
+  }
   const grain = input.constraints?.speechRankingGrain ?? speechRankingGrain(input.question)
   if (grain) {
     const prefix = grain === 'speaker' ? 'person:' : 'party:'

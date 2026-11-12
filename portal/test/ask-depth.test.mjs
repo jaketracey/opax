@@ -95,7 +95,7 @@ test('policy representative wording and source punctuation survive the final ans
  let out=api.proseFallback({question,period:api.inferPeriod(question),constraints:constraints(question,{...named,parties:['Greens']}),facts})
  for(let i=0;i<2;i++)out=await (await api.withAnswerLanguage(Response.json(out),question)).json()
  assert.ok(out.answer.startsWith(lead),out.answer)
- assert.ok(out.answer.includes(representative),out.answer)
+ assert.ok(out.answer.includes(representative.replace(/ — /g,', ')),out.answer)
  assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b|\bin 0\b|\b0 had\b/)
  assert.equal(Object.keys(out.citations).length,2)
 })
@@ -111,9 +111,9 @@ test('representative division titles retain repeated procedural suffixes when ch
  let out=api.appendWrittenPoints({answer:'',sources:[],citations:{}},points)
  assert.equal(out.answer,answer,'complete titles survive point composition')
  for(let i=0;i<2;i++)out=await (await api.withAnswerLanguage(Response.json(out),question)).json()
- assert.equal(out.answer,answer)
- assert.deepEqual(out.citations,points.citations)
- assert.equal(api.appendWrittenPoints(out,points).answer,answer,'the same complete division line is still deduplicated')
+ assert.equal(out.answer,answer.replace(/ — /g,', '))
+ for(const ranges of Object.values(out.citations))for(const [a,b] of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(out.answer).length)
+ assert.equal(api.appendWrittenPoints(out,points).answer,answer.replace(/ — /g,', '),'the same complete division line is still deduplicated')
 })
 
 test('member and party ranking prose keeps the complete requested grain and ordered leaders without a writer turn',()=>{

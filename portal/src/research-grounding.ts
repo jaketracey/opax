@@ -12,6 +12,8 @@ import {contentWords,passageExcerpt} from './research-evidence'
 import {broadTopicOverview} from './ask-answer-grain'
 import {isBillSpeechQuestion} from './ask-scope-intent'
 import {readableDate} from './tools/record-common'
+import {researchTrace} from './research-trace'
+import {questionPerson,sourceAboutPerson} from './ask-followup'
 
 // Metadata copied from a selected record is a citable record description,
 // rather than a model claim about the speaker's position.
@@ -24,9 +26,10 @@ function checkedClaims(payload:Record<string,unknown>,question:string,promote=tr
   const auditFor=(value:Record<string,unknown>)=>{
     const audit=auditPayload(question,value),records=((Array.isArray(value.sources)?value.sources:[]) as SelectedSource[]).filter(s=>renderedKind(s.kind))
     // A line copied from a selected record is that record; every other line, including points beside it, is audited.
-    audit.findings=audit.findings.filter(f=>{const line=f.text.endsWith('.')?f.text.slice(0,-1):f.text;return !isTitleLine(f.text,(value.sources??[]) as SelectedSource[])&&!records.some(s=>String(s.snippet??'').includes(line))})
+    audit.findings=audit.findings.filter(f=>{const line=f.text.endsWith('.')?f.text.slice(0,-1):f.text;return !isTitleLine(f.text,(value.sources??[]) as SelectedSource[])&&!records.some(s=>String(s.snippet??'').replace(/\s*—\s*/g,', ').includes(line.replace(/\s*—\s*/g,', ')))})
     // Keep the decision itself; audit any accompanying substantive points without promoting them.
     if(!promote){const text=String(value.answer??''),end=text.indexOf('\n\n');audit.findings=audit.findings.filter(f=>{const inDecision=(f.offset??text.indexOf(f.text))<(end<0?text.length:end);const questionEcho=f.type==='quote'&&!f.entity&&!!f.quote&&question.includes(f.quote);const nonFactualIdentity=f.type==='entity'&&f.metric==='identity'&&!audit.claims.some(c=>c.text===f.text&&['figure','quote'].includes(c.type));return !inDecision||f.type!=='period'&&!questionEcho&&!nonFactualIdentity})}
+    researchTrace('grounding.audit', {question, answer:value.answer, findings:audit.findings})
     return audit
   }
   // A wrong party adjective need not erase a correctly owned statement.
@@ -272,6 +275,7 @@ function answerFromFound(out:Record<string,unknown>,question:string,evidence:Rec
 }
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
+  researchTrace('grounding.input', {question,payload})
   let result=cleanAnswerShape(distinctSummary(answerFromFound(checkedAnswer(payload,question),question,payload)))
   const loose=['uncited','partly_cited'].includes(String(payload.answer_status))
   if(loose&&!protectedDecision(payload)){
@@ -290,6 +294,11 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   // Rebuild from the already cited records' titles and dates, without adding
   // an unchecked summary or changing a refusal, clarification or scope limit.
   if(protectedDecision(payload)||causalAsk(question))return result
+  const person=questionPerson(question)
+  const titleOnly=sentenceParts(String(result.answer??'')).every(p=>isTitleLine(p.text,(payload.sources??[]) as SelectedSource[]))
+  if(person&&(emptyAnswer(String(result.answer??''))||titleOnly)&&!((payload.sources??[]) as SelectedSource[]).some(s=>(s.cited||loose)&&sourceAboutPerson(s,person))){
+    return {...result,answer:'OPAX has no selected record that answers this question about '+person+'.',answer_decision:'limitation',citations:{},sources:[],coherence:{...((result.coherence??{}) as object),fallback:true,method:'no_subject_record'}}
+  }
   result=completePersonOverview(payload,result,question)
   const before=String(payload.answer??''),after=String(result.answer??'')
   const stripped=1-after.length/Math.max(1,before.length)
@@ -298,13 +307,14 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   if(!emptyAnswer(after)&&!fragment&&(stripped<=1/3||parts.length>=(overview?4:2)&&after.length>=120))return result
   const scope=payload.answer_scope as WritingInput['constraints'],topic=contentWords(question)
   const sources=((payload.sources??[]) as SelectedSource[]).filter(s=>(s.cited||loose)&&s.kind==='speech'&&titleLine(s)&&
+    (!person||sourceAboutPerson(s,person))&&
     (!scope?.people?.length||scope.people.includes(s.speaker??''))&&
     (!scope?.dated||!!s.date&&(!scope.period?.since||s.date>=scope.period.since)&&(!scope.period?.until||s.date<=scope.period.until))&&
     [...contentWords(s.snippet)].some(word=>topic.has(word))).slice(0,overview?6:3).map(s=>({...s,cited:true}))
   if(!sources.length)return result
   let answer='';const citations:Record<string,[number,number][]>={}
   for(const source of sources){
-    answer+=(answer?'\n':'')+'- ';const from=Array.from(answer).length
+    answer+=(answer?'\n\n':'');const from=Array.from(answer).length
     answer+=titleLine(source)
     if(overview){
       const excerpt=overviewSentence(source.snippet,question)

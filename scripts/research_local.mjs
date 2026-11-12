@@ -3,6 +3,9 @@
 //
 //   npm run research:local -- [questionIds...] [--model slug] [--port 8967] [--keep] [--json out.json]
 //
+// --prior-turn PATH carries one saved {q,payload} turn; question sets can use followup_of.
+// --trace PATH saves local model requests/results, tool results and grounding decisions.
+// --legacy-context reproduces the previous browser's compact source hints for baselines.
 // IDs or literal questions are accepted. --questions PATH selects a regression set.
 // --serve starts the server without Asks; --portal PATH selects a detached baseline checkout.
 // --local-data disables remote bindings and blocks outbound requests except the model provider.
@@ -21,6 +24,7 @@ import {readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync,
 import {createRequire} from 'node:module';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
+import {chatContext} from '../portal/public/chat-context.js';
 
 const sourcePortal = fileURLToPath(new URL('../portal/', import.meta.url));
 const localTelemetry = new Map();
@@ -34,7 +38,12 @@ const port = Number(flag('--port', 8967));
 const model = flag('--model', 'deepseek/deepseek-v4.1-flash');
 const keep = args.includes('--keep'), reuse = args.includes('--reuse');
 const jsonOut = flag('--json', null);
-const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal', '--questions'].includes(args[i - 1]));
+const traceOut = flag('--trace', null);
+const priorFile = flag('--prior-turn', null);
+const legacyContext = args.includes('--legacy-context');
+const traceEvents = [];
+let activeQuestion;
+const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal', '--questions', '--trace', '--prior-turn'].includes(args[i - 1]));
 const available = JSON.parse(readFileSync(flag('--questions', new URL('research_local_questions.json', import.meta.url)), 'utf8'));
 const questions = serveOnly ? [] : ids.length ? ids.map((id, i) => {
   const known = available.find(q => q.id === id);
@@ -71,6 +80,17 @@ function localConfig() {
   // With a `secrets` block wrangler dev only exposes the declared names, so declare exactly the ones .dev.vars holds.
   mkdirSync(portal + '.wrangler', {recursive: true});
   writeFileSync(portal + '.wrangler/research-entry.ts', `import worker from '../src/index.ts';
+${traceOut ? `globalThis.__opaxResearchTrace = (stage, detail) => console.log(JSON.stringify({kind:'research_local_trace',stage,detail}));
+const tracedFetch = globalThis.fetch.bind(globalThis);
+globalThis.fetch = async (request, init) => {
+  const target = new URL(typeof request === 'string' || request instanceof URL ? request : request.url);
+  const response = await tracedFetch(request, init);
+  if (target.hostname === 'openrouter.ai' || /\\/(?:ask|find)$/.test(target.pathname)) {
+    let body; try {body=JSON.parse(typeof init?.body === 'string' ? init.body : request instanceof Request ? await request.clone().text() : '{}')} catch {}
+    const copy=response.clone(); copy.text().then(text=>{let result;try{result=JSON.parse(text)}catch{result=text}globalThis.__opaxResearchTrace('model.transport',{service:target.hostname==='openrouter.ai'?'model':'kb',operation:target.pathname.split('/').at(-1),status:response.status,request:body,response:result})}).catch(()=>{});
+  }
+  return response;
+};` : ''}
 ${localData ? `const modelFetch = globalThis.fetch.bind(globalThis);
 globalThis.fetch = (request, init) => {
   const url = new URL(typeof request === 'string' || request instanceof URL ? request : request.url);
@@ -120,7 +140,9 @@ async function startServer(base) {
   child.stdout.on('data', d => {
     log += d; pendingLog += d;
     const lines = pendingLog.split('\n'); pendingLog = lines.pop();
-    for (const line of lines) if (/^\{"kind":"research_loop_/.test(line)) {
+    for (const line of lines) if (/^\{"kind":"research_local_trace"/.test(line)) {
+      try {traceEvents.push({question_id:activeQuestion,...JSON.parse(line)});writeFileSync(traceOut,JSON.stringify(traceEvents,null,1))} catch {}
+    } else if (/^\{"kind":"research_loop_/.test(line)) {
       console.log(line);
       try { const event = JSON.parse(line); if (event.kind === 'research_loop_fallback') localTelemetry.set(event.question_hash, event); } catch {}
     }
@@ -128,7 +150,7 @@ async function startServer(base) {
   for (let i = 0; i < 120; i++) {
     if (await up(base)) return child;
     if (child.exitCode !== null) break;
-    if (/\[ERROR\] Build failed/.test(log)) break;
+    if (/Build failed|Could not resolve/.test(log)) break;
     await new Promise(r => setTimeout(r, 2000));
   }
   console.error('wrangler dev did not come up:\n' + log.split('\n').filter(l => !/KEY|TOKEN|SECRET/.test(l)).slice(-25).join('\n'));
@@ -153,15 +175,24 @@ function checks(d) {
   };
 }
 
-async function ask(base, q) {
+function priorContext(row, question) {
+  if (Array.isArray(row)) row = row.at(-1);
+  if (!row) throw new Error('The prior-turn file contains no turn');
+  const d=row.payload ?? row.response ?? row;
+  return chatContext([{role:'user',text:row.q?.question ?? row.question ?? ''},{role:'answer',text:d.answer ?? '',sources:d.sources??[]}],question);
+}
+async function ask(base, q, prior) {
+  activeQuestion=q.id;
+  const request={...(prior?priorContext(prior,q.question):{}),...(q.request??{}),question:q.question};
+  if (legacyContext && request.context) request.context = request.context.map(t => t.author === 'answer' ? {...t,sources:(t.sources??[]).map(s=>Object.fromEntries(['slug','kind','source','state','chamber'].filter(k=>s[k]).map(k=>[k,s[k]])))} : t);
   const t0 = Date.now();
   const res = await fetch(base + '/api/ask', {method: 'POST', signal: AbortSignal.timeout(120_000),
     headers: {'content-type': 'application/json', 'x-opax-research': 'loop', 'x-opax-research-model': model,
       authorization: 'Bearer ' + vars.DAILY_POST_OPERATOR_SECRET},
-    body: JSON.stringify({question: q.question})});
+    body: JSON.stringify(request)});
   const text = await res.text();
   let d; try { d = JSON.parse(text); } catch { d = {error: text.slice(0, 200)}; }
-  return {status: res.status, ms: Date.now() - t0, d, telemetry: localTelemetry.get(questionHash(q.question))};
+  return {status: res.status, ms: Date.now() - t0, d, request, telemetry: localTelemetry.get(questionHash(q.question))};
 }
 
 const base = `http://127.0.0.1:${port}`;
@@ -170,7 +201,9 @@ if (serveOnly) { console.log(`Local research server ready on port ${port}; proce
 const rows = [], dump = [];
 try {
   for (const q of questions) {
-    const {status, ms, d, telemetry} = await ask(base, q);
+    const prior=q.followup_of?dump.find(r=>r.q.id===q.followup_of):priorFile?JSON.parse(readFileSync(priorFile,'utf8')):undefined;
+    if(q.followup_of&&!prior)throw new Error('Missing prior turn: '+q.followup_of);
+    const {status, ms, d, request, telemetry} = await ask(base, q, prior);
     const r = {...(d.research || {})}, c = checks(d);
     if (telemetry) {
       r.cost_usd ??= telemetry.cost_usd;
@@ -191,7 +224,7 @@ try {
     if (a) console.log(`  points: ${a.points_kept}/${a.points_in} kept (${a.mode ?? 'points'})  repairs ${JSON.stringify(a.repairs)}  drops ${JSON.stringify(a.drops)}`);
     console.log(`  checks: loop=${c.loop} quotes=${c.quotes} verbatim=${c.verbatim} unbound-markers=${c.unbound} placeholder=${c.placeholder}`);
     rows.push({id: q.id, kind: q.kind, s: (ms / 1000).toFixed(1), mode: r.mode ?? '-', failure: r.failure ?? '', cost: r.cost_usd ?? null, kept: r.answer_stats ? `${r.answer_stats.points_kept}/${r.answer_stats.points_in}` : '-', ...c});
-    dump.push({q, status, ms, payload: d, ...(telemetry ? {local_telemetry: telemetry} : {})});
+    dump.push({q, request, status, ms, payload: d, ...(telemetry ? {local_telemetry: telemetry} : {})});
     if (jsonOut) writeFileSync(jsonOut, JSON.stringify(dump, null, 1));
   }
 } finally {

@@ -139,7 +139,7 @@ function evidenceRows(payload){
  const rows=[]
  for(const source of Array.isArray(payload.sources)?payload.sources:[]){
   if(!source||typeof source!=='object'||typeof source.resource!=='string')continue
-  const text=String(source.snippet??''),base={id:source.resource,text,date:source.date,speaker:source.speaker,recipient:source.recipient,kind:source.kind,title:source.title,party:source.party,chamber:source.chamber}
+  const text=String(source.snippet??''),base={remuneration:source.remuneration,id:source.resource,text,date:source.date,speaker:source.speaker,recipient:source.recipient,kind:source.kind,title:source.title,party:source.party,chamber:source.chamber}
   const receipt=source.receipt
   // The tool's own association, read as data: both sides own the amount, for its period.
   if(receipt)rows.push({...base,text:`${receipt.party} ${receipt.source} $${receipt.amount.toLocaleString('en-AU')}`,entity:receipt.source,donor:receipt.source,period:periods(receipt.period),figures:figures('$'+receipt.amount.toLocaleString('en-AU')).map(f=>({...f,owner:receipt.party,owners:[receipt.source,receipt.party],period:periods(receipt.period)}))})
@@ -178,7 +178,7 @@ function evidenceRows(payload){
      if(bound)values.push(association);else{Object.assign(f,association);bound=true}
     }
    }
-   rows.push({...base,text:line,entity,donor:receipt?.[1]??donor?.[1]??(tableDonor&&entity?entity:undefined),role:donor||tableDonor&&entity?'donor':undefined,period:period.length?period:fiscal?periods(fiscal):[],figures:values})
+   rows.push({...base,remuneration:base.remuneration||(kmp?{name:kmp[1]}:undefined),text:line,entity,donor:receipt?.[1]??donor?.[1]??(tableDonor&&entity?entity:undefined),role:donor||tableDonor&&entity?'donor':undefined,period:period.length?period:fiscal?periods(fiscal):[],figures:values})
   }
  }
  return rows
@@ -229,7 +229,7 @@ export function auditPayload(question,payload,{roster=[]}={}){
  }
  for(const {text,at:sentenceAt}of sentenceParts(body)){
   const actors=nounPhrases(text)
-  const unknownActors=actors.filter(a=>!descriptor(text,a)&&!entities.some(e=>a.name.includes(e)||e.includes(a.name))&&!roles.some(role=>role.endsWith(a.name)&&entities.some(e=>e&&text.slice(0,a.at).includes(e)))&&! /^(?:Labor|Liberal|Greens|Nationals|Independent|Coalition)[’']s /.test(a.name))
+  const unknownActors=actors.filter(a=>!descriptor(text,a)&&!entities.some(e=>a.name.includes(e)||e.includes(a.name))&&!roles.some(role=>role.includes(a.name)&&entities.some(e=>e&&text.slice(0,a.at).includes(e)))&&! /^(?:Labor|Liberal|Greens|Nationals|Independent|Coalition)[’']s /.test(a.name))
   const named=mentions(text,[...entities,...unknownActors.map(a=>a.name)]).map(n=>({...n,name:personAliases.get(n.name)??n.name})),numeric=figures(text),ps=periods(text)
   const citedIds=Object.entries(payload.citations??{}).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(range=>Array.isArray(range)&&range.length===2&&range.every(Number.isSafeInteger)&&range[0]<Array.from(body.slice(0,sentenceAt+text.length)).length&&range[1]>Array.from(body.slice(0,sentenceAt)).length)).map(([id])=>id)
   const selected=citedIds.length?rows.filter(r=>citedIds.some(id=>id===r.id||id.startsWith(r.id+'/'))):rows
@@ -268,8 +268,13 @@ export function auditPayload(question,payload,{roster=[]}={}){
    if(!speech&&/\b(?:each|both|tied)\b/i.test(text)&&named.filter(n=>n.at>=previous&&n.end<=f.at).length>1)owners=named.filter(n=>n.at>=previous&&n.end<=f.at).map(n=>n.name)
    if(!owners.length&&scope.owner&&!reported)owners=[scope.owner]
    if(!owners.length){const aggregates=[...new Set(selected.filter(r=>r.role==='donor').map(r=>r.entity))];owners=!reported&&aggregates.length===1&&/\b(?:total|aggregate|records)\b/i.test(text)?aggregates:['']}
+   // A published remuneration row belongs to its named person. Appositive positions and
+   // the reporting body's name are not alternative payees.
+   const payee=preceding.filter(n=>selected.some(r=>r.remuneration&&r.entity===n.name)).at(-1)
+   if(payee&&!reported)owners=[payee.name]
    for(const entity of [...new Set(owners)]){
-    const next=numeric.find(n=>n.at>f.at)?.at??text.length,nearPeriods=ps.filter(p=>p.at>=f.end&&p.at<next&&!/\p{Lu}[\p{L}'’-]*\s*\($/u.test(text.slice(0,p.at)))
+    const nextPerson=payee?named.find(n=>n.at>f.at&&selected.some(r=>r.remuneration&&r.entity===n.name))?.at:undefined
+    const next=Math.min(numeric.find(n=>n.at>f.at)?.at??text.length,nextPerson??text.length),nearPeriods=ps.filter(p=>p.at>=f.end&&p.at<next&&!/\p{Lu}[\p{L}'’-]*\s*\($/u.test(text.slice(0,p.at)))
     const beforePeriod=ps.filter(p=>p.end<=f.at).at(-1)
     const attached=nearPeriods.length?nearPeriods:beforePeriod&&!/,\s*(?:and|but|while|because)|;/.test(text.slice(beforePeriod.end,f.at))?[beforePeriod]:[]
     const giving=/\b(?:gave|donated|provided|giving)\b/i.test(text)||/\b(?:total|aggregate|records)\b/i.test(text)&&!/\b(?:received|was paid|earned)\b/i.test(text),donor=givingActor(text,f,named.map(n=>n.name))??named.filter(n=>n.at<f.at&&rows.some(r=>r.donor===n.name)).at(-1)?.name
@@ -289,7 +294,9 @@ export function auditPayload(question,payload,{roster=[]}={}){
   for(const p of ps){
    const context=/cannot|do not|does not|not establish|requested|unavailable|does not date|cannot be stated/i.test(text)
    const scope=claimScope(text,p.at,named,speakers),nextFigure=numeric.find(f=>f.at>=p.end&&f.at<scope.end),entity=speech?scope.owner:nextFigure?((nextFigure.owner??named.filter(n=>n.end<=nextFigure.at&&n.at>=scope.start).at(-1)?.name)??scope.owner):scope.owner,quoted=quotations(text).filter(q=>q.at>=scope.start&&q.end<=scope.end)
-   const candidates=selected.filter(r=>(!entity? !r.speaker:(personName(entity,selected)?owns(r,entity):recordName(entity,r))||context&&!r.entity&&!r.speaker)&&(dateSupported(p.value,r)||r.figures.some(f=>dateSupported(p.value,{...r,period:f.period})))&&quoted.every(q=>r.text.includes(q.value))&&topicsMatch(text.slice(scope.start,scope.end),r))
+   const annualPayee=named.filter(n=>n.at<p.at&&selected.some(r=>r.remuneration&&r.entity===n.name)).at(-1)
+   const periodOwner=annualPayee?.name??entity
+   const candidates=selected.filter(r=>(!periodOwner? !r.speaker:(personName(periodOwner,selected)?owns(r,periodOwner):recordName(periodOwner,r))||context&&!r.entity&&!r.speaker)&&(dateSupported(p.value,r)||r.figures.some(f=>dateSupported(p.value,{...r,period:f.period})))&&quoted.every(q=>r.text.includes(q.value))&&topicsMatch(text.slice(scope.start,scope.end),r))
    if(context&&!candidates.length&&question.includes(p.raw)){claims.push({type:'request_period',entity:'request',metric:'requested period',value:p.value,period:[p.value],text,evidence_ids:['request'],status:'supported'});continue}
    add({type:'period',entity,metric:'period',value:p.value,period:[p.value],text,offset:sentenceAt+p.at},candidates,'period is not in the associated selected evidence')
   }

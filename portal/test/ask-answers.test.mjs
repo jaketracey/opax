@@ -156,7 +156,7 @@ test('the production refusal cannot be cached, and its question now can be',()=>
  assert.equal(api.cacheableRoutedAnswer(before,true),false)
  assert.equal(api.cacheableRoutedAnswer(api.groundAnswerPayload(api.proseFallback(moneyInput(gambling,'Labor')),gambling),true),true)
 })
-test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-22-ranking-wording')})
+test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-23-followup-records')})
 
 // Review of 36bf23f48, each finding on its exact input. The rule: a generic refusal gives way to on-topic facts,
 // a specific limit stays first with the facts beside it, and typed decisions, causal asks and period guards are left alone.
@@ -189,7 +189,7 @@ test('finding 3: real dates in any kind of fact keep it out, and the requested y
   assert.doesNotMatch(api.groundAnswerPayload({answer:refusal,answer_decision:'limitation',citations:{},sources:[],research:{mode:'loop',pre_writer_sources:pre(plain(q,[fact]))}},q).answer,/In 2005|\$/)
  }
  const inside=plain('Which electorate got the most grants in 2023?',['Kennedy: $4,500,000 across 12 grants, 2022-23'])
- assert.match(limited(inside,'The selected records do not rank electorates.').answer,/What the records do show:\n\n- Kennedy: \$4,500,000/)
+ assert.match(limited(inside,'The selected records do not rank electorates.').answer,/What the records do show:\n\nKennedy: \$4,500,000/)
 })
 for(const q of ['Which mining donor paid for votes?','Did Tabcorp money change how Labor voted on pokies?','Did gambling donors sway Labor?','What did Labor do in return for gambling money?','Did Tabcorp buy Labor\'s vote?','Which donor bought access?','Did gambling money influence Labor?','Did donations cause Labor to change its vote?','Was the vote because of gambling donations?'])test('finding 4: nothing is appended on a causal ask: '+q,()=>{
  const input=moneyInput(q,'Labor'),limit='The records do not show that money moved any vote.'
@@ -267,7 +267,7 @@ test('a dated question answered from a wider range says so in words',()=>{
 })
 test('case 2 keeps the limit unchanged and first, never adds a superlative or the requested period, and is stable',()=>{
  const q='Who gave the most money to Labor in 2005?',limit='OPAX can only show aggregate receipts for that party.',input=allRows(q,'Labor'),once=limited(input,limit),[first,second]=once.answer.split('\n\n')
- assert.equal(first,limit);assert.equal(second,'What the records do show:');assert.equal(once.answer_decision,'limitation');assert.doesNotMatch(once.answer.slice(limit.length),SUPERLATIVE);assert.match(api.normaliseCoveragePayload(once,q).coverage.note,/not 2005 amounts/);assert.equal(once.answer.split('\n\n').filter(l=>l.startsWith('- ')).length,3);for(const row of once.answer.split('\n\n').filter(l=>l.startsWith('- ')))assert.match(row,/financial years 1998-99 to 2025-26\)\.$/);assert.ok(Object.keys(once.citations).length)
+ assert.equal(first,limit);assert.equal(second,'What the records do show:');assert.equal(once.answer_decision,'limitation');assert.doesNotMatch(once.answer.slice(limit.length),SUPERLATIVE);assert.match(api.normaliseCoveragePayload(once,q).coverage.note,/not 2005 amounts/);assert.equal(once.answer.split('\n\n').filter(l=>/financial years/.test(l)).length,3);for(const row of once.answer.split('\n\n').filter(l=>/financial years/.test(l)))assert.match(row,/financial years 1998-99 to 2025-26\)\.$/);assert.ok(Object.keys(once.citations).length)
  assert.equal(api.groundAnswerPayload(once,q).answer,once.answer)
  assert.equal(api.cacheableRoutedAnswer(once,true),false,'a limitation with facts beside it is still not stored')
 })
@@ -302,7 +302,7 @@ test('the shape rule leads with no-causation, keeps a model limit ahead of it, a
 test('spoken points can answer a position question: the shape rule stands aside',()=>{
  const q='Why did Labor oppose pokies reform?',input=moneyInput(q,'Labor'),answer='- In 2020, Jane Hume said donations are declared to the AEC.'
  const out=api.groundAnswerPayload({answer,answer_decision:'answer',citations:{'p/t/body/0':[[2,answer.length]]},sources:[{resource:'p',slug:'',title:'Jane Hume',href:'/d',url:'/d',snippet:'I said donations are declared to the AEC.',cited:true,kind:'speech',speaker:'Jane Hume',date:'2020-06-15'}],answer_scope:input.constraints,research:{mode:'loop',pre_writer_sources:pre(input)}},q)
- assert.equal(out.answer,answer);assert.equal(out.answer_decision,'answer')
+ assert.equal(out.answer,answer.replace(/^- /gm,''));assert.equal(out.answer_decision,'answer')
 })
 test('a two-part question keeps its rows, votes and caveat, under the limit',()=>{
  const q='Who gave the most money to Labor and how did Labor vote on pokies?',input=allRows(q,'Labor',{}),vote='Labor voted in 13 divisions with "pokies" in the title: all aye in 9, all no in 4, split in 0'

@@ -95,7 +95,7 @@ export const askToolSpecs: ToolSpec[] = tools.filter(tool => !tool.mcpOnly).map(
   async run(deps: ToolDeps, args: ToolArgs) {
     const data = await callTool({ ...deps.toolEnv, asset: deps.asset, kb: deps.kb, origin: deps.origin, signal: deps.signal }, tool.name, args)
     return { tool: tool.askName ?? tool.name, ok: !data.error, ...(data.error ? { error: data.error === 'Published tool data is temporarily unavailable.' ? 'lookup timed out or unavailable' : data.error } : {}), ...(data.list ? { list: String(data.list) } : {}), data,
-      cite: data.citations.map(c => ({ kind: c.kind ?? 'record', label: c.text, url: c.url, ...(c.value === undefined ? {} : { value: c.value }), ...(c.related ? { related: c.related } : {}) })),
+      cite: data.citations.map(c => ({ kind: c.kind ?? 'record', label: c.text, url: c.url, ...(c.value === undefined ? {} : { value: c.value }), ...(c.related ? { related: c.related } : {}), ...(c.remuneration ? { remuneration: c.remuneration } : {}) })),
       ...(data.coverage ? { coverage: data.coverage as ToolResult['coverage'] } : {}),
       notes: data.notes, query: data.query,
       // The register a result was drawn from: its coverage row opens this, not one of its records.

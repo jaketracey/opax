@@ -17,7 +17,7 @@ import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-22-ranking-wording'
+export const ANSWER_WRITING_VERSION = 'written-answer-23-followup-records'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[] }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -105,7 +105,7 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     }
   }
   for (const fact of facts) {
-    const source = {resource:`fact-${fact.id}`, slug:'', title:fact.cite.label, href:fact.cite.url, url:fact.cite.url, snippet:fact.text, cited:true, kind:fact.cite.kind, ...(fact.receipt?{receipt:fact.receipt}:{}), ...(fact.entities?.length?{entities:fact.entities}:{}), ...(fact.member?{member:fact.member}:{})}
+    const source = {resource:`fact-${fact.id}`, slug:'', title:fact.cite.label, href:fact.cite.url, url:fact.cite.url, snippet:fact.text, cited:true, kind:fact.cite.kind, ...(fact.cite.remuneration?{remuneration:fact.cite.remuneration}:{}), ...(fact.receipt?{receipt:fact.receipt}:{}), ...(fact.entities?.length?{entities:fact.entities}:{}), ...(fact.member?{member:fact.member}:{})}
     for (const part of fact.text.split(/\n+/)) add(part, source, isCoverage(part))
   }
   const source = out[0]?.source

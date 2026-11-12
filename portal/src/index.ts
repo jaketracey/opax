@@ -881,7 +881,7 @@ interface AskInput {
   to?: string
   since?: string
   until?: string
-  context?: { author?: string; text?: string }[]
+  context?: import('./ask-followup').SourceTurn[]
   /**
    * Resource ids the conversation's earlier answers cited, sent by the chat.
    * Each gets its own pinned retrieval pass (a `prequeries` strategy, as

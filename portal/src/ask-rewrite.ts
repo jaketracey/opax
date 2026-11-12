@@ -11,7 +11,7 @@
  * (and the model's best guess at one, when it has a different one to offer).
  */
 
-export type ConversationTurn = { author?: string; text?: string }
+export type ConversationTurn = { author?: string; text?: string; sources?: {resource?:string; slug?:string; kind?:string; date?:string; url?:string; cited?:boolean; title?:string; speaker?:string; snippet?:string; remuneration?:import('./research-types').RemunerationRecord}[] }
 /** null: search the words as typed. A string: the standalone question. */
 export type FollowUpRewrite = string | null | { unclear: true; suggestion?: string }
 
@@ -110,7 +110,7 @@ export async function rewriteFollowUp(
   if (!question || question.length > 2000 || !turns.some((t) => t.author !== 'answer')) return null
   if (contentFree(question)) return { unclear: true }
   const transcript = turns
-    .map((t) => `${t.author === 'answer' ? 'Answer' : 'Reader'}: ${String(t.text).replace(/\s+/g, ' ').trim().slice(0, 1500)}`)
+    .map((t) => `${t.author === 'answer' ? 'Answer' : 'Reader'}: ${String(t.text).replace(/\s+/g, ' ').trim().slice(0, 1500)}${t.author==='answer'?'\nCited record hints: '+JSON.stringify((t.sources??[]).filter(s=>s.cited!==false).slice(0,6).map(s=>({resource:s.resource,slug:s.slug,kind:s.kind,date:s.date,url:s.url,title:s.title,speaker:s.speaker,remuneration:s.remuneration,snippet:s.snippet?.slice(0,600)}))):''}`)
     .join('\n')
   let raw: string | null
   try { raw = await generate(rewritePrompt(transcript), question) } catch { return null }
