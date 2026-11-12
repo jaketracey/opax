@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2008-12-18-public-duty-private-interests-issues-pre-separation-conduct",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for the Queensland public sector",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf",
+  "document": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for... (18 December 2008)",
+  "sha256": "fabc0bea68d70c6ae2c75a81b6c4716e1b6f11ae65bb3771deae68a1a6bd8ffa",
+  "pages": 88,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated allegations that a former director-general misused departmental information and failed to disclose an interest in a private training company.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf",
+      "document": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for... (18 December 2008)",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The CMC also examined risks arising when public officials prepare to leave government employment or take private sector jobs.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf",
+      "document": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for... (18 December 2008)",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that the former director-general’s interest in future employment had led him to act against the public interest.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf",
+      "document": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for... (18 December 2008)",
+      "page": 36
+     }
+    ]
+   },
+   {
+    "text": "The CMC sought prosecution advice on disclosing official secrets, but the advice did not support charges, and disciplinary action was unavailable after the official left public employment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf",
+      "document": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for... (18 December 2008)",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf",
+      "document": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for... (18 December 2008)",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The CMC made five recommendations concerning exit procedures, misconduct offences, conflicts of interest, confidentiality and restrictions on lobbying after public employment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf",
+      "document": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for... (18 December 2008)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf",
+      "document": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for... (18 December 2008)",
+      "page": 11
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "His interest in his own future employment caused him, on a number of instances, to act contrary to the public interest.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Separation-issues-in-the-Queensland-public-sector/Public-duty-private-interests-Report-2008.pdf",
+     "document": "Public Duty, Private Interests: Issues in pre-separation conduct and post-separation employment for... (18 December 2008)",
+     "page": 36
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

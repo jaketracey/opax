@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-beaufort-and-skipton-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Beaufort and Skipton Health Service 2025-26 annual report",
+ "body": "Beaufort and Skipton Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "fa55755e1efabde25ddcbe53760020f58887fe6ce496ca422bcbaa73816b3122",
+  "pages": 88,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "BOARD CHAIR AND CHIEF EXECUTIVE OFFICER’S REPORT",
+  "first_page": 9,
+  "last_page": 11,
+  "link": "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Beaufort and Skipton Health Service reported for 2025-26 on its health and community services for the two communities.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "OUR ROLE"
+   },
+   {
+    "text": "The health service reported activating its emergency plan when the January 2026 fire threatened its Skipton campus, then supporting community recovery.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "BOARD CHAIR AND CHIEF EXECUTIVE OFFICER’S REPORT"
+   },
+   {
+    "text": "The health service reported expanding Support at Home and adding positions to support its growth.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "BOARD CHAIR AND CHIEF EXECUTIVE OFFICER’S REPORT"
+   },
+   {
+    "text": "The health service reported an operating surplus and a workforce of 227 employees.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "BOARD CHAIR AND CHIEF EXECUTIVE OFFICER’S REPORT"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Sepsis Project was undertaken in partnership with Safer Care Victoria and the Grampians Local Health Service Network and supported earlier identification and treatment of sepsis, helping to improve patient outcomes.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3bb/globalassets/tabled-paper-documents/tabled-paper-10709/beaufort-and-skipton-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

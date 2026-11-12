@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-independent-commission-against-corruption-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Independent Commission Against Corruption 2025-26 annual report",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/617/NSW%20ICAC%20Annual%20Report%202025-26.pdf.aspx?Embed=Y",
+  "document": "annual report",
+  "sha256": "38cb034d0e3917d78dfbc2817c898bdabf5b119ecff5c923cdd07cc46ec5a44f",
+  "pages": 152,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Commissioner’s foreword",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.icac.nsw.gov.au/ArticleDocuments/617/NSW%20ICAC%20Annual%20Report%202025-26.pdf.aspx?Embed=Y#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption reported on 2025–26, investigating public sector corruption in NSW and working to prevent it.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/617/NSW%20ICAC%20Annual%20Report%202025-26.pdf.aspx?Embed=Y",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/617/NSW%20ICAC%20Annual%20Report%202025-26.pdf.aspx?Embed=Y",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The Commission reported receiving 3,692 matters for assessment, starting 11 full investigations and completing six.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/617/NSW%20ICAC%20Annual%20Report%202025-26.pdf.aspx?Embed=Y",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It reported delivering 139 presentations and 217 workshops, reaching more than 17,000 participants.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/617/NSW%20ICAC%20Annual%20Report%202025-26.pdf.aspx?Embed=Y",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission reported exceeding its assessment timeliness target, taking an average of 48 days against a target of 68 days.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/617/NSW%20ICAC%20Annual%20Report%202025-26.pdf.aspx?Embed=Y",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Resources were prioritised according to risk, resulting in an average assessment time of 48 days and exceeding the performance target.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.nsw.gov.au/ArticleDocuments/617/NSW%20ICAC%20Annual%20Report%202025-26.pdf.aspx?Embed=Y",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

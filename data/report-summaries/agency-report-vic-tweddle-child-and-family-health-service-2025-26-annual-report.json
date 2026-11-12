@@ -1,0 +1,127 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-tweddle-child-and-family-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Tweddle Child and Family Health Service 2025-26 annual report",
+ "body": "Tweddle Child and Family Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "1e72745ac0cf8dcba391ba22349e6c8d3f9f822adbb5fe0cec345c5ada092fdc",
+  "pages": 75,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CEO and Board Chair Report",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Tweddle Child and Family Health Service reported on the year ending 30 June 2026, providing early parenting support and contributing to research, education and advocacy.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Our Role"
+   },
+   {
+    "text": "Tweddle reported that the boards of Tweddle and the Queen Elizabeth Centre requested a merger in June 2026, with the proposal before the Secretary of the Department of Health.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 15
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Voluntary Merger with Queen Elizabeth Centre (QEC)"
+   },
+   {
+    "text": "Tweddle reported launching its 2025–2030 strategic plan and being appointed to operate the new early parenting centre in Northcote.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "CEO and Board Chair Report"
+   },
+   {
+    "text": "It reported introducing a new client information management system in February 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "CEO and Board Chair Report"
+   },
+   {
+    "text": "Tweddle reported minimum compliance with 91% of requirements in its asset management maturity assessment for 2025–26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 20
+     }
+    ],
+    "section": "Asset Management Accountability Framework (AMAF) Maturity Assessment"
+   },
+   {
+    "text": "Tweddle reported a net surplus of $916,247 for the year ending 30 June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 35
+     }
+    ],
+    "section": "Comprehensive Operating Statement"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Both organisations are confident the proposed merger will deliver lasting benefits for babies, children, families and carers.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab42f/globalassets/tabled-paper-documents/tabled-paper-10764/tweddle-child-and-family-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

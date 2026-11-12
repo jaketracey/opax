@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-cth-inspector-of-the-national-anti-corruption-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Inspector of the National Anti-Corruption Commission 2025-26 annual report",
+ "body": "Inspector of the National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.naccinspector.gov.au/system/files/2026-11/inspector-national-anti-corruption-commission-annual-report-2025-26.PDF",
+  "document": "annual report",
+  "sha256": "b366dc1503dc831e857de1d7005d64540ae82ddcf4df95f7928af87b69401ea0",
+  "pages": 42,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1. Foreword",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.naccinspector.gov.au/system/files/2026-11/inspector-national-anti-corruption-commission-annual-report-2025-26.PDF#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Inspector of the National Anti-Corruption Commission reported on 2025–26 as an independent parliamentary officer overseeing the Commission.",
+    "cites": [
+     {
+      "url": "https://www.naccinspector.gov.au/system/files/2026-11/inspector-national-anti-corruption-commission-annual-report-2025-26.PDF",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.naccinspector.gov.au/system/files/2026-11/inspector-national-anti-corruption-commission-annual-report-2025-26.PDF",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Inspector reported receiving 213 complaints, compared with 75 in the previous year.",
+    "cites": [
+     {
+      "url": "https://www.naccinspector.gov.au/system/files/2026-11/inspector-national-anti-corruption-commission-annual-report-2025-26.PDF",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Inspector commenced two complaint investigations and subsequently discontinued both.",
+    "cites": [
+     {
+      "url": "https://www.naccinspector.gov.au/system/files/2026-11/inspector-national-anti-corruption-commission-annual-report-2025-26.PDF",
+      "document": "annual report",
+      "page": 20
+     }
+    ]
+   },
+   {
+    "text": "The Inspector also recorded 4,917 public enquiries, including 4,120 contacts from 20 individuals.",
+    "cites": [
+     {
+      "url": "https://www.naccinspector.gov.au/system/files/2026-11/inspector-national-anti-corruption-commission-annual-report-2025-26.PDF",
+      "document": "annual report",
+      "page": 26
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "During the reporting period the Inspector commenced and discontinued two complaint investigations.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.naccinspector.gov.au/system/files/2026-11/inspector-national-anti-corruption-commission-annual-report-2025-26.PDF",
+     "document": "annual report",
+     "page": 20
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:43+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

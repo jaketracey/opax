@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2024-06-11-investigation-allegations-serious-misconduct-follow-24bd80d7",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "An investigation into allegations of serious misconduct following the death of a young detainee in Unit 18 Casuarina Prison",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/An_investigation_into_allegations_of_serious_misconduct_following_the_death_of_a_young_detainee_in_Unit_18_Casuarina_Prison_2.pdf",
+  "document": "An investigation into allegations of serious misconduct following the death of a young detainee in Unit 18 Casuarina Prison 2",
+  "sha256": "d0aeb6533fde875662851fe88c67bb53862bfb936d855ee249a31ddb80b903b3",
+  "pages": 70,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 5,
+  "last_page": 8,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/An_investigation_into_allegations_of_serious_misconduct_following_the_death_of_a_young_detainee_in_Unit_18_Casuarina_Prison_2.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated whether serious misconduct by public officers at Unit 18 in Casuarina Prison contributed to a young detainee’s death.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/An_investigation_into_allegations_of_serious_misconduct_following_the_death_of_a_young_detainee_in_Unit_18_Casuarina_Prison_2.pdf",
+      "document": "An investigation into allegations of serious misconduct following the death of a young detainee in Unit 18 Casuarina Prison 2",
+      "page": 68
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "Its inquiry focused on five youth custodial officers and a contracted nurse working the night shift when the detainee harmed himself.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/An_investigation_into_allegations_of_serious_misconduct_following_the_death_of_a_young_detainee_in_Unit_18_Casuarina_Prison_2.pdf",
+      "document": "An investigation into allegations of serious misconduct following the death of a young detainee in Unit 18 Casuarina Prison 2",
+      "page": 6
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission concluded that leaving the cell camera covered likely contributed significantly to the death, but that the officers’ omissions did not constitute serious misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/An_investigation_into_allegations_of_serious_misconduct_following_the_death_of_a_young_detainee_in_Unit_18_Casuarina_Prison_2.pdf",
+      "document": "An investigation into allegations of serious misconduct following the death of a young detainee in Unit 18 Casuarina Prison 2",
+      "page": 69
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission formed no serious misconduct opinions, having found no evidence of an offence within the criminal threshold governing this inquiry.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/An_investigation_into_allegations_of_serious_misconduct_following_the_death_of_a_young_detainee_in_Unit_18_Casuarina_Prison_2.pdf",
+      "document": "An investigation into allegations of serious misconduct following the death of a young detainee in Unit 18 Casuarina Prison 2",
+      "page": 70
+     }
+    ],
+    "section": "CONCLUSION"
+   },
+   {
+    "text": "The Commission made no recommendations, considering the Coroner better placed to recommend changes to prevent another death.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/An_investigation_into_allegations_of_serious_misconduct_following_the_death_of_a_young_detainee_in_Unit_18_Casuarina_Prison_2.pdf",
+      "document": "An investigation into allegations of serious misconduct following the death of a young detainee in Unit 18 Casuarina Prison 2",
+      "page": 70
+     }
+    ],
+    "section": "CONCLUSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-residential-tenancies-bond-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Residential Tenancies Bond Authority 2025-26 annual report",
+ "body": "Residential Tenancies Bond Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3a6/globalassets/tabled-paper-documents/tabled-paper-10691/2025-26-rtba-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "647a340d7d91e015e846fe2428d8168a86e783107ce0111ef0d5468722023b9c",
+  "pages": 47,
+  "rights": null
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Residential Tenancies Bond Authority’s 2025-26 report described its role holding Victorian residential tenancy bonds, including bonds for long-term caravan and rooming house residents.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a6/globalassets/tabled-paper-documents/tabled-paper-10691/2025-26-rtba-annual-report.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Residential Tenancies Bond Authority vision"
+   },
+   {
+    "text": "The Authority reported holding 750,880 bonds worth $1,644 million at 30 June 2026 and transferring $26.00 million to the Residential Tenancies Fund during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a6/globalassets/tabled-paper-documents/tabled-paper-10691/2025-26-rtba-annual-report.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Performance measures"
+   },
+   {
+    "text": "It reported registering 256,627 bond lodgments and repaying 246,997 bonds in 2025-26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a6/globalassets/tabled-paper-documents/tabled-paper-10691/2025-26-rtba-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Key bond processes and achievements for the year"
+   },
+   {
+    "text": "The Authority reported that its new bond management system began operating on 8 December 2025, when all bond transactions became available online.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a6/globalassets/tabled-paper-documents/tabled-paper-10691/2025-26-rtba-annual-report.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Outsourced services"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "At 30 June 2026, the Authority held 750,880 bonds, valued at $1,644 million.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3a6/globalassets/tabled-paper-documents/tabled-paper-10691/2025-26-rtba-annual-report.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-health-purchasing-victoria-healthshare-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Health Purchasing Victoria (HealthShare) 2025-26 annual report",
+ "body": "Health Purchasing Victoria (HealthShare)",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "23a923eeaf128ae4cd826946f11be3ddfb6638c5d461b49e585809571e2af15d",
+  "pages": 116,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Report from HSV’s Board Chair and Interim Chief Executive",
+  "first_page": 3,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "In its 2025-26 report, HealthShare Victoria describes its procurement and logistics role in supplying Victorian public health services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "About HSV"
+   },
+   {
+    "text": "HSV reported completing 58 procurement activities and signing 356 agreements across 35 categories.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Report from HSV’s Board Chair and Interim Chief Executive"
+   },
+   {
+    "text": "It reported more than $218 million in targeted benefits for health services, including a net cost reduction of $6.8 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Report from HSV’s Board Chair and Interim Chief Executive"
+   },
+   {
+    "text": "HSV reported customer satisfaction of 74 per cent in its 2026 survey, an increase of 5 per cent from 2025.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Achieving best procurement value and outcomes"
+   },
+   {
+    "text": "It reported an operating surplus of $4.5 million and a net deficit of $1.17 million after depreciation and other adjustments.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 67
+     }
+    ],
+    "section": "Summary of financial results"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In 2025-26, we completed 58 procurement activities and entered into 356 new agreements across 35 categories.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab40c/globalassets/tabled-paper-documents/tabled-paper-10740/healthshare-victoria-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

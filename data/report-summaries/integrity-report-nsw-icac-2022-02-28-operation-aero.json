@@ -1,0 +1,134 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2022-02-28-operation-aero",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation into political donations facilitated by Chinese Friends of Labor in 2015",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+  "document": "Operation Aero recommendations for prosecutions (pdf)",
+  "sha256": "2b0211a3fc165cbb3525a0cc6b1e775e0322ee0394f26075c1453899a0f4c041",
+  "pages": 7,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "For Operation Aero, NSW ICAC expressed the opinion that consideration should be given to obtaining prosecution advice from the Director of Public Prosecutions.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   },
+   {
+    "text": "The Commission’s proposed prosecution advice covers schemes to avoid disclosure of political donations’ true sources, false disclosures and misleading responses to electoral investigators.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 2
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 3
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 4
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 6
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   },
+   {
+    "text": "The Commission also proposed advice on obstructing investigations, false evidence, procuring false testimony and breaches of restrictions on publication.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 2
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 3
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 4
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 6
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 7
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   },
+   {
+    "text": "The Commission states that the Director of Public Prosecutions decides whether charges can be laid and conducts prosecutions.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/904/NSW%20ICAC%20Operation%20Aero%20recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Operation Aero recommendations for prosecutions (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-independent-commission-against-corruption-2025-26-assumed-identities-return",
+ "report_type": "agency_report",
+ "subtype": "assumed identities statutory annual return",
+ "title": "Independent Commission Against Corruption 2025-26 assumed identities statutory annual return",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F211546%2FICAC%20Assumed%20Identies%20Report%20for%20period%201%20July%202025%20to%2030%20June%202026.pdf",
+  "document": "assumed identities statutory annual return",
+  "sha256": "6b05162d413f17904eb2d709130b5d9a91f4f45b5ecc84f8a3dfaaf20806be11",
+  "pages": 1,
+  "rights": null,
+  "text": "ocr"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Commission Against Corruption provided a statutory return for 2025/2026 on its use of assumed identities.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F211546%2FICAC%20Assumed%20Identies%20Report%20for%20period%201%20July%202025%20to%2030%20June%202026.pdf",
+      "document": "assumed identities statutory annual return",
+      "page": 1
+     }
+    ]
+   },
+   {
+    "text": "The Commission reported granting one authority and cancelling two, with none varied and no applications refused.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F211546%2FICAC%20Assumed%20Identies%20Report%20for%20period%201%20July%202025%20to%2030%20June%202026.pdf",
+      "document": "assumed identities statutory annual return",
+      "page": 1
+     }
+    ]
+   },
+   {
+    "text": "It reported using assumed identities in surveillance during investigations and to preserve covert arrangements.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F211546%2FICAC%20Assumed%20Identies%20Report%20for%20period%201%20July%202025%20to%2030%20June%202026.pdf",
+      "document": "assumed identities statutory annual return",
+      "page": 1
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

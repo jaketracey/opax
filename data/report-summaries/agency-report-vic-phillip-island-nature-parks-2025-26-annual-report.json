@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-phillip-island-nature-parks-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Phillip Island Nature Parks 2025-26 annual report",
+ "body": "Phillip Island Nature Parks",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10602/phillip-island-nature-parks-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "086089265ceed48faf28b72d6107ef843b10ea53dda4a98fe3491723abc28778",
+  "pages": 109,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "2.1. Chair and CEO update",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10602/phillip-island-nature-parks-2025-26-annual-report.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Phillip Island Nature Parks reported on 2025–2026, combining ecotourism with wildlife conservation and public land management.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10602/phillip-island-nature-parks-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported a record 145 sold-out nights at the Penguin Parade and an estimated 38,000 penguins on the Summerland Peninsula.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10602/phillip-island-nature-parks-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported launching the St Kilda Penguin Viewing Experience with Parks Victoria and Earthcare St Kilda.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10602/phillip-island-nature-parks-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported investing $5.7 million in conservation and research during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10602/phillip-island-nature-parks-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "It reported a $5.9 million net profit, driven by recognition of $4.8 million in funding for the Penguin Parade boardwalk redevelopment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10602/phillip-island-nature-parks-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Based on the financial performance achieved, the Board has formed the view that the Nature Parks can continue as a going concern.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab345/globalassets/tabled-paper-documents/tabled-paper-10602/phillip-island-nature-parks-2025-26-annual-report.pdf",
+     "document": "annual report",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

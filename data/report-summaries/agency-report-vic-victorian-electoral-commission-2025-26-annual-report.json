@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-electoral-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Electoral Commission 2025-26 annual report",
+ "body": "Victorian Electoral Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aacdb/globalassets/tabled-paper-documents/tabled-paper-10570/vec-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "ee2ff3c01590ecf0a5d8220e40062a115b210a9e7e904c51b64fda6a475b5dd6",
+  "pages": 160,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Our year",
+  "first_page": 12,
+  "last_page": 13,
+  "link": "https://www.parliament.vic.gov.au/4aacdb/globalassets/tabled-paper-documents/tabled-paper-10570/vec-annual-report-2025-26.pdf#page=12"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Electoral Commission reported on 2025–26, conducting elections, maintaining enrolment and regulating political funding and donations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdb/globalassets/tabled-paper-documents/tabled-paper-10570/vec-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdb/globalassets/tabled-paper-documents/tabled-paper-10570/vec-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Our responsibilities"
+   },
+   {
+    "text": "The commission reported preparing for the 2026 state election through in-house ballot production, an Operational Command Centre and an election rehearsal.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdb/globalassets/tabled-paper-documents/tabled-paper-10570/vec-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Our year"
+   },
+   {
+    "text": "It reported website accessibility increasing from 70.5% to 95.9% compared with the previous year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdb/globalassets/tabled-paper-documents/tabled-paper-10570/vec-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Cover explanation"
+   },
+   {
+    "text": "The commission reported receiving $140.0 million in funding and incurring operational expenses of $129.5 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdb/globalassets/tabled-paper-documents/tabled-paper-10570/vec-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 95
+     }
+    ],
+    "section": "Finance at a glance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Project delivery performance was strong during the reporting period, with our major initiatives meeting election readiness requirements.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aacdb/globalassets/tabled-paper-documents/tabled-paper-10570/vec-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 20
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

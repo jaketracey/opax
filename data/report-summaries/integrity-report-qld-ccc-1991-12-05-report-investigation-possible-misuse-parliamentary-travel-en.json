@@ -1,0 +1,167 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-12-05-report-investigation-possible-misuse-parliamentary-travel-en",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on an investigation into possible misuse of Parliamentary travel entitlements by members of the 1986-1989 Queensland Legislative Assembly",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+  "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+  "sha256": "e68b13a71643fd676b76f5e8822d2b2557c6cb23d5473933d945372e0d1621be",
+  "pages": 180,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 17,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated possible misuse of travel allowances by members of Queensland’s 1986 to 1989 Parliament.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It screened all daily-travel-allowance claims from that Parliament and examined selected journeys in detail.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 10
+     }
+    ],
+    "section": "The Process"
+   },
+   {
+    "text": "The CJC found that weak accountability and inadequate travel rules had created opportunities for misuse.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 13
+     }
+    ],
+    "section": "The Evidence"
+   },
+   {
+    "text": "The Commission concluded that members bore primary responsibility for abuse of the travel scheme.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 105
+     }
+    ],
+    "section": "Parliamentarians’ Responsibility"
+   },
+   {
+    "text": "It said no criminal prosecutions would result, citing evidentiary barriers arising from inadequate guidelines and missing records.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 15
+     }
+    ],
+    "section": "Prosecutions"
+   },
+   {
+    "text": "The Commission made fourteen recommendations to strengthen financial administration, define parliamentary business, tighten claims and reporting, and improve public scrutiny.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 112
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 115
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 118
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 122
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 125
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 126
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+      "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+      "page": 127
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "At the end of the day, no matter what systems or guidelines are in place, it is the Members who must take the bulk of responsibility for misusing their entitlements.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+     "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+     "page": 105
+    }
+   },
+   {
+    "quote": "Consequently there will be no criminal prosecutions arising from this investigation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-possible-misuse-of-parliamentary-travel-entitlements-Report-1991.pdf",
+     "document": "Report on an investigation into possible misuse of Parliamentary travel entitlements by Members of... (5 December 1991)",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

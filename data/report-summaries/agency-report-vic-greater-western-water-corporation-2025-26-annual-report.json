@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-greater-western-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Greater Western Water Corporation 2025-26 annual report",
+ "body": "Greater Western Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "74c200980434699d70bc31893cbbacfc0c78ef51614cc55524bd11962a000c5d",
+  "pages": 156,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chair and Managing Director",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Greater Western Water’s 2025–26 report covers its water, recycled water, sewerage and trade waste services in Melbourne and surrounding areas.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "About GWW"
+   },
+   {
+    "text": "The corporation acknowledged continuing billing problems and reported that approximately 88% of residential customers received regular bills by 30 June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Improving billing and customer experience"
+   },
+   {
+    "text": "It reported applying credits and waiving charges for affected customers, while increasing contact centre capacity and extending its hours.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Improving billing and customer experience"
+   },
+   {
+    "text": "Greater Western Water reported progressing wastewater network upgrades and expanding capacity at the Melton and Gisborne recycled water plants.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Building for a growing region"
+   },
+   {
+    "text": "It reported a pre-tax loss of $202.5 million, primarily linked to repairs to its billing and collections system and related business processes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Financial overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "However, some customers continue to experience billing issues and further work is required to resolve them.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab361/globalassets/tabled-paper-documents/tabled-paper-10621/greater-western-water-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

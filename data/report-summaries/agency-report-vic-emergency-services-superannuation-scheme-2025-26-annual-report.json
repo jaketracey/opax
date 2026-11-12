@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-emergency-services-superannuation-scheme-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Emergency Services Superannuation Scheme 2025-26 annual report",
+ "body": "Emergency Services Superannuation Scheme",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/esssuper-20025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "dc726b7bb694efbb871df246f709d3fc9dfd8fdf428607171a3e53dd2a29984f",
+  "pages": 73,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Board President",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/esssuper-20025-26-annual-report.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "ESSSuper reported for the year ended 30 June 2026 on retirement benefits and services for current and former Victorian emergency workers and public servants.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/esssuper-20025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/esssuper-20025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Who we are"
+   },
+   {
+    "text": "The fund reported answering 83,707 calls at its Member Service Centre, with an average wait of less than two minutes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/esssuper-20025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Message from the CEO"
+   },
+   {
+    "text": "It reported positive annual returns across all accumulation and income stream options.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/esssuper-20025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Investment performance"
+   },
+   {
+    "text": "It reported managing more than $40 billion in net assets for over 119,000 members as at 30 June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/esssuper-20025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 2
+     }
+    ],
+    "section": "Who we are"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "All accumulation and income stream options delivered positive returns to 30 June 2026.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aa291/globalassets/tabled-paper-documents/tabled-paper-10565/esssuper-20025-26-annual-report.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

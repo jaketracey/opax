@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2016-11-10-tp2912-operation-ross-an-investigation-into-police-conduct-i",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Ross: An investigation into police conduct in the Ballarat Police Service Area",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a25e0/globalassets/tabled-paper-documents/tabled-paper-2912/operation_ross_special_report_november_2016_b4tw3f2x.pdf",
+  "document": "Operation_Ross_special_report_November_2016_B4Tw3f2x",
+  "sha256": "f3ad14400f776672b9421bde62b4d29d74de0672f366e23f98513e2bb04cb030",
+  "pages": 142,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1 Introduction",
+  "first_page": 7,
+  "last_page": 13,
+  "link": "https://www.parliament.vic.gov.au/4a25e0/globalassets/tabled-paper-documents/tabled-paper-2912/operation_ross_special_report_november_2016_b4tw3f2x.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Ross investigated alleged mistreatment of women at Ballarat Police Station and the police response to complaint patterns.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25e0/globalassets/tabled-paper-documents/tabled-paper-2912/operation_ross_special_report_november_2016_b4tw3f2x.pdf",
+      "document": "Operation_Ross_special_report_November_2016_B4Tw3f2x",
+      "page": 8
+     }
+    ],
+    "section": "1 Introduction"
+   },
+   {
+    "text": "IBAC found that a woman in custody was kicked and stood on while subdued and compliant, and that other incidents showed excessive force.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25e0/globalassets/tabled-paper-documents/tabled-paper-2912/operation_ross_special_report_november_2016_b4tw3f2x.pdf",
+      "document": "Operation_Ross_special_report_November_2016_B4Tw3f2x",
+      "page": 60
+     }
+    ],
+    "section": "9 Conclusions and recommendations"
+   },
+   {
+    "text": "IBAC concluded that the incidents indicated systemic problems in the treatment of vulnerable people at the station.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25e0/globalassets/tabled-paper-documents/tabled-paper-2912/operation_ross_special_report_november_2016_b4tw3f2x.pdf",
+      "document": "Operation_Ross_special_report_November_2016_B4Tw3f2x",
+      "page": 60
+     }
+    ],
+    "section": "9 Conclusions and recommendations"
+   },
+   {
+    "text": "IBAC made four recommendations on complaint management, promotion checks, human rights training and searches, alongside an interim recommendation to consider assault charges.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25e0/globalassets/tabled-paper-documents/tabled-paper-2912/operation_ross_special_report_november_2016_b4tw3f2x.pdf",
+      "document": "Operation_Ross_special_report_November_2016_B4Tw3f2x",
+      "page": 61
+     }
+    ],
+    "section": "9 Conclusions and recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The investigation found that while in police custody, person A was kicked and stood on while in a subdued and compliant state.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25e0/globalassets/tabled-paper-documents/tabled-paper-2912/operation_ross_special_report_november_2016_b4tw3f2x.pdf",
+     "document": "Operation_Ross_special_report_November_2016_B4Tw3f2x",
+     "page": 60
+    }
+   },
+   {
+    "quote": "Taken together, these incidents were evidence of systemic issues at Ballarat Police Station including excessive use of force and questionable treatment of vulnerable people.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25e0/globalassets/tabled-paper-documents/tabled-paper-2912/operation_ross_special_report_november_2016_b4tw3f2x.pdf",
+     "document": "Operation_Ross_special_report_November_2016_B4Tw3f2x",
+     "page": 60
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

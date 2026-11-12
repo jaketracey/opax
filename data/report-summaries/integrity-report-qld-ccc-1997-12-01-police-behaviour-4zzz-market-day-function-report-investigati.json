@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1997-12-01-police-behaviour-4zzz-market-day-function-report-investigati",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+  "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+  "sha256": "6344b95775a9cd670c17fdd5fc291614604663b789227c79ab3d54d5fe19404a",
+  "pages": 14,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 13,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated complaints about police behaviour at a 4ZZZ Market Day function in Musgrave Park.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+      "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+      "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It examined allegations about force, military-police involvement, liaison arrangements, harassment, assaults and other police conduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+      "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The CJC concluded that the police response to the volatile crowd was neither unreasonable nor excessive.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+      "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+      "page": 9
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It found that some arrested people spent too long in police vans, but considered the unexpected circumstances prevented adverse conclusions against particular officers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+      "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+      "page": 13
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The CJC supported twelve police recommendations and added five on liaison, safe exits, custody arrangements, public announcements and written agreements with organisers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+      "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+      "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+      "page": 14
+     }
+    ],
+    "section": "Further recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CJC considers that, in these circumstances, it cannot be established that any police officer intentionally breached any arrangements for liaison with 4ZZZ members.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+     "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+     "page": 11
+    }
+   },
+   {
+    "quote": "In conclusion, on all the evidence it cannot be established that the police have ever harassed patrons of 4ZZZ or the radio station itself.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Police-behaviour-at-a-4ZZZ-market-day-function-Report-1997.pdf",
+     "document": "Police Behaviour at a 4ZZZ Market Day Function: Report of an Investigation (December 1997)",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2022-05-11-report-deployment-police-dogs",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "A report on the deployment of police dogs",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+  "document": "A report on the deployment of police dogs.pdf",
+  "sha256": "30194a52f767f2c0bf2cd8ed15d238d8211359c57bdab6546599ac8c981e78d7",
+  "pages": 31,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 24,
+  "last_page": 28,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf#page=24"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed misconduct risks in police dog deployment following a parliamentary committee recommendation to audit dog bite incidents.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+      "document": "A report on the deployment of police dogs.pdf",
+      "page": 4
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The review examined training, force reporting, misconduct notifications and a sample of deployments, including available body camera recordings.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+      "document": "A report on the deployment of police dogs.pdf",
+      "page": 4
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission identified missing operational policies and weaknesses in independent review, despite improvements in training and accountability.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+      "document": "A report on the deployment of police dogs.pdf",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+      "document": "A report on the deployment of police dogs.pdf",
+      "page": 26
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The Commission identified higher deployment rates against Aboriginal and Torres Strait Islander people but did not establish the systemic reasons for this.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+      "document": "A report on the deployment of police dogs.pdf",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+      "document": "A report on the deployment of police dogs.pdf",
+      "page": 6
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission made two recommendations to establish canine policies and analyse the reasons for the higher representation of Aboriginal and Torres Strait Islander people.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+      "document": "A report on the deployment of police dogs.pdf",
+      "page": 6
+     }
+    ],
+    "section": "INTRODUCTION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission identified a gap in the policies and procedures specific to the use of police dogs.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+     "document": "A report on the deployment of police dogs.pdf",
+     "page": 5
+    }
+   },
+   {
+    "quote": "The Commission's review identified multiple occasions on which WA Police failed to detect the improper use of a police dog.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/A%20report%20on%20the%20deployment%20of%20police%20dogs.pdf",
+     "document": "A report on the deployment of police dogs.pdf",
+     "page": 26
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

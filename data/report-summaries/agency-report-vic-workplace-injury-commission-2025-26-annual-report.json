@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-workplace-injury-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Workplace Injury Commission 2025-26 annual report",
+ "body": "Workplace Injury Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10651/workplace-injury-commission-wic-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "e5a46a89968f2e39b3fa3c944eb216779bd3640602790fcd7a9c0e96a8ff11ea",
+  "pages": 37,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair and CEO Report",
+  "first_page": 3,
+  "last_page": 3,
+  "link": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10651/workplace-injury-commission-wic-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Workplace Injury Commission reported for the year ending 30 June 2026 on its independent conciliation and arbitration services for workers’ compensation disputes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10651/workplace-injury-commission-wic-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10651/workplace-injury-commission-wic-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "About the Workplace Injury Commission"
+   },
+   {
+    "text": "The Commission reported introducing a more flexible service model, expanding conciliation teams and creating a role to engage with parties earlier.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10651/workplace-injury-commission-wic-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Year in review"
+   },
+   {
+    "text": "The Commission reported 16,134 conciliation lodgements, up 10.5%, and said rising demand delayed the scheduling of conferences.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10651/workplace-injury-commission-wic-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Rising dispute numbers"
+   },
+   {
+    "text": "The Commission reported user satisfaction of 74%, compared with 71% in the previous year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10651/workplace-injury-commission-wic-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "User experience survey"
+   },
+   {
+    "text": "The Commission reported an operating deficit of $0.7 million against a budgeted deficit of $1.2 million, largely because depreciation and amortisation do not receive cash funding.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10651/workplace-injury-commission-wic-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This rise caused delays to service delivery, primarily impacting the amount of time injured workers had to wait for a conciliation conference to be scheduled.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10651/workplace-injury-commission-wic-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

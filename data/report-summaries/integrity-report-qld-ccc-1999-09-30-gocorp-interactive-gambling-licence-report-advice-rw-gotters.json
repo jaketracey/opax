@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1999-09-30-gocorp-interactive-gambling-licence-report-advice-rw-gotters",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Gocorp Interactive Gambling Licence: Report on an Advice by RW Gotterson QC",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+  "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+  "sha256": "eb31cfc96cb220c3822845f6f1bd609b86f21c1b2cda2fd40b0d7b65dea3585a",
+  "pages": 65,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive Summary",
+  "first_page": 9,
+  "last_page": 11,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission engaged independent counsel to assess the issuing of an interactive gambling licence to Gocorp.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+      "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+      "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+      "page": 9
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The inquiries examined documents and interviews about licence processing, probity checks and the conduct of officials and others involved.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+      "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+      "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+      "page": 10
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "Counsel concluded that no reasonable suspicion of official misconduct arose concerning officials, the applicant or associated people, and advised against further investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+      "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+      "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+      "page": 11
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "Counsel identified resourcing and procedural issues affecting probity work and urged adoption of a parliamentary code addressing the ethical questions raised by the application.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+      "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+      "page": 11
+     }
+    ],
+    "section": "Executive Summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Furthermore there is no evidence that any gifts or promises of money, property or other benefits were offered or given to any person to influence a decision.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+     "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+     "page": 11
+    }
+   },
+   {
+    "quote": "I consider that further investigations by the Commission of the circumstances surrounding the issuing of the licence are neither necessary nor warranted.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Gocorp-interactive-gambling/GOCORP-Interactive-Gambling-Licence-Report-1999.pdf",
+     "document": "Gocorp interactive gambling licence: Report on an Advice by R W Gotterson QC (30 September 1999)",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

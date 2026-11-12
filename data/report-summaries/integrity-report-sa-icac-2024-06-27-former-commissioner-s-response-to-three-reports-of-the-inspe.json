@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2024-06-27-former-commissioner-s-response-to-three-reports-of-the-inspe",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Former Commissioner’s response to three reports of the Inspector",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0016/1051243/Commissioners-response-to-3-reports-of-the-Inspector-4-June-2024.pdf",
+  "document": "Commissioner’s response to three reports of the Inspector",
+  "sha256": "ab0e2bf71e641056e878a3fc2696907f6f0f752ffc8456aea7201a43dfcdca0c",
+  "pages": 12,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0016/1051243/Commissioners-response-to-3-reports-of-the-Inspector-4-June-2024.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commissioner Against Corruption responded to three Inspector reports about two earlier investigations and a matter that had not been investigated.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0016/1051243/Commissioners-response-to-3-reports-of-the-Inspector-4-June-2024.pdf",
+      "document": "Commissioner’s response to three reports of the Inspector",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner rejected the view that the former Commissioner had erred in referring a matter for prosecution, arguing that he had discretion to refer it.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0016/1051243/Commissioners-response-to-3-reports-of-the-Inspector-4-June-2024.pdf",
+      "document": "Commissioner’s response to three reports of the Inspector",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "She supported continued investigation performance indicators but opposed putting those measures into legislation.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0016/1051243/Commissioners-response-to-3-reports-of-the-Inspector-4-June-2024.pdf",
+      "document": "Commissioner’s response to three reports of the Inspector",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "She said a witness-welfare recommendation would be considered in ongoing work and opposed a proposed statutory power to issue inquiry guidelines.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0016/1051243/Commissioners-response-to-3-reports-of-the-Inspector-4-June-2024.pdf",
+      "document": "Commissioner’s response to three reports of the Inspector",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0016/1051243/Commissioners-response-to-3-reports-of-the-Inspector-4-June-2024.pdf",
+      "document": "Commissioner’s response to three reports of the Inspector",
+      "page": 10
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "I support the Commission’s continued use of key performance indicators.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0016/1051243/Commissioners-response-to-3-reports-of-the-Inspector-4-June-2024.pdf",
+     "document": "Commissioner’s response to three reports of the Inspector",
+     "page": 9
+    }
+   },
+   {
+    "quote": "However, I do not support the legislating of such measures.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0016/1051243/Commissioners-response-to-3-reports-of-the-Inspector-4-June-2024.pdf",
+     "document": "Commissioner’s response to three reports of the Inspector",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

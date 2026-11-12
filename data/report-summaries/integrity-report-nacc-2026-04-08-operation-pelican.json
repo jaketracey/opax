@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nacc-2026-04-08-operation-pelican",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Pelican investigation report",
+ "body": "National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+  "document": "Operation Pelican investigation report",
+  "sha256": "0f784fe6dc59b8bb83daceb63ca9708736fce516878e4d91bb9583564920834b",
+  "pages": 30,
+  "rights": "CC BY 4.0 (stated in each report)"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The National Anti-Corruption Commission and Australian Federal Police jointly investigated whether a WSA employee sought a bribe during procurement of car park management services.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+      "document": "Operation Pelican investigation report",
+      "page": 4
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commission found that the procurement manager sought about $250,000 to arrange the award of a contract and that this was serious corrupt conduct through abuse of office.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+      "document": "Operation Pelican investigation report",
+      "page": 22
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "The Commission found no evidence that the conduct was systemic within WSA.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+      "document": "Operation Pelican investigation report",
+      "page": 4
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It made one recommendation asking the Attorney General’s Department to consider changes allowing the relevant conduct to be prosecuted under Commonwealth law.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+      "document": "Operation Pelican investigation report",
+      "page": 28
+     }
+    ],
+    "section": "Recommendation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

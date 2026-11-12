@@ -1,0 +1,79 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-vits-languageloop-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "VITS LanguageLoop 2025-26 annual report",
+ "body": "VITS LanguageLoop",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10772/vits-languageloop-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "9037220538b2653a4e6c901a9f5d827af0ac098c90b66d0878ab850e6a895381",
+  "pages": 50,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CEO’s Report",
+  "first_page": 7,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10772/vits-languageloop-2025-26-annual-report.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "VITS LanguageLoop reported on 2025–26, with a mission to help people with limited English participate and access services through communication support.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10772/vits-languageloop-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10772/vits-languageloop-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Our Mission"
+   },
+   {
+    "text": "LanguageLoop reported becoming the first provider endorsed under the NAATI Language Service Provider Endorsement Program.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10772/vits-languageloop-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chair’s Report"
+   },
+   {
+    "text": "It reported a profit of $1.1 million despite lower government spending affecting demand for interpreting and translation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab424/globalassets/tabled-paper-documents/tabled-paper-10772/vits-languageloop-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "CEO’s Report"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

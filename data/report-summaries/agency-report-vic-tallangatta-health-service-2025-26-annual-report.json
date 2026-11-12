@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-tallangatta-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Tallangatta Health Service 2025-26 annual report",
+ "body": "Tallangatta Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "ecec5a7eaa6ba727965213dff03f41547274dffe6d6288c12bc765b721a65d98",
+  "pages": 60,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CHIEF EXECUTIVE OFFICER REPORT",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Tallangatta Health Service reported for 2025-2026 on residential aged care, acute care, allied health, medical centre and home care services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "CHIEF EXECUTIVE OFFICER REPORT"
+   },
+   {
+    "text": "The health service reported opening the Lakeview Sensory Garden, refurbishing its medical centre and adding a treatment room for district nursing.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "CHIEF EXECUTIVE OFFICER REPORT"
+   },
+   {
+    "text": "It reported employing more than 200 staff, many working part-time, and belonging to the 12-service Hume Local Health Service Network.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "CHIEF EXECUTIVE OFFICER REPORT"
+   },
+   {
+    "text": "The health service reported an operating surplus of $95,567, which it attributed to back-office efficiencies.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ],
+    "section": "FINANCIAL INFORMATION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The operating result for the year is a surplus of $95,567.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab41e/globalassets/tabled-paper-documents/tabled-paper-10757/tallangatta-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 28
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

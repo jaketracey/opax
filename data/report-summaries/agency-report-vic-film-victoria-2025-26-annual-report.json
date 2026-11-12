@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-film-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Film Victoria 2025-26 annual report",
+ "body": "Film Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+  "document": "annual report",
+  "sha256": "200044beb24f0d11c95dc4e0500503851f7398f413ce3f34e563d7b8a53ef580",
+  "pages": 92,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CEO’S REPORT",
+  "first_page": 11,
+  "last_page": 11,
+  "link": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Film Victoria, trading as VicScreen, reported on its 2025–26 support for screen content, jobs, skills and audience development.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "ABOUT VICSCREEN"
+   },
+   {
+    "text": "VicScreen estimated that its support generated $444.5 million in direct Victorian spending and 7,921 local job opportunities.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "2025–26 YEAR IN REVIEW"
+   },
+   {
+    "text": "It reported starting industry training through the GameChanger Academy and supporting the MASS games coworking hub.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "CEO’S REPORT"
+   },
+   {
+    "text": "It reported 54 employees, equivalent to 51.8 full-time positions, in the last full pay period of June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 53
+     }
+    ],
+    "section": "Workforce data"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "VicScreen-supported projects generated approximately $444 million in direct Victorian expenditure and supported more than 7,921 jobs across the state’s screen industry.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab389/globalassets/tabled-paper-documents/tabled-paper-10666/film_victoria_vicscreen_annual_report_2025-26.pdf",
+     "document": "annual report",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

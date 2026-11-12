@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2008-04-11-report-discontinuance-prosecution-against-joe-mcdonald",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Discontinuance of a Prosecution Against Joe McDonald",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+  "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+  "sha256": "701a4a462fd61d144be496cd45264218e61bc2fa4ab36a384ac7cc93a8b7d5a2",
+  "pages": 49,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 7,
+  "last_page": 13,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated the discontinuance of a prosecution against a union official after the trial had concluded and judgment was reserved.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+      "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+      "page": 7
+     }
+    ],
+    "section": "Investigation by the Commission"
+   },
+   {
+    "text": "It assessed whether police had committed misconduct and whether the magistrate’s conduct could warrant removal from judicial office.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+      "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+      "page": 7
+     }
+    ],
+    "section": "Investigation by the Commission"
+   },
+   {
+    "text": "The Commission identified no police misconduct and concluded that the magistrate’s conduct did not meet the threshold for removal from office.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+      "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+      "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+      "page": 12
+     }
+    ],
+    "section": "Police: Opinion as to Misconduct"
+   },
+   {
+    "text": "Its four recommendations addressed legal advice before discontinuance, prosecution policy, publication of reasons and formal channels for magistrates’ concerns about prosecutors.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+      "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+      "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+      "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+      "page": 12
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission’s investigation identified no misconduct by any of the police officers involved in the decision by police to apply to discontinue the prosecution against Mr McDonald.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+     "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+     "page": 9
+    }
+   },
+   {
+    "quote": "In the Commission’s assessment the available material does not support a conclusion that Magistrate Lane deliberately attempted to influence the outcome of the McDonald matter.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Discontinuance%20of%20a%20Prosecution%20Against%20Joe%20McDonald.pdf",
+     "document": "Report on Discontinuance of a Prosecution Against Joe McDonald.pdf",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

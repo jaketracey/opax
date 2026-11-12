@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nacc-2026-05-13-operation-pentecost",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Pentecost investigation report",
+ "body": "National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-08/Operation%20Pentecost%20-%20Investigation%20Report_0.pdf",
+  "document": "Operation Pentecost investigation report",
+  "sha256": "e609a24b8d365612e4f6d39d522bedf1745d94fb1ef7c53e8c57e2a1f07cab39",
+  "pages": 69,
+  "rights": "CC BY 4.0 (stated in each report)"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.nacc.gov.au/sites/default/files/documents/2026-08/Operation%20Pentecost%20-%20Investigation%20Report_0.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Operation Pentecost was a joint investigation by the Australian Commission for Law Enforcement Integrity and Australian Federal Police into whether a police appointee disclosed sensitive information to a relative.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-08/Operation%20Pentecost%20-%20Investigation%20Report_0.pdf",
+      "document": "Operation Pentecost investigation report",
+      "page": 4
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The National Anti-Corruption Commission found serious corrupt conduct through abuse of office, involving disclosure of police access to encrypted communications to help a relative avoid police action.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-08/Operation%20Pentecost%20-%20Investigation%20Report_0.pdf",
+      "document": "Operation Pentecost investigation report",
+      "page": 4
+     },
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-08/Operation%20Pentecost%20-%20Investigation%20Report_0.pdf",
+      "document": "Operation Pentecost investigation report",
+      "page": 47
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "The Commission reported that the evidence did not establish the appointee’s receipt of, or involvement in, a bribe leading up to 30 May 2021.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-08/Operation%20Pentecost%20-%20Investigation%20Report_0.pdf",
+      "document": "Operation Pentecost investigation report",
+      "page": 46
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "The Commissioner said termination would have been recommended had the appointee not already resigned.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-08/Operation%20Pentecost%20-%20Investigation%20Report_0.pdf",
+      "document": "Operation Pentecost investigation report",
+      "page": 48
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

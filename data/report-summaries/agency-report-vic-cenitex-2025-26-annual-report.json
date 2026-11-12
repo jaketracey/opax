@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-cenitex-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Cenitex 2025-26 annual report",
+ "body": "Cenitex",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab329/globalassets/tabled-paper-documents/tabled-paper-10582/cenitex-annual-report-2025-2026.pdf",
+  "document": "annual report",
+  "sha256": "3ebc5f57400000a78518360571c90f634f9989e5d7a06ea2cee1f6ecd8482fe7",
+  "pages": 91,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1.2 CEO’s Foreword",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab329/globalassets/tabled-paper-documents/tabled-paper-10582/cenitex-annual-report-2025-2026.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Cenitex reported for 2025-2026 on its shared information and communications technology services for the Victorian Government.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab329/globalassets/tabled-paper-documents/tabled-paper-10582/cenitex-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "1.2 CEO’s Foreword"
+   },
+   {
+    "text": "Cenitex reported launching VicGov Chat and transitioning more than 32,000 devices to Windows 11 by the end of June.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab329/globalassets/tabled-paper-documents/tabled-paper-10582/cenitex-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "1.2 CEO’s Foreword"
+   },
+   {
+    "text": "Cenitex reported technology availability of 99.84% against a 99.8% target, while high-frequency vulnerability scanning covered 40% of the network against a 90% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab329/globalassets/tabled-paper-documents/tabled-paper-10582/cenitex-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "2.1 Delivery Outcomes"
+   },
+   {
+    "text": "Cenitex reported a $7.6 million gain from core services against a budgeted $7.5 million loss, after adjusting for non-operating items.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab329/globalassets/tabled-paper-documents/tabled-paper-10582/cenitex-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "1.1 Chair’s Foreword"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Cenitex finished 2025-2026 in a stronger-than-expected budget position, reflecting improved underlying performance, disciplined financial management and the delivery of structural efficiencies across the business.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab329/globalassets/tabled-paper-documents/tabled-paper-10582/cenitex-annual-report-2025-2026.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2017-12-18-report-allegations-serious-misconduct-councillors-c-25c23bca",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into Allegations of Serious Misconduct by Councillors of the City of Perth between 21 and 24 October 2017",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20Allegations%20of%20Serious%20Misconduct%20by%20Councillors%20of%20the%20City%20of%20Perth%20between%2021%20and%2024%20October%202017.pdf",
+  "document": "Report into Allegations of Serious Misconduct by Councillors of the City of Perth between 21 and 24 October 2017",
+  "sha256": "8ace89fac0f6ec175cd0442d26eb7a998ba56605ea206da2e4f63412fd7a60cc",
+  "pages": 37,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 5,
+  "last_page": 12,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20Allegations%20of%20Serious%20Misconduct%20by%20Councillors%20of%20the%20City%20of%20Perth%20between%2021%20and%2024%20October%202017.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated alleged misconduct surrounding the City of Perth’s election of a Deputy Lord Mayor and allocation of committee positions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20Allegations%20of%20Serious%20Misconduct%20by%20Councillors%20of%20the%20City%20of%20Perth%20between%2021%20and%2024%20October%202017.pdf",
+      "document": "Report into Allegations of Serious Misconduct by Councillors of the City of Perth between 21 and 24 October 2017",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20Allegations%20of%20Serious%20Misconduct%20by%20Councillors%20of%20the%20City%20of%20Perth%20between%2021%20and%2024%20October%202017.pdf",
+      "document": "Report into Allegations of Serious Misconduct by Councillors of the City of Perth between 21 and 24 October 2017",
+      "page": 13
+     }
+    ],
+    "section": "The jurisdiction of the Commission and the investigation"
+   },
+   {
+    "text": "It reviewed correspondence, social media and council records and examined every councillor privately.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20Allegations%20of%20Serious%20Misconduct%20by%20Councillors%20of%20the%20City%20of%20Perth%20between%2021%20and%2024%20October%202017.pdf",
+      "document": "Report into Allegations of Serious Misconduct by Councillors of the City of Perth between 21 and 24 October 2017",
+      "page": 13
+     }
+    ],
+    "section": "The jurisdiction of the Commission and the investigation"
+   },
+   {
+    "text": "The Commission found no evidence supporting the allegations against one councillor and formed no opinion on the serious misconduct allegation against the other.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20Allegations%20of%20Serious%20Misconduct%20by%20Councillors%20of%20the%20City%20of%20Perth%20between%2021%20and%2024%20October%202017.pdf",
+      "document": "Report into Allegations of Serious Misconduct by Councillors of the City of Perth between 21 and 24 October 2017",
+      "page": 37
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2016-03-21-report-inadequate-use-force-reporting-hakea-prison-a3efc992",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+  "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+  "sha256": "ea8d990159e4786fa37e56150117e0dbff2cf86d2d88c6b9dbe36a60a6851bc5",
+  "pages": 28,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 4,
+  "last_page": 6,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated reporting after an officer used force during a prisoner’s induction at Hakea Prison.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+      "page": 4
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "It compared CCTV recordings with officers’ reports and examined officers privately.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+      "page": 6
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission found that reports obscured and minimised the force used, but was not persuaded that the officer’s wrongful reporting was necessarily corrupt.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+      "page": 22
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its five recommendations cover specialised training, accurate reporting, action on reporting failures, safeguards against collusion and confidential reporting channels.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+      "page": 27
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The officers' descriptions of the force used by PO Mattar were vague and served to obscure and minimise what occurred.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+     "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+     "page": 6
+    }
+   },
+   {
+    "quote": "This practice was not conducive to ensuring IDRs were prepared independently.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Hakea%20Prison%20on%2021%20March%202016.pdf",
+     "document": "Report into inadequate use of force reporting at Hakea Prison on 21 March 2016",
+     "page": 23
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

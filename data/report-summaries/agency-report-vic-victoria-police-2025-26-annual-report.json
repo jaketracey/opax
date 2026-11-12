@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victoria-police-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victoria Police 2025-26 annual report",
+ "body": "Victoria Police",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab31a/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "f1ab8c8bb98a196d2650899888dc17094641b1b74fa5b162a057e002587fa829",
+  "pages": 115,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "FOREWORD FROM THE CHIEF COMMISSIONER OF POLICE",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab31a/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Victoria Police reported on the year ending 30 June 2026, providing policing services and enforcing the law across Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31a/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31a/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "OUR ORGANISATION"
+   },
+   {
+    "text": "Victoria Police reported completing the first phase of its organisational redesign and establishing a prevention, community and partnerships portfolio.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31a/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "FOREWORD FROM THE CHIEF COMMISSIONER OF POLICE"
+   },
+   {
+    "text": "It reported successful prosecution outcomes of 94.3% against a target of 92%, while 35.4% of crimes against the person were resolved within 30 days against a 45% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31a/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 18
+     }
+    ],
+    "section": "Performance against output measures for policing and crime prevention"
+   },
+   {
+    "text": "Victoria Police reported a net result from transactions of $3.2 million and an overall net result of $36.4 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31a/globalassets/tabled-paper-documents/tabled-paper-10576/victoria-police-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 20
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

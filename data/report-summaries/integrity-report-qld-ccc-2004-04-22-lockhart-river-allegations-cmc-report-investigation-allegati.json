@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2004-04-22-lockhart-river-allegations-cmc-report-investigation-allegati",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Lockhart River allegations: A CMC report on an investigation into allegations of official misconduct arising from the presence of alcohol on the Queensland Government aircraft at the Lockhart River airport",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Lockhart-River-allegations-Report-2004.pdf",
+  "document": "Lockhart River allegations: A CMC report on an investigation into allegations of official misconduct... (May 2004)",
+  "sha256": "4d8aaf6e5927d2e2ba1224d91aed482cf124fab52e52cf3533b13d0a05436624",
+  "pages": 18,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 1,
+  "last_page": 1,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Lockhart-River-allegations-Report-2004.pdf#page=1"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated whether events surrounding wine found on a government aircraft at Lockhart River airport involved official misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Lockhart-River-allegations-Report-2004.pdf",
+      "document": "Lockhart River allegations: A CMC report on an investigation into allegations of official misconduct... (May 2004)",
+      "page": 1
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The CMC found no evidence supporting the allegations against the Premier, minister and director-general.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Lockhart-River-allegations-Report-2004.pdf",
+      "document": "Lockhart River allegations: A CMC report on an investigation into allegations of official misconduct... (May 2004)",
+      "page": 1
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "It agreed with the Police Commissioner that possession of the wine on the aircraft did not constitute an offence under the Liquor Act.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Lockhart-River-allegations-Report-2004.pdf",
+      "document": "Lockhart River allegations: A CMC report on an investigation into allegations of official misconduct... (May 2004)",
+      "page": 1
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The CMC recommended no disciplinary action against officers and considered further official attention unnecessary.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Lockhart-River-allegations-Report-2004.pdf",
+      "document": "Lockhart River allegations: A CMC report on an investigation into allegations of official misconduct... (May 2004)",
+      "page": 1
+     }
+    ],
+    "section": "Summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CMC has found no evidence to support the allegations against the Premier, the minister and the director-general.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Lockhart-River-allegations-Report-2004.pdf",
+     "document": "Lockhart River allegations: A CMC report on an investigation into allegations of official misconduct... (May 2004)",
+     "page": 1
+    }
+   },
+   {
+    "quote": "The Commission does not believe that further official attention to this whole issue is warranted.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Lockhart-River-allegations-Report-2004.pdf",
+     "document": "Lockhart River allegations: A CMC report on an investigation into allegations of official misconduct... (May 2004)",
+     "page": 1
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

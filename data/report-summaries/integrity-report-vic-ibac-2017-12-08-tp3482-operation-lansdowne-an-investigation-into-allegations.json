@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2017-12-08-tp3482-operation-lansdowne-an-investigation-into-allegations",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Lansdowne: An investigation into allegations of serious corruption involving Victorian vocational education and training, and public transport sectors.",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+  "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+  "sha256": "b25a1960692dc6fd21904a2ae23d2a4063f116cf58360502c868f43f81a42ef7",
+  "pages": 151,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigation and outcomes",
+  "first_page": 9,
+  "last_page": 20,
+  "link": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Broad-based Anti-corruption Commission began Operation Lansdowne to investigate alleged serious corruption involving a TAFE training agreement, later extending it to another TAFE and V/Line.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+      "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "It examined subsidised training, qualifications, procurement and recruitment, and whether institutional controls could prevent or detect improper conduct.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+      "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+      "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+      "page": 12
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+      "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+      "page": 15
+     }
+    ]
+   },
+   {
+    "text": "IBAC found that fabricated student records were used to obtain government funding for engineering training that had not occurred.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+      "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "IBAC also found inadequate oversight of training contracts and repeated departures from procurement and recruitment procedures at V/Line.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+      "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+      "page": 13
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+      "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+      "page": 14
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+      "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+      "page": 15
+     }
+    ]
+   },
+   {
+    "text": "It made five recommendations covering TAFE oversight, training verification, V/Line controls and stronger probity in public-sector recruitment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+      "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+      "page": 20
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC found that V/Line’s procurement and recruitment processes had been ignored or bypassed on numerous occasions.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+     "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+     "page": 15
+    }
+   },
+   {
+    "quote": "IBAC found that South West TAFE’s management of the third-party training agreement with TayTell was deficient.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a282d/globalassets/tabled-paper-documents/tabled-paper-3482/operation_lansdowne_special_report_081217_m6wsn389.pdf",
+     "document": "Operation_Lansdowne_special_report_081217_M6WsN389",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

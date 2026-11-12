@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-echuca-regional-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Echuca Regional Health 2025-26 annual report",
+ "body": "Echuca Regional Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3f5/globalassets/tabled-paper-documents/tabled-paper-10736/echuca-regional-health-annual-report-2025-2026.pdf",
+  "document": "annual report",
+  "sha256": "cb6b4113216bc349ffeb59f81ee5a5d552e762c208bbebd266fe8260d70e7a72",
+  "pages": 63,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chairperson and Chief Executive Report",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab3f5/globalassets/tabled-paper-documents/tabled-paper-10736/echuca-regional-health-annual-report-2025-2026.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Echuca Regional Health reported for the year ended 30 June 2026 on its hospital, community, aged care and related healthcare services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f5/globalassets/tabled-paper-documents/tabled-paper-10736/echuca-regional-health-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f5/globalassets/tabled-paper-documents/tabled-paper-10736/echuca-regional-health-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Board Chairperson and Chief Executive Report"
+   },
+   {
+    "text": "The service reported expanding virtual care and establishing a Planned Surgery Unit to improve theatre planning and waitlist oversight.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f5/globalassets/tabled-paper-documents/tabled-paper-10736/echuca-regional-health-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Board Chairperson and Chief Executive Report"
+   },
+   {
+    "text": "It reported relocating oral health and central sterile services into the refurbished Lumeah building and taking on regional maternal and child health services in January 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f5/globalassets/tabled-paper-documents/tabled-paper-10736/echuca-regional-health-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Board Chairperson and Chief Executive Report"
+   },
+   {
+    "text": "It reported an operating deficit of $0.09 million against a breakeven budget.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f5/globalassets/tabled-paper-documents/tabled-paper-10736/echuca-regional-health-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 17
+     }
+    ],
+    "section": "Operational and Financial Performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "ERH actively contributed to the Loddon Mallee Health Network through participation in clinical service planning, regional workforce initiatives, credentialing reform, leadership development and shared service discussions.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3f5/globalassets/tabled-paper-documents/tabled-paper-10736/echuca-regional-health-annual-report-2025-2026.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

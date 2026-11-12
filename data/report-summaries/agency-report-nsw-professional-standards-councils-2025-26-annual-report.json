@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-professional-standards-councils-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Professional Standards Councils 2025-26 annual report",
+ "body": "Professional Standards Councils",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212199%2FProfessional%20Standards%20Councils%20Annual%20Report.pdf",
+  "document": "annual report",
+  "sha256": "fc31249b92c13c3a64a97227b14bbbe9fc8cc3a362615c963fbdd3aa6a04ef5d",
+  "pages": 72,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair’s message",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212199%2FProfessional%20Standards%20Councils%20Annual%20Report.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Professional Standards Councils reported on 2025–26, administering a national regulatory system intended to strengthen professional standards and consumer protection.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212199%2FProfessional%20Standards%20Councils%20Annual%20Report.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212199%2FProfessional%20Standards%20Councils%20Annual%20Report.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The Councils reported approving five professional standards schemes, all in the built environment sector.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212199%2FProfessional%20Standards%20Councils%20Annual%20Report.pdf",
+      "document": "annual report",
+      "page": 20
+     }
+    ]
+   },
+   {
+    "text": "They recorded 18 schemes in force and 102,823 association members covered by schemes.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212199%2FProfessional%20Standards%20Councils%20Annual%20Report.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Councils and Authority also reported securing new intergovernmental agreements for a further five years and developing a replacement strategic plan.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212199%2FProfessional%20Standards%20Councils%20Annual%20Report.pdf",
+      "document": "annual report",
+      "page": 21
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The PSA supported the Councils to approve five professional standards schemes, all in the built environment sector.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212199%2FProfessional%20Standards%20Councils%20Annual%20Report.pdf",
+     "document": "annual report",
+     "page": 20
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

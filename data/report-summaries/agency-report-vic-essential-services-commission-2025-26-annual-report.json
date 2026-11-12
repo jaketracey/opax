@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-essential-services-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Essential Services Commission 2025-26 annual report",
+ "body": "Essential Services Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "66977407d3ba0344362aac00075214fd38b00119d7cbf77e6463757b7797de23",
+  "pages": 106,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From the CEO and Chairperson",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Essential Services Commission’s 2025–26 report covers economic regulation of energy, water and transport, council rate caps and the Victorian Energy Upgrades program.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "What we do"
+   },
+   {
+    "text": "The commission reported accepting a court enforceable undertaking requiring Greater Western Water to provide a $130 million remediation package after billing failures.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Impactful compliance and enforcement"
+   },
+   {
+    "text": "It reported that 77% of surveyed stakeholders rated its reputation at least seven out of ten, above the 65% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 46
+     }
+    ],
+    "section": "Performance against output measures"
+   },
+   {
+    "text": "It recorded a net surplus of $11.3 million, comprising $6.6 million in the Enforcement Fund and $4.7 million in the Operating Fund.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 47
+     }
+    ],
+    "section": "Current year financial review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "As penalty revenue is unpredictable and not directly linked to annual enforcement expenditure, the Enforcement Fund may record either a surplus or deficit in any given year.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aa292/globalassets/tabled-paper-documents/tabled-paper-10566/esc-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 47
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

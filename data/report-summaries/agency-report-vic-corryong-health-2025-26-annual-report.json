@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-corryong-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Corryong Health 2025-26 annual report",
+ "body": "Corryong Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "3d33ab91a0e8fa9e934e6cf49ad5a4791ec5758b5c91d85fec91d25e7ac7e7ce",
+  "pages": 83,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Executive Officer’s Preface",
+  "first_page": 12,
+  "last_page": 13,
+  "link": "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf#page=12"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Corryong Health reported for 2025-2026 on its hospital, aged care, general practice and community services in the Upper Murray.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "About Corryong Health"
+   },
+   {
+    "text": "Corryong Health reported providing more than 15,000 GP appointments and a further 14,281 service occasions outside its multipurpose service funding activity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Chief Executive Officer’s Preface"
+   },
+   {
+    "text": "Corryong Health reported evacuating its site during the January 2026 Walwa River Road Fire, which disrupted service activity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Chief Executive Officer’s Preface"
+   },
+   {
+    "text": "Corryong Health reported pausing perioperative services following new infection control standards while seeking funding to redevelop its theatre facilities.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Chief Executive Officer’s Preface"
+   },
+   {
+    "text": "Corryong Health reported relying on locum and agency workers for approximately 35% of its workforce.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Chief Executive Officer’s Preface"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "During 2025–2026, we provided more than 15,000 General Practitioner (GP) appointments, alongside thousands of Practice Nursing and Allied Health appointments and significant activity across our acute, community and aged care services.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3f8/globalassets/tabled-paper-documents/tabled-paper-10728/corryong-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

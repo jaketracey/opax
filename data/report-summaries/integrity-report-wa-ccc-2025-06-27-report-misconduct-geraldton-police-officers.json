@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2025-06-27-report-misconduct-geraldton-police-officers",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on misconduct by Geraldton police officers",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Report%20on%20Misconduct%20by%20Geraldton%20police%20officers_0.pdf",
+  "document": "CCC - Report on Misconduct by Geraldton police officers",
+  "sha256": "0fb22e6a8db2f25b2aa75ccbdcd2d2cb7145144514aee80679bf89920b601b02",
+  "pages": 48,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Report%20on%20Misconduct%20by%20Geraldton%20police%20officers_0.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a police vehicle pursuit in Geraldton and the subsequent arrest and charging of the driver.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Report%20on%20Misconduct%20by%20Geraldton%20police%20officers_0.pdf",
+      "document": "CCC - Report on Misconduct by Geraldton police officers",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Report%20on%20Misconduct%20by%20Geraldton%20police%20officers_0.pdf",
+      "document": "CCC - Report on Misconduct by Geraldton police officers",
+      "page": 6
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission formed a serious misconduct opinion concerning a senior constable’s inaccurate official accounts, and a police misconduct opinion concerning another constable’s neglectfully prepared documents.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Report%20on%20Misconduct%20by%20Geraldton%20police%20officers_0.pdf",
+      "document": "CCC - Report on Misconduct by Geraldton police officers",
+      "page": 48
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission identified weaknesses in team procedures and supervision but did not determine whether there were broader systemic issues.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Report%20on%20Misconduct%20by%20Geraldton%20police%20officers_0.pdf",
+      "document": "CCC - Report on Misconduct by Geraldton police officers",
+      "page": 48
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission made two recommendations to consider prosecution of the senior constable and disciplinary action concerning the other constable.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/CCC%20-%20Report%20on%20Misconduct%20by%20Geraldton%20police%20officers_0.pdf",
+      "document": "CCC - Report on Misconduct by Geraldton police officers",
+      "page": 48
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:54+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

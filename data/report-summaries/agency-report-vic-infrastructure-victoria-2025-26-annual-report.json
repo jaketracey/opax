@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-infrastructure-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Infrastructure Victoria 2025-26 annual report",
+ "body": "Infrastructure Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+  "document": "annual report",
+  "sha256": "e1ce9e1d9502e495925b8dcfd5f702c713eb440c94802a3da3385af0f402aba7",
+  "pages": 148,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair and CEO’s report",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Infrastructure Victoria’s 2025–2026 report covers its independent advice, infrastructure strategy and research on the state’s infrastructure needs.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Infrastructure Victoria’s functions"
+   },
+   {
+    "text": "Infrastructure Victoria reported releasing its 2025–2055 infrastructure strategy in November 2025, containing 45 recommendations and 8 options for the future.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ],
+    "section": "Chair and CEO’s report"
+   },
+   {
+    "text": "It reported publishing 7 reports and 10 supporting documents during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ],
+    "section": "Our year by the numbers"
+   },
+   {
+    "text": "Infrastructure Victoria reported reducing staffing from 42 to 29 full-time equivalent positions through an organisational restructure.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chair and CEO’s report"
+   },
+   {
+    "text": "It reported spending $10,602,458, matching its annual appropriation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+      "document": "annual report",
+      "page": 37
+     }
+    ],
+    "section": "2025–2026 financial review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "During the year we published 7 reports authored by Infrastructure Victoria, plus 10 supporting documents.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab390/globalassets/tabled-paper-documents/tabled-paper-10656/infrastructure-victoria---2025-26---annual-report.pdf",
+     "document": "annual report",
+     "page": 16
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

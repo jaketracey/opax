@@ -11,6 +11,7 @@ const projected = await projectReports(read);
 const bySlug = new Map(projected.map(p => [p.detail.slug, p.detail]));
 const files = await Promise.all((await readdir(dataRoot)).filter(n => n.endsWith('.json')).map(async n => JSON.parse(await readFile(new URL(n, dataRoot), 'utf8'))));
 const LABEL = 'Generated summary: written by an AI model from the report text and checked against the cited pages.';
+const OCR_NOTE = 'This report is a scanned document, so its text was read by on-device OCR, which can misread words.';
 
 test('every ready summary lands on its record, except those left off', () => {
   const shown = files.filter(d => !SUMMARY_LEFT_OFF.has(d.slug));
@@ -22,7 +23,7 @@ test('every ready summary lands on its record, except those left off', () => {
 test('generated sentences are labelled and each cites the official pages it rests on', () => {
   for (const { detail } of projected.filter(p => p.detail.summary)) {
     const s = detail.summary;
-    assert.equal(s.generated.label, LABEL);
+    assert.ok(s.generated.label === LABEL || s.generated.label === `${LABEL} ${OCR_NOTE}`, detail.slug);
     assert.ok(s.generated.sentences.length >= 2, detail.slug);
     for (const x of s.generated.sentences) {
       assert.ok(x.cites.length, detail.slug);
@@ -58,6 +59,15 @@ test('a summary that is not ready, or is left off, is not projected', () => {
   const d = files[0];
   assert.equal(projectSummary({ ...d, summary: { ...d.summary, status: 'withheld' } }), null);
   assert.equal(projectSummary({ ...d, slug: [...SUMMARY_LEFT_OFF][0] }), null);
+});
+
+test('a summary drafted from OCR text says so in its label, and only then', () => {
+  const d = files.find(f => f.summary.status === 'ready' && f.source?.text !== 'ocr');
+  assert.equal(projectSummary(d).generated.label, LABEL);
+  assert.equal(projectSummary({ ...d, source: { ...d.source, text: 'ocr' } }).generated.label, `${LABEL} ${OCR_NOTE}`);
+  const scans = files.filter(f => f.source?.text === 'ocr' && f.summary.status === 'ready');
+  assert.ok(scans.length >= 30);
+  for (const f of scans) assert.equal(bySlug.get(f.slug).summary.generated.label, `${LABEL} ${OCR_NOTE}`, f.slug);
 });
 
 test('the report page leads with the summary block, and the API carries the same projection', () => {

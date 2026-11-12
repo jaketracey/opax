@@ -1,0 +1,79 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2006-05-11-report-allegation-public-sector-misconduct-concerni-d895dc50",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Allegation of public sector misconduct concerning Mr John D'Orazio MLA",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegation%20of%20public%20sector%20misconduct%20concerning%20Mr%20John%20D%26%23039%3BOrazio%20MLA.pdf",
+  "document": "Report on Allegation of public sector misconduct concerning Mr John D'Orazio MLA.pdf",
+  "sha256": "6011f90aadc56c6bad13499e8e2358448d9a99e7f807cbf5c805f93ec765cffd",
+  "pages": 28,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 7,
+  "last_page": 10,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegation%20of%20public%20sector%20misconduct%20concerning%20Mr%20John%20D%26%23039%3BOrazio%20MLA.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission assessed an allegation that a former minister helped arrange council work for a carpet business.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegation%20of%20public%20sector%20misconduct%20concerning%20Mr%20John%20D%26%23039%3BOrazio%20MLA.pdf",
+      "document": "Report on Allegation of public sector misconduct concerning Mr John D'Orazio MLA.pdf",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It reviewed earlier investigative material, interviewed the parties and examined accounts of a meeting about a business dispute.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegation%20of%20public%20sector%20misconduct%20concerning%20Mr%20John%20D%26%23039%3BOrazio%20MLA.pdf",
+      "document": "Report on Allegation of public sector misconduct concerning Mr John D'Orazio MLA.pdf",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegation%20of%20public%20sector%20misconduct%20concerning%20Mr%20John%20D%26%23039%3BOrazio%20MLA.pdf",
+      "document": "Report on Allegation of public sector misconduct concerning Mr John D'Orazio MLA.pdf",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed the opinion that there was no evidence of misconduct by the former minister in the meeting or the business arrangements and decided to take no action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegation%20of%20public%20sector%20misconduct%20concerning%20Mr%20John%20D%26%23039%3BOrazio%20MLA.pdf",
+      "document": "Report on Allegation of public sector misconduct concerning Mr John D'Orazio MLA.pdf",
+      "page": 9
+     }
+    ],
+    "section": "Commission’s opinion and decision"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

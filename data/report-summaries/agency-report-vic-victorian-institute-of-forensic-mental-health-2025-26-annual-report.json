@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-institute-of-forensic-mental-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Institute of Forensic Mental Health 2025-26 annual report",
+ "body": "Victorian Institute of Forensic Mental Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "87ffc4e6948cf35fcda6026112eaa4f60a6447bc9b58fbb5e9a607ddb3fe6800",
+  "pages": 117,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Report from the Board Chair and Chief Executive",
+  "first_page": 5,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Institute of Forensic Mental Health, known as Forensicare, reported on 2025–26, providing specialist mental health care at the intersection of health and justice.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Building strong partnerships"
+   },
+   {
+    "text": "Forensicare reported practical completion of construction for 82 new secure mental health beds at Thomas Embling Hospital.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Report from the Board Chair and Chief Executive"
+   },
+   {
+    "text": "It reported that 19 men awaited hospital admission at 30 June 2026, with an average wait of 374 days.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Report from the Board Chair and Chief Executive"
+   },
+   {
+    "text": "Forensicare reported a positive overall service experience for 65% of consumers, below its target of 80%.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 51
+     }
+    ],
+    "section": "Reporting against the Statement of Priorities - Part B"
+   },
+   {
+    "text": "The institute reported 909 full-time equivalent active employees at 30 June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 21
+     }
+    ],
+    "section": "Workforce data"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Late in 2025, Forensicare achieved full compliance against the National Safety and Quality Health Service Standards.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3ae/globalassets/tabled-paper-documents/tabled-paper-10696/victorian-institute-of-forensic-mental-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

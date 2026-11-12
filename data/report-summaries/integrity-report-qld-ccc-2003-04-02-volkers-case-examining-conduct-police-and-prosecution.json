@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2003-04-02-volkers-case-examining-conduct-police-and-prosecution",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "The Volkers Case: Examining the conduct of the police and prosecution",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf",
+  "document": "The Volkers Case: Examining the conduct of the police and prosecution (2 April 2003)",
+  "sha256": "ce0d912969e97cb6064d07a4569213cd4ad7bccd77243ac106598005e3957968",
+  "pages": 95,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 13,
+  "last_page": 22,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission examined police and prosecution handling of a case against a swimming coach, including possible political interference.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf",
+      "document": "The Volkers Case: Examining the conduct of the police and prosecution (2 April 2003)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf",
+      "document": "The Volkers Case: Examining the conduct of the police and prosecution (2 April 2003)",
+      "page": 14
+     }
+    ],
+    "section": "ROLE OF THE CMC"
+   },
+   {
+    "text": "Its inquiry addressed the investigation and the process leading to discontinuance, without deciding whether the prosecution should have continued.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf",
+      "document": "The Volkers Case: Examining the conduct of the police and prosecution (2 April 2003)",
+      "page": 14
+     }
+    ],
+    "section": "ROLE OF THE CMC"
+   },
+   {
+    "text": "The CMC found no evidence of official misconduct or political interference, but considered the process leading to discontinuance unsatisfactory.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf",
+      "document": "The Volkers Case: Examining the conduct of the police and prosecution (2 April 2003)",
+      "page": 94
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "It supported consideration of disciplinary action against two officers over an unauthorised arrangement with a newspaper before the arrest.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf",
+      "document": "The Volkers Case: Examining the conduct of the police and prosecution (2 April 2003)",
+      "page": 18
+     }
+    ],
+    "section": "OTHER CRITICISMS AND THE CMC’S CONCLUSIONS"
+   },
+   {
+    "text": "The CMC urged clearer police understanding of arrest decisions and consideration of prosecution guidelines for undertakings and communication with complainants.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf",
+      "document": "The Volkers Case: Examining the conduct of the police and prosecution (2 April 2003)",
+      "page": 94
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf",
+      "document": "The Volkers Case: Examining the conduct of the police and prosecution (2 April 2003)",
+      "page": 95
+     }
+    ],
+    "section": "CONCLUSIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CMC investigation did not disclose any evidence of official misconduct on the part of any officer of the QPS or the ODPP, or any other person.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Sexual-offence-matters/The-Volkers-Case-Examining-the-conduct-of-the-police-and-prosecution-2003.pdf",
+     "document": "The Volkers Case: Examining the conduct of the police and prosecution (2 April 2003)",
+     "page": 94
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

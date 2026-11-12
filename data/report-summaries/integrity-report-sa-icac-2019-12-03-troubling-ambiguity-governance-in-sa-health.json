@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2019-12-03-troubling-ambiguity-governance-in-sa-health",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Troubling Ambiguity: Governance in SA Health",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370552/Troubling_Ambiguity_Governance_in_SA_Health.pdf",
+  "document": "Troubling Ambiguity: Governance in SA Health",
+  "sha256": "c6058f1f1e77128f6667b0dd5171a5957bc3a06dc33d518f68a9651fa59a10a2",
+  "pages": 66,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "FOREWORD",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370552/Troubling_Ambiguity_Governance_in_SA_Health.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commissioner Against Corruption examined governance risks in SA Health after poor administration obstructed corruption investigations.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370552/Troubling_Ambiguity_Governance_in_SA_Health.pdf",
+      "document": "Troubling Ambiguity: Governance in SA Health",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "He considered culture, record keeping, clinicians’ hours and private practice, conflicts, clinical trials, special-purpose funds and procurement.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370552/Troubling_Ambiguity_Governance_in_SA_Health.pdf",
+      "document": "Troubling Ambiguity: Governance in SA Health",
+      "page": 8
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370552/Troubling_Ambiguity_Governance_in_SA_Health.pdf",
+      "document": "Troubling Ambiguity: Governance in SA Health",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner concluded that unclear governance and probity arrangements left SA Health vulnerable to improper conduct.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370552/Troubling_Ambiguity_Governance_in_SA_Health.pdf",
+      "document": "Troubling Ambiguity: Governance in SA Health",
+      "page": 59
+     }
+    ]
+   },
+   {
+    "text": "He made no recommendations because he had not conducted a comprehensive review of public health administration and service delivery.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370552/Troubling_Ambiguity_Governance_in_SA_Health.pdf",
+      "document": "Troubling Ambiguity: Governance in SA Health",
+      "page": 8
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Existing governance and probity arrangements appear to be insufficient and characterised by vagueness and uncertainty.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370552/Troubling_Ambiguity_Governance_in_SA_Health.pdf",
+     "document": "Troubling Ambiguity: Governance in SA Health",
+     "page": 59
+    }
+   },
+   {
+    "quote": "SA Health remains at risk because its practices, policies and procedures do not appear to sufficiently guard against corruption and serious or systemic misconduct or maladministration.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0004/370552/Troubling_Ambiguity_Governance_in_SA_Health.pdf",
+     "document": "Troubling Ambiguity: Governance in SA Health",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

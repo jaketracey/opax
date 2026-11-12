@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-western-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Western Health 2025-26 annual report",
+ "body": "Western Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "b96ed62320ba13aecb027a3f1b44a002f23d1155a30043ce09f6ba3bad6fba07",
+  "pages": 130,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair and CEO Message",
+  "first_page": 4,
+  "last_page": 11,
+  "link": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Western Health reported for 2025–26 on hospital, community and home-based healthcare for Melbourne’s western region.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "About Western Health"
+   },
+   {
+    "text": "Western Health reported opening the new Footscray Hospital with 505 inpatient beds and moving 115 patients in one day.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "New Footscray Hospital"
+   },
+   {
+    "text": "Western Health reported providing 7.3% of admitted bed days at home, exceeding its 6.4% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Supporting home-first models of care"
+   },
+   {
+    "text": "Western Health recorded ambulance transfers within 40 minutes below target at Footscray and Sunshine, while Williamstown exceeded its target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 25
+     }
+    ],
+    "section": "Emergency Care"
+   },
+   {
+    "text": "Western Health reported a Statement of Priorities surplus of $28.2 million and an overall net deficit of $67.7 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 27
+     }
+    ],
+    "section": "Financial Snapshot"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "As per last financial year, Western Health has met targeted admissions from the planned surgical waiting list in the 2026 financial year by prioritising care models that support patient choice, convenience, and recovery.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab43e/globalassets/tabled-paper-documents/tabled-paper-10768/western-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

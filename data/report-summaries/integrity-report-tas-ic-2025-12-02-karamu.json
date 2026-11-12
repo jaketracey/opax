@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-tas-ic-2025-12-02-karamu",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Own-Motion Investigation Karamu: A report of an own-motion investigation into the management of the alleged misuse of force against prisoners at the Risdon Prison Complex, Mary Hutchinson Women’s Prison and Hobart Reception Centre between 1 July and 31 December 2023",
+ "body": "Integrity Commission",
+ "source": {
+  "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0009/836766/report-1-of-2025.pdf",
+  "document": "Report of the Integrity Commission No. 1 of 2025",
+  "sha256": "6baf77129d5322f2b585a89bdffa41e5803de6330344ed385cb6e29d63e81063",
+  "pages": 138,
+  "rights": "copyright (Integrity Commission); reuse under the Tasmanian Government terms"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 9,
+  "last_page": 10,
+  "link": "https://integrity.tas.gov.au/__data/assets/pdf_file/0009/836766/report-1-of-2025.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Tasmania’s Integrity Commission investigated how prison authorities managed alleged or recorded inappropriate force against prisoners and detainees between July and December 2023.",
+    "cites": [
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0009/836766/report-1-of-2025.pdf",
+      "document": "Report of the Integrity Commission No. 1 of 2025",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "It examined use-of-force rules, training, incident reporting, internal reviews and external oversight, without making findings about individual misconduct.",
+    "cites": [
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0009/836766/report-1-of-2025.pdf",
+      "document": "Report of the Integrity Commission No. 1 of 2025",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The Commission found that officers generally followed standard practices, but identified excessive force, incomplete incident reports and inconsistent or outdated guidance.",
+    "cites": [
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0009/836766/report-1-of-2025.pdf",
+      "document": "Report of the Integrity Commission No. 1 of 2025",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "It concluded that the Prison Service needed to replace informal responses to excessive force with appropriate formal processes.",
+    "cites": [
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0009/836766/report-1-of-2025.pdf",
+      "document": "Report of the Integrity Commission No. 1 of 2025",
+      "page": 116
+     }
+    ]
+   },
+   {
+    "text": "Its ninety-two numbered recommendations addressed accountability, policies, reporting, training and independent oversight.",
+    "cites": [
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0009/836766/report-1-of-2025.pdf",
+      "document": "Report of the Integrity Commission No. 1 of 2025",
+      "page": 10
+     },
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0009/836766/report-1-of-2025.pdf",
+      "document": "Report of the Integrity Commission No. 1 of 2025",
+      "page": 120
+     },
+     {
+      "url": "https://integrity.tas.gov.au/__data/assets/pdf_file/0009/836766/report-1-of-2025.pdf",
+      "document": "Report of the Integrity Commission No. 1 of 2025",
+      "page": 130
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-public-sector-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Public Sector Commission 2025-26 annual report",
+ "body": "Victorian Public Sector Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "2aef42c66875f4f5192f953a7cce0298e4374e9696bb2002b0e530aa6e520400",
+  "pages": 71,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Commissioner",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Public Sector Commission’s 2025–26 report described its work to strengthen public sector capability, efficiency, professionalism and integrity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Message from the Commissioner"
+   },
+   {
+    "text": "The Commission reported recruiting 105 graduates across 13 departments and agencies and delivering 13 forums that reached 3,322 public service employees.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Priority 3: Building capability and creating pathways"
+   },
+   {
+    "text": "The Commission recorded all three output measures as achieved, including collection and validation of 100% of annual workforce data by the February deadline.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ],
+    "section": "Non-financial performance"
+   },
+   {
+    "text": "The Commission reported a net loss for the period of $214,008.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Five-year financial summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In 2026 the Program has recruited 105 graduates across 13 VPS departments and agencies.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3af/globalassets/tabled-paper-documents/tabled-paper-10686/attachment-1---vpsc-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-official-community-visitors-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Official Community Visitors 2025-26 annual report",
+ "body": "Official Community Visitors",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212481%2FOCV-Annual-Report_2026.pdf",
+  "document": "annual report",
+  "sha256": "89abd59eae47a2c303a6f1e263f38da1c124b1dd83afdd9f43c882c0dbcd05fb",
+  "pages": 44,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Ageing and Disability Commissioner",
+  "first_page": 8,
+  "last_page": 8,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212481%2FOCV-Annual-Report_2026.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Official Community Visitor scheme reported on 2025–2026, providing independent visits to residential care services and raising concerns affecting residents.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212481%2FOCV-Annual-Report_2026.pdf",
+      "document": "annual report",
+      "page": 8
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212481%2FOCV-Annual-Report_2026.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "Visitors reported making 3,235 visits and raising and monitoring 6,169 issues affecting residents.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212481%2FOCV-Annual-Report_2026.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The report recorded a fall in the overall service allocation rate from 62% to 58%, citing growth in disability accommodation services and fewer available visitors.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212481%2FOCV-Annual-Report_2026.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "For residential out-of-home care, it recorded 533 of 566 visitable services allocated to a visitor, an allocation rate of 94%.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212481%2FOCV-Annual-Report_2026.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Visitors raised and monitored 6,169 issues affecting residents.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212481%2FOCV-Annual-Report_2026.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

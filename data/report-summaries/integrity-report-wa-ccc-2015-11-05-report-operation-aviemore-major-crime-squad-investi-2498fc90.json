@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2015-11-05-report-operation-aviemore-major-crime-squad-investi-2498fc90",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+  "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+  "sha256": "078fc2d87bc5280c5c1a4a01dc80c6734ea1f40cbbdd079c722f32dd474ae1da",
+  "pages": 59,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "OPERATION AVIEMORE IN OVERVIEW",
+  "first_page": 9,
+  "last_page": 14,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated possible police misconduct during Operation Aviemore, a homicide investigation and subsequent prosecution.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 15
+     }
+    ],
+    "section": "Scope and Purpose of the Commission Investigation"
+   },
+   {
+    "text": "Its inquiry expanded from individual officers’ conduct to interview skills, legal powers, interpreters and the recording of important decisions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 16
+     }
+    ],
+    "section": "Scope and Purpose of the Commission Investigation"
+   },
+   {
+    "text": "The Commission concluded that failures reflected wider weaknesses in training, supervision, access to guidance and investigative resources.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 57
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 58
+     }
+    ],
+    "section": "LESSONS FROM OPERATION AVIEMORE"
+   },
+   {
+    "text": "It reported misconduct opinions separately to the Commissioner of Police and withheld them from publication because of possible prejudice to proceedings.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 56
+     }
+    ],
+    "section": "Opinions of Misconduct Arising from This Investigation"
+   },
+   {
+    "text": "Its seven recommendations address interview compliance records, searchable police guidance, cultural and language training, cautions, legal refresher training, suspect classification and decisions against charging.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 36
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 38
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 42
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 46
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 47
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 51
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+      "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+      "page": 54
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There is an urgent need to review training to ensure that all police officers have competence in dealing with people who are vulnerable because of language difficulties.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+     "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+     "page": 57
+    }
+   },
+   {
+    "quote": "No general consideration seems to have been given to the need for an interpreter.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Operation%20Aviemore%20Major%20Crime%20Squad%20Investigation%20into%20the%20Unlawful%20Killing%20of%20Mr%20Joshua%20Warneke.pdf",
+     "document": "Report on Operation Aviemore Major Crime Squad Investigation into the Unlawful Killing of Mr Joshua Warneke",
+     "page": 57
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

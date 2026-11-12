@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-goulburn-broken-catchment-management-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Goulburn Broken Catchment Management Authority 2025-26 annual report",
+ "body": "Goulburn Broken Catchment Management Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/goulburn-broken-cma-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "3490e97b0998c273f773b5aeb45e905003dd6494843e22916ed0ed5ba4680ed0",
+  "pages": 148,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair and CEO report",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/goulburn-broken-cma-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Goulburn Broken Catchment Management Authority reported on its 2025–26 work to strengthen catchment resilience and manage waterways, drainage and floodplains.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/goulburn-broken-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/goulburn-broken-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "CMA roles, responsibilities and objectives"
+   },
+   {
+    "text": "The authority reported distributing more than 4,000 straw bales for sediment control after the January 2026 bushfires and helping relocate and return endangered fish to Seven Creeks.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/goulburn-broken-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Chair and CEO report"
+   },
+   {
+    "text": "It reported renewing the Regional Waterway Strategy, completing recovery projects from the 2022 floods and providing 1,307 floodplain referrals and advice responses.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/goulburn-broken-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Chair and CEO report"
+   },
+   {
+    "text": "It recorded a $5.2 million surplus against a forecast $3.9 million deficit, attributing the difference to more project revenue and expenditure deferred into 2026–27.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/goulburn-broken-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Chair and CEO report"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The 2025-26 result was a surplus of $5.2 million compared with a Corporate Plan forecast deficit of $3.9 million, reflecting increased revenue with additional large-scale projects across multiple programs and some expenditure deferred into 2026-27.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab32c/globalassets/tabled-paper-documents/tabled-paper-10592/goulburn-broken-cma-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

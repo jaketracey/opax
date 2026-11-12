@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-grampians-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Grampians Health 2025-26 annual report",
+ "body": "Grampians Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "001da5d8e032b8221977780c2629e89608160719b316ce298fa14a53579ab271",
+  "pages": 110,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair & Chief Executive",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Grampians Health’s 2025-26 annual report describes its work to improve access to healthcare for rural and regional Victorians.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Board Chair & Chief Executive"
+   },
+   {
+    "text": "Grampians Health reported introducing monthly prosthetic and orthotics clinics in Stawell and Horsham and taking over management of its renal units in Ballarat and Horsham.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Board Chair & Chief Executive"
+   },
+   {
+    "text": "It reported that additional perioperative staff enabled both Stawell operating theatres to run together, adding an average of six to seven surgical lists monthly.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Board Chair & Chief Executive"
+   },
+   {
+    "text": "Grampians Health reported an operating deficit of $2.9 million against a budget that expected to break even, excluding capital, depreciation and consolidated entity results.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 46
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The 2026 People Matter Survey received the highest level of staff engagement to date.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3fc/globalassets/tabled-paper-documents/tabled-paper-10738/grampians-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,126 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2000-12-06-protecting-confidential-information-report-improper-access-a",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Protecting confidential information: A report on the improper access to, and release of, confidential information from the police computer systems by members of the Queensland Police Service",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+  "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+  "sha256": "7d164f2a77be201374de13ae2d256bc3fa89265c46f47fb2b006183ef122956f",
+  "pages": 183,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 17,
+  "last_page": 24,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf#page=17"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission examined how to prevent improper access to and disclosure of confidential police information following its Project Piper inquiry.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+      "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+      "page": 17
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It reviewed police information-security controls, the market for confidential information and the laws protecting it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+      "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+      "page": 17
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The CJC concluded that individual officers could readily misuse police computer systems without detection and that complaints alone could not reliably measure the problem.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+      "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+      "page": 20
+     }
+    ],
+    "section": "The nature of the misconduct (chapter 4)"
+   },
+   {
+    "text": "It also considered regulation of private investigators and commercial agents inadequate to secure minimum standards of integrity and professionalism.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+      "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+      "page": 22
+     }
+    ],
+    "section": "Industry regulation in Queensland (chapter 8)"
+   },
+   {
+    "text": "The CJC made nineteen grouped recommendations on police controls, audit and training, access restrictions, industry regulation and protection of personal information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+      "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+      "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+      "page": 25
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+      "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+      "page": 26
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+      "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+      "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+      "page": 28
+     }
+    ],
+    "section": "List of recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The current regime of government regulation is not sufficient for either industry to ensure even the minimum level of professionalism and integrity.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Protecting-confidential-information-Report-2000.pdf",
+     "document": "Protecting confidential information: A report on the improper access to, and release of, confidential... (November 2000)",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

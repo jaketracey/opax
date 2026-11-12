@@ -1,0 +1,126 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2000-09-01-allegations-electoral-fraud-report-advice-pd-mcmurdo-qc",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC.",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+  "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+  "sha256": "2ee0ee7ff591301f7e1622e614ddc75665686894369dc1c94d22190e50d595e6",
+  "pages": 40,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission adopted independent legal advice on the need for further investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 8
+     }
+    ],
+    "section": "FOREWORD"
+   },
+   {
+    "text": "The advice addressed suspected interference with electoral rolls for Labor preselections and a state by-election.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 36
+     }
+    ],
+    "section": "Matters for Further Investigation"
+   },
+   {
+    "text": "The adopted advice considered that reasonable suspicion of official misconduct existed in relation to four electoral contests, without determining the allegations as proved.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 36
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 37
+     }
+    ],
+    "section": "Matters for Further Investigation"
+   },
+   {
+    "text": "It recommended a Commission hearing and further inquiries into other potentially criminal conduct concerning Labor preselections during the specified period.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 37
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 39
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 40
+     }
+    ],
+    "section": "Terms of Reference of Open Inquiry"
+   },
+   {
+    "text": "The Commission resolved to appoint an independent legal practitioner to investigate and conduct open or closed hearings as appropriate.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+      "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+      "page": 8
+     }
+    ],
+    "section": "FOREWORD"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "On the material provided to me, there could be a reasonable suspicion of official misconduct by conduct constituting a criminal offence or offences affecting the electoral roll for the Mundingburra by-election in 1996.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Allegations-of-electoral-fraud-Report-2000.pdf",
+     "document": "Allegations of Electoral Fraud: Report on an advice by P.D. McMurdo, QC (September 2000)",
+     "page": 31
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,135 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2010-06-17-cmc-review-queensland-police-services-palm-island-review",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "CMC Review of the Queensland Police Service's Palm Island Review",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+  "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+  "sha256": "64593cc2a63da7c2dc00382c877547232c3bae66ced5982413b1f968ad0eaec3",
+  "pages": 216,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 14,
+  "last_page": 28,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf#page=14"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission reviewed the Queensland Police Service’s internal review of the initial investigation of a death in custody on Palm Island.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 15
+     }
+    ]
+   },
+   {
+    "text": "The CMC examined both the original investigators’ conduct and the adequacy, impartiality and conclusions of the internal review.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 15
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that the original investigation was seriously flawed and that it could not trust the internal review’s conclusions and recommendations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 25
+     }
+    ]
+   },
+   {
+    "text": "The CMC considered the evidence insufficient for criminal prosecution, but sufficient to warrant consideration of disciplinary proceedings.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 26
+     }
+    ]
+   },
+   {
+    "text": "Its six recommendations concerned possible disciplinary proceedings against four initial investigators and the review team, and management action for the initial investigators.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 25
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+      "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+      "page": 26
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CMC can have no confidence in the integrity of the conclusions and recommendations in the Palm Island Review.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+     "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+     "page": 25
+    }
+   },
+   {
+    "quote": "In the CMC’s view the evidence is insufficient to support consideration of any criminal prosecution proceedings.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-review-of-the-QPS-Palm-Island-Review-Report-2010.pdf",
+     "document": "CMC Review of the QPS Palm Island Review (17 June 2010)",
+     "page": 24
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

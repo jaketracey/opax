@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2021-12-16-tp6229-operation-dawson-an-investigation-into-alleged-miscon",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Dawson: An investigation into alleged misconduct by a former Victoria Police Superintendent",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2678/globalassets/tabled-paper-documents/tabled-paper-6229/ibac_-_operation_dawson_special_report_-_december_2021_qf9ts7rc.pdf",
+  "document": "IBAC_-_Operation_Dawson_special_report_-_December_2021_qf9ts7Rc",
+  "sha256": "bee21e0766294c656df4eb760b435178b77eba16d2b1b8a1c8e7de63652cfad4",
+  "pages": 24,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of investigation and outcomes",
+  "first_page": 5,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4a2678/globalassets/tabled-paper-documents/tabled-paper-6229/ibac_-_operation_dawson_special_report_-_december_2021_qf9ts7rc.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Broad-based Anti-corruption Commission investigated alleged misconduct by a then Victoria Police superintendent in Operation Dawson.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2678/globalassets/tabled-paper-documents/tabled-paper-6229/ibac_-_operation_dawson_special_report_-_december_2021_qf9ts7rc.pdf",
+      "document": "IBAC_-_Operation_Dawson_special_report_-_December_2021_qf9ts7Rc",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It examined alleged interference in two sexual-offence investigations involving church associates and alleged access to and disclosure of police information.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2678/globalassets/tabled-paper-documents/tabled-paper-6229/ibac_-_operation_dawson_special_report_-_december_2021_qf9ts7rc.pdf",
+      "document": "IBAC_-_Operation_Dawson_special_report_-_December_2021_qf9ts7Rc",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "IBAC found that the superintendent obtained and shared police information without authorisation in matters in which he had a personal interest.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2678/globalassets/tabled-paper-documents/tabled-paper-6229/ibac_-_operation_dawson_special_report_-_december_2021_qf9ts7rc.pdf",
+      "document": "IBAC_-_Operation_Dawson_special_report_-_December_2021_qf9ts7Rc",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It made two recommendations to clarify the legal requirement for a legitimate work-related need to access police information and reinforce those obligations through training.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2678/globalassets/tabled-paper-documents/tabled-paper-6229/ibac_-_operation_dawson_special_report_-_december_2021_qf9ts7rc.pdf",
+      "document": "IBAC_-_Operation_Dawson_special_report_-_December_2021_qf9ts7Rc",
+      "page": 17
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC found Superintendent Rosenblum used his position to obtain and disclose police information without authorisation, about investigations in which he had a personal, rather than a professional, interest.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2678/globalassets/tabled-paper-documents/tabled-paper-6229/ibac_-_operation_dawson_special_report_-_december_2021_qf9ts7rc.pdf",
+     "document": "IBAC_-_Operation_Dawson_special_report_-_December_2021_qf9ts7Rc",
+     "page": 6
+    }
+   },
+   {
+    "quote": "Operation Dawson highlights how conflicts can arise between an officer’s public duty and their personal interests, and how if not appropriately identified and managed, those conflicts can have serious consequences, including undermining community confidence in the independence and integrity of Victoria Police.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2678/globalassets/tabled-paper-documents/tabled-paper-6229/ibac_-_operation_dawson_special_report_-_december_2021_qf9ts7rc.pdf",
+     "document": "IBAC_-_Operation_Dawson_special_report_-_December_2021_qf9ts7Rc",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-national-gallery-of-victoria-council-of-trustees-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "National Gallery of Victoria Council of Trustees 2025-26 annual report",
+ "body": "National Gallery of Victoria Council of Trustees",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf",
+  "document": "annual report",
+  "sha256": "8f6c8abd62682cd21b429e9d7ee4544bc1d67d71a5026a3f340cb124959f9baf",
+  "pages": 189,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "PRESIDENT’S FOREWORD",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The National Gallery of Victoria’s Council of Trustees reported on 2025/26, including its work caring for the State Collection and presenting exhibitions.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The gallery reported welcoming 2,456,021 visitors across its two sites.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It reported continuing construction of The Fox: NGV Contemporary and closing the NGV Garden in preparation for the new building and urban garden.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It reported an operating surplus of $0.1 million and an overall surplus of $82.6 million, including non-operating activities.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 82
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The NGV attracted 2,456,021 visitors during 2025/26, including 100,506 students attending education programs.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab384/globalassets/tabled-paper-documents/tabled-paper-10665/national_gallery_of_victoria_council_of_trustees_annual_report_2025-26.pdf",
+     "document": "annual report",
+     "page": 82
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

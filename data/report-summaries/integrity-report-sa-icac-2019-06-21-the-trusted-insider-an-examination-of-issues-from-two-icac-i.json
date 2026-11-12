@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2019-06-21-the-trusted-insider-an-examination-of-issues-from-two-icac-i",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "The Trusted Insider: An Examination of Issues from Two ICAC Investigations",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf",
+  "document": "The Trusted Insider: An Examination of Issues From Two ICAC Investigations",
+  "sha256": "eca0164c9ea0e4b95ee5e63f56d301d70ff0a164fb0ae007c9cedd95582f77bc",
+  "pages": 30,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commissioner Against Corruption examined two investigations involving senior managers at Yorke Peninsula Council and TAFE SA.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf",
+      "document": "The Trusted Insider: An Examination of Issues From Two ICAC Investigations",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "He sought to explain how the conduct occurred, its effects and measures that could reduce similar offending.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf",
+      "document": "The Trusted Insider: An Examination of Issues From Two ICAC Investigations",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner concluded that the officers’ offences harmed their agencies and colleagues, and that both agencies and officers shared responsibility for prevention.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf",
+      "document": "The Trusted Insider: An Examination of Issues From Two ICAC Investigations",
+      "page": 28
+     }
+    ]
+   },
+   {
+    "text": "He urged stronger integrity controls through risk assessment, staff education, reviews of financial authority, compliance checks, random audits and recruitment screening.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf",
+      "document": "The Trusted Insider: An Examination of Issues From Two ICAC Investigations",
+      "page": 25
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf",
+      "document": "The Trusted Insider: An Examination of Issues From Two ICAC Investigations",
+      "page": 26
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf",
+      "document": "The Trusted Insider: An Examination of Issues From Two ICAC Investigations",
+      "page": 27
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "All agencies should review their integrity processes and controls.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf",
+     "document": "The Trusted Insider: An Examination of Issues From Two ICAC Investigations",
+     "page": 28
+    }
+   },
+   {
+    "quote": "The burden of protecting against corruption falls on agency and public officer alike.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0010/370567/The-Trusted-Insider_An-Examination-of-Issues-from-Two-ICAC-Investigations.pdf",
+     "document": "The Trusted Insider: An Examination of Issues From Two ICAC Investigations",
+     "page": 28
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

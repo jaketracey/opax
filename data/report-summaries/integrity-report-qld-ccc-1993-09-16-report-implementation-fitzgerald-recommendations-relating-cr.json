@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1993-09-16-report-implementation-fitzgerald-recommendations-relating-cr",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-implementation-of-the-Fitzgerald-recommendations-relating-to-the-CJC-Report-1993.pdf",
+  "document": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission (16 September 1993)",
+  "sha256": "598ddfa54e28b6c70e7ab86825c9c16b72b125b2b33eb683141edbcb1a1420a8",
+  "pages": 149,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission prepared this account of 37 recommendations directed to it following a request from the Parliamentary Criminal Justice Committee.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-implementation-of-the-Fitzgerald-recommendations-relating-to-the-CJC-Report-1993.pdf",
+      "document": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission (16 September 1993)",
+      "page": 3
+     }
+    ],
+    "section": "Letter of transmittal"
+   },
+   {
+    "text": "It covered the Commission’s establishment, parliamentary oversight, functions and programme of reviews.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-implementation-of-the-Fitzgerald-recommendations-relating-to-the-CJC-Report-1993.pdf",
+      "document": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission (16 September 1993)",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-implementation-of-the-Fitzgerald-recommendations-relating-to-the-CJC-Report-1993.pdf",
+      "document": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission (16 September 1993)",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-implementation-of-the-Fitzgerald-recommendations-relating-to-the-CJC-Report-1993.pdf",
+      "document": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission (16 September 1993)",
+      "page": 12
+     }
+    ],
+    "section": "CONTENTS"
+   },
+   {
+    "text": "The Commission explained that some recommendations defined continuing responsibilities, so their implementation could remain ongoing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-implementation-of-the-Fitzgerald-recommendations-relating-to-the-CJC-Report-1993.pdf",
+      "document": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission (16 September 1993)",
+      "page": 10
+     }
+    ],
+    "section": "Structure, Scope and Content of this Report"
+   },
+   {
+    "text": "The Commission stressed that the report accounted for implementation rather than assessing the success or impact of its work.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-implementation-of-the-Fitzgerald-recommendations-relating-to-the-CJC-Report-1993.pdf",
+      "document": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission (16 September 1993)",
+      "page": 3
+     }
+    ],
+    "section": "Letter of transmittal"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission recognises the considerable difference between reporting on the fact of implementation and evaluating the success or impact of implementation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-implementation-of-the-Fitzgerald-recommendations-relating-to-the-CJC-Report-1993.pdf",
+     "document": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission (16 September 1993)",
+     "page": 10
+    }
+   },
+   {
+    "quote": "The Criminal Justice Act overlooked or modified some of the Fitzgerald recommendations, and even where recommendations have been translated into the Act, their interpretation is often contingent on parts of the Act that were not drawn from the recommendations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-implementation-of-the-Fitzgerald-recommendations-relating-to-the-CJC-Report-1993.pdf",
+     "document": "Report on the Implementation of the Fitzgerald Recommendations Relating to the Criminal Justice Commission (16 September 1993)",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

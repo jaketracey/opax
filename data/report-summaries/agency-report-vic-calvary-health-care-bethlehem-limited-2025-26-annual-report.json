@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-calvary-health-care-bethlehem-limited-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Calvary Health Care Bethlehem Limited 2025-26 annual report",
+ "body": "Calvary Health Care Bethlehem Limited",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3d6/globalassets/tabled-paper-documents/tabled-paper-10719/calvary-health-care-bethlehem-limited-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "7964e817d753378d1e13ca0c983f852d13834ef8d78fe7fde3e96d1b1f95f5fc",
+  "pages": 74,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Joint message from the General Manager and Board Chair",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab3d6/globalassets/tabled-paper-documents/tabled-paper-10719/calvary-health-care-bethlehem-limited-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Calvary Health Care Bethlehem reported for the year ending 30 June 2026 on its specialist palliative care and statewide services for people with progressive neurological diseases.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d6/globalassets/tabled-paper-documents/tabled-paper-10719/calvary-health-care-bethlehem-limited-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 2
+     }
+    ],
+    "section": "About Bethlehem"
+   },
+   {
+    "text": "Calvary Bethlehem reported implementing its strategic quality plan and Statement of Priorities through work on safety, service improvement and innovation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d6/globalassets/tabled-paper-documents/tabled-paper-10719/calvary-health-care-bethlehem-limited-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Delivering on our strategic quality and service priorities"
+   },
+   {
+    "text": "Calvary Bethlehem reported receiving met ratings for every standard in its April 2026 short-notice accreditation assessment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d6/globalassets/tabled-paper-documents/tabled-paper-10719/calvary-health-care-bethlehem-limited-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Joint message from the General Manager and Board Chair"
+   },
+   {
+    "text": "The health service reported an operating result of $0.65 million, above its breakeven Statement of Priorities target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d6/globalassets/tabled-paper-documents/tabled-paper-10719/calvary-health-care-bethlehem-limited-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 21
+     }
+    ],
+    "section": "SUMMARY OF FINANCIAL RESULTS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Revenue growth of 11.7% was achieved while limiting expenditure growth to 5.7%.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3d6/globalassets/tabled-paper-documents/tabled-paper-10719/calvary-health-care-bethlehem-limited-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 21
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2005-05-06-report-allegations-surrounding-riverton-election",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Allegations Surrounding Riverton Election",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegations%20Surrounding%20Riverton%20Election.pdf",
+  "document": "Report on Allegations Surrounding Riverton Election.pdf",
+  "sha256": "4bb8118a32a03703fad384235601c49b680a06d6a36553cb281c54bfa784cafd",
+  "pages": 7,
+  "rights": "copyright-commission",
+  "text": "ocr"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a complaint about the nomination of an independent candidate for Riverton.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegations%20Surrounding%20Riverton%20Election.pdf",
+      "document": "Report on Allegations Surrounding Riverton Election.pdf",
+      "page": 4
+     }
+    ],
+    "section": "Complaint"
+   },
+   {
+    "text": "It obtained nomination records from the Electoral Commission and interviewed people involved in the matter.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegations%20Surrounding%20Riverton%20Election.pdf",
+      "document": "Report on Allegations Surrounding Riverton Election.pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegations%20Surrounding%20Riverton%20Election.pdf",
+      "document": "Report on Allegations Surrounding Riverton Election.pdf",
+      "page": 5
+     }
+    ],
+    "section": "Investigation"
+   },
+   {
+    "text": "The Commission concluded that the nomination involved no misconduct and found no evidence of impropriety by the two public officers concerned.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegations%20Surrounding%20Riverton%20Election.pdf",
+      "document": "Report on Allegations Surrounding Riverton Election.pdf",
+      "page": 7
+     }
+    ],
+    "section": "Opinion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the circumstances, the Commission has formed the opinion that there was no misconduct involved in the nomination of Ms Ma as a candidate for election to the seat of Riverton in the state election of 26 February 2005.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Allegations%20Surrounding%20Riverton%20Election.pdf",
+     "document": "Report on Allegations Surrounding Riverton Election.pdf",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

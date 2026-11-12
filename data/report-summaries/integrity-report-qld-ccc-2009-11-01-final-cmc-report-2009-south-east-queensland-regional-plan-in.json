@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2009-11-01-final-cmc-report-2009-south-east-queensland-regional-plan-in",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf",
+  "document": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods (2009)",
+  "sha256": "2adf143722cf31bd76c846d4b0b5d704f8c953e3826b1d78788146101bf3c40a",
+  "pages": 14,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "The report in context",
+  "first_page": 1,
+  "last_page": 1,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf#page=1"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Premier asked the Crime and Misconduct Commission to investigate whether anyone improperly influenced extensions to the urban footprint in the 2009 South East Queensland Regional Plan.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf",
+      "document": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods (2009)",
+      "page": 1
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf",
+      "document": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods (2009)",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The CMC examined departmental records and representations by lobbyists, focusing on Palmwoods and other proposed development areas.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf",
+      "document": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods (2009)",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf",
+      "document": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods (2009)",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that there was no reasonable basis to suspect official misconduct, but expressed concern about inadequate records of lobbying contacts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf",
+      "document": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods (2009)",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "The CMC recommended written records of communications with lobbyists and other interested parties, including the issue raised and any departmental response.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf",
+      "document": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods (2009)",
+      "page": 12
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Of those matters, there is no reasonable basis to suspect there has been any act of official misconduct committed by any person.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf",
+     "document": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods (2009)",
+     "page": 12
+    }
+   },
+   {
+    "quote": "The CMC is concerned, however, at the Department’s general lack of record-keeping, particularly as to representations involving lobbyists.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Final-CMC-report-into-the-2009-South-East-Qld-Regional-Plan-including-land-at-Palmwoods-Report-2009.pdf",
+     "document": "Final CMC report into the 2009 South East Queensland Regional Plan, including land at Palmwoods (2009)",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

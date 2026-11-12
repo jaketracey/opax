@@ -1,0 +1,79 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-treasury-corporation-of-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Treasury Corporation of Victoria 2025-26 annual report",
+ "body": "Treasury Corporation of Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a9413/globalassets/tabled-paper-documents/tabled-paper-10552/treasury-corporation-of-victoria-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "610b981cf2b1ac9b31310360fc190820784ed714f1b48a881db5aec6d7e70fba",
+  "pages": 84,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair and CEO’s report",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4a9413/globalassets/tabled-paper-documents/tabled-paper-10552/treasury-corporation-of-victoria-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Treasury Corporation of Victoria reported on 2025–26 as the state’s central financial institution, providing financial services and managing risk.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a9413/globalassets/tabled-paper-documents/tabled-paper-10552/treasury-corporation-of-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a9413/globalassets/tabled-paper-documents/tabled-paper-10552/treasury-corporation-of-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Who we are"
+   },
+   {
+    "text": "The corporation reported completing its first €2 billion benchmark transaction and releasing its sustainable bond framework.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a9413/globalassets/tabled-paper-documents/tabled-paper-10552/treasury-corporation-of-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chair and CEO’s report"
+   },
+   {
+    "text": "It reported a net profit of $43.7 million and customer satisfaction of 97%.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a9413/globalassets/tabled-paper-documents/tabled-paper-10552/treasury-corporation-of-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Year in review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

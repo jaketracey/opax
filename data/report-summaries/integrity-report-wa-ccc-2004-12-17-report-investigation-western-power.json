@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2004-12-17-report-investigation-western-power",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on investigation into Western Power",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20Western%20Power.pdf",
+  "document": "Report on investigation into Western Power.pdf",
+  "sha256": "0bd8446201d4cf15d1b4fc40359ce04daee1c892e717baf193667b576ead5c4a",
+  "pages": 19,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 15,
+  "last_page": 15,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20Western%20Power.pdf#page=15"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated an allegation that Western Power paid a union to help campaign against proposed government reforms of the corporation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20Western%20Power.pdf",
+      "document": "Report on investigation into Western Power.pdf",
+      "page": 7
+     }
+    ],
+    "section": "What is this report about?"
+   },
+   {
+    "text": "It examined the authorisation, purpose and eventual use of a $35,000 payment to the Australian Services Union.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20Western%20Power.pdf",
+      "document": "Report on investigation into Western Power.pdf",
+      "page": 15
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "The Commission found no evidence of an agreement to fund an anti-reform campaign, although it found that much of the payment was ultimately used for that campaign.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20Western%20Power.pdf",
+      "document": "Report on investigation into Western Power.pdf",
+      "page": 15
+     }
+    ],
+    "section": "Summary"
+   },
+   {
+    "text": "It identified inadequate control of public funds but found no evidence of misconduct by the corporation’s management or employees under the Act.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20Western%20Power.pdf",
+      "document": "Report on investigation into Western Power.pdf",
+      "page": 15
+     }
+    ],
+    "section": "Commission’s Opinions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Notwithstanding the above, at the conclusion of a lengthy investigation, the Commission has found no evidence that revealed “misconduct” within the definition of the Corruption and Crime Commission Act 2003 on the part of WPC management or current or former employees.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20Western%20Power.pdf",
+     "document": "Report on investigation into Western Power.pdf",
+     "page": 15
+    }
+   },
+   {
+    "quote": "It appears that, on this occasion, there was an inadequacy in Gillies’ approach to the control and use of public funds.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20Western%20Power.pdf",
+     "document": "Report on investigation into Western Power.pdf",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

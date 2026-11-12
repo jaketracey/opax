@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2019-05-21-serious-misconduct-procurement-environmental-services",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Serious misconduct in procurement of environmental services",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious%20misconduct%20in%20procurement%20of%20environmental%20services.pdf",
+  "document": "Serious misconduct in procurement of environmental services",
+  "sha256": "031dd9b3fa982abc8608b181fd84b515d6fcf96353074ff5f29dd38cd334082d",
+  "pages": 34,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious%20misconduct%20in%20procurement%20of%20environmental%20services.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined procurement, conflicts of interest and confidential information involving the manager of an abandoned mines program.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious%20misconduct%20in%20procurement%20of%20environmental%20services.pdf",
+      "document": "Serious misconduct in procurement of environmental services",
+      "page": 4
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission found that the manager secured contractor payments for work not performed and disclosed departmental information to the contractor.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious%20misconduct%20in%20procurement%20of%20environmental%20services.pdf",
+      "document": "Serious misconduct in procurement of environmental services",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious%20misconduct%20in%20procurement%20of%20environmental%20services.pdf",
+      "document": "Serious misconduct in procurement of environmental services",
+      "page": 33
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious%20misconduct%20in%20procurement%20of%20environmental%20services.pdf",
+      "document": "Serious misconduct in procurement of environmental services",
+      "page": 34
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct concerning her use of office to obtain payments and disclose confidential information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious%20misconduct%20in%20procurement%20of%20environmental%20services.pdf",
+      "document": "Serious misconduct in procurement of environmental services",
+      "page": 33
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious%20misconduct%20in%20procurement%20of%20environmental%20services.pdf",
+      "document": "Serious misconduct in procurement of environmental services",
+      "page": 34
+     }
+    ],
+    "section": "Opinion"
+   },
+   {
+    "text": "The Commission concluded that limited scrutiny of smaller transactions and invoice splitting helped enable the conduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Serious%20misconduct%20in%20procurement%20of%20environmental%20services.pdf",
+      "document": "Serious misconduct in procurement of environmental services",
+      "page": 33
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

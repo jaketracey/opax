@@ -1,0 +1,136 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1994-09-08-report-investigation-cape-melville-incident",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "A report of an investigation into the Cape Melville incident",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+  "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+  "sha256": "724dbd4579b7e1d26d8678aca67848fedafc29a2669573afbedab9242d16f2ff",
+  "pages": 392,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated events surrounding a ranger’s seizure of a vehicle near Cape Melville National Park.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 18
+     }
+    ],
+    "section": "ISSUES FOR CONSIDERATION"
+   },
+   {
+    "text": "It examined alleged interference in enforcement, travel by the Premier’s staff and the end of the ranger’s employment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 18
+     }
+    ],
+    "section": "ISSUES FOR CONSIDERATION"
+   },
+   {
+    "text": "The Commission concluded that allegations of improper interference in the investigation and prosecution arising from the vehicle seizure were unfounded.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 322
+     }
+    ],
+    "section": "CONCLUSIONS AND RECOMMENDATIONS"
+   },
+   {
+    "text": "It nevertheless recommended disciplinary action against departmental officers over failures to report information properly.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 302
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 303
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 306
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 307
+     }
+    ],
+    "section": "CONCLUSIONS AND RECOMMENDATIONS"
+   },
+   {
+    "text": "Its recommendations also addressed staff counselling and improving cooperation between the police wildlife squad and the environment department.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 296
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 308
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 324
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+      "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+      "page": 325
+     }
+    ],
+    "section": "CONCLUSIONS AND RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission concludes that the allegation of improper interference in the investigation and prosecution of Cochran is unsubstantiated.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Cape-Melville-incident/An-investigation-into-Cape-Melville-incident-Report-1994.pdf",
+     "document": "A report of an investigation into the Cape Melville incident (8 September 1994)",
+     "page": 331
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

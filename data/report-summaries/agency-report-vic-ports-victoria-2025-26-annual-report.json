@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-ports-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Ports Victoria 2025-26 annual report",
+ "body": "Ports Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "e3fb1d88f60e26f4486eb1dec24cfb6ac0e543ccbf853f0faa84d36c462286bd",
+  "pages": 72,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From the chief executive officer",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Ports Victoria’s 2025-26 report covered its responsibility for navigation and operational safety at Victoria’s four commercial ports.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "About Ports Victoria"
+   },
+   {
+    "text": "Ports Victoria reported managing 9,935 vessel movements and facilitating 81 cruise ship visits during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Performance at a glance"
+   },
+   {
+    "text": "It reported consolidating its vessel traffic services onto a platform that could operate from Melbourne, Geelong or both centres.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "From the chief executive officer"
+   },
+   {
+    "text": "Ports Victoria reported vessel traffic services availability above 99.97%, exceeding the international minimum of 99.95%.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Performance at a glance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The total shipping movements across the commercial ports of Melbourne, Geelong, Hastings and Portland increased from 9,315 in 2024–25 to 9,935 in 2025–26.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab328/globalassets/tabled-paper-documents/tabled-paper-10591/ports-victoria-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

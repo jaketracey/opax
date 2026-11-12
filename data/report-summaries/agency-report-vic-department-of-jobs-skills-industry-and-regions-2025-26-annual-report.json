@@ -1,0 +1,89 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-department-of-jobs-skills-industry-and-regions-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Department of Jobs, Skills, Industry and Regions 2025-26 annual report",
+ "body": "Department of Jobs, Skills, Industry and Regions",
+ "source": {
+  "url": "https://djsir.vic.gov.au/__data/assets/pdf_file/0010/2509579/DJSIR-Annual-Report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "08c1d01d815d55c261028d8e5a639bb7b471a5f7677bb4b56534d07ee891b215",
+  "pages": 223,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Secretary’s Foreword",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://djsir.vic.gov.au/__data/assets/pdf_file/0010/2509579/DJSIR-Annual-Report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Department of Jobs, Skills, Industry and Regions reported on its 2025–26 work supporting economic development, business investment, skills and regional communities.",
+    "cites": [
+     {
+      "url": "https://djsir.vic.gov.au/__data/assets/pdf_file/0010/2509579/DJSIR-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://djsir.vic.gov.au/__data/assets/pdf_file/0010/2509579/DJSIR-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "About the department"
+   },
+   {
+    "text": "The department reported establishing a TAFE centre of excellence for digital and artificial intelligence training and launching a tourism plan for First Peoples.",
+    "cites": [
+     {
+      "url": "https://djsir.vic.gov.au/__data/assets/pdf_file/0010/2509579/DJSIR-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Secretary’s Foreword"
+   },
+   {
+    "text": "It recorded a $19 million net surplus from continuing operations, which included $63 million in assets received free of charge.",
+    "cites": [
+     {
+      "url": "https://djsir.vic.gov.au/__data/assets/pdf_file/0010/2509579/DJSIR-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 162
+     }
+    ],
+    "section": "Department current year financial review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "If these assets were excluded, the net results would have been a deficit of $44 million.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://djsir.vic.gov.au/__data/assets/pdf_file/0010/2509579/DJSIR-Annual-Report-2025-26.pdf",
+     "document": "annual report",
+     "page": 162
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

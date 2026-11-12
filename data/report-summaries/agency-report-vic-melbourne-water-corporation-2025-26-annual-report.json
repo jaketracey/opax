@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-melbourne-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Melbourne Water Corporation 2025-26 annual report",
+ "body": "Melbourne Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "4df9f535d279ca51945b18f82ca998127bb5b11d043c1d5942775466fed40557",
+  "pages": 220,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Report from the Chair \nand Managing Director",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Melbourne Water reported on 2025–26 as the government-owned body responsible for wholesale water, sewage, drainage, flood risk and catchment management across Greater Melbourne.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported supplying 504 billion litres of water during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It reported processing 19,005 applications, with more than 99 per cent of council referrals assessed within its service standards.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It reported investing $1.078 billion in capital infrastructure during 2025–26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We continued the rollout of the Greater Melbourne Flood Information Program, completing updated flood studies and mapping for eight local government areas.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab39e/globalassets/tabled-paper-documents/tabled-paper-10688/melbourne-water-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

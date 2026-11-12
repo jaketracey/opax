@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-06-27-report-inadequate-use-force-reporting-eastern-goldf-107a3881",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf",
+  "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+  "sha256": "8119bfcdebb491a694fc2c9cea0563a726741059d1f08e2c6fabe850743af34b",
+  "pages": 38,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 5,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined the integrity of reporting after a senior officer used chemical spray against prisoners at Eastern Goldfields Regional Prison.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+      "page": 5
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "It compared CCTV recordings with incident reports and other official records concerning two uses of force.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+      "page": 8
+     }
+    ],
+    "section": "Relevance of use of force to the Commission investigations"
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct, concluding that the officer used inaccurate or false reports to minimise and conceal his use of force.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+      "page": 35
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+      "page": 36
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its nine recommendations cover independent reporting and review, confidential complaints, training, disciplinary action and controls over chemical spray.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+      "page": 37
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20in%20May%202017.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison in May 2017",
+      "page": 38
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

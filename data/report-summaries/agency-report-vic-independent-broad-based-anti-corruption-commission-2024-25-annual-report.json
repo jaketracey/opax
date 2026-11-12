@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-independent-broad-based-anti-corruption-commission-2024-25-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Independent Broad-based Anti-corruption Commission 2024-25 annual report",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a25c4/globalassets/tabled-paper-documents/tabled-paper-9508/ibac-annual-report-2024-25.pdf",
+  "document": "annual report",
+  "sha256": "2dd878ae72577995bff95828c78b44736703696a0e3c94a99d8ab8fc469008fe",
+  "pages": 125,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s message",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4a25c4/globalassets/tabled-paper-documents/tabled-paper-9508/ibac-annual-report-2024-25.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Independent Broad-based Anti-corruption Commission reported on its 2024/25 work to prevent and expose corruption in the public sector and police misconduct.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25c4/globalassets/tabled-paper-documents/tabled-paper-9508/ibac-annual-report-2024-25.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25c4/globalassets/tabled-paper-documents/tabled-paper-9508/ibac-annual-report-2024-25.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Commissioner’s message"
+   },
+   {
+    "text": "IBAC reported delivering 161 corruption prevention initiatives and starting 44 preliminary inquiries and investigations while completing 39.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25c4/globalassets/tabled-paper-documents/tabled-paper-9508/ibac-annual-report-2024-25.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Our 2024/25 performance highlights"
+   },
+   {
+    "text": "It reported establishing a permanent team to investigate single-incident police misconduct complaints from communities at greater risk.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25c4/globalassets/tabled-paper-documents/tabled-paper-9508/ibac-annual-report-2024-25.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Police oversight"
+   },
+   {
+    "text": "IBAC reported meeting its timeliness targets for assessing corruption and police misconduct complaints and notifications.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25c4/globalassets/tabled-paper-documents/tabled-paper-9508/ibac-annual-report-2024-25.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Our 2024/25 performance highlights"
+   },
+   {
+    "text": "It reported a net result from transactions of $0 million and a comprehensive surplus of $0.2 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a25c4/globalassets/tabled-paper-documents/tabled-paper-9508/ibac-annual-report-2024-25.pdf",
+      "document": "annual report",
+      "page": 21
+     }
+    ],
+    "section": "Financial overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This financial year we met our timeliness targets for assessing complaints and notifications about public sector corruption and police misconduct.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a25c4/globalassets/tabled-paper-documents/tabled-paper-9508/ibac-annual-report-2024-25.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

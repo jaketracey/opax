@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-corangamite-catchment-management-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Corangamite Catchment Management Authority 2025-26 annual report",
+ "body": "Corangamite Catchment Management Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/coranagmite-cma-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "47f7c827e805673592f2d508b56f688815ecfc620649a4b707c63bc4418164d9",
+  "pages": 100,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair's Foreword",
+  "first_page": 3,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/coranagmite-cma-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Corangamite Catchment Management Authority reported for 2025-26 on its role in overseeing land and water resources.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/coranagmite-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/coranagmite-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "ESTABLISHMENT AND RESPONSIBLE MINISTERS"
+   },
+   {
+    "text": "The Authority reported responding to bushfire impacts through community engagement, recovery planning and work to protect waterways and restore riverbank vegetation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/coranagmite-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Chair's Foreword"
+   },
+   {
+    "text": "The Authority reported completing 95 per cent of its Carbon Neutrality Action Plan actions and beginning work on a climate and nature transition plan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/coranagmite-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Chair's Foreword"
+   },
+   {
+    "text": "The Authority reported a $2,242,705 net operating surplus, compared with the $2,938,781 deficit it had forecast.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/coranagmite-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 48
+     }
+    ],
+    "section": "SUMMARY OF FINANCIAL RESULTS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We completed 95 per cent of actions within our Carbon Neutrality Action Plan and commenced planning for a Climate and Nature Transition Plan.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab357/globalassets/tabled-paper-documents/tabled-paper-10639/coranagmite-cma-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}
