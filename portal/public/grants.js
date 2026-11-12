@@ -1798,6 +1798,7 @@ export function mountGrants (container, opts = {}) {
   }
 
   function renderProgramDetail (td, r, p) {
+    td.id = "program-records"
     const notes = p.notes || null
     const progNotes = notes && notes.programs && notes.programs[state.jur] ? notes.programs[state.jur][p.id] : null
     const qld = state.jur === 'qld'

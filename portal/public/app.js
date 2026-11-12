@@ -1520,6 +1520,7 @@ async function openMoneyRecords(kind, params) {
       const query = next.toString();
       const to = query ? `${path}?${query}` : path;
       if (to === location.pathname + location.search) return false;
+      syncRecordCore(to);
       history[replace ? 'replaceState' : 'pushState'](null, '', to);
       return true;
     };
@@ -1954,6 +1955,15 @@ function parseHash() {
   return { segs, params };
 }
 
+// The server overview belongs to the landed record, including its canonical alias.
+function syncRecordCore(path = location.pathname + location.search) {
+  const core = document.querySelector('#prerender[data-record-core]');
+  if (core) {
+    const landed = core.dataset.route || (core.dataset.route = location.pathname + location.search);
+    if (path !== landed && path !== core.dataset.recordPath) core.remove();
+  }
+  document.documentElement.classList.toggle('record-core-ready', Boolean(document.querySelector('#prerender[data-record-core]')));
+}
 let routeRequest = 0;
 function routePrerequisites(segs) {
   const [view] = segs;
@@ -1975,6 +1985,7 @@ async function route() {
   await Promise.allSettled(routePrerequisites(segs));
   if (requested !== routeRequest) return;
   if (!segs.length) { location.replace('/' + location.search + location.hash); return; }
+  syncRecordCore();
   const herePath = "/" + segs.join("/"); // the trail reads the address, not the hash form
   // The script can boot before attribution helpers finish importing. Reveal
   // panels only when this requested route is ready to choose its own panel.

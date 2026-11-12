@@ -297,6 +297,24 @@
 /* A person's record stays unseen while its head settles (app.js revealGrid). */
 .subject-grid.is-settling { visibility: hidden; }
 #prerender { padding-bottom: var(--sp-24); }
+/* Record previews stay in place through hydration. The full interactive lists
+   mount below, so loading charts and controls cannot move the overview. */
+.spa-ready #prerender[data-record-core],
+.spa-booting #prerender[data-record-core] { display: block; }
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender[data-record-core] > * { display: revert; }
+.record-core-ready #money-records-head > :is(h1,h2),
+.record-core-ready #subject-body .agency-page > .ui-page-head > h1,
+.record-core-ready #subject-body > .subject-head > h1,
+.record-core-ready .grant-recipient-header > h1 { display: none; }
+.record-core-scroll { overflow-x: auto; margin-block: var(--sp-16); }
+.record-core-scroll table { width: 100%; border-collapse: collapse; text-align: left; font: var(--type-metadata); }
+.record-core-scroll caption { text-align: left; font-weight: var(--weight-strong); padding-block: var(--sp-8); }
+.record-core-scroll :is(th,td) { padding: var(--sp-8); border-bottom: var(--border-hairline) solid var(--divider-subtle); vertical-align: top; }
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender[data-record-core] > .record-core-figures,
+.record-core-figures { display: flex; flex-wrap: wrap; gap: var(--sp-24); }
+.record-core-figures dt { font: var(--type-metadata); color: var(--ink-soft); }
+.record-core-figures dd { margin: 0; font-weight: var(--weight-strong); }
+
 /* Audit reports and legislative instruments: server-only record pages. The
    sentence under the title is the page's one meta line; each page closes in
    one SourceLine with the attribution in its sheet. */
