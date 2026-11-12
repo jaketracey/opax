@@ -159,16 +159,39 @@ export function BarTitle({
   const ready =
     candidates.every((text) => measured(text) !== undefined) &&
     (!backTitle || backWidth !== undefined);
-  const [unmeasuredKey, setUnmeasuredKey] = useState<string | null>(null);
+  const [measurement, setMeasurement] = useState({
+    key,
+    shown,
+    ready,
+    expired: false,
+  });
+  // Invalidate an earlier wait before rendering a new title or reveal.
+  if (
+    measurement.key !== key ||
+    measurement.shown !== shown ||
+    measurement.ready !== ready
+  )
+    setMeasurement({
+      key,
+      shown,
+      ready,
+      // Keep the outgoing title available throughout its existing fade.
+      expired: measurement.key === key && !shown && measurement.expired,
+    });
   useEffect(() => {
-    setUnmeasuredKey(null);
-    if (!shown || ready) return;
+    if (!measurement.shown || measurement.ready || measurement.expired) return;
     // Native text layout can fail to report. Keep the previous full,
     // tail-truncated title available once the heading has left the content.
-    const timeout = setTimeout(() => setUnmeasuredKey(key), 300);
+    const timeout = setTimeout(
+      () =>
+        setMeasurement((current) =>
+          current === measurement ? { ...current, expired: true } : current,
+        ),
+      300,
+    );
     return () => clearTimeout(timeout);
-  }, [shown, ready, key]);
-  const fallback = !ready && unmeasuredKey === key;
+  }, [measurement]);
+  const fallback = !ready && measurement.expired;
   const namedRoom = barTitleWidth(
     safeWidth,
     trailing,

@@ -630,6 +630,25 @@ test.each([false, true])(
           expect.objectContaining({ toValue: 1, duration: 150 }),
         );
       }
+      // A later reveal gets its own timeout, even for the same subject.
+      act(() =>
+        view.update(<BarTitle title={title} backTitle="Bills" shown={false} />),
+      );
+      // Its opacity remains animated while it fades out, rather than being
+      // forced to zero when the heading returns into view.
+      expect(StyleSheet.flatten(text.props.style).opacity).not.toBe(0);
+      if (!reduceMotion)
+        expect(animation).toHaveBeenLastCalledWith(
+          expect.anything(),
+          expect.objectContaining({ toValue: 0, duration: 150 }),
+        );
+      act(() =>
+        view.update(<BarTitle title={title} backTitle="Bills" shown />),
+      );
+      act(() => jest.advanceTimersByTime(299));
+      expect(text.props.accessibilityElementsHidden).toBe(true);
+      act(() => jest.advanceTimersByTime(1));
+      expect(text.props.accessibilityElementsHidden).toBe(false);
       // Late metrics still restore the measured title and its back mode.
       measureBarTitle(view, { [title]: 80, Bills: 30 });
       expect(text.props.ellipsizeMode).toBe('clip');
