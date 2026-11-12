@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
+import {join} from 'node:path';
+import {buildVicElection} from '../../scripts/build_vic_election.mjs';
+import {withVicElectionBuild} from './helpers/vic-election-build.mjs';
 import {APP_CACHE} from '../src/app-http.ts';
 import {VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE} from '../public/vic-election.js';
 
@@ -10,8 +13,11 @@ const ROOT = '/api/app/v1/vic-election';
 const publicRoot = new URL('../public/',import.meta.url);
 const fixtures = new URL('./fixtures/app-vic-election/',import.meta.url);
 const jsonFile = async path=>JSON.parse(await readFile(new URL(path,publicRoot),'utf8'));
-const data = await jsonFile(VIC_ELECTION_ASSET.slice(1));
-const places = await jsonFile(VIC_ELECTION_PLACES.slice(1));
+// Exact response pins always use these committed inputs, never nightly exports.
+const data = JSON.parse(await readFile(new URL('hub-input.json',fixtures),'utf8'));
+const places = JSON.parse(await readFile(new URL('places-input.json',fixtures),'utf8'));
+const liveData = await jsonFile(VIC_ELECTION_ASSET.slice(1));
+const livePlaces = await jsonFile(VIC_ELECTION_PLACES.slice(1));
 async function compile(entry) {
   const result = await build({entryPoints:[new URL(entry,import.meta.url).pathname],bundle:true,platform:'browser',format:'esm',write:false,external:['node:*'],
     plugins:[{name:'omit-og',setup(b){b.onResolve({filter:/^\.\/og-render$/},()=>({path:'renderer',namespace:'vic-api-test'}));b.onLoad({filter:/.*/,namespace:'vic-api-test'},()=>({contents:'export const renderOgPng=async()=>null; export const renderOgJpeg=renderOgPng; export const renderStoryPng=renderOgPng; export const renderStoryJpeg=renderOgPng;',loader:'js'}));}}]});
@@ -36,7 +42,8 @@ const get=(path='',env=environment(),options={})=>appVicElection(request(path,op
 async function payload(path='',env=environment()) {
   const r=await get(path,env);assert.equal(r.status,200,await r.clone().text());return r.json();
 }
-async function pin(name,value) {
+async function pin(name,path,election=data) {
+  const value=await payload(path,environment(election,places));
   if(process.env.UPDATE_APP_VIC_ELECTION_FIXTURES==='1') {
     await mkdir(fixtures,{recursive:true});
     await writeFile(new URL(name+'.json',fixtures),JSON.stringify(value,null,2)+'\n');
@@ -76,7 +83,7 @@ test('overview projects 88 districts and 8 regions in hub order; every slug reso
   for(const row of [...d.districts,...d.regions]) {
     const detail=await payload('/seat/'+row.slug);assert.equal(detail.name,row.name);assert.equal(detail.kind,row.kind);
   }
-  await pin('overview',d);
+  await pin('overview','');
 });
 
 for(const date of ['2026-11-02T10:00:00+11:00','2026-11-12T10:00:00+11:00','2026-11-26T10:00:00+11:00']) {
@@ -113,7 +120,7 @@ test('recent votes skip untitled motions and duplicate titles, retain source ord
 });
 
 for(const name of ['albert-park','werribee','eureka','bendigo-west','southern-metropolitan']) {
-  test('pinned seat response: '+name,async()=>{await pin(name,await payload('/seat/'+name));});
+  test('pinned seat response from frozen hub: '+name,async()=>{await pin(name,'/seat/'+name);});
 }
 
 test('Albert Park complete payload equals the API contract example',async()=>{
@@ -144,7 +151,7 @@ test('injected candidates keep ballot order, normalise empty party to null, and 
   const d=candidateData();const api=await payload('/seat/albert-park',environment(d));
   assert.deepEqual(api.candidates.list,d.seats[0].candidates.list.map(c=>({...c,party:c.party||null})));
   const overview=await payload('',environment(d));assert.equal(overview.candidates_published,'2026-11-10');
-  assert.equal(overview.districts[0].candidates,3);await pin('albert-park-candidates',api);
+  assert.equal(overview.districts[0].candidates,3);await pin('albert-park-candidates','/seat/albert-park',d);
 });
 
 test('unknown and invalid seat slugs answer JSON 404 without caching',async()=>{
@@ -163,7 +170,7 @@ for(const [q,name] of [['3350','find-3350'],['St Kilda','find-st-kilda'],['Bass'
     const overview=await payload();
     for(const hit of api.hits)for(const {share,...row} of hit.seats)assert.deepEqual(row,[...overview.districts,...overview.regions].find(x=>x.slug===row.slug));
     assert.equal(api.empty,found.length?null:/^\d{4}$/.test(q)?'postcode':'place');
-    assert.equal(api.attribution,places.attribution);assert.equal(api.note,places.note);await pin(name,api);
+    assert.equal(api.attribution,places.attribution);assert.equal(api.note,places.note);await pin(name,'/find?q='+encodeURIComponent(q));
   });
 }
 
@@ -273,4 +280,71 @@ test('shape pin covers every response and nested contract type; internal fields 
   const injected=structuredClone(data);const seat=injected.seats[0];
   injected.private_field='not for the app';seat.result.general.private_field='not for the app';seat.members[0].votes.private_field='not for the app';
   assert.doesNotMatch(JSON.stringify(await payload('/seat/albert-park',environment(injected))),/private_field|detailed_count|interests_available/);
+});
+
+async function liveParity(election,index) {
+  const env=environment(election,index),overview=await payload('',env);
+  const frozen=JSON.parse(await readFile(new URL('overview.json',fixtures),'utf8'));
+  assert.deepEqual(Object.keys(overview).sort(),Object.keys(frozen).sort());
+  for(const key of ['updated','election_day','term_start','term_end','results_fetched','authorisation','corrections'])
+    assert.deepEqual(overview[key],election[key],key);
+  assert.deepEqual(overview.districts.map(s=>s.slug),election.seats.filter(s=>s.kind==='district').map(slug));
+  assert.deepEqual(overview.regions.map(s=>s.slug),election.seats.filter(s=>s.kind==='region').map(slug));
+  assert.equal(overview.candidates_published,election.seats.find(s=>s.candidates)?.candidates.published??null);
+  const now=Date.now(),rendered=JSDOM.fragment(renderVicElection(election,null,{},new Date(now)).html);
+  assert.equal(overview.title,rendered.querySelector('h1').textContent);
+  assert.equal(overview.about,rendered.querySelector('.vic-about').textContent.replace('About this data: ','').replace(' How this page is built','').replace(/^d/,'D'));
+  const dates=[...rendered.querySelectorAll('.vic-dates > div')];
+  overview.key_dates.forEach((r,i)=>{
+    const passed=r.passes_at!==null&&now>=Date.parse(r.passes_at);
+    assert.equal(dates[i].querySelector('dt').textContent,passed?r.passed_label??r.label:r.label);
+    assert.equal(dates[i].querySelector('dd').firstChild.textContent,passed?r.passed_when??r.when:r.when);
+  });
+  for(const seat of election.seats) {
+    const detail=await payload('/seat/'+slug(seat),env);
+    const pinned=JSON.parse(await readFile(new URL(seat.kind==='district'?'albert-park.json':'southern-metropolitan.json',fixtures),'utf8'));
+    assert.deepEqual(Object.keys(detail).sort(),Object.keys(pinned).sort());
+    for(const key of ['kind','name','source_url','electorate_url','roster_date','formerly','created','boundary_note','result'])
+      assert.deepEqual(detail[key],seat[key],seat.name+': '+key);
+    assert.deepEqual(detail.members.map(m=>m.name),seat.members.map(m=>m.name));
+    for(const [i,m] of seat.members.entries()) {
+      for(const key of ['party','href','source_url','speeches','speech_gap','votes'])assert.deepEqual(detail.members[i][key],m[key]);
+      assert.deepEqual(detail.members[i].recent_votes,titledVotes(m));
+    }
+    assert.deepEqual(detail.candidates,seat.candidates?{...seat.candidates,list:seat.candidates.list.map(c=>({...c,party:c.party||null}))}:null);
+    const row=[...overview.districts,...overview.regions].find(s=>s.slug===detail.slug);
+    assert.equal(row.candidates,seat.candidates?.list.length??0);
+    if(seat.kind==='district') {
+      const page=JSDOM.fragment(renderVicElection(election,seat).html);
+      assert.deepEqual(detail.members[0].recent_votes.map(v=>v.title),[...page.querySelectorAll('.vic-votes a')].map(a=>a.textContent));
+    } else assert.deepEqual(detail.districts.map(s=>s.name),seat.districts);
+  }
+  for(const q of ['3350','St Kilda','Bass','allan','9999']) {
+    const api=await payload('/find?q='+encodeURIComponent(q),env),hits=findSeats(q,election,index);
+    const hitShape=h=>({name:h.name,kind:h.kind,seats:h.seats.map(s=>({slug:s.slug,share:s.share}))});
+    assert.deepEqual(api.hits.map(hitShape),hits.map(h=>({name:h.name,kind:h.kind,seats:h.seats.map(x=>({slug:slug(x.seat),share:h.seats.length>1?x.share:null}))})));
+    assert.equal(api.split,hits.some(h=>h.seats.length>1));
+    assert.deepEqual(Object.keys(api).sort(),Object.keys(JSON.parse(await readFile(new URL('find-3350.json',fixtures),'utf8'))).sort());
+  }
+}
+
+test('current built hub and finder retain contract shape and page parity without snapshot values',async()=>{
+  await liveParity(liveData,livePlaces);
+});
+
+test('a scratch build with the next corpus date preserves live parity and every frozen response pin',async()=>{
+  await withVicElectionBuild(async({root,configPath})=>{
+    const corpusPath=join(root,'corpus.json'),corpus=JSON.parse(await readFile(corpusPath,'utf8'));
+    const next=new Date(Date.parse(liveData.updated+'T00:00:00Z')+24*60*60*1000).toISOString();
+    corpus.version=next;await writeFile(corpusPath,JSON.stringify(corpus));
+    await buildVicElection(root,configPath);
+    const rebuilt=JSON.parse(await readFile(join(root,VIC_ELECTION_ASSET),'utf8'));
+    const rebuiltPlaces=JSON.parse(await readFile(join(root,VIC_ELECTION_PLACES),'utf8'));
+    assert.equal(rebuilt.updated,next.slice(0,10));assert.notEqual(rebuilt.updated,data.updated);
+    await liveParity(rebuilt,rebuiltPlaces);
+    await pin('overview','');
+    for(const name of ['albert-park','werribee','eureka','bendigo-west','southern-metropolitan'])await pin(name,'/seat/'+name);
+    for(const q of ['3350','st kilda','bass','allan','9999'])await pin('find-'+q.replaceAll(' ','-'),'/find?q='+encodeURIComponent(q==='st kilda'?'St Kilda':q==='bass'?'Bass':q));
+    await pin('albert-park-candidates','/seat/albert-park',candidateData());
+  });
 });
