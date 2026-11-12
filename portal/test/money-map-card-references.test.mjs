@@ -3,11 +3,12 @@
 // The WebGL engine is swapped for a no-op stub so the real card code runs in jsdom.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
 
 const engineStub = `
-export const webglAvailable = () => true
+export const webglAvailable = () => globalThis.__testMoneyMapWebgl !== false
 export const easeInOut = (t) => t
 const answers = { viewOwned: false, focusOwned: false, reducedMotion: true, viewAngles: { theta: 0, phi: 1 } }
 export class KnowledgeMapEngine {
@@ -39,12 +40,13 @@ const graph = {
 };
 const REFERENCE = /RETURN-FIXTURE|AEC annual return|return reference/;
 
-async function mount(data=graph,options={}) {
-  const dom = new JSDOM('<div id="map" style="width:390px;height:600px"></div>', { url: 'https://opax.test/money', pretendToBeVisual: true });
+async function mount(data=graph,options={}, {url='https://opax.test/money',webgl=true}={}) {
+  const dom = new JSDOM('<div id="map" style="width:390px;height:600px"></div>', { url, pretendToBeVisual: true });
   const { window } = dom;
   const globals = { window, document: window.document, HTMLElement: window.HTMLElement, HTMLButtonElement: window.HTMLButtonElement,
     HTMLAnchorElement: window.HTMLAnchorElement, CustomEvent: window.CustomEvent, Event: window.Event, getComputedStyle: window.getComputedStyle,
     location: window.location, history: window.history, localStorage: window.localStorage, navigator: window.navigator,
+    __testMoneyMapWebgl: webgl,
     matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {} }),
     ResizeObserver: class { observe() {} unobserve() {} disconnect() {} },
     IntersectionObserver: class { observe() {} unobserve() {} disconnect() {} },
@@ -56,6 +58,74 @@ async function mount(data=graph,options={}) {
   const handle = await map.mountMoneyMap(window.document.querySelector('#map'), structuredClone(data), { chrome: 'full',...options });
   return { window, handle };
 }
+
+const publishedGraph=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
+const receiptRanks={
+  donation_only:[['Liberal',1093352],['Labor',1067066],['Nationals',258500],['LNP',50000]],
+  all_types:[['Labor',4699593],['Liberal',3538879],['Nationals',343740],['LNP',86300]],
+};
+
+for(const webgl of [true,false])test(`${webgl?'map':'2D fallback'} receipt selection survives reload and shared links without adding history entries`,async()=>{
+  async function open(url){
+    let view;
+    const mounted=await mount(publishedGraph,{onViewChange:next=>{view=next}},{url,webgl});
+    const select=()=>mounted.window.document.querySelector('select[aria-label="Receipt measure"]');
+    function assertMeasure(measure){
+      assert.equal(select()?.value,measure);
+      const nodes=new Map(view.nodes.map(n=>[n.id,n]));
+      const totals=new Map();
+      for(const edge of view.edges){
+        assert.equal(nodes.get(edge.source)?.industry,'gambling');
+        assert.equal(nodes.get(edge.target)?.kind,'party');
+        const party=nodes.get(edge.target).label;
+        totals.set(party,(totals.get(party)||0)+edge.total);
+      }
+      assert.deepEqual([...totals].sort((a,b)=>b[1]-a[1]),receiptRanks[measure]);
+      assert.equal([...totals.values()].reduce((a,b)=>a+b,0),measure==='donation_only'?2468918:8668512);
+    }
+    function choose(measure){
+      const history=mounted.window.history;
+      const length=history.length;
+      const state={kept:'map host state'};
+      history.replaceState(state,'');
+      const replace=history.replaceState.bind(history);
+      let replacements=0;
+      history.replaceState=(...args)=>{replacements++;return replace(...args)};
+      history.pushState=()=>assert.fail('receipt selection must not add a history entry');
+      select().value=measure;
+      select().dispatchEvent(new mounted.window.Event('change',{bubbles:true}));
+      assert.equal(replacements,1);
+      assert.equal(history.length,length);
+      assert.deepEqual(history.state,state);
+      const url=new URL(mounted.window.location.href);
+      assert.equal(url.searchParams.get('receipt'),measure==='donation_only'?'donations':null);
+      assert.equal(url.searchParams.get('industry'),'gambling');
+      assert.equal(url.searchParams.get('type'),'receipts');
+      assert.equal(url.searchParams.get('keep'),'shared');
+      assert.equal(url.hash,'#connections');
+      assertMeasure(measure);
+      return url.href;
+    }
+    return {...mounted,assertMeasure,choose};
+  }
+  const initial=await open('https://opax.test/money?industry=gambling&type=receipts&keep=shared#connections');
+  let donationLink,allTypesLink;
+  try{
+    initial.assertMeasure('all_types');
+    donationLink=initial.choose('donation_only');
+    allTypesLink=initial.choose('all_types');
+  }finally{initial.handle.destroy()}
+  // A fresh document models a reload; /map is the other shareable map route.
+  for(const link of [donationLink,allTypesLink])for(const pathname of ['/money','/map']){
+    const shared=new URL(link);shared.pathname=pathname;
+    const restored=await open(shared.href);
+    try{
+      const measure=shared.searchParams.has('receipt')?'donation_only':'all_types';
+      restored.assertMeasure(measure);
+      restored.choose(measure==='donation_only'?'all_types':'donation_only');
+    }finally{restored.handle.destroy()}
+  }
+});
 
 test('map controls and cards switch the typed measure and retain it through a year filter',async()=>{
   const typed=structuredClone(graph);

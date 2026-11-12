@@ -64,7 +64,22 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
         option.value = value
       }
       select.value = measure
-      select.addEventListener('change', () => { options.onInteract?.(); route.set('receipt', select.value === 'donation_only' ? 'donations' : 'all'); render() })
+      select.addEventListener('change', () => {
+        options.onInteract?.()
+        const donations = select.value === 'donation_only'
+        route.set('receipt', donations ? 'donations' : 'all')
+        // Full maps keep the measure in shared links without adding history entries.
+        // Embeds and a map being torn down on another route do not own that URL.
+        if ((options.chrome ?? 'full') === 'full' && typeof location !== 'undefined' && typeof history !== 'undefined') {
+          const url = new URL(location.href)
+          if (/^\/(?:money|map)\/?$/.test(url.pathname)) {
+            if (donations) url.searchParams.set('receipt', 'donations')
+            else url.searchParams.delete('receipt')
+            history.replaceState(history.state, '', `${url.pathname}${url.search}${url.hash}`)
+          }
+        }
+        render()
+      })
     }
     const window = period()
     const bounded = window.from > yearMin || window.to < yearMax
