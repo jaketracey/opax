@@ -55,6 +55,13 @@ scripts/e2e.sh <simulator-udid> --all-iphone
 `npm run qa -- --maxWorkers=8` forwards Jest options to the test stage. The
 default is two workers; explicit worker limits also work with `npm test`.
 
+`npm run lint` caches file results by content under `node_modules/.cache/eslint`.
+Config, local rules/policies, dependency versions and file membership invalidate
+that cache. The type-aware `opax/hermes-builtins` rule runs separately without
+caching, so edits to imported types still recheck unchanged callers. A one-file
+edit reuses the other rules' results for unchanged files. Use
+`OPAX_LINT_NO_CACHE=1 npm run lint` for the combined uncached check.
+
 With no journeys, `e2e.sh` runs 01-04 only. `--all-iphone` runs every iPhone
 journey that shares the default fixture and text size, in one locked device run
 that stops at the first failure. `--list-iphone` prints that list and the

@@ -46,6 +46,8 @@ if [ "$UPLOAD" = 1 ] && [ -z "$EXPECTED_VOICE_MODE" ]; then
 fi
 source scripts/qa-env.sh
 if [ -f private/local.env ]; then set -a; source private/local.env; set +a; fi
+# Release QA always runs in this worktree, regardless of a shared pass record.
+unset OPAX_QA_PASS_RECORD_DIR
 # An explicit caller mode wins over either ignored local configuration file.
 if [ "$CALLER_VOICE_MODE_SET" = x ]; then export OPAX_PRODUCTION_VOICE=$CALLER_VOICE_MODE; fi
 # Values remain local; do not enable tracing or echo any signing arguments.
@@ -152,7 +154,8 @@ verify() {
 }
 verify "$ARCHIVE/Products/Applications/OPAX.app" archive
 echo 'Exporting an App Store Connect IPA locally…'
-scripts/capacity.sh
+# No capacity wait here: the export is about 30 seconds of signing and
+# packaging, and a wait for the load to fall cost build 42 three minutes.
 release_step export
 IPAS=("$OUT/export/"*.ipa)
 [ "${#IPAS[@]}" = 1 ] && [ -f "${IPAS[0]}" ] || { echo 'Expected exactly one IPA.' >&2; exit 1; }

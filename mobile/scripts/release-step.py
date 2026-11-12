@@ -63,7 +63,12 @@ def run(step, mobile, out, expected_voice_mode=None):
                 "-authenticationKeyIssuerID", os.environ["ASC_ISSUER_ID"]]
         archive = out / "OPAX.xcarchive"
         if step == "archive":
-            cmd = ["nice", "-n", "10", "xcodebuild", "-jobs", "4", "-workspace", "ios/OPAX.xcworkspace",
+            # Parallel compile jobs: 4 is the shared-host default; a quiet Mac can
+            # take OPAX_XCODE_JOBS=8. The output does not depend on it.
+            jobs = os.environ.get("OPAX_XCODE_JOBS", "4")
+            if not re.fullmatch(r"[1-9][0-9]?", jobs):
+                raise ReleaseError("OPAX_XCODE_JOBS must be a small positive integer.")
+            cmd = ["nice", "-n", "10", "xcodebuild", "-jobs", jobs, "-workspace", "ios/OPAX.xcworkspace",
                    "-scheme", "OPAX", "-configuration", "Release", "-destination", "generic/platform=iOS",
                    "-archivePath", str(archive), "-derivedDataPath", str(out / "DerivedData"),
                    "DEVELOPMENT_TEAM=" + os.environ["APPLE_TEAM_ID"], "CODE_SIGN_STYLE=Automatic", *auth, "archive"]

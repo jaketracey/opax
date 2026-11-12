@@ -1,0 +1,71 @@
+// OPAX Android build speed. scripts/build-android.sh and scripts/build-play.sh pass this
+// with --init-script. It changes how Gradle schedules, reuses and caches work, never the
+// inputs of a task, so the APK and AAB are the same as a build without it.
+//
+//   OPAX_GRADLE_BUILD_CACHE  local build cache directory (default <Gradle user home>/opax-build-cache)
+//   OPAX_NATIVE_JOBS         total C/C++ compile and link jobs across all CMake builds (default 6)
+//   OPAX_CCACHE              ccache binary to launch C/C++ compilers with (unset: no ccache)
+import org.gradle.api.services.BuildService
+import org.gradle.api.services.BuildServiceParameters
+
+abstract class OpaxNativeBuildSlots implements BuildService<BuildServiceParameters.None> {}
+
+def env = System.getenv()
+def cacheDir = new File(env.OPAX_GRADLE_BUILD_CACHE ?: new File(gradle.gradleUserHomeDir, 'opax-build-cache').path)
+
+beforeSettings { settings ->
+  settings.buildCache {
+    local {
+      directory = cacheDir
+    }
+  }
+}
+
+// Bound native parallelism: at most `nativeTasks` CMake builds run at once, each with a
+// Ninja job pool of `poolSize`, so a cold build never runs more than OPAX_NATIVE_JOBS
+// compilers next to the emulators. Job pools and the compiler launcher do not change the
+// compile commands, so object files are unchanged.
+def nativeJobs = Math.max(1, (env.OPAX_NATIVE_JOBS ?: '6') as int)
+def nativeTasks = nativeJobs >= 4 ? 2 : 1
+def poolSize = Math.max(1, nativeJobs.intdiv(nativeTasks))
+def cmakeArgs = [
+  "-DCMAKE_JOB_POOLS=opax_native=${poolSize}".toString(),
+  '-DCMAKE_JOB_POOL_COMPILE=opax_native',
+  '-DCMAKE_JOB_POOL_LINK=opax_native',
+]
+def ccache = env.OPAX_CCACHE ?: ''
+if (ccache) {
+  cmakeArgs += ["-DCMAKE_C_COMPILER_LAUNCHER=${ccache}".toString(), "-DCMAKE_CXX_COMPILER_LAUNCHER=${ccache}".toString()]
+}
+
+def nativeSlots = gradle.sharedServices.registerIfAbsent('opaxNativeBuildSlots', OpaxNativeBuildSlots) {
+  maxParallelUsages = nativeTasks
+}
+
+gradle.allprojects { p ->
+  p.tasks.configureEach { t ->
+    def type = t.class.name
+    if (type.startsWith('com.android.build.gradle.tasks.ExternalNativeBuildTask')) {
+      t.usesService(nativeSlots)
+    }
+    // The React Native bundle task only tracks JS/TS sources under the project root, not
+    // JSON, assets, node_modules or the OPAX_* environment that app.config.ts reads. The old
+    // scripts always rebundled because Gradle's history was wiped; keep that guarantee now
+    // that history survives between builds.
+    if (t.name ==~ /createBundle.+JsAndAssets/) {
+      t.outputs.upToDateWhen { false }
+    }
+  }
+  // Registered before the Android plugin's own afterEvaluate, so this finalizeDsl runs after
+  // the React Native plugin has pointed the app at its CMake project.
+  p.afterEvaluate {
+    def components = p.extensions.findByName('androidComponents')
+    if (components != null) {
+      components.finalizeDsl { ext ->
+        if (ext.externalNativeBuild.cmake.path != null) {
+          ext.defaultConfig.externalNativeBuild.cmake.arguments.addAll(cmakeArgs)
+        }
+      }
+    }
+  }
+}
