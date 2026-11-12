@@ -26,6 +26,8 @@ import { researchCreditCooldown, isResearchCreditError, type ResearchCreditCoold
 import {answerDecision} from './research-coherence.mjs'
 import { isBillSpeechQuestion, isRecordCountQuestion, recordIntentText } from './ask-scope-intent'
 import { requestedPersonSlot } from './ask-person-slot'
+import {researchTrace} from './research-trace'
+import {remunerationFollowUp} from './ask-followup'
 import { resolvePersonName } from './person-name-matching'
 import { recordAnswerLines } from './research-record-answer'
 import { broadAbsenceQuestion, verifiedAbsenceCount, absenceClaim } from './research-absence'
@@ -211,6 +213,7 @@ export function createResearch(options: ResearchOptions): Research {
           }
           steps.push(step); results.push(result); observations.push({ step, result, round })
         }
+        researchTrace('tool.result', {question,round,step,result})
         return output(result)
       })
       const settled = task.then(() => {}, () => {})
@@ -381,7 +384,7 @@ export function createResearch(options: ResearchOptions): Research {
         const start = Array.from(text).length
         text += fact.text
         citations[`fact-${fact.id}/t/body/0`] = [[start, Array.from(text).length]]
-        sources.push({ resource: `fact-${fact.id}`, slug: '', title: fact.cite.label, href: fact.cite.url, url: fact.cite.url, snippet: fact.text, cited: true, kind: fact.cite.kind, ...(fact.receipt ? { receipt: fact.receipt } : {}), ...(fact.entities?.length ? { entities: fact.entities } : {}), ...(coverage ? { coverage: true } : {}) })
+        sources.push({ resource: `fact-${fact.id}`, slug: '', title: fact.cite.label, href: fact.cite.url, url: fact.cite.url, snippet: fact.text, cited: true, kind: fact.cite.kind, ...(fact.cite.remuneration?{remuneration:fact.cite.remuneration}:{}), ...(fact.receipt ? { receipt: fact.receipt } : {}), ...(fact.entities?.length ? { entities: fact.entities } : {}), ...(coverage ? { coverage: true } : {}) })
       }
       if (points) {
         const offset = text ? Array.from(text).length + 1 : 0
@@ -473,6 +476,7 @@ export function createResearch(options: ResearchOptions): Research {
           const roster = await (draftRoster ?? deps.asset('/parliamentarians.json'))
           const reasons: string[] = [], why = (reason: string) => { if (reasons.length < 12) reasons.push(reason) }
           const answer = draftAnswer(args, roster, why)
+          researchTrace('answer.verify', {question,args,reasons,answer,tally:stats.answer})
           stats.rejections!.push(...reasons.slice(0, 24 - stats.rejections!.length))
           if (answer) { qualitative = answer; finished = true; return { tool: 'answer', ok: true, data: { passages: answer.sources }, cite: [], notes: [] } }
           // Nothing usable: a person the question cannot pin down never gets an answer, and a repair turn is only
@@ -547,6 +551,15 @@ export function createResearch(options: ResearchOptions): Research {
       check()
       if (credits.blocked()) fail('research_credit_exhausted')
       if (!options.model) fail('missing_key')
+      const carried = remunerationFollowUp(question, options.input?.context ?? [])
+      if (carried) {
+        await invoke({tool:'annual_reports',args:carried.record_id ? {view:'remuneration',record_id:carried.record_id} : {view:'remuneration',person:carried.person,...(carried.body?{body:carried.body}:{}),...(carried.year?{year:carried.year}:{}),limit:5}})
+        const row = results.flatMap(r => Array.isArray(r.data?.rows) ? r.data.rows as Record<string,unknown>[] : []).find(r => String(r.name).toLowerCase() === carried.person.toLowerCase())
+        if (row) {
+          Object.assign(context.named,{people:[String(row.name)],ambiguous:false,unresolved:false})
+          constraints.people=[String(row.name)]
+        }
+      }
       if (/\bact\b|\baustralian capital territory\b|\bA\.C\.T\.(?=\W|$)/i.test(question) || options.input?.state === 'act') {
         const titles = await Promise.race([loadStatuteTitles(context.deps.asset, controller.signal), stopped])
         constraints = extractAskConstraints(question, context.period, context.named, options.input as Record<string, unknown> ?? {}, titles)
@@ -555,7 +568,7 @@ export function createResearch(options: ResearchOptions): Research {
       }
       await Promise.race([generateText({
         model: options.model!, instructions, tools, toolChoice: 'required',
-        prompt: JSON.stringify({ question, period: context.period, namedScope: context.named, constraints, budget: { rounds: limits.rounds, calls: RESEARCH_MAX_CALLS, answer_target_ms: ASK_ANSWER_TARGET_MS, wall_ms: limits.wallMs }, conversation: options.conversation ?? [] }),
+        prompt: JSON.stringify({ question, period: context.period, namedScope: context.named, constraints, budget: { rounds: limits.rounds, calls: RESEARCH_MAX_CALLS, answer_target_ms: ASK_ANSWER_TARGET_MS, wall_ms: limits.wallMs }, conversation: options.conversation ?? [], ...(results.length?{prior_records:results.map(output),prior_record_note:'These records were re-read for the person in the previous answer. Answer their role from these records and search for further records about the same person if needed. A non-parliamentarian need not have Hansard speeches.'}:{}) }),
         maxRetries: 0, abortSignal: controller.signal, stopWhen: [isStepCount(limits.rounds), () => finished || !!failed],
         prepareStep: async ({ stepNumber, messages }) => {
           await settle()

@@ -127,11 +127,13 @@ test('clean SSE deltas replay unchanged when only metadata is present',async()=>
   assert.deepEqual(JSON.parse(result.match(/event: done\ndata: (.+)/)[1]),input)
 })
 
-test('the no-question rollback boundary keeps legacy prose unchanged',async()=>{
+test('the no-question boundary normalises legacy punctuation and remaps citations',async()=>{
   const raw='Disclosed receipt: Example Holdings → Example Party — $20,000.00 in disclosed political receipts; 2 records. Aggregated connection, not an individual gift.'
   const input={answer:raw,citations:{'receipt/t/body/0':[[0,Array.from(raw).length]]},sources:[source('receipt',raw)]}
   const out=await(await api.withAnswerLanguage(Response.json(input))).json()
-  assert.deepEqual(out,input)
+  assert.equal(out.answer,raw.replace(' — ', ', '))
+  assert.deepEqual(out.citations,{'receipt/t/body/0':[[0,Array.from(out.answer).length]]})
+  assert.deepEqual(out.sources,input.sources)
 })
 
 test('specific limitations recover applicable note-only sources without treating spare records as notes',()=>{

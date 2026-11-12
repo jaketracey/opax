@@ -52,14 +52,14 @@ function cited(out, text) {
 test('MN-GRNT-014: the real aggregate and individual award payloads produce one total followed by notable grants', async () => {
   const raw = answer(inputFor('MN-GRNT-014'));
   assert.match(raw.answer, /^The Trustee for Mantiyupwi Family Trust received \$5,941,767\.00 across 4 recorded federal grants\./);
-  assert.match(raw.answer, /\n\n- Tiwi Islands Visitor Welcome Centre Project: \$4,092,000\.00/);
+  assert.match(raw.answer, /\n\nTiwi Islands Visitor Welcome Centre Project: \$4,092,000\.00/);
   assert.equal(raw.answer.match(/Tiwi Islands Visitor Welcome Centre Project/g).length, 1);
   assert.doesNotMatch(raw.answer, /Grant:|—|…|^;/m);
   const result = await api.callTool(env, 'grants', { operation: 'totals', recipient: 'The Trustee for Mantiyupwi Family Trust' });
   assert.equal(result.total_aud, 5941767);
   const out = answer(toolInput('MN-GRNT-014', result));
   assert.match(out.answer, /^The Trustee for Mantiyupwi Family Trust received \$5,941,767 across 4 federal grant awards/);
-  assert.match(out.answer, /\n\n- Tiwi Islands Visitor Welcome Centre Project: \$4,092,000/);
+  assert.match(out.answer, /\n\nTiwi Islands Visitor Welcome Centre Project: \$4,092,000/);
   cited(out, '$5,941,767'); cited(out, '$4,092,000');
 });
 
@@ -106,8 +106,8 @@ test('MN-STAT-006: exact campaign matching exposes the recorded category cost, p
 test('DT-FYR-004: a party total leads the real mixed aggregate and donor-source facts', async () => {
   const input = inputFor('DT-FYR-004'), out = answer(input);
   assert.match(out.answer, /^LNP received \$6,575,931 in federal disclosed receipts across 982 receipts in financial year 2019-20\./);
-  assert.match(out.answer, /\n\n- Altum Pty Ltd provided \$1,659,674/);
-  assert.match(out.answer, /\n\n- Macquarie Telecom provided \$189,500/);
+  assert.match(out.answer, /\n\nAltum Pty Ltd provided \$1,659,674/);
+  assert.match(out.answer, /\n\nMacquarie Telecom provided \$189,500/);
   cited(out, '$6,575,931');
   // Reproduce a writer that keeps only the example donor: the checked aggregate must survive both revisions.
   const draft = { answer_decision: 'answer', sentences: [{ text: 'Altum Pty Ltd provided $1,659,674 in disclosed receipts to LNP in financial year 2019-20.', facts: [input.facts.find(f => f.source.receipt?.source === 'Altum Pty Ltd').id] }] };

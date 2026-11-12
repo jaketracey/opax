@@ -1,11 +1,12 @@
 import { searchCatalog, type CatalogRecord } from './catalog-search'
 import { tokens } from './catalog-query.mjs'
 import { payEvidence } from './ask-pay'
+import type {SourceTurn} from './ask-followup'
 
 export interface RecordQuestion {
   question?: string; kind?: string; speaker?: string; party?: string
   since?: string; until?: string; state?: string; chamber?: string; topic?: string; from?: string; to?: string
-  context?: { author?: string; text?: string }[]
+  context?: SourceTurn[]
 }
 
 // Remove question scaffolding, retaining names, industries and record IDs.

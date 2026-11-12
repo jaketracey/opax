@@ -1,6 +1,6 @@
 /** Measures are checked against the cited source family, never against question wording. */
 import {sentenceParts} from './research-claim-audit.mjs'
-type Evidence={kind?:unknown;url?:unknown;href?:unknown;snippet?:unknown;title?:unknown;receipt?:unknown;coverage?:unknown;speaker?:unknown;claim_atoms?:unknown}
+type Evidence={kind?:unknown;url?:unknown;href?:unknown;snippet?:unknown;title?:unknown;receipt?:unknown;remuneration?:unknown;coverage?:unknown;speaker?:unknown;claim_atoms?:unknown}
 type Measure='money'|'speeches'|'votes'|'mentions'
 const moneyAction=/\b(?:takes?|took|taken|gets?|got|receiv(?:e[sd]?|ing)|donat(?:e[sd]?|ing)|gave|given|paid|pays?|earned|raised|contributed|funded)\b/i
 const financial=/\b(?:money|donations?|funding|receipts?|dollars?|salary|salaries|expenses?|payments?|loans?)\b/i
@@ -40,7 +40,8 @@ function evidenceMeasures(source:Evidence):Set<Measure> {
  // A dollar figure mentioned in Hansard never makes Hansard financial evidence.
  const speech=['speech','hansard'].includes(kind)||typeof source.speaker==='string'&&!!source.speaker||/\/doc\/(?:speech|hansard|committee)-/.test(url)
  const financialAtoms=Array.isArray(source.claim_atoms)&&source.claim_atoms.some(a=>a&&typeof a==='object'&&'unit' in a&&typeof a.unit==='string'&&a.unit.startsWith('AUD')&&'metric' in a&&['salary','base_salary','grants','contracts','receipts','median_personal_income','median_household_income'].includes(String(a.metric)))
- if(!speech&&kind!=='count'&&(kind==='receipt'||kind==='money'||!!source.receipt||financialAtoms||
+ const annualPay=kind==='record'&&/\b(?:19|20)\d{2}-\d{2} annual report\b[^:]*: total remuneration \$[\d,]+/.test(text)
+ if(!speech&&kind!=='count'&&(kind==='receipt'||kind==='money'||!!source.receipt||!!source.remuneration||annualPay||financialAtoms||
    kind==='export'&&/\b(?:income|rent|mortgage)\b/i.test(text)&&moneyAmount.test(text)||
    /\/(?:money(?:[/?#]|$)|donor\/|party\/|pay(?:[/?#.]|$)|expenses?(?:[/?#]|$)|grants?(?:[/?#]|$)|contracts?(?:[/?#]|$)|subject\/(?:supplier|recipient)\/|graph\/(?:money|aec-extras))/.test(url)&&(financial.test(text)||moneyAmount.test(text))))out.add('money')
  if(speech)out.add('speeches')

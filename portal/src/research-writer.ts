@@ -1,4 +1,5 @@
 import { generateText } from 'ai'
+import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
 import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, payRate, usableFact, type WritingInput } from './research-writing'
 import { researchTurnReservationUsd } from './research-budget'
@@ -98,6 +99,7 @@ export function createAnswerWriter(options: ResearchOptions) {
         let raw;try{raw=JSON.parse(result.text.replace(/^```(?:json)?\s*|\s*```$/g,''))}catch{return fallback()}
         lastDraft=draftWrittenAnswer(raw,activeInput)
         const verified=verifyWrittenAnswer(raw,activeInput)
+        researchTrace('writer.verify', {question:input.question,raw,verified})
         if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback()}
         const audit=auditPayload(input.question,verified)
         const checked=ground(verified)

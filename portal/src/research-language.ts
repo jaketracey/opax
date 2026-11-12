@@ -59,6 +59,7 @@ export function plainAnswerPayload<T extends Record<string, unknown>>(payload:T)
     replace(/[^\n]+/g,paragraph=>unbalanced(paragraph)?paragraph.split(/(?<=[.!?])\s+/).filter(sentence=>!unbalanced(sentence)).join(' '):paragraph)
   })
   return rewriteAnswerPayload(payload,replace=>{
+  replace(/^[ \t]*[-*•—–]+[ \t]+/gm,'')
   // Match internal references in context; public titles and literal source language are protected.
   replace(/[,;]\s*(?:(?:and|so)\s+)?[^.!?;\n]+(?:[.!?]|$)/g,m=>ANSWER_INTERNAL_LANGUAGE.test(m)&&! /\d/.test(m)?'.':m)
   replace(/\bcatalog(?:ue)? hits\b/gi,'matching records')
@@ -86,4 +87,14 @@ export function plainAnswerPayload<T extends Record<string, unknown>>(payload:T)
   })
   replace(/^\s+|\s+$/g,'')
   },true)
+}
+
+/** Apply display punctuation after evidence checks. A quote needing punctuation edits becomes a paraphrase. */
+export function displayAnswerPayload<T extends Record<string,unknown>>(payload:T):T {
+  const quotes=quotationSpans(String(payload.answer??''))
+  return rewriteAnswerPayload(payload,replace=>{
+    for(const q of quotes.filter(q=>q.value.includes('—')).reverse())replace(new RegExp(`(?<=^[\\s\\S]{${q.at}})[\\s\\S]{${q.end-q.at}}`,'g'),q.value)
+    replace(/^[ \t]*[-*•—–]+[ \t]+/gm,'')
+    replace(/\s*—\s*/g,', ')
+  })
 }

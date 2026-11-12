@@ -11525,36 +11525,17 @@ async function sendChat(question, carry) {
   // A user turn travels as the question the record was actually asked: the
   // money path's resolved question, or the Worker's standalone rewrite of a
   // follow-up, and only otherwise the words as typed.
-  const context = chatThread
-    .map((m) => ({ author: m.role === "answer" ? "answer" : "user", text: m.role === "user" && typeof m.fundingQuestion === "string" ? m.fundingQuestion : m.role === "user" && typeof m.askedAs === "string" ? m.askedAs : m.text,
-      ...(m.role === "answer" ? {sources:(m.sources || []).map(s => Object.fromEntries(['slug','kind','source','state','chamber'].filter(key => s[key]).map(key => [key,s[key]])))} : {}) }))
-    .slice(-12);
+  const {context, prior_resources: priorResources} = (await import("/chat-context.js?v=followup-1")).chatContext(chatThread, q);
   // A chip's question was proven against a passage retrieved for the PREVIOUS
   // answer; fresh retrieval on the chip's wording alone can miss that passage,
   // so the proof travels with the click as one extra context turn (appended
-  // after the slice — it must never be trimmed away). Typed follow-ups carry
-  // nothing: they are pure re-retrieval.
+  // after the slice, so it cannot be trimmed away). Typed follow-ups carry
+  // the cited source hints above and re-read the original records.
   if (carry?.evidence) {
     context.push({
       author: "answer",
       text: `From the record${carry.source ? ` (${carry.source})` : ""}: "${carry.evidence}"`,
     });
-  }
-  // The records the last two answers cited travel too: the Worker gives each
-  // its own pinned retrieval pass, so a follow-up keeps the conversation's
-  // records in the pool whatever its new wording finds (corpuskit's
-  // prior-paper prequeries). Only CITED records are pinned: pinning the
-  // uncited rest let one answer's stray retrieval (Mining records, say) come
-  // back uncited on the next turn, get pinned again and stick to every later
-  // question (TestFlight report, matched by the app's b17bf19e8).
-  const priorResources = [];
-  for (const m of chatThread.filter((t) => t.role === "answer").slice(-2).reverse()) {
-    const sources = Array.isArray(m.sources) ? m.sources : [];
-    for (const s of sources.filter((x) => x?.cited)) {
-      // Platform record ids only: the local records an answer cites travel as
-      // USER_CONTEXT_n extra context and cannot be pinned.
-      if (typeof s?.resource === "string" && /^[0-9a-f]{32}$/i.test(s.resource) && !priorResources.includes(s.resource)) priorResources.push(s.resource);
-    }
   }
   const userTurn = { role: "user", text: q };
   chatThread.push(userTurn);

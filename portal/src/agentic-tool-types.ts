@@ -11,7 +11,7 @@ export interface ToolDeps {
   signal?: AbortSignal
   withSignal?: (signal: AbortSignal) => Pick<ToolDeps, 'kb' | 'asset'>
 }
-export interface Cite { kind: 'count' | 'record' | 'export' | 'person' | 'speech'; label: string; url: string; value?: number | string; related?: RelatedCite[] }
+export interface Cite { remuneration?: import('./research-types').RemunerationRecord; kind: 'count' | 'record' | 'export' | 'person' | 'speech'; label: string; url: string; value?: number | string; related?: RelatedCite[] }
 export interface ToolResult { coverage?: import('./ask-constraints').Coverage; tool: string; ok: boolean; error?: string; data?: Json; cite: Cite[]; query?: unknown; notes: string[]; ms?: number
   /** A page listing the whole selection this result counted or ranked (not one of its rows): the coverage row opens it. */
   list?: string }
