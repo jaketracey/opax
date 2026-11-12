@@ -364,7 +364,7 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
       const rest=ranked.slice(rows.length),amount=rest.reduce((sum,r)=>sum+r.total_aud,0),records=rest.reduce((sum,r)=>sum+r.receipts,0),all=rest.reduce((sum,r)=>sum+r.all_types_aud,0),other=rest.reduce((sum,r)=>sum+r.other_receipts_aud,0)
       const start=Array.from(answer).length,includesLoans=result.measure==='receipts_all'&&industry==='finance'?' (includes loans)':''
       answer+=`\n| Other ${fromDonors||allFlows?'sources':'parties'} (${more} more on the map) | ${aud(amount)}${includesLoans} | ${share(amount)} | ${result.typed&&result.measure!=='receipts_all'?aud(all)+(other>=all/2&&other>0?' (includes loans)':''):records.toLocaleString('en-AU')} |`
-      cite(start,'Remaining sources',result.sources[0].url,`${aud(amount)} in ${measure_label}, ${period}; ${records} records across ${more} sources; share ${share(amount)}.`)
+      cite(start,'Remaining sources',result.sources[0].url,`${aud(amount)} in ${measure_label}, ${period}; ${records} records across ${more} sources; share ${share(amount)}${result.typed&&result.measure!=='receipts_all'?`; all receipt types ${aud(all)}`:''}.`)
     }
     const start=Array.from(answer).length,includesLoans=result.measure==='receipts_all'&&industry==='finance'?' (includes loans)':''
     const allTotal=aud(result.all_types_aud)+(result.other_receipts_aud>=result.all_types_aud/2&&result.other_receipts_aud>0?' (includes loans)':'')
