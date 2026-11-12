@@ -20,7 +20,7 @@ const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=d8900666f3").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=57c205a2c9').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=583d840b52').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=a6c0908d64').then(module => { askPerson = module; });
 let uiLabels;
@@ -1286,7 +1286,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=ad0bc4ecc3");
+    const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1510,7 +1510,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=e2802a59d0' : '/ledger.js?v=acfff602a7');
+    const mod = await import(grants ? '/grants.js?v=235e3653b2' : '/ledger.js?v=b992a7ebac');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1540,7 +1540,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=8806494137');
+    const mod = await import('/money-explain.js?v=cdfc62965a');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1559,7 +1559,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=7bb06b0633');
+    const mod = await import('/grant-recipient.js?v=994ffd5471');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1657,7 +1657,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ad0bc4ecc3"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=ee22626748"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=2e9dfab24a"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=2fa8fbe642"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1798,7 +1798,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=65d88ff71a");
+    const module = await import("/suppliers.js?v=d6685c3147");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -1865,7 +1865,7 @@ async function openAgencyPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading agencies…</p>';
   try {
-    const module = await import("/agencies.js?v=agency-withheld-20261110");
+    const module = await import("/agencies.js?v=agency-identity-20261112");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3906,7 +3906,7 @@ function votesFor(name, pid) {
 
 let personUrls = null;
 const personUrl = name => personUrls?.personUrl(name) || '/subject/person';
-const personUrlsReady = import('/canonical-urls.js?v=79dfba8774').then(module => { personUrls = module; });
+const personUrlsReady = import('/canonical-urls.js?v=6c889d487d').then(module => { personUrls = module; });
 
 function subjectHash(kind, label) {
   // Person links use the roster's verified slugs and reviewed name aliases.
@@ -4498,7 +4498,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ad0bc4ecc3");
+    const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -5327,7 +5327,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=b45a181d68'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=9d4f6badb1'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5490,7 +5490,7 @@ async function renderPartyDebts(label, sections) {
  *  directory's date join the figures' source sheet. Nothing shows if the
  *  directory cannot be read. */
 async function renderPartyMembers(label, body, key) {
-  const data = await loadParliamentarians();
+  const [data, partyPage] = await Promise.all([loadParliamentarians(), loadPartyPage()]);
   if (currentSubjectKey !== key || !data?.people?.length) return;
   const identity = (person) => person.pid ? `pid:${person.pid}` : `name:${String(person.full || person.name).trim().toLowerCase()}`;
   const sitting = new Set(), speakers = new Set();
@@ -5500,8 +5500,10 @@ async function renderPartyMembers(label, body, key) {
   }
   const directoryParty = data.people.flatMap((person) => [person.party, ...(person.parties || [])])
     .find((party) => party && samePartyLabel(party, label)) || label;
+  const independent = partyPage.isIndependent(label);
+  const noun = independent ? (sitting.size === 1 ? "parliamentarian" : "parliamentarians") : (sitting.size === 1 ? "member" : "members");
   if (sitting.size) body.querySelector(".subject-tag .entry-active")?.insertAdjacentHTML("beforebegin",
-    `<a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} sitting ${sitting.size === 1 ? "member" : "members"}</a> · `);
+    `<a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} sitting ${noun}</a> · `);
   body.querySelector("#entry-flows .ui-sheet-facts")?.insertAdjacentHTML("beforeend",
     `<div><dt>Members</dt><dd>${esc(`${sitting.size.toLocaleString()} sitting; ${speakers.size.toLocaleString()} recorded ${speakers.size === 1 ? "speaker" : "speakers"} since ${String(data.meta?.since || "1993").slice(0, 4)}, with at least ${Number(data.meta?.floor) || 5} speeches`)}${
       data.meta?.generated ? ` (directory, ${esc(fmtDate(data.meta.generated))})` : ""}. Sitting members use their current party; member IDs counted once.</dd></div>`);
@@ -5547,21 +5549,19 @@ async function renderRosterParty(segment, key, body) {
     loadParliamentarians(), loadPartyMembers(), loadPartyPage(), loadPartySpeeches(), ...states.map(loadMoneyFile)]);
   if (currentSubjectKey !== key) return;
   const sources = { money: [moneyData, ...stateFiles], roster, divisions };
-  let label = partyPage.resolvePartyLabel(segment, partyPage.partyLabels(sources));
-  // The record's own party labels are a live facet: asked only when the files do not know the name.
-  if (!label) label = partyPage.resolvePartyLabel(segment, partyPage.partyLabels({ ...sources, live: await aggregateApi("/api/parties").catch(() => null) }));
+  const page = partyPage.resolvePartyPage(segment, partyPage.canonicalPartyPages(sources));
   if (currentSubjectKey !== key) return;
   const sections = $("subject-sections");
   const box = $("subject-infobox");
   // A file that failed to load cannot vouch that the name is unknown: say so rather than "not found".
-  if (!label && (!roster || !divisions || stateFiles.some((file) => !file))) {
+  if (!page && (!roster || !divisions || stateFiles.some((file) => !file))) {
     $("subject-title").textContent = "Party";
     subjectTag(body).innerHTML = `<span role="alert">This party's record could not load just now. <a href="${esc(location.pathname + location.search)}">Try again</a></span>`;
     sections.innerHTML = "";
     box.innerHTML = "";
     return;
   }
-  if (!label) {
+  if (!page) {
     $("subject-title").textContent = "Party not found";
     subjectTag(body).innerHTML = `<span>This party isn't in OPAX's record. <a href="/subject/party">All parties</a></span>`;
     sections.innerHTML = "";
@@ -5569,10 +5569,10 @@ async function renderRosterParty(segment, key, body) {
     return;
   }
   // A code the roster files under ("JLN", "DLP") is titled with the party's own name.
-  const code = /^[A-Z]{2,5}$/.test(label) ? uiLabels.PARTY_MAP[label.toLowerCase()]?.[1] : null;
-  $("subject-title").textContent = (code && uiLabels.PARTY_NAMES[code]?.[1]) || label;
-  const canonical = subjectHash("party", label);
-  if (canonical && canonical !== location.pathname) replaceRoute(canonical);
+  const label = page.label;
+  const independent = partyPage.isIndependent(label);
+  $("subject-title").textContent = page.name;
+  if (page.href !== location.pathname) replaceRoute(page.href);
   currentSubjectKey = key = `party:${label}`;
   setCrumbs(crumbsFor("/subject/party", label));
   const members = partyPage.partyMembers(label, { roster, divisions, same: samePartyLabel });
@@ -5582,8 +5582,8 @@ async function renderRosterParty(segment, key, body) {
   const first = Math.min(...everyone.map((m) => m.first || 9999));
   const last = Math.max(0, ...everyone.map((m) => m.last || 0));
   subjectTag(body).innerHTML = [
-    partyChipHTML(label, { full: true }) || `<span>${esc(label)}</span>`,
-    first < 9999 ? `<span class="entry-active">Members in the record ${esc(yearSpan(first, last))}</span>` : "",
+    independent ? `<span>${esc(partyPage.INDEPENDENTS_DESCRIPTION)}</span>` : partyChipHTML(label, { full: true }) || `<span>${esc(label)}</span>`,
+    first < 9999 ? `<span class="entry-active">${independent ? 'Parliamentarians' : 'Members'} in the record ${esc(yearSpan(first, last))}</span>` : "",
   ].filter(Boolean).join(" · ");
   body.querySelector(".subject-head").insertAdjacentHTML("beforeend", `<div class="page-actions entry-actions">
     ${speeches ? actionBtn("search", partySpeechSearch(speeches.label), "Their speeches", { primary: true }) : ""}
@@ -5591,7 +5591,7 @@ async function renderRosterParty(segment, key, body) {
       { href: askHash(`What has parliament said about ${partyAskName(label)}?`), label: "Ask what parliament said about them" },
       { href: searchHash(`"${label}"`, {}), label: "Search mentions in the record" },
       { href: "/subject/party", label: "All parties" },
-    ], "More about this party")}
+    ], independent ? "More about independents" : "More about this party")}
   </div>`);
   box.classList.add("entry-rail");
   box.innerHTML = entryRailHTML();
@@ -7281,12 +7281,12 @@ function topicIndexDescription(slug) {
 // DIR_CHUNK with a "Show more" button so 1,400 people stay instant.
 
 const DIRECTORY_KINDS = {
-  person: "Parliamentarians", party: "Parties", donor: "Receipt sources", supplier: "Suppliers", agency: "Agencies",
+  person: "Parliamentarians", party: "Parties and independents", donor: "Receipt sources", supplier: "Suppliers", agency: "Agencies",
   campaigner: "Campaigners & third parties", electorate: "Electorates",
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=d4d1ba422b").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=99e1eeba7e").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -7365,17 +7365,19 @@ function loadParliamentarians() {
       try {
         const module = await loadElectorateModule();
         const reference = await module.loadPeople();
+        await personUrlsReady;
+        const nameKey = personUrls.personNameKey;
         data ||= { people: [] };
-        const names = new Set(data.people.flatMap((p) => [p.name, ...splitSpeakers(p)]).map((name) => name.toLowerCase()));
+        const names = new Set(data.people.flatMap((p) => [p.name, ...splitSpeakers(p)]).map(nameKey));
         for (const p of reference.people) {
-          if ([p.name, ...(p.aliases || [])].some((n) => names.has(n.toLowerCase()))) continue;
+          if ([p.name, ...(p.aliases || [])].some((n) => names.has(nameKey(n)))) continue;
           const current = p.electorates.filter((e) => e.current);
           if (!current.length) continue;
           data.people.push({ name: p.name, pid: p.legacy_person_id || p.person_id, speeches: 0,
             states: [...new Set(current.map((e) => e.jurisdiction))], chambers: [...new Set(current.map((e) => e.chamber))],
             party: current[0].party, party_now: current[0].party, current: true, first: null, last: null,
             representation_as_of: current[0].as_of, roster_only: true });
-          names.add(p.name.toLowerCase());
+          names.add(nameKey(p.name));
         }
       } catch { /* A missing foundation release does not remove the speech directory. */ }
       return data;
@@ -7686,7 +7688,7 @@ async function buildPeopleDirectory() {
       p.party ? partyChipHTML(p.party) : `<span class="dir-muted">No party recorded</span>`,
       (p.parties || []).length > 1 ? `<span class="dir-muted">also ${esc(p.parties.slice(1).join(", "))}</span>` : "",
       where ? esc(where) : "",
-      !p.speech_scope && yearSpan(p.first, p.last) ? `${p.speech_count_basis ? 'Transcript years: ' : ''}${esc(yearSpan(p.first, p.last))}` : "",
+      !p.speech_scope && yearSpan(p.first, p.last) ? `${p.roster_only ? 'Recorded service: ' : p.speech_count_basis ? 'Transcript years: ' : ''}${esc(yearSpan(p.first, p.last))}` : "",
     ].filter(Boolean).join(" · ");
     return `<li class="dir-row">
       ${portrait}
@@ -7736,35 +7738,47 @@ async function buildPeopleDirectory() {
   };
 }
 
-/** Parties: money-file party nodes, the record's party facet and the directory's member counts.
- *  Without the live facet (an error, or no answer inside AGGREGATE_WAIT_MS) the list still
- *  renders from the money files and the members register, with no speech figures at all. */
+/** Parties use the same canonical page inventory as server HTML and the sitemap.
+ * The live facet enriches those pages with speech counts. */
 async function buildPartiesDirectory() {
-  const [fed, qld, vic, tas, live, dir] = await Promise.all([
+  const [fed, qld, vic, tas, live, dir, catalogue, divisions] = await Promise.all([
     loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadMoneyFile("tas"),
-    aggregateApi("/api/parties").catch(() => null), loadParliamentarians(),
+    aggregateApi("/api/parties").catch(() => null), loadParliamentarians(), loadPartyPage(), loadPartyMembers(),
   ]);
   const counted = Boolean(live?.parties?.length);
   const files = [["federal", fed], ["qld", qld], ["vic", vic], ["tas", tas]].filter(([, d]) => d?.nodes);
-  if (!files.length && !live?.parties?.length) return null;
-  const parties = new Map();
-  const get = (label) => {
-    if (!parties.has(label)) parties.set(label, { label, colour: null, speeches: 0, members: 0, money: {}, _sortName: label.toLowerCase() });
-    return parties.get(label);
+  const pages = await catalogue.readPartyPages(async (path) => {
+    const jur = Object.keys(MONEY_JURISDICTIONS).find(j => MONEY_JURISDICTIONS[j].file === path);
+    if (jur) return loadMoneyFile(jur);
+    if (path === '/parliamentarians.json') return dir;
+    if (path === '/graph/party-members.json') return divisions;
+    const response = await fetch(path);
+    if (!response.ok) throw new Error('Party records unavailable');
+    return response.json();
+  });
+  const parties = new Map(pages.map(page => {
+    const members = catalogue.partyMembers(page.label, {roster: dir, divisions});
+    return [page.label, { label: page.label, name: page.name, colour: null, speeches: 0, members: members.current.length + members.former.length,
+      money: {}, _coverage: catalogue.partyPageCoverage(page), _sortName: page.name.toLowerCase() }];
+  }));
+  const lookup = new Map();
+  const get = label => {
+    if (!lookup.has(label)) lookup.set(label, parties.get(catalogue.resolvePartyPage(label, pages)?.label));
+    return lookup.get(label);
   };
   for (const [jur, data] of files) {
     for (const n of data.nodes) if (n.kind === "party") {
       const p = get(n.label);
+      if (!p) continue;
       p.colour ??= n.colour || null;
       p.money[jur] = { total: n.total || 0, count: n.count || 0, first: n.firstYear, last: n.lastYear, donors: 0 };
     }
     for (const e of data.edges || []) {
-      const p = parties.get(String(e.target).replace(/^party:/, ""));
+      const p = get(String(e.target).replace(/^party:/, ""));
       if (p?.money[jur]) p.money[jur].donors += 1;
     }
   }
-  for (const r of live?.parties || []) if (r.label) get(r.label).speeches = r.count || 0;
-  for (const p of dir?.people || []) if (p.party) get(p.party).members += 1;
+  for (const r of live?.parties || []) { const p = get(r.label); if (p) p.speeches += r.count || 0; }
   const items = [...parties.values()];
   const colours = new Map(items.filter((p) => p.colour).map((p) => [p.label, p.colour]));
   const sourceShort = { federal: "AEC returns", qld: (qld?.meta?.sourceShort) || "ECQ", vic: (vic?.meta?.sourceShort) || "VEC", tas:(tas?.meta?.sourceShort)||"TEC" };
@@ -7783,17 +7797,17 @@ async function buildPartiesDirectory() {
   const row = (p) => {
     const jurs = Object.keys(p.money);
     const meta = [
-      jurs.length ? esc(`Disclosures: ${jurs.map((j) => MONEY_JURISDICTIONS[j]?.label || j).join(", ")}`) : `<span class="dir-muted">No party-level disclosure file</span>`,
+      jurs.length ? esc(`Disclosures: ${jurs.map((j) => MONEY_JURISDICTIONS[j]?.label || j).join(", ")}`) : esc(p._coverage),
       jurs.length && p._first < 9999 ? esc(yearSpan(p._first, p._last)) : "",
     ].filter(Boolean).join(" · ");
     const figs = [
       counted ? `<span class="dir-fig"><b>${num(p.speeches)}</b>speech${p.speeches === 1 ? "" : "es"}</span>` : "",
-      `<span class="dir-fig"><b>${num(p.members)}</b>in the directory</span>`,
+      `<span class="dir-fig"><b>${num(p.members)}</b>parliamentarian${p.members === 1 ? '' : 's'} in the record</span>`,
       ...jurs.map((j) => `<span class="dir-fig"><b>${esc(fmtMoney(p.money[j].total))}</b>${esc(sourceShort[j] || j)}</span>`),
     ].join("");
     return `<li class="dir-row dir-row-plain">
       <div class="dir-main">
-        <a class="source-title dir-name" ${entityHrefAttr(subjectHash("party", p.label))}>${anyPartyDotHTML(p.label, colours)}${esc(p.label)}</a>
+        <a class="source-title dir-name" ${entityHrefAttr(subjectHash("party", p.label))}>${anyPartyDotHTML(p.label, colours)}${esc(p.name)}</a>
         <span class="result-meta">${meta}</span>
       </div>
       <div class="dir-figs">${figs}</div>
@@ -7801,29 +7815,29 @@ async function buildPartiesDirectory() {
   };
 
   return {
-    title: "Parties",
-    name: (p) => p.label, href: (p) => subjectHash("party", p.label), hint: () => "",
+    title: "Parties and independents",
+    name: (p) => p.name, href: (p) => subjectHash("party", p.label), hint: () => "",
     lede: counted ? "" : "Speech counts are updating.",
     items,
-    text: (p) => p.label,
+    text: (p) => `${p.name} ${p.label}`,
     filters: [
       { key: "jur", label: "Disclosures",
         options: [["federal", "Federal (AEC)"], ["qld", "Queensland (ECQ)"], ["vic", "Victoria (VEC)"], ["tas", "Tasmania (TEC)"]],
         test: (p, v) => Boolean(p.money[v]) },
       { key: "show", label: "Show",
-        options: [...(counted ? [["speeches", "With speeches in the record"]] : []), ["members", "With members in the directory"], ["money", "With disclosed receipts"]],
+        options: [...(counted ? [["speeches", "With speeches in the record"]] : []), ["members", "With parliamentarians in the record"], ["money", "With disclosed receipts"]],
         test: (p, v) => v === "speeches" ? p.speeches > 0 : v === "members" ? p.members > 0 : Object.keys(p.money).length > 0 },
     ],
     sorts: [
       ...(counted ? [["speeches", "Most speeches", byNumDesc((p) => p.speeches)]] : []),
       ["donations", "Most disclosed receipts", byNumDesc(moneyFor)],
-      ["members", "Most members", byNumDesc((p) => p.members)],
+      ["members", "Most parliamentarians", byNumDesc((p) => p.members)],
       ["name", "Name A-Z", byName],
     ],
     row,
     fineprint: `Speech counts use each speech's party label; a speech with no party label (many state Hansard
-      rows) is not counted, and a party with speeches but no disclosure file (independents, parties that wound up
-      before 1998) still lists. Receipts are per commission and are not summed: ${esc(STATE_NOT_SUMMED)}
+      rows) is not counted. Affiliations with speeches but no disclosure file still appear.
+      ${esc(catalogue.PARTY_MEMBER_SCOPE)} Receipts are per commission and are not summed: ${esc(STATE_NOT_SUMMED)}
       ${esc(AEC_NOTE)}`,
   };
 }
@@ -9618,7 +9632,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=8806494137"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=cdfc62965a"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=da68cf9f9e");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -9634,14 +9648,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=44359cc702", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=ee790d5ec3", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=124c5eaa01", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=acfff602a7", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=e2802a59d0", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=f1b69ffdd9", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=b992a7ebac", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=235e3653b2", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=3f70f2a4d0", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=b598714594", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=010196c4a8", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -14761,7 +14775,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ad0bc4ecc3");
+    const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",

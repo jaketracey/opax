@@ -9,7 +9,7 @@
  * holds the two to the same answers.
  */
 import { printSpeakers, splitSpeakers, type SpeechScope } from '../public/speech-attribution.js'
-import { personNameKey } from '../public/canonical-urls.js'
+import { personNameKey } from '../public/party-page.js'
 
 export function personSlug(name: string): string {
   return String(name ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
@@ -17,7 +17,7 @@ export function personSlug(name: string): string {
 }
 
 /** The roster lookup shared by redirects and the generated browser URL table. */
-export function personIndex<T extends { name: string; speeches: number | null; full?: string; states?: string[]; speech_scope?: SpeechScope; prints?: string[] }>(people: readonly T[]) {
+export function personIndex<T extends { name: string; speeches: number | null; full?: string; aliases?: string[]; pid?: string; states?: string[]; speech_scope?: SpeechScope; prints?: string[] }>(people: readonly T[]) {
   const byName = new Map(people.map(p => [p.name, p]))
   const byFold = new Map<string, T>()
   for (const p of people) {
@@ -36,23 +36,30 @@ export function personIndex<T extends { name: string; speeches: number | null; f
 }
 
 /**
- * A surname row's own full name ("Crisafulli", full "David Crisafulli") reads as that row, so a
+ * Reviewed source aliases and a surname row's own full name ("Crisafulli", full "David Crisafulli") reads as that row, so a
  * register that names the member in full (a ministerial diary, the pay record) reaches the profile
  * (search-hubs-006, registers-003). Only where the full name is free: no row is printed under it
- * and no other row claims it. The alias adds no identity the roster does not already show, since
+ * and no other identity claims it. The alias adds no identity the roster does not already show, since
  * the profile is titled with that full name; but a surname row can hold several parliaments'
  * speeches (state-datasets-001), so callers that know the register's parliament check it against
  * the row's (fullNameMatches).
  */
-export function fullNameAliases<T extends { name: string; full?: string; states?: string[] }>(people: readonly T[], taken: ReadonlyMap<string, T>): Map<string, T> {
+export function fullNameAliases<T extends { name: string; full?: string; aliases?: string[]; pid?: string; speeches?: number | null; states?: string[] }>(people: readonly T[], taken: ReadonlyMap<string, T>): Map<string, T> {
   const claims = new Map<string, T[]>()
   for (const p of people) {
-    if (!p.full || p.full === p.name) continue
-    const key = personNameKey(p.full)
-    if (!key || taken.has(key)) continue
-    claims.set(key, [...(claims.get(key) || []), p])
+    for (const alias of new Set([p.full, ...(p.aliases ?? [])])) {
+      if (!alias || alias === p.name) continue
+      const key = personNameKey(alias)
+      if (!key || taken.has(key)) continue
+      claims.set(key, [...(claims.get(key) || []), p])
+    }
   }
-  return new Map([...claims].filter(([, rows]) => rows.length === 1).map(([key, rows]) => [key, rows[0]]))
+  const result = new Map<string, T>()
+  for (const [key, rows] of claims) {
+    if (new Set(rows.map(p => p.pid ? `pid:${p.pid}` : `name:${p.name}`)).size !== 1) continue
+    result.set(key, [...rows].sort((a, b) => (b.speeches ?? 0) - (a.speeches ?? 0) || a.name.localeCompare(b.name))[0])
+  }
+  return result
 }
 
 /** True unless `name` reaches its row only through a full-name alias from another parliament. */

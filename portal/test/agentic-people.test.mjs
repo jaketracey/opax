@@ -17,6 +17,13 @@ const depsFor = people => ({
   kb: async () => { throw new Error('Name resolution must use the roster only'); },
 });
 const deps = depsFor(roster.people);
+test('find_people keeps the exact Panopoulos speech row despite the Mirabella alias', async () => {
+  const result = await findPeople(deps, {name: 'Sophie Panopoulos'});
+  assert.equal(result.data.match_status, 'matched');
+  assert.equal(result.data.people[0].name, 'Sophie Panopoulos');
+  assert.equal(result.data.people[0].speeches_indexed, 147);
+  assert.equal(result.data.clarification, undefined);
+});
 const person = (name, pid, speeches = 1) => ({ name, pid, speeches, states: ['federal'], chambers: ['senate'] });
 const resolved = (result, name) => {
   assert.equal(result.ok, true);
@@ -62,7 +69,7 @@ test('nickname resolution uses given names and preserves roster spelling and met
   const result = await runTool(deps, 'find_people', { name: 'Robert Katter' });
   const row = roster.people.find(p => p.name === 'Bob Katter');
   assert.deepEqual(result.data.people[0], {
-    name: row.name, confidence: 0.98, party: row.party_now, states: row.states,
+    name: row.name, confidence: 0.995, party: row.party_now, states: row.states,
     chambers: row.chambers, years: [row.first, row.last], current: row.current, speeches_indexed: row.speeches,
     representation: row.representation ?? [], service: [],
   });
@@ -178,4 +185,12 @@ test('name lookups reject empty input and bound candidate output without changin
   assert.ok((await findPeople(deps, { name: 'John', limit: 1000 })).data.candidates.length <= 10);
   const long = await findPeople(deps, { name: 'Ingrid '.repeat(1000) });
   assert.equal(long.data.match_status, 'no_match');
+});
+
+
+test('a service-only profile establishes identity without claiming a zero speech count', async () => {
+ const result = await findPeople(depsFor([{...person('Bill Example','19999',0),roster_only:true,aliases:['William Example']}]),{name:'William Example'});
+ resolved(result,'Bill Example');
+ assert.equal(result.data.people[0].speeches_indexed,null);
+ assert.match(result.notes.join(' '),/no speech total is published/);
 });

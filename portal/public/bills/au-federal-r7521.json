@@ -374,7 +374,7 @@
    "key": "federal-senate-10707",
    "date": "2026-08-19",
    "house": "senate",
-   "question": "Long debate text truncated.",
+   "question": null,
    "stage": "Limitation of debate",
    "ayes": 10,
    "noes": 30,

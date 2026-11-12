@@ -159,7 +159,7 @@
    "key": "federal-representatives-3713",
    "date": "2015-03-17",
    "house": "representatives",
-   "question": "No motion text available",
+   "question": null,
    "stage": "Second reading",
    "ayes": 53,
    "noes": 83,

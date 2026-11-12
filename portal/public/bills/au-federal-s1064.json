@@ -493,7 +493,7 @@
    "key": "federal-senate-4641",
    "date": "2017-03-22",
    "house": "senate",
-   "question": "No motion text available",
+   "question": null,
    "stage": "In committee",
    "ayes": 34,
    "noes": 31,

@@ -1,0 +1,194 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {readPartyPages, canonicalPartyPages, resolvePartyPage, partyPageCoverage, partyMembers} from '../public/party-page.js';
+import {renderDirectory} from '../src/seo-content.ts';
+import {officialReportCrawlEntries} from '../../scripts/official_report_crawl.mjs';
+import {sitemapFiles, latestDate, exportDate, personPaths} from '../../scripts/build_crawl_catalog.mjs';
+
+const root = new URL('../public/', import.meta.url);
+const read = async path => JSON.parse(await readFile(new URL(path.replace(/^\//, ''), root), 'utf8'));
+const paths = xml => [...xml.matchAll(/<loc>https:\/\/opax.com.au([^<]+)<\/loc>/g)].map(m => m[1]);
+// Finding 13's seven labels outside both the live directory and sitemap.
+const missing = ["Australia's Voice", 'Australian Conservatives', 'Australian Motoring Enthusiast Party',
+  "Derryn Hinch's Justice Party", 'Gerard Rennick People First', 'Jacqui Lambie Network', 'Liberal Democratic Party'];
+
+test('party directory and sitemap use the same canonical inventory, including the seven audit gaps', async () => {
+  const pages = await readPartyPages(read);
+  const directory = await renderDirectory('party', new URL('https://opax.test/subject/party'), read, [], new Map(), {});
+  const manifest = await read('/crawl/manifest.json');
+  const xml = (await Promise.all(manifest.files.filter(f => /^\/sitemaps\/parties-/.test(f.path)).map(f => readFile(new URL('crawl' + f.path, root), 'utf8')))).join('');
+  assert.deepEqual(paths(xml).sort(), pages.map(p => p.href).sort());
+  assert.deepEqual([...directory.html.matchAll(/href="(\/subject\/party\/[^"?]+)"/g)].map(m => m[1]).sort(), pages.map(p => p.href).sort());
+  for (const label of missing) {
+    const page = pages.find(p => p.label === label);
+    assert.ok(page, label);
+    assert.ok(directory.html.includes(page.href), label);
+    assert.ok(directory.html.includes('No party-level disclosure file held by OPAX.'));
+    assert.ok(page.roster || page.divisions);
+  }
+  assert.equal(pages.filter(p => p.aliases.includes('JLN') || p.aliases.includes('Jacqui Lambie Network')).length, 1);
+  assert.equal(resolvePartyPage('jln', pages).href, '/subject/party/jacqui-lambie-network');
+  assert.ok(!paths(xml).includes('/subject/party/jln'));
+});
+
+test('party_now, recorded roster labels and division parties survive without money or live counts', () => {
+  const pages = canonicalPartyPages({
+    money: [{nodes: [{kind: 'party', label: 'One Nation'}]}],
+    roster: {people: [{party: 'JLN', party_now: "Australia's Voice", recorded_parties: [{party: 'DLP'}]}]},
+    divisions: {parties: ['Jacqui Lambie Network', "Pauline Hanson's One Nation Party", 'Gerard Rennick People First']},
+  });
+  assert.deepEqual(pages.map(p => p.label), ["Australia's Voice", 'DLP', 'Gerard Rennick People First', 'Jacqui Lambie Network', 'One Nation']);
+  assert.equal(resolvePartyPage('pauline-hansons-one-nation-party', pages).label, 'One Nation');
+});
+
+test('directory discovery uses the small party-member export and tolerates its absence', async () => {
+  const requested = [];
+  const assets = {
+    '/parliamentarians.json': {people: [{name: 'Fixture Member', party: 'Labor', party_now: 'Independent'}]},
+    '/graph/party-members.json': {parties: {'Fixture Parliamentary Party': [{name: 'Fixture Person'}]}},
+  };
+  const reader = async path => {
+    requested.push(path);
+    if (path.startsWith('/graph/money')) return {nodes: []};
+    if (assets[path]) return assets[path];
+    throw Error('Unavailable fixture');
+  };
+  const pages = await readPartyPages(reader);
+  assert.ok(pages.some(p => p.label === 'Fixture Parliamentary Party'));
+  assert.ok(!requested.includes('/divisions/index.json'));
+  delete assets['/graph/party-members.json'];
+  assert.deepEqual((await readPartyPages(reader)).map(p => p.label), ['Independent', 'Labor']);
+});
+
+test('directory coverage is exact, capitalised, and distinguishes independents from organisations', async () => {
+  const pages = await readPartyPages(read);
+  for (const label of ['Australian Conservatives', 'Australian Motoring Enthusiast Party', "Derryn Hinch's Justice Party", 'Gerard Rennick People First', 'Liberal Democratic Party']) {
+    assert.equal(partyPageCoverage(pages.find(p => p.label === label)), 'Recorded divisions. No party-level disclosure file held by OPAX.');
+  }
+  assert.equal(partyPageCoverage(pages.find(p => p.label === 'Independent')), 'Parliamentarians who sat without a party. Not a party organisation.');
+  assert.equal(pages.find(p => p.label === 'DLP').name, 'Democratic Labour Party');
+  const directory = await renderDirectory('party', new URL('https://opax.test/subject/party'), read, [], new Map(), {});
+  assert.ok(directory.html.includes('Parliamentarians who sat without a party. Not a party organisation.'));
+  assert.ok(directory.html.includes('>Democratic Labour Party</a>'));
+  assert.ok(!directory.html.includes('—'));
+});
+
+test('one membership rule preserves previous affiliations and joins aliases by person ID', () => {
+  const roster = {people: [
+    {name: 'Alex Example', pid: 'fixture-1', party: 'JLN', party_now: 'Independent', current: true},
+    {name: 'Example', pid: 'fixture-1', party: 'Jacqui Lambie Network'},
+  ]};
+  const divisions = {parties: {'Jacqui Lambie Network': [{name: 'Alex Example'}, {name: 'Casey Fixture'}]}};
+  const previous = partyMembers('Jacqui Lambie Network', {roster, divisions});
+  assert.equal(previous.current.length, 0);
+  assert.deepEqual(previous.former.map(p => p.name).sort(), ['Alex Example', 'Casey Fixture']);
+  const now = partyMembers('Independent', {roster, divisions});
+  assert.deepEqual(now.current.map(p => p.name), ['Alex Example']);
+});
+
+test('person addresses add vote aliases only through recorded or reviewed IDs, preserving existing identities', () => {
+  const people = [
+    {name: 'Alexander Example', pid: 'fixture-1', speeches: 10},
+    {name: 'C.F. Fixture', speeches: 5},
+    {name: 'Alex Example', pid: 'fixture-3', speeches: 2},
+  ];
+  const paths = personPaths(people, {
+    'fixture-1': {name: 'Alex Example'},
+    'fixture-2': {name: 'Casey Fixture'},
+    'fixture-4': {name: 'Unlinked Example'},
+  }, {'c.f. fixture': {key: 'fixture-2'}});
+  assert.equal(paths.folded['alex example'], paths.exact['Alex Example'], 'a printed identity is never overwritten by a vote alias');
+  assert.equal(paths.folded['casey fixture'], paths.exact['C.F. Fixture']);
+  assert.ok(!paths.folded['unlinked example']);
+  const ordinary = personPaths(people.slice(0, 1), {'fixture-1': {name: 'Alex Example'}});
+  assert.equal(ordinary.folded['alex example'], ordinary.exact['Alexander Example']);
+});
+
+test('a supplied division slug is authoritative; only rows without one join on the printed name', () => {
+  const roster = {people: [{name: 'Alex Example', pid: 'fixture-1', party: 'Fixture Party'}]};
+  const divisions = {parties: {'Fixture Party': [
+    {name: 'Alex Example', slug: 'different-person', divisions: 2},
+    {name: 'Alex Example', slug: null, divisions: 3},
+    {name: 'Another print', slug: 'different-person', divisions: 4},
+  ]}};
+  const {former} = partyMembers('Fixture Party', {roster, divisions});
+  assert.equal(former.length, 2);
+  assert.equal(former.find(p => p.pid === 'fixture-1').divisions, 3);
+  assert.equal(former.find(p => !p.pid).divisions, 6, 'an unknown slug still identifies one division person');
+});
+
+test('real division name variants join the roster person addresses once per affiliation', async () => {
+  const {personUrl} = await import('../public/party-page.js');
+  const roster = await read('/parliamentarians.json'), divisions = await read('/graph/party-members.json');
+  const votes = await read('/votes.json');
+  for (const pid of ['10511', '10212', '10633', '10842']) {
+    const print = roster.people.find(p => p.pid === pid) || roster.people.find(p => personUrl(p.name) === personUrl(votes[pid].name));
+    assert.ok(print, pid);
+    const division = divisions.parties[votes[pid].party].find(m => m.name === votes[pid].name);
+    assert.ok(division?.slug, pid);
+    assert.notEqual(print.name, division.name, 'this regression covers different printed names');
+    assert.equal(personUrl(division.name), personUrl(print.name));
+    const members = partyMembers(votes[pid].party, {roster, divisions});
+    const matches = [...members.current, ...members.former].filter(m => personUrl(m.name) === personUrl(print.name));
+    assert.equal(matches.length, 1, pid);
+    assert.equal(matches[0].roster, print);
+    assert.ok(matches[0].divisions >= division.divisions);
+  }
+});
+
+test('official report discovery uses public indexed records and their dates, with bounded indexed sitemap files', async () => {
+  const type = 'agency_report';
+  const slug = suffix => 'agency-report-fixture-' + suffix;
+  const row = (suffix, flags = {}) => ({slug: slug(suffix), ...flags});
+  const record = (suffix, flags = {}) => ({schema: 1, kind: 'report', report_type: type, slug: slug(suffix), date: '2026-09-10', snapshot_at: '20261010', record: {}, ...flags});
+  const assets = {
+    '/report-records/index.json': {schema: 1, collections: [{type}]},
+    [`/report-records/index-${type}.json`]: {schema: 1, type, rows: [row('dated'), row('undated'), row('updated'), row('withdrawn'), row('private'), row('draft'), row('source-withdrawn'), row('hidden', {public: false})]},
+    ...Object.fromEntries([record('dated'), record('undated', {date: null}), record('updated', {updated_at: '2026-09-12'}),
+      record('withdrawn', {withdrawn: true}), record('private', {visibility: 'private'}), record('draft', {published: false}),
+      record('source-withdrawn', {record: {status: 'withdrawn'}}), record('orphan')].map(r => [`/report-records/${r.slug}.json`, r])),
+    '/reports/index.json': {reports: [{slug: 'investigation'}]},
+  };
+  const entries = await officialReportCrawlEntries(async path => { assert.ok(Object.hasOwn(assets, path), path); return assets[path]; });
+  const rows = entries.map(r => ({path: r.path, lastmod: latestDate([r.updated, r.date], r.snapshot) || exportDate(r.snapshot)}));
+  assert.deepEqual(rows, [
+    {path: '/report/' + slug('dated'), lastmod: '2026-09-10'},
+    {path: '/report/' + slug('undated'), lastmod: '2026-10-10'},
+    {path: '/report/' + slug('updated'), lastmod: '2026-09-12'},
+  ]);
+  const {files, index, counts} = sitemapFiles({'official-reports': rows}, 2);
+  assert.deepEqual(files.map(f => f.count), [2, 1]);
+  assert.equal(counts['official-reports'], 3);
+  for (const file of files) {
+    assert.ok(index.includes(file.path));
+    assert.ok(Buffer.byteLength(file.body) < 50 * 1024 * 1024);
+    assert.ok(paths(file.body).every(path => path.startsWith('/report/')));
+    assert.doesNotMatch(file.body, /\/reports\//);
+  }
+});
+
+test('built official report sitemap lists every public record from all four collections and leaves investigations off', async () => {
+  const entries = await officialReportCrawlEntries(read);
+  const manifest = await read('/crawl/manifest.json');
+  assert.ok(entries.length > 0);
+  assert.equal(manifest.counts['official-reports'], entries.length);
+  const files = manifest.files.filter(f => /^\/sitemaps\/official-reports-/.test(f.path));
+  assert.ok(files.length > 0);
+  const index = await readFile(new URL('crawl/sitemap.xml', root), 'utf8');
+  const listed = [];
+  for (const file of files) {
+    assert.ok(index.includes(file.path));
+    const xml = await readFile(new URL('crawl' + file.path, root), 'utf8');
+    listed.push(...paths(xml));
+    for (const path of paths(xml)) {
+      const entry = entries.find(r => r.path === path);
+      assert.ok(entry);
+      const lastmod = latestDate([entry.updated, entry.date], entry.snapshot) || exportDate(entry.snapshot);
+      assert.ok(xml.includes(`<loc>https://opax.com.au${path}</loc><lastmod>${lastmod}</lastmod>`));
+    }
+  }
+  assert.deepEqual(listed.sort(), entries.map(e => e.path).sort());
+  assert.deepEqual(new Set(entries.map(e => e.path.split('/')[2].split('-').slice(0, 2).join('-'))), new Set(['royal-commission', 'integrity-report', 'annual-report', 'agency-report']));
+  for (const file of manifest.files) assert.doesNotMatch(await readFile(new URL('crawl' + file.path, root), 'utf8'), /<loc>[^<]*\/reports(?:\/|<)/);
+});

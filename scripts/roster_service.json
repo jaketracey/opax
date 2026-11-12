@@ -135,5 +135,19 @@
   "party_corrections": [
     "D O'Brien",
     "D O’Brien"
-  ]
+  ],
+  "snapshot_party_windows": {
+    "nsw_lc": {
+      "start": "2023-03-25",
+      "source_url": "https://www.parliament.nsw.gov.au/researchpapers/Documents/2023-NSW-election-Analysis-of-results.pdf",
+      "note": "Hold earlier speech years until dated party history exists. The election year alone cannot establish which side of the election a speech falls on.",
+      "first_terms": {
+        "Chris Rath": {
+          "start": "2022-03-24",
+          "source_url": "https://www.wikidata.org/wiki/Q111482817",
+          "note": "Reviewed first-term exception. Both already-cached ext_state_roster observations (fetched 21 September 2026) record this start with no end. Party comes separately from the NSW Council list of 25 September 2026. This exception does not assert party history for other members."
+        }
+      }
+    }
+  }
 }

@@ -5,7 +5,7 @@ import {mountContractsTable} from './contracts-table.js?v=bd2b252bf0';
 import { shortDate, shortMoney } from "./format.js";
 import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=410d91a7a6";
 import { sourceLineHTML } from "./labels.js?v=6a4764139d";
-import { partyUrl } from "./canonical-urls.js?v=79dfba8774";
+import { partyUrl } from "./canonical-urls.js?v=6c889d487d";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
@@ -360,7 +360,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=ad0bc4ecc3");
+        const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

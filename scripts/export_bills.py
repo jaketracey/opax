@@ -1496,6 +1496,119 @@ def write_index(path: Path, index: dict) -> None:
     path.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
 
 
+def division_record(directory: Path, key: str) -> dict:
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", key):
+        raise ValueError(f"Invalid division key: {key}")
+    record = json.loads((directory / f"division-{key}.json").read_text())
+    if record.get("key") != key:
+        raise ValueError(f"Division identity mismatch: {key}")
+    return record
+
+
+def reconcile_divisions(docs: list[dict], directory: Path) -> None:
+    """Refresh shared facts from the published division projection, never the
+    older bill/DB copy. Keep bill-only annotations such as stage and title.
+    Missing identities fail before anything is written.
+    """
+    for doc in docs:
+        for division in doc.get("divisions", []):
+            key = division["key"]
+            record = division_record(directory, key)
+            for field in list(division):
+                if field in record:
+                    division[field] = record[field]
+            division["ayes"] = record.get("ayes")
+            division["noes"] = record.get("noes")
+            division["outcome"] = record.get("result")
+            division["url"] = record.get("source_url")
+
+
+def retained_bills(directory: Path) -> tuple[list[dict], dict[str, str]]:
+    """Read the indexed snapshot and verify file identities before publication."""
+    index = json.loads((directory / "index.json").read_text())
+    docs, previous = [], {}
+    for row in index["bills"]:
+        key = row["key"]
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", key):
+            raise ValueError(f"Invalid bill key: {key}")
+        path = directory / f"{key}.json"
+        previous[key] = path.read_text()
+        doc = json.loads(previous[key])
+        if doc.get("key") != key:
+            raise ValueError(f"Bill identity mismatch: {key}")
+        docs.append(doc)
+    return docs, previous
+
+
+def write_retained_bills(directory: Path, docs: list[dict], previous: dict[str, str]) -> int:
+    changed = 0
+    for doc in docs:
+        if doc != json.loads(previous[doc["key"]]):
+            content = json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
+            (directory / f"{doc['key']}.json").write_text(content)
+            changed += 1
+    return changed
+
+
+def normalise_sponsor_labels(directory: Path) -> int:
+    """Only decode/map existing labels. Never infer a new sponsor affiliation."""
+    def canonical(raw):
+        return raw if raw in PUBLISHED_PARTIES else sponsor_party_token(raw)
+
+    docs, previous = retained_bills(directory)
+    for doc in docs:
+        if "sponsor_party" in doc:
+            doc["sponsor_party"] = canonical(doc["sponsor_party"])
+        for sponsor in doc.get("sponsors") or []:
+            if "party" in sponsor:
+                sponsor["party"] = canonical(sponsor["party"])
+    index_path = directory / "index.json"
+    index = json.loads(index_path.read_text())
+    prior_index = json.loads(index_path.read_text())
+    by_key = {doc["key"]: doc for doc in docs}
+    for row in index["bills"]:
+        if "sponsor_party" in row:
+            row["sponsor_party"] = by_key[row["key"]].get("sponsor_party")
+    changed = write_retained_bills(directory, docs, previous)
+    if index != prior_index:
+        index_path.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
+    log(f"normalised existing sponsor party labels in {changed} bill files")
+    return changed
+
+
+def check_division_facts(directory: Path, divisions: Path) -> tuple[int, int]:
+    """Fail publication when a persisted embedded tally differs from its source."""
+    docs, _ = retained_bills(directory)
+    records = {}
+    bills_checked = links_checked = 0
+    for doc in docs:
+        if doc.get("divisions"):
+            bills_checked += 1
+        for embedded in doc.get("divisions", []):
+            key = embedded["key"]
+            if key not in records:
+                records[key] = division_record(divisions, key)
+            for field, source_field in (("ayes", "ayes"), ("noes", "noes"), ("outcome", "result")):
+                if embedded.get(field) != records[key].get(source_field):
+                    raise ValueError(f"Bill division drift: {doc['key']}/{key}/{field}")
+            links_checked += 1
+    log(f"validated division facts across {bills_checked} bills and {links_checked} links")
+    return bills_checked, links_checked
+
+
+def refresh_division_facts(directory: Path, divisions: Path) -> int:
+    """Reconcile and validate the retained snapshot after standalone publication.
+    No source acquisition, database access or new source-check timestamp.
+    Validate every join before writing any bill file, then check persisted facts.
+    """
+    docs, previous = retained_bills(directory)
+    reconcile_divisions(docs, divisions)
+    changed = write_retained_bills(directory, docs, previous)
+    check_division_facts(directory, divisions)
+    log(f"reconciled division facts in {changed} bill files")
+    return changed
+
+
 def write_out(docs: list[dict], index: dict, out: Path, sample: int | None) -> None:
     out.mkdir(parents=True, exist_ok=True)
     keys = sample_keys(index, sample) if sample else None
@@ -1693,6 +1806,16 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Project the bill registry into portal/public/bills/")
     ap.add_argument("--db", default=DB_URI, help="read-only sqlite URI")
     ap.add_argument("--out", default="portal/public/bills", help="output directory")
+    ap.add_argument("--divisions", default="portal/public/divisions",
+                    help="standalone division projection supplying shared bill facts")
+    ap.add_argument("--party-tokens", type=Path, default=Path("portal/public/facts/sponsor-parties.json"),
+                    help="canonical sponsor party tokens consumed by the portal")
+    ap.add_argument("--refresh-division-facts", type=Path, metavar="DIR",
+                    help="refresh retained bill division facts from standalone records, without a DB or fetch")
+    ap.add_argument("--check-division-facts", type=Path, metavar="DIR",
+                    help="verify all retained bill tallies against standalone records, without a DB or fetch")
+    ap.add_argument("--normalise-sponsor-labels", type=Path, metavar="DIR",
+                    help="decode/map existing sponsor party labels without inferring affiliations or fetching")
     ap.add_argument("--legacy", action="store_true",
                     help="read bills/bill_progress and join by title (before bills_v2 lands)")
     ap.add_argument("--sample", type=int, default=None,
@@ -1713,6 +1836,15 @@ def main() -> int:
     ap.add_argument("--drafts", default=str(DRAFTS_PATH), help="exposure drafts file")
     args = ap.parse_args()
 
+    if args.normalise_sponsor_labels:
+        normalise_sponsor_labels(args.normalise_sponsor_labels)
+        return 0
+    if args.check_division_facts:
+        check_division_facts(args.check_division_facts, Path(args.divisions))
+        return 0
+    if args.refresh_division_facts:
+        refresh_division_facts(args.refresh_division_facts, Path(args.divisions))
+        return 0
     if args.fill_briefs:
         stats = fill_briefs(Path(args.fill_briefs), Path(args.brief_cache),
                             recheck_hours=args.recheck_hours, recheck_limit=args.recheck_limit,
@@ -1730,6 +1862,8 @@ def main() -> int:
             return 2
         docs, index = build(db, args.legacy)
         write_out(docs, index, Path(args.out), args.sample)
+        args.party_tokens.parent.mkdir(parents=True, exist_ok=True)
+        args.party_tokens.write_text(json.dumps(sorted(PUBLISHED_PARTIES), ensure_ascii=False, indent=1) + "\n")
     finally:
         db.rollback()
         db.close()
