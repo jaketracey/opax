@@ -1,6 +1,7 @@
 """Offline Android identity, provenance and release shell regression tests."""
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -15,18 +16,22 @@ from release_support import ReleaseError
 
 
 class AndroidReleaseTests(unittest.TestCase):
-    def test_config_version_110_mismatch_and_explicit_override(self):
-        version = configured_version(Path(__file__).resolve().parent.parent)
-        self.assertEqual(version, '1.1.0')
+    def test_config_version_matches_ios_release_and_explicit_override(self):
+        root = Path(__file__).resolve().parent.parent
+        version = configured_version(root)
+        # One store version for both platforms: the Android config must match the iOS release script.
+        ios = re.search(r'^VERSION=(\S+)$', (root/'scripts'/'release-ios.sh').read_text(), re.M)
+        self.assertIsNotNone(ios)
+        self.assertEqual(version, ios.group(1))
         def manifest(name):
             return ET.fromstring(f'<manifest xmlns:android="{NS[1:-1]}" android:versionName="{name}" android:versionCode="2026111001"><uses-sdk android:targetSdkVersion="36" /></manifest>')
-        verify_identity(manifest('1.1.0'), version, 2026111001)
+        verify_identity(manifest(version), version, 2026111001)
         with self.assertRaisesRegex(ReleaseError, 'versionName'):
-            verify_identity(manifest('1.0.0'), version)
-        verify_identity(manifest('1.2.0'), '1.2.0')
+            verify_identity(manifest('0.0.1'), version)
+        verify_identity(manifest('9.9.0'), '9.9.0')
         with self.assertRaisesRegex(ReleaseError, 'versionCode mismatch'):
-            verify_identity(manifest('1.1.0'), version, 2026111002)
-        bad = manifest('1.1.0'); bad.find('uses-sdk').set(NS+'targetSdkVersion', '37')
+            verify_identity(manifest(version), version, 2026111002)
+        bad = manifest(version); bad.find('uses-sdk').set(NS+'targetSdkVersion', '37')
         with self.assertRaisesRegex(ReleaseError, 'targetSdk'): verify_identity(bad, version)
 
     def test_version_code_calendar_and_play_limit(self):
