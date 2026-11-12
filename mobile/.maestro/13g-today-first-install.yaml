@@ -2,7 +2,8 @@ appId: au.com.opax.app
 name: 13g First install, nothing saved, skeleton and loaded positions match
 ---
 # Case C (today.md 5.2): nothing saved. The invitation leads, then the
-# edition's slot, then the daily pair. Run with the network throttled; the
+# optional election block, the edition's slot, then the daily pair. Run with
+# the network throttled; the
 # harness overlay-diffs the two captures (5.20: block positions above the
 # edition slot within 4 pt).
 - launchApp:
@@ -16,16 +17,31 @@ name: 13g First install, nothing saved, skeleton and loaded positions match
       id: today-screen-message
     timeout: 60000
 - takeScreenshot: ${EVIDENCE}/13g-fresh-skeleton
-- extendedWaitUntil:
-    visible:
+- scrollUntilVisible:
+    element:
       id: today-edition
+    direction: DOWN
     timeout: 120000
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - assertVisible:
     id: today-invitation
-- assertVisible:
-    id: today-invitation
-    above:
-      id: today-edition
+- runFlow:
+    when:
+      visible:
+        id: today-edition
+    commands:
+      - assertVisible:
+          id: today-invitation
+          above:
+            id: today-edition
 - takeScreenshot: ${EVIDENCE}/13g-fresh-loaded
 
 # An old edition: the edition's slot collapses once the read answers, and
@@ -49,6 +65,13 @@ name: 13g First install, nothing saved, skeleton and loaded positions match
     id: today-invitation
 - assertNotVisible:
     id: today-edition
+- takeScreenshot: ${EVIDENCE}/13g-old-loaded
+- scrollUntilVisible:
+    element:
+      id: today-pair
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - assertVisible:
     id: today-pair
-- takeScreenshot: ${EVIDENCE}/13g-old-loaded

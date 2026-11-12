@@ -33,6 +33,8 @@ const helpers = new Set([
   'search-submit-reveal.yaml',
 ]);
 const specialReasons = {
+  '70-vic-election.yaml':
+    'Election clock links, Android seat chooser and Back dismissal of the page menu',
   '03-mp-profile.yaml': 'Native Sources navigation and profile share action',
   '32-record-reader.yaml':
     'Android Back, cold citation link and exact native clipboard audit',

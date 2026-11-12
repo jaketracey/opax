@@ -28,6 +28,10 @@ name: 13h Today with a federal and a Victorian state seat saved
     id: today-state-seat
 - assertNotVisible:
     id: today-state-sources
+- assertNotVisible:
+    id: today-state-member
+- assertNotVisible:
+    id: today-state-seat-header
 - scrollUntilVisible:
     element:
       id: today-bills
@@ -37,4 +41,8 @@ name: 13h Today with a federal and a Victorian state seat saved
     speed: 20
 - assertNotVisible:
     id: today-state-seat
+- assertNotVisible:
+    id: today-state-member
+- assertNotVisible:
+    id: today-state-sources
 - takeScreenshot: ${EVIDENCE}/13h-no-state-card

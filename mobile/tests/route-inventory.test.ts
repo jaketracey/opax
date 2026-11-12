@@ -370,6 +370,8 @@ test('shared barrels and layouts delegate group registrations', () => {
 });
 
 const builders = [
+  ['shared', 'vic-election/index', routes.vicElectionRoute()],
+  ['shared', 'vic-election/[district]', routes.vicSeatRoute('albert-park')],
   ['shared', 'edition', routes.editionRoute()],
   ['shared', 'members', routes.membersRoute('seat')],
   ['shared', 'election', routes.electionRoute('seat', 'key')],

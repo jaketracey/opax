@@ -399,7 +399,7 @@ export default function Today() {
       directory?.electorates.data.electorates ?? [],
       Intl.DateTimeFormat().resolvedOptions().timeZone,
     ) &&
-    (election.record.stale || offline)
+    offline
       ? election.record.savedAt
       : null;
 

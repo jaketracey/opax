@@ -14,8 +14,22 @@ name: 28g A federal seat with no member recorded, chosen from Today
       OPAXWelcomeDeclined: none
 - extendedWaitUntil:
     visible:
-      id: today-invitation
+      id: today-screen
     timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: today-invitation
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-invitation-find
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - tapOn:
     id: today-invitation-find
 - extendedWaitUntil:

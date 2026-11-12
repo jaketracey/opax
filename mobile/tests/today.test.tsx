@@ -23,6 +23,10 @@ import { Screen } from '../src/design/layout';
 import { rhythm } from '../src/design/tokens';
 import { OfflineLine } from '../src/design/states';
 import Today from '../src/features/Today';
+import { Masthead } from '../src/features/today/Masthead';
+import { useOverview as useElectionOverview } from '../src/features/vic-election/reads';
+import { decodeOverview } from '../src/features/vic-election/decoders';
+import electionOverview from '../scripts/fixtures/vic-election/overview.json';
 import { readCachedEdition } from '../src/features/today/edition-store';
 import { readInvitationDates } from '../src/features/today/invitation-store';
 import { addDays, sydneyDay } from '../src/features/today/rules';
@@ -62,6 +66,13 @@ jest.mock('../src/api/runtime', () => ({
     roster: jest.fn(() => new Promise(() => {})),
     slugs: jest.fn(() => new Promise(() => {})),
   },
+}));
+jest.mock('../src/features/vic-election/reads', () => ({
+  ...jest.requireActual('../src/features/vic-election/reads'),
+  useOverview: jest.fn(),
+}));
+jest.mock('../src/features/vic-election/clock', () => ({
+  useElectionNow: () => new Date('2026-11-20T10:00:00+11:00'),
 }));
 jest.mock('../src/features/your-mp/choice-store', () => ({
   loadChoice: jest.fn(),
@@ -222,6 +233,12 @@ function setUp({
 } = {}) {
   resetSeatForTests();
   jest.clearAllMocks();
+  jest.mocked(useElectionOverview).mockReturnValue({
+    record: null,
+    error: null,
+    loading: false,
+    retry: jest.fn(),
+  });
   mock.directory.mockResolvedValue(directory);
   jest
     .mocked(loadChoice)
@@ -826,6 +843,44 @@ test.each(['edition', 'bills', 'declarations'] as const)(
       expect(r.root.findByType(OfflineLine).props.testID).toBe('today-offline');
     } finally {
       await act(async () => r.unmount());
+      jest.mocked(useNetworkState).mockReturnValue({});
+    }
+  },
+);
+
+test.each([
+  { offline: false, stale: true },
+  { offline: false, stale: false },
+  { offline: true, stale: true },
+  { offline: true, stale: false },
+])(
+  'election overview stale=$stale only draws the offline line when offline=$offline',
+  async ({ offline, stale }) => {
+    setUp();
+    const resolved = new Intl.DateTimeFormat().resolvedOptions();
+    const zone = jest
+      .spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions')
+      .mockReturnValue({ ...resolved, timeZone: 'Australia/Melbourne' });
+    jest.mocked(useElectionOverview).mockReturnValue({
+      record: {
+        data: decodeOverview(electionOverview),
+        stale,
+        savedAt: 0,
+        asOf: null,
+      },
+      loading: true,
+      error: null,
+      retry: jest.fn(),
+    });
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: !offline });
+    try {
+      const r = await render(<Today />);
+      expect(r.root.findByType(Masthead).props.offlineSavedAt).toBe(
+        offline ? 0 : null,
+      );
+      expect(r.root.findAllByType(OfflineLine)).toHaveLength(offline ? 1 : 0);
+    } finally {
+      zone.mockRestore();
       jest.mocked(useNetworkState).mockReturnValue({});
     }
   },

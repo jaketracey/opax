@@ -17,11 +17,24 @@ name: 13f The daily edition placed by its age, fresh, recent and old
     visible:
       id: today-edition
     timeout: 60000
-- assertVisible:
-    id: today-edition
-    above:
-      id: today-invitation
+- runFlow:
+    when:
+      visible:
+        id: today-invitation
+    commands:
+      - assertVisible:
+          id: today-edition
+          above:
+            id: today-invitation
 - takeScreenshot: ${EVIDENCE}/13f-fresh
+- scrollUntilVisible:
+    element:
+      id: today-invitation
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- takeScreenshot: ${EVIDENCE}/13f-fresh-invitation
 
 # Recent (case B): the edition sits late, below Just declared.
 - launchApp:

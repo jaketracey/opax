@@ -9,7 +9,7 @@ The cold first-line flow (15) defaults to 2.0; OPAX_ANDROID_FONT_SCALE=1.0 runs 
 
 On Linux, OPAX_ANDROID_PRIVATE_ADB=1 uses a new owned Unix-socket server when shared adb is unavailable. Emulator scanning and wireless auto-connect are disabled; the USB filter accepts only the assigned emulator serial. Only that emulator is registered. Cleanup stops the owned server by PID and leaves shared adb untouched. See the [ADB socket options](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/docs/user/adb.1.md).
 
-prepared variant: **87**; Android-only variant: **4**; held: map lane: **8**; not applicable: **7**. Total: **106**.
+prepared variant: **88**; Android-only variant: **5**; held: map lane: **8**; not applicable: **7**. Total: **108**.
 
 The full device set is selected with `scripts/e2e-android.sh OPAX_API34 --all-android`.
 The runner changes fixture variants per flow; 04 requires a saved-catalog warmup then the fixture stopped.
@@ -121,6 +121,8 @@ R8 mapping and native symbols are release checks only when enabled by the genera
 | `66-my-mp-journey.yaml` | prepared variant | `66-my-mp-journey.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `67-my-mp-entry-points.yaml` | prepared variant | `67-my-mp-entry-points.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `68-my-mp-neutrality.yaml` | prepared variant | `68-my-mp-neutrality.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
+| `69-money-map-v2.yaml` | prepared variant | `69-money-map-v2.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
+| `70-vic-election.yaml` | Android-only variant | `android/70-vic-election.yaml`: Election clock links, Android seat chooser and Back dismissal of the page menu |
 | `release-community-hidden.yaml` | not applicable | `release-community-hidden.yaml`: Production-only hidden-Community check needs a production binary; e2e deliberately includes fixture routes |
 | `review-pages.yaml` | prepared variant | `review-pages.yaml`: Parameterised helper; exercised by parent journeys |
 | `reviewer-walkthrough.yaml` | prepared variant | `reviewer-walkthrough.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
