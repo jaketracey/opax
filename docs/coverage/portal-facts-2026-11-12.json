@@ -1,0 +1,5008 @@
+{
+  "date": "2026-11-12",
+  "base_sha": "4568395112fd90c1c96bb4d452760177b8c15cf1",
+  "scope": "Local portal facts repair. No APH acquisition, deployment or production writes.",
+  "publication": {
+    "bills": 2989,
+    "generated_at_retained": "2026-10-04T16:27:54+00:00",
+    "method": "Restore original sponsor-party label/null fields from base 456839511, then decode/map only pre-existing labels with export_bills.py --normalise-sponsor-labels, using its existing sponsor_party_token function. Original nulls remain null and 12 non-party values become null. No sponsor identity or dated affiliation is inferred. Division facts are reconciled and validated against standalone records at export time; page rendering reads the reconciled embedded copies. The collection timestamp and all other retained bill facts are preserved."
+  },
+  "findings": {
+    "grant_program_ids": {
+      "affected_before": 24,
+      "affected_after": 0,
+      "long_source_ids": 23,
+      "long_suffixed_keys": 9,
+      "case_collision": {
+        "before_total": 145674336,
+        "before_awards": 8,
+        "after_total": 88201000,
+        "after_awards": 6
+      }
+    },
+    "sponsor_parties": {
+      "encoded_before": 73,
+      "encoded_after": 0,
+      "unrecognised_before": 12,
+      "unrecognised_after": 0,
+      "noncanonical_before": 585,
+      "noncanonical_after": 0,
+      "existing_labels_corrected": 585,
+      "original_nulls_filled": 0,
+      "non_party_labels_removed": 12
+    },
+    "bill_division_tallies": {
+      "conflicts_before": 8,
+      "conflicts_after": 0,
+      "affected_bills": 3,
+      "bills_checked": 1003,
+      "embedded_division_links_checked": 4230
+    }
+  },
+  "corrected_divisions": [
+    {
+      "keys": [
+        "federal-representatives-5650",
+        "federal-representatives-5651",
+        "federal-representatives-5652",
+        "federal-representatives-5653",
+        "federal-representatives-5654",
+        "federal-representatives-5655"
+      ],
+      "bill": "au-federal-r6069",
+      "ayes": 75,
+      "noes": 74,
+      "outcome": "affirmative",
+      "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2019-02-12.xml"
+    },
+    {
+      "keys": [
+        "federal-representatives-5063"
+      ],
+      "bill": "au-federal-s1099",
+      "ayes": 73,
+      "noes": 72,
+      "outcome": "affirmative",
+      "evidence_url": "https://data.openaustralia.org.au/scrapedxml/representatives_debates/2017-12-06.xml"
+    },
+    {
+      "keys": [
+        "federal-senate-3304"
+      ],
+      "bill": "au-federal-r5292",
+      "ayes": 37,
+      "noes": 37,
+      "outcome": "negative",
+      "evidence_url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-09.xml"
+    }
+  ],
+  "evidence": "Reviewed divisioncount corrections in scripts/corrections/divisions.json agree with the named aye and no source rows for all eight divisions.",
+  "regenerated": [
+    {
+      "path": "portal/public/bills/au-federal-alrc-2370.json",
+      "before_bytes": 7800,
+      "after_bytes": 7775,
+      "sha256": "a39c7670938f3e8c41770fb21256c36494b1993bafb56c7282a1e11bc3a57d8d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2371.json",
+      "before_bytes": 6834,
+      "after_bytes": 6809,
+      "sha256": "17f1ec4c629aa661022e5af85512eb030bff6fd8ee2f34936c76afaf9b1136a8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2374.json",
+      "before_bytes": 19249,
+      "after_bytes": 19228,
+      "sha256": "242b137ec3af88d6b1cc457506a12ab1aff30d93d0272c7d0f708863a4da0eae"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2384.json",
+      "before_bytes": 15689,
+      "after_bytes": 15690,
+      "sha256": "48fd9018e0cd6d1d106138bcfe04cbcb67bd8a8469cee8c57fcc7d0c465b5c6b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2388.json",
+      "before_bytes": 9836,
+      "after_bytes": 9792,
+      "sha256": "bbf5314e0f72520f0563bfd7387510d412dc2f17a89fd62e7704de24128a55d2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2404.json",
+      "before_bytes": 12912,
+      "after_bytes": 12887,
+      "sha256": "b836a7d902cff2c1301522f87778a0774da68977e2325aa7a949c5dd9f89e543"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2405.json",
+      "before_bytes": 14931,
+      "after_bytes": 14906,
+      "sha256": "42146d577b38474cb3c22726cbc9fb798da3282f5c946e308006e9b41916d565"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2406.json",
+      "before_bytes": 16357,
+      "after_bytes": 16332,
+      "sha256": "6804da7b1b634946a4b296ff1e2621c1b6f6106da885c1365d8af86853b85d1b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2413.json",
+      "before_bytes": 20139,
+      "after_bytes": 20140,
+      "sha256": "36d098413b9ba6fe678f05db6abab352beb9c91c7a106ddcb4d5efc46b85ec17"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2414.json",
+      "before_bytes": 13944,
+      "after_bytes": 13900,
+      "sha256": "4cd24eec11133b27aea5ff23eb227f0fdad6cd30791dfbfeccfe7fd36583179b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2421.json",
+      "before_bytes": 17110,
+      "after_bytes": 17111,
+      "sha256": "c386cafcbe1d9c6e088e3a5194438d4a3d6dd3b4b26b13676f1029bce4aafd79"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-2430.json",
+      "before_bytes": 6255,
+      "after_bytes": 6211,
+      "sha256": "c333bf14013850d75b1c59f402742b8c082154282dfac1b950ef90dd2c307788"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-4142.json",
+      "before_bytes": 10465,
+      "after_bytes": 10440,
+      "sha256": "0053aba6b168700eab75d6fca9a1e795372578727828f45a0a0852329d20b0a2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-4144.json",
+      "before_bytes": 11900,
+      "after_bytes": 11875,
+      "sha256": "f599fb5a579d32baccae77913549c852688b2978a9f3e7effb55441777775275"
+    },
+    {
+      "path": "portal/public/bills/au-federal-alrc-4164.json",
+      "before_bytes": 6377,
+      "after_bytes": 6355,
+      "sha256": "a81ff70318ae81c4d28d4a18c5ae3d8ab7da083becf58729ba4f44e6233c2b31"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5121.json",
+      "before_bytes": 22222,
+      "after_bytes": 22197,
+      "sha256": "ac06d556e7e2faa77fc51481d820000114ed196faa1d51d8011b3d8dee877e67"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5129.json",
+      "before_bytes": 19889,
+      "after_bytes": 19864,
+      "sha256": "8818dad7538905207268b69a02d3fff9d0963aa84584500e5bb37f9162991439"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5130.json",
+      "before_bytes": 11291,
+      "after_bytes": 11266,
+      "sha256": "8a42a75fe32d04bc8aebec6c1ad39790c4ae77d5dd6e54653a7f3a889d23a1b6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5137.json",
+      "before_bytes": 28487,
+      "after_bytes": 28488,
+      "sha256": "d962d13671e23fd7cb16797fbedab260b16456af719cf8a4894fed5168b89fd1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5157.json",
+      "before_bytes": 3650,
+      "after_bytes": 3623,
+      "sha256": "3676dec3e6f637a9cfc002ea863f5c66eaae3e5051fc3a147bb5dedb41b74023"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5160.json",
+      "before_bytes": 2877,
+      "after_bytes": 2866,
+      "sha256": "baed5bdba0bc340befe06e1b4361704f69ca440c4f1aede472885230d6f45c13"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5162.json",
+      "before_bytes": 3060,
+      "after_bytes": 3052,
+      "sha256": "12c9e393a06303351e06315d469350b8cb4e20913ce740c8dc0519f488d98529"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5173.json",
+      "before_bytes": 32349,
+      "after_bytes": 32325,
+      "sha256": "a8d038b7acdd0d5ff69464b1e7d442c64898cc98b24ef8364148180035b67e15"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5174.json",
+      "before_bytes": 40891,
+      "after_bytes": 46863,
+      "sha256": "6e9eee0e582ee6d40342f8eee453a2274b0ec5d0f21df84fa01e4c340b9dd1db"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5200.json",
+      "before_bytes": 13883,
+      "after_bytes": 13884,
+      "sha256": "6140f9f6ce4b34a53eecb65327daaa22d850e8cb868b74da915ee217ecd0d110"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5228.json",
+      "before_bytes": 5695,
+      "after_bytes": 5697,
+      "sha256": "5b79d0aea6a577e7d497a842ffaf27bb0468bc6cb7734f2955901b40a0a4172d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5229.json",
+      "before_bytes": 1708,
+      "after_bytes": 1700,
+      "sha256": "c904543bfc8babfb3267a7e4f3e93c8d5d72cd12994fb829764a2bd686c6091c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5255.json",
+      "before_bytes": 44917,
+      "after_bytes": 44921,
+      "sha256": "98712589e7f258343ee02efa4029498578bce1fe04baf599d76e179197450261"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5256.json",
+      "before_bytes": 33783,
+      "after_bytes": 33785,
+      "sha256": "366efa3c24ff25b9875969d95fb70a770ed04633e888fb40946b773bda9f1193"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5271.json",
+      "before_bytes": 17330,
+      "after_bytes": 17331,
+      "sha256": "85312bd1ce1fdc04c7917fb3ed80f147a6003d6a39d3ec956ba46938a902f4d5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5292.json",
+      "before_bytes": 38490,
+      "after_bytes": 38487,
+      "sha256": "e9f7fda349277fa2620e4a0f89b98eee3f567a7c069fd5ee6a7cfe5db53aef73"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5300.json",
+      "before_bytes": 31686,
+      "after_bytes": 31621,
+      "sha256": "820180bb0a352f500f485845716b3c8d1dd14c1600da67a1508c2b93b26e01c9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5303.json",
+      "before_bytes": 34404,
+      "after_bytes": 34405,
+      "sha256": "d428a3ffcf958a93a2f821a3b02332ba3ea39b1e715fccc0372d1b2fccdba21e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5308.json",
+      "before_bytes": 8504,
+      "after_bytes": 8505,
+      "sha256": "0f92a341b70baf5e6f4288bb18741403b286bf7bdb01f15ea8cabfd2b50d5796"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5311.json",
+      "before_bytes": 33959,
+      "after_bytes": 33960,
+      "sha256": "034a2d586b44a833030e30c445b8394a6a862663075e4d145bc2dd0621fca0cc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5322.json",
+      "before_bytes": 3145,
+      "after_bytes": 3137,
+      "sha256": "306e8c6ab71e5ae13144c6dd9418fd792d56c8ef80ff1a4130c28e0cd9356860"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5326.json",
+      "before_bytes": 22217,
+      "after_bytes": 22218,
+      "sha256": "33a8c5c88fcd296fa91d787255d6bb30d9d0682672637c9a48df050d71f63741"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5327.json",
+      "before_bytes": 32829,
+      "after_bytes": 32830,
+      "sha256": "e6cd522bdfc2c9fb2c3566876701fc844d26c9c606544787c8c6dc73c6f05d0b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5331.json",
+      "before_bytes": 11461,
+      "after_bytes": 11439,
+      "sha256": "922ebf4821d2ede6ec6578039b12611f1bee9ad52faf020d90a12809cbc42d3b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5351.json",
+      "before_bytes": 3387,
+      "after_bytes": 3379,
+      "sha256": "59b4aeba9c6885fa12a92aaa56a12f3e4dd7725ea5a104cbe62bc9d48c731ad1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5355.json",
+      "before_bytes": 7875,
+      "after_bytes": 7876,
+      "sha256": "55682ff98a755175031074bb2888cc97d9196644cdf902dc7a09d35f5eb7104e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5356.json",
+      "before_bytes": 10968,
+      "after_bytes": 10969,
+      "sha256": "52f39448c03d8274e89a13b4c9f3636f92343c2f56a5ff08e86861437c32508e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5359.json",
+      "before_bytes": 11730,
+      "after_bytes": 11705,
+      "sha256": "490342aec2bb241ee98c3e6c66587c45d699f7c1f50463d55b562110f9485894"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5360.json",
+      "before_bytes": 28574,
+      "after_bytes": 32069,
+      "sha256": "6d4ec013243b8f5ba70346455b65f61a1ab07965991f90f2a424fe28909463b2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5373.json",
+      "before_bytes": 1754,
+      "after_bytes": 1746,
+      "sha256": "9484ec69fbb7ad06d16c955388d64953371e4a5607bad23ed6b8040c880587c7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5374.json",
+      "before_bytes": 2869,
+      "after_bytes": 2871,
+      "sha256": "6a1a2adcc5f26b94187a993cb5390478515b6684c5d108f04a319dd5ad754cf7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5375.json",
+      "before_bytes": 47880,
+      "after_bytes": 54067,
+      "sha256": "fa67d0d9f2f0cf43f4ffa76169d9862c085c6d03c3b2f04ba7789d70bf3a64cf"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5396.json",
+      "before_bytes": 20208,
+      "after_bytes": 22665,
+      "sha256": "0e916d8e6f61640345fa6726b564d24bb490ea474a166d093208afce18f9e85d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5397.json",
+      "before_bytes": 24883,
+      "after_bytes": 24858,
+      "sha256": "ac9007aee01393ae7afd6005495949c15b176599f061116fdebd2d1cbe88d02d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5398.json",
+      "before_bytes": 13161,
+      "after_bytes": 13136,
+      "sha256": "da63972917fa403cc509aff15613f03eb147660b785b7174e8f97a3bd00ffc4b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5413.json",
+      "before_bytes": 15029,
+      "after_bytes": 15007,
+      "sha256": "99d8dc10109b5648ee1b574249589dbf0d558ed7e233db781867bcaf2f7cec4c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5416.json",
+      "before_bytes": 22315,
+      "after_bytes": 22316,
+      "sha256": "91c69bcb127f3ef684d8bcd20bd491088f941603cda98e25fd75d2b62ec473be"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5418.json",
+      "before_bytes": 3445,
+      "after_bytes": 3437,
+      "sha256": "d7cab54828f5317d910a3d06420c95793de3d41d80bb108ad7b39109375b234b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5422.json",
+      "before_bytes": 14662,
+      "after_bytes": 14663,
+      "sha256": "ffc01866b317c6be834eac5ef35b1429526549332d880146354c5eb1b5e440b5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5431.json",
+      "before_bytes": 3750,
+      "after_bytes": 3742,
+      "sha256": "b6753996118ebfd8f41c9c081a30f6a52d9c46040904a288b1346c2abd994697"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5442.json",
+      "before_bytes": 10358,
+      "after_bytes": 10359,
+      "sha256": "c7f63caa9af15eb993a28e708cce736db479ad369c3c75e2019fe50301740bad"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5446.json",
+      "before_bytes": 17226,
+      "after_bytes": 17227,
+      "sha256": "b55ac88c61d2139bf03ebee1bbfddd72b8b5b7387c3604547b3e0173c0b17469"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5462.json",
+      "before_bytes": 15396,
+      "after_bytes": 15397,
+      "sha256": "f5b4e3b119d03c4288a249532528d8da6384ad45ee90fffa556420bc9838ed45"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5463.json",
+      "before_bytes": 45846,
+      "after_bytes": 45848,
+      "sha256": "dc85a740f50a6a833ea3f8ae65adf3a0bf7bb721bfba3128a07b4d0a56f3b2af"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5467.json",
+      "before_bytes": 23471,
+      "after_bytes": 23472,
+      "sha256": "92cae01c248ef8a81ef626fcfdb78a59be64160b1f042ac2c124114e2adf3b22"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5470.json",
+      "before_bytes": 4111,
+      "after_bytes": 4113,
+      "sha256": "ea33f348e161f77c8c46d22860c2835dbe69aaa8bae60d4a98c2f2599be36225"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5471.json",
+      "before_bytes": 3102,
+      "after_bytes": 3094,
+      "sha256": "e0f3971085251cba2150c4808edab53d991718152c0012b1e63f5393ae2f35fe"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5485.json",
+      "before_bytes": 27586,
+      "after_bytes": 27561,
+      "sha256": "dd24050b4dd7d0087bc8c84cc1979e914eca56abe4fc0433d427fe89d5333067"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5495.json",
+      "before_bytes": 27089,
+      "after_bytes": 27067,
+      "sha256": "514f04b487ef88ba4351bbcd8394282447a8b6152d23bb4488471e5356149398"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5512.json",
+      "before_bytes": 8315,
+      "after_bytes": 8272,
+      "sha256": "737ba78518a58319d9083806c26c24d0dc84c59bf9189b93f4727a527dc8add0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5519.json",
+      "before_bytes": 33844,
+      "after_bytes": 33822,
+      "sha256": "2d87750bb3ec5745e35edb1b9210e9a8066508623cc558e5ced272afccec74de"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5521.json",
+      "before_bytes": 3041,
+      "after_bytes": 3033,
+      "sha256": "011725a31628cb8d97b5bb6e90d98ede1b6c06b312cbff387c5299cfb8246560"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5531.json",
+      "before_bytes": 2733,
+      "after_bytes": 2706,
+      "sha256": "c60bd837fe6ded1c99ab2fa349b03b9913600a144bd826a1c2be39d7a9a2031d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5533.json",
+      "before_bytes": 26178,
+      "after_bytes": 26179,
+      "sha256": "f3f683a71bec30ccd0bd10c74139bb346e4cb7c76df26069db5422b2bc0cc16a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5542.json",
+      "before_bytes": 17322,
+      "after_bytes": 17323,
+      "sha256": "2c49fb37e52a5590d82037bbbe331c08769a4a9c5db4fcca08a5a3497f23dc16"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5549.json",
+      "before_bytes": 31347,
+      "after_bytes": 31348,
+      "sha256": "88aa54738f1b2a9136d0438520cde24ea1dc1b86266aabfa687373edda9668a0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5552.json",
+      "before_bytes": 3097,
+      "after_bytes": 3099,
+      "sha256": "243524550387d7ad5f90ec108478037bd96885d8b1076c0f632fe9cfb54c4fb1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5553.json",
+      "before_bytes": 1748,
+      "after_bytes": 1737,
+      "sha256": "fb8dc5856a9e8dc9311d25094e550a9aa813b8eba2b6056cd6f2761bfc0fdfe7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5554.json",
+      "before_bytes": 2719,
+      "after_bytes": 2721,
+      "sha256": "4da08a3f26c5c5eac646b7e328f19c473e9d6e3933d1486540cfcb96cd273fdb"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5557.json",
+      "before_bytes": 15614,
+      "after_bytes": 15589,
+      "sha256": "0aa54e1440125ff1c8dbb04ab4b4cb26b84fe647e30923567a818bcac6377df0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5558.json",
+      "before_bytes": 1769,
+      "after_bytes": 1736,
+      "sha256": "baee47d96a29d683fe5d10f36b00185d48ae776291d486921041882a7e319eaa"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5559.json",
+      "before_bytes": 11672,
+      "after_bytes": 11673,
+      "sha256": "6f73850cb0a38834eb925244bdd306cd2ac51966340c2c54adaaaccde6cff824"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5569.json",
+      "before_bytes": 2841,
+      "after_bytes": 2833,
+      "sha256": "19c2a668db7ae60eabefb767a5aa1f606c071cc981bc8c86124eebec7072ec0e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5570.json",
+      "before_bytes": 3085,
+      "after_bytes": 3077,
+      "sha256": "1ed0d231300fd54f8e08efe1e7686c604a4c112434b11551de218d728fa1e0fc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5576.json",
+      "before_bytes": 3069,
+      "after_bytes": 3061,
+      "sha256": "2319b38ca5f5c47035af44fe27813d1dca57a18318471d097b532aa7dedcde2e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5600.json",
+      "before_bytes": 2919,
+      "after_bytes": 2911,
+      "sha256": "6c35c45fe633be76623ab96ec4c09763250457ff2041b48d3a9e84ffa0873cf1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5612.json",
+      "before_bytes": 15779,
+      "after_bytes": 15754,
+      "sha256": "fa57e3a3a225fb7046d90314da7441ff1b9049e33d2771b75a6da4444acd4c80"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5616.json",
+      "before_bytes": 16361,
+      "after_bytes": 16336,
+      "sha256": "e20d5300c6542701cf7aafc95315b6f9867bbc1f79a6b303731829c4350e3272"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5622.json",
+      "before_bytes": 3096,
+      "after_bytes": 3088,
+      "sha256": "4de0acae34c8a6001feb76a06ff4f186b0a337093334c39962c673c00f4a848e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5625.json",
+      "before_bytes": 2063,
+      "after_bytes": 2065,
+      "sha256": "b06dcd6b81547032485b64af13bf80861cf5a3ef59eb7e1ecf52eb1e6571334b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5626.json",
+      "before_bytes": 124935,
+      "after_bytes": 124941,
+      "sha256": "8a354c06ce7985d1db5311fb50e07882b8775d6b8badfad021f4817bc61f5bc1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5627.json",
+      "before_bytes": 3086,
+      "after_bytes": 3088,
+      "sha256": "1df744ff12ce4f37da63873b9680e4ff548cb819b75d1ad13696d5440fd38181"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5628.json",
+      "before_bytes": 2574,
+      "after_bytes": 2541,
+      "sha256": "f02521a6705e768df968b0e4470d30fa2d443ff7659df276f1f74ddc57d40472"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5636.json",
+      "before_bytes": 1754,
+      "after_bytes": 1746,
+      "sha256": "32f501bc4cf6424969ae8fd95f3e37274629a189d399f5aa0825eb3cae80bc6b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5648.json",
+      "before_bytes": 12017,
+      "after_bytes": 12018,
+      "sha256": "d755b86bf292772fb7bc767fa917ea36159aa3422a3a16f94cbdb753ca163dbf"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5658.json",
+      "before_bytes": 1697,
+      "after_bytes": 1670,
+      "sha256": "3364f1b3b07f813f5a5952e5eb094be6f2294dffe8bf1f3efce89917816344f8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5659.json",
+      "before_bytes": 3135,
+      "after_bytes": 3124,
+      "sha256": "e81548048ac99cfafea63b5922ad8a03ea9d7ab4189f542d14200a7143f43ea5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5660.json",
+      "before_bytes": 1674,
+      "after_bytes": 1676,
+      "sha256": "6ff2d4ac1f37ac45b8b53f519be1e3fc1df402adbc9abb81410cded2b85a41cd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5661.json",
+      "before_bytes": 3040,
+      "after_bytes": 3042,
+      "sha256": "4ccfbc7e14f318e28e24c45ca94783776bd27ee62da4eaa4b5479826f4152a09"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5680.json",
+      "before_bytes": 20754,
+      "after_bytes": 20755,
+      "sha256": "6aea995f9aa9dc0148061256d8b6ff7cb2b4f6aeeb6ef3cc6e0ee73ef623134e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5687.json",
+      "before_bytes": 24264,
+      "after_bytes": 24240,
+      "sha256": "0f0190a7ec393cb264884e3a68115f8b3a5a4156dd56a15e7803a62af70f7c1d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5689.json",
+      "before_bytes": 31000,
+      "after_bytes": 31003,
+      "sha256": "b3e342e8a2c70bbc3c2faf522011c76a4f118bc243144a6e489c7714e828f022"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5692.json",
+      "before_bytes": 27062,
+      "after_bytes": 27038,
+      "sha256": "3796d96beb7f6539d90b8d97c0bfeee324d6a164bf2a75db6ef6be6947a12786"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5698.json",
+      "before_bytes": 13093,
+      "after_bytes": 13072,
+      "sha256": "70133e37d887caf34070405d589d88ac209ba864e119349497034e66cd28af13"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5700.json",
+      "before_bytes": 25592,
+      "after_bytes": 25593,
+      "sha256": "ffeabbeefb59c8c1814d75d617ed8792e8188c42a71fcf669127db8cb9d0cbaf"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5702.json",
+      "before_bytes": 13752,
+      "after_bytes": 13727,
+      "sha256": "68af524770c08edca641aa58b88bb59a6fa8977465f33a1e7c86142aa20fccc5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5705.json",
+      "before_bytes": 10388,
+      "after_bytes": 10389,
+      "sha256": "08323cf2ecfc704315abdaa22b807095ceea1ea12b7d2c210fd198ef696d33a0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5708.json",
+      "before_bytes": 1662,
+      "after_bytes": 1654,
+      "sha256": "c1ecda2765478d7c42b3adf73f59a0ae56568f5680482280865975b7e4bf0e6c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5709.json",
+      "before_bytes": 2885,
+      "after_bytes": 2867,
+      "sha256": "cc405e353f9950935691b41320d945d2022d74ef2a3abe2496a4648a45f47e2e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5710.json",
+      "before_bytes": 2994,
+      "after_bytes": 2976,
+      "sha256": "4ec91bf8064c88fcd7502ef177980d51e7ac431e231715132d871e1b00cdf81a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5711.json",
+      "before_bytes": 2900,
+      "after_bytes": 2879,
+      "sha256": "d0a1fad7595adfb88a726ba870ad29931082ac63f0d86e3b457bb1d18b511b33"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5725.json",
+      "before_bytes": 3134,
+      "after_bytes": 3116,
+      "sha256": "76c1bbf42dba6b23c8089d21eeee4116a0e4a75f2e344fe9cced96c74be517b9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5726.json",
+      "before_bytes": 3009,
+      "after_bytes": 3001,
+      "sha256": "dbdfc530b140db1ebebef81f1cacc84746f71bda6d143b986774e74bad61d8a7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5734.json",
+      "before_bytes": 36997,
+      "after_bytes": 36999,
+      "sha256": "a746bbe524c993d7b94e4c9cc3809f909ea64dffbd43205c015087d264f68b92"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5742.json",
+      "before_bytes": 3168,
+      "after_bytes": 3160,
+      "sha256": "b6763be8bdc9d934b585269a12093fc4e43bce0a227c9fe04e26f88c870f3931"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5743.json",
+      "before_bytes": 3123,
+      "after_bytes": 3105,
+      "sha256": "d063903276cae649cf2ba1bff88b1ad2c26a08a34bab9b98461797f9d63c86a0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5753.json",
+      "before_bytes": 2975,
+      "after_bytes": 2948,
+      "sha256": "5e0d231bae5eff54d2e16978901720a0ac6b1f9051eb61fd3b51231395bc6bf2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5755.json",
+      "before_bytes": 29749,
+      "after_bytes": 29699,
+      "sha256": "f4efa796afefd28c10c47dd2279cb87a02a9561aaabbf627b85e5519d93fba60"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5763.json",
+      "before_bytes": 3512,
+      "after_bytes": 3491,
+      "sha256": "755a9e621121250ce95639daf7929a7622a084d3c3ee4a7354632d42cad9d79d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5764.json",
+      "before_bytes": 1722,
+      "after_bytes": 1714,
+      "sha256": "9d4365150a1960cb251502c6e6f2690b8a6bf9926ded52e01c3849fe2cf47ffd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5765.json",
+      "before_bytes": 2558,
+      "after_bytes": 2537,
+      "sha256": "503cb864c063e39d58e319c8ba3671b27237bf4235fefd6ef91dd4d9340061e2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5773.json",
+      "before_bytes": 3324,
+      "after_bytes": 3306,
+      "sha256": "ea787389b08a771dd7f41fa57636b67c9693a8dffd7b9ca74c0d6893bd5f37c5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5774.json",
+      "before_bytes": 2142,
+      "after_bytes": 2121,
+      "sha256": "45b58ee030452e0245aa2d65341b83074812215d1a304c037efe5bc8fec49855"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5775.json",
+      "before_bytes": 3855,
+      "after_bytes": 3834,
+      "sha256": "a0c4ecf5ea96bbd3338069ae50b33b782b357141b62db086cccbce1e91ad29af"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5776.json",
+      "before_bytes": 3433,
+      "after_bytes": 3425,
+      "sha256": "ec37a5cfcce4903d4c7afd05c4c7729715a38bd6e7a8d4d2b6845ac750d72541"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5777.json",
+      "before_bytes": 4097,
+      "after_bytes": 4079,
+      "sha256": "650b2b2a6af0d134725806228b3a38b98c4d52d64e04732e0f38793a2d76108c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5790.json",
+      "before_bytes": 25948,
+      "after_bytes": 25882,
+      "sha256": "f777630467d641f6de6c362992eee0205ff6948924a92e99e7e58e90336a3515"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5793.json",
+      "before_bytes": 15074,
+      "after_bytes": 15049,
+      "sha256": "1e7f5b2eb6aeb559b9f73b8a9da92c9d4e7a2e483f3f95bf6a80b9d2759d49f9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5798.json",
+      "before_bytes": 26203,
+      "after_bytes": 26181,
+      "sha256": "940124ff4e932dd92555518d5230aced7923e124f9eaacfe2b1a228c89983cf8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5806.json",
+      "before_bytes": 21294,
+      "after_bytes": 21273,
+      "sha256": "0999743561c94f4857c5b264adfff0ea4a88569f060725f5b8e604816903a17c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5807.json",
+      "before_bytes": 2997,
+      "after_bytes": 2979,
+      "sha256": "207aad003b4fd6a1331f37927da7b6f3b283dfc774fd0bbd92371817532d4998"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5808.json",
+      "before_bytes": 3254,
+      "after_bytes": 3246,
+      "sha256": "16cdd694dace1d039a06f3014fc096a88510f47d2d5583835aa68652efbf50c0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5809.json",
+      "before_bytes": 2994,
+      "after_bytes": 2976,
+      "sha256": "6f62b8f0ff38784a81bc99460e3b29c17f40447dcd1dbeb87fda12717151e732"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5810.json",
+      "before_bytes": 2731,
+      "after_bytes": 2723,
+      "sha256": "5c22992a9f545a0061a1a4f420a45f24d18122569e5e90f27f6e26da5b51e6af"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5820.json",
+      "before_bytes": 2748,
+      "after_bytes": 2730,
+      "sha256": "4b0cccfba31ace6838f0fc6874004358ede865d4510bc3b3f864130b8967b2f5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5821.json",
+      "before_bytes": 26532,
+      "after_bytes": 26533,
+      "sha256": "debed988a3e96e61ab89b9bce81481d94ec1371ba01fddb393fdf14bbc93f1b4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5824.json",
+      "before_bytes": 4113,
+      "after_bytes": 4115,
+      "sha256": "9cb41e71eb7a9548a9b05da14827510e355273aa5df7c16a6826bec57ff716c9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5825.json",
+      "before_bytes": 3530,
+      "after_bytes": 3509,
+      "sha256": "1200a2dcfcb9cdcc6ee27ff96c310541ce12e1384a2810ae40a79eac80493aa6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5828.json",
+      "before_bytes": 1714,
+      "after_bytes": 1696,
+      "sha256": "5512921465e1f7c86591ade9d859c491bc79bd697ee096c4147c0ac9fde6832a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5829.json",
+      "before_bytes": 3792,
+      "after_bytes": 3774,
+      "sha256": "4e05c78eb48e61f4cea820233e4eac5e75a9f370533212f74402d039c4e380f1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5834.json",
+      "before_bytes": 3255,
+      "after_bytes": 3247,
+      "sha256": "3019d5f2c4a050edbb5967e85e8a317e7e8403c1bcc80d743aa4915f8c1acb2c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5836.json",
+      "before_bytes": 2955,
+      "after_bytes": 2937,
+      "sha256": "db5566110fa97ea97b192fbec21159030df27a2c4578f65d0995addbda75a25b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5858.json",
+      "before_bytes": 24745,
+      "after_bytes": 24746,
+      "sha256": "d21ff5e76b361c18a4aa771ff664eed0dec6f858287c2d899098317db5c6c4bd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5868.json",
+      "before_bytes": 3543,
+      "after_bytes": 3525,
+      "sha256": "eabbfe498896ba5d397467d10924a6178f15ced5b662a488eecae0b42a177dde"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5870.json",
+      "before_bytes": 3756,
+      "after_bytes": 3748,
+      "sha256": "bca3496a817880d0abb8ac3166b47c259315d287c92d2dd5d413d418f566f959"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5896.json",
+      "before_bytes": 18585,
+      "after_bytes": 18564,
+      "sha256": "9b7ade1ecee74950d917aa90501e472ee92962edbe550bc8225db364e223be6b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5897.json",
+      "before_bytes": 16403,
+      "after_bytes": 16382,
+      "sha256": "e79fad0b1469396972e6a4a61849f7f049e680963d9eeafad5d5742fa7bc3f06"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5900.json",
+      "before_bytes": 21989,
+      "after_bytes": 21969,
+      "sha256": "23d06da748601e8fc8579e30c15d828598e89463ec8c1987b4a6729025b3d6bd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5901.json",
+      "before_bytes": 22311,
+      "after_bytes": 22291,
+      "sha256": "f21bf121540cf7da133e044076655198626a4267cfddfa34c87aed397849bef3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5902.json",
+      "before_bytes": 3504,
+      "after_bytes": 3471,
+      "sha256": "dc1a5ff66f737d4ab1f0a40e6fbf4ffea820f044d7b906141cf52f34ca0289e7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5912.json",
+      "before_bytes": 3036,
+      "after_bytes": 3028,
+      "sha256": "488a87d0001c8315e0537316cf37f32ca376319b9362c58840be4c28aa581ae3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5915.json",
+      "before_bytes": 2874,
+      "after_bytes": 2863,
+      "sha256": "be4caeccac08f8fa127711779dc06535b72ffc4b4524b4f942564b34c4d5303d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5928.json",
+      "before_bytes": 2679,
+      "after_bytes": 2671,
+      "sha256": "7a88a51f3a51244603a6b9f024c100ff7da59f275292d26d50204a04a3213994"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5937.json",
+      "before_bytes": 2776,
+      "after_bytes": 2768,
+      "sha256": "d47f479f867b384970ec3e9f1d3ccebb57fd01bc25bff0c916cb1a12d020bad2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5938.json",
+      "before_bytes": 3282,
+      "after_bytes": 3274,
+      "sha256": "273095f672090b92429ed9d0d4e21361fb697e10d2ab07bfb5a601f6dff2b4e7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5955.json",
+      "before_bytes": 3476,
+      "after_bytes": 3468,
+      "sha256": "9aadf6e13b286a432bbe3c8faa6b953dfdcb4aecc5a7276e2d34d253773f2129"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5965.json",
+      "before_bytes": 2761,
+      "after_bytes": 2753,
+      "sha256": "0f6e6026869da81239d1531067a08e3a38e3416fd44f4dab664c73ef9aa752af"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5966.json",
+      "before_bytes": 2870,
+      "after_bytes": 2862,
+      "sha256": "bd36011989cb817733fe41ce43798ba288f84058e9e264852185146edb1a923b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5967.json",
+      "before_bytes": 1750,
+      "after_bytes": 1742,
+      "sha256": "c5fc1d7be679851650d583f9145111894ac4dcdad5714444ae3418cb2be11e94"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r5980.json",
+      "before_bytes": 2988,
+      "after_bytes": 2977,
+      "sha256": "c7424aba28c51de8abee7426c697313cb142bf913fdc984b450312e6ba53c99e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6002.json",
+      "before_bytes": 3091,
+      "after_bytes": 3080,
+      "sha256": "2eba6518a954889d7f92a88553ca6db3501b8b749a04600d9c94dc41a7d06cec"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6027.json",
+      "before_bytes": 2269,
+      "after_bytes": 2258,
+      "sha256": "9f1c09caaf4f188eff7c9a067ef7ed7aefbe133eb6d0c78216b99384ace7e37d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6041.json",
+      "before_bytes": 2200,
+      "after_bytes": 2189,
+      "sha256": "2632a3d58b54f7a538b17f98ba98c75fb0c4d3c51b005537133ee01000a952f3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6056.json",
+      "before_bytes": 3421,
+      "after_bytes": 3413,
+      "sha256": "1b6aaa01dc3b3c45414f7963c55467ad9356e2281d4eac135274ef0a7b9a10a6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6057.json",
+      "before_bytes": 5900,
+      "after_bytes": 5902,
+      "sha256": "be85dfee481acd10cd1bc05399154da5d6adc9b8abedce63c51d2c9ccc69317e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6059.json",
+      "before_bytes": 1694,
+      "after_bytes": 1683,
+      "sha256": "844f33b27d650ee115c9130700d23c8fa488458cd9a30efc73bc4e83611b1f5f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6060.json",
+      "before_bytes": 3040,
+      "after_bytes": 3029,
+      "sha256": "d756b37e2fd340c8bdee38ed395d465c667080b5416020376e4965badd8a4b45"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6066.json",
+      "before_bytes": 4252,
+      "after_bytes": 4244,
+      "sha256": "bb7712f35726dde2bae6dfe2b0526b82c751b9b28aab66f4bc89f4cd7ca5f5f6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6069.json",
+      "before_bytes": 78609,
+      "after_bytes": 78627,
+      "sha256": "47d5ec18d684b38be48486121efafae351233032448feafb1e87820d6ee0d209"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6099.json",
+      "before_bytes": 3187,
+      "after_bytes": 3176,
+      "sha256": "50757a4f46927e8f82e988896a5be3ef9cc638f96b706d5d67dc2c1b69d08d37"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6110.json",
+      "before_bytes": 11139,
+      "after_bytes": 11120,
+      "sha256": "8c6ddbc9f29cabb94c7698c0b8ece852b6e25b52cf4b01a4b5fe2e680b6a084a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6131.json",
+      "before_bytes": 3425,
+      "after_bytes": 3417,
+      "sha256": "e5baedd9a9f06b85f2fba06499405926f32271a0d17a7ac1e695b0d924558119"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6132.json",
+      "before_bytes": 7086,
+      "after_bytes": 7069,
+      "sha256": "3e98c1513eda4ef9cfae4fa037b57a6e2b4e21e56de3ac31ac6e3f9db7c039b1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6135.json",
+      "before_bytes": 9786,
+      "after_bytes": 9788,
+      "sha256": "21aac65e036f7ab2597fbe746cecc74eb6c58fae2c755d86fad141063399e407"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6136.json",
+      "before_bytes": 3240,
+      "after_bytes": 3236,
+      "sha256": "89464eeefebfb38d5290fe446ce5cd654cd2ac6238aa747e6890d126abad1126"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6137.json",
+      "before_bytes": 2987,
+      "after_bytes": 2979,
+      "sha256": "80963d5a783c91a42e18d5af55e6e9d944e90ed048aee1ec7241dd99bf2fad09"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6138.json",
+      "before_bytes": 3029,
+      "after_bytes": 3018,
+      "sha256": "09329dcf97f976c73f8853f5423395d776e68267b676293c3e7bf83095b46fd2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6139.json",
+      "before_bytes": 3117,
+      "after_bytes": 3109,
+      "sha256": "8df993e489ac44033480bc1c4279ec484c12622758df6a47313acadde4617b29"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6141.json",
+      "before_bytes": 16565,
+      "after_bytes": 16566,
+      "sha256": "e195ad468ed845a4e708c23dd6346e4ffa39ab2950b21c6b1da86ad46078ec0e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6156.json",
+      "before_bytes": 3217,
+      "after_bytes": 3209,
+      "sha256": "54e3e61f5e8d16f6bf547e0bc1cf7c813ca8ff2d6ca585b7237128cb2a45ea60"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6158.json",
+      "before_bytes": 3740,
+      "after_bytes": 3732,
+      "sha256": "3143e5f0336853726c07ecb5a70cf398fe54ea891a6a763b64cd4e55e4f8cf09"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6159.json",
+      "before_bytes": 4496,
+      "after_bytes": 4498,
+      "sha256": "2be5260151e04cbb5ff753e4fe3f6755396d42a3c45c1e9dd9e99aaa16064638"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6200.json",
+      "before_bytes": 2941,
+      "after_bytes": 2924,
+      "sha256": "2871bf92e5b9ac54fea74885655e45ecbf8daec55280658042cc1731cd518d8f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6201.json",
+      "before_bytes": 3186,
+      "after_bytes": 3188,
+      "sha256": "6e7adf9e88d14b4d1396687c217dff29b249f7e48f994a98de74749cfaabed9f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6207.json",
+      "before_bytes": 3239,
+      "after_bytes": 3231,
+      "sha256": "d659132b9f7b9d2edda668498c9e90fd262a911f8a26dbf1987a198281cbd227"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6210.json",
+      "before_bytes": 1717,
+      "after_bytes": 1709,
+      "sha256": "47e6f80829f47e555caaa000c3d01bc16a421d4915ea1c0791ed5dc6477ac85b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6212.json",
+      "before_bytes": 3348,
+      "after_bytes": 3340,
+      "sha256": "13e3163536730b14d6d87678199daec28c5f94e0df2f2f9296987747648564cb"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6216.json",
+      "before_bytes": 3396,
+      "after_bytes": 3388,
+      "sha256": "033bed2e95fc357feae2172021584a7915c3e3053c1848372f8238db7834c8b3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6217.json",
+      "before_bytes": 3125,
+      "after_bytes": 3117,
+      "sha256": "97d9db575ee1d8c7d1c9e6580bfff2d45e327018bcda055d0d0fe8ff794f6116"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6218.json",
+      "before_bytes": 3564,
+      "after_bytes": 3566,
+      "sha256": "6f3199e050cf405121d9bf77df3f0b41b2c35cd62cfb009a54060ed1c0144683"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6232.json",
+      "before_bytes": 3560,
+      "after_bytes": 3549,
+      "sha256": "9481ccabbe272ba111140bde700710b8c43ca51f0ddc6c35dc9834c7a34f77c7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6233.json",
+      "before_bytes": 3839,
+      "after_bytes": 3831,
+      "sha256": "abdcc3b7bf6b6105bebf7fa5177ed1f64fbb4a6f0d2f7702ad60dae77c11a89a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6234.json",
+      "before_bytes": 2966,
+      "after_bytes": 2968,
+      "sha256": "c9736cfe7e4e4aeed4c0e0799af67df163811f4a655169de797d5402c5910016"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6235.json",
+      "before_bytes": 3545,
+      "after_bytes": 3537,
+      "sha256": "dadd75cffe4e0be23232126e0ece06838ab4fc827d4e3221f76fa7d0e33c1375"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6236.json",
+      "before_bytes": 2423,
+      "after_bytes": 2415,
+      "sha256": "1a4e8c805b13d4173f73c3e6357e4cc5d96915070021020a022c1740643558a7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6257.json",
+      "before_bytes": 3665,
+      "after_bytes": 3667,
+      "sha256": "26c061789578f249785c55b324691dafb37f073b2dc0e0bf2d91c9de4b71da37"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6294.json",
+      "before_bytes": 2861,
+      "after_bytes": 2853,
+      "sha256": "83f3edb54a21ac0be0dca7b206067886d3e756f1b9e01fc5d54df40a2bf9f2c1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6295.json",
+      "before_bytes": 3481,
+      "after_bytes": 3470,
+      "sha256": "ef5dd63f4853f9f43a4e87eba45f1f993d743362ddb551181c0f2cb78fdca611"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6296.json",
+      "before_bytes": 2160,
+      "after_bytes": 2149,
+      "sha256": "086e67e470770c62b63ce05a2f593c992d05749e96e6403060ca451e494f8897"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6300.json",
+      "before_bytes": 3765,
+      "after_bytes": 3757,
+      "sha256": "9db722861f40255fb31083b83aac124ddb5c14b1602ed02a5b41317b4dc0faaf"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6301.json",
+      "before_bytes": 2812,
+      "after_bytes": 2808,
+      "sha256": "242dd8cad37180ca10bed4a5f659654be84f8b51400558deec7cba3e634bc96b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6348.json",
+      "before_bytes": 56241,
+      "after_bytes": 56244,
+      "sha256": "fae3e622eb7b7cee291dbf2cc7b509bb5e6454ef8c360391bceca8fd5bfad58c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6355.json",
+      "before_bytes": 3131,
+      "after_bytes": 3120,
+      "sha256": "25fdcfbaf26b58f13c44e8cad819ce365fb55b13132012ba5546f877b6bfcc35"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6389.json",
+      "before_bytes": 4012,
+      "after_bytes": 4001,
+      "sha256": "b03031efc0d6ef655f5ab68a98ebc3cf6df12c644137b8a2d7d815c1206ea4ab"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6404.json",
+      "before_bytes": 3319,
+      "after_bytes": 3311,
+      "sha256": "e9513d39f97206fe02708b23a3950167a4894fc8a934d46eeeb0aeae49493d7b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6405.json",
+      "before_bytes": 2978,
+      "after_bytes": 2967,
+      "sha256": "af08cfb21836c42982c5015a89af68fc9deb259ec42206913406aaf76bc31243"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6422.json",
+      "before_bytes": 2800,
+      "after_bytes": 2789,
+      "sha256": "8b7ada17c7ff04774308452ccad638047226b9512b139edcde8ee8e54cbccd04"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6434.json",
+      "before_bytes": 3300,
+      "after_bytes": 3289,
+      "sha256": "b1c3f7eaad49cdc556718ad0825a06eeeb3d8ce810b4c7cf2d468c7947df3645"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6435.json",
+      "before_bytes": 3964,
+      "after_bytes": 3956,
+      "sha256": "c96bf664dad2c72a9b32c1989a5782dea8c69708dfb46dbd79c68d895edf625c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6442.json",
+      "before_bytes": 3789,
+      "after_bytes": 3781,
+      "sha256": "e80bd1c062dd2269019f4f2d607593697d68211ca07d4c0328a4794e15bec183"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6443.json",
+      "before_bytes": 2996,
+      "after_bytes": 2992,
+      "sha256": "032c62ad0859e450b7bf607979eb07c95e87e0c2aea8f06cf7f83d638bc50d21"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6447.json",
+      "before_bytes": 35896,
+      "after_bytes": 35897,
+      "sha256": "41431c31c346e82d3f9fef119daeab1b22d73d4f394358038cd7dad313b44715"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6461.json",
+      "before_bytes": 2314,
+      "after_bytes": 2303,
+      "sha256": "b28e2259da85cb6fdfd13731585df19c076a443a97cb453e29fd8ad896bead88"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6462.json",
+      "before_bytes": 3009,
+      "after_bytes": 3001,
+      "sha256": "0762e46f39b13c8f42c23e1f6492b877078f03d40960f64c3c8528d7e6c1a25c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6484.json",
+      "before_bytes": 3764,
+      "after_bytes": 3766,
+      "sha256": "867fb84104d0c30414000b49532610f67c57a19b1577c747d2e88881934148b2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6488.json",
+      "before_bytes": 24205,
+      "after_bytes": 24206,
+      "sha256": "e9b0873dda4ad6ee75efff40568d57205cb25db92c21275b8c90b89d42ac448d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6489.json",
+      "before_bytes": 3362,
+      "after_bytes": 3351,
+      "sha256": "729ad240c325cb17d7d2df487c6ed329ce8bd51cbea9dad42b3be7d393f1ddd0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6490.json",
+      "before_bytes": 3762,
+      "after_bytes": 3754,
+      "sha256": "aa019ca44e586b3adbf00be3d469aad06dd8b0bb89824a673786e74f8ccf0422"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6503.json",
+      "before_bytes": 2944,
+      "after_bytes": 2940,
+      "sha256": "685bf0715889c2fc2e0c2edd8f836c08b131ff5c1600543a99903da996f8c969"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6506.json",
+      "before_bytes": 3175,
+      "after_bytes": 3164,
+      "sha256": "aef3a8f7d9bbf7a56d8e004b91983ac4ab188bd3fc8d9c468456c478fb8981b6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6508.json",
+      "before_bytes": 11170,
+      "after_bytes": 11172,
+      "sha256": "af2b4ec8e9f7f92c5e408c7e373021b9fcc370ac6e0698975c105d880ded7546"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6511.json",
+      "before_bytes": 19398,
+      "after_bytes": 19399,
+      "sha256": "73c75acc2c819c4fcb7a79398c632a098588f5b23a6e24e011f048daf37951e4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6512.json",
+      "before_bytes": 3587,
+      "after_bytes": 3576,
+      "sha256": "a8e276a4cfc289386fa13f9445477c971cdadd4ba7e0e0849409e1c77207aef8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6542.json",
+      "before_bytes": 21125,
+      "after_bytes": 21126,
+      "sha256": "65098fa1a5d8daf103be73fb6d5dd9251b4aa1c405149edbba025f43917abfd9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6558.json",
+      "before_bytes": 3038,
+      "after_bytes": 3030,
+      "sha256": "b099f5e9fe0854f016c77b8d701b7ac97baa9fb2a42ceed6b1c16d2c5c1baa90"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6563.json",
+      "before_bytes": 3829,
+      "after_bytes": 3821,
+      "sha256": "aaf5042ea2eca28ba696d9797c16f761bdd4fb1ddefc82d117ed78f35261370c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6564.json",
+      "before_bytes": 2807,
+      "after_bytes": 2796,
+      "sha256": "f5127ac44259349e08709e9028de1764b20b0a796a9ae6c87273244dfa747020"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6583.json",
+      "before_bytes": 40695,
+      "after_bytes": 40696,
+      "sha256": "06a9c4840d3483ba31d36c4777d0200c0171f7585f7e617610ef4a99b2b04d8a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6585.json",
+      "before_bytes": 4014,
+      "after_bytes": 4010,
+      "sha256": "b4a88e95e9685b615e0189b662a36e4c096b506c40009897cadad3d3b1385fc0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6597.json",
+      "before_bytes": 5595,
+      "after_bytes": 5587,
+      "sha256": "0eac587010b6266dd997a95d07027d33d4079443a2b9e941431e042ad7fbe3e6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6598.json",
+      "before_bytes": 3717,
+      "after_bytes": 3709,
+      "sha256": "5f6732fda87fd16e973838ea7af4027ecadaee95515652cdfb1d74a4138853df"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6606.json",
+      "before_bytes": 43180,
+      "after_bytes": 43182,
+      "sha256": "7fd1c60d2bb8c1e98703db8cfd0cd0f0c2e02ee38f12ab2d5202e712bec448d3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6616.json",
+      "before_bytes": 3418,
+      "after_bytes": 3410,
+      "sha256": "43dc46d816a94e956b6156e0f1d4401e0ad9541a6bec1dafa72d8c27a112fcd5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6617.json",
+      "before_bytes": 2952,
+      "after_bytes": 2944,
+      "sha256": "a879cf256f6b8cd168103bcc218d7a2b8b0b7dad78d0edd6dce7eb88593463ea"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6618.json",
+      "before_bytes": 4643,
+      "after_bytes": 4635,
+      "sha256": "ff31d6ac31143d02002bda981ccc542c2b150f3e1340002a33ba162595df345a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6627.json",
+      "before_bytes": 3672,
+      "after_bytes": 3664,
+      "sha256": "e6543a399badb0d426e8d62eb0ffdd9a0f21e1d578e39c1c46bb763d2e470edc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6628.json",
+      "before_bytes": 3660,
+      "after_bytes": 3662,
+      "sha256": "c7de85bc28cd2d1d2912d449f8ab85d1b995b051b9b77975fd95499df1357a39"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6631.json",
+      "before_bytes": 32302,
+      "after_bytes": 32303,
+      "sha256": "1376c0d3f72cfa8a9e199e82c8fe6104f5733bc51d60b059c45d423d40f8ae9f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6644.json",
+      "before_bytes": 3071,
+      "after_bytes": 3060,
+      "sha256": "c1fa1527e8fd3e401e63e1a334b6e40d4604a91f381cfbebba25486380d0007d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6645.json",
+      "before_bytes": 3991,
+      "after_bytes": 3983,
+      "sha256": "e5e8c313547fd267867990bbee6f88b5e316b98601c521d0c8299582cfaac5e1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6646.json",
+      "before_bytes": 3240,
+      "after_bytes": 3242,
+      "sha256": "c754b7d4cdd15621722679bf6b04d323e3556dafa83a75db157e2c9f67c040b3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6653.json",
+      "before_bytes": 60371,
+      "after_bytes": 60373,
+      "sha256": "c3b1daf54b32afa4ecf9d22db9a0754298902a9a9aefd67aa2ed679034419d65"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6660.json",
+      "before_bytes": 1686,
+      "after_bytes": 1688,
+      "sha256": "f5bd23f811041b461127b838642e2f65c7c47686015f91de43cbef1b43c8b12c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6664.json",
+      "before_bytes": 3155,
+      "after_bytes": 3147,
+      "sha256": "47b0ece6ce9bbb786a06b23c36b783001213342d57b26c3ec7ac9f789cf52b09"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6673.json",
+      "before_bytes": 4012,
+      "after_bytes": 4004,
+      "sha256": "80ddac8b435554af46d8929faf62339c29d871dd5c2f1ca7b12bb48433c0d503"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6674.json",
+      "before_bytes": 30294,
+      "after_bytes": 30295,
+      "sha256": "f2044b71ca6ced379d8f3e9c57bc34ec1403de83a12d795aa2719ab20c9c45d1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6675.json",
+      "before_bytes": 4229,
+      "after_bytes": 4221,
+      "sha256": "44be7fcc4b8e9d93ea92add4f1fc6dc0c9166071d25cf539c1e7803465182fc9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6676.json",
+      "before_bytes": 3598,
+      "after_bytes": 3590,
+      "sha256": "1a741d002f99a6a1e468f603e175596034753a9f2c6d2d138d9e21955fddd836"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6680.json",
+      "before_bytes": 43899,
+      "after_bytes": 43900,
+      "sha256": "4ab003028c039e6abe9e4d8a8374242bdbcede44096684467f289026ba58d04c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6682.json",
+      "before_bytes": 3799,
+      "after_bytes": 3791,
+      "sha256": "0bc3eca1bbd8d1c35bded7ddb848c2f3d7fab337599139509839f440f7de6906"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6690.json",
+      "before_bytes": 3763,
+      "after_bytes": 3755,
+      "sha256": "4d2c3ca628ceede80e8c9e7e01d8a63bb822737400191d1e1d369559c223efdd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6691.json",
+      "before_bytes": 3226,
+      "after_bytes": 3218,
+      "sha256": "08fc42896dca4e82639296643b6b38dc12afe929ec9b5ae1e8a65e955401b3ba"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6692.json",
+      "before_bytes": 4106,
+      "after_bytes": 4095,
+      "sha256": "af68884c15e65dfe1615b4810ac8e1959fb263b433e4e27b6e334f470b9cf53d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6700.json",
+      "before_bytes": 3079,
+      "after_bytes": 3068,
+      "sha256": "1b633675578e970352466479ce0e73f4269ef51f8940562a173434e1739e5b8f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6712.json",
+      "before_bytes": 3166,
+      "after_bytes": 3158,
+      "sha256": "fbbf90bec96ea6f75a9f785e17b0ce114d6de7769650eb9eb1430beee44edc34"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6724.json",
+      "before_bytes": 3733,
+      "after_bytes": 3725,
+      "sha256": "984917589c2460bd10f7eded2e287210597535a0edb6ca175a392323e40f8b48"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6730.json",
+      "before_bytes": 3286,
+      "after_bytes": 3288,
+      "sha256": "cb77374d0e4a668aa34e83ba7f5a35cd777c45b862bf81654bf60a418f3d4447"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6731.json",
+      "before_bytes": 3649,
+      "after_bytes": 3616,
+      "sha256": "5947c52e0082446b383e03f0eb53489257789862c58dd3769e8953b6f1456031"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6732.json",
+      "before_bytes": 3236,
+      "after_bytes": 3232,
+      "sha256": "d2d8a870761e16bff536d56772839379333b885652beb85cf16c8cc3422abf4c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6744.json",
+      "before_bytes": 2907,
+      "after_bytes": 2899,
+      "sha256": "8fec790316f35159e0cc05eb2edc7917adfa44b9414275193f0b696181acd999"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6747.json",
+      "before_bytes": 20312,
+      "after_bytes": 20313,
+      "sha256": "259f098e20d8a230808fdee030518b4a576135cc98e1f99726a21da96c045378"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6766.json",
+      "before_bytes": 18815,
+      "after_bytes": 18817,
+      "sha256": "ecb4e9966c39e05a7e8e05856ffe29849f4039584c564ce00d2bb37c8e2eb118"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6770.json",
+      "before_bytes": 1950,
+      "after_bytes": 1942,
+      "sha256": "6c90215f52f39ab23e1e0084ff18bfd9f259faac0ff8806d12cd4aebcf0eebf4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6779.json",
+      "before_bytes": 3904,
+      "after_bytes": 3896,
+      "sha256": "826dfdfa7744988582ab1f5e162560fa62d651cc2d0c25743bf4fa91a4df8fc3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6780.json",
+      "before_bytes": 5674,
+      "after_bytes": 5666,
+      "sha256": "df00436b02285ffc1e0b0c92b4a841e09703487ad0ffaad87f608307b3d3ff01"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6781.json",
+      "before_bytes": 4624,
+      "after_bytes": 4616,
+      "sha256": "fa2e881a6a23810d8dbc6bd4a8f51c5d4470bf847567d5062358f34a1e068d4b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6787.json",
+      "before_bytes": 3269,
+      "after_bytes": 3261,
+      "sha256": "6473f81266fcdfea2abbff80accc21798fe14e9145623f7011a39e16a8b711dc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6788.json",
+      "before_bytes": 4749,
+      "after_bytes": 4741,
+      "sha256": "7c66988993b3b7bd5d0f7172bf44d144dbd9bb37d1899858ae949668e9796b9f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6792.json",
+      "before_bytes": 3358,
+      "after_bytes": 3350,
+      "sha256": "7736b37ff07556f9e590b3bc0dc99de5909a22c7085031c86a3d15c574aec577"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6793.json",
+      "before_bytes": 3131,
+      "after_bytes": 3120,
+      "sha256": "bf7184a1d110e171ab24267894173f23f880b9db5b46dc5bd474c6bcd96c506f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6794.json",
+      "before_bytes": 2968,
+      "after_bytes": 2957,
+      "sha256": "6aa62e2c7c0f2f72b26cb3d0c7f1459537fb60bd9cd7d2cc85523ff07fc9c023"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6797.json",
+      "before_bytes": 1690,
+      "after_bytes": 1692,
+      "sha256": "4573f3032825633838e1e2064b85629492ed47e7cff487a86a8b7b00f73581e1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6808.json",
+      "before_bytes": 6707,
+      "after_bytes": 6690,
+      "sha256": "c03f7cdb3613439e3f10652dac3c0bb62f52997c52dd16f09ad68c686af9c94a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6818.json",
+      "before_bytes": 16884,
+      "after_bytes": 16885,
+      "sha256": "e02919f4d67288c61b8017a97cea3c0b5718fb40ba752f093e6888b6cb3d189a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6822.json",
+      "before_bytes": 3844,
+      "after_bytes": 3811,
+      "sha256": "94a27374d774b88041f94c6a520f022391fa7fc2d3bdebdd9f5e549e3f05335f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6829.json",
+      "before_bytes": 3819,
+      "after_bytes": 3808,
+      "sha256": "de0681643e33887cd7bebecb0842e917bea0eec2cff3680478c5a14b40c46e1b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6845.json",
+      "before_bytes": 3505,
+      "after_bytes": 3497,
+      "sha256": "55f5ece6a7c100dbde8e9878e457261c39ae3273cdf6a9f2db48ac728cbb9efe"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6846.json",
+      "before_bytes": 3668,
+      "after_bytes": 3660,
+      "sha256": "75b44ff89c6af9eefdbaea2aa4fd4810b935ced9d0ad37505ad9da026e46c060"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6848.json",
+      "before_bytes": 2962,
+      "after_bytes": 2929,
+      "sha256": "bea198de46bebc5d60b16a1a6f81d7ecc54820317102ca2ec2514fb78fea5c3d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6849.json",
+      "before_bytes": 2996,
+      "after_bytes": 2985,
+      "sha256": "245b975d013bf323f9de1e7bf77a4a55fd88e0c75492ba0828239550dea7a9e2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6850.json",
+      "before_bytes": 3139,
+      "after_bytes": 3131,
+      "sha256": "ec9897e9e1a8b98d99a3b5ea6b4c7e0d3fd99ee973ba9fb457291547a24cef9e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6875.json",
+      "before_bytes": 15693,
+      "after_bytes": 15694,
+      "sha256": "9381d18ae4a4a7d9890bf4f942d850609d3bbaa6f8bd2cb48d5d8f96ef49b15c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6885.json",
+      "before_bytes": 56075,
+      "after_bytes": 56076,
+      "sha256": "1cd052e4a735419a413b85011e5604b481912d12518974663d3700db61e45d6a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6886.json",
+      "before_bytes": 48415,
+      "after_bytes": 48416,
+      "sha256": "261114d23641e9cb94b19b8f4a568adf631c109454144b63cb507a30320b396d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6888.json",
+      "before_bytes": 4227,
+      "after_bytes": 4219,
+      "sha256": "1e380a443ba6cde34e9ef009a40e690a6099fa5b9bcd0e931b08ad95f2e3574b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6889.json",
+      "before_bytes": 21374,
+      "after_bytes": 21376,
+      "sha256": "4a9c24cfd866bfd717b21817331d7199085a20a1031badf3de01a3dfdfe31b8f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6894.json",
+      "before_bytes": 3368,
+      "after_bytes": 3360,
+      "sha256": "bc31aa0defe1374efe02efdab484cabaab257e3ead85d985ba7191113170e66c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6895.json",
+      "before_bytes": 3252,
+      "after_bytes": 3241,
+      "sha256": "8ca9f7da75b29b69ca2024a23d35e1784f73c47d88dae65bcf280736d2823843"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6910.json",
+      "before_bytes": 2642,
+      "after_bytes": 2609,
+      "sha256": "4428ac19cd2f08816b390179d8fa5d2b5550297aba15de3db7f57aaa95f29fb7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6914.json",
+      "before_bytes": 19986,
+      "after_bytes": 19987,
+      "sha256": "11c234736ff98db32563b97aaea53caca486bae8b8b78096ac3567b37b101c06"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6917.json",
+      "before_bytes": 54447,
+      "after_bytes": 54449,
+      "sha256": "b1d97eff09e69850ac6953b206ab20743ce50f40f6a00f0c9c52808dbe00149d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6940.json",
+      "before_bytes": 14008,
+      "after_bytes": 14009,
+      "sha256": "4b326f9f81e9da4b2342317ea34dbcc894bab0d548440ee7b08b5c021690486f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6941.json",
+      "before_bytes": 50601,
+      "after_bytes": 50604,
+      "sha256": "91748387d32182857f24981940dd856970ceb8ac4e2bb19a5ddfd85e3f1a0192"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6947.json",
+      "before_bytes": 3056,
+      "after_bytes": 3048,
+      "sha256": "f74389e3eb10e85a4b360ca0d44046141191373dc659875ae9c596dbfe9e7d0b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6948.json",
+      "before_bytes": 2946,
+      "after_bytes": 2938,
+      "sha256": "bc177cdfff0703d6e974816a7753267a0bae277aae5a977f1dd3456d59cb407d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6949.json",
+      "before_bytes": 2929,
+      "after_bytes": 2921,
+      "sha256": "f964cddcb3b7dc9a2d6f61bb87e6c9cde5bbb30ad1e78d890503d81b0feb2220"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6953.json",
+      "before_bytes": 22037,
+      "after_bytes": 22038,
+      "sha256": "3275753e480056f3a193bc69bb6af2d5c5705d8b84d8b3f0fbd3127674dd0443"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6955.json",
+      "before_bytes": 48683,
+      "after_bytes": 48684,
+      "sha256": "2ba0f7ec30ed1028b2f5c37240ba5b05607f7e2ac4493e1b4b8d4baa03d3e216"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6957.json",
+      "before_bytes": 44632,
+      "after_bytes": 44633,
+      "sha256": "a439549d9002722d646084e537e0244fe717679620572a24778576a526403f06"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6966.json",
+      "before_bytes": 3547,
+      "after_bytes": 3536,
+      "sha256": "d81992818724c58b7bcdb69fe1630f4a9f4915f309482775ee440075c6d2e601"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6973.json",
+      "before_bytes": 3888,
+      "after_bytes": 3880,
+      "sha256": "7ff74234eb01fbf4ebe6a839de93036db86ab08f484e1b37f269101af28007c3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6974.json",
+      "before_bytes": 1701,
+      "after_bytes": 1682,
+      "sha256": "83dd793d726796da6d32fcdf0a31ac1658fb9d01016e7eae70780c6c6e7cfd1a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6975.json",
+      "before_bytes": 2606,
+      "after_bytes": 2598,
+      "sha256": "78945a7c59dc50febf88a117c24ec8d4cae8d38baf790bfcf6d38300adef19c6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6981.json",
+      "before_bytes": 3371,
+      "after_bytes": 3363,
+      "sha256": "cd6ab12db58803a2cd35b38aefd25d27ced5a70be62d14760c14e2985b4cb366"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6982.json",
+      "before_bytes": 1667,
+      "after_bytes": 1656,
+      "sha256": "587258a85c09a21fdeea358b689e546ed8fac42c96307da1a559f88879885c28"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r6995.json",
+      "before_bytes": 23195,
+      "after_bytes": 23196,
+      "sha256": "1765c83f9ac6555f4b4d40a81a3dd01c8e619b7584ab52443f3b79130eec7ab7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7000.json",
+      "before_bytes": 2742,
+      "after_bytes": 2723,
+      "sha256": "0d5c5a013eab97b23261677662dcc965c0a736e47ee995dd604b0c60a768a1f0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7001.json",
+      "before_bytes": 2921,
+      "after_bytes": 2902,
+      "sha256": "3731eff0a7fea63de7a93108c195169d1d7dd506ea584dc6bd92976e9fcb9682"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7005.json",
+      "before_bytes": 2806,
+      "after_bytes": 2798,
+      "sha256": "14f07680be6bbeb69d5af4d4357ca320b5d83290c57fb5a38ac643b1ed69c133"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7006.json",
+      "before_bytes": 2789,
+      "after_bytes": 2781,
+      "sha256": "b94016adb9bb3893e52ba02c0edc669f9adc2da8dfe236e0af9c588578461dc4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7010.json",
+      "before_bytes": 22528,
+      "after_bytes": 22529,
+      "sha256": "703ee00914eece29522e76071965658ae19899fbc0ccc833f9e3c3c16a8ca60f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7016.json",
+      "before_bytes": 2504,
+      "after_bytes": 2496,
+      "sha256": "9e291cf5b3385734cc0b9cee740fe3e0ac2ae10723241866934af58688b37294"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7034.json",
+      "before_bytes": 16183,
+      "after_bytes": 16184,
+      "sha256": "2fb2894ec37ed2016e6d9a0d7fcebfbb988e928336e9c39cf6fcaf080273d425"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7044.json",
+      "before_bytes": 13701,
+      "after_bytes": 13702,
+      "sha256": "8a30362c72fa72579d1167822e80ddd9e4ca2b775ba18b1d7bb41d36a28cc8a1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7047.json",
+      "before_bytes": 3222,
+      "after_bytes": 3214,
+      "sha256": "cfe53219f73b06499909f770a65d7b59b7206324572165f990e173de60472bdd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7048.json",
+      "before_bytes": 16157,
+      "after_bytes": 16158,
+      "sha256": "6e85aae713eb1c5d0fd2765bc6aca48406e5e181917d4484d7127d4cb7c4dd88"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7057.json",
+      "before_bytes": 21004,
+      "after_bytes": 21005,
+      "sha256": "136c1b29701dea45cb9814988abf184107c84985f94b1b954cbe3d874e244d05"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7067.json",
+      "before_bytes": 3063,
+      "after_bytes": 3055,
+      "sha256": "3c28608dfad3419076c917ee7a3bc79da4bbff1b53fa52877af27964cf99bf13"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7070.json",
+      "before_bytes": 13828,
+      "after_bytes": 13829,
+      "sha256": "401e752bf34ad535adde61c2ccdae07505ade2c54a5574fe1b9e20e7afdf3eb6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7072.json",
+      "before_bytes": 64146,
+      "after_bytes": 64147,
+      "sha256": "585e9f50b9fea3c16b83027b8d43aab3192080010df06ddba0a2a71075f39e23"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7076.json",
+      "before_bytes": 56333,
+      "after_bytes": 56334,
+      "sha256": "26b9f31c55ba18db7b1371d6d772ef5a1dc1fd375b41d9ba4ebbd8aaea53d263"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7077.json",
+      "before_bytes": 3064,
+      "after_bytes": 3056,
+      "sha256": "c5387898fa1ed859604ca14d2c928f9c982ea6cb821c355464e805ac881473a1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7078.json",
+      "before_bytes": 2553,
+      "after_bytes": 2542,
+      "sha256": "c3879a2fd83289d1f88b3482782507cafbd574cc58d34f13ea82bc75b0619b92"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7085.json",
+      "before_bytes": 18579,
+      "after_bytes": 18580,
+      "sha256": "e30a542573fcb3d6bb2027a6bed932a73b105fcd62ff5f3e67d4df300e547cf6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7086.json",
+      "before_bytes": 2939,
+      "after_bytes": 2931,
+      "sha256": "ba735dd3eae4eeee85e5ff2b9dea04f2d9c65420bd3a995132669d068fe3bf17"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7087.json",
+      "before_bytes": 12357,
+      "after_bytes": 12359,
+      "sha256": "c457b4f0d4bdaf04da73125a9e5f86841df842d4a1865b5e32ca81388602569f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7100.json",
+      "before_bytes": 3074,
+      "after_bytes": 3066,
+      "sha256": "52c76dc5a001218b8ade09f611ce1bc19d806421983797e02ff1680cb7b0546e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7101.json",
+      "before_bytes": 2998,
+      "after_bytes": 2990,
+      "sha256": "acf5f565ac1eb0d97c3c4256857689d2bce8a047a5eb0970f540c54e3f498b1e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7104.json",
+      "before_bytes": 29898,
+      "after_bytes": 29900,
+      "sha256": "c55b1137c0d72130c9e1a5647eadb49a48d8174dfea9c865e0fe36777ceae86f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7106.json",
+      "before_bytes": 18235,
+      "after_bytes": 18236,
+      "sha256": "d741cecdf100f84db705b76737efdfa6dc01fb53c86f11ef324c6f7273fe008c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7107.json",
+      "before_bytes": 36023,
+      "after_bytes": 36024,
+      "sha256": "c743efa22c438131c3506d5f47d001d8a48adadc904ad19309e8a1c1a6a11d78"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7112.json",
+      "before_bytes": 2896,
+      "after_bytes": 2888,
+      "sha256": "bb8dbece2e52920fa687c8f8148d836718e505beb202a366674b6a0e4b9fb542"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7113.json",
+      "before_bytes": 2861,
+      "after_bytes": 2842,
+      "sha256": "d82f074aa505ae3a9e5eaf8eb16c5db0ba0eb46245857c95f4e23802b16d1bb8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7121.json",
+      "before_bytes": 12460,
+      "after_bytes": 12462,
+      "sha256": "f16c2b48471900825c10243fc2915820395fc576071495477206e9851812eb42"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7122.json",
+      "before_bytes": 15571,
+      "after_bytes": 15572,
+      "sha256": "586d467e5dc7cc11b4e7054f2659f93f7e660e256e3db3a7bc5eace8740bd4b3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7123.json",
+      "before_bytes": 29442,
+      "after_bytes": 29443,
+      "sha256": "a8f64adb19c489f91343d813298ba49de7e2a92f75cf8579715e79903c25e105"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7124.json",
+      "before_bytes": 22212,
+      "after_bytes": 22213,
+      "sha256": "ca0e1b2be0210f7fabb9e9d4191accda9d86ef4923e91b350c495ee8f20a6504"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7135.json",
+      "before_bytes": 14456,
+      "after_bytes": 14434,
+      "sha256": "f61acb383de30b08e06f8d327ea04530c9f55945a2efe5703e1fcb02f51b8f90"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7146.json",
+      "before_bytes": 3286,
+      "after_bytes": 3278,
+      "sha256": "a6040c30375e06ef650a0b018b3694f16badbb611d675db2b54943e97eb87eda"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7149.json",
+      "before_bytes": 41476,
+      "after_bytes": 41477,
+      "sha256": "bfa96e5a7853494ee6f0a7c1703f57ef622443d45a8dcfe64e031172bca004f4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7153.json",
+      "before_bytes": 3090,
+      "after_bytes": 3082,
+      "sha256": "842e73e109bcdd189d09c4674e96f887e885a8685ae1e72b52604f27d4f51737"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7154.json",
+      "before_bytes": 2853,
+      "after_bytes": 2845,
+      "sha256": "55bea66b612baf2e358b3e739b4628370a8d513156ff8f67b64ae3d71e79a4e0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7164.json",
+      "before_bytes": 9363,
+      "after_bytes": 9364,
+      "sha256": "4875c3ea0649ed979534b815251ca03a64f8132061e1f61260c84717b62494d7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7166.json",
+      "before_bytes": 3805,
+      "after_bytes": 3786,
+      "sha256": "ea714b06cb6de68a8ffb506e040694257e27247a35c05e087b666bf23876e52d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7167.json",
+      "before_bytes": 3157,
+      "after_bytes": 3153,
+      "sha256": "2a7a474dc82e245bce350ee1e7a34b2e3fe4de9a034208174b83e06fe1b7f4e6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7168.json",
+      "before_bytes": 3856,
+      "after_bytes": 3848,
+      "sha256": "6905f4c65f6ad4ba4653778de07ea3f4d18011f18999d92faf054bd38584a5b1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7169.json",
+      "before_bytes": 18718,
+      "after_bytes": 18719,
+      "sha256": "b9f88ff472d5f1bb8fcb2736a963454eae4053326a6bad7daf14c61bc6364c9a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7176.json",
+      "before_bytes": 23259,
+      "after_bytes": 23260,
+      "sha256": "f4475be5a1550477fedf3f3e5b25a38a7c4cb02055e6f62b9854093b282f97a9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7181.json",
+      "before_bytes": 49752,
+      "after_bytes": 49754,
+      "sha256": "a36fb877a01dc6dbed796dfbfe22dc1d83b4c6e9014fab53fc19b8740763d579"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7200.json",
+      "before_bytes": 2752,
+      "after_bytes": 2744,
+      "sha256": "ed9959342655b63ee1c0e41cc1e835b301c0770b76bbf26358ba717af3cf2027"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7203.json",
+      "before_bytes": 25334,
+      "after_bytes": 25310,
+      "sha256": "d3614a4d4e5c1055589190229e8605d0dc683249a32b23412b3c43342316c54d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7205.json",
+      "before_bytes": 17494,
+      "after_bytes": 17495,
+      "sha256": "efa2a9aef079dba2e277a2dbec130e97a209ce60d14d13b114768152e610c68e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7207.json",
+      "before_bytes": 2930,
+      "after_bytes": 2922,
+      "sha256": "fa2d741b96ae720c03cd3cb1523b089ef55295c9b8eba4e46ddc2d2750e0f49e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7213.json",
+      "before_bytes": 5794,
+      "after_bytes": 5769,
+      "sha256": "02681719e2fe360a4fab63f26e1befd6ac1c184c398ebad67e51f4ea147a3d4a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7219.json",
+      "before_bytes": 39967,
+      "after_bytes": 39943,
+      "sha256": "488420eb788207c2ff7062f0e6d823cb7caea5ad090cbde03f0b1d8c5d2577db"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7223.json",
+      "before_bytes": 21547,
+      "after_bytes": 21522,
+      "sha256": "6ad78673b25db3abb51c4734afb21dfbbeb7908674315151b3531bc8ea094432"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7226.json",
+      "before_bytes": 2714,
+      "after_bytes": 2706,
+      "sha256": "92807bbf0b4ceb925244fa318eae49e003117fc02389a608154e2342fa576ce4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7228.json",
+      "before_bytes": 2797,
+      "after_bytes": 2789,
+      "sha256": "41342b92445b1bc5a586fc4108bdae43d7c59ac540168fc5fcf9dd59fcaa4aa1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7229.json",
+      "before_bytes": 3921,
+      "after_bytes": 3902,
+      "sha256": "36cd05cf69a0b554e489fa4081df86249fcd2b3be5a7fefe09832152c23c4dd1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7230.json",
+      "before_bytes": 3174,
+      "after_bytes": 3155,
+      "sha256": "ac483c660787d8728d4954aa5ec20a4221d24114681f66efc404082046c9ec6d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7236.json",
+      "before_bytes": 20922,
+      "after_bytes": 20923,
+      "sha256": "774c0f33ae4e3c29cb917edbb17ac7a0a5ea1c4bda08511c9dba5ff7fb81ecd0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7240.json",
+      "before_bytes": 20888,
+      "after_bytes": 20890,
+      "sha256": "9223bf74a66ca38ff9f865476bbce4cc93c67b4a04200d103d126e898c6bd173"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7245.json",
+      "before_bytes": 22837,
+      "after_bytes": 22812,
+      "sha256": "ac938a8da99514ef262fc474ec4d5c58056602a0ab087f5c462879cd94dd5d7e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7246.json",
+      "before_bytes": 19569,
+      "after_bytes": 19544,
+      "sha256": "03ba763f6c6c721c0dd64d730a309c2dab3a016510ec09ab143e1f04fa0a1fa1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7248.json",
+      "before_bytes": 17141,
+      "after_bytes": 17116,
+      "sha256": "32008157f3f612535ee1910686bfce124e5dbf22b888ccaff67e58e813f2d155"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7260.json",
+      "before_bytes": 3419,
+      "after_bytes": 3411,
+      "sha256": "ed4c4b3f12ca2133bc254b74b6c13682047750975a9dd38ded9265f098837a6a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7261.json",
+      "before_bytes": 2700,
+      "after_bytes": 2667,
+      "sha256": "266e929cfb987a45312dd8b246d6a7f21154ac5396709a68461252dbf7f28c07"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7262.json",
+      "before_bytes": 3102,
+      "after_bytes": 3069,
+      "sha256": "ed7ad011cb6ea967addeb7b495739a2ada1c23b04e0197e966e93d6ce0502bc1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7263.json",
+      "before_bytes": 3196,
+      "after_bytes": 3177,
+      "sha256": "4adafaa5fd8ebc1f05d236596c0f994e6b0f50ac680d70559073754afe8c61df"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7264.json",
+      "before_bytes": 3343,
+      "after_bytes": 3335,
+      "sha256": "6c9d6a96151f465423787e51090e17d7cd23b269f9f70e12f64a0c141a006e83"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7266.json",
+      "before_bytes": 3269,
+      "after_bytes": 3261,
+      "sha256": "4e9dfb8995edad3e81187b7c169b272a059a13d5bb97d2b25be67e713c0ad17e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7270.json",
+      "before_bytes": 1798,
+      "after_bytes": 1790,
+      "sha256": "05267be7010228d949b4aaa6c18dd6f03c88d5c1b8b1416467a8a3532d7dde95"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7272.json",
+      "before_bytes": 3158,
+      "after_bytes": 3150,
+      "sha256": "69f49ce5f3d1c3650043250ea52aa314a69de829ec1c2d3abb066f31dbbcacfd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7273.json",
+      "before_bytes": 3373,
+      "after_bytes": 3365,
+      "sha256": "6e25be551a76c2c0afbbe0d2ffea893f2eefbcc8aa140b32f3a0e308e0d69f14"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7274.json",
+      "before_bytes": 3134,
+      "after_bytes": 3126,
+      "sha256": "56813dff374f899428ee0498fc141408e9ac7ffc9355e150693b8365aefdc3b8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7280.json",
+      "before_bytes": 56574,
+      "after_bytes": 56577,
+      "sha256": "895948b4ce0b9355f92ebe73078e07e7a6500a6d9cd882ca8b20c3188b1834d1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7284.json",
+      "before_bytes": 30380,
+      "after_bytes": 30382,
+      "sha256": "acab655b4af255f2cc3625a653712a0410dfd1c1f4d568f98e58c781beeee18a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7285.json",
+      "before_bytes": 2745,
+      "after_bytes": 2737,
+      "sha256": "b57e78898a34f667eebd5f1e231646a956bad5ade7f3f3293897c34285af2a96"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7286.json",
+      "before_bytes": 3223,
+      "after_bytes": 3215,
+      "sha256": "2a68d8bef00a2c676c80f4531cded4674362f1344c402bc24f6303e7a0e8dd5d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7299.json",
+      "before_bytes": 17762,
+      "after_bytes": 17763,
+      "sha256": "fd9f7e9ae30545fa9a253aa6223f528f85452e3cedb42f78492d17bee6c1569e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7301.json",
+      "before_bytes": 2981,
+      "after_bytes": 2973,
+      "sha256": "48da954704261133c4f470713615a46429ec4aa4205ced5efb2bcf73b3de1959"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7310.json",
+      "before_bytes": 16053,
+      "after_bytes": 16054,
+      "sha256": "769f286bcc7e65be8167e215a8aa051fd3d75f5fec0239127c8af6a22fb5357b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7314.json",
+      "before_bytes": 3005,
+      "after_bytes": 2997,
+      "sha256": "68adfdf7b88a0dc953189bfa94bbb0f21ff07c914ba4c0a33e634926c3469abd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7315.json",
+      "before_bytes": 3394,
+      "after_bytes": 3386,
+      "sha256": "412b68434656d507de2e73cb3ce149628652ac5c095f2bfdba63a9b6c483502e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7323.json",
+      "before_bytes": 23040,
+      "after_bytes": 23041,
+      "sha256": "39138adf1b531cd0ced804fa321aec06763afea27804e708b6cc783e394020cf"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7335.json",
+      "before_bytes": 36010,
+      "after_bytes": 36011,
+      "sha256": "460839dbcdcee94b463b7c2d993847567791f738b433c8c1c452e8bc3637c191"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7347.json",
+      "before_bytes": 3390,
+      "after_bytes": 3382,
+      "sha256": "570838ae4414d881d4092dfa3fc6ca6c36b2661640b4cc6245708cfc4619e48b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7348.json",
+      "before_bytes": 2241,
+      "after_bytes": 2233,
+      "sha256": "3f2078a0d60005e78aebd90ff5cf9aaa5033e817d4e427895239952e7e639f35"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7355.json",
+      "before_bytes": 3031,
+      "after_bytes": 3023,
+      "sha256": "562aae2baf3ae3639b542292d597137435a575bcf348b6dc92dc8e906ce5dc06"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7356.json",
+      "before_bytes": 3035,
+      "after_bytes": 3027,
+      "sha256": "045fd9f24265455fb1f64928c44d6e9dcacad326613d458bdf2064a1e977c622"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7357.json",
+      "before_bytes": 3048,
+      "after_bytes": 3040,
+      "sha256": "a60fa5feb354025b707d98fbe3b25442497ed9016d775903161fbf58af98d99e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7362.json",
+      "before_bytes": 2734,
+      "after_bytes": 2715,
+      "sha256": "6e461c0fe1531d005d4dd9424638796a96bcd73f77b1ff4214e3306a39c71865"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7364.json",
+      "before_bytes": 3265,
+      "after_bytes": 3257,
+      "sha256": "fbfd833a64df7ef1c1f242eb93c8438ecf5159c1b32097be416ff24dae389f62"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7377.json",
+      "before_bytes": 17236,
+      "after_bytes": 17237,
+      "sha256": "624ca278ea82bfe8743cd5f735a9b830f84347cff7684cd1224b3f6cc0becfb9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7385.json",
+      "before_bytes": 24832,
+      "after_bytes": 24833,
+      "sha256": "1b90ec29f1e9d17d14a7d75d6f6913405f9787b096a89c02ceb8d8148c4e04a6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7386.json",
+      "before_bytes": 20223,
+      "after_bytes": 20224,
+      "sha256": "1ed0d4e44a6f3ae32d84e8eacb9856048dd4f8589b59f38522cd8b2c8e5458fc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7387.json",
+      "before_bytes": 2783,
+      "after_bytes": 2764,
+      "sha256": "ee139e170c111bb643d13417259a46ec79253679d887e8e8888f61b96eaa8563"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7388.json",
+      "before_bytes": 3204,
+      "after_bytes": 3196,
+      "sha256": "164b240ec81c30677c002e260fb0ef9fbba7b9c41cc2c3a6a9c25ab90acf7efb"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7399.json",
+      "before_bytes": 2904,
+      "after_bytes": 2896,
+      "sha256": "89ac944fc796583091c991f22f25bec149136ff157b4a2d0427f26f07e14d112"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7403.json",
+      "before_bytes": 2959,
+      "after_bytes": 2951,
+      "sha256": "b4c3f3de3d9f5780f2c563e3e8cbfc73dbd2cbc4c2c22b746308a3d2d0b2c0ca"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7412.json",
+      "before_bytes": 25249,
+      "after_bytes": 25251,
+      "sha256": "a584424c9a9fdc2850333b323206c2a592826bec8dc17e04d07deddb210a7d57"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7416.json",
+      "before_bytes": 35545,
+      "after_bytes": 35546,
+      "sha256": "33a9eefa130fc5231aa6d11bd0d42a1db10237d157740135949dca62630c491a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7422.json",
+      "before_bytes": 39281,
+      "after_bytes": 39282,
+      "sha256": "1db0a51eaf171e0f0540f003918723b6bd23487b1b1f4cd572b4162bf73745c6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7424.json",
+      "before_bytes": 12497,
+      "after_bytes": 12498,
+      "sha256": "ad0c51f2e6e0186c831f273548c7898a74e5db4f4027c71a46fe296332e8cba3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7436.json",
+      "before_bytes": 18814,
+      "after_bytes": 18771,
+      "sha256": "f7313c332121a244aa04b8d6cdac366df7dc6778cca6f3169b3ec888210ffdd7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7440.json",
+      "before_bytes": 3021,
+      "after_bytes": 3013,
+      "sha256": "f536560a67e2c2dc3238453f53a6c84ef7bed257754fa23a9bb263bb78c9a47d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7441.json",
+      "before_bytes": 2879,
+      "after_bytes": 2871,
+      "sha256": "a35a7ef17f7b793d64cf815e57022f039b1001aed64b4217b35ef156a9804a01"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7445.json",
+      "before_bytes": 18398,
+      "after_bytes": 18399,
+      "sha256": "9eda2ea87205a557638a8cebc4120905ef8b086e952aa8bbf5e14dc34a24702a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7450.json",
+      "before_bytes": 3327,
+      "after_bytes": 3319,
+      "sha256": "3742178eaa2213f08a82d5f01a6b51d948814ff192c2d7adc487cef665c8a5e8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7451.json",
+      "before_bytes": 2930,
+      "after_bytes": 2922,
+      "sha256": "8e5de2b13886eabaf2e64b190253b61d612cad1c67a2d28a3ff7ffaf0a3f524a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7456.json",
+      "before_bytes": 13520,
+      "after_bytes": 13521,
+      "sha256": "90f36ff9ccf677995fb447232c75b03c3fbbcedfccb2e605838482840fa42521"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7459.json",
+      "before_bytes": 3215,
+      "after_bytes": 3207,
+      "sha256": "df903bfee2f2fc5eb8acb80dcab3cba3ca3609346d3718f729f2d9d88a88b69a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7462.json",
+      "before_bytes": 18636,
+      "after_bytes": 18637,
+      "sha256": "18addf2d629b25ce41f370da0b1fcaff1048dc5a0c371bf150db54cba5b3eaf7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7472.json",
+      "before_bytes": 19207,
+      "after_bytes": 19208,
+      "sha256": "af139ed66d5a378ae6c59bbdb4755b6675ec9ab294586339a548c260f5652c4f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7487.json",
+      "before_bytes": 77963,
+      "after_bytes": 77940,
+      "sha256": "1c764e874e77b8566de889fea0cc80ee2ffc1af3746f722712622d97c7b4712d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7488.json",
+      "before_bytes": 2551,
+      "after_bytes": 2543,
+      "sha256": "261e08434aae02aaaf861e70798715a057b2630119d736e7383284b99c714846"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7492.json",
+      "before_bytes": 68074,
+      "after_bytes": 68076,
+      "sha256": "d3cc9bcf6a8cfbdd90c22427876d68eec7f05db2fa7458572be1952f6fb0ac9d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7493.json",
+      "before_bytes": 79821,
+      "after_bytes": 79824,
+      "sha256": "7f71ce33997fdfb8b28d4749e4d9e02d547c510a50aa0692f6897ba86d0f846e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7494.json",
+      "before_bytes": 32566,
+      "after_bytes": 32567,
+      "sha256": "5a4c7350ac38dbfb3b1e8feeaf732459f2567badf9f347a7fc171daa6b111bea"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7495.json",
+      "before_bytes": 2913,
+      "after_bytes": 2905,
+      "sha256": "77e63313077f0057bd5d6ba6db6172350e71b17923cc9c9f766019fd72cc44ce"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7496.json",
+      "before_bytes": 3241,
+      "after_bytes": 3233,
+      "sha256": "613a884c621f1708c86625879ec8e82b4f8f710d3738cdefc8efd5f2b45d720f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7505.json",
+      "before_bytes": 3166,
+      "after_bytes": 3158,
+      "sha256": "b0cdf94432594f0ae130d51018f01bcd9a359ebe3495b4e95070a5042c9e89e6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7506.json",
+      "before_bytes": 2541,
+      "after_bytes": 2533,
+      "sha256": "07cb3e3865b7b88e044e088362c4b09c5c229c0b37697b031137058240fa0151"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7507.json",
+      "before_bytes": 12786,
+      "after_bytes": 12764,
+      "sha256": "068d421f27e6c44184f83635e253eee8c60c699d849aacb2189224c87dacdf38"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7511.json",
+      "before_bytes": 2734,
+      "after_bytes": 2701,
+      "sha256": "8b4c4155785e6b6091ec52b9b8275fa6ba2dd12e94b51f5422a7bb760a22281b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7512.json",
+      "before_bytes": 8863,
+      "after_bytes": 8864,
+      "sha256": "6b7199ae72d42670a79856b112b92160132963715f34605ce22fff1409db0685"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7520.json",
+      "before_bytes": 42393,
+      "after_bytes": 42343,
+      "sha256": "76daed67fbc8a615b57af13737eab41d38a525fb9c24606b52d21c05d5107fff"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7521.json",
+      "before_bytes": 22837,
+      "after_bytes": 22812,
+      "sha256": "0b6c08cf765f6bc1ac6d1e777efee35b21bf4d675b18fb0bf4e634f30bf7d8e4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7534.json",
+      "before_bytes": 22254,
+      "after_bytes": 22229,
+      "sha256": "f771f0e6013b1b82c74169efb0a25517163296b50ec68fabe0a47b1429340f61"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7535.json",
+      "before_bytes": 2821,
+      "after_bytes": 2788,
+      "sha256": "51ea9922f469e9a902899953b76d3324f864b251c3a332dce90f307f714d98b1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7536.json",
+      "before_bytes": 2946,
+      "after_bytes": 2938,
+      "sha256": "c5f88df88e32162fdc18f2083bd901702657244f3bb2bb828510a8665d14d37f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7537.json",
+      "before_bytes": 2971,
+      "after_bytes": 2963,
+      "sha256": "e090e608e3ee5485545830eea0f760ebb2c6910e64ade3704e0040e52f27b507"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7543.json",
+      "before_bytes": 1540,
+      "after_bytes": 1532,
+      "sha256": "b5a0b7f1b9f16acc6645150510453af5bb215a9c0726f47a23e5fdf33ae3c096"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7545.json",
+      "before_bytes": 3108,
+      "after_bytes": 3100,
+      "sha256": "0032b74e3a83d53cff89b72a6cb029e9504d85f0cce5e85d03f0bfeba7254f5a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-r7546.json",
+      "before_bytes": 2879,
+      "after_bytes": 2860,
+      "sha256": "9c6bcc6111c62621d5622b42d635e814369dae287138cc93a4a2b91732e514af"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1000.json",
+      "before_bytes": 2466,
+      "after_bytes": 2455,
+      "sha256": "917ba2f5f571f9737a0d4cc9997d1f61d86228bdbf6d82b0916b5cf1875b6c6e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1001.json",
+      "before_bytes": 3900,
+      "after_bytes": 3889,
+      "sha256": "20866bb17182a301c81215615af86cbac5fc13a800e13f679e4c3acc06c8700e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1003.json",
+      "before_bytes": 9464,
+      "after_bytes": 9439,
+      "sha256": "644ad9f98a64a998cf0128a6cd9110b0b38e96a3f5e5167c217bf501bd29dc7b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1004.json",
+      "before_bytes": 5307,
+      "after_bytes": 5300,
+      "sha256": "5f82a50ae6facd49c8871be0a91bdfd177072273f6a1f9a9c03e86d980b36ac9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1005.json",
+      "before_bytes": 3877,
+      "after_bytes": 3879,
+      "sha256": "f07b6aeaa91921e2b2b2f6a87af61f1202de35dcf61eb356010d8abb2a48b9c3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1006.json",
+      "before_bytes": 2657,
+      "after_bytes": 2646,
+      "sha256": "1cf1ec5dc5b41f2633932a15b534454753b7fcc5d4c1c7cb267862249bbdce74"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1008.json",
+      "before_bytes": 3178,
+      "after_bytes": 3161,
+      "sha256": "d71e0f8d2fd1a9eb7284e8fc0ed7bc2a98f34a7f4ff8e96a56af9cf77ed59e73"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1009.json",
+      "before_bytes": 7879,
+      "after_bytes": 7881,
+      "sha256": "d520dc47dcae345fe1c80feec9c817b64732f886e71a36a8577a8f0ba980e11c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1010.json",
+      "before_bytes": 3321,
+      "after_bytes": 3314,
+      "sha256": "6c62c7c432757c15430ae41d86a14eb85c1bf18455b33f01015b37525a5a91c1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1011.json",
+      "before_bytes": 2871,
+      "after_bytes": 2873,
+      "sha256": "d3565dd38c2e92b91d305f886325f95f3d106e20555ef1c93a371ab76d9fe3b1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1014.json",
+      "before_bytes": 4066,
+      "after_bytes": 4059,
+      "sha256": "4578a971aae33049c0fbbff92b4c284d4312bdaf3cc498b588f4aeea702d60b3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1015.json",
+      "before_bytes": 2882,
+      "after_bytes": 2871,
+      "sha256": "03cb79f5cfc3a611c41dc88ac2a53953799525b43e104e6a29949dc974e34f5d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1016.json",
+      "before_bytes": 3442,
+      "after_bytes": 3431,
+      "sha256": "9e0341fc2fbc9f74d67e306455a126f4143ced38b0492f0600f18922d2241610"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1017.json",
+      "before_bytes": 4095,
+      "after_bytes": 4084,
+      "sha256": "54ab61a249aa5b343888e1d128ed1c9c92cb608d084d2c79781a20f700822976"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1019.json",
+      "before_bytes": 3526,
+      "after_bytes": 3516,
+      "sha256": "19681c1c78e59e6c523913743bcb53992061de8093c63449cf71d3fcf5e9bf92"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1021.json",
+      "before_bytes": 3979,
+      "after_bytes": 3968,
+      "sha256": "f9e51f1c08dd850adad272d84230f1f9a0adbfc2f19fd9ea0f0fd92fe1c17fec"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1024.json",
+      "before_bytes": 3687,
+      "after_bytes": 3654,
+      "sha256": "2a5e98351a711528bc0f9b2b25acc9138e198e2e47ba0f22dd31b6f2cd5332c3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1025.json",
+      "before_bytes": 3704,
+      "after_bytes": 3697,
+      "sha256": "84c9765b5f811309998621bd644c242078393172504212a281c83b733fb43d48"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1032.json",
+      "before_bytes": 4200,
+      "after_bytes": 4202,
+      "sha256": "a34d16e222615777ffde11e053b62276d905c0f58450f671cc41f3ac37ae3da7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1034.json",
+      "before_bytes": 2438,
+      "after_bytes": 2427,
+      "sha256": "501d77e0bfdbdc20449d9cab6423758bf70aa900fbbf4605fbfe9e841eae970a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1036.json",
+      "before_bytes": 3895,
+      "after_bytes": 3884,
+      "sha256": "d9bb27844eec6b0fa3ddab508819bb96ffd985bf912c6b764d1025e362a677e0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1040.json",
+      "before_bytes": 1623,
+      "after_bytes": 1604,
+      "sha256": "8a3e20b8bed8a5a2aecbdcba97530333b87bf024ca9e0bee0eb3baf58a509579"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1042.json",
+      "before_bytes": 21665,
+      "after_bytes": 21640,
+      "sha256": "bcb8684668c968edef0d5e9bb69a69992c15c95d672057ac2d2796999aa9ed2a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1045.json",
+      "before_bytes": 3028,
+      "after_bytes": 3017,
+      "sha256": "08da708e4c5222788d825fdaa41ee858d3164f0623a73de786d0c7ff297dae1f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1050.json",
+      "before_bytes": 3193,
+      "after_bytes": 3195,
+      "sha256": "4c17e83408df898c9f413749269282532d2c97afe88849b1aec01c79f7dbbff7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1052.json",
+      "before_bytes": 3493,
+      "after_bytes": 3472,
+      "sha256": "e95e4366a158b9fa5f869d4f9942a21d08c19dce249eeda736eed7c66615d5a3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1054.json",
+      "before_bytes": 3494,
+      "after_bytes": 3486,
+      "sha256": "db993c9422a2677a26454a5ce86a2f1748ce3c4fe8d9ba94af9ba8562e89609b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1055.json",
+      "before_bytes": 3146,
+      "after_bytes": 3139,
+      "sha256": "a9091faf109cf363cb4e2f404607c2691d1770c12f7e2593cab6f85e902bef66"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1058.json",
+      "before_bytes": 5288,
+      "after_bytes": 5290,
+      "sha256": "75527ffc205174b4b46058d2dc6a076a6a6a500060e9dc43edb3eaaa596590f5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1059.json",
+      "before_bytes": 3246,
+      "after_bytes": 3225,
+      "sha256": "2fb2215f599fe97e7f67381c581eb2ae727b419bdf518775322e702e31e884fc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1060.json",
+      "before_bytes": 3956,
+      "after_bytes": 3958,
+      "sha256": "78237a59023894b06ae6c2d7ca3c6d61cc3cfae19a840a30439d124a55b13176"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1061.json",
+      "before_bytes": 3389,
+      "after_bytes": 3378,
+      "sha256": "d1178a963512fdd200378567059db0513217a6999da6c1c7d137931900150fdb"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1062.json",
+      "before_bytes": 8027,
+      "after_bytes": 7949,
+      "sha256": "6016d5c3fc7e5e567e42ea577093c21a0ed9a718d0f9d5c7b744090962fd14b8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1064.json",
+      "before_bytes": 32073,
+      "after_bytes": 32051,
+      "sha256": "074a8788a19988c7d97a3073e892de1a02af7b8a3f0adfc759a9544f3ee86178"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1065.json",
+      "before_bytes": 2960,
+      "after_bytes": 2949,
+      "sha256": "740cebf5a67ad1df9b25b39b76689de17365c486ec2781fd24650afe8dc88bc5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1066.json",
+      "before_bytes": 7707,
+      "after_bytes": 7709,
+      "sha256": "0f14c3613224713246c040c26066204637215055279f1606294de84cd4a70263"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1067.json",
+      "before_bytes": 5382,
+      "after_bytes": 5371,
+      "sha256": "12be0ce253d48c423fdc027f7c637f9df4e689915ac78dfc6a6cf10827ddc2a5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1070.json",
+      "before_bytes": 2842,
+      "after_bytes": 2835,
+      "sha256": "155057b5b38bbb3e8639048af8ab59dc1843cdf26e06b3065d5135992cc3a7d7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1073.json",
+      "before_bytes": 2535,
+      "after_bytes": 2524,
+      "sha256": "32032a8fd0d54178465acc7bbdc67fd17d53b18253dd3011279e43e3d3525cac"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1074.json",
+      "before_bytes": 3357,
+      "after_bytes": 3350,
+      "sha256": "0d153af458ac54d4aa99f3c982be4c9a85ea1193047bc1d391a76f0b86e96024"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1077.json",
+      "before_bytes": 2813,
+      "after_bytes": 2797,
+      "sha256": "fe4da1b85cfe6ff6130abf68404adf7344060230d4e783563f09f9e4a06bdf13"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1078.json",
+      "before_bytes": 2894,
+      "after_bytes": 2873,
+      "sha256": "655dba54fe2d4777b2ec40b8f00f5da60151e1ceb091f853d52c82c243744d3a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1079.json",
+      "before_bytes": 4217,
+      "after_bytes": 4196,
+      "sha256": "17582848f308aa8f968ef127aa5ddaa622aa26d0344f6c51f0ae172294ba6d89"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1080.json",
+      "before_bytes": 10462,
+      "after_bytes": 10464,
+      "sha256": "509f862b9f96823db45e0220ca1d5b47afc993904886032655ff1c526d57c6a9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1081.json",
+      "before_bytes": 2816,
+      "after_bytes": 2808,
+      "sha256": "5783b8276d17bd3b4df9e18cf2b45ec19101e7149d0030e647e0e89a05a02236"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1082.json",
+      "before_bytes": 3054,
+      "after_bytes": 3056,
+      "sha256": "814581981d93ea82c1721a5c1ca0dc1e9e4337b59e1d832fea28069b13e8eaca"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1083.json",
+      "before_bytes": 3571,
+      "after_bytes": 3560,
+      "sha256": "617ed83589721aa833de30ed650a07da33727cb916f468de044147a3eab862dd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1086.json",
+      "before_bytes": 2985,
+      "after_bytes": 2981,
+      "sha256": "9bbce8163c8d3a4b462b9d85ed9cf76551817f6c94ad4a5d5bfcd34e294fa6ed"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1087.json",
+      "before_bytes": 2814,
+      "after_bytes": 2807,
+      "sha256": "70f8f2505a24b8011e76412c119750c0851d6d9d389192b90f94dd173c98e162"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1090.json",
+      "before_bytes": 4095,
+      "after_bytes": 4084,
+      "sha256": "bd768e5d64e50c90b6eadd555c17bbb0a7d428ef0048149bf9c3edb435a82b99"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1091.json",
+      "before_bytes": 3248,
+      "after_bytes": 3227,
+      "sha256": "df38c63069e2f21bdb9c9b1030390e5d873231ebee96091bf36d5584b970273c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1094.json",
+      "before_bytes": 3491,
+      "after_bytes": 3480,
+      "sha256": "503fb915c21c4756132c0c55d5059390fd2008fe06e9fe5e5ccd284b9d67abc4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1098.json",
+      "before_bytes": 3722,
+      "after_bytes": 3714,
+      "sha256": "be3f894fada08e1661a28c9ab26cae9f6134fb5bfd035119cf669d5e63b28051"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1099.json",
+      "before_bytes": 67259,
+      "after_bytes": 67243,
+      "sha256": "659ef761deb14bab9b7da9fcdff79bf01a4e75012f8dd8a60bfef7a2138baee1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1100.json",
+      "before_bytes": 2553,
+      "after_bytes": 2500,
+      "sha256": "a64db711cec380ae95deca3c970d15b134b1894914d0d659a5497a3ff636a317"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1106.json",
+      "before_bytes": 26238,
+      "after_bytes": 26239,
+      "sha256": "26b6410fb4b0c71376abad4daf06ad545c8070d81eca0b275f5278ce068ecc14"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1113.json",
+      "before_bytes": 28829,
+      "after_bytes": 28830,
+      "sha256": "3cab528e6fd035782bc6e2af93c1dee0ef77238759afcc11f77823a94f870f96"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1122.json",
+      "before_bytes": 1875,
+      "after_bytes": 1867,
+      "sha256": "c416a7c12e6c94bfc968df7fe0bb22854d97edef2f9803398141b53e11acabef"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1123.json",
+      "before_bytes": 3223,
+      "after_bytes": 3202,
+      "sha256": "009da73d0d75c2d8848e14e57eea7a04d5b0fe0a6f304d09991437c7afd3aa24"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1124.json",
+      "before_bytes": 2691,
+      "after_bytes": 2683,
+      "sha256": "561e456f7b7ebd083e6eae87a6d9cf8e54ef37bab5f0054037e1bc663c79f5a6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1125.json",
+      "before_bytes": 3074,
+      "after_bytes": 3063,
+      "sha256": "f7ae99e451c25dc6599fafefe489de539c6d6fff305de21466c57b7b78a7f2d1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1128.json",
+      "before_bytes": 4056,
+      "after_bytes": 4045,
+      "sha256": "3f6eb807a7a16476e6bbe08d10ae8a99418c5fe291451b591bdbbd389a472680"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1129.json",
+      "before_bytes": 14000,
+      "after_bytes": 13989,
+      "sha256": "d22ab08be9c118218f78c3039d7952e2a09f7d3098e546d186ebec85f7423b9c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1130.json",
+      "before_bytes": 3680,
+      "after_bytes": 3669,
+      "sha256": "0f39a885424f1863ddfd2c44b41ee840c42a893b6480bc474af3a11b7d7aa1c7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1132.json",
+      "before_bytes": 2683,
+      "after_bytes": 2662,
+      "sha256": "c1d7eb94042dcb0deed4e8bc52054e32fbca60f574ecd48fce3f7f864d192ec1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1133.json",
+      "before_bytes": 1693,
+      "after_bytes": 1682,
+      "sha256": "c1743f3a2f7bde3f803b3f113e23994deab3112fb42e02c291b0e83b56e1420b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1134.json",
+      "before_bytes": 3206,
+      "after_bytes": 3198,
+      "sha256": "fd65d903ae91a2ca9ffe2b6236a7df816656bcebeb794bb8b65cfd8417afe683"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1138.json",
+      "before_bytes": 6478,
+      "after_bytes": 6457,
+      "sha256": "d9abf9be78b1f0d655c88ef2b2245f15c466fd774ba6ccb1442f252268ef5d39"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1139.json",
+      "before_bytes": 3376,
+      "after_bytes": 3355,
+      "sha256": "3dd709a4da7007eacde45a898100c13aa32c74204adc07ad93a6e4829db8c9ec"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1143.json",
+      "before_bytes": 3130,
+      "after_bytes": 3119,
+      "sha256": "d2ccf44037755cd177de019d706305a18e3cc87693a3082c18bb5b0c31a2f461"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1144.json",
+      "before_bytes": 4052,
+      "after_bytes": 4041,
+      "sha256": "7504b4559a08280efdb8aa78b19bb322e632e5cad46619681fa237bfef1907ba"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1145.json",
+      "before_bytes": 2749,
+      "after_bytes": 2741,
+      "sha256": "57137fc6f58b05298a1953f275da6fe4b63ad0c2b13f8a7f8e4d62f4a210d8ee"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1146.json",
+      "before_bytes": 5717,
+      "after_bytes": 5700,
+      "sha256": "6df6a7bf0da21d4ca328f72dfc295e3ef280e651c98733a8aa557a08460afe81"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1147.json",
+      "before_bytes": 3885,
+      "after_bytes": 3874,
+      "sha256": "9b9d5f548566d1c35b9624f844e25e68f3a8b8c484ce82bf743c18b1439dff7c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1148.json",
+      "before_bytes": 2879,
+      "after_bytes": 2871,
+      "sha256": "8ce10f19212207ea4fc0968abca0f5c696ce91878d840fbd52903d01c7f8130e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1149.json",
+      "before_bytes": 2723,
+      "after_bytes": 2719,
+      "sha256": "125fc55a1eedc2528ddeb5fcbc354c5803202800fa3d1b6f195ba95e44676e2d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1150.json",
+      "before_bytes": 3164,
+      "after_bytes": 3153,
+      "sha256": "1dd8f4f1f0eeea96b6101f7fc731147eb9e52e1a65a9b34d60371e63fa37ee00"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1151.json",
+      "before_bytes": 3144,
+      "after_bytes": 3136,
+      "sha256": "d4fe045faa4d39fd9fa4ec16f8ad8192eb1a54929ef59e1eb5851e5f2913a73c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1152.json",
+      "before_bytes": 2243,
+      "after_bytes": 2245,
+      "sha256": "515d28ba8323312d7725892c0f21994283c962bb7d976b0890044b3378ae048c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1153.json",
+      "before_bytes": 2746,
+      "after_bytes": 2742,
+      "sha256": "04d1a95d745fac25f00a2a06b2a10d7bb1a62905c0dffa0a359d15e17ae181d5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1154.json",
+      "before_bytes": 18064,
+      "after_bytes": 18053,
+      "sha256": "6e968e4cd2e10d8f6df6e57898d42760278d9382a084ea9c2b356b86093c1cee"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1156.json",
+      "before_bytes": 3316,
+      "after_bytes": 3305,
+      "sha256": "19ca5a5efe487791be58d3c761d14b8ccb7017b8ef9769d86118b81bb0008fda"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1158.json",
+      "before_bytes": 2715,
+      "after_bytes": 2707,
+      "sha256": "b6b0c6aa0571f424568a519d3b710b2d5e02581e580f03f2a0f97ebaebbb25bc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1159.json",
+      "before_bytes": 2569,
+      "after_bytes": 2561,
+      "sha256": "3822bf6a02eec1b146a526a9183da013e2cb8006799f61e4cfd47b7dea280dae"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1160.json",
+      "before_bytes": 3342,
+      "after_bytes": 3334,
+      "sha256": "2d41232b31b6af7cef9c6dd80a14f7af381b99ae1908ba3290bf70aba4a386a7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1162.json",
+      "before_bytes": 7750,
+      "after_bytes": 7752,
+      "sha256": "ae6e96dc4cae0a799661e735805c9a82a4fad32e0aa7fd395c17101430ea0c73"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1163.json",
+      "before_bytes": 1756,
+      "after_bytes": 1748,
+      "sha256": "fa36210a8a27103fcc33c58f46150b44b21a2ded4245e53932546fc7375108e5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1167.json",
+      "before_bytes": 2217,
+      "after_bytes": 2206,
+      "sha256": "02a294a9bd112298ca3e50bbebc90c9697b46940c849f70037ea23083eca5d3d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1170.json",
+      "before_bytes": 2147,
+      "after_bytes": 2136,
+      "sha256": "f6d189ca65862649dfc249140d54ae74b5eec03a21d9fe7edf6b6ef41ec8c34b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1171.json",
+      "before_bytes": 3217,
+      "after_bytes": 3198,
+      "sha256": "86421d9ca27dbc76a80fa6383082239dc7d9dd2bbb5b44cba5a781256a4c1115"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1172.json",
+      "before_bytes": 2956,
+      "after_bytes": 2935,
+      "sha256": "f282282c94b5f4ad0bb53bede775efc2f5c16bbbac376f676ec5681a71c51f55"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1173.json",
+      "before_bytes": 3580,
+      "after_bytes": 3559,
+      "sha256": "71024cc67d2f6faf43add7c86047b6887c78da1a214c8c985bcb4d70d60acc3a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1174.json",
+      "before_bytes": 4342,
+      "after_bytes": 4331,
+      "sha256": "5bd31d0936159eec1ce3b21d8a98f99765578c5dc6ffe6addd2a6d80e11b221b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1178.json",
+      "before_bytes": 10034,
+      "after_bytes": 10035,
+      "sha256": "ac9ba17d58f446054e9460c433feb6dd98ed6b4f3f364c0a7387a6f4258baca0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1183.json",
+      "before_bytes": 3470,
+      "after_bytes": 3466,
+      "sha256": "9f6f02b3cbd6f589a4bf8f9145e9c2e46e96d3b892dd8192b6f2f72252a6e826"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1187.json",
+      "before_bytes": 3690,
+      "after_bytes": 3679,
+      "sha256": "c16a12ca0c44089057b43feca1d7f137e79268dde203a3532de459f2d8e8b019"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1188.json",
+      "before_bytes": 2840,
+      "after_bytes": 2842,
+      "sha256": "d4a175641b807cb18ef28e5368b4babe6c97f4d3ae768b936fb2c3a4681f3131"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1189.json",
+      "before_bytes": 2903,
+      "after_bytes": 2895,
+      "sha256": "0116169eeb4a116eb850c6b077cd24c112ab837a03ab70c9ed599b0180313272"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1202.json",
+      "before_bytes": 2706,
+      "after_bytes": 2695,
+      "sha256": "053d8430d6c6633cbbf1e9984e0f3252bf590c964d1c3b44574039643e5db8d8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1215.json",
+      "before_bytes": 3032,
+      "after_bytes": 3021,
+      "sha256": "ebf1872168fbebcd9ea8904d2a86b113cb4d4ac731b096d4865600d16ab39c0b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1217.json",
+      "before_bytes": 3160,
+      "after_bytes": 3152,
+      "sha256": "79627dbe2ea0d23f3b87df4fad90e64a700acc5043c157527c6aeb1db8c014e1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1218.json",
+      "before_bytes": 27609,
+      "after_bytes": 27610,
+      "sha256": "61361d164237b248e25656323af6a1123c1f26c4fbd6f56e8df1ba83687f8b2b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1226.json",
+      "before_bytes": 3070,
+      "after_bytes": 3017,
+      "sha256": "6e434c079db750603826697a50a34ccc3ac85a0ed617e335be5940c33844e81d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1227.json",
+      "before_bytes": 3138,
+      "after_bytes": 3127,
+      "sha256": "f931f2f6c439f168e07286a0f6419a506c44d01041d992723a41244ad865fa31"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1228.json",
+      "before_bytes": 2968,
+      "after_bytes": 2970,
+      "sha256": "ab2df1507b53959b20a322d2747d6c40263622f2fced266431f0d8bd74f8cd5f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1232.json",
+      "before_bytes": 3241,
+      "after_bytes": 3220,
+      "sha256": "fd977b37034fb3a4122e59f45b5776ff3f55fd77edeffff37197149822d0f2e1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1237.json",
+      "before_bytes": 4441,
+      "after_bytes": 4420,
+      "sha256": "35e0365cd6c56d51f842b8b8cce51abb8180224dc5f4cd9a81aa96155dd47340"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1238.json",
+      "before_bytes": 2877,
+      "after_bytes": 2879,
+      "sha256": "aae59fedba24aa372af2cac2b7f6fff2445bbd83534f336a09f932013b49cfb0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1239.json",
+      "before_bytes": 3048,
+      "after_bytes": 3050,
+      "sha256": "190fbb4c1a510e765fdc18ac58b78ade73c43bf001a4d10e2f30b2e73242c361"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1240.json",
+      "before_bytes": 2759,
+      "after_bytes": 2748,
+      "sha256": "a400af020aa6ad577d71fa0f612bf849307cad0b44a079e778ace66c460b4f28"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1242.json",
+      "before_bytes": 7956,
+      "after_bytes": 7958,
+      "sha256": "03ce56ba83c8f455043d143078b21b318a9f48407ead1bb13521a6046bfa70f2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1247.json",
+      "before_bytes": 3835,
+      "after_bytes": 3837,
+      "sha256": "59a475967b8484254f454ae0ba7310175d385906a016d32a18202ec38c5c19db"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1248.json",
+      "before_bytes": 8869,
+      "after_bytes": 8871,
+      "sha256": "276aa19d9889979661d70bd2604cbab375e5ed0974a6eaf06824c4b5586c638e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1249.json",
+      "before_bytes": 3060,
+      "after_bytes": 3039,
+      "sha256": "c86911cff0e2555e6b0d17b5be07101ea7c6e130dbc640fcd1f9134c8a6fd86a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1254.json",
+      "before_bytes": 4958,
+      "after_bytes": 4937,
+      "sha256": "8c0d95f1699a13778983423f637ca64752e091df90584044a3a2b8a2247b987f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1255.json",
+      "before_bytes": 3530,
+      "after_bytes": 3519,
+      "sha256": "d66ce21013207c951ee3b29efe63d358efab75a054be850572c7e415db66e618"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1256.json",
+      "before_bytes": 3106,
+      "after_bytes": 3108,
+      "sha256": "32e84e11b428396033edeaff9dd8ddbf93338759a1b5bb3f4c5261711ef91a20"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1257.json",
+      "before_bytes": 4085,
+      "after_bytes": 4064,
+      "sha256": "98f734f6976f97484a74caac8954f6a13b131ba1ee3a462d000149ebfa020a07"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1258.json",
+      "before_bytes": 3016,
+      "after_bytes": 3005,
+      "sha256": "929bab0a7467f1289b7a48380aff6872038a2589f91ac7b191e23efa9a1a82c6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1259.json",
+      "before_bytes": 4099,
+      "after_bytes": 4088,
+      "sha256": "c551e7b9e795e93dbf2181cccbbcb46801ab4631ebef02f7e86158cbdf18dc8f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1261.json",
+      "before_bytes": 3235,
+      "after_bytes": 3224,
+      "sha256": "fb8a580abddebf6fda1b384818461b961460cdda0cf635f8452173417f306c59"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1262.json",
+      "before_bytes": 3016,
+      "after_bytes": 3018,
+      "sha256": "d4f31ca7a86d5eb0b3e633982ff698af7320e4b40d77482354c1b485b5dbd35f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1263.json",
+      "before_bytes": 3779,
+      "after_bytes": 3768,
+      "sha256": "7fc8ec1ca1f681adf318475119066a6f4204ba0a2f8047838972789e6aeed5e1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1271.json",
+      "before_bytes": 5807,
+      "after_bytes": 5809,
+      "sha256": "1a7b0337680528d4c6d54c475fb8b77cb704bfef3d9d7587c469856e3006a973"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1272.json",
+      "before_bytes": 8883,
+      "after_bytes": 8872,
+      "sha256": "0be61766b7b98f7e31a9d6ba81f72cc871efbaa59a7519d0e472e7c28801bd39"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1273.json",
+      "before_bytes": 2779,
+      "after_bytes": 2771,
+      "sha256": "d4ed4840d4b2bdac60102e49bf0d86daed27ff7ac231e88d982e0aaa40309e38"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1275.json",
+      "before_bytes": 3156,
+      "after_bytes": 3145,
+      "sha256": "6cb546ddad79dca8c33c10c042f971874ac938dc3b2bfb6acef36f262cf4fb27"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1277.json",
+      "before_bytes": 3005,
+      "after_bytes": 3007,
+      "sha256": "50129b236177e0b490f46ada012cf01383e1b38061cc07ae3ae2dab1d6b5b0ce"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1278.json",
+      "before_bytes": 4153,
+      "after_bytes": 4155,
+      "sha256": "632820596788272749fdab8fa085812967c5114c917794c1a760e1a193e826f7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1281.json",
+      "before_bytes": 6221,
+      "after_bytes": 6210,
+      "sha256": "f9a753f66c4fbc5576fa2f78e2f0f480e4702919a7264c04a5de26bbf569deb3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1283.json",
+      "before_bytes": 7066,
+      "after_bytes": 7045,
+      "sha256": "ebeabc1e662e7ad3e1bf1292cf86b73316a9b714c37216dda3fd0484c53418ad"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1284.json",
+      "before_bytes": 2654,
+      "after_bytes": 2646,
+      "sha256": "7b70c223c003f8f7a087fd3b7c8cf70bbaf080bd937834ae6b5f9eedcdfb05db"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1285.json",
+      "before_bytes": 2895,
+      "after_bytes": 2897,
+      "sha256": "9e54479def17ded06273c41a161a9f67c675600b2864faca365138617405f3f8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1287.json",
+      "before_bytes": 5125,
+      "after_bytes": 5114,
+      "sha256": "2d83594eb83f00f33c23b6dd4299b66a9c71a83f35a5023f005f4e4446acba40"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1288.json",
+      "before_bytes": 4072,
+      "after_bytes": 4061,
+      "sha256": "91d9d044abfd3cbc395068a5573ae7f9cae6bb2844bf4010a847b141bea5de8f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1298.json",
+      "before_bytes": 3681,
+      "after_bytes": 3670,
+      "sha256": "bcc32bffbbea0293f86bc5b65c9a2b4db4d08d99b9e8ccdf3be3a0f2fb5b28b7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1299.json",
+      "before_bytes": 3014,
+      "after_bytes": 3003,
+      "sha256": "e9176e11d274907387ef087cb96b58d54980fd4e3c2408c89c2e0005334878e8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1300.json",
+      "before_bytes": 14710,
+      "after_bytes": 14699,
+      "sha256": "ac9faab3ace4c35b19a7298eb691174669d0b6267e5dc0bba894df5b728cbde6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1302.json",
+      "before_bytes": 3094,
+      "after_bytes": 3083,
+      "sha256": "2ccf0084efa812f16f9a73d3502202b50132f81e708f2ce0cae527975e613cbd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1308.json",
+      "before_bytes": 2803,
+      "after_bytes": 2792,
+      "sha256": "44006c86c2f2e80f2c51849fa38bc60c83720119dad6bc3332cae1c502f4aacf"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1309.json",
+      "before_bytes": 3404,
+      "after_bytes": 3385,
+      "sha256": "aa326ac159fb6c4d950d397e51ab1009bcc6b1f32e182b193600082f54875edc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1311.json",
+      "before_bytes": 3380,
+      "after_bytes": 3382,
+      "sha256": "45d85de0c4c9608e07f7314c692c9fb31b0e0cbd4e2e5b1bf502887efd4af5d3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1312.json",
+      "before_bytes": 3223,
+      "after_bytes": 3225,
+      "sha256": "2b109cb8f260d8d8614b756543ab3eef90fbe12c3374f9409a642c2afc2c7068"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1313.json",
+      "before_bytes": 3133,
+      "after_bytes": 3135,
+      "sha256": "94e9d173d86596fd2bb301b64cba93db78cb77aad16b4ebfd51b60c22186eef6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1314.json",
+      "before_bytes": 3073,
+      "after_bytes": 3062,
+      "sha256": "3a7dd7ba9899c01de8598fa6d09c2ccc59cf37b9c202c73f7825dbccf45d107b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1317.json",
+      "before_bytes": 3594,
+      "after_bytes": 3583,
+      "sha256": "4e774a6b6a6c2814e61dac65c75120a8d1e6bfb6d1cbe756143bf5b42bc5098a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1319.json",
+      "before_bytes": 3134,
+      "after_bytes": 3113,
+      "sha256": "1b874235a9a335f0cd255af23d338ed7805cbcd7b2cf96d849f3e5a660583fb4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1320.json",
+      "before_bytes": 2777,
+      "after_bytes": 2766,
+      "sha256": "6fc45dc1c3592593feddfb2a3bdbf5f95ce2cc0986a9d4fa87db276f61dba8b9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1324.json",
+      "before_bytes": 2916,
+      "after_bytes": 2905,
+      "sha256": "506d83fe43aaced86b673d134f801cdf46ad335639b343c9ae31db2ead3e5b28"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1325.json",
+      "before_bytes": 7420,
+      "after_bytes": 7399,
+      "sha256": "b5a902116262cb70a5803fb16cd57e909cb6fae1db24f956166800a1ac2b141e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1328.json",
+      "before_bytes": 2951,
+      "after_bytes": 2898,
+      "sha256": "66542e15eb6095ff17821be35a3d127fca7edd005b5bd221e881809e8259e0cb"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1329.json",
+      "before_bytes": 1795,
+      "after_bytes": 1776,
+      "sha256": "9ac7eb23fa90d82c5a6eb8a2f50038c7a0c8470e084e7b3b181e46fa5237987d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1330.json",
+      "before_bytes": 1745,
+      "after_bytes": 1734,
+      "sha256": "602a0fea90e9c1fa86f5258b7ee8812ce7d30df8a3ce09dd79a99fee4c915bfc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1335.json",
+      "before_bytes": 2642,
+      "after_bytes": 2623,
+      "sha256": "6d86ff33d9ff5df784f2edac23c5619fc01d45e7a2f4aa3290832e77b367660e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1336.json",
+      "before_bytes": 3171,
+      "after_bytes": 3152,
+      "sha256": "7ca97143e6f8c0543c57261c6e6f99d4a168bbc682a43c0501cbc359b5e1eeee"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1337.json",
+      "before_bytes": 3723,
+      "after_bytes": 3702,
+      "sha256": "6479f956b7b790be19b6bdfeac27241284313338715d3448ea3bd1c7e6499a3f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1341.json",
+      "before_bytes": 5248,
+      "after_bytes": 5237,
+      "sha256": "8edb4e06076bc72dd83edf07417cd6412c1511a40b6d23c081a7c6a4da5f2765"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1344.json",
+      "before_bytes": 5542,
+      "after_bytes": 5531,
+      "sha256": "6bea6669914e5ae06e46bc5ba048bfb84e17698ca7e3ab70e3e016ba4cddc841"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1346.json",
+      "before_bytes": 3466,
+      "after_bytes": 3413,
+      "sha256": "afaeeea12fea5577921a477a8bb9b2d28ad66698024985b5889a6a45b0d039d2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1347.json",
+      "before_bytes": 3175,
+      "after_bytes": 3156,
+      "sha256": "00b0a734a12ac688a79c36db280c21495ef8304a49e9c838c0916d3d9a3f42ff"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1352.json",
+      "before_bytes": 3287,
+      "after_bytes": 3276,
+      "sha256": "b28b198826a4e05a4e2c200a4f4c214b06ea5941b6bfd2c1e4d7f4bfbd830e55"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1353.json",
+      "before_bytes": 3822,
+      "after_bytes": 3811,
+      "sha256": "e2dc98255c54e6911526de871a48ec114ef781db864da398c0dc87dbc160eb1a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1355.json",
+      "before_bytes": 4101,
+      "after_bytes": 4090,
+      "sha256": "6d94726d80ee5c3dd37c50c5a3e20373d5b388e359fa3c541f6faf64d7813e61"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1356.json",
+      "before_bytes": 1675,
+      "after_bytes": 1664,
+      "sha256": "f9538e9abec37991132c7a109e8a0244a190b292d37ff12070eb495b84f23a37"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1357.json",
+      "before_bytes": 2983,
+      "after_bytes": 2972,
+      "sha256": "f3fa474d67d73dac9e67a2923fc4a9614039c019e315824f23c491f1559c4fce"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1358.json",
+      "before_bytes": 6691,
+      "after_bytes": 6670,
+      "sha256": "fe50f6368e17269137d92cdca8246f3b3015764177fd2de557a4094e9404b958"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1361.json",
+      "before_bytes": 2337,
+      "after_bytes": 2326,
+      "sha256": "155af8c30518fe1bd0f5c27ab434eb964804b434a873fcfe98b0ea8665947193"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1362.json",
+      "before_bytes": 4297,
+      "after_bytes": 4286,
+      "sha256": "8e51a3555695f0511cfe86ec407fa024fc18371265c2e60e3440e2d4b05ef6e6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1364.json",
+      "before_bytes": 5625,
+      "after_bytes": 5610,
+      "sha256": "e287bb399d2f2d58053291821469ce9b4d218cfd79054fd8a376a76e9d6cd479"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1366.json",
+      "before_bytes": 3540,
+      "after_bytes": 3521,
+      "sha256": "f613d73346b0e8d872d1e8b45816b781d4e7b5d2c97be02c27167f124d7e2069"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1368.json",
+      "before_bytes": 5834,
+      "after_bytes": 5813,
+      "sha256": "a2e89c3e2d504aa59fd71cde71aa2a983e5962d8e9c27feb1af63b1a22034f35"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1369.json",
+      "before_bytes": 2819,
+      "after_bytes": 2808,
+      "sha256": "c2eed0e1989587ca927711cc1d849b19786c8c9a25b5aeac978a2b2920393bba"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1370.json",
+      "before_bytes": 5032,
+      "after_bytes": 5021,
+      "sha256": "2857f0284cd0f83df59b2b12b3cd4d14a1132bf19e8d1101c600df916430d0ae"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1371.json",
+      "before_bytes": 2927,
+      "after_bytes": 2916,
+      "sha256": "af705e7aaa20678f18bbedeb8b0a7fc535ad05457c18502c8b3349b664dd2ec4"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1372.json",
+      "before_bytes": 5819,
+      "after_bytes": 5800,
+      "sha256": "ad2c7b0dbb07da1354e3b8015ba170d9ecf89ab8825352bfc82765ac3812f48f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1373.json",
+      "before_bytes": 3026,
+      "after_bytes": 3007,
+      "sha256": "eeb8192a326d8c5145f8b75dec2982c212c08b015ad2ff1f644ff3202919a235"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1374.json",
+      "before_bytes": 2914,
+      "after_bytes": 2903,
+      "sha256": "fedef3bbcabb3d935d796adde5e775c4de71c9efa12cbac44a5ea3dda989de1b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1375.json",
+      "before_bytes": 2817,
+      "after_bytes": 2806,
+      "sha256": "401de352da8e683d523a1cb088b9718a12ac04e2a5df2797332074e5a9c8fed9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1376.json",
+      "before_bytes": 3657,
+      "after_bytes": 3638,
+      "sha256": "db21d0cb50641436457ac766d6d849acddc26873a99e7d3eb0e6290de921ff07"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1377.json",
+      "before_bytes": 4791,
+      "after_bytes": 4772,
+      "sha256": "b6a2372c87397b769a3180c8d7f7ac9b46f0cf3adef4360c0430a38ade7a7971"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1378.json",
+      "before_bytes": 11195,
+      "after_bytes": 11174,
+      "sha256": "5193dcc35e5f86b318a3e00514609cb80f79dec6182f06fdbe47f2ff0df0419c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1379.json",
+      "before_bytes": 2734,
+      "after_bytes": 2723,
+      "sha256": "83e203a5f5b7a146944d1428431a1d46aa887e97b6d60b8c666f4c4f694a8082"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1381.json",
+      "before_bytes": 4356,
+      "after_bytes": 4337,
+      "sha256": "aeb8fd39eb2e3d9eba19c5bde761274782fe234df191569684ecdaf11d4b9809"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1384.json",
+      "before_bytes": 4609,
+      "after_bytes": 4590,
+      "sha256": "a5e28e404c3884ea45c1210dbc928540d71df5608c16e4c20472a3b3f3149a76"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1385.json",
+      "before_bytes": 1705,
+      "after_bytes": 1697,
+      "sha256": "d3ccde3174f131a69d867a51b437a836e26c841278c3342b698ae31d7a66ca70"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1386.json",
+      "before_bytes": 3821,
+      "after_bytes": 3813,
+      "sha256": "4046dbdd6a32ea2cc711cac32a002c42ef029acc317febfeb652c024fbe2906f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1387.json",
+      "before_bytes": 4735,
+      "after_bytes": 4721,
+      "sha256": "ac570c1c5a557fc9b2db239d9d5fd8d0ee3bdbefda1339f5f7cb79a8ee1ac80f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1388.json",
+      "before_bytes": 2887,
+      "after_bytes": 2876,
+      "sha256": "a72b206f223ff6c12575316b984abef9152344d6e2c91d005981242608c12206"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1389.json",
+      "before_bytes": 3564,
+      "after_bytes": 3553,
+      "sha256": "5dddecf547e17c4913d3a567af12e68915eba5dcc2a881acc710d9e8a071cb88"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1390.json",
+      "before_bytes": 3342,
+      "after_bytes": 3321,
+      "sha256": "4070e4e35f0ca3923927a35416d0cb905547f24d629fdddc28159578dd47fb7d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1392.json",
+      "before_bytes": 2877,
+      "after_bytes": 2858,
+      "sha256": "98a59ca29db2c8489c48a633781fc54313893aad70f08db1eda4e1322c8dc40f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1393.json",
+      "before_bytes": 3687,
+      "after_bytes": 3676,
+      "sha256": "ed38a963236ec601c3dde788a5b0266f3a6869ea6b38d2b0b3fd188f9c9b0c8b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1394.json",
+      "before_bytes": 3118,
+      "after_bytes": 3107,
+      "sha256": "34042754471323cf0b3e289e7b7cbb48ec9a48043d979f762f5aa7e955d1e319"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1395.json",
+      "before_bytes": 4122,
+      "after_bytes": 4103,
+      "sha256": "70d25f2baba428218da9686f9305a2229cd58416b93ed3e9152feebf7b7ed700"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1396.json",
+      "before_bytes": 3213,
+      "after_bytes": 3202,
+      "sha256": "79c7555224d7d8d3a122630856e1938e9084a0f4949b20d0767eebdfa0db440f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1397.json",
+      "before_bytes": 4891,
+      "after_bytes": 4872,
+      "sha256": "c45a695e6e51c2d2dc9195574b1fd292e0401fed1be955038badaf70249f3c64"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1403.json",
+      "before_bytes": 3218,
+      "after_bytes": 3197,
+      "sha256": "8a2223218bce77207f9b968330239f79e6a6a98d13a2c651320d5a99f49a84be"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1406.json",
+      "before_bytes": 4226,
+      "after_bytes": 4218,
+      "sha256": "16d0ef7ed09ac20ab1acb29804d0e19fcc30c37df88c049acac3461565152dba"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1407.json",
+      "before_bytes": 4767,
+      "after_bytes": 4759,
+      "sha256": "1f813c19b52d2137174cb5ce076ac718f2ecc27f60e61945d11a2b4e632c9074"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1412.json",
+      "before_bytes": 2925,
+      "after_bytes": 2914,
+      "sha256": "33adda25c36ebcb3f9dc03156b9945153195eb530fe64543cda6e572d9b0199f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1413.json",
+      "before_bytes": 7489,
+      "after_bytes": 7478,
+      "sha256": "fd5f1fbd1d3f85910429b554fecfb7243a96bbce49be3f76b6f4999ad3cd746b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1414.json",
+      "before_bytes": 4016,
+      "after_bytes": 4008,
+      "sha256": "3983caa353f048ea3fe50a40752b530f5b220175cc40f8c2c8b4e3525124e547"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1415.json",
+      "before_bytes": 2790,
+      "after_bytes": 2771,
+      "sha256": "7178f6f5b3a03eb4b86842e2dbc339067b7f7d4379c01e304ac94befbe540695"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1416.json",
+      "before_bytes": 1837,
+      "after_bytes": 1829,
+      "sha256": "7fd3abc088b6670f86e66bbc7694ed017e4afe03c5de6916ec670b046ca8898a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1417.json",
+      "before_bytes": 3776,
+      "after_bytes": 3757,
+      "sha256": "443b0bf5d4644217d5e9b215022c7986086fbf165b6db729cb7202bab2dadeb5"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1419.json",
+      "before_bytes": 3116,
+      "after_bytes": 3097,
+      "sha256": "18f994386cc6305a820f902226a71eb43888f7a65fff3ed210a73f6d752d6919"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1420.json",
+      "before_bytes": 4461,
+      "after_bytes": 4450,
+      "sha256": "996d5098eebdf8e6e07867ef25096e83b6bd954c8f430c85dc56eb7dc0f4a8aa"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1421.json",
+      "before_bytes": 2822,
+      "after_bytes": 2803,
+      "sha256": "4462b32356851a74d9a7e3d7b95a4895082c036d8a2c4252ac35d8e0fa2efd1a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1425.json",
+      "before_bytes": 3220,
+      "after_bytes": 3201,
+      "sha256": "b9ff49bf2802e6b13ed14e0dbd7c53e2c84b320b84a3742b84187ce2d4916113"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1426.json",
+      "before_bytes": 3329,
+      "after_bytes": 3310,
+      "sha256": "c777bd367fa31b7bcc1f459006cbad952cb5e3829a5fff124f27935f9ec2048f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1427.json",
+      "before_bytes": 10527,
+      "after_bytes": 10508,
+      "sha256": "7fd75a01849f3fdbf47d7e82210ee201ef6bf7774e3239e9a7a7dca713950fcb"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1428.json",
+      "before_bytes": 5101,
+      "after_bytes": 5082,
+      "sha256": "34f7cc39f3bd6c312e217542687c5d5389c7f59860e613a628124cb0429902d9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1429.json",
+      "before_bytes": 5366,
+      "after_bytes": 5345,
+      "sha256": "bcae4e3dfff40b18999c8c6326bc7fd285a89e1ee8ddb6dda6cc1ddcca26f746"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1430.json",
+      "before_bytes": 10900,
+      "after_bytes": 10889,
+      "sha256": "cdd9a0212a2cd72a2870be0ea4d541f2958683b0fb6f92ede5d2e48efad47ab3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1431.json",
+      "before_bytes": 4710,
+      "after_bytes": 4691,
+      "sha256": "cf3baf768866ee5e671ce261a649419e5dbd481288ea754301a36300e2d625a2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1432.json",
+      "before_bytes": 3748,
+      "after_bytes": 3737,
+      "sha256": "107238feac9f74ff14dd6f1ec18f8730e1318f002abb365cc3f0185eb3d0086e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1435.json",
+      "before_bytes": 3416,
+      "after_bytes": 3408,
+      "sha256": "be1057c758f0bba513ce1d0158d4912917cd3cd678a0671ed124861418850f70"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1436.json",
+      "before_bytes": 3809,
+      "after_bytes": 3801,
+      "sha256": "d367f0adcf81904e80472dab9d3349910cb3f75602cbf539901203f4734d6eee"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1438.json",
+      "before_bytes": 3159,
+      "after_bytes": 3151,
+      "sha256": "1dad410386507f65af4a776e246415ff68adb705108c2f9e179a6ebb6ed4eaac"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1439.json",
+      "before_bytes": 3388,
+      "after_bytes": 3380,
+      "sha256": "6c05a39662b6a5bcfea70975a380649f2071c8f38ca9cbff72c844223e2f687c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1440.json",
+      "before_bytes": 3675,
+      "after_bytes": 3667,
+      "sha256": "2bdcde177c7bcafa5d4e9274230dab739068c1a74eb0b77217c1db77a3616c2b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1442.json",
+      "before_bytes": 4227,
+      "after_bytes": 4216,
+      "sha256": "7ad76f37781bb6cc06f4d334a46fc22f5343852aa923b8eb8bb3d29ce1f22315"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1445.json",
+      "before_bytes": 4253,
+      "after_bytes": 4242,
+      "sha256": "c0dc7f29b41f34f766c13ae50a123f359f8df961a443989a22ed0deae64026c0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1446.json",
+      "before_bytes": 4997,
+      "after_bytes": 4989,
+      "sha256": "cd832774e561b18f8fd9ba5ab5fc12ef35be676b57835067a41f09db6feff27f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1447.json",
+      "before_bytes": 2927,
+      "after_bytes": 2913,
+      "sha256": "5f5d56e102322a5ef02b9299da2b3feba4164b9a36f1ac0b7141e45388c05157"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1448.json",
+      "before_bytes": 3311,
+      "after_bytes": 3300,
+      "sha256": "594ccfbb4b088ec9b13da2ecb2c251407caf60cc1f1a5922c33a1d26c7f5e879"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1449.json",
+      "before_bytes": 5813,
+      "after_bytes": 5802,
+      "sha256": "6a5e03b8c04317c714d70177ff3c78af2457ca272a540e1b276e6f85e8afcfbe"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1451.json",
+      "before_bytes": 3894,
+      "after_bytes": 3883,
+      "sha256": "a992d9bb906039d01fdbd8d97d231aeec036e18b32e62977fb1cd90088ae3579"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1452.json",
+      "before_bytes": 3424,
+      "after_bytes": 3413,
+      "sha256": "0e068969d37491fc319564a38d8d76a805d8d061fd8092d66969e0f6f0381b6e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1453.json",
+      "before_bytes": 3689,
+      "after_bytes": 3678,
+      "sha256": "6fcf2e3818f3a85392b4b5aec2167138ec87e5f1cbb79eab0037b15bb1579455"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1454.json",
+      "before_bytes": 2943,
+      "after_bytes": 2932,
+      "sha256": "3b8240f16d4387952243a22ca632d5eb6e94d43a9f3f769d95dbdcc35bb1f2a8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1455.json",
+      "before_bytes": 3367,
+      "after_bytes": 3356,
+      "sha256": "dd14abcb803f88ac42d2df76dd9a1b8d4ee2e65d9cba03d6f0d4d29e6c4ddccd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1458.json",
+      "before_bytes": 18107,
+      "after_bytes": 18108,
+      "sha256": "34a4d171e8f9d28fb09f2f13177b209aa2c2d56425dc669a8bbdcef7d06abfcc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1461.json",
+      "before_bytes": 1499,
+      "after_bytes": 1491,
+      "sha256": "a76b8c3ec03dc7d8071f7b1bbcd700fdae30c08d353dcb3a9a70b70be62cdd51"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1462.json",
+      "before_bytes": 2773,
+      "after_bytes": 2754,
+      "sha256": "18f65be22a81cc21ed4852a4ab0f3abae34ddda64e9c0bf95a457d8521bcc24c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1463.json",
+      "before_bytes": 3384,
+      "after_bytes": 3365,
+      "sha256": "403a7fdbdab330eb2fcfc9a798e0a48ac40fb96b0fc1dad61907158140941bab"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1464.json",
+      "before_bytes": 9104,
+      "after_bytes": 9085,
+      "sha256": "30cd3762ef8afe7ab19c85093cfcc55967791659cfb72c0e5b2f433017b94398"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1466.json",
+      "before_bytes": 2883,
+      "after_bytes": 2872,
+      "sha256": "39e8208ff14c138854b2ca3b97be0106ce1676875b2ce13979d02982a68111d2"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1467.json",
+      "before_bytes": 3370,
+      "after_bytes": 3359,
+      "sha256": "b5b48dd4032f8f3babb81a77142f2c23127ecd794af91328b93e0a1a4d8470f0"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1468.json",
+      "before_bytes": 7969,
+      "after_bytes": 7950,
+      "sha256": "1d2e1869e8315cc6d7688c7c14e54f999d2561e620d161e24127355325cc0820"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1470.json",
+      "before_bytes": 7273,
+      "after_bytes": 7254,
+      "sha256": "ec95199b8034bf56940634d1e02b3f4d7a5191dd83db18b6d3fdf5bf08ca19b6"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1471.json",
+      "before_bytes": 3429,
+      "after_bytes": 3421,
+      "sha256": "fcdacd1c76d5212c8b8fc593a9937411500255e7fd7d0f5ced15cb81db6686da"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1472.json",
+      "before_bytes": 3738,
+      "after_bytes": 3730,
+      "sha256": "abd0e86b1325abc0fec1e0a1575a8a17cfbb7191ccf04f53f12ed1e117bda505"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1473.json",
+      "before_bytes": 1503,
+      "after_bytes": 1484,
+      "sha256": "6d635f48cadabe902cf7e08c25b73c7c39b29eb8c09ad88c5b27057eef7b8161"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1474.json",
+      "before_bytes": 2664,
+      "after_bytes": 2656,
+      "sha256": "2b9754ca0fea012d77f6e2a8a85d29a9efb44755278bee55dfc6dd2e95349c4b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1475.json",
+      "before_bytes": 2819,
+      "after_bytes": 2808,
+      "sha256": "a6aacf98daaa1ed89c64ef457ad4236a537213510d22c0499e688aa014f6f2ee"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1479.json",
+      "before_bytes": 7222,
+      "after_bytes": 7211,
+      "sha256": "8766bd37680d41952a5157bff8e3cc880f704d3783c70c99387be639bec5809f"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1480.json",
+      "before_bytes": 2494,
+      "after_bytes": 2480,
+      "sha256": "b1916a3ea1e31bd09cc9c4514c4a12e25daeb3d632161bf93faf3af2183bedfe"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1481.json",
+      "before_bytes": 3744,
+      "after_bytes": 3725,
+      "sha256": "b21328f5be3a8a91ada15e76f44b3b32747e13e9ea52861bbe1ec9a3162c722c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1482.json",
+      "before_bytes": 3351,
+      "after_bytes": 3332,
+      "sha256": "2fe8d440eac6aedf5b0eb0508111dc017bfdad551ba2eb5dc037292c59d9f34a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1485.json",
+      "before_bytes": 3654,
+      "after_bytes": 3643,
+      "sha256": "5d8b6b70d5a800ea02d69a44f6527ebfcfd79074fff76a7c8de2e8972cc8c190"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1487.json",
+      "before_bytes": 2723,
+      "after_bytes": 2719,
+      "sha256": "2e5709f9b32448894169da6aed8757d01350c1ad3369f18afa3ba2cd70ca3f16"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1488.json",
+      "before_bytes": 8836,
+      "after_bytes": 8817,
+      "sha256": "f4637098b787a476b57aafadfb4ae8fffa0e3160230f49d66455671c1bdc6304"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1489.json",
+      "before_bytes": 2858,
+      "after_bytes": 2837,
+      "sha256": "81014544b0ba5d85925587be33772a4f5d0da98407c9d148972e6e40eddc81f1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1491.json",
+      "before_bytes": 2928,
+      "after_bytes": 2917,
+      "sha256": "1d231bdb9928946960355a16a65e74ce718d9554653298f2a8b74e714426ca8c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1494.json",
+      "before_bytes": 3378,
+      "after_bytes": 3325,
+      "sha256": "4341898a4f3f06e590487d5f15d719add25fb2e9d8ac91b12a6f7365d891b465"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1496.json",
+      "before_bytes": 15563,
+      "after_bytes": 15563,
+      "sha256": "95ed969a4a12d8e023a63b9cfff9e6f5de01bab49cf92a865c6f41b442682b15"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1497.json",
+      "before_bytes": 3183,
+      "after_bytes": 3164,
+      "sha256": "1d5aba37314f826c3c103d3b1172c5b092676f49a36b06be73a56e825ad912b3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1499.json",
+      "before_bytes": 4611,
+      "after_bytes": 4600,
+      "sha256": "6b1bf2b3313f43f2b145de3fdd947b28be3b20d2509d3985868b8a7c3fbfbd03"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1500.json",
+      "before_bytes": 2424,
+      "after_bytes": 2405,
+      "sha256": "a081bbea79aeb362e09dddc49da5339c98a4d2cc36d927dab3212c8620772a06"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1501.json",
+      "before_bytes": 2938,
+      "after_bytes": 2930,
+      "sha256": "73c0178bc8a83c8710439c4ebad833653cec7dba7758341049d2076e63346b9e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1502.json",
+      "before_bytes": 3884,
+      "after_bytes": 3873,
+      "sha256": "4b914fa3b12ba488b378410731ed1d3b9605f65dd9894ce983189d02d1de7127"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1503.json",
+      "before_bytes": 4070,
+      "after_bytes": 4049,
+      "sha256": "a32d2a523f90c43a0a3ab5ac45069f0cc29e3319924e2c164b5140e61580001e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1505.json",
+      "before_bytes": 2640,
+      "after_bytes": 2629,
+      "sha256": "7755bbc09fbcc4d28390fb11573939c5b9e777db906350a946d3b33644e8719c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1507.json",
+      "before_bytes": 3005,
+      "after_bytes": 2997,
+      "sha256": "73afd9e1bcc743bb36475458be9dd10dba8e845959afa2824d8fc3539f92a86d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1508.json",
+      "before_bytes": 3149,
+      "after_bytes": 3141,
+      "sha256": "698dc5e4a4658f114b06bc7c39d102f839f9b2b73a9cb1d7ac87460242d58d68"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1509.json",
+      "before_bytes": 2890,
+      "after_bytes": 2871,
+      "sha256": "7bc313bab989405848c5cad94b01233d59ba45a20985520606c4d12195ab326c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1510.json",
+      "before_bytes": 2812,
+      "after_bytes": 2793,
+      "sha256": "48d630c69c886206f16b639cc55b58f82f16fd3c0d6c640b25a3e47ee1c75f0b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1511.json",
+      "before_bytes": 3745,
+      "after_bytes": 3726,
+      "sha256": "f3dcd3019fb8fcfd9ab8dd169a3d6c9ccf24fea548812383c2837ed2173c103b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1512.json",
+      "before_bytes": 2909,
+      "after_bytes": 2890,
+      "sha256": "9a4311e60c5c6ffafcc01c51b37031c67b2cf6b2890cddfdf8f78fd7594506ad"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1513.json",
+      "before_bytes": 3231,
+      "after_bytes": 3212,
+      "sha256": "2fdff5c2ae321112892c72884ecd9a10345e1254521771fa7fdeb353b4312625"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1514.json",
+      "before_bytes": 2743,
+      "after_bytes": 2739,
+      "sha256": "7bbe0976e053b6658975ef8490f59f8de6680c5e7b3dcdcbb7350f39d70540d8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1516.json",
+      "before_bytes": 1543,
+      "after_bytes": 1524,
+      "sha256": "04984da39f3255fcc790fab267ddb55ca0bebe6428f4afc3532a506a5be36376"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s1517.json",
+      "before_bytes": 3096,
+      "after_bytes": 3088,
+      "sha256": "e0df852ab54574dee4f6d765a9272b7206d5394a14f6dea3ed55d9d5b7a3202a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s815.json",
+      "before_bytes": 4948,
+      "after_bytes": 4941,
+      "sha256": "dce6149c9734ca800b595bbe48f099442bd06f13ef1a0baf4754014fd1d5d4a9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s828.json",
+      "before_bytes": 3739,
+      "after_bytes": 3732,
+      "sha256": "9f46162a0eb2b22976cb1ce23a017fe86a166c797c1704c7718e808cebb893cc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s833.json",
+      "before_bytes": 4467,
+      "after_bytes": 4460,
+      "sha256": "9d06e7bb7e2e3eb5ddab204a8136839f2bc1eca9207ce2096a12bb276884ce54"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s877.json",
+      "before_bytes": 4191,
+      "after_bytes": 4180,
+      "sha256": "339aba1bbb5799c205e0a967c9bd9003f65146ace7dd6e7f60b225cfdbf53f4b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s889.json",
+      "before_bytes": 4000,
+      "after_bytes": 3993,
+      "sha256": "35846a282d63047080b3620f1fa241ff4ca855c3275da6a2c87e36ff3aef9975"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s901.json",
+      "before_bytes": 4613,
+      "after_bytes": 4588,
+      "sha256": "7ed58cde8c0f451af6a8b893251cc8370aeb84cf61254178ac9849ca678d9550"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s909.json",
+      "before_bytes": 5705,
+      "after_bytes": 5681,
+      "sha256": "c1adb7651b16a41dd51aab65032a5ce621d5b7575009352394e643d8defabced"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s920.json",
+      "before_bytes": 3746,
+      "after_bytes": 3722,
+      "sha256": "483c42e4ead9c8f2e60845e2f91a65492dc0fa70aa30d151acb048f4240f3747"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s934.json",
+      "before_bytes": 2618,
+      "after_bytes": 2611,
+      "sha256": "415470f612d5229b6d3c7461baffc53c898777e8c979d631c926b8766b920776"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s936.json",
+      "before_bytes": 5755,
+      "after_bytes": 5744,
+      "sha256": "ce5d382fcce95696edf4e941bcea67ae07c820d4ad5363e972c681724d150349"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s937.json",
+      "before_bytes": 4011,
+      "after_bytes": 4004,
+      "sha256": "9c8d6f459131a89919dc4d2b860b19739b63767b4d71741e77b4ec6926b17232"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s938.json",
+      "before_bytes": 6412,
+      "after_bytes": 6401,
+      "sha256": "37a7d6fd73ee728b3a5125486407a82bae33e7b80324f2f0c89d887736902834"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s939.json",
+      "before_bytes": 3487,
+      "after_bytes": 3480,
+      "sha256": "9d59fa9b5eb55adcf3502f9126ce1bb90b854b12f5e825416edf5224faaae714"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s940.json",
+      "before_bytes": 3684,
+      "after_bytes": 3673,
+      "sha256": "fadb68659c969ae30f1b50286b7729316032f216780d1b6dbfbd9498b6c8a11c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s941.json",
+      "before_bytes": 4312,
+      "after_bytes": 4301,
+      "sha256": "888256b14be34ecb33238ac0ccf79003c6a2482d6fec33e501a108503b0c60e7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s942.json",
+      "before_bytes": 3249,
+      "after_bytes": 3242,
+      "sha256": "91c827c152866f80fa1641a4be633d3b0c4605fd34ba06c8a4474e24fdf1fe00"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s943.json",
+      "before_bytes": 5599,
+      "after_bytes": 5601,
+      "sha256": "23a9fcbf480269f77e61190e91bd55b4adc5d0cf1cd20c5cadc4ef837730b922"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s944.json",
+      "before_bytes": 3804,
+      "after_bytes": 3797,
+      "sha256": "50272699ee8b92c27dd05b1b92cdb2fdd76e6c7af89159f5510cdd0eb5317850"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s946.json",
+      "before_bytes": 3609,
+      "after_bytes": 3598,
+      "sha256": "0c6c2dcc089a67251620e27b7b6cd96577165e2bdd29e7d5c0879c8294c50038"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s947.json",
+      "before_bytes": 3226,
+      "after_bytes": 3215,
+      "sha256": "fc06028327903aee05891dc4e00b57e2185aabe6810755398597d2de7b9fdcee"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s948.json",
+      "before_bytes": 2885,
+      "after_bytes": 2874,
+      "sha256": "bd6e6d2a0abec74a7ea7e31246be693d8b3a636f093c986be6b49acb097ac099"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s949.json",
+      "before_bytes": 3499,
+      "after_bytes": 3488,
+      "sha256": "7354d293f8d0878d79e5805cf13e2e4b11a491d94f85b8bfb42bd87df107cec8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s950.json",
+      "before_bytes": 3411,
+      "after_bytes": 3400,
+      "sha256": "081d1a085a3beb6655a0f95e70dcdff10327e7b3265ffe7389b7ef54b45cf729"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s951.json",
+      "before_bytes": 3739,
+      "after_bytes": 3686,
+      "sha256": "1c205d42255821e121bc57205e47c5fa9103b5ad1d83cdd5bdf4a98621bf2a0d"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s952.json",
+      "before_bytes": 2832,
+      "after_bytes": 2824,
+      "sha256": "5950380ec7c4c4e54cb14408470a15a4f38216d657737c6d4ea59d5311461aed"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s953.json",
+      "before_bytes": 2923,
+      "after_bytes": 2898,
+      "sha256": "1403aa2b584c76982a9eb96b4e3b3bc5306ae1777d8d71a33467ec7df296d53e"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s954.json",
+      "before_bytes": 3215,
+      "after_bytes": 3208,
+      "sha256": "03b21f97e78e8eb3e4866bed11568e9fcecdab37a9705300b3a1d91c1e9b9dc9"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s955.json",
+      "before_bytes": 3197,
+      "after_bytes": 3186,
+      "sha256": "fa10ab972f3f1a555e073c82c34fd31281b2f22d91959a1a55737e34f69c310c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s956.json",
+      "before_bytes": 3667,
+      "after_bytes": 3656,
+      "sha256": "7ec5ab4955c6b6dde9dad4ff8313929c8764f5f17ed7caaed67e21d1df992e12"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s957.json",
+      "before_bytes": 3708,
+      "after_bytes": 3710,
+      "sha256": "1b905b20c56d85a43c0c1c6c5f1db82cd2b8f4ef03a1abdcf208cc853e246386"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s958.json",
+      "before_bytes": 2399,
+      "after_bytes": 2401,
+      "sha256": "3457f347fdc5ce2d857952e326f3eb9d3eb8248880dc636c9447f4d8c8630e39"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s960.json",
+      "before_bytes": 3159,
+      "after_bytes": 3148,
+      "sha256": "e831591482b9cc39473a74dbe435270dcf0650a7b19f7e4d0655c7619510b72b"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s961.json",
+      "before_bytes": 3591,
+      "after_bytes": 3580,
+      "sha256": "272718ba7099753b5bebb84fc1fe9c7a971cdbb70e1602dd7cc6f5d94baffc24"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s962.json",
+      "before_bytes": 3447,
+      "after_bytes": 3436,
+      "sha256": "a5b7810fe92e92f34f670f38f4e1c5071281c6bb2712b98e5682deddc8a8960a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s963.json",
+      "before_bytes": 2604,
+      "after_bytes": 2593,
+      "sha256": "98053167fb10d2735de80c48f37f4fcff720bc98a9898195ab0a7f44f492afda"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s964.json",
+      "before_bytes": 3153,
+      "after_bytes": 3142,
+      "sha256": "a3fc648cf10469589e3d85cdefe9b7527bb5dd0280152f96484ffa5429915532"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s966.json",
+      "before_bytes": 3534,
+      "after_bytes": 3523,
+      "sha256": "51328edcb1edc52e864904a2be280af437b6dc1f16a0a867ed5ed2b1bb1ee124"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s967.json",
+      "before_bytes": 3855,
+      "after_bytes": 3844,
+      "sha256": "cbe98be5faf9ebf91c73a658a5c9614c7931d7c1bcdf98289c09fc53e0b8b4e7"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s968.json",
+      "before_bytes": 3791,
+      "after_bytes": 3780,
+      "sha256": "abfd6d7154d87beba82549968d201ad94a5ba416cf5b1979788a6aa414d19a35"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s970.json",
+      "before_bytes": 4237,
+      "after_bytes": 4226,
+      "sha256": "0bb05adca9391f4233135e59b69be941030b6a6a25abf6ab569d2ea38e3dd4fd"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s971.json",
+      "before_bytes": 4149,
+      "after_bytes": 4138,
+      "sha256": "c6ee867a0027ac40f249b2778150074218336fd5b01a0ec020c33eb3c7305f45"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s973.json",
+      "before_bytes": 2947,
+      "after_bytes": 2894,
+      "sha256": "e76573994b9e9f88f64591081d63c8373fc1f212c919f3f6b7e5abed28124ad8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s974.json",
+      "before_bytes": 20401,
+      "after_bytes": 20376,
+      "sha256": "0cfad6bfb15d260b9a50435aa262bd0d6e894c96e573126142b8d4929c045f20"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s975.json",
+      "before_bytes": 3337,
+      "after_bytes": 3326,
+      "sha256": "ec819da583027386d741cb7c73e2ff9e102b3e49f61fc2cb5f9e37e719811a14"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s977.json",
+      "before_bytes": 2035,
+      "after_bytes": 2024,
+      "sha256": "70ecdf075ec4556813c934ffc9a765b308f4702f7ae737eba3f2d071ec70414a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s978.json",
+      "before_bytes": 2684,
+      "after_bytes": 2629,
+      "sha256": "3753b3fcf4e2919d7a46afd21b60bae76e64d39adfec42ebbf814a823a750519"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s979.json",
+      "before_bytes": 2089,
+      "after_bytes": 2078,
+      "sha256": "f1d15561c8e40782634964362ec9c8b3900b31d02be0445e5d2e97465f2cd9e1"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s981.json",
+      "before_bytes": 3251,
+      "after_bytes": 3240,
+      "sha256": "b543e05646f1ff5628ae99cd4ede037952d1da48775ae5b81b7e9822eb0391b8"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s982.json",
+      "before_bytes": 26447,
+      "after_bytes": 26449,
+      "sha256": "639affdd2a35240b0627ca48e2fc87f554263a281092ffb99db67be34b8b2e55"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s984.json",
+      "before_bytes": 3393,
+      "after_bytes": 3386,
+      "sha256": "3799c945c9d7447be28ef5d7facc9d6d1802fc68047de3ca7475f36a54da7ccc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s987.json",
+      "before_bytes": 2711,
+      "after_bytes": 2700,
+      "sha256": "43c69a42a5e794266cd3f1ebe038cf52e62c967c45aa956146eb67c4813890c3"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s988.json",
+      "before_bytes": 3549,
+      "after_bytes": 3538,
+      "sha256": "c3012ba5525c4309b07b3a52c80f9501ad6f624359bfbb8b94145762b0049508"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s989.json",
+      "before_bytes": 4680,
+      "after_bytes": 4655,
+      "sha256": "eb393a947e52235388055e27ee3548b6eac90f451804496996a1ce3089c8f199"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s992.json",
+      "before_bytes": 3695,
+      "after_bytes": 3684,
+      "sha256": "56d73eff1052a753cc3bac1ff15c6a97fba051f574a005c222bc4c5df35b286a"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s993.json",
+      "before_bytes": 3700,
+      "after_bytes": 3689,
+      "sha256": "21eb9728bf0cd391474e874723faf20ae816206fc9e0041161b2f1b26d3bc78c"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s994.json",
+      "before_bytes": 3667,
+      "after_bytes": 3648,
+      "sha256": "bf4d9587404dd673b228e2a611d4d1515226fd3f6dec118dc8c4f53c942906ea"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s995.json",
+      "before_bytes": 3751,
+      "after_bytes": 3740,
+      "sha256": "8ca68592cbeb57d374e93d97141347c373428afd8a2287477fe0cfa10a313011"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s996.json",
+      "before_bytes": 4075,
+      "after_bytes": 4064,
+      "sha256": "0b38111044c68303be782df2309923000d2a9e33b6df983f4d6e01df0faf3b22"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s997.json",
+      "before_bytes": 3669,
+      "after_bytes": 3658,
+      "sha256": "46d5ee43030b625f054de4ede28c2c1089e1882b6d3a4a29bc40a95396ee12fc"
+    },
+    {
+      "path": "portal/public/bills/au-federal-s998.json",
+      "before_bytes": 2027,
+      "after_bytes": 2016,
+      "sha256": "a891e6f8cd04f375a9a3062312ab5224955a9dd3291b69ee67eb29270baa34ce"
+    },
+    {
+      "path": "portal/public/bills/index.json",
+      "before_bytes": 1819999,
+      "after_bytes": 1813313,
+      "sha256": "800df5abf7132888af2fb77076d370c21ad233fabe7e240a8020e88bf6580fd9"
+    },
+    {
+      "path": "portal/public/search-catalog/manifest.json",
+      "before_bytes": 764,
+      "after_bytes": 764,
+      "sha256": "8bb6d026c19b6ef4e720cfe1659b3c2011a2c52321d21c67f99a56a9d2ab4d69"
+    },
+    {
+      "path": "portal/public/facts/sponsor-parties.json",
+      "before_bytes": null,
+      "after_bytes": 508,
+      "sha256": "816c97bf29e76df2c6296d8096f0ebc7aec37cb7927e2fde79b300807719412c"
+    }
+  ],
+  "code_sha": "9504eac3a",
+  "local_validation_builds": [
+    {
+      "path": "portal/public/report-records",
+      "command": "node scripts/build_report_catalog.mjs",
+      "files_present": 2373,
+      "bytes_present": 31097198,
+      "result": "passed; build outputs are gitignored except the search manifest"
+    },
+    {
+      "path": "portal/public/search-catalog",
+      "command": "node scripts/build_search_catalog.mjs",
+      "files_present": 1626,
+      "bytes_present": 279950246,
+      "result": "passed; build outputs are gitignored except the search manifest"
+    },
+    {
+      "path": "portal/public/hubs",
+      "command": "node scripts/build_hubs.mjs and node scripts/build_vic_election.mjs",
+      "files_present": 5,
+      "bytes_present": 819574,
+      "result": "passed; build outputs are gitignored except the search manifest"
+    },
+    {
+      "path": "portal/public/crawl",
+      "command": "node scripts/build_crawl_catalog.mjs",
+      "files_present": 2,
+      "bytes_present": 865423,
+      "result": "passed; build outputs are gitignored except the search manifest"
+    }
+  ],
+  "regenerated_summary": {
+    "bill_detail_files": 764,
+    "bill_index_files": 1,
+    "bill_files_bytes": 8613969,
+    "search_manifest_bytes": 764,
+    "canonical_party_tokens_bytes": 508,
+    "total_versioned_data_bytes": 8615241
+  },
+  "review_round_1": {
+    "reviewed_sha": "6727804019fd6a7cadf838b7311789d48ed0a0ae",
+    "fix_sha": "9504eac3ac85c2e1a755539d5e8aa33ff31f3efb",
+    "main_merged": "c37df29d334008d98dfe13c82fa03b3b8eb42fbd",
+    "party_changes_original_submission": 605,
+    "existing_raw_labels_original_submission": 585,
+    "unsupported_null_fills_original_submission": 20,
+    "party_changes_final_against_original_base": 585,
+    "unsupported_null_fills_final": 0,
+    "party_values_revised_against_reviewed_sha": 32,
+    "explanation": "The first submission changed 605 top-level party fields: 585 pre-existing raw labels plus 20 originally null ALRC fields. Round 1 reverts those 20 additions (including nine Bob Katter bills), and drops 12 affiliations inferred in place of non-party source text. The final 585 changes only decode/map labels that existed in the October snapshot. No party is promoted onto an originally null field.",
+    "alrc_party_without_sponsor_before": 20,
+    "alrc_party_without_sponsor_after": 0,
+    "wrong_katter_independent_before": 9,
+    "wrong_katter_independent_after": 0,
+    "browser_standalone_requests_r5626_before": 48,
+    "browser_standalone_requests_r5626_after": 0,
+    "server_standalone_requests_r5626_before": 48,
+    "server_standalone_requests_r5626_after": 0,
+    "catalogue_parses_per_request_before": 1,
+    "catalogue_parses_per_isolate_after": 1,
+    "catalogue_failure_status_before": 500,
+    "catalogue_failure_status_after": 404,
+    "native_title_distinct_search_slugs_before": 1,
+    "native_title_distinct_search_slugs_after": 2,
+    "nightly_check": "--refresh-division-facts validates all joins before writing and checks persisted ayes/noes/outcome for every embedded division afterwards; mismatch or missing records fail the nightly step. --check-division-facts exposes the same offline check for build verification.",
+    "merge_sha": "037c74e8eeefda9fb97f77a08f15618a7d1114c4",
+    "generated_search_version": "d0af3ee81c0b633b",
+    "round_1_data_files": [
+      {
+        "path": "portal/public/bills/au-federal-alrc-4132.json",
+        "bytes": 5676
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4134.json",
+        "bytes": 2696
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4135.json",
+        "bytes": 2285
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4138.json",
+        "bytes": 615
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4139.json",
+        "bytes": 618
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4140.json",
+        "bytes": 2417
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4141.json",
+        "bytes": 720
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4143.json",
+        "bytes": 3678
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4144.json",
+        "bytes": 11875
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4149.json",
+        "bytes": 2260
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4150.json",
+        "bytes": 2694
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4157.json",
+        "bytes": 2473
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4158.json",
+        "bytes": 3075
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4159.json",
+        "bytes": 2438
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4167.json",
+        "bytes": 3008
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4168.json",
+        "bytes": 2425
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4169.json",
+        "bytes": 4445
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4172.json",
+        "bytes": 3227
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4173.json",
+        "bytes": 3043
+      },
+      {
+        "path": "portal/public/bills/au-federal-alrc-4177.json",
+        "bytes": 2422
+      },
+      {
+        "path": "portal/public/bills/au-federal-r7006.json",
+        "bytes": 2781
+      },
+      {
+        "path": "portal/public/bills/au-federal-r7200.json",
+        "bytes": 2744
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1062.json",
+        "bytes": 7949
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1100.json",
+        "bytes": 2500
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1226.json",
+        "bytes": 3017
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1328.json",
+        "bytes": 2898
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1346.json",
+        "bytes": 3413
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1494.json",
+        "bytes": 3325
+      },
+      {
+        "path": "portal/public/bills/au-federal-s1496.json",
+        "bytes": 15563
+      },
+      {
+        "path": "portal/public/bills/au-federal-s951.json",
+        "bytes": 3686
+      },
+      {
+        "path": "portal/public/bills/au-federal-s973.json",
+        "bytes": 2894
+      },
+      {
+        "path": "portal/public/bills/au-federal-s978.json",
+        "bytes": 2629
+      },
+      {
+        "path": "portal/public/bills/index.json",
+        "bytes": 1813313
+      }
+    ],
+    "round_1_bill_detail_files": 32,
+    "round_1_bill_data_bytes": 1928802,
+    "unrelated_release_outputs_restored": [
+      "portal/public/grants-map-LICENSE.txt",
+      "portal/public/graph/party-members.json",
+      "portal/public/growth/agency-top-suppliers.json",
+      "portal/public/voice.js"
+    ],
+    "formatting_only_bill_restore": "au-federal-alrc-4132 is semantically identical to the original snapshot after reverting its unsupported party. Restored original file bytes too.",
+    "unrelated_release_outputs_removed": [
+      "portal/public/chunks/voice-sdk-XRBS4UDV.js"
+    ],
+    "unresolved_findings": []
+  },
+  "prior_submission_gates": {
+    "typescript": {
+      "command": "cd portal && npx tsc --noEmit",
+      "result": "passed after local wrangler types generation"
+    },
+    "portal_default": {
+      "command": "cd portal && npm test",
+      "tests": 4728,
+      "passed": 4726,
+      "failed": 1,
+      "skipped": 1,
+      "result": "Overview stream cancellation assertion failed under concurrent load. The complete ask-person-route suite passed on rerun (12 tests)."
+    },
+    "portal_bounded": {
+      "command": "cd portal && npm test -- --test-concurrency=8",
+      "result": "passed",
+      "tests": 4728,
+      "passed": 4727,
+      "failed": 0,
+      "skipped": 1
+    },
+    "python": {
+      "command": "python3 -m unittest scripts.test_export_bills_sponsors scripts.test_export_bills_cleanup tests.test_export_bill_divisions tests.test_bill_lifecycle_export tests.test_bill_refresh_briefs tests.test_export_bills_facts",
+      "passed": 56,
+      "result": "passed"
+    },
+    "python_refresh": {
+      "command": "python3 -m unittest scripts.vm.test_bills_refresh",
+      "passed": 24,
+      "result": "passed on isolated rerun; one timeout fixture failed in the combined 80-test run under concurrent load"
+    },
+    "asset_stamps": {
+      "command": "node scripts/stamp_assets.mjs --check",
+      "result": "passed"
+    },
+    "shell_syntax": {
+      "command": "bash -n scripts/vm/nightly.sh",
+      "result": "passed"
+    },
+    "diff": {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    "lint": {
+      "result": "No portal lint script is defined"
+    },
+    "nightly_rehearsal": {
+      "command": "bash scripts/vm/test_nightly.sh",
+      "result": "Interrupted after reproducing failures. The first scenario also fails with the base nightly/exporter because fixture status introduced is outside the published vocabulary. The new offline reconciliation completed with zero changed files in that scenario."
+    }
+  },
+  "gates": {
+    "wrangler_types": {
+      "command": "cd portal && npx wrangler types",
+      "result": "passed"
+    },
+    "python": {
+      "command": ".venv/bin/python -m unittest scripts.test_export_bills_sponsors scripts.test_export_bills_cleanup tests.test_export_bill_divisions tests.test_bill_lifecycle_export tests.test_bill_refresh_briefs tests.test_export_bills_facts",
+      "result": "passed",
+      "tests": 60
+    },
+    "targeted_portal": {
+      "command": "cd portal && node --test test/portal-facts.test.mjs test/seo-render.test.mjs",
+      "result": "passed before merge; the full portal gate rechecks these tests on the merged tree",
+      "tests": 52
+    },
+    "shell_syntax": {
+      "command": "bash -n scripts/vm/nightly.sh",
+      "result": "passed"
+    },
+    "lint": {
+      "result": "No portal lint script is defined"
+    },
+    "build_release": {
+      "command": "cd portal && npm run build:release",
+      "result": "passed; local assets only, no deployment",
+      "search_version": "d0af3ee81c0b633b"
+    },
+    "asset_stamps": {
+      "command": "node scripts/stamp_assets.mjs --check",
+      "result": "passed after restoring unrelated tracked build outputs"
+    },
+    "typescript": {
+      "command": "cd portal && npx tsc --noEmit",
+      "result": "passed on the merged tree after release build and restoring unrelated tracked outputs"
+    },
+    "diff": {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    "portal_system_python_attempt": {
+      "command": "cd portal && npm test",
+      "tests": 4727,
+      "passed": 4723,
+      "failed": 3,
+      "skipped": 1,
+      "result": "Failed because system python3 lacks openpyxl. Two files could not load, and the Victorian advertising Python subprocess also failed. All lane regression tests passed in this run. Re-run with the existing repository virtual environment on PATH."
+    },
+    "portal": {
+      "command": "cd portal && npm test",
+      "environment": "Repository .venv/bin prepended to PATH so Python subprocesses use the installed workbook dependencies.",
+      "tests": 4737,
+      "passed": 4736,
+      "failed": 0,
+      "skipped": 1,
+      "duration_ms": 158481.544452,
+      "result": "passed on the merged tree after restoring unrelated tracked release outputs"
+    }
+  }
+}

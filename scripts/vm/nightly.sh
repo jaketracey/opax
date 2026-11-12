@@ -437,6 +437,11 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "$DIVISIONS_ACQUISITION_FAILE
     DIVISIONS_PAGES_ROLLED_BACK=0
     retained=$("$PY" -c 'import json; print(json.load(open("portal/public/divisions/index.json"))["coverage"]["retained_count"])')
     [ "$retained" = 0 ] || warn "division export retained $retained pinned records; explicit coverage flags identify degraded source coverage"
+    # Bills can be retained while the division projection receives reviewed
+    # corrections. Refresh and validate persisted embedded tallies without APH.
+    if ! run "$PY" scripts/export_bills.py --refresh-division-facts portal/public/bills; then
+      fail "bill division facts could not be reconciled with the accepted division pages"
+    fi
   fi
   # SEO links depend on the accepted division pages, never just the DB rows.
   if [ "${DIVISIONS_EXPORT_FAILED:-0}" = 1 ]; then

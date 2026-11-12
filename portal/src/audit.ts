@@ -1,5 +1,5 @@
 import { AUDIT_ID, auditComplete, type AuditRow } from '../public/audit.js'
-import { sourceLineHTML, tagHTML, statusLabelHTML } from '../public/labels.js'
+import { sourceLineHTML, tagHTML, statusLabelHTML } from '../public/party-page.js'
 import { shortDate } from '../public/format.js'
 import type { Crumb } from './seo-content'
 import { trail } from './nav-model.mjs'

@@ -492,6 +492,17 @@ class Builder:
                                "start": start, "end": end, "start_precision": "day", "end_precision": "day" if end else "open",
                                "observed_through": self.rows["sources"][sid]["fetched_at"][:10], "start_reason": r.get("Type of election") or "election", "end_reason": r.get("reason"),
                                "party_periods": [{"party": party(r["Most recent party"]), "start": start, "end": end}] if r["Most recent party"] != "SPK" else [], "source_party_label": r["Most recent party"], "sources": [sid]})
+        # Keep reviewed service-only identities when the members snapshot lacks them.
+        # The same source check builds the directory supplement and offline releases.
+        from scripts import roster_accept
+        from scripts.roster_source_profiles import enrich_catalog
+        accepted = roster_accept.load()
+        service_entries = {n: e for n, e in accepted.get("new", {}).items()
+                           if e.get("evidence") == "openaustralia-service"
+                           and e.get("catalog_person_id") in self.rows["people"]}
+        if service_entries:
+            updated = enrich_catalog(self.bundle(), {"new": service_entries})
+            self.rows["people"] = {p["person_id"]: p for p in updated["people"]}
         self.link_candidates()
 
     def link_candidates(self):

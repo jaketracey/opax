@@ -5,7 +5,7 @@
 // the model when a pay question is too loose for the calculated answer (a
 // misspelt name, a vague or compound question). One text, one place.
 
-import { personUrl } from '../public/canonical-urls.js';
+import { personUrl } from '../public/party-page.js';
 
 const whole = n => Number(n).toLocaleString('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
 const fy = y => `${y}-${String(Number(y) + 1).slice(2)}`;

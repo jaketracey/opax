@@ -16,8 +16,8 @@ import { identityAnswer, identityResponse } from './ask-identity'
 import { loosePositionPoints, claimAttributionOk, repairCausal } from './research-evidence'
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
-import { chamberLabel, PARTY_MAP } from '../public/labels.js'
-import { partySpeechLabel } from '../public/party-page.js'
+import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
+import {partySpeechLabel, partyMembers, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, type PartyPage} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -52,6 +52,8 @@ import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
+import {resolveProgram, programKey, type GrantProgram} from '../public/facts/grant-programs.js'
+import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
 import { sydneyDay } from '../public/hubs-data.js'
@@ -86,15 +88,17 @@ import { communityRoute } from './community'
 import { reviewerLoginEnabled } from './community-auth'
 import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
-import { partyUrl, personUrl, personNameKey } from '../public/canonical-urls.js'
+import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { htmlValidator, notModified } from './html-etag'
 import { cacheKeyParams } from './cache-key'
+import { searchFind, type SearchRetrieval } from './search-find'
 import { communityMcp } from './community-mcp'
 import { expireVoiceSessions, voiceRoute } from './voice'
 import { appEdition } from './app-edition'
+import { appVicElection } from './app-vic-election'
 import { appManifest } from './app-manifest'
 import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
@@ -401,6 +405,7 @@ const SEARCH_CACHE_TTL = 600
  * the key carries CACHE_EPOCH, so a corpus change retires the window anyway.
  */
 const SEARCH_WINDOW_CACHE_TTL = 3600
+const SEARCH_FALLBACK_CACHE_TTL = 60
 const RESOURCE_CACHE_TTL = 3600
 // Follow-ups belong to the answer they were written from, and they are derived
 // from it deterministically: the same question, answer and passages ask for the
@@ -503,7 +508,7 @@ const SEARCH_WINDOW_TOPK = 200 // retrieval depth once a caller pages
 const SEARCH_PER_DEFAULT = 20
 const SEARCH_PER_MAX = 200 // one request can still take the whole window (export)
 
-interface SearchWindow {
+interface SearchWindow extends SearchRetrieval {
   total: number
   truncated: boolean
   results: SearchResult[]
@@ -561,11 +566,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // from page 1's entry; the window key drops them so paging and re-sorting
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
-  // Retire windows/pages containing the old unnormalized, character-cut snippets.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1\n${keyParams(['nocache'])}`))
+  // Retire older snippets and windows without retrieval-mode metadata.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -584,9 +589,14 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   if (!win) {
     const limited = options.suggest ? null : await rateLimited(env.SEARCH_LIMITER, request)
     if (limited) return limited
-    win = await searchWindow(env, { q, mode, kind, topK, url, ...(options.suggest ? { reranker: 'noop' as const, signal: AbortSignal.any([request.signal, AbortSignal.timeout(1500)]) } : {}) })
-    if (!win) return json({ error: 'find failed' }, 502)
-    cacheStore(ctx, windowKey, json(win), SEARCH_WINDOW_CACHE_TTL)
+    win = await searchWindow(env, { q, mode, kind, topK, url, signal: request.signal, ...(options.suggest ? { reranker: 'noop' as const, signal: AbortSignal.any([request.signal, AbortSignal.timeout(1500)]) } : {}) })
+    if (!win) {
+      const unavailable = json({ error: 'find failed' }, 503)
+      unavailable.headers.set('retry-after', '5')
+      unavailable.headers.set('cache-control', 'no-store')
+      return unavailable
+    }
+    cacheStore(ctx, windowKey, json(win), win.fallback ? SEARCH_FALLBACK_CACHE_TTL : SEARCH_WINDOW_CACHE_TTL)
   }
 
   const ordered = [...win.results].sort((a, b) => compareSearchResults(a, b, sort))
@@ -601,6 +611,8 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   const out = json({
     query: q,
     mode,
+    mode_used: win.mode_used,
+    ...(win.fallback ? { fallback: win.fallback } : {}),
     kind,
     sort,
     page: clamped,
@@ -614,7 +626,8 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     count: rows.length,
     results: rows,
   })
-  cacheStore(ctx, pageKey, out, SEARCH_CACHE_TTL)
+  if (win.fallback) out.headers.set('cache-control', 'no-store')
+  else cacheStore(ctx, pageKey, out, SEARCH_CACHE_TTL)
   return withCacheStatus(out, bypass ? 'BYPASS' : 'MISS')
 }
 
@@ -652,7 +665,7 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
       const req = new Request(docUrl, request)
       const response = env.STAGING_API ? await env.STAGING_API.fetch(req) : await apiSearch(req, docUrl, env, ctx, options)
       if (!response.ok) throw new Error('Document search unavailable')
-      return await response.json() as { results: SearchResult[]; truncated: boolean }
+      return await response.json() as { results: SearchResult[]; truncated: boolean } & Partial<SearchRetrieval>
     })() : Promise.resolve(null),
   ])
   const catalog = tasks[0].status === 'fulfilled' ? tasks[0].value : null
@@ -660,7 +673,12 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   const warnings: string[] = []
   if (tasks[0].status === 'rejected') warnings.push('Financial and register search is temporarily unavailable. These results only cover documents.')
   if (tasks[1].status === 'rejected') warnings.push('Document search is temporarily unavailable. These results only cover the other published records.')
-  if (!catalog && !documents && warnings.length) return json({ error: 'Search is temporarily unavailable. Please try again.' }, 503)
+  if (!catalog && !documents && warnings.length) {
+    const unavailable = json({ error: 'Search is temporarily unavailable. Please try again.' }, 503)
+    unavailable.headers.set('retry-after', '5')
+    unavailable.headers.set('cache-control', 'no-store')
+    return unavailable
+  }
   // Reciprocal ranks combine lexical records with semantic document retrieval;
   // their native scores are different scales and must never be compared.
   // A paged catalogue row is a stub until it is on the page shown; this maps it to its record ID.
@@ -716,14 +734,18 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
       return { ...record, score: row.score, sort_date: record.date || row.sort_date }
     })
   }
-  return json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
+  const out = json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
     results: shown, count: shown.length,
     total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
     years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
+    ...(documents?.mode_used ? { mode_used: documents.mode_used } : {}),
+    ...(documents?.fallback ? { fallback: documents.fallback } : {}),
   })
+  out.headers.set('cache-control', 'no-store')
+  return out
 }
 
-/** One /find at `topK` depth, deduped to documents and ranked by score. */
+/** A bounded /find window at `topK` depth, deduped to documents and ranked by score. */
 async function searchWindow(
   env: Env,
   opts: { q: string; mode: string; kind: string; topK: number; url: URL; reranker?: 'noop'; signal?: AbortSignal },
@@ -770,14 +792,14 @@ async function searchWindow(
     if (speakers) body.filter_expression = scopedCollaborators(filters, { speakers })
   }
 
-  const res = await kbFetch(env, '/find', { body, signal: opts.signal })
-  if (!res.ok) return null
-  const found = (await res.json()) as {
+  const retrieval = await searchFind<{
     resources?: Record<string, FindResource & {
       computedmetadata?: { field_classifications?: { classifications?: { labelset: string; label: string }[] }[] }
     }>
     best_matches?: unknown[]
-  }
+  }>((body, signal) => kbFetch(env, '/find', { body, signal }), body, mode, opts.signal)
+  if (!retrieval) return null
+  const { found, ...status } = retrieval
 
   const results = Object.entries(found.resources ?? {})
     .filter(([, r]) => !/^(da-|news-)/.test(r.slug ?? '')) // enrichment output never surfaces as a result
@@ -867,7 +889,7 @@ async function searchWindow(
   await joinMixedSpeakers(results, env.ASSETS)
   results.sort((a, b) => b.score - a.score)
   // A full batch means retrieval hit its ceiling, not that the record is spent.
-  return { total: results.length, truncated: (found.best_matches?.length ?? 0) >= topK, results }
+  return { total: results.length, truncated: (found.best_matches?.length ?? 0) >= topK, results, ...status }
 }
 
 interface AskInput {
@@ -3742,7 +3764,7 @@ const CHAMBER_NAMES: Record<string, string> = {
 // router and the crumb labels; the two lists have to name the same kinds.
 const DIRECTORY_KINDS: Record<string, string> = {
   person: 'Parliamentarians',
-  party: 'Parties',
+  party: 'Parties and independents',
   donor: 'Receipt sources',
   supplier: 'Government suppliers',
   agency: 'Government agencies',
@@ -4633,7 +4655,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       } else if (route.dir === 'electorate') {
         description = 'Australian electorates, their representatives, election results and Census context. Browse by parliament and chamber, with dated sources and explicit historical coverage.'
       } else if (route.dir === 'party') {
-        description = 'Australian political parties in the record: speeches, members and disclosed receipts, party by party, from Hansard and electoral commission returns.'
+        description = 'Parties and independents in the parliamentary record: recorded affiliations, speeches and disclosed receipts where held. Independents are not a party organisation.'
       } else if (route.dir === 'agency') {
         const data = await loadAgencies(env).catch(() => null)
         if (!data) return base({ title: 'Government agencies · OPAX', description: 'The agency list is temporarily unavailable. Please try again.', status: 503 })
@@ -4994,6 +5016,7 @@ function personPath(people: PeopleData | null, name: string): string {
 /** An address written with the name forwards to the slug, so one page has one URL. */
 /** Resolve host, historical shapes and path aliases before issuing one redirect.
  * Entity redirects require a locally exported target; unknown identities stay 404. */
+let partyPagesMemo: Promise<PartyPage[]> | null = null
 let partyLabelsMemo: Promise<string[]> | null = null
 let divisionSummariesMemo: Promise<Map<string,Division>> | null = null
 function loadDivisionSummaries(env: Env): Promise<Map<string,Division>> {
@@ -5001,9 +5024,16 @@ function loadDivisionSummaries(env: Env): Promise<Map<string,Division>> {
     .then(index=>new Map(index.divisions.map(d=>[d.key,d]))).catch(()=>{divisionSummariesMemo=null;return new Map()})
   return divisionSummariesMemo
 }
+async function loadPartyPages(env: Env): Promise<PartyPage[]> {
+  partyPagesMemo ??= readPartyPages(<T>(path: string) => assetJson<T>(env,path))
+    .catch(error=>{partyPagesMemo=null;throw error})
+  return partyPagesMemo
+}
+// Retain older bill-source addresses outside the directory's verified party
+// inventory. Adding crawl discovery must not remove an existing record URL.
 async function loadPartyLabels(env: Env): Promise<string[]> {
-  partyLabelsMemo ??= Promise.all([loadMoney(env),loadPeople(env),loadBills(env),assetJson<{parties?:string[]}>(env,'/divisions/index.json').catch(()=>null)]).then(([money,people,bills,divisions])=>[...new Set([
-    ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party || ''),...(divisions?.parties || [])
+  partyLabelsMemo ??= Promise.all([loadMoney(env),loadPeople(env),loadBills(env),loadPartyPages(env)]).then(([money,people,bills,pages])=>[...new Set([
+    ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party && sponsorParties.includes(b.sponsor_party) ? b.sponsor_party : ''),...pages.flatMap(p=>p.aliases)
   ].filter(Boolean))]).catch(error=>{partyLabelsMemo=null;throw error})
   return partyLabelsMemo
 }
@@ -5029,6 +5059,8 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
       const p=people && personAt(people,name)
       if(p) return personPath(people,p.name)
     } else if(kind==='party') {
+      const page=resolvePartyPage(name,await loadPartyPages(env).catch(()=>[]))
+      if(page) return page.href
       const labels=await loadPartyLabels(env).catch(()=>[])
       const label=labels.find(p=>foldName(p)===foldName(name) || partyUrl(p).split('/').at(-1)===name.toLowerCase())
       if(label) return partyUrl(label)
@@ -5272,17 +5304,25 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
 
 /** The figures the daily edition posts about a program, when it has been told by seat (scripts/build_social_catalog.mjs). */
 interface SocialProgram { key: string; n: string; t: number; c: number; y0?: string | null; y1?: string | null; mapped: [number, number]; groups: Record<string, [number, number]>; seatShare: Record<string, number> }
-const PROGRAM_KEY_RE = /^[a-z0-9][a-z0-9-]{0,79}$/
+const PROGRAM_KEY_RE = /^[a-z0-9][a-z0-9-]*$/
+let grantProgramsMemo: Promise<{programs: GrantProgram[]}> | null = null
+function loadGrantPrograms(env: Env): Promise<{programs: GrantProgram[]}> {
+  grantProgramsMemo ??= assetJson<{programs: GrantProgram[]}>(env, '/graph/grants.federal.json')
+    .catch(error => { grantProgramsMemo = null; throw error })
+  return grantProgramsMemo
+}
 const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/
 const MONTH_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 /** /money/grants?jur=federal&program=<key>: one program's file, opened in the grants explorer. */
 async function grantProgramMeta(raw: string, url: URL, env: Env): Promise<PageMeta> {
-  const key = raw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
-  const canonical = `${SITE_ORIGIN}/money/grants?jur=federal&program=${encodeURIComponent(key)}`
-  const program = PROGRAM_KEY_RE.test(key)
+  const catalogue = await loadGrantPrograms(env).catch(() => null)
+  const row = resolveProgram(catalogue?.programs, raw)
+  const key = row ? row.key || programKey(row.id) : ''
+  const canonical = `${SITE_ORIGIN}/money/grants?jur=federal&program=${encodeURIComponent(row?.id || raw)}`
+  const program = row && PROGRAM_KEY_RE.test(key)
     ? await assetJson<{ id: string; n: string; ag?: string; t: number; c: number; r?: number; y0?: string; y1?: string }>(env, `/grants/federal/programs/${key}.json`).catch(() => null) : null
-  if (!program || typeof program.n !== 'string' || !Number.isFinite(program.t)) {
+  if (!program || program.id !== row?.id || typeof program.n !== 'string' || !Number.isFinite(program.t)) {
     return { title: 'Grant program not found · OPAX', description: STATIC_PAGES['money/grants'].description, canonical, ogType: 'website', status: 404, jsonLd: null, prerender: null, card: null }
   }
   const social = await assetJson<{ programs?: SocialProgram[] }>(env, '/social/programs.json').catch(() => null)
@@ -5447,11 +5487,13 @@ function samePartyLabel(a: string, b: string): boolean {
   return code(a) === code(b)
 }
 
-/** The party a /subject/party/<name> segment names: a money-map party, or one the roster, bills or divisions record. */
+/** The canonical party page a source spelling or URL segment names. */
 async function partyFor(name: string, env: Env): Promise<{ node: MoneyEntry | null; label: string | null; loaded: boolean }> {
   const moneyData = await loadMoney(env).catch(() => null)
-  const node = moneyData?.parties.get(foldName(name)) ?? [...(moneyData?.parties.values() || [])].find(p => partyUrl(p.label).split('/').at(-1) === name.toLowerCase()) ?? null
-  const label = node?.label ?? (await loadPartyLabels(env).catch(() => [])).find(p => partyUrl(p).split('/').at(-1) === name.toLowerCase()) ?? null
+  const page = resolvePartyPage(name,await loadPartyPages(env).catch(() => []))
+  const node = page ? [...(moneyData?.parties.values() || [])].find(p => samePartyLabel(p.label,page.label)) ?? null
+    : moneyData?.parties.get(foldName(name)) ?? [...(moneyData?.parties.values() || [])].find(p => partyUrl(p.label).split('/').at(-1) === name.toLowerCase()) ?? null
+  const label = page?.label ?? node?.label ?? (await loadPartyLabels(env).catch(() => [])).find(p => partyUrl(p).split('/').at(-1) === name.toLowerCase()) ?? null
   return { node, label, loaded: !!moneyData }
 }
 
@@ -5473,14 +5515,15 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     display = disclosureRecord ? donorDisclosure(disclosureRecord).name : name
   }
   const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : node && donorDisclosure(node).href ? new URL(donorDisclosure(node).href!,SITE_ORIGIN).href : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
-  const title = `${display} · OPAX`
+  const independent = dir === 'party' && isIndependent(display)
+  const heading = dir === 'party' ? partyDisplayName(display) : display
+  const title = `${heading} · OPAX`
   let facts: string
   let tail = ''
-  const ldType = dir==='donor' ? 'Dataset' : 'Organization'
+  const ldType = dir==='donor' ? 'Dataset' : independent ? 'CollectionPage' : 'Organization'
   let card: CardSpec
   let memberNames: string[] = []
   if (dir === 'party') {
-    const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
     // Speeches as the search index labels them (scripts/build_party_speeches.mjs), so the page promises
     // what its members said only where the record holds it: "Reason Party" has money, no Hansard.
     const indexed = await assetJson<{ parties?: Record<string, number> }>(env, '/graph/party-speeches.json').catch(() => null)
@@ -5488,24 +5531,24 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     // The division records name those who sat for a party the roster files elsewhere
     // (scripts/build_party_index.mjs): one senator's own party has its senator.
     const recorded = await assetJson<{ parties?: Record<string, { name: string }[]> }>(env, '/graph/party-members.json').catch(() => null)
-    const known = new Set(members.flatMap((p) => [p.name, p.full ?? ''].filter(Boolean).map(foldName)))
-    const voted = Object.entries(recorded?.parties ?? {}).filter(([label]) => foldName(label) === foldName(display))
-      .flatMap(([, rows]) => rows.map((r) => r.name)).filter((n) => !known.has(foldName(n)))
-    memberNames = [...new Set([...members.filter((p) => p.current).map((p) => p.name), ...members.map((p) => p.name), ...voted])]
+    // Shared with the browser directory and party page: a distinct person may
+    // have recorded affiliations with more than one party across their career.
+    const members = partyMembers(display, {roster: people, divisions: recorded})
+    memberNames = [...members.current, ...members.former].map(p=>p.name)
     const parts: string[] = []
-    const count = members.length + new Set(voted.map(foldName)).size
+    const count = memberNames.length
     if (count) parts.push(`${num(count)} parliamentarian${count === 1 ? '' : 's'}${speeches ? ` and ${num(speeches)} speeches` : ''} in the record`)
     if (node) parts.push(`${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
     if (parts.length) {
-      facts = `${display}: ${parts.join('; ')}.`
-      tail = speeches && node ? 'What its members said, and who paid.' : speeches ? 'What its members said.' : node ? 'Who paid.' : ''
+      facts = independent ? `${heading}: ${INDEPENDENTS_DESCRIPTION} ${parts.join('; ')}.` : `${heading}: ${parts.join('; ')}.`
+      tail = independent ? (speeches ? 'Their recorded speeches.' : '') : speeches && node ? 'What its members said, and who paid.' : speeches ? 'What its members said.' : node ? 'Who paid.' : ''
     } else {
-      facts = `${display} in the OPAX record of Australian parliamentary speeches and disclosed political receipts.`
+      facts = independent ? INDEPENDENTS_DESCRIPTION : `${heading} in the OPAX record of Australian parliamentary speeches and disclosed political receipts.`
     }
     card = {
-      kicker: 'Political party',
-      title: display,
-      lines: parts.length ? parts : ['In the OPAX record of Australian parliamentary speeches and disclosed political receipts.'],
+      kicker: independent ? 'Independent parliamentarians' : 'Political party',
+      title: heading,
+      lines: independent ? [INDEPENDENTS_DESCRIPTION, ...parts] : parts.length ? parts : ['In the OPAX record of Australian parliamentary speeches and disclosed political receipts.'],
       dot: node?.colour ?? null,
     }
   } else if (node) {
@@ -5545,9 +5588,9 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     canonical,
     ogType: 'profile',
     status: 200,
-    jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
-    prerender: prerenderBlock(display,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}`
-      : memberNames.length ? `<h2>Members</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul>${indexLinks()}` : indexLinks()) + table,
+    jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
+    prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}`
+      : memberNames.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>${indexLinks()}` : indexLinks()) + table,
     card,
   }
 }
@@ -7164,6 +7207,7 @@ export default {
     // proxy or general retrieval dispatch. No composition callback is supplied.
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))
     if (url.pathname === '/api/app/v1/manifest') return communityResponse(await appManifest(request, env))
+    if (url.pathname === '/api/app/v1/vic-election' || url.pathname.startsWith('/api/app/v1/vic-election/')) return communityResponse(await appVicElection(request, env))
     if (url.pathname.startsWith('/api/app/')) return communityResponse(appJson(request, {error:'not_found'}, 404))
     if(url.pathname==='/map' && ['GET','HEAD'].includes(request.method)) {
       const shell=await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/map.html`))

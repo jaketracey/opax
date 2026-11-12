@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-12",
+  "kind": "region",
+  "slug": "southern-metropolitan",
+  "name": "Southern Metropolitan",
+  "web_url": "https://opax.com.au/vic-election-2026/southern-metropolitan",
+  "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/southern-metropolitan-region",
+  "electorate_url": "/subject/electorate/vic-vic-lc-vic-southern-metropolitan",
+  "roster_date": "2026-09-09",
+  "formerly": null,
+  "created": false,
+  "boundary_note": null,
+  "region": null,
+  "districts": [
+    {
+      "kind": "district",
+      "slug": "albert-park",
+      "name": "Albert Park",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-albert-park",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Nina Taylor",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 11.15
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "ashwood",
+      "name": "Ashwood",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-ashwood",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Matt Fregon",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 6.15
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "bentleigh",
+      "name": "Bentleigh",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-bentleigh",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Nick Staikos",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 8.04
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "brighton",
+      "name": "Brighton",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-brighton",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "James Newbury",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 4.21
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "caulfield",
+      "name": "Caulfield",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-caulfield",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "David Southwick",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 2.07
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "hawthorn",
+      "name": "Hawthorn",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-hawthorn",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "John Pesutto",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 1.74
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "kew",
+      "name": "Kew",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-kew",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Jess Wilson",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 3.98
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "malvern",
+      "name": "Malvern",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-malvern",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Michael O'Brien",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 8.28
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "oakleigh",
+      "name": "Oakleigh",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-oakleigh",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Steve Dimopoulos",
+        "party": "Labor"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Labor",
+        "margin": 13.48
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "prahran",
+      "name": "Prahran",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-prahran",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Rachel Westaway",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2025-02-08",
+        "kind": "by-election",
+        "party": "Liberal",
+        "margin": 1.35
+      },
+      "candidates": 0
+    },
+    {
+      "kind": "district",
+      "slug": "sandringham",
+      "name": "Sandringham",
+      "electorate_url": "/subject/electorate/vic-vic-la-vic-sandringham",
+      "region": "Southern Metropolitan",
+      "member": {
+        "name": "Brad Rowswell",
+        "party": "Liberal"
+      },
+      "result": {
+        "date": "2022-11-26",
+        "kind": "general",
+        "party": "Liberal",
+        "margin": 5.15
+      },
+      "candidates": 0
+    }
+  ],
+  "result": null,
+  "candidates": null,
+  "members": [
+    {
+      "name": "Ryan Batchelor",
+      "party": "Labor",
+      "slug": "ryan-batchelor",
+      "href": "/subject/person/ryan-batchelor",
+      "source_url": "https://www.parliament.vic.gov.au/members/ryan-batchelor/",
+      "speeches": {
+        "count": 373,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 58,
+        "ayes": 19,
+        "noes": 39
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-24",
+          "title": "That this house:",
+          "href": "/doc/division-vic-lc-2026-09-24-1",
+          "vote": "no",
+          "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+        }
+      ]
+    },
+    {
+      "name": "John Berger",
+      "party": "Labor",
+      "slug": "john-berger",
+      "href": "/subject/person/john-berger",
+      "source_url": "https://www.parliament.vic.gov.au/members/john-berger/",
+      "speeches": {
+        "count": 293,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 59,
+        "ayes": 19,
+        "noes": 40
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-24",
+          "title": "That this house:",
+          "href": "/doc/division-vic-lc-2026-09-24-1",
+          "vote": "no",
+          "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+        }
+      ]
+    },
+    {
+      "name": "Katherine Copsey",
+      "party": "Greens",
+      "slug": "katherine-copsey",
+      "href": "/subject/person/katherine-copsey",
+      "source_url": "https://www.parliament.vic.gov.au/members/katherine-copsey/",
+      "speeches": {
+        "count": 329,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 57,
+        "ayes": 24,
+        "noes": 33
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-24",
+          "title": "That this house:",
+          "href": "/doc/division-vic-lc-2026-09-24-1",
+          "vote": "aye",
+          "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+        }
+      ]
+    },
+    {
+      "name": "Georgie Crozier",
+      "party": "Liberal",
+      "slug": "georgie-crozier",
+      "href": "/subject/person/georgie-crozier",
+      "source_url": "https://www.parliament.vic.gov.au/members/georgie-crozier/",
+      "speeches": {
+        "count": 496,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 57,
+        "ayes": 38,
+        "noes": 19
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-24",
+          "title": "That this house:",
+          "href": "/doc/division-vic-lc-2026-09-24-1",
+          "vote": "aye",
+          "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+        }
+      ]
+    },
+    {
+      "name": "David Davis",
+      "party": "Liberal",
+      "slug": "david-davis",
+      "href": "/subject/person/david-davis",
+      "source_url": "https://www.parliament.vic.gov.au/members/david-davis/",
+      "speeches": {
+        "count": 596,
+        "first": 2024,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 58,
+        "ayes": 39,
+        "noes": 19
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-24",
+          "title": "That this house:",
+          "href": "/doc/division-vic-lc-2026-09-24-1",
+          "vote": "aye",
+          "source_url": "https://www.parliament.vic.gov.au/4a9854/globalassets/hansard-daily-pdfs/hansard-974425065-37279/hansard-974425065-37279.pdf"
+        }
+      ]
+    }
+  ],
+  "results_fetched": "2026-10-13",
+  "speech_updated": "2026-10-18",
+  "division_start": "2026-08-14",
+  "division_end": "2026-09-24"
+}

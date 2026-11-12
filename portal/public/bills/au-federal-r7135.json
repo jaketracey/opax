@@ -339,7 +339,7 @@
    "key": "federal-senate-10473",
    "date": "2024-11-28",
    "house": "senate",
-   "question": "No motion text available",
+   "question": null,
    "stage": "Bill",
    "ayes": 27,
    "noes": 27,

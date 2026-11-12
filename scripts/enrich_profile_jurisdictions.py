@@ -107,7 +107,7 @@ def dated_records(reference,reviewed,state_evidence=None):
         if not t.get('start'):continue
         p,e=people[t['person_id']],seats[t['electorate_id']]
         for period in t.get('party_periods') or [{'start':t['start'],'end':t.get('end'),'party':None}]:
-            records.append({'name':p['name'],'identity':p['person_id'],'jurisdiction':e['jurisdiction'],
+            records.append({'name':p['name'],'aliases':p.get('aliases',[]),'identity':p['person_id'],'jurisdiction':e['jurisdiction'],
                 'chamber':e['chamber'],'electorate':e['name'],'state':e.get('state_code','').upper(),
                 'start':period['start'],'end':period.get('end'),'party':period.get('party'),
                 'source_url':next((sources[s].get('url') for s in t.get('sources',[]) if s in sources),None)})
@@ -119,7 +119,7 @@ def dated_records(reference,reviewed,state_evidence=None):
         e=seats[roster['electorate_id']]
         for m in roster.get('members',[]):
             p=people[m['person_id']]
-            records.append({'name':p['name'],'identity':p['person_id'],'jurisdiction':e['jurisdiction'],
+            records.append({'name':p['name'],'aliases':p.get('aliases',[]),'identity':p['person_id'],'jurisdiction':e['jurisdiction'],
                 'chamber':e['chamber'],'electorate':e['name'],'state':e.get('state_code','').upper(),
                 'start':roster['as_of'],'end':roster['as_of'],'as_of':roster['as_of'],'party':m.get('party'),
                 'source_url':p.get('source_url') or next((sources[s].get('url') for s in roster.get('sources',[]) if s in sources),None)})
@@ -143,6 +143,12 @@ def dated_records(reference,reviewed,state_evidence=None):
     return records
 
 
+def record_agrees(name,record):
+    """Explicit aliases may omit middle names, but a middle name is not a given-name alias."""
+    return agrees(name,record['name']) or any(agrees(name,n) and
+        (weak(name) or parts(name)[0]==parts(n)[0]) for n in record.get('aliases',[]) if parts(n))
+
+
 def matching_records(person,records,reviewed,unique=True,allow_weak=False):
     """Name, jurisdiction, chamber and overlapping years. Weak prints are
     admitted only by the explicit resolver, which checks all competing people.
@@ -153,7 +159,7 @@ def matching_records(person,records,reviewed,unique=True,allow_weak=False):
     for r in records:
         alias_match=(alias and r['name']==alias['name'] and r['jurisdiction']==alias['jurisdiction']
                      and r['chamber']==alias['chamber'])
-        if not (alias_match or any(agrees(person['name'],n) for n in [r['name'],*r.get('aliases',[])])):continue
+        if not (alias_match or record_agrees(person['name'],r)):continue
         if r['jurisdiction'] not in person.get('states',[]) or r['chamber'] not in person.get('chambers',[]):continue
         if int(r['start'][:4])>person['last'] or (r.get('end') and int(r['end'][:4])<person['first']):continue
         found.append(r)
@@ -185,6 +191,12 @@ def print_identity(person,records,reference,printed_people=()):
         compatible['chambers']=list(houses | FEDERAL)
     possible=matching_records(compatible,records,{},unique=False,allow_weak=True)
     if ambiguous_scopes(possible):return []
+    service=[r for r in own if r.get('start') and (not r.get('as_of') or r['identity'].startswith('reviewed:'))]
+    if person.get('witness_rows') and service and all(r.get('end') for r in service) and max(
+            int(r['end'][:4]) for r in service)<person['last']:
+        # A preferred-name alias cannot turn testimony after retirement into
+        # the retired member's identity or party on the whole surname print.
+        return []
     by_id={p['person_id']:p for p in reference.get('people',[])}
     seats={e['electorate_id']:e for e in reference.get('electorates',[])}
     candidates={}
@@ -216,8 +228,11 @@ def print_identity(person,records,reference,printed_people=()):
         if (other.get('first') is None or other.get('last') is None
                 or other['first']>person['last'] or other['last']<person['first']):continue
         names.append(other['name'])
-    if names and not all(agrees(a,b) or any(a in r.get('aliases',[]) and b==r['name']
-                      or b in r.get('aliases',[]) and a==r['name'] for r in own)
+    # Both spellings may omit middle names in one explicit source identity.
+    # The documented aliases, rather than a guessed nickname, bridge them.
+    names=list(dict.fromkeys(names))
+    supported={name:{i for i,r in enumerate(own) if record_agrees(name,r)} for name in names}
+    if names and not all(agrees(a,b) or bool(supported[a] & supported[b])
                       for a in names for b in names):return []
     # Every parliament with an actual house needs its own candidate evidence.
     # Two houses within one state are allowed, consistently with the photo guard.

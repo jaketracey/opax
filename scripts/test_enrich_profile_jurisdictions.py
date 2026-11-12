@@ -144,9 +144,32 @@ class PinnedServiceTests(unittest.TestCase):
             with self.subTest(name=name):
                 p = people[name]
                 self.assertIn(seat, [r['electorate'] for r in p['representation']])
-                # These pinned terms use different ids across an election or a spelling change.
+                # Stable catalog identities now join source spellings. Multiple
+                # dated seats/terms survive that consolidation without ambiguity.
                 own = profiles.matching_records(p, profiles.dated_records(self.reference, self.reviewed), self.reviewed)
-                self.assertGreater(len({r['identity'] for r in own}), 1)
+                self.assertGreater(len({(r['electorate'], r['start'], r.get('end')) for r in own}), 1)
+                self.assertEqual(profiles.ambiguous_scopes(own), set())
+
+    def test_explicit_catalog_aliases_corroborate_a_preferred_name(self):
+        ref = dict(people=[dict(person_id='person_example', name='Bill Example', aliases=['William George Example'])],
+                   electorates=[dict(electorate_id='seat_example', name='Fixtureton', jurisdiction='federal',
+                                     chamber='representatives', state_code='vic')],
+                   sources=[], rosters=[], terms=[dict(person_id='person_example', electorate_id='seat_example',
+                       start='2000-01-01', end='2010-01-01', party_periods=[dict(start='2000-01-01',
+                       end='2010-01-01', party='Example Party')])])
+        records = profiles.dated_records(ref, {}, state_evidence={})
+        row = person('Example', ['federal'], ['representatives'], first=2001, last=2009, full='Bill Example')
+        peer = person('William Example', ['federal'], ['representatives'], first=2001, last=2009)
+        self.assertTrue(profiles.print_identity(row, records, ref, [peer]))
+        retired_witness = dict(row, last=2012, witness_rows=1)
+        self.assertEqual(profiles.print_identity(retired_witness, records, ref, [peer]), [])
+        records[0]['aliases'] = []
+        self.assertEqual(profiles.print_identity(row, records, ref, [peer]), [])
+
+    def test_a_legal_middle_name_is_not_another_members_given_name_alias(self):
+        record = dict(name='Tony Example', aliases=['Anthony David Example'])
+        self.assertTrue(profiles.record_agrees('Anthony Example', record))
+        self.assertFalse(profiles.record_agrees('David Example', record))
 
 
 class GeneralGuardTests(unittest.TestCase):

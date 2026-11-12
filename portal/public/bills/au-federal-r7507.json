@@ -159,7 +159,7 @@
    "key": "federal-representatives-10618",
    "date": "2026-08-19",
    "house": "representatives",
-   "question": "No motion text available",
+   "question": null,
    "stage": "Bill",
    "ayes": 38,
    "noes": 80,
