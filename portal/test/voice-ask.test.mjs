@@ -17,7 +17,7 @@ await build({entryPoints:[new URL('../src/voice.ts',import.meta.url).pathname,ne
 const {voiceRoute,reserveVoiceSession,claimVoiceSession}=await import(pathToFileURL(join(folder,'voice.js')));
 const {voiceSource,spokenAnswer,plainCase,askOpaxResult}=await import(pathToFileURL(join(folder,'voice-sources.js')));
 const {voiceAsk}=await import(pathToFileURL(join(folder,'voice-ask.js')));
-const {callerBudgetMs,fallbackAllowanceMs,gatheredPayload,ASK_FALLBACK_FLOOR_MS}=await import(pathToFileURL(join(folder,'ask-caller-budget.js')));
+const {callerBudgetMs,fallbackAllowanceMs,gatheredPayload,ASK_FALLBACK_FLOOR_MS,trustedCaller,shortenedCaller}=await import(pathToFileURL(join(folder,'ask-caller-budget.js')));
 const stored=JSON.parse(readFileSync(new URL('./fixtures/voice-ask-payload.json',import.meta.url),'utf8'));
 const hash=async value=>Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value))).toString('hex');
 
@@ -174,22 +174,42 @@ test('agent config is valid JSON, every tool posts under /api/voice/tools/ and a
   assert.doesNotMatch(raw,/sk_[a-z0-9]{20,}|xi-api-key/i);
 });
 
-test('staging asks through STAGING_API the way its /api/ask is served; production asks in this Worker',async()=>{
-  for(const staging of [true,false]){
+test('staging asks through STAGING_API the way its /api/ask is served; production asks in this Worker with its deadline',async()=>{
+  for(const [staging,secret] of [[true,'k'.repeat(40)],[true,undefined],[false,'k'.repeat(40)]]){
     const forwarded=[],local=[];
-    const env={COMMUNITY_ORIGIN:staging?'https://staging.opax.test':'https://opax.test',...(staging?{STAGING_API:{async fetch(request){forwarded.push(request);return Response.json({answer:'Forwarded.'})}}}:{})};
-    const ask=voiceAsk(env,async request=>{local.push(request);return Response.json({answer:'Local.'})});
-    const controller=new AbortController();
+    const env={COMMUNITY_ORIGIN:staging?'https://staging.opax.test':'https://opax.test',ASK_INTERNAL_SECRET:secret,...(staging?{STAGING_API:{async fetch(request){forwarded.push(request);return Response.json({answer:'Forwarded.'})}}}:{})};
+    const ask=voiceAsk(env,async(request,caller)=>{local.push({request,caller});return Response.json({answer:'Local.'})});
+    const controller=new AbortController(),before=Date.now();
     const response=await ask({question:'How much is a federal backbencher paid?'},'session-1',controller.signal,82_000);
     assert.equal((await response.json()).answer,staging?'Forwarded.':'Local.');
-    const [request]=staging?forwarded:local;
     assert.equal(forwarded.length,staging?1:0);assert.equal(local.length,staging?0:1);
+    const request=staging?forwarded[0]:local[0].request;
     assert.equal(request.method,'POST');assert.equal(new URL(request.url).href,env.COMMUNITY_ORIGIN+'/api/ask');
     assert.equal(request.headers.get('accept'),'application/json');assert.equal(request.headers.get('content-type'),'application/json');
-    assert.equal(request.headers.get('cf-connecting-ip'),'voice-ask:session-1');assert.equal(request.headers.get('x-opax-ask-budget-ms'),'82000');
+    assert.equal(request.headers.get('cf-connecting-ip'),'voice-ask:session-1');
     assert.deepEqual(await request.json(),{question:'How much is a federal backbencher paid?'});
+    if(staging){
+      // The hop states the remaining time only with the shared secret; production checks it (ask-caller-budget.test.mjs).
+      assert.equal(request.headers.get('x-opax-ask-budget-ms'),secret?'82000':null);
+      assert.equal(request.headers.get('x-opax-ask-internal'),secret??null);
+    }else{
+      // In this Worker the deadline is an argument: no header, nothing a reader could copy.
+      assert.equal(request.headers.get('x-opax-ask-budget-ms'),null);assert.equal(request.headers.get('x-opax-ask-internal'),null);
+      assert.equal(local[0].caller.ms,82_000);assert.ok(local[0].caller.deadline>=before+82_000&&local[0].caller.deadline<=Date.now()+82_000);
+    }
     controller.abort();assert.equal(request.signal.aborted,true);
   }
+});
+
+test('the budget header is trusted only with the internal secret, and counted from arrival',async()=>{
+  const secret='k'.repeat(40),req=headers=>new Request('https://opax.test/api/ask',{method:'POST',headers});
+  assert.equal(await trustedCaller(req({'x-opax-ask-budget-ms':'30000'}),secret),undefined);
+  assert.equal(await trustedCaller(req({'x-opax-ask-budget-ms':'30000','x-opax-ask-internal':'k'.repeat(39)}),secret),undefined);
+  assert.equal(await trustedCaller(req({'x-opax-ask-budget-ms':'30000','x-opax-ask-internal':secret}),undefined),undefined);
+  assert.equal(await trustedCaller(req({'x-opax-ask-budget-ms':'30000','x-opax-ask-internal':'short'}),'short'),undefined,'a short secret is never accepted');
+  assert.equal(await trustedCaller(req({'x-opax-ask-internal':secret}),secret),undefined);
+  assert.deepEqual(await trustedCaller(req({'x-opax-ask-budget-ms':'30000','x-opax-ask-internal':secret}),secret,1_000),{deadline:31_000,ms:30_000});
+  assert.equal(shortenedCaller(undefined),false);assert.equal(shortenedCaller({ms:82_000,deadline:0}),true);assert.equal(shortenedCaller({ms:150_000,deadline:0}),false);
 });
 
 test('the provider hanging up aborts the Ask run',async()=>{
@@ -314,4 +334,28 @@ test('agent sync never reuses another environment\'s tool and fails the check wh
   assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true},{call:drop.call,log:out.log,backupDir:mkdtempSync(join(tmpdir(),'opax-voice-backup-'))}),1);
   assert.match(out.lines.join('\n'),/NOT IN SYNC after apply/);
   assert.ok(!p.agent.conversation_config.agent.prompt.tool_ids.includes('tool_prod_ask'));
+});
+
+test('agent sync refuses to apply when an attached tool of a configured name posts to another environment',async()=>{
+  const config=loadConfig();
+  const [prodSearch]=renderTools(config,{origin:'https://opax.com.au',secretId:'secret_prod'}).filter(t=>t.name==='search_records');
+  const p=provider();p.tools.set('tool_search',prodSearch);
+  const out=quiet(),dir=mkdtempSync(join(tmpdir(),'opax-voice-backup-'));
+  assert.equal(await run({agent:'agent_x',origin:p.origin,apply:true,secretId:'secret_stage'},{call:p.call,log:out.log,backupDir:dir}),1);
+  assert.match(out.lines.join('\n'),/PROBLEM search_records \(tool_search\) is attached but posts to https:\/\/opax\.com\.au, not https:\/\/staging\.opax\.com\.au\. It may be another environment's tool; apply refused\./);
+  assert.ok(p.calls.every(c=>c.startsWith('GET ')),'no writes');assert.equal(readdirSync(dir).length,0,'no backup either');
+  assert.equal(p.tools.get('tool_search').api_schema.url,'https://opax.com.au/api/voice/tools/search_records');
+  // The end_call system tool and tools of other names never raise it.
+  assert.ok(!out.lines.join('\n').includes('end_call (tool_end) is attached but'));
+});
+
+test('agent sync takes the tool secret only from this environment\'s tools',()=>{
+  const config=loadConfig(),origin='https://staging.opax.com.au',agent={conversation_config:{agent:{prompt:{prompt:'x',tool_ids:[]}}}};
+  const [prodAsk]=renderTools(config,{origin:'https://opax.com.au',secretId:'secret_prod'}).filter(t=>t.name==='ask_opax');
+  const [stageAsk]=renderTools(config,{origin,secretId:'secret_stage'}).filter(t=>t.name==='ask_opax');
+  const onlyProd=planSync(config,agent,[],{origin,workspace:[{id:'tool_prod',tool_config:prodAsk}]});
+  assert.equal(onlyProd.secret_id,null);assert.match(onlyProd.problems.join('\n'),/No tool secret id/);
+  assert.equal(planSync(config,agent,[],{origin,workspace:[{id:'tool_prod',tool_config:prodAsk},{id:'tool_stage',tool_config:stageAsk}]}).secret_id,'secret_stage');
+  assert.equal(planSync(config,{conversation_config:{agent:{prompt:{tools:[prodAsk]}}}},[],{origin}).secret_id,null,'inline tools too');
+  assert.equal(planSync(config,agent,[],{origin,secretId:'chosen',workspace:[{id:'tool_prod',tool_config:prodAsk}]}).secret_id,'chosen');
 });
