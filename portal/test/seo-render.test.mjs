@@ -6,6 +6,7 @@ import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import {build} from 'esbuild';
 import {isOrganisationDonor} from "../public/donor-entity.js";
 import {divisionPlain} from '../public/division-markdown.js';
+import {shortMoney} from '../public/format.js';
 import {renderBillAnswer as rawBillAnswer,renderPersonAnswer,partyLine,escapeHtml,safeHref,internalLinkCount,associationCaveat,crumbsHTML,answerBlock} from '../src/seo-content.ts';
 // Visible text for assertions: strip tags until none remain (a single pass can leave a rebuilt tag).
 const stripTags = html => { let prev; do { prev = html; html = html.replace(/<[^<>]*>/g, ''); } while (html !== prev); return html; };
@@ -40,6 +41,88 @@ const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(c
 const origin='https://opax.com.au';
 const env={COMMUNITY_ORIGIN:origin,ASSETS:{async fetch(req){const path=new URL(req.url).pathname;const file=new URL(path==='/'?'index.html':path==='/home'?'home.html':path==='/community'?'community.html':path.slice(1),pub);if(!existsSync(file)) return new Response('Missing',{status:404}); const response=new Response(readFileSync(file),{headers:{'content-type':path.endsWith('.json')?'application/json':'text/html'}}); if(path.endsWith('.json')) response.json=()=>read(path); return response;}}};
 async function get(path){const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});assert.equal(r.status,200,path);return r.text();}
+test('all 24 audited grant source IDs and nine long file keys serve their own program facts', async () => {
+  const audit=JSON.parse(readFileSync(new URL('fixtures/portal-facts.json',import.meta.url)));
+  assert.equal(audit.programs.length,24);
+  assert.equal(audit.programs.filter(p=>p.key.length>80).length,9);
+  for(const row of audit.programs) for(const id of [row.id,row.key]) {
+    const html=await get('/money/grants?'+new URLSearchParams({jur:'federal',program:id}));
+    const total=shortMoney(row.total);
+    assert.ok(stripTags(html).includes(total),`${row.id}: ${total}`);
+    assert.ok(stripTags(html).includes(`${row.awards.toLocaleString('en-AU')} published Commonwealth grant awards`),row.id);
+    assert.ok(html.includes(`program=${encodeURIComponent(row.id)}`),row.id);
+  }
+  for(const id of ['GO-unknown-program',audit.programs[0].id+' unknown suffix']) {
+    const response=await worker.fetch(new Request(origin+'/money/grants?'+new URLSearchParams({jur:'federal',program:id})),env,{waitUntil(){}});
+    assert.equal(response.status,404,id);
+    assert.match(await response.text(),/Grant program not found/);
+  }
+});
+test('party router rejects retained malformed sponsor attributes', async () => {
+  // A fresh isolate starts with an old snapshot, before the data repair.
+  const {default:retainedWorker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text+'\n// retained sponsor fixture').toString('base64'));
+  const retainedEnv={...env,ASSETS:{async fetch(request){
+    if(new URL(request.url).pathname==='/bills/index.json') {
+      const file=structuredClone(await read('/bills/index.json'));
+      for(const [i,party] of ['xx','monarchist','Australia&#39;s Voice'].entries()) file.bills[i].sponsor_party=party;
+      return Response.json(file);
+    }
+    return env.ASSETS.fetch(request);
+  }}};
+  for(const slug of ['xx','monarchist','australia-39-s-voice']) {
+    const response=await retainedWorker.fetch(new Request(origin+'/subject/party/'+slug),retainedEnv,{waitUntil(){}});
+    assert.equal(response.status,404,slug);
+  }
+});
+test('grant programme catalogue is parsed once per isolate and an asset failure returns 404 with retry', async () => {
+  const audit=JSON.parse(readFileSync(new URL('fixtures/portal-facts.json',import.meta.url)));
+  const {default:cachedWorker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text+'\n// programme catalogue cache').toString('base64'));
+  let reads=0,parses=0;
+  const cachedEnv={...env,ASSETS:{async fetch(request){
+    if(new URL(request.url).pathname==='/graph/grants.federal.json') {
+      reads++;
+      if(reads===1) return new Response('Unavailable',{status:503});
+      const response=await env.ASSETS.fetch(request);
+      response.json=async()=>{parses++;return read('/graph/grants.federal.json')};
+      return response;
+    }
+    return env.ASSETS.fetch(request);
+  }}};
+  const request=id=>cachedWorker.fetch(new Request(origin+'/money/grants?'+new URLSearchParams({jur:'federal',program:id})),cachedEnv,{waitUntil(){}});
+  assert.equal((await request(audit.programs[0].id)).status,404);
+  for(const row of audit.programs) assert.equal((await request(row.id)).status,200,row.id);
+  assert.equal(reads,2);
+  assert.equal(parses,1);
+});
+test('bill server tables use reconciled embedded tallies even when every standalone file is unavailable', async () => {
+  const audit=JSON.parse(readFileSync(new URL('fixtures/portal-facts.json',import.meta.url)));
+  const {default:embeddedWorker}=await import('data:text/javascript;base64,'+Buffer.from(compiled.outputFiles[0].text+'\n// embedded division fixture').toString('base64'));
+  let standaloneReads=0;
+  const embeddedEnv={...env,ASSETS:{async fetch(request){
+    const path=new URL(request.url).pathname;
+    if(path.startsWith('/divisions/division-')) {
+      standaloneReads++;
+      return new Response('Unavailable',{status:404});
+    }
+    return env.ASSETS.fetch(request);
+  }}};
+  for(const bill of new Set(['au-federal-r5626',...audit.divisions.map(row=>row.bill)])) {
+    const response=await embeddedWorker.fetch(new Request(origin+'/bill/'+bill),embeddedEnv,{waitUntil(){}});
+    assert.equal(response.status,200);
+    const html=await response.text();
+    assert.doesNotMatch(html,/>999</);
+    let matched=0;
+    for(const expected of audit.divisions.filter(row=>row.bill===bill)) {
+      const row=[...html.matchAll(/<tr\b[^>]*>[\s\S]*?<\/tr>/g)].map(m=>m[0]).find(row=>row.includes(`href="/doc/division-${expected.key}"`));
+      // The table folds repeated questions; every displayed tally must agree.
+      if(!row) continue;
+      matched++;
+      for(const [field,label] of [['ayes','Ayes'],['noes','Noes']]) assert.ok(row.includes(`data-value="${expected[field]}"`) || row.includes(`>${expected[field]}</span>`),`${expected.key}/${label}`);
+    }
+    if(bill!=='au-federal-r5626') assert.ok(matched>0,bill);
+  }
+  assert.equal(standaloneReads,0);
+});
 test('About, coverage and Methods routes render new collections from the canonical panels', async () => {
   for (const path of ['/about','/stats','/methods']) {
     const html = await get(path);
