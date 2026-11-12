@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-12",
+  "kind": "district",
+  "slug": "bendigo-west",
+  "name": "Bendigo West",
+  "web_url": "https://opax.com.au/vic-election-2026/bendigo-west",
+  "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/bendigo-west-district",
+  "electorate_url": "/subject/electorate/vic-vic-la-vic-bendigo-west",
+  "roster_date": "2026-09-09",
+  "formerly": null,
+  "created": false,
+  "boundary_note": null,
+  "region": {
+    "slug": "northern-victoria",
+    "name": "Northern Victoria",
+    "members": [
+      {
+        "name": "Gaelle Broad",
+        "party": "Nationals",
+        "slug": "gaelle-broad",
+        "href": "/subject/person/gaelle-broad"
+      },
+      {
+        "name": "Wendy Lovell",
+        "party": "Liberal",
+        "slug": "wendy-lovell",
+        "href": "/subject/person/wendy-lovell"
+      },
+      {
+        "name": "Georgie Purcell",
+        "party": "Animal Justice Party",
+        "slug": "georgie-purcell",
+        "href": "/subject/person/georgie-purcell"
+      },
+      {
+        "name": "Jaclyn Symes",
+        "party": "Labor",
+        "slug": "jaclyn-symes",
+        "href": "/subject/person/jaclyn-symes"
+      },
+      {
+        "name": "Rikkie-Lee Tyrrell",
+        "party": "Pauline Hanson's One Nation",
+        "slug": "rikkie-lee-tyrrell",
+        "href": "/subject/person/rikkie-lee-tyrrell"
+      }
+    ]
+  },
+  "districts": [],
+  "result": {
+    "general": {
+      "date": "2022-11-26",
+      "kind": "general",
+      "party": "Labor",
+      "share": 64.35,
+      "against": "Liberal",
+      "against_share": 35.65,
+      "margin": 14.35,
+      "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/bendigo-west-district-results"
+    },
+    "since": null
+  },
+  "candidates": null,
+  "members": [
+    {
+      "name": "Maree Edwards",
+      "party": "Labor",
+      "slug": "maree-edwards",
+      "href": "/subject/person/maree-edwards",
+      "source_url": "https://www.parliament.vic.gov.au/members/maree-edwards/",
+      "speeches": null,
+      "speech_gap": "No speech count for this member.",
+      "votes": null,
+      "recent_votes": []
+    }
+  ],
+  "results_fetched": "2026-10-13",
+  "speech_updated": "2026-10-18",
+  "division_start": "2026-08-14",
+  "division_end": "2026-09-24"
+}

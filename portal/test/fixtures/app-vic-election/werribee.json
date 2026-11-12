@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-12",
+  "kind": "district",
+  "slug": "werribee",
+  "name": "Werribee",
+  "web_url": "https://opax.com.au/vic-election-2026/werribee",
+  "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/werribee-district",
+  "electorate_url": "/subject/electorate/vic-vic-la-vic-werribee",
+  "roster_date": "2026-09-09",
+  "formerly": null,
+  "created": false,
+  "boundary_note": null,
+  "region": {
+    "slug": "western-metropolitan",
+    "name": "Western Metropolitan",
+    "members": [
+      {
+        "name": "Lizzie Blandthorn",
+        "party": "Labor",
+        "slug": "lizzie-blandthorn",
+        "href": "/subject/person/lizzie-blandthorn"
+      },
+      {
+        "name": "Moira Deeming",
+        "party": "Independent",
+        "slug": "moira-deeming",
+        "href": "/subject/person/moira-deeming"
+      },
+      {
+        "name": "David Ettershank",
+        "party": "Legalise Cannabis Victoria",
+        "slug": "david-ettershank",
+        "href": "/subject/person/david-ettershank"
+      },
+      {
+        "name": "Trung Luu",
+        "party": "Liberal",
+        "slug": "trung-luu",
+        "href": "/subject/person/trung-luu"
+      },
+      {
+        "name": "Ingrid Stitt",
+        "party": "Labor",
+        "slug": "ingrid-stitt",
+        "href": "/subject/person/ingrid-stitt"
+      }
+    ]
+  },
+  "districts": [],
+  "result": {
+    "general": {
+      "date": "2022-11-26",
+      "kind": "general",
+      "party": "Labor",
+      "share": 60.5,
+      "against": "Liberal",
+      "against_share": 39.5,
+      "margin": 10.5,
+      "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/werribee-district-results"
+    },
+    "since": {
+      "date": "2025-02-08",
+      "kind": "by-election",
+      "party": "Labor",
+      "share": 50.82,
+      "against": "Liberal",
+      "against_share": 49.18,
+      "margin": 0.82,
+      "url": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline/werribee-district-results/results-by-district/werribee-district-results"
+    }
+  },
+  "candidates": null,
+  "members": [
+    {
+      "name": "John Lister",
+      "party": "Labor",
+      "slug": "john-lister",
+      "href": "/subject/person/john-lister",
+      "source_url": "https://www.parliament.vic.gov.au/members/john-lister/",
+      "speeches": {
+        "count": 155,
+        "first": 2025,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 7,
+        "ayes": 6,
+        "noes": 1
+      },
+      "recent_votes": [
+        {
+          "date": "2026-08-27",
+          "title": "Workplace Legislation Amendment (Accident Compensation and Other Matters) Bill 2026",
+          "href": "/doc/division-vic-la-2026-08-27-3",
+          "vote": "aye",
+          "source_url": "https://www.parliament.vic.gov.au/4a475c/globalassets/hansard-daily-pdfs/hansard-2145855009-37081/hansard-2145855009-37081.pdf"
+        },
+        {
+          "date": "2026-08-27",
+          "title": "Local Government Legislation Amendment (Stronger Communities) Bill 2026",
+          "href": "/doc/division-vic-la-2026-08-27-4",
+          "vote": "aye",
+          "source_url": "https://www.parliament.vic.gov.au/4a475c/globalassets/hansard-daily-pdfs/hansard-2145855009-37081/hansard-2145855009-37081.pdf"
+        }
+      ]
+    }
+  ],
+  "results_fetched": "2026-10-13",
+  "speech_updated": "2026-10-18",
+  "division_start": "2026-08-14",
+  "division_end": "2026-09-24"
+}

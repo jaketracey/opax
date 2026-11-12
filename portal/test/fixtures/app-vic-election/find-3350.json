@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "q": "3350",
+  "places_searched": true,
+  "hits": [
+    {
+      "name": "3350",
+      "kind": "Postcode",
+      "seats": [
+        {
+          "kind": "district",
+          "slug": "wendouree",
+          "name": "Wendouree",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-wendouree",
+          "region": "Western Victoria",
+          "member": {
+            "name": "Juliana Addison",
+            "party": "Labor"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Labor",
+            "margin": 13.46
+          },
+          "candidates": 0,
+          "share": 55.2
+        },
+        {
+          "kind": "district",
+          "slug": "eureka",
+          "name": "Eureka",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-eureka",
+          "region": "Western Victoria",
+          "member": {
+            "name": "Michaela Settle",
+            "party": "Labor"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Labor",
+            "margin": 7.17
+          },
+          "candidates": 0,
+          "share": 40.1
+        },
+        {
+          "kind": "district",
+          "slug": "ripon",
+          "name": "Ripon",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-ripon",
+          "region": "Western Victoria",
+          "member": {
+            "name": "Martha Haylett",
+            "party": "Labor"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Labor",
+            "margin": 2.99
+          },
+          "candidates": 0,
+          "share": 4.8
+        }
+      ]
+    }
+  ],
+  "split": true,
+  "empty": null,
+  "address_url": "https://www.vec.vic.gov.au/electoral-boundaries/which-boundaries-cover-where-i-live",
+  "attribution": "Source: Australian Bureau of Statistics, ASGS Edition 3 allocation files and 2021 Census mesh block counts (CC BY 4.0).",
+  "note": "Places are split by usual residents at the 2021 Census. Postcodes are ABS postal areas, an approximation of delivery postcodes."
+}

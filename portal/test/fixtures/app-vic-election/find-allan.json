@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "q": "allan",
+  "places_searched": true,
+  "hits": [
+    {
+      "name": "Allansford",
+      "kind": "Suburb",
+      "seats": [
+        {
+          "kind": "district",
+          "slug": "south-west-coast",
+          "name": "South-West Coast",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-south-west-coast",
+          "region": "Western Victoria",
+          "member": {
+            "name": "Roma Britnell",
+            "party": "Liberal"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Liberal",
+            "margin": 8.05
+          },
+          "candidates": 0,
+          "share": null
+        }
+      ]
+    },
+    {
+      "name": "Allans Flat",
+      "kind": "Suburb",
+      "seats": [
+        {
+          "kind": "district",
+          "slug": "benambra",
+          "name": "Benambra",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-benambra",
+          "region": "Northern Victoria",
+          "member": {
+            "name": "Bill Tilley",
+            "party": "Liberal"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Liberal",
+            "margin": 0.94
+          },
+          "candidates": 0,
+          "share": null
+        }
+      ]
+    },
+    {
+      "name": "Jacinta Allan",
+      "kind": "Member",
+      "seats": [
+        {
+          "kind": "district",
+          "slug": "bendigo-east",
+          "name": "Bendigo East",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-bendigo-east",
+          "region": "Northern Victoria",
+          "member": {
+            "name": "Jacinta Allan",
+            "party": "Labor"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Labor",
+            "margin": 10.91
+          },
+          "candidates": 0,
+          "share": null
+        }
+      ]
+    }
+  ],
+  "split": false,
+  "empty": null,
+  "address_url": "https://www.vec.vic.gov.au/electoral-boundaries/which-boundaries-cover-where-i-live",
+  "attribution": "Source: Australian Bureau of Statistics, ASGS Edition 3 allocation files and 2021 Census mesh block counts (CC BY 4.0).",
+  "note": "Places are split by usual residents at the 2021 Census. Postcodes are ABS postal areas, an approximation of delivery postcodes."
+}

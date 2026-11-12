@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "q": "9999",
+  "places_searched": true,
+  "hits": [],
+  "split": false,
+  "empty": "postcode",
+  "address_url": "https://www.vec.vic.gov.au/electoral-boundaries/which-boundaries-cover-where-i-live",
+  "attribution": "Source: Australian Bureau of Statistics, ASGS Edition 3 allocation files and 2021 Census mesh block counts (CC BY 4.0).",
+  "note": "Places are split by usual residents at the 2021 Census. Postcodes are ABS postal areas, an approximation of delivery postcodes."
+}

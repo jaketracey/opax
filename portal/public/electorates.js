@@ -1,8 +1,8 @@
-import { vicElectionFooterHTML } from './vic-election.js?v=c6e1bad2ff';
+import { vicElectionFooterHTML } from './vic-election.js?v=6642b187d4';
 import { personUrl, partyUrl } from './canonical-urls.js?v=79dfba8774';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
-import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=1ef33cf9c3';
+import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=6a4764139d';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster party fallback through this module (roster-party.js).
 export { rosterSeatParty } from './roster-party.js';
