@@ -48,7 +48,7 @@ import {
   personRoute,
   resultsRoute,
 } from '../src/navigation/routes';
-import { LinkRow } from '../src/design/rows';
+import { LinkRow, MoneyRow } from '../src/design/rows';
 import { pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
 jest.mock('expo-router', () => ({
@@ -661,8 +661,17 @@ test('AX5 party text remains uncapped and the recorded disclosure exposes its ex
       .findAllByType(Portrait)
       .flatMap((portrait) => portrait.findAllByType(NativeText)),
   );
+  const clamped = new Set(
+    r.root
+      .findAllByType(MoneyRow)
+      .flatMap((row) =>
+        row
+          .findAllByType(NativeText)
+          .filter((text) => text.props.numberOfLines === 2),
+      ),
+  );
   for (const text of r.root.findAllByType(NativeText)) {
-    expect(text.props.numberOfLines).toBeUndefined();
+    expect(text.props.numberOfLines).toBe(clamped.has(text) ? 2 : undefined);
     if (portraitInitials.has(text)) {
       expect(text.props.accessible).toBe(false);
       expect(text.props.maxFontSizeMultiplier).toBeGreaterThanOrEqual(1);

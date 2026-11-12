@@ -465,6 +465,7 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
     ];
     return {
       title: active ? '' : talkCopy.title,
+      headerTitleAlign: 'center' as const,
       gestureEnabled: !active,
       unstable_headerRightItems: items,
       // Android draws the same items in its own bar.

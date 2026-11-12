@@ -571,6 +571,7 @@ async function readMoneyItem(
           register: params.kind === 'award' ? 'GrantConnect' : 'Department',
           facts: facts([
             { label: 'Program', value: 'Community funding' },
+            { label: 'Purpose', value: p.title, long: true },
             { label: 'Recipient', value: p.recipient },
             { label: 'State', value: fullState(p.state) },
             { label: 'Area', value: p.area },
@@ -620,6 +621,7 @@ async function readMoneyItem(
           register: 'GrantConnect',
           facts: facts([
             { label: 'Program', value: r.program },
+            { label: 'Purpose', value: r.title, long: true },
             { label: 'State', value: fullState(r.state) },
             { label: 'Published', value: short(r.date) },
             { label: 'Register ID', value: r.id },

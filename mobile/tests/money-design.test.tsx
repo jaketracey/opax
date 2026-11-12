@@ -1,3 +1,4 @@
+import { MoneyRow } from '../src/design/rows';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { act } from 'react';
@@ -126,15 +127,24 @@ async function render(Screen: () => React.ReactElement | null) {
 }
 
 test.each(screens)(
-  '%s at AX5: every line of text wraps whole, never clipped',
+  '%s at AX5: record text wraps and money interface text uses the requested clamps',
   async (_name, Screen, params) => {
     Object.assign(mockParams, params);
     jest
       .mocked(useWindowDimensions)
       .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 3.571 });
     const r = await render(Screen);
+    const clamped = new Set(
+      r.root
+        .findAllByType(MoneyRow)
+        .flatMap((row) =>
+          row
+            .findAllByType(NativeText)
+            .filter((text) => text.props.numberOfLines === 2),
+        ),
+    );
     for (const text of r.root.findAllByType(NativeText))
-      expect(text.props.numberOfLines).toBeUndefined();
+      expect(text.props.numberOfLines).toBe(clamped.has(text) ? 2 : undefined);
     await act(async () => r.unmount());
   },
 );

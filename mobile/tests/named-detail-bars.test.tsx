@@ -1,3 +1,4 @@
+import { measureBarTitle } from './bar-title-metrics';
 import { act } from 'react';
 import { router, type NativeStackHeaderItem } from 'expo-router';
 import TestRenderer from 'react-test-renderer';
@@ -6,7 +7,6 @@ import {
   Dimensions,
   Platform,
   SectionList,
-  StyleSheet,
   View,
   ScrollView,
 } from 'react-native';
@@ -34,10 +34,9 @@ import {
 } from '../src/navigation/useNamedBackOptions';
 import {
   BarTitle,
-  backPillWidth,
   barTitleWidth,
-  minimumBarTitleWidth,
-  shortenBarTitle,
+  retreatBarTitle,
+  barTitleCandidates,
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
 
@@ -198,8 +197,8 @@ test.each(['grants', 'money-record', 'largest-grants'])(
     expect(rootBackTitle(navigation, route.key)).toBe('Commonwealth grants');
     expect(inline.props.backTitle).toBe('Commonwealth grants');
     expect(
-      barTitleWidth(402, 2, undefined, inline.props.backTitle),
-    ).toBeLessThan(barTitleWidth(402, 2, undefined, 'Grants'));
+      barTitleWidth(402, 2, undefined, inline.props.backTitle, 160),
+    ).toBeLessThan(barTitleWidth(402, 2, undefined, 'Grants', 50));
   },
 );
 
@@ -538,156 +537,130 @@ test('Screen.barTitle measures an anchored heading, including when it is inside 
 });
 
 test.each([
-  ['Votes in parliament', 'A bill name', 1],
-  ['Bills', 'A bill name', 3],
-  ['Bills', 'Supercalifragilisticexpialidocious Act', 1],
+  [
+    'Short title',
+    90,
+    200,
+    { 'Short title': 80 },
+    false,
+    'Short title',
+    'default',
+  ],
+  [
+    'Whole subject',
+    90,
+    200,
+    { 'Whole subject': 150 },
+    false,
+    'Whole subject',
+    'minimal',
+  ],
+  [
+    'Interactive Games Amendment Bill',
+    90,
+    200,
+    {
+      'Interactive Games Amendment Bill': 330,
+      'Interactive Games Amendment…': 260,
+      'Interactive Games…': 180,
+    },
+    false,
+    'Interactive Games…',
+    'minimal',
+  ],
+  [
+    'A very long subject',
+    40,
+    80,
+    { 'A very long subject': 200, 'A very long…': 120, 'A very…': 90 },
+    false,
+    null,
+    'minimal',
+  ],
+  [
+    'Alexandra Sample',
+    40,
+    80,
+    { 'Alexandra Sample': 200, Sample: 70 },
+    true,
+    'Sample',
+    'minimal',
+  ],
+  [
+    'Alexandra Sample',
+    40,
+    60,
+    { 'Alexandra Sample': 200, Sample: 70 },
+    true,
+    null,
+    'minimal',
+  ],
 ] as const)(
-  'an undersized title stays laid out and hidden beside %s at scale %s',
-  (backTitle, title, fontScale) => {
-    const originalWindow = Dimensions.get('window');
-    const originalScreen = Dimensions.get('screen');
-    try {
-      act(() => {
-        Dimensions.set({
-          window: { ...originalWindow, width: 402, fontScale },
-          screen: { ...originalScreen, width: 402 },
-        });
-        view = TestRenderer.create(
-          <BarTitle title={title} shown backTitle={backTitle} />,
-        );
-      });
-      const text = view!.root.findByType(Animated.Text);
-      const style = StyleSheet.flatten(text.props.style);
-      expect(style.maxWidth).toBeLessThan(
-        minimumBarTitleWidth(title, fontScale),
-      );
-      expect(style.opacity).toBe(0);
-      expect(text.props.children).toBe(title);
-      expect(text.props.accessibilityElementsHidden).toBe(true);
-      expect(text.props.importantForAccessibility).toBe('no-hide-descendants');
-    } finally {
-      act(() =>
-        Dimensions.set({ window: originalWindow, screen: originalScreen }),
-      );
-    }
+  'title-first retreat for %s',
+  (title, named, minimal, widths, person, text, mode) => {
+    expect(
+      retreatBarTitle(
+        title,
+        named,
+        minimal,
+        (text) => (widths as Record<string, number>)[text],
+        person,
+      ),
+    ).toMatchObject({ text, mode });
   },
 );
 
-test('the useful minimum includes a whole first word and the capped text scale', () => {
-  expect(minimumBarTitleWidth('A bill')).toBe(60);
-  expect(minimumBarTitleWidth('Commonwealth grants')).toBeGreaterThan(100);
-  expect(minimumBarTitleWidth('Members', 3)).toBe(
-    Math.ceil(minimumBarTitleWidth('Members') * (23 / 17)),
-  );
+test('cuts keep two words and people offer only their family name', () => {
+  expect(barTitleCandidates('Interactive Games Amendment Bill')).toEqual([
+    'Interactive Games Amendment Bill',
+    'Interactive Games Amendment…',
+    'Interactive Games…',
+  ]);
+  expect(barTitleCandidates('Alexandra Sample', true)).toEqual([
+    'Alexandra Sample',
+    'Sample',
+  ]);
 });
 
-test('bar title shortening keeps a whole title that fits', () => {
-  expect(shortenBarTitle('Anthony Albanese', 150)).toBe('Anthony Albanese');
-});
-
-test('bar title shortening keeps the longest leading whole words with an ellipsis', () => {
-  expect(shortenBarTitle('Anthony Albanese', 125)).toBe('Anthony…');
-  expect(shortenBarTitle('Digital Transformation Agency', 225)).toBe(
-    'Digital Transformation…',
-  );
-});
-
-test('bar title shortening hides a first word that cannot fit', () => {
-  expect(
-    shortenBarTitle('Commonwealth Home Support Programme', 100),
-  ).toBeNull();
-});
-
-test('bar title shortening reserves the full ellipsis advance', () => {
-  expect(shortenBarTitle('Anthony Albanese MP', 159)).toBe('Anthony…');
-  expect(shortenBarTitle('Anthony Albanese MP', 160)).toBe('Anthony Albanese…');
-});
-
-test('bar title shortening scales its advances and caps a large font scale', () => {
-  expect(shortenBarTitle('Anthony Albanese', 150, 1)).toBe('Anthony Albanese');
-  expect(shortenBarTitle('Anthony Albanese', 150, 3)).toBe('Anthony…');
-  expect(shortenBarTitle('Anthony Albanese', 150, 3)).toBe(
-    shortenBarTitle('Anthony Albanese', 150, 23 / 17),
-  );
-  expect(shortenBarTitle('Anthony Albanese', 100, 3)).toBeNull();
-});
-
-test('a shortened bar title exposes the full accessibility label', () => {
-  const originalWindow = Dimensions.get('window');
-  const originalScreen = Dimensions.get('screen');
-  try {
-    act(() => {
-      Dimensions.set({
-        window: { ...originalWindow, width: 402, fontScale: 1 },
-        screen: { ...originalScreen, width: 402 },
-      });
-      view = TestRenderer.create(
-        <BarTitle title="Anthony Albanese" shown backTitle="Today" />,
-      );
-    });
-    expect(view!.root.findByType(Animated.Text).props).toMatchObject({
-      children: 'Anthony…',
-      accessibilityLabel: 'Anthony Albanese',
-      accessibilityElementsHidden: false,
-      ellipsizeMode: 'clip',
-    });
-  } finally {
+test.each([
+  ['Alexandra Sample', true, { 'Alexandra Sample': 300, Sample: 70 }, 'Sample'],
+  [
+    'Interactive Games Amendment Bill',
+    false,
+    {
+      'Interactive Games Amendment Bill': 330,
+      'Interactive Games Amendment…': 280,
+      'Interactive Games…': 180,
+    },
+    'Interactive Games…',
+  ],
+])(
+  'native measurements retain the full VoiceOver title: %s',
+  (title, person, widths, expected) => {
+    const original = Dimensions.get('window');
     act(() =>
-      Dimensions.set({ window: originalWindow, screen: originalScreen }),
+      Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
     );
-  }
-});
-
-test.each([false, true])(
-  'a list back title reserves its named pill, shown=%s',
-  (shown) => {
-    const { route, navigation } = navigationFor('index', 'leads', 'lead/[id]');
-    let backTitle: string | undefined;
-    function Probe() {
-      backTitle = useNamedBackTitle();
-      return (
-        <BarTitle
-          title="Lead"
-          shown={shown}
-          trailing={1}
-          backTitle={backTitle}
-        />
-      );
-    }
+    const navigation = { setOptions: jest.fn() };
     act(() => {
       view = TestRenderer.create(
         <NavigationContext.Provider value={navigation as never}>
-          <NavigationRouteContext.Provider value={route}>
-            <Probe />
-          </NavigationRouteContext.Provider>
+          <BarTitle title={title} person={person} shown backTitle="Today" />
         </NavigationContext.Provider>,
       );
     });
-    expect(backTitle).toBe('Leads');
-    const text = view!.root.findByType(Animated.Text);
-    const style = StyleSheet.flatten(text.props.style);
-    expect(style.width).toBeUndefined();
-    expect(style.textAlign).toBeUndefined();
-    expect(style.maxWidth).toBeGreaterThan(0);
-    expect(text.props.children).toBe('Lead');
-    expect(text.props.accessibilityElementsHidden).toBe(!shown);
+    measureBarTitle(view!, widths);
+    expect(view!.root.findByType(Animated.Text).props).toMatchObject({
+      children: expected,
+      accessibilityLabel: title,
+      accessibilityElementsHidden: false,
+    });
+    expect(navigation.setOptions).toHaveBeenLastCalledWith({
+      headerBackButtonDisplayMode: 'minimal',
+    });
+    act(() => Dimensions.set({ window: original }));
   },
 );
-
-test('Program has room for Commonwealth at Large with Grants and More', () => {
-  const fontScale = 1.118;
-  const room = barTitleWidth(402, 1, undefined, 'Grants', fontScale);
-  expect(room).toBeGreaterThanOrEqual(
-    minimumBarTitleWidth('Commonwealth Home Support Programme', fontScale),
-  );
-});
-
-test('People fits as a whole word beside Search, Filters and More at Large', () => {
-  const fontScale = 1.118;
-  expect(
-    barTitleWidth(402, 2, undefined, 'Search', fontScale),
-  ).toBeGreaterThanOrEqual(minimumBarTitleWidth('People', fontScale));
-});
 
 test('iOS compares asynchronous window measurements without using the JS scroll offset', async () => {
   const native = nativeMeasurements();
@@ -960,103 +933,96 @@ test.each([
   },
 );
 
-test.each([
-  ['Bills', 84],
-  ['Lead', 90],
-  ['Leads', 93],
-  ['Today', 94],
-  ['Bill text', 110],
-  ['Your MP', 117],
-] as const)(
-  '%s back pill rounds up from the device width of %i pt',
-  (title, measured) => {
-    const estimate = backPillWidth(title);
-    expect(estimate).toBeGreaterThanOrEqual(measured);
-    expect(estimate).toBeLessThanOrEqual(measured + 6);
-    expect(Number.isInteger(estimate)).toBe(true);
-  },
-);
+test('named back space uses the supplied native font advance', () => {
+  expect(barTitleWidth(402, 2, undefined, 'Subject', 40)).toBe(138);
+  expect(barTitleWidth(402, 2, undefined, 'Subject', 90)).toBe(88);
+  expect(barTitleWidth(402, 2, undefined, '')).toBe(206);
+});
+
+test('the Version pill is measured independently of the back name', () => {
+  expect(barTitleWidth(402, 2, 164, 'Bills', 36)).toBe(82);
+  expect(barTitleWidth(200, 2, 164, 'Bills', 36)).toBe(0);
+  expect(barTitleWidth(1024, 2, 164, 'Bills', 36)).toBe(512);
+});
 
 test.each([
-  ['Lead', undefined, 136],
-  ['Bill text', undefined, 116],
-  ['Bills', 164, 82],
-  ['Your MP', undefined, 109],
+  [
+    'Short subject',
+    false,
+    { 'Short subject': 100 },
+    'Short subject',
+    'default',
+  ],
+  [
+    'Whole subject',
+    false,
+    { 'Whole subject': 170 },
+    'Whole subject',
+    'minimal',
+  ],
+  [
+    'Long subject with clause',
+    false,
+    {
+      'Long subject with clause': 300,
+      'Long subject with…': 260,
+      'Long subject…': 180,
+    },
+    'Long subject…',
+    'minimal',
+  ],
+  [
+    'First Second Third',
+    false,
+    { 'First Second Third': 400, 'First Second…': 300 },
+    null,
+    'minimal',
+  ],
+  [
+    'Alexandra Sample',
+    true,
+    { 'Alexandra Sample': 300, Sample: 70 },
+    'Sample',
+    'minimal',
+  ],
 ] as const)(
-  '%s back name with %s pt trailing items leaves about %i pt on a 402 pt iPhone',
-  (backTitle, trailingWidth, expected) => {
-    const room = barTitleWidth(402, 2, trailingWidth, backTitle);
-    expect(room).toBeGreaterThan(0);
-    expect(Math.abs(room - expected)).toBeLessThanOrEqual(4);
-  },
-);
-
-test.each([
-  [200, 2, 164, 'Bills', 0],
-  [1024, 2, 164, 'Bills', 512],
-] as const)(
-  '%i pt with %i items (%s pt) leaves room for back name %s',
-  (width, trailing, trailingWidth, backTitle, expected) => {
-    expect(barTitleWidth(width, trailing, trailingWidth, backTitle)).toBe(
-      expected,
+  'native title retreat installs the back mode for %s',
+  (title, person, widths, expected, mode) => {
+    const original = Dimensions.get('window');
+    act(() =>
+      Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
     );
-  },
-);
-
-test('the Version pill and Bills back name leave the title laid out at rest and revealed on a 402 pt iPhone', () => {
-  const originalWindow = Dimensions.get('window');
-  const originalScreen = Dimensions.get('screen');
-  try {
+    const navigation = { setOptions: jest.fn() };
     act(() => {
-      Dimensions.set({
-        window: { ...originalWindow, width: 402, fontScale: 1 },
-        screen: { ...originalScreen, width: 402 },
-      });
       view = TestRenderer.create(
-        <BarTitle
-          title="Bill name"
-          shown
-          trailing={2}
-          trailingWidth={120 + 44}
-          backTitle="Bills"
-        />,
+        <NavigationContext.Provider value={navigation as never}>
+          <BarTitle title={title} person={person} shown backTitle="Today" />
+        </NavigationContext.Provider>,
       );
     });
-    const text = () => view!.root.findByType(Animated.Text);
-    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
-    expect(StyleSheet.flatten(text().props.style).width).toBeUndefined();
-    expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(1);
-    expect(text().props).toMatchObject({
-      numberOfLines: 1,
-      ellipsizeMode: 'clip',
+    measureBarTitle(view!, { Today: 35, ...widths });
+    const text = view!.root.findByType(Animated.Text);
+    expect(text.props.accessibilityLabel).toBe(title);
+    expect(text.props.accessibilityElementsHidden).toBe(expected === null);
+    if (expected) expect(text.props.children).toBe(expected);
+    expect(navigation.setOptions).toHaveBeenLastCalledWith({
+      headerBackButtonDisplayMode: mode,
     });
     act(() =>
       view!.update(
-        <BarTitle
-          key="rest"
-          title="Bill name"
-          shown={false}
-          trailing={2}
-          trailingWidth={120 + 44}
-          backTitle="Bills"
-        />,
+        <NavigationContext.Provider value={navigation as never}>
+          <BarTitle
+            title={title}
+            person={person}
+            shown={false}
+            backTitle="Today"
+          />
+        </NavigationContext.Provider>,
       ),
     );
-    expect(StyleSheet.flatten(text().props.style).maxWidth).toBe(82);
-    expect(StyleSheet.flatten(text().props.style).width).toBeUndefined();
-    expect(StyleSheet.flatten(text().props.style).opacity.__getValue()).toBe(0);
-    expect(text().props).toMatchObject({
-      children: 'Bill name',
-      accessibilityElementsHidden: true,
-      importantForAccessibility: 'no-hide-descendants',
+    expect(navigation.setOptions).toHaveBeenLastCalledWith({
+      headerBackButtonDisplayMode: 'default',
     });
-    // A caller without a known back name retains the accepted override.
-    expect(barTitleWidth(402, 2, 164)).toBe(90);
-    expect(barTitleWidth(200, 2, 164)).toBe(0);
-    expect(barTitleWidth(1024, 2, 164)).toBe(512);
-  } finally {
-    act(() =>
-      Dimensions.set({ window: originalWindow, screen: originalScreen }),
-    );
-  }
-});
+    act(() => Dimensions.set({ window: original }));
+  },
+);

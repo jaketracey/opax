@@ -5,6 +5,7 @@ import { AnswerCaption } from '../src/features/talk/AnswerCaption';
 import { canReport, talkMenu, timeLeft } from '../src/features/talk/menu';
 import type { TranscriptTurn, VoiceSource } from '../src/voice';
 import { reportChoices } from '../src/features/talk/reportAnswer';
+import { expectPublicSiteAction } from './more-menu-web';
 
 const answered: TranscriptTurn[] = [
   { role: 'agent', id: 1, text: 'Synthetic answer' },
@@ -164,8 +165,16 @@ test('the menu keeps web pages out of a call and offers withdrawal only after co
           entry.type === 'action' ? entry.label : '',
         )
       : [];
-  expect(labels(during)).toEqual(['Hide captions', 'Withdraw voice consent']);
-  expect(labels(before)).toEqual(['Voice privacy']);
+  expect(labels(during)).toEqual([
+    'Hide captions',
+    'Withdraw voice consent',
+    'Open on opax.com.au',
+  ]);
+  expect(labels(before)).toEqual(['Voice privacy', 'Open on opax.com.au']);
+  for (const item of [during, before]) {
+    if (item.type !== 'menu') throw new Error('Expected the More menu');
+    expectPublicSiteAction(item.menu.items, '/');
+  }
 });
 
 test.each<{ sources: VoiceSource[] }>([

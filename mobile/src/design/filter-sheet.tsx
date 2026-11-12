@@ -99,7 +99,11 @@ export function FilterSheet<S extends object>({
   return (
     <>
       <RouteOptions
-        options={{ title: 'Filters', ...filterBar(onDone, onCancel) }}
+        options={{
+          title: model.title ?? (model.list === 'ask' ? 'Options' : 'Filters'),
+          headerTitleAlign: 'center',
+          ...filterBar(onDone, onCancel),
+        }}
       />
       <Screen grouped testID="filters-screen">
         {model.rows.length ? (

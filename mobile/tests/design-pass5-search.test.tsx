@@ -1,4 +1,5 @@
 import { withNavigationOptions } from './navigation-options';
+import { expectPublicSiteAction } from './more-menu-web';
 // Design pass 5, lane A, carried into the four-scope Search
 // (journeys/search.md 3.4 to 3.6). P1-1: once a query is answered nothing
 // asks again (no Kind, no submit pill): the scope control and the count
@@ -98,7 +99,13 @@ const bar = () => mockBar.options!;
 const items = () =>
   (bar().unstable_headerRightItems?.() ?? []) as {
     label: string;
-    menu?: { items: { label: string; items?: { label: string }[] }[] };
+    menu?: {
+      items: {
+        label: string;
+        onPress?: () => void;
+        items?: { label: string }[];
+      }[];
+    };
   }[];
 
 async function submitted(q = 'housing') {
@@ -142,12 +149,17 @@ test('bars: All has Share; Speeches has Filters and ⋯ with Sort and Share', as
   );
   expect(labels()).toEqual(['Account', 'More', 'Filters']);
   const more = items().find((i) => i.label === 'More')!;
-  expect(more.menu!.items.map((i) => i.label)).toEqual(['Sort', 'Share']);
+  expect(more.menu!.items.map((i) => i.label)).toEqual([
+    'Sort',
+    'Share',
+    'Open on opax.com.au',
+  ]);
   expect(more.menu!.items[0]!.items!.map((i) => i.label)).toEqual([
     'Most relevant',
     'Newest first',
     'Oldest first',
   ]);
+  expectPublicSiteAction(more.menu!.items, '/');
   await act(async () => renderer.unmount());
 });
 

@@ -130,3 +130,38 @@ test('bar item dictionaries carry the exact test IDs without changing spoken lab
       .slice(0, 3),
   ).toEqual(['header-more', 'header-filters', 'header-account']);
 });
+
+test.each(tabs)(
+  '%s keeps Account outermost on iOS and Android keeps its existing visual order',
+  (segment) => {
+    const { Platform } = jest.requireActual('react-native');
+    const original = Platform.OS;
+    try {
+      for (const os of ['ios', 'android']) {
+        Platform.OS = os;
+        const items = rootHeaderItems({
+          segment,
+          signedIn: false,
+          extra: [{ type: 'button', label: 'Feature', onPress: jest.fn() }],
+        });
+        expect(
+          items.map((item) => ('label' in item ? item.label : '')),
+        ).toEqual(
+          os === 'ios' ? ['Feature', 'Account'] : ['Account', 'Feature'],
+        );
+        if (os === 'android') {
+          const bar = androidHeaderBar(items);
+          expect(
+            React.Children.toArray(bar.props.children).map(
+              (child) =>
+                (child as React.ReactElement<{ accessibilityLabel: string }>)
+                  .props.accessibilityLabel,
+            ),
+          ).toEqual(['Feature', 'Account']);
+        }
+      }
+    } finally {
+      Platform.OS = original;
+    }
+  },
+);

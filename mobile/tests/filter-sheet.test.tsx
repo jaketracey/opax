@@ -48,6 +48,8 @@ import {
   filtersRoute,
 } from '../src/navigation/routes/filters';
 
+jest.mock('../src/api/runtime', () => ({ catalogs: { roster: jest.fn() } }));
+jest.mock('../src/features/ask/session', () => ({ askSession: {} }));
 let mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => ({
   ...jest.requireActual('expo-router'),
@@ -691,4 +693,26 @@ test('declarations Chamber reads Any by default, as every list without a named w
   expect(model.rows.map((item) => filterRowValue(item, model.initial))).toEqual(
     ['Any', 'Any'],
   );
+});
+
+test('Ask uses the centred Options title while list filters keep Filters', () => {
+  const { askOptionsModel } = jest.requireActual('../src/features/ask/Options');
+  for (const [model, title] of [
+    [askOptionsModel(), 'Options'],
+    [searchFilterModel(), 'Filters'],
+  ] as const) {
+    const page = render(
+      <FilterSheet
+        model={model}
+        value={model.initial}
+        onChange={jest.fn()}
+        onDone={jest.fn()}
+        onCancel={jest.fn()}
+      />,
+    );
+    expect(page.root.findByType(RouteOptions).props.options).toMatchObject({
+      title,
+      headerTitleAlign: 'center',
+    });
+  }
 });

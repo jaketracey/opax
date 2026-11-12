@@ -198,7 +198,7 @@ test('record bar actions expose Cite in an inline section and remove the in-cont
     'Copy RIS',
     'Citation formats…',
     'Copy link',
-    'Open on the website',
+    'Open on opax.com.au',
   ]);
   expect(recordBarItems(target)()[0]).toMatchObject({
     type: 'menu',
@@ -221,7 +221,7 @@ for (const following of [false, true]) {
           ? ['Ask about this bill']
           : kind === 'division'
             ? []
-            : ['Open on the website']),
+            : ['Open on opax.com.au']),
       ]);
       expect(leaves.every((item) => !item.destructive)).toBe(true);
       leaves[0]!.onPress();

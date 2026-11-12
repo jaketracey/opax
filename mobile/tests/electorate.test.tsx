@@ -400,7 +400,7 @@ test('the bar menu: no Set as my electorate is ever disabled; Ask drafts without
     'View on a date',
     'Ask about Grayndler',
     'Copy link',
-    'Open on the website',
+    'Open on opax.com.au',
   ]);
   await act(async () =>
     menu.menu!.items.find((i) => i.label === 'Ask about Grayndler')!.onPress(),
@@ -424,7 +424,7 @@ test("no Set as my electorate when it is already the reader's seat", async () =>
     'View on a date',
     'Ask about Grayndler',
     'Copy link',
-    'Open on the website',
+    'Open on opax.com.au',
   ]);
   // No disabled item anywhere in the menu.
   expect(

@@ -17,6 +17,7 @@ import {
   formatCount,
   formatDate,
   formatMoney,
+  formatMoneyCompact,
   moneyAccessibilityLabel,
   recordTitleStage,
 } from './format';
@@ -67,6 +68,8 @@ type Navigation = {
 
 export interface LinkRowProps extends Navigation {
   title: ReactNode;
+  titleLines?: number;
+  detailLines?: number;
   titleRole?: import('./tokens').TextVariant;
   secondary?: ReactNode;
   /** Metadata above a full-width title, rather than beside its first line. */
@@ -97,6 +100,8 @@ export interface LinkRowProps extends Navigation {
 export function LinkRow({
   title,
   titleRole = 'body',
+  titleLines,
+  detailLines,
   secondary,
   aboveTitle,
   leadingAccessory,
@@ -206,6 +211,7 @@ export function LinkRow({
             {plainTitle ? (
               <Text
                 wordSafe
+                numberOfLines={titleLines}
                 variant={titleRole}
                 tone={destructive ? 'danger' : undefined}
                 testID={titleTestID}
@@ -225,7 +231,12 @@ export function LinkRow({
           </View>
           {secondary}
           {detail ? (
-            <Text wordSafe variant="secondary" testID={detailTestID}>
+            <Text
+              wordSafe
+              numberOfLines={detailLines}
+              variant="secondary"
+              testID={detailTestID}
+            >
               {detail}
             </Text>
           ) : null}
@@ -240,6 +251,14 @@ export function LinkRow({
             variant={valueEmphasis ? 'strong' : 'body'}
             tabular
             tone={valueEmphasis ? 'ink' : 'inkSoft'}
+            style={
+              valueEmphasis
+                ? {
+                    textAlign: 'right',
+                    ...(stacked ? { alignSelf: 'flex-end' } : {}),
+                  }
+                : undefined
+            }
           >
             {value}
           </Text>
@@ -1092,6 +1111,7 @@ export function DivisionRow({
 
 export function MoneyRow({
   name,
+  nameLines,
   detail,
   amount,
   href,
@@ -1099,6 +1119,7 @@ export function MoneyRow({
   testID,
 }: {
   name: string;
+  nameLines?: number;
   detail?: string;
   amount: number;
   href?: Href;
@@ -1109,7 +1130,13 @@ export function MoneyRow({
     <LinkRow
       title={name}
       detail={detail}
-      value={formatMoney(amount)}
+      titleLines={nameLines}
+      detailLines={2}
+      value={
+        Math.abs(amount) >= 10_000_000
+          ? formatMoneyCompact(amount)
+          : formatMoney(amount)
+      }
       valueEmphasis
       href={href}
       external={external}

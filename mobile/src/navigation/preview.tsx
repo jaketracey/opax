@@ -4,6 +4,7 @@ import {
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
+import { sheetListOptions } from './sheet-lists';
 import { useDetailRouteOptions } from './useDetailRouteOptions';
 import { headerItems, pendingHeaderItems } from './chrome';
 import {
@@ -28,11 +29,14 @@ export function useCanSetOptions() {
 export function useSafeSetOptions() {
   const navigation = useContext(NavigationContext);
   const canSetOptions = useCanSetOptions();
+  const routeName = useContext(NavigationRouteContext)?.name;
   return useCallback(
     (options: NativeStackNavigationOptions) => {
       if (!canSetOptions) return;
       try {
-        navigation?.setOptions(options);
+        navigation?.setOptions(
+          sheetListOptions(options, routeName, navigation.getState?.()?.index),
+        );
       } catch (error) {
         // Also cover placeholders whose route context still names a real
         // route. Do not hide option errors from an ordinary screen.
@@ -43,7 +47,7 @@ export function useSafeSetOptions() {
           throw error;
       }
     },
-    [navigation, canSetOptions],
+    [navigation, canSetOptions, routeName],
   );
 }
 

@@ -1,3 +1,4 @@
+import { measureBarTitle } from './bar-title-metrics';
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { Animated, Platform } from 'react-native';
@@ -116,16 +117,19 @@ test.each([false, true, null])(
         <BarTitle title="Loaded title" shown={false} />,
       );
     });
+    measureBarTitle(view);
     timing.mockClear();
     act(() => view.update(<BarTitle title="Loaded title" shown />));
-    expect(timing).toHaveBeenLastCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        toValue: 1,
-        duration: reduced === false ? motion.duration.crossfade : 0,
-        useNativeDriver: true,
-      }),
-    );
+    if (reduced === false)
+      expect(timing).toHaveBeenLastCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          toValue: 1,
+          duration: reduced === false ? motion.duration.crossfade : 0,
+          useNativeDriver: true,
+        }),
+      );
+    else expect(timing).not.toHaveBeenCalled();
     act(() => view.unmount());
     timing.mockRestore();
   },

@@ -19,17 +19,19 @@ export function useNamedBackTitle(): string | undefined {
 }
 
 /** The same back settings installed by the stack before the screen mounts. */
-export function useNamedBackOptions(): NativeStackNavigationOptions {
+export function useNamedBackOptions(
+  mode: 'default' | 'minimal' = 'default',
+): NativeStackNavigationOptions {
   const { headerBackTitle: back } = useBackTitleResolution();
   return useMemo(
     () =>
       Platform.OS === 'ios' && back
         ? {
-            headerBackButtonDisplayMode: 'default',
+            headerBackButtonDisplayMode: mode,
             headerBackTitle: back,
             headerBackButtonMenuEnabled: true,
           }
         : {},
-    [back],
+    [back, mode],
   );
 }

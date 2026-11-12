@@ -9,7 +9,7 @@ import {
 // Records, Apple-design wave 4 (records.md 2 to 5), after design pass 5:
 // the reader has one meta line, the title in the record face, the speaker as
 // a PersonRow, one SourceLine holding the original, notes and licence, and
-// Cite / Copy link / Open on the website under the bar's ⋯. Bill text opens
+// Cite / Copy link / Open on opax.com.au under the bar's ⋯. Bill text opens
 // on its text with the version as a bar menu. Just added is a list of
 // record rows grouped by the day they were added.
 import { NavigationContext } from 'expo-router/react-navigation';
@@ -981,7 +981,7 @@ test('Just added: rows without a date added follow in a final group with no head
   await act(async () => view.unmount());
 });
 
-test('the bar holds Share and ⋯: Cite inline, Copy link, Open on the website', async () => {
+test('the bar holds Share and ⋯: Cite inline, Copy link, Open on opax.com.au', async () => {
   const view = await mount(<DocumentReader />);
   expect(barLabels()).toEqual(['Share', 'More']);
   // iOS draws no bottom toolbar, which the floating tab bar would cover:
@@ -998,7 +998,7 @@ test('the bar holds Share and ⋯: Cite inline, Copy link, Open on the website',
   expect(actions.map((a) => a.title)).toEqual([
     'Cite',
     'Copy link',
-    'Open on the website',
+    'Open on opax.com.au',
   ]);
   expect(actions[0]).toMatchObject({ inline: true });
   expect(menuLeaves(actions).map((a) => a.title)).toEqual([
@@ -1008,7 +1008,7 @@ test('the bar holds Share and ⋯: Cite inline, Copy link, Open on the website',
     'Copy RIS',
     'Citation formats…',
     'Copy link',
-    'Open on the website',
+    'Open on opax.com.au',
   ]);
   const item = recordBarItems(target)()[0]!;
   expect(item).toMatchObject({

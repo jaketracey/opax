@@ -1,3 +1,4 @@
+import { measureBarTitle } from './bar-title-metrics';
 import { Stack, type NativeStackNavigationOptions } from 'expo-router';
 import {
   HeaderHeightContext,
@@ -111,6 +112,7 @@ function tree(element: React.ReactElement) {
   act(() => {
     result = TestRenderer.create(element);
   });
+  measureBarTitle(result);
   return result;
 }
 afterEach(() => {
@@ -134,7 +136,7 @@ test.each(['(today)', '(your-mp)', '(bills)', '(search)'] as const)(
         ],
       });
       expect(items).toHaveLength(2);
-      expect(items[0]).toMatchObject({
+      expect(items.at(-1)).toMatchObject({
         label: 'Account',
         accessibilityLabel: 'Account',
         icon: {
@@ -162,8 +164,8 @@ test.each([false, true])(
     ]);
     // Talk lives in the composer (D5): the bar is New question and Account.
     expect(registration.unstable_headerRightItems()).toEqual([
-      expect.objectContaining({ label: 'Account' }),
       expect.objectContaining({ label: 'New question', disabled: true }),
+      expect.objectContaining({ label: 'Account' }),
     ]);
     act(() => view.unmount());
   },
@@ -186,12 +188,12 @@ test('Ask has history leading and New question plus Account trailing', () => {
     }),
   ]);
   expect(options.unstable_headerRightItems?.()).toEqual([
-    expect.objectContaining({ label: 'Account' }),
     expect.objectContaining({
       label: 'New question',
       disabled: false,
       onPress: onNew,
     }),
+    expect.objectContaining({ label: 'Account' }),
   ]);
   expect(designFlags.talkInAsk).toBe(true);
 });
@@ -584,6 +586,212 @@ test('hidden bar titles stay out of accessibility and fade over 150 ms', () => {
   );
   act(() => view.unmount());
 });
+test.each([false, true])(
+  'missing native metrics show the full, tail-truncated title after 300 ms (Reduce Motion: %s)',
+  (reduceMotion) => {
+    jest.useFakeTimers();
+    mockReducedMotion = reduceMotion;
+    const animation = jest.spyOn(Animated, 'timing');
+    const title = 'Interactive Gambling Amendment Bill';
+    let view!: TestRenderer.ReactTestRenderer;
+    try {
+      // Deliberately never deliver onTextLayout, including while at rest.
+      act(() => {
+        view = TestRenderer.create(
+          <BarTitle title={title} backTitle="Bills" shown={false} />,
+        );
+      });
+      act(() => jest.advanceTimersByTime(1000));
+      act(() =>
+        view.update(<BarTitle title={title} backTitle="Bills" shown />),
+      );
+      act(() => jest.advanceTimersByTime(299));
+      expect(
+        view.root.findByType(Animated.Text).props.accessibilityElementsHidden,
+      ).toBe(true);
+      act(() => jest.advanceTimersByTime(1));
+      const text = view.root.findByType(Animated.Text);
+      expect(text.props).toMatchObject({
+        children: title,
+        accessibilityLabel: title,
+        accessibilityElementsHidden: false,
+        importantForAccessibility: 'auto',
+        numberOfLines: 1,
+        ellipsizeMode: 'tail',
+      });
+      if (reduceMotion) {
+        expect(animation).not.toHaveBeenCalled();
+        expect(StyleSheet.flatten(text.props.style).opacity.__getValue()).toBe(
+          1,
+        );
+      } else {
+        expect(animation).toHaveBeenLastCalledWith(
+          expect.anything(),
+          expect.objectContaining({ toValue: 1, duration: 150 }),
+        );
+      }
+      // A later reveal gets its own timeout, even for the same subject.
+      act(() =>
+        view.update(<BarTitle title={title} backTitle="Bills" shown={false} />),
+      );
+      // Its opacity remains animated while it fades out, rather than being
+      // forced to zero when the heading returns into view.
+      expect(StyleSheet.flatten(text.props.style).opacity).not.toBe(0);
+      if (!reduceMotion)
+        expect(animation).toHaveBeenLastCalledWith(
+          expect.anything(),
+          expect.objectContaining({ toValue: 0, duration: 150 }),
+        );
+      act(() =>
+        view.update(<BarTitle title={title} backTitle="Bills" shown />),
+      );
+      act(() => jest.advanceTimersByTime(299));
+      expect(text.props.accessibilityElementsHidden).toBe(true);
+      act(() => jest.advanceTimersByTime(1));
+      expect(text.props.accessibilityElementsHidden).toBe(false);
+      // Late metrics apply to the next reveal, keeping this fallback stable.
+      measureBarTitle(view, { [title]: 80, Bills: 30 });
+      expect(text.props.ellipsizeMode).toBe('tail');
+      act(() => view.update(<BarTitle title={title} shown={false} />));
+      expect(text.props.accessibilityElementsHidden).toBe(true);
+    } finally {
+      act(() => view?.unmount());
+      jest.useRealTimers();
+    }
+  },
+);
+describe.each([false, true])(
+  'late title metrics (Reduce Motion: %s)',
+  (reduced) => {
+    test.each([
+      [
+        'Short subject',
+        false,
+        { 'Short subject': 100 },
+        'Short subject',
+        'default',
+      ],
+      [
+        'Whole subject',
+        false,
+        { 'Whole subject': 170 },
+        'Whole subject',
+        'minimal',
+      ],
+      ['Whole subject', false, { 'Whole subject': 400 }, null, 'minimal'],
+      [
+        'Long subject with clause',
+        false,
+        {
+          'Long subject with clause': 400,
+          'Long subject with…': 300,
+          'Long subject…': 180,
+        },
+        'Long subject…',
+        'minimal',
+      ],
+      [
+        'Alexandra Sample',
+        true,
+        { 'Alexandra Sample': 400, Sample: 80 },
+        'Sample',
+        'minimal',
+      ],
+    ] as const)(
+    '%s (%s, %j) stays full through late metrics and uses them on the next reveal',
+      (title, person, widths, nextTitle, nextBackMode) => {
+        jest.useFakeTimers();
+        mockReducedMotion = reduced;
+        const animation = jest.spyOn(Animated, 'timing');
+        const original = Dimensions.get('window');
+        const navigation = { setOptions: jest.fn() };
+        const element = (shown: boolean) => (
+          <NavigationContext.Provider value={navigation as never}>
+            <BarTitle
+              title={title}
+              person={person}
+              shown={shown}
+              backTitle="Today"
+            />
+          </NavigationContext.Provider>
+        );
+        let view!: TestRenderer.ReactTestRenderer;
+        try {
+          act(() => {
+            Dimensions.set({
+              window: { ...original, width: 402, fontScale: 1 },
+            });
+            view = TestRenderer.create(element(true));
+          });
+          act(() => jest.advanceTimersByTime(450));
+          const text = view.root.findByType(Animated.Text);
+          const fallbackStyle = StyleSheet.flatten(text.props.style);
+          expect(text.props).toMatchObject({
+            children: title,
+            accessibilityLabel: title,
+            accessibilityElementsHidden: false,
+            importantForAccessibility: 'auto',
+            ellipsizeMode: 'tail',
+          });
+          const animationCount = animation.mock.calls.length;
+          measureBarTitle(view, { Today: 35, ...widths });
+          // Both the wording and the room remain latched, even when the
+          // newly measured retreat would cut or hide this title.
+          expect(text.props).toMatchObject({
+            children: title,
+            accessibilityLabel: title,
+            accessibilityElementsHidden: false,
+            importantForAccessibility: 'auto',
+            ellipsizeMode: 'tail',
+          });
+          expect(StyleSheet.flatten(text.props.style)).toMatchObject({
+            opacity: fallbackStyle.opacity,
+            maxWidth: fallbackStyle.maxWidth,
+          });
+          expect(animation).toHaveBeenCalledTimes(animationCount);
+          if (reduced) expect(fallbackStyle.opacity.__getValue()).toBe(1);
+          expect(navigation.setOptions).toHaveBeenLastCalledWith({
+            headerBackButtonDisplayMode: 'default',
+          });
+          act(() => jest.advanceTimersByTime(1000));
+          expect(text.props.accessibilityElementsHidden).toBe(false);
+          act(() => view.update(element(false)));
+          expect(text.props.accessibilityElementsHidden).toBe(true);
+          act(() => view.update(element(true)));
+          expect(text.props).toMatchObject({
+            children: nextTitle ?? title,
+            accessibilityLabel: title,
+            accessibilityElementsHidden: nextTitle === null,
+            ellipsizeMode: 'clip',
+          });
+          expect(navigation.setOptions).toHaveBeenLastCalledWith({
+            headerBackButtonDisplayMode: nextBackMode,
+          });
+        } finally {
+          act(() => {
+            view?.unmount();
+            Dimensions.set({ window: original });
+          });
+          jest.useRealTimers();
+        }
+      },
+    );
+  },
+);
+test('native width probes have intrinsic height and stay hidden and untouchable', () => {
+  const view = tree(<BarTitle title="Interactive Gambling Bill" shown />);
+  const probes = view.root.findAllByProps({ testID: 'bar-title-probes' })[0]!;
+  const style = StyleSheet.flatten(probes.props.style);
+  expect(style).toMatchObject({ position: 'absolute', opacity: 0 });
+  expect(style).not.toHaveProperty('height');
+  expect(style).not.toHaveProperty('maxHeight');
+  expect(probes.props).toMatchObject({
+    pointerEvents: 'none',
+    accessibilityElementsHidden: true,
+    importantForAccessibility: 'no-hide-descendants',
+  });
+  act(() => view.unmount());
+});
 test('debug and e2e record the opened destination in a hidden text element; release renders nothing', () => {
   const insets = { top: 59, left: 20, right: 20, bottom: 34 };
   const probe = () => (
@@ -696,7 +904,11 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     expect(style(view).maxWidth).toBe(
       barTitleWidth(Dimensions.get('window').width, 2),
     );
-    expect(style(view).opacity.__getValue()).toBe(0);
+    expect(
+      typeof style(view).opacity === 'number'
+        ? style(view).opacity
+        : style(view).opacity.__getValue(),
+    ).toBe(0);
     expect(view.root.findByType(Animated.Text).props).toMatchObject({
       children: 'Interactive Gambling Bill',
       accessibilityElementsHidden: true,
@@ -712,11 +924,10 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     expect(text.props.children).toBe('Interactive Gambling Bill');
     expect(text.props.numberOfLines).toBe(1);
     expect(text.props.ellipsizeMode).toBe('clip');
-    expect(style(view).opacity.__getValue()).toBe(1);
     expect(text.props.accessibilityElementsHidden).toBe(false);
     expect(text.props.importantForAccessibility).toBe('auto');
     expect(style(view).maxWidth).toBe(
-      barTitleWidth(Dimensions.get('window').width, 2),
+      barTitleWidth(Dimensions.get('window').width, 2, undefined, ''),
     );
     act(() => view.unmount());
   });
@@ -748,7 +959,11 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
     expect(style(view).maxWidth).toBe(width);
     act(() => finish?.());
     expect(style(view).maxWidth).toBe(width);
-    expect(style(view).opacity.__getValue()).toBe(0);
+    expect(
+      typeof style(view).opacity === 'number'
+        ? style(view).opacity
+        : style(view).opacity.__getValue(),
+    ).toBe(0);
     expect(view.root.findByType(Animated.Text).props.children).toBe('Member');
     act(() => view.update(<BarTitle title="Member" shown />));
     act(() => finish?.());
@@ -825,10 +1040,7 @@ test('Reduce Motion cuts the bar title instead of animating it', () => {
   mockReducedMotion = true;
   const animation = jest.spyOn(Animated, 'timing');
   const view = tree(<BarTitle title="Member" shown />);
-  expect(animation).toHaveBeenCalledWith(
-    expect.anything(),
-    expect.objectContaining({ duration: 0 }),
-  );
+  expect(animation).not.toHaveBeenCalled();
   act(() => view.unmount());
 });
 
@@ -1561,3 +1773,26 @@ test.each([18, 26, 27])(
     }
   },
 );
+
+test('More keeps its page title out and ends in one public-site action', () => {
+  for (const items of [
+    [],
+    [
+      {
+        title: 'Cite',
+        inline: true,
+        items: [{ title: 'Copy APA 7', onPress: jest.fn() }],
+      },
+      { title: 'Open on opax.com.au', onPress: jest.fn() },
+      { title: 'Share', onPress: jest.fn() },
+    ],
+  ]) {
+    const menu = pageMenu({ name: 'A full record title', items });
+    if (menu.type !== 'menu') throw new Error('Expected a menu');
+    expect(menu.menu).not.toHaveProperty('title');
+    expect(menu.menu.items.at(-1)?.label).toBe('Open on opax.com.au');
+    expect(
+      menu.menu.items.filter((row) => row.label === 'Open on opax.com.au'),
+    ).toHaveLength(1);
+  }
+});

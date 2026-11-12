@@ -27,10 +27,16 @@ import {
   deleteRemoteChat,
   reconcileChats,
 } from '../src/features/ask/sync';
-import { resetAskConsent } from '../src/features/ask/consent';
+import {
+  askConsentGiven,
+  giveAskConsent,
+  resetAskConsent,
+} from '../src/features/ask/consent';
 import { askSession } from '../src/features/ask/session';
 import { confirmAction } from '../src/design/menu';
 import { haptic } from '../src/design/haptics';
+import { RouteOptions } from '../src/navigation/preview';
+import { expectPublicSiteAction } from './more-menu-web';
 
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -105,6 +111,8 @@ jest.mock('../src/features/ask/session', () => ({
 }));
 jest.mock('../src/features/ask/consent', () => ({
   resetAskConsent: jest.fn().mockResolvedValue(undefined),
+  askConsentGiven: jest.fn().mockResolvedValue(true),
+  giveAskConsent: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('../src/design/menu', () => ({ confirmAction: jest.fn() }));
 jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
@@ -286,7 +294,7 @@ describe('Account › Ask', () => {
     expect(deleteAllRemoteChats).toHaveBeenCalled();
   });
   test.each([1, 3.12])(
-    'the notice is a tinted action at scale %s and resets consent',
+    'the notice is a Switch at scale %s and resets consent',
     async (fontScale) => {
       const previous = Dimensions.get('window');
       act(() => Dimensions.set({ window: { ...previous, fontScale } }));
@@ -296,24 +304,27 @@ describe('Account › Ask', () => {
         const button = row.findAll(
           (n) =>
             typeof n.type === 'string' &&
-            n.props.accessibilityRole === 'button',
+            n.props.accessibilityRole === 'switch',
         )[0]!;
         expect(button.props.accessibilityLabel).toBe(
           'Show the notice before asking',
         );
-        expect(button.props.accessibilityState?.checked).toBeUndefined();
+        expect(button.props.accessibilityState?.checked).toBe(false);
         expect(row.findByType(Text).props).toMatchObject({
           wordSafe: true,
-          variant: 'body',
-          tone: 'navy',
+          variant: 'strong',
+          tone: 'ink',
         });
         const label = row.findByType(NativeText);
-        expect(StyleSheet.flatten(label.props.style).color).toBe(colors.navy);
+        expect(StyleSheet.flatten(label.props.style).color).toBe(colors.ink);
         expect(label.props.allowFontScaling).toBe(true);
         expect(label.props.numberOfLines).toBeUndefined();
-        await act(async () => row.props.onPress());
+        await act(async () => row.props.onValueChange(true));
         expect(resetAskConsent).toHaveBeenCalled();
         expect(haptic).toHaveBeenCalledWith('success');
+        expect(askConsentGiven).toHaveBeenCalled();
+        await act(async () => row.props.onValueChange(false));
+        expect(giveAskConsent).toHaveBeenCalled();
       } finally {
         act(() => Dimensions.set({ window: previous }));
       }
@@ -322,6 +333,18 @@ describe('Account › Ask', () => {
 });
 
 describe('Conversations', () => {
+  test.each(['sheet', 'account'] as const)(
+    '%s More opens a public page accepted by the URL guard',
+    async (mode) => {
+      stored([chat('first-chat', '2026-11-09T01:00:00Z')]);
+      const root = await render(<Conversations mode={mode} />);
+      const items = root
+        .findByType(RouteOptions)
+        .props.options.unstable_headerRightItems();
+      const more = items.find((item: { type: string }) => item.type === 'menu');
+      expectPublicSiteAction(more.menu.items, '/');
+    },
+  );
   test('native row labels use adaptive ink roles instead of the button tint', async () => {
     const saved = chat('first-chat', '2026-11-09T01:00:00Z');
     stored([saved]);
@@ -428,4 +451,13 @@ describe('Conversations', () => {
     // The open conversation was the one deleted.
     expect(askSession.start).toHaveBeenCalled();
   });
+});
+
+test('the notice Switch cannot replace first-question consent', async () => {
+  jest.mocked(askConsentGiven).mockResolvedValueOnce(false);
+  const root = await render(<AskSettings />);
+  const row = byID(root, 'ask-settings-notice')[0]!;
+  expect(row.props).toMatchObject({ value: true, disabled: true });
+  await act(async () => row.props.onValueChange(false));
+  expect(giveAskConsent).not.toHaveBeenCalled();
 });

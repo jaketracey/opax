@@ -14,6 +14,7 @@ import { answerTurn } from '../src/features/ask/session';
 import { bindShortLastWord } from '../src/design/record-title';
 import { presentSheet } from '../src/navigation/sheets';
 import type { Answer, Source, Turn } from '../src/features/ask/model';
+import { expectPublicSiteAction } from './more-menu-web';
 
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -161,6 +162,16 @@ test('with nothing selected the sheet says there is nothing to show', () => {
   expect(host('citation-missing')).toHaveLength(1);
 });
 
+test.each(['fixture-1', undefined])(
+  'the source More menu opens a permitted public page (slug: %s)',
+  (slug) => {
+    found(fixture([source(1, { slug })]));
+    act(() => showCitation({ turn: 'fixture-chat:1', n: 1 }));
+    draw();
+    expectPublicSiteAction(menuRows(), slug ? `/doc/${slug}` : '/');
+  },
+);
+
 test('the source sheet shows decoded titles without decoding literal entities twice', () => {
   found(
     fixture([source(1, { title: 'Australia&#039;s &amp;amp; interests' })]),
@@ -286,6 +297,7 @@ test('⋯ holds an inline Cite section, then Copy link, Share and Report', () =>
     'Copy link',
     'Share',
     'Report a problem with this source',
+    'Open on opax.com.au',
   ]);
   expect(rows[0]!.inline).toBe(true);
   expect(rows[0]!.items!.map((row) => row.label)).toEqual([
@@ -312,7 +324,10 @@ test('Report and Open record leave the sheet first', () => {
   found(two);
   act(() => showCitation({ turn: 'fixture-chat:1', n: 2 }));
   const { press } = draw();
-  act(() => menuRows().at(-1)!.onPress!());
+  act(() =>
+    menuRows().find((row) => row.label === 'Report a problem with this source')!
+      .onPress!(),
+  );
   expect(router.back).toHaveBeenCalledTimes(1);
   expect(router.push).toHaveBeenCalledWith({
     pathname: '/ask-report',

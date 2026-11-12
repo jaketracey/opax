@@ -1012,7 +1012,10 @@ describe('Following', () => {
     const more = bar()[0] as unknown as {
       menu: { items: { label: string }[] };
     };
-    expect(more.menu.items.map((i) => i.label)).toEqual(['Mark all as seen']);
+    expect(more.menu.items.map((i) => i.label)).toEqual([
+      'Mark all as seen',
+      'Open on opax.com.au',
+    ]);
     expect(has(r, 'follows-unfollow-all')).toBe(false);
     await act(async () => bar().at(-1)!.onPress!());
     expect(bar().map((i) => i.label)).toEqual(['Done']);

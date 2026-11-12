@@ -88,6 +88,7 @@ export function useResultsControls({
     return [
       pageMenu({
         name: 'these results',
+        webPath: '/',
         items: [
           sortMenu,
           { title: 'Share', symbol: 'square.and.arrow.up', onPress: share },

@@ -1,3 +1,4 @@
+import { openOnOpaxItem } from '../../navigation/chrome';
 import type { NativeStackHeaderItem } from 'expo-router';
 import type { SFSymbol } from '../../design/icon';
 import { currentChromeColours } from '../../design/tokens';
@@ -98,7 +99,7 @@ export function talkMenu({
       icon: symbol('flag'),
       onPress: () => onReport(records[0]?.path ?? null),
     });
-  // A web page during a call would leave it; privacy is linked before one.
+  // Voice privacy is offered before a call.
   if (!active)
     items.push({
       type: 'action',
@@ -114,6 +115,7 @@ export function talkMenu({
       destructive: true,
       onPress: onWithdraw,
     });
+  items.push(openOnOpaxItem());
   return {
     type: 'menu',
     label: talkCopy.menu.more,
