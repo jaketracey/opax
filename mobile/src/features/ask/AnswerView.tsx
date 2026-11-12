@@ -18,7 +18,13 @@ import {
   useRef,
   useState,
 } from 'react';
-import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { decodeEntities } from '../../api/passage-text';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { IconButton } from '../../design/controls';
@@ -32,7 +38,7 @@ import { FigureBlock } from '../../design/record';
 import { LinkRow } from '../../design/rows';
 import { SourceAffordance, type SourceDetails } from '../../design/source';
 import { Text } from '../../design/text';
-import { rhythm } from '../../design/tokens';
+import { colors, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { personRoute } from '../../navigation/routes';
 import { askReportRoute } from '../../navigation/routes/ask';
@@ -118,6 +124,8 @@ export function AnswerView({
   const reveal = useContext(AskRevealContext);
   const stacked = useAccessibilitySize();
   const key = turnKey(chat, index);
+  const [textSelection, setTextSelection] = useState<string | null>(null);
+  const selectingText = Platform.OS === 'android' && textSelection === key;
   const selection = useCitationSelection();
   const mine = selection?.turn === key ? selection : null;
   const revealedClaim = useRef<object | undefined>(undefined);
@@ -200,8 +208,25 @@ export function AnswerView({
   const report = () => router.push(askReportRoute(key));
   const cited = numbered ? groups.cited : [];
   const empty = !data.answer.trim();
+  const selectionProps =
+    Platform.OS === 'android' ? { selectionMode: selectingText } : {};
+  const toggleTextSelection = () =>
+    setTextSelection(selectingText ? null : key);
   const body = (
     <View style={styles.answer} testID="ask-answer">
+      {selectingText ? (
+        <Pressable
+          accessibilityRole="button"
+          android_ripple={{ color: colors.dividerSubtle }}
+          onPress={toggleTextSelection}
+          style={styles.selectionDone}
+          testID="ask-selection-done"
+        >
+          <Text variant="secondary" tone="navy" wordSafe>
+            Done selecting text
+          </Text>
+        </Pressable>
+      ) : null}
       {kind ? (
         <Text wordSafe variant="secondary" testID="ask-answer-kind">
           {kind}
@@ -210,7 +235,7 @@ export function AnswerView({
       {overview ? (
         <View style={styles.block}>
           <MachinePill note={machineNote} testID="ask-machine-label" />
-          <AnswerBody blocks={overview} onLink={go} />
+          <AnswerBody blocks={overview} onLink={go} {...selectionProps} />
         </View>
       ) : null}
       {empty ? null : (
@@ -219,6 +244,7 @@ export function AnswerView({
             <MachinePill note={machineNote} testID="ask-machine-label" />
           ) : null}
           <AnswerBody
+            {...selectionProps}
             blocks={blocks}
             onCite={cite}
             onLink={go}
@@ -250,6 +276,7 @@ export function AnswerView({
         return (
           <View key={i} style={styles.block}>
             <AnswerBody
+              {...selectionProps}
               blocks={[
                 {
                   kind: 'quote',
@@ -360,6 +387,10 @@ export function AnswerView({
           onShare={shareQuestion}
           onReport={report}
           cited={cited}
+          {...(Platform.OS === 'android' &&
+          (blocks.length || overview?.length || data.evidence_excerpts?.length)
+            ? { onSelectText: toggleTextSelection, selectingText }
+            : {})}
         />
       </View>
     </View>
@@ -602,11 +633,15 @@ function AnswerMenu({
   onShare,
   onReport,
   cited,
+  onSelectText,
+  selectingText = false,
 }: {
   onCopy: () => void;
   onShare: () => void;
   onReport: () => void;
   cited: Source[];
+  onSelectText?: () => void;
+  selectingText?: boolean;
 }) {
   const citeAll = (style: 'apa' | 'aglc') => () =>
     void copyCitation(cited, style);
@@ -619,6 +654,16 @@ function AnswerMenu({
         onPress={() =>
           confirmAction('', [
             { title: 'Copy answer', onPress: onCopy },
+            ...(onSelectText
+              ? [
+                  {
+                    title: selectingText
+                      ? 'Done selecting text'
+                      : 'Select text',
+                    onPress: onSelectText,
+                  },
+                ]
+              : []),
             { title: 'Share question', onPress: onShare },
             ...(cited.length
               ? [
@@ -682,6 +727,11 @@ export function announceAnswer(turn: Turn) {
   );
 }
 const styles = StyleSheet.create({
+  selectionDone: {
+    minHeight: 48,
+    justifyContent: 'center',
+    paddingVertical: rhythm.tight,
+  },
   answer: { gap: rhythm.group },
   block: { gap: rhythm.tight },
   labelled: { gap: rhythm.groupHeader },

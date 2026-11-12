@@ -8,9 +8,9 @@ import { colors, minimumTarget, radii, rhythm } from '../design/tokens';
 /**
  * Android's sheet for a short choice or a ⋯ menu: a panel from the foot of
  * the screen over a scrim, as Material's modal bottom sheet and the iPhone's
- * action sheet both sit. Long sheets (sources, filters) stay full-screen
- * dialogs. Back, the scrim and the last row close it; TalkBack hears the
- * same names as VoiceOver.
+ * action sheet both sit. Route notes use native Material bottom sheets;
+ * filters with nested stacks use a full-screen dialog. Back, the scrim
+ * and the last row close this menu.
  */
 export function AndroidBottomSheet({
   title,
@@ -58,8 +58,11 @@ export function AndroidBottomSheet({
             },
           ]}
           accessibilityViewIsModal
+          role="dialog"
+          accessibilityLabel={title || 'Actions'}
           testID={testID}
         >
+          <View accessible={false} style={styles.handle} />
           <Text
             wordSafe
             variant="secondary"
@@ -109,6 +112,15 @@ export function AndroidSheetRow({
 }
 
 const styles = StyleSheet.create({
+  handle: {
+    width: 32,
+    height: 4,
+    borderRadius: radii.capsule,
+    borderCurve: 'continuous',
+    backgroundColor: colors.inkSoft,
+    alignSelf: 'center',
+    marginBottom: rhythm.tight,
+  },
   backdrop: { flex: 1, justifyContent: 'flex-end' },
   // The ink at 40%: the scrim is a role, not a new colour.
   scrim: { backgroundColor: colors.ink, opacity: 0.4 },

@@ -1,10 +1,10 @@
+import { Pressable } from './pressable';
 import { useEffect, useState, type ReactNode } from 'react';
 import { ownsRowPadding, useRowCellStyle } from './row-padding';
 import {
   Animated,
   Easing,
   LayoutAnimation,
-  Pressable,
   StyleSheet,
   View,
 } from 'react-native';

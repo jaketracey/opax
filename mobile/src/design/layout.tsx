@@ -1,3 +1,4 @@
+import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
 import {
   Children,
@@ -17,7 +18,6 @@ import {
 } from 'react';
 import {
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   View,
@@ -28,6 +28,7 @@ import {
   type ViewProps,
 } from 'react-native';
 import { opaqueBar } from '../navigation/chrome';
+import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
 import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
@@ -174,6 +175,8 @@ export function Screen({
     contentInsetAdjustmentBehavior !== 'never',
   );
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
+  const androidScroll = useRef<ScrollView>(null);
+  const androidRoot = useAndroidRootScroll(androidScroll, colors[ground]);
   const setOptions = useSafeSetOptions();
   const inPane = useSplitPane() !== null;
   const nativeRoot = useRootBarAppearance(setOptions, {
@@ -212,12 +215,25 @@ export function Screen({
     refreshControl?.props.onRefresh,
     !!refreshControl?.props.refreshing,
   );
-  const bounds = useScrollBounds(clampScrollOnContentChange, scrollRef);
+  const bounds = useScrollBounds(
+    clampScrollOnContentChange,
+    Platform.OS === 'android' ? androidScroll : scrollRef,
+  );
+  useImperativeHandle(
+    Platform.OS === 'android' ? scrollRef : undefined,
+    () => androidScroll.current!,
+    [],
+  );
+  const targetRef = clampScrollOnContentChange
+    ? bounds.ref
+    : Platform.OS === 'android'
+      ? androidScroll
+      : scrollRef;
   return (
     <StatePageProvider refreshing={!!refreshControl?.props.refreshing}>
       <SidebarSafe style={[styles.screen, { backgroundColor: colors[ground] }]}>
         <ScrollView
-          ref={clampScrollOnContentChange ? bounds.ref : scrollRef}
+          ref={targetRef}
           testID={testID}
           style={[styles.screen, { backgroundColor: colors[ground] }]}
           contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
@@ -245,6 +261,7 @@ export function Screen({
           onScroll={(event) => {
             if (clampScrollOnContentChange) bounds.onScroll(event);
             const y = event.nativeEvent.contentOffset.y;
+            if (Platform.OS === 'android') androidRoot.onScroll(y);
             if (titleScroll.current) titleScroll.current(y, anchorBottom);
             else if (!inPane && barTitle) nativeTitle.onScroll(y);
             onScroll?.(y);
@@ -277,6 +294,7 @@ export function Screen({
                       }}
                     >
                       {bar}
+                      {androidRoot.title}
                       {anchorHeadings(withOffline(children, offline))}
                     </View>
                   </TitleContentContext.Provider>

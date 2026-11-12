@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import type { SearchBarCommands } from 'react-native-screens';
-import { Field, Screen } from '../../design/primitives';
+import { Screen } from '../../design/primitives';
 import { searchTabRole, useFocusRequest } from '../../design/keyboard';
 import { useListSearchBar } from '../../design/search-bar';
 import { headerItems, rootHeaderItems } from '../../navigation/chrome';
@@ -17,6 +17,7 @@ import { resultsRoute } from '../../navigation/routes/search';
 import { useAccount } from '../account/store';
 import { useOpenAsk } from '../ask/open';
 import { SearchIdle } from './SearchIdle';
+import { SearchField } from './SearchField';
 import { SearchSuggestions } from './SearchSuggestions';
 import { ResultsView } from './ResultsView';
 import { useResultsControls } from './controls';
@@ -27,6 +28,7 @@ import { capQuery, isScope, type Scope } from './scopes';
 import { useSearchSources } from './sources';
 import type { GroupKind } from './ranking';
 import { useSearchTabReset } from './tab-reset';
+import { useAndroidSearchKeyboard } from './useAndroidSearchKeyboard';
 
 export const SEARCH_PLACEHOLDER = 'People, bills, topics and more';
 const OWNER = 'search-root';
@@ -101,6 +103,10 @@ export function SearchScreen({
   function submit(raw: string, nextScope: Scope, link = false) {
     const words = link ? capQuery(raw) : raw.trim();
     if (!words) return;
+    if (Platform.OS === 'android') {
+      input.current?.blur();
+      Keyboard.dismiss();
+    }
     fieldText(words);
     setEditing(false);
     setSubmitted({ q: words, scope: nextScope });
@@ -134,6 +140,9 @@ export function SearchScreen({
     onSearchButtonPress: (value) => submit(value, 'all'),
     onCancelButtonPress: cancel,
     autoFocus: false,
+  });
+  useAndroidSearchKeyboard(input, () => {
+    if (editing) cancel();
   });
   useSearchTabReset(() => {
     // A retained link query must not replay over this reset. Removing it also
@@ -223,17 +232,12 @@ export function SearchScreen({
         }
       >
         {Platform.OS === 'android' ? (
-          <Field
-            label="Search"
-            labelHidden
+          <SearchField
             inputRef={input}
             value={text}
             placeholder={SEARCH_PLACEHOLDER}
             onChangeText={type}
             onSubmitEditing={() => submit(text, 'all')}
-            returnKeyType="search"
-            autoCapitalize="none"
-            autoCorrect={false}
             testID="search-input"
           />
         ) : null}

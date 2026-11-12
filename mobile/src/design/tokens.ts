@@ -339,3 +339,17 @@ export const headlineSizes: Record<ContentSizeCategory, number> = {
   ax4: 47,
   ax5: 53,
 };
+
+/** Material geometry and state layers, used only by Android branches. */
+const androidPalette = paletteFor('light');
+export const androidControls = {
+  target: 48,
+  buttonHeight: 48,
+  fieldHeight: 56,
+  chipRadius: 8,
+  fieldRadius: 4,
+  menuRadius: 12,
+  ripple: `${androidPalette.navy}29`,
+  rippleHighContrast: `${androidPalette.navy}52`,
+  rippleOnFilled: `${androidPalette.onNavy}1F`,
+} as const;

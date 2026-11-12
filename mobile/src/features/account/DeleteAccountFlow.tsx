@@ -1,7 +1,14 @@
 import { RouteOptions } from '../../navigation/preview';
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
-import { AccessibilityInfo, Keyboard, StyleSheet, View } from 'react-native';
+import { useNavigation, usePreventRemove } from 'expo-router/react-navigation';
+import { useRef, useState, type RefObject } from 'react';
+import {
+  AccessibilityInfo,
+  Keyboard,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { confirmAction } from '../../design/menu';
 import {
   Button,
@@ -33,6 +40,22 @@ import { issueChallenge, useCodeChallenge } from './useCodeChallenge';
 const needsSignIn = (failure: VoiceFailure) =>
   failure === 'signedOut' || failure === 'forbidden';
 const signInAgain = () => router.push(signInRoute('account'));
+
+function AndroidDeletionGuard({
+  deleting,
+  completed,
+}: {
+  deleting: boolean;
+  completed: RefObject<boolean>;
+}) {
+  const navigation = useNavigation();
+  // Covers the custom header as well as system and predictive Back.
+  usePreventRemove(deleting, ({ data }) => {
+    // Success returns to Account before React has committed the busy state.
+    if (completed.current) navigation.dispatch(data.action);
+  });
+  return null;
+}
 
 /**
  * Delete account, step 1 (specs/account.md 6.2): what is deleted and kept,
@@ -139,6 +162,7 @@ export function DeleteCode({
   // Signed out here, account not deleted: deleting needs a new sign-in.
   const [signedOut, setSignedOut] = useState(false);
   const inFlight = useRef(false);
+  const completed = useRef(false);
   const challenge = useCodeChallenge(initial);
 
   function refused(failure: VoiceFailure) {
@@ -203,6 +227,7 @@ export function DeleteCode({
     );
     challenge.clear();
     accountDeleted(cleared);
+    completed.current = true;
     router.dismissTo('/account');
   }
 
@@ -223,6 +248,9 @@ export function DeleteCode({
 
   return (
     <>
+      {Platform.OS === 'android' ? (
+        <AndroidDeletionGuard deleting={deleting} completed={completed} />
+      ) : null}
       <RouteOptions
         // No swipe or back while the deletion request runs (1.1, 6.4).
         options={{ gestureEnabled: !deleting, headerBackVisible: !deleting }}
@@ -243,7 +271,9 @@ export function DeleteCode({
             }}
             testID="account-deletion-code"
             textContentType="oneTimeCode"
-            autoComplete="one-time-code"
+            autoComplete={
+              Platform.OS === 'android' ? 'email-otp' : 'one-time-code'
+            }
             keyboardType="number-pad"
             autoFocus
             selectTextOnFocus

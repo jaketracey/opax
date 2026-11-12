@@ -1,6 +1,8 @@
 import { router } from 'expo-router';
 import { act, type ReactNode } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { Platform } from 'react-native';
+import { confirmAction } from '../src/design/menu';
 import { CitationMark } from '../src/design/citation-mark';
 import { haptic } from '../src/design/haptics';
 import { dispatchKeyCommand } from '../src/design/keyboard';
@@ -91,6 +93,10 @@ jest.mock('../src/features/ask/cite', () => ({
   copyCitation: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
+jest.mock('../src/design/menu', () => ({
+  ...jest.requireActual('../src/design/menu'),
+  confirmAction: jest.fn(),
+}));
 jest.mock('../src/features/CachedPortrait', () => ({
   CachedPortrait: () => null,
 }));
@@ -320,6 +326,38 @@ test('the answer text stays selectable and its marks still open on a tap; stream
   });
   expect(streamed.root.findAll((n) => n.props.selectable === true)).toEqual([]);
   act(() => streamed.unmount());
+  expect(
+    renderer.root.findAllByProps({ testID: 'ask-selection-done' }),
+  ).toHaveLength(0);
+});
+
+test('Android enables text selection on demand and returns to citation taps', () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  try {
+    const { renderer, press } = draw();
+    const selectable = () => {
+      let block = renderer.root.findAllByType(CitationMark)[0]!.parent;
+      while (block && block.props.selectable === undefined)
+        block = block.parent;
+      return block?.props.selectable;
+    };
+    expect(selectable()).toBe(false);
+    act(() => press('ask-answer-menu'));
+    const choices = jest.mocked(confirmAction).mock.calls.at(-1)![1];
+    const select = choices.find((item) => item.title === 'Select text')!;
+    act(() => select.onPress());
+    expect(selectable()).toBe(true);
+    expect(
+      renderer.root.findAllByProps({ testID: 'ask-selection-done' }).length,
+    ).toBeGreaterThan(0);
+    act(() => press('ask-selection-done'));
+    expect(selectable()).toBe(false);
+    act(() => press('ask-citation-mark-1'));
+    expect(presentSheet).toHaveBeenCalledTimes(1);
+  } finally {
+    Platform.OS = original;
+  }
 });
 test('People in this answer are full person rows, the reader’s own member marked', () => {
   const { ids, words } = draw();
@@ -375,6 +413,11 @@ test('the foot is the dated Answered line and one answer menu', async () => {
     expect(menuButton(label)).toBeTruthy();
   // The ⋯ label itself is a 44 by 44 target.
   const menu = renderer.root.find((n) => n.props.swift === 'Menu');
+  expect(
+    renderer.root
+      .findAll((n) => n.props.swift === 'Button')
+      .map((n) => n.props.label),
+  ).not.toContain('Select text');
   expect(menu.props.modifiers).toContainEqual({
     modifier: 'frame',
     args: [{ minWidth: 44, minHeight: 44 }],

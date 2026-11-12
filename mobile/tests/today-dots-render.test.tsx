@@ -4,7 +4,7 @@ import {
   NavigationContext,
 } from 'expo-router/react-navigation';
 import React, { act, Profiler, useRef } from 'react';
-import { AppState, Dimensions, StyleSheet } from 'react-native';
+import { AppState, Dimensions, Platform, StyleSheet } from 'react-native';
 import type * as ReanimatedTypes from 'react-native-reanimated';
 import TestRenderer from 'react-test-renderer';
 import { RegionProvider } from '../src/design/adaptive';
@@ -15,6 +15,11 @@ import {
   useTodayDotsScroll,
 } from '../src/features/today/AustraliaDots';
 import { Masthead } from '../src/features/today/Masthead';
+import {
+  androidDotScale,
+  dotHeight,
+  dotWidth,
+} from '../src/features/today/australia-dots-model';
 
 const Skia = jest.requireMock('@shopify/react-native-skia') as typeof SkiaTypes;
 const Reanimated = jest.requireMock(
@@ -311,5 +316,84 @@ test('the UI scroll observer retains the expanded inset through native title col
     observe.mockRestore();
     shared.mockRestore();
     derived.mockRestore();
+  }
+});
+
+test('Android reserves a separate art column beside the date, without a native header offset', () => {
+  const subscription = jest
+    .spyOn(AppState, 'addEventListener')
+    .mockReturnValue({ remove: jest.fn() });
+  const platform = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+  const originalWindow = Dimensions.get('window');
+  const originalScreen = Dimensions.get('screen');
+  Object.defineProperty(Platform, 'OS', {
+    configurable: true,
+    value: 'android',
+  });
+  const animatedStyle = jest
+    .spyOn(Reanimated, 'useAnimatedStyle')
+    .mockImplementation((compute) => compute());
+  const window = { width: 402, height: 874, scale: 3, fontScale: 1 };
+  Dimensions.set({ window, screen: window });
+  let renderer: TestRenderer.ReactTestRenderer | undefined;
+  function Page() {
+    const scroll = Reanimated.useSharedValue(0);
+    const header = Reanimated.useSharedValue(100);
+    return (
+      <RegionProvider value={{ width: 370, height: 874 }}>
+        <Masthead
+          now={new Date('2026-11-10T00:00:00Z')}
+          mark={
+            <AustraliaDots
+              state={null}
+              scroll={scroll}
+              expandedHeader={header}
+            />
+          }
+        />
+      </RegionProvider>
+    );
+  }
+  try {
+    act(() => {
+      renderer = TestRenderer.create(<Page />);
+    });
+    const host = (id: string) =>
+      renderer!.root.find(
+        (n) => typeof n.type === 'string' && n.props.testID === id,
+      );
+    expect(
+      StyleSheet.flatten(host('today-masthead-date').props.style),
+    ).toMatchObject({
+      paddingRight: dotWidth * androidDotScale + rhythm.tight,
+      minHeight: dotHeight * androidDotScale,
+    });
+    expect(
+      StyleSheet.flatten(host('today-australia-dots').props.style),
+    ).toMatchObject({
+      left: 370 - dotWidth,
+      top: 0,
+      transformOrigin: 'top right',
+      transform: [{ translateY: 0 }, { scale: androidDotScale }],
+    });
+    act(() => {
+      Dimensions.set({
+        window: { ...window, fontScale: 2 },
+        screen: { ...window, fontScale: 2 },
+      });
+    });
+    expect(
+      renderer!.root.findAllByProps({ testID: 'today-masthead-date' }),
+    ).toHaveLength(0);
+    expect(
+      renderer!.root.findAllByProps({ testID: 'today-australia-dots' }),
+    ).toHaveLength(0);
+    expect(host('today-screen-message')).toBeDefined();
+  } finally {
+    if (renderer) act(() => renderer!.unmount());
+    animatedStyle.mockRestore();
+    subscription.mockRestore();
+    Dimensions.set({ window: originalWindow, screen: originalScreen });
+    Object.defineProperty(Platform, 'OS', platform);
   }
 });

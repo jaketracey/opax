@@ -1,10 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Animated, Easing, Image, StyleSheet, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  Image,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { localImageURI } from '../../api/image-policy';
 import { yearPictures } from '../../api/runtime';
 import { yearPictureKey } from '../../api/year-picture-policy';
 import { useReduceMotion } from '../../design/accessibility';
 import { InlineError } from '../../design/primitives';
+import { Text } from '../../design/text';
 import { colors, radii, rhythm } from '../../design/tokens';
 
 /** A photo’s black ground in every scheme. */
@@ -123,17 +132,41 @@ export function Picture({
       ) : null}
       {current?.failed && failure === 'inline' ? (
         <View style={styles.failed}>
-          <InlineError
-            subject="Photo"
-            message="Photo couldn't be loaded."
-            onRetry={() => setRetry((v) => v + 1)}
-          />
+          {Platform.OS === 'android' && ground === 'black' ? (
+            <>
+              <Text wordSafe style={styles.onBlack}>
+                {"Photo couldn't be loaded."}
+              </Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Try again"
+                onPress={() => setRetry((v) => v + 1)}
+                style={styles.retry}
+                android_ripple={{ color: colors.onBand }}
+              >
+                <Text style={styles.onBlack}>Try again</Text>
+              </Pressable>
+            </>
+          ) : (
+            <InlineError
+              subject="Photo"
+              message="Photo couldn't be loaded."
+              onRetry={() => setRetry((v) => v + 1)}
+            />
+          )}
         </View>
       ) : null}
     </View>
   );
 }
 const styles = StyleSheet.create({
+  onBlack: { color: colors.onBand, textAlign: 'center' },
+  retry: {
+    minHeight: 48,
+    minWidth: 48,
+    justifyContent: 'center',
+    paddingHorizontal: rhythm.block,
+  },
   failed: {
     position: 'absolute',
     left: 0,

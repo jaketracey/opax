@@ -517,7 +517,13 @@ function BillToolbar({
   canShare: boolean;
 }) {
   return (
-    <SafeAreaView edges={['bottom']} style={styles.toolbar}>
+    <SafeAreaView
+      edges={['bottom']}
+      style={[
+        styles.toolbar,
+        Platform.OS === 'android' ? styles.androidToolbar : null,
+      ]}
+    >
       <Button
         label="Ask about this bill"
         onPress={onAsk}
@@ -2078,4 +2084,5 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.tight,
     backgroundColor: colors.paper,
   },
+  androidToolbar: { flexWrap: 'wrap', gap: rhythm.tight },
 });

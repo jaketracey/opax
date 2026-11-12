@@ -1,9 +1,16 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { AppState, StyleSheet, View } from 'react-native';
+import {
+  AppState,
+  Platform,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import type { DateInput } from '../../design/format';
 import { OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
-import { rhythm } from '../../design/tokens';
+import { isAccessibilityCategory, rhythm } from '../../design/tokens';
+import { androidDotScale, dotHeight, dotWidth } from './australia-dots-model';
 
 const weekdays = [
   'Sunday',
@@ -101,17 +108,32 @@ export function Masthead({
   /** Absolute decorative art, behind the date and the native large title. */
   mark?: ReactNode;
 }) {
+  const { fontScale } = useWindowDimensions();
+  const androidArt =
+    Platform.OS === 'android' && !!mark && !isAccessibilityCategory(fontScale);
+  const date = (
+    <Text
+      wordSafe
+      variant="secondary"
+      maxFontSizeMultiplier={1.353}
+      testID="today-screen-message"
+    >
+      {mastheadDate(now)}
+    </Text>
+  );
   return (
     <View testID="today-masthead" style={styles.masthead}>
-      {mark}
-      <Text
-        wordSafe
-        variant="secondary"
-        maxFontSizeMultiplier={1.353}
-        testID="today-screen-message"
-      >
-        {mastheadDate(now)}
-      </Text>
+      {androidArt ? (
+        <View testID="today-masthead-date" style={styles.androidDate}>
+          {mark}
+          {date}
+        </View>
+      ) : (
+        <>
+          {mark}
+          {date}
+        </>
+      )}
       {offlineSavedAt !== undefined && offlineSavedAt !== null ? (
         <OfflineLine savedAt={offlineSavedAt} testID="today-offline" />
       ) : null}
@@ -121,4 +143,10 @@ export function Masthead({
 
 const styles = StyleSheet.create({
   masthead: { gap: rhythm.tight },
+  androidDate: {
+    minHeight: dotHeight * androidDotScale,
+    paddingRight: dotWidth * androidDotScale + rhythm.tight,
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
 });

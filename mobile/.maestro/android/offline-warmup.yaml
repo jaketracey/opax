@@ -1,0 +1,18 @@
+appId: au.com.opax.app
+name: Android save public catalogs and a bill before the offline journey
+---
+- launchApp:
+    clearState: true
+- openLink: opax://person/anthony-albanese
+- extendedWaitUntil:
+    visible:
+      id: person-electorate
+    timeout: 60000
+- openLink: opax://bill/au-federal-r7534
+- extendedWaitUntil:
+    visible:
+      id: bill-title
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${EVIDENCE}/04-online-bill-warmed

@@ -1,4 +1,5 @@
 import { RouteOptions } from '../../navigation/preview';
+import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import {
   router,
   useLocalSearchParams,
@@ -69,6 +70,7 @@ import { useAccount } from '../account/store';
 import { scopedQuestion } from '../ask/AskAbout';
 import { useOpenAsk } from '../ask/open';
 import BillTextReader from '../records/BillTextReader';
+import { ScopeChips } from '../search/ScopeChips';
 import { BillTextPaneBar } from '../split/RecordDetail';
 import {
   billEntryFromRoute,
@@ -217,6 +219,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     [selectedKey, titleFor],
   );
   const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
+  const androidRoot = useAndroidRootScroll(listRef, colors.paper);
   const visible = useRef(new Set<string>());
   const [onViewable] = useState(
     () =>
@@ -482,7 +485,19 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
           })
         }
         ItemSeparatorComponent={() => <Divider variant="subtle" />}
-        ListHeaderComponent={header}
+        ListHeaderComponent={
+          Platform.OS === 'android' ? (
+            <>
+              {androidRoot.title}
+              {header}
+            </>
+          ) : (
+            header
+          )
+        }
+        {...(Platform.OS === 'android'
+          ? { onScroll: androidRoot.onScroll, scrollEventThrottle: 16 }
+          : {})}
         ListHeaderComponentStyle={styles.header}
         ListFooterComponent={rows.length ? footer : null}
         ListFooterComponentStyle={styles.footer}
@@ -604,6 +619,16 @@ function ScopeControl({
     ...s,
     testID: `bills-scope-${s.value}`,
   }));
+  if (Platform.OS === 'android')
+    return (
+      <ScopeChips
+        label="Showing bills"
+        options={options}
+        value={value}
+        onChange={onChange}
+        testID="bills-scope"
+      />
+    );
   return (
     <View onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
       <View
