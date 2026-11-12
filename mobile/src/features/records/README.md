@@ -88,5 +88,6 @@ Coverage, transcription and citation notes are in the source line's sheet;
 source terms live on Sources and licences. Full source text remains selectable
 and virtualised at every size.
 
-Ask about this goes through `useOpenAsk`. It carries the web's document
-question into a draft; arrival never submits.
+Ask about this goes through `useOpenAsk`. Its button shows no question, so it
+carries the web's document question into a draft for the reader to send. (A
+control that shows its exact question asks at once through `useAskNow`.)

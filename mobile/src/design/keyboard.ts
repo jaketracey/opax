@@ -242,7 +242,8 @@ export function installKeyCommands(): boolean {
 
 // Focus requests: Cmd-F and Cmd-N move to a screen that may not be mounted
 // yet, so a request waits until that screen's field takes it.
-export type FocusTarget = 'search' | 'ask';
+// 'ask-status' moves VoiceOver to a running answer's status line.
+export type FocusTarget = 'search' | 'ask' | 'ask-status';
 const pending = new Set<FocusTarget>();
 const focusListeners = new Map<FocusTarget, Set<() => void>>();
 

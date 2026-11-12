@@ -38,6 +38,7 @@ export const composerCopy = {
   options: 'Options',
   clear: 'Clear options',
   fresh: 'Starts a new conversation',
+  queued: 'Asks when this answer finishes',
 } as const;
 const MAX = 2000;
 /** Lines before the field scrolls inside (journeys/ask.md 4.4a). */
@@ -88,7 +89,8 @@ export function composerFieldCap({
  * written, Talk while the field is empty (D5 on), else
  * Send. The options in force show as one line inside it, above the field;
  * an arrival's draft that waits for a running answer says it starts a new
- * conversation.
+ * conversation, or, for a tapped question, that it asks when the answer
+ * finishes.
  */
 export function AskDock({
   inputRef,
@@ -128,8 +130,10 @@ export function AskDock({
   const options = askSession.composerOptions();
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
+  // A tapped question waiting for the running answer says when it goes.
+  const freshLabel = s.queued ? composerCopy.queued : composerCopy.fresh;
   const line = [
-    s.fresh ? composerCopy.fresh : null,
+    s.fresh ? freshLabel : null,
     ...tags.map((tag) => tag.value),
   ]
     .filter(Boolean)
@@ -145,7 +149,7 @@ export function AskDock({
     chrome,
   });
   const spoken = [
-    s.fresh ? composerCopy.fresh : null,
+    s.fresh ? freshLabel : null,
     ...tags.map((tag) => `${tag.key}, ${tag.value}`),
   ]
     .filter(Boolean)
@@ -196,14 +200,14 @@ export function AskDock({
               {s.fresh ? (
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel={composerCopy.fresh}
+                  accessibilityLabel={freshLabel}
                   accessibilityHint="Opens Options"
                   onPress={onOptions}
                   android_ripple={{ color: colors.dividerSubtle }}
                   style={styles.chip}
                 >
                   <Text variant="footnote" tone="inkSoft">
-                    {composerCopy.fresh}
+                    {freshLabel}
                   </Text>
                 </Pressable>
               ) : null}

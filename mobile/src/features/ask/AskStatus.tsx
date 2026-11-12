@@ -5,6 +5,7 @@ import {
   Platform,
   StyleSheet,
   View,
+  findNodeHandle,
 } from 'react-native';
 import Animated, {
   Easing,
@@ -17,6 +18,7 @@ import {
   useAccessibilitySize,
   useReduceMotionSetting,
 } from '../../design/accessibility';
+import { useFocusRequest } from '../../design/keyboard';
 import { ShimmerText } from '../../design/ShimmerText';
 import { colors, motion, rhythm } from '../../design/tokens';
 import type { AskStage, AskStep } from './stream';
@@ -97,6 +99,28 @@ export function useAskStageAnnouncement(stage: AskStage | null) {
   return announced;
 }
 
+/**
+ * A tapped question that asks at once (`askNow`) puts VoiceOver or TalkBack
+ * on the answer's status, not the composer.
+ */
+function useStatusFocus() {
+  const view = useRef<View>(null);
+  const target = useRef({
+    focus: () => {
+      const node = view.current;
+      if (!node) return;
+      if (Platform.OS === 'android')
+        AccessibilityInfo.sendAccessibilityEvent(node, 'focus');
+      else {
+        const handle = findNodeHandle(node);
+        if (handle) AccessibilityInfo.setAccessibilityFocus(handle);
+      }
+    },
+  });
+  useFocusRequest('ask-status', target);
+  return view;
+}
+
 export function AskStatus({
   stage,
   steps,
@@ -108,6 +132,7 @@ export function AskStatus({
 }) {
   const stacked = useAccessibilitySize();
   const reduceMotion = useReduceMotionSetting() !== false;
+  const focusView = useStatusFocus();
   const { current, previous, version } = useHeldLine(
     askStatusText(stage, steps),
     STATUS_HOLD_MS,
@@ -140,6 +165,7 @@ export function AskStatus({
   }));
   return (
     <View
+      ref={focusView}
       accessible
       accessibilityLabel={announcement}
       accessibilityLanguage="en-AU"
