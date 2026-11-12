@@ -17,6 +17,7 @@ import { lightHighContrast, paletteFor } from './palette';
 import { bindRecordTitle, recordTitleRoles } from './record-title';
 import { useTextProbe } from './text-probe';
 import type { ProbeLine } from './text-probe.types';
+import { textRampScale } from './text-scale';
 import {
   boldStep,
   colors,
@@ -174,8 +175,9 @@ export function titleSizeCap(
 /**
  * A word-safe text's state for one identity: text size, window width, role,
  * weight and text. Every change of cap starts a logical generation. Event
- * callbacks capture that generation; content and measured line height also
- * reject stale layouts. Generations must never key the native Text: replacing
+ * callbacks alone cannot identify Fabric events, which use current props.
+ * The expected role scale and a matching frame reject stale measurements.
+ * Generations must never key the native Text: replacing
  * it destroys the accessibility element and loses VoiceOver/TalkBack focus.
  */
 export interface WordSafeState {
@@ -183,7 +185,7 @@ export interface WordSafeState {
   gen: number;
   /** The cap on the Dynamic Type multiplier; 0 is full size. */
   cap: number;
-  /** The uncapped multiplier, from this identity's first full-size break. */
+  /** Expected uncapped multiplier, including the role's title ceiling. */
   full: number;
   /** The full-size generation, and the frame width it was laid out in. */
   fullGen: number;
@@ -198,11 +200,15 @@ export interface WordSafeInstance {
   key: string;
   gen: number;
 }
-export const wordSafeStart = (key: string, gen = 0): WordSafeState => ({
+export const wordSafeStart = (
+  key: string,
+  full: number,
+  gen = 0,
+): WordSafeState => ({
   key,
   gen,
   cap: 0,
-  full: 0,
+  full,
   fullGen: gen,
   fullFrame: 0,
   frame: 0,
@@ -216,8 +222,7 @@ const FIT_MARGIN = 1;
 const compact = (text: string) => text.replace(/\s/g, '');
 /** Full size again, as a new generation; the uncapped multiplier still holds. */
 const restart = (state: WordSafeState): WordSafeState => ({
-  ...wordSafeStart(state.key, state.gen + 1),
-  full: state.full,
+  ...wordSafeStart(state.key, state.full, state.gen + 1),
 });
 /**
  * The column grew enough: the capped instance's frame is wider than the one
@@ -240,8 +245,9 @@ function provenToFit(state: WordSafeState): WordSafeState {
  * and only for this text. The cap only steps down, in 10% steps, after a
  * mid-word break measured at the size now drawn, and never at or below the
  * reader's default size, where there is nothing to step down to (a layout
- * from a larger size delivered late included). `full` comes only from a
- * fresh full-size break. Returns `state` itself when nothing changes.
+ * from a larger size delivered late included). The first measurement must
+ * also match the expected full scale, never an inferred scale from an event.
+ * Returns `state` itself when nothing changes.
  */
 export function wordSafeOnLines(
   state: WordSafeState,
@@ -253,10 +259,22 @@ export function wordSafeOnLines(
 ): WordSafeState {
   if (at.key !== state.key || at.gen !== state.gen || !lines.length)
     return state;
-  if (fontScale <= 1) return state;
+  if (fontScale <= 1 || !state.fullFrame) return state;
   if (compact(lines.map((line) => line.text).join('')) !== compact(content))
     return state;
   const measuredAt = lineScale(lines[0]!.height, baseLineHeight);
+  if (!Number.isFinite(measuredAt)) return state;
+  // A full-size, whole-word layout that fits the current frame proves every
+  // word fits, even if it arrives after a queued narrow-column break capped
+  // us. This also recovers when both columns happen to have the same height.
+  if (
+    state.cap &&
+    state.frame &&
+    Math.abs(measuredAt - state.full) <= MEASURED_AT_TOLERANCE &&
+    !breaksMidWord(lines) &&
+    lines.every((line) => line.width <= state.frame + WIDTH_EPSILON)
+  )
+    return restart(state);
   const drawnAt = state.cap || state.full;
   if (drawnAt && Math.abs(measuredAt - drawnAt) > MEASURED_AT_TOLERANCE)
     return state;
@@ -267,7 +285,9 @@ export function wordSafeOnLines(
       ...state,
       gen: state.gen + 1,
       cap: next,
-      full: state.full || measuredAt,
+      // Only a measurement already validated against the expected role ramp
+      // may refine the baseline to native two-place line-height rounding.
+      full: state.cap ? state.full : measuredAt,
       frame: 0,
       word: 0,
     };
@@ -359,16 +379,22 @@ export function Text({
   // (nested text included, such as a field's "(required)"): any change starts
   // again from full size, and so does a wider column (wordSafeOnFrame).
   const content = textContent(props.children);
-  const key = `${fontScale}|${width}|${variant}|${bold}|${drawnFamily}|${content}`;
+  const expectedFull =
+    textRampScale(
+      role.dynamicTypeRamp,
+      fontScale,
+      given.maxFontSizeMultiplier ?? 0,
+    ) * titleSizeCap(variant, fontScale);
+  const key = `${fontScale}|${width}|${variant}|${bold}|${drawnFamily}|${given.maxFontSizeMultiplier}|${content}`;
   // The state machine runs at event time in a ref, so frames and lines that
   // change nothing drawn never render; `shown` re-renders on a new generation.
-  const [shown, setShown] = useState(() => wordSafeStart(key));
+  const [shown, setShown] = useState(() => wordSafeStart(key, expectedFull));
   const machine = useRef(shown);
   const committedKey = useRef(key);
   useLayoutEffect(() => {
     committedKey.current = key;
   });
-  const drawn = shown.key === key ? shown : wordSafeStart(key);
+  const drawn = shown.key === key ? shown : wordSafeStart(key, expectedFull);
   const { cap, full } = drawn;
   const instance: WordSafeInstance = { key: drawn.key, gen: drawn.gen };
   const advance = (step: (state: WordSafeState) => WordSafeState) => {
@@ -376,7 +402,7 @@ export function Text({
     if (instance.key !== committedKey.current) return;
     if (machine.current.key !== instance.key) {
       const earlier = machine.current;
-      machine.current = wordSafeStart(instance.key);
+      machine.current = wordSafeStart(instance.key, expectedFull);
       // Returning to that identity later must not draw its old cap.
       if (earlier.gen) setShown(machine.current);
     }
@@ -414,43 +440,6 @@ export function Text({
     minimum: 0,
   });
   const nativeText = useRef<NativeText>(null);
-  useLayoutEffect(() => {
-    if (
-      heightGuard.key !== heightKey ||
-      heightGuard.minimum !== 0 ||
-      heightGuard.width <= 0
-    )
-      return;
-    // Removing a floor need not change the final dimensions, so onLayout may
-    // not fire again. Measure the committed, unguarded native frame explicitly.
-    // This runs only after a container-width reset, never on ordinary mounts.
-    let active = true;
-    nativeText.current?.measure((_x, _y, width, height) => {
-      if (
-        !active ||
-        Math.abs(width - heightGuard.width) > 0.01 ||
-        width <= 0 ||
-        height <= 0
-      )
-        return;
-      if (measured.current.key === heightKey)
-        measured.current.frame = { width, height };
-      setHeightGuard((previous) =>
-        previous.key === heightKey &&
-        previous.width === heightGuard.width &&
-        previous.minimum === 0
-          ? {
-              key: heightKey,
-              width: heightGuard.width,
-              minimum: Math.ceil(height) + 1,
-            }
-          : previous,
-      );
-    });
-    return () => {
-      active = false;
-    };
-  }, [heightGuard, heightKey]);
   const guardDrawing = () => {
     const { frame, lines } = measured.current;
     if (!frame || frame.height <= 0 || frame.width <= 0) return;
@@ -474,12 +463,19 @@ export function Text({
     }
     probe.update(lines, frame);
   };
-  const onLayoutLines = (event: TextLayoutEvent) => {
-    onTextLayout?.(event);
-    currentMeasurement().lines = event.nativeEvent.lines;
-    guardDrawing();
+  const fitLines = () => {
     if (!wordSafe) return;
-    const lines = event.nativeEvent.lines;
+    const { frame, lines } = currentMeasurement();
+    // onTextLayout can precede onLayout. Buffer it until this identity/step
+    // has a frame. A queued portrait break cannot fit a one-line landscape
+    // frame, and a queued wider layout cannot fit a narrower column.
+    if (
+      !frame ||
+      !lines?.length ||
+      lines.reduce((sum, line) => sum + line.height, 0) > frame.height + 1 ||
+      lines.some((line) => line.width > frame.width + WIDTH_EPSILON)
+    )
+      return;
     advance((state) =>
       wordSafeOnLines(
         state,
@@ -491,6 +487,74 @@ export function Text({
       ),
     );
   };
+  const onFrame = (frame: { width: number; height: number }) => {
+    if (frame.width <= 0 || frame.height <= 0) return;
+    if (wordSafe)
+      advance((state) => wordSafeOnFrame(state, instance, frame.width));
+    if (
+      Platform.OS !== 'android' &&
+      heightGuard.key === heightKey &&
+      Math.abs(heightGuard.width - frame.width) > 0.01
+    ) {
+      // Keep pending lines, but accept them only against the unguarded frame
+      // measured after removing the old width's floor.
+      measured.current = { key: heightKey, lines: measured.current.lines };
+      setHeightGuard({ key: heightKey, width: frame.width, minimum: 0 });
+      probe.reset();
+      return;
+    }
+    currentMeasurement().frame = frame;
+    guardDrawing();
+    fitLines();
+  };
+  const onLayoutLines = (event: TextLayoutEvent) => {
+    onTextLayout?.(event);
+    currentMeasurement().lines = event.nativeEvent.lines;
+    guardDrawing();
+    fitLines();
+  };
+  const frameReceiver = useRef(onFrame);
+  useLayoutEffect(() => {
+    frameReceiver.current = onFrame;
+  });
+  useLayoutEffect(() => {
+    if (
+      heightGuard.key !== heightKey ||
+      heightGuard.minimum !== 0 ||
+      heightGuard.width <= 0
+    )
+      return;
+    // Removing a floor need not change the final dimensions, so onLayout may
+    // not fire again. Measure the committed, unguarded native frame explicitly.
+    // This runs only after a container-width reset, never on ordinary mounts.
+    let active = true;
+    nativeText.current?.measure((_x, _y, width, height) => {
+      if (
+        !active ||
+        Math.abs(width - heightGuard.width) > 0.01 ||
+        width <= 0 ||
+        height <= 0
+      )
+        return;
+      frameReceiver.current({ width, height });
+    });
+    return () => {
+      active = false;
+    };
+  }, [heightGuard, heightKey]);
+  useLayoutEffect(() => {
+    if (!wordSafe) return;
+    // Text/content can change without changing the frame, suppressing onLayout.
+    // Measure the committed view once per identity/step as well. Its callback
+    // is cancelled when another identity/step commits.
+    let active = true;
+    nativeText.current?.measure((_x, _y, width, height) => {
+      if (active) frameReceiver.current({ width, height });
+    });
+    return () => {
+      active = false;
+    };
+  }, [heightKey, wordSafe]);
   return (
     <NativeText
       // Names and party abbreviations are read with Australian English rules.
@@ -505,30 +569,7 @@ export function Text({
           ? undefined
           : (event) => {
               onLayout?.(event);
-              const frame = event.nativeEvent.layout;
-              if (frame.width <= 0 || frame.height <= 0) return;
-              if (wordSafe)
-                advance((state) =>
-                  wordSafeOnFrame(state, instance, frame.width),
-                );
-              // This event may still include the old floor. Forget that frame and
-              // its lines before removing the floor, then wait for a fresh layout.
-              if (
-                Platform.OS !== 'android' &&
-                heightGuard.key === heightKey &&
-                Math.abs(heightGuard.width - frame.width) > 0.01
-              ) {
-                measured.current = { key: heightKey };
-                setHeightGuard({
-                  key: heightKey,
-                  width: frame.width,
-                  minimum: 0,
-                });
-                probe.reset();
-                return;
-              }
-              currentMeasurement().frame = frame;
-              guardDrawing();
+              onFrame(event.nativeEvent.layout);
             }
       }
       allowFontScaling

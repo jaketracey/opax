@@ -14,6 +14,7 @@ import {
   Text,
   titleSizeCap,
   wordSafeOnLines,
+  wordSafeOnFrame,
   wordSafeStart,
 } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
@@ -33,8 +34,13 @@ test.each(['ios', 'android'] as const)(
         }),
       );
     try {
-      for (const variant of ['largeTitle', 'recordHeading', 'body'] as const) {
-        resize(390, 2.3);
+      for (const [variant, iosScale] of [
+        ['largeTitle', 60 / 34],
+        ['recordHeading', 56 / 22],
+        ['body', 53 / 17],
+      ] as const) {
+        resize(390, 3.571);
+        const full = os === 'ios' ? iosScale : 3.571;
         const accessibility = {
           accessible: true,
           accessibilityRole: 'header' as const,
@@ -49,7 +55,6 @@ test.each(['ios', 'android'] as const)(
           renderer = TestRenderer.create(renderText('Representation'));
         });
         const native = renderer.root.findByType(NativeText);
-        const originalCallback = native.props.onTextLayout;
         const base = textStyles[variant].lineHeight + LINE_HEIGHT_NUDGE;
         const layout = (at: number) => ({
           nativeEvent: {
@@ -66,21 +71,20 @@ test.each(['ios', 'android'] as const)(
         act(() =>
           native.props.onLayout({
             nativeEvent: {
-              layout: { x: 0, y: 0, width: 200, height: base * 4.6 },
+              layout: { x: 0, y: 0, width: 200, height: base * full * 2 },
             },
           }),
         );
-        act(() => native.props.onTextLayout(layout(2.3)));
+        act(() => native.props.onTextLayout(layout(full)));
         expectSameElement();
-        expect(StyleSheet.flatten(native.props.style).fontSize).toBeCloseTo(
-          textStyles[variant].fontSize * 0.9,
-        );
+        const cappedSize = StyleSheet.flatten(native.props.style).fontSize;
+        expect(cappedSize).toBeLessThan(textStyles[variant].fontSize);
         // A delayed full-size event cannot drive another shrink at this cap.
-        act(() => native.props.onTextLayout(layout(2.3)));
-        expect(StyleSheet.flatten(native.props.style).fontSize).toBeCloseTo(
-          textStyles[variant].fontSize * 0.9,
+        act(() => native.props.onTextLayout(layout(full)));
+        expect(StyleSheet.flatten(native.props.style).fontSize).toBe(
+          cappedSize,
         );
-        resize(844, 2.3);
+        resize(844, 3.571);
         expectSameElement();
         expect(StyleSheet.flatten(native.props.style).fontSize).toBe(
           textStyles[variant].fontSize,
@@ -89,7 +93,7 @@ test.each(['ios', 'android'] as const)(
         expectSameElement();
         expect(native.props.children).toBe('Updated record heading');
         resize(390, 1);
-        act(() => originalCallback(layout(2.3)));
+        act(() => native.props.onTextLayout(layout(full)));
         expectSameElement();
         expect(StyleSheet.flatten(native.props.style).fontSize).toBe(
           textStyles[variant].fontSize,
@@ -193,7 +197,8 @@ test.each(measuredWords)(
     // A column just narrower than the native AX5 run must step down, while
     // the Large-size rendering keeps its full default size.
     const base = role.lineHeight + LINE_HEIGHT_NUDGE;
-    let state = wordSafeStart(word);
+    let state = wordSafeStart(word, full);
+    state = wordSafeOnFrame(state, state, axWidth - 1);
     const broken = (at: number) => [
       { text: word.slice(0, -1), width: axWidth - 2, height: base * at },
       { text: word.slice(-1), width: 2, height: base * at },

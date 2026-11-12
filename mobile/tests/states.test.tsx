@@ -460,6 +460,25 @@ describe('party context', () => {
 });
 
 describe('word-safe text', () => {
+  const originalWindow = Dimensions.get('window');
+  const originalScreen = Dimensions.get('screen');
+  beforeEach(() =>
+    act(() =>
+      Dimensions.set({
+        window: { ...originalWindow, fontScale: 3.571 },
+        screen: { ...originalScreen, fontScale: 3.571 },
+      }),
+    ),
+  );
+  afterEach(() =>
+    act(() =>
+      Dimensions.set({ window: originalWindow, screen: originalScreen }),
+    ),
+  );
+  const sendFrame = (node: ReactTestInstance, width = 400) =>
+    node.props.onLayout({
+      nativeEvent: { layout: { x: 0, y: 0, width, height: 200 } },
+    });
   // The cap scales the role's own size and line height: React Native's text
   // measure cache ignores maxFontSizeMultiplier, so that prop stays 0.
   const capScale = (node: ReactTestInstance, variant: TextVariant) => {
@@ -546,33 +565,55 @@ describe('word-safe text', () => {
       // Lines carry the whole drawn text, the nested marker included.
       const marker = (on: boolean) => (on ? ' (required)' : '');
       act(() => {
+        sendFrame(label());
         label().props.onTextLayout({
           nativeEvent: {
             lines: [
-              { text: 'Representatio', height: 22 * 3 },
-              { text: `n${marker(required)}`, height: 22 * 3 },
+              {
+                text: 'Representatio',
+                height:
+                  (textStyles.secondary.lineHeight + LINE_HEIGHT_NUDGE) *
+                  (49 / 15),
+              },
+              {
+                text: `n${marker(required)}`,
+                height:
+                  (textStyles.secondary.lineHeight + LINE_HEIGHT_NUDGE) *
+                  (49 / 15),
+              },
             ],
           },
         });
       });
       // 2.7 of the uncapped 3.
-      expect(capScale(label(), 'secondary')).toBeCloseTo(0.9, 6);
+      expect(capScale(label(), 'secondary')).toBeCloseTo(2.94 / 3.27, 6);
       act(() => {
         renderer.update(<Field label="Name" required={required} />);
       });
       expect(capScale(label(), 'secondary')).toBe(1);
       // Changing only the required marker is a change of text too.
       act(() => {
+        sendFrame(label());
         label().props.onTextLayout({
           nativeEvent: {
             lines: [
-              { text: 'Na', height: 22 * 3 },
-              { text: `me${marker(required)}`, height: 22 * 3 },
+              {
+                text: 'Na',
+                height:
+                  (textStyles.secondary.lineHeight + LINE_HEIGHT_NUDGE) *
+                  (49 / 15),
+              },
+              {
+                text: `me${marker(required)}`,
+                height:
+                  (textStyles.secondary.lineHeight + LINE_HEIGHT_NUDGE) *
+                  (49 / 15),
+              },
             ],
           },
         });
       });
-      expect(capScale(label(), 'secondary')).toBeCloseTo(0.9, 6);
+      expect(capScale(label(), 'secondary')).toBeCloseTo(2.94 / 3.27, 6);
       act(() => {
         renderer.update(<Field label="Name" required={!required} />);
       });
@@ -624,6 +665,7 @@ describe('word-safe text', () => {
     expect(capScale(text(), 'sectionTitle')).toBe(1);
     const layout = (at: number, broken = true) =>
       act(() => {
+        sendFrame(text());
         text().props.onTextLayout({
           nativeEvent: {
             lines: broken
@@ -646,18 +688,19 @@ describe('word-safe text', () => {
           },
         });
       });
-    layout(2.3, false);
+    layout(2.55, false);
     expect(capScale(text(), 'sectionTitle')).toBe(1);
-    layout(2.3);
-    // Uncapped 2.3, capped 2.07: 90% of the role's size, which Dynamic Type
-    // then multiplies by the same 2.3.
-    expect(capScale(text(), 'sectionTitle')).toBeCloseTo(2.07 / 2.3, 6);
+    layout(2.55);
+    // Uncapped 2.55, capped 2.29: 90% of the role's size, which Dynamic Type
+    // then multiplies by the same 2.55.
+    expect(capScale(text(), 'sectionTitle')).toBeCloseTo(2.29 / 2.55, 6);
     // Each layout at the size now drawn that still breaks steps 10% lower,
-    // always as a share of the same uncapped 2.3, and stops at the reader's
+    // always as a share of the same uncapped 2.55, and stops at the reader's
     // default size.
     for (const [at, next] of [
-      [2.07, 1.86],
-      [1.86, 1.67],
+      [2.29, 2.06],
+      [2.06, 1.85],
+      [1.85, 1.67],
       [1.67, 1.5],
       [1.5, 1.35],
       [1.35, 1.22],
@@ -666,14 +709,14 @@ describe('word-safe text', () => {
       [1, 1],
     ] as const) {
       layout(at);
-      expect(capScale(text(), 'sectionTitle')).toBeCloseTo(next / 2.3, 6);
+      expect(capScale(text(), 'sectionTitle')).toBeCloseTo(next / 2.55, 6);
     }
     expect(text().props.accessibilityRole).toBe('header');
   });
   describe('word-safe resets and late layouts', () => {
     const base = textStyles.sectionTitle.lineHeight + LINE_HEIGHT_NUDGE;
-    // "Representation" at heading scale: 212pt wide at the uncapped 2.3,
-    // 191pt at 2.07 and 172pt at 1.86.
+    // "Representation" at heading scale: 212pt wide at the uncapped 2.55,
+    // 191pt at 2.29 and 172pt at 2.06.
     const broken = (at: number, widths: [number, number]) => ({
       nativeEvent: {
         lines: [
@@ -682,7 +725,7 @@ describe('word-safe text', () => {
         ],
       },
     });
-    const fits = (at: number, width = (212 * at) / 2.3) => ({
+    const fits = (at: number, width = (212 * at) / 2.55) => ({
       nativeEvent: {
         lines: [{ text: 'Representation', width, height: base * at }],
       },
@@ -709,7 +752,7 @@ describe('word-safe text', () => {
       }),
     );
     function heading(
-      fontScale = 2.3,
+      fontScale = 3.571,
       variant: TextVariant = 'sectionTitle',
       children = 'Representation',
     ) {
@@ -722,12 +765,20 @@ describe('word-safe text', () => {
         );
       });
       const text = () => renderer.root.findByType(NativeText);
+      let frameWidth = 400;
       return {
         text,
         ratio: () => capScale(text(), variant),
-        layout: (event: object) => act(() => text().props.onTextLayout(event)),
+        layout: (event: object) =>
+          act(() => {
+            sendFrame(text(), frameWidth);
+            text().props.onTextLayout(event);
+          }),
         resize: (width: number) =>
-          act(() => text().props.onLayout(frame(width))),
+          act(() => {
+            frameWidth = width;
+            text().props.onLayout(frame(width));
+          }),
       };
     }
 
@@ -735,68 +786,68 @@ describe('word-safe text', () => {
     test('a modest wider column restores full size once the full word fits', () => {
       const { ratio, layout, resize } = heading();
       resize(200);
-      layout(broken(2.3, [198, 14]));
-      expect(ratio()).toBeCloseTo(0.9, 6);
-      layout(fits(2.07, 191));
-      // 200 to 220pt: 191pt at 2.07 is 212pt at 2.3, which now fits.
+      layout(broken(2.55, [198, 14]));
+      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
+      layout(fits(2.29, 191));
+      // 200 to 220pt: 191pt at 2.29 is 212pt at 2.55, which now fits.
       resize(220);
       expect(ratio()).toBe(1);
       // The capped layout, delivered late to the full-size text, is ignored.
-      layout(fits(2.07, 191));
+      layout(fits(2.29, 191));
       expect(ratio()).toBe(1);
     });
     test('a narrower column that widens again restores the larger cap', () => {
       const { ratio, layout, resize } = heading();
       resize(200);
-      layout(broken(2.3, [198, 14]));
+      layout(broken(2.55, [198, 14]));
       resize(200);
-      layout(fits(2.07));
-      expect(ratio()).toBeCloseTo(2.07 / 2.3, 6);
+      layout(fits(2.29));
+      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
       // The column narrows to 180pt and 191pt no longer fits.
       resize(180);
-      layout(broken(2.07, [178, 13]));
+      layout(broken(2.29, [178, 13]));
       resize(180);
-      layout(fits(1.86));
-      expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
+      layout(fits(2.06));
+      expect(ratio()).toBeCloseTo(2.06 / 2.55, 6);
       // Back to 200pt: the same capped text's frame widens, so the column
       // did. Full size breaks there again and steps to the 200pt cap.
       resize(200);
       expect(ratio()).toBe(1);
-      layout(broken(2.3, [198, 14]));
-      expect(ratio()).toBeCloseTo(2.07 / 2.3, 6);
+      layout(broken(2.55, [198, 14]));
+      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
       // Repeated frames and lines at that width settle without restarting.
       for (let i = 0; i < 5; i++) {
         resize(200);
-        layout(fits(2.07));
+        layout(fits(2.29));
       }
-      expect(ratio()).toBeCloseTo(2.07 / 2.3, 6);
+      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
     });
     test("the capped text's own narrowing never counts as a wider column", () => {
       const { ratio, layout, resize } = heading();
       resize(200);
-      layout(broken(2.3, [198, 14]));
+      layout(broken(2.55, [198, 14]));
       // The capped text hugs its 191pt word: narrower than the column, and
       // never wider than the 200pt it broke in, so the cap stays.
       resize(191);
-      layout(fits(2.07, 191));
+      layout(fits(2.29, 191));
       resize(191);
-      expect(ratio()).toBeCloseTo(2.07 / 2.3, 6);
+      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
     });
     test("a change of role starts again with that role's own uncapped size", () => {
       const { text, layout } = heading(
-        2.3,
+        3.571,
         'sectionTitle',
         'Recorded representation',
       );
       layout({
         nativeEvent: {
           lines: [
-            { text: 'Recorded representatio', width: 300, height: base * 2.3 },
-            { text: 'n', width: 12, height: base * 2.3 },
+            { text: 'Recorded representatio', width: 300, height: base * 2.55 },
+            { text: 'n', width: 12, height: base * 2.55 },
           ],
         },
       });
-      expect(capScale(text(), 'sectionTitle')).toBeCloseTo(2.07 / 2.3, 6);
+      expect(capScale(text(), 'sectionTitle')).toBeCloseTo(2.29 / 2.55, 6);
       act(() =>
         renderer.update(
           <Text wordSafe variant="footnote">
@@ -805,9 +856,10 @@ describe('word-safe text', () => {
         ),
       );
       expect(capScale(text(), 'footnote')).toBe(1);
-      // The fine role's ramp is 3.4 at this size: 3.06 of 3.4, not of 2.3.
+      // The fine role's ramp is 3.4 at this size: 3.06 of 3.4, not of 2.55.
       const fine = textStyles.footnote.lineHeight + LINE_HEIGHT_NUDGE;
-      act(() =>
+      act(() => {
+        sendFrame(text());
         text().props.onTextLayout({
           nativeEvent: {
             lines: [
@@ -819,53 +871,53 @@ describe('word-safe text', () => {
               { text: 'n', width: 12, height: fine * 3.4 },
             ],
           },
-        }),
-      );
+        });
+      });
       expect(capScale(text(), 'footnote')).toBeCloseTo(3.06 / 3.4, 6);
     });
     test('a late layout from an earlier size can neither raise nor lower the cap', () => {
-      const { text, ratio, layout } = heading();
-      const fullSizeText = text().props.onTextLayout;
-      layout(broken(2.3, [300, 12]));
-      const firstCap = text().props.onTextLayout;
-      layout(broken(2.07, [300, 12]));
-      expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
-      // Callbacks captured by earlier measurement generations.
-      act(() => fullSizeText(broken(2.3, [300, 12])));
-      act(() => firstCap(broken(2.07, [300, 12])));
-      expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
+      const { ratio, layout } = heading();
+
+      layout(broken(2.55, [300, 12]));
+
+      layout(broken(2.29, [300, 12]));
+      expect(ratio()).toBeCloseTo(2.06 / 2.55, 6);
+      // Fabric delivers both queued layouts through current props.
+      layout(broken(2.55, [300, 12]));
+      layout(broken(2.29, [300, 12]));
+      expect(ratio()).toBeCloseTo(2.06 / 2.55, 6);
       // A layout at another size arriving at the current callback is ignored.
-      layout(broken(2.3, [300, 12]));
+      layout(broken(2.55, [300, 12]));
       layout(broken(1.3, [300, 12]));
-      expect(ratio()).toBeCloseTo(1.86 / 2.3, 6);
-      // A fresh layout at 1.86 still steps down as usual.
-      layout(broken(1.86, [300, 12]));
-      expect(ratio()).toBeCloseTo(1.67 / 2.3, 6);
+      expect(ratio()).toBeCloseTo(2.06 / 2.55, 6);
+      // A fresh layout at 2.06 still steps down as usual.
+      layout(broken(2.06, [300, 12]));
+      expect(ratio()).toBeCloseTo(1.85 / 2.55, 6);
     });
     // Review round 2, probe 2.
     test('after a switch to standard size a late AX5 layout cannot shrink below the role size', () => {
-      const { text, ratio, layout } = heading();
-      layout(broken(2.3, [198, 14]));
-      expect(ratio()).toBeCloseTo(0.9, 6);
-      const ax5Text = text().props.onTextLayout;
+      const { ratio, layout } = heading();
+      layout(broken(2.55, [198, 14]));
+      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
+
       act(() => setSize(1));
       expect(ratio()).toBe(1);
-      // The AX5 layout, through both the old and current callbacks.
-      act(() => ax5Text(broken(2.07, [198, 14])));
-      layout(broken(2.07, [198, 14]));
+      // The queued AX5 layout, through current props.
+      layout(broken(2.29, [198, 14]));
+      layout(broken(2.29, [198, 14]));
       expect(ratio()).toBe(1);
       layout(fits(1, 92));
       expect(ratio()).toBe(1);
     });
     test('after a switch between large sizes the uncapped size comes only from a fresh layout', () => {
-      const { text, ratio, layout } = heading();
-      layout(broken(2.3, [198, 14]));
-      const ax5Text = text().props.onTextLayout;
+      const { ratio, layout } = heading();
+      layout(broken(2.55, [198, 14]));
+
       // To a smaller accessibility size, where the heading's ramp is 2.0.
       act(() => setSize(2.643));
       expect(ratio()).toBe(1);
-      // The old callback's AX5 layout cannot set this size's uncapped value.
-      act(() => ax5Text(broken(2.07, [198, 14])));
+      // The queued AX5 layout cannot set this size's uncapped value.
+      layout(broken(2.29, [198, 14]));
       expect(ratio()).toBe(1);
       layout(broken(2.0, [198, 14]));
       expect(ratio()).toBeCloseTo(1.8 / 2.0, 6);
