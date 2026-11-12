@@ -142,6 +142,34 @@ describe('Lately', () => {
     );
     expect(records).toHaveLength(3);
     expect(records.filter((r) => r.title === gift.description)).toHaveLength(1);
+    expect(records.find((r) => r.title === gift.description)!.holderLine).toBe(
+      'Declared by the member and their spouse or partner',
+    );
+  });
+  test('identical member-only copies collapse without an extra holder line', () => {
+    const records = recordsFor([gift, { ...gift }]);
+    expect(records).toHaveLength(1);
+    expect(records[0]).not.toHaveProperty('holderLine');
+  });
+  test('merged holder wording is deterministic and follows the register labels', () => {
+    const records = recordsFor([
+      { ...gift, holder: 'children' },
+      { ...gift, holder: 'spouse' },
+      gift,
+      { ...gift, holder: 'spouse' },
+    ]);
+    expect(records).toHaveLength(1);
+    expect(records[0]!.holderLine).toBe(
+      'Declared by the member, their spouse or partner and their dependent children',
+    );
+    expect(
+      recordsFor([
+        { ...gift, kind: 'deletion' },
+        { ...gift, kind: 'deletion', holder: 'spouse' },
+      ])[0]!.holderLine,
+    ).toBe(
+      'Removed from the register for the member and their spouse or partner',
+    );
   });
   test.each(['key', 'id'] as const)(
     'the same source %s appears once',
@@ -204,7 +232,7 @@ describe('Lately', () => {
     expect(other.records[0]!.slug).toBe('morgan-banks');
   });
   test('the API decoder preserves source record identities for defensive deduplication', () => {
-    const data = decodeInterest({
+    const raw = {
       name: 'Evelyn Harbour',
       jurisdiction: 'federal',
       chamber: 'house',
@@ -220,11 +248,27 @@ describe('Lately', () => {
           items: [{ ...gift, key: 'register-row-1', id: 42 }],
         },
       },
-    });
+    };
+    const data = decodeInterest(raw);
     expect(data.buckets.gifts!.items[0]).toMatchObject({
       key: 'register-row-1',
       id: 42,
     });
+    for (const hints of [
+      { key: '', id: '' },
+      { key: '   ', id: null },
+      { key: {}, id: -1 },
+    ]) {
+      const decoded = decodeInterest({
+        ...raw,
+        buckets: { gifts: { count: 1, items: [{ ...gift, ...hints }] } },
+      });
+      expect(decoded.buckets.gifts!.items[0]).toMatchObject({
+        description: gift.description,
+        key: undefined,
+        id: undefined,
+      });
+    }
   });
   test('loading before the profile, error when every source fails', () => {
     expect(latelyFor(null, null)).toEqual({ status: 'loading' });

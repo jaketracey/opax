@@ -330,6 +330,41 @@ test('NewDot has New label; latest rows share the dated, clamped and routed anat
   ).toBeUndefined();
   expect(router.push).not.toHaveBeenCalled();
 });
+
+test.each([
+  [['self', 'spouse'], 'Declared by the member and their spouse or partner'],
+  [['self', 'self'], undefined],
+] as const)(
+  'LatestRows includes merged holder wording visually and in its accessible label: %s',
+  (holders, line) => {
+    const latest = latestRecord({
+      key: 'synthetic-gift',
+      kind: 'register',
+      category: 'gifts',
+      operation: 'addition',
+      date: '2026-09-28',
+      title: 'Tickets to the Lakeside theatre festival',
+      slug: 'evelyn-harbour',
+      holders: [...holders],
+    })!;
+    mount(<LatestRows records={[latest]} />);
+    const words = renderer!.root
+      .findAllByType(Text)
+      .map((node) => node.props.children);
+    const label = renderer!.root.findAll(
+      (node) =>
+        node.props.accessibilityRole === 'link' &&
+        typeof node.props.accessibilityLabel === 'string',
+    )[0]!.props.accessibilityLabel;
+    if (line) {
+      expect(words).toContain(line);
+      expect(label).toContain(line);
+    } else {
+      expect(words.join(' ')).not.toContain('Declared by');
+      expect(label).not.toContain('Declared by');
+    }
+  },
+);
 test('LatestRows composition excludes statements, procedural and unknown votes, and uses deterministic limits', () => {
   const profile = profileFor(
     personId('person_2b850aa643795ce8902f754b'),

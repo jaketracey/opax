@@ -100,6 +100,29 @@ const registerHolders: Record<string, string> = {
   spouse: 'Spouse or partner',
   children: 'Dependent children',
 };
+/** Household copies share one activity row, with every distinct holder named. */
+export function registerHolderLine(
+  holders: readonly string[] = [],
+  operation?: 'addition' | 'deletion',
+): string | undefined {
+  const distinct = new Set(holders);
+  if (distinct.size < 2) return undefined;
+  const names = Object.keys(registerHolders)
+    .filter((holder) => distinct.has(holder))
+    .map((holder) =>
+      holder === 'self'
+        ? 'the member'
+        : `their ${registerHolders[holder]!.toLowerCase()}`,
+    );
+  // Unknown holder values have no name on the full register either.
+  if (names.length !== distinct.size)
+    return 'Recorded in more than one register entry';
+  const list =
+    names.length === 2
+      ? names.join(' and ')
+      : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
+  return `${operation === 'deletion' ? 'Removed from the register for' : 'Declared by'} ${list}`;
+}
 type RegisterRow = {
   holder: string;
   description: string;

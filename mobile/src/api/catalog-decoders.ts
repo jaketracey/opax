@@ -547,10 +547,17 @@ const tie = shape({
   industry: maybeText,
 });
 const registerRow = shape({
-  key: optional(nonempty),
-  id: optional((v: unknown) =>
-    typeof v === 'number' ? count(v) : nonempty(v),
-  ),
+  // Optional identities are not yet sent by the portal. Ignore missing or
+  // malformed hints without losing the otherwise valid register block.
+  key: (v: unknown) => (typeof v === 'string' && v.trim() ? v : undefined),
+  id: (v: unknown) =>
+    typeof v === 'number'
+      ? Number.isSafeInteger(v) && v >= 0
+        ? v
+        : undefined
+      : typeof v === 'string' && v.trim()
+        ? v
+        : undefined,
   holder: nonempty,
   description: text,
   kind: nonempty,
