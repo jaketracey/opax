@@ -48,8 +48,8 @@ test('support gives help, corrections, answers and the in-app deletion path', ()
   assert.match(body, /href="\/privacy#privacy-deletion"/);
 });
 
-test('panelPrerender copies only the policy panels, whole and visible', () => {
-  assert.deepEqual([...SERVER_PANELS], ['privacy', 'support', 'methods']);
+test('panelPrerender copies information and policy panels, whole and visible', () => {
+  assert.deepEqual([...SERVER_PANELS], ['privacy', 'support', 'methods', 'about', 'stats']);
   for (const name of SERVER_PANELS) {
     const copy = panelPrerender(html, name);
     assert.ok(copy.startsWith(`<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">`), name);
@@ -57,7 +57,8 @@ test('panelPrerender copies only the policy panels, whole and visible', () => {
     assert.equal((copy.match(/<h1\b/g) || []).length, 1, name);
     assert.doesNotMatch(copy, new RegExp(`id="panel-${name}"`), name);
   }
-  assert.equal(panelPrerender(html, 'about'), null);
+  assert.equal(panelPrerender(html, 'ask'), null);
   assert.equal(panelPrerender('<main></main>', 'privacy'), null);
-  assert.equal(panelPrerender('<section id="panel-privacy"><section>x</section></section>', 'privacy'), null);
+  assert.match(panelPrerender('<section id="panel-stats"><section>x</section><p>last</p></section>', 'stats'), /<section>x<\/section><p>last<\/p><\/section>$/);
+  assert.equal(panelPrerender('<section id="panel-stats"><section>x</section>', 'stats'), null);
 });

@@ -39,7 +39,7 @@ for (let i = 0; i < 10; i++) for (const q of queries) await run(q);
 for (let i = 0; i < 100; i++) for (const q of i % 2 ? [...queries].reverse() : queries) samples[q].push((await run(q)).ms);
 const quantile = (values, q) => [...values].sort((a, b) => a - b)[Math.ceil(values.length * q) - 1];
 const manifest = JSON.parse(await readFile(new URL('search-catalog/manifest.json', publicRoot)));
-const files = await readdir(new URL('report-records/', publicRoot));
+const files = (await readdir(new URL('report-records/', publicRoot))).filter(file => !file.startsWith('index') && file.endsWith('.json'));
 let detailBytes = 0, rowBytes = 0;
 const types = {};
 for (const file of files) {
