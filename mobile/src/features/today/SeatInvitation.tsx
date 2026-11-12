@@ -140,13 +140,15 @@ export function SeatInvitation({
             onPress={() => router.push(seatRoute())}
             testID="today-invitation-find"
           />
-          <Button
-            label="Use my location"
-            variant="plain"
-            icon={symbols.location}
-            onPress={() => router.push(seatRoute(undefined, true))}
-            testID="today-invitation-location"
-          />
+          <View style={styles.location}>
+            <Button
+              label="Use my location"
+              variant="plain"
+              icon={symbols.location}
+              onPress={() => router.push(seatRoute(undefined, true))}
+              testID="today-invitation-location"
+            />
+          </View>
         </View>
       </Pressable>
     </Card>
@@ -158,4 +160,5 @@ const styles = StyleSheet.create({
   art: { alignItems: 'center', justifyContent: 'center' },
   words: { gap: rhythm.line },
   buttons: { gap: rhythm.tight, alignItems: 'center' },
+  location: { alignSelf: 'center' },
 });

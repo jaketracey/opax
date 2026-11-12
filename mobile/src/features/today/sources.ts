@@ -35,7 +35,8 @@ export const rules = {
   billsPassed: 'Newest passed or given Royal Assent first.',
   declarations: 'Newest declarations first, from both registers.',
   votes: VOTES_RULE,
-  archive: 'A different year each day, from 1998 to 2026, in order.',
+  archive:
+    'A different year each day, from 1998 to 2026, in order. Photographs of protests and party events are left out.',
   question: 'A different question each day, in order, from a reviewed set.',
   ask: 'Two questions a day, in order, from a reviewed list.',
 } as const;

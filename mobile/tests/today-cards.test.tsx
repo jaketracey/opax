@@ -27,9 +27,12 @@ import { explore } from '../src/features/explore/runtime';
 import type { YearPicture } from '../src/features/explore/pictures';
 import {
   ArchiveCard,
+  archivePicture,
   DailyPair,
   QuestionCard,
 } from '../src/features/today/DailyPair';
+import { frontPageSkip } from '../src/features/today/archive-review';
+import { rules } from '../src/features/today/sources';
 import {
   FeaturedPeopleCarousel,
   featuredLabel,
@@ -200,6 +203,46 @@ afterEach(() => {
 });
 
 describe('full-width daily cards', () => {
+  test('archive selection skips invented ids and collapses when all are skipped', () => {
+    const first = {
+      ...picture,
+      file: 'years/pictures/2021/invented-first.webp',
+    };
+    const second = {
+      ...picture,
+      file: 'years/pictures/2021/invented-second.webp',
+    };
+    const manifest = { [archiveYear(today)]: [first, second] };
+    expect(
+      archivePicture(manifest, today, new Set([first.file]))?.picture,
+    ).toBe(second);
+    expect(
+      archivePicture(manifest, today, new Set([first.file, second.file])),
+    ).toBeNull();
+    expect(rules.archive).toContain(
+      'Photographs of protests and party events are left out.',
+    );
+  });
+  test('an all-skipped archive leaves only the full-width question card', async () => {
+    const skipped = {
+      ...picture,
+      file: 'years/pictures/2021/invented-skipped.webp',
+    };
+    jest
+      .spyOn(frontPageSkip, 'has')
+      .mockImplementation((id) => id === skipped.file);
+    jest
+      .mocked(explore.pictures)
+      .mockResolvedValue({
+        data: { [archiveYear(today)]: [skipped] },
+      } as never);
+    const { root } = await render(<DailyPair today={today} attempt={0} />);
+    expect(root.findAllByType(ArchiveCard)).toHaveLength(0);
+    expect(root.findAllByType(QuestionCard)).toHaveLength(1);
+    expect(
+      StyleSheet.flatten(root.findByType(QuestionCard).parent!.props.style),
+    ).toEqual({ alignSelf: 'stretch' });
+  });
   describe.each(['landscape', 'portrait'] as const)(
     '%s archive media',
     (shape) => {

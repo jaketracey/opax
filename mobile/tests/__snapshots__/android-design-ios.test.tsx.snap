@@ -6919,37 +6919,102 @@ exports[`iOS design at font scale 1 Tile retains its iOS output 1`] = `
             }
           }
         >
-          <Text
-            accessibilityLanguage="en-AU"
-            allowFontScaling={true}
-            dynamicTypeRamp="headline"
-            maxFontSizeMultiplier={0}
-            onLayout={[Function]}
-            onTextLayout={[Function]}
+          <View
             style={
-              [
-                {
-                  "color": {
-                    "dynamic": {
-                      "dark": "#ECEAE2",
-                      "highContrastDark": "#ECEAE2",
-                      "highContrastLight": "#23271F",
-                      "light": "#23271F",
-                    },
-                  },
-                  "flexShrink": 1,
-                  "fontSize": 17,
-                  "fontWeight": "600",
-                  "lineHeight": 22.00100300902708,
-                },
-                null,
-                null,
-                undefined,
-              ]
+              {
+                "alignItems": "flex-start",
+                "flexDirection": "row",
+                "gap": 8,
+              }
             }
           >
-            Explore
-          </Text>
+            <Text
+              accessibilityLanguage="en-AU"
+              allowFontScaling={true}
+              dynamicTypeRamp="headline"
+              maxFontSizeMultiplier={0}
+              onLayout={[Function]}
+              onTextLayout={[Function]}
+              style={
+                [
+                  {
+                    "color": {
+                      "dynamic": {
+                        "dark": "#ECEAE2",
+                        "highContrastDark": "#ECEAE2",
+                        "highContrastLight": "#23271F",
+                        "light": "#23271F",
+                      },
+                    },
+                    "flexShrink": 1,
+                    "fontSize": 17,
+                    "fontWeight": "600",
+                    "lineHeight": 22.00100300902708,
+                  },
+                  null,
+                  null,
+                  {
+                    "flex": 1,
+                  },
+                ]
+              }
+            >
+              Explore
+            </Text>
+            <View
+              style={
+                {
+                  "height": undefined,
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <ViewManagerAdapter_SymbolModule
+                accessibilityElementsHidden={true}
+                accessible={false}
+                animated={false}
+                colors={[]}
+                importantForAccessibility="no-hide-descendants"
+                name="chevron.right"
+                scale="medium"
+                size={13}
+                style={
+                  [
+                    {
+                      "height": 13,
+                      "width": 13,
+                    },
+                    {
+                      "height": 13,
+                      "width": 13,
+                    },
+                  ]
+                }
+                tint={
+                  {
+                    "dynamic": {
+                      "dark": 4287270788,
+                      "highContrastDark": 4289310370,
+                      "highContrastLight": 4283915346,
+                      "light": 4285494376,
+                    },
+                  }
+                }
+                tintColor={
+                  {
+                    "dynamic": {
+                      "dark": "#8A8F84",
+                      "highContrastDark": "#A9AEA2",
+                      "highContrastLight": "#575C52",
+                      "light": "#6F7468",
+                    },
+                  }
+                }
+                type="monochrome"
+                weight="semibold"
+              />
+            </View>
+          </View>
           <Text
             accessibilityLanguage="en-AU"
             allowFontScaling={true}
@@ -6982,50 +7047,6 @@ exports[`iOS design at font scale 1 Tile retains its iOS output 1`] = `
             From the record
           </Text>
         </View>
-        <ViewManagerAdapter_SymbolModule
-          accessibilityElementsHidden={true}
-          accessible={false}
-          animated={false}
-          colors={[]}
-          importantForAccessibility="no-hide-descendants"
-          name="chevron.right"
-          scale="medium"
-          size={13}
-          style={
-            [
-              {
-                "height": 13,
-                "width": 13,
-              },
-              {
-                "height": 13,
-                "width": 13,
-              },
-            ]
-          }
-          tint={
-            {
-              "dynamic": {
-                "dark": 4287270788,
-                "highContrastDark": 4289310370,
-                "highContrastLight": 4283915346,
-                "light": 4285494376,
-              },
-            }
-          }
-          tintColor={
-            {
-              "dynamic": {
-                "dark": "#8A8F84",
-                "highContrastDark": "#A9AEA2",
-                "highContrastLight": "#575C52",
-                "light": "#6F7468",
-              },
-            }
-          }
-          type="monochrome"
-          weight="regular"
-        />
       </View>
     </RouteHost>
     <RouteHost />
@@ -14411,37 +14432,102 @@ exports[`iOS design at font scale 2 Tile retains its iOS output 1`] = `
             }
           }
         >
-          <Text
-            accessibilityLanguage="en-AU"
-            allowFontScaling={true}
-            dynamicTypeRamp="headline"
-            maxFontSizeMultiplier={0}
-            onLayout={[Function]}
-            onTextLayout={[Function]}
+          <View
             style={
-              [
-                {
-                  "color": {
-                    "dynamic": {
-                      "dark": "#ECEAE2",
-                      "highContrastDark": "#ECEAE2",
-                      "highContrastLight": "#23271F",
-                      "light": "#23271F",
-                    },
-                  },
-                  "flexShrink": 1,
-                  "fontSize": 17,
-                  "fontWeight": "600",
-                  "lineHeight": 22.00100300902708,
-                },
-                null,
-                null,
-                undefined,
-              ]
+              {
+                "alignItems": "flex-start",
+                "flexDirection": "row",
+                "gap": 8,
+              }
             }
           >
-            Explore
-          </Text>
+            <Text
+              accessibilityLanguage="en-AU"
+              allowFontScaling={true}
+              dynamicTypeRamp="headline"
+              maxFontSizeMultiplier={0}
+              onLayout={[Function]}
+              onTextLayout={[Function]}
+              style={
+                [
+                  {
+                    "color": {
+                      "dynamic": {
+                        "dark": "#ECEAE2",
+                        "highContrastDark": "#ECEAE2",
+                        "highContrastLight": "#23271F",
+                        "light": "#23271F",
+                      },
+                    },
+                    "flexShrink": 1,
+                    "fontSize": 17,
+                    "fontWeight": "600",
+                    "lineHeight": 22.00100300902708,
+                  },
+                  null,
+                  null,
+                  {
+                    "flex": 1,
+                  },
+                ]
+              }
+            >
+              Explore
+            </Text>
+            <View
+              style={
+                {
+                  "height": undefined,
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <ViewManagerAdapter_SymbolModule
+                accessibilityElementsHidden={true}
+                accessible={false}
+                animated={false}
+                colors={[]}
+                importantForAccessibility="no-hide-descendants"
+                name="chevron.right"
+                scale="medium"
+                size={20}
+                style={
+                  [
+                    {
+                      "height": 20,
+                      "width": 20,
+                    },
+                    {
+                      "height": 20,
+                      "width": 20,
+                    },
+                  ]
+                }
+                tint={
+                  {
+                    "dynamic": {
+                      "dark": 4287270788,
+                      "highContrastDark": 4289310370,
+                      "highContrastLight": 4283915346,
+                      "light": 4285494376,
+                    },
+                  }
+                }
+                tintColor={
+                  {
+                    "dynamic": {
+                      "dark": "#8A8F84",
+                      "highContrastDark": "#A9AEA2",
+                      "highContrastLight": "#575C52",
+                      "light": "#6F7468",
+                    },
+                  }
+                }
+                type="monochrome"
+                weight="semibold"
+              />
+            </View>
+          </View>
           <Text
             accessibilityLanguage="en-AU"
             allowFontScaling={true}
@@ -14474,50 +14560,6 @@ exports[`iOS design at font scale 2 Tile retains its iOS output 1`] = `
             From the record
           </Text>
         </View>
-        <ViewManagerAdapter_SymbolModule
-          accessibilityElementsHidden={true}
-          accessible={false}
-          animated={false}
-          colors={[]}
-          importantForAccessibility="no-hide-descendants"
-          name="chevron.right"
-          scale="medium"
-          size={20}
-          style={
-            [
-              {
-                "height": 20,
-                "width": 20,
-              },
-              {
-                "height": 20,
-                "width": 20,
-              },
-            ]
-          }
-          tint={
-            {
-              "dynamic": {
-                "dark": 4287270788,
-                "highContrastDark": 4289310370,
-                "highContrastLight": 4283915346,
-                "light": 4285494376,
-              },
-            }
-          }
-          tintColor={
-            {
-              "dynamic": {
-                "dark": "#8A8F84",
-                "highContrastDark": "#A9AEA2",
-                "highContrastLight": "#575C52",
-                "light": "#6F7468",
-              },
-            }
-          }
-          type="monochrome"
-          weight="regular"
-        />
       </View>
     </RouteHost>
     <RouteHost />

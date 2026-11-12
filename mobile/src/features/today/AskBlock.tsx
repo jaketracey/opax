@@ -1,10 +1,15 @@
 import { PadReading } from '../../design/adaptive';
+import { router } from 'expo-router';
 import { View } from 'react-native';
+import { designFlags } from '../../design/flags';
 import { InsetGroup, SectionHeader } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { symbols } from '../../design/symbols';
 import { rhythm } from '../../design/tokens';
 import { track } from '../../analytics';
+import { talkSignInRoute } from '../../navigation/routes/account';
+import { voiceLinked } from '../../voice/linked';
+import { useAccount } from '../account/store';
 import { useOpenAsk } from '../ask/open';
 import { starterList } from '../ask/starters';
 import { starterPair, type SydneyDate } from './rules';
@@ -22,6 +27,8 @@ export const todayStarters = (
  */
 export function AskBlock({ today }: { today: SydneyDate }) {
   const openAsk = useOpenAsk();
+  const account = useAccount();
+  const signedOut = !account.checking && account.status?.signedIn === false;
   const starters = todayStarters(today);
   if (!starters.length) return null;
   return (
@@ -34,6 +41,7 @@ export function AskBlock({ today }: { today: SydneyDate }) {
               key={question}
               title={question}
               symbol={symbols.ask}
+              symbolInk="navy"
               onPress={() => {
                 track('opax_chip', { chip_kind: 'ask', placement: 'today' });
                 openAsk({ question });
@@ -42,6 +50,16 @@ export function AskBlock({ today }: { today: SydneyDate }) {
               testID={`today-ask-${i}`}
             />
           ))}
+          {designFlags.talkInAsk && voiceLinked ? (
+            <LinkRow
+              title="Talk it through"
+              symbol={symbols.talk}
+              symbolInk="navy"
+              onPress={() => router.push(signedOut ? talkSignInRoute : '/talk')}
+              accessibilityHint="Talk to OPAX about parliament"
+              testID="today-voice"
+            />
+          ) : null}
         </InsetGroup>
       </View>
     </PadReading>

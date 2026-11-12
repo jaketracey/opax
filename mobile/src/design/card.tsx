@@ -166,6 +166,7 @@ export function Tile({
   testID?: string;
 }) {
   const lead = useContext(LeadTile);
+  const [firstLineHeight, setFirstLineHeight] = useState<number>();
   return (
     <RowLink href={href} menu={menu}>
       <Pressable
@@ -192,15 +193,36 @@ export function Tile({
           }
           {...{ type: 'hierarchical' as const }}
         />
-        <View style={styles.tileText}>
-          <Text wordSafe variant="subsectionTitle">
-            {title}
-          </Text>
+        <View
+          style={
+            lead ? [styles.tileText, styles.tileTextLead] : styles.tileText
+          }
+        >
+          <View style={styles.tileTitle}>
+            <Text
+              wordSafe
+              variant="subsectionTitle"
+              style={styles.tileHeading}
+              onTextLayout={(event) =>
+                setFirstLineHeight(event.nativeEvent.lines[0]?.height)
+              }
+            >
+              {title}
+            </Text>
+            <View style={{ height: firstLineHeight, justifyContent: 'center' }}>
+              <Icon
+                name={symbols.chevron}
+                size={13}
+                maxScale={1.5}
+                tone="inkFaint"
+                weight="semibold"
+              />
+            </View>
+          </View>
           <Text wordSafe variant="footnote">
             {line}
           </Text>
         </View>
-        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkFaint" />
       </Pressable>
     </RowLink>
   );
@@ -294,4 +316,11 @@ const styles = StyleSheet.create({
   },
   leadTile: { flexDirection: 'row', alignItems: 'center' },
   tileText: { flexShrink: 1, gap: rhythm.line },
+  tileTextLead: { flex: 1 },
+  tileTitle: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
+  tileHeading: { flex: 1 },
 });

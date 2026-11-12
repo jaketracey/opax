@@ -76,19 +76,29 @@ const sentences = (text: string) =>
     .filter(Boolean);
 /**
  * The plate's detail line, less any sentence already shown below it. The
- * cover line often restates the first paragraph ("This bill would … Passed
- * 18 Sep 2026."), so the page, which shows every paragraph, draws no line,
- * and the card, which shows the first, keeps only what the paragraph lacks.
+ * cover line often restates the first paragraph. A bill with a stage rail
+ * uses its published portfolio instead; other lines keep only what the
+ * paragraphs lack. Detail lines have no trailing full stop.
  */
 export function plateLine(
   line: string | null,
   shownBelow?: readonly string[],
+  edition?: Pick<EditionView, 'kind' | 'facts'>,
 ): string | null {
+  if (edition?.kind === 'bill' && edition.facts.events.length) {
+    return (
+      edition.facts.kicker
+        ?.split('·')
+        .slice(1)
+        .join('·')
+        .trim()
+        .replace(/\.$/, '') || null
+    );
+  }
   if (!line?.trim()) return null;
-  if (!shownBelow?.length) return line;
-  const below = new Set(shownBelow.flatMap(sentences));
+  const below = new Set((shownBelow ?? []).flatMap(sentences));
   const rest = sentences(line).filter((sentence) => !below.has(sentence));
-  return rest.length ? rest.join(' ') : null;
+  return rest.length ? rest.join(' ').replace(/\.$/, '') : null;
 }
 
 const MONTHS = [

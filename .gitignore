@@ -58,7 +58,7 @@ mobile/ios/
 mobile/android/
 mobile/build/
 mobile/private/
-mobile/node_modules/
+mobile/node_modules
 mobile/.expo/
 .expo/
 mobile/.maestro/results/
