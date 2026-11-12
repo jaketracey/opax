@@ -41,7 +41,8 @@ def build_agencies(profiles, meta):
             a["total"] += value
             a["count"] += 1
             s = a["suppliers"].setdefault(supplier["id"], dict(id=supplier["id"], name=supplier["name"],
-                abn=supplier.get("abn"), total=Decimal(0), count=0, donor_links=supplier.get("donor_links", [])))
+                abn=supplier.get("abn"), identity=dict(supplier.get("identity") or {}),
+                total=Decimal(0), count=0, donor_links=supplier.get("donor_links", [])))
             s["total"] += value
             s["count"] += 1
             start = str(contract.get("start_date") or "")

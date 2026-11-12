@@ -17,6 +17,27 @@ const originalFetch = globalThis.fetch;
 globalThis.fetch = async () => { throw Error('Unit tests must not call a network service'); };
 test.after(() => { globalThis.fetch = originalFetch; });
 
+test('declared interests returns null holders for real retained declarations and old cached placeholders', async () => {
+  const index = await published('/interests/index.json');
+  let register, id;
+  for (const key of Object.keys(index.people)) {
+    const candidate = await published(`/interests/${key}.json`);
+    if (Object.values(candidate.buckets).some(b => b.items.some(item => item.holder == null || item.holder === 'unspecified'))) { register = candidate; id = key; break; }
+  }
+  assert.ok(register);
+  const asset = async path => path === '/interests/index.json' ? { _by_name: { [register.name.toLowerCase()]: id }, people: { [id]: { name: register.name } } }
+    : path === `/interests/${id}.json` ? register : null;
+  for (const holder of [null, 'unspecified']) {
+    const item = Object.values(register.buckets).flatMap(b => b.items).find(item => item.holder == null || item.holder === 'unspecified');
+    item.holder = holder;
+    const result = await api.callTool({ ...env, asset }, 'declared_interests', { person: register.name, limit: 20 });
+    assert.ok(result.rows.some(row => row.holder === null));
+    assert.ok(!JSON.stringify(result).includes('unspecified'));
+    const grouped = await api.callTool({ ...env, asset }, 'declared_interests', { limit: 20 });
+    assert.ok(!JSON.stringify(grouped).includes('unspecified'));
+  }
+});
+
 test('find_people exposes historical House service, independently of speech coverage, as citable writer facts', async () => {
   const out = await api.findPeople(deps, { name: 'Ralph Willis' });
   const person = out.data.people[0];

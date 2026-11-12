@@ -28,17 +28,18 @@ test('the published Bowen rows retain the dependent holder, deletion and additio
  assert.equal(applyQuery(rows,config,{filters:{entry_type:['Deletion']}}).total,1);
 });
 
-test('statement, missing, unspecified and unknown legacy values stay distinct; correction wording does not invent an entry type',()=>{
+test('missing and legacy placeholder holders are absent; stated holders and entry types stay distinct',()=>{
  const items=[
   {description:'Statement row',holder:'self',kind:'statement'},
   {description:'Partner row',holder:'spouse',kind:'addition'},
-  {description:'Unspecified row',holder:'unspecified',kind:'deletion'},
+  {description:'Legacy placeholder row',holder:'unspecified',kind:'deletion'},
   {description:'Legacy row'},
   {description:'Unknown row',holder:'<unknown-holder>',kind:'<unknown-kind>'},
   {description:'Correction: this was on 04/07/26, not 14/07/2026.',holder:'self',kind:'addition'},
  ];
  const {rows}=interestTableData({source_url:'https://fixture.test/statement',as_at:'2026-09-15',buckets:{other:{items}}});
- assert.deepEqual(rows.map(r=>r.holder_label),['Self','Spouse or partner','Not specified','Not recorded','<unknown-holder>','Self']);
+ assert.deepEqual(rows.map(r=>r.holder_label),['Self','Spouse or partner','Not stated','Not stated','<unknown-holder>','Self']);
+ assert.equal(rows[2].holder,null);assert.equal(rows[3].holder,null);
  assert.deepEqual(rows.map(r=>r.entry_type),['Statement','Addition','Deletion','Not recorded','<unknown-kind>','Addition']);
  assert.equal(rows[4].holder,items[4].holder);assert.equal(rows[4].kind,items[4].kind);
  assert.equal(rows[5].item,items[5].description);assert.equal(rows[5].date,'2026-09-15');

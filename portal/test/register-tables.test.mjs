@@ -30,6 +30,27 @@ test('all published interest registers retain every source entry',async()=>{
  }
  assert.ok(registers>300);
 });
+test('missing holders stay null through the register API and never display the old placeholder',async()=>{
+ const index=await read('/interests/index.json');
+ let register;
+ for(const id of Object.keys(index.people)) {
+  const candidate=await read('/interests/'+id+'.json');
+  if(Object.values(candidate.buckets).some(b=>b.items.some(item=>item.holder==null || item.holder==='unspecified'))){register=candidate;break;}
+ }
+ assert.ok(register,'real retained example with an absent holder');
+ for(const holder of [null,undefined,'unspecified',' Unspecified ']) {
+  const copy=structuredClone(register);
+  const item=Object.values(copy.buckets).flatMap(b=>b.items).find(item=>item.holder==null || item.holder==='unspecified');
+  item.holder=holder;
+  const rows=interestTableData(copy).rows;
+  const row=rows.find(row=>row.item===item.description);
+  assert.equal(row.holder,null);assert.equal(row.holder_label,'Not stated');
+  const response=await interestRegisterResponse(new Request('https://opax.test/api/register/interests?pid=fixture'),{fetch:async()=>Response.json(copy)});
+  const result=await response.json();
+  assert.equal(result.rows.find(row=>row.item===item.description).holder,null);
+  assert.ok(!JSON.stringify(result).includes('unspecified'));
+ }
+});
 test('instrument rows keep source registration dates and portfolio memberships',async()=>{
  const m=await read('/instruments/manifest.json'),rows=await instrumentTableRows(read,m,(await read(m.index_url)).records);
  assert.equal(rows.length,m.exported ?? m.count);
