@@ -173,7 +173,7 @@ afterEach(() => {
   act(() => citationSheetLeft());
   jest.clearAllMocks();
 });
-function draw(turn: Turn = answer(), pane = false) {
+function draw(turn: Turn = answer(), pane = false, onRephrase = jest.fn()) {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(
@@ -184,6 +184,7 @@ function draw(turn: Turn = answer(), pane = false) {
         chat="fixture-chat"
         profiles={profiles}
         paneShowsSources={pane}
+        onRephrase={onRephrase}
       />,
     );
   });
@@ -506,12 +507,19 @@ test('a figure is drawn only with its own date and source', () => {
   });
 });
 
-test('an empty answer says so above its records and offers Search', () => {
-  const { words, ids, press } = draw(answer({ answer: '' }));
+test('an empty answer describes the search, offers rephrasing and Search, and retains related records', () => {
+  const onRephrase = jest.fn();
+  const { words, ids, press } = draw(answer({ answer: '' }), false, onRephrase);
   expect(words()).toContain(
     'No written answer came back. The records found are listed below.',
   );
   expect(ids('ask-error-empty').length).toBeGreaterThan(0);
+  expect(words()).toContain(`Searched OPAX records for “${question.text}”.`);
+  expect(words()).toContain('Try naming a person, bill or topic and a year.');
+  expect(words()).toContain('Records found');
+  expect(words()).not.toContain('Records cited');
+  act(() => press('ask-rephrase'));
+  expect(onRephrase).toHaveBeenCalledWith(question.text);
   act(() => press('ask-search-opax'));
   expect(router.push).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -521,6 +529,38 @@ test('an empty answer says so above its records and offers Search', () => {
   const none = draw(answer({ answer: '', sources: [] }));
   expect(none.words()).toContain('No written answer came back.');
   expect(none.words()).not.toContain('listed below');
+});
+
+test('an explicit evidence gap uses the actual scope and a returned rephrase suggestion', () => {
+  const onRephrase = jest.fn();
+  const suggestion = 'What did parliament say about the fixture bill in 2025?';
+  const turn = answer({
+    answer: 'No verified position in the selected speeches.',
+    answer_status: 'evidence_gap',
+    scope: {
+      kind: 'speech',
+      speaker: 'Sam Placeholder',
+      state: 'vic',
+      from: '2025',
+      to: '2025',
+    },
+    asked_as: 'What was said about the fixture bill in 2025?',
+    suggested_question: suggestion,
+  });
+  const { words, ids, press } = draw(turn, false, onRephrase);
+  expect(ids('ask-no-answer').length).toBeGreaterThan(0);
+  expect(ids('ask-machine-label')).toHaveLength(0);
+  expect(words()).toContain(
+    'Searched OPAX speeches for “What was said about the fixture bill in 2025?”.',
+  );
+  expect(words()).toContain('Person: Sam Placeholder');
+  expect(words()).toContain('Parliament: Victoria');
+  expect(words()).toContain('Years: 2025');
+  act(() => press('ask-rephrase'));
+  expect(onRephrase).toHaveBeenCalledWith(suggestion);
+  expect(answerReadyAnnouncement(turn)).toBe(
+    'No answer found. Rephrase your question or search OPAX.',
+  );
 });
 
 test('on iPad with the pane the column hides Records cited', () => {

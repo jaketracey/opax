@@ -39,6 +39,7 @@ const pattern =
   (re: RegExp): Rule =>
   (value) =>
     typeof value === 'string' && re.test(value) ? value : undefined;
+const askReason = oneOf('stall', 'deadline', 'network', 'server', 'no_answer');
 
 /** A screen's top-level section, from its route file name (never a parameter). */
 const sectionPattern = /^[a-z][a-z0-9-]{0,31}$/;
@@ -97,12 +98,14 @@ export const eventFields = {
     duration_ms: duration,
     source_count: count,
     has_answer: flag,
+    reason: askReason,
   },
   opax_ask_failed: {
     from_section: section,
     follow_up: flag,
     duration_ms: duration,
     cancelled: flag,
+    reason: askReason,
   },
   opax_search_started: {
     scope: oneOf(...searchScopes),

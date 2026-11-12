@@ -58,7 +58,14 @@ import {
   useCitationSelection,
 } from './citation-state';
 import { copyCitation } from './cite';
-import { defaultOptions, turnKey, type Source, type Turn } from './model';
+import {
+  defaultOptions,
+  isNoAnswer,
+  turnKey,
+  type Source,
+  type Turn,
+} from './model';
+import { noAnswerSearch } from './no-answer';
 import { peopleInAnswer, type AskPerson } from './people';
 import { answerCopyText, answeredLong, answeredText } from './share-answer';
 import { citedSources, sourceDate, sourceTitle } from './source-present';
@@ -100,6 +107,7 @@ export function AnswerView({
   legacy = null,
   profiles,
   paneShowsSources = false,
+  onRephrase,
 }: {
   turn: Turn;
   question: Turn;
@@ -111,6 +119,7 @@ export function AnswerView({
   profiles: Map<string, AskPerson>;
   /** iPad regular width: the pane lists the sources, so the column does not. */
   paneShowsSources?: boolean;
+  onRephrase?: (question: string) => void;
 }) {
   const pane = useAskPane();
   const self = useRef<View>(null);
@@ -148,7 +157,12 @@ export function AnswerView({
     () => (data.money_overview ? parseAnswer(data.money_overview) : null),
     [data.money_overview],
   );
-  const groups = citedSources(data.sources);
+  const empty = isNoAnswer(data);
+  const groups = citedSources(
+    empty
+      ? data.sources.map((source) => ({ ...source, cited: false }))
+      : data.sources,
+  );
   const numbered = groups.numbered;
   const scoped = ['needs_scope', 'needs_period'].includes(
     data.answer_status ?? '',
@@ -199,7 +213,6 @@ export function AnswerView({
     });
   const report = () => router.push(askReportRoute(key));
   const cited = numbered ? groups.cited : [];
-  const empty = !data.answer.trim();
   const body = (
     <View style={styles.answer} testID="ask-answer">
       {kind ? (
@@ -287,11 +300,25 @@ export function AnswerView({
         </InsetGroup>
       ) : null}
       {empty ? (
-        <View style={styles.block}>
-          <Text wordSafe testID="ask-error-empty">
+        <View style={styles.block} testID="ask-no-answer">
+          <Text wordSafe accessibilityRole="header" testID="ask-error-empty">
             {groups.cited.length ? askErrors.empty : askErrors.emptyNone}
           </Text>
-          <SearchOpaxRow question={question.text} />
+          <Text wordSafe variant="secondary" testID="ask-searched">
+            {noAnswerSearch(data, question)}
+          </Text>
+          <InsetGroup>
+            <LinkRow
+              title="Rephrase your question"
+              detail="Try naming a person, bill or topic and a year."
+              symbol="square.and.pencil"
+              onPress={() =>
+                onRephrase?.(data.suggested_question?.trim() || question.text)
+              }
+              testID="ask-rephrase"
+            />
+            <SearchOpaxRow question={question.text} grouped />
+          </InsetGroup>
         </View>
       ) : null}
       {scoped ? <SearchOpaxRow question={question.text} /> : null}
@@ -670,6 +697,8 @@ function AnswerMenu({
 }
 /** Announced once when an answer lands (journeys/ask.md 4.15). */
 export function answerReadyAnnouncement(turn: Turn) {
+  if (isNoAnswer(turn.result ?? { answer: turn.text }))
+    return 'No answer found. Rephrase your question or search OPAX.';
   const count = (turn.result?.sources ?? turn.sources ?? []).filter(
     (s) => s.cited,
   ).length;

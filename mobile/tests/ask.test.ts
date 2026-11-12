@@ -719,6 +719,7 @@ describe('analytics: each question measured once, never its words', () => {
         follow_up: false,
         duration_ms: 250,
         cancelled: false,
+        reason: 'network',
       },
     ]);
     post.mockImplementationOnce(

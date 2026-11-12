@@ -170,7 +170,7 @@ test('offline and explicit cancel never retry', async () => {
 });
 
 test.each(['headers', 'json', 'stream'] as const)(
-  'a stalled %s times out, aborts transport and permits manual retry',
+  'a stalled %s is bounded across one retry and permits manual retry',
   async (phase) => {
     jest.useFakeTimers();
     Object.assign(globalThis, { TextDecoder, TextEncoder });
@@ -180,50 +180,53 @@ test.each(['headers', 'json', 'stream'] as const)(
       cancel: jest.fn().mockResolvedValue(undefined),
       releaseLock: jest.fn(),
     };
-    const t = jest
-      .fn()
-      .mockImplementationOnce(() =>
-        phase === 'headers'
-          ? never
-          : Promise.resolve(
-              response(
-                200,
-                payload,
-                phase === 'json'
-                  ? { json: () => never }
-                  : {
-                      headers: { get: () => 'text/event-stream' },
-                      body: { getReader: () => reader },
-                    },
-              ),
+    const t = jest.fn((_url: string, _init: RequestInit) =>
+      phase === 'headers'
+        ? never
+        : Promise.resolve(
+            response(
+              200,
+              payload,
+              phase === 'json'
+                ? { json: () => never }
+                : {
+                    headers: { get: () => 'text/event-stream' },
+                    body: { getReader: () => reader },
+                  },
             ),
-      )
-      .mockResolvedValue(response(200));
+          ),
+    );
     const client = api(t);
+    const on = { stage: jest.fn(), delta: jest.fn(), retry: jest.fn() };
     const pending = client.askPost(
       '/api/ask?stream=1',
       {},
       controller().signal,
-      { stage: jest.fn(), delta: jest.fn(), retry: jest.fn() },
+      on,
     );
-    const failure = expect(pending).rejects.toMatchObject({ code: 'timeout' });
+    const failure = expect(pending).rejects.toMatchObject({
+      code: 'timeout',
+      reason: 'deadline',
+    });
     try {
       await jest.advanceTimersByTimeAsync(120_000);
       await failure;
-      expect(t.mock.calls[0]![1].signal.aborted).toBe(true);
-      expect(t).toHaveBeenCalledTimes(1);
+      expect(
+        t.mock.calls.every(([, init]) => (init as RequestInit).signal?.aborted),
+      ).toBe(true);
+      expect(t).toHaveBeenCalledTimes(2);
+      expect(on.retry).toHaveBeenCalledTimes(1);
+      t.mockResolvedValue(response(200));
       await expect(
         client.askPost('/api/ask?stream=1', {}, controller().signal),
       ).resolves.toEqual(payload);
-      expect(
-        askErrorCopy({ code: 'timeout' } as Parameters<typeof askErrorCopy>[0]),
-      ).toEqual({
-        message: 'This answer took too long. Please try again.',
+      expect(askErrorCopy({ code: 'timeout' })).toEqual({
+        message: 'This answer took too long.',
         retry: true,
       });
       expect(jest.getTimerCount()).toBe(0);
       if (phase === 'stream')
-        expect(reader.releaseLock).toHaveBeenCalledTimes(1);
+        expect(reader.releaseLock).toHaveBeenCalledTimes(2);
     } finally {
       jest.useRealTimers();
     }
@@ -404,14 +407,14 @@ test.each([
   },
 );
 
-test('a slow answer that keeps arriving is not cut off by the stall timeout', async () => {
+test('meaningful progress within the deadline is not cut off by the stall timeout', async () => {
   jest.useFakeTimers();
   Object.assign(globalThis, { TextDecoder, TextEncoder });
   const later = (text: string) =>
     new Promise((resolve) =>
       setTimeout(
         () => resolve({ value: new TextEncoder().encode(text), done: false }),
-        60_000,
+        20_000,
       ),
     );
   const reader = {
@@ -440,7 +443,7 @@ test('a slow answer that keeps arriving is not cut off by the stall timeout', as
     .askPost('/api/ask?stream=1', {}, controller().signal, on)
     .catch((error: unknown) => error);
   try {
-    await jest.advanceTimersByTimeAsync(180_000);
+    await jest.advanceTimersByTimeAsync(60_000);
     expect(await pending).toMatchObject({ answer: 'Recorded answer' });
     expect(on.delta).toHaveBeenCalledWith('slow answer');
   } finally {
