@@ -66,7 +66,7 @@ The nightly only brings new records in and publishes them.
       someone is logged in / connected over ssh
 10:30 Sydney   EventBridge Scheduler "opax-refresh-stop-backstop" stops the instance if still up
 
-the push (corpus.json changed) ──► .github/workflows/deploy.yml
+the push (portal/ changed) ──► .github/workflows/deploy.yml
       npm ci · build:release (search/social/grants-map/analytics/voice, stamps, photos, privacy)
       npm test (Node 24) · wrangler types + tsc · `npm run deploy:built`
       mandatory privacy sweep before upload · commit restamped assets back with [skip ci]
@@ -78,7 +78,7 @@ With `OPAX_EVIDENCE_BUILD=1`, unexpected bundle build, receipt validation or new
 
 **`corpus.json` is stamped every night.** `refresh.checked_at` is written when it is more than 12 hours
 old, and always when anything else is being pushed. That makes every nightly commit change
-`portal/public/corpus.json`, which is what starts the deploy, and it is what the watchdog reads. A night with
+`portal/public/corpus.json`, which the watchdog reads (any change under `portal/` starts the deploy). A night with
 no new data therefore still makes a small commit and a deploy. Running the nightly again the same night
 changes nothing.
 
@@ -202,7 +202,7 @@ The repository is **public**: nothing below is ever committed, logged or publish
 
 * **GitHub from the machine: a deploy key only.** `~/.ssh/opax_deploy` has write access to `jaketracey/opax`;
   `~/.ssh/config` maps `github.com` to it. There is **no GitHub token** on the machine, so the nightly cannot dispatch
-  workflows or open issues. It pushes over SSH and the pushes start the deploy (path filter on `corpus.json`).
+  workflows or open issues. It pushes over SSH and the pushes start the deploy (path filter on `portal/` and the other Worker inputs).
   Alerting is the watchdog workflow plus the published `nightly-status` branch (both need no credential).
   If `main` gets branch protection the deploy key must be allowed to push to it.
 * **GitHub Actions secrets** (Settings → Secrets and variables → Actions), already set: `CLOUDFLARE_API_TOKEN`
@@ -622,8 +622,8 @@ end (in `status.json`, so the watchdog can email) and keeps publishing whatever 
 - Bills whose fetch/export fails or times out, whose count shrinks, that lose any existing bill or brief,
   or that fail validation, are reverted to HEAD; the other groups and manifest still go.
 - The manifest updater refusing (KB reports >1% fewer resources than the manifest, or a kind that
-  will not answer) leaves `corpus.json` and `CACHE_EPOCH` alone. Then the push has no `corpus.json` change, so **the deploy does
-  not start**; the status says so and the deploy has to be run by hand.
+  will not answer) leaves `corpus.json` and `CACHE_EPOCH` alone. The other data under `portal/` still goes out and
+  still starts the deploy; the status reports the manifest failure.
 - The run stops outright only if the checkout cannot be synced, or `daily_refresh.sh` did not actually complete a run.
 - Push race with a human: `git rebase origin/main` and retry, five times. A refused push (deploy key, network) leaves the
   commit local and it goes out on the next run.
@@ -763,10 +763,11 @@ writes briefs onto recent speeches after the first export): every empty speech d
 Failed fetches never blank an existing brief. `index.json` is written in the committed layout
 (`indent=1`) and keeps its old `generated_at` when nothing else changed, so a quiet night leaves no diff.
 
-**Deploy workflow** (`.github/workflows/deploy.yml`): starts on a push to `main` that changes `portal/public/corpus.json`,
-or by hand (Actions → Deploy → Run workflow); never on pull_request (the repo is public and the job holds the Cloudflare
-token). Concurrency group `deploy-production`, no cancellation. The restamp commit it pushes back does not touch
-`corpus.json`, carries `[skip ci]`, and the job refuses to run for the bot's own pushes, so it cannot loop. Restamps
+**Deploy workflow** (`.github/workflows/deploy.yml`): starts on a push to `main` that changes what the Worker is built from (`portal/`
+except tests and markdown, `scripts/`, the Python version and lock, the ACT invoice release, the ingest user agent and
+the design tokens; the full list is the workflow's `paths`), so merged portal and data PRs deploy themselves (a push that only changes portal tests or markdown does not deploy; run it by hand if needed), or by hand (Actions → Deploy → Run workflow); never on pull_request (the repo is public and the job holds the Cloudflare
+token). Concurrency group `deploy-production`, no cancellation. The restamp commit it pushes back is pushed with
+the job's `GITHUB_TOKEN` (whose pushes start no workflows), carries `[skip ci]`, and the job refuses to run for the bot's own pushes, so it cannot loop. Restamps
 commit only `portal/public/*.html` and the analytics bundles: `voice.js` and `chunks/` are left alone because esbuild bakes the
 absolute checkout path into their hashes, so a CI build never matches the committed one. The `skip_tests` input is an
 emergency escape hatch. It always uses `npm run deploy`, never a bare `wrangler deploy`.

@@ -1,0 +1,12 @@
+{
+  "published": "2026-11-10",
+  "url": "https://www.vec.vic.gov.au/electoral-boundaries/state-regions/northern-metropolitan-region/nominations",
+  "list": [
+    {"name": "Avery Quill", "party": "Example Alliance", "group": "A", "group_name": "Example Alliance"},
+    {"name": "Rowan Ketch", "party": "Example Alliance", "group": "A", "group_name": "Example Alliance"},
+    {"name": "Wren Halloway", "party": "", "group": "B", "group_name": ""},
+    {"name": "Marlow Fen", "party": "", "group": "Z", "group_name": "   "},
+    {"name": "Arden Vale", "party": "Independent", "group": null, "group_name": null},
+    {"name": "Ellis Cove", "party": ""}
+  ]
+}
