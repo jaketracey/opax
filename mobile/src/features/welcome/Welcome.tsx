@@ -26,6 +26,7 @@ import { useLayout, useScreenMargin } from '../../design/adaptive';
 import { LaunchHandoff } from '../../launch/LaunchHandoff';
 import { releaseSplash } from '../../launch/splash';
 import { welcomeSeatRoute } from '../../navigation/routes';
+import { firstRunSkipped } from '../../onboarding/measure';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
 import { useSeat } from '../your-mp/useSeat';
 import { welcomeCopy } from './copy';
@@ -82,6 +83,7 @@ export function WelcomePage({
     if (leaving.current) return;
     leaving.current = true;
     void markWelcomeSeen({ declined }).catch(() => undefined);
+    if (declined) firstRunSkipped('welcome');
     closeWelcome(navigation as Parameters<typeof closeWelcome>[0]);
   };
   const next = () => {
@@ -89,6 +91,10 @@ export function WelcomePage({
     if (short) leave(false);
     else {
       advancing.current = true;
+      // Continue has shown the page and its notice, so the welcome counts as
+      // seen from here: a reader who leaves the app on the electorate step
+      // comes back to Today and its invitation, not to this page again.
+      void markWelcomeSeen().catch(() => undefined);
       router.push(welcomeSeatRoute());
     }
   };

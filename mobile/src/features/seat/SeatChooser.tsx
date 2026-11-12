@@ -22,6 +22,11 @@ import { colors, rhythm } from '../../design/tokens';
 import { headerItems } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 import { seatStateRoute, welcomeSeatStateRoute } from '../../navigation/routes';
+import {
+  firstRunChosen,
+  firstRunSkipped,
+  type FirstRunMethod,
+} from '../../onboarding/measure';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
 import type { Directory } from '../your-mp/model';
 import { migratedSeat, useSeat } from '../your-mp/useSeat';
@@ -35,6 +40,7 @@ import {
   matchIn,
   matchLeads,
   matchSeats,
+  noMatchCopy,
   regionOf,
   seatCopy,
   vicCopy,
@@ -167,6 +173,57 @@ export function SeatSaveError({ onRetry }: { onRetry: () => void }) {
   );
 }
 
+/** The AEC's own finder, for a reader who knows their address, not their seat. */
+export function AecRow() {
+  return (
+    <InsetGroup>
+      <LinkRow
+        title={seatCopy.aec}
+        external
+        onPress={() => void openSource(AEC_URL, 'AEC electorate finder')}
+        testID="seat-aec"
+      />
+    </InsetGroup>
+  );
+}
+
+/**
+ * The welcome's way on without a seat, in the list itself (first-run
+ * drop-off, 12 Nov): the bar's "Not now" is small, fixed-size text a reader
+ * can miss, and it never says the choice can be made later. This is a full
+ * button at the reader's text size, with where to find the choice again. It
+ * does what "Not now" does: records the decline and closes onto Today.
+ */
+export function ChooseLater({
+  onPress,
+  disabled = false,
+}: {
+  onPress: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <View style={styles.later} testID="seat-later">
+      <Button
+        label={seatCopy.later}
+        variant="secondary"
+        fullWidth
+        onPress={onPress}
+        disabled={disabled}
+        testID="seat-choose-later"
+      />
+      <Text
+        wordSafe
+        variant="footnote"
+        tone="inkSoft"
+        style={styles.centred}
+        testID="seat-later-note"
+      >
+        {seatCopy.laterNote}
+      </Text>
+    </View>
+  );
+}
+
 /** The row accessory for a seat while a choice is being written. */
 export function accessoryFor(
   id: string,
@@ -218,9 +275,12 @@ export function SeatChooser({
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(false);
   const [stopKey, setStopKey] = useState(0);
+  // Which control chose, for the first-run funnel: a category, never a seat.
+  const method = useRef<FirstRunMethod>('search');
   const close = useCallback(
     (declined: boolean) => {
       if (welcome) void markWelcomeSeen({ declined }).catch(() => undefined);
+      if (welcome && declined) firstRunSkipped('seat');
       // Pops the whole sheet or welcome from the root stack, from the
       // chooser or a Browse list inside it.
       closeWelcome(navigation as Parameters<typeof closeWelcome>[0]);
@@ -230,6 +290,7 @@ export function SeatChooser({
   const { seat, choose, savingId, chosenId, failed } = useChoose(
     (chosen) => {
       onChosen?.(chosen);
+      if (welcome) firstRunChosen('seat', method.current);
       close(false);
     },
     vic
@@ -348,7 +409,10 @@ export function SeatChooser({
       <SeatRow
         key={s.electorate_id}
         seat={s}
-        onPress={() => void choose(s)}
+        onPress={() => {
+          method.current = 'search';
+          void choose(s);
+        }}
         disabled={
           busy && savingId !== s.electorate_id && chosenId !== s.electorate_id
         }
@@ -394,16 +458,33 @@ export function SeatChooser({
         <Skeleton shape="rows" count={3} label="Loading electorates" />
       </InsetGroup>
     );
-  const aec = (
-    <InsetGroup>
-      <LinkRow
-        title={seatCopy.aec}
-        external
-        onPress={() => void openSource(AEC_URL, 'AEC electorate finder')}
-        testID="seat-aec"
-      />
-    </InsetGroup>
+  const aec = <AecRow />;
+  // "Use my location", in the idle list and again under a miss, so a reader
+  // who typed a suburb or postcode has one tap on from "no match".
+  const location = (autoStart: boolean) => (
+    <LocationRow
+      seats={async () =>
+        state.status === 'ready'
+          ? electorates
+          : (await catalogs.directory()).electorates.data.electorates
+      }
+      onChoose={(s) => {
+        method.current = 'location';
+        void choose(s);
+      }}
+      accessory={(id) => accessoryFor(id, savingId, chosenId)}
+      disabled={busy}
+      autoStart={autoStart}
+      stopKey={stopKey}
+      scope={vic ? 'vic' : 'federal'}
+    />
   );
+  // The welcome with no seat saved: why it asks, and the way on without one.
+  const asking = welcome && !saved && seat.status !== 'chosen';
+  const later = asking ? (
+    <ChooseLater onPress={() => close(true)} disabled={busy} />
+  ) : null;
+  const miss = noMatchCopy(query);
   const saveError = failed ? (
     <SeatSaveError onRetry={() => void choose(failed)} />
   ) : null;
@@ -512,20 +593,37 @@ export function SeatChooser({
               </>
             ) : (
               <>
-                <Text
-                  wordSafe
-                  variant="body"
-                  tone="inkSoft"
-                  testID="seat-no-results"
-                >
-                  {seatCopy.noMatch}
-                </Text>
+                <View style={styles.miss}>
+                  <Text
+                    wordSafe
+                    variant="body"
+                    tone="inkSoft"
+                    testID="seat-no-results"
+                  >
+                    {miss.title}
+                  </Text>
+                  <Text
+                    wordSafe
+                    variant="body"
+                    tone="inkSoft"
+                    testID="seat-no-results-help"
+                  >
+                    {miss.help}
+                  </Text>
+                </View>
+                {location(false)}
                 {browseGroup}
                 {aec}
+                {later}
               </>
             )
           ) : (
             <>
+              {asking ? (
+                <Text wordSafe variant="body" testID="welcome-seat-why">
+                  {seatCopy.why}
+                </Text>
+              ) : null}
               {saved && !vic ? (
                 <InsetGroup testID="seat-saved">
                   <SeatRow
@@ -550,19 +648,7 @@ export function SeatChooser({
                   )}
                 </InsetGroup>
               ) : null}
-              <LocationRow
-                seats={async () =>
-                  state.status === 'ready'
-                    ? electorates
-                    : (await catalogs.directory()).electorates.data.electorates
-                }
-                onChoose={(s) => void choose(s)}
-                accessory={(id) => accessoryFor(id, savingId, chosenId)}
-                disabled={busy}
-                autoStart={locate}
-                stopKey={stopKey}
-                scope={vic ? 'vic' : 'federal'}
-              />
+              {location(locate)}
               {vic ? (
                 state.status === 'ready' ? (
                   vicGroups(districts, regions)
@@ -579,6 +665,7 @@ export function SeatChooser({
                 <>
                   {browseGroup}
                   {aec}
+                  {later}
                 </>
               )}
             </>
@@ -596,4 +683,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     columnGap: rhythm.tight,
   },
+  miss: { gap: rhythm.line },
+  later: { gap: rhythm.tight, alignItems: 'center' },
+  centred: { textAlign: 'center' },
 });
