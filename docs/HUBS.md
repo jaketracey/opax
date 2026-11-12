@@ -117,8 +117,8 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   sequence must match the workbook exactly before any output is replaced.
   The hub renders group headings in ballot order and no region candidate numbers;
   district lists keep their numbered ballot order. Each seat links to its own
-  VEC nominations page. Shared `portal/public/labels.js` aliases give the web
-  and app API the same party identity; source JSON keeps registered names.
+  VEC nominations page. Browser labels and Worker-rendered pages share
+  `portal/public/labels.js` aliases; source JSON keeps registered names.
   Albert Park and Eastern Victoria were checked against the VEC's
   [district ballot order](https://www.vec.vic.gov.au/electoral-boundaries/state-districts/albert-park-district/nominations)
   and [region ballot order](https://www.vec.vic.gov.au/electoral-boundaries/state-regions/eastern-victoria-region/nominations).
@@ -162,7 +162,7 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   | Democratic Labour Party (DLP) | DLP | DLP | neutral |
   | Family First Victoria | FF | Family First | neutral |
   | Free Palestine | FP | Free Palestine | neutral |
-  | I'm Voting to Avoid the Fine | FINE | Avoid the Fine | neutral |
+  | I'm Voting to Avoid the Fine | FINE | I'm Voting to Avoid the Fine | neutral |
   | Legalise Cannabis Victoria | LCP | Legalise Cannabis | neutral |
   | Liberal Party of Australia - Victorian Division | LIB | Liberal | blue |
   | Libertarian Party (formerly Liberal Democrats) | LDP | Libertarian | neutral |

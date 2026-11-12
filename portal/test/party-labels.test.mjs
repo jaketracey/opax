@@ -28,6 +28,7 @@ test('every registered VEC name resolves through the shared party map, with read
     const html=partyLabelHTML(name);
     assert.equal(visible(html),partyShortName(name),name);
     assert.ok(html.includes(`party-${colour}`),name);
+    assert.doesNotMatch(partyLabelHTML(name,{full:true}),/[–—]/,name);
   }
   for(const [registered,short,colour,code] of [
     ['Australian Labor Party - Victorian Branch','Labor','alp','ALP'],
@@ -39,7 +40,7 @@ test('every registered VEC name resolves through the shared party map, with read
     ['Animal Justice Party','Animal Justice','oth','AJP'],
     ['Democratic Labour Party (DLP)','DLP','oth','DLP'],
     ['Family First Victoria','Family First','oth','FF'],
-    ["I'm Voting to Avoid the Fine",'Avoid the Fine','oth','FINE'],
+    ["I'm Voting to Avoid the Fine","I'm Voting to Avoid the Fine",'oth','FINE'],
   ]){
     assert.deepEqual(PARTY_MAP[registered.toLowerCase()],[colour,code]);
     assert.equal(visible(partyLabelHTML(registered)),short);
@@ -48,4 +49,47 @@ test('every registered VEC name resolves through the shared party map, with read
   assert.equal(partyShortName('Australian Labor Party'),'Labor');
   assert.equal(partyShortName('Liberal / The Nationals'),'Liberal / Nationals');
   assert.equal(partyShortName('Labour DLP'),'DLP');
+});
+
+test('non-Victorian election records keep state-neutral spoken and full party names', async () => {
+  const json=async path=>JSON.parse(await readFile(new URL(path.replace(/^\//,''),new URL('../public/',import.meta.url)),'utf8'));
+  const manifest=await json('electorates/manifest.json');
+  const index=await json(manifest.index_url);
+  const seat=index.electorates.find(s=>s.name==='Cowan'&&s.jurisdiction==='federal'&&s.state_code==='wa');
+  assert.ok(seat,'Published Western Australian federal electorate');
+  const data=await json(seat.detail_url);
+  for(const [year,party,full] of [
+    [2019,'Shooters, Fishers and Farmers','Shooters, Fishers and Farmers Party'],
+    [2025,'Legalise Cannabis Party','Legalise Cannabis Party'],
+  ]){
+    const contest=data.elections.find(c=>c.election.poll_date.startsWith(String(year)));
+    const candidate=contest?.candidates.find(c=>c.party===party);
+    assert.ok(candidate,`${year} published party label`);
+    const html=partyLabelHTML(candidate.party);
+    assert.doesNotMatch(html,/Victoria/);
+    assert.equal(partyLabelHTML(candidate.party,{full:true}).replace(/<[^>]+>/g,''),full);
+    if(party!==full)assert.ok(html.includes(`<span class="visually-hidden">${full}</span>`));
+  }
+});
+
+test('bare internal codes do not become party aliases; existing code keys still resolve', () => {
+  for(const [code,name] of [
+    ['ad','Australian Democrats'],['ca','Centre Alliance'],['fp','Free Palestine'],
+    ['can','Climate Action Now'],['rep','The Republican'],['west','The West Party'],
+    ['safe','Safety Victoria'],['fine',"I'm Voting to Avoid the Fine"],['ind','Independent'],
+    ['alp','Labor'],['lib','Liberal'],['nat','Nationals'],['grn','Greens'],['onp','One Nation'],
+  ]){
+    assert.equal(PARTY_MAP[code],undefined,code);
+    assert.equal(partyShortName(code),code);
+    assert.notEqual(PARTY_MAP[code]?.[1]??code,PARTY_MAP[name.toLowerCase()]?.[1]??name);
+  }
+  for(const code of ['dlp','jln','lnp'])assert.equal(PARTY_MAP[code][1],code.toUpperCase());
+});
+
+test('registered full names and unabridged labels are retained without typographic dashes', () => {
+  assert.equal(PARTY_NAMES.SAP[1],'Affordable Housing Now - Sustainable Australia Party');
+  assert.equal(partyShortName('Affordable Housing Now – Sustainable Australia Party'),'Sustainable Australia');
+  const html=partyLabelHTML("I'm Voting to Avoid the Fine");
+  assert.equal(html.replace(/<[^>]+>/g,'').replace(/&#39;/g,"'"),"I'm Voting to Avoid the Fine");
+  assert.doesNotMatch(html,/aria-hidden="true">Avoid the Fine/);
 });
