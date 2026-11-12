@@ -1,0 +1,3150 @@
+{
+  "audit": "2026-11-12",
+  "programs": [
+    {
+      "id": "activity:Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for NSW.",
+      "key": "activity-consolidated-quarterly-reporting-of-australian-apprenticeships-incentiv",
+      "name": "Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for NSW.",
+      "total": 264550937,
+      "awards": 1
+    },
+    {
+      "id": "activity:Rail infrastructure construction works to upgrade the standard gauge North East Rail Line.",
+      "key": "activity-rail-infrastructure-construction-works-to-upgrade-the-standard-gauge-no",
+      "name": "Infrastructure Investment Program",
+      "total": 235000000,
+      "awards": 1
+    },
+    {
+      "id": "activity:Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for QLD.",
+      "key": "activity-consolidated-quarterly-reporting-of-australian-apprenticeships-incentiv-2",
+      "name": "Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for QLD.",
+      "total": 228702962,
+      "awards": 1
+    },
+    {
+      "id": "activity:Stage 3 - Planning, Design and Implimentation of the Advanced Train Management System",
+      "key": "activity-stage-3-planning-design-and-implimentation-of-the-advanced-train-manage",
+      "name": "Infrastructure Investment Program",
+      "total": 220000000,
+      "awards": 1
+    },
+    {
+      "id": "activity:Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for VIC.",
+      "key": "activity-consolidated-quarterly-reporting-of-australian-apprenticeships-incentiv-3",
+      "name": "Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for VIC.",
+      "total": 207600009,
+      "awards": 1
+    },
+    {
+      "id": "activity:Strengthening Community Safety – Enhancing Security for Jewish Communities",
+      "key": "activity-strengthening-community-safety-enhancing-security-for-jewish-communitie",
+      "name": "Strengthening Community Safety – Enhancing Security for Jewish Communities",
+      "total": 136400000,
+      "awards": 1
+    },
+    {
+      "id": "activity:Individual Capacity Building (ICB) - Information, Linkages and Capacity Building (ILC) Grant Round 2020-21",
+      "key": "activity-individual-capacity-building-icb-information-linkages-and-capacity-buil",
+      "name": "Individual Capacity Building (ICB) - Information, Linkages and Capacity Building (ILC) Grant Round 2020-21",
+      "total": 121732055,
+      "awards": 145
+    },
+    {
+      "id": "activity:Inclusion Support Program - Inclusion Development Fund Subsidy payments 2023-24",
+      "key": "activity-inclusion-support-program-inclusion-development-fund-subsidy-payments-2",
+      "name": "Inclusion Support Program - Inclusion Development Fund Subsidy payments 2023-24",
+      "total": 120437839,
+      "awards": 6614
+    },
+    {
+      "id": "activity:Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for WA.",
+      "key": "activity-consolidated-quarterly-reporting-of-australian-apprenticeships-incentiv-4",
+      "name": "Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for WA.",
+      "total": 106758477,
+      "awards": 1
+    },
+    {
+      "id": "activity:Inclusion Support Program - Inclusion Development Fund Subsidy payments 2022-23",
+      "key": "activity-inclusion-support-program-inclusion-development-fund-subsidy-payments-2-2",
+      "name": "Inclusion Support Program - Inclusion Development Fund Subsidy payments 2022-23",
+      "total": 97087047,
+      "awards": 6023
+    },
+    {
+      "id": "activity:National Information Program (NIP) - Information, Linkages and Capacity Building (ILC) Grant Round 2019-20",
+      "key": "activity-national-information-program-nip-information-linkages-and-capacity-buil",
+      "name": "DHDA NDIS National Information Program Grant Round 2019-20",
+      "total": 94777957,
+      "awards": 64
+    },
+    {
+      "id": "activity:Performance of Native Title Representative Body Functions",
+      "key": "activity-performance-of-native-title-representative-body-functions-2",
+      "name": "Jobs, Land and the Economy",
+      "total": 88201000,
+      "awards": 6
+    },
+    {
+      "id": "activity:Inclusion Support Program - Inclusion Development Fund Subsidy payments 2021-22",
+      "key": "activity-inclusion-support-program-inclusion-development-fund-subsidy-payments-2-3",
+      "name": "Inclusion Support Program - Inclusion Development Fund Subsidy payments 2021-22",
+      "total": 84646069,
+      "awards": 5683
+    },
+    {
+      "id": "activity:The National Plan to End Violence against Women and Children 2022-2032 Primary Prevention Activities Program",
+      "key": "activity-the-national-plan-to-end-violence-against-women-and-children-2022-2032",
+      "name": "The National Plan to End Violence against Women and Children 2022-2032 Primary Prevention Activities",
+      "total": 82135900,
+      "awards": 5
+    },
+    {
+      "id": "activity:Inclusion Support Program - Inclusion Development Fund Subsidy payments 2020-21",
+      "key": "activity-inclusion-support-program-inclusion-development-fund-subsidy-payments-2-4",
+      "name": "Inclusion Support Program - Inclusion Development Fund Subsidy payments 2020-21",
+      "total": 82117829,
+      "awards": 5213
+    },
+    {
+      "id": "activity:Individual Capacity Building ICB - Information Linkages and Capacity Building ILC Grant Round 2019-20",
+      "key": "activity-individual-capacity-building-icb-information-linkages-and-capacity-buil-2",
+      "name": "Individual Capacity Building ICB - Information Linkages and Capacity Building ILC Grant Round 2019-20",
+      "total": 81437669,
+      "awards": 186
+    },
+    {
+      "id": "activity:Community Child Care Fund Restricted non-competitive grant opportunity (for specified services)",
+      "key": "activity-community-child-care-fund-restricted-non-competitive-grant-opportunity",
+      "name": "Communirty Child Care Fund",
+      "total": 80232724,
+      "awards": 24
+    },
+    {
+      "id": "activity:Regional Development Australia Committees work with all levels of government through a Charter set by the Australian Government.",
+      "key": "activity-regional-development-australia-committees-work-with-all-levels-of-gover",
+      "name": "Regional Development Australia Committees work with all levels of government through a Charter set by the Australian Government.",
+      "total": 75512984,
+      "awards": 47
+    },
+    {
+      "id": "activity:Economic and Community Participation ECP - Information Linkages and Capacity Building ILC Grant Round 2019-20",
+      "key": "activity-economic-and-community-participation-ecp-information-linkages-and-capac",
+      "name": "DHDA NDIS Economic and Community Participation Grant Round 2019-20",
+      "total": 73866455,
+      "awards": 84
+    },
+    {
+      "id": "activity:National Plan to Reduce Violence against Women and their Children 2010-2022",
+      "key": "activity-national-plan-to-reduce-violence-against-women-and-their-children-2010",
+      "name": "National Plan to Reduce Violence against Women and their Children 2010-2022",
+      "total": 72268111,
+      "awards": 24
+    },
+    {
+      "id": "activity:Information Linkages and Capacity building - Jurisdiction Based grants - Transition Funding",
+      "key": "activity-information-linkages-and-capacity-building-jurisdiction-based-grants-tr",
+      "name": "ILC JB Transition Funding",
+      "total": 71088059,
+      "awards": 24
+    },
+    {
+      "id": "activity:Capital Works-Bickerton Island Boarding School-Wurriyukwayuwa-Langwa College",
+      "key": "activity-capital-works-bickerton-island-boarding-school-wurriyukwayuwa-langwa-co",
+      "name": "Jobs, Land and the Economy",
+      "total": 67375000,
+      "awards": 1
+    },
+    {
+      "id": "activity:Inclusion Support Program - Inclusion Development Fund Subsidy payments 2019-20",
+      "key": "activity-inclusion-support-program-inclusion-development-fund-subsidy-payments-2-5",
+      "name": "Inclusion Support Program - Inclusion Development Fund Subsidy payments 2019-20",
+      "total": 65668468,
+      "awards": 4534
+    },
+    {
+      "id": "activity:Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for SA.",
+      "key": "activity-consolidated-quarterly-reporting-of-australian-apprenticeships-incentiv-5",
+      "name": "Consolidated quarterly reporting of Australian Apprenticeships Incentives Programme payments for SA.",
+      "total": 60832276,
+      "awards": 1
+    }
+  ],
+  "parties": [
+    {
+      "key": "au-federal-s1517",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1516",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7546",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7545",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7543",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1514",
+      "raw": "Australia&#39;s Voice",
+      "canonical": "Australia's Voice"
+    },
+    {
+      "key": "au-federal-s1512",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7537",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7536",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7535",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-s1511",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1513",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1510",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1509",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1508",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1507",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7511",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-s1505",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1503",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1502",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1501",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1500",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1499",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r7506",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7505",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1497",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1496",
+      "raw": "xx",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-r7496",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7495",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7488",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7451",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1494",
+      "raw": "independent candidate for the federal seat of Bass, Tas",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-s1491",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r7459",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7450",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1489",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1488",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1487",
+      "raw": "Australia&#39;s Voice",
+      "canonical": "Australia's Voice"
+    },
+    {
+      "key": "au-federal-r7441",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7440",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1485",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1482",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1481",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1480",
+      "raw": "United Australia Party (Clive Palmer",
+      "canonical": "United Australia Party"
+    },
+    {
+      "key": "au-federal-s1479",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1471",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7403",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1475",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1474",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7399",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1473",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1472",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7388",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7387",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1470",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1468",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1467",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r7364",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7362",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1466",
+      "raw": "Queensland Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1464",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7357",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7356",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7355",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1463",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1462",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1461",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7348",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7347",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1455",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1454",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1453",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1452",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1451",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1449",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1448",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1447",
+      "raw": "United Australia Party (Clive Palmer",
+      "canonical": "United Australia Party"
+    },
+    {
+      "key": "au-federal-s1446",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1445",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1436",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7315",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7314",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7301",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1442",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1440",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1439",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1438",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7286",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7285",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1435",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7274",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7273",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7272",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7270",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7266",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7264",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7263",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7262",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-r7261",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-r7260",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1432",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1431",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1430",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1429",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1428",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1427",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1426",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1425",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7230",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7229",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7228",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7226",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1421",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1420",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1419",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1417",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1416",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7207",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7200",
+      "raw": "monarchist",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-s1415",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1414",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7168",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7167",
+      "raw": "Katter&#39;s Australian Party",
+      "canonical": "Katter's Australian Party"
+    },
+    {
+      "key": "au-federal-r7166",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1413",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1412",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r7154",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7153",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7146",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1407",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1406",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1403",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-r7113",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7112",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7101",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7100",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1397",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1396",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r7086",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7078",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1395",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1393",
+      "raw": "Queensland Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1394",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1392",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7077",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1390",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1389",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1353",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1388",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r7067",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1387",
+      "raw": "United Australia Party (Clive Palmer",
+      "canonical": "United Australia Party"
+    },
+    {
+      "key": "au-federal-s1386",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1385",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1384",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1379",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r7047",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1381",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1375",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r7016",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7006",
+      "raw": "monarchist",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-s1378",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1377",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1374",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1376",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1371",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r7005",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r7001",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r7000",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1373",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1372",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r6982",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1370",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1368",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1369",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6981",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6975",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6974",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r6973",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1366",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1361",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1364",
+      "raw": "Country Liberals (Northern Territory",
+      "canonical": "Country Liberal Party"
+    },
+    {
+      "key": "au-federal-s1362",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6966",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1355",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1358",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-r6949",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6948",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6947",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1357",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1356",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1352",
+      "raw": "Queensland Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6910",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-s1344",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6895",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6894",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1346",
+      "raw": "independent candidate for the federal seat of Bass, Tas",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-s1347",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r6889",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6888",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1341",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6850",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6849",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6848",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-r6846",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6845",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6829",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1337",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1336",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1335",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1330",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1329",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1328",
+      "raw": "independent candidate for the federal seat of Bass, Tas",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-r6822",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-r6808",
+      "raw": "Australian Labor Party",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6797",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6794",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6793",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6792",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6788",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6787",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1325",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1324",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6781",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6780",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6779",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6744",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1320",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1319",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1317",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6770",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1314",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1313",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1308",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6731",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-s1312",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1311",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1309",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1228",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1299",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6732",
+      "raw": "Katter&#39;s Australian Party",
+      "canonical": "Katter's Australian Party"
+    },
+    {
+      "key": "au-federal-r6730",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6724",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1302",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1300",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6712",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6700",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1298",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6692",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6691",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6690",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6682",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6676",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6675",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6673",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6664",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6660",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6644",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1288",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1287",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1285",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1284",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1283",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1281",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6646",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6645",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6628",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6627",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1278",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1277",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6618",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6617",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6616",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6598",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6597",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1275",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1273",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1272",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1271",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6585",
+      "raw": "Katter&#39;s Australian Party",
+      "canonical": "Katter's Australian Party"
+    },
+    {
+      "key": "au-federal-s1258",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6564",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6563",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6508",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1263",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1262",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6558",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6512",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1261",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1259",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6506",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1257",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1256",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6503",
+      "raw": "Katter&#39;s Australian Party",
+      "canonical": "Katter's Australian Party"
+    },
+    {
+      "key": "au-federal-r6490",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6489",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6484",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1255",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1254",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1248",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1247",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1249",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1242",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6462",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6461",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6443",
+      "raw": "Katter&#39;s Australian Party",
+      "canonical": "Katter's Australian Party"
+    },
+    {
+      "key": "au-federal-s1239",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1238",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6442",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1240",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6435",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6434",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1227",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1237",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-r6422",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6405",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6404",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1232",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1226",
+      "raw": "independent candidate for the federal seat of Bass, Tas",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-r6389",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1215",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1217",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6355",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1202",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1189",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6301",
+      "raw": "Katter&#39;s Australian Party",
+      "canonical": "Katter's Australian Party"
+    },
+    {
+      "key": "au-federal-r6300",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6296",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6295",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6294",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6257",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1183",
+      "raw": "Derryn Hinch&#39;s Justice Party",
+      "canonical": "Derryn Hinch's Justice Party"
+    },
+    {
+      "key": "au-federal-s1171",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1188",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1187",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1173",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1174",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1172",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1170",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1167",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1163",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1158",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6236",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6235",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6234",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6233",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6232",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6218",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1162",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1160",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1154",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1159",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1156",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1153",
+      "raw": "Katter&#39;s Australian Party",
+      "canonical": "Katter's Australian Party"
+    },
+    {
+      "key": "au-federal-r6217",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6216",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1150",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1152",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1151",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6212",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6210",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6207",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1149",
+      "raw": "Katter&#39;s Australian Party",
+      "canonical": "Katter's Australian Party"
+    },
+    {
+      "key": "au-federal-s1148",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1147",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1146",
+      "raw": "Australian Labor Party",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6201",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6200",
+      "raw": "Australian Labor Party",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1145",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1144",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1143",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1134",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6159",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6158",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6156",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1138",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1139",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1133",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1132",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-r6139",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6138",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6137",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6136",
+      "raw": "Katter&#39;s Australian Party",
+      "canonical": "Katter's Australian Party"
+    },
+    {
+      "key": "au-federal-r6135",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1130",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1129",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6132",
+      "raw": "Australian Labor Party",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6131",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6110",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r6099",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6041",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1128",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1125",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6066",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6060",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6059",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r6057",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r6056",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1124",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1123",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1122",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6027",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1100",
+      "raw": "independent candidate for the federal seat of Bass, Tas",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-s1099",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s1098",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r6002",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5980",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1094",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5955",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1091",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1090",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1077",
+      "raw": "Pauline Hansons One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1087",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5967",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5966",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5965",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1083",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1086",
+      "raw": "Derryn Hinch&#39;s Justice Party",
+      "canonical": "Derryn Hinch's Justice Party"
+    },
+    {
+      "key": "au-federal-s1082",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5928",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5915",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1081",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1080",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5938",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5937",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1079",
+      "raw": "&#34;Australian Greens&#34;",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1078",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1074",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1073",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5912",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5902",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-s1070",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1066",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1067",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5870",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5868",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1061",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1065",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5836",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5834",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1062",
+      "raw": "independent candidate for the federal seat of Bass, Tas",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-s1060",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1059",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-r5829",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5828",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5825",
+      "raw": "&#34;Australian Greens&#34;",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5824",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5820",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1058",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1055",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5810",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5809",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5808",
+      "raw": "&#34;ALP&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5807",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1054",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1052",
+      "raw": "Pauline Hanson&#39;s One Nation",
+      "canonical": "One Nation"
+    },
+    {
+      "key": "au-federal-s1050",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5777",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5776",
+      "raw": "&#34;ALP&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5775",
+      "raw": "&#34;Australian Greens&#34;",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5774",
+      "raw": "&#34;Australian Greens&#34;",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5773",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5765",
+      "raw": "&#34;Australian Greens&#34;",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5764",
+      "raw": "&#34;ALP&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5763",
+      "raw": "&#34;Australian Greens&#34;",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5753",
+      "raw": "&#34;Australian Labor Party&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5743",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5742",
+      "raw": "&#34;ALP&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5726",
+      "raw": "&#34;ALP&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5725",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5710",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5709",
+      "raw": "&#34;Independent Members&#34;",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1045",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5711",
+      "raw": "&#34;Australian Greens&#34;",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5708",
+      "raw": "&#34;ALP&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1040",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-r5661",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5660",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5659",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5658",
+      "raw": "&#34;Australian Labor Party&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5636",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1032",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1036",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1021",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1034",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5628",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-r5627",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5625",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5622",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5600",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5576",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1025",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5570",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5569",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1024",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1001",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5558",
+      "raw": "Liberal National Party of Queensland",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-s1019",
+      "raw": "&#34;Palmer United Party&#34;",
+      "canonical": "Palmer United Party"
+    },
+    {
+      "key": "au-federal-r5554",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5553",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5552",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5531",
+      "raw": "&#34;Australian Labor Party&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1017",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s1016",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5521",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1015",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5512",
+      "raw": "&#34;Liberal National Party of Queensland&#34;",
+      "canonical": "LNP"
+    },
+    {
+      "key": "au-federal-s1014",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1011",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1010",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1009",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1008",
+      "raw": "Australian Labor Party",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1006",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5471",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5470",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1005",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s1004",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5431",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s1000",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s998",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s997",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s996",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5418",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s995",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s994",
+      "raw": "Liberal Party of Australia",
+      "canonical": "Liberal"
+    },
+    {
+      "key": "au-federal-s993",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s992",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s988",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s987",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s984",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5374",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-r5373",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s979",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s981",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5351",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s978",
+      "raw": "Liberal Party candidate for the federal seat of Makin, SA",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-s977",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s975",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s973",
+      "raw": "independent candidate for the federal seat of Bass, Tas",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-r5322",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s971",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s970",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s968",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s967",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s966",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s964",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5229",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5228",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s963",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s962",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s961",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s947",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s960",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s958",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s957",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s956",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s955",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s954",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s953",
+      "raw": "Democratic Labour Party (DLP",
+      "canonical": "DLP"
+    },
+    {
+      "key": "au-federal-s952",
+      "raw": "&#34;ALP&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s951",
+      "raw": "independent candidate for the federal seat of Bass, Tas",
+      "canonical": null
+    },
+    {
+      "key": "au-federal-s950",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s946",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5162",
+      "raw": "Independent Members",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-r5160",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s949",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s948",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s944",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s943",
+      "raw": "ALP",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s938",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s942",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s941",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s940",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-r5157",
+      "raw": "&#34;Australian Labor Party&#34;",
+      "canonical": "Labor"
+    },
+    {
+      "key": "au-federal-s939",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s937",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s936",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s934",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s920",
+      "raw": "Democratic Labor Party (DLP",
+      "canonical": "DLP"
+    },
+    {
+      "key": "au-federal-s901",
+      "raw": "Democratic Labour Party (DLP",
+      "canonical": "DLP"
+    },
+    {
+      "key": "au-federal-s909",
+      "raw": "Democratic Labor Party (DLP",
+      "canonical": "DLP"
+    },
+    {
+      "key": "au-federal-s889",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s877",
+      "raw": "Australian Greens",
+      "canonical": "Greens"
+    },
+    {
+      "key": "au-federal-s833",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s828",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    },
+    {
+      "key": "au-federal-s815",
+      "raw": "Independent Member",
+      "canonical": "Independent"
+    }
+  ],
+  "divisions": [
+    {
+      "bill": "au-federal-r6069",
+      "key": "federal-representatives-5650",
+      "ayes": 75,
+      "noes": 74
+    },
+    {
+      "bill": "au-federal-r6069",
+      "key": "federal-representatives-5651",
+      "ayes": 75,
+      "noes": 74
+    },
+    {
+      "bill": "au-federal-r6069",
+      "key": "federal-representatives-5652",
+      "ayes": 75,
+      "noes": 74
+    },
+    {
+      "bill": "au-federal-r6069",
+      "key": "federal-representatives-5653",
+      "ayes": 75,
+      "noes": 74
+    },
+    {
+      "bill": "au-federal-r6069",
+      "key": "federal-representatives-5654",
+      "ayes": 75,
+      "noes": 74
+    },
+    {
+      "bill": "au-federal-r6069",
+      "key": "federal-representatives-5655",
+      "ayes": 75,
+      "noes": 74
+    },
+    {
+      "bill": "au-federal-s1099",
+      "key": "federal-representatives-5063",
+      "ayes": 73,
+      "noes": 72
+    },
+    {
+      "bill": "au-federal-r5292",
+      "key": "federal-senate-3304",
+      "ayes": 37,
+      "noes": 37
+    }
+  ]
+}

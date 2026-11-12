@@ -1510,7 +1510,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=adc90122e2' : '/ledger.js?v=f990ff80ae');
+    const mod = await import(grants ? '/grants.js?v=a478a39d4b' : '/ledger.js?v=f990ff80ae');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1559,7 +1559,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=1fd6dd2095');
+    const mod = await import('/grant-recipient.js?v=f77ccb6d22');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -8393,7 +8393,16 @@ function loadBillsDate() {
 function fetchBill(key) {
   if (!billFiles.has(key)) {
     const request = fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
-      .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); });
+      .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); })
+      .then(async bill => {
+        if (!bill) return null;
+        const {withBillDivisions} = await import('/facts/bill-divisions.js?v=e43d7d4bee');
+        return withBillDivisions(bill, async path => {
+          const response = await fetch(path, {cache: 'no-cache'});
+          if (!response.ok) throw new Error(`division ${response.status}`);
+          return response.json();
+        });
+      });
     request.catch(() => { if (billFiles.get(key) === request) billFiles.delete(key); });
     billFiles.set(key, request);
   }
@@ -9636,7 +9645,7 @@ const GAMES = {
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=124c5eaa01", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=f990ff80ae", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=adc90122e2", mount: "mountGrants" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=a478a39d4b", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=3f70f2a4d0", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=e767ae435f", mount: "mountThenVsNow" },

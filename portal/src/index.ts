@@ -51,6 +51,9 @@ import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
+import {resolveProgram, programKey, type GrantProgram} from '../public/facts/grant-programs.js'
+import {withBillDivisions} from '../public/facts/bill-divisions.js'
+import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
 import { sydneyDay } from '../public/hubs-data.js'
@@ -4829,7 +4832,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(bill){
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
           const query = guardTableURL(divisionTableConfig({bill:bill.key}),url).query
-        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query).html;billIdentity={identifier:bill.key,status:bill.status}}
+        meta.prerender=renderBillAnswer(await withBillDivisions(bill,read),people?.people || [],people?.slugOf || new Map(),related.bills,query).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,sharedAgencyTopSuppliers(env))
       if(content) meta.prerender=content.html
@@ -5033,7 +5036,7 @@ function loadDivisionSummaries(env: Env): Promise<Map<string,Division>> {
 }
 async function loadPartyLabels(env: Env): Promise<string[]> {
   partyLabelsMemo ??= Promise.all([loadMoney(env),loadPeople(env),loadBills(env),assetJson<{parties?:string[]}>(env,'/divisions/index.json').catch(()=>null)]).then(([money,people,bills,divisions])=>[...new Set([
-    ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party || ''),...(divisions?.parties || [])
+    ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party && sponsorParties.includes(b.sponsor_party) ? b.sponsor_party : ''),...(divisions?.parties || [])
   ].filter(Boolean))]).catch(error=>{partyLabelsMemo=null;throw error})
   return partyLabelsMemo
 }
@@ -5302,17 +5305,19 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
 
 /** The figures the daily edition posts about a program, when it has been told by seat (scripts/build_social_catalog.mjs). */
 interface SocialProgram { key: string; n: string; t: number; c: number; y0?: string | null; y1?: string | null; mapped: [number, number]; groups: Record<string, [number, number]>; seatShare: Record<string, number> }
-const PROGRAM_KEY_RE = /^[a-z0-9][a-z0-9-]{0,79}$/
+const PROGRAM_KEY_RE = /^[a-z0-9][a-z0-9-]*$/
 const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/
 const MONTH_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 /** /money/grants?jur=federal&program=<key>: one program's file, opened in the grants explorer. */
 async function grantProgramMeta(raw: string, url: URL, env: Env): Promise<PageMeta> {
-  const key = raw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
-  const canonical = `${SITE_ORIGIN}/money/grants?jur=federal&program=${encodeURIComponent(key)}`
-  const program = PROGRAM_KEY_RE.test(key)
+  const catalogue = await assetJson<{programs: GrantProgram[]}>(env, '/graph/grants.federal.json')
+  const row = resolveProgram(catalogue.programs, raw)
+  const key = row ? row.key || programKey(row.id) : ''
+  const canonical = `${SITE_ORIGIN}/money/grants?jur=federal&program=${encodeURIComponent(row?.id || raw)}`
+  const program = row && PROGRAM_KEY_RE.test(key)
     ? await assetJson<{ id: string; n: string; ag?: string; t: number; c: number; r?: number; y0?: string; y1?: string }>(env, `/grants/federal/programs/${key}.json`).catch(() => null) : null
-  if (!program || typeof program.n !== 'string' || !Number.isFinite(program.t)) {
+  if (!program || program.id !== row?.id || typeof program.n !== 'string' || !Number.isFinite(program.t)) {
     return { title: 'Grant program not found · OPAX', description: STATIC_PAGES['money/grants'].description, canonical, ogType: 'website', status: 404, jsonLd: null, prerender: null, card: null }
   }
   const social = await assetJson<{ programs?: SocialProgram[] }>(env, '/social/programs.json').catch(() => null)

@@ -1496,6 +1496,56 @@ def write_index(path: Path, index: dict) -> None:
     path.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
 
 
+def reconcile_divisions(docs: list[dict], directory: Path) -> None:
+    """Refresh shared facts from the published division projection, never the
+    older bill/DB copy. Keep bill-only annotations such as stage and title.
+    Missing identities fail before anything is written.
+    """
+    for doc in docs:
+        for division in doc.get("divisions", []):
+            key = division["key"]
+            if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", key):
+                raise ValueError(f"Invalid division key: {key}")
+            record = json.loads((directory / f"division-{key}.json").read_text())
+            if record.get("key") != key:
+                raise ValueError(f"Division identity mismatch: {key}")
+            for field in list(division):
+                if field in record:
+                    division[field] = record[field]
+            division["ayes"] = record.get("ayes")
+            division["noes"] = record.get("noes")
+            division["outcome"] = record.get("result")
+            division["url"] = record.get("source_url")
+
+
+def refresh_division_facts(directory: Path, divisions: Path) -> int:
+    """Reconcile the retained bill snapshot after standalone divisions publish.
+    No source acquisition, database access or new source-check timestamp.
+    Validate every join before writing any bill file.
+    """
+    index = json.loads((directory / "index.json").read_text())
+    docs, previous = [], {}
+    for row in index["bills"]:
+        key = row["key"]
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", key):
+            raise ValueError(f"Invalid bill key: {key}")
+        path = directory / f"{key}.json"
+        previous[key] = path.read_text()
+        doc = json.loads(previous[key])
+        if doc.get("key") != key:
+            raise ValueError(f"Bill identity mismatch: {key}")
+        docs.append(doc)
+    reconcile_divisions(docs, divisions)
+    changed = 0
+    for doc in docs:
+        if doc != json.loads(previous[doc["key"]]):
+            content = json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
+            (directory / f"{doc['key']}.json").write_text(content)
+            changed += 1
+    log(f"reconciled division facts in {changed} bill files")
+    return changed
+
+
 def write_out(docs: list[dict], index: dict, out: Path, sample: int | None) -> None:
     out.mkdir(parents=True, exist_ok=True)
     keys = sample_keys(index, sample) if sample else None
@@ -1693,6 +1743,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Project the bill registry into portal/public/bills/")
     ap.add_argument("--db", default=DB_URI, help="read-only sqlite URI")
     ap.add_argument("--out", default="portal/public/bills", help="output directory")
+    ap.add_argument("--divisions", default="portal/public/divisions",
+                    help="standalone division projection supplying shared bill facts")
+    ap.add_argument("--party-tokens", type=Path, default=Path("portal/public/facts/sponsor-parties.json"),
+                    help="canonical sponsor party tokens consumed by the portal")
+    ap.add_argument("--refresh-division-facts", type=Path, metavar="DIR",
+                    help="refresh retained bill division facts from standalone records, without a DB or fetch")
     ap.add_argument("--legacy", action="store_true",
                     help="read bills/bill_progress and join by title (before bills_v2 lands)")
     ap.add_argument("--sample", type=int, default=None,
@@ -1713,6 +1769,9 @@ def main() -> int:
     ap.add_argument("--drafts", default=str(DRAFTS_PATH), help="exposure drafts file")
     args = ap.parse_args()
 
+    if args.refresh_division_facts:
+        refresh_division_facts(args.refresh_division_facts, Path(args.divisions))
+        return 0
     if args.fill_briefs:
         stats = fill_briefs(Path(args.fill_briefs), Path(args.brief_cache),
                             recheck_hours=args.recheck_hours, recheck_limit=args.recheck_limit,
@@ -1730,6 +1789,8 @@ def main() -> int:
             return 2
         docs, index = build(db, args.legacy)
         write_out(docs, index, Path(args.out), args.sample)
+        args.party_tokens.parent.mkdir(parents=True, exist_ok=True)
+        args.party_tokens.write_text(json.dumps(sorted(PUBLISHED_PARTIES), ensure_ascii=False, indent=1) + "\n")
     finally:
         db.rollback()
         db.close()
