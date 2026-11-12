@@ -74,11 +74,11 @@ env:
       - takeScreenshot: ${EVIDENCE}/70-finder
       - scrollUntilVisible:
           element:
-            id: vic-election-district-eureka
+            id: vic-election-hit-0-district-eureka
           direction: UP
           centerElement: true
       - tapOn:
-          id: vic-election-district-eureka
+          id: vic-election-hit-0-district-eureka
       - assertVisible:
           id: vic-seat-screen
       - assertVisible: Last held by

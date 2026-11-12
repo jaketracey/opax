@@ -75,7 +75,10 @@ test('Council groups retain ballot order, with headings instead of global number
     'Ungrouped candidates. Test Rowan.',
   );
   expect(row(r, 3).findAllByType(PartyLabel)).toHaveLength(0);
-  expect(row(r, 4).props.accessibilityLabel).toContain('Independent');
+  expect(row(r, 4).props.accessibilityLabel).toBe(
+    'Ungrouped candidates. Test Avery.',
+  );
+  expect(row(r, 4).findAllByType(PartyLabel)).toHaveLength(0);
   for (let i = 0; i < 5; i++) {
     expect(row(r, i).props.onPress).toBeUndefined();
     expect(
@@ -94,10 +97,52 @@ test('an all-ungrouped Council list has one heading and no ballot numbers', () =
     'Ungrouped candidates. Test Rowan.',
   );
 });
-test('older Council responses without group metadata keep their numbered order', () => {
+test('older Council responses without group metadata are a plain unnumbered list', () => {
   const r = renderCandidates(published.candidates.list);
   expect(row(r, 0).props.accessibilityLabel).toBe(
-    `1. ${published.candidates.list[0]!.name}.`,
+    `${published.candidates.list[0]!.name}.`,
   );
   expect(words(r)).not.toContain('Ungrouped candidates');
+  for (let i = 0; i < published.candidates.list.length; i++)
+    expect(
+      row(r, i)
+        .findAllByType(NativeText)
+        .some((n) => n.props.children === i + 1),
+    ).toBe(false);
+});
+test('a Council list with no group fields never gains a number or group heading', () => {
+  const r = renderCandidates([{ name: 'Test Rowan', party: null }]);
+  expect(row(r, 0).props.accessibilityLabel).toBe('Test Rowan.');
+  expect(
+    row(r, 0)
+      .findAllByType(NativeText)
+      .some((n) => n.props.children === 1),
+  ).toBe(false);
+  expect(
+    r.root
+      .findAllByType(NativeText)
+      .filter((n) => n.props.accessibilityRole === 'header'),
+  ).toHaveLength(1);
+});
+test('districts keep visible ballot numbers and independent names have no party label', () => {
+  mockVic.seat.record!.data = decodeSeat(published);
+  const r = renderVic(
+    <Candidates
+      record={mockVic.seat.record!}
+      o={mockVic.overview.record!.data}
+      now={mockVic.now}
+    />,
+  );
+  expect(row(r, 0).props.accessibilityLabel).toBe(
+    `${1}. ${published.candidates.list[0]!.name}.`,
+  );
+  expect(
+    row(r, 0)
+      .findAllByType(NativeText)
+      .some((n) => n.props.children === 1),
+  ).toBe(true);
+  expect(row(r, 1).findAllByType(PartyLabel)).toHaveLength(0);
+  expect(row(r, 1).props.accessibilityLabel).toBe(
+    `2. ${published.candidates.list[1]!.name}.`,
+  );
 });

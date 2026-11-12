@@ -97,7 +97,7 @@ export default function Seat() {
             </Block>
             {s.kind === 'district' ? (
               <Block title={c.lastResult} testID="vic-seat-result">
-                {!o || phase(o, now) === 'closed' ? (
+                {o && phase(o, now) === 'closed' ? (
                   <Text wordSafe variant="footnote" tone="inkSoft">
                     {c.beforeResult}
                   </Text>

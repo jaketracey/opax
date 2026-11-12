@@ -127,6 +127,8 @@ export class ElectionReads {
     this.read(`${overviewPath}/seat/${slug}`, decodeSeat, signal);
   savedSeat = (slug: string) =>
     this.client.saved(`${overviewPath}/seat/${slug}`, decodeSeat);
+  // CatalogCache keeps this route's queries and responses in its bounded
+  // session-only search bucket, away from the disk catalog and its index.
   find = (q: string, signal?: AbortSignal) =>
     this.client.get(
       `${overviewPath}/find?${new URLSearchParams({ q: q.trim().slice(0, 60) })}`,

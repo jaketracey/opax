@@ -91,12 +91,17 @@ export function Finder({
                 s.kind === 'district' ? (
                   <SeatRow
                     key={s.slug}
+                    testID={`vic-election-hit-${index}-district-${s.slug}`}
                     district={s}
                     share={s.share}
                     place={hit.name}
                   />
                 ) : (
-                  <RegionRow key={s.slug} region={s} />
+                  <RegionRow
+                    key={s.slug}
+                    region={s}
+                    testID={`vic-election-hit-${index}-region-${s.slug}`}
+                  />
                 ),
               )}
             </Block>

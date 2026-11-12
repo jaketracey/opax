@@ -20,8 +20,9 @@ export function Candidates({
   const candidates = record.data.candidates;
   const { fontScale } = useWindowDimensions();
   if (!candidates && (!o || phase(o, now) === 'closed')) return null;
+  const numbered = record.data.kind === 'district';
   const grouped =
-    record.data.kind === 'region' &&
+    !numbered &&
     candidates?.list.some(
       (candidate) =>
         candidate.group !== undefined || candidate.group_name !== undefined,
@@ -34,6 +35,8 @@ export function Candidates({
             {c.ballot(shortDate(candidates.published))}
           </Text>
           {candidates.list.map((candidate, i) => {
+            const party =
+              candidate.party === 'Independent' ? null : candidate.party;
             const group = candidate.group || null;
             const heading = group
               ? c.candidateGroup(group, candidate.group_name ?? undefined)
@@ -55,7 +58,7 @@ export function Candidates({
                 ) : null}
                 <View
                   accessible
-                  accessibilityLabel={`${grouped ? heading : i + 1}. ${candidate.name}${candidate.party ? `, ${candidate.party}` : ''}.`}
+                  accessibilityLabel={`${numbered ? `${i + 1}. ` : grouped ? `${heading}. ` : ''}${candidate.name}${party ? `, ${party}` : ''}.`}
                   testID={`vic-seat-candidate-${i}`}
                   style={{
                     minHeight: minimumTarget,
@@ -64,7 +67,7 @@ export function Candidates({
                     paddingVertical: rhythm.tight,
                   }}
                 >
-                  {!grouped ? (
+                  {numbered ? (
                     <Text
                       variant="secondary"
                       tone="inkSoft"
@@ -85,9 +88,7 @@ export function Candidates({
                     <Text wordSafe variant="body">
                       {candidate.name}
                     </Text>
-                    {candidate.party ? (
-                      <PartyLabel party={candidate.party} />
-                    ) : null}
+                    {party ? <PartyLabel party={party} /> : null}
                   </View>
                 </View>
               </Fragment>

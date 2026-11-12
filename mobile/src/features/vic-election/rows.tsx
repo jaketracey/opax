@@ -21,10 +21,12 @@ export function SeatRow({
   district: d,
   share = null,
   place = '',
+  testID,
 }: {
   district: District;
   share?: number | null;
   place?: string;
+  testID?: string;
 }) {
   const large = useAccessibilitySize();
   const figure = share === null ? rowFigure(d) : shareText(share);
@@ -86,7 +88,7 @@ export function SeatRow({
         accessible
         accessibilityRole="link"
         accessibilityLabel={ax}
-        testID={`vic-election-district-${d.slug}`}
+        testID={testID ?? `vic-election-district-${d.slug}`}
         style={styles.row}
       >
         <View style={{ flex: 1, minWidth: 0, gap: rhythm.line }}>
@@ -123,7 +125,13 @@ export function SeatRow({
     </RowLink>
   );
 }
-export function RegionRow({ region: r }: { region: Region }) {
+export function RegionRow({
+  region: r,
+  testID,
+}: {
+  region: Region;
+  testID?: string;
+}) {
   const names = r.members.map((m) => m.name);
   const detail = [
     ...names.slice(0, 3),
@@ -135,7 +143,7 @@ export function RegionRow({ region: r }: { region: Region }) {
         accessible
         accessibilityRole="link"
         accessibilityLabel={`${r.name}. ${names.join(', ')}.`}
-        testID={`vic-election-region-${r.slug}`}
+        testID={testID ?? `vic-election-region-${r.slug}`}
         style={styles.row}
       >
         <View style={{ flex: 1, minWidth: 0, gap: rhythm.line }}>

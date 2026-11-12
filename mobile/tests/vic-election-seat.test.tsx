@@ -62,9 +62,7 @@ test('candidate order, ballot numbers and plain unlinked names', () => {
   const independent = r.root
     .findAllByProps({ testID: 'vic-seat-candidate-1' })
     .find((n) => typeof n.type === 'string')!;
-  expect(independent.props.accessibilityLabel).toBe(
-    `2. ${names[1]}, Independent.`,
-  );
+  expect(independent.props.accessibilityLabel).toBe(`2. ${names[1]}.`);
   expect(
     r.root.findAllByProps({ testID: 'vic-seat-candidates-none' }),
   ).toHaveLength(0);
@@ -137,6 +135,9 @@ test('a loaded seat survives an unavailable overview, with key dates collapsed',
   expect(text).toContain('Last held by');
   expect(text).toContain('Authorised by');
   expect(text).not.toContain('Key dates');
+  expect(text).not.toContain(
+    'These are results from before the 2026 election.',
+  );
 });
 
 test('absent votes do not show an invented count', () => {

@@ -108,6 +108,19 @@ test('finder draws split percentages and its foot', async () => {
   expect(text).toContain('of residents');
   expect(text).toContain('Some places cross district lines.');
   expect(text).toContain(mockVic.overview.record!.data.authorisation);
+  const ids = r.root
+    .findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        /^vic-election-hit-\d+-(district|region)-/.test(n.props.testID ?? ''),
+    )
+    .map((n) => n.props.testID);
+  expect(ids).toHaveLength(
+    finder.hits.reduce((n, hit) => n + hit.seats.length, 0),
+  );
+  expect(new Set(ids).size).toBe(ids.length);
+  expect(ids).toContain('vic-election-hit-0-district-albert-park');
+  expect(ids).toContain('vic-election-hit-2-district-albert-park');
 });
 test('pinned postcode 3350 shows all three districts and resident shares', async () => {
   const text = words(await find('3350', decodeFind(postcode)));

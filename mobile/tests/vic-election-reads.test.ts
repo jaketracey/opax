@@ -6,6 +6,9 @@ import {
 import { ApiClient } from '../src/api/client';
 import overview from '../scripts/fixtures/vic-election/overview.json';
 import seat from '../scripts/fixtures/vic-election/albert-park.json';
+import finder from '../scripts/fixtures/vic-election/find-st-kilda.json';
+import { decodeElectorateIndex } from '../src/api/catalogs';
+import { manifest, pinned } from './pinned';
 import { decodeOverview } from '../src/features/vic-election/decoders';
 import {
   ElectionReads,
@@ -18,16 +21,16 @@ function setup() {
   let index: CacheIndexEntry[] = [];
   const store = {
     readIndex: async () => index,
-    writeIndex: async (value: CacheIndexEntry[]) => {
+    writeIndex: jest.fn(async (value: CacheIndexEntry[]) => {
       index = value;
-    },
+    }),
     read: async (url: string) => entries.get(url),
-    write: async (entry: CacheEntry) => {
+    write: jest.fn(async (entry: CacheEntry) => {
       entries.set(entry.url, entry);
-    },
-    remove: async (url: string) => {
+    }),
+    remove: jest.fn(async (url: string) => {
       entries.delete(url);
-    },
+    }),
   };
   const transport = jest.fn();
   const client = new ApiClient({
@@ -39,7 +42,7 @@ function setup() {
     retries: 0,
   });
   const reads = new ElectionReads(client);
-  return { reads, client, transport, entries };
+  return { reads, client, transport, entries, store, index: () => index };
 }
 const reply = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -92,4 +95,56 @@ test('finder uses a trimmed, bounded query and forwards cancellation', async () 
     reads.find(' St Kilda ', controller.signal),
   ).rejects.toMatchObject({ name: 'AbortError' });
   expect(transport).not.toHaveBeenCalled();
+});
+test('a finder response and its query never write a disk entry or index', async () => {
+  const { reads, transport, entries, store, index } = setup();
+  transport.mockResolvedValueOnce(reply(finder));
+  expect((await reads.find(' St Kilda ')).data).toEqual(finder);
+  expect(store.write).not.toHaveBeenCalled();
+  expect(store.writeIndex).not.toHaveBeenCalled();
+  expect(entries.size).toBe(0);
+  expect(index()).toEqual([]);
+});
+test('the saved electorate catalog survives 50 different seat-finder queries', async () => {
+  const { reads, client, transport, entries, store, index } = setup();
+  const path = manifest.index_url;
+  transport.mockResolvedValueOnce(reply(pinned(path)));
+  await client.get(path, decodeElectorateIndex);
+  const savedIndex = [...index()];
+  const savedEntries = new Map(entries);
+  store.write.mockClear();
+  store.writeIndex.mockClear();
+  store.remove.mockClear();
+  transport.mockImplementation(async (url: string) =>
+    reply({ ...finder, q: new URL(url).searchParams.get('q') }),
+  );
+  for (let i = 0; i < 50; i++) await reads.find(`Test suburb ${i}`);
+  expect(store.write).not.toHaveBeenCalled();
+  expect(store.writeIndex).not.toHaveBeenCalled();
+  expect(store.remove).not.toHaveBeenCalled();
+  expect(index()).toEqual(savedIndex);
+  expect(entries).toEqual(savedEntries);
+  transport.mockRejectedValue(new Error('offline'));
+  const saved = await client.get(path, decodeElectorateIndex, true);
+  expect(saved.stale).toBe(true);
+  expect(saved.data.electorates.length).toBeGreaterThan(0);
+});
+test('old disk finder URLs are removed when the catalog index loads', async () => {
+  const { client, entries, store, index } = setup();
+  const url = `https://fixture.test${overviewPath}/find?q=3350`;
+  const entry = {
+    url,
+    body: finder,
+    savedAt: 1,
+    validatedAt: 1,
+    expiresAt: 1,
+    asOf: null,
+  };
+  entries.set(url, entry);
+  await store.writeIndex([
+    { url, bytes: 1, validatedAt: 1, bucket: 'catalog' },
+  ]);
+  await client.saved(overviewPath, decodeOverview);
+  expect(entries.has(url)).toBe(false);
+  expect(index()).toEqual([]);
 });
