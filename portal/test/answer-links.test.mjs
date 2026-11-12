@@ -14,7 +14,7 @@ test('answer links allow Opax record paths, never foreign origins or executable 
  assert.equal(safeAnswerLink('https://opax.com.au/graph/money.json'),'/graph/money.json');
  assert.equal(safeAnswerLink('/money?party=party%3ALabor&focus=donor%3AMineralogy'),'/money?party=party%3ALabor&focus=donor%3AMineralogy');
  assert.equal(safeAnswerLink('/subject/person/David%20Pocock'),'/subject/person/David%20Pocock');
- for(const href of ['javascript:alert(1)','data:text/html,test','//evil.test','/\\evil.test','https://name:secret@opax.com.au/','https://example.test/\npath','https://www.aec.gov.au/','https://opax.com.au.evil.test/']) assert.equal(safeAnswerLink(href),null,href);
+ for(const href of ['javascript:alert(1)','data:text/html,test','//evil.test','/\\evil.test','/money/..//outside.test/path','https://name:secret@opax.com.au/','https://example.test/\npath','https://www.aec.gov.au/','https://opax.com.au.evil.test/']) assert.equal(safeAnswerLink(href),null,href);
 });
 test('calculation links become anchors while model HTML and unsafe links stay text',()=>{
  const root=node('p');appendInline(root,'[Download the calculation data](/graph/money.json) <script>alert(1)</script> [bad](javascript:alert)');

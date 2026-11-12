@@ -9,3 +9,4 @@ export function quotationSpans(text:string):{value:string;at:number;end:number}[
 export function unclosedQuoteOffset(text:string):number
 
 export function sentenceParts(text:string):{text:string;at:number}[]
+export function adverbsOnly(text:string):boolean
