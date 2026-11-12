@@ -2,8 +2,8 @@ import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './don
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
-import { personUrl, partyUrl } from './canonical-urls.js?v=79dfba8774';
-import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=5529476190';
+import { personUrl, partyUrl } from './canonical-urls.js?v=0079b1f2db';
+import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=60fb43597a';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';

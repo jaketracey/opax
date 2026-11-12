@@ -1,7 +1,7 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {partyUrl} from './canonical-urls.js?v=79dfba8774';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=67fd943a31';
+import {partyUrl} from './canonical-urls.js?v=0079b1f2db';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=68e7e12136';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
