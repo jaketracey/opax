@@ -110,6 +110,7 @@ class BillLifecycleExportTests(unittest.TestCase):
         timeline = export.PartyTimeline({}, {})
         with registry() as db, patch.object(export.PartyTimeline, "load", return_value=timeline), \
                 patch.object(export, "load_v2_bills", return_value=[bill]), \
+                patch.object(export, "load_suppressed", return_value=[]), \
                 patch.object(export, "load_divisions", return_value={}), \
                 patch.object(export, "load_acts", return_value=({}, {})), \
                 patch.object(export, "load_sources", return_value={}), \

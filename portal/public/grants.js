@@ -1,6 +1,8 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {subjectUrl} from './canonical-urls.js?v=79dfba8774';
+import {subjectUrl} from './canonical-urls.js?v=0079b1f2db';
+import {programKey, resolveProgram, resolveProgramId} from './facts/grant-programs.js?v=5b8dddc342';
+export {programKey, resolveProgram, resolveProgramId};
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
  * organisations that receive them and checked against the receipt registers.
@@ -138,11 +140,6 @@ export function formatABN (abn) {
   return d.length === 11 ? `${d.slice(0, 2)} ${d.slice(2, 5)} ${d.slice(5, 8)} ${d.slice(8)}` : d
 }
 
-/** Mirror of export_grants.py program key: 'GO3141' -> 'go3141', 'activity:Some title' -> 'activity-some-title'. */
-export function programKey (id) {
-  return String(id || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80).replace(/-+$/g, '')
-}
-
 /** num/den, or null when the denominator is nothing (so the UI can say "not recorded" rather than 0%). */
 export function shareOf (num, den) {
   return den > 0 ? (num || 0) / den : null
@@ -175,20 +172,6 @@ export function programByName (programs) {
   const out = new Map()
   for (const p of programs || []) if (p.key && !out.has(p.n)) out.set(p.n, p)
   return out
-}
-
-/**
- * The program row an address asks for. Links carry the id as the register
- * prints it (GO6047), the file key (go6047) or any other casing, so an exact
- * match wins and otherwise the program key decides; null when none matches.
- */
-export function resolveProgramId (programs, id) {
-  if (!id) return null
-  const rows = programs || []
-  if (rows.some((p) => p.id === id)) return id
-  const key = programKey(id)
-  const hit = rows.find((p) => (p.key || programKey(p.id)) === key)
-  return hit ? hit.id : null
 }
 
 /** The grant date the program file's seat, holder and timing fields were computed on. */
@@ -1557,13 +1540,16 @@ export function mountGrants (container, opts = {}) {
 
   /** The program file plus the notes file (optional: a 404 there is not an error). */
   async function loadProgram (r) {
-    const key = r.key || programKey(r.id)
+    const row = resolveProgram(data.programs, r.id)
+    if (!row) throw new Error('Grant program not found')
+    const key = row.key || programKey(row.id)
     const id = `${state.jur}/${key}`
     let p = programCache.get(id)
     if (!p) {
       const res = await fetch(`${JURISDICTIONS[state.jur].dir}programs/${encodeURIComponent(key)}.json`, { signal: aborter.signal, cache:"no-cache" })
       if (!res.ok) throw new Error(`${res.status}`)
       p = await res.json()
+      if (p.id !== row.id) throw new Error('Grant program identity mismatch')
       if (state.jur === 'federal') p = withToldSeats(p, await loadTold(key))
       programCache.set(id, p)
     }

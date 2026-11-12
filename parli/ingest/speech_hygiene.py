@@ -31,6 +31,11 @@ for canonical, aliases in {
         "One Nation", "PHON", "Pauline Hanson's One Nation",
         "Pauline Hanson's One Nation Party",
     ],
+    "Legalise Cannabis": ["Legalise Cannabis", "Legalise Cannabis Victoria"],
+    "Libertarian Party": ["Libertarian", "Libertarian Party"],
+    "Shooters, Fishers and Farmers Party": [
+        "Shooters, Fishers and Farmers", "Shooters, Fishers and Farmers Party",
+    ],
     "Australian Democrats": ["Australian Democrats", "AD"],
     "DLP": ["DLP", "Democratic Labor Party"],
     "Family First": ["Family First", "Family First Party", "FF"],

@@ -28,6 +28,22 @@ const entry = { id, name: 'Agency & Works', profile_path: `/agencies/${id}.json`
 const profile = { ...entry, suppliers: [{ id: 's-one', name: 'A company', total: 12, count: 2, donor_links: [] }], years: [], contracts: [] };
 const ok = data => ({ ok: true, json: async () => data });
 
+test('supplier rows show identity from the real ABN-bounded supplier profile', () => {
+  const index = JSON.parse(readFileSync(new URL('../public/suppliers.json', import.meta.url), 'utf8'));
+  const shard = JSON.parse(readFileSync(new URL('../public'+index.suppliers[0].profile_path, import.meta.url), 'utf8'));
+  const supplier = Object.values(shard.profiles).find(s => s.identity?.legal_name && s.identity?.type && s.abn);
+  assert.ok(supplier);
+  const c = harness(async () => ok({}));
+  const html = c.agencySupplierMetadataHTML(supplier);
+  assert.ok(html.includes(supplier.identity.abn_url));
+  assert.ok(html.includes('ABR type '+supplier.identity.type));
+  assert.ok(html.includes(supplier.identity.kind));
+  if (supplier.identity.legal_name !== supplier.name) assert.ok(html.includes(supplier.identity.legal_name));
+  const missing = c.agencySupplierMetadataHTML({name:'Example',abn:null});
+  assert.match(missing,/No ABN recorded/);assert.ok(!missing.includes('undefined'));
+  assert.ok(!c.agencySupplierMetadataHTML({...supplier,abn:'00000000000'}).includes('href='));
+});
+
 test('agency graph and supplier graph retain award direction and exclude political receipts', () => {
   for (const [p, kind] of [[profile, 'agency'], [{ id: 's-one', name: 'A company', total: 12, count: 2, agencies: [entry] }, 'supplier']]) {
     const graph = procurementGraph(p, kind);

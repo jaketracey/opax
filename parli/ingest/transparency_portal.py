@@ -27,7 +27,7 @@ exit 4 (from parli.ingest.http) when the source refuses the agent.
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 import hashlib
 import json
 import os
@@ -262,6 +262,42 @@ def published(item):
     return (item.get("system") or {}).get("workflow_step") == "published"
 
 
+def publication_date(message):
+    """The Portal normally prints MM/DD/YYYY, but some reports print DD/MM/YYYY.
+
+    Retain month-first for ambiguous dates. Only use day-first when the first
+    component cannot be a month, and reject impossible dates in either form.
+    """
+    match = re.search(r"Annual Report Published: (\d{2})/(\d{2})/(\d{4})", message or "")
+    if not match:
+        return None
+    first, second, year = map(int, match.groups())
+    month, day = (first, second) if first <= 12 else (second, first)
+    try:
+        return date(year, month, day).isoformat()
+    except ValueError:
+        return None
+
+
+def projected_publication_date(value):
+    """Replay a retained projection through the source parser.
+
+    The old parser copied MM/DD/YYYY components verbatim to YYYY-MM-DD. Its
+    invalid output therefore retains the exact source components; reverse that
+    formatting before parsing. Valid projections are already normalised.
+    """
+    if not value:
+        return None
+    try:
+        return date.fromisoformat(value).isoformat()
+    except ValueError:
+        match = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})", value)
+        if not match:
+            return None
+        year, first, second = match.groups()
+        return publication_date(f"Annual Report Published: {first}/{second}/{year}")
+
+
 def build(args):
     run = Path(args.run) if args.run else latest_run()
     raw_manifest = json.loads((run / "manifest.json").read_text())
@@ -286,11 +322,10 @@ def build(args):
         if not published(r):
             continue
         msg = clean(re.sub(r"<[^>]+>", " ", el(r, "validation_messages") or ""))
-        m = re.search(r"Annual Report Published: (\d{2})/(\d{2})/(\d{4})", msg or "")
         reports[r["system"]["codename"]] = {
             "codename": r["system"]["codename"], "id": r["system"]["id"], "title": clean(el(r, "title")),
             "web_url": clean(el(r, "web_url")), "year": period(r), "collection": r["system"].get("collection"),
-            "published_on": f"{m.group(3)}-{m.group(1)}-{m.group(2)}" if m else None,
+            "published_on": publication_date(msg),
             "last_modified": r["system"].get("last_modified"),
             "tables": list(el(r, "performance_data") or []),
         }
