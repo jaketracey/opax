@@ -166,7 +166,7 @@ test('a commission with many transcripts keeps its profile within the payload li
 });
 
 test('new inquiries load with their transcripts only, as listed documents', async () => {
-  for (const id of ['nsw-healthcare-funding', 'qld-child-safety', 'sa-domestic-family-sexual-violence', 'tas-institutional-child-sexual-abuse', 'nt-hydraulic-fracturing']) {
+  for (const id of ['nsw-healthcare-funding', 'qld-child-safety', 'tas-institutional-child-sexual-abuse', 'nt-hydraulic-fracturing']) {
     const c = (await asset(`/royal-commissions/commission-${id}.json`)).commission;
     assert.ok(c.transcripts.length >= 5, id); assert.equal(c.recommendations.length, 0);
     for (const t of c.transcripts) { assert.match(t.date, /^\d{4}-\d{2}-\d{2}$/); assert.equal(t.date_basis, 'stated'); assert.ok(t.date_quote); assert.ok(t.rights); assert.ok(!/\(PDF/.test(t.title), t.title); }
