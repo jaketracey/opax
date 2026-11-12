@@ -17,9 +17,17 @@ export class ElectionUnavailable extends Error {
     super(reason);
   }
 }
-const withAbsence =
-  <T>(decode: (v: unknown) => T) =>
-  (v: unknown): T | { error: 'not_found' | 'not_published' } => {
+type Absence = { error: 'not_found' | 'not_published' };
+// ApiClient caches decoded bodies by decoder identity. Weak keys also let
+// short-lived callers' decoders and wrappers go when their cache entries do.
+const absenceDecoders = new WeakMap<
+  (v: unknown) => unknown,
+  (v: unknown) => unknown
+>();
+function withAbsence<T>(decode: (v: unknown) => T) {
+  const saved = absenceDecoders.get(decode);
+  if (saved) return saved as (v: unknown) => T | Absence;
+  const wrapped = (v: unknown): T | Absence => {
     const o = object(v);
     if ('error' in o && !('schema_version' in o)) {
       if (o.error !== 'not_found' && o.error !== 'not_published') invalid();
@@ -27,6 +35,9 @@ const withAbsence =
     }
     return decode(v);
   };
+  absenceDecoders.set(decode, wrapped);
+  return wrapped;
+}
 export type ElectionRead<T> = {
   record: RecordResult<T> | null;
   error: unknown;
