@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-08-20-report-investigation-complaint-mr-t-r-cooper-mla-leader-oppo",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation into the Complaint of Mr T. R. Cooper, MLA, Leader of the Opposition against the Hon. T. M. Mackenroth, MLA, Minister for Police and Emergency Services",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaint-of-Cooper-against-Mackenroth-Report-1991.pdf",
+  "document": "Report on the Investigation into the Complaint of Mr T. R. Cooper, MLA, Leader of the Opposition against.... (20 August 1991)",
+  "sha256": "c8d24d8e8f8aa5033a7e1bd446804d3688b3f15adc6a32d1f2759583b736ca48",
+  "pages": 302,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "G. FINDINGS",
+  "first_page": 20,
+  "last_page": 21,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaint-of-Cooper-against-Mackenroth-Report-1991.pdf#page=20"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated an Opposition complaint about a minister’s use of a government aircraft.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaint-of-Cooper-against-Mackenroth-Report-1991.pdf",
+      "document": "Report on the Investigation into the Complaint of Mr T. R. Cooper, MLA, Leader of the Opposition against.... (20 August 1991)",
+      "page": 3
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "It examined the minister’s authority to approve the flight, its official purpose and concerns about another parliamentarian’s welfare.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaint-of-Cooper-against-Mackenroth-Report-1991.pdf",
+      "document": "Report on the Investigation into the Complaint of Mr T. R. Cooper, MLA, Leader of the Opposition against.... (20 August 1991)",
+      "page": 20
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaint-of-Cooper-against-Mackenroth-Report-1991.pdf",
+      "document": "Report on the Investigation into the Complaint of Mr T. R. Cooper, MLA, Leader of the Opposition against.... (20 August 1991)",
+      "page": 21
+     }
+    ],
+    "section": "FINDINGS"
+   },
+   {
+    "text": "The Commission found that the belief that the flight served official duties was reasonable and that its use did not constitute official misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaint-of-Cooper-against-Mackenroth-Report-1991.pdf",
+      "document": "Report on the Investigation into the Complaint of Mr T. R. Cooper, MLA, Leader of the Opposition against.... (20 August 1991)",
+      "page": 21
+     }
+    ],
+    "section": "FINDINGS"
+   },
+   {
+    "text": "It decided to take no action and recommend none against anyone involved.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaint-of-Cooper-against-Mackenroth-Report-1991.pdf",
+      "document": "Report on the Investigation into the Complaint of Mr T. R. Cooper, MLA, Leader of the Opposition against.... (20 August 1991)",
+      "page": 21
+     }
+    ],
+    "section": "CONCLUSION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission is satisfied that the use of the Government aircraft, as complained of by Mr Cooper, did not amount to official misconduct on the part of any of the persons involved.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaint-of-Cooper-against-Mackenroth-Report-1991.pdf",
+     "document": "Report on the Investigation into the Complaint of Mr T. R. Cooper, MLA, Leader of the Opposition against.... (20 August 1991)",
+     "page": 21
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

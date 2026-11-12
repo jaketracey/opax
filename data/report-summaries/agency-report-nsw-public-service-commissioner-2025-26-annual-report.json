@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-public-service-commissioner-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Public Service Commissioner 2025-26 annual report",
+ "body": "Public Service Commissioner",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf",
+  "document": "annual report",
+  "sha256": "d65614f33ee819574bb05e18ff4d1d1f01f5d5e5be832a0856e673221b9ea50f",
+  "pages": 38,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s forward",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Office of the Public Service Commissioner reported on 2025–26, supporting integrity, recruitment on merit and workforce diversity across the NSW government sector.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Office reported developing an integrity framework and self-assessment tool, and extending applied ethics training to Band 1 senior executives.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "It also completed the first round of merit compliance reviews and published a revised capability framework covering digital literacy and cultural capability.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Office reported 19 roles across three teams, in addition to the Commissioner.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Over the past 12 months, we have worked closely with the sector to strengthen integrity and ethical practice, foster inclusive workplaces, improve workforce capability, and support merit-based recruitment processes.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

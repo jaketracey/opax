@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-maryborough-district-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Maryborough District Health Service 2025-26 annual report",
+ "body": "Maryborough District Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10710/maryborough-district-health-service-annual-report-2025-2026.pdf",
+  "document": "annual report",
+  "sha256": "6da966973d96519c06e31b7b6fdae2c58f9b255a1b456cdbd8d16180b5017b73",
+  "pages": 93,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair and Interim Chief Executive Officer",
+  "first_page": 6,
+  "last_page": 14,
+  "link": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10710/maryborough-district-health-service-annual-report-2025-2026.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Maryborough District Health Service reported on its 2025–2026 urgent care, hospital, aged care, home and community services at Maryborough, Avoca and Dunolly.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10710/maryborough-district-health-service-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "About us"
+   },
+   {
+    "text": "MDHS reported completing a $4.3 million logistics hub upgrade covering waste management, linen handling, sterile supply storage, an engineering workshop and electric vehicle charging.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10710/maryborough-district-health-service-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Creating places where people feel cared for"
+   },
+   {
+    "text": "It reported four- and five-star overall aged care ratings and meeting 100 per cent of assessed hospital accreditation standards.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10710/maryborough-district-health-service-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Supporting healthier ageing"
+   },
+   {
+    "text": "MDHS reported an operating surplus of $1.580 million and a surplus from transactions of $0.862 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10710/maryborough-district-health-service-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 39
+     }
+    ],
+    "section": "Summary of financial results"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "MDHS met Australian Commission on Safety and Quality in Health Care (ACSQHC) accreditation outcomes with 100 per cent of assessed standards met across hospital services.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3c5/globalassets/tabled-paper-documents/tabled-paper-10710/maryborough-district-health-service-annual-report-2025-2026.pdf",
+     "document": "annual report",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

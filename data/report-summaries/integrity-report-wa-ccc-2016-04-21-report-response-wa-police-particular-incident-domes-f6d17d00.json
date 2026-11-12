@@ -1,0 +1,98 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2016-04-21-report-response-wa-police-particular-incident-domes-f6d17d00",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Response of WA Police to a Particular Incident of Domestic Violence on 19-20 March 2013",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Response%20of%20WA%20Police%20to%20a%20Particular%20Incident%20of%20Domestic%20Violence%20on%2019-20%20March%202013.pdf",
+  "document": "Report on the Response of WA Police to a Particular Incident of Domestic Violence on 19-20 March 2013",
+  "sha256": "1f3fd9f6b2fd65a88dbb1d193f7ed965d571b223e1f57417e0ce7b87cd07bb9a",
+  "pages": 27,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Response%20of%20WA%20Police%20to%20a%20Particular%20Incident%20of%20Domestic%20Violence%20on%2019-20%20March%202013.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed the police response to domestic violence and a child’s abduction in Broome to improve future responses.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Response%20of%20WA%20Police%20to%20a%20Particular%20Incident%20of%20Domestic%20Violence%20on%2019-20%20March%202013.pdf",
+      "document": "Report on the Response of WA Police to a Particular Incident of Domestic Violence on 19-20 March 2013",
+      "page": 7
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "It examined the handling of initial contacts, subsequent reports and the collection and transfer of important information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Response%20of%20WA%20Police%20to%20a%20Particular%20Incident%20of%20Domestic%20Violence%20on%2019-20%20March%202013.pdf",
+      "document": "Report on the Response of WA Police to a Particular Incident of Domestic Violence on 19-20 March 2013",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Response%20of%20WA%20Police%20to%20a%20Particular%20Incident%20of%20Domestic%20Violence%20on%2019-20%20March%202013.pdf",
+      "document": "Report on the Response of WA Police to a Particular Incident of Domestic Violence on 19-20 March 2013",
+      "page": 8
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission concluded that individual officers’ failures did not warrant serious misconduct opinions, but together caused a delayed and ineffective response.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Response%20of%20WA%20Police%20to%20a%20Particular%20Incident%20of%20Domestic%20Violence%20on%2019-20%20March%202013.pdf",
+      "document": "Report on the Response of WA Police to a Particular Incident of Domestic Violence on 19-20 March 2013",
+      "page": 8
+     }
+    ],
+    "section": "INTRODUCTION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Failures by individual officers on the night do not justify an opinion of serious misconduct.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Response%20of%20WA%20Police%20to%20a%20Particular%20Incident%20of%20Domestic%20Violence%20on%2019-20%20March%202013.pdf",
+     "document": "Report on the Response of WA Police to a Particular Incident of Domestic Violence on 19-20 March 2013",
+     "page": 8
+    }
+   },
+   {
+    "quote": "Collectively though they contributed to a delayed and ineffective response.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Response%20of%20WA%20Police%20to%20a%20Particular%20Incident%20of%20Domestic%20Violence%20on%2019-20%20March%202013.pdf",
+     "document": "Report on the Response of WA Police to a Particular Incident of Domestic Violence on 19-20 March 2013",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1992-03-12-report-inquiry-allegations-made-terrence-michael-mackenroth",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report on an inquiry into allegations made by Terrence Michael Mackenroth MLA and former Minister for Police and Emergency Services; and associated matters",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth/An-inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth-and-associated-matters-Report-1992.pdf",
+  "document": "Report on an Inquiry into allegations made by Terrence Michael Mackenroth MLA the former Minister for Police... (12 March 1992)",
+  "sha256": "cce865f76b35c16787fc2b4dfd05699dfef3c2ededc494117dd708e818b08bda",
+  "pages": 128,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "An independent consultant reported to the Criminal Justice Commission on complaints against the Police Commissioner by a former police minister.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth/An-inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth-and-associated-matters-Report-1992.pdf",
+      "document": "Report on an Inquiry into allegations made by Terrence Michael Mackenroth MLA the former Minister for Police... (12 March 1992)",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth/An-inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth-and-associated-matters-Report-1992.pdf",
+      "document": "Report on an Inquiry into allegations made by Terrence Michael Mackenroth MLA the former Minister for Police... (12 March 1992)",
+      "page": 4
+     }
+    ],
+    "section": "Letter of transmittal"
+   },
+   {
+    "text": "The inquiry found no misconduct in the former minister’s seven allegations and found that no criminal offence had occurred.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth/An-inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth-and-associated-matters-Report-1992.pdf",
+      "document": "Report on an Inquiry into allegations made by Terrence Michael Mackenroth MLA the former Minister for Police... (12 March 1992)",
+      "page": 4
+     }
+    ],
+    "section": "Commission’s account of findings"
+   },
+   {
+    "text": "For four other matters concerning reimbursement of a spouse’s travel costs, the inquiry recommended tribunal investigation of possible official misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth/An-inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth-and-associated-matters-Report-1992.pdf",
+      "document": "Report on an Inquiry into allegations made by Terrence Michael Mackenroth MLA the former Minister for Police... (12 March 1992)",
+      "page": 4
+     }
+    ],
+    "section": "Commission’s account of findings"
+   },
+   {
+    "text": "The Commission said it would refer those matters to a Misconduct Tribunal for determination.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth/An-inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth-and-associated-matters-Report-1992.pdf",
+      "document": "Report on an Inquiry into allegations made by Terrence Michael Mackenroth MLA the former Minister for Police... (12 March 1992)",
+      "page": 4
+     }
+    ],
+    "section": "Commission’s response"
+   },
+   {
+    "text": "The inquiry’s five general recommendations addressed access to police aircraft, travel costs, recovery of expenses and senior officers travelling together.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth/An-inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth-and-associated-matters-Report-1992.pdf",
+      "document": "Report on an Inquiry into allegations made by Terrence Michael Mackenroth MLA the former Minister for Police... (12 March 1992)",
+      "page": 47
+     }
+    ],
+    "section": "General Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Accounting procedures in the Police Financial Services Branch, especially with respect to recovery of funds need to be tightened.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth/An-inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth-and-associated-matters-Report-1992.pdf",
+     "document": "Report on an Inquiry into allegations made by Terrence Michael Mackenroth MLA the former Minister for Police... (12 March 1992)",
+     "page": 47
+    }
+   },
+   {
+    "quote": "The desirability of many senior Police Officers travelling together on a light aircraft must be questioned.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth/An-inquiry-into-allegations-made-by-Terrence-Michael-Mackenroth-and-associated-matters-Report-1992.pdf",
+     "document": "Report on an Inquiry into allegations made by Terrence Michael Mackenroth MLA the former Minister for Police... (12 March 1992)",
+     "page": 47
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

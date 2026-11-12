@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "slug": "agency-report-sa-independent-commission-against-corruption-2025-26-financial-statements",
+ "report_type": "agency_report",
+ "subtype": "audited financial statements companion",
+ "title": "Independent Commission Against Corruption 2025-26 audited financial statements companion",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0004/1453720/Audited-financial-statements-ICAC-SA-Annual-Report-2025-26.pdf",
+  "document": "audited financial statements companion",
+  "sha256": "c773cc53e1931ea8f99460c0acc37dd6ed2fd8faaa9b7f23d5b5a60390732d60",
+  "pages": 28,
+  "rights": null
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption prepared financial statements for the year ending 30 June 2026, covering its corruption investigation and prevention functions.",
+    "cites": [
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0004/1453720/Audited-financial-statements-ICAC-SA-Annual-Report-2025-26.pdf",
+      "document": "audited financial statements companion",
+      "page": 4
+     },
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0004/1453720/Audited-financial-statements-ICAC-SA-Annual-Report-2025-26.pdf",
+      "document": "audited financial statements companion",
+      "page": 11
+     }
+    ],
+    "section": "Objectives and programs"
+   },
+   {
+    "text": "The Commission recorded a net deficit and a smaller total comprehensive deficit after an asset revaluation gain.",
+    "cites": [
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0004/1453720/Audited-financial-statements-ICAC-SA-Annual-Report-2025-26.pdf",
+      "document": "audited financial statements companion",
+      "page": 6
+     }
+    ],
+    "section": "Statement of Comprehensive Income"
+   },
+   {
+    "text": "The Commission assessed its exposure to financial risk as low and reported no change in exposure from the previous period.",
+    "cites": [
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0004/1453720/Audited-financial-statements-ICAC-SA-Annual-Report-2025-26.pdf",
+      "document": "audited financial statements companion",
+      "page": 28
+     }
+    ],
+    "section": "Financial risk management"
+   },
+   {
+    "text": "The Auditor-General concluded that the financial report fairly presented the Commission’s position, financial performance and cash flows under the applicable reporting requirements.",
+    "cites": [
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0004/1453720/Audited-financial-statements-ICAC-SA-Annual-Report-2025-26.pdf",
+      "document": "audited financial statements companion",
+      "page": 1
+     }
+    ],
+    "section": "Independent Auditor’s Report"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission's exposure to financial risk (liquidity risk, credit risk and market risk) is low due to the nature of financial instruments held.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0004/1453720/Audited-financial-statements-ICAC-SA-Annual-Report-2025-26.pdf",
+     "document": "audited financial statements companion",
+     "page": 28
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

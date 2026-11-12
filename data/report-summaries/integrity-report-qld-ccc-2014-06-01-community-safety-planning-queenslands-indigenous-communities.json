@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2014-06-01-community-safety-planning-queenslands-indigenous-communities",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring order report",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+  "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+  "sha256": "0fd8d52b3691d16edf5f56853cc7c5b72a16c537c5868ce2b0cd006e3548738b",
+  "pages": 68,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 10,
+  "last_page": 16,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission reviewed community safety planning as a follow-up to its Restoring order inquiry.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+      "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "It examined community safety plans and local police planning in nine Indigenous communities, including priorities, strategies and opportunities to prevent crime.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+      "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+      "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The CMC found slow progress, limited community engagement and unclear responsibility for implementing and monitoring plans.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+      "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+      "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+      "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "The CMC made no formal recommendations, instead proposing better community engagement, implementation, evaluation and public reporting.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+      "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+      "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+      "page": 16
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Of the planning processes that we examined for this review, only one had progressed to implementation.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+     "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+     "page": 11
+    }
+   },
+   {
+    "quote": "Overall, we found responsibility and accountability for strategy implementation is often unclear, performance measurement appears to be poorly understood and there is general uncertainty about whether monitoring and reporting progress against the plan is a priority.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Public-forum/CMC-Indigenous-policing-inquiry/Community-safety-planning-in-qld-Indigenous-communities-Report-2014.pdf",
+     "document": "Community safety planning in Queensland’s Indigenous communities: A follow-up to the Restoring Order report (June 2014)",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

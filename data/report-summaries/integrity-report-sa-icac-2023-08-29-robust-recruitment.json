@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2023-08-29-robust-recruitment",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Robust Recruitment",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+  "document": "Robust Recruitment",
+  "sha256": "c01fc46713c8e7beb79290836057d9f43aac000d60f1f01f85824533c5df1525",
+  "pages": 16,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption drew on investigations and reports to explain how public authorities could prevent improper recruitment.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+      "document": "Robust Recruitment",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "It examined recruitment policies, planning, conflicts of interest, screening, panel training and documentation.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+      "document": "Robust Recruitment",
+      "page": 7
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+      "document": "Robust Recruitment",
+      "page": 13
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+      "document": "Robust Recruitment",
+      "page": 14
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+      "document": "Robust Recruitment",
+      "page": 15
+     }
+    ]
+   },
+   {
+    "text": "The Commission concluded that weak recruitment could expose agencies to corruption and damage productivity, morale, reputation and public confidence.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+      "document": "Robust Recruitment",
+      "page": 15
+     }
+    ]
+   },
+   {
+    "text": "It urged agencies to assess candidates’ integrity, manage conflicts, conduct screening and document each recruitment stage.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+      "document": "Robust Recruitment",
+      "page": 15
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Consideration of a candidate’s merit for a position should include assessing the candidate’s integrity.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+     "document": "Robust Recruitment",
+     "page": 15
+    }
+   },
+   {
+    "quote": "Public officers involved in recruitment should identify, declare and manage conflicts of interest.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0011/937658/Robust-Recruitment.pdf",
+     "document": "Robust Recruitment",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

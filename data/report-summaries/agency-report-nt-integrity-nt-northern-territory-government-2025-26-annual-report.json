@@ -1,0 +1,107 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nt-integrity-nt-northern-territory-government-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "tabled annual report",
+ "title": "Integrity NT, Northern Territory Government 2025-26 tabled annual report",
+ "body": "Integrity NT, Northern Territory Government",
+ "source": {
+  "url": "https://territorystories.nt.gov.au/10070/1052273/0/24",
+  "document": "tabled annual report",
+  "sha256": "3126b5241917c85c19cfe1d6aa28718af524ffacc110c4ae2d2bf617792e1c16",
+  "pages": 32,
+  "rights": null,
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword: Commissioner Shoyer",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://territorystories.nt.gov.au/10070/1052273/0/24#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Office of the Independent Commissioner Against Corruption reported for 2025–26 on identifying, investigating and preventing improper conduct in the Northern Territory.",
+    "cites": [
+     {
+      "url": "https://territorystories.nt.gov.au/10070/1052273/0/24",
+      "document": "tabled annual report",
+      "page": 6
+     }
+    ],
+    "section": "Independent Commissioner Against Corruption"
+   },
+   {
+    "text": "The Office reported becoming part of the broader Integrity NT organisation on 1 June 2026.",
+    "cites": [
+     {
+      "url": "https://territorystories.nt.gov.au/10070/1052273/0/24",
+      "document": "tabled annual report",
+      "page": 2
+     }
+    ],
+    "section": "Purpose of this report"
+   },
+   {
+    "text": "The Office reported conducting 181 education and prevention activities, including training on reporting obligations and conflicts of interest.",
+    "cites": [
+     {
+      "url": "https://territorystories.nt.gov.au/10070/1052273/0/24",
+      "document": "tabled annual report",
+      "page": 20
+     }
+    ],
+    "section": "Education and awareness"
+   },
+   {
+    "text": "The Office reported completing all assessments within 20 business days, while investigations averaged 463 days against a 365-day target.",
+    "cites": [
+     {
+      "url": "https://territorystories.nt.gov.au/10070/1052273/0/24",
+      "document": "tabled annual report",
+      "page": 10
+     }
+    ],
+    "section": "2025-26 BUSINESS UNIT PERFORMANCE"
+   },
+   {
+    "text": "The Office reported a surplus of $1.12 million, mainly attributed to employee expenses being about $1.37 million below budget.",
+    "cites": [
+     {
+      "url": "https://territorystories.nt.gov.au/10070/1052273/0/24",
+      "document": "tabled annual report",
+      "page": 9
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In 2025-26, the OICAC had a net surplus of $1.12 million compared to the revised budgeted deficit of $323,000.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://territorystories.nt.gov.au/10070/1052273/0/24",
+     "document": "tabled annual report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

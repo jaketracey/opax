@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-west-gippsland-catchment-management-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "West Gippsland Catchment Management Authority 2025-26 annual report",
+ "body": "West Gippsland Catchment Management Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "cdb0617da8d1a403142f1061bd4a245b8ebc2b7e70630a52cccb1ee501f206e4",
+  "pages": 100,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair and CEO report",
+  "first_page": 4,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The West Gippsland Catchment Management Authority reported for 2025–26 on work with regional partners to protect waterways, landscapes and natural resources.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chair and CEO report"
+   },
+   {
+    "text": "The Authority reported new watering infrastructure for the Lower Latrobe Wetlands, progress on a fishway and 1,019 planning referrals and flood advice requests.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chair and CEO report"
+   },
+   {
+    "text": "The Authority reported completing 96% of actions in its annual operational plan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Chair and CEO report"
+   },
+   {
+    "text": "The Authority reported a surplus for the period of $1.277 million, mainly reflecting funding for projects to be delivered in future years.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 17
+     }
+    ],
+    "section": "Summary of financial results"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Overall, the 2025-26 financial results indicate a strong operating performance, supported by increased government funding, growth in total income and a reduction in liabilities, while maintaining positive operating cash flows and a stable balance sheet.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab334/globalassets/tabled-paper-documents/tabled-paper-10595/west-gippsland-cma-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 17
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

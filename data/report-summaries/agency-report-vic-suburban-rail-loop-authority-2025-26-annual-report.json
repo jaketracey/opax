@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-suburban-rail-loop-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Suburban Rail Loop Authority 2025-26 annual report",
+ "body": "Suburban Rail Loop Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "f7998139d6544143ba65275f121c7bf37624313cac494c79a0491ad9d3dbc617",
+  "pages": 90,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Executive Officer foreword",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Suburban Rail Loop Authority reported for 1 July 2025 to 30 June 2026 on its role planning and delivering the Suburban Rail Loop program.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "The Suburban Rail Loop Authority"
+   },
+   {
+    "text": "The authority reported the start of SRL East tunnelling, with tunnel boring machines launched from Burwood and station works begun at Glen Waverley, Monash and Clayton.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Board Chair foreword"
+   },
+   {
+    "text": "It reported completing initial and early works on time and within budget and awarding the Linewide Alliance contract at the end of 2025.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chief Executive Officer foreword"
+   },
+   {
+    "text": "The authority reported finalising structure plans and planning scheme amendments around the stations, with more than 4,300 people working on the project.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chief Executive Officer foreword"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Project delivery teams completed initial and early works on time and on budget.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3a4/globalassets/tabled-paper-documents/tabled-paper-10689/suburban-rail-loop-authority-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

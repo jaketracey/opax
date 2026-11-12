@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-ombudsman-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Ombudsman 2025-26 annual report",
+ "body": "Ombudsman",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "25e474607fe8c51a09de58d4c598b5f1452551589c0ede67d0576d1c46a91c12",
+  "pages": 96,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From the \nOmbudsman",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Ombudsman reported on 2025–26, covering complaint handling, investigations and preventive work to improve fairness in public administration.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ]
+   },
+   {
+    "text": "The Ombudsman reported tabling four investigation reports in Parliament during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The office reported closing 93 per cent of complaints within 30 days against a 90 per cent target, and 31 per cent of investigations within 12 months against a 75 per cent target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 17
+     }
+    ]
+   },
+   {
+    "text": "The Ombudsman said inadequate funding and powers constrained the office’s ability to fulfil its mandate.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The office reported an operating deficit of $0.182 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 18
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Yet our capacity to fulfil this mandate continues to be constrained by inadequate funding and powers.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aacdd/globalassets/tabled-paper-documents/tabled-paper-10571/victorian-ombudsman---annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

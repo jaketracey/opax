@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2006-10-16-report-sexual-contact-children-persons-authority-de-f056eeb5",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Sexual Contact with Children by Persons in Authority in the Department of Education and Training of WA",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf",
+  "document": "Report on Sexual Contact With Children By Persons in Authority in the Department of Education and Training of WA.pdf",
+  "sha256": "630f67a985aeb7e56b6d3387df13e84ffca40cda849f40cc87c671f7f07c4272",
+  "pages": 112,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 12,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed how the Department of Education and Training handled five allegations of sexual contact with children.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf",
+      "document": "Report on Sexual Contact With Children By Persons in Authority in the Department of Education and Training of WA.pdf",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It considered those cases against the department’s commitment to safe learning environments.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf",
+      "document": "Report on Sexual Contact With Children By Persons in Authority in the Department of Education and Training of WA.pdf",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission concluded that the department inadequately managed these cases, identifying weaknesses in risk management, accountability, reporting and recordkeeping.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf",
+      "document": "Report on Sexual Contact With Children By Persons in Authority in the Department of Education and Training of WA.pdf",
+      "page": 54
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "Its six recommendations addressed centralised complaint handling, staff training, statutory responsibilities, executive oversight and cooperation with police.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf",
+      "document": "Report on Sexual Contact With Children By Persons in Authority in the Department of Education and Training of WA.pdf",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf",
+      "document": "Report on Sexual Contact With Children By Persons in Authority in the Department of Education and Training of WA.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf",
+      "document": "Report on Sexual Contact With Children By Persons in Authority in the Department of Education and Training of WA.pdf",
+      "page": 12
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission’s opinion the case studies indicate that at the present time DET does not adequately manage sexual contact cases.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf",
+     "document": "Report on Sexual Contact With Children By Persons in Authority in the Department of Education and Training of WA.pdf",
+     "page": 54
+    }
+   },
+   {
+    "quote": "The Commission has not undertaken any empirical analysis of DET, and cannot estimate to what extent there is a lack of reporting of sexual contact matters.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Sexual%20Contact%20With%20Children%20By%20Persons%20in%20Authority%20in%20the%20Department%20of%20Education%20and%20Training%20of%20WA.pdf",
+     "document": "Report on Sexual Contact With Children By Persons in Authority in the Department of Education and Training of WA.pdf",
+     "page": 40
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

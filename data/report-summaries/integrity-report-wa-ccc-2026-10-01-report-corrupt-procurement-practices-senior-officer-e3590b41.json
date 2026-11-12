@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2026-10-01-report-corrupt-procurement-practices-senior-officer-e3590b41",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Corrupt Procurement Practices of a Senior Officer at the Shire of East Pilbara",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20261001%20Report%20on%20Corrupt%20Procurement%20Practices%20of%20a%20Senior%20Officer%20at%20the%20Shire%20of%20East%20Pilbara.pdf",
+  "document": "20261001 Report on Corrupt Procurement Practices of a Senior Officer at the Shire of East Pilbara",
+  "sha256": "7b983e865db35eca9ffd3d5682a89e61aa6fad99ac904946c5dddfaf0870eee7",
+  "pages": 43,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "THE INVESTIGATION",
+  "first_page": 3,
+  "last_page": 14,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/20261001%20Report%20on%20Corrupt%20Procurement%20Practices%20of%20a%20Senior%20Officer%20at%20the%20Shire%20of%20East%20Pilbara.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated whether an operations manager at the Shire of East Pilbara used his position corruptly to benefit himself or others.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20261001%20Report%20on%20Corrupt%20Procurement%20Practices%20of%20a%20Senior%20Officer%20at%20the%20Shire%20of%20East%20Pilbara.pdf",
+      "document": "20261001 Report on Corrupt Procurement Practices of a Senior Officer at the Shire of East Pilbara",
+      "page": 5
+     }
+    ],
+    "section": "What the Commission investigated"
+   },
+   {
+    "text": "The Commission found that the manager favoured contractors and received gifts in exchange for allocating work.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20261001%20Report%20on%20Corrupt%20Procurement%20Practices%20of%20a%20Senior%20Officer%20at%20the%20Shire%20of%20East%20Pilbara.pdf",
+      "document": "20261001 Report on Corrupt Procurement Practices of a Senior Officer at the Shire of East Pilbara",
+      "page": 10
+     }
+    ],
+    "section": "What the Commission found"
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct and identified ineffective oversight and insufficient separation of purchasing and payment functions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20261001%20Report%20on%20Corrupt%20Procurement%20Practices%20of%20a%20Senior%20Officer%20at%20the%20Shire%20of%20East%20Pilbara.pdf",
+      "document": "20261001 Report on Corrupt Procurement Practices of a Senior Officer at the Shire of East Pilbara",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20261001%20Report%20on%20Corrupt%20Procurement%20Practices%20of%20a%20Senior%20Officer%20at%20the%20Shire%20of%20East%20Pilbara.pdf",
+      "document": "20261001 Report on Corrupt Procurement Practices of a Senior Officer at the Shire of East Pilbara",
+      "page": 13
+     }
+    ],
+    "section": "The Commission’s opinion of misconduct"
+   },
+   {
+    "text": "The Commission made one recommendation to review the Shire’s procurement procedures, including approvals, compliance, completed work and reporting.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/20261001%20Report%20on%20Corrupt%20Procurement%20Practices%20of%20a%20Senior%20Officer%20at%20the%20Shire%20of%20East%20Pilbara.pdf",
+      "document": "20261001 Report on Corrupt Procurement Practices of a Senior Officer at the Shire of East Pilbara",
+      "page": 43
+     }
+    ],
+    "section": "RECOMMENDATION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:54+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

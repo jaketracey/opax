@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-parkville-youth-mental-health-and-wellbeing-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Parkville Youth Mental Health and Wellbeing Service 2025-26 annual report",
+ "body": "Parkville Youth Mental Health and Wellbeing Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab412/globalassets/tabled-paper-documents/tabled-paper-10742/parkville-youth-mental-health-and-wellbeing-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "295304edd50fb31e940046e5e428f314a9446317100553244a3ed247cb1db0b7",
+  "pages": 82,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Board Chair and Chief Executive",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab412/globalassets/tabled-paper-documents/tabled-paper-10742/parkville-youth-mental-health-and-wellbeing-service-annual-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Parkville Youth Mental Health and Wellbeing Service reported on its first full year in 2025–26, providing specialist care for people aged 12 to 25 across Melbourne’s north and west.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab412/globalassets/tabled-paper-documents/tabled-paper-10742/parkville-youth-mental-health-and-wellbeing-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The service reported removing the two-year care limit for existing patients and new referrals in September 2025.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab412/globalassets/tabled-paper-documents/tabled-paper-10742/parkville-youth-mental-health-and-wellbeing-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "It reported relocating its inpatient unit to Footscray Hospital and its access and home treatment teams to Spotswood in February 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab412/globalassets/tabled-paper-documents/tabled-paper-10742/parkville-youth-mental-health-and-wellbeing-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "It reported that clinical activity grew more gradually than planned while services were being established and transferred.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab412/globalassets/tabled-paper-documents/tabled-paper-10742/parkville-youth-mental-health-and-wellbeing-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 26
+     }
+    ]
+   },
+   {
+    "text": "It reported a net surplus after other economic flows of $3.89 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab412/globalassets/tabled-paper-documents/tabled-paper-10742/parkville-youth-mental-health-and-wellbeing-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 26
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The surplus primarily reflects the establishment and growth phase of the organisation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab412/globalassets/tabled-paper-documents/tabled-paper-10742/parkville-youth-mental-health-and-wellbeing-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 26
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

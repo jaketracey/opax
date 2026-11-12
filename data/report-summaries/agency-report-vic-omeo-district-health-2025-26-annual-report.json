@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-omeo-district-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Omeo District Health 2025-26 annual report",
+ "body": "Omeo District Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "09541de60d4743ccedcc0fbeafbad30ab40993825087d51b24d6ecfc643afd76",
+  "pages": 84,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "2025-2026 year in review: A message from the Board Chair and Chief \nExecutive Oﬃcer",
+  "first_page": 3,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Omeo District Health reported on 2025–2026 as a rural health service for the East Gippsland High Country.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The health service reported a 122 per cent increase in acute inpatient bed days and a 223 per cent increase in transition care bed days.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "It reported starting a virtual care pod pilot at Swifts Creek in January 2026, offering free emergency consultations around the clock.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It reported receiving three-year accreditation against the NSQHS Standards in September 2025.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The health service reported maintaining a stable financial position while expanding activity and investing in its workforce.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Omeo District Health was awarded three-year accreditation against the NSQHS Standards in September 2025.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10730/omeo-district-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

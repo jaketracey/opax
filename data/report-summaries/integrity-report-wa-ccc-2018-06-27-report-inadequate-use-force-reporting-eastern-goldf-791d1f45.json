@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-06-27-report-inadequate-use-force-reporting-eastern-goldf-791d1f45",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison on 27 March 2017 and Bunbury Regional Prison on 14 November 2016",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20on%2027%20March%202017%20and%20Bunbury%20Regional%20Prison%20on%2014%20November%202016.pdf",
+  "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison on 27 March 2017 and Bunbury Regional Prison on 14 November 2016",
+  "sha256": "e657baf181af340af6ecb756705a8a69a5626b7b1630b2a924029d9bb6733a23",
+  "pages": 28,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20on%2027%20March%202017%20and%20Bunbury%20Regional%20Prison%20on%2014%20November%202016.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated how prison staff reported and reviewed a senior officer’s use of force at Eastern Goldfields and Bunbury regional prisons.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20on%2027%20March%202017%20and%20Bunbury%20Regional%20Prison%20on%2014%20November%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison on 27 March 2017 and Bunbury Regional Prison on 14 November 2016",
+      "page": 4
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "It examined staff accounts, CCTV recordings, incident reports and the department’s training and operational requirements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20on%2027%20March%202017%20and%20Bunbury%20Regional%20Prison%20on%2014%20November%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison on 27 March 2017 and Bunbury Regional Prison on 14 November 2016",
+      "page": 6
+     }
+    ],
+    "section": "Reporting on Senior Prison Officer Mortley's critical use of force against prisoners"
+   },
+   {
+    "text": "The Commission identified reporting failures and risks of serious misconduct but did not form an opinion of serious misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20on%2027%20March%202017%20and%20Bunbury%20Regional%20Prison%20on%2014%20November%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison on 27 March 2017 and Bunbury Regional Prison on 14 November 2016",
+      "page": 26
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20on%2027%20March%202017%20and%20Bunbury%20Regional%20Prison%20on%2014%20November%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison on 27 March 2017 and Bunbury Regional Prison on 14 November 2016",
+      "page": 27
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "Its six recommendations address confidential reporting, independent review, officer training, notification procedures and safeguards against collusion in incident reports.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20on%2027%20March%202017%20and%20Bunbury%20Regional%20Prison%20on%2014%20November%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison on 27 March 2017 and Bunbury Regional Prison on 14 November 2016",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20use%20of%20force%20reporting%20at%20Eastern%20Goldfields%20Regional%20Prison%20on%2027%20March%202017%20and%20Bunbury%20Regional%20Prison%20on%2014%20November%202016.pdf",
+      "document": "Report into inadequate use of force reporting at Eastern Goldfields Regional Prison on 27 March 2017 and Bunbury Regional Prison on 14 November 2016",
+      "page": 28
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

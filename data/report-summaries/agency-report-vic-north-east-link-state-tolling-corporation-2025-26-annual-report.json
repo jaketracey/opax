@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-north-east-link-state-tolling-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "North East Link State Tolling Corporation 2025-26 annual report",
+ "body": "North East Link State Tolling Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "63d783640b53df5f686b8e02f5d69c8ffed415af45bcca6ae4cc9e9c10baf83e",
+  "pages": 69,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword",
+  "first_page": 3,
+  "last_page": 3,
+  "link": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "North East Link State Tolling Corporation reported on 2025–26 as the government-owned operator preparing to deliver tolling services for the North East Link.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The corporation reported completing procurement of its roadside and back office systems.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "It reported that its roadside systems contractor had completed required delivery milestones on schedule.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "It reported a comprehensive loss of $31.92 million for the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Following contract award in 2025-26, the RSS contractor’s delivery is on schedule with successful completion of the required delivery milestones.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab313/globalassets/tabled-paper-documents/tabled-paper-10587/north-east-link-state-tolling-corporation-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

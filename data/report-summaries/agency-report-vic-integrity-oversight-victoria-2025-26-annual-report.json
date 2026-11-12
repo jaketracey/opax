@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-integrity-oversight-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Integrity Oversight Victoria 2025-26 annual report",
+ "body": "Integrity Oversight Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "a6ca5cc45070ff4e6dc4a6c292f69189fe9ac75889de3bd40a8fd0c2d9bb3011",
+  "pages": 138,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chief Integrity Inspector",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Integrity Oversight Victoria’s 2025–26 report describes its oversight of 13 integrity bodies to ensure they use their powers lawfully and properly.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Chief Integrity Inspector"
+   },
+   {
+    "text": "IOV reported completing 3 investigations and starting 3 others during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Message from the Chief Executive Officer"
+   },
+   {
+    "text": "It reported that Victoria Police accepted 8 recommendations from its report on listening devices in prisons.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Message from the Chief Executive Officer"
+   },
+   {
+    "text": "IOV reported exceeding 6 of its 8 output performance targets, meeting one and falling short of one.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 20
+     }
+    ],
+    "section": "Performance against output performance measures"
+   },
+   {
+    "text": "It reported a net operating result of $0.226 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 92
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IOV’s performance and strategic outcomes in 2025–26 show we are on track.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aacd9/globalassets/tabled-paper-documents/tabled-paper-10568/iov-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-early-childhood-regulatory-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Early Childhood Regulatory Authority 2025-26 annual report",
+ "body": "Victorian Early Childhood Regulatory Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab38d/globalassets/tabled-paper-documents/tabled-paper-10655/vecra_annual_report.pdf",
+  "document": "annual report",
+  "sha256": "73f85d9cbca13bb3bc97d1f399d38ab931d8e91f48f2a7ac271413f4a8ae17da",
+  "pages": 74,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Regulator’s foreword",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab38d/globalassets/tabled-paper-documents/tabled-paper-10655/vecra_annual_report.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Early Childhood Regulatory Authority reported on its first six months, from 1 January to 30 June 2026, as Victoria’s independent early childhood education and care regulator.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38d/globalassets/tabled-paper-documents/tabled-paper-10655/vecra_annual_report.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Responsible Body’s declaration"
+   },
+   {
+    "text": "The authority reported establishing its governance and systems while maintaining sector regulation and implementing child-safety reforms.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38d/globalassets/tabled-paper-documents/tabled-paper-10655/vecra_annual_report.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "First 6 months"
+   },
+   {
+    "text": "It reported 2,756 completed inspections and an average of 46.4 days to issue quality-rating notices, against a 2026 target of 50 days.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38d/globalassets/tabled-paper-documents/tabled-paper-10655/vecra_annual_report.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ],
+    "section": "2.2 Performance"
+   },
+   {
+    "text": "The authority reported income of $39.6 million and expenses of $20.0 million for the reporting period.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38d/globalassets/tabled-paper-documents/tabled-paper-10655/vecra_annual_report.pdf",
+      "document": "annual report",
+      "page": 29
+     }
+    ],
+    "section": "3.1.3 VECRA current-year financial review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

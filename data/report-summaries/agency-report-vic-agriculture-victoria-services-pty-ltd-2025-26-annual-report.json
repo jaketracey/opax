@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-agriculture-victoria-services-pty-ltd-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Agriculture Victoria Services Pty Ltd 2025-26 annual report",
+ "body": "Agriculture Victoria Services Pty Ltd",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10638/attachment-1---avs-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "d98e477d0d64f661d9b4be12c1db9b8c811a793824d4f48d044c472d3d87a805",
+  "pages": 106,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chair",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10638/attachment-1---avs-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Agriculture Victoria Services reported on 2025–26, protecting and commercialising agricultural research technologies for Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10638/attachment-1---avs-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10638/attachment-1---avs-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ]
+   },
+   {
+    "text": "The company reported new investments in pest control, canola and forage digestibility, alongside expanded industry collaboration.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10638/attachment-1---avs-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "It reported investing $3.2 million and approving another $9.4 million for deployment over the following four years.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10638/attachment-1---avs-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The company reported a net result of $4.4 million and net royalty revenue above $7.2 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10638/attachment-1---avs-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In 2025–26, AVS achieved a net result of $4.4 million.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10638/attachment-1---avs-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 44
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-act-ic-2025-03-18-operation-juno",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Juno Investigation Report: Concerning certain conduct of Mr Walter Sofronoff KC.",
+ "body": "ACT Integrity Commission",
+ "source": {
+  "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0004/2826724/Investigation-Report-Operation-Juno.pdf",
+  "document": "Operation Juno Investigation Report: Concerning certain conduct of Mr Walter Sofronoff KC.",
+  "sha256": "ddbfdf6622718d4cb3dfab3c470ecb17a843f6c09d0e792094de404272fa58dd",
+  "pages": 131,
+  "rights": "commission-copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Outline of findings",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0004/2826724/Investigation-Report-Operation-Juno.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The ACT Integrity Commission investigated whether a Board of Inquiry’s disclosures to journalists breached its legal obligations and amounted to corrupt conduct.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0004/2826724/Investigation-Report-Operation-Juno.pdf",
+      "document": "Operation Juno Investigation Report: Concerning certain conduct of Mr Walter Sofronoff KC.",
+      "page": 5
+     }
+    ],
+    "section": "Introduction – summary of allegation"
+   },
+   {
+    "text": "Its investigation covered confidential material given to journalists, the report’s release to journalists before public publication, and whether affected people received natural justice.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0004/2826724/Investigation-Report-Operation-Juno.pdf",
+      "document": "Operation Juno Investigation Report: Concerning certain conduct of Mr Walter Sofronoff KC.",
+      "page": 5
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0004/2826724/Investigation-Report-Operation-Juno.pdf",
+      "document": "Operation Juno Investigation Report: Concerning certain conduct of Mr Walter Sofronoff KC.",
+      "page": 6
+     }
+    ],
+    "section": "Introduction – summary of allegation"
+   },
+   {
+    "text": "The Commission concluded that the official engaged in serious corrupt conduct that undermined the inquiry’s integrity and fairness and was likely to threaten public confidence.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0004/2826724/Investigation-Report-Operation-Juno.pdf",
+      "document": "Operation Juno Investigation Report: Concerning certain conduct of Mr Walter Sofronoff KC.",
+      "page": 7
+     },
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0004/2826724/Investigation-Report-Operation-Juno.pdf",
+      "document": "Operation Juno Investigation Report: Concerning certain conduct of Mr Walter Sofronoff KC.",
+      "page": 73
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission made no adverse comment or opinion about anyone else named in the report.",
+    "cites": [
+     {
+      "url": "https://www.integrity.act.gov.au/__data/assets/pdf_file/0004/2826724/Investigation-Report-Operation-Juno.pdf",
+      "document": "Operation Juno Investigation Report: Concerning certain conduct of Mr Walter Sofronoff KC.",
+      "page": 7
+     }
+    ],
+    "section": "Outline of findings"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

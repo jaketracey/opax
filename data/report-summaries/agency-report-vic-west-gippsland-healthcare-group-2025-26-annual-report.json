@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-west-gippsland-healthcare-group-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "West Gippsland Healthcare Group 2025-26 annual report",
+ "body": "West Gippsland Healthcare Group",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab430/globalassets/tabled-paper-documents/tabled-paper-10765/west-gippsland-healthcare-group-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "b362aface39cc54c29eab795057b145a802f49d41efe657f9e9594bb6a8fd23e",
+  "pages": 100,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Board Chair and Chief Executive Officer",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab430/globalassets/tabled-paper-documents/tabled-paper-10765/west-gippsland-healthcare-group-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "West Gippsland Healthcare Group reported for the year ending 30 June 2026 on its hospital, aged care and community health services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab430/globalassets/tabled-paper-documents/tabled-paper-10765/west-gippsland-healthcare-group-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "REPORT OF OPERATIONS 2025-26"
+   },
+   {
+    "text": "The Group reported exceeding planned surgery activity targets and maintaining accreditation under national safety and quality standards.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab430/globalassets/tabled-paper-documents/tabled-paper-10765/west-gippsland-healthcare-group-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Board Chair and Chief Executive Officer"
+   },
+   {
+    "text": "The Group reported 3,834 planned surgery admissions against a target of 3,700, while 84.2% received surgery within recommended times against a 94% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab430/globalassets/tabled-paper-documents/tabled-paper-10765/west-gippsland-healthcare-group-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 42
+     }
+    ],
+    "section": "Part B – KPI’s"
+   },
+   {
+    "text": "The Group recorded an operating surplus under its Statement of Priorities and an overall net deficit.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab430/globalassets/tabled-paper-documents/tabled-paper-10765/west-gippsland-healthcare-group-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 24
+     }
+    ],
+    "section": "Financial Summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Performance against the Network’s Outcomes Framework indicates that all Year 1 measures have been achieved or remain on track within agreed timeframes.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab430/globalassets/tabled-paper-documents/tabled-paper-10765/west-gippsland-healthcare-group-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

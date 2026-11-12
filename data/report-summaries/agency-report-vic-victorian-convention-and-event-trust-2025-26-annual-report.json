@@ -1,0 +1,68 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-convention-and-event-trust-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Convention and Event Trust 2025-26 annual report",
+ "body": "Victorian Convention and Event Trust",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3bd/globalassets/tabled-paper-documents/tabled-paper-10687/vcet-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "83e37778ba97d0cad6cfdc1c204593b2b9ef05fe13315407090e3d6c788711aa",
+  "pages": 45,
+  "rights": null
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The annual report of the Victorian Convention and Event Trust covers the year ending 30 June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3bd/globalassets/tabled-paper-documents/tabled-paper-10687/vcet-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ],
+    "section": "Independent Auditor’s Report"
+   },
+   {
+    "text": "The independent auditor concluded that the financial report fairly presented the trust’s financial position, performance and cash flows in accordance with the applicable reporting requirements.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3bd/globalassets/tabled-paper-documents/tabled-paper-10687/vcet-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ],
+    "section": "Opinion"
+   },
+   {
+    "text": "The auditor’s opinion covered the financial report and did not provide assurance on other information in the annual report.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3bd/globalassets/tabled-paper-documents/tabled-paper-10687/vcet-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ],
+    "section": "Other information"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

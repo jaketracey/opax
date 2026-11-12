@@ -182,3 +182,30 @@ def test_published_quotes_lose_pdf_line_breaks():
 
 def test_spelled_numbers_on_the_page_count():
     assert g.spelled("It made twenty-five recommendations and nine findings") >= {"25", "9"}
+
+
+def test_ocr_text_is_marked_on_the_published_source():
+    res = g.check(draft(), PAGES, META)
+    assert "text" not in g.publish(draft(), res, META, None)["source"]
+    out = g.publish(draft(), res, {**META, "text_source": "ocr"}, None)
+    assert out["source"]["text"] == "ocr"
+
+
+def test_packs_prefer_on_device_ocr_text_for_the_same_file(tmp_path, monkeypatch):
+    spec = importlib.util.spec_from_file_location("prepare", GATE.parent / "prepare.py")
+    prep = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(prep)
+    monkeypatch.setattr(prep, "PACKS", tmp_path / "packs")
+    monkeypatch.setattr(prep, "OCR_TEXT", tmp_path / "ocr")
+    (tmp_path / "ocr").mkdir()
+    layer = tmp_path / "layer.json"
+    layer.write_text(json.dumps({"pages": ["", " "]}))
+    r = {"slug": "integrity-report-scan", "type": "integrity_report", "title": "Scan", "url": "https://example.gov.au/s.pdf",
+         "sha256": "ab" * 32, "text": str(layer)}
+    meta = json.loads((prep.write_pack(r) / "meta.json").read_text())
+    assert meta["text_source"] == "pdf" and meta["chars"] == 1
+    (tmp_path / "ocr" / f"{'ab' * 32}.json").write_text(json.dumps({"sha256": "ab" * 32, "pages": ["Scanned page one", "two"]}))
+    d = prep.write_pack(r)
+    meta = json.loads((d / "meta.json").read_text())
+    assert meta["text_source"] == "ocr" and meta["pages"] == 2
+    assert json.loads((d / "pages.json").read_text()) == ["Scanned page one", "two"]

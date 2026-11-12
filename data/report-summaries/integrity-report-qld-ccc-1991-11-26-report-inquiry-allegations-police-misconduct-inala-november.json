@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-11-26-report-inquiry-allegations-police-misconduct-inala-november",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+  "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+  "sha256": "3f2610056430e15c8d9adc60b9a8915583707e9b0499288cc309b2e7a65bc4c1",
+  "pages": 120,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 15,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated complaints about police conduct during disturbances at Inala and subsequent detention in November 1990.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+      "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The inquiry examined complaints concerning the Wandarrah Centre incident, arrests and treatment in the Inala watchhouse.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+      "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+      "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+      "page": 12
+     }
+    ],
+    "section": "Complaints Received"
+   },
+   {
+    "text": "The Commission concluded that inconsistent and inadequate evidence prevented charges, while cautioning that this did not establish that the allegations were untrue.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+      "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+      "page": 13
+     }
+    ],
+    "section": "Observations"
+   },
+   {
+    "text": "Its eight main recommendations covered community liaison, senior supervision, agreements about local functions, police training and arrangements for detaining large groups.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+      "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+      "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+      "page": 15
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In making its findings the Commission is not to be taken as certifying that the allegations were necessarily untrue and that the police version was accepted without question.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+     "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+     "page": 13
+    }
+   },
+   {
+    "quote": "The standards of proof for criminal proceedings or disciplinary proceedings, namely proof beyond reasonable doubt or on the balance of probabilities simply could not be met.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+     "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+     "page": 13
+    }
+   },
+   {
+    "quote": "Continuing regular liaison between police and the Aboriginal community should be promoted.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-inquiry-into-allegations-of-police-misconduct-at-Inala-in-November-Report-1990.pdf",
+     "document": "Report on an Inquiry into allegations of police misconduct at Inala in November 1990 (26 November 1991)",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

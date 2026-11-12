@@ -1,0 +1,89 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-department-of-premier-and-cabinet-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Department of Premier and Cabinet 2025-26 annual report",
+ "body": "Department of Premier and Cabinet",
+ "source": {
+  "url": "https://www.vic.gov.au/sites/default/files/2026-10/DPC-Annual-Report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "ca9075840224dc027eadb7b015e3df3939edbc5188a72a9e7bf1bf61128a420d",
+  "pages": 205,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Secretary’s foreword",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.vic.gov.au/sites/default/files/2026-10/DPC-Annual-Report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Department of Premier and Cabinet’s 2025–26 report covers its support for government policy, public sector leadership and collaboration across departments.",
+    "cites": [
+     {
+      "url": "https://www.vic.gov.au/sites/default/files/2026-10/DPC-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.vic.gov.au/sites/default/files/2026-10/DPC-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Vision and strategic objectives"
+   },
+   {
+    "text": "The department reported developing Victoria’s China Strategy and publishing caretaker convention guidelines in June 2026 for the coming state election.",
+    "cites": [
+     {
+      "url": "https://www.vic.gov.au/sites/default/files/2026-10/DPC-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Secretary’s foreword"
+   },
+   {
+    "text": "It reported a portfolio operating surplus of $9.0 million and a comprehensive surplus of $8.1 million, including movements outside transactions.",
+    "cites": [
+     {
+      "url": "https://www.vic.gov.au/sites/default/files/2026-10/DPC-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 148
+     }
+    ],
+    "section": "Comprehensive operating statement"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The comprehensive result, which incorporates non transactional movements is a surplus of $8.1 million.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.vic.gov.au/sites/default/files/2026-10/DPC-Annual-Report-2025-26.pdf",
+     "document": "annual report",
+     "page": 148
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2013-09-25-fraud-financial-management-and-accountability-queensland-pub",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Fraud, financial management and accountability in the Queensland public sector: An examination of how a $16.69 million fraud was committed on Queensland Health",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+  "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+  "sha256": "fac3b52e4c9ac99454a928da9a6891f7cbc2d5103ca93017b9d1f094cf286324",
+  "pages": 46,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission examined how a Queensland Health employee committed a $16.69 million fraud and what other public agencies could learn from it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+      "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+      "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+      "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+      "page": 39
+     }
+    ]
+   },
+   {
+    "text": "The CMC identified failures in policy compliance, financial controls, supervision, change management and responses to complaints and audits.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+      "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+      "page": 36
+     }
+    ]
+   },
+   {
+    "text": "The CMC’s five recommendations addressed checks on service providers and payments, management skills, organisational change and fraud awareness.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+      "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+      "page": 40
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+      "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+      "page": 41
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+      "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+      "page": 42
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+      "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+      "page": 43
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "It was this aggregation of factors that exposed QHealth to a long-term and continuing fraud.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+     "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+     "page": 36
+    }
+   },
+   {
+    "quote": "To function properly, agencies must have not only appropriate policies and procedures, but also staff who understand and conscientiously adhere to them, and managers who can identify and effectively manage non-compliance.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Fraud-financial-management-and-accountability-in-the-qld-public-sector-Report-2013.pdf",
+     "document": "Fraud, financial management and accountability in the Queensland public sector: An examination of how... (25 September 2013)",
+     "page": 37
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

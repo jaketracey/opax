@@ -1,4 +1,4 @@
-import {partyLabelHTML} from '../public/labels.js'
+import {partyLabelHTML, partyShortName} from '../public/labels.js'
 import {shortDate} from '../public/format.js'
 import {VIC_ELECTION_PATH, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
 import {escapeHtml as esc, safeHref, type Crumb, type ReadAsset} from './seo-content'
@@ -13,11 +13,12 @@ interface Member {
   detailed_count: number; divisions: Division[];
 }
 interface Contest { date: string; kind: 'general' | 'by-election' | 'supplementary'; party: string; share: number; against: string; against_share: number; margin: number; url: string }
+interface Candidate {name: string; party: string; group?: string | null; group_name?: string}
 interface Seat {
   name: string; kind: 'district' | 'region'; path: string; source_url: string; region: string | null;
   districts: string[]; boundary_note: string | null; formerly: string | null; created: boolean;
   result: {general: Contest; since: Contest | null} | null;
-  candidates: {published: string; url: string; list: {name: string; party: string}[]} | null;
+  candidates: {published: string; url: string; list: Candidate[]} | null;
   electorate_url: string; roster_date: string; members: Member[];
 }
 export interface VicElection {
@@ -113,11 +114,27 @@ function record(m: Member, opts: {search: boolean; heading: string}) {
 }
 
 /** Candidates as the VEC publishes them after nominations close: ballot paper order, no other ordering. */
-// The ballot number sits in its own column, so names and parties start on one line however many there are.
-const candidates = (s: Seat) => s.candidates?.list.length
-  ? section('candidates','Candidates',`<ol class="vic-candidates" role="list">${s.candidates.list.map((c,i)=>`<li><span class="vic-candidate-no" aria-hidden="true">${i+1}</span><span class="vic-candidate"><span class="vic-candidate-name">${esc(c.name)}</span>${c.party ? party(c.party) : ''}</span></li>`).join('')}</ol>`,
+function candidates(s: Seat) {
+  if (!s.candidates?.list.length) return ''
+  const row = (c: Candidate, number?: number) => `<li>${number === undefined ? '' : `<span class="vic-candidate-no" aria-hidden="true">${number}</span>`}<span class="vic-candidate"><span class="vic-candidate-name">${esc(c.name)}</span>${c.party && c.party.toLowerCase() !== 'independent' ? party(c.party) : ''}</span></li>`
+  let body: string
+  if (s.kind === 'region') {
+    const groups: {letter: Candidate['group']; name: string; list: Candidate[]}[] = []
+    for (const c of s.candidates.list) {
+      if (!groups.length || groups.at(-1)!.letter !== c.group) groups.push({letter:c.group,name:c.group_name || '',list:[]})
+      groups.at(-1)!.list.push(c)
+    }
+    body = groups.map((g,i) => {
+      const heading = g.letter === null ? 'Ungrouped' : g.letter ? `Group ${g.letter}${g.name ? ', '+partyShortName(g.name) : ''}` : ''
+      const id = `candidate-group-${i}`
+      return `${heading ? `<h3 class="ui-subsection-title" id="${id}">${esc(heading)}</h3>` : ''}<ul class="vic-candidates vic-candidates-region" role="list"${heading ? ` aria-labelledby="${id}"` : ''}>${g.list.map(c=>row(c)).join('')}</ul>`
+    }).join('')
+  } else {
+    body = `<ol class="vic-candidates" role="list">${s.candidates.list.map((c,i)=>row(c,i+1)).join('')}</ol>`
+  }
+  return section('candidates','Candidates',body,
     `In ballot paper order, as published by the VEC on ${esc(shortDate(s.candidates.published))}. ${link(s.candidates.url,'VEC candidate list')}`)
-  : ''
+}
 
 function resultFacts(s: Seat) {
   const r = s.result

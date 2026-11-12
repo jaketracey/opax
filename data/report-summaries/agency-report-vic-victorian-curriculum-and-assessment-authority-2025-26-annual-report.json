@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-curriculum-and-assessment-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Curriculum and Assessment Authority 2025-26 annual report",
+ "body": "Victorian Curriculum and Assessment Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab38e/globalassets/tabled-paper-documents/tabled-paper-10679/vcaa-annual-report-2025_26.pdf",
+  "document": "annual report",
+  "sha256": "f1aaebab3e9bd3147ea9e14d612b155fe58540cd7df02a83ac1a8358871b5c75",
+  "pages": 92,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Executive Officer’s report",
+  "first_page": 8,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab38e/globalassets/tabled-paper-documents/tabled-paper-10679/vcaa-annual-report-2025_26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Curriculum and Assessment Authority reported on 2025–26, setting curriculum, assessment and reporting standards for Victorian schools and students.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38e/globalassets/tabled-paper-documents/tabled-paper-10679/vcaa-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chief Executive Officer’s report"
+   },
+   {
+    "text": "The authority reported delivering the 2025 VCE examinations to more than 92,000 students and supporting NAPLAN for more than 315,000 students.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38e/globalassets/tabled-paper-documents/tabled-paper-10679/vcaa-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chief Executive Officer’s report"
+   },
+   {
+    "text": "It reported a senior secondary certificate completion rate of 97.4%, above the target of 95.0%, using calendar-year data.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38e/globalassets/tabled-paper-documents/tabled-paper-10679/vcaa-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 20
+     }
+    ],
+    "section": "Performance against output performance measures"
+   },
+   {
+    "text": "The authority reported a net surplus of $0.4 million for 2025–26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38e/globalassets/tabled-paper-documents/tabled-paper-10679/vcaa-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 21
+     }
+    ],
+    "section": "Financial year review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

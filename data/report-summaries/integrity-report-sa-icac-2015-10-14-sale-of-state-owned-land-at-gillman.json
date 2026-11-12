@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2015-10-14-sale-of-state-owned-land-at-gillman",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Sale of State Owned Land at Gillman",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370724/ICAC_Report_Sale_Gillman.pdf",
+  "document": "Sale of State Owned Land at Gillman",
+  "sha256": "088b35dbac0dc6c88e56ee5a216bb67904e84ef438eb46fab887c4f2de54e6cd",
+  "pages": 266,
+  "rights": "copyright"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commissioner Against Corruption used Ombudsman powers to investigate possible maladministration by the Urban Renewal Authority in the Gillman land transaction.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370724/ICAC_Report_Sale_Gillman.pdf",
+      "document": "Sale of State Owned Land at Gillman",
+      "page": 9
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370724/ICAC_Report_Sale_Gillman.pdf",
+      "document": "Sale of State Owned Land at Gillman",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "He examined the Authority’s assessment and negotiation of an unsolicited land proposal, including valuations, market testing, probity advice and information provided to its board.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370724/ICAC_Report_Sale_Gillman.pdf",
+      "document": "Sale of State Owned Land at Gillman",
+      "page": 234
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370724/ICAC_Report_Sale_Gillman.pdf",
+      "document": "Sale of State Owned Land at Gillman",
+      "page": 235
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner found maladministration by the Authority, concluding that its practices substantially mismanaged public resources.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370724/ICAC_Report_Sale_Gillman.pdf",
+      "document": "Sale of State Owned Land at Gillman",
+      "page": 234
+     }
+    ]
+   },
+   {
+    "text": "He made one recommendation to consider legislative changes clarifying the reporting and decision-making responsibilities of the Authority’s chief executive, board and minister.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/370724/ICAC_Report_Sale_Gillman.pdf",
+      "document": "Sale of State Owned Land at Gillman",
+      "page": 245
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

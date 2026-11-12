@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-port-of-hastings-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Port of Hastings Corporation 2025-26 annual report",
+ "body": "Port of Hastings Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "8bcb0969c254eadea73c5607d5ea3efdac25b7aeee04bf6a223d59bf34425ca5",
+  "pages": 72,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chairperson’s & CEO’s Report",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Port of Hastings Corporation reported on 2025–26 as the body managing and developing the port to support Victoria’s freight system.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The corporation reported handling 137 vessels and 1.84 million tonnes of trade during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It reported progressing environmental assessment and planning for the proposed Victorian Renewable Energy Terminal, which remained subject to approvals and funding.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It reported a comprehensive result of $4 million and capital expenditure of $2.1 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Pleasingly, there were no major safety and marine pollution response incidents during the year.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab333/globalassets/tabled-paper-documents/tabled-paper-10608/port-of-hastings-corporation-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

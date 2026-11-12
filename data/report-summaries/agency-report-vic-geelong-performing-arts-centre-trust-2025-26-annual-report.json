@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-geelong-performing-arts-centre-trust-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Geelong Performing Arts Centre Trust 2025-26 annual report",
+ "body": "Geelong Performing Arts Centre Trust",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab392/globalassets/tabled-paper-documents/tabled-paper-10668/geelong_performing_arts_centre_trust_annual_report_2025-26.pdf",
+  "document": "annual report",
+  "sha256": "a64e648b9d5e03d2dbf6ea9bdc23a2f10951dc09a1a9ba09df14c7ab7419ec00",
+  "pages": 132,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "TRUST CHAIR’S REPORT",
+  "first_page": 14,
+  "last_page": 15,
+  "link": "https://www.parliament.vic.gov.au/4ab392/globalassets/tabled-paper-documents/tabled-paper-10668/geelong_performing_arts_centre_trust_annual_report_2025-26.pdf#page=14"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Geelong Performing Arts Centre Trust, trading as Geelong Arts Centre, reported on its management of the centre and support for artistic and entertainment activities in 2025–26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab392/globalassets/tabled-paper-documents/tabled-paper-10668/geelong_performing_arts_centre_trust_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "ABOUT US"
+   },
+   {
+    "text": "The trust reported more than 659,126 visits, including 285,241 attendees at 1,935 performances and events.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab392/globalassets/tabled-paper-documents/tabled-paper-10668/geelong_performing_arts_centre_trust_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "TRUST CHAIR’S REPORT"
+   },
+   {
+    "text": "It reported a business-as-usual surplus of $56,561.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab392/globalassets/tabled-paper-documents/tabled-paper-10668/geelong_performing_arts_centre_trust_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "TRUST CHAIR’S REPORT"
+   },
+   {
+    "text": "It reported a $6.48 million deficit from transactions after depreciation and an $11.36 million comprehensive surplus after land and building revaluations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab392/globalassets/tabled-paper-documents/tabled-paper-10668/geelong_performing_arts_centre_trust_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "TRUST CHAIR’S REPORT"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We have made major steps forward to achieving our four-year goals.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab392/globalassets/tabled-paper-documents/tabled-paper-10668/geelong_performing_arts_centre_trust_annual_report_2025-26.pdf",
+     "document": "annual report",
+     "page": 17
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

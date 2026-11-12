@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-07-18-report-public-inquiry-certain-allegations-against-employees",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its successor, the Queensland Corrective Services Commission",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+  "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+  "sha256": "e3292fa1a4476c2af8a3f09b1c18c3f618c7e8c2b6d200f99dfe6eb007abbd4a",
+  "pages": 274,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 15,
+  "last_page": 27,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf#page=15"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission held a public inquiry into allegations involving prison employees and corrective services staff.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 19
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined allegations about drugs, sexual conduct, theft from prison farms, escapes and financial practices.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 20
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 21
+     }
+    ],
+    "section": "THE ALLEGATIONS IN A NUT SHELL"
+   },
+   {
+    "text": "The Commission concluded that none of the allegations had been substantiated and exonerated the people concerned.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 22
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 23
+     }
+    ],
+    "section": "NO EVIDENCE OF CORRUPT OR ILLEGAL CONDUCT"
+   },
+   {
+    "text": "It also concluded that there was no evidence of a cover-up or impropriety by the Queensland Corrective Services Commission.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 241
+     }
+    ],
+    "section": "CONCLUSIONS, FINDINGS AND RECOMMENDATIONS"
+   },
+   {
+    "text": "Its six recommendations addressed inmate work, accommodation with officers, search powers, drug controls, statutory oversight and support for staff through organisational change.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 26
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+      "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+      "page": 27
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Despite the numerous allegations made, not one was substantiated.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+     "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+     "page": 22
+    }
+   },
+   {
+    "quote": "In these circumstances, the Commission has no hesitation in exonerating those persons the subject of the allegations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+     "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+     "page": 23
+    }
+   },
+   {
+    "quote": "There was no evidence of any \"cover-up\" or impropriety by the Queensland Corrective Services Commission.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Public-inquiry-certain-allegations-employees-qld-prison-service/A-public-inquiry-into-certain-allegations-against-employees-of-the-qld-prison-service-and-QCS-Report-1991.pdf",
+     "document": "Report on a Public Inquiry into certain allegations against employees of the Queensland Prison Service and its... (18 July 1991)",
+     "page": 241
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

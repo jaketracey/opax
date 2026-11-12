@@ -1,0 +1,80 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2005-07-01-report-investigation-appointment-queensland-information-comm",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report of an investigation into the appointment of the Queensland Information Commissioner",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Report-of-an-investigation-into-the-appointment-of-the-qld-Information-Commissioner-Report-2005_0.pdf",
+  "document": "Report of an investigation into the appointment of the Queensland Information Commissioner (July 2005)",
+  "sha256": "cafb7c1f59eabe0a6dddc59c953d50428f8851189fb3c056c236362b14798bed",
+  "pages": 18,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission examined concerns about the appointment of the Queensland Information Commissioner.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Report-of-an-investigation-into-the-appointment-of-the-qld-Information-Commissioner-Report-2005_0.pdf",
+      "document": "Report of an investigation into the appointment of the Queensland Information Commissioner (July 2005)",
+      "page": 2
+     }
+    ]
+   },
+   {
+    "text": "It considered the selection criteria, the roles of selection committee members and the ending of the former deputy commissioner’s duties.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Report-of-an-investigation-into-the-appointment-of-the-qld-Information-Commissioner-Report-2005_0.pdf",
+      "document": "Report of an investigation into the appointment of the Queensland Information Commissioner (July 2005)",
+      "page": 2
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Report-of-an-investigation-into-the-appointment-of-the-qld-Information-Commissioner-Report-2005_0.pdf",
+      "document": "Report of an investigation into the appointment of the Queensland Information Commissioner (July 2005)",
+      "page": 3
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that, although questions remained about parts of the selection process, there was no reasonable suspicion of official misconduct and no further action was warranted.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Report-of-an-investigation-into-the-appointment-of-the-qld-Information-Commissioner-Report-2005_0.pdf",
+      "document": "Report of an investigation into the appointment of the Queensland Information Commissioner (July 2005)",
+      "page": 18
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In those circumstances, the Commission considers no further action on its part is warranted.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Report-of-an-investigation-into-the-appointment-of-the-qld-Information-Commissioner-Report-2005_0.pdf",
+     "document": "Report of an investigation into the appointment of the Queensland Information Commissioner (July 2005)",
+     "page": 18
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

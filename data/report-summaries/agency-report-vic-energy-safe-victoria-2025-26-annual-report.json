@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-energy-safe-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Energy Safe Victoria 2025-26 annual report",
+ "body": "Energy Safe Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "17f113560e1b88d7849d301b6cf45258f7ddc1045632c5891ad98185dc422511",
+  "pages": 106,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From the Chairperson and Chief Executive Officer",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Energy Safe Victoria reported on its 2025–26 role regulating energy safety and reducing harm to people, property and the environment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "From the Chairperson and Chief Executive Officer"
+   },
+   {
+    "text": "The regulator reported inspecting 85 large renewable energy sites and more than 1,300 electrical assets as part of its safety work.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "From the Chairperson and Chief Executive Officer"
+   },
+   {
+    "text": "It reported four deaths and eight serious injuries in energy incidents, while ground fires caused by electrical assets fell by 6% from the previous year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "From the Chairperson and Chief Executive Officer"
+   },
+   {
+    "text": "It recorded a surplus from transactions of $9.2 million and reported no borrowings at 30 June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 44
+     }
+    ],
+    "section": "Financial performance and business review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Despite a challenging season, ground fires from electrical assets decreased by 6% from the previous year.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab33d/globalassets/tabled-paper-documents/tabled-paper-10600/energy-safe-victoria---annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

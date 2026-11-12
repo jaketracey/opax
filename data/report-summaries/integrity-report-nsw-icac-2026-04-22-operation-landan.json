@@ -1,0 +1,68 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2026-04-22-operation-landan",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation into the conduct of the then chief executive of school infrastructure NSW and others (Operation Landan)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1128/NSW%20ICAC%20Operation%20Landan%20-%20Recommendations%20for%20prosecutions.pdf.aspx",
+  "document": "Download the recommendations for prosecutions – Operation Landan (pdf)",
+  "sha256": "49cf08b29af3f5217b0f3c89243a1f3f8a4a5d5a089edba3ea35cd1c65d892ba",
+  "pages": 2,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "NSW ICAC’s Operation Landan recommendations express the Commission’s opinion that advice about possible prosecutions should be considered from the Director of Public Prosecutions.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1128/NSW%20ICAC%20Operation%20Landan%20-%20Recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Download the recommendations for prosecutions – Operation Landan (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Section 74A(2) statements"
+   },
+   {
+    "text": "The Commission’s proposed advice covers misconduct in public office, assisting that offence and false evidence during compulsory examinations or a public inquiry.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1128/NSW%20ICAC%20Operation%20Landan%20-%20Recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Download the recommendations for prosecutions – Operation Landan (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Section 74A(2) statements"
+   },
+   {
+    "text": "The Commission also proposed seeking advice about destroying messages to prevent their use in its investigation and false evidence concerning deleted messages and supplier blacklisting.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1128/NSW%20ICAC%20Operation%20Landan%20-%20Recommendations%20for%20prosecutions.pdf.aspx",
+      "document": "Download the recommendations for prosecutions – Operation Landan (pdf)",
+      "page": 2
+     }
+    ],
+    "section": "Section 74A(2) statements"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

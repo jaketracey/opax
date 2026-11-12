@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-cladding-safety-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Cladding Safety Victoria 2025-26 annual report",
+ "body": "Cladding Safety Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "ab6c6461ec455676945041d6d19a89080df62e01b8e00af6677bdc8af7dd190d",
+  "pages": 90,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Executive Officer’s statement",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Cladding Safety Victoria reported for 2025-26 on its work to reduce combustible cladding risks in Victorian buildings.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Nature and range of services provided"
+   },
+   {
+    "text": "Cladding Safety Victoria reported supporting 1,661 residential apartment buildings and rectifying 131 public-use buildings over the program.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chief Executive Officer’s statement"
+   },
+   {
+    "text": "Cladding Safety Victoria reported that cladding removal from the final three Class 2 buildings was expected in the coming months.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chief Executive Officer’s statement"
+   },
+   {
+    "text": "Cladding Safety Victoria reported a $66.87 million deficit from transactions, mainly reflecting the end of its levy and planned use of accumulated funds.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ],
+    "section": "Financial summary"
+   },
+   {
+    "text": "Cladding Safety Victoria reported that it would close as a standalone agency and transfer remaining responsibilities to the Building and Plumbing Commission from 1 July 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Chief Executive Officer’s statement"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In total, 1,661 Class 2 residential apartment buildings have been supported by CSV.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab37c/globalassets/tabled-paper-documents/tabled-paper-10661/cladding-safety-victoria-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

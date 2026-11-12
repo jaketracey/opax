@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-consumer-affairs-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Consumer Affairs Victoria 2025-26 annual report",
+ "body": "Consumer Affairs Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "4215575a06537d7c937de542d7a66ec8a2bb85186bc685b4ad813dfa57bea3d6",
+  "pages": 51,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Director’s foreword",
+  "first_page": 4,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Consumer Affairs Victoria reported for 2025-26 on consumer protection, rental regulation and support for people navigating consumer problems.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Director’s foreword"
+   },
+   {
+    "text": "Consumer Affairs Victoria reported answering more than 232,000 calls and handling 99,000 online or written contacts.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Director’s foreword"
+   },
+   {
+    "text": "Consumer Affairs Victoria reported launching a digital bond system in December 2025 covering more than 750,000 active bonds.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Our performance"
+   },
+   {
+    "text": "Consumer Affairs Victoria reported 1,104 court and administrative actions and responding to all high-priority consumer law breaches.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Our performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We delivered strong overall performance against our 2025–26 measures.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3a5/globalassets/tabled-paper-documents/tabled-paper-10690/2025-26-cav-annual-report.pdf",
+     "document": "annual report",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1997-03-26-reducing-police-civilian-conflict-analysis-assault-complaint",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Reducing Police-Civilian Conflict: An Analysis of Assault Complaints Against Queensland Police",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Reducing-police-civilian-conflict-Report-1997.pdf",
+  "document": "Reducing Police-Civilian Conflict: An Analysis of Assault Complaints Against Queensland Police (26 March 1997)",
+  "sha256": "752250dc8fe05d4869da857252ef40e7b16a0a82e5f82f1daabc4232ca0e8cf8",
+  "pages": 94,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 12,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Reducing-police-civilian-conflict-Report-1997.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission studied the circumstances behind assault complaints to help Queensland police reduce conflict with the public.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Reducing-police-civilian-conflict-Report-1997.pdf",
+      "document": "Reducing Police-Civilian Conflict: An Analysis of Assault Complaints Against Queensland Police (26 March 1997)",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It analysed selected complaints finalised between July 1990 and June 1995, examining the people involved, their behaviour and the settings of incidents.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Reducing-police-civilian-conflict-Report-1997.pdf",
+      "document": "Reducing Police-Civilian Conflict: An Analysis of Assault Complaints Against Queensland Police (26 March 1997)",
+      "page": 9
+     }
+    ],
+    "section": "Study design"
+   },
+   {
+    "text": "The Commission found that legal difficulties in proving allegations meant few complaints led to recommendations for criminal or disciplinary action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Reducing-police-civilian-conflict-Report-1997.pdf",
+      "document": "Reducing Police-Civilian Conflict: An Analysis of Assault Complaints Against Queensland Police (26 March 1997)",
+      "page": 10
+     }
+    ],
+    "section": "Key findings"
+   },
+   {
+    "text": "The Commission proposed measures to prevent assault complaints covering supervision, communication training, officer identification, monitoring and policies on force, alongside support and education for off-duty officers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Reducing-police-civilian-conflict-Report-1997.pdf",
+      "document": "Reducing Police-Civilian Conflict: An Analysis of Assault Complaints Against Queensland Police (26 March 1997)",
+      "page": 12
+     }
+    ],
+    "section": "Policy implications"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Most complaints of assault against police were first made to other (usually more senior) police officers, who then forwarded the complaint to the CJC.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Reducing-police-civilian-conflict-Report-1997.pdf",
+     "document": "Reducing Police-Civilian Conflict: An Analysis of Assault Complaints Against Queensland Police (26 March 1997)",
+     "page": 10
+    }
+   },
+   {
+    "quote": "On or off duty, female police officers were much less likely to have complaints of assault made against them than were male officers.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Reducing-police-civilian-conflict-Report-1997.pdf",
+     "document": "Reducing Police-Civilian Conflict: An Analysis of Assault Complaints Against Queensland Police (26 March 1997)",
+     "page": 10
+    }
+   },
+   {
+    "quote": "A variety of strategies are required to reduce the incidence of assault complaints against police to take account of the range of different circumstances in which such complaints arise.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Reducing-police-civilian-conflict-Report-1997.pdf",
+     "document": "Reducing Police-Civilian Conflict: An Analysis of Assault Complaints Against Queensland Police (26 March 1997)",
+     "page": 76
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

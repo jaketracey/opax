@@ -1,0 +1,157 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1992-12-03-report-investigation-complaints-kelvin-ronald-condren-and-ot",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation into the complaints of Kelvin Ronald Condren and others",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+  "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+  "sha256": "f1fa2f68380734d72f3768a206aca7a168d9172ecfe57c6bfcd349b198f478c5",
+  "pages": 136,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 29,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated complaints about police conduct in a murder case.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 12
+     }
+    ],
+    "section": "Scope of the Hearing"
+   },
+   {
+    "text": "It examined alleged assault, intimidation and fabricated interview records, as well as the quality of the investigation and interview safeguards for Aboriginal people.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 14
+     }
+    ],
+    "section": "The Conduct of the Investigation"
+   },
+   {
+    "text": "The Commission concluded that the evidence did not justify referrals for criminal or disciplinary charges on the complaints examined.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 20
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 22
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 23
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "It nevertheless identified unsatisfactory aspects of the investigation, including failures to interview relevant witnesses and inadequate arrangements for an independent person during questioning.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 20
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission proposed nine recommendations on interview support, recording practices and the use of confessions, subject to review after public submissions and a hearing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 25
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 26
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 27
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 28
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+      "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+      "page": 29
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The use of the JP as an independent person did not, in the Commission's view, substantially comply with the General Instructions.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Report-investigation-into-complaints-of-Kelvin-Ronald-Condren-and-others/The-investigation-into-the-complaints-of-Kelvin-Ronald-Condren-and-others-Report-1992.pdf",
+     "document": "Report on the investigation into the complaints of Kelvin Ronald Condren and others (November 1992)",
+     "page": 19
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

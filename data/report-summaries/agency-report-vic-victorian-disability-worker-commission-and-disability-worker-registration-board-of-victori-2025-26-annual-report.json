@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-disability-worker-commission-and-disability-worker-registration-board-of-victori-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Disability Worker Commission and Disability Worker Registration Board of Victoria 2025-26 annual report",
+ "body": "Victorian Disability Worker Commission and Disability Worker Registration Board of Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa28b/globalassets/tabled-paper-documents/tabled-paper-10563/victorian-disability-worker-commission-and-disability-worker-registration-board-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "bfd693ffdfc58e791062fe2694ead26369ce79c86269449ebaf3124dd03da5d9",
+  "pages": 38,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s report",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4aa28b/globalassets/tabled-paper-documents/tabled-paper-10563/victorian-disability-worker-commission-and-disability-worker-registration-board-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Disability Worker Commission and Disability Worker Registration Board of Victoria reported on 2025–26, regulating disability workers and administering their registration.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa28b/globalassets/tabled-paper-documents/tabled-paper-10563/victorian-disability-worker-commission-and-disability-worker-registration-board-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Commissioner’s report"
+   },
+   {
+    "text": "The bodies reported 1,083 registered disability workers, with 81% renewing their registration.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa28b/globalassets/tabled-paper-documents/tabled-paper-10563/victorian-disability-worker-commission-and-disability-worker-registration-board-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Year in review 2025–26"
+   },
+   {
+    "text": "They reported completing 29 investigations into worker conduct and deciding 97% of new registration applications within 90 days.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa28b/globalassets/tabled-paper-documents/tabled-paper-10563/victorian-disability-worker-commission-and-disability-worker-registration-board-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Year in review 2025–26"
+   },
+   {
+    "text": "The commission and board reported operating expenses of $12,632,498, with prior-year savings funding the difference between expenditure and the year’s allocation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa28b/globalassets/tabled-paper-documents/tabled-paper-10563/victorian-disability-worker-commission-and-disability-worker-registration-board-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 22
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,126 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2005-06-02-review-financial-management-guidelines-office-speaker",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Review of the financial management guidelines for the Office of the Speaker",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+  "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+  "sha256": "524ed2a043ecb82b393e52858ef6785789a30304e1b28d42ea06c3758147d7c9",
+  "pages": 68,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "At the Premier’s request, the Crime and Misconduct Commission reviewed proposed financial management guidelines for the Office of the Speaker.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The review assessed expense controls and misconduct risks, including authorisation, documentation and public accountability.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The CMC considered the draft guidelines generally sound, while stressing that their effectiveness depended on how they were interpreted and applied.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 29
+     }
+    ]
+   },
+   {
+    "text": "The CMC made 28 recommendations covering spending approvals, travel and hospitality reporting, gifts, and the clerk’s ability to address non-compliance.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+      "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+      "page": 13
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "However technically sound the Guidelines may be, their effectiveness will depend on the spirit in which they are interpreted and applied.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Review-of-the-financial-management-guidelines-for-the-office-of-the-speaker-Report-2005.pdf",
+     "document": "Review of the financial management guidelines for the Office of the Speaker (2 June 2005)",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

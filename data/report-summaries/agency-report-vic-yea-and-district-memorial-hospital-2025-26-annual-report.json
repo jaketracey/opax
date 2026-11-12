@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-yea-and-district-memorial-hospital-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Yea and District Memorial Hospital 2025-26 annual report",
+ "body": "Yea and District Memorial Hospital",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "11cc58df272f89c5ee97d4bc657111c68e3a2604c675e0f76fb4802a0345598e",
+  "pages": 88,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Report from the Board Chair",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Yea and District Memorial Hospital reported for 2025–26 on providing local healthcare to its rural community.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Report from the Board Chair"
+   },
+   {
+    "text": "The Hospital reported launching a mobile health van that supported outreach clinics and recovery services following the January bushfires.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Report from the Chief Executive Officer"
+   },
+   {
+    "text": "The Hospital reported growth in district nursing and expanded mental health services, including practitioners working in local schools.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Report from the Chief Executive Officer"
+   },
+   {
+    "text": "The Hospital reported aged care ratings of four and five stars, and no improvement recommendations from its disability services accreditation assessment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Report from the Board Chair"
+   },
+   {
+    "text": "The Hospital reported meeting its break-even operating target, while recording an overall net deficit.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 21
+     }
+    ],
+    "section": "Financial Information"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Our mid-cycle National Disability Insurance Scheme (NDIS) accreditation assessment identified no recommendations for improvement.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab446/globalassets/tabled-paper-documents/tabled-paper-10771/yea-and-district-memorial-hospital-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

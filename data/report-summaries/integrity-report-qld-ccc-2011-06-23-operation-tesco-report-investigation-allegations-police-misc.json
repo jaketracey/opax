@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2011-06-23-operation-tesco-report-investigation-allegations-police-misc",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Tesco/Operation-Tesco-Report-2011.pdf",
+  "document": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast (23 June 2011)",
+  "sha256": "512ad980ff6ab18a9feaf28e02ec830a2150197be768d90462d5f647a8a5ed4d",
+  "pages": 48,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission conducted Operation Tesco to investigate allegations of drug use, improper information sharing and benefits involving Gold Coast police.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Tesco/Operation-Tesco-Report-2011.pdf",
+      "document": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast (23 June 2011)",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CMC found misconduct involving two initially targeted officers, while finding no evidence that corruption or misconduct was widespread across the district.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Tesco/Operation-Tesco-Report-2011.pdf",
+      "document": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast (23 June 2011)",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CMC identified problems with supervision, improper associations, alcohol use and the reporting of misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Tesco/Operation-Tesco-Report-2011.pdf",
+      "document": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast (23 June 2011)",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CMC recommended consideration of disciplinary action against five officers and managerial guidance for another officer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Tesco/Operation-Tesco-Report-2011.pdf",
+      "document": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast (23 June 2011)",
+      "page": 25
+     }
+    ]
+   },
+   {
+    "text": "The CMC supported stronger supervision and recruitment practices and called for a more proactive response to drug and alcohol risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Tesco/Operation-Tesco-Report-2011.pdf",
+      "document": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast (23 June 2011)",
+      "page": 45
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Tesco/Operation-Tesco-Report-2011.pdf",
+      "document": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast (23 June 2011)",
+      "page": 46
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Most of the misconduct outlined in this report arose out of compromising associations which police officers had failed to manage appropriately.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Tesco/Operation-Tesco-Report-2011.pdf",
+     "document": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast (23 June 2011)",
+     "page": 45
+    }
+   },
+   {
+    "quote": "A largely reactive approach to managing and dealing with substance abuse risks is not adequate.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Tesco/Operation-Tesco-Report-2011.pdf",
+     "document": "Operation Tesco: Report of an investigation into allegations of police misconduct on the Gold Coast (23 June 2011)",
+     "page": 45
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-barwon-region-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Barwon Region Water Corporation 2025-26 annual report",
+ "body": "Barwon Region Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab355/globalassets/tabled-paper-documents/tabled-paper-10629/barwon-water-group--annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "92ba7fcb4c9fee81a6f27042fba419da01df235924204c1d0d6d1f04a49e82ed",
+  "pages": 158,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chair and Managing Director",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab355/globalassets/tabled-paper-documents/tabled-paper-10629/barwon-water-group--annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Barwon Water reported for 2025-26 on its provision of water and wastewater services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab355/globalassets/tabled-paper-documents/tabled-paper-10629/barwon-water-group--annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Chair and Managing Director"
+   },
+   {
+    "text": "Barwon Water reported that its Melbourne to Geelong Pipeline upgrade added 6 billion litres of annual capacity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab355/globalassets/tabled-paper-documents/tabled-paper-10629/barwon-water-group--annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Chair and Managing Director"
+   },
+   {
+    "text": "Barwon Water reported 100% compliance with drinking water quality requirements and EPA standards.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab355/globalassets/tabled-paper-documents/tabled-paper-10629/barwon-water-group--annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Message from the Chair and Managing Director"
+   },
+   {
+    "text": "Barwon Water reported an after-tax loss of $14.7 million, attributing reduced growth-related revenue to slower construction and development.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab355/globalassets/tabled-paper-documents/tabled-paper-10629/barwon-water-group--annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Current year operating results and financial position analysis"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Despite the reduction in developer contribution revenue, we continued to generate positive operating cash flows throughout the year.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab355/globalassets/tabled-paper-documents/tabled-paper-10629/barwon-water-group--annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

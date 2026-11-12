@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-arts-centre-trust-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Arts Centre Trust 2025-26 annual report",
+ "body": "Victorian Arts Centre Trust",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10676/victorian_arts_centre_trust_annual_report_2025-26.pdf",
+  "document": "annual report",
+  "sha256": "b5dfe83a473e8189d6c40155d13fe1d2e9e44f163da80b9ed9266bb7b5e4df9e",
+  "pages": 136,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Executive Officer’s report",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10676/victorian_arts_centre_trust_annual_report_2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Arts Centre Trust reported on 2025–2026, presenting performing arts and caring for collections at Arts Centre Melbourne.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10676/victorian_arts_centre_trust_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10676/victorian_arts_centre_trust_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "About us"
+   },
+   {
+    "text": "The trust reported more than 1.1 million audience members attending 1,392 performances during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10676/victorian_arts_centre_trust_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Trust President’s report"
+   },
+   {
+    "text": "It reported opening the Australian Museum of Performing Arts in December 2025, with DIVA as its first exhibition.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10676/victorian_arts_centre_trust_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Chief Executive Officer’s report"
+   },
+   {
+    "text": "The trust reported an operating surplus of $0.3 million and an overall net result of $2.1 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10676/victorian_arts_centre_trust_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 64
+     }
+    ],
+    "section": "Financial overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The net operating and non-operating results combine to deliver a net result from transactions before depreciation of $16.7 million, with depreciation of $15.0 million driving a net result from transactions of $1.8 million.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3a7/globalassets/tabled-paper-documents/tabled-paper-10676/victorian_arts_centre_trust_annual_report_2025-26.pdf",
+     "document": "annual report",
+     "page": 64
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

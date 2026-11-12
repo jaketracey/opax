@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2023-03-07-operation-paragon",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation into the awarding of RTA and RMS contracts (Operation Paragon)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/986/NSW%20ICAC%20Operation%20Paragon%20recommendations%20for%20prosections.pdf.aspx",
+  "document": "recommendations for prosecutions (pdf)",
+  "sha256": "949776d0af2391a655418ac7d251d243617afd32a404a9461c7d7fc3606ea52a",
+  "pages": 6,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "For Operation Paragon, NSW ICAC expressed the opinion that consideration should be given to obtaining prosecution advice from the Director of Public Prosecutions.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/986/NSW%20ICAC%20Operation%20Paragon%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "recommendations for prosecutions (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   },
+   {
+    "text": "The Commission’s proposed prosecution advice concerns benefits linked to awarding roads agency contracts, deception for financial advantage and fraudulent documents.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/986/NSW%20ICAC%20Operation%20Paragon%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "recommendations for prosecutions (pdf)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/986/NSW%20ICAC%20Operation%20Paragon%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "recommendations for prosecutions (pdf)",
+      "page": 2
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   },
+   {
+    "text": "The Commission also proposed advice about dealing with proceeds of crime and false evidence in compulsory examinations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/986/NSW%20ICAC%20Operation%20Paragon%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "recommendations for prosecutions (pdf)",
+      "page": 3
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/986/NSW%20ICAC%20Operation%20Paragon%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "recommendations for prosecutions (pdf)",
+      "page": 4
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/986/NSW%20ICAC%20Operation%20Paragon%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "recommendations for prosecutions (pdf)",
+      "page": 5
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/986/NSW%20ICAC%20Operation%20Paragon%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "recommendations for prosecutions (pdf)",
+      "page": 6
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   },
+   {
+    "text": "The Commission states that the Director of Public Prosecutions decides whether charges can be laid and conducts prosecutions.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/986/NSW%20ICAC%20Operation%20Paragon%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "recommendations for prosecutions (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

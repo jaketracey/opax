@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-health-complaints-commissioner-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Health Complaints Commissioner 2025-26 annual report",
+ "body": "Health Complaints Commissioner",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf",
+  "document": "annual report",
+  "sha256": "a4c156dee810905bbc4077ffec65efccb7df2eed49ce67b88c557a6d1441ae6d",
+  "pages": 30,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Health Complaints Commissioner’s report for 2025–26 describes its independent complaint handling, education and regulation of health services in Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commissioner reported introducing risk-based triage and dedicated provider teams to identify and manage high-risk complaints more quickly.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It reported finalising 5,402 complaints and 4,426 enquiries during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Our impact at a glance"
+   },
+   {
+    "text": "The Commissioner reported issuing 48 interim prohibition orders and 10 prohibition orders to address risks to public health, safety and welfare.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "As a result, more enquiries were finalised within 3 days and 30 days than ever before.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a4bd8/globalassets/tabled-paper-documents/tabled-paper-10394/17177-hcc-annual-report-2025-26-web-ready-fa.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

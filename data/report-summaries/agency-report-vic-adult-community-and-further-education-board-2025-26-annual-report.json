@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-adult-community-and-further-education-board-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Adult, Community and Further Education Board 2025-26 annual report",
+ "body": "Adult, Community and Further Education Board",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10574/final---adult_community_and_further_education_annual_report_2025-26.pdf",
+  "document": "annual report",
+  "sha256": "c38528564570446eff097f68ac4b908355628156275384a39d23a74553d92af9",
+  "pages": 76,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chairperson’s report",
+  "first_page": 8,
+  "last_page": 11,
+  "link": "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10574/final---adult_community_and_further_education_annual_report_2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Adult, Community and Further Education Board reported on 2025–26, leading foundation skills education and training for Victorian adults.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10574/final---adult_community_and_further_education_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10574/final---adult_community_and_further_education_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Board reported funding training for 27,773 Victorians through 204 contracted Learn Local providers in 2025.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10574/final---adult_community_and_further_education_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "It reported funding 2,372,110 training hours against a target of 2,106,900 for 2025–26, attributing the higher result to demand and extra digital skills funding.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10574/final---adult_community_and_further_education_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "The Board reported that 83% of surveyed learners achieved their main reason for training.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10574/final---adult_community_and_further_education_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 17
+     }
+    ]
+   },
+   {
+    "text": "It recorded a deficit, with income declining by $2 million and expenses by $2.7 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10574/final---adult_community_and_further_education_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Survey results showed that learners were highly satisfied with their teaching and learning experience.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab314/globalassets/tabled-paper-documents/tabled-paper-10574/final---adult_community_and_further_education_annual_report_2025-26.pdf",
+     "document": "annual report",
+     "page": 17
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2012-09-18-report-investigation-alleged-public-sector-miscondu-13d80395",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+  "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+  "sha256": "86be1faca2b360aa16b676dfc8d633c527171c31bf8a08416a1708f2f530abf5",
+  "pages": 70,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 15,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated suspected manipulation of English language test scores at Curtin University and whether other public test centres were affected.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+      "page": 14
+     }
+    ],
+    "section": "Commission Investigation"
+   },
+   {
+    "text": "The Commission formed a serious misconduct opinion about a former administrative employee’s involvement in the score alteration scheme.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+      "page": 62
+     }
+    ],
+    "section": "Commission Assessment and Opinions as to Misconduct"
+   },
+   {
+    "text": "It identified weaknesses in security, auditing and management at Curtin, while finding no basis for misconduct opinions about other public officers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+      "page": 63
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "It made no recommendations for further action against the former employee or other public officers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+      "page": 62
+     }
+    ],
+    "section": "Commission Assessment and Opinions as to Misconduct"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Consequently, in the opinion of the Commission, the conduct of Mr Low as outlined in this report constitutes serious misconduct under section 4(c) of the CCC Act.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/International%20English%20Language%20Testing%20System%20at%20Curtin%20University.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct by any public officer in relation to the conduct of the international English language testing system by Curtin University of Technology or any other public authority",
+     "page": 62
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

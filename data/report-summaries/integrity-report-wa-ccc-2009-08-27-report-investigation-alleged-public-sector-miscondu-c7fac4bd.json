@@ -1,0 +1,78 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2009-08-27-report-investigation-alleged-public-sector-miscondu-c7fac4bd",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+  "document": "Report on the Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+  "sha256": "15c00b7ac96ffdfcffe259d3155e689ebc4f19446212cb473cabb587efb984eb",
+  "pages": 12,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission issued an addendum to its Smiths Beach investigation report after correspondence with the Parliamentary Inspector about an officer’s complaints.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 9
+     }
+    ],
+    "section": "FOREWORD"
+   },
+   {
+    "text": "The Commission withdrew its opinion that a CALM officer lacked integrity and withdrew the associated recommendation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 11
+     }
+    ],
+    "section": "ADDENDUM"
+   },
+   {
+    "text": "It stated that the changes left no adverse opinion about that officer in the Smiths Beach report.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+      "page": 12
+     }
+    ],
+    "section": "ADDENDUM"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The consequence of these changes is that there is now no opinion that is adverse to Mr Mark Brabazon in the Smiths Beach Report.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20Linked%20to%20the%20Smiths%20Beach%20Development%20at%20Yallingup.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct Linked to the Smiths Beach Development at Yallingup.pdf",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

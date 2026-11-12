@@ -168,6 +168,58 @@ test('rendering escapes source text and rejects unsafe links', () => {
   assert.ok(!html.includes('href="javascript:'));
 });
 
+test('no page draws the "How to read this record" box; a caveat that qualifies a table sits with it, and the record keeps them all', () => {
+  for (const { detail } of projected) {
+    const html = renderReport(detail);
+    assert.doesNotMatch(html, /How to read this record|rr-caveats/, detail.slug);
+    assert.ok(detail.caveats.length, detail.slug);
+  }
+  const annual = projected.find(r => r.row.body === 'Department of Defence' && r.row.year === '2024-25').detail;
+  const block = title => (new RegExp(`<details class="ui-disclosure rr-table-block"[^>]*><summary><span>${title}[\\s\\S]*?</details>`).exec(renderReport(annual)) || [''])[0];
+  assert.match(block('Information about remuneration for senior executives'), /Never multiply or add averages across bands/);
+  assert.match(block('Information about remuneration for key management personnel'), /part-year amounts are not annual salaries/);
+});
+test('a commission with no report held says so with the inquiry, not as an empty Recommendations section', () => {
+  const sa = projected.find(p => p.detail.slug === 'royal-commission-sa-domestic-family-sexual-violence').detail;
+  const html = renderReport(sa);
+  assert.doesNotMatch(html, /id="recommendations"/);
+  assert.match(html, /<dt>Report<\/dt><dd>No report is held for this inquiry, so no recommendations are reproduced\.<\/dd>/);
+  assert.doesNotMatch(html, /Type of inquiry/);
+  assert.match(html, /<p class="ui-page-meta">Royal commission · South Australia · No report date recorded<\/p>/);
+});
+test('transcript rows are one compact line each; what every transcript shares is said once', () => {
+  const section = html => (/<section[^>]*id="transcripts"[\s\S]*?<\/section>/.exec(html) || [''])[0];
+  const belcarra = projected.find(p => p.detail.slug.startsWith('integrity-report-qld-ccc-2017-10-04-operation-belcarra')).detail;
+  const tx = section(renderReport(belcarra)), items = belcarra.record.transcripts.items, kase = items[0].case;
+  assert.equal((tx.match(new RegExp(escapeHtml(kase).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length, 1, 'the case is named once');
+  assert.equal((tx.match(/About these copies/g) || []).length, 1);
+  assert.equal((tx.match(/Document details/g) || []).length, 0);
+  const sixes = [...tx.matchAll(/\(part (\d) of 6\)/g)].map(m => m[1]).slice(0, 6);
+  assert.deepEqual(sixes, ['1', '2', '3', '4', '5', '6']);
+  const robodebt = projected.find(p => p.detail.slug === 'royal-commission-cth-robodebt').detail;
+  const rtx = section(renderReport(robodebt));
+  for (const t of robodebt.record.transcripts) {
+    assert.ok(rtx.includes(`href="${escapeHtml(t.files[0].url)}"`), t.key);
+    assert.ok(rtx.includes(`href="${escapeHtml(t.page_url)}"`), t.key);
+  }
+  assert.doesNotMatch(rtx, /PDF: [^<]*\.pdf/);
+});
+test('report documents with one file link the title to it, then pages, type and size, with no raw file labels', async () => {
+  let seen = 0;
+  for (const { detail } of projected.filter(p => p.detail.report_type === 'royal_commission')) {
+    const html = renderReport(detail);
+    assert.doesNotMatch(html, />(?:PDF|File): /, detail.slug);
+    for (const d of [...(detail.record.reports || []), ...(detail.record.responses || [])].filter(d => d.files?.length === 1)) {
+      assert.ok(html.includes(`href="${escapeHtml(d.files[0].url)}"`), d.title);
+      if (d.page_url) assert.ok(html.includes(`href="${escapeHtml(d.page_url)}"`), d.title);
+      seen++;
+    }
+  }
+  assert.ok(seen >= 20, `${seen} single-file documents`);
+  const robodebt = renderReport(projected.find(p => p.detail.slug === 'royal-commission-cth-robodebt').detail);
+  assert.match(robodebt, /<h3 class="rr-doc-title"><a href="https:\/\/www\.royalcommission\.gov\.au\/system\/files\/2023-09\/robodebt-accessible-full-report\.PDF"[^>]*>Report of the Royal Commission into the Robodebt Scheme<\/a><\/h3>/);
+  assert.match(robodebt, /1,052 pages · PDF, 20\.2 MB/);
+});
 test('hearing transcripts get their own section, grouped by month newest first, and leave Official documents', async () => {
   const section = (html, id) => (new RegExp(`<section[^>]*id="${id}"[\\s\\S]*?</section>`).exec(html) || [''])[0];
   const rc = projected.find(p => p.detail.slug === 'royal-commission-cth-robodebt').detail;

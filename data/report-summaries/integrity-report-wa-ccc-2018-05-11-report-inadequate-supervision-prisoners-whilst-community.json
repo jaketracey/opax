@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-05-11-report-inadequate-supervision-prisoners-whilst-community",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into inadequate supervision of prisoners whilst in the community",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20supervision%20of%20prisoners%20whilst%20in%20the%20community.pdf",
+  "document": "Report into inadequate supervision of prisoners whilst in the community",
+  "sha256": "027a4af4f5dd23be582c8f848a8f4318a378a1a42747b245669b0360a870b95a",
+  "pages": 23,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20supervision%20of%20prisoners%20whilst%20in%20the%20community.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a prison transport officer’s supervision of prisoners during community delivery runs, working with the Department of Justice and police.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20supervision%20of%20prisoners%20whilst%20in%20the%20community.pdf",
+      "document": "Report into inadequate supervision of prisoners whilst in the community",
+      "page": 9
+     }
+    ],
+    "section": "Commission investigation"
+   },
+   {
+    "text": "The Commission found that inadequate controls over prisoner transport created serious misconduct risks and left a high risk of contraband entering prisons.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20supervision%20of%20prisoners%20whilst%20in%20the%20community.pdf",
+      "document": "Report into inadequate supervision of prisoners whilst in the community",
+      "page": 22
+     }
+    ],
+    "section": "Conclusion and recommendations"
+   },
+   {
+    "text": "It could not form an opinion of serious misconduct because the officer’s actions could reasonably be understood as misguided rather than corrupt.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20supervision%20of%20prisoners%20whilst%20in%20the%20community.pdf",
+      "document": "Report into inadequate supervision of prisoners whilst in the community",
+      "page": 20
+     }
+    ],
+    "section": "Commission opinion"
+   },
+   {
+    "text": "The Commission made six recommendations covering driver safety, vehicle monitoring, supervision training, staff suitability, prisoner rotation and vehicle searches.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20supervision%20of%20prisoners%20whilst%20in%20the%20community.pdf",
+      "document": "Report into inadequate supervision of prisoners whilst in the community",
+      "page": 22
+     }
+    ],
+    "section": "Conclusion and recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Because the conclusion that Mr Northing's actions were misguided rather than corrupt is reasonably open, the Commission is unable to form an opinion of serious misconduct.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20supervision%20of%20prisoners%20whilst%20in%20the%20community.pdf",
+     "document": "Report into inadequate supervision of prisoners whilst in the community",
+     "page": 20
+    }
+   },
+   {
+    "quote": "Moreover, the risk of contraband entering prisons through regular transport deliveries remains high.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20inadequate%20supervision%20of%20prisoners%20whilst%20in%20the%20community.pdf",
+     "document": "Report into inadequate supervision of prisoners whilst in the community",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

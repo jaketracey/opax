@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-development-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Development Victoria 2025-26 annual report",
+ "body": "Development Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "cd55d36017d68e437c8ab1fc9129b87ea9932c93b1baad9039f6ce4bd4874b09",
+  "pages": 63,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword",
+  "first_page": 3,
+  "last_page": 3,
+  "link": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Development Victoria’s 2025–26 report covers its housing, land development and civic infrastructure projects.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "The agency reported supporting 6,270 jobs and generating $904 million in development and infrastructure investment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "It reported that 44% of homes sold and settled were classified as affordable, above its 10% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Foreword"
+   },
+   {
+    "text": "It reported a comprehensive loss of $127.99 million after recognising $110.05 million in impairment charges on its land inventory.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Foreword"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Consequently, Development Victoria reported a comprehensive loss of $127.99 million.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10653/development-victoria-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 3
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

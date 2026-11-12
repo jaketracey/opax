@@ -53,7 +53,7 @@ import {subjectUrl} from './canonical-urls.js?v=0079b1f2db';
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { sourceLineHTML } from './labels.js?v=18b8e313e4'
+import { sourceLineHTML } from './labels.js?v=1ef33cf9c3'
 
 /** Text into the source line's HTML fields (labels.js escapes only its own text fields). */
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>

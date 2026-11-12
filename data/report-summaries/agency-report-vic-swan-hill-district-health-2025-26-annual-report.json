@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-swan-hill-district-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Swan Hill District Health 2025-26 annual report",
+ "body": "Swan Hill District Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "3a3bf78a15ef8c730cd01e937cdefa763ddef064d17b92f6f2592f69f5816a17",
+  "pages": 105,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Year in Review",
+  "first_page": 7,
+  "last_page": 10,
+  "link": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Swan Hill District Health reported for the year ended 30 June 2026 on its emergency, acute, primary, community and aged care services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Purpose, Functions, Powers and Duties"
+   },
+   {
+    "text": "The health service reported completing the final stage of its emergency department project and introducing its 2026-2029 strategic plan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Year in Review"
+   },
+   {
+    "text": "It reported expanding allied health practice, including podiatry prescribing and dietetics-led parenteral nutrition, and providing virtual care to 78 patients since November 2024.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Year in Review"
+   },
+   {
+    "text": "Swan Hill District Health reported staff survey participation of 59% and an operating deficit of $2.609 million for 2025-2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 21
+     }
+    ],
+    "section": "Summary of Financial Results"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "SHDH recorded an operating deficit of $2.609 million for the 2025-2026 financial year.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab41d/globalassets/tabled-paper-documents/tabled-paper-10756/swan-hill-district-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 21
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

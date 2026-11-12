@@ -1,0 +1,134 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2013-12-19-report-investigation-alleged-public-sector-miscondu-9d018119",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+  "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+  "sha256": "def27b4c4ed377f8445b1832bd01ffc117dbcce5f020af62484d8dc7d0ff9451",
+  "pages": 57,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 14,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a local government chief executive’s procurement of management software at Kalamunda and Augusta-Margaret River shires.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 9
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It examined purchasing decisions, council approvals, tender requirements and gifts from the supplier.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 12
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed three misconduct opinions concerning advice to councils, impartial procurement and compliance with gift disclosure requirements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 12
+     }
+    ],
+    "section": "Misconduct Opinions"
+   },
+   {
+    "text": "Its five recommendations cover possible prosecution for gift non-disclosure, contract splitting rules, gift regulation, supplier conduct and guidance on software procurement costs.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+      "page": 14
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Mr Trail's conduct advantaged CAMMS over other potential suppliers as it disadvantaged other suppliers by denying them the opportunity to tender and get the work.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+     "page": 12
+    }
+   },
+   {
+    "quote": "Proper procurement processes were not followed.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20by%20a%20Local%20Government%20Employee%20in%20Relation%20to%20the%20Purchase%20of%20Management%20Systems%20Software.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct by a Local Government Employee in Relation to the Purchase of Management Systems Software",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

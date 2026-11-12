@@ -2,7 +2,7 @@ import {subjectUrl} from './canonical-urls.js?v=0079b1f2db';
 /* Homepage adapters: source exports, never editorial selections. Each block's
    figures carry the date of the export they came from, in its source line. */
 import {shortDate} from './format.js';
-import {partyLabelHTML, statusLabelHTML, sourceLineHTML} from './labels.js?v=18b8e313e4';
+import {partyLabelHTML, statusLabelHTML, sourceLineHTML} from './labels.js?v=1ef33cf9c3';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const count = value => Number(value).toLocaleString('en-AU');
 const date = value => shortDate(String(value).slice(0,10));

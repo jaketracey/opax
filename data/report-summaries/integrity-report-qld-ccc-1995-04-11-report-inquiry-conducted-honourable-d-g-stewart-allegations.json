@@ -1,0 +1,135 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1995-04-11-report-inquiry-conducted-honourable-d-g-stewart-allegations",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct at the Basil Stafford Centre",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+  "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+  "sha256": "f1f0b661e74b03de1cb7f5cf1ad9cb7c80aba2df303fc753bee43e55b364db8c",
+  "pages": 424,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY OF MAJOR CONCLUSIONS AND RECOMMENDATIONS",
+  "first_page": 15,
+  "last_page": 22,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf#page=15"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission appointed an inquiry into staff conduct at the Basil Stafford Centre, a residential service for people with intellectual disabilities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+      "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+      "page": 15
+     }
+    ],
+    "section": "SUMMARY OF MAJOR CONCLUSIONS AND RECOMMENDATIONS"
+   },
+   {
+    "text": "The inquiry examined suspected abuse or gross neglect of residents, intimidation of staff and procedures for residents’ treatment and protection.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+      "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+      "page": 31
+     }
+    ],
+    "section": "1.11 THE INQUIRY’S TERMS OF REFERENCE"
+   },
+   {
+    "text": "The inquiry concluded that the Centre’s institutional culture enabled abuse, neglect and staff intimidation while discouraging reports of misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+      "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+      "page": 16
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "Its primary recommendation was to accelerate the Centre’s closure and introduce safeguards for residents in the meantime.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+      "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+      "page": 20
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   },
+   {
+    "text": "Its 20 major recommendations also addressed staff training, recruitment, supervision, injury reporting, investigations and advocacy for residents.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+      "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+      "page": 21
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+      "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+      "page": 22
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+      "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+      "page": 20
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This culture promoted the occurrence of client abuse and gross neglect, and the harassment or intimidation of staff members who reported or could have reported such occurrences, by other staff members.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+     "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+     "page": 16
+    }
+   },
+   {
+    "quote": "Management at the Centre, and in the Department, has been unable to effectively counter the problems presented by the insidious culture existing at the Centre; in particular, the problems of staff harassment and intimidation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+     "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+     "page": 16
+    }
+   },
+   {
+    "quote": "The benefits of strong individual advocacy, for each client at the Centre, be recognised, and steps be taken to promote the achievement of that objective.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Inquiry-into-allegations-of-official-misconduct-basil-stafford-Stewart/An-inquiry-into-allegations-of-official-misconduct-at-the-Basil-Stafford-Centre-Report-1995.pdf",
+     "document": "Report of an Inquiry conducted by the Honourable D G Stewart into allegations of official misconduct ... (11 April 1995)",
+     "page": 22
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

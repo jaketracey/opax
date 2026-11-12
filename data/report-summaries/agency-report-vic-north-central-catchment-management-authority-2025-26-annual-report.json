@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-north-central-catchment-management-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "North Central Catchment Management Authority 2025-26 annual report",
+ "body": "North Central Catchment Management Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10594/north-central-cma-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "b1f53e00e7fa00c16670759ad1d3a2b56795cb9ab33dd27004b6e1f3e5b488c5",
+  "pages": 120,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Foreword from the Chair",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10594/north-central-cma-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "North Central Catchment Management Authority reported on 2025–26, covering regional natural resource planning, coordination and delivery.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10594/north-central-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10594/north-central-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The authority reported completing a catchment strategy review and gaining endorsement of its regional climate change strategy.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10594/north-central-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "It reported establishing joint management of environmental water in the Coliban catchment with DJAARA.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10594/north-central-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "It reported revenue of $17,455,987 and expenditure of $18,610,002 for the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10594/north-central-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 50
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The North Central CMA had another productive year filled with successful programs and projects delivered collaboratively with communities, Traditional Owners, and partners.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab332/globalassets/tabled-paper-documents/tabled-paper-10594/north-central-cma-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

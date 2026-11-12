@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2025-11-27-investigation-murray",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation Murray: An investigation into allegations of corrupt conduct by the Mayor of Townsville",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf",
+  "document": "Investigation Murray – November 2025 (PDF)",
+  "sha256": "7fbfc52f3115b4af8766d4162db27d58601e13bd9b94fa0be369ca35ae961fce",
+  "pages": 32,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview of investigation/s",
+  "first_page": 8,
+  "last_page": 8,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Queensland’s Crime and Corruption Commission investigated complaints about the then Mayor of Townsville.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf",
+      "document": "Investigation Murray – November 2025 (PDF)",
+      "page": 8
+     }
+    ],
+    "section": "Overview of investigation/s"
+   },
+   {
+    "text": "The investigation covered a chief executive’s severance payment, allegedly misleading election claims, alleged conduct towards councillors and alleged disclosure of confidential council information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf",
+      "document": "Investigation Murray – November 2025 (PDF)",
+      "page": 8
+     }
+    ],
+    "section": "Overview of investigation/s"
+   },
+   {
+    "text": "The CCC concluded that the mayor acted within his lawful authority over the chief executive’s departure and severance payment, requiring no further action on that complaint.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf",
+      "document": "Investigation Murray – November 2025 (PDF)",
+      "page": 9
+     }
+    ],
+    "section": "Part One"
+   },
+   {
+    "text": "The CCC reported referring evidence from the election-claims and confidential-information investigations to the Director of Public Prosecutions for advice.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf",
+      "document": "Investigation Murray – November 2025 (PDF)",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf",
+      "document": "Investigation Murray – November 2025 (PDF)",
+      "page": 24
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The CCC recommended a legislative review covering candidate disclosures, false election claims, private advisers, council information and disciplinary processes after councillors leave office.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf",
+      "document": "Investigation Murray – November 2025 (PDF)",
+      "page": 28
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Mr Thompson’s actions in terminating the employment of the former CEO, including the payment of any relevant severance payments, were found to be within the scope of his lawful authority.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf",
+     "document": "Investigation Murray – November 2025 (PDF)",
+     "page": 9
+    }
+   },
+   {
+    "quote": "While the current system regulates the appointment and provision of advisors to councillors, the current regulatory framework fails to adequately address the significant corruption risks associated with the engagement of advisors by councillors who are independent of and unknown to Council.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Public-Report_Investigation-Murray_November-2025.pdf",
+     "document": "Investigation Murray – November 2025 (PDF)",
+     "page": 27
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

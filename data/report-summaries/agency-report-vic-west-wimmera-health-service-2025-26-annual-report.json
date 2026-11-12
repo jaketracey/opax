@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-west-wimmera-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "West Wimmera Health Service 2025-26 annual report",
+ "body": "West Wimmera Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "52cb9ec931155a15ba7bf525d909a433722718656b683fd378b7f30d2d197196",
+  "pages": 102,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "A MESSAGE FROM OUR BOARD CHAIR AND CHIEF EXECUTIVE OFFICER",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "West Wimmera Health Service reported for the year ending 30 June 2026 on health and community care across four local government areas.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "A MESSAGE FROM OUR BOARD CHAIR AND CHIEF EXECUTIVE OFFICER"
+   },
+   {
+    "text": "The Service reported completing a nursing home extension and a $6.1 million kitchen and stores redevelopment, and expanding maternal, child health and home support services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "A MESSAGE FROM OUR BOARD CHAIR AND CHIEF EXECUTIVE OFFICER"
+   },
+   {
+    "text": "The Service reported influenza immunisation of 98% of healthcare workers against a 94% target, and positive staff safety culture responses of 82% against 80%.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 50
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 51
+     }
+    ],
+    "section": "KEY 2025-2026 HEALTH SERVICE PERFORMANCE PRIORITIES"
+   },
+   {
+    "text": "The Service reported a net operating surplus of $49,468, in line with budget.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 52
+     }
+    ],
+    "section": "FINANCIAL RESULTS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Service concluded the year with an operating surplus in line with budget despite ongoing workforce cost pressures, lower than budgeted aged care occupancy during parts of the year and the completion of significant capital projects.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab436/globalassets/tabled-paper-documents/tabled-paper-10766/west-wimmera-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 52
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

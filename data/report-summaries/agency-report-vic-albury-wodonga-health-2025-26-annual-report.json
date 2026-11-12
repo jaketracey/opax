@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-albury-wodonga-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Albury Wodonga Health 2025-26 annual report",
+ "body": "Albury Wodonga Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "1ecccf03aec1c85c9e4440c01f4c5c9704e8296990f95f13abfda39bde0b393e",
+  "pages": 69,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "A Joint Message from the Interim Board Chair and Chief Executive Officer",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Albury Wodonga Health reported on 2025–26, providing hospital and community health services across north-east Victoria and southern NSW.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The health service recorded 73,084 emergency presentations and 51,105 inpatient admissions.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It reported moving inpatient and day oncology services at the regional cancer centre to public operation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The health service said it had begun work on culture, leadership, clinical governance and patient safety in response to feedback and external reviews.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It reported positive hospital patient experiences at 92.3% against a 95% target, and positive staff safety culture responses at 59% against an 80% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 36
+     }
+    ]
+   },
+   {
+    "text": "The health service reported an operating deficit of $5.47m, compared with $7.1m in the preceding year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 38
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "One of the most significant milestones was the successful transition of inpatient and day oncology services at the Albury Wodonga Regional Cancer Centre to a publicly operated model.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3b5/globalassets/tabled-paper-documents/tabled-paper-10697/albury-wodonga-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

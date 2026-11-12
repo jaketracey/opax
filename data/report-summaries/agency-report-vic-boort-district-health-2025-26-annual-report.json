@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-boort-district-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Boort District Health 2025-26 annual report",
+ "body": "Boort District Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10716/boort-district-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "08141aab59340d1d2e191355f10b2315da89ca9bf9e25763ff534d7d1d684b9e",
+  "pages": 43,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair and Chief Executive Report",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10716/boort-district-health-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Boort District Health reported for 1 July 2025 to 30 June 2026 on its hospital, aged care and community services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10716/boort-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "About Boort District Health"
+   },
+   {
+    "text": "Boort District Health reported maintaining a five-star aged care rating and progressing its aged care accommodation project.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10716/boort-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Respect and Equity"
+   },
+   {
+    "text": "Boort District Health reported progress across its Statement of Priorities goals, including governance, workforce development, cultural safety and regional partnerships.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10716/boort-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Board Chair and Chief Executive Report"
+   },
+   {
+    "text": "Boort District Health reported having 108 staff members.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10716/boort-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "About Boort District Health"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Significant progress was achieved across all Statement of Priorities goals, strengthening clinical governance, workforce capability, financial sustainability, cultural safety and regional partnerships.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10716/boort-district-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

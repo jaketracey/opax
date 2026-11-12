@@ -79,10 +79,10 @@ state electorate index, validated roster, existing canonical person-path table,
 `votes.json` and Victorian division shards. It writes the uncommitted,
 deployed `portal/public/hubs/vic-election-2026.json`; run the full search build
 first to refresh canonical person paths. There is no new identity
-join, cron, candidate list or donor read. The projection uses an explicit field
-allowlist.
+join, cron or donor read. The projection reads the optional, separately fetched
+VEC candidate report using an explicit name/party field allowlist.
 
-Two committed source files sit beside the VEC config in `scripts/hubs/`:
+Three committed source files sit beside the VEC config in `scripts/hubs/`:
 
 - `vic-results-2022.json`, from `python3 -I scripts/fetch_vec_results.py`: each
   district's 2022 result and any by-election or supplementary election since
@@ -96,6 +96,84 @@ Two committed source files sit beside the VEC config in `scripts/hubs/`:
   and 2021 Census mesh block counts: every Victorian suburb, postal area and council
   area split across districts by usual residents. The builder checks that the ABS
   names and regions match the VEC's 88 districts. ABS data is CC BY 4.0.
+- `vic-candidates-2026.json`, from
+  `uv run python scripts/fetch_vec_candidates.py`: **1,037 candidates**, comprising
+  **734 across all 88 districts** and **303 across all 8 regions**. No constituency
+  is empty. The [VEC election page](https://www.vec.vic.gov.au/voting/2026-state-election)
+  links the [official XLS candidate report](https://www.vec.vic.gov.au/-/media/f487c2abe7274ed4b5bb60daa2b001ad.xls).
+  The output's `published` date, **11 November 2026**, comes from that page's
+  “Get to know your candidates - published Wednesday 11 November” notice. The
+  workbook's own snapshot is earlier: **9 November 2026, 7:58 pm**. The notice date
+  records the VEC's dated candidate publication, not an inferred first upload
+  time or the OPAX fetch date (12 November).
+
+  Candidate names and full registered party labels come from the XLS
+  `Candidates` and `RPP Name` columns; surrounding party whitespace is trimmed.
+  Blank party cells remain blank, including independents, unnamed groups
+  and ungrouped candidates. Row order is retained. The five-column XLS does not
+  carry Council group headings. The eight region nominations pages supply
+  `group` (letter, or null for Ungrouped) and `group_name` (blank for unnamed
+  groups and Ungrouped) on region candidates only. Each page's complete candidate
+  sequence must match the workbook exactly before any output is replaced.
+  The hub renders group headings in ballot order and no region candidate numbers;
+  district lists keep their numbered ballot order. Each seat links to its own
+  VEC nominations page. Browser labels and Worker-rendered pages share
+  `portal/public/labels.js` aliases; source JSON keeps registered names.
+  Albert Park and Eastern Victoria were checked against the VEC's
+  [district ballot order](https://www.vec.vic.gov.au/electoral-boundaries/state-districts/albert-park-district/nominations)
+  and [region ballot order](https://www.vec.vic.gov.au/electoral-boundaries/state-regions/eastern-victoria-region/nominations).
+  Contact people, telephone numbers, email addresses and locality fields are
+  excluded from the JSON. The text is **CC BY 4.0**, attributed **© Victorian
+  Electoral Commission**, under the [VEC legal terms](https://www.vec.vic.gov.au/legal).
+
+  Fetching uses `parli.ingest.honest_http.HonestHTTP` and the shared
+  `parli/ingest/http.py` identity, serial rate limits, robots checks and refusal
+  receipts. On refusal it exits with code 4 and preserves existing output;
+  the receipt defaults to `~/.cache/autoresearch/pipeline/source-access.json`
+  (`OPAX_SOURCE_STATUS_FILE` can override this). Successfully fetched source
+  responses, including the workbook's contact columns, stay in the gitignored
+  `portal/private/vec-candidates-2026/` cache. Use `--cache <fresh-directory>` to
+  refresh; an existing cache reuses both `election.html` and the linked workbook
+  for reproducible offline conversion. It does not discover replacement XLS URLs.
+  `uv run python scripts/fetch_vec_candidates.py --groups-only --cache <directory>`
+  enriches the existing JSON snapshot using only the eight region pages (plus
+  robots.txt when not cached by the client), without requesting the election
+  landing page or workbook. Successfully cached region HTML is reused too.
+  Every constituency, vacancy count, candidate count and the report total must
+  validate before the generated JSON replaces the previous file. The small
+  saved XLS test fixture uses invented names only:
+  `uv run --with pytest pytest tests/test_vec_candidates.py`. Rebuild with
+  `npm run build:vic-election` from `portal/`; the portal tests check that Albert
+  Park and Eastern Victoria render the committed candidate lists in source order.
+
+  Registered-name aliases (the site's existing neutral dot applies to minor
+  parties; no new party colours are assigned):
+
+  | Registered VEC name | Code | Short label | Dot |
+  | --- | --- | --- | --- |
+  | Affordable Housing Now – Sustainable Australia Party | SAP | Sustainable Australia | neutral |
+  | Animal Justice Party | AJP | Animal Justice | neutral |
+  | Australian Citizens Party (Victorian Division) | ACP | Citizens Party | neutral |
+  | Australian Democrats | AD | Democrats | neutral |
+  | Australian Greens Victoria | GRN | Greens | green |
+  | Australian Labor Party - Victorian Branch | ALP | Labor | red |
+  | Christian Alliance Party – Reform AU | CAP | Christian Alliance | neutral |
+  | Climate Action Now | CAN | Climate Action Now | neutral |
+  | Democratic Labour Party (DLP) | DLP | DLP | neutral |
+  | Family First Victoria | FF | Family First | neutral |
+  | Free Palestine | FP | Free Palestine | neutral |
+  | I'm Voting to Avoid the Fine | FINE | I'm Voting to Avoid the Fine | neutral |
+  | Legalise Cannabis Victoria | LCP | Legalise Cannabis | neutral |
+  | Liberal Party of Australia - Victorian Division | LIB | Liberal | blue |
+  | Libertarian Party (formerly Liberal Democrats) | LDP | Libertarian | neutral |
+  | National Party of Australia - Victoria | NAT | Nationals | ochre |
+  | One Nation Victoria | ONP | One Nation | orange |
+  | Safety Victoria – Violent Crime Prevention | SAFE | Safety Victoria | neutral |
+  | Shooters, Fishers and Farmers Party Victoria | SFF | Shooters, Fishers and Farmers | neutral |
+  | Socialist Alliance | SAL | Socialist Alliance | neutral |
+  | The Republican Make Australia Great Again | REP | The Republican | neutral |
+  | The West Party | WEST | The West Party | neutral |
+  | Victorian Socialists | VS | Victorian Socialists | neutral |
 
 The build writes the places into a separate `/hubs/vic-election-2026-places.json`,
 read only by the hub's "Which seat am I in?" finder. The finder is a plain GET form
@@ -126,8 +204,8 @@ records hashes of the checked pages and EBC report; local source copies are in
 The current [VEC timeline](https://www.vec.vic.gov.au/voting/types-of-elections/state-elections)
 and [2026 election page](https://www.vec.vic.gov.au/voting/2026-state-election)
 put nominations closing at **noon 9 November**, superseding the older draft
-service plan's 13 November. The hub points to VEC candidate publication after
-nominations close and carries no candidate names. Early voting is 18–27 November
+service plan's 13 November. The hub now carries the VEC's published candidate
+lists on every constituency page. Early voting is 18–27 November
 (closed Sunday 22 November); election day is Saturday 28 November. Caretaker
 starts at 6 pm 3 November unless Parliament is dissolved earlier, sourced to
 the [Victorian caretaker guidelines](https://www.vic.gov.au/guidelines-caretaker-conventions/introduction).

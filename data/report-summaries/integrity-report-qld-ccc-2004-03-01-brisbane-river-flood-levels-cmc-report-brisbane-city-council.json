@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2004-03-01-brisbane-river-flood-levels-cmc-report-brisbane-city-council",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Brisbane River flood levels: A CMC report on the Brisbane City Council’s handling of flood study reports",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Brisbane-river-flood-levels-Report-2004.pdf",
+  "document": "Brisbane River flood levels: A CMC report on the Brisbane City Council’s handling of flood study reports (March 2004)",
+  "sha256": "8573dbd712f2a9ff39adf23d2d62123494e918c999a668a47fe38b841fa57ac8",
+  "pages": 28,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 1,
+  "last_page": 3,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Brisbane-river-flood-levels-Report-2004.pdf#page=1"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated allegations that Brisbane City Council improperly withheld flood-study information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Brisbane-river-flood-levels-Report-2004.pdf",
+      "document": "Brisbane River flood levels: A CMC report on the Brisbane City Council’s handling of flood study reports (March 2004)",
+      "page": 1
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The investigation covered the council’s decisions not to release flood reports produced between 1998 and 2000.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Brisbane-river-flood-levels-Report-2004.pdf",
+      "document": "Brisbane River flood levels: A CMC report on the Brisbane City Council’s handling of flood study reports (March 2004)",
+      "page": 2
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The CMC found no evidence of official misconduct, but identified weaknesses in council records and administrative processes.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Brisbane-river-flood-levels-Report-2004.pdf",
+      "document": "Brisbane River flood levels: A CMC report on the Brisbane City Council’s handling of flood study reports (March 2004)",
+      "page": 1
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "It made six recommendations covering committee responsibilities, decision records, document management, confidential information and staff training.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Brisbane-river-flood-levels-Report-2004.pdf",
+      "document": "Brisbane River flood levels: A CMC report on the Brisbane City Council’s handling of flood study reports (March 2004)",
+      "page": 22
+     }
+    ],
+    "section": "Procedural recommendations"
+   },
+   {
+    "text": "The Commission favoured a starting position of releasing information unless compelling public-interest reasons justified withholding it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Brisbane-river-flood-levels-Report-2004.pdf",
+      "document": "Brisbane River flood levels: A CMC report on the Brisbane City Council’s handling of flood study reports (March 2004)",
+      "page": 26
+     }
+    ],
+    "section": "Open government"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This investigation identified some failings in the BCC’s recordkeeping.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Brisbane-river-flood-levels-Report-2004.pdf",
+     "document": "Brisbane River flood levels: A CMC report on the Brisbane City Council’s handling of flood study reports (March 2004)",
+     "page": 21
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

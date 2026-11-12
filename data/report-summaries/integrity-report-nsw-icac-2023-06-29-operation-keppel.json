@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2023-06-29-operation-keppel",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation into the conduct of the then member of Parliament for Wagga Wagga and then premier and others – Volume 1 (Operation Keppel)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+  "document": "Download the corruption prevention recommendations (pdf)",
+  "sha256": "26a89a94270a5059625ef54bd4b6faae11cf123c8e401ac947400c45e631aa07",
+  "pages": 4,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "NSW ICAC set out 18 corruption-prevention recommendations for Operation Keppel, addressing parliamentary and ministerial conduct, public resources, education and government grants.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+      "document": "Download the corruption prevention recommendations (pdf)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+      "document": "Download the corruption prevention recommendations (pdf)",
+      "page": 2
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+      "document": "Download the corruption prevention recommendations (pdf)",
+      "page": 3
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+      "document": "Download the corruption prevention recommendations (pdf)",
+      "page": 4
+     }
+    ],
+    "section": "Corruption prevention recommendations"
+   },
+   {
+    "text": "The Commission recommended clearer conduct principles, practical conflict-of-interest guidance and limits on using parliamentary staff and resources for private activities.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+      "document": "Download the corruption prevention recommendations (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Corruption prevention recommendations"
+   },
+   {
+    "text": "It recommended stronger rules for parliamentary friendship groups and consideration of legal requirements for responses to its corruption-prevention recommendations.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+      "document": "Download the corruption prevention recommendations (pdf)",
+      "page": 2
+     }
+    ],
+    "section": "Corruption prevention recommendations"
+   },
+   {
+    "text": "The Commission also recommended ongoing education for members, mandatory recurring staff training and guidance on preparing and funding business cases for grants to non-government bodies.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+      "document": "Download the corruption prevention recommendations (pdf)",
+      "page": 2
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+      "document": "Download the corruption prevention recommendations (pdf)",
+      "page": 3
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/964/NSW%20ICAC%20Operation%20Keppel%20corruption%20prevention%20recommendations.pdf.aspx",
+      "document": "Download the corruption prevention recommendations (pdf)",
+      "page": 4
+     }
+    ],
+    "section": "Corruption prevention recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

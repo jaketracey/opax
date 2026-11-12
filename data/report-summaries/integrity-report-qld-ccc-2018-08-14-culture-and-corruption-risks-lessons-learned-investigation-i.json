@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2018-08-14-culture-and-corruption-risks-lessons-learned-investigation-i",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Culture and corruption risks: Lessons learned from an investigation into Ipswich City Council (Operation Windage)",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Culture-and-corruption-risks-in-local-government-Lessons-from-Ipswich-City-Council-Operation-Windage-Report-2018.pdf",
+  "document": "Culture and corruption risks in local government - Operation Windage",
+  "sha256": "77e799e4a191087464c27a92ee3392611104974fb3a133e956e09bbbd64f38dd",
+  "pages": 76,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary and recommendations",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Culture-and-corruption-risks-in-local-government-Lessons-from-Ipswich-City-Council-Operation-Windage-Report-2018.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Corruption Commission investigated allegations involving Ipswich councillors and senior council employees in Operation Windage.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Culture-and-corruption-risks-in-local-government-Lessons-from-Ipswich-City-Council-Operation-Windage-Report-2018.pdf",
+      "document": "Culture and corruption risks in local government - Operation Windage",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The CCC identified longstanding governance and cultural problems, including weak oversight, avoidance of scrutiny and reluctance to report inappropriate conduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Culture-and-corruption-risks-in-local-government-Lessons-from-Ipswich-City-Council-Operation-Windage-Report-2018.pdf",
+      "document": "Culture and corruption risks in local government - Operation Windage",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Culture-and-corruption-risks-in-local-government-Lessons-from-Ipswich-City-Council-Operation-Windage-Report-2018.pdf",
+      "document": "Culture and corruption risks in local government - Operation Windage",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CCC’s four recommendations covered councillor training, minimum policy standards, oversight of council companies and restrictions on private email for official business.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Culture-and-corruption-risks-in-local-government-Lessons-from-Ipswich-City-Council-Operation-Windage-Report-2018.pdf",
+      "document": "Culture and corruption risks in local government - Operation Windage",
+      "page": 8
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The investigation has identified significant governance failures and cultural issues that appear to have been occurring over many years.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Culture-and-corruption-risks-in-local-government-Lessons-from-Ipswich-City-Council-Operation-Windage-Report-2018.pdf",
+     "document": "Culture and corruption risks in local government - Operation Windage",
+     "page": 9
+    }
+   },
+   {
+    "quote": "Ipswich City Council had no fraud risk register, despite a recommendation to do so from the internal auditor.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Culture-and-corruption-risks-in-local-government-Lessons-from-Ipswich-City-Council-Operation-Windage-Report-2018.pdf",
+     "document": "Culture and corruption risks in local government - Operation Windage",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

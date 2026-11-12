@@ -1,0 +1,113 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2016-04-29-tp2326-operation-ord-an-investigation-into-the-conduct-of-of",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Ord: An investigation into the conduct of officers of the Department of Education and Training, in connection with the use of 'banker schools' and related activities",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a2620/globalassets/tabled-paper-documents/tabled-paper-2326/special_report_operation_ord_april_2016_p9dmrrxt.pdf",
+  "document": "Special_report_Operation_Ord_April_2016_P9dmrRXt",
+  "sha256": "443172b3b0e6dbda324774a82c695da85ecbc124fade3892d0c4161c05b4c5f0",
+  "pages": 130,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1 Summary of investigation and outcomes",
+  "first_page": 9,
+  "last_page": 18,
+  "link": "https://www.parliament.vic.gov.au/4a2620/globalassets/tabled-paper-documents/tabled-paper-2326/special_report_operation_ord_april_2016_p9dmrrxt.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC’s Operation Ord investigated allegations that senior education officials diverted public funds through false invoices and inappropriate expenses.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2620/globalassets/tabled-paper-documents/tabled-paper-2326/special_report_operation_ord_april_2016_p9dmrrxt.pdf",
+      "document": "Special_report_Operation_Ord_April_2016_P9dmrRXt",
+      "page": 10
+     }
+    ],
+    "section": "1.1 Introduction"
+   },
+   {
+    "text": "IBAC found that officials used schools as payment channels for illegitimate invoices and expenses unrelated to departmental work.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2620/globalassets/tabled-paper-documents/tabled-paper-2326/special_report_operation_ord_april_2016_p9dmrrxt.pdf",
+      "document": "Special_report_Operation_Ord_April_2016_P9dmrRXt",
+      "page": 10
+     }
+    ],
+    "section": "1.1 Introduction"
+   },
+   {
+    "text": "IBAC concluded that weaknesses in departmental controls and organisational culture allowed corruption to continue for at least seven years.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2620/globalassets/tabled-paper-documents/tabled-paper-2326/special_report_operation_ord_april_2016_p9dmrrxt.pdf",
+      "document": "Special_report_Operation_Ord_April_2016_P9dmrRXt",
+      "page": 110
+     }
+    ],
+    "section": "9 Conclusions and recommendations"
+   },
+   {
+    "text": "IBAC made six recommendations covering departmental reforms, school audits, exclusion of improper suppliers, independent audit and broader public service integrity measures.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a2620/globalassets/tabled-paper-documents/tabled-paper-2326/special_report_operation_ord_april_2016_p9dmrrxt.pdf",
+      "document": "Special_report_Operation_Ord_April_2016_P9dmrRXt",
+      "page": 18
+     }
+    ],
+    "section": "1.5 Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Operation Ord revealed that funds intended for the Victorian state school system were corruptly misappropriated by a number of senior Department of Education and Training employees and used to pay for such things as excessive hospitality, travel and other personal expenses, or otherwise purloined for the personal benefit of themselves and their relatives.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2620/globalassets/tabled-paper-documents/tabled-paper-2326/special_report_operation_ord_april_2016_p9dmrrxt.pdf",
+     "document": "Special_report_Operation_Ord_April_2016_P9dmrRXt",
+     "page": 110
+    }
+   },
+   {
+    "quote": "The investigation found the improper use of schools to pay illegitimate or inappropriate invoices was facilitated by a number of principals and business managers, who are considered to have failed in their financial management duty by not questioning the invoices.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2620/globalassets/tabled-paper-documents/tabled-paper-2326/special_report_operation_ord_april_2016_p9dmrrxt.pdf",
+     "document": "Special_report_Operation_Ord_April_2016_P9dmrRXt",
+     "page": 11
+    }
+   },
+   {
+    "quote": "Operation Ord identified substantial weaknesses in the Department’s systems, controls and culture which created an environment in which the misconduct and corrupt conduct was able to flourish for at least seven years, and probably significantly longer.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a2620/globalassets/tabled-paper-documents/tabled-paper-2326/special_report_operation_ord_april_2016_p9dmrrxt.pdf",
+     "document": "Special_report_Operation_Ord_April_2016_P9dmrRXt",
+     "page": 110
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

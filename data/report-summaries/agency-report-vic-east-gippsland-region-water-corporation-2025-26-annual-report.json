@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-east-gippsland-region-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "East Gippsland Region Water Corporation 2025-26 annual report",
+ "body": "East Gippsland Region Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab344/globalassets/tabled-paper-documents/tabled-paper-10624/east-gippland-water-annual-report-2025-26-.pdf",
+  "document": "annual report",
+  "sha256": "45e31bc17022f6c8554b8480194d7289fb7889b164a83dd919b38044af47c204",
+  "pages": 146,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "REPORT FROM THE CHAIRPERSON AND MANAGING DIRECTOR",
+  "first_page": 9,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab344/globalassets/tabled-paper-documents/tabled-paper-10624/east-gippland-water-annual-report-2025-26-.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "East Gippsland Region Water Corporation, trading as East Gippsland Water, reported on its water supply, wastewater and recycled water services in 2025–26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab344/globalassets/tabled-paper-documents/tabled-paper-10624/east-gippland-water-annual-report-2025-26-.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "THE CORPORATION"
+   },
+   {
+    "text": "The corporation reported $30.6 million in capital works, including completion of the Paynesville winter storage and a main supply pipeline replacement at Lakes Entrance.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab344/globalassets/tabled-paper-documents/tabled-paper-10624/east-gippland-water-annual-report-2025-26-.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "2025-26 Financial summary"
+   },
+   {
+    "text": "It reported a $7.19 million loss before tax against a budgeted loss of $4.18 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab344/globalassets/tabled-paper-documents/tabled-paper-10624/east-gippland-water-annual-report-2025-26-.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "2025-26 Financial summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "East Gippsland Water recorded its lowest greenhouse gas emissions to date, while progressing major initiatives in renewable energy, integrated water management and long-term water security planning.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab344/globalassets/tabled-paper-documents/tabled-paper-10624/east-gippland-water-annual-report-2025-26-.pdf",
+     "document": "annual report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2015-10-05-report-investigation-acceptance-and-disclosure-gift-be950a17",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on an Investigation into Acceptance and Disclosure of Gifts and Travel Contributions by the Lord Mayor of the City of Perth",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20Investigation%20into%20Acceptance%20and%20Disclosure%20of%20Gifts%20and%20Travel%20Contributions%20by%20the%20Lord%20Mayor%20of%20the%20City%20of%20Perth.pdf",
+  "document": "Report on an Investigation into Acceptance and Disclosure of Gifts and Travel Contributions by the Lord Mayor of the City of Perth",
+  "sha256": "c5dbea05f92663f1fe81dada4d1f177c07a69cb2a91e98381b80a302c23231fd",
+  "pages": 52,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 42,
+  "last_page": 43,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20Investigation%20into%20Acceptance%20and%20Disclosure%20of%20Gifts%20and%20Travel%20Contributions%20by%20the%20Lord%20Mayor%20of%20the%20City%20of%20Perth.pdf#page=42"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated the City of Perth Lord Mayor’s acceptance and disclosure of gifts and travel benefits.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20Investigation%20into%20Acceptance%20and%20Disclosure%20of%20Gifts%20and%20Travel%20Contributions%20by%20the%20Lord%20Mayor%20of%20the%20City%20of%20Perth.pdf",
+      "document": "Report on an Investigation into Acceptance and Disclosure of Gifts and Travel Contributions by the Lord Mayor of the City of Perth",
+      "page": 7
+     }
+    ],
+    "section": "The Purpose of the Investigation and this Report"
+   },
+   {
+    "text": "It examined an Olympic hospitality package, accommodation associated with the Broome Cup and other benefits and travel contributions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20Investigation%20into%20Acceptance%20and%20Disclosure%20of%20Gifts%20and%20Travel%20Contributions%20by%20the%20Lord%20Mayor%20of%20the%20City%20of%20Perth.pdf",
+      "document": "Report on an Investigation into Acceptance and Disclosure of Gifts and Travel Contributions by the Lord Mayor of the City of Perth",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20Investigation%20into%20Acceptance%20and%20Disclosure%20of%20Gifts%20and%20Travel%20Contributions%20by%20the%20Lord%20Mayor%20of%20the%20City%20of%20Perth.pdf",
+      "document": "Report on an Investigation into Acceptance and Disclosure of Gifts and Travel Contributions by the Lord Mayor of the City of Perth",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20Investigation%20into%20Acceptance%20and%20Disclosure%20of%20Gifts%20and%20Travel%20Contributions%20by%20the%20Lord%20Mayor%20of%20the%20City%20of%20Perth.pdf",
+      "document": "Report on an Investigation into Acceptance and Disclosure of Gifts and Travel Contributions by the Lord Mayor of the City of Perth",
+      "page": 49
+     }
+    ],
+    "section": "The Purpose of the Investigation and this Report"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about accepting prohibited hospitality and serious misconduct opinions about failures to disclose gifts and travel.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20Investigation%20into%20Acceptance%20and%20Disclosure%20of%20Gifts%20and%20Travel%20Contributions%20by%20the%20Lord%20Mayor%20of%20the%20City%20of%20Perth.pdf",
+      "document": "Report on an Investigation into Acceptance and Disclosure of Gifts and Travel Contributions by the Lord Mayor of the City of Perth",
+      "page": 48
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20an%20Investigation%20into%20Acceptance%20and%20Disclosure%20of%20Gifts%20and%20Travel%20Contributions%20by%20the%20Lord%20Mayor%20of%20the%20City%20of%20Perth.pdf",
+      "document": "Report on an Investigation into Acceptance and Disclosure of Gifts and Travel Contributions by the Lord Mayor of the City of Perth",
+      "page": 49
+     }
+    ],
+    "section": "Acceptance of the Olympic Hospitality Package"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

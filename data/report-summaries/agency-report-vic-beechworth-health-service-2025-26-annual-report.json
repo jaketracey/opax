@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-beechworth-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Beechworth Health Service 2025-26 annual report",
+ "body": "Beechworth Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/beechworth-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "7b39243b6a3280b73be45d72619b38b2cc66d3e4ba471e6b2191d1b0f82a7686",
+  "pages": 81,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair and Chief Executive Officer Report",
+  "first_page": 11,
+  "last_page": 12,
+  "link": "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/beechworth-health-service-annual-report-2025-26.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Beechworth Health Service reported for 2025-2026 on its hospital, residential aged care and community health functions.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/beechworth-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/beechworth-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Purpose and Functions"
+   },
+   {
+    "text": "Beechworth Health Service reported reaching practical completion of its aged care development, including new community space and individual resident ensuites.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/beechworth-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Chair and Chief Executive Officer Report"
+   },
+   {
+    "text": "Beechworth Health Service reported reviewing its governance, policies and risk management arrangements and rebuilding its business continuity plan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/beechworth-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Chair and Chief Executive Officer Report"
+   },
+   {
+    "text": "Beechworth Health Service reported an operating deficit of $120,000 against a breakeven target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/beechworth-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 21
+     }
+    ],
+    "section": "Summary of Financial Results"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Beechworth Health Service reported an operating deficit of $120,000 for the year, compared with the Statement of Priorities target of breakeven.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3c6/globalassets/tabled-paper-documents/tabled-paper-10711/beechworth-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 21
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

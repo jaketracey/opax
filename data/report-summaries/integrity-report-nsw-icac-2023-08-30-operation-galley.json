@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2023-08-30-operation-galley",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation into the conduct of three councillors of former Hurstville City Council now part of Georges River Council and others (Operation Galley)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1027/NSW%20ICAC%20Operation%20Galley%20recommendations%20for%20prosections.pdf.aspx",
+  "document": "Download the recommendations for prosecutions (pdf)",
+  "sha256": "64e6e643ec16b5c623e77282563d28f00f7371bd87be237a204046c0432d80c5",
+  "pages": 4,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "For Operation Galley, NSW ICAC expressed the opinion that consideration should be given to obtaining prosecution advice from the Director of Public Prosecutions.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1027/NSW%20ICAC%20Operation%20Galley%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "Download the recommendations for prosecutions (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   },
+   {
+    "text": "The Commission’s proposed prosecution advice covers benefits associated with development proposals, travel costs in China and misconduct in public office.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1027/NSW%20ICAC%20Operation%20Galley%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "Download the recommendations for prosecutions (pdf)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1027/NSW%20ICAC%20Operation%20Galley%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "Download the recommendations for prosecutions (pdf)",
+      "page": 2
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1027/NSW%20ICAC%20Operation%20Galley%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "Download the recommendations for prosecutions (pdf)",
+      "page": 3
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   },
+   {
+    "text": "The Commission also proposed advice on possible false or misleading evidence about business dealings, development interests and travel payments.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1027/NSW%20ICAC%20Operation%20Galley%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "Download the recommendations for prosecutions (pdf)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1027/NSW%20ICAC%20Operation%20Galley%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "Download the recommendations for prosecutions (pdf)",
+      "page": 2
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1027/NSW%20ICAC%20Operation%20Galley%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "Download the recommendations for prosecutions (pdf)",
+      "page": 3
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   },
+   {
+    "text": "The Commission states that decisions about laying charges and conducting prosecutions belong to the Director of Public Prosecutions.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1027/NSW%20ICAC%20Operation%20Galley%20recommendations%20for%20prosections.pdf.aspx",
+      "document": "Download the recommendations for prosecutions (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Recommendations for prosecutions"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

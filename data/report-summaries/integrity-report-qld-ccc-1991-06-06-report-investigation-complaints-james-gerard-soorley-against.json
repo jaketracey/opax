@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-06-06-report-investigation-complaints-james-gerard-soorley-against",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation into the complaints of James Gerard Soorley against the Brisbane City Council",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf",
+  "document": "Report on the investigation into the complaints of James Gerard Soorley against... (May 1991)",
+  "sha256": "412583a7fbe5889c7f1382f19a8374a7da038fc487a6a48f5a4b38d122f6c148",
+  "pages": 64,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "H. FINDINGS",
+  "first_page": 37,
+  "last_page": 39,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf#page=37"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission investigated complaints about Brisbane City Council's waste-disposal tender and the proposed Rochedale dump.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf",
+      "document": "Report on the investigation into the complaints of James Gerard Soorley against... (May 1991)",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission reported that it could not substantiate corruption or official misconduct allegations, but identified weaknesses in Council administration.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf",
+      "document": "Report on the investigation into the complaints of James Gerard Soorley against... (May 1991)",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Commission found that the contract negotiations were impartial and unbiased.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf",
+      "document": "Report on the investigation into the complaints of James Gerard Soorley against... (May 1991)",
+      "page": 38
+     }
+    ]
+   },
+   {
+    "text": "Its four recommendations addressed tender strategy, negotiation rules, officer guidance and training, and financial evaluation of major contracts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf",
+      "document": "Report on the investigation into the complaints of James Gerard Soorley against... (May 1991)",
+      "page": 41
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf",
+      "document": "Report on the investigation into the complaints of James Gerard Soorley against... (May 1991)",
+      "page": 42
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf",
+      "document": "Report on the investigation into the complaints of James Gerard Soorley against... (May 1991)",
+      "page": 44
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "in summary, no adverse findings can be made against the Council or its officers with respect to allegations of official misconduct or corruption arising out of the awarding of the tender to Pacific Waste and the siting of the proposed dump at Rochedale.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf",
+     "document": "Report on the investigation into the complaints of James Gerard Soorley against... (May 1991)",
+     "page": 39
+    }
+   },
+   {
+    "quote": "The Commission is satisfied that the contract negotiations were conducted in an unbiased and impartial manner.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-investigation-into-the-complaints-of-James-Gerard-Soorley-against-the-Brisbane-City-Council-Report-1991.pdf",
+     "document": "Report on the investigation into the complaints of James Gerard Soorley against... (May 1991)",
+     "page": 38
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

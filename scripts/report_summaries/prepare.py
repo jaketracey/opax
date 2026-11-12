@@ -26,6 +26,8 @@ CACHE = Path("~/.cache/autoresearch").expanduser()
 INTEGRITY_TEXT = CACHE / "integrity-commissions" / "text"
 RC_TEXT = CACHE / "royal-commissions" / "text"
 AGENCY_TEXT = CACHE / "agency-reports" / "text"
+# On-device OCR text (ocr.py) for scanned or glyph-broken PDFs; used in place of the blank text layer.
+OCR_TEXT = Path(os.environ.get("OPAX_SUMMARY_OCR", str(CACHE / "report-summaries" / "ocr")))
 PACKS = Path(os.environ.get("OPAX_SUMMARY_PACKS", str(CACHE / "report-summaries" / "packs")))
 GATE = Path(__file__).resolve().parent / "gate.py"
 
@@ -116,13 +118,15 @@ def cmd_scope(args) -> int:
 
 
 def write_pack(r: dict) -> Path:
-    pages = load_pages(Path(r["text"]))
+    ocr = OCR_TEXT / f"{r.get('sha256')}.json"
+    pages = load_pages(ocr if r.get("sha256") and ocr.exists() else Path(r["text"]))
     d = PACKS / r["slug"]
     d.mkdir(parents=True, exist_ok=True)
     meta = {k: r.get(k) for k in ("slug", "type", "subtype", "title", "body", "body_short", "document", "url", "sha256",
                                   "rights", "jurisdiction", "opax_findings", "recommendations_on_page")}
     meta["pages"] = len(pages)
     meta["chars"] = sum(len(p) for p in pages)
+    meta["text_source"] = "ocr" if r.get("sha256") and ocr.exists() else "pdf"
     (d / "meta.json").write_text(json.dumps(meta, indent=1, ensure_ascii=False) + "\n")
     (d / "pages.json").write_text(json.dumps(pages, ensure_ascii=False))
     (d / "text.txt").write_text("\n".join(f"=== PDF page {i + 1} ===\n{p.rstrip()}\n" for i, p in enumerate(pages)))

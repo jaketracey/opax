@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2017-11-02-report-corruption-respect-truck-driving-licence-applications",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on Corruption in Respect of Truck Driving Licence Applications",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corruption%20in%20Respect%20of%20Truck%20Driving%20Licence%20Applications.pdf",
+  "document": "Report on Corruption in Respect of Truck Driving Licence Applications",
+  "sha256": "102dd6c1e1d40b4f53b3e23e6cad510804bbaf936fcd5a7d87c1316fc2c277e6",
+  "pages": 25,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview: How driving assessment was corrupted",
+  "first_page": 5,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corruption%20in%20Respect%20of%20Truck%20Driving%20Licence%20Applications.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated a contracted heavy vehicle driving assessor in cooperation with the Department of Transport.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corruption%20in%20Respect%20of%20Truck%20Driving%20Licence%20Applications.pdf",
+      "document": "Report on Corruption in Respect of Truck Driving Licence Applications",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corruption%20in%20Respect%20of%20Truck%20Driving%20Licence%20Applications.pdf",
+      "document": "Report on Corruption in Respect of Truck Driving Licence Applications",
+      "page": 6
+     }
+    ],
+    "section": "Overview: How driving assessment was corrupted"
+   },
+   {
+    "text": "The investigation used observation, covert methods, seized records and private examinations to examine driving assessment practices.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corruption%20in%20Respect%20of%20Truck%20Driving%20Licence%20Applications.pdf",
+      "document": "Report on Corruption in Respect of Truck Driving Licence Applications",
+      "page": 6
+     }
+    ],
+    "section": "Overview: How driving assessment was corrupted"
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct, finding that the assessor corruptly failed to conduct assessments required by his work.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corruption%20in%20Respect%20of%20Truck%20Driving%20Licence%20Applications.pdf",
+      "document": "Report on Corruption in Respect of Truck Driving Licence Applications",
+      "page": 7
+     }
+    ],
+    "section": "Overview: How driving assessment was corrupted"
+   },
+   {
+    "text": "Its recommendation proposed two regulatory changes: limiting foreign licence validity after arrival in Western Australia and cancelling foreign or interstate licences after a failed practical assessment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corruption%20in%20Respect%20of%20Truck%20Driving%20Licence%20Applications.pdf",
+      "document": "Report on Corruption in Respect of Truck Driving Licence Applications",
+      "page": 25
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

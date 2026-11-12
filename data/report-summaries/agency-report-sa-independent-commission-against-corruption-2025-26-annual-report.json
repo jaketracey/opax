@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-sa-independent-commission-against-corruption-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Independent Commission Against Corruption 2025-26 annual report",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0008/1453049/ICAC-SA-Annual-Report-2025-26-FINAL-A1047497.pdf",
+  "document": "annual report",
+  "sha256": "52f9c3062de1b28a531407d1235bb8f573b7f1f3b39f9826caf06c63db072e95",
+  "pages": 76,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From the Commissioner",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0008/1453049/ICAC-SA-Annual-Report-2025-26-FINAL-A1047497.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South Australia’s Independent Commission Against Corruption reported for 2025–2026 on investigating potential corruption and helping prevent it in public administration.",
+    "cites": [
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0008/1453049/ICAC-SA-Annual-Report-2025-26-FINAL-A1047497.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Overview: about ICAC"
+   },
+   {
+    "text": "The Commission reported receiving 155 referrals from the Office for Public Integrity and described an increasingly complex investigative workload.",
+    "cites": [
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0008/1453049/ICAC-SA-Annual-Report-2025-26-FINAL-A1047497.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "From the Commissioner"
+   },
+   {
+    "text": "The Commission reported completing its whistleblower protection project, making 61 recommendations that included a dedicated support service.",
+    "cites": [
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0008/1453049/ICAC-SA-Annual-Report-2025-26-FINAL-A1047497.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "From the Commissioner"
+   },
+   {
+    "text": "The Commission reported delivering more than 60 education and engagement sessions and continuing to develop support for vulnerable witnesses.",
+    "cites": [
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0008/1453049/ICAC-SA-Annual-Report-2025-26-FINAL-A1047497.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "From the Commissioner"
+   },
+   {
+    "text": "The Commission reported an unaudited deficit smaller than its budgeted deficit.",
+    "cites": [
+     {
+      "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0008/1453049/ICAC-SA-Annual-Report-2025-26-FINAL-A1047497.pdf",
+      "document": "annual report",
+      "page": 38
+     }
+    ],
+    "section": "Financial performance at a glance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "A significant achievement this year was the completion of ICAC’s major project examining South Australia’s whistleblower protection framework.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.icac.sa.gov.au/__data/assets/pdf_file/0008/1453049/ICAC-SA-Annual-Report-2025-26-FINAL-A1047497.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

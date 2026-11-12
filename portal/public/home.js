@@ -3,7 +3,7 @@ import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=0079b1f2db';
-import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=4d28b262af';
+import { hydrateCollections, hydrateLatest, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=60fb43597a';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';

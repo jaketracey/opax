@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-department-of-families-fairness-and-housing-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Department of Families, Fairness and Housing 2025-26 annual report",
+ "body": "Department of Families, Fairness and Housing",
+ "source": {
+  "url": "https://www.dffh.vic.gov.au/department-families-fairness-and-housing-dffh-annual-report-2025-2026-pdf",
+  "document": "annual report",
+  "sha256": "fd47a591cfcb19cd09e96264e73e1bd38a54793ffb844de87c9adf30f75ccab1",
+  "pages": 245,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Secretary’s foreword",
+  "first_page": 6,
+  "last_page": 8,
+  "link": "https://www.dffh.vic.gov.au/department-families-fairness-and-housing-dffh-annual-report-2025-2026-pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Department of Families, Fairness and Housing’s 2025–26 report covers its work on inclusion, family safety, disability support and social and affordable housing.",
+    "cites": [
+     {
+      "url": "https://www.dffh.vic.gov.au/department-families-fairness-and-housing-dffh-annual-report-2025-2026-pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Secretary’s foreword"
+   },
+   {
+    "text": "The department reported delivering 2,388 social and affordable homes, including 1,196 in regional Victoria.",
+    "cites": [
+     {
+      "url": "https://www.dffh.vic.gov.au/department-families-fairness-and-housing-dffh-annual-report-2025-2026-pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Secretary’s foreword"
+   },
+   {
+    "text": "It reported delivering 416 social homes for First Peoples against a target of 300 and helping more than 103,300 people address or prevent homelessness.",
+    "cites": [
+     {
+      "url": "https://www.dffh.vic.gov.au/department-families-fairness-and-housing-dffh-annual-report-2025-2026-pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Secretary’s foreword"
+   },
+   {
+    "text": "It reported a consolidated net deficit of $462.1 million, including Homes Victoria and the other portfolio entities incorporated in its financial statements.",
+    "cites": [
+     {
+      "url": "https://www.dffh.vic.gov.au/department-families-fairness-and-housing-dffh-annual-report-2025-2026-pdf",
+      "document": "annual report",
+      "page": 72
+     }
+    ],
+    "section": "Current year financial summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

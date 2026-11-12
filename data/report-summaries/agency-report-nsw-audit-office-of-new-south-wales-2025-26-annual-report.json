@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-audit-office-of-new-south-wales-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Audit Office of New South Wales 2025-26 annual report",
+ "body": "Audit Office of New South Wales",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212198%2FAONSW%20Annual%20Report%202025-26.pdf",
+  "document": "annual report",
+  "sha256": "d1ffc2ffdb39cb282a82730822e26336dbea80725b22e65d25c1d0442a1cfee0",
+  "pages": 98,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Auditor-General’s message",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212198%2FAONSW%20Annual%20Report%202025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Audit Office of New South Wales reported on 2025–26, assisting Parliament to scrutinise government use of public resources through financial and performance audits.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212198%2FAONSW%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212198%2FAONSW%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The Office reported completing 488 financial audits and 676 other assurance engagements.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212198%2FAONSW%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "It reported tabling 18 performance audit reports containing 94 recommendations to improve public administration.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212198%2FAONSW%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 18
+     }
+    ]
+   },
+   {
+    "text": "The Office recorded 329 full-time equivalent employees at the end of June 2026.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212198%2FAONSW%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We also completed 676 other assurance engagements, compared with 684 last year.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212198%2FAONSW%20Annual%20Report%202025-26.pdf",
+     "document": "annual report",
+     "page": 16
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

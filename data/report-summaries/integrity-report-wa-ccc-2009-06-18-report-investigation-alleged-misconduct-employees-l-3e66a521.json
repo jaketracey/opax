@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2009-06-18-report-investigation-alleged-misconduct-employees-l-3e66a521",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+  "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+  "sha256": "57dec560f41481e73f864ee88eb5a6aa05f8887839d26ad91ae63338c098e545",
+  "pages": 96,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 17,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated suspected bribery involving Landgate officers and property industry clients.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined gifts and payments linked to the examination of strata plans and faster issue of land titles.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed the opinion that an officer’s conduct amounted to serious misconduct and identified weaknesses in gift policies, supervision and urgent application procedures.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+      "page": 15
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It made eight recommendations about gifts, outside employment, conflicts of interest, salary levels and procedures for urgent applications.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+      "page": 17
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In the Commission’s opinion Mr Croasdale’s actions constituted serious misconduct under section 3, 4(b) and 4(c) of the CCC Act.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+     "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+     "page": 14
+    }
+   },
+   {
+    "quote": "There was uncertainty about and inconsistent application of the policy for according priority to urgent applications.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20by%20Employees%20of%20Landgate%20as%20a%20Result%20of%20Associations%20with%20External%20Clients%20Involved%20in%20the%20Property%20Development%20Industry.pdf",
+     "document": "Report on the Investigation of Alleged Misconduct by Employees of Landgate as a Result of Associations with External Clients Involved in the Property Development Industry.pdf",
+     "page": 15
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

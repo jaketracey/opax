@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-royal-botanic-gardens-board-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Royal Botanic Gardens Board 2025-26 annual report",
+ "body": "Royal Botanic Gardens Board",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf",
+  "document": "annual report",
+  "sha256": "bbdd95d6ac3c67ca8112ac63b12decc1bcb14c3028b23d46b21493cdb4f495d5",
+  "pages": 132,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair and Director and Chief Executive Report",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Royal Botanic Gardens Victoria’s 2025-26 report covered its gardens, botanical collections, conservation, research and public education work.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf",
+      "document": "annual report",
+      "page": 1
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Our Charter"
+   },
+   {
+    "text": "The organisation reported a record 2.68 million visitors to Melbourne and Cranbourne Gardens and more than 40,000 students in its learning programs.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Chair and Director and Chief Executive Report"
+   },
+   {
+    "text": "It reported 61 peer-reviewed publications and identified shortcomings in National Herbarium facilities and assets as its most pressing strategic risk.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Chair and Director and Chief Executive Report"
+   },
+   {
+    "text": "The organisation reported a net deficit for the year alongside growth in commercial and philanthropic income.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf",
+      "document": "annual report",
+      "page": 45
+     }
+    ],
+    "section": "Revenue Generation and Budgetary Objectives"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Retail revenue exceeded budget expectations, supported by increased visitation, extended trading hours, cruise tourism, and the introduction of new product ranges.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10603/royal-botanic-gardens---annual-report-2025-26-.pdf",
+     "document": "annual report",
+     "page": 45
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-latrobe-regional-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Latrobe Regional Health 2025-26 annual report",
+ "body": "Latrobe Regional Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "b18868e03d2f85e667ffbececa417f5c790bc1f3bb88674260b5fb88b2fabe59",
+  "pages": 60,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Board Chair and Chief Executive",
+  "first_page": 3,
+  "last_page": 3,
+  "link": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Latrobe Regional Health reported on its 2025–26 hospital, mental health and community services for Gippsland.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "About Latrobe Regional Health"
+   },
+   {
+    "text": "LRH reported introducing emergency angioplasty and stent treatment for severe heart attacks, allowing patients to receive treatment locally rather than transferring to Melbourne.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Every minute matters"
+   },
+   {
+    "text": "It reported opening a youth mental health recovery service and a Transit Lounge that had supported more than 1,100 patients preparing to leave hospital.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "A smoother journey home"
+   },
+   {
+    "text": "LRH reported reducing the average wait between a decision to admit and transfer to an inpatient bed by 2.5 hours.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Improving access to emergency care"
+   },
+   {
+    "text": "It reported year-end cash and cash equivalents of $19.4 million, following a $11.6 million reduction over the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 17
+     }
+    ],
+    "section": "Financial Information"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "During the year, ambulance transfer wait times improved significantly, while the average time from clinical decision to admit to transfer to an inpatient bed reduced by 2.5 hours.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3cc/globalassets/tabled-paper-documents/tabled-paper-10704/latrobe-regional-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1994-06-01-report-investigation-complaints-against-six-aboriginal-and-i",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on an investigation into complaints against six Aboriginal and Island Councils",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-complaints-against-six-Aboriginal-and-Island-councils-Report-1994.pdf",
+  "document": "Report on an investigation into complaints against six Aboriginal and Island Councils (June 1994)",
+  "sha256": "3e5d653c810b110926cb7b04ecdd58a388c33ae46f1f7cdaf69daf8698c25bb7",
+  "pages": 426,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary of conclusions and recommendations",
+  "first_page": 400,
+  "last_page": 425,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-complaints-against-six-Aboriginal-and-Island-councils-Report-1994.pdf#page=400"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission reported on investigations of complaints against six Aboriginal and Island Councils.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-complaints-against-six-Aboriginal-and-Island-councils-Report-1994.pdf",
+      "document": "Report on an investigation into complaints against six Aboriginal and Island Councils (June 1994)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-complaints-against-six-Aboriginal-and-Island-councils-Report-1994.pdf",
+      "document": "Report on an investigation into complaints against six Aboriginal and Island Councils (June 1994)",
+      "page": 24
+     }
+    ],
+    "section": "Scope of the investigations"
+   },
+   {
+    "text": "A joint task force examined more than ninety allegations, covering matters such as council spending, resources, employment and private interests.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-complaints-against-six-Aboriginal-and-Island-councils-Report-1994.pdf",
+      "document": "Report on an investigation into complaints against six Aboriginal and Island Councils (June 1994)",
+      "page": 23
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-complaints-against-six-Aboriginal-and-Island-councils-Report-1994.pdf",
+      "document": "Report on an investigation into complaints against six Aboriginal and Island Councils (June 1994)",
+      "page": 24
+     }
+    ],
+    "section": "Scope of the investigations"
+   },
+   {
+    "text": "The CJC concluded that poor records, weak internal controls and limited accountability had obstructed many investigations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-complaints-against-six-Aboriginal-and-Island-councils-Report-1994.pdf",
+      "document": "Report on an investigation into complaints against six Aboriginal and Island Councils (June 1994)",
+      "page": 400
+     }
+    ],
+    "section": "Summary of conclusions and recommendations"
+   },
+   {
+    "text": "The Commission made three recommendations on enforcing financial procedures, requiring public meetings and accessible minutes, and strengthening declarations of financial interests.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-complaints-against-six-Aboriginal-and-Island-councils-Report-1994.pdf",
+      "document": "Report on an investigation into complaints against six Aboriginal and Island Councils (June 1994)",
+      "page": 425
+     }
+    ],
+    "section": "Summary of recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission considers that it is essential from an investigative point of view that the financial procedures which bind the Councils be given force of law as soon as possible.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/An-investigation-into-complaints-against-six-Aboriginal-and-Island-councils-Report-1994.pdf",
+     "document": "Report on an investigation into complaints against six Aboriginal and Island Councils (June 1994)",
+     "page": 412
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

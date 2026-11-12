@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victoria-state-emergency-service-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victoria State Emergency Service Authority 2025-26 annual report",
+ "body": "Victoria State Emergency Service Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "5ed07b2ebaf09ed9b88181f26a5ad2416467cfc5a8ecccf9d8529ef81d987795",
+  "pages": 139,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Executive Officer Report",
+  "first_page": 9,
+  "last_page": 10,
+  "link": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Victoria State Emergency Service reported on 2025–26, providing emergency management and helping communities prepare for disasters and reduce risk.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Our Mission"
+   },
+   {
+    "text": "The service reported more than 32,900 incidents, including flooding, storms, rescues and support for other emergency agencies.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Chief Executive Officer Report"
+   },
+   {
+    "text": "It reported that 94% of road accident rescue responses met time benchmarks, exceeding the target of 90%.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ],
+    "section": "Key Performance Measures"
+   },
+   {
+    "text": "The service reported a comprehensive deficit of $13.1 million, with expenditure increasing by $15.1 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 29
+     }
+    ],
+    "section": "Financial Year in Review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "VICSES delivered its core emergency management services and progressed key budget initiatives during 2025-26, while continuing to invest in its people, assets and capability.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab348/globalassets/tabled-paper-documents/tabled-paper-10613/victoria-state-emergency-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 29
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-office-of-the-victorian-information-commissioner-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Office of the Victorian Information Commissioner 2025-26 annual report",
+ "body": "Office of the Victorian Information Commissioner",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "8375243e56d78d9b910ee4914bcf891ce735a2f88561e23bcb4207b5062b1f1f",
+  "pages": 69,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner's foreword",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Office of the Victorian Information Commissioner reported on 2025–2026, overseeing public access to information, privacy and public sector information security.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "The office reported updating guidance on government use of artificial intelligence and publishing advice for people using it to communicate with government.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It reported closing 1,806 reviews and complaints against a target of 950, while completing 49.1 per cent of freedom of information reviews within agreed timeframes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "The office argued that freedom of information, privacy and information security legislation needed reform.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "In its unaudited financial overview, it reported an actual net surplus of $0.21 million after allowing for approved access to its previous year’s surplus.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Privacy and information security reforms are also needed to ensure that Victorian legislation is in step with other jurisdictions and that as an integrity agency we have the appropriate compliance tools at our disposal to prevent and remediate harms caused by data breaches.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3a8/globalassets/tabled-paper-documents/tabled-paper-10692/office-of-the-victorian-information-commissioner-2025-26-annual-report.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

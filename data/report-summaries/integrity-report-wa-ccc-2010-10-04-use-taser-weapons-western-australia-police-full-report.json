@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2010-10-04-use-taser-weapons-western-australia-police-full-report",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "The use of Taser weapons by the Western Australia Police - Full Report",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+  "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+  "sha256": "f71d063e2772f70be7250d88ceed1b0762fd37f843ca40b983ac6dfa97f5096a",
+  "pages": 128,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 13,
+  "last_page": 18,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission reviewed police use of Tasers in Western Australia from 2007 to 2009.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+      "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It analysed complaints, police data and detailed force reports for a selected period.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+      "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission concluded that most Taser use was reasonable, but identified compliance uses, potentially excessive force and disproportionate use against Indigenous people.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+      "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+      "page": 111
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "It also concluded that firearm use had increased and police injuries had not fallen following the introduction of Tasers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+      "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+      "page": 111
+     }
+    ],
+    "section": "Conclusions"
+   },
+   {
+    "text": "Its ten recommendations address use thresholds, injury risks, restricted situations, medical assistance, repeated deployments, training and ongoing scrutiny.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+      "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+      "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+      "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+      "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+      "page": 18
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The overwhelming majority of Taser weapon use by WAPOL officers is reasonable.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+     "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+     "page": 111
+    }
+   },
+   {
+    "quote": "Not all of these incidents are identified and addressed through WAPOL misconduct management systems.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/The%20use%20of%20Taser%20weapons%20by%20the%20Western%20Australia%20Police%20-%20Full%20Report.pdf",
+     "document": "The use of Taser weapons by the Western Australia Police - Full Report",
+     "page": 112
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -43,3 +43,22 @@ def test_registry_is_complete_and_cited():
     assert all(r.get("orders") for r in t if r["body"] == "vic_ibac")
     assert len(reg["publisher_view_only"]) == 21 and all(v["availability"] == "publisher_view_only" for v in reg["publisher_view_only"])
     json.dumps(reg)
+
+
+def test_rights_notes_and_gaps_are_reader_facing():
+    reg = tx.load()
+    texts = [r["rights"] for r in reg["transcripts"] + reg["publisher_view_only"]]
+    texts += [n for r in reg["transcripts"] for n in r.get("notes", [])] + [g["note"] for g in reg["gaps"]]
+    assert texts and not [s for s in texts if tx.INTERNAL.search(s)]
+    assert tx.public("Hearing date taken from transcript cover, which differs from the publisher filename or link label.").startswith(
+        "The hearing date is the one printed on the transcript's cover")
+    folios = ("The publisher-supplied PDF has a different physical page count from the listed transcript folio range. "
+              "The file is preserved as published. The first and last PDF folios are 3885 and 3925.")
+    assert tx.public(folios).endswith("Its transcript pages run from 3885 to 3925.")
+
+
+def test_new_internal_manifest_wording_stops_the_build():
+    import pytest
+    from parli.ingest.integrity import common
+    with pytest.raises(common.Held):
+        tx.public("Check the publisher's terms before any public projection.")

@@ -1,0 +1,140 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2011-11-24-report-investigation-alleged-public-sector-miscondu-555daf25",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+  "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+  "sha256": "33b3d93ce8b5609cb33d710ae9ce8d545c98cc323b938fcf8bdf631c188a7cb0",
+  "pages": 120,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 15,
+  "last_page": 21,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf#page=15"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated public officers’ receipt of gifts linked to toner cartridge purchases outside approved procurement arrangements.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 15
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It also reviewed procurement and gift policies across state and local public authorities to assess why improper purchasing could occur undetected.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 16
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission found that gift policies, registers and accountability arrangements did not adequately manage misconduct risks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 18
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "It estimated that the cartridge purchases cost government at least $415,000 more than buying the same quantities through approved suppliers, excluding the effect of unnecessary purchases.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 75
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "Its seven recommendations cover procurement controls, purchase authorisation, electronic oversight, gift records, staff training, gift policy reviews and legislative change.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 18
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+      "page": 20
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Generally, the gift policies, gift register arrangements and accountability mechanisms for public authorities did not sufficiently address the misconduct risks associated with the inappropriate offering and/or acceptance of gifts by public officers.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+     "page": 18
+    }
+   },
+   {
+    "quote": "When public officers breach procurement or gift policies in circumstances such as they did, these breaches may go undetected where systems are inadequate and accountability mechanisms do not exist.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Misconduct%20Allegation%20in%20Relation%20to%20the%20Purchase%20of%20Toner%20Cartridges%20in%20Exchange%20for%20Gifts.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct in relation to the purchase of toner cartridges in exchange for gifts outside government procurement policies and arrangements",
+     "page": 18
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

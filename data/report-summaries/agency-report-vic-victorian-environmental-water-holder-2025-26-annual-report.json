@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-environmental-water-holder-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Environmental Water Holder 2025-26 annual report",
+ "body": "Victorian Environmental Water Holder",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10630/victorian-environmental-water-holder-vewh-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "49c0ff70af8589682be7c4b01e2d09f19c12d7d6c7e081023fab48375a97ae97",
+  "pages": 88,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "1.1 Chairperson and Chief Executive Officer Report",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10630/victorian-environmental-water-holder-vewh-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Environmental Water Holder reported on 2025–26, planning and managing environmental water to protect Victoria’s catchments and waterways.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10630/victorian-environmental-water-holder-vewh-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "1.1 Chairperson and Chief Executive Officer Report"
+   },
+   {
+    "text": "The authority reported delivering 826,322 ML of environmental water, helping achieve 164 watering actions across 175 river reaches and wetlands.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10630/victorian-environmental-water-holder-vewh-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "1.1 Chairperson and Chief Executive Officer Report"
+   },
+   {
+    "text": "It reported that 89% of required potential watering actions were achieved fully or partly during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10630/victorian-environmental-water-holder-vewh-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ],
+    "section": "1.4 Performance report (non-financial)"
+   },
+   {
+    "text": "The authority reported an overall surplus of $3.1 million, with commercial water trading contributing to the result.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10630/victorian-environmental-water-holder-vewh-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 46
+     }
+    ],
+    "section": "1.6 Current year financial review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We affirm that the VEWH has complied with its legislative and financial requirements in 2025-26.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab358/globalassets/tabled-paper-documents/tabled-paper-10630/victorian-environmental-water-holder-vewh-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

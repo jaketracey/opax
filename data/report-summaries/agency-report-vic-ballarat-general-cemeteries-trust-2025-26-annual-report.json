@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-ballarat-general-cemeteries-trust-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Ballarat General Cemeteries Trust 2025-26 annual report",
+ "body": "Ballarat General Cemeteries Trust",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/ballarat-general-cemeteries-trust-annual-report-2025-2026.pdf",
+  "document": "annual report",
+  "sha256": "69c8fa6b790ca32a66e5a2cfa20316a727f312b61d0565d9310ce4239bfe7056",
+  "pages": 76,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "BOARD CHAIR AND CEO REPORT",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/ballarat-general-cemeteries-trust-annual-report-2025-2026.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Ballarat General Cemeteries Trust reported on its cemetery and cremation services for 2025-26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/ballarat-general-cemeteries-trust-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "BOARD CHAIR AND CEO REPORT"
+   },
+   {
+    "text": "The Trust reported changing staff shifts to maintain services while a major piece of infrastructure was unavailable for several months.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/ballarat-general-cemeteries-trust-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "BOARD CHAIR AND CEO REPORT"
+   },
+   {
+    "text": "The Trust reported employing four apprentices, with placements covering burial work, cremation and horticulture.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/ballarat-general-cemeteries-trust-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/ballarat-general-cemeteries-trust-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "BOARD CHAIR AND CEO REPORT"
+   },
+   {
+    "text": "The Trust reported a comprehensive surplus of $878,000, mainly arising from a land revaluation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/ballarat-general-cemeteries-trust-annual-report-2025-2026.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "BOARD CHAIR AND CEO REPORT"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We experienced a challenging year due to a significant piece of infrastructure being unavailable for use for several months.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aa6a4/globalassets/tabled-paper-documents/tabled-paper-10671/ballarat-general-cemeteries-trust-annual-report-2025-2026.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

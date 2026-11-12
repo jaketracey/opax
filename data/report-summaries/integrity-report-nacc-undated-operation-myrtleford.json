@@ -1,0 +1,122 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nacc-undated-operation-myrtleford",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Myrtleford investigation report",
+ "body": "National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+  "document": "Operation Myrtleford investigation report",
+  "sha256": "67b41757a30b20e64126a80e7910135ff68afff2d88bbf054e6a4f240a1c4afb",
+  "pages": 445,
+  "rights": "CC BY 4.0 (stated in each report)"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 8,
+  "link": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The National Anti-Corruption Commission investigated corruption issues concerning six people referred by the Royal Commission into the Robodebt Scheme.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+      "document": "Operation Myrtleford investigation report",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "It examined the scheme’s budget approval, responses to the Ombudsman and operational problems, and concerns about lawfulness, focusing on events in 2015, 2017 and 2018.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+      "document": "Operation Myrtleford investigation report",
+      "page": 6
+     }
+    ],
+    "section": "Events under investigation"
+   },
+   {
+    "text": "The Commission found two people engaged in serious corrupt conduct by intentionally misleading Social Services officials during the 2015 budget process and the Ombudsman during the 2017 investigation.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+      "document": "Operation Myrtleford investigation report",
+      "page": 6
+     },
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+      "document": "Operation Myrtleford investigation report",
+      "page": 7
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "The Commission concluded that the other four referred people had not engaged in corrupt conduct.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+      "document": "Operation Myrtleford investigation report",
+      "page": 6
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "The Commission concluded that insufficient admissible evidence was available for criminal referrals concerning the two people against whom it made corruption findings.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+      "document": "Operation Myrtleford investigation report",
+      "page": 7
+     }
+    ],
+    "section": "Recommendations and outcomes"
+   },
+   {
+    "text": "It made no recommendations because it considered existing reforms to budget processes and responses to the Ombudsman sufficient to prevent similar conduct.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+      "document": "Operation Myrtleford investigation report",
+      "page": 7
+     },
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+      "document": "Operation Myrtleford investigation report",
+      "page": 8
+     },
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-03/Operation%20Myrtleford%20Investigation%20Report.pdf",
+      "document": "Operation Myrtleford investigation report",
+      "page": 437
+     }
+    ],
+    "section": "Observations and recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

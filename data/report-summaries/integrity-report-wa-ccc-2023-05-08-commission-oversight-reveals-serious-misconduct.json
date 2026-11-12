@@ -1,0 +1,79 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2023-05-08-commission-oversight-reveals-serious-misconduct",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Commission oversight reveals serious misconduct",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Excessive_use_of_force_by_a_police_officer.pdf",
+  "document": "Excessive use of force by a police officer",
+  "sha256": "6c4a0b7ade9c3f9f5448f01f0f791753d36c941677ba3d78434c6d30663adc8b",
+  "pages": 16,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Excessive_use_of_force_by_a_police_officer.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated police conduct during an arrest and detention after considering the police investigation inadequate.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Excessive_use_of_force_by_a_police_officer.pdf",
+      "document": "Excessive use of force by a police officer",
+      "page": 5
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission examined a sergeant’s use of force against a handcuffed man inside a police vehicle.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Excessive_use_of_force_by_a_police_officer.pdf",
+      "document": "Excessive use of force by a police officer",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Excessive_use_of_force_by_a_police_officer.pdf",
+      "document": "Excessive use of force by a police officer",
+      "page": 15
+     }
+    ],
+    "section": "The Commission’s opinion"
+   },
+   {
+    "text": "The Commission considered the pulling and repeated punching punitive, unnecessary and excessive, and formed an opinion of serious misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Excessive_use_of_force_by_a_police_officer.pdf",
+      "document": "Excessive use of force by a police officer",
+      "page": 15
+     }
+    ],
+    "section": "The Commission’s opinion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

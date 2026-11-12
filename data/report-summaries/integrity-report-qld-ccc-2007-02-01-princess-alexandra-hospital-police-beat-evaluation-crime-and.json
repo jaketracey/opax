@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2007-02-01-princess-alexandra-hospital-police-beat-evaluation-crime-and",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+  "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+  "sha256": "e749fde762049a2a81c9a9fdaaf01c8a8d8abe38a21a82f641cadf862c6bd56e",
+  "pages": 84,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 9,
+  "last_page": 12,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "At the Queensland Police Service’s request, the Crime and Misconduct Commission evaluated a six-month trial of a police beat at Princess Alexandra Hospital and nearby shops.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+      "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The evaluation examined police service delivery, perceptions of safety and satisfaction among hospital staff and retailers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+      "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The CMC found improved feelings of safety among hospital staff and high satisfaction with the service, while calls for service and reported crime were unchanged.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+      "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+      "page": 73
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+      "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+      "page": 75
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+      "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+      "page": 76
+     }
+    ]
+   },
+   {
+    "text": "The CMC suggested stronger community engagement, more proactive patrols, officer training and clear arrangements for sharing patient information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+      "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+      "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+      "page": 77
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+      "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+      "page": 78
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In general, perceptions of safety among hospital staff have improved substantially since the introduction of the PAHPB.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+     "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+     "page": 75
+    }
+   },
+   {
+    "quote": "The evaluation revealed no change in the number and types of calls for service and reported crime originating from the PAHPB area during the period of the trial (see Chapter 3).",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/The-Princess-Alexandra-Hopsital-Police-Beat-Report-2007.pdf",
+     "document": "The Princess Alexandra Hospital Police Beat: An evaluation by the Crime and Misconduct Commission (February 2007)",
+     "page": 73
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

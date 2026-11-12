@@ -37,6 +37,58 @@ BODIES = {
     "Independent Commissioner Against Corruption (South Australia)": ("sa_icac", "SA ICAC", "SA"),
     "Independent Broad-based Anti-corruption Commission": ("vic_ibac", "IBAC", "Vic"),
 }
+# The intake manifest's rights, notes and gap notes are written for the intake reviewer. Pages show these
+# reader-facing versions instead (same facts, no review instructions). A manifest wording with no entry here
+# stops the build, so internal wording never reaches a page.
+PUBLIC = {
+    "NSW ICAC copyright notice reserves rights. Check the permitted use or permission before any public full-text projection.":
+        "NSW ICAC copyright: the Commission's copyright notice reserves its rights. OPAX links to the publisher's copy.",
+    "Published public hearing copies, subject to document-specific notices and current publication orders. Some covers prohibit copying or distribution except in accordance with the presiding officer's order. The general site CC BY licence does not override those notices.":
+        "Public hearing copies published by the Commission, subject to the notices on each document and to current publication orders. Some covers prohibit copying or distribution except as the presiding officer orders, and the website's general CC BY licence does not override those notices. OPAX links to the publisher's copy.",
+    "Transcript front matter warns against publication identifying protected participants. Preserve the original public version and check current orders before any downstream republication.":
+        "The transcript's front matter warns against publishing anything that identifies protected participants, and current publication orders apply. OPAX links to the publisher's copy.",
+    "NSW LECC attribution required. Check its permission conditions for modification or commercial reuse.":
+        "Published by the NSW Law Enforcement Conduct Commission, which requires attribution and sets conditions for modification and commercial reuse. OPAX links to the publisher's copy.",
+    "Publisher authorises viewing only and prohibits alteration. Use the official link for discovery and keep the original out of downstream copying, processing or public indexing until permission is confirmed.":
+        "The publisher authorises viewing only and prohibits alteration, so OPAX lists the hearing and links to the publisher's copy.",
+    "Publisher-released public copies, including its redactions. The transcript notices reserve Crown copyright and require the Attorney-General's prior written consent for reproduction. Preserve publication orders and use the source links for any outward-facing index pending rights clearance.":
+        "Public copies released by the Commission, including its redactions. The transcript notices reserve Crown copyright and require the Attorney-General's prior written consent for reproduction, and publication orders apply. OPAX links to the publisher's copy.",
+    "Published original. IBAC reserves copyright and commercial reuse. Review the publisher’s terms, transcript restrictions and suppression order before any public text projection.":
+        "Published by IBAC, which reserves copyright and commercial reuse. Transcript restrictions and a suppression order apply. OPAX links to the publisher's copy.",
+    "Published public examinations. The transcript notices reserve Crown copyright and state that reproduction requires prior written consent of the Commissioner. Stage as source evidence only and use source links for outward-facing indexing pending clearance.":
+        "Public examinations published by the Commission. The transcript notices reserve Crown copyright and state that reproduction requires the Commissioner's prior written consent. OPAX links to the publisher's copy.",
+    "SA ICAC publisher material carries copyright. Use original source links for publication pending rights clearance. This was a public legislative review hearing; SA ICAC corruption investigation examinations are conducted privately.":
+        "SA ICAC material carries copyright. This was a public legislative review hearing; SA ICAC conducts its corruption investigation examinations in private. OPAX links to the publisher's copy.",
+    "Hearing date taken from transcript cover, which differs from the publisher filename or link label.":
+        "The hearing date is the one printed on the transcript's cover; the publisher's file name or link label gives a different date.",
+    "The publisher-supplied PDF has a different physical page count from the listed transcript folio range. The file is preserved as published.":
+        "The publisher's PDF has a different number of pages from the transcript page range it lists; OPAX links to the file as published.",
+    "Official catalogue link contained an escaped apostrophe. This is the indexed original on the same publisher host.":
+        "The publisher's catalogue link to this file is malformed; this link goes to the same file on the publisher's site.",
+    "Publisher’s current investigations index is the bounded initial scope. Earlier archived cases and sessions not publicly published are outside this snapshot.":
+        "OPAX holds the transcripts listed in the Commission's current investigations index. Transcripts of earlier archived cases, and sessions the Commission has not published, are not included.",
+    "The Operation Makalu PDF is the public opening address transcript; the collection records that document type.":
+        "The Operation Makalu document is the transcript of the public opening address.",
+}
+_FOLIOS = re.compile(r"^(The publisher-supplied PDF .*? preserved as published\.) The first and last PDF folios are (\d+) and (\d+)\.$")
+INTERNAL = re.compile(r"\b(?:Check|Review the|before any|pending|Stage as|Preserve|downstream|bounded|snapshot|projection|"
+                      r"rights review|taken from transcript)\b", re.I)
+
+
+def public(text):
+    """Reader-facing wording for a manifest rights statement, note or gap note."""
+    if text is None:
+        return None
+    text = common.clean(text)
+    m = _FOLIOS.match(text)
+    if m:
+        return f"{PUBLIC[m.group(1)]} Its transcript pages run from {m.group(2)} to {m.group(3)}."
+    out = PUBLIC.get(text, text)
+    if INTERNAL.search(out):
+        raise common.Held(f"no reader-facing wording for: {text!r}")
+    return out
+
+
 MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october",
           "november", "december"]
 
@@ -136,7 +188,7 @@ def build(intake: Path, cache: Path = common.CACHE, registry: Path = REGISTRY):
         code, short, jurisdiction = BODIES[d["publisher"]]
         hearing_date = d["hearing_date"]
         quote, page = find_date(hearing_date, pages)
-        notes = [common.clean(n) for n in (d.get("date_note"), d.get("coverage_note"), d.get("source_note")) if n]
+        notes = [public(n) for n in (d.get("date_note"), d.get("coverage_note"), d.get("source_note")) if n]
         if not quote:
             printed, q = nearby_date(hearing_date, pages)
             if printed:
@@ -156,7 +208,7 @@ def build(intake: Path, cache: Path = common.CACHE, registry: Path = REGISTRY):
             "url": d["source_url"],
             "page_url": d.get("source_index_url") or d.get("source_catalogue_url") or d.get("index_url") or d.get("publisher_item_url"),
             "pages": d["pages"], "bytes": d["bytes"], "sha256": d["sha256"],
-            "publisher_redacted": redacted(d), "rights": common.clean(d["rights"]),
+            "publisher_redacted": redacted(d), "rights": public(d["rights"]),
             **({"reuse_status": d["reuse_status"]} if d.get("reuse_status") else {}),
             **({"copyright_url": d["copyright_url"]} if d.get("copyright_url") else {}),
             **({"terms_url": d["publisher_terms_url"]} if d.get("publisher_terms_url") else {}),
@@ -181,14 +233,14 @@ def build(intake: Path, cache: Path = common.CACHE, registry: Path = REGISTRY):
     view_only = [{
         "body": BODIES[v["publisher"]][0], "case": case_name(v), "title": common.clean(v.get("title_as_listed") or ""),
         "hearing_date": v["hearing_date"], "url": v["source_url"], "page_url": v.get("source_catalogue_url"),
-        "pages": v.get("pages"), "rights": common.clean(v["rights"]), "availability": "publisher_view_only",
+        "pages": v.get("pages"), "rights": public(v["rights"]), "availability": "publisher_view_only",
     } for v in m.get("publisher_view_only", []) if v.get("publisher") in BODIES]
     gaps = []
     for c in m.get("collections", []):
         cm = json.loads(Path(c["manifest_path"]).read_text())
         for g in cm.get("known_coverage_gaps", []) or cm.get("gaps", []) or []:
             if isinstance(g, dict) and g.get("note"):
-                gaps.append({k: g[k] for k in ("agency", "note", "url") if g.get(k)})
+                gaps.append({k: public(g[k]) if k == "note" else g[k] for k in ("agency", "note", "url") if g.get(k)})
     reg = {"schema": common.SCHEMA, "built_at": common.now(), "label": LABEL,
            "intake": {"snapshot_at": m.get("snapshot_at"), "manifest_sha256": hashlib.sha256(raw).hexdigest()},
            "counts": dict(sorted(Counter(r["body"] for r in out).items())),
