@@ -129,9 +129,9 @@ export async function projectReports(read) {
 // ---- generated summaries (data/report-summaries, written by Codex lanes and checked by
 // scripts/report_summaries/gate.py). Outside public/, so only this projection is served.
 const summaryRoot = fileURLToPath(new URL('../data/report-summaries/', import.meta.url));
-/** Findings quotes that name a person are shown only when this is true. Off until Jake rules on named-person quotes;
- * the records' summary sentences still show. */
-export const SHOW_NAMED_PERSON_QUOTES = false;
+/** Findings quotes that name a person are shown only when this is true. On since 12 Nov 2026 (Jake's ruling): they are
+ * shown word for word as the body printed them, each with its page, and the gate rules are unchanged. */
+export const SHOW_NAMED_PERSON_QUOTES = true;
 /** Records whose "In the body's own words" quotes name a person (adverse findings or favourable outcomes). */
 export const NAMED_PERSON_QUOTES = new Set([
   'integrity-report-vic-ibac-2016-10-20-tp2847-special-report-on-operation-exmouth',
