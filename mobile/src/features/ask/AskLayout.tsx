@@ -53,9 +53,12 @@ export function AskColumns({
   const paneWidth =
     split?.trailing.width ?? splitPaneWidth(region.width, large, region.rule);
   return (
-    <View style={styles.row}>
+    // These wrappers must be stacking contexts. Fabric can otherwise hoist
+    // the scroll view beside an empty wrapper that stops UIKit's discovery.
+    <View style={styles.row} collapsable={false}>
       <View
         testID="ask-conversation-column"
+        collapsable={false}
         style={split ? { width: split.leading.width } : styles.fill}
       >
         {content}

@@ -17,11 +17,14 @@ beforeEach(() => {
   mkdirSync(join(root, 'scripts'));
   for (const name of [
     'build-android.sh',
+    'android-gradle.sh',
     'qa-env.sh',
     'capacity.sh',
     'qa-lock.sh',
   ])
     cpSync(join(__dirname, '../scripts', name), join(root, 'scripts', name));
+  // The host guard has its own test; a stub keeps these cases host-independent.
+  writeFileSync(join(root, 'scripts', 'android-host.sh'), '');
   for (const directory of ['bin', 'jdk/bin', 'node_modules/.bin', 'android'])
     mkdirSync(join(root, directory), { recursive: true });
   executable(

@@ -60,4 +60,18 @@ for option in --watch --watchAll --watch=true --watchAll=true; do
   PASSED=$((PASSED + 1))
   echo "ok $PASSED - $option exec preserves interactivity and exit without retry"
 done
+# Check both Jest directly and the package script, so a hard-coded worker
+# argument in package.json cannot silently override a caller's budget.
+(cd "$SCRIPTS/.." && npx --no-install jest --showConfig --maxWorkers=6) > "$SCRATCH/direct-config.json"
+(cd "$SCRIPTS/.." && npm test -- --showConfig --maxWorkers=6) > "$SCRATCH/npm-config.txt"
+python3 - "$SCRATCH/direct-config.json" "$SCRATCH/npm-config.txt" <<'PYCONFIG'
+import json, sys
+for path in sys.argv[1:]:
+    text = open(path).read()
+    config = json.loads(text[text.index('{'):])
+    assert config['globalConfig']['maxWorkers'] == 6, (path, config['globalConfig']['maxWorkers'])
+print('PASS direct and npm Jest configurations both report maxWorkers=6')
+PYCONFIG
+PASSED=$((PASSED + 1))
+echo "ok $PASSED - explicit worker budgets reach the real Jest configuration"
 echo "jest-retry: $PASSED passed"

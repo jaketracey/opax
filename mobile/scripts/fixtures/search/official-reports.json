@@ -1,0 +1,79 @@
+[
+  {
+    "kind": "report",
+    "report_type": "royal_commission",
+    "slug": "royal-commission-cth-robodebt",
+    "title": "Royal Commission into the Robodebt Scheme",
+    "body": "Royal Commission into the Robodebt Scheme",
+    "jurisdiction": "Cth",
+    "date": "2023-07-07",
+    "year": null,
+    "snippet": "Report of the Royal Commission into the Robodebt Scheme",
+    "citation": {
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "document": "Report of the Royal Commission into the Robodebt Scheme"
+    },
+    "href": "/report/royal-commission-cth-robodebt",
+    "resource": "",
+    "source": "Royal Commission into the Robodebt Scheme",
+    "source_url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF"
+  },
+  {
+    "kind": "report",
+    "report_type": "integrity_report",
+    "slug": "integrity-report-nacc-2026-04-08-operation-pelican",
+    "title": "Operation Pelican investigation report",
+    "body": "National Anti-Corruption Commission",
+    "jurisdiction": "Cth",
+    "date": "2026-04-08",
+    "year": null,
+    "snippet": "Operation Pelican investigation report",
+    "citation": {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf",
+      "document": "Operation Pelican investigation report"
+    },
+    "href": "/report/integrity-report-nacc-2026-04-08-operation-pelican",
+    "resource": "",
+    "source": "National Anti-Corruption Commission",
+    "source_url": "https://www.nacc.gov.au/sites/default/files/documents/2026-04/Operation%20Pelican%20Investigation%20Report.pdf"
+  },
+  {
+    "kind": "report",
+    "report_type": "annual_report",
+    "slug": "annual-report-bundanon-trust-2022-23",
+    "title": "Bundanon Trust Annual Report 2022-23",
+    "body": "Bundanon Trust",
+    "jurisdiction": "Cth",
+    "date": null,
+    "year": "2022-23",
+    "snippet": "Bundanon Trust Annual Report 2022-23",
+    "citation": {
+      "url": "https://www.transparency.gov.au/publications/infrastructure-transport-regional-development-communications-and-the-arts/bundanon_trust/bundanon-trust-annual-report-2022-23",
+      "document": "Bundanon Trust Annual Report 2022-23"
+    },
+    "href": "/report/annual-report-bundanon-trust-2022-23",
+    "resource": "",
+    "source": "Bundanon Trust",
+    "source_url": "https://www.transparency.gov.au/publications/infrastructure-transport-regional-development-communications-and-the-arts/bundanon_trust/bundanon-trust-annual-report-2022-23"
+  },
+  {
+    "kind": "report",
+    "report_type": "agency_report",
+    "slug": "agency-report-nsw-public-service-commissioner-2025-26-annual-report",
+    "title": "Public Service Commissioner 2025-26 annual report",
+    "body": "Public Service Commissioner",
+    "jurisdiction": "NSW",
+    "date": null,
+    "year": "2025-26",
+    "snippet": "the Commissioner received 1 request for guidance under section 83B",
+    "citation": {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf#page=33",
+      "document": "Public Service Commissioner 2025-26 annual report",
+      "page": 33
+    },
+    "href": "/report/agency-report-nsw-public-service-commissioner-2025-26-annual-report",
+    "resource": "",
+    "source": "Public Service Commissioner",
+    "source_url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212142%2FOPSC%20Annual%20Report%202025%20-%2026_signed%20by%20Commissioner.pdf#page=33"
+  }
+]

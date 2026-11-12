@@ -4,6 +4,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/qa-env.sh
+source scripts/android-host.sh
 source scripts/qa-lock.sh
 source scripts/qa-java.sh
 AVD=${1:?Usage: e2e-android.sh OPAX_Pixel_API36|OPAX_API34 [01 02 03 07 08 13 25 26 32 38 39 40]}; shift

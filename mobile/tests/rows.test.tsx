@@ -210,6 +210,7 @@ test.each([
 test('ValueRow stacks a long figure, then returns inline when the column widens', () => {
   const value = '$123,456,789,012,345,678';
   const renderer = render(<ValueRow label="Total debts" value={value} />);
+  const nativeTexts = renderer.root.findAllByType(NativeText);
   const content = () => renderer.root.findAllByType(Text)[0]!.parent!;
   act(() => {
     content().props.onLayout({ nativeEvent: { layout: { width: 370 } } });
@@ -249,6 +250,13 @@ test('ValueRow stacks a long figure, then returns inline when the column widens'
   expect(flat(content().props.style).flexDirection).toBe('column');
   act(() => renderer.update(<ValueRow label="Total debts" value="$3,000" />));
   expect(flat(content().props.style).flexDirection).toBe('row');
+  renderer.root
+    .findAllByType(NativeText)
+    .forEach((text, index) => expect(text).toBe(nativeTexts[index]));
+  size(3.571);
+  renderer.root
+    .findAllByType(NativeText)
+    .forEach((text, index) => expect(text).toBe(nativeTexts[index]));
 });
 
 test.each([1.786, 3.571])(

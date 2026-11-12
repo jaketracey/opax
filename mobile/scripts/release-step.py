@@ -8,10 +8,14 @@ from pathlib import Path
 import plistlib
 import re
 import sys
+import tempfile
 
 sys.dont_write_bytecode = True
 from release_inputs import clean_commit, dependency_command, refuse_dotenv
 from release_support import ReleaseError, load_credentials, redact, run_logged
+
+
+APPLE_RSYNC = Path("/usr/bin/rsync")
 
 
 def upload_verified(mobile, out, approved_commit, expected_voice_mode):
@@ -63,7 +67,12 @@ def run(step, mobile, out, expected_voice_mode=None):
                 "-authenticationKeyIssuerID", os.environ["ASC_ISSUER_ID"]]
         archive = out / "OPAX.xcarchive"
         if step == "archive":
-            cmd = ["nice", "-n", "10", "xcodebuild", "-jobs", "4", "-workspace", "ios/OPAX.xcworkspace",
+            # Parallel compile jobs: 4 is the shared-host default; a quiet Mac can
+            # take OPAX_XCODE_JOBS=8. The output does not depend on it.
+            jobs = os.environ.get("OPAX_XCODE_JOBS", "4")
+            if not re.fullmatch(r"[1-9][0-9]?", jobs):
+                raise ReleaseError("OPAX_XCODE_JOBS must be a small positive integer.")
+            cmd = ["nice", "-n", "10", "xcodebuild", "-jobs", jobs, "-workspace", "ios/OPAX.xcworkspace",
                    "-scheme", "OPAX", "-configuration", "Release", "-destination", "generic/platform=iOS",
                    "-archivePath", str(archive), "-derivedDataPath", str(out / "DerivedData"),
                    "DEVELOPMENT_TEAM=" + os.environ["APPLE_TEAM_ID"], "CODE_SIGN_STYLE=Automatic", *auth, "archive"]
@@ -76,7 +85,17 @@ def run(step, mobile, out, expected_voice_mode=None):
                    "-exportOptionsPlist", str(options), "-exportPath", str(out / "export"), *auth]
     # Only command output is logged; arguments are never echoed. Remove signing
     # variables before Expo or Xcode build phases inherit the environment.
-    run_logged(cmd, out / f"{step}-command.log", public_env=True)
+    if step == "export":
+        if not os.access(APPLE_RSYNC, os.X_OK):
+            raise ReleaseError("Export requires Apple's executable /usr/bin/rsync.")
+        # Xcode's export copy requires Apple's rsync. Override only that tool;
+        # the rest of the caller's PATH and every other step stay unchanged.
+        with tempfile.TemporaryDirectory(prefix="opax-release-rsync-") as shim:
+            (Path(shim) / "rsync").symlink_to(APPLE_RSYNC)
+            env = {**os.environ, "PATH": shim + os.pathsep + os.environ.get("PATH", os.defpath)}
+            run_logged(cmd, out / f"{step}-command.log", public_env=True, env=env)
+    else:
+        run_logged(cmd, out / f"{step}-command.log", public_env=True)
     if step == "dependencies":
         run_logged(["python3", "scripts/apply-privacy-patches.py"],
                    out / "privacy-patches-command.log", public_env=True)

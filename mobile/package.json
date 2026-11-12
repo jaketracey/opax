@@ -6,8 +6,8 @@
   "scripts": {
     "start": "expo start --localhost",
     "ios": "bash scripts/run-ios.sh",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
+    "typecheck": "mkdir -p node_modules/.cache && tsc --noEmit --incremental --tsBuildInfoFile node_modules/.cache/tsconfig.tsbuildinfo",
+    "lint": "bash scripts/lint.sh",
     "test": "bash scripts/jest-retry.sh",
     "format": "prettier --write src scripts tests plugins app.config.ts *.js *.json .maestro README.md",
     "qa-advisories": "tsx scripts/qa-advisories.ts",

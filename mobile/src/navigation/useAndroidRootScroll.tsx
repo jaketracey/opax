@@ -17,6 +17,7 @@ import {
   type NativeSyntheticEvent,
 } from 'react-native';
 import { colors, interfaceFonts, rhythm } from '../design/tokens';
+import { scrollToTop } from '../design/scroll-to-top';
 import { useSafeSetOptions } from './preview';
 
 const titles: Record<string, string> = {
@@ -97,7 +98,7 @@ export function useAndroidRootScroll(
         requestAnimationFrame(() => {
           if (event.defaultPrevented) return;
           const node = scroll.current;
-          if (node?.scrollTo) node.scrollTo({ y: 0, animated: true });
+          if (node?.scrollTo) scrollToTop(node, 0, true);
           else node?.scrollToOffset?.({ offset: 0, animated: true });
         });
       },

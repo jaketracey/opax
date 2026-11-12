@@ -61,7 +61,7 @@ export function AskProgress({
       {streaming ? (
         <StreamedAnswer text={streaming} testID="ask-streaming" />
       ) : (
-        <Skeleton shape="text" count={3} label="Loading the answer" />
+        <Skeleton shape="text" count={3} label="Loading the answer" onSunken />
       )}
     </View>
   );

@@ -1,16 +1,15 @@
-import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { act, type ReactElement, type ReactNode } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { Button, Card, Icon, Text } from '../src/design/primitives';
+import { Button, Icon } from '../src/design/primitives';
 import { useAccount } from '../src/features/account/store';
 import Today from '../src/features/Today';
 import { AskBlock } from '../src/features/today/AskBlock';
 import { readCachedEdition } from '../src/features/today/edition-store';
 import { todayColumns, todayOrder } from '../src/features/today/order';
 import { sydneyDay } from '../src/features/today/rules';
-import { VoiceCard } from '../src/features/today/VoiceCard';
+import { LinkRow } from '../src/design/rows';
 
 let mockVoiceLinked = true;
 let mockTalkInAsk = true;
@@ -58,7 +57,7 @@ jest.mock('expo-router', () => {
 jest.mock('../src/features/account/store', () => ({
   useAccount: jest.fn(),
 }));
-// Keep Today's real order, Ask block and voice card; other feeds own their tests.
+// Keep Today's real order and Ask rows; other feeds own their tests.
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     todayEdition: jest.fn(async () => ({ status: 'missing' })),
@@ -126,7 +125,7 @@ function accountState(signedIn: boolean | null, checking = false) {
   });
 }
 const mounted: TestRenderer.ReactTestRenderer[] = [];
-async function render(element: ReactElement = <VoiceCard />) {
+async function render(element: ReactElement = <AskBlock today="2026-11-13" />) {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     renderer = TestRenderer.create(element);
@@ -139,31 +138,10 @@ const host = (root: ReactTestInstance, testID: string) =>
     (node) => typeof node.type === 'string' && node.props.testID === testID,
   );
 
-/** Buttons exposed to a reader, excluding hidden native subtrees. */
-function accessibleButtons(node: ReactTestInstance): ReactTestInstance[] {
-  if (
-    typeof node.type === 'string' &&
-    (node.props.accessibilityElementsHidden ||
-      node.props.importantForAccessibility === 'no-hide-descendants')
-  )
-    return [];
-  const own =
-    typeof node.type === 'string' && node.props.accessibilityRole === 'button'
-      ? [node]
-      : [];
-  return [
-    ...own,
-    ...node.children.flatMap((child) =>
-      typeof child === 'string' ? [] : accessibleButtons(child),
-    ),
-  ];
-}
-
 beforeEach(() => {
   jest.clearAllMocks();
   mockVoiceLinked = true;
   mockTalkInAsk = true;
-  Constants.expoConfig!.extra = { variant: 'development' };
   jest.mocked(useWindowDimensions).mockReturnValue(standard);
   jest.mocked(readCachedEdition).mockResolvedValue(null);
   accountState(true);
@@ -178,40 +156,30 @@ test.each([
   { signedIn: null, checking: false, signup: false },
   { signedIn: null, checking: true, signup: false },
   { signedIn: false, checking: true, signup: false },
-  { signedIn: true, checking: true, signup: false },
 ])(
-  'voice invitation with signedIn=$signedIn and checking=$checking',
+  'third Ask row routes like the composer ($signedIn, $checking)',
   async ({ signedIn, checking, signup }) => {
     accountState(signedIn, checking);
-    const label = signup ? 'Sign up to talk' : 'Start a voice chat';
-    const route = { pathname: signup ? '/talk/sign-in' : '/talk' };
     const { root } = await render();
-    expect(root.findByType(Card).props).toMatchObject({
+    const rows = root.findAllByType(LinkRow);
+    expect(rows).toHaveLength(3);
+    expect(rows[2]!.props).toMatchObject({
+      title: 'Talk it through',
+      symbol: 'waveform',
+      symbolInk: 'navy',
       testID: 'today-voice',
-      accessibilityLabel: label,
-      accessibilityHint: 'Talk to OPAX about parliament',
     });
-    expect(root.findAllByType(Text).map((text) => text.props.children)).toEqual(
-      expect.arrayContaining([
-        'Talk it through',
-        signup
-          ? 'You’ll need a free account for voice chats. Ask about a bill, a vote or your MP, with sources.'
-          : 'Ask about a bill, a vote or your MP, out loud. Answers come with sources.',
-      ]),
-    );
-    expect(root.findByType(Button).props).toMatchObject({
-      label,
-      variant: 'primary',
-      fullWidth: true,
-      testID: 'today-voice-start',
-    });
+    expect(rows[2]!.props.secondary).toBeUndefined();
+    expect(root.findAllByType(Button)).toHaveLength(0);
+    expect(
+      root.findAllByType(Icon).filter((n) => n.props.name === 'waveform')[0]!
+        .props,
+    ).toMatchObject({ tone: 'navy', type: 'hierarchical' });
     expect(router.push).not.toHaveBeenCalled();
-    act(() => root.findByType(Card).props.onPress());
-    expect(router.push).toHaveBeenCalledTimes(1);
-    expect(router.push).toHaveBeenLastCalledWith(route);
-    act(() => root.findByType(Button).props.onPress());
-    expect(router.push).toHaveBeenCalledTimes(2);
-    expect(router.push).toHaveBeenLastCalledWith(route);
+    act(() => rows[2]!.props.onPress());
+    expect(router.push).toHaveBeenCalledWith(
+      signup ? { pathname: '/talk/sign-in' } : '/talk',
+    );
   },
 );
 
@@ -219,71 +187,35 @@ test.each([
   [false, true],
   [true, false],
   [false, false],
-])('hidden when voiceLinked=%s and talkInAsk=%s', async (linked, flag) => {
-  mockVoiceLinked = linked;
-  mockTalkInAsk = flag;
-  const renderer = await render();
-  expect(renderer.toJSON()).toBeNull();
-});
-
-test.each([undefined, false, true])(
-  'production respects its voice build switch (%s), even with iOS voiceLinked',
-  async (enabled) => {
-    Constants.expoConfig!.extra = {
-      variant: 'production',
-      productionVoiceEnabled: enabled,
-    };
-    const renderer = await render();
-    if (enabled) expect(host(renderer.root, 'today-voice')).toBeDefined();
-    else expect(renderer.toJSON()).toBeNull();
+])(
+  'Ask retains its starters when voiceLinked=%s and talkInAsk=%s',
+  async (linked, flag) => {
+    mockVoiceLinked = linked;
+    mockTalkInAsk = flag;
+    const { root } = await render();
+    expect(root.findAllByType(LinkRow)).toHaveLength(2);
+    expect(root.findAllByProps({ testID: 'today-voice' })).toHaveLength(0);
   },
 );
 
-test.each([
-  [1, false],
-  [1, true],
-  [3.571, false],
-  [3.571, true],
-] as const)(
-  'one accessible button and wrapping text at font scale %s with signedIn=%s',
-  async (fontScale, signedIn) => {
-    accountState(signedIn);
-    jest.mocked(useWindowDimensions).mockReturnValue({
-      ...standard,
-      width: 320,
-      fontScale,
-    });
+test.each([1, 3.571])(
+  'starter symbols are navy hierarchical at font scale %s',
+  async (fontScale) => {
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ ...standard, width: 320, fontScale });
     const { root } = await render();
-    expect(accessibleButtons(root).map((node) => node.props.testID)).toEqual([
-      'today-voice',
-    ]);
-    expect(host(root, 'today-voice').props).toMatchObject({
-      accessible: true,
-      accessibilityRole: 'button',
-      accessibilityLabel: signedIn ? 'Start a voice chat' : 'Sign up to talk',
-      accessibilityHint: 'Talk to OPAX about parliament',
-    });
-    const text = root.findAll((node) => node.type === 'Text');
-    expect(text.length).toBeGreaterThanOrEqual(3);
-    for (const node of text) {
-      expect(node.props.numberOfLines).toBeUndefined();
-      expect(node.props.allowFontScaling).not.toBe(false);
-      const style = StyleSheet.flatten(node.props.style);
-      expect(style?.height).toBeUndefined();
-      expect(style?.maxHeight).toBeUndefined();
-    }
-    const icon = root.findByType(Icon);
-    expect(icon.props).toMatchObject({ name: 'waveform', maxScale: 1 });
-    expect(icon.props.animation).toBeUndefined();
-    act(() => root.findByType(Button).props.onPress());
-    expect(router.push).toHaveBeenCalledWith({
-      pathname: signedIn ? '/talk' : '/talk/sign-in',
-    });
+    const icons = root
+      .findAllByType(Icon)
+      .filter((n) => n.props.name === 'text.bubble');
+    expect(icons).toHaveLength(2);
+    for (const icon of icons)
+      expect(icon.props).toMatchObject({ tone: 'navy', type: 'hierarchical' });
   },
 );
 
 test.each(['A', 'B', 'C'] as const)(
-  'Today draws voice directly before Ask in launch case %s',
+  'Today has the voice row inside Ask in launch case %s',
   async (launchCase) => {
     const today = sydneyDay();
     jest
@@ -296,20 +228,9 @@ test.each(['A', 'B', 'C'] as const)(
             : null,
       );
     const { root } = await render(<Today />);
-    const ids = root
-      .findAll((node) => typeof node.type === 'string' && !!node.props.testID)
-      .map((node) => node.props.testID);
-    expect(
-      ids.filter((id) =>
-        ['today-voice', 'today-ask', 'today-foot'].includes(id),
-      ),
-    ).toEqual(['today-voice', 'today-ask', 'today-foot']);
-    const voice = root.findByType(VoiceCard);
-    const siblings = voice.parent!.children;
-    expect(siblings[siblings.indexOf(voice) + 1]).toBe(
-      root.findByType(AskBlock),
-    );
-    // The Ask slot also sits in the trailing iPad column in every case.
+    const ask = root.findByType(AskBlock);
+    expect(ask.findAllByType(LinkRow)).toHaveLength(3);
+    expect(host(root, 'today-voice')).toBeDefined();
     const order = todayOrder({
       seat: false,
       invitation: { hiddenUntil: null, welcomeDeclinedAt: null },
@@ -320,14 +241,3 @@ test.each(['A', 'B', 'C'] as const)(
     expect(todayColumns(order).trailing.at(-1)).toBe('ask');
   },
 );
-
-test('Today retains Ask when voice is hidden', async () => {
-  mockVoiceLinked = false;
-  const { root } = await render(<Today />);
-  expect(
-    root
-      .findAllByType(Card)
-      .filter((card) => card.props.testID === 'today-voice'),
-  ).toHaveLength(0);
-  expect(host(root, 'today-ask')).toBeDefined();
-});

@@ -78,6 +78,34 @@ test('network failure retains the saved copy, while a cold failure is visible', 
   expect(cold.reads.overview.record).toBeNull();
   expect(cold.reads.overview.error).toBeTruthy();
 });
+test('50 revalidations reuse one absence wrapper and one decoded snapshot per decoder', async () => {
+  const { reads, client, transport, entries } = setup();
+  const get = jest.spyOn(client, 'get');
+  const decode = jest.fn(decodeOverview);
+  transport.mockResolvedValueOnce(reply(overview));
+  const first = await reads.read(overviewPath, decode);
+  const snapshots = new Set([first.data]);
+  transport.mockImplementation(async () => new Response(null, { status: 304 }));
+  const secondReader = new ElectionReads(client);
+  for (let i = 0; i < 50; i++) {
+    const reader = i % 2 ? reads : secondReader;
+    snapshots.add((await reader.read(overviewPath, decode)).data);
+  }
+  expect(transport).toHaveBeenCalledTimes(51);
+  expect(new Set(get.mock.calls.map((call) => call[1])).size).toBe(1);
+  expect(decode).toHaveBeenCalledTimes(1);
+  expect(snapshots.size).toBe(1);
+  expect(entries.size).toBe(1);
+
+  const otherDecoder = jest.fn(decodeOverview);
+  const other = await reads.read(overviewPath, otherDecoder);
+  expect(other.data).not.toBe(first.data);
+  expect(other.data).toEqual(first.data);
+  expect(otherDecoder).toHaveBeenCalledTimes(1);
+  await secondReader.read(overviewPath, otherDecoder);
+  expect(otherDecoder).toHaveBeenCalledTimes(1);
+  expect(new Set(get.mock.calls.map((call) => call[1])).size).toBe(2);
+});
 test('seat not_found is distinct from a withdrawn hub', async () => {
   const { reads, transport } = setup();
   transport.mockResolvedValueOnce(reply(seat));

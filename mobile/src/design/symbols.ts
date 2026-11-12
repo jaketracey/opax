@@ -72,6 +72,7 @@ export const symbols = Object.freeze({
   talk: 'waveform',
   newConversation: 'square.and.pencil',
   history: 'clock',
+  retry: 'arrow.clockwise',
   askOptions: 'slider.horizontal.3',
   send: 'arrow.up.circle.fill',
   stop: 'stop.circle.fill',

@@ -24,6 +24,8 @@ done
 [[ "$EXPECTED_COMMIT" =~ ^[0-9a-f]{40}$ ]] || { echo 'Release requires --expected-commit with the full QA-approved SHA.' >&2; exit 2; }
 case "$EXPECTED_VOICE_MODE" in 0|1) ;; *) echo 'Release requires --expected-voice-mode 0 or 1.' >&2; exit 2 ;; esac
 source scripts/qa-env.sh
+source scripts/android-host.sh
+source scripts/android-gradle.sh
 source scripts/qa-lock.sh
 if [ "$CALLER_VOICE_MODE_SET" = x ]; then export OPAX_PRODUCTION_VOICE=$CALLER_VOICE_MODE; fi
 export OPAX_PRODUCTION_VOICE=${OPAX_PRODUCTION_VOICE-1}
@@ -71,11 +73,14 @@ import json, sys
 config=json.load(open(sys.argv[1]))
 assert (config['extra'].get('productionVoiceEnabled') is True) == (sys.argv[2] == '1'), 'Effective Expo voice mode mismatch'
 PY
+# Upload builds keep the provenance guards and use a fresh android/.
+export OPAX_GRADLE_DAEMON=0 OPAX_GRADLE_CACHE_ENABLED=0
+android_gradle_args
 ./node_modules/.bin/expo prebuild --platform android --no-install > "$OUT/prebuild.log" 2>&1
 (cd android && "$JAVA_HOME/bin/java" -Xmx64m -Xms64m --enable-native-access=ALL-UNNAMED \
   -Dorg.gradle.appname=gradlew -classpath gradle/wrapper/gradle-wrapper.jar \
   org.gradle.wrapper.GradleWrapperMain :app:bundleRelease :app:assembleRelease \
-  --no-daemon --max-workers=2 -PreactNativeArchitectures=arm64-v8a,x86_64) > "$OUT/gradle.log" 2>&1
+  "${ANDROID_GRADLE_ARGS[@]}" -PreactNativeArchitectures=arm64-v8a,x86_64) > "$OUT/gradle.log" 2>&1
 check_inputs
 ./node_modules/.bin/expo config --type public --json > "$OUT/config-after.json"
 python3 - "$OUT" "$EXPECTED_COMMIT" "$EXPECTED_VOICE_MODE" <<'PY'

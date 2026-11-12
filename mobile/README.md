@@ -55,6 +55,13 @@ scripts/e2e.sh <simulator-udid> --all-iphone
 `npm run qa -- --maxWorkers=8` forwards Jest options to the test stage. The
 default is two workers; explicit worker limits also work with `npm test`.
 
+`npm run lint` caches file results by content under `node_modules/.cache/eslint`.
+Config, local rules/policies, dependency versions and file membership invalidate
+that cache. The type-aware `opax/hermes-builtins` rule runs separately without
+caching, so edits to imported types still recheck unchanged callers. A one-file
+edit reuses the other rules' results for unchanged files. Use
+`OPAX_LINT_NO_CACHE=1 npm run lint` for the combined uncached check.
+
 With no journeys, `e2e.sh` runs 01-04 only. `--all-iphone` runs every iPhone
 journey that shares the default fixture and text size, in one locked device run
 that stops at the first failure. `--list-iphone` prints that list and the
@@ -141,6 +148,12 @@ live holder, a live group member or no owner file is never removed, whatever its
 `<lock>.opax/` holds the reap guard plus staging and retired copies from crashed runs,
 which are cleaned once their pid is dead. `scripts/test-qa-lock.sh`, part of
 `npm run qa`, tests all of this with a mocked gate in a scratch directory.
+
+A machine can keep Android work off itself. Create `~/.config/opax/no-android`, or set
+`OPAX_NO_ANDROID=1` in `.qa.local.env`. Then `build-android.sh`, `build-play.sh`,
+`e2e-android.sh` and `e2e-android-device.sh` stop before any Gradle, NDK or emulator step,
+with exit 3 and a pointer to the Android host. `OPAX_ANDROID_HERE=1` allows one run.
+`scripts/test-android-host.sh`, part of `npm run qa`, tests the guard.
 
 The fixture port must be in `8900..8999`; Maestro uses `--driver-host-port` at
 fixture port + 100 (`9000..9099`). Occupied fixture or driver ports fail before

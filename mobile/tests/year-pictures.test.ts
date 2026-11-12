@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs';
+import assert from 'node:assert/strict';
+import { closeSync, openSync, readFileSync, readSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { exploreFixture } from '../scripts/explore-fixture';
 import pins from '../scripts/fixtures/explore-pictures.json';
@@ -10,6 +11,7 @@ import {
   assertYearPictureBytes,
   yearPictureKey,
   yearPictureKeyPattern,
+  yearPictureMaxBytes,
   yearPicturePath,
 } from '../src/api/year-picture-policy';
 import { decodePictures } from '../src/features/explore/pictures';
@@ -31,40 +33,61 @@ const cache = () =>
     write: async () => {},
     remove: async () => {},
   });
+beforeEach(() => jest.useFakeTimers({ now: 1000 }));
+afterEach(() => {
+  const pendingTimers = jest.getTimerCount();
+  jest.useRealTimers();
+  expect(pendingTimers).toBe(0);
+});
 test('the web manifest preserves all 189 photos and credits, including unknown dates', () => {
   const cleaned = decodePictures(raw);
   const originals = Object.values(raw).flat() as any[];
+  const byFile = new Map(originals.map((p) => [p.file, p]));
   for (const p of Object.values(cleaned).flat()) {
-    const original = originals.find((row) => row.file === p.file);
-    expect({ ...p, credit: original.credit }).toEqual(original);
-    expect(p.credit).not.toMatch(/^(?:photo:\s*)?own work[.!]?$/i);
+    const original = byFile.get(p.file);
+    assert.deepEqual({ ...p, credit: original.credit }, original, p.file);
+    assert.doesNotMatch(p.credit, /^(?:photo:\s*)?own work[.!]?$/i, p.file);
   }
-  expect(Object.values(decodePictures(raw)).flat()).toHaveLength(189);
-  for (const rows of Object.values(decodePictures(raw)))
+  expect(Object.values(cleaned).flat()).toHaveLength(189);
+  for (const rows of Object.values(cleaned))
     for (const p of rows) {
-      expect(() => assertAllowedPath('/' + p.file)).not.toThrow();
-      expect(yearPicturePath(yearPictureKey('/' + p.file))).toBe('/' + p.file);
-      expect(() =>
-        assertYearPictureBytes(
-          new Uint8Array(
-            readFileSync(resolve(__dirname, '../../portal/public', p.file)),
-          ),
-        ),
-      ).not.toThrow();
+      assert.doesNotThrow(() => assertAllowedPath('/' + p.file), p.file);
+      assert.equal(
+        yearPicturePath(yearPictureKey('/' + p.file)),
+        '/' + p.file,
+        p.file,
+      );
     }
+});
+test('all 189 source pictures meet mobile byte limits and exact RIFF lengths using only 12-byte headers', () => {
+  const pictures = Object.values(raw).flat() as { file: string }[];
+  assert.equal(pictures.length, 189);
+  const header = Buffer.alloc(12);
+  for (const { file } of pictures) {
+    const path = resolve(__dirname, '../../portal/public', file);
+    const size = statSync(path).size;
+    assert.ok(size >= 30 && size <= yearPictureMaxBytes, file);
+    const fd = openSync(path, 'r');
+    try {
+      assert.equal(readSync(fd, header, 0, 12, 0), 12, file);
+    } finally {
+      closeSync(fd);
+    }
+    assert.equal(header.toString('ascii', 0, 4), 'RIFF', file);
+    assert.equal(header.toString('ascii', 8, 12), 'WEBP', file);
+    assert.equal(header.readUInt32LE(4) + 8, size, file);
+  }
 });
 test.each(['file', 'width', 'licence', 'source_url'])(
   'manifest refuses malformed %s and mismatched years',
   (field) => {
-    const bad = structuredClone(raw);
+    const bad = { '2025': [{ ...raw['2025'][0] }] };
     bad['2025'][0][field] =
       field === 'width' ? 0 : field === 'licence' ? '' : '/api/og/paid';
     expect(() => decodePictures(bad)).toThrow();
-    const wrongYear = structuredClone(raw);
-    wrongYear['1998'] = wrongYear['2025'];
+    const wrongYear = { '1998': [raw['2025'][0]] };
     expect(() => decodePictures(wrongYear)).toThrow();
-    const duplicate = structuredClone(raw);
-    duplicate['2025'].push(duplicate['2025'][0]);
+    const duplicate = { '2025': [raw['2025'][0], raw['2025'][0]] };
     expect(() => decodePictures(duplicate)).toThrow();
   },
 );
@@ -175,7 +198,7 @@ test('existing image cache deduplicates photos, bounds downloads, survives a new
   const getPortrait = jest.fn(async (_path: string) => {
     active++;
     peak = Math.max(peak, active);
-    // Yield asynchronously without coupling 189 fixture downloads to host timers.
+    // Yield asynchronously without coupling fixture downloads to host timers.
     await Promise.resolve();
     active--;
     return pictureBytes;
@@ -210,4 +233,4 @@ test('existing image cache deduplicates photos, bounds downloads, survives a new
   expect(await offline.get(yearPictureKey(paths[0]!))).toBe(
     files.get(yearPictureKey(paths[0]!))!.localURI,
   );
-}, 30000);
+});

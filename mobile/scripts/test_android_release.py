@@ -89,9 +89,10 @@ class AndroidReleaseTests(unittest.TestCase):
 
     def fixture(self, directory):
         root = Path(directory); mobile = root/'mobile'; scripts = mobile/'scripts'; scripts.mkdir(parents=True)
-        for name in ('build-play.sh', 'capacity.sh', 'qa-lock.sh', 'android_release.py', 'release_inputs.py', 'release_support.py'):
+        for name in ('build-play.sh', 'android-gradle.sh', 'capacity.sh', 'qa-lock.sh', 'android_release.py', 'release_inputs.py', 'release_support.py'):
             shutil.copyfile(Path(__file__).parent/name, scripts/name)
         (scripts/'qa-env.sh').write_text('build_command() { "$@"; }\n')
+        (scripts/'android-host.sh').write_text('')  # host guard has its own test; keep fixtures host-independent
         (root/'.gitignore').write_text('mobile/private/\nmobile/android/\nmobile/node_modules/\nnative.lock/\n')
         (mobile/'app.config.ts').write_text("  version: '1.1.0',\n")
         binpath = mobile/'node_modules/.bin'; binpath.mkdir(parents=True)
@@ -110,7 +111,9 @@ else:
 '''); expo.chmod(0o755)
         java = root/'jdk/bin/java'; java.parent.mkdir(parents=True)
         java.write_text('''#!/usr/bin/env python3
-import json, os, pathlib, subprocess, zipfile
+import json, os, pathlib, subprocess, sys, zipfile
+pathlib.Path('gradle-args.json').write_text(json.dumps(sys.argv[1:]))
+assert os.environ['OPAX_GRADLE_DAEMON'] == '0'
 p=pathlib.Path('app/build/outputs')
 for suffix, name in [('aab','bundle/release/app-release.aab'),('apk','apk/release/app-release.apk')]:
     target=p/name; target.parent.mkdir(parents=True, exist_ok=True)
@@ -160,6 +163,9 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
                     self.assertEqual(evidence['commit'], commit); self.assertEqual(evidence['production_voice_mode'], '1')
                     self.assertTrue(evidence['r8_enabled'] and evidence['native_symbols_enabled'])
                     self.assertEqual(len(evidence['artifacts']), 2)
+                    arguments=json.loads((mobile/'android/gradle-args.json').read_text())
+                    self.assertIn('--no-daemon', arguments); self.assertIn('--no-build-cache', arguments)
+                    self.assertNotIn('--build-cache', arguments)
                 self.assertFalse((Path(d)/'native.lock').exists())
 
 

@@ -106,7 +106,7 @@ export type Turn = {
   result?: Answer;
   carried?: { source: string };
   followupsRequested?: boolean;
-  /** When the answer arrived (epoch ms, device clock). Answers saved before this build have none. */
+  /** When this turn was sent (user) or arrived (answer), in device-clock epoch ms. Older turns have none. */
   at?: number;
 };
 export type Chat = {

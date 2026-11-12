@@ -1,10 +1,15 @@
-import { useEffect, useState, type ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { AccessibilityInfo, AppState, StyleSheet, View } from 'react-native';
 import { Button } from '../../design/controls';
+import { haptic } from '../../design/haptics';
+import { Icon } from '../../design/icon';
+import { requestFocus } from '../../design/keyboard';
+import { Pressable } from '../../design/pressable';
 import { InsetGroup } from '../../design/layout';
 import { InlineError } from '../../design/states';
 import { Text } from '../../design/text';
-import { rhythm } from '../../design/tokens';
+import { symbols } from '../../design/symbols';
+import { minimumTarget, rhythm } from '../../design/tokens';
 import { AnswerView, SearchOpaxRow, type LegacyDate } from './AnswerView';
 import { AskProgress, StreamedAnswer } from './AskProgress';
 import { AskSuggestionRow } from './AskRows';
@@ -13,12 +18,8 @@ import { fillComposer } from './AskIdle';
 import type { AskState } from './controller';
 import type { Chat, Turn } from './model';
 import type { AskPerson } from './people';
-import {
-  askErrorCopy,
-  busyWait,
-  clarifyCopy,
-  showAnsweredAs,
-} from './turn-copy';
+import type { AskFailure } from './stream';
+import { askErrorCopy, clarifyCopy, showAnsweredAs } from './turn-copy';
 
 /** A legacy answer's date: the first from `created`, later ones bound by `updated`. */
 export function legacyDate(
@@ -34,8 +35,10 @@ export function legacyDate(
     : { at: chat.updated, bound: true };
 }
 
-// Each failure is a new object: a fresh key restarts Try again's wait.
+// A failure owns its deadline and announcement across component remounts.
 const failureKeys = new WeakMap<object, number>();
+const announcedRetries = new WeakSet<AskFailure>();
+const arrivedQuestions = new WeakSet<Turn>();
 let nextKey = 0;
 function errorKey(failure: object) {
   if (!failureKeys.has(failure)) failureKeys.set(failure, ++nextKey);
@@ -79,30 +82,122 @@ export function QuestionLine({
   );
 }
 
-/** Try again, held for 30 s after "OPAX is busy right now." Keyed by failure. */
+const secondsUntil = (deadline: number | undefined) =>
+  deadline === undefined
+    ? 0
+    : Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+
+/** Count from the rate-limit failure's deadline, including after a remount. */
 function RetryButton({
-  wait,
+  failure,
   onPress,
 }: {
-  wait: boolean;
+  failure: AskFailure;
   onPress: () => void;
 }) {
-  const [waiting, setWaiting] = useState(wait);
+  const deadline = failure.retryAt;
+  const wait = failure.code === 'rate-limited';
+  const [remaining, setRemaining] = useState(() => secondsUntil(deadline));
   useEffect(() => {
     if (!wait) return;
-    const timer = setTimeout(() => setWaiting(false), busyWait);
-    return () => clearTimeout(timer);
-  }, [wait]);
+    const tick = () => {
+      const seconds = secondsUntil(deadline);
+      setRemaining(seconds);
+      if (seconds === 0) {
+        clearInterval(timer);
+        if (!announcedRetries.has(failure)) {
+          announcedRetries.add(failure);
+          AccessibilityInfo.announceForAccessibilityWithOptions(
+            'You can try again now',
+            { queue: true },
+          );
+        }
+      }
+    };
+    const timer = setInterval(tick, 1000);
+    tick();
+    return () => clearInterval(timer);
+  }, [wait, deadline, failure]);
+  if (!wait)
+    return (
+      <Button
+        label="Try again"
+        icon={symbols.retry}
+        onPress={onPress}
+        testID="ask-retry"
+      />
+    );
+  const waiting = remaining > 0;
   return (
-    <Button
-      label="Try again"
-      icon="arrow.clockwise"
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="Try again"
+      accessibilityState={{ disabled: waiting }}
+      accessibilityLiveRegion="none"
       disabled={waiting}
-      accessibilityHint={waiting ? 'Available in a moment' : undefined}
+      accessibilityHint={
+        waiting ? 'Available when the countdown ends' : undefined
+      }
       onPress={onPress}
       testID="ask-retry"
-    />
+      style={styles.retry}
+    >
+      <Icon name={symbols.retry} tone={waiting ? 'inkSoft' : 'navy'} />
+      <Text
+        variant="strong"
+        tone={waiting ? 'inkSoft' : 'navy'}
+        tabular
+        wordSafe
+      >
+        {waiting ? `Try again in ${remaining} s` : 'Try again'}
+      </Text>
+    </Pressable>
   );
+}
+
+/** Consume the first text once per submitted question, including fast/background arrivals. */
+function useAnswerArrival(s: AskState) {
+  const waiting = useRef<{
+    question: Turn;
+    started: number | undefined;
+    arrived: boolean;
+  } | null>(null);
+  useEffect(() => {
+    if (s.error || s.clarify) {
+      waiting.current = null;
+      return;
+    }
+    const latest = s.thread.at(-1);
+    if (
+      s.busy &&
+      latest?.role === 'user' &&
+      waiting.current?.question !== latest
+    )
+      waiting.current = {
+        question: latest,
+        started: latest.at,
+        arrived: false,
+      };
+    const run = waiting.current;
+    const text = s.busy
+      ? s.streaming
+      : latest?.role === 'answer' && s.thread.at(-2) === run?.question
+        ? latest.text
+        : '';
+    if (run && !run.arrived && text.trim()) {
+      run.arrived = true;
+      const alreadyArrived = arrivedQuestions.has(run.question);
+      arrivedQuestions.add(run.question);
+      if (
+        !alreadyArrived &&
+        run.started !== undefined &&
+        Date.now() - run.started >= 3000 &&
+        AppState.currentState === 'active'
+      )
+        haptic('light');
+    }
+    if (!s.busy) waiting.current = null;
+  }, [s]);
 }
 
 /**
@@ -139,6 +234,7 @@ export function AskThread({
   minHeight: number;
   statusAnnouncement?: string;
 }) {
+  useAnswerArrival(s);
   const thread = s.thread;
   const failure =
     s.error && s.error.code !== 'empty' ? askErrorCopy(s.error) : null;
@@ -238,10 +334,18 @@ export function AskThread({
               message={failure.message}
               testID="ask-error"
             />
+            {s.error!.code === 'blocked' ? (
+              <Button
+                label="Edit question"
+                variant="plain"
+                onPress={() => requestFocus('ask')}
+                testID="ask-edit-question"
+              />
+            ) : null}
             {failure.retry ? (
               <RetryButton
                 key={errorKey(s.error!)}
-                wait={s.error!.code === 'rate-limited'}
+                failure={s.error!}
                 onPress={onRetry}
               />
             ) : null}
@@ -270,4 +374,11 @@ const styles = StyleSheet.create({
   thread: { gap: rhythm.section },
   question: { gap: rhythm.line },
   block: { gap: rhythm.tight },
+  retry: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: minimumTarget,
+    alignSelf: 'flex-start',
+  },
 });

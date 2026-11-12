@@ -14,8 +14,7 @@ export const askErrors = {
   empty: 'No written answer came back. The records found are listed below.',
   emptyNone: 'No written answer came back.',
 } as const;
-/** How long Try again waits after "OPAX is busy right now." */
-export const busyWait = 30_000;
+export { busyWait } from './stream';
 export function askErrorCopy(failure: Pick<AskFailure, 'code'>): {
   message: string;
   retry: boolean;
@@ -24,7 +23,12 @@ export function askErrorCopy(failure: Pick<AskFailure, 'code'>): {
     case 'cancelled':
       return null;
     case 'blocked':
-      return { message: askErrors.blocked, retry: false };
+      // Ask has no explicit content-rejection flag. A transport block does
+      // not establish that the reader's wording caused it.
+      return {
+        message: askErrors.blocked,
+        retry: false,
+      };
     case 'empty':
       return { message: askErrors.empty, retry: false };
     case 'offline':

@@ -1,10 +1,25 @@
-import { AskFailure, AskStream, type StreamHandlers } from './stream';
+import { AskFailure, AskStream, busyWait, type StreamHandlers } from './stream';
 
 // portal/src/index.ts: the lighter retrieval can take 50 s. The position
 // path can silently fall through from a 40 s recovery to 40 s reasoning.
 // Allow both plus 5 s; cap the pre-text wait (including retry) separately.
 export const ASK_STALL_MS = 85_000;
 export const ASK_DEADLINE_MS = 120_000;
+
+/** Retry-After is a non-negative seconds count or an HTTP date. */
+function retryDeadline(value: string | null, receivedAt: number): number {
+  const raw = value?.trim() ?? '';
+  const date =
+    /^(?:[A-Za-z]{3}, \d{2} [A-Za-z]{3} \d{4} \d{2}:\d{2}:\d{2} GMT|[A-Za-z]+, \d{2}-[A-Za-z]{3}-\d{2} \d{2}:\d{2}:\d{2} GMT|[A-Za-z]{3} [A-Za-z]{3} [ \d]\d \d{2}:\d{2}:\d{2} \d{4})$/;
+  const deadline = /^\d+$/.test(raw)
+    ? receivedAt + Number(raw) * 1000
+    : date.test(raw)
+      ? Date.parse(raw.endsWith('GMT') ? raw : `${raw} GMT`)
+      : NaN;
+  return Number.isSafeInteger(deadline)
+    ? Math.max(receivedAt, deadline)
+    : receivedAt + busyWait;
+}
 
 /** One submission, at most two requests, with one pre-text deadline across both. */
 export async function postAsk(
@@ -62,6 +77,7 @@ export async function postAsk(
     arm();
     try {
       const response = await waiting(send(request.signal));
+      const receivedAt = Date.now();
       if (
         response.redirected ||
         (response.status >= 300 && response.status < 400) ||
@@ -76,6 +92,10 @@ export async function postAsk(
               ? 'blocked'
               : 'invalid',
           `Request failed (${response.status}).`,
+          undefined,
+          response.status === 429
+            ? retryDeadline(response.headers.get('retry-after'), receivedAt)
+            : undefined,
         );
       if (
         !on ||

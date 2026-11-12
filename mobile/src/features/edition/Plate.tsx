@@ -49,7 +49,7 @@ export function Plate({
   const large = useAccessibilitySize();
   const ink = editionInk(edition);
   const person = edition.kind === 'politician' ? editionPerson(edition) : null;
-  const detailLine = plateLine(edition.facts.line, shownBelow);
+  const detailLine = plateLine(edition.facts.line, shownBelow, edition);
   const band =
     ink === 'bills'
       ? colors.bandBills

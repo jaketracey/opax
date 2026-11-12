@@ -15,6 +15,7 @@ import type { FrontPageQuestion } from '../explore/quiz-model';
 import { frontPageDeck } from '../explore/quiz/data';
 import { explore } from '../explore/runtime';
 import { archiveYear, questionIndex, type SydneyDate } from './rules';
+import { frontPageSkip } from './archive-review';
 import { rules } from './sources';
 import { SurfaceGrid } from './SurfaceGrid';
 import { useTodayRead } from './TodayBlock';
@@ -23,14 +24,15 @@ import { useTodayRead } from './TodayBlock';
 export const frontPageLicence = (licence: string) =>
   !/\b(NC|ND)\b|non-?commercial|no-?deriv/i.test(licence);
 
-/** The day's photograph: the first in the day's year whose licence allows it. */
+/** The first reviewed, licensed photograph in the day's year, or no card. */
 export function archivePicture(
   pictures: Record<string, readonly YearPicture[]> | null | undefined,
   today: SydneyDate,
+  skip: ReadonlySet<string> = frontPageSkip,
 ): { year: number; picture: YearPicture } | null {
   const year = archiveYear(today);
-  const picture = (pictures?.[String(year)] ?? []).find((p) =>
-    frontPageLicence(p.licence),
+  const picture = (pictures?.[String(year)] ?? []).find(
+    (p) => !skip.has(p.file) && frontPageLicence(p.licence),
   );
   return picture ? { year, picture } : null;
 }

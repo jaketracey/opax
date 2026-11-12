@@ -13,6 +13,8 @@ import { formatCount } from '../../design/format';
 import { Screen } from '../../design/layout';
 import { OfflineLine } from '../../design/states';
 import { rhythm } from '../../design/tokens';
+import { scrollToTop } from '../../design/scroll-to-top';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { ExploreChrome, toolName } from './parts';
 import {
   answerComplete,
@@ -81,6 +83,7 @@ export default function Quiz({
   );
   const [width, setWidth] = useState<number>();
   const scrollRef = useRef<ScrollView>(null);
+  const headerBottom = useHeaderBottom();
   const promptRef = useRef<View>(null);
   const starting = useRef(false);
   const reduceMotion = useReduceMotion();
@@ -112,7 +115,7 @@ export default function Quiz({
   }, [mode, questionKey]);
 
   const toTop = () =>
-    scrollRef.current?.scrollTo({ y: 0, animated: !reduceMotion });
+    scrollToTop(scrollRef.current, headerBottom, !reduceMotion);
   const start = async (choice: Deck) => {
     if (starting.current) return;
     starting.current = true;
@@ -260,6 +263,7 @@ export default function Quiz({
       <Screen
         grouped
         scrollRef={scrollRef}
+        scrollToOverflowEnabled
         barTitle={fixedTitle ? undefined : quizName}
         testID="explore-quiz-screen"
       >
