@@ -616,7 +616,8 @@ export type SkeletonCrossfadeState = {
   skeleton: ReactNode;
   visible: boolean;
   fade: boolean;
-  opacity: Animated.Value;
+  /** The content layer's opacity, 0 to 1; the skeleton draws its inverse. */
+  reveal: Animated.Value;
 };
 
 /**
@@ -715,13 +716,13 @@ export function useSkeletonCrossfade({
     skeleton: loading ? skeleton : phase.skeleton,
     visible: phase.visible,
     fade: phase.fade,
-    opacity,
+    reveal: opacity,
   };
 }
 
 /** The skeleton and content layers of a crossfade. Holds no state. */
 export function CrossfadeLayers({
-  crossfade: { loading, skeleton, visible, fade, opacity },
+  crossfade: { loading, skeleton, visible, fade, reveal: opacity },
   children,
   sectioned = false,
   fill = false,
