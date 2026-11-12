@@ -148,7 +148,11 @@ test('committed measurement covers unchanged frames and cannot raise an existing
   act(() => callbacks[0]!(0, 0, 200, base * 4));
   expect(ratio()).toBeCloseTo(0.9);
   frame(200, base * 3.6);
+  // This step has a new heightKey. A queued frame cannot set its floor;
+  // establish it from the committed measurement before testing reinflation.
+  act(() => callbacks[1]!(0, 0, 200, base * 3.6));
   const floor = StyleSheet.flatten(text().props.style).minHeight;
+  expect(floor).toBe(Math.ceil(base * 3.6) + 1);
   act(() => callbacks[1]!(0, 0, 200, floor));
   expect(StyleSheet.flatten(text().props.style).minHeight).toBe(floor);
   setSize(1);

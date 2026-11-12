@@ -434,9 +434,11 @@ export function Text({
   const probe = useTextProbe(props, heightKey, content);
   const measured = useRef<{
     key: string;
+    initial?: boolean;
+    verified?: boolean;
     frame?: { width: number; height: number };
     lines?: readonly ProbeLine[];
-  }>({ key: heightKey });
+  }>({ key: heightKey, initial: true });
   const currentMeasurement = () => {
     if (measured.current.key !== heightKey)
       measured.current = { key: heightKey };
@@ -449,7 +451,7 @@ export function Text({
   });
   const nativeText = useRef<NativeText>(null);
   const guardDrawing = () => {
-    const { frame, lines } = measured.current;
+    const { frame, lines, verified } = measured.current;
     if (!frame || frame.height <= 0 || frame.width <= 0) return;
     // The height floor repairs TextKit rounding on iOS. Android measures its
     // own glyph bounds; adding a floor there re-lays out every mounted Text.
@@ -458,11 +460,17 @@ export function Text({
       return;
     }
     // One whole point survives Yoga rounding; a physical pixel may round away.
-    // Only the first natural frame sets the minimum, never the guarded frame.
+    // Queued onLayout events carry no identity or font scale. After a new
+    // heightKey, only measure() of the committed, unguarded view may set the
+    // floor. On first mount there is no previous identity to queue a frame.
+    // A guarded frame must never add another point to an established floor.
     // Guard every content Text, including a completely missing first line:
     // RN suppresses the initial empty onTextLayout event. A frame callback is
     // independent of its glyphs. Avoid dispatching no-op updates once settled.
-    if (!(heightGuard.key === heightKey && heightGuard.minimum > 0)) {
+    if (
+      verified &&
+      !(heightGuard.key === heightKey && heightGuard.minimum > 0)
+    ) {
       setHeightGuard({
         key: heightKey,
         width: frame.width,
@@ -495,7 +503,10 @@ export function Text({
       ),
     );
   };
-  const onFrame = (frame: { width: number; height: number }) => {
+  const onFrame = (
+    frame: { width: number; height: number },
+    committed = false,
+  ) => {
     if (frame.width <= 0 || frame.height <= 0) return;
     if (wordSafe)
       advance((state) => wordSafeOnFrame(state, instance, frame.width));
@@ -506,12 +517,19 @@ export function Text({
     ) {
       // Keep pending lines, but accept them only against the unguarded frame
       // measured after removing the old width's floor.
-      measured.current = { key: heightKey, lines: measured.current.lines };
+      const measurement = currentMeasurement();
+      measured.current = {
+        key: heightKey,
+        initial: measurement.initial,
+        lines: measurement.lines,
+      };
       setHeightGuard({ key: heightKey, width: frame.width, minimum: 0 });
       probe.reset();
       return;
     }
-    currentMeasurement().frame = frame;
+    const measurement = currentMeasurement();
+    measurement.frame = frame;
+    measurement.verified = committed || measurement.initial;
     guardDrawing();
     fitLines();
   };
@@ -544,20 +562,24 @@ export function Text({
         height <= 0
       )
         return;
-      frameReceiver.current({ width, height });
+      frameReceiver.current({ width, height }, true);
     });
     return () => {
       active = false;
     };
   }, [heightGuard, heightKey]);
   useLayoutEffect(() => {
-    if (!wordSafe) return;
+    if (measured.current.key !== heightKey)
+      measured.current = { key: heightKey };
+    const measurement = measured.current;
+    if (!wordSafe && (Platform.OS === 'android' || measurement.initial)) return;
     // Text/content can change without changing the frame, suppressing onLayout.
-    // Measure the committed view once per identity/step as well. Its callback
-    // is cancelled when another identity/step commits.
+    // Measure every iOS Text after an identity change, including plain text:
+    // its new floor must use the current native size, never a queued frame.
+    // Its callback is cancelled when another identity/step commits.
     let active = true;
     nativeText.current?.measure((_x, _y, width, height) => {
-      if (active) frameReceiver.current({ width, height });
+      if (active) frameReceiver.current({ width, height }, true);
     });
     return () => {
       active = false;
