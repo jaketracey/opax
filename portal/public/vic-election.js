@@ -3,6 +3,8 @@ import { authorisationHTML } from './authorisation.js?v=14e85d758d';
 // Only the exact deployment value "true" enables publication.
 export const VIC_ELECTION_HUB_ENABLED = false;
 export const VIC_ELECTION_PATH = '/vic-election-2026';
+export const VIC_ELECTION_POLLS_OPEN = '2026-11-28T08:00:00+11:00';
+export const VIC_ELECTION_POLLS_CLOSE = '2026-11-28T18:00:00+11:00';
 export const VIC_ELECTION_ASSET = '/hubs/vic-election-2026.json';
 // Suburb, postcode and council splits for the seat finder, read only when someone searches.
 export const VIC_ELECTION_PLACES = '/hubs/vic-election-2026-places.json';
