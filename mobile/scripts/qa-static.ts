@@ -166,7 +166,7 @@ assert.deepEqual(
 );
 for (const app of [release, e2e]) {
   assert.equal(app.name, 'OPAX');
-  assert.equal(app.version, '1.1.2');
+  assert.equal(app.version, '1.1.3');
   // The API User-Agent and analytics report the store version.
   assert.equal(app.extra.appVersion, app.version);
   assert.equal(app.ios.bundleIdentifier, 'au.com.opax.app');
@@ -355,7 +355,7 @@ if (appIndex !== -1) {
     ),
   );
   assert.equal(plist.CFBundleIdentifier, 'au.com.opax.app');
-  assert.equal(plist.CFBundleShortVersionString, '1.1.2');
+  assert.equal(plist.CFBundleShortVersionString, '1.1.3');
   assert.equal(plist.CFBundleVersion, process.env.OPAX_BUILD_NUMBER ?? '1');
   assert.equal(plist.MinimumOSVersion, '18.4');
   assert(!plist.NSMicrophoneUsageDescription);
