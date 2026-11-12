@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  AccessibilityInfo,
   Platform,
   Pressable,
   StyleSheet,
@@ -122,6 +123,22 @@ const machineNote = (doc: DocumentRecord) =>
     : doc.labels.kind === 'speech'
       ? 'Written by a model from this speech. It is not part of the record.'
       : 'Written by a model. It is not part of the record.';
+
+function askLabel(doc: DocumentRecord, headline: string) {
+  const subjects: Record<string, string> = {
+    speech: 'this speech',
+    division: 'this division',
+    bill_text: 'this bill text',
+    press_release: 'this release',
+    government_release: 'this release',
+    research_report: 'this report',
+    grant_invitation: 'this grant invitation',
+    grant_award: 'this grant award',
+    contract: 'this contract',
+    legal: 'this legal record',
+  };
+  return `Ask about ${subjects[recordKind(doc)] ?? 'this record'}: ${headline}`;
+}
 /** First paint waits this long for the speaker's roster match (records.md 2.3). */
 const SPEAKER_WINDOW = 400;
 const titleKey = (value: string) =>
@@ -218,6 +235,7 @@ function useFind(
   const reveal = (at: number) => {
     const match = matches[at];
     if (!match) return;
+    AccessibilityInfo.announceForAccessibility(`Match ${at + 1} of ${total}`);
     setJump((old) => ({
       index: match.part,
       attempt: (old?.attempt ?? 0) + 1,
@@ -436,7 +454,7 @@ export default function DocumentReader({
             <ReaderSkeleton />
           ) : (
             <>
-              {find.open ? (
+              {ios && !embedded && find.open ? (
                 <Pressable
                   accessibilityRole="button"
                   accessibilityLabel={findLabel(find)}
@@ -674,7 +692,8 @@ function ReaderHeader({
             label="Ask about this"
             variant="primary"
             symbol={symbols.ask}
-            accessibilityLabel={`Ask about ${recordKind(doc) === 'speech' ? 'this speech' : recordKind(doc) === 'division' ? 'this division' : recordKind(doc) === 'bill_text' ? 'this bill text' : 'this record'}: ${headline}`}
+            accessibilityLabel={askLabel(doc, headline)}
+            accessibilityHint="Opens Ask with a question drafted"
             onPress={askRow}
             testID="doc-ask"
           />

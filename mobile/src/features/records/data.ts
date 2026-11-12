@@ -70,8 +70,6 @@ export class Records {
       // The endpoint otherwise reranks 200 passages for a paged request.
       // This panel only needs three records, with room to remove self/duplicates.
       top_k: '20',
-      // Broad parliamentary headings can fail in upstream semantic retrieval.
-      mode: 'keyword',
     });
     const topic = doc.topics.find((slug) => knownTopics.has(slug));
     if (topic) params.set('topic', topic);

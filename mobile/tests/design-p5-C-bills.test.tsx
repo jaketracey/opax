@@ -261,6 +261,19 @@ test('Android bills keep whole scope labels at 2x and wrap the bottom actions; i
     expect(list.findAllByType(SegmentedPicker)).toHaveLength(0);
     mockParams.key = 'au-federal-r7534';
     const detail = await render(<BillDetail />);
+    const asks = detail
+      .findAllByType(Button)
+      .filter((node) => node.props.testID === 'bill-ask');
+    expect(asks).toHaveLength(1);
+    expect(asks[0]!.props).toMatchObject({
+      variant: 'primary',
+      accessibilityHint: 'Opens Ask with a question drafted',
+    });
+    const ids = order(detail);
+    expect(ids.indexOf('bill-ask')).toBeGreaterThan(
+      ids.indexOf('bill-summary'),
+    );
+    expect(ids.indexOf('bill-ask')).toBeLessThan(ids.indexOf('bill-read-text'));
     const toolbar = detail.find((n) => {
       if (typeof n.type !== 'string' || !n.props.style) return false;
       const style = StyleSheet.flatten(n.props.style);

@@ -1,8 +1,14 @@
 /** Entity spellings fold without changing the record or its highlight offsets. */
 const entityWords = new Map([
   ['&', 'and'],
+  ['nsw', 'new south wales'],
   ['vic', 'victoria'],
+  ['qld', 'queensland'],
+  ['wa', 'western australia'],
+  ['sa', 'south australia'],
   ['tas', 'tasmania'],
+  ['act', 'australian capital territory'],
+  ['nt', 'northern territory'],
 ]);
 
 function folded(text: string) {

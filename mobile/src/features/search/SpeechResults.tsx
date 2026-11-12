@@ -27,18 +27,23 @@ import { resultMeta, resultTitle, speechSlug, speechSpeaker } from './present';
 import { failureRecovery } from './recovery';
 import type { SpeechList, SpeechSort } from './speeches';
 import { SummaryBlock } from './SummaryBlock';
+import { findAliases } from '../records/find';
 
 /** Results drawn before the Summarise row, so the first is on the first screen. */
 export const SUMMARY_AFTER = 3;
 
 /** The reader for a result row, with the query for its find bar. */
-export function speechRoute(row: SearchRecord, q: string) {
+export function speechRoute(
+  row: SearchRecord,
+  q: string,
+  aliases: readonly string[] = [],
+) {
   const slug = speechSlug(row);
   return slug
     ? docRoute(slug, undefined, {
         q: q.replace(/\s+/g, ' ').trim(),
         find: 'auto',
-        aliases: row.aliases,
+        aliases: findAliases([...aliases, ...(row.aliases ?? [])]),
       })
     : null;
 }
@@ -47,6 +52,7 @@ export function speechRoute(row: SearchRecord, q: string) {
 export function SpeechRow({
   row,
   q,
+  aliases,
   index,
   testID,
   roster = null,
@@ -54,12 +60,13 @@ export function SpeechRow({
 }: {
   row: SearchRecord;
   q: string;
+  aliases?: readonly string[];
   index: number;
   testID?: string;
   roster?: Roster | null;
   slugs?: Slugs | null;
 }) {
-  const route = speechRoute(row, q);
+  const route = speechRoute(row, q, aliases);
   if (row.kind === 'interest')
     return (
       <InterestRow
@@ -118,6 +125,7 @@ export function SpeechRow({
 export function SpeechResults({
   list,
   q,
+  aliases,
   filters,
   sort,
   roster,
@@ -128,6 +136,7 @@ export function SpeechResults({
 }: {
   list: SpeechList;
   q: string;
+  aliases?: readonly string[];
   filters: SpeechFilters;
   sort: SpeechSort;
   roster: Roster | null;
@@ -237,6 +246,7 @@ export function SpeechResults({
             key={row.slug}
             row={row}
             q={q}
+            aliases={aliases}
             index={index}
             roster={roster}
             slugs={slugs}
@@ -262,6 +272,7 @@ export function SpeechResults({
             key={row.slug}
             row={row}
             q={q}
+            aliases={aliases}
             index={index}
             roster={roster}
             slugs={slugs}
@@ -278,6 +289,7 @@ export function SpeechResults({
               key={row.slug}
               row={row}
               q={q}
+              aliases={aliases}
               index={index + SUMMARY_AFTER}
               roster={roster}
               slugs={slugs}

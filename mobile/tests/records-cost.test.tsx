@@ -414,9 +414,7 @@ test('real request client sends one GET per action, shares in-flight and session
   expect(transport).toHaveBeenCalledTimes(1);
   await repository.similar(speech, new Set(['gambling']));
   expect(transport).toHaveBeenLastCalledWith(
-    expect.stringContaining(
-      'kind=speech&per=6&top_k=20&mode=keyword&topic=gambling',
-    ),
+    expect.stringContaining('kind=speech&per=6&top_k=20&topic=gambling'),
     expect.objectContaining({
       method: 'GET',
       credentials: 'omit',

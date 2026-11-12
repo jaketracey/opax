@@ -25,6 +25,19 @@ test.each([
   ],
   ['Example, Workers (Union)', 'EXAMPLE WORKERS UNION'],
   ['Constructor & Co', 'CONSTRUCTOR and CO'],
+  ...[
+    ['NSW', 'New South Wales'],
+    ['Vic', 'Victoria'],
+    ['Qld', 'Queensland'],
+    ['WA', 'Western Australia'],
+    ['SA', 'South Australia'],
+    ['Tas', 'Tasmania'],
+    ['ACT', 'Australian Capital Territory'],
+    ['NT', 'Northern Territory'],
+  ].flatMap(([short, full]) => [
+    [`Example ${short} branch`, `Example ${full} branch`],
+    [`Example ${full} branch`, `Example ${short} branch`],
+  ]),
 ])(
   'entity find tolerates %s and preserves the exact source highlight',
   async (query, spelling) => {
@@ -73,6 +86,68 @@ test('aliases merge overlapping hits once, in reading order, without matching in
   expect(entityMatches('Unrelated', ['related'])).toEqual([]);
   expect(findAliases('{broken')).toEqual([]);
   expect(findAliases('["Known alias", false, 42]')).toEqual(['Known alias']);
+});
+
+test.each([
+  ['tax', '😀 Taxes are recorded.', 'Tax'],
+  ['housing afford', 'About housing affordability.', 'housing afford'],
+  ['İ', '😀 İSTANBUL', 'İ'],
+])(
+  'tolerant find falls back to literal %s with unchanged source offsets',
+  async (query, text, highlight) => {
+    const parts = [{ id: 'literal', text }];
+    const matches = findMatches(parts, query, { tolerant: true });
+    expect(matches).toEqual([{ part: 0, start: text.indexOf(highlight) }]);
+    let view!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      view = TestRenderer.create(
+        <ReaderList
+          parts={parts}
+          header={null}
+          testID="literal-reader"
+          find={{ query, tolerant: true, current: matches[0]! }}
+        />,
+      );
+    });
+    const marks = view.root
+      .findAllByType(Text)
+      .filter(
+        (node) =>
+          StyleSheet.flatten(node.props.style)?.backgroundColor ===
+          colors.navyWash,
+      );
+    expect(marks.map((node) => node.props.children)).toEqual([highlight]);
+    await act(async () => view.unmount());
+  },
+);
+
+test('whole-word matches anywhere in the document take precedence over substring fallback', async () => {
+  const parts = [
+    { id: 'one', text: 'Taxes' },
+    { id: 'two', text: 'A tax' },
+  ];
+  const matches = findMatches(parts, 'tax', { tolerant: true });
+  expect(matches).toEqual([{ part: 1, start: 2 }]);
+  let view!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    view = TestRenderer.create(
+      <ReaderList
+        parts={parts}
+        header={null}
+        testID="whole-reader"
+        find={{ query: 'tax', tolerant: true, current: matches[0]! }}
+      />,
+    );
+  });
+  const marks = view.root
+    .findAllByType(Text)
+    .filter(
+      (node) =>
+        StyleSheet.flatten(node.props.style)?.backgroundColor ===
+        colors.navyWash,
+    );
+  expect(marks.map((node) => node.props.children)).toEqual(['tax']);
+  await act(async () => view.unmount());
 });
 
 test('changing Reduce Motion preserves manual reading position and affects only the next jump', async () => {

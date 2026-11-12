@@ -15,10 +15,14 @@ a person row, and one source line (`source.ts`) whose sheet holds the
 original, the record's date, the text's notes and the licence. In short is
 an always-visible section heading with the Machine-written pill.
 Ask about this is a primary button after its text, on iPhone, Android and
-in an iPad pane. Share is in the navigation bar. Search arrivals use tolerant
-find with recorded aliases, ampersands, punctuation and state-name variants.
+in an iPad pane. Share is in the navigation bar. Organisation search links carry
+the donor graph's recorded aliases through search results to tolerant find.
+Find handles ampersands, punctuation and every state and territory abbreviation.
+If no whole-word variant matches anywhere, it uses the original literal substring.
 An unmatched arrival keeps the normal record actions. Find status occupies
-space in the scrolling header, above the metadata, never over the content.
+space in the iOS scrolling header, above the metadata, never over the content.
+Android keeps one status beside Previous, Next and Done outside the list.
+Embedded iPad panes hide the status. Each find jump announces its match position.
 An explicit find with no hits says No matches.
 
 The document source is preserved in contiguous, selectable text slices in a
@@ -30,13 +34,13 @@ All paid data stays in memory for the session, including in-flight requests.
 Failed reads are removed so a user can retry. There are no automatic retries,
 focus refreshes or background reads.
 
-| GET                                           | Explicit action                                             | Requests on a cache miss |
-| --------------------------------------------- | ----------------------------------------------------------- | ------------------------ |
-| `/api/resource/<slug>`                        | Open the reader, or open Cite directly from a search result | 1                        |
-| `/api/search?q=…&kind=speech&per=6&top_k=20&mode=keyword[&topic=…]` | Tap Similar speeches                                        | 1                        |
-| `/bill-texts/<key>/index.json`                | Open Bill text (with the default version)                   | 1                        |
-| `/bill-texts/<key>/<version>.json`            | Open Bill text (default version), or choose a version       | 1                        |
-| `/api/recent`                                 | Open Just added, or pull to refresh it                      | 1                        |
+| GET                                                    | Explicit action                                             | Requests on a cache miss |
+| ------------------------------------------------------ | ----------------------------------------------------------- | ------------------------ |
+| `/api/resource/<slug>`                                 | Open the reader, or open Cite directly from a search result | 1                        |
+| `/api/search?q=…&kind=speech&per=6&top_k=20[&topic=…]` | Tap Similar speeches                                        | 1                        |
+| `/bill-texts/<key>/index.json`                         | Open Bill text (with the default version)                   | 1                        |
+| `/bill-texts/<key>/<version>.json`                     | Open Bill text (default version), or choose a version       | 1                        |
+| `/api/recent`                                          | Open Just added, or pull to refresh it                      | 1                        |
 
 Repeating an action for a successfully loaded path makes zero additional
 requests. Opening Cite from an already loaded document costs zero resource
@@ -74,10 +78,9 @@ headings as part titles (`markdownParts` in `api/passage-text.ts`).
 
 The reader uses the shared rhythm, section headings for In short, primary
 Ask buttons, and a disclosure
-for related speeches. Similar speeches uses a bounded keyword retrieval with
-a 15-second deadline, matching Search. Hybrid retrieval can fail upstream
-for broad parliamentary headings such as Responses; keyword retrieval keeps
-this optional panel independent of that failure. Coverage, transcription
+for related speeches. Similar speeches uses bounded hybrid retrieval with
+a 15-second deadline, matching Search. Failures retain the explicit retry state;
+successful empty results say No similar speeches found. Coverage, transcription
 and citation
 notes are in the source line's sheet; source terms live on Sources and
 licences. Full source text remains selectable and virtualised at every size.

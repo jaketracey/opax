@@ -705,6 +705,7 @@ test('In short retains the recorded version caveat when the reader changes bill 
   expect(ask.props).toMatchObject({
     variant: 'primary',
     label: 'Ask about this bill',
+    accessibilityHint: 'Opens Ask with a question drafted',
   });
   const ids = view.root
     .findAll((node) => typeof node.type === 'string' && node.props.testID)

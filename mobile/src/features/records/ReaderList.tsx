@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, type ReactNode } from 'react';
+import { Fragment, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import {
   FlatList,
   Platform,
@@ -68,7 +68,7 @@ export function findMatches(
   parts: readonly ReaderPart[],
   query: string,
   options?: Pick<ReaderFind, 'tolerant' | 'aliases'>,
-) {
+): { part: number; start: number }[] {
   const needle = query.trim().toLocaleLowerCase('en-AU');
   const found: { part: number; start: number }[] = [];
   if (!needle) return found;
@@ -78,6 +78,9 @@ export function findMatches(
       : textMatches(part.text, needle))
       found.push({ part: index, start: match.start });
   });
+  // Search arrivals prefer whole-word entity spellings. If none occur anywhere
+  // in the document, retain the original query's literal substring behaviour.
+  if (options?.tolerant && !found.length) return findMatches(parts, query);
   return found;
 }
 
@@ -144,6 +147,23 @@ export function ReaderList({
   const lastJump = useRef<typeof jumpTo>(null);
   // A readable column on iPad, with a split pane's Back first.
   const column = useScreenColumn();
+  // Highlight with the same document-wide pass as the find counter, including
+  // parts that are not mounted in the virtualised list yet.
+  const query = find?.query;
+  const aliases = find?.aliases;
+  const tolerantFind = find?.tolerant;
+  const tolerant = useMemo(
+    () =>
+      !!tolerantFind &&
+      !!query &&
+      parts.some(
+        (part) =>
+          entityMatches(part.text, [query, ...(aliases ?? [])]).length > 0,
+      ),
+    [parts, tolerantFind, query, aliases],
+  );
+  const marks =
+    find?.tolerant && !tolerant ? { ...find, tolerant: false } : find;
   useEffect(() => {
     if (!jumpTo) {
       lastJump.current = null;
@@ -177,7 +197,7 @@ export function ReaderList({
           ref={list}
           testID={testID}
           data={parts}
-          extraData={find}
+          extraData={marks}
           keyExtractor={(part) => part.id}
           style={styles.screen}
           contentContainerStyle={[styles.content, column.content]}
@@ -232,7 +252,7 @@ export function ReaderList({
                 testID={`reader-text-${index}`}
               >
                 {find?.query.trim() ? (
-                  <Marked text={item.text} index={index} find={find} />
+                  <Marked text={item.text} index={index} find={marks} />
                 ) : (
                   item.text
                 )}

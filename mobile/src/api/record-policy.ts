@@ -12,13 +12,13 @@ export function isSimilarRequest(params: URLSearchParams): boolean {
     params.get('q')!.length <= 2000 &&
     params.get('kind') === 'speech' &&
     params.get('per') === '6' &&
-    ((!params.has('top_k') && !params.has('mode')) ||
-      (params.get('top_k') === '20' && params.get('mode') === 'keyword')) &&
+    (!params.has('top_k') || params.get('top_k') === '20') &&
+    !params.has('mode') &&
     (!params.has('topic') ||
       /^[a-z]+(?:-[a-z]+)*$/.test(params.get('topic')!)) &&
     [...params.keys()].every(
       (key) =>
-        ['q', 'kind', 'per', 'topic', 'top_k', 'mode'].includes(key) &&
+        ['q', 'kind', 'per', 'topic', 'top_k'].includes(key) &&
         params.getAll(key).length === 1,
     )
   );

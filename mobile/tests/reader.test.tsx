@@ -6,6 +6,7 @@ import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { act } from 'react';
 import {
+  AccessibilityInfo,
   Platform,
   Text as NativeText,
   StyleSheet,
@@ -34,6 +35,7 @@ import {
 import { decodeDocument } from '../src/features/records/model';
 import { records } from '../src/features/records/runtime';
 import { citeRoute, moneyRecordRoute } from '../src/navigation/routes';
+import { sheetPayload } from '../src/navigation/sheets';
 import { index, manifest, people, roster, slugs } from './pinned';
 
 const responses: Record<string, unknown> = fixtures.responses;
@@ -200,14 +202,23 @@ test.each(
       variant: 'primary',
       label: 'Ask about this',
     });
+    const subject: Record<string, string> = {
+      speech: 'speech',
+      division: 'division',
+      bill_text: 'bill text',
+      press_release: 'release',
+      government_release: 'release',
+      research_report: 'report',
+      grant_invitation: 'grant invitation',
+      grant_award: 'grant award',
+      contract: 'contract',
+      legal: 'legal record',
+    };
     expect(ask.props.accessibilityLabel).toContain(
-      kind === 'speech'
-        ? 'this speech'
-        : kind === 'division'
-          ? 'this division'
-          : kind === 'bill_text'
-            ? 'this bill text'
-            : 'this record',
+      `this ${subject[kind] ?? 'record'}:`,
+    );
+    expect(ask.props.accessibilityHint).toBe(
+      'Opens Ask with a question drafted',
     );
     const ids = view.root
       .findAll((node) => typeof node.type === 'string' && node.props.testID)
@@ -226,9 +237,24 @@ test.each(
         )
         .props.onPress(),
     );
-    expect(router.push).toHaveBeenLastCalledWith(
-      expect.objectContaining({ pathname: '/machine-note' }),
-    );
+    const route = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      pathname: string;
+      params: { key: string };
+    };
+    expect(route.pathname).toBe('/machine-note');
+    expect(sheetPayload(route.params.key, 'machine')).toMatchObject({
+      testID: 'doc-brief-label',
+      note: {
+        title: 'Machine-written',
+        body: [
+          kind === 'speech'
+            ? 'Written by a model from this speech. It is not part of the record.'
+            : kind === 'bill_text'
+              ? 'Written by a model from this bill text. It is not part of the bill.'
+              : 'Written by a model. It is not part of the record.',
+        ],
+      },
+    });
     expect(text(view)).toContain('Another record summary.');
     await act(async () => view.unmount());
   },
@@ -588,3 +614,129 @@ test('a search arrival with no matching entity opens the normal speech and its a
   ).toBe(speech.text.trim());
   await act(async () => view.unmount());
 });
+
+test.each(
+  (['ios', 'android'] as const).flatMap((os) =>
+    [390, 1024].flatMap((width) =>
+      ['paragraph', 'no-such-phrase'].map((q) => ({ os, width, q })),
+    ),
+  ),
+)(
+  '$os at width $width has exactly one find status for $q',
+  async ({ os, width, q }) => {
+    const original = Platform.OS;
+    Platform.OS = os;
+    jest.mocked(useWindowDimensions).mockReturnValue({
+      width,
+      height: 1024,
+      scale: 2,
+      fontScale: 1,
+    });
+    try {
+      mockParams = { slug: speech.slug, q };
+      const view = await mount(<DocumentReader />);
+      const status = view.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'doc-find-status',
+      );
+      expect(status).toHaveLength(1);
+      const inList = view.root
+        .findByType(ReaderList)
+        .findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            node.props.testID === 'doc-find-status',
+        );
+      expect(inList).toHaveLength(os === 'ios' ? 1 : 0);
+      if (q === 'no-such-phrase') {
+        expect(text(view)).toContain(`No matches for ${q}`);
+        expect(text(view)).not.toContain('0 of 0');
+      }
+      await act(async () => view.unmount());
+    } finally {
+      Platform.OS = original;
+    }
+  },
+);
+
+test.each(['ios', 'android'] as const)(
+  '%s Next and Previous announce the match position, including wraparound',
+  async (os) => {
+    const original = Platform.OS;
+    Platform.OS = os;
+    const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    try {
+      mockParams = { slug: speech.slug, q: 'tax', find: 'auto' };
+      jest
+        .mocked(records.document)
+        .mockResolvedValue(record({ ...speech, text: 'tax and tax' }));
+      const view = await mount(<DocumentReader />);
+      const step = async (which: 'Next' | 'Previous') => {
+        await act(async () => {
+          if (os === 'ios')
+            barItems().find((item) => item.label === `${which} match`)!
+              .onPress!();
+          else
+            view.root
+              .findByType(FindControls)
+              .props[which === 'Next' ? 'onNext' : 'onPrevious']();
+        });
+      };
+      await step('Next');
+      expect(announce).toHaveBeenLastCalledWith('Match 1 of 2');
+      await step('Next');
+      expect(announce).toHaveBeenLastCalledWith('Match 2 of 2');
+      await step('Next');
+      expect(announce).toHaveBeenLastCalledWith('Match 1 of 2');
+      await step('Previous');
+      expect(announce).toHaveBeenLastCalledWith('Match 2 of 2');
+      expect(announce).toHaveBeenCalledTimes(4);
+      await act(async () => view.unmount());
+    } finally {
+      announce.mockRestore();
+      Platform.OS = original;
+    }
+  },
+);
+
+test('an embedded iPad reader keeps a citation highlight without an undismissable find status', async () => {
+  mockParams = { slug: speech.slug, q: 'paragraph', find: 'auto' };
+  jest
+    .mocked(useWindowDimensions)
+    .mockReturnValue({ width: 1024, height: 1366, scale: 2, fontScale: 1 });
+  const view = await mount(
+    <DocumentReader
+      recordSlug={speech.slug}
+      citedPassage="paragraph"
+      embedded
+    />,
+  );
+  expect(view.root.findAllByProps({ testID: 'doc-find-status' })).toHaveLength(
+    0,
+  );
+  expect(
+    view.root.findAllByProps({ testID: 'doc-passage-highlight' }).length,
+  ).toBeGreaterThan(0);
+  await act(async () => view.unmount());
+});
+
+test.each(['tax', 'housing afford'])(
+  'a search arrival for %s retains a literal substring highlight',
+  async (q) => {
+    mockParams = { slug: speech.slug, q, find: 'auto' };
+    jest
+      .mocked(records.document)
+      .mockResolvedValue(
+        record({ ...speech, text: 'Taxes and housing affordability.' }),
+      );
+    const view = await mount(<DocumentReader />);
+    expect(barItems().map((item) => item.label)).toContain('Done');
+    expect(text(view)).toContain('1 of 1');
+    expect(view.root.findByType(ReaderList).props.find.current).toEqual({
+      part: 0,
+      start: q === 'tax' ? 0 : 10,
+    });
+    await act(async () => view.unmount());
+  },
+);

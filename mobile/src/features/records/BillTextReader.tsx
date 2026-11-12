@@ -490,6 +490,7 @@ export default function BillTextReader({
                     variant="primary"
                     symbol={symbols.ask}
                     accessibilityLabel={`Ask about this bill: ${manifest.title}`}
+                    accessibilityHint="Opens Ask with a question drafted"
                     onPress={ask}
                     testID="bill-text-ask"
                   />

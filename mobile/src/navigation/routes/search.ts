@@ -7,6 +7,8 @@ export type ResultsParams = {
   group?: string;
   scope?: string;
   q?: string;
+  /** Recorded entity spellings for the reader, never sent to search APIs. */
+  aliases?: string;
   speaker?: string;
   party?: string;
   state?: string;

@@ -13,7 +13,7 @@ const result = (slug: string) => ({
   speaker: null,
 });
 
-test('similar speeches uses bounded keyword retrieval and the Search deadline in one GET', async () => {
+test('similar speeches uses bounded hybrid retrieval and the Search deadline in one GET', async () => {
   const get = jest.fn(async (path, decode) => {
     assertAllowedPath(path);
     return {
@@ -36,9 +36,9 @@ test('similar speeches uses bounded keyword retrieval and the Search deadline in
     kind: 'speech',
     per: '6',
     top_k: '20',
-    mode: 'keyword',
     topic: 'gambling',
   });
+  expect(params.has('mode')).toBe(false);
   expect(get).toHaveBeenCalledWith(
     expect.any(String),
     expect.any(Function),

@@ -422,7 +422,7 @@ export default function BillDetail({
             name={name}
             titleRef={embedded ? undefined : titleRef}
             onTitleLayout={embedded ? undefined : barTitle.onTitleLayout}
-            onAsk={Platform.OS === 'ios' || embedded ? ask : undefined}
+            onAsk={ask}
             directory={directory}
             savedAt={savedAt}
             stale={
@@ -446,12 +446,7 @@ export default function BillDetail({
         ) : null}
       </Screen>
       {embedded || failed || Platform.OS === 'ios' ? null : (
-        <BillToolbar
-          onAsk={ask}
-          onShare={share}
-          canAsk={!!title}
-          canShare={!!identity}
-        />
+        <BillToolbar onShare={share} canShare={!!identity} />
       )}
     </>
   );
@@ -504,18 +499,14 @@ export function PaneMenu({
 }
 
 /**
- * Android's bottom bar: Ask about this bill and Share. iOS puts Share in the
- * navigation bar and Ask in a button, where the tab bar cannot cover them.
+ * Android keeps Share in its bottom bar. Ask follows the summary on every
+ * platform; iOS keeps Share in the navigation bar above the floating tab bar.
  */
 function BillToolbar({
-  onAsk,
   onShare,
-  canAsk,
   canShare: shareReady,
 }: {
-  onAsk: () => void;
   onShare: () => void;
-  canAsk: boolean;
   canShare: boolean;
 }) {
   return (
@@ -526,12 +517,6 @@ function BillToolbar({
         Platform.OS === 'android' ? styles.androidToolbar : null,
       ]}
     >
-      <Button
-        label="Ask about this bill"
-        onPress={onAsk}
-        disabled={!canAsk}
-        testID="bill-ask"
-      />
       {canShare ? (
         <Button
           label="Share"

@@ -181,6 +181,22 @@ beforeEach(() => {
 });
 afterEach(() => jest.restoreAllMocks());
 
+test('a named organisation can search the record with its recorded aliases', async () => {
+  const r = await renderDonor('Example Union', ['Example Workers Association']);
+  const search = r.root
+    .findAllByType(LinkRow)
+    .find((node) => node.props.testID === 'money-record-search')!;
+  expect(search.props.href).toMatchObject({
+    pathname: '/results/[kind]',
+    params: {
+      kind: 'all',
+      q: 'Example Union',
+      aliases: JSON.stringify(['Example Workers Association']),
+    },
+  });
+  await act(async () => r.unmount());
+});
+
 test('a party record: originals last, the window figure, all years beside it, and donors that push their records', async () => {
   const r = await render({
     node: 'party:Labor',

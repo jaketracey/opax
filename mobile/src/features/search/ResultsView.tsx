@@ -79,6 +79,7 @@ function scopeMatches(
  */
 export function ResultsView({
   q,
+  aliases,
   scope,
   onScope,
   filters,
@@ -91,6 +92,7 @@ export function ResultsView({
   showScopes = true,
 }: {
   q: string;
+  aliases?: readonly string[];
   scope: Scope;
   onScope: (scope: Scope) => void;
   filters: SpeechFilters;
@@ -122,7 +124,9 @@ export function ResultsView({
     if (scope === 'all' || scope === 'speeches') load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scope, q, filtersKeyOf(filters), sort]);
-  const rows = onRows ? paneRows(q, scope, sources, speeches, reports) : [];
+  const rows = onRows
+    ? paneRows(q, scope, sources, speeches, reports, aliases)
+    : [];
   const rowsKey = JSON.stringify(rows);
   useEffect(() => {
     onRows?.(rows);
@@ -149,6 +153,7 @@ export function ResultsView({
       {scope === 'all' ? (
         <AllResults
           q={q}
+          aliases={aliases}
           sources={sources}
           roster={roster}
           filters={filters}
@@ -163,6 +168,7 @@ export function ResultsView({
         <SpeechResults
           list={scopeList}
           q={q}
+          aliases={aliases}
           filters={filters}
           sort={sort}
           roster={roster}
@@ -197,6 +203,7 @@ function paneRows(
   sources: SearchSources | null,
   speeches: SpeechList,
   reports: Read<GroupPage> | null,
+  aliases?: readonly string[],
 ): PaneRow[] {
   const local: Match[] = !sources
     ? []
@@ -221,7 +228,7 @@ function paneRows(
           .slice(0, 3)
           .map((r) => reportRoute(r.slug, r.title))
       : []),
-    ...speechRows.map((row) => speechRoute(row, q)),
+    ...speechRows.map((row) => speechRoute(row, q, aliases)),
   ].flatMap((route) => (route ? [{ route }] : []));
 }
 
