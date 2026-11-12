@@ -622,6 +622,24 @@ test('search results open matching native excerpt resources and preserve related
   expect(unknown.status).toBe(404);
 });
 
+test('serves official report search rows in the live API shape', async () => {
+  const endpoint = '/api/search-all';
+  const response = await request(`${endpoint}?q=report&kind=report`);
+  expect(response.status).toBe(200);
+  const page = decodeRecords(JSON.parse(response.body));
+  expect(page.results.length).toBeGreaterThan(0);
+  for (const row of page.results) {
+    expect(row.report_type).toMatch(
+      /^(royal_commission|integrity_report|annual_report|agency_report)$/,
+    );
+    expect(row.href).toBe(`/report/${row.slug}`);
+    expect(row.citation?.url).toBe(row.source_url);
+  }
+  const empty = await request(`${endpoint}?q=zzzxqvnomatch&kind=report`);
+  expect(empty.status).toBe(200);
+  expect(decodeRecords(JSON.parse(empty.body)).results).toEqual([]);
+});
+
 // Today's How parliament voted: the D1 index, projected from the pinned
 // bills, answers as a static catalog (strong validator, 304 on a match) and
 // gives the block its three reading votes.
