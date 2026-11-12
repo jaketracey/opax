@@ -39,6 +39,7 @@ import { useScreenColumn } from '../../design/layout';
 import { SurfaceContext } from '../../design/row-padding';
 import { colors, rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { scrollToTop } from '../../design/scroll-to-top';
 import { askHeaderItems } from '../../navigation/chrome';
 import { talkSignInRoute } from '../../navigation/routes/account';
 import { conversationsRoute } from '../../navigation/routes/ask';
@@ -202,8 +203,6 @@ export default function AskScreen() {
   useEffect(() => {
     wasBusy.current = s.busy;
   }, [s.busy]);
-  const scrollToTop = () =>
-    scroll.current?.scrollTo({ y: -headerBottom, animated: false });
   // The new question goes just under the bar once its turn is laid out.
   const reveal = () => {
     if (!pin.current) return;
@@ -214,7 +213,7 @@ export default function AskScreen() {
     });
   };
   useEffect(() => {
-    if (topRequest) scrollToTop();
+    if (topRequest) scrollToTop(scroll.current, headerBottom);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topRequest]);
   const pinTurn = () => {
@@ -393,7 +392,13 @@ export default function AskScreen() {
         />
         <AskRevealContext.Provider value={revealClaim}>
           <SidebarSafe style={[styles.fill, groundStyle]}>
-            <View style={[styles.fill, groundStyle]} onLayout={onRoom}>
+            {/* Keep the first-child chain intact for UIKit's large-title tracking.
+                Fabric otherwise hoists the scroll beside an empty background view. */}
+            <View
+              collapsable={false}
+              style={[styles.fill, groundStyle]}
+              onLayout={onRoom}
+            >
               <RegionProvider value={room}>
                 <ReservedRegionArea style={styles.fill}>
                   <AskPaneProvider value={docked ? sources.context : null}>

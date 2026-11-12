@@ -36,6 +36,7 @@ import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
 import { colors, rhythm, textStyles } from '../src/design/tokens';
 import { designFlags } from '../src/design/flags';
+import * as ScrollTop from '../src/design/scroll-to-top';
 import { askRoute, conversationsRoute } from '../src/navigation/routes/ask';
 import { useSeat } from '../src/features/your-mp/useSeat';
 import { startersFor } from '../src/features/ask/starters';
@@ -52,6 +53,7 @@ import {
   setWindowTraitsOverride,
 } from '../src/design/adaptive';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
+import { AskColumns } from '../src/features/ask/AskLayout';
 import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
@@ -229,6 +231,31 @@ async function mount(screen = <AskScreen />) {
   });
   return view!;
 }
+
+test('the phone keeps wrappers in the first native scroll descendant chain', async () => {
+  await mount();
+  const scroll = view!.root.findByType(ScrollView);
+  expect(scroll.props.contentInsetAdjustmentBehavior).toBe('automatic');
+  expect(scroll.props.scrollToOverflowEnabled).toBe(true);
+  const columns = view!.root.findByType(AskColumns);
+  const row = columns.findAllByType(View)[0]!;
+  const column = byId('ask-conversation-column').find(
+    (node) => typeof node.type === 'string',
+  )!;
+  expect(row.props.collapsable).toBe(false);
+  expect(column.props.collapsable).toBe(false);
+  expect(column.children[0]).toBe(scroll);
+  // A background-only View can survive Fabric flattening while its children
+  // are hoisted beside it. UIKit then follows that empty first child.
+  const measuring = view!.root
+    .findAllByType(View)
+    .find(
+      (node) =>
+        node.props.onLayout &&
+        StyleSheet.flatten(node.props.style)?.backgroundColor === colors.sunken,
+    )!;
+  expect(measuring.props.collapsable).toBe(false);
+});
 
 test.each([
   ['ios', 'composer'],
@@ -1120,9 +1147,13 @@ test('Ask next rows send; New question is enabled once there is an answer', asyn
   expect(jest.mocked(client.askPost).mock.calls[2]?.[1]).toMatchObject({
     question: 'A grounded fixture follow-up?',
   });
+  const reset = jest.spyOn(ScrollTop, 'scrollToTop');
   await act(async () => barButton('New question')!.onPress());
   expect(askSession.snapshot().thread).toEqual([]);
   expect(byId('ask-idle-line')).not.toEqual([]);
+  expect(reset).toHaveBeenCalledWith(expect.anything(), 44);
+  expect(scrollTo).toHaveBeenLastCalledWith({ y: -44, animated: false });
+  reset.mockRestore();
 });
 
 test('a failed follow-up hides the previous Ask next and holds Try again while OPAX is busy', async () => {
