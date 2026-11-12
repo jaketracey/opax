@@ -114,16 +114,16 @@ test('server: a party page promises what its members said only where the record 
 });
 
 test('the wildcard search with no matches says the filter found nothing, never quotes "*"', () => {
-  const nodes = {};
-  const el = id => (nodes[id] ??= new JSDOM('<div></div>').window.document.querySelector('div'));
+  const dom = new JSDOM('<div id="search-empty" hidden></div>');
+  const el = id => dom.window.document.getElementById(id);
   const context = {
     $: el, esc, askHash: q => `/ask?q=${encodeURIComponent(q)}`, subjectHash: (k, v) => `/subject/${k}/${v}`, TOPICS: {},
     activeFilterSummary: f => [f.party && `party ${f.party}`, f.kind && `kind ${f.kind}`].filter(Boolean).join(', '),
     filterChipSpecs: f => f.party ? [{id: 'party', k: 'Party'}] : [], clearSearchFilter() {},
   };
-  runInNewContext(fnSource('renderSearchRecovery') + '\nthis.recover=renderSearchRecovery;', context);
+  runInNewContext(fnSource('searchRecoverySuggestions') + '\n' + fnSource('renderSearchRecovery') + '\nthis.recover=renderSearchRecovery;', context);
   context.recover('*', {party: 'Fixture Reason Party', kind: 'speech'});
-  const box = nodes['search-empty'];
+  const box = el('search-empty');
   assert.equal(box.querySelector('.empty-title').textContent, 'No speeches in the record for this filter');
   assert.doesNotMatch(box.textContent, /\*|No matches for/);
   assert.match(box.textContent, /Searched with party Fixture Reason Party/);
@@ -132,4 +132,5 @@ test('the wildcard search with no matches says the filter found nothing, never q
   assert.equal(box.querySelector('.empty-title').textContent, 'Nothing in the record for this filter');
   context.recover('housing', {});
   assert.equal(box.querySelector('.empty-title').textContent, 'No matches for “housing”', 'a typed query is still quoted');
+  dom.window.close();
 });

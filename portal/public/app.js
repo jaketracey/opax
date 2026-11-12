@@ -2174,7 +2174,9 @@ async function route() {
     const q = params.get("q");
     // Ask and Search share a research workspace; unknown paths retain a not-found trail.
     setCrumbs(crumbsFor(view !== "ask" && view !== "" ? herePath : "/ask"));
-    if (view === "ask" && q && q !== lastAsk.question) {
+    if (view === "ask" && q && (params.get("draft") === "1" || q !== lastAsk.question)) {
+      const draft = params.get("draft") === "1";
+      if (draft) resetAsk();
       setQueryValue("ask-input", q);
       if ($("ask-wide")) $("ask-wide").checked = params.get("kind") !== "speech";
       // A topic page hands its label over as the ask's topic filter; an
@@ -2182,7 +2184,8 @@ async function route() {
       const askTopic = params.get("topic");
       if (askTopic && $("a-topic")) $("a-topic").value = TOPICS[askTopic] ? askTopic : "";
       renderAskFilterChips(); // preserve an explicitly shared speech-only scope
-      runAsk(q);
+      if (draft) focusEntry("ask-input");
+      else runAsk(q);
     } else if (!q && $("ask-result").hidden) {
       if (!takeEarlyAsk()) focusEntry("ask-input");
     }
@@ -12942,7 +12945,8 @@ async function runSearch(page = 1) {
     const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     const results = data.results || [];
-    trackOutcome("opax_search_completed", { page, result_count: results.length, total_count: data.total ?? results.length, duration_ms: Math.round(performance.now() - analyticsStarted) });
+    const suggestions = results.length ? [] : searchRecoverySuggestions(q || f.speaker, data.suggestions);
+    trackOutcome("opax_search_completed", { page, result_count: results.length, total_count: data.total ?? results.length, duration_ms: Math.round(performance.now() - analyticsStarted), ...searchSuggestionProperties(suggestions) });
     lastSearch = {
       key, query: q, filters: f, sort, results,
       page: data.page || 1,
@@ -12962,13 +12966,13 @@ async function runSearch(page = 1) {
       $("search-date-ruler").hidden = true;
       $("search-readbar").hidden = true;
       $("search-pager").hidden = true;
-      renderSearchRecovery(q, f);
+      renderSearchRecovery(q, f, suggestions);
       giveUpSearchAnswer();
       $("search-answer").hidden = true;
     } else {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");
-      setStatus($("search-status"), data.warnings?.join(" ") || "");
+      setStatus($("search-status"), data.warnings?.join(" ") || (data.matched_query ? `Showing records for “${data.matched_query}”.` : ""));
       $("results-count").innerHTML = `<span class="results-count-main">${esc(resultsCountLine(lastSearch))}</span>${
         lastSearch.truncated ? '<span class="results-count-note">The record holds more. </span>' : ""}`;
       $("results-bar").hidden = false;
@@ -12999,7 +13003,30 @@ async function runSearch(page = 1) {
   }
 }
 
-function renderSearchRecovery(q, f) {
+function searchRecoverySuggestions(q, supplied) {
+  // Also cover an older cached response or unavailable correction names.
+  const suggestions = (Array.isArray(supplied) ? supplied : []).filter(s =>
+    ["did_you_mean", "scope", "ask"].includes(s.kind) && typeof s.label === "string" && /^\/(?!\/)/.test(s.href));
+  if (!suggestions.some(s => s.kind === "scope")) suggestions.push(
+    { kind: "scope", label: "People", href: "/subject/person" },
+    { kind: "scope", label: "Bills", href: "/bills" },
+    { kind: "scope", label: "Speeches", href: "/ask?view=search&q=*&kind=speech" },
+    { kind: "scope", label: "Money", href: "/money" });
+  // A wildcard is a filter request, not a question to hand to Ask.
+  const others = suggestions.filter(s => s.kind !== "ask");
+  if (q === "*") return others;
+  // Always use a draft link, including with cached responses from older servers.
+  return [...others, {
+    kind: "ask", label: `Ask OPAX: ${q}`, href: askHash(q, "all") + "&draft=1",
+  }];
+}
+
+function searchSuggestionProperties(suggestions) {
+  const kind = ["did_you_mean", "scope", "ask"].find(kind => suggestions.some(s => s.kind === kind)) || "none";
+  return { had_suggestion: kind !== "none", suggestion_kind: kind };
+}
+
+function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q || f.speaker)) {
   const box = $("search-empty");
   const filters = activeFilterSummary(f);
   const specs = filterChipSpecs(f);
@@ -13009,16 +13036,24 @@ function renderSearchRecovery(q, f) {
   const everything = q === "*";
   const title = everything ? (f.kind === "speech" ? "No speeches in the record for this filter" : "Nothing in the record for this filter")
     : `No matches for “${esc(q || f.speaker)}”`;
+  const links = (kind) => suggestions.filter(s => s.kind === kind).map(s =>
+    `<a class="ui-button" href="${esc(s.href)}">${esc(s.label)}${Number.isSafeInteger(s.count) && s.count >= 0 ? ` (${s.count.toLocaleString("en-AU")})` : ""}</a>`).join("");
+  const corrections = links("did_you_mean");
   box.innerHTML = `<h2 class="empty-title">${title}</h2>
     <p class="empty-lede">${filters ? `Searched with ${esc(filters)}. ` : ""}${everything ? "Remove a filter to see more of the record." : "Try a broader phrase or a different part of the record."}</p>
+    <h3 id="search-suggestions-heading" tabindex="-1">Suggestions</h3>
+    ${corrections ? `<p>Did you mean</p><div class="empty-actions" aria-label="Did you mean">${corrections}</div>` : ""}
+    <p>Browse the record. Counts show published entries in each collection.</p>
+    <div class="empty-actions" aria-label="Browse the record">${links("scope")}</div>
+    <div class="empty-actions">${links("ask")}</div>
     <div class="empty-actions"><button type="button" class="ui-button" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
-    ${everything ? "" : `<a class="ui-button" href="${esc(askHash(q || f.speaker, f.kind === "speech" ? "speech" : "all"))}">Try in Ask</a>`}
     <a class="ui-button" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
   $("search-recovery-edit").addEventListener("click", () => {
     if (first) clearSearchFilter(first.id);
     else { $("search-input").focus(); $("search-input").select(); }
   });
   box.hidden = false;
+  $("search-suggestions-heading").focus();
 }
 
 $("search-form").addEventListener("submit", (e) => {

@@ -70,6 +70,15 @@ type CatalogRecord = {
 type UnifiedSearchPage = Omit<SearchPage, 'results'> & {
   results:(SearchResult | CatalogRecord)[]; warnings:string[]; catalog_matches:number;
   coverage?:string; index_version?:string;
+  // Only present when an initially empty catalogue query matches its question subject.
+  matched_query?:string;
+  // Optional on completed empty searches. Absent on typeahead and nonempty responses.
+  suggestions?:SearchSuggestion[];
+};
+type SearchSuggestion = {
+  kind:'did_you_mean'|'scope'|'ask'; label:string; href:string;
+  // Collection entries, not query matches. Omitted where a count needs retrieval.
+  count?:number;
 };
 type Resource = {
   slug: string; title: string; speaker: string | null; url: string | null;
@@ -107,6 +116,10 @@ type TopicProfile = {
 `BillVersion` has `id`, `source_version`, `stage`, `stage_label`, nullable `date`, `source_url`, `format`, `status:'complete'`, `text_url`, nullable `characters/pages/sections`, `coverage_note` and `sha256`. The manifest lists complete collected versions, not every version Parliament has issued. Integrity failures return 502 and are not cached. Missing versions return 404.
 
 For an explicit catalog-only kind other than `bill`, `mode=keyword|hybrid|semantic` does not start document retrieval: search-all runs only the asset catalog task. Catalog-only search does not generate an answer. The web can subsequently call briefs, resource reads or search-summary, each changing its cost. `total` for unified/document search describes a ranked window; `catalog_matches` and the coverage text must remain separate. The inspected facet/recent/brief caches generally do not include the data epoch, unlike search and resource caches.
+
+Empty-search recovery (November 2026) adds optional fields only to `/api/search-all`. Existing `/api/search` and `/api/app/v1/*` response fields are unchanged. Correction names come only from the public parliamentarian roster, published bill titles and the electorate list. Scope suggestions browse People, Bills, Speeches and Money; People and Bills counts are published collection entries, not matches for the original query. Ask suggestions use `/ask?q=<encoded query>&draft=1`: the web prefills the form and waits for an explicit submission. Wildcard filter searches offer browsing without turning `*` into an Ask question. No Ask or generation call is made to prepare suggestions. Clients may ignore these fields. Native v1's existing restriction against calling Ask still applies.
+
+The shipped native search decoder (app 1.1.3, `eb6fd2dce`) uses `pageShape = shape(...)` in `mobile/src/features/search/decoders.ts`; `shape` in `mobile/src/api/validation.ts` reads declared keys and accepts unknown keys. Empty and populated pages with additional page/result keys were checked against this decoder and the current integration decoder. These additive fields require no native decoder change. Web completion analytics adds only `had_suggestion:boolean` and `suggestion_kind:'did_you_mean'|'scope'|'ask'|'none'`. The category is the first available of correction, scope and Ask, or `none` for nonempty results. Query text, correction labels, destinations and query-derived identifiers are excluded.
 
 ### Generation routes, outside native v1 and documented from source only
 
