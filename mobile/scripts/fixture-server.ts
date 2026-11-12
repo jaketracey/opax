@@ -1,3 +1,4 @@
+import { vicElectionFixture } from './vic-election-fixture';
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createVoiceFixture } from './voice-fixture';
 import { divisionsFixture, divisionsPath } from './divisions-fixture';
@@ -76,6 +77,8 @@ if (!['pinned', 'null-optional', 'vacant'].includes(rosterMode))
   throw new Error(
     'OPAX_FIXTURE_ROSTER must be pinned, null-optional or vacant',
   );
+if (!['on', 'off'].includes(process.env.OPAX_FIXTURE_VIC_ELECTION ?? 'on'))
+  throw new Error('OPAX_FIXTURE_VIC_ELECTION must be on or off');
 const files = new Map<string, Buffer>();
 for (const [path, body] of Object.entries(recordFixtures.responses)) {
   if (path === '/api/search') continue;
@@ -314,6 +317,19 @@ export const server = createServer(async (request, response) => {
       assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
+    const election = vicElectionFixture(
+      path,
+      process.env.OPAX_FIXTURE_VIC_ELECTION !== 'off',
+    );
+    if (election) {
+      status = election.status;
+      response.writeHead(status, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': status === 200 ? 'public, max-age=300' : 'no-store',
+      });
+      response.end(JSON.stringify(election.body));
+      return;
+    }
     const reportBody = exploreFixture(path, reportBytes) ?? reportBytes(path);
     const peopleResponse = Object.hasOwn(peopleFixtures.responses, path);
     const search =

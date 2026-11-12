@@ -1,0 +1,155 @@
+appId: au.com.opax.app
+name: 70 Victorian election, finder, district and date states
+env:
+  VIC_ELECTION_OFF: 'false'
+---
+# Uses pinned API responses with OPAX_FIXTURE_VIC_ELECTION=on.
+# The 3350 result includes Eureka, whose full seat response is pinned.
+# Run again after restarting the server with the flag off and
+# -e VIC_ELECTION_OFF=true to check authoritative withdrawal.
+- launchApp:
+    clearState: true
+    arguments:
+      OPAXSeat: federal+state
+      OPAXVicElection: ahead
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 120000
+- runFlow:
+    when:
+      true: ${VIC_ELECTION_OFF == 'true'}
+    commands:
+      - extendedWaitUntil:
+          notVisible:
+            id: today-vic-election
+          timeout: 30000
+      - openLink: opax:///vic-election
+      - extendedWaitUntil:
+          visible: This page isn’t available
+          timeout: 30000
+- runFlow:
+    when:
+      true: ${VIC_ELECTION_OFF != 'true'}
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: today-vic-election-status
+          centerElement: true
+          timeout: 60000
+      - assertVisible: Election day is Saturday 28 November
+      - assertVisible: In 8 days
+      - scrollUntilVisible:
+          element:
+            id: today-vic-election-authorisation
+          centerElement: true
+      - assertVisible:
+          id: today-vic-election-authorisation
+          text: Authorised by.*
+      - takeScreenshot: ${EVIDENCE}/70-today-ahead
+      - tapOn:
+          id: today-vic-election-status
+      - extendedWaitUntil:
+          visible:
+            id: vic-election-screen
+          timeout: 30000
+      - assertVisible:
+          id: vic-election-days
+      - assertVisible: Key dates
+      - scrollUntilVisible:
+          element:
+            text: 'Lower house: 88 districts'
+          centerElement: true
+      - tapOn: Suburb, postcode or district
+      - inputText: '3350'
+      - extendedWaitUntil:
+          visible: Wendouree
+          timeout: 30000
+      - assertVisible: 55%
+      - assertVisible: of residents
+      - scrollUntilVisible:
+          element:
+            text: Some places cross district lines.
+          centerElement: true
+      - takeScreenshot: ${EVIDENCE}/70-finder
+      - scrollUntilVisible:
+          element:
+            id: vic-election-hit-0-district-eureka
+          direction: UP
+          centerElement: true
+      - tapOn:
+          id: vic-election-hit-0-district-eureka
+      - assertVisible:
+          id: vic-seat-screen
+      - assertVisible: Last held by
+      - assertVisible: Winning margin
+      - scrollUntilVisible:
+          element:
+            id: vic-seat-candidates-none
+          centerElement: true
+      - takeScreenshot: ${EVIDENCE}/70-district
+      - scrollUntilVisible:
+          element:
+            id: vic-seat-foot
+          centerElement: true
+          timeout: 60000
+      - assertVisible: Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.
+      - assertVisible: corrections@opax.com.au
+      - tapOn:
+          id: BackButton
+      - tapOn: Cancel
+      - scrollUntilVisible:
+          element:
+            id: vic-election-region-southern-metropolitan
+          centerElement: true
+          timeout: 90000
+      - tapOn:
+          id: vic-election-region-southern-metropolitan
+      - assertVisible: Southern Metropolitan Region
+      - scrollUntilVisible:
+          element:
+            text: Districts in this region
+          centerElement: true
+      - takeScreenshot: ${EVIDENCE}/70-region
+      - tapOn:
+          id: BackButton
+      - scrollUntilVisible:
+          element:
+            id: vic-election-foot
+          centerElement: true
+          timeout: 90000
+      - assertVisible: Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.
+      - takeScreenshot: ${EVIDENCE}/70-hub-foot
+      - launchApp:
+          stopApp: true
+          arguments:
+            OPAXSeat: federal+state
+            OPAXVicElection: today
+      - scrollUntilVisible:
+          element:
+            id: today-vic-election-status
+          centerElement: true
+          timeout: 60000
+      - assertVisible: Election day is today
+      - assertVisible: Polls are open from 8 am to 6 pm
+      - takeScreenshot: ${EVIDENCE}/70-today-election-day
+      - launchApp:
+          stopApp: true
+          arguments:
+            OPAXSeat: federal+state
+            OPAXVicElection: closed
+      - scrollUntilVisible:
+          element:
+            id: today-vic-election-status
+          centerElement: true
+          timeout: 60000
+      - assertVisible: Voting has closed
+      - takeScreenshot: ${EVIDENCE}/70-today-closed
+      - tapOn:
+          id: today-vic-election-status
+      - assertVisible: Voting has closed
+      - assertNotVisible:
+          id: vic-election-days
+      - assertNotVisible: Key dates
+      - assertNotVisible: Apply for a postal vote by
+      - takeScreenshot: ${EVIDENCE}/70-hub-closed

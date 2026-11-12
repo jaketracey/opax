@@ -137,6 +137,28 @@ export function assertAllowedPath(path: string): void {
     throw new Error('Route is outside the public catalog allow-list');
   const params = new URLSearchParams(query);
   if (path.split('?').length > 2) throw new Error('Invalid catalog query');
+  // Anonymous published election reads. No generation, account or write path.
+  if (pathname === '/api/app/v1/vic-election/find') {
+    const q = params.get('q') ?? '';
+    if (
+      [...params.keys()].length !== 1 ||
+      params.getAll('q').length !== 1 ||
+      !q.trim() ||
+      q.length > 60
+    )
+      throw new Error(
+        'Election finder requires one query of 1 to 60 characters',
+      );
+    return;
+  }
+  if (
+    !path.includes('?') &&
+    (pathname === '/api/app/v1/vic-election' ||
+      /^\/api\/app\/v1\/vic-election\/seat\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(
+        pathname!,
+      ))
+  )
+    return;
   if (
     !query &&
     /^\/(?:grants\/(?:federal|qld)\/shard-\d{2}|suppliers\/[a-f0-9]{2})\.json$/.test(

@@ -28,12 +28,15 @@ export interface WriteCondition {
   // Present only for a conditional 304; an absent ETag cannot validate a body.
   revalidatedETag?: string;
 }
-// Catalog search (/api/search-all) pages stay in memory. Document search
+// Catalog search (/api/search-all) and election seat-finder queries stay in
+// bounded session memory, including their URLs. Document search
 // (/api/search and /api/search-summary) is cached on disk with the catalogs,
 // in the app's own Caches folder: its query words are in those URLs. Nothing
 // here leaves the device.
 const isSearch = (url: string) =>
-  url.split('?')[0]!.endsWith('/api/search-all');
+  ['/api/search-all', '/api/app/v1/vic-election/find'].some((path) =>
+    url.split('?')[0]!.endsWith(path),
+  );
 const bucket = (url: string) => (isSearch(url) ? 'search' : 'catalog');
 export class CatalogCache {
   private queue: Promise<unknown> = Promise.resolve();
@@ -58,7 +61,7 @@ export class CatalogCache {
       .readIndex()
       .catch(() => [])
       .then(async (index) => {
-        // Remove catalog search pages written by older builds, including
+        // Remove memory-only search pages written by older builds, including
         // query URLs in their index. Catalogs and document searches remain.
         const catalogs = index.filter(
           (item) => item.bucket !== 'search' && !isSearch(item.url),
@@ -133,7 +136,21 @@ export class CatalogCache {
     if (!(await this.loadIndex()).some((entry) => entry.url === url)) return;
     return this.readCatalog(url);
   }
-  // Serialized compare-and-write; catalog search queries and bodies stay in
+  /** An authoritative withdrawal removes both the disk and memory copy. */
+  async remove(url: string): Promise<void> {
+    const task = this.queue.then(async () => {
+      const index = await this.loadIndex();
+      const next = index.filter((entry) => entry.url !== url);
+      await this.store.remove(url);
+      await this.store.writeIndex(next);
+      this.index = next;
+      this.forget(url);
+      this.searches.delete(url);
+    });
+    this.queue = task.catch(() => undefined);
+    return task;
+  }
+  // Serialized compare-and-write; catalog and seat-finder queries stay in
   // memory, everything else (document search too) goes to disk. A caller
   // receives the retained entry when its response loses a validation/date race.
   put(entry: CacheEntry, condition?: WriteCondition): Promise<CacheEntry> {

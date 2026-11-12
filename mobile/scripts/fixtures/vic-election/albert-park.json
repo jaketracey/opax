@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-12",
+  "kind": "district",
+  "slug": "albert-park",
+  "name": "Albert Park",
+  "web_url": "https://opax.com.au/vic-election-2026/albert-park",
+  "source_url": "https://www.vec.vic.gov.au/electoral-boundaries/state-districts/albert-park-district",
+  "electorate_url": "/subject/electorate/vic-vic-la-vic-albert-park",
+  "roster_date": "2026-09-09",
+  "formerly": null,
+  "created": false,
+  "boundary_note": null,
+  "region": {
+    "slug": "southern-metropolitan",
+    "name": "Southern Metropolitan",
+    "members": [
+      {
+        "name": "Ryan Batchelor",
+        "party": "Labor",
+        "slug": "ryan-batchelor",
+        "href": "/subject/person/ryan-batchelor"
+      },
+      {
+        "name": "John Berger",
+        "party": "Labor",
+        "slug": "john-berger",
+        "href": "/subject/person/john-berger"
+      },
+      {
+        "name": "Katherine Copsey",
+        "party": "Greens",
+        "slug": "katherine-copsey",
+        "href": "/subject/person/katherine-copsey"
+      },
+      {
+        "name": "Georgie Crozier",
+        "party": "Liberal",
+        "slug": "georgie-crozier",
+        "href": "/subject/person/georgie-crozier"
+      },
+      {
+        "name": "David Davis",
+        "party": "Liberal",
+        "slug": "david-davis",
+        "href": "/subject/person/david-davis"
+      }
+    ]
+  },
+  "districts": [],
+  "result": {
+    "general": {
+      "date": "2022-11-26",
+      "kind": "general",
+      "party": "Labor",
+      "share": 61.15,
+      "against": "Liberal",
+      "against_share": 38.85,
+      "margin": 11.15,
+      "url": "https://www.vec.vic.gov.au/results/state-election-results/2022-state-election-results/results-by-district/albert-park-district-results"
+    },
+    "since": null
+  },
+  "candidates": null,
+  "members": [
+    {
+      "name": "Nina Taylor",
+      "party": "Labor",
+      "slug": "nina-taylor",
+      "href": "/subject/person/nina-taylor",
+      "source_url": "https://www.parliament.vic.gov.au/members/nina-taylor/",
+      "speeches": {
+        "count": 367,
+        "first": 2023,
+        "last": 2026,
+        "within_term": true
+      },
+      "speech_gap": null,
+      "votes": {
+        "count": 15,
+        "ayes": 12,
+        "noes": 3
+      },
+      "recent_votes": [
+        {
+          "date": "2026-09-10",
+          "title": "That the following words be inserted to the end of the motion: ‘while noting the impact of $15 billion of corruption on services for Victorians’.",
+          "href": "/doc/division-vic-la-2026-09-10-3",
+          "vote": "no",
+          "source_url": "https://www.parliament.vic.gov.au/4a70cc/globalassets/hansard-daily-pdfs/hansard-2145855009-37384/hansard-2145855009-37384.pdf"
+        }
+      ]
+    }
+  ],
+  "results_fetched": "2026-10-13",
+  "speech_updated": "2026-10-18",
+  "division_start": "2026-08-14",
+  "division_end": "2026-09-24"
+}

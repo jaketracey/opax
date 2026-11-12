@@ -79,6 +79,29 @@ function freezeSnapshot(...values: unknown[]) {
   }
 }
 export class ApiClient {
+  /** Validated saved copy, without a network read. */
+  async saved<T>(
+    path: string,
+    decode: Decoder<T>,
+  ): Promise<RecordResult<T> | null> {
+    const entry = await this.options.cache.get(
+      allowedURL(this.options.origin, path),
+    );
+    if (!entry) return null;
+    try {
+      return {
+        data: this.decodeBody(entry.body, decode),
+        stale: true,
+        savedAt: entry.savedAt,
+        asOf: entry.asOf,
+      };
+    } catch {
+      return null;
+    }
+  }
+  forget(path: string): Promise<void> {
+    return this.options.cache.remove(allowedURL(this.options.origin, path));
+  }
   private actionReads = new ReadSession<RecordResult<unknown>>();
   /** Explicit actions only: one attempt, session memory, no disk or retry. */
   getForAction<T>(

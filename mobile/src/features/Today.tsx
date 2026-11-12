@@ -1,3 +1,7 @@
+import { useOverview as useElectionOverview } from './vic-election/reads';
+import { useElectionNow } from './vic-election/clock';
+import { todayEligible, todayWindow } from './vic-election/model';
+import VicElectionBlock from './vic-election/TodayBlock';
 import * as Router from 'expo-router';
 import { useScreenReady, useTodayRendered } from '../analytics/timing';
 import {
@@ -230,6 +234,8 @@ export default function Today() {
   useTodayRendered();
   const dots = useTodayDotsScroll();
   const offline = useOffline();
+  const election = useElectionOverview(false);
+  const electionNow = useElectionNow();
   const now = useNow();
   const day = sydneyDay(now);
   const launch = useLaunch(day);
@@ -280,6 +286,8 @@ export default function Today() {
   const slot = (name: TodaySlot): ReactNode => {
     if (!order) return null;
     switch (name) {
+      case 'vic-election':
+        return <VicElectionBlock key={name} attempt={attempt} />;
       case 'your-mp':
         if (!home || !directory) return null;
         if (nothingSaved) return null;
@@ -383,7 +391,20 @@ export default function Today() {
     }
   };
 
+  const electionSavedAt =
+    election.record &&
+    todayWindow(electionNow) &&
+    todayEligible(
+      choice,
+      directory?.electorates.data.electorates ?? [],
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    ) &&
+    offline
+      ? election.record.savedAt
+      : null;
+
   const offlineAt = [
+    electionSavedAt,
     reports.savedAt,
     offline ? reports.cachedAt : null,
     edition.block &&

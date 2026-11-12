@@ -1,3 +1,4 @@
+import { ElectionSearchRow } from '../vic-election/SearchRow';
 import { Pressable, StyleSheet, View } from 'react-native';
 import {
   Group,
@@ -140,6 +141,7 @@ export function SearchIdle({
             testID={row.testID}
           />
         ))}
+        <ElectionSearchRow />
       </InsetGroup>
     </Group>
   );

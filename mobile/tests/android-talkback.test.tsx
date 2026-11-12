@@ -754,3 +754,43 @@ describe('accounts with TalkBack', () => {
       expect(accountCopy.deletedNotice).not.toContain('iPhone');
     }));
 });
+
+test('Victorian election rows expose grouped TalkBack labels and 48dp targets', () =>
+  android(async (show) => {
+    const { renderer } = await show((app) => {
+      const { SeatRow, RegionRow } = app.load<
+        typeof import('../src/features/vic-election/rows')
+      >('../src/features/vic-election/rows');
+      const { decodeOverview } = app.load<
+        typeof import('../src/features/vic-election/decoders')
+      >('../src/features/vic-election/decoders');
+      const raw = jest.requireActual(
+        '../scripts/fixtures/vic-election/overview.json',
+      );
+      const overview = decodeOverview(raw);
+      return app.React.createElement(
+        app.RN.View,
+        null,
+        app.React.createElement(SeatRow, {
+          district: overview.districts[0]!,
+          share: 67.2,
+          place: 'St Kilda',
+        }),
+        app.React.createElement(RegionRow, {
+          region: overview.regions.find((r) => r.slug === 'southern-metropolitan')!,
+        }),
+      );
+    });
+    const district = byID(renderer, 'vic-election-district-albert-park');
+    expect(district.props.accessibilityLabel).toContain(
+      '67 per cent of St Kilda’s residents. Last held by',
+    );
+    expect(
+      StyleSheet.flatten(district.props.style).minHeight,
+    ).toBeGreaterThanOrEqual(48);
+    expect(district.props.accessibilityRole).toBe('link');
+    const region = byID(renderer, 'vic-election-region-southern-metropolitan');
+    expect(region.props.accessibilityLabel).toContain(
+      'Ryan Batchelor, John Berger, Katherine Copsey, Georgie Crozier, David Davis',
+    );
+  }));

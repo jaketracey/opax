@@ -1,3 +1,4 @@
+import { vicElectionPaths } from './vic-election';
 import { todayPaths } from './today';
 import { editionPaths } from './edition';
 import { seatPaths } from './seat';
@@ -15,6 +16,7 @@ import { explorePaths } from './explore';
 import { filtersPaths } from './filters';
 import { sheetsPaths } from './sheets';
 const paths = [
+  ...vicElectionPaths,
   ...todayPaths,
   ...editionPaths,
   ...seatPaths,

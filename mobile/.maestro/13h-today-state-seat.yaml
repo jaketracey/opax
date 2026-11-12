@@ -5,7 +5,8 @@ name: 13h Today with a federal and a Victorian state seat saved
 # seat card (today.md 5.4, StateSeatCard) is withheld from 3 November 2026,
 # when the Victorian Legislative Assembly dissolved for the 28 November
 # election, until a timetable record says who holds each seat. At this
-# capture date Today draws the federal card only, with no authorisation line.
+# capture date the old state card is hidden. The election block has its own
+# authorisation line.
 - launchApp:
     clearState: true
     arguments:
@@ -27,7 +28,10 @@ name: 13h Today with a federal and a Victorian state seat saved
     id: today-state-seat
 - assertNotVisible:
     id: today-state-sources
-- assertNotVisible: Authorised by.*
+- assertNotVisible:
+    id: today-state-member
+- assertNotVisible:
+    id: today-state-seat-header
 - scrollUntilVisible:
     element:
       id: today-bills
@@ -37,4 +41,8 @@ name: 13h Today with a federal and a Victorian state seat saved
     speed: 20
 - assertNotVisible:
     id: today-state-seat
+- assertNotVisible:
+    id: today-state-member
+- assertNotVisible:
+    id: today-state-sources
 - takeScreenshot: ${EVIDENCE}/13h-no-state-card

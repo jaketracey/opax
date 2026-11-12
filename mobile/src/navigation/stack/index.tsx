@@ -1,3 +1,4 @@
+import { vicElectionScreens } from './vic-election';
 import { todayScreens } from './today';
 import { editionScreens } from './edition';
 import { yourMpScreens } from './your-mp';
@@ -40,6 +41,7 @@ export function sharedScreens(segment: string, signedIn: boolean) {
   const screens = [
     ...todayScreens(segment, signedIn),
     ...editionScreens(),
+    ...vicElectionScreens(),
     ...yourMpScreens(segment, signedIn),
     ...peopleScreens(),
     ...billsScreens(segment, signedIn),

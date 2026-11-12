@@ -62,8 +62,22 @@ name: 28c Welcome Not now lands on a finished Today, the invitation after Bills
       OPAXWelcomeDeclined: 8d
 - extendedWaitUntil:
     visible:
-      id: today-invitation
+      id: today-screen
     timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: today-screen-message
+    direction: UP
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-invitation
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - takeScreenshot: ${EVIDENCE}/28c-day-8
 # The card's own Not now (touch and hold, away from its two buttons: on the
 # headline) hides it for 30 days.

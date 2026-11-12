@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "q": "Bass",
+  "places_searched": true,
+  "hits": [
+    {
+      "name": "Bass",
+      "kind": "District",
+      "seats": [
+        {
+          "kind": "district",
+          "slug": "bass",
+          "name": "Bass",
+          "electorate_url": "/subject/electorate/vic-vic-la-vic-bass",
+          "region": "Eastern Victoria",
+          "member": {
+            "name": "Jordan Crugnale",
+            "party": "Labor"
+          },
+          "result": {
+            "date": "2022-11-26",
+            "kind": "general",
+            "party": "Labor",
+            "margin": 0.24
+          },
+          "candidates": 0,
+          "share": null
+        }
+      ]
+    }
+  ],
+  "split": false,
+  "empty": null,
+  "address_url": "https://www.vec.vic.gov.au/electoral-boundaries/which-boundaries-cover-where-i-live",
+  "attribution": "Source: Australian Bureau of Statistics, ASGS Edition 3 allocation files and 2021 Census mesh block counts (CC BY 4.0).",
+  "note": "Places are split by usual residents at the 2021 Census. Postcodes are ABS postal areas, an approximation of delivery postcodes."
+}

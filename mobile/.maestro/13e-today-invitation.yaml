@@ -11,12 +11,26 @@ name: 13e Today's invitation to choose a seat, by name, by location, and after N
       OPAXWelcomeDeclined: none
 - extendedWaitUntil:
     visible:
-      id: today-invitation
+      id: today-screen
     timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: today-invitation
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - assertVisible:
     id: today-invitation-body
     text: Add your electorate to see your MP, how they vote and the grants in your area\.
 - takeScreenshot: ${EVIDENCE}/13e-invitation
+- scrollUntilVisible:
+    element:
+      id: today-invitation-find
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - tapOn:
     id: today-invitation-find
 - extendedWaitUntil:
@@ -59,8 +73,22 @@ name: 13e Today's invitation to choose a seat, by name, by location, and after N
       OPAXWelcomeDeclined: none
 - extendedWaitUntil:
     visible:
-      id: today-invitation
+      id: today-screen
     timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: today-invitation
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
+- scrollUntilVisible:
+    element:
+      id: today-invitation-location
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - tapOn:
     id: today-invitation-location
 - extendedWaitUntil:
@@ -91,6 +119,13 @@ name: 13e Today's invitation to choose a seat, by name, by location, and after N
     timeout: 60000
 - assertNotVisible:
     id: today-invitation
+- scrollUntilVisible:
+    element:
+      id: today-archive
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - assertVisible:
     id: today-archive
 - takeScreenshot: ${EVIDENCE}/13e-not-now-first-screen
@@ -120,6 +155,13 @@ name: 13e Today's invitation to choose a seat, by name, by location, and after N
       OPAXEditionAge: old
 - extendedWaitUntil:
     visible:
-      id: today-invitation
+      id: today-screen
     timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: today-invitation
+    direction: DOWN
+    timeout: 90000
+    centerElement: true
+    speed: 20
 - takeScreenshot: ${EVIDENCE}/13e-day-8

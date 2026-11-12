@@ -83,6 +83,18 @@ test('native search selectors tolerate Android SearchView hint padding', () => {
   );
 });
 
+test('the election journey selects its Android twin with clock links', () => {
+  const row = plan.find((p) => p.shared === '70-vic-election.yaml');
+  assert.equal(row.path, 'android/70-vic-election.yaml');
+  assert.equal(row.category, 'Android-only variant');
+  assert.equal(row.run, true);
+  const body = JSON.stringify(read(row.path)[1].toJS());
+  for (const phase of ['ahead', 'today', 'closed'])
+    assert.ok(body.includes(`fixture=${phase}`));
+  assert.ok(!body.includes('OPAXVicElection'));
+  assert.ok(plan.some((p) => p.shared === '69-money-map-v2.yaml'));
+});
+
 test('all prepared YAML parses as two documents, with bounded support references', () => {
   for (const name of JSON.parse(
     fs.readFileSync(path.join(out, 'prepared-files.json'), 'utf8'),

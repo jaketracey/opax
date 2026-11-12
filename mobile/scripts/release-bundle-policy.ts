@@ -38,7 +38,7 @@ export function assertNoVoiceFixtures(body: Buffer, productionVoice = false) {
 }
 
 /** E2E launch arguments (the welcome tour's opt-in) never ship. */
-export const E2E_LAUNCH_FLAGS = ['OPAXWelcomeTour'] as const;
+export const E2E_LAUNCH_FLAGS = ['OPAXWelcomeTour', 'OPAXVicElection'] as const;
 export function assertNoE2ELaunchFlags(body: Buffer) {
   for (const marker of E2E_LAUNCH_FLAGS)
     assert(
