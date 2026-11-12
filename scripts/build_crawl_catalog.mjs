@@ -16,6 +16,7 @@ import { auditComplete } from '../portal/public/audit.js';
 import { clearedAggregates } from '../portal/src/budget.ts';
 import { clearedGiftRegisters } from '../portal/src/vic-gifts.ts';
 import { clearedStateBills } from '../portal/src/state-bills.ts';
+import { REPORT_COLLECTIONS, reportRoot } from '../portal/public/official-reports-model.js';
 import { reportsPublished } from './reports_flag.mjs';
 
 export const ORIGIN = 'https://opax.com.au';
@@ -90,6 +91,7 @@ ${auditComplete(audit) ? '- [Queensland audit reports](' + ORIGIN + '/audit): \`
 - [Suppliers](${ORIGIN}/subject/supplier): \`/subject/supplier/{supplier-id}\`; named AusTender profiles, award values rather than expenditure.
 - [Agencies](${ORIGIN}/subject/agency): \`/subject/agency/{agency-id}\`.
 - [Campaigners](${ORIGIN}/subject/campaigner): \`/subject/campaigner/{encoded-name}\`.
+- [Official reports](${ORIGIN}/official-reports): Royal commissions, integrity reports, Commonwealth annual reports and agency reports. Individual records use \`/report/{slug}\`.
 - [Topics](${ORIGIN}/subject/topic): \`/subject/topic/{topic-slug}\`.
 ${reports ? '- [Reports](' + ORIGIN + '/reports): \`/reports/{report-slug}\`; source-backed investigations.\n' : ''}- [Sitemap index](${ORIGIN}/sitemap.xml): Canonical discovery URLs, grouped by type with record dates, or the snapshot date where a record has none.
 `;
@@ -323,7 +325,7 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
   // The reports are in the sitemap only while they are published.
   for (const r of published ? reports.reports : []) add('topics-reports',`/reports/${r.slug}`,r.updated,undefined,r.generated_at || corpus.version);
   for (const slug of Object.keys(TOPIC_NAMES)) add('topics-reports',`/subject/topic/${slug}`,null,undefined,corpus.version);
-  for (const path of ['/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map',...(published ? ['/reports'] : []),'/explore','/money/contracts','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);
+  for (const path of ['/official-reports',...Object.keys(REPORT_COLLECTIONS).map(reportRoot),'/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map',...(published ? ['/reports'] : []),'/explore','/money/contracts','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);
   const result = sitemapFiles(groups);
   const out = join(root,'crawl');
   await rm(out,{recursive:true,force:true});

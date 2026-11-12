@@ -36,6 +36,9 @@ import { normalizePassage, passageWindow } from './passage-text'
 import { instrumentPage, instrumentReader } from './instruments'
 import { budgetPage, budgetReader } from './budget'
 import { auditPage, auditReader } from './audit'
+import { officialReportsPage } from './official-reports'
+import { REPORT_COLLECTIONS, reportRoot } from '../public/official-reports-model.js'
+import type { ReportType } from './report-records'
 import { readReport, renderReport, reportApiBody, reportTranscriptPage } from './report-records'
 import { vicGiftsPage, vicGiftsReader, vicGiftsPersonBlock, vicGiftsResponse } from './vic-gifts'
 import { stateBillsPage, stateBillsReader } from './state-bills'
@@ -3876,6 +3879,7 @@ type SeoRoute =
   | { kind: 'act-invoices' }
   | { kind: 'audit'; id: string | null }
   | { kind: 'source-report'; slug: string }
+  | { kind: 'official-reports'; type: ReportType | null }
   | { kind: 'static'; page: keyof typeof STATIC_PAGES }
   | { kind: 'report'; slug: string }
   | { kind: 'index'; dir: DirectoryKind }
@@ -3922,6 +3926,9 @@ const GRANT_RECIPIENT_ID_RE = /^(?:abn:\d{11}|name:[a-z0-9 .&'()-]{2,120}|person
 /** Route table for real paths. Trailing slashes tolerated, never canonical. */
 function matchSeoRoute(url: URL): SeoRoute | null {
   const path = url.pathname.replace(/\/+$/, '') || '/'
+  if (path === '/official-reports') return { kind: 'official-reports', type: null }
+  if (path.startsWith('/official-reports/')) for (const [type, collection] of Object.entries(REPORT_COLLECTIONS))
+    if (path === '/official-reports/' + collection.path) return { kind: 'official-reports', type: type as ReportType }
   if (path.startsWith('/report/')) {
     try { return { kind: 'source-report', slug: decodeURIComponent(path.slice('/report/'.length)) } }
     catch { return { kind: 'source-report', slug: '' } }
@@ -4516,13 +4523,18 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
   if ((route.kind === 'report' || route.kind === 'static' && route.page === 'reports') && !reportsEnabled(env.REPORTS_ENABLED)) route = { kind: 'notfound' }
 
   switch (route.kind) {
+    case 'official-reports': {
+      try { return base(await officialReportsPage(route.type, url, env.ASSETS)) }
+      catch { return base({ title: 'Official reports temporarily unavailable · OPAX', description: 'The report catalogue is temporarily unavailable.', status: 503,
+        prerender: prerenderBlock('Official reports temporarily unavailable', 'Please try again shortly.', '') }) }
+    }
     case 'source-report': {
       try {
         const record = await readReport(env.ASSETS, route.slug)
         if (!record) return base({ title: 'Report not found · OPAX', description: 'No report record is available at this address.', status: 404,
           prerender: prerenderBlock('Report not found', 'No report record is available at this address.', '') })
         return base({ title: record.title + ' · OPAX', description: record.snippet, ogType: 'article',
-          canonical: `${SITE_ORIGIN}/report/${record.slug}`, trail: [{ label: 'Search', href: '/ask?view=search' }, { label: record.title }],
+          canonical: `${SITE_ORIGIN}/report/${record.slug}`, trail: [{ label: REPORT_COLLECTIONS[record.report_type].title, href: reportRoot(record.report_type) }, { label: record.title }],
           prerender: renderReport(record) })
       } catch {
         return base({ title: 'Report temporarily unavailable · OPAX', description: 'This report record is temporarily unavailable.', status: 503,
@@ -5901,7 +5913,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
   // Official report records quote a publisher's own document; they pair no records.
-  if (!(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
+  if (route.kind !== 'official-reports' && !(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // Every page prints its trail in the server HTML too (readers without
   // scripts, crawlers), from the menus' own list; the app's strip replaces it
@@ -5954,6 +5966,9 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   if (route.kind === 'notfound') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } })
+  if (route.kind === 'official-reports') rewriter.on('script[src]', { element(el) {
+    if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/official-reports.css">' + (route.type ? '<script type="module" src="/official-reports.js"></script>' : ''), { html: true }) } })
   if (route.kind === 'source-report') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/report-records.css">', { html: true }) } })
@@ -6285,7 +6300,7 @@ const CSP_PAGE = [
   "default-src 'self'",
   `script-src 'self' 'wasm-unsafe-eval' ${GTM}`,
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: https://tile.openstreetmap.org ${GTM} ${GA}`, // data: for the stylesheet's inline SVG glyphs (a select's chevron); images, never script
+  `img-src 'self' data: https://i.ytimg.com https://tile.openstreetmap.org ${GTM} ${GA}`, // data: for the stylesheet's inline SVG glyphs (a select's chevron); images, never script
   "font-src 'self'",
   `connect-src 'self' wss://opax.com.au wss://staging.opax.com.au ${GTM} ${GA}`,
   "worker-src 'self'",
@@ -7173,7 +7188,7 @@ export default {
       } catch { return communityResponse(json({ error: 'Report record is temporarily unavailable' }, 503)) }
     }
     const reportRoute = matchSeoRoute(url)
-    if (reportRoute?.kind === 'source-report' && ['GET', 'HEAD'].includes(request.method))
+    if ((reportRoute?.kind === 'source-report' || reportRoute?.kind === 'official-reports') && ['GET', 'HEAD'].includes(request.method))
       return communityResponse(await serveSeoPage(reportRoute, url, request, env, ctx))
     // Public app adapters use this Worker's journal/assets, before any staging
     // proxy or general retrieval dispatch. No composition callback is supplied.

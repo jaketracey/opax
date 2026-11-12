@@ -45,7 +45,7 @@ test('About, coverage and Methods routes render new collections from the canonic
     const html = await get(path);
     assert.match(html, new RegExp(`data-panel-copy="${path.slice(1)}"`), path);
     for (const phrase of ['annual report', 'hearing transcript', 'integrity']) assert.ok(html.toLowerCase().includes(phrase), `${path}: ${phrase}`);
-    assert.doesNotMatch(html, /href="\/official-reports/);
+    if (path !== '/methods') assert.match(html, /href="\/official-reports/, path);
     if (path === '/stats') {
       const {coverageCollections} = await import('../../scripts/build_coverage.mjs');
       for (const row of coverageCollections()) {
@@ -70,6 +70,30 @@ test('official report page and API share the schema 1 record, independent of res
     assert.match(html,/href="\/api\/report\/royal-commission-cth-robodebt"/);
     assert.doesNotMatch(html,/<script[^>]+src="\/(?:app|spa-entry|spa-shell)\.js/);
     const text=stripTags(html);for(const rec of data.record.recommendations)assert.ok(text.includes(escapeHtml(rec.text)));
+  }
+});
+test('official report roots are public server HTML with clean canonicals, noindex query views and share cards', async () => {
+  for(const path of ['/official-reports','/official-reports/royal-commissions','/official-reports/integrity','/official-reports/annual-reports','/official-reports/agency-reports']) {
+    for(const query of ['', '?q=zzznomatchingreport', '?page=2']) {
+      const response=await worker.fetch(new Request(origin+path+query),{...env,REPORTS_ENABLED:'false'},{waitUntil(){}});
+      assert.equal(response.status,200,path+query);const html=await response.text();
+      assert.ok(html.includes('href="'+origin+path+'"'));
+      assert.equal(/<meta name="robots" content="noindex">/.test(html),Boolean(query));
+      assert.match(html,/official-reports.css/);assert.doesNotMatch(html,/data-colour-scheme|href="\/report-records\.css"/);assert.match(html,/og:image[^>]+content="https:\/\/opax.com.au\/og\//);
+      assert.doesNotMatch(html,/<script[^>]+src="\/(?:app|spa-entry|spa-shell)\.js/);
+      const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];
+      assert.doesNotMatch(main,/An association does not prove influence/);
+      if(!query) assert.match(main,path==='/official-reports' ? /or-collection/ : /href="\/report\//);
+      if(query.startsWith('?q=') && path!=='/official-reports') assert.match(main,/No (?:reports|inquiries) match/);
+    }
+  }
+});
+test('official report record breadcrumbs link to the record type root in HTML and schema',async()=>{
+  for(const [slug,root,label] of [['royal-commission-cth-robodebt','royal-commissions','Royal commissions'],['annual-report-department-of-defence-2024-25','annual-reports','Annual reports'],['integrity-report-'+(await read('/integrity-reports/index.json')).reports[0].id,'integrity','Integrity reports'],['agency-report-'+(await read('/agency-reports/index.json')).documents[0].id,'agency-reports','Agency reports']]) {
+    const html=await get('/report/'+slug);
+    const crumbs=html.match(/<nav class="crumbs prerender-crumbs"[\s\S]*?<\/nav>/)[0];
+    assert.ok(crumbs.includes('href="/official-reports/'+root+'"'));assert.ok(crumbs.includes(label));assert.doesNotMatch(crumbs,/>Search</);
+    assert.ok(html.includes('"name":"'+label+'","item":"'+origin+'/official-reports/'+root+'"') || html.includes(origin+'/official-reports/'+root));
   }
 });
 test('search-all returns official report rows for web and native API consumers',async()=>{

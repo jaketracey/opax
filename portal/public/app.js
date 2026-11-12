@@ -4189,7 +4189,7 @@ async function renderPersonFirstSpeech(name, sections, roster) {
   const rows = cards?.personVideos(data?.videos, personSlugs.byName.get(roster?.name ?? name), roster) || [];
   if (currentSubjectKey !== key || !slot.isConnected || !rows.length) { slot.remove(); return; }
   slot.innerHTML = `<h3 class="subject-section-title">First speech</h3>
-    <p class="person-caveat">Video published by the Senate Public Information Office on YouTube. The player loads from YouTube only when you press play.</p>
+    <p class="person-caveat">Video published by the Senate Public Information Office on YouTube.</p>
     <div class="video-cards">${rows.map((v) => cards.videoCardHTML(v)).join("")}</div>
     <p class="video-more"><a href="/video/senate?kind=first-speech">All first speeches</a></p>
     ${sourceLineHTML({ updated: String(rows[0].published || "").slice(0, 10), dateLabel: "Published", source: "AuSenate YouTube channel",

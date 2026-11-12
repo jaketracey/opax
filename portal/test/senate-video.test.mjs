@@ -153,7 +153,7 @@ const recorder = () => {
   return {urls, resources: {interceptors: [requestInterceptor((request) => { urls.push(request.url); return new Response('', {status: 200, headers: {'content-type': 'text/html'}}); })]}};
 };
 
-test('facade: nothing from YouTube before a press; the nocookie player after it, titled and focused', async () => {
+test('facade: only the thumbnail before a press; the nocookie player after it, titled and focused', async () => {
   const loader = recorder();
   const card = rows.find(r => r.id === 'qtFixture12');
   const dom = new JSDOM(`<!doctype html><html><head></head><body><main>${videoSectionHTML('Senate Question Time', [card])}</main></body></html>`,
@@ -167,13 +167,16 @@ test('facade: nothing from YouTube before a press; the nocookie player after it,
   assert.match(button.textContent, /Play video: Senate Question Time, 12 October 2026/);
   assert.match(button.textContent, /12 Oct 2026 · Australian Senate · YouTube/);
   assert.equal(document.querySelector('iframe'), null);
-  assert.equal(document.querySelector('img'), null, 'no thumbnail');
+  const thumb = document.querySelector('img.video-thumb');
+  assert.equal(thumb.getAttribute('src'), 'https://i.ytimg.com/vi/qtFixture12/hqdefault.jpg', 'the YouTube thumbnail');
+  assert.equal(thumb.getAttribute('alt'), '', 'decorative: the button names the video');
+  assert.equal(thumb.getAttribute('loading'), 'lazy');
   assert.equal(document.querySelector('svg.video-play').getAttribute('aria-hidden'), 'true');
   const link = document.querySelector('.video-caption a');
   assert.equal(link.textContent, 'Watch on YouTube');
   assert.equal(link.href, 'https://www.youtube.com/watch?v=qtFixture12');
-  assert.equal(loader.urls.filter(u => /youtube|ytimg|google/.test(u)).length, 0, `before play: ${loader.urls}`);
-  assert.doesNotMatch(document.documentElement.outerHTML.replace(/<a [^>]*>Watch on YouTube<\/a>/, ''), /youtube-nocookie|ytimg|i\d?\.ytimg|youtube\.com\/embed/);
+  assert.equal(loader.urls.filter(u => /youtube|google/.test(u)).length, 0, `no player request before play: ${loader.urls}`);
+  assert.doesNotMatch(document.documentElement.outerHTML.replace(/<a [^>]*>Watch on YouTube<\/a>/, ''), /youtube-nocookie|youtube\.com\/embed/);
   // Keyboard activation is the native button's: Enter and Space both dispatch click.
   button.focus();
   button.click();
@@ -188,7 +191,7 @@ test('facade: nothing from YouTube before a press; the nocookie player after it,
   assert.equal(document.querySelector('button.video-facade'), null);
   assert.ok(document.querySelector('[data-video-card]').hasAttribute('data-playing'));
   for (let i = 0; i < 50 && !loader.urls.some(u => u.startsWith('https://www.youtube-nocookie.com/')); i++) await new Promise(r => setTimeout(r, 10));
-  assert.deepEqual(loader.urls.filter(u => /youtube|ytimg|google/.test(u)), ['https://www.youtube-nocookie.com/embed/qtFixture12?autoplay=1'], 'the press makes the first and only YouTube request');
+  assert.deepEqual(loader.urls.filter(u => /youtube|google/.test(u)), ['https://www.youtube-nocookie.com/embed/qtFixture12?autoplay=1'], 'the press makes the first and only player request');
   assert.ok(document.querySelector('link[data-video-card-style][href="/video-card.css"]'));
   dom.window.close();
 });
@@ -196,7 +199,8 @@ test('facade: nothing from YouTube before a press; the nocookie player after it,
 test('card markup escapes titles and refuses a malformed id', () => {
   assert.equal(videoCardHTML({id: 'javascript:1', title: 'x', kind: 'other'}), '');
   const html = videoCardHTML({id: 'qtFixture12', title: '<img src=x onerror=bad>', kind: 'question_time', date: '2026-10-12'});
-  assert.doesNotMatch(html, /<img/);
+  assert.equal((html.match(/<img/g) || []).length, 1, 'the one thumbnail; the title is escaped, never markup');
+  assert.match(html, /&lt;img src=x onerror=bad&gt;/);
   assert.equal(videoSectionHTML('Senate Question Time', []), '', 'no rows, no section');
 });
 
@@ -218,8 +222,9 @@ test('sitting week: one Question Time card per sitting day with a video; none, a
   const cards = [...page.html.matchAll(/data-video-id="([^"]+)"/g)].map(m => m[1]);
   assert.deepEqual(cards, ['qtFixture12', 'qtFixture14'], 'day order; the undated upload and first speeches stay off');
   assert.match(page.html, /<h2 class="ui-section-title">Senate Question Time<\/h2>/);
-  assert.match(page.html, /only when you press play/);
-  assert.doesNotMatch(page.html, /<iframe|youtube-nocookie|ytimg/);
+  assert.doesNotMatch(page.html, /only when you press play/);
+  assert.doesNotMatch(page.html, /<iframe|youtube-nocookie/, 'no player until play');
+  assert.match(page.html, /<img class="video-thumb" src="https:\/\/i\.ytimg\.com\/vi\/qtFixture12\/hqdefault\.jpg" alt="" [^>]*loading="lazy"/, 'the YouTube thumbnail, lazy');
   for (const html of [renderSittingWeek(hubData, quiet, [], new Map(), '2026-10-16', {}, {}, rows).html, renderSittingWeek(hubData, week, [], new Map(), '2026-10-16').html]) {
     assert.doesNotMatch(html, /data-video-card|Senate Question Time<\/h2>|senate-video/);
   }
@@ -263,13 +268,15 @@ test('person page: a matched senator gets a First speech card; others get no sec
   assert.equal(sittingVideos(rows, '2026-10-12', '2026-10-15').length, 2);
 });
 
-test('CSP: frame-src gains youtube-nocookie.com and nothing broader, in _headers and the Worker', async () => {
+test('CSP: frame-src gains youtube-nocookie.com, img-src i.ytimg.com, and nothing broader, in _headers and the Worker', async () => {
   const headers = await readFile(new URL('../public/_headers', import.meta.url), 'utf8');
   const worker = await readFile(new URL('../src/index.ts', import.meta.url), 'utf8');
   const csp = /Content-Security-Policy: (.+)/.exec(headers)[1];
   const directive = (policy, name) => policy.split(';').map(s => s.trim()).find(s => s.startsWith(name + ' '));
   assert.equal(directive(csp, 'frame-src'), 'frame-src https://www.googletagmanager.com https://www.youtube-nocookie.com');
-  assert.doesNotMatch(csp.replace('https://www.youtube-nocookie.com', ''), /youtube|ytimg|\*\.google\.com/);
+  assert.match(directive(csp, 'img-src'), /^img-src 'self' data: https:\/\/i\.ytimg\.com /);
+  assert.doesNotMatch(csp.replace('https://www.youtube-nocookie.com', '').replace('https://i.ytimg.com', ''), /youtube|ytimg|\*\.google\.com/);
+  assert.match(worker, /`img-src 'self' data: https:\/\/i\.ytimg\.com /);
   assert.match(worker, /const YOUTUBE_EMBED = 'https:\/\/www\.youtube-nocookie\.com'\n/);
   assert.match(worker, /`frame-src \$\{GTM\} \$\{YOUTUBE_EMBED\}`,/);
   assert.equal((worker.match(/YOUTUBE_EMBED/g) || []).length, 2, 'used in frame-src only');

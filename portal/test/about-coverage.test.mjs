@@ -97,6 +97,7 @@ test('About and Methods describe the new records and their evidence limits', () 
   for (const phrase of ['Hearing transcripts are evidence', 'suppression or non-publication orders', 'pseudonymous witness', 'PDF page number', 'OCR', 'not an\n      annual salary', 'not currently offered to Ask', '/api/report/&lt;slug&gt;']) assert.ok(methods.includes(phrase), phrase);
   const copy = new JSDOM(about + methods).window.document.body.textContent;
   assert.doesNotMatch(copy, /—/);
-  assert.doesNotMatch(about + methods + coverageHTML(rows), /href="\/official-reports/);
+  assert.ok(about.includes('href="/official-reports"'), 'About links the official reports pages');
+  for (const href of ['/official-reports/royal-commissions','/official-reports/integrity','/official-reports/annual-reports','/official-reports/agency-reports']) assert.ok(coverageHTML(rows).includes(`href="${href}"`), href);
   for (const href of ['/video/senate','/register/state-bills','/register/act-invoices','/register/gov-advertising','/register/tax-expenditures','/register/government-finance','/audit']) assert.ok(about.includes(`href="${href}"`), href);
 });
