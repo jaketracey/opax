@@ -6,6 +6,7 @@ import bills from './fixtures/search/bills.json';
 import briefs from './fixtures/search/briefs.json';
 import manifest from './fixtures/search/search-catalog-manifest.json';
 import reports from './fixtures/search/reports-index.json';
+import officialReports from './fixtures/search/official-reports.json';
 import { decodeRecord } from '../src/features/search/decoders';
 import type { Roster } from '../src/api/catalog-decoders';
 import { typeLabel } from '../src/features/search/contracts';
@@ -43,16 +44,9 @@ export function searchFixture(
         : kind === 'agency'
           ? agencies
           : kind === 'report'
-            ? reports.reports.map((r) => ({
-                kind,
-                title: r.title,
-                slug: r.slug,
-                href: '/reports/' + r.slug,
-                snippet: r.blurb,
-                resource: '',
-                date: r.updated.slice(0, 10),
-                source: 'OPAX research reports',
-              }))
+            ? // Public search fields pinned from tests/fixtures/reports. The
+              // retired research index is not the official-report API shape.
+              officialReports
             : kind === 'party'
               ? [
                   ...new Set(

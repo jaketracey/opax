@@ -36,6 +36,7 @@ import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
 import { colors, rhythm, textStyles } from '../src/design/tokens';
 import { designFlags } from '../src/design/flags';
+import * as ScrollTop from '../src/design/scroll-to-top';
 import { askRoute, conversationsRoute } from '../src/navigation/routes/ask';
 import { useSeat } from '../src/features/your-mp/useSeat';
 import { startersFor } from '../src/features/ask/starters';
@@ -52,6 +53,7 @@ import {
   setWindowTraitsOverride,
 } from '../src/design/adaptive';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
+import { AskColumns } from '../src/features/ask/AskLayout';
 import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
@@ -229,6 +231,31 @@ async function mount(screen = <AskScreen />) {
   });
   return view!;
 }
+
+test('the phone keeps wrappers in the first native scroll descendant chain', async () => {
+  await mount();
+  const scroll = view!.root.findByType(ScrollView);
+  expect(scroll.props.contentInsetAdjustmentBehavior).toBe('automatic');
+  expect(scroll.props.scrollToOverflowEnabled).toBe(true);
+  const columns = view!.root.findByType(AskColumns);
+  const row = columns.findAllByType(View)[0]!;
+  const column = byId('ask-conversation-column').find(
+    (node) => typeof node.type === 'string',
+  )!;
+  expect(row.props.collapsable).toBe(false);
+  expect(column.props.collapsable).toBe(false);
+  expect(column.children[0]).toBe(scroll);
+  // A background-only View can survive Fabric flattening while its children
+  // are hoisted beside it. UIKit then follows that empty first child.
+  const measuring = view!.root
+    .findAllByType(View)
+    .find(
+      (node) =>
+        node.props.onLayout &&
+        StyleSheet.flatten(node.props.style)?.backgroundColor === colors.sunken,
+    )!;
+  expect(measuring.props.collapsable).toBe(false);
+});
 
 test.each([
   ['ios', 'composer'],
@@ -898,6 +925,80 @@ test('a starter asks at once; the seat starter only fills the composer', async (
   });
 });
 
+test.each(['before', 'after'] as const)(
+  'turn layouts win when fallback frames run %s layout, including Ask next',
+  async (frameOrder) => {
+    const frames: FrameRequestCallback[] = [];
+    let frameId = 0;
+    const frame = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation((callback) => {
+        frames.push(callback);
+        return ++frameId;
+      });
+    const reset = jest.spyOn(ScrollTop, 'scrollToTop');
+    const runFrame = async () => {
+      await act(async () => {
+        // Frames queued by this frame belong to the next frame.
+        frames.splice(0).forEach((callback) => callback(0));
+      });
+    };
+    const fallback = async () => {
+      await runFrame();
+      await runFrame();
+    };
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({
+        questions: [{ question: 'A grounded fixture follow-up?' }],
+      })
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    try {
+      await mount();
+      await type('A fixture question?');
+      for (const [button, y] of [
+        ['ask-submit', 400],
+        ['ask-followup-0', 900],
+      ] as const) {
+        scrollTo.mockClear();
+        await press(button);
+        expect(frames.length).toBeGreaterThan(0);
+        if (frameOrder === 'before') await fallback();
+        await act(async () => {
+          byId('ask-turn')[0]!.props.onLayout({
+            nativeEvent: { layout: { y } },
+          });
+        });
+        if (frameOrder === 'after') await fallback();
+        // The fallback can also produce -44, without a New question reset.
+        expect(reset).not.toHaveBeenCalled();
+        expect(scrollTo).toHaveBeenLastCalledWith(
+          expect.objectContaining({ y: y - 44 - rhythm.heading }),
+        );
+        expect(scrollTo).toHaveBeenCalledTimes(frameOrder === 'before' ? 2 : 1);
+      }
+      // Clearing a conversation cancels a reveal that has not had its layout.
+      jest
+        .mocked(client.askPost)
+        .mockResolvedValueOnce(answer)
+        .mockResolvedValueOnce({ questions: [] });
+      await type('Another fixture question?');
+      await press('ask-submit');
+      await act(async () => barButton('New question')!.onPress());
+      expect(scrollTo).toHaveBeenLastCalledWith({ y: -44, animated: false });
+      expect(reset).toHaveBeenCalledTimes(1);
+      scrollTo.mockClear();
+      await fallback();
+      expect(scrollTo).not.toHaveBeenCalled();
+    } finally {
+      frame.mockRestore();
+      reset.mockRestore();
+    }
+  },
+);
+
 test('a sent question shows the status line, Stop, and is revealed below the header', async () => {
   let on: StreamHandlers | undefined,
     fail: (e: unknown) => void = () => {};
@@ -1120,9 +1221,13 @@ test('Ask next rows send; New question is enabled once there is an answer', asyn
   expect(jest.mocked(client.askPost).mock.calls[2]?.[1]).toMatchObject({
     question: 'A grounded fixture follow-up?',
   });
+  const reset = jest.spyOn(ScrollTop, 'scrollToTop');
   await act(async () => barButton('New question')!.onPress());
   expect(askSession.snapshot().thread).toEqual([]);
   expect(byId('ask-idle-line')).not.toEqual([]);
+  expect(reset).toHaveBeenCalledWith(expect.anything(), 44);
+  expect(scrollTo).toHaveBeenLastCalledWith({ y: -44, animated: false });
+  reset.mockRestore();
 });
 
 test('a failed follow-up hides the previous Ask next and holds Try again while OPAX is busy', async () => {
