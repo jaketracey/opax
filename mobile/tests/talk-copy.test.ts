@@ -5,7 +5,14 @@ import {
   voiceTime,
   voiceTimeSpoken,
 } from '../src/features/talk/model';
-import { sourceKind, sourceMeta } from '../src/features/talk/sources';
+import {
+  askDraftDestination,
+  canOpenSource,
+  sourceHeading,
+  sourceKind,
+  sourceMeta,
+  sourceSpeaker,
+} from '../src/features/talk/sources';
 
 // Talk's words, pinned as specs/account.md 7.6 and 7.7 print them.
 function strings(value: unknown): string[] {
@@ -122,4 +129,61 @@ test('a source never silently drops its date', () => {
   expect(
     sourceMeta({ title: 'Fixture', path: '/bill/fixture', date: '2026-09-17' }),
   ).toMatch(/^Bill · .*2026/);
+});
+
+// Voice sources since im/voice-ask: Ask's type, date, title and speaker.
+const speech = {
+  title: 'Alex Example: Committees',
+  path: '/doc/speech-500101',
+  recordTitle: 'Committees',
+  speaker: 'Alex Example',
+  date: '2001-06-21',
+  type: 'Speech',
+};
+const pay = {
+  title: 'Example office pay: every step since 1999',
+  path: '/ask?q=How%20much%20is%20the%20example%20office%20paid%3F',
+  recordTitle: 'Example office pay: every step since 1999',
+  date: '1999–2026',
+  type: 'Pay record',
+};
+test('an Ask-style source reads type and date, then title, then speaker', () => {
+  expect(sourceMeta(speech)).toBe('Speech · 21 Jun 2001');
+  expect(sourceHeading(speech)).toBe('Committees');
+  expect(sourceSpeaker(speech)).toBe('Alex Example');
+  expect(sourceMeta(pay)).toBe('Pay record · 1999–2026');
+  expect(sourceSpeaker(pay)).toBeNull();
+  expect(sourceMeta({ ...speech, date: '2024-25' })).toBe('Speech · 2024–25');
+  expect(sourceMeta({ ...speech, date: undefined })).toBe(
+    'Speech · Date not published',
+  );
+  expect(sourceMeta({ ...speech, type: undefined })).toBe(
+    'Record · 21 Jun 2001',
+  );
+});
+test('a speaker the title already names is not repeated', () => {
+  expect(
+    sourceSpeaker({
+      ...speech,
+      recordTitle: 'Speech by Alex Example',
+    }),
+  ).toBeNull();
+  // The shipped server: no record title, so the title stays as sent.
+  const shipped = {
+    title: 'Casey Example — ESTIMATES — 2025-02-05',
+    path: '/doc/speech-1',
+  };
+  expect(sourceHeading(shipped)).toBe(shipped.title);
+  expect(sourceSpeaker(shipped)).toBeNull();
+});
+test('an Ask pay row opens an unsent Ask draft; other Ask links do not', () => {
+  expect(askDraftDestination(pay.path)).toMatchObject({
+    pathname: '/ask',
+    params: { question: 'How much is the example office paid?' },
+  });
+  expect(canOpenSource(pay.path)).toBe(true);
+  for (const path of ['/ask', '/ask?q=%20', '/ask?view=search&q=x'])
+    expect([path, askDraftDestination(path)]).toEqual([path, null]);
+  expect(askDraftDestination('/doc/speech-1')).toBeNull();
+  expect(canOpenSource('/doc/speech-1')).toBe(true);
 });

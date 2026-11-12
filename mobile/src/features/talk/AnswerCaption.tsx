@@ -4,7 +4,7 @@ import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
 import type { TranscriptTurn, VoiceSource } from '../../voice';
 import { talkCopy } from './model';
 import { captionText } from './caption-text';
-import { recordDestination, sourceMeta } from './sources';
+import { askDraftDestination, recordDestination, sourceMeta } from './sources';
 
 /**
  * One turn of the captions (specs/account.md 7.4): OPAX's words in body
@@ -57,7 +57,9 @@ export function AnswerCaption({
                 accessibilityHint={
                   recordDestination(source.path)
                     ? 'Opens the record within Talk'
-                    : 'Offers to open on opax.com.au'
+                    : askDraftDestination(source.path)
+                      ? 'Offers to open in Ask'
+                      : 'Offers to open on opax.com.au'
                 }
                 onPress={() => onOpenSource?.(source)}
                 style={({ pressed }) => [
