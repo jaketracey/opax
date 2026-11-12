@@ -39,7 +39,7 @@ const graph = {
 };
 const REFERENCE = /RETURN-FIXTURE|AEC annual return|return reference/;
 
-async function mount() {
+async function mount(data=graph,options={}) {
   const dom = new JSDOM('<div id="map" style="width:390px;height:600px"></div>', { url: 'https://opax.test/money', pretendToBeVisual: true });
   const { window } = dom;
   const globals = { window, document: window.document, HTMLElement: window.HTMLElement, HTMLButtonElement: window.HTMLButtonElement,
@@ -53,9 +53,32 @@ async function mount() {
   // node --test runs each file in its own process, and the map keeps timers
   // queued after destroy(), so the jsdom globals stay for the file's lifetime.
   for (const [key, value] of Object.entries(globals)) Object.defineProperty(globalThis, key, { value, configurable: true, writable: true });
-  const handle = await map.mountMoneyMap(window.document.querySelector('#map'), structuredClone(graph), { chrome: 'full' });
+  const handle = await map.mountMoneyMap(window.document.querySelector('#map'), structuredClone(data), { chrome: 'full',...options });
   return { window, handle };
 }
+
+test('map controls and cards switch the typed measure and retain it through a year filter',async()=>{
+  const typed=structuredClone(graph);
+  typed.meta.receipt_types={available:true};
+  const cells={by_type:{donation_received:100,other_receipt:400},by_type_year:{'2020-21':{donation_received:[25,1],other_receipt:[150,2]},'2021-22':{donation_received:[75,2],other_receipt:[250,3]}}};
+  for(const x of [...typed.nodes,...typed.edges])Object.assign(x,cells,{total:999999,firstYear:2020,lastYear:2021});
+  const views=[];
+  const {window,handle}=await mount(typed,{onViewChange:view=>views.push(view)});
+  try{
+    const select=window.document.querySelector('select[aria-label="Receipt measure"]');
+    assert.ok(select);
+    assert.equal(views.at(-1).edges[0].total,500);
+    handle.select(typed.nodes[0].id);
+    assert.match(window.document.querySelector('.mm-card').textContent,/All receipt types/);
+    select.value='donation_only';select.dispatchEvent(new window.Event('change',{bubbles:true}));
+    assert.equal(views.at(-1).edges[0].total,100);
+    assert.match(window.document.querySelector('.mm-card').textContent,/Donation-only/);
+    assert.equal(new URL(window.location.href).searchParams.get('receipt'),'donations');
+    handle.setFilters({},new URLSearchParams('receipt=donations&from=2020&to=2020'));
+    assert.equal(views.at(-1).edges[0].total,25);
+    assert.equal(views.at(-1).nodes[0].total,25);
+  }finally{handle.destroy()}
+});
 
 test('the entity card shows no return references for a donor or a party; Sources carries them', async () => {
   const { window, handle } = await mount();

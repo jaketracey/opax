@@ -14,6 +14,8 @@ import pytest
 from parli.ingest import aec_receipts as receipts, donations
 from parli.schema import init_db
 from scripts import export_money_graph as exporter
+from scripts.report_aec_receipt_types import report
+from scripts.aec_receipt_selection import load_selection
 
 
 def archive(key, entries=None):
@@ -194,3 +196,35 @@ def test_nightly_export_requires_successful_type_backfill(backfill_result):
     assert lines[0] == "aec_receipt_types"
     assert ("x_money" in lines) == (backfill_result == 0)
     assert "scripts/weekly_refresh.sh" in (root / "scripts/vm/nightly.sh").read_text()
+
+
+def test_graph_and_uncapped_report_share_per_name_exclusions_for_an_on_map_entity(tmp_path):
+    path = tmp_path / "db"
+    db = database(path)
+    # Invented names, with the six amounts/types that exposed the alias leak.
+    name = "Example Trades Council"
+    party_spelling = "Example Trades Council T/A Labor Business Forum"
+    amounts = [(30207, "Other Receipt"), (620000, "Other Receipt"), (145000, "Other Receipt"),
+               (100000, "Donation Received"), (75000, "Donation Received"), (165000, "Other Receipt")]
+    entries = [annual(Value="1000000", **{"Received From": name})] + [
+        annual(kind, Value=str(amount), **{"Received From": party_spelling}) for amount, kind in amounts]
+    donations.process_zip(db, archive("AllAnnualData", {"Detailed Receipts.csv": entries}), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='unions'")
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);")
+    db.execute("INSERT INTO ext_donor_entities VALUES ('example-union',?,'union')", (name,))
+    db.executemany("INSERT INTO ext_donor_aliases VALUES (?,'example-union',1,'exact')", [(name,), (party_spelling,)])
+    db.commit()
+    graph = export(path)
+    comparison = report(db, tmp_path, graph)
+    assert comparison['industries_full_party_receipts']['unions'] == comparison['industries_visible_graph_receipts']['unions']
+    assert graph['edges'][0]['by_type'] == {'donation_received': 1000000}
+    assert graph['meta']['receipt_types']['counts']['excluded_government_or_internal'] == 6
+    assert comparison['full_party_receipts_exclusions']['government_or_internal'] == 6
+    selection = load_selection(db)
+    held = [r for r in entries if selection.exclusion(r['Received From'],r['Recipient Name'],float(r['Value']),r['Financial Year'],'political_party')]
+    assert len(held) == 6
+    assert sum(float(r['Value']) for r in held) == 1135207
+    assert sum(float(r['Value']) for r in held if r['Receipt Type']=='Donation Received') == 175000

@@ -12,8 +12,7 @@ import zipfile
 
 from parli.ingest.aec_receipts import normal_type, period_key
 from parli.ingest.donations import _read_csv_text
-from scripts.donor_disclosure import exact_alias_index, resolve_alias
-from scripts.export_money_graph import PUBLIC_FUNDING_RE, PARTY_WORD_RE
+from scripts.aec_receipt_selection import load_selection
 
 
 def report(db, cache, graph):
@@ -46,22 +45,15 @@ def report(db, cache, graph):
             "SELECT source,donor_name,recipient,amount,financial_year FROM aec_receipt_records WHERE archive=? AND source_file=?", (archive, filename)))
         cross_checks.append({"archive": archive, "file": filename, "rows": sum(keys.values()),
                              "potential_exact_overlap_rows": sum((keys & recipient_keys).values())})
-    alias = dict(db.execute("SELECT alias_raw,entity_id FROM ext_donor_aliases"))
-    exact = exact_alias_index(alias)
-    entities = {r[0]: r[1] for r in db.execute("SELECT entity_id,kind FROM ext_donor_entities")}
+    selection = load_selection(db)
     industries = defaultdict(Counter)
-    parties, flags = defaultdict(set), set()
-    for donor, recipient, party, amount, fy, industry, flag in db.execute(
-        "SELECT donor_name,recipient,recipient_canonical,amount,financial_year,industry,donation_type FROM donations "
+    for donor, amount, industry in db.execute(
+        "SELECT donor_name,amount,industry FROM donations "
         "WHERE source IN ('aec_annual','aec_election','aec_referendum')"):
-        eid = resolve_alias(donor, alias, exact) or donor
+        eid = selection.entity(donor) or donor
         if industry and industry not in ("other", "unidentified"):
             industries[eid][industry] += amount or 0
-        if party:
-            parties[recipient].add(party)
-        if flag == "flagged_review":
-            flags.add((donor, recipient, amount, period_key(fy)))
-    tags = {eid: "unions" if entities.get(eid) == "union" else max(tags, key=tags.get)
+    tags = {eid: "unions" if selection.entity_kinds.get(eid) == "union" else max(tags, key=tags.get)
             for eid, tags in industries.items()}
     buckets = {s: {"all_types": Counter(), "donation_only": Counter()} for s in
                ("gambling", "mining", "property", "unions", "tobacco", "finance")}
@@ -69,28 +61,21 @@ def report(db, cache, graph):
     for donor, recipient, amount, fy, kind in db.execute(
         "SELECT donor_name,recipient,amount,financial_year,receipt_type FROM aec_receipt_records "
         "WHERE record_side='recipient' AND recipient_kind='political_party'"):
-        if not donor or not amount or amount <= 0:
-            excluded["blank_donor_or_nonpositive"] += 1
+        reason = selection.exclusion(donor, recipient, amount, fy, "political_party")
+        if reason:
+            excluded[reason] += 1
             continue
-        eid = resolve_alias(donor, alias, exact) or donor
-        if (donor, recipient, amount, period_key(fy)) in flags:
-            excluded["flagged_review"] += 1
-            continue
-        if entities.get(eid) in ("government", "party_unit") or PUBLIC_FUNDING_RE.search(donor) or PARTY_WORD_RE.search(donor):
-            excluded["government_or_internal"] += 1
-            continue
-        if len(parties[recipient]) != 1:
-            excluded["no_exact_unambiguous_party_mapping"] += 1
-            continue
+        eid = selection.entity(donor) or donor
         tag = tags.get(eid)
         if tag not in buckets:
             continue
-        party = next(iter(parties[recipient]))
+        party = selection.recipient_party[recipient]
         buckets[tag]["all_types"][party] += amount
         if normal_type(kind) == "donation_received":
             buckets[tag]["donation_only"][party] += amount
 
     def rankings(values):
+        values = Counter({name: amount for name, amount in values.items() if amount > 0})
         return {"aud": round(sum(values.values()), 2), "top5": [
             {"recipient": name, "aud": round(amount, 2)} for name, amount in values.most_common(5)]}
 
@@ -109,6 +94,7 @@ def report(db, cache, graph):
             "cross_check_note": "Potential overlaps compare exact source, donor, recipient, amount and normalised financial year/event; annual detail has no gift date, so this is not proof of gift identity. Cross-check rows contribute zero to the typed measure.",
             "legacy_backfill": dict(db.execute("SELECT COALESCE(record_side,'unmatched'),COUNT(*) FROM donations WHERE source LIKE 'aec_%' GROUP BY record_side")),
             "full_party_receipts_scope": "All cached Political Party Return itemised recipient receipts, uncapped donors. Exact existing recipient-party mappings and existing canonical donor industry tags. No donor declarations, public bodies, internal party transfers, nonpositive amounts or reviewed outliers. Property is OPAX's broad property/construction tag, not a reviewed developer-only list. Mining excludes the separate fossil_fuels tag.",
+            "selection_rule": "Both scopes use aec_receipt_selection.ReceiptSelection.exclusion, including per-name public-funding and party-name exclusions even when another alias of the entity is visible. The map additionally requires an existing donor-party edge. Visible industry tags remain the released graph node tags; uncapped tags follow industry_method.",
             "industry_method": "Resolve donor names with the existing exact alias index. Sum existing AEC-row amounts by classified industry for each donor entity, ignoring other/unidentified; largest tag wins. Resolver-kind union forces unions. No new industry labels are inferred from the CSV.",
             "full_party_receipts_exclusions": dict(excluded),
             "industries_full_party_receipts": {s: {measure: rankings(values) for measure, values in measures.items()} for s, measures in buckets.items()},

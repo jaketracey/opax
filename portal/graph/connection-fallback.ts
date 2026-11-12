@@ -1,11 +1,15 @@
 import {donorDisclosure,donorDisplayText} from '../public/donor-disclosure.js'
-import type { MoneyGraph, MoneyMapHandle, MoneyMapOptions, MoneyScene } from './index.ts'
-import { windowFigures } from './index.ts'
+import type { MoneyGraph, MoneyMapHandle, MoneyMapOptions, MoneyScene, ReceiptMeasure } from './index.ts'
+import { receiptGraphView, receiptMeasureLabel } from './index.ts'
 import { filterMoneyEdges, readMoneyFilters, type MoneyFilters } from '../public/money-records.js'
 import { formatMoney } from './map-types.ts'
 
 /** The fallback uses the same directed edges and year windows as the 3D scene. */
-export function connectionRows(data: MoneyGraph, scene?: MoneyScene, group?: string | null) {
+export function connectionRows(data: MoneyGraph, scene?: MoneyScene, group?: string | null, measure: ReceiptMeasure = 'all_types') {
+  return selectedRows(receiptGraphView(data, measure, scene?.from ?? -Infinity, scene?.to ?? Infinity), scene, group)
+}
+
+function selectedRows(data: MoneyGraph, scene?: MoneyScene, group?: string | null) {
   const nodes = new Map(data.nodes.map(node => [node.id, node]))
   const pairs = scene?.edges ? new Set(scene.edges.map(edge => JSON.stringify([edge.source, edge.target]))) : null
   return data.edges.filter(edge => {
@@ -13,8 +17,7 @@ export function connectionRows(data: MoneyGraph, scene?: MoneyScene, group?: str
     if (pairs) return pairs.has(JSON.stringify([edge.source, edge.target]))
     if (scene) return edge.source === scene.focusId || edge.target === scene.focusId
     return !group || [nodes.get(edge.source), nodes.get(edge.target)].some(node => node?.group === group || node?.industry === group)
-  }).map(edge => scene ? windowFigures(edge, scene.from ?? -Infinity, scene.to ?? Infinity) : edge)
-    .filter(edge => Number.isFinite(edge.total) && edge.total > 0)
+  }).filter(edge => Number.isFinite(edge.total) && edge.total > 0)
     .sort((a, b) => b.total - a.total)
 }
 
@@ -49,12 +52,27 @@ export function mountConnectionFallback(container: HTMLElement, data: MoneyGraph
     root.replaceChildren()
     add('p', root, 'Connections · 2D view').className = 'mm-connections-title'
     add('p', root, 'Showing a lighter map for this browser.').className = 'mm-connections-note'
+    const measure: ReceiptMeasure = route.has('receipt') ? route.get('receipt') === 'donations' ? 'donation_only' : 'all_types' : options.receiptMeasure ?? 'all_types'
+    if ((data.meta?.receipt_types as { available?: boolean } | undefined)?.available) {
+      const label = add('label', root)
+      add('span', label, 'Party receipts ')
+      const select = add('select', label) as HTMLSelectElement
+      select.className = 'ui-select'
+      select.setAttribute('aria-label', 'Receipt measure')
+      for (const value of ['all_types', 'donation_only'] as const) {
+        const option = add('option', select, receiptMeasureLabel(value)) as HTMLOptionElement
+        option.value = value
+      }
+      select.value = measure
+      select.addEventListener('change', () => { options.onInteract?.(); route.set('receipt', select.value === 'donation_only' ? 'donations' : 'all'); render() })
+    }
     const window = period()
-    const windowed = { ...data, edges: data.edges.map(e => windowFigures(e, window.from, window.to, window.cpi)).filter(e => e.byYear || (e.firstYear ?? yearMin) <= window.to && (e.lastYear ?? yearMax) >= window.from) }
-    const allRows = filterMoneyEdges({ ...data, edges: connectionRows({ ...windowed, edges: windowed.edges.map(e => ({ ...e, byYear: undefined })) }, current ? { ...current, from: undefined, to: undefined } : undefined, group) }, filters)
+    const bounded = window.from > yearMin || window.to < yearMax
+    const windowed = receiptGraphView(data, measure, bounded ? window.from : -Infinity, bounded ? window.to : Infinity, window.cpi)
+    const allRows = filterMoneyEdges({ ...windowed, edges: selectedRows(windowed, current, group) }, filters)
     const rows=allRows
     const ids = new Set(allRows.flatMap(e => [e.source, e.target]))
-    options.onViewChange?.({ ...data, nodes: data.nodes.filter(n => ids.has(n.id)), edges: allRows }, { ...filters, industry: group || '' }, window)
+    options.onViewChange?.({ ...data, nodes: windowed.nodes.filter(n => ids.has(n.id)), edges: allRows }, { ...filters, industry: group || '' }, window)
     const shown = rows.slice(0, 24)
     if (!shown.length) add('p', root, 'No recorded connections in this view.')
     const list = add('ul', root)

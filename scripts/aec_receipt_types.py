@@ -2,10 +2,7 @@
 from collections import defaultdict
 
 from parli.ingest.aec_receipts import FILES, normal_type, period_key
-try:
-    from scripts.donor_disclosure import exact_alias_index, resolve_alias
-except ModuleNotFoundError:
-    from donor_disclosure import exact_alias_index, resolve_alias
+from scripts.aec_receipt_selection import load_selection
 
 
 def receipt_cells():
@@ -34,49 +31,28 @@ def attach_receipt_types(db, graph):
     if not have or not files or {tuple(r) for r in db.execute("SELECT archive,source_file FROM aec_receipt_files")} != expected:
         graph["meta"]["receipt_types"] = {"available": False, "reason": "Complete cached AEC receipt backfill required"}
         return graph
-    alias = {r[0]: r[1] for r in db.execute("SELECT alias_raw,entity_id FROM ext_donor_aliases")} if db.execute(
-        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='ext_donor_aliases'").fetchone() else {}
-    exact = exact_alias_index(alias)
+    selection = load_selection(db)
     node_for_entity, node_for_name = {}, {}
     for n in graph["nodes"]:
         if n["kind"] != "donor":
             continue
         for name in [n["label"], *n.get("aliases", [])]:
             node_for_name[name] = n["id"]
-            eid = resolve_alias(name, alias, exact)
+            eid = selection.entity(name)
             if eid:
                 node_for_entity[eid] = n["id"]
-    # Only reuse unambiguous, exact recipient spellings already assigned in the
-    # reviewed legacy corpus. Candidate names are never parsed as party names.
-    parties = defaultdict(set)
-    flags = set()
-    for donor, recipient, party, year, amount, flag in db.execute(
-        "SELECT donor_name,recipient,recipient_canonical,financial_year,amount,donation_type FROM donations "
-        "WHERE source IN ('aec_annual','aec_election','aec_referendum')"):
-        if party:
-            parties[recipient].add(party)
-        if flag == "flagged_review":
-            flags.add((donor, recipient, period_key(year), amount))
-    recipient_party = {k: next(iter(v)) for k, v in parties.items() if len(v) == 1}
     by_edge, by_node = defaultdict(receipt_cells), defaultdict(receipt_cells)
     edge_keys = {(e["source"], e["target"]) for e in graph["edges"] if not e.get("grant") and not e.get("flow")}
     counts = defaultdict(int)
     for donor, recipient, amount, period, kind, recipient_kind in db.execute(
         "SELECT donor_name,recipient,amount,financial_year,receipt_type,recipient_kind FROM aec_receipt_records WHERE record_side='recipient'"):
         counts["recipient_rows"] += 1
-        if not donor or not recipient or not amount or amount <= 0:
-            counts["excluded_blank_or_nonpositive"] += 1
+        reason = selection.exclusion(donor, recipient, amount, period, recipient_kind)
+        if reason:
+            counts["excluded_" + reason] += 1
             continue
-        if (donor, recipient, period_key(period), amount) in flags:
-            counts["excluded_flagged_review"] += 1
-            continue
-        # The federal graph covers party receipts. Associated-entity, candidate,
-        # MP, campaigner and third-party returns remain in the provenance table.
-        if recipient_kind != "political_party" or recipient not in recipient_party:
-            counts["excluded_nonparty_or_unmapped_recipient"] += 1
-            continue
-        source = node_for_entity.get(resolve_alias(donor, alias, exact)) or node_for_name.get(donor)
-        key = (source, "party:" + recipient_party[recipient])
+        source = node_for_entity.get(selection.entity(donor)) or node_for_name.get(donor)
+        key = (source, "party:" + selection.recipient_party[recipient])
         if key not in edge_keys:
             counts["excluded_donor_or_edge_outside_map"] += 1
             continue
@@ -102,6 +78,7 @@ def attach_receipt_types(db, graph):
         "fields": "by_type contains AUD amounts; by_type_year maps financial year (short form) or election/referendum event to type: [AUD, row count]. Node cells sum visible receipt edges only, unlike legacy party node totals.",
         "normalisation": "AEC labels lowercased, punctuation/whitespace replaced with underscores. Donation Received = donation_received. Blank = unknown. Unspecified remains unspecified. No inference of loans from Other Receipt.",
         "scope": "Political Party Return recipients with an exact unambiguous existing party mapping, and donor-party edges on this map. Other recipient kinds remain in aec_receipt_records. This is a capped donor map, not all AEC receipts.",
+        "selection": "aec_receipt_selection.ReceiptSelection.exclusion is shared with the uncapped report: recipient-side positive itemised party receipts, exact recipient mapping, no reviewed outliers, government/party-unit entities or public-funding/party-name donor spellings. Map edge membership is the additional cap.",
         "donation_type": "donation_received",
         "counts": dict(counts),
     }

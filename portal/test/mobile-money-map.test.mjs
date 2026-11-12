@@ -76,7 +76,7 @@ test('desktop selection keeps the quiet focus nudge',()=>{
 
 const windowBlock=adapter.slice(adapter.indexOf('export function windowFigures'),adapter.indexOf('export function buildGraph',adapter.indexOf('export function windowFigures')));
 const fallback=read('connection-fallback').replace(/^import .*\n/gm,'').replaceAll('export function','function');
-const {connectionRows,mountConnectionFallback}=runInNewContext(`${transpile(windowBlock.replace('export ',''))}\n${transpile(fallback)}; ({connectionRows,mountConnectionFallback})`,{donorDisclosure,donorDisplayText,URLSearchParams,filterMoneyEdges,readMoneyFilters,formatMoney:n=>`$${n}`,document:{createElement:tag=>element(tag)}});
+const {connectionRows,mountConnectionFallback}=runInNewContext(`${transpile(windowBlock.replaceAll('export ',''))}\n${transpile(fallback)}; ({connectionRows,mountConnectionFallback})`,{donorDisclosure,donorDisplayText,URLSearchParams,filterMoneyEdges,readMoneyFilters,formatMoney:n=>`$${n}`,document:{createElement:tag=>element(tag)}});
 function element(tag='div') { return {tagName:tag,children:[],style:{},classList:{remove(){}},append(...items){this.children.push(...items)},replaceChildren(){this.children=[]},setAttribute(){},addEventListener(name,fn){this[name]=fn},remove(){this.removed=true}}; }
 const data={nodes:[{id:'hub',kind:'grantor',flow:'contracts',label:'Contracts'},{id:'a',kind:'donor',label:'Recipient A Pty Ltd'},{id:'p',kind:'party',label:'Party'}],edges:[
   {source:'hub',target:'a',total:100,count:2,byYear:{2022:[40,1],2023:[60,1]}},
