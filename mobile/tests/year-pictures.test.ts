@@ -31,26 +31,29 @@ const cache = () =>
     write: async () => {},
     remove: async () => {},
   });
+beforeEach(() => jest.useFakeTimers({ now: 1000 }));
+afterEach(() => {
+  const pendingTimers = jest.getTimerCount();
+  jest.useRealTimers();
+  expect(pendingTimers).toBe(0);
+});
 test('the web manifest preserves all 189 photos and credits, including unknown dates', () => {
   const cleaned = decodePictures(raw);
   const originals = Object.values(raw).flat() as any[];
+  const byFile = new Map(originals.map((p) => [p.file, p]));
   for (const p of Object.values(cleaned).flat()) {
-    const original = originals.find((row) => row.file === p.file);
+    const original = byFile.get(p.file);
     expect({ ...p, credit: original.credit }).toEqual(original);
     expect(p.credit).not.toMatch(/^(?:photo:\s*)?own work[.!]?$/i);
   }
-  expect(Object.values(decodePictures(raw)).flat()).toHaveLength(189);
-  for (const rows of Object.values(decodePictures(raw)))
+  expect(Object.values(cleaned).flat()).toHaveLength(189);
+  // The portal's pictures.test.mjs validates every source image. Mobile checks
+  // all routes here and the seven pinned WebP bodies below, without rereading
+  // 23 MB of portal assets on every unit run.
+  for (const rows of Object.values(cleaned))
     for (const p of rows) {
       expect(() => assertAllowedPath('/' + p.file)).not.toThrow();
       expect(yearPicturePath(yearPictureKey('/' + p.file))).toBe('/' + p.file);
-      expect(() =>
-        assertYearPictureBytes(
-          new Uint8Array(
-            readFileSync(resolve(__dirname, '../../portal/public', p.file)),
-          ),
-        ),
-      ).not.toThrow();
     }
 });
 test.each(['file', 'width', 'licence', 'source_url'])(
@@ -175,7 +178,7 @@ test('existing image cache deduplicates photos, bounds downloads, survives a new
   const getPortrait = jest.fn(async (_path: string) => {
     active++;
     peak = Math.max(peak, active);
-    // Yield asynchronously without coupling 189 fixture downloads to host timers.
+    // Yield asynchronously without coupling fixture downloads to host timers.
     await Promise.resolve();
     active--;
     return pictureBytes;
@@ -210,4 +213,4 @@ test('existing image cache deduplicates photos, bounds downloads, survives a new
   expect(await offline.get(yearPictureKey(paths[0]!))).toBe(
     files.get(yearPictureKey(paths[0]!))!.localURI,
   );
-}, 30000);
+});
