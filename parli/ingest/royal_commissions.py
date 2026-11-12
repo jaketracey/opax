@@ -529,7 +529,19 @@ def build_commission(rc, run: Path, texts: Texts, trackers):
                 raise Held(f"{rc['id']}/{doc['key']}: recommendation length out of range for {bad[:5]}")
             for n, text, page, _ in rows:
                 recs.append({"number": n, "report": doc["key"], "text": text, "cite": cite(url, title, page), "status": None})
-            record["recommendations"] = len(rows)
+            # A recommendation the report prints without a number (Robodebt's closing observation): its heading
+            # and text are the registry's, each checked verbatim on the page cited. It is labelled by its heading.
+            extra = rule.get("unnumbered", [])
+            for u in extra:
+                page = int(u["page"])
+                page_text = texts.texts(url)[page - 1]
+                if not (pr.verbatim(u["heading"], page_text) and pr.verbatim(u["text"], page_text)):
+                    raise Held(f"{rc['id']}/{doc['key']}: unnumbered recommendation {u['heading']!r} is not verbatim on page {page}")
+                recs.append({"number": None, "label": u["heading"], "report": doc["key"], "text": u["text"],
+                             "cite": cite(url, title, page, u.get("section")), "status": None})
+            if rule.get("stated_total") is not None and len(rows) + len(extra) != rule["stated_total"]:
+                raise Held(f"{rc['id']}/{doc['key']}: {len(rows) + len(extra)} recommendations held, the report states {rule['stated_total']}")
+            record["recommendations"] = len(rows) + len(extra)
             record["recommendations_status"] = "extracted"
         elif doc["kind"] in REPORT_KINDS:
             record["recommendations"] = None

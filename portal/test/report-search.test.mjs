@@ -77,10 +77,16 @@ test('record pages retain full numbered recommendations, findings labels, court 
   let html = renderReport(royal);
   for (const rec of royal.record.recommendations) {
     assert.ok(visible(html).includes(escapeHtml(rec.text)));
-    assert.ok(html.includes('Recommendation ' + rec.number));
+    assert.ok(rec.number != null ? html.includes('Recommendation ' + rec.number) : html.includes(escapeHtml(rec.label)));
     assert.ok(html.includes('page ' + rec.cite.page));
   }
   assert.match(html, /not findings of criminal or civil liability/);
+  // The report states 57; 56 are numbered and one, in its closing observations, is printed under its own heading.
+  assert.equal(royal.record.recommendations.length, 57);
+  const unnumbered = royal.record.recommendations.filter(r => r.number == null);
+  assert.deepEqual(unnumbered.map(r => [r.label, r.cite.page]), [['Section 34 of the Cth FOI Act should be repealed', 27]]);
+  assert.ok(html.includes('page 27, Closing observations'));
+  assert.ok(!html.includes('Recommendation null') && !html.includes('recommendation-null'));
   for (const { detail } of projected.filter(r => r.detail.report_type === 'integrity_report' && r.detail.record.findings?.length)) {
     html = renderReport(detail);
     assert.match(html, /Allegations are not findings/);
