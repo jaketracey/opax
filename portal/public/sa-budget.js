@@ -1,5 +1,5 @@
-import {mountDataTable} from './datatable.js?v=a8472268da';
-import {saBudgetConfig,decorateSABudgetTable} from './sa-budget-table.js?v=bc4563a610';
+import {mountDataTable} from './datatable.js?v=893767f2bd';
+import {saBudgetConfig,decorateSABudgetTable} from './sa-budget-table.js?v=25f3d44d2b';
 for(const node of document.querySelectorAll('[data-sa-budget-table]')){
   const data=node.querySelector('[data-sa-budget-rows]');
   if(data){

@@ -13,14 +13,14 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=30da6b1119").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=eed4f6a2a2").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=d8900666f3").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=5380fbdd3f').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=583d840b52').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=a6c0908d64').then(module => { askPerson = module; });
 let uiLabels;
@@ -1286,7 +1286,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=ad0bc4ecc3");
+    const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1345,7 +1345,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=c84d63bf2b').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=bd2b252bf0').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1501,7 +1501,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=fb17ece00c');
+      const mod = await import('/grants-table.js?v=90ce4c8c09');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1657,7 +1657,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = `<p class="ui-status-line money-map-status" role="status">Loading the map…</p>`;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ad0bc4ecc3"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=f4cf6c1d33"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=2e9dfab24a"), loadMoneyFile(jur), import("/money-journeys.js?v=mobile-picker-20260908"), import("/map-research.js?v=2fa8fbe642"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1798,7 +1798,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=b585fc384a");
+    const module = await import("/suppliers.js?v=d6685c3147");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2643,6 +2643,7 @@ function safeAnswerLink(href) {
     // Encode each URL component explicitly before it is written into the DOM.
     // Decode individual components first so an existing %3A or %20 is not doubled.
     const path = url.pathname.split("/").map(part => encodeURIComponent(decodeURIComponent(part))).join("/");
+    if (path.startsWith("//")) return null;
     const query = [...url.searchParams].map(([key, value]) => encodeURIComponent(key) + "=" + encodeURIComponent(value)).join("&");
     const hash = url.hash ? "#" + encodeURIComponent(decodeURIComponent(url.hash.slice(1))) : "";
     return path + (query ? "?" + query : "") + hash;
@@ -2776,8 +2777,9 @@ function renderNoAnswer(container, response) {
   line.textContent = "OPAX couldn't find a clear answer to this in the record.";
   const link = document.createElement("a");
   const step = response.next_step;
-  const profile = typeof step?.href === "string" && /^\/subject\/person\/[^?#]+$/.test(step.href);
-  link.href = profile ? step.href : "/ask?view=search";
+  const href = safeAnswerLink(step?.href);
+  const profile = href && /^\/subject\/person\/[^/?#]+$/.test(href);
+  link.href = profile ? href : "/ask?view=search";
   link.textContent = profile ? step.label : "Search records";
   const browse = document.createElement("p");
   browse.appendChild(link);
@@ -4499,7 +4501,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ad0bc4ecc3");
+    const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -10593,7 +10595,15 @@ const PAY_CALCULATION_NOTE = "Opax worked these salaries out from the Remunerati
 
 /** The fixed next steps under a pay answer: links the Worker chose (src/ask-pay.ts). */
 function renderPayNextSteps(container, steps) {
-  const links = (Array.isArray(steps) ? steps : []).filter((step) => typeof step?.href === "string" && step.href.startsWith("/") && step.label);
+  const links = (Array.isArray(steps) ? steps : []).flatMap((step) => {
+    if (typeof step?.href !== "string" || !step.href.startsWith("/") || /[\u0000-\u0020]/.test(step.href) || !step.label) return [];
+    try {
+      const url = new URL(step.href, location.origin);
+      if (url.origin !== location.origin || url.username || url.password) return [];
+      // Keep the origin when serialising: a normalised path can start with //.
+      return [{href:url.href, label:step.label}];
+    } catch { return []; }
+  });
   if (!links.length) return;
   const nav = document.createElement("nav");
   nav.className = "answer-money-next";
@@ -14800,7 +14810,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=ad0bc4ecc3");
+    const { mountMoneyMap } = await import("/money-map.js?v=2e9dfab24a");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
