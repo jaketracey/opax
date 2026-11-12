@@ -34,18 +34,23 @@ test('generated sentences are labelled and each cites the official pages it rest
   }
 });
 
-test('quotes naming a person are held while the flag is off; their summary sentences still show', () => {
-  assert.equal(SHOW_NAMED_PERSON_QUOTES, false);
+test('quotes naming a person are shown word for word, with their pages, now the flag is on', () => {
+  assert.equal(SHOW_NAMED_PERSON_QUOTES, true);
+  const escHtml = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   for (const slug of NAMED_PERSON_QUOTES) {
     const d = files.find(f => f.slug === slug);
     assert.ok(d, slug);
-    assert.ok(d.findings.items.length, `${slug} has quotes to hold`);
-    const detail = bySlug.get(slug);
+    assert.ok(d.findings.items.length, `${slug} has quotes`);
     if (SUMMARY_LEFT_OFF.has(slug)) continue;
+    const detail = bySlug.get(slug);
     assert.ok(detail.summary.generated.sentences.length, slug);
-    assert.deepEqual(detail.summary.quotes.items, [], slug);
-    const served = JSON.stringify(reportApiBody(detail)) + renderReport(detail);
-    for (const q of d.findings.items) assert.ok(!served.includes(q.quote.slice(0, 60)), `${slug} serves a held quote`);
+    assert.deepEqual(detail.summary.quotes.items.map(q => [q.quote, q.cite.page]), d.findings.items.map(q => [q.quote, q.cite.page]), slug);
+    const api = JSON.stringify(reportApiBody(detail));
+    const html = renderReport(detail);
+    for (const q of d.findings.items) {
+      assert.ok(api.includes(JSON.stringify(q.quote).slice(1, -1)), `${slug} API carries the quote`);
+      assert.ok(html.includes(escHtml(q.quote)), `${slug} page shows the quote`);
+    }
   }
 });
 
