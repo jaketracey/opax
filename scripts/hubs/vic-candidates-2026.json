@@ -1,0 +1,4348 @@
+{
+  "published": "2026-11-11",
+  "url": "https://www.vec.vic.gov.au/voting/2026-state-election",
+  "districts": {
+    "Albert Park": [
+      {
+        "name": "DRAGWIDGE, Georgie",
+        "party": ""
+      },
+      {
+        "name": "SEMMENS, Sonya",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "COOK, Andrew",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "TAYLOR, Nina",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "KING, Adrian William",
+        "party": ""
+      },
+      {
+        "name": "LINDRUM, Tam",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "BOLGER, Colleen",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Ashwood": [
+      {
+        "name": "UWIMANA, Enid",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "RANDALL, Tim",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "FREGON, Matt",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "VAN DER EYNDEN, Jacob",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "ZOGRAPHOS, Theo",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "JOSHI, Hitendra K.",
+        "party": ""
+      },
+      {
+        "name": "MITCHELL, Steven",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Bass": [
+      {
+        "name": "JOBE, Chris",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "THORN, Sophie",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SCHELLEKENS, Nikole",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "HALSTEAD, Rochelle",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "CAUNEAC, Ben",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "BUCKINGHAM, Chris",
+        "party": "Australian Labor Party - Victorian Branch"
+      }
+    ],
+    "Bayswater": [
+      {
+        "name": "BLEAKNEY, Kayte",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "KENNEDY, Jess",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "BUXTON, Julie",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "KITCHEN, David",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "CLARKE, Mathew",
+        "party": ""
+      },
+      {
+        "name": "HUBBARD, Naomi",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "FERGUSON, Alec",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "COOMBES, Gary",
+        "party": "Family First Victoria"
+      }
+    ],
+    "Bellarine": [
+      {
+        "name": "WHITEHEAD, Callum",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "MARCHANT, Alison",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MCRAE, Ross",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "KEOGH, Ronan",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "LOCKHART, Kate",
+        "party": ""
+      },
+      {
+        "name": "MANUELL, Guy",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "WILLIAMS, Dom",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "POPE, Mitch",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Benambra": [
+      {
+        "name": "FUERY, Mike",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "PARTON, Graham",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "YOUNG, Oliver",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "VANGALEN, Alex",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "McKEEMAN, Lachie",
+        "party": ""
+      },
+      {
+        "name": "MARTIN, Steve",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "SHEPPARD, Kellie",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "PEPPER, Evette",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "QUILTY, Tim",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      }
+    ],
+    "Bendigo East": [
+      {
+        "name": "JOHN, Des",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "DUNN, Bonnie",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "NORSEN, Denali",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HAWKEN, Cheryl",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "LETHLEAN, Andrew",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "WRIGHT, Liz",
+        "party": ""
+      },
+      {
+        "name": "HOSKINS, Kristie",
+        "party": ""
+      },
+      {
+        "name": "RICKWOOD, Tim",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "TOLHURST, Michael",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Bendigo West": [
+      {
+        "name": "SHALEVSKI, Tayne",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HUTCHINGS, David",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "TRANTER, Debra",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "BALDWIN, Brenton",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SHAW, Liza",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "HARISOPOULOS, Christos",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "MORGAN, Ellen",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Bentleigh": [
+      {
+        "name": "PUTT, Tynan",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "VAINORAS, Tony",
+        "party": "Australian Citizens Party (Victorian Division)"
+      },
+      {
+        "name": "LONSING, Herbert",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "PROCTOR, Claire",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "STAIKOS, Nick",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "KRUGER, Liam",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Berwick": [
+      {
+        "name": "KHAN, Rana",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "DE SILVA, Roshan",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "DE PAOLIS, Vincenzo",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "PIASTRINO, Michael",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "BATTIN, Brad",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "DOWLING, Scott",
+        "party": "Australian Citizens Party (Victorian Division)"
+      },
+      {
+        "name": "JOHN, David",
+        "party": ""
+      },
+      {
+        "name": "AMARASIRI GUNAWARDANA, Nalinda",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "KING, Ethelyn",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      }
+    ],
+    "Box Hill": [
+      {
+        "name": "QIN, Aaron",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "CHEUNG, Heena",
+        "party": ""
+      },
+      {
+        "name": "BAKER, Jamie",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "HOUGUET, Sally",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "McGRATH, Sue-Ellen",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "HAMER, Paul",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "AFAJ, Saravina",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "FAGG, Peter",
+        "party": "Family First Victoria"
+      }
+    ],
+    "Brighton": [
+      {
+        "name": "FAGAN, Alexander",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "CASLEY, John",
+        "party": ""
+      },
+      {
+        "name": "HAIN, Anthony",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "MULLAHY, Bridget",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SMITH, Jessica",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "NEWBURY, James",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "VINCENT, Barry",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "BAIN, Ebony",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Broadmeadows": [
+      {
+        "name": "YOLBULAN, Mutullah Can",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "EL YOUSSEF, Mohamad",
+        "party": ""
+      },
+      {
+        "name": "DUZOVA, Baris",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "NASIM, Maryam",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "ELMUSTAPHA, Mohamad",
+        "party": ""
+      },
+      {
+        "name": "MATTHEWS-WARD, Kathleen",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "WILSON, Russell",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "KEIRS, Ethan",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "UNICOMB, Rachel",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "BOLTON, Sue",
+        "party": "Socialist Alliance"
+      }
+    ],
+    "Brunswick": [
+      {
+        "name": "FARMER, Naomi",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MARGELIS, John",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "PULFORD, Adam",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "HELMAN, Adam",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "ROSE, India",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "STEGER, Gabe",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "AMANATIDIS, Jack",
+        "party": ""
+      },
+      {
+        "name": "YUAN, Melissa",
+        "party": ""
+      }
+    ],
+    "Bulleen": [
+      {
+        "name": "RUBLEE, Greg",
+        "party": ""
+      },
+      {
+        "name": "LIGHTBODY, Tomas",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "HARVEY, Bradley",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "GUY, Matthew",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "PALIOURAS, Amanda",
+        "party": ""
+      },
+      {
+        "name": "TAFIDIS, Dimitrios",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "DALE, Tim",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ATHARI, Mahdi",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Bundoora": [
+      {
+        "name": "MURPHY-WEBSTER, Melissa",
+        "party": ""
+      },
+      {
+        "name": "LAITALA, Nina",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "PARR, Chris",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "WHALLEY, Bruce",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "RANCIE, Rae",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "NICOLOSI, Chloe",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "BROOKS, Colin",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SANYAL, Sagar",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Carrum": [
+      {
+        "name": "MATHEWS, Joshua",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "ABABNEH, Reema",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MOORE, Carolyn",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "MACKENZIE, Harley",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "SMITH, Trevor",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "KILKENNY, Sonya",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "PEGRUM, Zoe",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SHELLEY, Jeff",
+        "party": "Liberal Party of Australia - Victorian Division"
+      }
+    ],
+    "Caulfield": [
+      {
+        "name": "DOLEJŠÍ, Angel",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SHROOT, Yaakov Ziv",
+        "party": ""
+      },
+      {
+        "name": "ABABNEH, Malak",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "STAFRACE, Mikaela",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "GILBERT, Geneviève",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "SOUTHWICK, David",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "ABELMAN, Michael",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Clarinda": [
+      {
+        "name": "ROCHE, Liam",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "BOYD-EEDLE, Conor",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "TAK, Meng Heang",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MESSAGE, Kit",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "WHITE, Caroline",
+        "party": ""
+      },
+      {
+        "name": "BAIN, Gavin",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "PAGANIS, John",
+        "party": "Liberal Party of Australia - Victorian Division"
+      }
+    ],
+    "Cranbourne": [
+      {
+        "name": "URQUIOLA, Liam",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "BAIRD, Craig",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "MERCER, Annalise",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "TRIPODI, Gino",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "RICHARDS, Pauline",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "YUNIS, Reem",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HIRST, Andrew",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "FOREMAN, Shane",
+        "party": "Family First Victoria"
+      }
+    ],
+    "Croydon": [
+      {
+        "name": "FARR, Richard",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "VANDERWOLF, David",
+        "party": ""
+      },
+      {
+        "name": "SCHWAB, Nathan",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "THOMAS, Nofoao",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "WOOLDRIDGE, Toby",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "GRIMSHAW, Beth",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "BRINDLEY, Glenn",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "FERNANDO, Lini",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Dandenong": [
+      {
+        "name": "BILLINGS, William",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "McMAHON, Jack",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "KHAN, Arshad Ali",
+        "party": ""
+      },
+      {
+        "name": "HARVEY, Jacqueline",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "WILLIAMS, Gabrielle",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "FORTE, Jordan",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "D'ARCY, Catherine",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "WRIGHT, Glenda",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Eildon": [
+      {
+        "name": "WARD, Tom",
+        "party": ""
+      },
+      {
+        "name": "MCLEISH, Cindy",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BARBER, Tim",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "MOSELY, Joshua",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "GULPILIL, Talia",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "LITTLE, Dylan",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "GIBSON, Kevin",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "BOND, Chloe",
+        "party": "Animal Justice Party"
+      }
+    ],
+    "Eltham": [
+      {
+        "name": "RICHES, Maeve",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "BYRNES, Paul",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BROOKSBY, Louise",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "MARASEA, Steven",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "WARD, Vicki",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "WEATHERLEY, Jessie",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "BUSBRIDGE, Rachel",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Essendon": [
+      {
+        "name": "BARNES, John",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "ADAMS, Ava",
+        "party": ""
+      },
+      {
+        "name": "LE DEUX, Tommy",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "MOHAMUD, Anab",
+        "party": ""
+      },
+      {
+        "name": "THEODOSIS, Kat",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "WILLIAMS, James",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "YILDIZ, Oscar",
+        "party": ""
+      },
+      {
+        "name": "KEDEM, Michal",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Eureka": [
+      {
+        "name": "ZIVKOVIC, Belinda",
+        "party": ""
+      },
+      {
+        "name": "McCOLL, Sam",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SETTLE, Michaela",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "RAVEN, Andy",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HARKNESS, Ian Maxwell",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "MORRISON, Wendy",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "BALLINGER, Paul",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "MUIR, Emma",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "VENDITTI-TAYLOR, Steven",
+        "party": ""
+      }
+    ],
+    "Euroa": [
+      {
+        "name": "CLEELAND, Annabelle",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "TAOUK, Moussa",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "REGAN, Alysia",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "KELLY, Karina",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "KELLY, Julian",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "CAMPBELL, Steve",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "LYLE, Zoe",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Evelyn": [
+      {
+        "name": "SHERLOCK, Analise",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "O'BRIEN, Michelle",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "HENLEY, Andrew",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "VALLENCE, Bridget",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "HEALD, Jan",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "KILLEY, Daniel",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "SCANLON, James",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Footscray": [
+      {
+        "name": "DINH, Hai",
+        "party": ""
+      },
+      {
+        "name": "PEREYRA, Elena",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "NGUYEN, Minh Quan",
+        "party": "The West Party"
+      },
+      {
+        "name": "FELATE, Andualem",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "HESS, Kristina",
+        "party": "I'm Voting to Avoid the Fine "
+      },
+      {
+        "name": "LOPEZ, Alexander",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "LEWIS, Daniel",
+        "party": "Free Palestine"
+      },
+      {
+        "name": "IBRAHIM, Marcus",
+        "party": ""
+      },
+      {
+        "name": "FLORES, Ana",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "HALL, Katie",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MARSH, Jess",
+        "party": ""
+      },
+      {
+        "name": "CALDER, Daryle",
+        "party": "Climate Action Now"
+      },
+      {
+        "name": "CUMMING, Catherine",
+        "party": ""
+      },
+      {
+        "name": "CHANG, Tim",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "DUFF, Jasmine",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Frankston": [
+      {
+        "name": "KNIPE, Jeff",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "KELSALL, Henry",
+        "party": ""
+      },
+      {
+        "name": "BARRY, Nicola",
+        "party": ""
+      },
+      {
+        "name": "NICHOLES, Peter",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "EDBROOKE, Paul",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ABRAHAM, Chrysten",
+        "party": ""
+      },
+      {
+        "name": "AMBRY, Bree",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "STAFFORD, Paul",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "HARMAN, Julie",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "GOULAS, Katie",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "CHEESEMAN, Andrew",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Geelong": [
+      {
+        "name": "FLYNN, Emilie",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "POBJOY, Andy",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BENGTSSON, Maria",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "MACPHERSON, Pippa",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "DE LORENZO, John",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "GRULL, Brenden",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "COUZENS, Christine",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "VANDERPOL, Bree",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Gippsland East": [
+      {
+        "name": "ESPESETH, Amy",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "STEPHENS, Sonny",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MUNRO, Ash",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "RENDELL, Gemma",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "WATERS, Alison",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "GOODMAN, Steve",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "MUIR, Ricky",
+        "party": "Shooters, Fishers and Farmers Party Victoria"
+      }
+    ],
+    "Gippsland South": [
+      {
+        "name": "BARRY-MACAULAY, Amy",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "McAULIFFE, Jessica",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "O'BRIEN, Danny",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "SCHUHMANN, Phillip",
+        "party": ""
+      },
+      {
+        "name": "EVANS, Zave",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "McGENNISKEN, Lachie",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "WILKIE, Bianca",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Glen Waverley": [
+      {
+        "name": "SUN, Jacky",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "WHITE, Toyo",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "NADARAJAH, Segar",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "COX, Brad",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DOBIE, Anna",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "SIOW, Nicholas",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MULLAHY, John",
+        "party": "Australian Labor Party - Victorian Branch"
+      }
+    ],
+    "Greenvale": [
+      {
+        "name": "SAID, Hassan",
+        "party": ""
+      },
+      {
+        "name": "SMELOV, Kirill",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MCGINNESS, Declan",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "MOORE, Chris",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "ZOUGHAIB, Yehya",
+        "party": ""
+      },
+      {
+        "name": "YOHANNA, Mazen",
+        "party": "Australian Citizens Party (Victorian Division)"
+      },
+      {
+        "name": "TITHERIDGE, Michael",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "FURINA, Rosanna",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "OVEREND, Jim",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "WALTERS, Iwan",
+        "party": "Australian Labor Party - Victorian Branch"
+      }
+    ],
+    "Hastings": [
+      {
+        "name": "COULSON, Chloe",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "DENMAN, Michael",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "WILLOUGHBY, Isaac",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "MERCURIO, Paul",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SCHIEFLER, Frank",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "SMART, Jason",
+        "party": ""
+      },
+      {
+        "name": "ANGELICO, Peter",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Hawthorn": [
+      {
+        "name": "CROSBY, Clive",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ROCHA, Kylie",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "IBUKI, Shima",
+        "party": ""
+      },
+      {
+        "name": "PRIBILOVICS, Paul",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "NICOLL, Adam",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "McENEARNEY, Tess",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "PESUTTO, John",
+        "party": "Liberal Party of Australia - Victorian Division"
+      }
+    ],
+    "Ivanhoe": [
+      {
+        "name": "KENNEDY, Michelle",
+        "party": ""
+      },
+      {
+        "name": "MILNE, Ben",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "CARBINES, Anthony",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "LOPEZ RIOS, Oscar",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "HUTCHINSON, Wayne",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "CASONATO, Ren",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "CRAWLEY, Nina",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "BERGMAN, Dora",
+        "party": ""
+      }
+    ],
+    "Kalkallo": [
+      {
+        "name": "SPENCE, Ros",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "DADISHO, Eddie",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "DOBSON, Jeanette",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "LYNCH, Matthew",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "STEANS, Troy",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "TIWARI, Payal",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "ISLAM, Rebeca",
+        "party": ""
+      },
+      {
+        "name": "MILLETT, Courtney",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Kew": [
+      {
+        "name": "LIANG, Man",
+        "party": ""
+      },
+      {
+        "name": "TORNEY, Sophie",
+        "party": ""
+      },
+      {
+        "name": "CARTER, Jackie",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SUN, David",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "LAIRD, David",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "LINCOLNE, Samantha",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "WILSON, Jess",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "SEELEY, Ann",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "HALES, Juliet",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "DAVIS, Finlay",
+        "party": ""
+      }
+    ],
+    "Kororoit": [
+      {
+        "name": "SOUTHERN, Donna",
+        "party": "The West Party"
+      },
+      {
+        "name": "PATTERSON, Nick",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "MCDONALD, Joyce",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "PIDI, Divya",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "HASSAN, Rayan",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "CHAKOMA, Jack",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "GRIGOROVITCH, Luba",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MELNIKOV, Seva",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "KANDPAL, Vasundhara",
+        "party": "Animal Justice Party"
+      }
+    ],
+    "Lara": [
+      {
+        "name": "HATHWAY, Sarah",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "LONG, Samantha",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "UWIZEYIMANA, Tina",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "SLATER, Theresa",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SPYROS, Steven",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "RANDALL, Oliver",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "GEORGE, Ella",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "BEDDOE, Tim",
+        "party": "Liberal Party of Australia - Victorian Division"
+      }
+    ],
+    "Laverton": [
+      {
+        "name": "NGUYEN, Lucy",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "MENDELSOHN, Emma",
+        "party": "The West Party"
+      },
+      {
+        "name": "PAREDES, Rufo",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "GARCIA, Jo",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "CONNOLLY, Sarah",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MANSOURI JAJAEE, Shohre",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "CHITTEDI, Suchithra",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "NOUNE, Ghada",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "RUDD, Van Thanh",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Lowan": [
+      {
+        "name": "BUTLER, Kieran",
+        "party": ""
+      },
+      {
+        "name": "HYSLOP, Karen",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "KEALY, Emma",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "PAVLOVICH, Sue",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ELMES, Lee-Ann",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "PARTRIDGE, Andrew",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DOWNEY, Jos",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MORAN, Jeff",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Macedon": [
+      {
+        "name": "BONANNO, Dom",
+        "party": ""
+      },
+      {
+        "name": "DEATH, Annette",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "WILSON, Catherine",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MCRAE MCLEOD, Marley",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SETON, Michael",
+        "party": ""
+      },
+      {
+        "name": "MAYNE, Bernadette",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "KORINFSKY, Natalie",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "KENDALL, Kate",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "PAROLIN, Damien",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Malvern": [
+      {
+        "name": "SEGAL, David",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "MARTIN, Peter",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "BODE, Edward",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "LEONARD, Gavin",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "KATSIKIS, Georgia",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "ZIGOURAS, Christina",
+        "party": ""
+      },
+      {
+        "name": "HAMER, Amelia",
+        "party": "Liberal Party of Australia - Victorian Division"
+      }
+    ],
+    "Melbourne": [
+      {
+        "name": "TUCKFIELD, Rowan",
+        "party": ""
+      },
+      {
+        "name": "SANDELL, Ellen",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "MCCATHIE, Rob",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "GRIFFITHS, Davydd",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "YUSUF, Mohamed",
+        "party": ""
+      },
+      {
+        "name": "JONES, Naomi",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "CAMILLO, Rafael",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "VAN DEN LAMB, Jordan",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "COURTIS, Phillip",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Melton": [
+      {
+        "name": "LEGRO, Hayden",
+        "party": "The West Party"
+      },
+      {
+        "name": "KELLY, Daire",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "FARUQ, M.D. Omor",
+        "party": ""
+      },
+      {
+        "name": "LEVCHENKOVA, Veronika",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "ADIN-JAMES, Fiona",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "BINGHAM, Jarrod",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "WEST, Marlene",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "BORG, Broden",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "PERERA, Jason Spencer",
+        "party": ""
+      },
+      {
+        "name": "FRASER, Jason",
+        "party": ""
+      },
+      {
+        "name": "KATSELIS, Matthew",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Mildura": [
+      {
+        "name": "NTAHOMVUKIYE, Joselyne",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "COOPER, Guy",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "NAYEF, Renee",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "BENHAM, Jade",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "FRIES, Vanessa",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "ZIGOURAS, Stella",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "CLEMENTS, Katie",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Mill Park": [
+      {
+        "name": "NEALY, Elizabeth",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "DRYSDALE, Joel",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "VAN DER END, Kath",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "ZACHARIAS, Binoy",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "McLINDON, Aidan",
+        "party": ""
+      },
+      {
+        "name": "LAMBOURN, Jesse",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "TSOUTSOULIS, Arthur",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "LEVENS, Eve",
+        "party": "Animal Justice Party"
+      }
+    ],
+    "Monbulk": [
+      {
+        "name": "FITZMAURICE, Clare",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "MANNERS, Craig",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "DE MARTINO, Daniela",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "DOWELL, Adrian",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "BLAIR, Merran",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "WORMALD, Alyssa",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "BRIGGS, Noah",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Mordialloc": [
+      {
+        "name": "O'HALLORAN, Paul",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "HOSSAIN, Mahee",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "POTUCEK, Lily",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "VERSTEEGEN, Rachel",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "TICEHURST, Nadia",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "BRESKIN, Alex",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "RICHARDSON, Tim",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "THOMPSON, Renee",
+        "party": "Legalise Cannabis Victoria"
+      }
+    ],
+    "Mornington": [
+      {
+        "name": "BROWNLIE, Gene",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MACDONALD, Kerry",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "CREWTHER, Chris",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BEARDS, Ashli",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "TITCHER, Kai",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "GOFFIN, Melissa",
+        "party": ""
+      },
+      {
+        "name": "MAHER, Adrian",
+        "party": ""
+      }
+    ],
+    "Morwell": [
+      {
+        "name": "CLARKE, Brendan",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "LUND, Tracie",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "HINE, Rochelle",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "McPHEE, Ross",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "CAMERON, Martin",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "ACREMAN, Natalie",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MURPHY, Casey",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Mulgrave": [
+      {
+        "name": "REBBECHI, Cody",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "SCHOFIELD, Paul J",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "TRAN, Charles",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "FOSTER, Eden",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "THEODOSSOPOULOU, Fotini",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "DOBRZYNSKI, Stewart",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "COOK, Ian",
+        "party": ""
+      },
+      {
+        "name": "BUCHANAN, Connor",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Murray Plains": [
+      {
+        "name": "COLLARD, Peita",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "HOSKING, Brett",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "MCDONALD, Ewan",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "SMITH, Garner",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "GRUNDY, Christine",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SANIF, Asyiqin",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "COOK, Zoe",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Narracan": [
+      {
+        "name": "DETHLEFS, Geoff",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "FARNHAM, Wayne",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "WEAVER, Alyssa",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "PAGE, Moss",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "LUCAS, Ben",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "LANGLEY, Jannette",
+        "party": "Australian Labor Party - Victorian Branch"
+      }
+    ],
+    "Narre Warren North": [
+      {
+        "name": "NATHANIELSZ, Shemane",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "CRUTCHFIELD, Sebastian",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "UTOYO, Joshua",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "EMMANUEL, Cristina",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "LEAHY, Martin",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "WILSON, Belinda",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "PERRY, Hayley",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "McCRACKEN, Lachlan",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Narre Warren South": [
+      {
+        "name": "McCRACKEN, Bailey",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "CURRIE, Alan",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "HAMMOND, Trevor",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DENKER, Lydia",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "WATSON, Scott",
+        "party": ""
+      },
+      {
+        "name": "NAMBU, Jill",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "KOOMEN, Stefan",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "PETERSON, Norliah",
+        "party": "Liberal Party of Australia - Victorian Division"
+      }
+    ],
+    "Nepean": [
+      {
+        "name": "HEALY, Sianan",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SNOWBALL, Surbhi",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "CHAMPION, Tamara",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "HERCUS, Darren",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "ROBBINS, Kim",
+        "party": ""
+      },
+      {
+        "name": "TOSCANO, Joseph",
+        "party": ""
+      },
+      {
+        "name": "WILLCOCKS, Seth",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MARSH, Anthony",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BROWN, Mike",
+        "party": "Family First Victoria"
+      }
+    ],
+    "Niddrie": [
+      {
+        "name": "SFAMENI, Sam",
+        "party": ""
+      },
+      {
+        "name": "CARROLL, Ben",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "THEODOROU, George",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "BYRNE, Samantha",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "METE, Domenic",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "LAWS, Brendan",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HASELGROVE, Salomae",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "TAVERNA, Jason",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "NGUYEN, Lana",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "CHITTEDI, Karthik Reddy",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "PATRIKEOS, Brett",
+        "party": "The West Party"
+      }
+    ],
+    "Northcote": [
+      {
+        "name": "CIMBARO, Richard",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "PENMAN, Jim",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "LARKIN, Kath",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "PILLEY, Clive",
+        "party": "I'm Voting to Avoid the Fine "
+      },
+      {
+        "name": "HILLMAN, Ian",
+        "party": ""
+      },
+      {
+        "name": "BRADBURY, Christopher",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "AWAD, Lynda",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "THEOPHANOUS, Kat",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "KAFEL, Hannah",
+        "party": "Free Palestine"
+      },
+      {
+        "name": "GOME, Campbell",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Oakleigh": [
+      {
+        "name": "HSIEH, Hsiang-Han",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "DIMOPOULOS, Steve",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "JUNG, Martin",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "CARTER, Brooke",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "GRINTER, Matthew",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "BUGTER, Rowdy",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Ovens Valley": [
+      {
+        "name": "McCURDY, Tim",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "FIDGE, Julian",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "MURPHY, Bronwyn",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "ROUEL, James",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "MANNING, Steve",
+        "party": ""
+      },
+      {
+        "name": "NORTON-SMITH, Carol",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "SMITH, Jennifer",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "GILBERT, Benjamin",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "LITCHFIELD, Sue",
+        "party": "Animal Justice Party"
+      }
+    ],
+    "Pakenham": [
+      {
+        "name": "HAMALAINEN, Jesse",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "FRENCH, Raymond",
+        "party": ""
+      },
+      {
+        "name": "HANDS, Kate",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "OGDEN, Lucas",
+        "party": ""
+      },
+      {
+        "name": "GRIGG, Stephanie",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "SOLIVEN, Alessandra",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "DYSON, Radmila",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "YAWARI, Nasser",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "PICKERING, Warren",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DAVIES, Stephanie",
+        "party": ""
+      }
+    ],
+    "Pascoe Vale": [
+      {
+        "name": "HICKEY, Amanda",
+        "party": "Free Palestine"
+      },
+      {
+        "name": "LAWRENCE, Stuart",
+        "party": "Climate Action Now"
+      },
+      {
+        "name": "CIANFLONE, Anthony",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "GANCI, Rosemarie Pauline",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "PANOPOULOS, Angelica",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "ASHTON, Kathrine",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "ANDREWARTHA, Jacob",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "HAUPT, Kerry",
+        "party": "I'm Voting to Avoid the Fine "
+      },
+      {
+        "name": "SHAMSILI, Yasemin",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "TAGGAR, Rohit",
+        "party": "Liberal Party of Australia - Victorian Division"
+      }
+    ],
+    "Point Cook": [
+      {
+        "name": "LAINE, Taylor",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "GRECH, Mark",
+        "party": "The West Party"
+      },
+      {
+        "name": "KELLY, Paul",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "HILAKARI, Mathew",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ALLE, Kirti",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "KRISHNA PANDI, Ponraj",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "MEURE, Keith",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "REDDY, Raja",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "REID, Cameron",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Polwarth": [
+      {
+        "name": "TOLLEY, Lula",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "RIORDAN, Richard",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "HUSSEIN, Hutch",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "HOLDEN, Jesse",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "CARBINS, Brenton",
+        "party": "Australian Citizens Party (Victorian Division)"
+      },
+      {
+        "name": "MALCOLM, Anna",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "COLLA, Vince",
+        "party": "Family First Victoria"
+      }
+    ],
+    "Prahran": [
+      {
+        "name": "FINNIGAN, Tosh-Jake",
+        "party": ""
+      },
+      {
+        "name": "O'NEILL, G. Daniel",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "LEETON WATTS, George",
+        "party": ""
+      },
+      {
+        "name": "WESTAWAY, Rachel",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "MENADUE, Alan",
+        "party": ""
+      },
+      {
+        "name": "WONG, Nicholas",
+        "party": "Climate Action Now"
+      },
+      {
+        "name": "JONES, Daniel",
+        "party": "Free Palestine"
+      },
+      {
+        "name": "DICKS, Max",
+        "party": ""
+      },
+      {
+        "name": "DOUEIHI, Clayton",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "JONAS, Morgan",
+        "party": "Safety Victoria – Violent Crime Prevention"
+      },
+      {
+        "name": "VIRSU, Shaun",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "HOPPER, Meghan",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "DI CAMILLO, Angelica",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Preston": [
+      {
+        "name": "DATE, Tim",
+        "party": "I'm Voting to Avoid the Fine "
+      },
+      {
+        "name": "CHIN, Zheng",
+        "party": ""
+      },
+      {
+        "name": "AL KATRANJI, Hamza",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "VALENCIA, Julio",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "FOWLES, William",
+        "party": ""
+      },
+      {
+        "name": "SANGARYA, Loki",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "ASHMORE, Serena",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "BRYANT, Mark",
+        "party": "Free Palestine"
+      },
+      {
+        "name": "GUARDIANI, Franco",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DOWER, Simon",
+        "party": "Climate Action Now"
+      },
+      {
+        "name": "LAMBERT, Nathan",
+        "party": "Australian Labor Party - Victorian Branch"
+      }
+    ],
+    "Richmond": [
+      {
+        "name": "RINDFLEISH, Harrison",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "APONSO, Charles",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "DITE, Chris",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MCKENZIE, Sarah",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MAYNARD, Christine",
+        "party": ""
+      },
+      {
+        "name": "GRAY, Bernadette",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "PEAD-PHILIPSON, Jack",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "de VIETRI, Gabrielle",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "MEYER, David",
+        "party": ""
+      }
+    ],
+    "Ringwood": [
+      {
+        "name": "HALSE, Rachel",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "McGOWAN, Nick",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "NORTON, Christopher William",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "HUANG, Elaine",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "CUTTS, Prue",
+        "party": ""
+      },
+      {
+        "name": "MILLS, Amy",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "O'CONNOR, John",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "WALKER, Lyndon",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "GARDNER, Jack",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Ripon": [
+      {
+        "name": "WOJTKOWSKI, Krzysztof",
+        "party": "Shooters, Fishers and Farmers Party Victoria"
+      },
+      {
+        "name": "QUINCE, Bernard",
+        "party": ""
+      },
+      {
+        "name": "MCGRATH, Mark",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "SKRUZNY, Ronald",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "BRENNAN-JONES, Taylah",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "BARRY, Jeff",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "ANDREI, Trevor Scott",
+        "party": ""
+      },
+      {
+        "name": "HAYLETT, Martha",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "DRYLIE, Tim",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "BUXTON, Donna",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "READ, Megan",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "ARMSTRONG, Jo",
+        "party": "National Party of Australia - Victoria"
+      }
+    ],
+    "Rowville": [
+      {
+        "name": "MASSEY, David",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "WILLIAMS, Max",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "DOBRZYNSKI, Fiona",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "SHAHBAZ, Muhammad",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "WATT, Bradley",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "ROBSON, Scott",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "HIEMSTRA, Lars",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Sandringham": [
+      {
+        "name": "STEVENSON, Lauren",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "FOTAKIS, Timon",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "ROWSWELL, Brad",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "SAGRIS-DESMOND, Anastasia",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "BLIGHT, Anthony",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Shepparton": [
+      {
+        "name": "SALI, Shane",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "WHITE, Alison",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "VERNEY, Grace",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "HOCKING, Karen",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "COSTA, Lou",
+        "party": ""
+      },
+      {
+        "name": "FIN, Cayla",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "BRYANT, Phillip",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "MURPHY-GINGER, Faith",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "VARKEY, Johnson",
+        "party": ""
+      }
+    ],
+    "South Barwon": [
+      {
+        "name": "THISTLETON, Rebecca",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "NELSON, Ron",
+        "party": ""
+      },
+      {
+        "name": "BARRON, Alan",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "HEDLEY, Freya",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "GORMAN, Madilyn",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "GEARD, Josh",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "SCHERRER, Izzy",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "PETTIT, Libby",
+        "party": "Liberal Party of Australia - Victorian Division"
+      }
+    ],
+    "South-West Coast": [
+      {
+        "name": "BUCHAN, Tamhas",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "HUGHES, Richard",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "GOVANSTONE, Andrew",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "WATTS, Silver Rose",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "BRITNELL, Roma",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "SHEPPARD, Hera",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "St Albans": [
+      {
+        "name": "WALKER, Luân",
+        "party": "The West Party"
+      },
+      {
+        "name": "HUYNH, Thuc Bao",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "NGUYEN, Leanna",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "SULEYMAN, Natalie",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "DUNSTAN, Rob",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "JANTEN, Kerry",
+        "party": ""
+      },
+      {
+        "name": "HAKIZIMANA, Alex",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "COWELL, John",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DAVINDER KAUR",
+        "party": "The Republican Make Australia Great Again"
+      }
+    ],
+    "Sunbury": [
+      {
+        "name": "BREMNER, Adam",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "DABROWSKI, Elita",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "VINE, Geoff",
+        "party": "The West Party"
+      },
+      {
+        "name": "COTTOM, Simmone",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BULL, Josh",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MOHR, Rohanna",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "BETHI, Bhasker Reddy",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "STAFFORD, John",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "MEDCRAFT, Steve Jack",
+        "party": ""
+      },
+      {
+        "name": "GRANGER-BROWN, Lauren",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "BATRES, Elmer",
+        "party": "Family First Victoria"
+      }
+    ],
+    "Sydenham": [
+      {
+        "name": "VANDENBERG, Ashleigh",
+        "party": ""
+      },
+      {
+        "name": "CROES, Nancy G",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "LANKALA KENDERLA, Laxmi",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "LANCASHIRE, Bruce",
+        "party": "The West Party"
+      },
+      {
+        "name": "KERR, Maria",
+        "party": ""
+      },
+      {
+        "name": "BAUCH, Joh",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "MOUSSI, Nathalie",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "SINCLAIR, Brandon",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "POON, Bruce",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "RASIC, Uros",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "JANE, Maggie",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "KHAN, Shania",
+        "party": "Victorian Socialists"
+      }
+    ],
+    "Tarneit": [
+      {
+        "name": "MOINUDDIN, Aijaz",
+        "party": ""
+      },
+      {
+        "name": "WIGHT, Dylan",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ISLAM, SM Zaberul",
+        "party": ""
+      },
+      {
+        "name": "ELSBURY, Andrew",
+        "party": "The West Party"
+      },
+      {
+        "name": "VAN KEULEN, Leah",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "NIYONGABIRE, Horizana",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "AHMED, Rahima Ibrahim",
+        "party": ""
+      },
+      {
+        "name": "RAHN, Maurita",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "VILLAGONZALO, Walter",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "RIFAI, A. Raheem",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "UPPARLAPALLE, Venkat Ram",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "SUDHAGANI, Sindhu",
+        "party": "The Republican Make Australia Great Again"
+      }
+    ],
+    "Thomastown": [
+      {
+        "name": "RANCIE, Rob",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "STOJCEVSKI, Belinda",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "ANTHONY, Nadia",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "REDDY, Priya",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HALFPENNY, Bronwyn",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "TREWELLA, Gavin",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Warrandyte": [
+      {
+        "name": "STANLEY, John",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "WERNER, Nicole",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "PATERSON, Rebecca",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SCHWAB, Caleb",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "MURADIAN, Vanessa",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "BURNSIDE, Mark",
+        "party": "One Nation Victoria"
+      }
+    ],
+    "Wendouree": [
+      {
+        "name": "ADDISON, Juliana",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ROBINSON, Stuart",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "BYRNE, Ruth",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "MEAGHER, Chris",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "RONAN, Gav",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "COLLINS, Melissa",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "BURNS, Ellen",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Werribee": [
+      {
+        "name": "HOPPER, Paul",
+        "party": "The West Party"
+      },
+      {
+        "name": "KUMAR, Tushar",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "PATERAS, Paul",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "CLARK, Reece",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "EMERSON, Matt",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "LISTER, John",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ORCHARD, Jeremy",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "MUNRO, Sue",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "RAIZADA, Monica Sharma",
+        "party": ""
+      },
+      {
+        "name": "KAYAGURLA, Sandhya",
+        "party": "The Republican Make Australia Great Again"
+      }
+    ],
+    "Williamstown": [
+      {
+        "name": "MARTIN, Oskar",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HOCKING, Ben",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "O'REGAN, Bruce",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "LOUGHNAN, Catherine",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "YARRA, Sagar Reddy",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "GANNON, Gill",
+        "party": "The West Party"
+      },
+      {
+        "name": "HORNE, Melissa",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "BRIFFA, Tony",
+        "party": ""
+      },
+      {
+        "name": "LINDEMANN, Paul",
+        "party": "Liberal Party of Australia - Victorian Division"
+      }
+    ],
+    "Yan Yean": [
+      {
+        "name": "KATHAGE, Lauren",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "JOHNSON, Jeremy",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "BELL, Andrew",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HALL, James",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "OKATAN, Sinan",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "DOW, Amanda",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "MOHAMMED, Gufran",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "CHEERS, Troy",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      }
+    ]
+  },
+  "regions": {
+    "Eastern Victoria": [
+      {
+        "name": "FORWARD, Max",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "EDWARDS, Dylan",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "ESLER, Clay",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DAVISON, Neil",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DE WACHT, John",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "HEATH, Renee",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BATH, Melina",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "GREEN, Matt",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BESANKO, Barry",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "CLARK, Richard",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "BURRIDGE, Danielle",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "STARBUCK, Devon",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "WHITE, Khalif",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "HAMMAN, Daniel",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "JEGES, Helen",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "WATERS, Philip Keith Geoffrey",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "ERDOGAN, Enver",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "QUINTANA, Leticia",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "RYAN, Denise",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ROGERS, Ian",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MATHER, Ryan",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SMITH, Reade",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "MELDGAARD, Inge",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "BOURMAN, Jeff",
+        "party": "Shooters, Fishers and Farmers Party Victoria"
+      },
+      {
+        "name": "MUIR, Kerrie-Anne",
+        "party": "Shooters, Fishers and Farmers Party Victoria"
+      },
+      {
+        "name": "PITT, Ant",
+        "party": ""
+      },
+      {
+        "name": "COXALL, Kate",
+        "party": ""
+      },
+      {
+        "name": "MORGAN, Mat",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "TURNBULL, Xero",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "JOBE, Oliver",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "CHAUHAN, Helen",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "WATT, Phillip",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "North-Eastern Metropolitan": [
+      {
+        "name": "DEL ROSARIO-MAKRIDIS, Gianni",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "FORREST, Thomas",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "DEVIESSEUX, Lucas",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MALTBY, Heather",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "BATCHELOR, Ryan",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "GAN, James",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "JAVED, Rana",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MACKINNON, Donna",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SIMMONS, Maree",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "CORCORAN, Jack",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "TILLING, Heather",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "CLOW, William",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "DE WIT, Cary",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "VAN DER ENDE, Brenton",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "PLAUCS, Peter",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "BERULDSEN, Ashley",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "HWANG, Jae Ho",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "VAN DER END, Alex",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "NGOH, Jeremy",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "ADAMS, Natalie",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "GRATTON, Maxwell",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "AFFORD, Kane",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "WELCH, Richard",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "DIAMANTE, Deirdre",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "PYRROS, John",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "LEIDLER, Sue",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "SOLLY, David",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "FORD, Matt",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "SCHWAB, David",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "CHOW, Wai Man Raymond",
+        "party": ""
+      },
+      {
+        "name": "CHOW, Yeung Yee Big Lily",
+        "party": ""
+      },
+      {
+        "name": "PUGLIELLI, Aiv",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SUN, Sophia",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "GALLAGHER, Peter",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "HERSI, Mohamud",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SHNOOKAL, Liezl",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "GREEN, Leonie",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "PARRIS, Ryan",
+        "party": "Australian Democrats"
+      }
+    ],
+    "Northern Metropolitan": [
+      {
+        "name": "AICKIN, Riley",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "RIVER WIND, King",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "PEACH, Morgan",
+        "party": ""
+      },
+      {
+        "name": "BYRNE, Peter",
+        "party": ""
+      },
+      {
+        "name": "MULHOLLAND, Evan",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "KHOURY, Bernadette",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "DHAREL, Shankar",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "GHANI, Usman",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BRIERS, Mark",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "GRAY-BARBERIO, Anasina",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "DRUMMOND, Sam",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "BURNETT, Tara",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "THOMAS, Hannah",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SHEEHAN, Tim",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "NICHOLSON, Mark",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "GALLUZZO, Anna Regina",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "JESSUP, Bert",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "COUCH, Beth",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "BUDGEON, Daryl",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "LAWRENCE, Meredith",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "BEATON, Chloe",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "SAFFIN, Darren",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "KAVANAGH, John",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "FUNG, James",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "ROWSE, Andrew",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "KHALILI-NAGHADEH, Sahar",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "HAWLI, Bassima",
+        "party": ""
+      },
+      {
+        "name": "DRAPANIOTIS, Anastasia",
+        "party": ""
+      },
+      {
+        "name": "DANDACH, Abir",
+        "party": ""
+      },
+      {
+        "name": "GUNGORMUS, Selin",
+        "party": ""
+      },
+      {
+        "name": "WATT, Sheena",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MCINTOSH, Tom",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SHEIKH, Sainab",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "KOMARAGIRI, Praveen Kumar",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "CAIRNES, Dan",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "HASSAN, Omar",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "BASSINI, Louisa",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "ROBERTSON, Catherine",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "GIBSON, Belle",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "BEIRAGHI, Bella",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HIRMIZ, Imad",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "DEEMING, Andrew",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "RAZOS, Peter",
+        "party": ""
+      }
+    ],
+    "Northern Victoria": [
+      {
+        "name": "LAHY, Chris",
+        "party": "Australian Citizens Party (Victorian Division)"
+      },
+      {
+        "name": "DAVY, Jeff",
+        "party": "Australian Citizens Party (Victorian Division)"
+      },
+      {
+        "name": "WHITE, Kate",
+        "party": ""
+      },
+      {
+        "name": "GREEN, Alex",
+        "party": ""
+      },
+      {
+        "name": "SYMES, Jaclyn",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "SARANTIS, Jana",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "BRIDGES, Mitch",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "GAYFER, Natasha",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "OLSEN, Greg",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MCCORMACK, Chris",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "KEETELAAR, Ev",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "CONSTANTINOU, Ethan",
+        "party": "Shooters, Fishers and Farmers Party Victoria"
+      },
+      {
+        "name": "ASHBY, Geoff",
+        "party": "Shooters, Fishers and Farmers Party Victoria"
+      },
+      {
+        "name": "VAN DORSSEN, Chae",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "DE WIT, Sophie",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "READ, Paul",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "BLACKER, Cheryl",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "TYRRELL, Rikkie-Lee",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "THOMAS, Athol",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "SORENSEN, Luke",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "PURCELL, Georgie",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "LEVY, Laurie",
+        "party": "Animal Justice Party"
+      },
+      {
+        "name": "BROOKS, Steve",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BROAD, Gaelle",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "MILLAR, Amanda",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "MULLER, Chad",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "HEARN, Brad",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "SINCLAIR, Cate",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "MADDOCK, Lucas",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "MIKELSONS, Wil",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "ROBINSON, Helen",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "BRIGHT, Samantha",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "TAYLOR, Wayne",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "WILLIAMS, Scott",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "LAMOND, Dorothy",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "TYLER, Rohan",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "McHUGH, Nick",
+        "party": ""
+      }
+    ],
+    "South-Eastern Metropolitan": [
+      {
+        "name": "HARKIN, Colleen",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "GODDARD, Geoff",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "PANETTA, Leo",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "WILDE, Milton",
+        "party": "Christian Alliance Party – Reform AU"
+      },
+      {
+        "name": "WILDE, Leanne",
+        "party": "Christian Alliance Party – Reform AU"
+      },
+      {
+        "name": "COLLIE, Gary",
+        "party": "Australian Citizens Party (Victorian Division)"
+      },
+      {
+        "name": "BENNETT, Russell",
+        "party": "Australian Citizens Party (Victorian Division)"
+      },
+      {
+        "name": "TARLAMIS, Lee",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "GALEA, Michael",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "RAM, Moti",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "PAK, Soheang",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "TRAN, Thanh Van",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "CVETKOVA, Kelly",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HOPPER, Keeley",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "PAYNE, Rachel",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "DENHAM, Gregory",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "HOULT, Brandon",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "BRADY, Ann-Marie",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "KIRWAN, Matthew",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "WILLOUGHBY, Louisa",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "VON HAGT, Samantha",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "KENT, Amelia",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "HARDY, Jayden",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "LIMBRICK, David",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "VANDERMEER, Will",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "MCKENZIE, Heath",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "MOREL, Jacqui",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "PEASE, Phillip",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "HERMANS, Ann-Marie",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "FENNER, Scott",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "FERNANDEZ, Marcus",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "VIPINKUMAR, Salini",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "ZMEGAC, Andrew",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "MARSH, Scott",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "ABEYSINGHE, Susantha",
+        "party": ""
+      }
+    ],
+    "Southern Metropolitan": [
+      {
+        "name": "BERGER, John",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "CRAWFORD, Louise",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "WILLS, Virginia",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "DOUCH, Gavin",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "COLE, Philip",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "JACKSON, Clive",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "BROADBRIDGE, Philip",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "PAWLACZEK, Zofia",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "HOWMAN, Ben",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "SANFORD, Aaron",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "KAULENAS, Kristina",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "FOREMAN, Jane",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "PATON, Tom",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "DAVIS, David",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "CROZIER, Georgie",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BOFFA, Xavier",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "BELL, Jamie",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "PERERA, Jasmine",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "HOLDER, Catherine",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "WORSLEY, April",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "TERRY, Bettina",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "BAIRD, Linda",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "ZMEGAC, Karla",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "DEAN, Paul",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "LOWE, Melissa",
+        "party": ""
+      },
+      {
+        "name": "NESS, Jess",
+        "party": ""
+      },
+      {
+        "name": "COPSEY, Katherine",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "IAMPOLSKI, Rachel",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "KISSUBI, Jeffrey",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SAMIOTIS, Kim",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "WEAVER, Joshua",
+        "party": "Australian Greens Victoria"
+      }
+    ],
+    "Western Metropolitan": [
+      {
+        "name": "ROYAL, Mark",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "SMITH, Arlene",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "MENTA, Xavier",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "BERSON, Chana",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "CAMPBELL, Roshena",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "LUU, Trung",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "PATEL, Satish",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "NARAYANAN, Shwetha",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "MADUOK GENG, Daniel",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "DEMANUELE, Anneke",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "JORQUERA, Jorge",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "SJODIN, Ella",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "KELLY, Lucy",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MALONEY, Dean",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "BLANDTHORN, Lizzie",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "STITT, Ingrid",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "LAM, Cuc",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "IBRAHIM, Sara",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "TRAVERS, Kim",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "THIERY-LAI, Chris",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "KEENAN, Nigel",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "BILIC, Dennis",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "DAVIES, Susan",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "DEEMING, Moira",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "NEIL, Chris",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "KULKARNI, Pavitra",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "EMERSON, Mark",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "IKIREZI, Francine",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "HENDERSON, Brittney",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "MCRAE MCLEOD, Isabella",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "HEINS, Ebony",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "HARDEN, Niall",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "PATHANJALIMANOHARAR, Geetha",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SAINI, Raj",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "SHAH, Zalak",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "SARABJIT KAUR",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "KULKARNI, Shubhangi",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "LOPEZ, Fiona",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DOENSEN, Allan",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "GARRA, Joe",
+        "party": "The West Party"
+      },
+      {
+        "name": "RAMESH, Sahana",
+        "party": "The West Party"
+      },
+      {
+        "name": "FARRELLY, Philip",
+        "party": "The West Party"
+      },
+      {
+        "name": "RAIZADA, Rakesh",
+        "party": ""
+      }
+    ],
+    "Western Victoria": [
+      {
+        "name": "MANSFIELD, Sarah",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "COATES, Belinda",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "VEALE, Steve",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "SMITH, Aleisha",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "VAN ASPEREN, Heaven",
+        "party": "Australian Greens Victoria"
+      },
+      {
+        "name": "WEARNE, Madeleine",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "CHIVERS, Ian",
+        "party": "Affordable Housing Now – Sustainable Australia Party"
+      },
+      {
+        "name": "MAXFIELD, Kate",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ERMACORA, Jacinta",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "ANWARI, Sam",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "HANDRECK, Kaitlyn",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MACKENZIE, Fiona",
+        "party": "Australian Labor Party - Victorian Branch"
+      },
+      {
+        "name": "MITCHELL, Peter",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "DAVY, Alice",
+        "party": "Legalise Cannabis Victoria"
+      },
+      {
+        "name": "MEDDICK, Andy",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "KELLY, Peter",
+        "party": "Australian Democrats"
+      },
+      {
+        "name": "MCARTHUR, Bev",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "WATT, Graham",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "LETTS, Robert",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "READ, Ellie",
+        "party": "Liberal Party of Australia - Victorian Division"
+      },
+      {
+        "name": "STEED, Melody",
+        "party": "National Party of Australia - Victoria"
+      },
+      {
+        "name": "NUNQUAM, Ben",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "HOUZET, Dominique",
+        "party": "Victorian Socialists"
+      },
+      {
+        "name": "MORIARTY, Aleta",
+        "party": ""
+      },
+      {
+        "name": "DENTON, Timothy",
+        "party": ""
+      },
+      {
+        "name": "BARKER, Paul",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "SCHIEMER, Phill",
+        "party": "Libertarian Party (formerly Liberal Democrats)"
+      },
+      {
+        "name": "GOODEN, Timothy",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "BULL, Sue",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "SMITH, Ross",
+        "party": "Socialist Alliance"
+      },
+      {
+        "name": "BURSON, Chris",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "WILLIAMS, Vaughan",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "OOSTHUIZEN, Jason",
+        "party": "One Nation Victoria"
+      },
+      {
+        "name": "DI BIASE, Costa",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "BOWDEN, Jennifer",
+        "party": "Democratic Labour Party (DLP)"
+      },
+      {
+        "name": "COLLYER, Ben",
+        "party": "Shooters, Fishers and Farmers Party Victoria"
+      },
+      {
+        "name": "VICKERS, Ken",
+        "party": "Shooters, Fishers and Farmers Party Victoria"
+      },
+      {
+        "name": "COLBERT, Dianne",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "MOLONEY, Anne",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "VEERAPPAGOUNDER, Senthil",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "THOMAS, Brendan William",
+        "party": "Family First Victoria"
+      },
+      {
+        "name": "SAMA, Sindhu",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "KAUR, Akwinder",
+        "party": "The Republican Make Australia Great Again"
+      },
+      {
+        "name": "FISHER, Eve",
+        "party": ""
+      }
+    ]
+  }
+}

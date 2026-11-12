@@ -142,11 +142,14 @@ test('federal hub footer values remain optional, escaped and safe',async()=>{
   const auth=renderSittingIndex(weeks,'2026-10-10',{AUTHORISATION_LINE:'Approved line'}).html;assert.match(auth,/Approved line/);assert.doesNotMatch(auth,/Report a correction/);
   const correction=renderSittingIndex(weeks,'2026-10-10',{CORRECTION_CONTACT:'/corrections'}).html;assert.match(correction,/Report a correction/);assert.doesNotMatch(correction,/authorisation-line/);
 });
-test('derived individual donor set is absent from every election page and the projection',async()=>{
+test('individual donor data is absent outside official candidate lists, with no donor links anywhere',async()=>{
   const individuals=new Set();
   for(const path of ['graph/money.json','graph/money.vic.json','graph/money.qld.json'])for(const n of (await json(path)).nodes)if(n.kind==='donor'&&!isOrganisationDonor(n))individuals.add(n.label);
   assert.ok(individuals.size>100);
-  const all=JSON.stringify(data)+[null,...data.seats].map(s=>renderVicElection(data,s).html).join('\n');
+  // Official candidate names can also contain donor labels (including short
+  // labels inside surnames). Their exact VEC provenance is checked separately.
+  const withoutCandidates={...data,seats:data.seats.map(s=>({...s,candidates:null}))};
+  const all=JSON.stringify(withoutCandidates)+[null,...withoutCandidates.seats].map(s=>renderVicElection(withoutCandidates,s).html).join('\n');
   // A donor label can coincide with a sitting member's name.
   // Their existing roster identity is allowed only in its member context.
   const memberNames=new Set(data.seats.flatMap(s=>s.members.map(m=>personNameKey(m.name))));
@@ -154,7 +157,8 @@ test('derived individual donor set is absent from every election page and the pr
   for(const s of data.seats)for(const m of s.members)assert.deepEqual(Object.keys(m).sort(),['name','party','href','source_url','speeches','speech_gap','votes','detailed_count','divisions'].sort());
   // Results keep parties and shares only: no candidate names.
   for(const s of data.seats.filter(s=>s.result))for(const c of [s.result.general,s.result.since].filter(Boolean))assert.deepEqual(Object.keys(c).sort(),['date','kind','party','share','against','against_share','margin','url'].sort());
-  assert.doesNotMatch(all,/\/subject\/donor\/|donor_links|candidate_names/);
+  const full=JSON.stringify(data)+[null,...data.seats].map(s=>renderVicElection(data,s).html).join('\n');
+  assert.doesNotMatch(full,/\/subject\/donor\/|donor_links|candidate_names/);
 });
 test('non-partisan strings, nomination dates and actual speech scope stay explicit',()=>{
   const pages=[null,...data.seats].map(s=>renderVicElection(data,s,{},new Date('2026-10-10T00:00:00Z')).html);
@@ -189,8 +193,8 @@ test('page template: shared head and sections, link rows as touch targets, ballo
   assert.match(pages.district,/<ul class="hub-links"><li><a href="\/subject\/person\/[a-z-]+">Full profile<\/a><\/li><li><a href="https:\/\/www\.parliament\.vic\.gov\.au\/[^"]+">Parliament of Victoria profile<\/a><\/li><\/ul><\/article>/);
   assert.match(pages.district,/<div class="vic-elsewhere"><ul class="hub-links"><li><a [^>]+>District map and profile \(VEC\)<\/a><\/li><li><a href="\/vic-election-2026#find">Find another seat<\/a><\/li><\/ul><\/div>/);
   assert.match(pages.region,/<li><a [^>]+>Full profile<\/a><\/li><li><a href="\/ask\?[^"]+">Speeches<\/a><\/li>/);
-  // No candidates yet: no Candidates section at all. Published: ballot order, number in its own column.
-  assert.doesNotMatch(pages.district,/id="candidates"/);
+  // An absent candidate list omits the section. Published: ballot order, number in its own column.
+  assert.doesNotMatch(renderVicElection(data,{...essendon,candidates:null}).html,/id="candidates"/);
   const list=[{name:'Avery Quill',party:'Independent'},{name:'Marisol Featherstonehaugh-Vandersloot',party:'Shooters, Fishers and Farmers Party Victoria'},{name:'Wren Halloway',party:''}];
   const named=renderVicElection(data,{...essendon,candidates:{published:'2026-11-10',url:'https://www.vec.vic.gov.au/candidates',list}}).html;
   const ballot=named.match(/<ol class="vic-candidates" role="list">([\s\S]*?)<\/ol>/)?.[1];assert.ok(ballot);
@@ -256,8 +260,7 @@ test('Methods carries the coverage detail the election pages link to',async()=>{
 });
 
 test('candidates appear only from a VEC list, in ballot paper order, with the allowlisted fields',async()=>{
-  assert.ok(data.seats.every(s=>s.candidates===null));
-  assert.doesNotMatch(renderVicElection(data,data.seats.find(s=>s.name==='Lowan')).html,/id="candidates"/);
+  assert.doesNotMatch(renderVicElection(data,{...data.seats.find(s=>s.name==='Lowan'),candidates:null}).html,/id="candidates"/);
   const dir=await mkdtemp(join(tmpdir(),'vic-candidates-'));
   try {
     const hubs=new URL('../../scripts/hubs/',import.meta.url);
@@ -269,6 +272,13 @@ test('candidates appear only from a VEC list, in ballot paper order, with the al
       for(const path of ['electorates/manifest.json','parliamentarians.json','votes.json','divisions/index.json','interests/index.json','corpus.json','person-paths.js']){await mkdir(dirname(join(out,path)),{recursive:true});await writeFile(join(out,path),await readFile(new URL(path,root)));}
       const manifest=await json('electorates/manifest.json');await mkdir(dirname(join(out,manifest.index_url)),{recursive:true});await writeFile(join(out,manifest.index_url),await readFile(new URL(manifest.index_url.slice(1),root)));
       for(const row of (await json('divisions/index.json')).divisions.filter(d=>/^vic-(la|lc)-/.test(d.key))){await mkdir(join(out,'divisions'),{recursive:true});await writeFile(join(out,`divisions/${row.slug}.json`),await readFile(new URL(`divisions/${row.slug}.json`,root)));}
+      // Missing optional input still builds without any candidate sections.
+      const candidateSource=await readFile(join(dir,'vic-candidates-2026.json'),'utf8');
+      await rm(join(dir,'vic-candidates-2026.json'));
+      await buildVicElection(out,join(dir,'vic-election-2026.json'));
+      const absent=JSON.parse(await readFile(join(out,VIC_ELECTION_ASSET),'utf8'));
+      assert.ok(absent.seats.every(s=>s.candidates===null));
+      await writeFile(join(dir,'vic-candidates-2026.json'),candidateSource);
       await buildVicElection(out,join(dir,'vic-election-2026.json'));
       const built=JSON.parse(await readFile(join(out,VIC_ELECTION_ASSET),'utf8'));const lowan=built.seats.find(s=>s.name==='Lowan');
       assert.deepEqual(lowan.candidates.list,[{name:'Avery Quill',party:'Independent'},{name:'Rowan Ketch',party:'Liberal'}]);
@@ -277,6 +287,25 @@ test('candidates appear only from a VEC list, in ballot paper order, with the al
       await assert.rejects(buildVicElection(out,join(dir,'vic-election-2026.json')),/unknown constituency: Nowhere/);
     } finally {await rm(out,{recursive:true,force:true});}
   } finally {await rm(dir,{recursive:true,force:true});}
+});
+
+test('published VEC input covers every seat and renders district and region candidates in source order',async()=>{
+  const source=JSON.parse(await readFile(new URL('../../scripts/hubs/vic-candidates-2026.json',import.meta.url),'utf8'));
+  assert.equal(Object.keys(source.districts).length,88);assert.equal(Object.keys(source.regions).length,8);
+  for(const seat of data.seats){
+    const list=source[seat.kind==='district'?'districts':'regions'][seat.name];
+    assert.ok(list.length>0,seat.name);
+    assert.deepEqual(seat.candidates,{published:source.published,url:source.url,list});
+  }
+  for(const name of ['Albert Park','Eastern Victoria']){
+    const seat=data.seats.find(s=>s.name===name);
+    const page=renderVicElection(data,seat);
+    const {JSDOM}=await import('jsdom');
+    const document=new JSDOM(page.html).window.document;
+    assert.deepEqual([...document.querySelectorAll('.vic-candidate-name')].map(n=>n.textContent),seat.candidates.list.map(c=>c.name));
+    assert.match(document.querySelector('#candidates').textContent,/In ballot paper order/);
+    assert.equal(document.querySelector('#candidates a').href,source.url);
+  }
 });
 
 test('election detection identifies state election copy without treating federal records in Victoria as state electoral copy',()=>{
