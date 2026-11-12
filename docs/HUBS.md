@@ -107,11 +107,18 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   records the VEC's dated candidate publication, not an inferred first upload
   time or the OPAX fetch date (12 November).
 
-  Candidate names and full registered party labels come verbatim from the XLS
-  `Candidates` and `RPP Name` columns. The website sometimes uses shorter party
-  labels. Blank party cells remain blank, including independents, unnamed groups
-  and ungrouped candidates. Row order is retained, including the order within
-  and across Council groups; the hub's flat list does not reproduce group headings.
+  Candidate names and full registered party labels come from the XLS
+  `Candidates` and `RPP Name` columns; surrounding party whitespace is trimmed.
+  Blank party cells remain blank, including independents, unnamed groups
+  and ungrouped candidates. Row order is retained. The five-column XLS does not
+  carry Council group headings. The eight region nominations pages supply
+  `group` (letter, or null for Ungrouped) and `group_name` (blank for unnamed
+  groups and Ungrouped) on region candidates only. Each page's complete candidate
+  sequence must match the workbook exactly before any output is replaced.
+  The hub renders group headings in ballot order and no region candidate numbers;
+  district lists keep their numbered ballot order. Each seat links to its own
+  VEC nominations page. Browser labels and Worker-rendered pages share
+  `portal/public/labels.js` aliases; source JSON keeps registered names.
   Albert Park and Eastern Victoria were checked against the VEC's
   [district ballot order](https://www.vec.vic.gov.au/electoral-boundaries/state-districts/albert-park-district/nominations)
   and [region ballot order](https://www.vec.vic.gov.au/electoral-boundaries/state-regions/eastern-victoria-region/nominations).
@@ -126,13 +133,47 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   (`OPAX_SOURCE_STATUS_FILE` can override this). Successfully fetched source
   responses, including the workbook's contact columns, stay in the gitignored
   `portal/private/vec-candidates-2026/` cache. Use `--cache <fresh-directory>` to
-  refresh; an existing cache is reused for reproducible offline conversion.
+  refresh; an existing cache reuses both `election.html` and the linked workbook
+  for reproducible offline conversion. It does not discover replacement XLS URLs.
+  `uv run python scripts/fetch_vec_candidates.py --groups-only --cache <directory>`
+  enriches the existing JSON snapshot using only the eight region pages (plus
+  robots.txt when not cached by the client), without requesting the election
+  landing page or workbook. Successfully cached region HTML is reused too.
   Every constituency, vacancy count, candidate count and the report total must
   validate before the generated JSON replaces the previous file. The small
   saved XLS test fixture uses invented names only:
-  `uv run pytest tests/test_vec_candidates.py`. Rebuild with
+  `uv run --with pytest pytest tests/test_vec_candidates.py`. Rebuild with
   `npm run build:vic-election` from `portal/`; the portal tests check that Albert
   Park and Eastern Victoria render the committed candidate lists in source order.
+
+  Registered-name aliases (the site's existing neutral dot applies to minor
+  parties; no new party colours are assigned):
+
+  | Registered VEC name | Code | Short label | Dot |
+  | --- | --- | --- | --- |
+  | Affordable Housing Now – Sustainable Australia Party | SAP | Sustainable Australia | neutral |
+  | Animal Justice Party | AJP | Animal Justice | neutral |
+  | Australian Citizens Party (Victorian Division) | ACP | Citizens Party | neutral |
+  | Australian Democrats | AD | Democrats | neutral |
+  | Australian Greens Victoria | GRN | Greens | green |
+  | Australian Labor Party - Victorian Branch | ALP | Labor | red |
+  | Christian Alliance Party – Reform AU | CAP | Christian Alliance | neutral |
+  | Climate Action Now | CAN | Climate Action Now | neutral |
+  | Democratic Labour Party (DLP) | DLP | DLP | neutral |
+  | Family First Victoria | FF | Family First | neutral |
+  | Free Palestine | FP | Free Palestine | neutral |
+  | I'm Voting to Avoid the Fine | FINE | I'm Voting to Avoid the Fine | neutral |
+  | Legalise Cannabis Victoria | LCP | Legalise Cannabis | neutral |
+  | Liberal Party of Australia - Victorian Division | LIB | Liberal | blue |
+  | Libertarian Party (formerly Liberal Democrats) | LDP | Libertarian | neutral |
+  | National Party of Australia - Victoria | NAT | Nationals | ochre |
+  | One Nation Victoria | ONP | One Nation | orange |
+  | Safety Victoria – Violent Crime Prevention | SAFE | Safety Victoria | neutral |
+  | Shooters, Fishers and Farmers Party Victoria | SFF | Shooters, Fishers and Farmers | neutral |
+  | Socialist Alliance | SAL | Socialist Alliance | neutral |
+  | The Republican Make Australia Great Again | REP | The Republican | neutral |
+  | The West Party | WEST | The West Party | neutral |
+  | Victorian Socialists | VS | Victorian Socialists | neutral |
 
 The build writes the places into a separate `/hubs/vic-election-2026-places.json`,
 read only by the hub's "Which seat am I in?" finder. The finder is a plain GET form

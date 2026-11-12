@@ -5,7 +5,7 @@
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES } from './labels.js?v=18b8e313e4';
+import { PARTY_MAP, PARTY_NAMES } from './labels.js?v=6a4764139d';
 import { partyUrl } from './canonical-urls.js?v=79dfba8774';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
