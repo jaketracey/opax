@@ -58,6 +58,17 @@ for (const kind of kinds) {
   });
 }
 
+test('the browser party directory uses every canonical page and explains parliamentary-only coverage', { timeout: 20000 }, async () => {
+  const {readPartyPages} = await import('../public/party-page.js');
+  const pages = await readPartyPages(async path => JSON.parse(readFileSync(new URL('../public' + path, import.meta.url), 'utf8')));
+  const result = await render('party', { html: true, path: '/subject/party?sort=name' });
+  assert.deepEqual(result.errors, []);
+  const listed = [...result.html.matchAll(/class="source-title dir-name"[^>]*href="(\/subject\/party\/[^"?]+)"/g)].map(m => m[1]);
+  assert.deepEqual(listed.sort(), pages.map(p => p.href).sort());
+  assert.match(result.html, /No party-level disclosure file held by OPAX\./);
+  assert.match(result.html, /recorded divisions/);
+});
+
 // Jake, 16 Oct: the Parliamentarians bar keeps search, Party, Parliament, Chamber
 // and the sort; the "Voting record" and "Portrait" checkboxes are gone. An old
 // link that still carries their params lists everyone and drops them from the URL.

@@ -5325,7 +5325,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=b45a181d68'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=e9df073844'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -7734,35 +7734,39 @@ async function buildPeopleDirectory() {
   };
 }
 
-/** Parties: money-file party nodes, the record's party facet and the directory's member counts.
- *  Without the live facet (an error, or no answer inside AGGREGATE_WAIT_MS) the list still
- *  renders from the money files and the members register, with no speech figures at all. */
+/** Parties use the same canonical page inventory as server HTML and the sitemap.
+ * The live facet enriches those pages with speech counts. */
 async function buildPartiesDirectory() {
-  const [fed, qld, vic, tas, live, dir] = await Promise.all([
+  const [fed, qld, vic, tas, live, dir, catalogue] = await Promise.all([
     loadMoneyFile("federal"), loadMoneyFile("qld"), loadMoneyFile("vic"), loadMoneyFile("tas"),
-    aggregateApi("/api/parties").catch(() => null), loadParliamentarians(),
+    aggregateApi("/api/parties").catch(() => null), loadParliamentarians(), loadPartyPage(),
   ]);
   const counted = Boolean(live?.parties?.length);
   const files = [["federal", fed], ["qld", qld], ["vic", vic], ["tas", tas]].filter(([, d]) => d?.nodes);
-  if (!files.length && !live?.parties?.length) return null;
-  const parties = new Map();
-  const get = (label) => {
-    if (!parties.has(label)) parties.set(label, { label, colour: null, speeches: 0, members: 0, money: {}, _sortName: label.toLowerCase() });
-    return parties.get(label);
-  };
+  const pages = await catalogue.readPartyPages(async (path) => {
+    const jur = Object.keys(MONEY_JURISDICTIONS).find(j => MONEY_JURISDICTIONS[j].file === path);
+    if (jur) return loadMoneyFile(jur);
+    if (path === '/parliamentarians.json') return dir;
+    const response = await fetch(path);
+    if (!response.ok) throw new Error('Party records unavailable');
+    return response.json();
+  });
+  const parties = new Map(pages.map(page => [page.label, { label: page.label, colour: null, speeches: 0, members: 0, money: {}, _coverage: catalogue.partyPageCoverage(page), _sortName: page.label.toLowerCase() }]));
+  const get = label => parties.get(catalogue.resolvePartyPage(label, pages)?.label);
   for (const [jur, data] of files) {
     for (const n of data.nodes) if (n.kind === "party") {
       const p = get(n.label);
+      if (!p) continue;
       p.colour ??= n.colour || null;
       p.money[jur] = { total: n.total || 0, count: n.count || 0, first: n.firstYear, last: n.lastYear, donors: 0 };
     }
     for (const e of data.edges || []) {
-      const p = parties.get(String(e.target).replace(/^party:/, ""));
+      const p = get(String(e.target).replace(/^party:/, ""));
       if (p?.money[jur]) p.money[jur].donors += 1;
     }
   }
-  for (const r of live?.parties || []) if (r.label) get(r.label).speeches = r.count || 0;
-  for (const p of dir?.people || []) if (p.party) get(p.party).members += 1;
+  for (const r of live?.parties || []) { const p = get(r.label); if (p) p.speeches += r.count || 0; }
+  for (const person of dir?.people || []) { const p = get(person.party_now || person.party); if (p) p.members += 1; }
   const items = [...parties.values()];
   const colours = new Map(items.filter((p) => p.colour).map((p) => [p.label, p.colour]));
   const sourceShort = { federal: "AEC returns", qld: (qld?.meta?.sourceShort) || "ECQ", vic: (vic?.meta?.sourceShort) || "VEC", tas:(tas?.meta?.sourceShort)||"TEC" };
@@ -7781,7 +7785,7 @@ async function buildPartiesDirectory() {
   const row = (p) => {
     const jurs = Object.keys(p.money);
     const meta = [
-      jurs.length ? esc(`Disclosures: ${jurs.map((j) => MONEY_JURISDICTIONS[j]?.label || j).join(", ")}`) : `<span class="dir-muted">No party-level disclosure file</span>`,
+      jurs.length ? esc(`Disclosures: ${jurs.map((j) => MONEY_JURISDICTIONS[j]?.label || j).join(", ")}`) : esc(p._coverage),
       jurs.length && p._first < 9999 ? esc(yearSpan(p._first, p._last)) : "",
     ].filter(Boolean).join(" · ");
     const figs = [

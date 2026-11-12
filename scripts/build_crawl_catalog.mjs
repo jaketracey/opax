@@ -18,6 +18,8 @@ import { clearedGiftRegisters } from '../portal/src/vic-gifts.ts';
 import { clearedStateBills } from '../portal/src/state-bills.ts';
 import { REPORT_COLLECTIONS, reportRoot } from '../portal/public/official-reports-model.js';
 import { reportsPublished } from './reports_flag.mjs';
+import { readPartyPages } from '../portal/public/party-page.js';
+import { officialReportCrawlEntries } from './official_report_crawl.mjs';
 
 export const ORIGIN = 'https://opax.com.au';
 export const SITEMAP_LIMIT = 49_999;
@@ -183,7 +185,7 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
   const identity = personIndex(people);
   const personPaths = { exact: Object.fromEntries([...identity.byName].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])), folded: Object.fromEntries([...identity.addresses].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])) };
   await writeFile(join(root,'person-paths.js'), '// Generated from the roster and reviewed aliases by build:crawl.\nexport const PERSON_PATHS = '+JSON.stringify(personPaths)+';\n');
-  const groups = Object.fromEntries(['people','parties','electorates','bills','divisions','grant-programs','grant-recipients','topics-reports','static','suppliers','donors','campaigners','agencies'].map(t=>[t,[]]));
+  const groups = Object.fromEntries(['people','parties','electorates','bills','divisions','grant-programs','grant-recipients','official-reports','topics-reports','static','suppliers','donors','campaigners','agencies'].map(t=>[t,[]]));
   const fallbacks=Object.fromEntries(Object.keys(groups).map(type=>[type,0]));
   const fallbackPaths=new Set();
   const add = (type,path,date,priority,fallback) => {
@@ -249,17 +251,16 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
     const named = namedDonors(html);
     snapshot.set(path,hash({...base,...(named.length ? {donors:named} : {})}));
   }
-  const partyLabels = new Map(), donors = new Map();
+  const donors = new Map();
   for (const name of ['money.json','money.qld.json','money.vic.json']) {
     const money = await read(`graph/${name}`);
     for (const n of money.nodes) {
       if (!validId(n.label)) continue;
-      const map = n.kind === 'party' ? partyLabels : n.kind === 'donor' ? donors : null;
+      const map = n.kind === 'donor' ? donors : null;
       if (map && !map.has(fold(n.label))) map.set(fold(n.label),{label:n.label,date:money.meta.generated});
     }
   }
-  for (const p of people) if (validId(p.party) && !partyLabels.has(fold(p.party))) partyLabels.set(fold(p.party),{label:p.party,date:peopleDate});
-  for (const p of partyLabels.values()) if (p.label.length <= 120) add('parties',`/subject/party/${personSlug(p.label)}`,null,undefined,p.date);
+  for (const p of await readPartyPages(read)) add('parties',p.href,null,undefined,p.lastmod || peopleDate);
   for (const p of donors.values()) if (p.label.length <= 120) add('donors',`/subject/donor/${encodeURIComponent(p.label)}`,null,undefined,p.date);
   for (const s of seats.electorates) add('electorates',s.url,latestDate([s.updated_at,s.representation_as_of,s.latest_election,s.abolished,s.established],seatManifest.generated),undefined,seatManifest.generated);
   const divisions = new Map();
@@ -322,7 +323,8 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
     if (!previous || (c.years?.length || 0) > (previous.years?.length || 0)) campaignerNames.set(fold(c.name),c);
   }
   for (const c of campaignerNames.values()) add('campaigners',`/subject/campaigner/${encodeURIComponent(c.name)}`,latestDate([c.updated_at,c.filed_at],campaigners.meta.generated),undefined,campaigners.meta.generated);
-  // The reports are in the sitemap only while they are published.
+  for (const r of await officialReportCrawlEntries(optional)) add('official-reports',r.path,latestDate([r.updated,r.date],r.snapshot),undefined,r.snapshot);
+  // The separate investigations are in the sitemap only while they are published.
   for (const r of published ? reports.reports : []) add('topics-reports',`/reports/${r.slug}`,r.updated,undefined,r.generated_at || corpus.version);
   for (const slug of Object.keys(TOPIC_NAMES)) add('topics-reports',`/subject/topic/${slug}`,null,undefined,corpus.version);
   for (const path of ['/official-reports',...Object.keys(REPORT_COLLECTIONS).map(reportRoot),'/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map',...(published ? ['/reports'] : []),'/explore','/money/contracts','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);

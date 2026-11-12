@@ -5,6 +5,9 @@
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
+import { PARTY_MAP, PARTY_NAMES } from './labels.js?v=18b8e313e4';
+import { partyUrl } from './canonical-urls.js?v=79dfba8774';
+
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 /** The party URL's last segment; the same spelling as canonical-urls.js entitySlug. */
 export const partySlug = name => String(name ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
@@ -179,4 +182,56 @@ export function partyStateMoneyHTML(label, files, h) {
     ${h.sourceLineHTML({source: commissions.join('; ') || 'State electoral commissions', state: 'totals are a floor',
       notes: ["Gifts under each state's disclosure threshold are not reported, so these totals are a floor, not a ceiling.", h.esc(h.notSummed)]})}
   </section>`;
+}
+
+const identity = label => PARTY_MAP[fold(label)]?.[1] || fold(label);
+export const PARTY_MONEY_PATHS = ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json', '/graph/money.tas.json'];
+
+/** One page per party identity. The money map's spelling wins, then the existing
+ * full canonical label, so roster and division aliases never add another page. */
+export function canonicalPartyPages({ money = [], roster = null, divisions = null } = {}) {
+  const parties = new Map();
+  const add = (label, source, date) => {
+    label = String(label ?? '').trim();
+    if (!label || label.length > 120 || /^(?:null|undefined|PRES|DPRES|SPK|DSPK|CWM|CHAIR)$/i.test(label)) return;
+    const key = identity(label);
+    if (!parties.has(key)) parties.set(key, { label, aliases: [], money: false, roster: false, divisions: false, lastmod: '' });
+    const page = parties.get(key);
+    if (!page.aliases.includes(label)) page.aliases.push(label);
+    if (source === 'money' && !page.money) page.label = label;
+    page[source] = true;
+    if (date && date > page.lastmod) page.lastmod = date;
+  };
+  for (const graph of money) for (const node of graph?.nodes || []) if (node.kind === 'party') add(node.label, 'money', graph.meta?.generated);
+  for (const person of roster?.people || []) {
+    for (const label of [person.party, person.party_now, ...(person.parties || []), ...(person.recorded_parties || []).map(r => typeof r === 'string' ? r : r?.party)]) add(label, 'roster', roster.meta?.generated);
+  }
+  const labels = Array.isArray(divisions?.parties) ? divisions.parties : Object.keys(divisions?.parties || {});
+  for (const label of labels) add(label, 'divisions', divisions?.generated_at || roster?.meta?.generated);
+  return [...parties.values()].map(page => {
+    if (!page.money) page.label = page.aliases.find(label => fold(label) === fold(PARTY_NAMES[identity(label)]?.[1])) || page.label;
+    return { ...page, href: partyUrl(page.label) };
+  }).sort((a, b) => a.label.localeCompare(b.label, 'en-AU'));
+}
+
+/** Shared source inventory for the server directory, browser directory and sitemap. */
+export async function readPartyPages(read) {
+  const [money, roster, divisions] = await Promise.all([
+    Promise.all(PARTY_MONEY_PATHS.map(path => path.endsWith('money.tas.json') ? read(path).catch(() => null) : read(path))),
+    read('/parliamentarians.json', {cache: 'no-cache'}), read('/divisions/index.json'),
+  ]);
+  return canonicalPartyPages({ money, roster, divisions });
+}
+
+/** Accept source spellings and the existing label aliases, but return one page. */
+export function resolvePartyPage(segment, pages) {
+  const want = fold(segment);
+  const alias = Object.keys(PARTY_MAP).find(label => partyUrl(label).split('/').at(-1) === want);
+  return pages.find(page => page.aliases.some(label => fold(label) === want || partyUrl(label).split('/').at(-1) === want)
+    || page.href.split('/').at(-1) === want || identity(page.label) === identity(alias || segment)) || null;
+}
+
+export function partyPageCoverage(page) {
+  const held = [page.roster ? 'Parliamentary roster' : '', page.divisions ? 'recorded divisions' : ''].filter(Boolean).join(' and ');
+  return page.money ? 'Published political receipts; federal and state returns remain separate.' : `${held}. No party-level disclosure file held by OPAX.`;
 }

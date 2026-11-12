@@ -16,7 +16,7 @@ import { loosePositionPoints, claimAttributionOk, repairCausal } from './researc
 import {ServerTiming, timed, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { chamberLabel, PARTY_MAP } from '../public/labels.js'
-import { partySpeechLabel } from '../public/party-page.js'
+import {partySpeechLabel, readPartyPages, resolvePartyPage, type PartyPage} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -5024,6 +5024,7 @@ function personPath(people: PeopleData | null, name: string): string {
 /** An address written with the name forwards to the slug, so one page has one URL. */
 /** Resolve host, historical shapes and path aliases before issuing one redirect.
  * Entity redirects require a locally exported target; unknown identities stay 404. */
+let partyPagesMemo: Promise<PartyPage[]> | null = null
 let partyLabelsMemo: Promise<string[]> | null = null
 let divisionSummariesMemo: Promise<Map<string,Division>> | null = null
 function loadDivisionSummaries(env: Env): Promise<Map<string,Division>> {
@@ -5031,6 +5032,13 @@ function loadDivisionSummaries(env: Env): Promise<Map<string,Division>> {
     .then(index=>new Map(index.divisions.map(d=>[d.key,d]))).catch(()=>{divisionSummariesMemo=null;return new Map()})
   return divisionSummariesMemo
 }
+async function loadPartyPages(env: Env): Promise<PartyPage[]> {
+  partyPagesMemo ??= readPartyPages(<T>(path: string) => assetJson<T>(env,path))
+    .catch(error=>{partyPagesMemo=null;throw error})
+  return partyPagesMemo
+}
+// Retain older bill-source addresses outside the directory's verified party
+// inventory. Adding crawl discovery must not remove an existing record URL.
 async function loadPartyLabels(env: Env): Promise<string[]> {
   partyLabelsMemo ??= Promise.all([loadMoney(env),loadPeople(env),loadBills(env),assetJson<{parties?:string[]}>(env,'/divisions/index.json').catch(()=>null)]).then(([money,people,bills,divisions])=>[...new Set([
     ...[...money.parties.values()].map(p=>p.label),...people.people.map(p=>p.party || ''),...people.people.map(p=>p.party_now || ''),...[...bills.byKey.values()].map(b=>b.sponsor_party || ''),...(divisions?.parties || [])
@@ -5059,6 +5067,8 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
       const p=people && personAt(people,name)
       if(p) return personPath(people,p.name)
     } else if(kind==='party') {
+      const page=resolvePartyPage(name,await loadPartyPages(env).catch(()=>[]))
+      if(page) return page.href
       const labels=await loadPartyLabels(env).catch(()=>[])
       const label=labels.find(p=>foldName(p)===foldName(name) || partyUrl(p).split('/').at(-1)===name.toLowerCase())
       if(label) return partyUrl(label)
@@ -5477,11 +5487,13 @@ function samePartyLabel(a: string, b: string): boolean {
   return code(a) === code(b)
 }
 
-/** The party a /subject/party/<name> segment names: a money-map party, or one the roster, bills or divisions record. */
+/** The canonical party page a source spelling or URL segment names. */
 async function partyFor(name: string, env: Env): Promise<{ node: MoneyEntry | null; label: string | null; loaded: boolean }> {
   const moneyData = await loadMoney(env).catch(() => null)
-  const node = moneyData?.parties.get(foldName(name)) ?? [...(moneyData?.parties.values() || [])].find(p => partyUrl(p.label).split('/').at(-1) === name.toLowerCase()) ?? null
-  const label = node?.label ?? (await loadPartyLabels(env).catch(() => [])).find(p => partyUrl(p).split('/').at(-1) === name.toLowerCase()) ?? null
+  const page = resolvePartyPage(name,await loadPartyPages(env).catch(() => []))
+  const node = page ? [...(moneyData?.parties.values() || [])].find(p => samePartyLabel(p.label,page.label)) ?? null
+    : moneyData?.parties.get(foldName(name)) ?? [...(moneyData?.parties.values() || [])].find(p => partyUrl(p.label).split('/').at(-1) === name.toLowerCase()) ?? null
+  const label = page?.label ?? node?.label ?? (await loadPartyLabels(env).catch(() => [])).find(p => partyUrl(p).split('/').at(-1) === name.toLowerCase()) ?? null
   return { node, label, loaded: !!moneyData }
 }
 

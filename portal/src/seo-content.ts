@@ -19,6 +19,7 @@ import {recentVotesBucket, recentVotesBucketPath, votesBucketPath, VOTES_NAMES_P
 import {partyFold, partyMoneyBucket, partyMoneyBucketPath} from '../public/party-money-buckets.js'
 import {SUPPLIER_ID_RE, supplierRowsPath, SUPPLIERS_META_PATH} from '../public/supplier-row-buckets.js'
 import {BILL_TITLES_PATH} from '../public/bill-titles.js'
+import {readPartyPages, partyPageCoverage} from '../public/party-page.js'
 /** Crawlable answers from the same static projections the application reads.
  * All lists are bounded; source strings and URLs cross one escaping boundary. */
 export type ReadAsset = <T>(path: string) => Promise<T>
@@ -407,11 +408,15 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
     }))).flat()
     return paginate(url,rows,'Grant recipients','Published grants by recipient. Awarded values are commitments, not payments. Source: GrantConnect and Queensland published grant records.')
   }
-  if (dir==='party' || dir==='donor') {
+  if (dir==='party') {
+    const pages = await readPartyPages(read)
+    return paginate(url,pages.map(p=>({href:p.href,label:p.label,detail:partyPageCoverage(p)})),'Parties','Parties in the parliamentary and political receipts records. Coverage differs by party.')
+  }
+  if (dir==='donor') {
     const graphs = await Promise.all(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json'].map(path=>read<MoneyGraph>(path)))
     const rows = new Map<string,{href:string;label:string;detail?:string}>()
-    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir) rows.set(fold(n.label),{href:dir==='party' ? partyUrl(n.label) : donorDisclosure(n).href || '',label:n.label})
-    return paginate(url,[...rows.values()],dir==='party' ? 'Parties' : 'Disclosed donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
+    for (const graph of graphs) for (const n of graph.nodes) if (n.kind===dir) rows.set(fold(n.label),{href:donorDisclosure(n).href || '',label:n.label})
+    return paginate(url,[...rows.values()],'Disclosed donors','Published political receipts from AEC, ECQ and VEC; federal and state returns remain separate.')
   }
   const sources: Record<string,[string,string,string]> = {supplier:['/suppliers.json','suppliers','Government suppliers'],agency:['/agencies.json','agencies','Government agencies'],campaigner:['/graph/campaigners.json','entities','Campaigners']}
   const source = sources[dir]

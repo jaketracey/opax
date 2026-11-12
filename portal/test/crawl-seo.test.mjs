@@ -27,6 +27,18 @@ const env = {COMMUNITY_ORIGIN:'https://opax.com.au',ASSETS:{async fetch(req){
 }}};
 const get = (path,method='GET') => worker.fetch(new Request('https://opax.com.au'+path,{method}),env,{});
 
+test('canonical party sitemap pages serve successfully and known aliases redirect to one page', async () => {
+  const {readPartyPages} = await import('../public/party-page.js');
+  const pages = await readPartyPages(async path => json(path.replace(/^\//, '')));
+  for (const page of pages) assert.equal((await get(page.href)).status, 200, page.href);
+  assert.equal((await get('/subject/party/australian-labor-party')).status, 200, 'existing bill-source party addresses stay reachable');
+  for (const [alias, canonical] of [['jln', 'jacqui-lambie-network'], ['pauline-hansons-one-nation-party', 'one-nation']]) {
+    const response = await get('/subject/party/' + alias);
+    assert.equal(response.status, 301);
+    assert.equal(response.headers.get('location'), 'https://opax.com.au/subject/party/' + canonical);
+  }
+});
+
 test('sitemap index and every type file have export lastmod, unique canonical URLs and accurate counts',async()=>{
   const manifest = json('crawl/manifest.json');
   const index = await get('/sitemap.xml');

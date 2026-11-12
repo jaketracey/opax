@@ -141,6 +141,8 @@ export const MODULE_STAMPS = [
   ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','home.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js'].map(file=>[file,'donor-disclosure.js']),
   ['donor-disclosure.js','donor-entity.js'],
   ['money-journeys-data.js','donor-views.js'],
+  ['canonical-urls.js', 'person-paths.js'],
+  ['party-page.js', 'canonical-urls.js'], ['party-page.js', 'labels.js'],
   // ⋯: app.js draws and runs it; electorates.js draws it.
   ['app.js', 'page-actions-menu.js'], ['electorates.js', 'page-actions-menu.js'], ['app.js', 'party-page.js'],
   ['datatable.js', 'server-csv.js'], ['datatable.js', 'wombat.js'], ['connections.js', 'wombat.js'],
@@ -162,7 +164,6 @@ export const MODULE_STAMPS = [
   ['growth-modules.js', 'donor-entity.js'], ['growth-modules.js', 'labels.js'], ['growth-modules.js', 'sponsor-person.js'],
   ['supplier-growth.js', 'growth-modules.js'], ['supplier-growth.js', 'labels.js'],
 
-  ['canonical-urls.js', 'person-paths.js'],
   ['money-connections.js', 'donor-disclosure.js'], ['money-connections.js', 'canonical-urls.js'], ['money-connections.js', 'datatable.js'],
   ['map-research.js','datatable.js'],
   ['map-research.js','money-connections.js'],
