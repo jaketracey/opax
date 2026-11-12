@@ -7,7 +7,6 @@
  *   writer's checks add to a receipt (it restates the answer's figure in machine form).
  * Rows are only added or tidied: every field keeps its type, so the app's decoding is unchanged. */
 import type { SourceLinks } from './agentic-ask'
-import {guardClaimMeasures} from './ask-claim-measures'
 
 type Row = Record<string, unknown> & { resource?: string; title?: string; url?: string; href?: string; snippet?: string; cited?: boolean }
 
@@ -31,7 +30,6 @@ export function cleanSnippet(snippet: string): string {
 }
 
 export function linkAskSources<T extends Record<string, unknown>>(payload: T, links: SourceLinks | undefined, origin = 'https://opax.com.au'): T {
-  payload=guardClaimMeasures(payload)
   if (!Array.isArray(payload.sources) || !payload.sources.length) return payload
   const rows = (payload.sources as Row[]).filter(s => s && typeof s === 'object')
   const recordUrls = new Set(rows.filter(s => !isCoverage(s)).map(s => s.url))
