@@ -1,8 +1,9 @@
 import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
 import { researchPhaseWallMs } from './research-time'
-import { ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_MAX_ROUNDS, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS, ASK_TURN_OUTPUT_TOKENS, ASK_RESULT_BYTES, reserveQuestionTurn } from './ask-budgets'
+import { ASK_MAX_MODEL_USD, ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_MAX_ROUNDS, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS, ASK_TURN_OUTPUT_TOKENS, ASK_RESULT_BYTES, reserveQuestionTurn } from './ask-budgets'
 export { researchPhaseWallMs, WRITING_RESERVE_MS } from './research-time'
 import { createAnswerWriter } from './research-writer'
+import { leadWithModelAnswer } from './research-answer-shape'
 import { electoratePlan } from './tools/electorates'
 import { divisionModelRows } from './tools/division'
 import { loadStatuteTitles } from './ask-statute-titles.mjs'
@@ -19,7 +20,7 @@ import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
 import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL } from './transcript-answer'
-import { verifyResearchAnswer, verifyResearchPoints, unresolvedPersonAsked, recordPassagesAnswer, namedDecline, emptyTally, type AnswerDraft, type AnswerPoint } from './research-evidence'
+import { verifyResearchAnswer, verifyResearchPoints, emptyTally, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
 import { researchReservationUsd, researchTurnReservationUsd } from './research-budget'
@@ -186,7 +187,6 @@ export function createResearch(options: ResearchOptions): Research {
         if (invalid) fail('malformed_args')
         // A search or read that finds nothing usable is information for the model, not a failed run; so is any failed
         // record lookup outside the numerical shapes, whose answers never rest on a missing count.
-        if (!result.ok && terminal && step.tool === 'answer' && answerAttempts >= 2 && !isBillSpeechQuestion(question)) fail('grounding')
         if (!terminal) {
           if (step.tool === 'find_people' && result.ok && result.data?.match_status === 'matched' && Array.isArray(result.data.people)) {
             const slot = requestedPersonSlot(question), resolution = slot ? resolvePersonName(slot, result.data.people as { name: string }[]) : null
@@ -202,7 +202,6 @@ export function createResearch(options: ResearchOptions): Research {
               if (typeof raw.record_id !== 'string' || typeof raw.excerpt !== 'string' || !raw.excerpt.trim()) continue
               if (constraints.dated && (typeof raw.date !== 'string' || constraints.period.since && raw.date < constraints.period.since || constraints.period.until && raw.date > constraints.period.until)) continue
               if (constraints.jurisdiction && raw.jurisdiction !== constraints.jurisdiction || constraints.chamber && raw.chamber !== constraints.chamber) continue
-              if (constraints.people.length && (typeof raw.speaker !== 'string' || !constraints.people.some(name => resolvePersonName(raw.speaker as string, [{ name }]).status === 'matched'))) continue
               if (constraints.party && !searchPartyLabels(constraints.party)?.includes(String(raw.party))) continue
               const resource = raw.record_id, id = `${resource}/t/body/${raw.text_offset ?? 0}-${Number(raw.text_offset ?? 0) + raw.excerpt.length}`
               const p: Passage = { id, resource, slug: resource, text: raw.excerpt, title: String(raw.title ?? resource), kind: String(raw.kind ?? 'speech'), url: String(raw.url ?? ''),
@@ -232,9 +231,10 @@ export function createResearch(options: ResearchOptions): Research {
       const record = await pending
       const text = options.evidenceText?.(record, String(record.text ?? '')) ?? String(record.text ?? '')
       const normal = (v: string) => v.replace(/\s+/g, ' ').trim()
-      // A person's own words: their first speaking turn, attributed, and spoken by them.
-      const original = own || context.named.people.length || options.positionQuery ? firstSpeechTurn(text) : text
-      if (!original || !normal(original).includes(normal(known.text)) || (own || context.named.people.length) && record.speaker_attribution === 'unattributed') return false
+      // person_quotes reads a person's own words: their first speaking turn, attributed, and spoken by them. Every
+      // other search may cite anyone in the record, including others speaking about a named person.
+      const original = own || options.positionQuery ? firstSpeechTurn(text) : text
+      if (!original || !normal(original).includes(normal(known.text)) || own && record.speaker_attribution === 'unattributed') return false
       if (own && (typeof record.speaker !== 'string' || normal(record.speaker).toLowerCase() !== normal(own).toLowerCase())) return false
       if (typeof record.speaker === 'string') known.speaker = record.speaker
       const kind = object(record.labels).kind, date = object(record.metadata).date, party = object(record.metadata).party_on_day ?? object(record.labels).party
@@ -362,9 +362,6 @@ export function createResearch(options: ResearchOptions): Research {
         if (tool === 'count_records' && !/\b(?:bills?|legislation|divisions?|vot(?:e|ed|es|ing))\b/i.test(recordIntentText(question)) && !isRecordCountQuestion(question)) { why(`fact ${id}: count does not answer what was debated; use source passages`); return [] }
         if (!fact || !tool) { why(`fact ${id}: not a record fact`); return [] }
         if (constraints.identityPerson && !sourceAboutPerson({title:fact.cite.label,snippet:fact.text,remuneration:fact.cite.remuneration},constraints.identityPerson,true)) { why(`fact ${id}: outside full-name identity`); return [] }
-        if (absenceClaim(fact.text) && recoveryOwed()) { why(`fact ${id}: recover with a distinct lookup before stating absence`); return [] }
-        if (broadAbsenceQuestion(question, constraints) && absenceClaim(fact.text) && !verifiedAbsenceCount(results)) { why(`fact ${id}: a whole-year, chamber or party absence needs a complete count or list; an empty narrow search is not absence`); return [] }
-        if (context.named.ambiguous || unresolvedPersonAsked(question, context.named)) { why(`fact ${id}: named_unresolved`); return [] }
         if (required.length && ['count_speeches', 'speech_trend', 'member_votes'].includes(tool) && !fact.entities?.some(e => required.includes(e))) { why(`fact ${id}: outside_named_scope`); return [] }
         return [{ fact, tool,coverage:coverage.has(id) }]
       })
@@ -407,7 +404,11 @@ export function createResearch(options: ResearchOptions): Research {
       }
       // Record facts are always cited: uncited points beside them make the answer partly cited.
       const status = points?.answer_status === 'uncited' && facts.length ? 'partly_cited' : points?.answer_status
-      return { answer: text || 'The research did not produce usable evidence for an answer. Please try a more specific question.', answer_decision:!text||!points&&facts.length&&facts.every(f=>f.coverage)?'limitation':points?.answer_decision??'answer', citations, sources, ...(status ? { answer_status: status } : {}) }
+      if (points && facts.length) { const led = leadWithModelAnswer({ answer: text, citations }, points); text = led.answer; for (const key of Object.keys(citations)) delete citations[key]; Object.assign(citations, led.citations) }
+      // Research that found nothing still answers; the coverage note says the records did not cover it.
+      const general = !facts.length && !passages.size && !!points && !Object.keys(points.citations).length
+      return { answer: text, answer_decision:!points&&facts.length&&facts.every(f=>f.coverage)?'limitation':points?.answer_decision??'answer', citations, sources, ...(status ? { answer_status: status } : {}),
+        ...(general ? { coverage: { note: 'OPAX’s records did not cover this question, so this answer draws on general knowledge.' } } : {}) }
     }
     // One answer call, checked: cited points, uncited points that failed only soft checks, record facts; else, with
     // nothing usable written, the best verified passages in their own words. Null when none of those exists.
@@ -441,19 +442,9 @@ export function createResearch(options: ResearchOptions): Research {
       if (overview) facts = facts.filter(f=>f.tool!=='find_records'&&!overviewContextOnly(f.fact.text)).filter((f,i,all)=>all.findIndex(other=>other.fact.cite.url===f.fact.cite.url)===i).slice(0,2)
       const tally = stats.answer = emptyTally()
       const { named } = context
-      // A text answer that fails as a whole is read again point by point, one point per citation range.
-      const ranged = () => Array.isArray(args.citations) && typeof args.text === 'string' ? (args.citations as unknown[]).flatMap(raw => {
-        const c = object(raw), chars = Array.from(args.text as string)
-        return Number.isSafeInteger(c.start) && Number.isSafeInteger(c.end) && (c.start as number) >= 0 && (c.end as number) > (c.start as number)
-          ? [{ claim: chars.slice(c.start as number, c.end as number).join('').replace(/\s+/g, ' ').replace(/^[-*•\s]+/, '').trim(), id: c.id, quote: c.quote }] : []
-      }) : []
-      const points = focus || hearing ? null : Array.isArray(args.points) ? verifyResearchPoints(overview ? args.points.slice(0,8-facts.length) : args.points, passages, question, named, options.positionQuery, roster, why, tally)
-        : typeof args.text === 'string' && Array.isArray(args.citations) ? verifyResearchAnswer(args as unknown as AnswerDraft, passages, question, named, options.positionQuery, roster, why)
-          ?? (ranged().length ? verifyResearchPoints(ranged(), passages, question, named, options.positionQuery, roster, why, tally) : null) : null
-      // Nothing written survived: the best verified passages answer in their own words, with no further turn.
+      const points = focus || hearing ? null : Array.isArray(args.points) && args.points.length ? verifyResearchPoints(overview ? args.points.slice(0,8-facts.length) : args.points, passages, question, named, options.positionQuery, roster, why, tally)
+        : typeof args.text === 'string' && args.text.trim() ? verifyResearchAnswer({ text: args.text, citations: Array.isArray(args.citations) ? args.citations as AnswerDraft['citations'] : [] }, passages, question, named) : null
       const speech = !hearing && isBillSpeechQuestion(question)
-      const record = !hearing && !points && (!facts.length || speech) ? recordPassagesAnswer(passages, question, named, options.positionQuery, broadTopicOverview(question) ? 6 : 3) : null
-      if (record) { tally.mode = 'record_list'; return compose([], record) }
       if (speech && !points) { why('Bill metadata does not establish what a member said; search their Hansard speeches using the title, short title and second-reading debate'); return null }
       if (!points && facts.length) tally.mode = 'facts'
       if (!facts.length && !points) return null
@@ -470,7 +461,6 @@ export function createResearch(options: ResearchOptions): Research {
         const focus = focussedIds()
         if (constraints.listIntroductions && !focus) return errorResult('finish', 'Fetch the complete introduction list with count_records include_records before answering')
         if (focus) args = { ...args, facts: focus }
-        if (recoveryOwed() && (idList(args.facts).every(id => coverage.has(id)) || idList(args.facts).some(id => { const fact = all.find(f => f.id === id); return fact && (absenceClaim(fact.text) || fact.cite.kind === 'count' && fact.cite.value === 0) }))) return errorResult('finish', 'An empty lookup is not absence: recover with a different query, tool, record kind or resolved name first')
         if (!validIds(args.facts, 30) || args.facts.some(id => !tools.has(id))) return fail('grounding')
         // Outside the ranking and trend shapes, finish is an answer made only of record facts.
         if (qualitativeRun) {
@@ -491,16 +481,13 @@ export function createResearch(options: ResearchOptions): Research {
         return { tool: 'finish', ok: true, data: { facts: selected }, cite: [], notes: [] }
       }, true),
     })
-    tools.answer = tool({ description: 'Finish a supported answer. facts: existing structured record fact ids, selected once, with figures rendered from those records. points: 4 to 8 short points for a broad parliamentary topic overview when records exist, otherwise 2 to 6. Each point is one complete sentence in Australian English, with no line breaks or em dashes, naming its passage speaker and citing its id and a phrase of 5 to 25 words copied exactly. The first point directly answers the question with the requested name, date or outcome. Select each fact once and do not repeat it in points. Use different records for different threads; never repeat a selected fact in a point. Preserve source punctuation in quotes. Attribute disputed effects and allegations to the speaker, never as established findings. Repair unsupported details as whole sentences; use relevant cited titles and dates if a summary cannot be supported. Give facts, points or both. One repair is allowed.',
-      inputSchema: jsonSchema<{ points?: AnswerPoint[]; facts?: number[] } & Partial<AnswerDraft>>({ type: 'object', properties: { facts: { type: 'array', minItems: 1, maxItems: 30, items: { type: 'integer', minimum: 1 } }, points: { type: 'array', minItems: 1, maxItems: 8, items: { type: 'object', properties: { claim: { type: 'string', minLength: 1, maxLength: 1200 }, id: { type: 'string', minLength: 1, maxLength: 240 }, quote: { type: 'string', minLength: 1, maxLength: 1200 } }, required: ['claim', 'id', 'quote'], additionalProperties: false } }, text: { type: 'string', minLength: 1, maxLength: 8000 }, citations: { type: 'array', minItems: 1, maxItems: 12, items: { type: 'object', properties: { id: { type: 'string' }, quote: { type: 'string', minLength: 1, maxLength: 4000 }, start: { type: 'integer', minimum: 0 }, end: { type: 'integer', minimum: 1 } }, required: ['id', 'quote', 'start', 'end'], additionalProperties: false } } }, additionalProperties: false }),
+    tools.answer = tool({ description: 'Finish with the answer. Lead with the direct answer to the question: the people, roles, decisions, findings or outcome asked about. Then give the supporting detail. facts: structured record fact ids whose figures answer the question, each selected once. points: 2 to 8 complete sentences in Australian English (4 to 8 for a broad topic overview), the first answering the question directly. Cite a point with the id of the passage that supports it and a phrase of 5 to 25 words copied exactly from it; a point of context or background from general knowledge carries no id. Use quotation marks only around words copied exactly from a cited passage. Give facts, points or both.',
+      inputSchema: jsonSchema<{ points?: AnswerPoint[]; facts?: number[] } & Partial<AnswerDraft>>({ type: 'object', properties: { facts: { type: 'array', minItems: 1, maxItems: 30, items: { type: 'integer', minimum: 1 } }, points: { type: 'array', minItems: 1, maxItems: 8, items: { type: 'object', properties: { claim: { type: 'string', minLength: 1, maxLength: 1200 }, id: { type: 'string', minLength: 1, maxLength: 240 }, quote: { type: 'string', minLength: 1, maxLength: 1200 } }, required: ['claim'], additionalProperties: false } }, text: { type: 'string', minLength: 1, maxLength: 8000 }, citations: { type: 'array', maxItems: 12, items: { type: 'object', properties: { id: { type: 'string' }, quote: { type: 'string', minLength: 1, maxLength: 4000 }, start: { type: 'integer', minimum: 0 }, end: { type: 'integer', minimum: 1 } }, required: ['id', 'quote', 'start', 'end'], additionalProperties: false } } }, additionalProperties: false }),
       execute: args => {
-        if (qualitativeRun && (passages.size || recordFacts().tools.size)) { draft = { ...args }; draftRoster ??= context.deps.asset('/parliamentarians.json'); draftRoster.catch(() => {}) }
+        if (qualitativeRun) { draft = { ...args }; draftRoster ??= context.deps.asset('/parliamentarians.json'); draftRoster.catch(() => {}) }
         return invoke({ tool: 'answer', args: { ...args } }, async deps => {
           if (!qualitativeRun) { numericalAnswer = true; return errorResult('answer', 'use finish for numerical facts') }
-          if (!passages.size && !recordFacts().tools.size) return errorResult('answer', 'nothing retrieved yet: search or look up records first')
-          const records = recordFacts()
-          if (overviewReads < overviewSearches.length && limits.wallMs - (Date.now() - started) >= REPAIR_MIN_MS && calls < RESEARCH_MAX_CALLS - 1) return errorResult('answer', 'Complete the complementary framework, Basin Plan and water recovery corpus_records searches before this overview; metadata dates alone do not answer what parliament said')
-          if (recoveryOwed() && !passages.size && [...records.tools.keys()].every(id => { const fact = records.all.find(f => f.id === id); return records.coverage.has(id) || !!fact && (absenceClaim(fact.text) || fact.cite.kind === 'count' && fact.cite.value === 0) })) return errorResult('answer', 'An empty lookup is not absence: recover with a different query, tool, record kind or resolved name first')
+          if (!steps.length) return errorResult('answer', 'look up the records first, then answer')
           answerAttempts++
           const roster = await (draftRoster ?? deps.asset('/parliamentarians.json'))
           const reasons: string[] = [], why = (reason: string) => { if (reasons.length < 12) reasons.push(reason) }
@@ -508,32 +495,16 @@ export function createResearch(options: ResearchOptions): Research {
           researchTrace('answer.verify', {question,args,reasons,answer,tally:stats.answer})
           stats.rejections!.push(...reasons.slice(0, 24 - stats.rejections!.length))
           if (answer) { qualitative = answer; finished = true; return { tool: 'answer', ok: true, data: { passages: answer.sources }, cite: [], notes: [] } }
-          // Nothing usable: a person the question cannot pin down never gets an answer, and a repair turn is only
-          // worth it with time left for one.
-          if (namedDecline(question, context.named) || limits.wallMs - (Date.now() - started) < REPAIR_MIN_MS) fail('grounding')
-          return errorResult('answer', `grounding failed (${reasons.join('; ') || 'no supported point or fact'}); repair once with record fact ids, or claims that restate a search passage and quotes copied exactly from it`)
+          if (limits.wallMs - (Date.now() - started) < REPAIR_MIN_MS) fail('grounding')
+          return errorResult('answer', `the answer was empty (${reasons.join('; ') || 'no points, text or facts'}); answer again with points or text`)
         }, true)
       },
     })
-    tools.decline = tool({ description: 'Politely decline a question outside the Australian public record, private-person information, an unsupported causal allegation, or ask to clarify an ambiguous question. Use no_record only after a person or record lookup returns no matching records. No free-form claims.',
-      inputSchema: jsonSchema<{ reason: string }>({ type: 'object', properties: { reason: { type: 'string', enum: ['out_of_scope', 'private_person', 'causation', 'ambiguous', 'no_record'] } }, required: ['reason'], additionalProperties: false }),
+    tools.decline = tool({ description: 'Decline only a question that has nothing to do with Australian public life, such as homework, writing code or personal medical advice. Every question about a person, event, policy, party, money or institution gets an answer.',
+      inputSchema: jsonSchema<{ reason: string }>({ type: 'object', properties: { reason: { type: 'string', enum: ['out_of_scope'] } }, required: ['reason'], additionalProperties: false }),
       execute: args => invoke({ tool: 'decline', args }, async () => {
-        if (args.reason === 'no_record') {
-          if (broadAbsenceQuestion(question, constraints) && !verifiedAbsenceCount(results)) return errorResult('decline', 'An empty lookup is not absence: verify a whole-year, chamber or party absence with a complete scoped count or list first. A narrow search cannot establish it; uncovered periods require a coverage limitation, never a zero.')
-          if (isBillSpeechQuestion(question) && !steps.some(s => ['search', 'person_quotes'].includes(s.tool))) return errorResult('decline', 'Search the member\'s Hansard speeches using title variants and second-reading debate before stating absence; the bill index contains no speech text')
-          if (!recoveryTried()) return errorResult('decline', 'An empty lookup is not absence: first try another tool or kind, a shorter or exact-title query, a broader discovery window or resolve the name with find_records')
-          const normal = (v: unknown) => String(v ?? '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
-          const relevant = (index: number) => { const args = steps[index]?.args; return args && [args.name, args.query].some(value => typeof value === 'string' && normal(question).includes(normal(value))) }
-          const found = results.some((r, i) => relevant(i) && r.ok && !r.data?.coverage_only && (r.tool === 'find_people' && Array.isArray(r.data?.people) && r.data.people.length || r.tool === 'find_records' && Array.isArray(r.data?.rows) && r.data.rows.length))
-          const ambiguous = results.some((r, i) => relevant(i) && r.ok && r.tool === 'find_people' && r.data?.match_status === 'ambiguous')
-          const empty = !found && !ambiguous && results.find((r, i) => relevant(i) && r.ok && (r.tool === 'find_people' && Array.isArray(r.data?.people) && !r.data.people.length || r.tool === 'find_records' && Array.isArray(r.data?.rows) && !r.data.rows.length))
-          if (!empty) return errorResult('decline', 'no empty person or record lookup; check the exact name, title and date first')
-          const answer = empty.tool === 'find_people' ? 'OPAX has no record of a parliamentarian by that name.' : `OPAX has no matching ${constraints.recordKind ?? 'public'} record for the requested name, title or date in this lookup.`
-          qualitative = { answer, answer_decision: 'limitation', citations: {}, sources: [] }; finished = true
-          return { tool: 'decline', ok: true, data: {}, cite: [], notes: [] }
-        }
-        const messages: Record<string, string> = { out_of_scope: 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.', private_person: 'I cannot provide private information about a private person. OPAX can help with public parliamentary and disclosure records.', causation: 'Public donation and voting records do not establish that money caused a vote. I can help compare the disclosed records without making that allegation.', ambiguous: 'Please name the person, place, period or public record you mean so I can answer the whole question.' }
-        qualitative = { answer: messages[args.reason], answer_decision:args.reason==='ambiguous'?'clarification':'refusal', citations: {}, sources: [] }; finished = true
+        const answer = 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.'
+        qualitative = { answer, answer_decision: 'refusal', citations: {}, sources: [] }; finished = true
         return { tool: 'decline', ok: true, data: {}, cite: [], notes: [] }
       }, true),
     })
@@ -541,31 +512,23 @@ export function createResearch(options: ResearchOptions): Research {
       'Pick the source that holds the answer: money, donations, pay, contracts, grants, declared interests, votes and electorate figures come from the structured record tools, before Hansard; find_records shows which register holds a name or subject. What someone said comes from search (Hansard passages): run two complementary searches in one turn, and add speech counts only when the question asks how much or how often. For statements about a bill, search that member\'s Hansard speeches mentioning the full title, short title or title variants and second-reading debate before stating absence. The bill lifecycle record cannot establish an absence of speech; procedural remarks also answer what was said. Select the member\'s words, not lifecycle facts. Run independent lookups in the same turn. ' +
       'For any how-many, number-of, more-or-fewer or count comparison about divisions or bills, use count_records with record_type divisions or bills, the requested jurisdiction and chamber, and one date, month, year, financial_year or federal term, or inclusive since/until dates. Use group_by year or month for a series; retain every requested group. Pass bill for divisions linked to a named bill, and include_records true when the question asks which bills were introduced on a date. Use the returned status denominator and share for bill passage rates. find_records and search are ranked samples: never infer a total or a rate from their returned rows. For speech counts use count_speeches, and for speech trends use speech_trend. Select the count facts and snapshot/coverage facts that answer the requested scope. ' +
       'For one party vote select its division fact and lead with the party aye/no side. Division outcomes need the result and ayes/noes; floor crossing needs named dissenters and is mentioned only when asked. Do not replace a recorded vote or bill lifecycle answer with speeches. For bill sponsors or introducing members lead with that person; for introduction dates lead with the first introduction; for status/passage select the recorded status and date. For busiest years retain maxima and ties, and for passage shares retain numerator, denominator and share once. Debate prominence needs topic-specific Hansard, never a year-wide tally over unrelated debates. For which bills were introduced retain titles and the count. ' +
-      'Speech-count rankings and trends end with finish (fact ids). Other answers end with answer, selecting record fact ids and/or complete cited passage points. For a broad overview give 4 to 8 short points when records exist, otherwise 2 to 6. Name each passage speaker and date as recorded. The first point directly answers the question with the requested name, date or outcome; never restate the question and never paste raw tool rows. Select each fact once, never repeating it in points. Each figure comes from one selected fact with its supporting citation. Quotes must come from the cited record. Party descriptors must match the passage. Repair whole sentences; when a summary cannot be supported give cited titles and dates. Include any material record limitation. ' +
+      'Speech-count rankings and trends end with finish (fact ids). Other answers end with answer, selecting record fact ids and/or complete cited passage points. For a broad overview give 4 to 8 short points when records exist, otherwise 2 to 6. Name each passage speaker and date as recorded. The first point directly answers the question with the requested name, date or outcome; never restate the question and never paste raw tool rows. Select each fact once, never repeating it in points. Each figure comes from one selected fact with its supporting citation. Use quotation marks only around words copied exactly from a cited record. Lead with the answer; a record limitation goes in a short note after it, never in its place. ' +
       'Select numeric record fact ids for transcript excerpts. '+
-      'The question constraints are mandatory: preserve years, ranges, jurisdiction, chamber, party, person and place. Never substitute current data for a historical question. Coverage-only facts explain a data limit, not a ranking result. For parliamentary pay prefer paid_answer. For departmental secretaries use annual_reports and select each body’s named office holder and remuneration amount, rather than matching-row counts. For summed federal receipts use money_totals: party or donor filters for totals, group_by party or donor for rankings by total, and group_by year for annual trends. Pass financial_year as YYYY-YY or from_year/to_year as financial-year starting years. State the total first with its period. Use party_receipts for donor breakdowns or industry breakdowns, and ranked_money for individual money records, state registers and other money overviews. For complete calculated answers select a single fact only if it fully answers the question as asked. Tools are evidence for you to decide, not automatic responses. For an ambiguous question ask for the missing scope. Call decline for private-person information, out-of-scope requests, or a request to establish an unsupported allegation such as money buying a vote. Answer questions about recorded allegations by attributing them to the speaker and distinguishing an allegation from a finding. Explain supported policy arguments and reasons with citations. ' +
-      'Verify the exact person, bill, division and date. Correct a wrong premise with the recorded fact first. After an empty lookup, try a distinct recovery; use decline no_record only when no usable facts remain. A failed service establishes unavailability, not absence. For future events give the latest recorded date and explain that the future result is not yet recorded. ' +
-      'Never count retrieved passages. Preserve attribution, dates, uncertainty and policy limits. Keep retrieval-method and coverage caveats out of answer points; the response coverage note carries relevant limitations, only when the answer depends on them. No claim that donations caused votes or speeches. No invented quotations. For speaker rankings check committee coverage when relevant. Finish within the remaining turns. ' +
+      'The question constraints are mandatory: preserve years, ranges, jurisdiction, chamber, party, person and place. Never substitute current data for a historical question. Coverage-only facts explain a data limit, not a ranking result. For parliamentary pay prefer paid_answer. For departmental secretaries use annual_reports and select each body’s named office holder and remuneration amount, rather than matching-row counts. For summed federal receipts use money_totals: party or donor filters for totals, group_by party or donor for rankings by total, and group_by year for annual trends. Pass financial_year as YYYY-YY or from_year/to_year as financial-year starting years. State the total first with its period. Use party_receipts for donor breakdowns or industry breakdowns, and ranked_money for individual money records, state registers and other money overviews. For complete calculated answers select a single fact only if it fully answers the question as asked. Tools are evidence for you to decide, not automatic responses. Answer every question about a person, event, policy, party, money or institution directly and fully: who was responsible and their roles, what was decided or found, what happened and why. Name the people the records name, including private individuals. State the findings of royal commissions, inquiries, courts and audits as their findings, and attribute contested claims to whoever made them. Use general knowledge for context and to fill gaps the records leave, and cite the records wherever they support a point. When a name could mean more than one person, answer about the most likely one (a current office holder first, then the one with the most records) and name the other in one closing line so the reader can ask again. Decline only a question with nothing to do with Australian public life. ' +
+      'Verify the exact person, bill, division and date. Correct a wrong premise with the recorded fact first. After an empty lookup, try one distinct recovery, then answer from what was found and what you know. For future events give the latest recorded date and explain that the future result is not yet recorded. ' +
+      'Never count retrieved passages. Preserve attribution, dates, uncertainty and policy limits. Keep retrieval-method and coverage caveats out of answer points; the response coverage note carries them. Report donations and votes as recorded, and say whose claim any link between them is. For speaker rankings check committee coverage when relevant. Finish within the remaining turns. ' +
       (constraints.policyVoteTopic ? 'For this policy voting question use division operation policy_votes with party and title core topic words. Select the aggregate, bill/motion breakdown and representative divisions. Aye/no describes the specific question, not policy support. ' : constraints.industryRanking ? 'For this industry ranking use money_totals group_by industry. Lead with ranked industry totals, retaining the published-selection and classification limits. ' : '') + overviewResearchHint(question, constraints.dated) + personOverviewHint(question, context.named.people, isBillSpeechQuestion(question))
     const salvage = async (): Promise<QualitativeAnswer | null> => {
       // Provider stops and failed selections retain the same hearing scope as an answer call.
       // Hansard passages cannot replace already retrieved evidence before the commission.
       if (hearingEvidenceQuestion(question)) return draftAnswer(draft ?? {}, null, () => {})
-      if (draft && draftRoster) {
-        let timer: ReturnType<typeof setTimeout> | undefined
-        // The roster is what the wrong-person line is checked against: without it, no draft is returned.
-        const roster = await Promise.race([draftRoster.catch(() => undefined), new Promise<undefined>(resolve => { timer = setTimeout(() => resolve(undefined), 1_500) })]).finally(() => { if (timer !== undefined) clearTimeout(timer) })
-        const answer = roster ? draftAnswer(draft, roster, () => {}) : null
-        if (answer) return answer
-      }
+      // A run that stops after the model drafted its answer (the spend cap, the wall clock, a failed turn) returns that draft.
+      if (draft) { const answer = draftAnswer(draft, null, () => {}); if (answer) return answer }
       const focus = focussedIds()
       if (focus?.length) { const lines = factLines(focus, () => {}); if (lines.length) return compose(lines, null) }
       if (constraints.listIntroductions) return null
-      const record = passages.size ? recordPassagesAnswer(passages, question, context.named, options.positionQuery, broadTopicOverview(question) ? 6 : 3) : null
-      if (record) { stats.answer = { ...emptyTally(), mode: 'record_list' }; return compose([], record) }
       if (isBillSpeechQuestion(question)) return null
       // Records were found but no answer call landed: the facts themselves are the answer.
-      if (recoveryOwed() && [...recordFacts().tools.keys()].every(id => recordFacts().coverage.has(id))) return null
       const lines = factLines([...recordFacts().tools.keys()].slice(0, 15), () => {})
       if (!lines.some(line => !line.coverage)) return null
       stats.answer = { ...emptyTally(), mode: 'facts' }
@@ -636,7 +599,11 @@ export function createResearch(options: ResearchOptions): Research {
           const terminal = qualitativeRun ? 'answer' : 'finish'
           const late = Date.now() - started > limits.wallMs - REPAIR_MIN_MS
           const lastAffordableTurn = remaining < inputReserve + 2 * ASK_TURN_OUTPUT_TOKENS + 2048
+          // The spend cap stays: when the turn after this one could not be afforded, this turn writes the answer from what
+          // research has gathered so far.
+          const lastAffordableSpend = steps.length > 0 && (stats.reservedCostUsd ?? 0) + maxUsd > ASK_MAX_MODEL_USD
           const forced = numericalAnswer ? 'finish'
+            : lastAffordableSpend ? terminal
             : evidence && !recoveryOwed() && (focussedIds()?.length || round === limits.rounds || late || lastAffordableTurn || calls >= RESEARCH_MAX_CALLS || repeated) ? terminal : null
           return { maxOutputTokens: reservedOutput, toolChoice: forced ? { type: 'tool' as const, toolName: forced } : 'required' as const,
             instructions }
