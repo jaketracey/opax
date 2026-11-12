@@ -23,7 +23,7 @@ export function createAnswerWriter(options: ResearchOptions) {
     // Exact record findings have a complete prose answer without a writing turn.
     if(recordAnswerLines(input)||receiptWritingLines(input)||completeMoneySelection(input))return ground(proseFallback(input))
     let lastDraft:QualitativeAnswer|null=null
-    let requiredAnswer:QualitativeAnswer|null=null,keepsRequired=(answer:string)=>true
+    let requiredAnswer:QualitativeAnswer|null=null,keepsRequired=(payload:QualitativeAnswer)=>true
     const fallback=():QualitativeAnswer=>{
       stats.coherence={...stats.coherence,fallback:true}
       const facts=proseFallback(input),fromFacts={...facts,coherence:{...facts.coherence,fallback:true}}
@@ -34,7 +34,7 @@ export function createAnswerWriter(options: ResearchOptions) {
         const checked=ground(lastDraft)
         if(protectedDecision(lastDraft))return {...checked,coherence:{...checked.coherence,fallback:true}}
         // Preserve the checked answer prepared before writing when a revision loses its required headline.
-        if(requiredAnswer&&!keepsRequired(checked.answer))return {...requiredAnswer,coherence:{...requiredAnswer.coherence,fallback:true}}
+        if(requiredAnswer&&!keepsRequired(checked))return {...requiredAnswer,coherence:{...requiredAnswer.coherence,fallback:true}}
         if(protectedDecision(checked)||coherenceCheck(input.question,checked).pass)return {...checked,answer_decision:answerDecision(checked),coherence:{...checked.coherence,fallback:true}}
         // An incoherent draft yields to the facts it was written from; without any, its checked points stand.
         return facts.answer_decision==='limitation'&&checked.answer.trim()?{...checked,coherence:{...checked.coherence,fallback:true}}:fromFacts
@@ -62,7 +62,12 @@ export function createAnswerWriter(options: ResearchOptions) {
     const voteFacts=input.facts.filter(f=>!f.coverage&&(f.atoms??[]).some(a=>VOTE_METRICS.has(a.metric)))
     const keepsVotes=(answer:string)=>voteFacts.every(f=>(f.atoms??[]).filter(a=>VOTE_METRICS.has(a.metric)).every(a=>new RegExp(`\\b${a.metric.replace('_',' ')} (?:in )?${a.value}\\b`,'i').test(answer)))
     if(voteFacts.length&&keepsVotes(required.answer)){requiredAnswer??=ground(required);voteFacts.forEach(f=>requiredIds.add(f.id))}
-    const keepsAll=(answer:string)=>keepsHeadline(answer)&&(!voteFacts.length||!keepsVotes(required.answer)||keepsVotes(answer))
+    // A rejected paraphrase does not invalidate its original transcript turn. Keep those facts for
+    // repair, and do not let a surviving counsel question displace all retrieved statements.
+    const transcriptStatements=input.facts.filter(f=>f.transcript&&!/\?\s*$/.test(f.transcript.excerpt))
+    input.facts.filter(f=>f.transcript).forEach(f=>requiredIds.add(f.id))
+    const keepsAll=(payload:QualitativeAnswer)=>keepsHeadline(payload.answer)&&(!voteFacts.length||!keepsVotes(required.answer)||keepsVotes(payload.answer))&&
+      (!transcriptStatements.length||payload.sources.some(s=>s.cited&&transcriptStatements.some(f=>f.source.resource===s.resource)))
     keepsRequired=keepsAll
     let activeInput=input, prompt=writingPrompt(input)
     const startedWriting=Date.now()
@@ -109,7 +114,7 @@ export function createAnswerWriter(options: ResearchOptions) {
         if(protectedDecision(verified))return checked
         const draft=Array.isArray(raw.sentences)?raw.sentences.map((s:{text?:string})=>s.text??'').join('\n\n'):''
         const dropped=Array.isArray(raw.sentences)&&raw.sentences.some((s:{text?:string})=>{const words=(s.text??'').toLowerCase().match(/[\p{L}\p{N}]+/gu)??[];return words.length>0&&words.filter((w:string)=>verified.answer.toLowerCase().includes(w)).length/words.length<0.8})
-        if(pass===0&&(audit.findings.length||dropped||!keepsAll(checked.answer))&&remainingMs-(Date.now()-startedWriting)>=500){
+        if(pass===0&&(audit.findings.length||dropped||!keepsAll(checked))&&remainingMs-(Date.now()-startedWriting)>=500){
           const used=new Set(checked.sources.filter(s=>s.cited).map(s=>s.resource))
           const surviving={...activeInput,facts:activeInput.facts.filter(f=>used.has(f.source.resource)||requiredIds.has(f.id))}
           // A revision may lose a rejected fact, never the only usable ones: a coverage note alone cannot be rewritten into an answer.
@@ -117,7 +122,7 @@ export function createAnswerWriter(options: ResearchOptions) {
           continue
         }
         const stripped=Math.max(0,1-checked.answer.length/Math.max(1,draft.length))
-        if(stripped>1/3||!keepsAll(checked.answer))return fallback()
+        if(stripped>1/3||!keepsAll(checked))return fallback()
         return checked
       }catch(error){
         if(isResearchCreditError(error)){credits.exhaust();receipt=0;stats.usageUnknown=false;if(turn)Object.assign(turn,{input:0,output:0,cost_usd:0})}

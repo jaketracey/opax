@@ -6,7 +6,23 @@
  * the writer, which quotes or paraphrases them. */
 export const TRANSCRIPT_LABEL = 'Hearing transcript: evidence, not findings'
 /** Evidence before an inquiry is a different record from parliamentary discussion about its topic. */
-export const hearingEvidenceQuestion = (question: string) => /\b(?:said|say|evidence|witness(?:es)?|counsel|testif\w*)\b/i.test(question) && (/\b(?:at|before)\s+(?:the\s+)?(?:[\p{L}'’-]+\s+){0,8}(?:royal commission|inquiry)\b/iu.test(question) || /\b(?:witnesses|counsel)\s+(?:to|of|in)\s+(?:the\s+)?(?:[\p{L}'’-]+\s+){0,8}(?:royal commission|inquiry)\b/iu.test(question))
+export function hearingEvidenceQuestion(question: string): boolean {
+  // Reader text is bounded before tokenisation. Inspect a fixed word window rather than backtracking
+  // through variable-length commission names and whitespace.
+  const words = question.slice(0, 2000).toLowerCase().match(/[\p{L}'’-]+/gu) ?? []
+  if (!words.some(w => /^(?:said|say|tell|told|evidence|witness(?:es)?|counsel|testif\w*)$/.test(w))) return false
+  return words.some((word, i) => {
+    if (word !== 'inquiry' && !(word === 'royal' && words[i + 1] === 'commission')) return false
+    const before = words.slice(Math.max(0, i - 10), i)
+    if (before.some(w => w === 'at' || w === 'before')) return true
+    return before.some((w, n) =>
+      (w === 'tell' || w === 'told') && !before.slice(n + 1).some(v => v === 'about' || v === 'on') ||
+      (w === 'witnesses' || w === 'counsel') && ['to', 'of', 'in'].includes(before[n + 1]))
+  })
+}
+
+export const HEARING_EVIDENCE_GAP = 'OPAX did not retrieve usable hearing transcript passages for this question. Parliamentary debates, bills and motions do not establish what witnesses told the commission.'
+export const hearingEvidenceText = (text: string) => text.includes(TRANSCRIPT_LABEL) && text.includes('transcript page')
 
 const EXCERPT = /\btranscript page \S+/
 export interface TranscriptTurn { speaker: string; day?: string; date?: string; page: string; excerpt: string }

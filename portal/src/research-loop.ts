@@ -475,6 +475,12 @@ export function createResearch(options: ResearchOptions): Research {
         // Outside the ranking and trend shapes, finish is an answer made only of record facts.
         if (qualitativeRun) {
           if (isBillSpeechQuestion(question)) return errorResult('finish', 'Use answer with the member\'s verified Hansard points; bill metadata does not establish what was said')
+          if (hearingEvidenceQuestion(question)) {
+            const answer = draftAnswer(args, null, () => {})
+            if (!answer) return errorResult('finish', 'Use hearing transcript passages, not parliamentary discussion or catalogue metadata')
+            qualitative = answer; finished = true
+            return { tool: 'finish', ok: true, data: { facts: args.facts }, cite: [], notes: [] }
+          }
           const reasons: string[] = [], lines = factLines(args.facts.slice(0, 15), reason => { if (reasons.length < 12) reasons.push(reason) })
           stats.rejections!.push(...reasons.slice(0, 24 - stats.rejections!.length))
           if (!lines.length) return errorResult('finish', `no usable fact (${reasons.join('; ')})`)
@@ -542,6 +548,9 @@ export function createResearch(options: ResearchOptions): Research {
       'Never count retrieved passages. Preserve attribution, dates, uncertainty and policy limits. Keep retrieval-method and coverage caveats out of answer points; the response coverage note carries relevant limitations, only when the answer depends on them. No claim that donations caused votes or speeches. No invented quotations. For speaker rankings check committee coverage when relevant. Finish within the remaining turns. ' +
       (constraints.policyVoteTopic ? 'For this policy voting question use division operation policy_votes with party and title core topic words. Select the aggregate, bill/motion breakdown and representative divisions. Aye/no describes the specific question, not policy support. ' : constraints.industryRanking ? 'For this industry ranking use money_totals group_by industry. Lead with ranked industry totals, retaining the published-selection and classification limits. ' : '') + overviewResearchHint(question, constraints.dated) + personOverviewHint(question, context.named.people, isBillSpeechQuestion(question))
     const salvage = async (): Promise<QualitativeAnswer | null> => {
+      // Provider stops and failed selections retain the same hearing scope as an answer call.
+      // Hansard passages cannot replace already retrieved evidence before the commission.
+      if (hearingEvidenceQuestion(question)) return draftAnswer(draft ?? {}, null, () => {})
       if (draft && draftRoster) {
         let timer: ReturnType<typeof setTimeout> | undefined
         // The roster is what the wrong-person line is checked against: without it, no draft is returned.

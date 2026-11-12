@@ -2,13 +2,15 @@ import { claimClauses, proseClaimKeys } from './research-claims'
 import { appendWrittenPoints, proseFallback, rawToolEcho, tokens, writingFacts } from './research-writing'
 import { plainAnswerPayload, rewriteAnswerPayload, displayAnswerPayload } from './research-language'
 import { groundAnswerPayload } from './research-grounding'
-import {protectedDecision} from './research-coherence.mjs'
+import {protectedDecision,answerDecision} from './research-coherence.mjs'
 import {sentenceParts} from './research-claim-audit.mjs'
 import type { QualitativeAnswer } from './research-types'
 import type { ResearchPayload } from './research-types'
 import type { researchEvalUsage } from './research-eval'
 import { inferPeriod } from './ask-period'
 import { divisionVoteSource } from './research-record-answer'
+import {isEvidenceGap} from './ask-evidence'
+import {hearingEvidenceQuestion} from './transcript-answer'
 
 function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPayload): Record<string, unknown> {
   if (payload.research) return payload
@@ -25,6 +27,10 @@ export const cacheableRoutedAnswer = (payload: Record<string, unknown>, requireC
 
 /** A successful response always has text, including old cached and streamed payloads. */
 export function ensureAnswerText(payload: Record<string, unknown>, question?: string): Record<string, unknown> {
+  if (typeof payload.answer === 'string' && isEvidenceGap(payload.answer) && !['refusal','clarification'].includes(String(answerDecision(payload)))) {
+    if (question && hearingEvidenceQuestion(question)) return groundAnswerPayload(payload, question)
+    return {...payload,answer:'The selected records do not establish the requested answer. Try naming a person, period or a more specific topic.',answer_decision:'limitation',citations:{},sources:[],claim_atoms:[]}
+  }
   if (typeof payload.answer === 'string' && payload.answer.trim() || payload.answered !== true && payload.answer_decision !== 'answer') return payload
   if (question && !protectedDecision(payload)) {
     const research = payload.research as ResearchPayload | undefined

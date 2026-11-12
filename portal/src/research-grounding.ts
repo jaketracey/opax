@@ -14,6 +14,8 @@ import {isBillSpeechQuestion} from './ask-scope-intent'
 import {readableDate} from './tools/record-common'
 import {researchTrace} from './research-trace'
 import {questionPerson,sourceAboutPerson,identityPerson} from './ask-followup'
+import {hearingEvidenceQuestion,hearingEvidenceText,HEARING_EVIDENCE_GAP} from './transcript-answer'
+import {isEvidenceGap} from './ask-evidence'
 
 // Metadata copied from a selected record is a citable record description,
 // rather than a model claim about the speaker's position.
@@ -277,6 +279,15 @@ function answerFromFound(out:Record<string,unknown>,question:string,evidence:Rec
 /** One final deterministic boundary shared by JSON, SSE, ordinary fallback and cache. */
 export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
   researchTrace('grounding.input', {question,payload})
+  if (hearingEvidenceQuestion(question) && !['refusal','clarification'].includes(String(answerDecision(payload)))) {
+    const input = foundInput(payload, question), facts = input.facts.filter(f => hearingEvidenceText(f.text))
+    if (!facts.length) return {...payload,answer:HEARING_EVIDENCE_GAP,answer_decision:'limitation',answer_status:'evidence_gap',citations:{},sources:[],claim_atoms:[]}
+    const selected = ((payload.sources ?? []) as SelectedSource[]).filter(s => s.cited && !s.coverage)
+    if (isEvidenceGap(String(payload.answer ?? '')) || !selected.length || selected.some(s => !hearingEvidenceText(s.snippet))) {
+      const {answer_status:_status,...rest} = payload
+      payload = {...rest,...proseFallback({...input,facts})}
+    }
+  }
   const identity=identityPerson(question)
   if(identity&&answerDecision(payload)!=='refusal'){
     const input=foundInput(payload,question)
