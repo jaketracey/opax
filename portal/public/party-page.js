@@ -6,17 +6,22 @@
    Pure functions; app.js passes in its helpers. */
 
 import { PARTY_MAP, PARTY_NAMES } from './labels.js?v=6a4764139d';
-import { partyUrl } from './canonical-urls.js?v=79dfba8774';
+import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=f5f5526365';
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
 export * from './labels.js?v=6a4764139d';
-export * from './canonical-urls.js?v=79dfba8774';
+export * from './canonical-urls.js?v=f5f5526365';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 /** The party URL's last segment; the same spelling as canonical-urls.js entitySlug. */
 export const partySlug = name => String(name ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
   .replace(/['’‘ʼ`.]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+// A division slug can name a reviewed alias. Canonical addresses take precedence
+// where removing punctuation would otherwise make two names share a slug.
+const personAddresses = new Map(Object.entries(PERSON_PATHS.folded).map(([name, href]) => [partySlug(name), href]));
+for (const href of Object.values(PERSON_PATHS.exact)) personAddresses.set(href.slice('/subject/person/'.length), href);
 
 /** Every party label in the loaded sources, money first so a map party keeps the map's spelling. */
 export function partyLabels({money = [], roster = null, divisions = null, live = null} = {}) {
@@ -52,13 +57,14 @@ function personPartyLabels(p) {
 
 /** Members of a party, current and former. A roster person is a member when any of their party
  *  fields names the party; the division records add those who voted under it. One row per person:
- *  the roster's pid joins a surname-only print ("Rennick") to the full name, which is the one shown. */
+ *  the roster's pid joins its prints, and person-paths joins division slugs to those identities.
+ *  Only division rows without a slug fall back to their printed name. */
 export function partyMembers(label, {roster = null, divisions = null, same = (a, b) => identity(a) === identity(b)} = {}) {
   const people = roster?.people || [];
   const idOf = p => p.pid ? `pid:${p.pid}` : `name:${fold(p.full || p.name)}`;
   // A full name with a party outranks a surname print or a committee-witness stub.
   const rank = p => (/\s/.test(p.name) ? 4 : 0) + (p.party ? 2 : 0) + (p.current ? 1 : 0);
-  const best = new Map(), span = new Map(), byName = new Map();
+  const best = new Map(), span = new Map(), byName = new Map(), byAddress = new Map();
   for (const p of people) {
     const id = idOf(p);
     if (!best.has(id) || rank(p) > rank(best.get(id))) best.set(id, p);
@@ -68,6 +74,14 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
   // A printed name first, then the register's full name, so "Gerard Rennick" finds his own row.
   for (const p of people) if (p.full && !byName.has(fold(p.full))) byName.set(fold(p.full), idOf(p));
   for (const p of people) byName.set(fold(p.name), idOf(p));
+  for (const p of people) {
+    const href = p.full && personUrl(p.full);
+    if (href && href !== '/subject/person' && !byAddress.has(href)) byAddress.set(href, idOf(p));
+  }
+  for (const p of people) {
+    const href = personUrl(p.name);
+    if (href !== '/subject/person') byAddress.set(href, idOf(p));
+  }
   const rows = new Map();
   const row = (id, fallback = {}) => {
     if (!rows.has(id)) {
@@ -85,7 +99,9 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
   for (const [party, members] of Object.entries(divisions?.parties || {})) {
     if (!same(party, label)) continue;
     for (const m of members) {
-      const id = byName.get(fold(m.name)) || `name:${fold(m.name)}`;
+      const id = m.slug
+        ? byAddress.get(personAddresses.get(m.slug) || `/subject/person/${m.slug}`) || `slug:${m.slug}`
+        : byName.get(fold(m.name)) || `name:${fold(m.name)}`;
       row(id, {name: m.name, last: Number(String(m.last || '').slice(0, 4)) || 0}).divisions += m.divisions || 0;
     }
   }

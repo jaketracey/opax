@@ -74,10 +74,12 @@ test('independents have collection wording and markup, and DLP keeps its short U
 test('server page counts use the same distinct-person membership rule as the directory', async () => {
   const {partyMembers} = await import('../public/party-page.js');
   const roster = await loadPeople(env), divisions = json('graph/party-members.json');
-  for (const [label, slug] of [['Independent', 'independent'], ['Jacqui Lambie Network', 'jacqui-lambie-network'], ['Labor', 'labor']]) {
+  for (const [label, slug] of [['Independent', 'independent'], ['Jacqui Lambie Network', 'jacqui-lambie-network'], ['Labor', 'labor'], ['Liberal', 'liberal'], ['Greens', 'greens']]) {
     const members = partyMembers(label, {roster, divisions});
     const total = members.current.length + members.former.length;
     assert.ok(total > 0);
+    if (label === 'Liberal') assert.equal(total, 310);
+    if (label === 'Greens') assert.equal(total, 40);
     const meta = await moneySubjectMeta('party', slug, new URL('https://opax.com.au/subject/party/' + slug), env);
     assert.ok(meta.prerender.includes(`${total.toLocaleString('en-AU')} parliamentarian${total === 1 ? '' : 's'}`));
   }

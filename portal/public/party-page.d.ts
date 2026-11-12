@@ -12,7 +12,7 @@ export interface PartyPage {
 export interface PartyMemberPerson { name: string; full?: string; pid?: string; party?: string | null; party_now?: string | null; parties?: string[]; current?: boolean; first?: number | null; last?: number | null }
 export interface PartyMember { name: string; pid: string | null; current: boolean; roster: PartyMemberPerson | null; first: number; last: number; divisions: number }
 export interface PartyMembership { current: PartyMember[]; former: PartyMember[] }
-export function partyMembers(label: string, sources?: {roster?: {people: PartyMemberPerson[]} | null; divisions?: {parties?: Record<string, {name: string; last?: string; divisions?: number}[]>} | null; same?: (a: string, b: string) => boolean}): PartyMembership;
+export function partyMembers(label: string, sources?: {roster?: {people: PartyMemberPerson[]} | null; divisions?: {parties?: Record<string, {name: string; slug?: string | null; last?: string; divisions?: number}[]>} | null; same?: (a: string, b: string) => boolean}): PartyMembership;
 export function isIndependent(label: string): boolean;
 export function partyDisplayName(label: string): string;
 export const INDEPENDENTS_DESCRIPTION: string;

@@ -70,7 +70,7 @@ async function run() {
   // app logic, data loaders, routing, directory builders or row rendering.
   window.document.fonts = { ready: Promise.resolve() };
   window.structuredClone = structuredClone;
-  window.matchMedia = media => ({ matches: media === '(prefers-reduced-motion: reduce)', addEventListener() {}, removeEventListener() {} });
+  window.matchMedia = media => ({ matches: media === '(prefers-reduced-motion: reduce)' || Boolean(workerData.media?.includes(media)), addEventListener() {}, removeEventListener() {} });
   window.ResizeObserver = window.IntersectionObserver = class { observe() {} unobserve() {} disconnect() {} };
   window.scrollTo = window.HTMLElement.prototype.scrollIntoView = () => {};
   window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };

@@ -66,6 +66,32 @@ test('directory: every row links to its donor page, whatever the match evidence'
   }
 });
 
+test('the party directory resolves each label once, including labels absent from the catalogue', async () => {
+  const catalogue = await import('../public/party-page.js');
+  const calls = new Map();
+  const graph = {nodes: [{kind: 'party', label: 'Fixture Party'}], edges: [
+    ...Array.from({length: 6}, () => ({target: 'party:Fixture Party'})),
+    ...Array.from({length: 4}, () => ({target: 'party:Unknown Party'})),
+  ]};
+  const context = {
+    loadMoneyFile: async jur => jur === 'federal' ? graph : {nodes: []},
+    aggregateApi: async () => ({parties: [{label: 'Fixture Party', count: 8}, {label: 'Unknown Party', count: 3}]}),
+    loadParliamentarians: async () => ({people: []}), loadPartyMembers: async () => ({parties: {}}),
+    loadPartyPage: async () => ({...catalogue, resolvePartyPage(label, pages) {
+      calls.set(label, (calls.get(label) || 0) + 1);
+      return catalogue.resolvePartyPage(label, pages);
+    }}),
+    MONEY_JURISDICTIONS: Object.fromEntries(['federal', 'qld', 'vic', 'tas'].map(jur => [jur, {file: jur === 'federal' ? '/graph/money.json' : `/graph/money.${jur}.json`}])),
+    byNumDesc: () => () => 0, byName: () => 0, moneyFor: () => 0, esc, STATE_NOT_SUMMED: '', AEC_NOTE: '',
+  };
+  runInNewContext(fnSource('buildPartiesDirectory') + '\nthis.build=buildPartiesDirectory;', context);
+  const directory = await context.build();
+  assert.equal(directory.items.length, 1);
+  assert.equal(directory.items[0].money.federal.donors, 6);
+  assert.equal(directory.items[0].speeches, 8);
+  assert.deepEqual([...calls], [['Fixture Party', 1], ['Unknown Party', 1]]);
+});
+
 test('directory over the published data: every row links, and names with &, commas, apostrophes, slashes and "Pty Limited" open a real donor page', {timeout: 180_000}, async () => {
   const files = Object.fromEntries(MONEY_GRAPHS.map(path => [path.endsWith('money.json') ? 'federal' : path.split('.')[1], json(path)]));
   const directory = await donorsDirectory(files, json('/graph/donor-index.json').donors);
@@ -113,7 +139,7 @@ const roster = {people: [
   {name: 'Alex Fixture', pid: 'p1', party: 'Independent', parties: ['Independent', 'Liberal'], chambers: ['senate'], states: ['federal'], first: 2023, last: 2025},
   {name: 'Sam Example', pid: 'p2', party: 'Labor', party_now: 'Labor', current: true, states: ['federal'], first: 2010, last: 2026},
 ]};
-const divisions = {parties: {'Fixture First Party': [{name: 'Alex Fixture', slug: 'alex-fixture', last: '2025-03-26', divisions: 12}]}};
+const divisions = {parties: {'Fixture First Party': [{name: 'Alex Fixture', slug: null, last: '2025-03-26', divisions: 12}]}};
 const helpers = {esc, photoUrlFor: () => null, personUrl: name => name === 'Alex Fixture' ? '/subject/person/alex-fixture' : '/subject/person',
   partyChipHTML: p => `<span class="ui-party">${esc(p)}</span>`, yearSpan: (a, b) => a === b ? String(a) : `${a}–${b}`,
   sourceLineHTML: () => '<p class="source-line">Source</p>', fmtMoney: v => `$${v}`, donorNameHTML: esc, same: (a, b) => a === b,
@@ -156,10 +182,10 @@ test('state money on a party page names the commission and links the donors', ()
   assert.equal(doc.querySelector('.snippet a').getAttribute('href'), '/subject/donor/Fixture%20%26%20Co');
 });
 
-function renderEntry(path, selector) {
+function renderEntry(path, selector, options = {}) {
   return new Promise((resolve, reject) => {
     const worker = new Worker(new URL('./helpers/directory-shell.mjs', import.meta.url), {
-      execArgv: ['--experimental-vm-modules', '--disable-warning=ExperimentalWarning'], workerData: {kind: 'party', path, selector, html: true, settleMs: 1500},
+      execArgv: ['--experimental-vm-modules', '--disable-warning=ExperimentalWarning'], workerData: {kind: 'party', path, selector, html: true, settleMs: 1500, ...options},
     });
     let result;
     worker.once('message', message => { result = message; });
@@ -196,5 +222,34 @@ test('the app presents independents as parliamentarians outside a party organisa
   assert.equal(doc.querySelector('#subject-title').textContent, 'Independents');
   assert.ok(doc.body.textContent.includes('Parliamentarians who sat without a party. Not a party organisation.'));
   assert.equal(doc.querySelector('#party-members h3').textContent, 'Parliamentarians');
+  assert.match(doc.querySelector('.subject-tag').textContent, /\d+ sitting parliamentarians/);
+  assert.doesNotMatch(doc.querySelector('.subject-tag').textContent, /sitting members/);
   assert.doesNotMatch(doc.body.textContent, /What its members said/);
+});
+
+test('in-app JLN navigation uses the canonical party name and address', {timeout: 120_000}, async () => {
+  const result = await renderEntry('/subject/party/jln', '#party-members li.dir-row');
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.location, '/subject/party/jacqui-lambie-network');
+  const doc = new JSDOM(result.html).window.document;
+  assert.equal(doc.querySelector('#subject-title').textContent, 'Jacqui Lambie Network');
+  assert.equal(result.rows, 2);
+});
+
+test('real Liberal and Greens page lists count each person once and agree with the directory', {timeout: 120_000}, async () => {
+  const directory = await renderEntry('/subject/party?sort=name', 'li.dir-row');
+  assert.deepEqual(directory.errors, []);
+  const doc = new JSDOM(directory.html).window.document;
+  for (const [slug, expected] of [['liberal', 310], ['greens', 40]]) {
+    const row = doc.querySelector(`a[href="/subject/party/${slug}"]`).closest('li');
+    const figure = [...row.querySelectorAll('.dir-fig')].find(n => n.textContent.includes('parliamentarians in the record'));
+    assert.equal(figure.querySelector('b').textContent, String(expected));
+    // Use the map's ordinary link card: jsdom supplies no WebGL renderer.
+    const page = await renderEntry(`/subject/party/${slug}`, '#party-members li.dir-row', {media: ['(max-width: 600px)']});
+    assert.deepEqual(page.errors, []);
+    assert.equal(page.rows, expected, slug);
+    const pageDoc = new JSDOM(page.html).window.document;
+    const profiles = [...pageDoc.querySelectorAll('#party-members li.dir-row a[href^="/subject/person/"]')].map(a => a.getAttribute('href'));
+    assert.equal(new Set(profiles).size, profiles.length, 'no profile appears twice in a party list');
+  }
 });

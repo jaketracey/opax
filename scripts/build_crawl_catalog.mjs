@@ -36,6 +36,26 @@ const xml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>'
 const fold = s => s.normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
+/** Reviewed person IDs connect the vote export's names to the roster's addresses. */
+export function personPaths(people, votes, samePerson = {}) {
+  const identity = personIndex(people);
+  const exact = Object.fromEntries([...identity.byName].map(([name, p]) => [name, `/subject/person/${identity.slugOf.get(p.name)}`]));
+  const folded = Object.fromEntries([...identity.addresses].map(([name, p]) => [name, exact[p.name]]));
+  const byId = new Map();
+  for (const p of people) {
+    const pid = p.pid || samePerson[personNameKey(p.name)]?.key;
+    if (!pid) continue;
+    const previous = byId.get(String(pid));
+    if (!previous || (p.speeches || 0) > (previous.speeches || 0)) byId.set(String(pid), p);
+  }
+  for (const [pid, vote] of Object.entries(votes)) {
+    const p = byId.get(pid);
+    const key = personNameKey(vote.name);
+    if (p && key && !folded[key]) folded[key] = exact[p.name];
+  }
+  return {exact, folded};
+}
+
 export function sitemapFiles(groups, limit = SITEMAP_LIMIT) {
   if (!Number.isInteger(limit) || limit < 1 || limit > SITEMAP_LIMIT) throw new Error('Invalid sitemap limit');
   const files = [], counts = {};
@@ -182,9 +202,8 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
     people.push({name:p.name,pid:p.legacy_person_id || p.person_id,speeches:0,party:current[0].party || null,states:[...new Set(current.map(e=>e.jurisdiction))],chambers:[...new Set(current.map(e=>e.chamber))],first:null,last:null,rosterOnly:{asOf:current[0].as_of,seats:current.map(e=>e.name)}});
     known.add(personNameKey(p.name));
   }
-  const identity = personIndex(people);
-  const personPaths = { exact: Object.fromEntries([...identity.byName].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])), folded: Object.fromEntries([...identity.addresses].map(([name,p])=>[name,`/subject/person/${identity.slugOf.get(p.name)}`])) };
-  await writeFile(join(root,'person-paths.js'), '// Generated from the roster and reviewed aliases by build:crawl.\nexport const PERSON_PATHS = '+JSON.stringify(personPaths)+';\n');
+  const {same_person: samePerson} = JSON.parse(await readFile(new URL('./person_identity.json', import.meta.url), 'utf8'));
+  await writeFile(join(root,'person-paths.js'), '// Generated from the roster and reviewed aliases by build:crawl.\nexport const PERSON_PATHS = '+JSON.stringify(personPaths(people, votes, samePerson))+';\n');
   const groups = Object.fromEntries(['people','parties','electorates','bills','divisions','grant-programs','grant-recipients','official-reports','topics-reports','static','suppliers','donors','campaigners','agencies'].map(t=>[t,[]]));
   const fallbacks=Object.fromEntries(Object.keys(groups).map(type=>[type,0]));
   const fallbackPaths=new Set();

@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {readPartyPages, canonicalPartyPages, resolvePartyPage, partyPageCoverage, partyMembers} from '../public/party-page.js';
 import {renderDirectory} from '../src/seo-content.ts';
 import {officialReportCrawlEntries} from '../../scripts/official_report_crawl.mjs';
-import {sitemapFiles, latestDate, exportDate} from '../../scripts/build_crawl_catalog.mjs';
+import {sitemapFiles, latestDate, exportDate, personPaths} from '../../scripts/build_crawl_catalog.mjs';
 
 const root = new URL('../public/', import.meta.url);
 const read = async path => JSON.parse(await readFile(new URL(path.replace(/^\//, ''), root), 'utf8'));
@@ -85,6 +85,56 @@ test('one membership rule preserves previous affiliations and joins aliases by p
   assert.deepEqual(previous.former.map(p => p.name).sort(), ['Alex Example', 'Casey Fixture']);
   const now = partyMembers('Independent', {roster, divisions});
   assert.deepEqual(now.current.map(p => p.name), ['Alex Example']);
+});
+
+test('person addresses add vote aliases only through recorded or reviewed IDs, preserving existing identities', () => {
+  const people = [
+    {name: 'Alexander Example', pid: 'fixture-1', speeches: 10},
+    {name: 'C.F. Fixture', speeches: 5},
+    {name: 'Alex Example', pid: 'fixture-3', speeches: 2},
+  ];
+  const paths = personPaths(people, {
+    'fixture-1': {name: 'Alex Example'},
+    'fixture-2': {name: 'Casey Fixture'},
+    'fixture-4': {name: 'Unlinked Example'},
+  }, {'c.f. fixture': {key: 'fixture-2'}});
+  assert.equal(paths.folded['alex example'], paths.exact['Alex Example'], 'a printed identity is never overwritten by a vote alias');
+  assert.equal(paths.folded['casey fixture'], paths.exact['C.F. Fixture']);
+  assert.ok(!paths.folded['unlinked example']);
+  const ordinary = personPaths(people.slice(0, 1), {'fixture-1': {name: 'Alex Example'}});
+  assert.equal(ordinary.folded['alex example'], ordinary.exact['Alexander Example']);
+});
+
+test('a supplied division slug is authoritative; only rows without one join on the printed name', () => {
+  const roster = {people: [{name: 'Alex Example', pid: 'fixture-1', party: 'Fixture Party'}]};
+  const divisions = {parties: {'Fixture Party': [
+    {name: 'Alex Example', slug: 'different-person', divisions: 2},
+    {name: 'Alex Example', slug: null, divisions: 3},
+    {name: 'Another print', slug: 'different-person', divisions: 4},
+  ]}};
+  const {former} = partyMembers('Fixture Party', {roster, divisions});
+  assert.equal(former.length, 2);
+  assert.equal(former.find(p => p.pid === 'fixture-1').divisions, 3);
+  assert.equal(former.find(p => !p.pid).divisions, 6, 'an unknown slug still identifies one division person');
+});
+
+test('real division name variants join the roster person addresses once per affiliation', async () => {
+  const {personUrl} = await import('../public/party-page.js');
+  const roster = await read('/parliamentarians.json'), divisions = await read('/graph/party-members.json');
+  const votes = await read('/votes.json');
+  for (const pid of ['10511', '10212', '10633', '10842']) {
+    const print = roster.people.find(p => p.pid === pid) || roster.people.find(p => personUrl(p.name) === personUrl(votes[pid].name));
+    assert.ok(print, pid);
+    const division = divisions.parties[votes[pid].party].find(m => m.name === votes[pid].name);
+    assert.ok(division?.slug, pid);
+    assert.notEqual(print.name, division.name, 'this regression covers different printed names');
+    assert.equal(personUrl(division.name), personUrl(print.name));
+    const members = partyMembers(votes[pid].party, {roster, divisions});
+    const matches = [...members.current, ...members.former].filter(m => personUrl(m.name) === personUrl(print.name));
+    assert.equal(matches.length, 1, pid);
+    assert.equal(matches[0].roster, print);
+    assert.ok(matches[0].divisions >= division.divisions);
+  }
 });
 
 test('official report discovery uses public indexed records and their dates, with bounded indexed sitemap files', async () => {
