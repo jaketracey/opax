@@ -597,35 +597,42 @@ export function Skeleton({
 /** Screen supplies its own section gap, including adaptive-width boundaries. */
 export const ScreenSectionGapContext = createContext<number>(rhythm.section);
 
-/** A cold skeleton yields to content in place. Fast and saved reads appear at once. */
-export function SkeletonCrossfade({
-  loading,
-  skeleton,
-  children,
-  ready = true,
-  cached = false,
-  cachedAt,
-  sectioned = false,
-  fill = false,
-  style,
-}: {
+/** Inputs to a cold-load crossfade; see SkeletonCrossfade. */
+export type SkeletonCrossfadeInput = {
   loading: boolean;
   skeleton: ReactNode;
-  children: ReactNode;
   /** Errors and empty states replace the skeleton immediately. */
   ready?: boolean;
   /** A saved record never has an entrance animation, even after a slow read. */
   cached?: boolean;
   /** The oldest saved record: a timestamp before this read identifies a cache hit. */
   cachedAt?: number | null;
-  /** Preserve Screen's spacing when its children are fragments. */
-  sectioned?: boolean;
-  /** For a loader whose content owns its scrolling screen. */
-  fill?: boolean;
-  style?: StyleProp<ViewStyle>;
-}) {
+};
+
+/** The crossfade's timing, owned by the loader so its layers can move. */
+export type SkeletonCrossfadeState = {
+  loading: boolean;
+  /** The skeleton to draw: the live one, or the last one while it fades. */
+  skeleton: ReactNode;
+  visible: boolean;
+  fade: boolean;
+  opacity: Animated.Value;
+};
+
+/**
+ * The crossfade's state without its layers. A loader whose seeded content
+ * must stay still (a bill's header from the tapped row) keeps that content
+ * outside CrossfadeLayers, and may render the layers in a new place once
+ * its content arrives: all timing lives here.
+ */
+export function useSkeletonCrossfade({
+  loading,
+  skeleton,
+  ready = true,
+  cached = false,
+  cachedAt,
+}: SkeletonCrossfadeInput): SkeletonCrossfadeState {
   const reduceMotion = useReduceMotionSetting();
-  const sectionGap = useContext(ScreenSectionGapContext);
   const [opacity] = useState(() => new Animated.Value(loading ? 0 : 1));
   const [phase, setPhase] = useState({
     loading,
@@ -703,25 +710,51 @@ export function SkeletonCrossfade({
       fade.stop();
     };
   }, [loading, phase.fade, opacity]);
+  return {
+    loading,
+    skeleton: loading ? skeleton : phase.skeleton,
+    visible: phase.visible,
+    fade: phase.fade,
+    opacity,
+  };
+}
+
+/** The skeleton and content layers of a crossfade. Holds no state. */
+export function CrossfadeLayers({
+  crossfade: { loading, skeleton, visible, fade, opacity },
+  children,
+  sectioned = false,
+  fill = false,
+  style,
+}: {
+  crossfade: SkeletonCrossfadeState;
+  children?: ReactNode;
+  /** Preserve Screen's spacing when its children are fragments. */
+  sectioned?: boolean;
+  /** For a loader whose content owns its scrolling screen. */
+  fill?: boolean;
+  style?: StyleProp<ViewStyle>;
+}) {
+  const sectionGap = useContext(ScreenSectionGapContext);
   const contentStyle = [
     fill ? { flex: 1 } : null,
     sectioned ? { gap: sectionGap } : null,
   ];
   return (
     <View style={[fill ? { flex: 1 } : null, style]}>
-      {(loading || phase.fade) && (
+      {(loading || fade) && (
         <Animated.View
           pointerEvents={loading ? 'auto' : 'none'}
-          accessibilityElementsHidden={!loading || !phase.visible}
+          accessibilityElementsHidden={!loading || !visible}
           importantForAccessibility={
-            loading && phase.visible ? 'auto' : 'no-hide-descendants'
+            loading && visible ? 'auto' : 'no-hide-descendants'
           }
           style={[
             ...contentStyle,
             !loading ? StyleSheet.absoluteFill : null,
             {
               opacity: loading
-                ? phase.visible
+                ? visible
                   ? 1
                   : 0
                 : opacity.interpolate({
@@ -731,7 +764,7 @@ export function SkeletonCrossfade({
             },
           ]}
         >
-          {loading ? skeleton : phase.skeleton}
+          {skeleton}
         </Animated.View>
       )}
       {!loading && (
@@ -740,6 +773,32 @@ export function SkeletonCrossfade({
         </Animated.View>
       )}
     </View>
+  );
+}
+/** A cold skeleton yields to content in place. Fast and saved reads appear at once. */
+export function SkeletonCrossfade({
+  children,
+  sectioned,
+  fill,
+  style,
+  ...input
+}: SkeletonCrossfadeInput & {
+  children: ReactNode;
+  /** Preserve Screen's spacing when its children are fragments. */
+  sectioned?: boolean;
+  /** For a loader whose content owns its scrolling screen. */
+  fill?: boolean;
+  style?: StyleProp<ViewStyle>;
+}) {
+  return (
+    <CrossfadeLayers
+      crossfade={useSkeletonCrossfade(input)}
+      sectioned={sectioned}
+      fill={fill}
+      style={style}
+    >
+      {children}
+    </CrossfadeLayers>
   );
 }
 /** Compatibility alias while screen lanes adopt the named shapes. */

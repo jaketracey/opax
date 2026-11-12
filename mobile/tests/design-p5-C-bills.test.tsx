@@ -1,4 +1,4 @@
-import { SkeletonCrossfade } from '../src/design/states';
+import { CrossfadeLayers } from '../src/design/states';
 import { SectionHeader } from '../src/design/layout';
 import { SourceAffordance } from '../src/design/source';
 import { withNavigationOptions } from './navigation-options';
@@ -613,11 +613,11 @@ test('a consultation that closed yesterday in Sydney reads closed on an Australi
 test('bill content uses the shared loader while its headers and source bands keep their spacing', async () => {
   mockParams.key = 'au-federal-r7529';
   const root = await render(<BillDetail />);
-  expect(root.findByType(SkeletonCrossfade).props).toMatchObject({
-    loading: false,
-    ready: true,
-    sectioned: true,
-  });
+  // The bill keeps the crossfade's timing itself, so a seeded header can
+  // stay outside the fading layers (tests/bill-seed-crossfade.test.tsx).
+  const layers = root.findByType(CrossfadeLayers).props;
+  expect(layers.sectioned).toBe(true);
+  expect(layers.crossfade).toMatchObject({ loading: false, fade: false });
   const headers = root.findAllByType(SectionHeader);
   expect(headers.length).toBeGreaterThan(0);
   for (const header of headers) {

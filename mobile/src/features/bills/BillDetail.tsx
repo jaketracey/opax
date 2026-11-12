@@ -3,6 +3,7 @@ import { useScreenReady } from '../../analytics/timing';
 import { Host, Menu, Button as SwiftButton } from '@expo/ui/swift-ui';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
+  isValidElement,
   useCallback,
   useEffect,
   useMemo,
@@ -62,13 +63,15 @@ import {
   Screen,
   Section,
   Skeleton,
-  SkeletonCrossfade,
+  CrossfadeLayers,
   SourceLine,
   StageTimeline,
   StatusCapsule,
   Text,
   VoteSplit,
   useAccessibilitySize,
+  useSkeletonCrossfade,
+  type SkeletonCrossfadeState,
   type SourceOriginal,
 } from '../../design/primitives';
 import { useRowFollow } from '../../design/row-link';
@@ -315,6 +318,19 @@ export default function BillDetail({
       ]
     : [];
   const failed = notFound || (error && !record);
+  // One element per shape: the crossfade keeps the last loading skeleton.
+  const seeded = !!seed;
+  const skeleton = useMemo(
+    () => (seeded ? <SeededBodySkeleton /> : <ColdSkeleton />),
+    [seeded],
+  );
+  const crossfade = useSkeletonCrossfade({
+    loading: !view && !failed,
+    ready: !!view,
+    cached: !!record?.stale,
+    cachedAt: record?.savedAt,
+    skeleton,
+  });
   // Share sits in the bar beside ⋯ and Ask about this bill is a button: iOS 26's
   // floating tab bar stays up on pushes, and covered a bottom toolbar.
   const barShare = Platform.OS === 'ios' && canShare && !failed;
@@ -368,93 +384,72 @@ export default function BillDetail({
           />
         }
       >
-        <SkeletonCrossfade
-          loading={!view && !failed}
-          ready={!!view}
-          cached={!!record?.stale}
-          cachedAt={record?.savedAt}
-          sectioned
-          skeleton={
-            seed ? (
-              <>
-                <SeededHead row={seed} />
-                <View
-                  accessible
-                  accessibilityRole="progressbar"
-                  accessibilityLabel="Loading the bill"
-                  accessibilityState={{ busy: true }}
-                  testID="bill-loading"
-                >
-                  <BodySkeleton />
-                </View>
-              </>
-            ) : (
-              <ColdSkeleton />
-            )
-          }
-        >
-          {notFound ? (
-            <ContentUnavailable
-              symbol="doc.text.magnifyingglass"
-              title="Bill not found"
-              body="This link may be old."
-              action={{
-                label: 'Search bills',
-                onPress: () =>
-                  router.push(billListRoute({ scope: 'all', focus: '1' })),
-                testID: 'bill-not-found-search',
-              }}
-              testID="bill-not-found"
-            />
-          ) : offline && !record ? (
-            <ContentUnavailable
-              symbol="wifi.slash"
-              title={words.notSaved}
-              body={words.notSavedBody}
-              testID="bill-offline-uncached"
-            />
-          ) : error && !record ? (
-            <ContentUnavailable
-              symbol="exclamationmark.triangle"
-              title="This bill couldn't be loaded"
-              action={{
-                label: words.tryAgain,
-                onPress: retry,
-                testID: 'bill-error-retry',
-              }}
-              testID="bill-error"
-            />
-          ) : null}
-          {view && identity && record ? (
-            <BillPage
-              view={view}
-              identity={identity}
-              name={name}
-              titleRef={embedded ? undefined : titleRef}
-              onTitleLayout={embedded ? undefined : barTitle.onTitleLayout}
-              onAsk={ask}
-              directory={directory}
-              savedAt={savedAt}
-              stale={
-                record.stale
-                  ? record.staleReason
-                    ? { kind: 'failed', at: record.savedAt, retry: refresh }
-                    : { kind: 'offline', at: record.savedAt }
-                  : null
-              }
-              follow={follow}
-              targets={targets}
-              arrival={
-                embedded
-                  ? {}
-                  : {
-                      division: params.division,
-                      section: params.section,
-                    }
-              }
-            />
-          ) : null}
-        </SkeletonCrossfade>
+        {seed && crossfade.loading ? <SeededHead row={seed} /> : null}
+        {view && identity && record ? (
+          <BillPage
+            view={view}
+            identity={identity}
+            name={name}
+            titleRef={embedded ? undefined : titleRef}
+            onTitleLayout={embedded ? undefined : barTitle.onTitleLayout}
+            onAsk={ask}
+            directory={directory}
+            savedAt={savedAt}
+            stale={
+              record.stale
+                ? record.staleReason
+                  ? { kind: 'failed', at: record.savedAt, retry: refresh }
+                  : { kind: 'offline', at: record.savedAt }
+                : null
+            }
+            follow={follow}
+            targets={targets}
+            arrival={
+              embedded
+                ? {}
+                : {
+                    division: params.division,
+                    section: params.section,
+                  }
+            }
+            crossfade={crossfade}
+          />
+        ) : (
+          <CrossfadeLayers crossfade={crossfade} sectioned>
+            {notFound ? (
+              <ContentUnavailable
+                symbol="doc.text.magnifyingglass"
+                title="Bill not found"
+                body="This link may be old."
+                action={{
+                  label: 'Search bills',
+                  onPress: () =>
+                    router.push(billListRoute({ scope: 'all', focus: '1' })),
+                  testID: 'bill-not-found-search',
+                }}
+                testID="bill-not-found"
+              />
+            ) : offline && !record ? (
+              <ContentUnavailable
+                symbol="wifi.slash"
+                title={words.notSaved}
+                body={words.notSavedBody}
+                testID="bill-offline-uncached"
+              />
+            ) : error && !record ? (
+              <ContentUnavailable
+                symbol="exclamationmark.triangle"
+                title="This bill couldn't be loaded"
+                action={{
+                  label: words.tryAgain,
+                  onPress: retry,
+                  testID: 'bill-error-retry',
+                }}
+                testID="bill-error"
+              />
+            ) : null}
+          </CrossfadeLayers>
+        )}
       </Screen>
       {embedded || failed || Platform.OS === 'ios' || !canShare ? null : (
         <BillToolbar onShare={share} canShare={!!identity} />
@@ -613,6 +608,7 @@ function BillPage({
   follow,
   targets,
   arrival,
+  crossfade,
 }: {
   view: BillView;
   identity: Identity;
@@ -626,6 +622,7 @@ function BillPage({
   follow: FollowInfo;
   targets: Targets;
   arrival: Arrival;
+  crossfade: SkeletonCrossfadeState;
 }) {
   const bills = useBillNavigation();
   const changesRef = useRef<View>(null);
@@ -651,39 +648,41 @@ function BillPage({
       targets.scrollTo(datesRef);
     } else if (record.kind === 'speech') targets.scrollTo(speechesRef);
   };
-  return (
-    <>
-      <View style={styles.head}>
-        {stale?.kind === 'offline' ? (
-          <OfflineLine savedAt={stale.at} testID="bill-offline" />
-        ) : stale?.kind === 'failed' ? (
-          <InlineError
-            subject="the latest version of this bill"
-            message={`The latest version of this bill couldn't be loaded. Showing the copy saved on ${dayMonth(stale.at)}.`}
-            onRetry={stale.retry}
-            testID="bill-stale"
-          />
-        ) : null}
-        <BillHead
-          view={view}
-          identity={identity}
-          name={name}
-          titleRef={titleRef}
-          onTitleLayout={onTitleLayout}
-          directory={directory}
+  const head = (
+    <View style={styles.head}>
+      {stale?.kind === 'offline' ? (
+        <OfflineLine savedAt={stale.at} testID="bill-offline" />
+      ) : stale?.kind === 'failed' ? (
+        <InlineError
+          subject="the latest version of this bill"
+          message={`The latest version of this bill couldn't be loaded. Showing the copy saved on ${dayMonth(stale.at)}.`}
+          onRetry={stale.retry}
+          testID="bill-stale"
         />
-        {follow.group ? (
-          <View ref={changesRef} collapsable={false} style={styles.added}>
-            <AddedSinceGroup
-              follow={follow.group.follow}
-              changes={follow.group.changes}
-              stale={follow.group.stale}
-              testID="bill-added-since"
-              onRowPress={onChange}
-            />
-          </View>
-        ) : null}
-      </View>
+      ) : null}
+      <BillHead
+        view={view}
+        identity={identity}
+        name={name}
+        titleRef={titleRef}
+        onTitleLayout={onTitleLayout}
+        directory={directory}
+      />
+      {follow.group ? (
+        <View ref={changesRef} collapsable={false} style={styles.added}>
+          <AddedSinceGroup
+            follow={follow.group.follow}
+            changes={follow.group.changes}
+            stale={follow.group.stale}
+            testID="bill-added-since"
+            onRowPress={onChange}
+          />
+        </View>
+      ) : null}
+    </View>
+  );
+  const body = (
+    <>
       <Consultation view={view} />
       <Summary view={view} savedAt={savedAt} />
       {onAsk ? (
@@ -728,6 +727,24 @@ function BillPage({
       <Related view={view} savedAt={savedAt} />
       <BillSource view={view} identity={identity} savedAt={savedAt} />
     </>
+  );
+  // The header seeded from the tapped row is real data: it stays still, in
+  // place, while only the body below it fades in from its skeleton.
+  const steadyHead =
+    isValidElement(crossfade.skeleton) &&
+    crossfade.skeleton.type === SeededBodySkeleton;
+  return steadyHead ? (
+    <>
+      {head}
+      <CrossfadeLayers crossfade={crossfade} sectioned>
+        {body}
+      </CrossfadeLayers>
+    </>
+  ) : (
+    <CrossfadeLayers crossfade={crossfade} sectioned>
+      {head}
+      {body}
+    </CrossfadeLayers>
   );
 }
 
@@ -990,6 +1007,21 @@ function SeededHead({ row }: { row: IndexRow }) {
         title={name}
         testID="bill-follow"
       />
+    </View>
+  );
+}
+
+/** Below a seeded header: one element, "Loading the bill". */
+function SeededBodySkeleton() {
+  return (
+    <View
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel="Loading the bill"
+      accessibilityState={{ busy: true }}
+      testID="bill-loading"
+    >
+      <BodySkeleton />
     </View>
   );
 }
