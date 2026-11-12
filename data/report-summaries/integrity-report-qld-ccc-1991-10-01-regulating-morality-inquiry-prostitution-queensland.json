@@ -1,0 +1,135 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1991-10-01-regulating-morality-inquiry-prostitution-queensland",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Regulating Morality? An Inquiry into Prostitution in Queensland",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+  "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+  "sha256": "d5b4996783c3584b11b9c411b7efb9c4f0a0dc0732539a77183907393365b309",
+  "pages": 372,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 16,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission reviewed options for regulating prostitution in Queensland to inform Parliament and public debate.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+      "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+      "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined laws in other jurisdictions, public submissions, surveys of public attitudes and sex workers, and economic, health and criminal issues.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+      "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission rejected both strict criminal enforcement and a wholly unregulated approach, favouring criminal laws for specified activities alongside a registration system.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+      "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+      "page": 12
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "Its proposed safeguards addressed children, coercion, health risks, exploitation and criminal involvement.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+      "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+      "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission recommended local approval and registration of businesses involving two to ten people, while allowing individuals to work from home subject to planning rules.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+      "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+      "page": 13
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Instead, the Commission recommends a combination of some criminal law rules and a system of regulation by a Registration Board.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+     "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+     "page": 12
+    }
+   },
+   {
+    "quote": "The Commission therefore does not believe that prohibition by strict enforcement of the criminal law is the most appropriate option to adopt.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+     "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+     "page": 233
+    }
+   },
+   {
+    "quote": "With respect to the individual sex worker, the Commission recommends that a self-employed individual sex worker be permitted to operate from his/her home, subject to Local Authority planning provisions.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/Regulating-morality-an-inquiry-into-prostitution-in-qld-Report-1991.pdf",
+     "document": "Regulating Morality? An Inquiry into Prostitution in Queensland (September 1991)",
+     "page": 239
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

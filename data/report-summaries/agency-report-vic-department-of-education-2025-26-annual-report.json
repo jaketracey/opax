@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-department-of-education-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Department of Education 2025-26 annual report",
+ "body": "Department of Education",
+ "source": {
+  "url": "https://www.vic.gov.au/sites/default/files/2026-10/DE-Annual-Report-2025-2026_0.pdf",
+  "document": "annual report",
+  "sha256": "74a656130719ffc5341791ac028719d9f129ff17868eb90a1db7abbf77b568a8",
+  "pages": 245,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Secretary's foreword",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.vic.gov.au/sites/default/files/2026-10/DE-Annual-Report-2025-2026_0.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Department of Education’s 2025–26 report covers its responsibility for Victoria’s early childhood education and schools.",
+    "cites": [
+     {
+      "url": "https://www.vic.gov.au/sites/default/files/2026-10/DE-Annual-Report-2025-2026_0.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.vic.gov.au/sites/default/files/2026-10/DE-Annual-Report-2025-2026_0.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Purpose and function"
+   },
+   {
+    "text": "The department reported opening another 14 government early learning and childcare centres and providing schools with more than 4,000 lesson plans.",
+    "cites": [
+     {
+      "url": "https://www.vic.gov.au/sites/default/files/2026-10/DE-Annual-Report-2025-2026_0.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Secretary's foreword"
+   },
+   {
+    "text": "It reported that 19 new schools opened in 2026.",
+    "cites": [
+     {
+      "url": "https://www.vic.gov.au/sites/default/files/2026-10/DE-Annual-Report-2025-2026_0.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Secretary's foreword"
+   },
+   {
+    "text": "It recorded a net surplus of $53 million for the financial year, including $43 million in other economic flows.",
+    "cites": [
+     {
+      "url": "https://www.vic.gov.au/sites/default/files/2026-10/DE-Annual-Report-2025-2026_0.pdf",
+      "document": "annual report",
+      "page": 53
+     }
+    ],
+    "section": "Departmental financial summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In 2025, Year 10 to 12 retention increased to its highest rate in 8 years.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.vic.gov.au/sites/default/files/2026-10/DE-Annual-Report-2025-2026_0.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

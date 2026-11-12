@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-nsw-ombudsman-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "NSW Ombudsman 2025-26 annual report",
+ "body": "NSW Ombudsman",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212449%2FNSW-Ombudsman-Annual-Report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "aa2a7d31272e38260a7824efdebca6382dde4ddf277b9c8105c2f3d46d6d3efe",
+  "pages": 120,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Ombudsman’s message",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212449%2FNSW-Ombudsman-Annual-Report-2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The NSW Ombudsman reported on 2025–26, handling complaints, investigating wrongdoing, reviewing systems and building capability across government and government-funded organisations.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212449%2FNSW-Ombudsman-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Ombudsman reported receiving 18,380 actionable complaints and assessing each complaint through a complaints officer.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212449%2FNSW-Ombudsman-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Ombudsman reported finalising 10 investigations and making 58 recommendations, with agencies accepting 98% of those answered by the time of reporting.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212449%2FNSW-Ombudsman-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The Office also reported 3,245 participants in training and workshops about complaint handling, administrative law and public interest disclosures.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212449%2FNSW-Ombudsman-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Of the recommendations that have been responded to by agencies to date, 98% were accepted.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212449%2FNSW-Ombudsman-Annual-Report-2025-26.pdf",
+     "document": "annual report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

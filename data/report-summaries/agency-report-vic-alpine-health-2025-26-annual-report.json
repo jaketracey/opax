@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-alpine-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Alpine Health 2025-26 annual report",
+ "body": "Alpine Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3b9/globalassets/tabled-paper-documents/tabled-paper-10699/alpine-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "cdd98d6c481cff5900265cdc4a9c9a5d37849b8c8ff27fded3ab63df8f18415b",
+  "pages": 79,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "REPORT FROM THE CHAIR AND CHIEF EXECUTIVE OFFICER",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab3b9/globalassets/tabled-paper-documents/tabled-paper-10699/alpine-health-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Alpine Health reported for the year ending 30 June 2026 and provides hospital, community health and aged care services in Alpine Shire.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b9/globalassets/tabled-paper-documents/tabled-paper-10699/alpine-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b9/globalassets/tabled-paper-documents/tabled-paper-10699/alpine-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "CHARTER AND PURPOSE"
+   },
+   {
+    "text": "Alpine Health reported that orthopaedic surgery began at Mount Beauty in April through a partnership with Northeast Health Wangaratta.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b9/globalassets/tabled-paper-documents/tabled-paper-10699/alpine-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "REPORT FROM THE CHAIR AND CHIEF EXECUTIVE OFFICER"
+   },
+   {
+    "text": "Alpine Health reported full compliance with accreditation requirements, while hand hygiene compliance was 83% against an 85% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b9/globalassets/tabled-paper-documents/tabled-paper-10699/alpine-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 23
+     }
+    ],
+    "section": "MPS PERFORMANCE PRIORITY REPORTING"
+   },
+   {
+    "text": "Alpine Health reported an operating result of $1.58 million against a target of $0.19 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3b9/globalassets/tabled-paper-documents/tabled-paper-10699/alpine-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 24
+     }
+    ],
+    "section": "Financial sustainability"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Structural changes implemented the previous year assisted in containing costs.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3b9/globalassets/tabled-paper-documents/tabled-paper-10699/alpine-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

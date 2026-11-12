@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-glenelg-hopkins-catchment-management-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Glenelg Hopkins Catchment Management Authority 2025-26 annual report",
+ "body": "Glenelg Hopkins Catchment Management Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10590/glenelg-hopkins-cma-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "53975bfde7fa3022ebfc3b7bfe66d6e78e01e126210af67aba47831558c5df80",
+  "pages": 94,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chairperson and Chief Executive Officer Report",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10590/glenelg-hopkins-cma-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Glenelg Hopkins Catchment Management Authority reported on its 2025–26 coordination of natural resource management across the region.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10590/glenelg-hopkins-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10590/glenelg-hopkins-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "NATURE AND RANGE OF SERVICES PROVIDED"
+   },
+   {
+    "text": "The authority reported providing off-farm work for eight drought-affected farmers, farm workers and agricultural business employees through its drought employment program.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10590/glenelg-hopkins-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Chairperson and Chief Executive Officer Report"
+   },
+   {
+    "text": "It reported that the Saving 17 project’s seed production area produced more than two million seeds in its second year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10590/glenelg-hopkins-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Chairperson and Chief Executive Officer Report"
+   },
+   {
+    "text": "It recorded a net operating profit of $6.84 million and reported additional funding for bushfire recovery projects.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10590/glenelg-hopkins-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "CURRENT FINANCIAL REVIEW"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Saving 17 project concluded after establishing a seed production area that produced more than two million seeds in its second year.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab320/globalassets/tabled-paper-documents/tabled-paper-10590/glenelg-hopkins-cma-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 6
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

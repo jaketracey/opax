@@ -1,0 +1,141 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1994-05-05-report-honourable-r-h-matthews-qc-his-investigation-allegati",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report by the Honourable R H Matthews QC on his investigation into the allegations of Lorrelle Anne Saunders concerning the circumstances surrounding her being charged with criminal offences in 1982, and related matters: Volume I & II",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+  "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+  "sha256": "5897b3b14c86c526ff887238fdd0ae834a9a9b375e2e870f31b934215bdf4839",
+  "pages": 780,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CONCLUSIONS",
+  "first_page": 761,
+  "last_page": 766,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf#page=761"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission published an independent inquiry into allegations about criminal charges laid in 1982 and related matters.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 3
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The inquiry considered possible fabricated evidence, improper influence over witnesses and prosecutions, public records and compensation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 761
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 762
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 763
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 764
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "It concluded that three people had fabricated a recording used for the first three charges, but found no other fabricated evidence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 762
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "The inquiry found no criminal offence, official misconduct or breach of duty in the investigation and prosecution of the person charged.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 763
+     }
+    ],
+    "section": "CONCLUSIONS"
+   },
+   {
+    "text": "It found no justification for compensation and considered further action against participants unwarranted on evidentiary and public-interest grounds.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 764
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 765
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+      "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+      "page": 766
+     }
+    ],
+    "section": "CONCLUSIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "A tape recording purporting to be a conversation dated 19 March 1982 between Saunders and Dodd was fabricated and used in evidence against Saunders in respect of the first three charges referred to above.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+     "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+     "page": 762
+    }
+   },
+   {
+    "quote": "On all the evidence I am satisfied that no person directly or indirectly, improperly influenced or attempted to improperly influence witnesses to be called by the prosecution.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-01/Investigation-into-the-allegations-of-lorrelle-anne-saunders-concerning-her-being-charged-with-criminal-offences-Report-1994.pdf",
+     "document": "Report by the Honourable R H Matthews QC on his investigation of Lorrelle Anne Saunders concerning... Volume I (5 May 1994)",
+     "page": 762
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

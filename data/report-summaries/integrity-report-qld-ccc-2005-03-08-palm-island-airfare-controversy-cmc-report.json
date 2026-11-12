@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2005-03-08-palm-island-airfare-controversy-cmc-report",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Palm Island Airfare Controversy: A CMC report",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-Airfare-Controversy-Report-2005.pdf",
+  "document": "Palm Island Airfare Controversy: A CMC Report on an investigation into allegations of official misconduct... (March 2005)",
+  "sha256": "c9280f4755eb60d609f5431ddc1c62a64d042944bd87860704da2fe13e355670",
+  "pages": 42,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY OF CMC FINDINGS",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-Airfare-Controversy-Report-2005.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated allegations about a ministerial press statement on the funding of air travel to Palm Island.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-Airfare-Controversy-Report-2005.pdf",
+      "document": "Palm Island Airfare Controversy: A CMC Report on an investigation into allegations of official misconduct... (March 2005)",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-Airfare-Controversy-Report-2005.pdf",
+      "document": "Palm Island Airfare Controversy: A CMC Report on an investigation into allegations of official misconduct... (March 2005)",
+      "page": 9
+     }
+    ],
+    "section": "SUMMARY OF CMC FINDINGS"
+   },
+   {
+    "text": "The CMC considered that two ministerial advisers should face consideration of disciplinary action over preparing and issuing a false statement, although their conduct did not constitute official misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-Airfare-Controversy-Report-2005.pdf",
+      "document": "Palm Island Airfare Controversy: A CMC Report on an investigation into allegations of official misconduct... (March 2005)",
+      "page": 4
+     }
+    ],
+    "section": "SUMMARY OF CMC FINDINGS"
+   },
+   {
+    "text": "It found the minister had approved a statement she knew, or should have known, was false, but that her conduct did not amount to a criminal offence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-Airfare-Controversy-Report-2005.pdf",
+      "document": "Palm Island Airfare Controversy: A CMC Report on an investigation into allegations of official misconduct... (March 2005)",
+      "page": 4
+     }
+    ],
+    "section": "SUMMARY OF CMC FINDINGS"
+   },
+   {
+    "text": "The CMC considered allegations of a cover-up involving the director-general and staff in the Premier’s office unsubstantiated.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-Airfare-Controversy-Report-2005.pdf",
+      "document": "Palm Island Airfare Controversy: A CMC Report on an investigation into allegations of official misconduct... (March 2005)",
+      "page": 4
+     }
+    ],
+    "section": "SUMMARY OF CMC FINDINGS"
+   },
+   {
+    "text": "The CMC said it would forward the report to the Department of the Premier and Cabinet for a decision on disciplinary action.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-Airfare-Controversy-Report-2005.pdf",
+      "document": "Palm Island Airfare Controversy: A CMC Report on an investigation into allegations of official misconduct... (March 2005)",
+      "page": 38
+     }
+    ],
+    "section": "ASSESSING THE DEGREE OF BLAME"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The allegation that staff of the Premier’s office were involved in a cover-up strategy is unsubstantiated and is considered unlikely to have occurred.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/Palm-Island-Airfare-Controversy-Report-2005.pdf",
+     "document": "Palm Island Airfare Controversy: A CMC Report on an investigation into allegations of official misconduct... (March 2005)",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

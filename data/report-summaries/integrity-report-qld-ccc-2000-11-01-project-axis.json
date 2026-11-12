@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2000-11-01-project-axis",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Project Axis",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf",
+  "document": "Volume 1 - Project Axis: Child Sexual Abuse in Queensland: The Nature and Extent (June 2000)",
+  "sha256": "58dd93bdbe6edffcf4aaa8801c4af66533793530d58dc753eb67c764bc607973",
+  "pages": 158,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive Summary",
+  "first_page": 9,
+  "last_page": 14,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Queensland Crime Commission and Queensland Police Service established Project Axis to investigate child sexual offending in Queensland.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf",
+      "document": "Volume 1 - Project Axis: Child Sexual Abuse in Queensland: The Nature and Extent (June 2000)",
+      "page": 9
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "This volume examined the nature and extent of that offending using published and unpublished material and commissioned research.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf",
+      "document": "Volume 1 - Project Axis: Child Sexual Abuse in Queensland: The Nature and Extent (June 2000)",
+      "page": 9
+     }
+    ],
+    "section": "Executive Summary"
+   },
+   {
+    "text": "The QCC reported that offenders were usually known to victims and that abuse commonly occurred in the offender’s or victim’s home.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf",
+      "document": "Volume 1 - Project Axis: Child Sexual Abuse in Queensland: The Nature and Extent (June 2000)",
+      "page": 10
+     }
+    ],
+    "section": "Offender characteristics"
+   },
+   {
+    "text": "It reported research suggesting that about half of victims never disclosed their abuse to anyone.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf",
+      "document": "Volume 1 - Project Axis: Child Sexual Abuse in Queensland: The Nature and Extent (June 2000)",
+      "page": 12
+     }
+    ],
+    "section": "Disclosure of child sexual abuse"
+   },
+   {
+    "text": "The QCC identified priorities for education, prevention, tailored offender treatment and further research into victims and offending.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf",
+      "document": "Volume 1 - Project Axis: Child Sexual Abuse in Queensland: The Nature and Extent (June 2000)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf",
+      "document": "Volume 1 - Project Axis: Child Sexual Abuse in Queensland: The Nature and Extent (June 2000)",
+      "page": 14
+     }
+    ],
+    "section": "Implications of the findings"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Child sex offenders are most likely to be known to their victims and to perpetrate abuse in their own or their victim’s home.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf",
+     "document": "Volume 1 - Project Axis: Child Sexual Abuse in Queensland: The Nature and Extent (June 2000)",
+     "page": 10
+    }
+   },
+   {
+    "quote": "The low level of disclosure of child sexual abuse is one of the central impediments to agencies in providing appropriately targeted responses to the problem.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/QCC/Project-AXIS-Volume-1-The-nature-and-extent-Report-2000.pdf",
+     "document": "Volume 1 - Project Axis: Child Sexual Abuse in Queensland: The Nature and Extent (June 2000)",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

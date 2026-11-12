@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2008-10-03-report-investigation-alleged-misconduct-concerning-8c058c39",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Misconduct Concerning Rezoning of Land at Whitby",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Rezoning%20of%20Land%20at%20Whitby.pdf",
+  "document": "Report on the Investigation of Alleged Misconduct Concerning Rezoning of Land at Whitby.pdf",
+  "sha256": "585d2e366ae5d4f5ebcc13faccbcd1523c941454499816db6edb95a3e226334b",
+  "pages": 139,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 12,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Rezoning%20of%20Land%20at%20Whitby.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated public officers’ responses to lobbying over residential rezoning at Whitby.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Rezoning%20of%20Land%20at%20Whitby.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Rezoning of Land at Whitby.pdf",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It examined the release of departmental information and correspondence about whether mineral extraction should precede development.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Rezoning%20of%20Land%20at%20Whitby.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Rezoning of Land at Whitby.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Rezoning%20of%20Land%20at%20Whitby.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Rezoning of Land at Whitby.pdf",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Rezoning%20of%20Land%20at%20Whitby.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Rezoning of Land at Whitby.pdf",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed a serious misconduct opinion about a senior departmental officer’s disclosures, but did not establish misconduct by the minister or the other officers identified.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Rezoning%20of%20Land%20at%20Whitby.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Rezoning of Land at Whitby.pdf",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Rezoning%20of%20Land%20at%20Whitby.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Rezoning of Land at Whitby.pdf",
+      "page": 12
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "Its two recommendations called for a review of public sector disciplinary arrangements and consideration of prosecuting the senior officer for corruption.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Misconduct%20Concerning%20Rezoning%20of%20Land%20at%20Whitby.pdf",
+      "document": "Report on the Investigation of Alleged Misconduct Concerning Rezoning of Land at Whitby.pdf",
+      "page": 106
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

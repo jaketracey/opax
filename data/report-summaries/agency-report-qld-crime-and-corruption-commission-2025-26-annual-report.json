@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-qld-crime-and-corruption-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Crime and Corruption Commission 2025-26 annual report",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Annual-Report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "8694331eade03c3f7dd757903ae6838a1a70c56e673168b096d02f78865c0dca",
+  "pages": 118,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chairperson",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Annual-Report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Queensland’s Crime and Corruption Commission reported for 2025–26 on combating major crime, reducing public sector corruption and protecting witnesses.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Who we are"
+   },
+   {
+    "text": "The Commission reported holding 100 days of crime and intelligence hearings and making 38 corruption prevention recommendations to agencies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 25
+     }
+    ],
+    "section": "Key achievements"
+   },
+   {
+    "text": "The Commission reported assessing 75% of complaints within its 45-day timeframe and identified complaint handling as an area for improvement.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "Message from the Chairperson"
+   },
+   {
+    "text": "The Commission recorded a corruption investigation clearance rate of 130% against an 80% target, while hearing costs per witness exceeded the $6,000 target.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 23
+     }
+    ],
+    "section": "Performance information"
+   },
+   {
+    "text": "The Commission reported a net operating surplus of $0.306 million and deferred $4.0 million in funding for use in future years.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Annual-Report-2025-26.pdf",
+      "document": "annual report",
+      "page": 26
+     }
+    ],
+    "section": "Financial summary"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The 38 corruption prevention recommendations we made this year covered a range of topics and agencies.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/CCC-Annual-Report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

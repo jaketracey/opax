@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-greyhound-racing-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Greyhound Racing Victoria 2025-26 annual report",
+ "body": "Greyhound Racing Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "28ce385b1d2cb57e9ee01749acfe66842af84834cf8c0fe983a9c526d6a3af2d",
+  "pages": 86,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CEO REPORT",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Greyhound Racing Victoria’s 2025–26 report describes its work as the controlling body and regulator for Victorian greyhound racing.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "CEO REPORT"
+   },
+   {
+    "text": "GRV reported that its adoption program rehomed 892 retired greyhounds during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "CEO REPORT"
+   },
+   {
+    "text": "It reported completing the introduction of digital lifecycle tracking for greyhounds across Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "CEO REPORT"
+   },
+   {
+    "text": "GRV reported an operating profit of $8 million and a net profit of $0.5 million after depreciation and infrastructure investment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "CEO REPORT"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "During the year, GAP found new homes for 892 retired greyhounds, demonstrating the continued strength of the program and the community’s support for life after racing.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3ac/globalassets/tabled-paper-documents/tabled-paper-10685/greyhound-racing-victoria-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

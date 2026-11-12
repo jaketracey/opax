@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-central-gippsland-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Central Gippsland Health Service 2025-26 annual report",
+ "body": "Central Gippsland Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/central-gippsland-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "36a1a9d9a42f451e7dae18ffe6fba679cfda85d57e98441b5b481933167a0b82",
+  "pages": 112,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Report by the Chief Executive Officer",
+  "first_page": 12,
+  "last_page": 13,
+  "link": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/central-gippsland-health-service-annual-report-2025-26.pdf#page=12"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Central Gippsland Health Service reported for 2025/26 on its health and residential aged care services in Wellington Shire and its wider specialist catchment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/central-gippsland-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/central-gippsland-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Who We Are"
+   },
+   {
+    "text": "The health service reported achieving National Safety and Quality Health Service accreditation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/central-gippsland-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Report by the Chief Executive Officer"
+   },
+   {
+    "text": "The health service reported securing Commonwealth funding to establish a specialist dementia care unit for the region.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/central-gippsland-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ],
+    "section": "Report by the Chief Executive Officer"
+   },
+   {
+    "text": "The health service reported developing a new strategic plan with contributions from consumers, staff, clinicians, volunteers and other partners.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/central-gippsland-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Report by the Chair, Board of Directors"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "One of the highlights of the year was our successful accreditation against the National Safety and Quality Health Service (NSQHS) Standards.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3e1/globalassets/tabled-paper-documents/tabled-paper-10721/central-gippsland-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

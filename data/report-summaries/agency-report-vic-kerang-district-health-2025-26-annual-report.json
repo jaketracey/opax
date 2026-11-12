@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-kerang-district-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Kerang District Health 2025-26 annual report",
+ "body": "Kerang District Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "fd9c74261913a9245f178e3a1cad81c8150bdd2f1cae19485b37ef8114987222",
+  "pages": 94,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "BOARD CHAIR & CEO REPORT",
+  "first_page": 5,
+  "last_page": 10,
+  "link": "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Kerang District Health reported on its 2025–26 hospital, aged care, community and primary care services for Gannawarra Shire.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "RANGE OF SERVICES"
+   },
+   {
+    "text": "KDH reported taking over radiology operations to maintain local X-ray and ultrasound access after the previous provider left.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "BOARD CHAIR & CEO REPORT"
+   },
+   {
+    "text": "It reported starting construction of three staff townhouses and developing a Community Telehealth Room to reduce barriers to appointments.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "BOARD CHAIR & CEO REPORT"
+   },
+   {
+    "text": "KDH reported compliance with accreditation requirements for acute, aged care, community and primary care services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "ACCREDITATION UPDATE"
+   },
+   {
+    "text": "It reported an operating deficit of $352 thousand for 2025-26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ],
+    "section": "FINANCIAL INFORMATION"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "KDH is fully compliant with all accreditation bodies across acute, aged care, community and primary care services.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab405/globalassets/tabled-paper-documents/tabled-paper-10748/kerang-district-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

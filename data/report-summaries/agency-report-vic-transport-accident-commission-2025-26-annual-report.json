@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-transport-accident-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Transport Accident Commission 2025-26 annual report",
+ "body": "Transport Accident Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10650/transport-accident-commission-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "496df3d979c61d548c4d30d6b8bd46c1a0ece8388ad1c12978fc8bd4d03318c7",
+  "pages": 136,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "From our CEO and Chair",
+  "first_page": 4,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10650/transport-accident-commission-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Transport Accident Commission reported on 2025–26, administering a no-fault scheme that supports and rehabilitates people injured in transport accidents.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10650/transport-accident-commission-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "From our CEO and Chair"
+   },
+   {
+    "text": "The TAC reported spending almost $1.97 billion on treatment, rehabilitation, care, benefits and compensation for more than 48,000 clients.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10650/transport-accident-commission-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "From our CEO and Chair"
+   },
+   {
+    "text": "It reported investing almost $131 million in road safety and preventing transport trauma during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10650/transport-accident-commission-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "From our CEO and Chair"
+   },
+   {
+    "text": "The TAC reported a net profit after tax of $1,104 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10650/transport-accident-commission-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "From our CEO and Chair"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "These improvements are reflected in shorter Independent Medical Examination wait times (reduced by 33%), quicker medical report turnaround times (improved by 76%) and improved client experience scores, which increased for an eighth consecutive reporting period.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab378/globalassets/tabled-paper-documents/tabled-paper-10650/transport-accident-commission-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

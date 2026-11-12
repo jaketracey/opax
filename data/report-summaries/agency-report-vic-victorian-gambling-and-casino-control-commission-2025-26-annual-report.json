@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-gambling-and-casino-control-commission-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Gambling and Casino Control Commission 2025-26 annual report",
+ "body": "Victorian Gambling and Casino Control Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aaac5/globalassets/tabled-paper-documents/tabled-paper-10567/victorian-gambling-and-casino-control-commission-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "118a8e0d0935aa8846929d98cb9566f58a1d03ad1e50005fa3c094c5aa02d8cc",
+  "pages": 128,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "A year in review",
+  "first_page": 7,
+  "last_page": 8,
+  "link": "https://www.parliament.vic.gov.au/4aaac5/globalassets/tabled-paper-documents/tabled-paper-10567/victorian-gambling-and-casino-control-commission-2025-26-annual-report.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Gambling and Casino Control Commission reported on 2025–26, regulating gambling for integrity, safety and fairness and to prevent criminal influence and exploitation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aaac5/globalassets/tabled-paper-documents/tabled-paper-10567/victorian-gambling-and-casino-control-commission-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "A year in review"
+   },
+   {
+    "text": "The commission reported strengthening regulation based on risk and intelligence, including investment in data and technology.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aaac5/globalassets/tabled-paper-documents/tabled-paper-10567/victorian-gambling-and-casino-control-commission-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "A year in review"
+   },
+   {
+    "text": "It reported completing 1,633 gambling audits against a target of 1,600, while casino applications, monitoring and audit activities totalled 1,722 against a target of 2,016.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aaac5/globalassets/tabled-paper-documents/tabled-paper-10567/victorian-gambling-and-casino-control-commission-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 20
+     }
+    ],
+    "section": "Performance against output measures"
+   },
+   {
+    "text": "The commission reported an overall net deficit of $3.425 million for 2025–26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aaac5/globalassets/tabled-paper-documents/tabled-paper-10567/victorian-gambling-and-casino-control-commission-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 22
+     }
+    ],
+    "section": "Our current-year financial review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

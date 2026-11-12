@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-local-jobs-first-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Local Jobs First 2025-26 annual report",
+ "body": "Local Jobs First",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "fad0f10b412a59773334f2a49834b616de73465241555401d04fb8f0b521feb9",
+  "pages": 28,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Minister’s Foreword",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Department of Jobs, Skills, Industry and Regions reported on Local Jobs First in 2025–26, a policy supporting local suppliers and employment through Victorian government contracts.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Scope of the report"
+   },
+   {
+    "text": "The Government reported setting local content requirements for 34 new Strategic Projects worth more than $41 billion, with an average minimum requirement of 88%.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 17
+     }
+    ],
+    "section": "Strategic Projects"
+   },
+   {
+    "text": "It reported that 302 projects worth $8.1 billion began during the year, with commitments for 12,431 jobs and opportunities for 19,727 local small and medium-sized enterprises.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 19
+     }
+    ],
+    "section": "Commenced Projects"
+   },
+   {
+    "text": "The Government reported completion of 86 Local Jobs First projects with a combined value of $10.7 billion.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 19
+     }
+    ],
+    "section": "Completed Projects"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "A total of 302 Local Jobs First projects worth $8.1 billion commenced during 2025‑26.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a581e/globalassets/tabled-paper-documents/tabled-paper-10482/local-jobs-first-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 19
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

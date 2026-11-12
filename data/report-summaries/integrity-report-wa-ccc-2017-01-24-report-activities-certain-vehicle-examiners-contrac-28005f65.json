@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2017-01-24-report-activities-certain-vehicle-examiners-contrac-28005f65",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the activities of certain vehicle examiners contracted by the Department of Transport",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20activities%20of%20certain%20vehicle%20examiners%20contracted%20by%20the%20Department%20of%20Transport.pdf",
+  "document": "Report on the activities of certain vehicle examiners contracted by the Department of Transport",
+  "sha256": "47deb0f39a7f2d0bdd7b80135b9b46c34493fe3475dd3d200bb0f68c0ae4a74e",
+  "pages": 37,
+  "rights": "copyright-commission"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated privately contracted vehicle examiners following concerns about corruption and weak oversight of outsourced inspections.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20activities%20of%20certain%20vehicle%20examiners%20contracted%20by%20the%20Department%20of%20Transport.pdf",
+      "document": "Report on the activities of certain vehicle examiners contracted by the Department of Transport",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20activities%20of%20certain%20vehicle%20examiners%20contracted%20by%20the%20Department%20of%20Transport.pdf",
+      "document": "Report on the activities of certain vehicle examiners contracted by the Department of Transport",
+      "page": 10
+     }
+    ],
+    "section": "HOW AND WHY THIS INVESTIGATION CAME ABOUT"
+   },
+   {
+    "text": "It used covert surveillance, intercepted communications and examinations to investigate vehicles certified for licensing.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20activities%20of%20certain%20vehicle%20examiners%20contracted%20by%20the%20Department%20of%20Transport.pdf",
+      "document": "Report on the activities of certain vehicle examiners contracted by the Department of Transport",
+      "page": 9
+     }
+    ],
+    "section": "HOW AND WHY THIS INVESTIGATION CAME ABOUT"
+   },
+   {
+    "text": "The Commission found that serious misconduct had compromised the vehicle licensing system, creating risks for road safety and purchasers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20activities%20of%20certain%20vehicle%20examiners%20contracted%20by%20the%20Department%20of%20Transport.pdf",
+      "document": "Report on the activities of certain vehicle examiners contracted by the Department of Transport",
+      "page": 9
+     }
+    ],
+    "section": "HOW AND WHY THIS INVESTIGATION CAME ABOUT"
+   },
+   {
+    "text": "It recommended adopting seven further oversight measures, including predictive analysis, photographic records, broader compliance work, invoice audits, more resources, training and a reporting line.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20activities%20of%20certain%20vehicle%20examiners%20contracted%20by%20the%20Department%20of%20Transport.pdf",
+      "document": "Report on the activities of certain vehicle examiners contracted by the Department of Transport",
+      "page": 35
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

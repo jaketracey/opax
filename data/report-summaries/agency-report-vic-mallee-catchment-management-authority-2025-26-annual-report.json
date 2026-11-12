@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-mallee-catchment-management-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Mallee Catchment Management Authority 2025-26 annual report",
+ "body": "Mallee Catchment Management Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "6652018e4816243d754022564e4082ec40d834787fe2b48c45b3fc75cdc02c49",
+  "pages": 112,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chair’s Report",
+  "first_page": 7,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Mallee Catchment Management Authority reported on its 2025–26 work coordinating sustainable management of the region’s natural, cultural and productive landscapes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Nature and range of services provided"
+   },
+   {
+    "text": "Mallee CMA reported environmental works across about 415,000 hectares, with 95 per cent directed to high-value landscapes and more than 49,000 hectares covering priority waterways.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Waterway and Catchment Health"
+   },
+   {
+    "text": "It reported engaging 4,158 participants through events, facilitating 92 formal partnerships and establishing 13 agreements with Traditional Owners.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Customer, Community and Engagement"
+   },
+   {
+    "text": "Mallee CMA reported maintaining its quality management certification and gaining recertification for 2025–28.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Performance and Financial Management"
+   },
+   {
+    "text": "It reported a financial surplus of $16,921,330 and net assets of $67,742,552.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 55
+     }
+    ],
+    "section": "Current year financial review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Mallee CMA programs and projects collectively delivered some 415,000ha of environmental works throughout 2025–26 to protect and improve the region’s priority land, water, and biodiversity assets.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab330/globalassets/tabled-paper-documents/tabled-paper-10593/mallee-cma-annaul-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 9
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

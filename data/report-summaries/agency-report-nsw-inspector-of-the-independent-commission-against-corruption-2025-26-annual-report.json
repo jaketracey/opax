@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-inspector-of-the-independent-commission-against-corruption-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Inspector of the Independent Commission Against Corruption 2025-26 annual report",
+ "body": "Inspector of the Independent Commission Against Corruption",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212478%2FOIICAC%20Annual%20Report%202025-26.pdf",
+  "document": "annual report",
+  "sha256": "fefce8c5bf0986e3daac0830019c1177ecb33c17365e419a395a3ada57ca80b6",
+  "pages": 28,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Introduction and overview",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212478%2FOIICAC%20Annual%20Report%202025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Inspector of the Independent Commission Against Corruption reported on 2025–26, overseeing the Commission through complaints, operational information and scrutiny of procedures.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212478%2FOIICAC%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212478%2FOIICAC%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ]
+   },
+   {
+    "text": "The Inspector reported receiving 69 complaints and notifications, including 29 notifications from the Commission.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212478%2FOIICAC%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The Inspector finalised 68 complaints, including two carried over from the preceding year.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212478%2FOIICAC%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Inspector reported a median complaint finalisation time of seven days, with three complaints outstanding at year end.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212478%2FOIICAC%20Annual%20Report%202025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Three complaints remained outstanding at the end of the reporting period.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212478%2FOIICAC%20Annual%20Report%202025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

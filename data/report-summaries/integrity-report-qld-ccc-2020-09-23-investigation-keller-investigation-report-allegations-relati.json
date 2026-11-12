@@ -1,0 +1,135 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2020-09-23-investigation-keller-investigation-report-allegations-relati",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation Keller: An investigation report into allegations relating to the former Chief of Staff to The Honourable Annastacia Palaszczuk MP, Premier of Queensland and Minister for Trade",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+  "document": "Investigation Keller - September 2020 (PDF)",
+  "sha256": "68b9418eae0aff65cc03bb2b3826a060350633b43c903503ec7ac87f4d18928f",
+  "pages": 66,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chapter 4 – Conclusion",
+  "first_page": 46,
+  "last_page": 47,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf#page=46"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Queensland’s Crime and Corruption Commission investigated allegations that the Premier’s then chief of staff misused his position to secure public co-investment funding for a company he helped own and direct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+      "document": "Investigation Keller - September 2020 (PDF)",
+      "page": 46
+     }
+    ],
+    "section": "Chapter 4 – Conclusion"
+   },
+   {
+    "text": "It examined the official’s role in the application, disclosure of his interests, the accuracy of his responses and whether the funding decision involved improper influence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+      "document": "Investigation Keller - September 2020 (PDF)",
+      "page": 46
+     }
+    ],
+    "section": "Chapter 4 – Conclusion"
+   },
+   {
+    "text": "The CCC found no evidence of improper influence over the funding decision or misuse of the official’s position to obtain it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+      "document": "Investigation Keller - September 2020 (PDF)",
+      "page": 47
+     }
+    ],
+    "section": "Chapter 4 – Conclusion"
+   },
+   {
+    "text": "The CCC nevertheless found that he had not fully declared his non-financial interests and considered that this could have warranted disciplinary action had he remained employed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+      "document": "Investigation Keller - September 2020 (PDF)",
+      "page": 47
+     }
+    ],
+    "section": "Chapter 4 – Conclusion"
+   },
+   {
+    "text": "The CCC made five recommendations on interest declarations, conflict management, investment-panel records and disclosure of Integrity Commissioner advice.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+      "document": "Investigation Keller - September 2020 (PDF)",
+      "page": 48
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+      "document": "Investigation Keller - September 2020 (PDF)",
+      "page": 51
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+      "document": "Investigation Keller - September 2020 (PDF)",
+      "page": 53
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+      "document": "Investigation Keller - September 2020 (PDF)",
+      "page": 54
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+      "document": "Investigation Keller - September 2020 (PDF)",
+      "page": 55
+     }
+    ],
+    "section": "Chapter 5 – Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The investigation found that there was no evidence Barbagallo misused his position as Chief of Staff to obtain funding from the AQBD Fund through Fortress Capstone.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+     "document": "Investigation Keller - September 2020 (PDF)",
+     "page": 47
+    }
+   },
+   {
+    "quote": "The investigation did find Barbagallo failed to fully and accurately declare his non-pecuniary interests throughout his employment as Chief of Staff.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Keller_a-report-into-allegations-relating-to-the-Premiers-former-Chief-of-Staff_September-2020.pdf",
+     "document": "Investigation Keller - September 2020 (PDF)",
+     "page": 47
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-museums-board-of-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Museums Board of Victoria 2025-26 annual report",
+ "body": "Museums Board of Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf",
+  "document": "annual report",
+  "sha256": "5e1d15da7683176b26868b527b15a1e36266ab0ba86fb29569632e5973985b76",
+  "pages": 134,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "President’s message",
+  "first_page": 6,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Museums Board of Victoria reported on 2025–26, overseeing museums and the State Collection of scientific and cultural heritage.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "Museums Victoria reported 3.6 million site admissions and the opening of the permanent exhibition \"Our Wondrous Planet\" at Melbourne Museum.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It reported education participation above target under an updated counting method, while memberships and volunteer hours were below target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 54
+     }
+    ]
+   },
+   {
+    "text": "It reported a surplus before depreciation of $17.325 million and a deficit after depreciation of $6.277 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 48
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Volunteer hours were 14% below target.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3a1/globalassets/tabled-paper-documents/tabled-paper-10672/museums_board_of_victoria_annual_report_2025-26.pdf",
+     "document": "annual report",
+     "page": 54
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

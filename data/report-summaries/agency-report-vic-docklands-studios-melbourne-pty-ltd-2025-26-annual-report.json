@@ -1,0 +1,68 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-docklands-studios-melbourne-pty-ltd-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Docklands Studios Melbourne Pty Ltd 2025-26 annual report",
+ "body": "Docklands Studios Melbourne Pty Ltd",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10678/docklands_studios_melbourne_annual_report_2025-26.pdf",
+  "document": "annual report",
+  "sha256": "8936936fd8c81c7a8e9e49e8c3605e80f3baf94a3102492c9e2124e1bca00e2e",
+  "pages": 49,
+  "rights": null
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Docklands Studios Melbourne Pty Ltd’s annual report includes financial accounts for the year ended 30 June 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10678/docklands_studios_melbourne_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 18
+     }
+    ],
+    "section": "Opinion"
+   },
+   {
+    "text": "The Auditor-General’s delegate concluded that the financial report fairly presented the company’s financial position, performance and cash flows in all material respects.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10678/docklands_studios_melbourne_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 18
+     }
+    ],
+    "section": "Opinion"
+   },
+   {
+    "text": "The delegate’s opinion covered the financial report and gave no assurance on the annual report’s other information.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab38a/globalassets/tabled-paper-documents/tabled-paper-10678/docklands_studios_melbourne_annual_report_2025-26.pdf",
+      "document": "annual report",
+      "page": 18
+     }
+    ],
+    "section": "Other information"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

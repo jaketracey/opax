@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-mental-health-tribunal-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Mental Health Tribunal 2025-26 annual report",
+ "body": "Mental Health Tribunal",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "1c7f642c5c5878a400aafb8f47b75783a9f088cf10f0a8120c9f8986f61a61bf",
+  "pages": 54,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "PRESIDENT’S MESSAGE",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Mental Health Tribunal reported on 2025–26 as the independent body deciding whether people meet the criteria for compulsory mental health treatment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The tribunal reported a 2 per cent increase in hearings, with demand continuing to exceed capacity.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It reported appointing 13 additional psychiatrist members and seven registered medical members in April 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It acknowledged significant delays in hearing applications to revoke treatment orders, including excessive delays for some people on community orders.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There were significant delays in scheduling these matters, and the delay was excessive for some consumers on community treatment orders.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3ad/globalassets/tabled-paper-documents/tabled-paper-10695/mental-health-tribunal-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 4
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

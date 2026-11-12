@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2012-04-16-report-investigation-alleged-public-sector-miscondu-287e30eb",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+  "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+  "sha256": "0833406e046bed38b31691feed835001e3b4414e4eb53699dbf28bf3a4e9f1b7",
+  "pages": 174,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 26,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated alleged misconduct involving police and corrective services officers’ use of Tasers and treatment of detainees.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 11
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "It examined incidents involving one detainee, a separate prison cell extraction, internal investigations and the agencies’ policies.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 12
+     }
+    ],
+    "section": "Introduction"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about excessive force by two police officers and recommended that their prosecution be considered.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 17
+     }
+    ],
+    "section": "Commission Opinions as to Misconduct"
+   },
+   {
+    "text": "For several other Taser uses, it found no misconduct or lacked sufficient material to decide whether the force was justified.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 18
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 19
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 21
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 22
+     }
+    ],
+    "section": "Commission Opinions as to Misconduct"
+   },
+   {
+    "text": "Its nine numbered recommendations address force reports, internal investigations, charging decisions, custody practices, incident recording and review, negotiation, specialist officer tenure and prison medical care.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 23
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 24
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+      "page": 25
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "It is recommended that DCS review the period of time that officers can be attached to the ESG and give consideration to the introduction of a tenure period for officers attached to the ESG.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+     "page": 25
+    }
+   },
+   {
+    "quote": "However, precisely when, during the course of the cell extraction, by whom and precisely how that might have occurred it is not possible to determine.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20use%20of%20Taser%20weapons%20by%20officers%20of%20WA%20Police%20and%20the%20Department%20of%20Corrective%20Services.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct in relation to the use of Taser weapons by officers of Western Australia Police and the Department of Corrective Services",
+     "page": 151
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

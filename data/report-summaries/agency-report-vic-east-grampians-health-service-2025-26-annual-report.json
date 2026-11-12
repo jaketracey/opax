@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-east-grampians-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "East Grampians Health Service 2025-26 annual report",
+ "body": "East Grampians Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3e6/globalassets/tabled-paper-documents/tabled-paper-10731/east-grampians-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "166420776ee887b3852cfb0ab066a9e73c71a64b0aebd03fc510c2bce841e492",
+  "pages": 39,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CHAIR AND CHIEF EXECUTIVE REPORT",
+  "first_page": 12,
+  "last_page": 16,
+  "link": "https://www.parliament.vic.gov.au/4ab3e6/globalassets/tabled-paper-documents/tabled-paper-10731/east-grampians-health-service-annual-report-2025-26.pdf#page=12"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "East Grampians Health Service reported on its 2025–26 hospital, residential, home and community care for Ararat and Willaura.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e6/globalassets/tabled-paper-documents/tabled-paper-10731/east-grampians-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "NATURE AND RANGE OF SERVICES"
+   },
+   {
+    "text": "The service reported installing new endoscopy equipment across both operating theatres with a $545,187 government grant.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e6/globalassets/tabled-paper-documents/tabled-paper-10731/east-grampians-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ],
+    "section": "CHAIR AND CHIEF EXECUTIVE REPORT"
+   },
+   {
+    "text": "It reported delivering 4.3% of admitted bed days at home against a 1.1% target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e6/globalassets/tabled-paper-documents/tabled-paper-10731/east-grampians-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "STATEMENT OF PRIORITIES"
+   },
+   {
+    "text": "It recorded an operating surplus of $218 thousand.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3e6/globalassets/tabled-paper-documents/tabled-paper-10731/east-grampians-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "FINANCIAL SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Overall, the survey confirms EGHS has an engaged and committed workforce with a strong foundation for delivering high-quality care.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3e6/globalassets/tabled-paper-documents/tabled-paper-10731/east-grampians-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 12
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-ames-australia-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "AMES Australia 2025-26 annual report",
+ "body": "AMES Australia",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "92e16fa39082f66c2d40d3520e150f111258d104ccc536772f8f0bc81038f7d2",
+  "pages": 72,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Statement from the Board Chair of AMES Australia",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "AMES Australia reported on 2025–2026, supporting refugees, migrants and multicultural communities through settlement, education, employment and community participation services.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "AMES reported supporting 7,437 clients through the Humanitarian Settlement Program and recording 6,064 education enrolments.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "It recorded 1,555 sustainable employment outcomes and 79% student satisfaction in a national survey.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "AMES reported completing all 19 actions in its 2021–2025 gender equality plan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "It reported a surplus and plans to continue investing in facilities, systems, staff and clients.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 34
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "During the year, AMES Australia divested its interest in Kare One Pty Ltd as part of a strategic portfolio review.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab317/globalassets/tabled-paper-documents/tabled-paper-10575/final---bmin-2-26-54051---ames-australia-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 34
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

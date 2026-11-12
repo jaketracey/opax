@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2018-03-21-report-tasering-incident-31-march-2017-fremantle",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report into a Tasering Incident on 31 March 2017 at Fremantle",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20a%20Tasering%20Incident%20on%2031%20March%202017%20at%20Fremantle.pdf",
+  "document": "Report into a Tasering Incident on 31 March 2017 at Fremantle",
+  "sha256": "ae994c989c2989a9865676ae7fd07c287495dc18dee1d1e5dc7ca95d808ae737",
+  "pages": 54,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "INTRODUCTION",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20a%20Tasering%20Incident%20on%2031%20March%202017%20at%20Fremantle.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated police use of a Taser in Fremantle after disagreeing with the police’s internal assessment.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20a%20Tasering%20Incident%20on%2031%20March%202017%20at%20Fremantle.pdf",
+      "document": "Report into a Tasering Incident on 31 March 2017 at Fremantle",
+      "page": 5
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "It considered sworn accounts and a recording of the incident and its aftermath.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20a%20Tasering%20Incident%20on%2031%20March%202017%20at%20Fremantle.pdf",
+      "document": "Report into a Tasering Incident on 31 March 2017 at Fremantle",
+      "page": 5
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "The Commission concluded that the tasering lacked lawful authority, was unreasonable and oppressive, and amounted to serious misconduct by the officer who used the weapon.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20a%20Tasering%20Incident%20on%2031%20March%202017%20at%20Fremantle.pdf",
+      "document": "Report into a Tasering Incident on 31 March 2017 at Fremantle",
+      "page": 6
+     }
+    ],
+    "section": "INTRODUCTION"
+   },
+   {
+    "text": "It considered the police investigations flawed but did not suggest they were driven by improper motives.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20into%20a%20Tasering%20Incident%20on%2031%20March%202017%20at%20Fremantle.pdf",
+      "document": "Report into a Tasering Incident on 31 March 2017 at Fremantle",
+      "page": 54
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

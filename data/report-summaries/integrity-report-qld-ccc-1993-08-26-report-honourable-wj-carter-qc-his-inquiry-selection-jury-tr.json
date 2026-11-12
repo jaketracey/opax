@@ -1,0 +1,164 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-1993-08-26-report-honourable-wj-carter-qc-his-inquiry-selection-jury-tr",
+ "report_type": "integrity_report",
+ "subtype": "public_inquiry_report",
+ "title": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of Sir Johannes Bjelke-Petersen",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+  "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+  "sha256": "377cc9e1c0245ab16078bf15ca39783c0266e849ceb4cb523dbd85cbf6ca0f49",
+  "pages": 510,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "12.9 Summary of Findings",
+  "first_page": 475,
+  "last_page": 480,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf#page=475"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission commissioned an independent inquiry into jury selection for a former premier’s trial.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 3
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 481
+     }
+    ],
+    "section": "1.1 The Establishment of the Inquiry and its Terms"
+   },
+   {
+    "text": "It examined contacts with prospective jurors, information given to the trial judge, jury-list creation and possible disclosure of confidential information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 11
+     }
+    ],
+    "section": "1.1 The Establishment of the Inquiry and its Terms"
+   },
+   {
+    "text": "The inquiry concluded that an investigator deliberately deceived defence counsel, who then unintentionally misled the trial judge about polling of the original panel.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 478
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 479
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 476
+     }
+    ],
+    "section": "12.9 Summary of Findings"
+   },
+   {
+    "text": "It found no manipulation of jury-list creation and insufficient evidence to justify official misconduct charges or a report for prosecution.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 479
+     }
+    ],
+    "section": "12.9 Summary of Findings"
+   },
+   {
+    "text": "The inquiry proposed six rules to restrict publication, access, copying and retention of jury lists and when they became available before trials.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 487
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+      "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+      "page": 488
+     }
+    ],
+    "section": "CHAPTER 13"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "O'Brien's intention in falsely deceiving Greenwood QC and Gundelach was to facilitate the discharge of Panel Z from service in the Bjelke-Petersen trial for which it had been specifically formed.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+     "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+     "page": 476
+    }
+   },
+   {
+    "quote": "Senior defence Counsel in providing the trial Judge with false and misleading information did so in the honest but mistaken belief that what he had been told was true, and without any intention to deceive or mislead the trial Judge.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+     "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+     "page": 479
+    }
+   },
+   {
+    "quote": "There is no sufficient evidence available which shows a prima facie case against any person in respect of whom a charge of official misconduct might be brought or which warrants the Chairman authorising a report pursuant to Section 2.24(2) of the Criminal Justice Act 1989.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+     "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+     "page": 479
+    }
+   },
+   {
+    "quote": "The procedures used to create prospective jury lists and jury panels were not manipulated to include the name of any person who was subsequently empanelled in the Bjelke-Petersen trial.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CJC/The-inquiry-into-the-selection-of-the-jury-for-the-trial-of-Sir-Joh-Bjelke-Petersen-Report-1993_0.pdf",
+     "document": "Report by the Honourable WJ Carter QC on his Inquiry into the Selection of the Jury for the Trial of... (26 August 1993)",
+     "page": 479
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:50+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

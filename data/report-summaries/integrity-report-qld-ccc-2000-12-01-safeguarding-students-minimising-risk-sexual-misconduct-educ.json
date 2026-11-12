@@ -1,0 +1,165 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2000-12-01-safeguarding-students-minimising-risk-sexual-misconduct-educ",
+ "report_type": "integrity_report",
+ "subtype": "prevention_research_report",
+ "title": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+  "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+  "sha256": "dab36e25f061688c0719ee87837f95173d33f348021d5adc5182099f579d70b4",
+  "pages": 107,
+  "rights": "cc-by-4.0",
+  "text": "ocr"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 10,
+  "last_page": 17,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Criminal Justice Commission reviewed Education Queensland’s policies for reporting and investigating alleged sexual behaviour by staff towards students.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 10
+     }
+    ],
+    "section": "Context"
+   },
+   {
+    "text": "The review focused on prevention, using individual investigations only to illustrate where policies and procedures needed improvement.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 10
+     }
+    ],
+    "section": "What this report does and does not do"
+   },
+   {
+    "text": "The Commission acknowledged existing initiatives but concluded that clearer conduct rules, stronger reporting, better investigations and tighter screening were needed.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 11
+     }
+    ],
+    "section": "Where to from here: strategies for addressing the problem"
+   },
+   {
+    "text": "The Commission’s recommendations covered conduct standards, reporting and investigation of allegations, student protection, screening, information sharing and disciplinary powers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 13
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 14
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 46
+     }
+    ],
+    "section": "List of recommendations"
+   },
+   {
+    "text": "The Commission concluded that most recommendations could be implemented without legislative changes or substantial extra spending.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+      "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+      "page": 74
+     }
+    ],
+    "section": "THE IMPLEMENTATION PROCESS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The internal investigative capacity of Education Queensland needs to be enhanced.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+     "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+     "page": 11
+    }
+   },
+   {
+    "quote": "That the Code of Conduct and associated policies be regularly reviewed and updated.",
+    "kind": "recommendation",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+     "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+     "page": 12
+    }
+   },
+   {
+    "quote": "Most of the recommendations made in this report can be implemented without requiring legislative change or significant budgetary outlays.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/2020-03/Safeguarding-students-Report-2000.pdf",
+     "document": "Safeguarding Students: Minimising the Risk of Sexual Misconduct by Education Queensland staff (December 2000)",
+     "page": 74
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

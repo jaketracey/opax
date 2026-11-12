@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-department-of-government-services-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Department of Government Services 2025-26 annual report",
+ "body": "Department of Government Services",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/dgs-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "f86feeb883735f786a81cb5d4d73ee0b1f92cc7350bc6776610409c3715ad4cf",
+  "pages": 209,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Secretary’s foreword",
+  "first_page": 9,
+  "last_page": 10,
+  "link": "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/dgs-annual-report-2025-26.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Department of Government Services’ 2025–26 report covers public services and the systems supporting government administration, with an emphasis on access and responsiveness.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/dgs-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Secretary’s foreword"
+   },
+   {
+    "text": "The department reported that Service Victoria provided access to 440 government services and that its consolidated contact centre handled 868,165 contacts.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/dgs-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Secretary’s foreword"
+   },
+   {
+    "text": "It reported customer satisfaction of 96%, above its target, from 1.3 million experience ratings.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/dgs-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Secretary’s foreword"
+   },
+   {
+    "text": "It reported a $374.3 million net surplus, including $127.6 million from removing lease option periods from its accounts.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/dgs-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 135
+     }
+    ],
+    "section": "FINANCIAL PERFORMANCE"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "We strengthened corporate shared services, onboarding 3 departments to the VicGov People platform and launching VicGov Services, enabling managers and employees to use self-service and interactive chat for HR and payroll services.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab31c/globalassets/tabled-paper-documents/tabled-paper-10579/dgs-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

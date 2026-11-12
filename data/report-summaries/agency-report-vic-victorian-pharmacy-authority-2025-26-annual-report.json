@@ -1,0 +1,127 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-pharmacy-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Pharmacy Authority 2025-26 annual report",
+ "body": "Victorian Pharmacy Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "36c1620c2e7b68f012f5ab817f8c0a27404ce9d17bc8500d69dce352ab1b0374",
+  "pages": 76,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chairperson and Registrar report",
+  "first_page": 10,
+  "last_page": 11,
+  "link": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Pharmacy Authority reported for the year ending 30 June 2026 on its regulation of pharmacy ownership, premises and operations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "About the VPA"
+   },
+   {
+    "text": "The Authority reported introducing a central licensing database, an online renewal portal and secure electronic payments.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Chairperson and Registrar report"
+   },
+   {
+    "text": "The Authority reported revising inspection checklists to concentrate on higher-risk issues and beginning a project to identify priority harms.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Chairperson and Registrar report"
+   },
+   {
+    "text": "The Authority also reported issuing guidance on pharmacy ownership, proprietary interests and third-party influence.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Chairperson and Registrar report"
+   },
+   {
+    "text": "The Authority reported processing 452 applications, with 90% receiving an initial assessment and 92% completing processing within its service timeframes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 39
+     }
+    ],
+    "section": "Service standard data"
+   },
+   {
+    "text": "The Authority reported a deficit of $198,547, largely attributed to the first stage of its digital transformation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 40
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 41
+     }
+    ],
+    "section": "Financial operations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Improvements to the public register, including expanded search functionality, were also delivered during the period.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4aa6ba/globalassets/tabled-paper-documents/tabled-paper-10683/victorian-pharmacy-authority-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-goulburn-valley-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Goulburn Valley Health 2025-26 annual report",
+ "body": "Goulburn Valley Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "5b5112b70342eabb6996aebdb26277396adcd86143962dcba852db2ba4f5bd96",
+  "pages": 69,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "CHIEF EXECUTIVE REPORT",
+  "first_page": 5,
+  "last_page": 6,
+  "link": "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "In its 2025/26 report, Goulburn Valley Health describes its hospital, aged care and community health services across the Goulburn Valley.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "OUR SERVICES"
+   },
+   {
+    "text": "GV Health reported finishing construction of a youth mental health recovery centre and completing the first stage of staff accommodation redevelopment.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "CHIEF EXECUTIVE REPORT"
+   },
+   {
+    "text": "It reported that its new Patient Flow and Access Unit reduced emergency department congestion and improved ambulance offload times.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "CHIEF EXECUTIVE REPORT"
+   },
+   {
+    "text": "GV Health reported completing or embedding more than half of the 60 initiatives in its 2024–26 strategic plan.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "OUR STRATEGIC PLAN 2024-26"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This year saw the completion of construction of the Youth Prevention and Recovery Care (YPARC) centre.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3f9/globalassets/tabled-paper-documents/tabled-paper-10737/goulburn-valley-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

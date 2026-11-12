@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2009-09-14-report-investigation-alleged-public-sector-miscondu-aa9107e4",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf",
+  "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd.pdf",
+  "sha256": "448b60584d3aed5f338c3f7efd35d3ab970ef9a1c5292b06bb09c882d93e39ce",
+  "pages": 76,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 21,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission examined public officers’ responses to lobbying for Fortescue Metals Group.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd.pdf",
+      "page": 9
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The investigation concerned information about approvals for a railway through the Woodstock-Abydos Protected Area.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd.pdf",
+      "page": 9
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd.pdf",
+      "page": 13
+     }
+    ],
+    "section": "Commission Assessment"
+   },
+   {
+    "text": "The Commission concluded that the evidence did not establish misconduct by the then resources minister in disclosing the information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd.pdf",
+      "page": 16
+     }
+    ],
+    "section": "Commission Assessment"
+   },
+   {
+    "text": "It also concluded that the evidence did not establish that the minister’s chief of staff had a duty to withhold the information from the company’s representative.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd.pdf",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf",
+      "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd.pdf",
+      "page": 21
+     }
+    ],
+    "section": "Commission Assessment"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In light of the foregoing, it is the Commission’s opinion that the evidence does not establish that Mr Bowler’s actions in disclosing the subject information constituted misconduct within section 4 of the Corruption and Crime Commission Act 2003.",
+    "kind": "opinion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd.pdf",
+     "page": 16
+    }
+   },
+   {
+    "quote": "That being so, such disclosure could not constitute a breach of discipline by him, and in turn nor could it constitute misconduct under section 4 of the Corruption and Crime Commission Act 2003.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20Investigation%20of%20Alleged%20Public%20Sector%20Misconduct%20in%20Connection%20with%20the%20Activities%20of%20Lobbyists%20and%20Other%20Persons%20-%20Fortescue%20Metals%20Group%20Ltd.pdf",
+     "document": "Report on the Investigation of Alleged Public Sector Misconduct in Connection with the Activities of Lobbyists and Other Persons - Fortescue Metals Group Ltd.pdf",
+     "page": 21
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

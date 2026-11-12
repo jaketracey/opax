@@ -1,0 +1,121 @@
+{
+ "schema": 1,
+ "slug": "agency-report-wa-corruption-and-crime-commission-2024-25-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report, updated publisher version",
+ "title": "Corruption and Crime Commission 2024-25 annual report, updated publisher version",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+  "document": "annual report, updated publisher version",
+  "sha256": "ef2b635d35cad69737f5be2027deda437caa6031f0617ba1d0eb30653caeafd2",
+  "pages": 70,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s Report",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Western Australia’s Corruption and Crime Commission reported for 2024–25 on public sector integrity, corruption reduction and disruption of criminal activity.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+      "document": "annual report, updated publisher version",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+      "document": "annual report, updated publisher version",
+      "page": 5
+     }
+    ],
+    "section": "Commissioner’s Report"
+   },
+   {
+    "text": "The Commission reported tabling nine parliamentary reports on alleged serious misconduct, including three concerning police personnel.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+      "document": "annual report, updated publisher version",
+      "page": 5
+     }
+    ],
+    "section": "Commissioner’s Report"
+   },
+   {
+    "text": "The Commission recorded 40 serious misconduct investigations against a target of 50, and 29 reports against a target of 45.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+      "document": "annual report, updated publisher version",
+      "page": 30
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+      "document": "annual report, updated publisher version",
+      "page": 32
+     }
+    ],
+    "section": "KPI Results 2024-25"
+   },
+   {
+    "text": "The Auditor General concluded that the financial statements presented fairly, but qualified the controls opinion over weaknesses in payroll, expenditure and finance-system access.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+      "document": "annual report, updated publisher version",
+      "page": 23
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+      "document": "annual report, updated publisher version",
+      "page": 24
+     }
+    ],
+    "section": "Independent Auditor’s Report"
+   },
+   {
+    "text": "The Commission reported a workforce of about 136 people, equivalent to 126 full-time positions.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+      "document": "annual report, updated publisher version",
+      "page": 4
+     }
+    ],
+    "section": "Commission Overview"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "There were significant weaknesses in the management of user access to the finance system.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Corruption%20and%20Crime%20Commission%20Annual%20Report%202024-25%20-%20WEB%20-%20UPDATED.pdf",
+     "document": "annual report, updated publisher version",
+     "page": 24
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

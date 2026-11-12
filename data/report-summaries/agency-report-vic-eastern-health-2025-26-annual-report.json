@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-eastern-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Eastern Health 2025-26 annual report",
+ "body": "Eastern Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "4474325dfb121cb99cc009994740a0e6b46dd22541976847a6a96a506c07197f",
+  "pages": 144,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Our Board Chair and Chief Executive",
+  "first_page": 5,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Eastern Health reported on its hospital, mental health, community and specialist healthcare services in 2025–26.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ],
+    "section": "Who we are"
+   },
+   {
+    "text": "The service reported opening a women’s health clinic and moving community mental health services into a new Ringwood hub in August 2025.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ],
+    "section": "Our Board Chair and Chief Executive"
+   },
+   {
+    "text": "It reported meeting its planned activity and service targets for the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Activity levels and costs"
+   },
+   {
+    "text": "It reported an operating deficit of $5.2 million against a breakeven target, on revenue of $1.85 billion.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "The Net Operating Result"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Our planned activity and service targets were met this year allowing Eastern Health to generate $1.85 billion of revenue.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3ee/globalassets/tabled-paper-documents/tabled-paper-10734/eastern-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

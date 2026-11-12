@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2025-09-23-report-corrupt-procurement-practices-and-conduct-he-23919c1e",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on corrupt procurement practices and conduct in Health Support Services",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Procurement%20Practices%20and%20Conduct%20in%20Health%20Support%20Services.pdf",
+  "document": "Report on Corrupt Procurement Practices and Conduct in Health Support Services.pdf",
+  "sha256": "273c16840a165f9fd4bbc94cee29d2b0dfb5240fec0d26c2f491d3df877a4f3f",
+  "pages": 35,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "THE INVESTIGATION",
+  "first_page": 3,
+  "last_page": 7,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Procurement%20Practices%20and%20Conduct%20in%20Health%20Support%20Services.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated alleged misuse of confidential supplier information by a Health Support Services employee managing protective apparel contracts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Procurement%20Practices%20and%20Conduct%20in%20Health%20Support%20Services.pdf",
+      "document": "Report on Corrupt Procurement Practices and Conduct in Health Support Services.pdf",
+      "page": 3
+     }
+    ],
+    "section": "What the Commission investigated"
+   },
+   {
+    "text": "The Commission found that the employee disclosed a supplier’s confidential information to help establish a competitor and received financial benefits.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Procurement%20Practices%20and%20Conduct%20in%20Health%20Support%20Services.pdf",
+      "document": "Report on Corrupt Procurement Practices and Conduct in Health Support Services.pdf",
+      "page": 4
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Procurement%20Practices%20and%20Conduct%20in%20Health%20Support%20Services.pdf",
+      "document": "Report on Corrupt Procurement Practices and Conduct in Health Support Services.pdf",
+      "page": 5
+     }
+    ],
+    "section": "What the Commission found"
+   },
+   {
+    "text": "The Commission formed an opinion of serious misconduct and found that supplier approval processes lacked effective independent checks.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Procurement%20Practices%20and%20Conduct%20in%20Health%20Support%20Services.pdf",
+      "document": "Report on Corrupt Procurement Practices and Conduct in Health Support Services.pdf",
+      "page": 6
+     }
+    ],
+    "section": "The Commission’s opinion of misconduct"
+   },
+   {
+    "text": "The Commission made two recommendations to improve procurement risk assessments and documented checks when adding suppliers to panel and standing offer contracts.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Procurement%20Practices%20and%20Conduct%20in%20Health%20Support%20Services.pdf",
+      "document": "Report on Corrupt Procurement Practices and Conduct in Health Support Services.pdf",
+      "page": 7
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20Corrupt%20Procurement%20Practices%20and%20Conduct%20in%20Health%20Support%20Services.pdf",
+      "document": "Report on Corrupt Procurement Practices and Conduct in Health Support Services.pdf",
+      "page": 33
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:54+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2022-08-01-operation-jersey",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on investigation into pork barrelling in NSW (Operation Jersey)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+  "document": "recommendations for corruption prevention (pdf)",
+  "sha256": "36be5ffe440e31b230c65c65750f08a98dfd42769e96f3da26fa6e3f66a1bae4",
+  "pages": 4,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "NSW ICAC made 21 corruption-prevention recommendations in Operation Jersey, addressing grants funding and safeguards against pork barrelling.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 2
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 3
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 4
+     }
+    ],
+    "section": "Recommendations for corruption prevention"
+   },
+   {
+    "text": "The Commission recommended legally based grant guidelines, stronger requirements for ministers approving expenditure and application of the funding framework to local government.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 1
+     }
+    ],
+    "section": "Recommendations for corruption prevention"
+   },
+   {
+    "text": "It recommended publishing ministerial input into grant assessments and requiring ministers to explain departures from officials’ advice by reference to merit, selection criteria and public interest.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 2
+     }
+    ],
+    "section": "Recommendations for corruption prevention"
+   },
+   {
+    "text": "The Commission also recommended stronger scrutiny of business cases and better grant information, including searchable data, reasons for exceptional funding and complaint processes.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 2
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 3
+     }
+    ],
+    "section": "Recommendations for corruption prevention"
+   },
+   {
+    "text": "Its audit recommendations cover high-risk grants, implementation of records-management recommendations and powers to follow public money.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1029/NSW%20ICAC%20Operation%20Jersey%20Recommendations%20for%20Corruption%20Prevention.pdf.aspx",
+      "document": "recommendations for corruption prevention (pdf)",
+      "page": 4
+     }
+    ],
+    "section": "Recommendations for corruption prevention"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

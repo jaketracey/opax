@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-western-district-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Western District Health Service 2025-26 annual report",
+ "body": "Western District Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "17e64aa992b1a366ef0e6f7f05b99cb1087a52054287bc585a2677190f8a150c",
+  "pages": 66,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from The C hairs and C hief Executive",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Western District Health Service reported for the year ending 30 June 2026 on acute, aged care and community services in rural western Victoria.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 2
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ],
+    "section": "Nature and Range of Services"
+   },
+   {
+    "text": "The Service reported merging voluntarily with Casterton Memorial Hospital on 1 April 2026, bringing clinical, governance, workforce and administrative systems together.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Message from The C hairs and C hief Executive"
+   },
+   {
+    "text": "The Service reported progressing plans for its Hamilton emergency department redevelopment and beginning another stage of redevelopment at Penshurst.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Message from The C hairs and C hief Executive"
+   },
+   {
+    "text": "The Service reported delivering 10,061 weighted activity units against a patient activity target of 10,077.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 24
+     }
+    ],
+    "section": "Organisational growth"
+   },
+   {
+    "text": "The Service reported an operating surplus of $385,000 against a $98,000 budget target, and an overall net deficit of $6.615 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 24
+     }
+    ],
+    "section": "Operating Result"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "For 2025-26, WDHS achieved a modest net operating surplus of $385,000 on total revenue of $143.528m, exceeding the budgeted surplus target of $98,000.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab43c/globalassets/tabled-paper-documents/tabled-paper-10767/western-district-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 24
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

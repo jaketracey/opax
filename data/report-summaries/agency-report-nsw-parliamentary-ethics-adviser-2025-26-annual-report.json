@@ -1,0 +1,80 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-parliamentary-ethics-adviser-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Parliamentary Ethics Adviser 2025-26 annual report",
+ "body": "Parliamentary Ethics Adviser",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212549%2FParliamentary%20Ethics%20Adviser%20Annual%20Report%202025%20-%202026.pdf",
+  "document": "annual report",
+  "sha256": "e3c5be53f20207d174c51bc7b6c9de760e411fab0d2355c885192ae66555c0cb",
+  "pages": 23,
+  "rights": null
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Parliamentary Ethics Adviser reported on 2025–2026, providing confidential ethical advice to NSW parliamentarians and post-employment advice to ministers and former ministers.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212549%2FParliamentary%20Ethics%20Adviser%20Annual%20Report%202025%20-%202026.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212549%2FParliamentary%20Ethics%20Adviser%20Annual%20Report%202025%20-%202026.pdf",
+      "document": "annual report",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Adviser recorded six occasions of advice for the Legislative Assembly and four for the Legislative Council.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212549%2FParliamentary%20Ethics%20Adviser%20Annual%20Report%202025%20-%202026.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The Adviser reported spending 106 hours on duties, with advice covering conflicts of interest, pecuniary disclosures, outside employment and entitlements.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212549%2FParliamentary%20Ethics%20Adviser%20Annual%20Report%202025%20-%202026.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ]
+   },
+   {
+    "text": "The Adviser also reported making submissions to two parliamentary inquiries, addressing the members’ code of conduct and disclosure of conflicts of interest.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212549%2FParliamentary%20Ethics%20Adviser%20Annual%20Report%202025%20-%202026.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

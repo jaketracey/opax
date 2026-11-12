@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2010-12-21-report-investigation-alleged-misuse-public-monies-and-former",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on an investigation into the alleged misuse of public monies, and a former ministerial adviser",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Alleged-misuse-of-public-monies/Report-on-an-investigation-into-the-alleged-misuse-of-public-monies-and-a-former-ministerial-adviser-2010.pdf",
+  "document": "Report on an investigation into the alleged misuse of public monies, and a former ministerial adviser (21 December 2010)",
+  "sha256": "9d5d1eafc9e547b14ccec7356611c3ab4b2f895e7300d36e5f7c6f450ee3106d",
+  "pages": 84,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary",
+  "first_page": 7,
+  "last_page": 9,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Alleged-misuse-of-public-monies/Report-on-an-investigation-into-the-alleged-misuse-of-public-monies-and-a-former-ministerial-adviser-2010.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated a $4.2 million grant to the Queensland Rugby Union and a ministerial adviser’s role in awarding it.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Alleged-misuse-of-public-monies/Report-on-an-investigation-into-the-alleged-misuse-of-public-monies-and-a-former-ministerial-adviser-2010.pdf",
+      "document": "Report on an investigation into the alleged misuse of public monies, and a former ministerial adviser (21 December 2010)",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "It also examined how the department administered its Major Facilities Program and how part of the rugby grant was used.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Alleged-misuse-of-public-monies/Report-on-an-investigation-into-the-alleged-misuse-of-public-monies-and-a-former-ministerial-adviser-2010.pdf",
+      "document": "Report on an investigation into the alleged misuse of public monies, and a former ministerial adviser (21 December 2010)",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that no criminal or disciplinary action would be taken, but identified departures from proper relations between ministerial staff and public servants.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Alleged-misuse-of-public-monies/Report-on-an-investigation-into-the-alleged-misuse-of-public-monies-and-a-former-ministerial-adviser-2010.pdf",
+      "document": "Report on an investigation into the alleged misuse of public monies, and a former ministerial adviser (21 December 2010)",
+      "page": 7
+     }
+    ]
+   },
+   {
+    "text": "The CMC made four recommendations on communication protocols, documenting decisions that override agency advice, staff training and safeguards for discretionary grants.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Alleged-misuse-of-public-monies/Report-on-an-investigation-into-the-alleged-misuse-of-public-monies-and-a-former-ministerial-adviser-2010.pdf",
+      "document": "Report on an investigation into the alleged misuse of public monies, and a former ministerial adviser (21 December 2010)",
+      "page": 8
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Alleged-misuse-of-public-monies/Report-on-an-investigation-into-the-alleged-misuse-of-public-monies-and-a-former-ministerial-adviser-2010.pdf",
+      "document": "Report on an investigation into the alleged misuse of public monies, and a former ministerial adviser (21 December 2010)",
+      "page": 9
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CMC’s investigation brought to light a number of episodes where the interaction between a ministerial adviser and public servants ran contrary to established principles of good government.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Alleged-misuse-of-public-monies/Report-on-an-investigation-into-the-alleged-misuse-of-public-monies-and-a-former-ministerial-adviser-2010.pdf",
+     "document": "Report on an investigation into the alleged misuse of public monies, and a former ministerial adviser (21 December 2010)",
+     "page": 7
+    }
+   },
+   {
+    "quote": "Although no criminal or disciplinary action will be taken against any individual, the investigation has served to highlight several issues, including the need for procedural reform to prevent future misconduct and raise standards of integrity in the public sector.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Public-Hearings/Alleged-misuse-of-public-monies/Report-on-an-investigation-into-the-alleged-misuse-of-public-monies-and-a-former-ministerial-adviser-2010.pdf",
+     "document": "Report on an investigation into the alleged misuse of public monies, and a former ministerial adviser (21 December 2010)",
+     "page": 7
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

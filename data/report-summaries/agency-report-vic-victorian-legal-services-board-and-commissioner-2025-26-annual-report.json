@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-victorian-legal-services-board-and-commissioner-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Victorian Legal Services Board and Commissioner 2025-26 annual report",
+ "body": "Victorian Legal Services Board and Commissioner",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+  "document": "annual report",
+  "sha256": "2596e1e00b78ff36b57570ac08ebdfcac074bb6478cd2ded96eaac8670c037bd",
+  "pages": 248,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the CEO & Commissioner",
+  "first_page": 11,
+  "last_page": 12,
+  "link": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Victorian Legal Services Board and Commissioner reported on 2025–26, licensing lawyers, overseeing legal practice and handling complaints and disputes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 15
+     }
+    ],
+    "section": "Our functions"
+   },
+   {
+    "text": "The bodies reported establishing an independent Legal Services Research Centre and publishing Wellbeing Guidelines for Legal Workplaces.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 11
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Message from the CEO & Commissioner"
+   },
+   {
+    "text": "They reported awarding $206 million in grants and funding, including $156 million in annual support to legal and justice organisations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Investing in access to justice"
+   },
+   {
+    "text": "They reported that 8 performance measures met expectations, 4 partly met expectations and 2 fell below expectations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 19
+     }
+    ],
+    "section": "Progress against our measures and indicators"
+   },
+   {
+    "text": "The bodies reported a composite surplus of $52 million, comprising a $19.7 million operating surplus and $32.3 million in gains from other economic flows.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+      "document": "annual report",
+      "page": 109
+     }
+    ],
+    "section": "Our financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The majority of measures and indicators met or exceeded expectations, with a small number falling short of expectations and identified as areas for uplift.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10611/victorian-legal-services-board-and-commissioner-2025-26-annual-report.pdf",
+     "document": "annual report",
+     "page": 19
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

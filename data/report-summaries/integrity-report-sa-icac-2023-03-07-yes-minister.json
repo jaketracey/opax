@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2023-03-07-yes-minister",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Yes Minister",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/documents/Yes-Minister.pdf",
+  "document": "Yes Minister",
+  "sha256": "d0a5e6f2616fe76a2d71f916b9a649df4d589dbf641d13f34584aab674417112",
+  "pages": 12,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 4,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/documents/Yes-Minister.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commission Against Corruption investigated an allegation that a minister used his position to arrange a government contract for a personal associate.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Yes-Minister.pdf",
+      "document": "Yes Minister",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It examined two unsolicited business proposals, the first rejected and the second accepted after agency assessment.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Yes-Minister.pdf",
+      "document": "Yes Minister",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner reported no direct evidence of corruption, but identified risks when private interests use ministerial connections for commercial benefit.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Yes-Minister.pdf",
+      "document": "Yes Minister",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "She called for objective assessment of unsolicited proposals and said she would separately recommend improvements to agency guidance.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/documents/Yes-Minister.pdf",
+      "document": "Yes Minister",
+      "page": 11
+     },
+     {
+      "url": "https://icac.sa.gov.au/documents/Yes-Minister.pdf",
+      "document": "Yes Minister",
+      "page": 5
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Ministers must be alive to the risk that those around them might attempt to influence them for personal or commercial gain.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Yes-Minister.pdf",
+     "document": "Yes Minister",
+     "page": 11
+    }
+   },
+   {
+    "quote": "Chief executives and other government decision makers must be unwavering in upholding their responsibility to ensure unsolicited proposals are given objective consideration that is in the public interest.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/documents/Yes-Minister.pdf",
+     "document": "Yes Minister",
+     "page": 11
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

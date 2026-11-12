@@ -1,0 +1,86 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2006-10-01-cmc-investigations-allegations-affecting-douglas-shire-counc",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "CMC investigations into allegations affecting the Douglas Shire Council: A synopsis",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-investigation-into-allegations-affecting-the-Douglas-Shire-Council-Report-2006.pdf",
+  "document": "CMC investigations into allegations affecting the Douglas Shire Council: A synopsis (October 2006)",
+  "sha256": "d417cef0f4eea91f69526be71a225f2902fc7d3ef95b09919b1acb10556c93d3",
+  "pages": 62,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Summary and acknowledgements",
+  "first_page": 62,
+  "last_page": 62,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-investigation-into-allegations-affecting-the-Douglas-Shire-Council-Report-2006.pdf#page=62"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated allegations concerning the Douglas Shire mayor, councillors and council officers.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-investigation-into-allegations-affecting-the-Douglas-Shire-Council-Report-2006.pdf",
+      "document": "CMC investigations into allegations affecting the Douglas Shire Council: A synopsis (October 2006)",
+      "page": 2
+     }
+    ]
+   },
+   {
+    "text": "The investigations covered complaints about the mayor and chief executive and the award of the Daintree River ferry contract.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-investigation-into-allegations-affecting-the-Douglas-Shire-Council-Report-2006.pdf",
+      "document": "CMC investigations into allegations affecting the Douglas Shire Council: A synopsis (October 2006)",
+      "page": 2
+     }
+    ]
+   },
+   {
+    "text": "The CMC concluded that the allegations lacked substance, could not establish or reasonably suggest official misconduct, or could not be substantiated on the available evidence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-investigation-into-allegations-affecting-the-Douglas-Shire-Council-Report-2006.pdf",
+      "document": "CMC investigations into allegations affecting the Douglas Shire Council: A synopsis (October 2006)",
+      "page": 2
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-investigation-into-allegations-affecting-the-Douglas-Shire-Council-Report-2006.pdf",
+      "document": "CMC investigations into allegations affecting the Douglas Shire Council: A synopsis (October 2006)",
+      "page": 62
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The various allegations involving the tender process for operation of the Daintree River Ferry do not, on the available evidence, give rise to a reasonable suspicion of official misconduct on the part of any person.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/CMC-investigation-into-allegations-affecting-the-Douglas-Shire-Council-Report-2006.pdf",
+     "document": "CMC investigations into allegations affecting the Douglas Shire Council: A synopsis (October 2006)",
+     "page": 62
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

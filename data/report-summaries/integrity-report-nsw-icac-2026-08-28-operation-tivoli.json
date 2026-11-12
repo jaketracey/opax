@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nsw-icac-2026-08-28-operation-tivoli",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation into the conduct of an Illawarra Shoalhaven Local Area Health District employee (Operation Tivoli)",
+ "body": "Independent Commission Against Corruption",
+ "source": {
+  "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+  "document": "nine corruption prevention recommendations",
+  "sha256": "f45d6b9dec502f45bc4e4c1a77638ef1737d260ae212bacb5ba35f585e8064fa",
+  "pages": 4,
+  "rights": "copyright, all rights reserved"
+ },
+ "own_summary": null,
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "NSW ICAC made nine corruption-prevention recommendations following Operation Tivoli, covering recruitment, conflicts of interest, procurement and consultancy management at NSW Health.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+      "document": "nine corruption prevention recommendations",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+      "document": "nine corruption prevention recommendations",
+      "page": 4
+     }
+    ],
+    "section": "Recommendations for corruption prevention"
+   },
+   {
+    "text": "The Commission recommended stronger qualification and referee checks, a review of recruitment due diligence risks and periodic audits.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+      "document": "nine corruption prevention recommendations",
+      "page": 1
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+      "document": "nine corruption prevention recommendations",
+      "page": 2
+     }
+    ],
+    "section": "Recruitment"
+   },
+   {
+    "text": "It recommended standard conflict declarations, a register, independent handling of concerns and governance review of management plans.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+      "document": "nine corruption prevention recommendations",
+      "page": 2
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+      "document": "nine corruption prevention recommendations",
+      "page": 3
+     }
+    ],
+    "section": "Conflicts of interest"
+   },
+   {
+    "text": "Its procurement recommendations address separating duties, preventing split orders, checking suppliers, monitoring transactions and controlling vendor records.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+      "document": "nine corruption prevention recommendations",
+      "page": 3
+     },
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+      "document": "nine corruption prevention recommendations",
+      "page": 4
+     }
+    ],
+    "section": "Procurement"
+   },
+   {
+    "text": "The Commission also recommended guidance for managing consultancy agreements, including risks, planning, scope and use of information.",
+    "cites": [
+     {
+      "url": "https://www.icac.nsw.gov.au/ArticleDocuments/1177/Op%20Tivoli%20recommendations%20for%20corruption%20prevention.pdf.aspx",
+      "document": "nine corruption prevention recommendations",
+      "page": 4
+     }
+    ],
+    "section": "Value for money"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

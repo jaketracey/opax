@@ -1,0 +1,135 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2013-09-13-examination-suspected-official-misconduct-university-queensl",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "An examination of suspected official misconduct at the University of Queensland",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+  "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+  "sha256": "868242d9c7bc66e68df54a529eccaf2899fd8caae16e04fea0349f8b0c8b61b7",
+  "pages": 88,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 10,
+  "last_page": 12,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission examined suspected misconduct involving a forced offer of admission to the University of Queensland’s medical program.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "It investigated possible criminal conduct and reviewed the university’s handling of the allegations and its wider misconduct controls.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 12
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "The CMC identified delayed reporting, limited transparency and weaknesses in policies and staff training.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 44
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 45
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 47
+     }
+    ]
+   },
+   {
+    "text": "The CMC referred possible charges for prosecution advice, but the prosecution office advised that the available admissible evidence offered no reasonable prospect of conviction.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 43
+     }
+    ]
+   },
+   {
+    "text": "The CMC recommended clarifying who must report allegations against an agency head and noted 16 recommendations from its separate quality review.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 45
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+      "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+      "page": 49
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The University demonstrated a lack of transparency in its public statements and in its statements to its own staff.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+     "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+     "page": 47
+    }
+   },
+   {
+    "quote": "A number of principal UQ policies needed improvement or development.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-examination-of-suspected-official-misconduct-at-the-UQ-Report-2013.pdf",
+     "document": "An examination of suspected official misconduct at the University of Queensland (13 September 2013)",
+     "page": 44
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

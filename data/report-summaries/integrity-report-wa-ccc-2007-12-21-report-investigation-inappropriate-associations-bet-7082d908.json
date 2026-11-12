@@ -1,0 +1,90 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2007-12-21-report-investigation-inappropriate-associations-bet-7082d908",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on investigation into inappropriate associations between Western Australia Police Officers and Pasquale Minniti",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20inappropriate%20associations%20between%20Western%20Australia%20Police%20Officers%20and%20Pasquale%20Minniti.pdf",
+  "document": "Report on investigation into inappropriate associations between Western Australia Police Officers and Pasquale Minniti.pdf",
+  "sha256": "acdfaecce9f237b65134bca30d1bbf9502567ff5d9aa5091b4bb6539a6cce8b1",
+  "pages": 84,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 7,
+  "last_page": 11,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20inappropriate%20associations%20between%20Western%20Australia%20Police%20Officers%20and%20Pasquale%20Minniti.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated allegations of inappropriate relationships between police officers and a Bayswater business proprietor.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20inappropriate%20associations%20between%20Western%20Australia%20Police%20Officers%20and%20Pasquale%20Minniti.pdf",
+      "document": "Report on investigation into inappropriate associations between Western Australia Police Officers and Pasquale Minniti.pdf",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The inquiry examined confidential information, assistance with traffic infringements and other services provided through those relationships.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20inappropriate%20associations%20between%20Western%20Australia%20Police%20Officers%20and%20Pasquale%20Minniti.pdf",
+      "document": "Report on investigation into inappropriate associations between Western Australia Police Officers and Pasquale Minniti.pdf",
+      "page": 7
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about two police officers and identified deficiencies in procedures for withdrawing infringements and accessing police information.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20inappropriate%20associations%20between%20Western%20Australia%20Police%20Officers%20and%20Pasquale%20Minniti.pdf",
+      "document": "Report on investigation into inappropriate associations between Western Australia Police Officers and Pasquale Minniti.pdf",
+      "page": 10
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "Its five recommendations covered an audit, conflicts of interest, confidential information, computer auditing and controls over infringement withdrawals and statutory declarations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20inappropriate%20associations%20between%20Western%20Australia%20Police%20Officers%20and%20Pasquale%20Minniti.pdf",
+      "document": "Report on investigation into inappropriate associations between Western Australia Police Officers and Pasquale Minniti.pdf",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20investigation%20into%20inappropriate%20associations%20between%20Western%20Australia%20Police%20Officers%20and%20Pasquale%20Minniti.pdf",
+      "document": "Report on investigation into inappropriate associations between Western Australia Police Officers and Pasquale Minniti.pdf",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

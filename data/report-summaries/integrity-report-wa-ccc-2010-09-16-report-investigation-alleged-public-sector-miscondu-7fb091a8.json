@@ -1,0 +1,140 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2010-09-16-report-investigation-alleged-public-sector-miscondu-7fb091a8",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+  "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+  "sha256": "a49298cc51eb293355abc5d2567b3f331e63a0d64beb92d594393eb1aef462d2",
+  "pages": 164,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 11,
+  "last_page": 20,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated alleged bribery and corruption among vehicle examiners in the Department for Planning and Infrastructure.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "It also reviewed the department’s exposure to improper influence in licensing and its arrangements for managing misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 11
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "The Commission formed misconduct opinions about four vehicle examiners.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 16
+     }
+    ],
+    "section": "Recommendations"
+   },
+   {
+    "text": "The Commission found that the department’s management of vehicle examination and driver assessment increased its exposure to improper influence.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 14
+     }
+    ],
+    "section": "EXECUTIVE SUMMARY"
+   },
+   {
+    "text": "Its 13 recommendations covered disciplinary action, consideration of prosecution, vehicle inspection procedures and stronger controls for preventing and managing misconduct.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 16
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 18
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+      "page": 19
+     }
+    ],
+    "section": "Recommendations"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission found DPI’s approach to managing the Assessor and Vehicle Examiner business functions heightened its exposure to improper influence and therefore the likelihood of improper influence-related misconduct occurring.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+     "page": 14
+    }
+   },
+   {
+    "quote": "The risk of improper influence was found to be significant across the 13 DPI centres visited by Commission officers during the review.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20DPI%20Misconduct%20by%20Authorised%20Vehicle%20Examiners.pdf",
+     "document": "Report on the investigation of alleged public sector misconduct by employees of the Department for Planning and Infrastructure in relation to the inspection, licensing and registration of motor vehicles",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,110 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-sa-icac-2023-09-26-response-to-inspector-s-review",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Response to Inspector’s Review",
+ "body": "Independent Commission Against Corruption (South Australia)",
+ "source": {
+  "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf",
+  "document": "Response to Inspector's Review",
+  "sha256": "af21ce38edb729dde4671ed2d4824cace8ac2d05ea17004bce1a495e196d341e",
+  "pages": 22,
+  "rights": "copyright"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Commissioner’s foreword",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The South Australian Independent Commissioner Against Corruption responded to an Inspector review of the investigation and prosecution of a former Renewal SA executive.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf",
+      "document": "Response to Inspector's Review",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf",
+      "document": "Response to Inspector's Review",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner attributed the main errors to insufficient planning for investigators’ travel to Germany and failures to inform the former Commissioner and prosecution director of developments.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf",
+      "document": "Response to Inspector's Review",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "She accepted the Inspector’s four recommendations in principle, covering interstate or overseas statements, records, referrals and recording important decisions.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf",
+      "document": "Response to Inspector's Review",
+      "page": 5
+     },
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf",
+      "document": "Response to Inspector's Review",
+      "page": 14
+     }
+    ]
+   },
+   {
+    "text": "The Commissioner reported changes including multidisciplinary investigation teams, stronger record keeping, a disclosure procedure and legal checks before overseas travel.",
+    "cites": [
+     {
+      "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf",
+      "document": "Response to Inspector's Review",
+      "page": 14
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The Commission record keeping practices have been consolidated and strengthened.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf",
+     "document": "Response to Inspector's Review",
+     "page": 14
+    }
+   },
+   {
+    "quote": "A new Disclosure Procedure, which the Commission began developing in 2022, has been completed and is in force.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://icac.sa.gov.au/__data/assets/pdf_file/0005/944177/Response-to-Inspectors-Review.pdf",
+     "document": "Response to Inspector's Review",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

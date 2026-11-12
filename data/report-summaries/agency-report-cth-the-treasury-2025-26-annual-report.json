@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-cth-the-treasury-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "The Treasury 2025-26 annual report",
+ "body": "The Treasury",
+ "source": {
+  "url": "https://treasury.gov.au/sites/default/files/2026-10/p2026-815422-treasury-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "6fc21b177e01893a70650c8f8e2d086e9aeed59100da8e253d4cdb471174256d",
+  "pages": 303,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Secretary’s review",
+  "first_page": 11,
+  "last_page": 15,
+  "link": "https://treasury.gov.au/sites/default/files/2026-10/p2026-815422-treasury-annual-report-2025-26.pdf#page=11"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Treasury reported on 2025–26 as the Australian Government’s lead adviser on economic matters, implementing policy and programs as well as providing advice.",
+    "cites": [
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2026-10/p2026-815422-treasury-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     },
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2026-10/p2026-815422-treasury-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 16
+     }
+    ]
+   },
+   {
+    "text": "Treasury reported delivering the 2026–27 Budget and the mid-year fiscal outlook with the Department of Finance, while supporting tax, housing and regulatory reforms.",
+    "cites": [
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2026-10/p2026-815422-treasury-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ]
+   },
+   {
+    "text": "Treasury stated that 12 of its 14 performance measures were achieved to some degree.",
+    "cites": [
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2026-10/p2026-815422-treasury-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 28
+     }
+    ]
+   },
+   {
+    "text": "It also reported welcoming 384 employees, including 150 transferred through machinery of government changes.",
+    "cites": [
+     {
+      "url": "https://treasury.gov.au/sites/default/files/2026-10/p2026-815422-treasury-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Treasury achieved, substantially achieved, or partially achieved 12 of the 14 performance measures.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://treasury.gov.au/sites/default/files/2026-10/p2026-815422-treasury-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 28
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

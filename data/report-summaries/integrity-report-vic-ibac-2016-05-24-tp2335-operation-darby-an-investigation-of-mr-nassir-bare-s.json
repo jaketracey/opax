@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-vic-ibac-2016-05-24-tp2335-operation-darby-an-investigation-of-mr-nassir-bare-s",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Darby: An investigation of Mr Nassir Bare's complaint against Victoria Police",
+ "body": "Independent Broad-based Anti-corruption Commission",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4a260b/globalassets/tabled-paper-documents/tabled-paper-2335/operation_darby_tcknktfg.pdf",
+  "document": "Operation_Darby_TCKnkTfg",
+  "sha256": "ea75c434ba810f353c5a99d4d0e4e7fab10ff3db28644d98472e48ea2968e38e",
+  "pages": 2,
+  "rights": "parliament-tabled-copy"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "IBAC’s findings",
+  "first_page": 2,
+  "last_page": 2,
+  "link": "https://www.parliament.vic.gov.au/4a260b/globalassets/tabled-paper-documents/tabled-paper-2335/operation_darby_tcknktfg.pdf#page=2"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "IBAC investigated a complaint alleging excessive force and racial discrimination by police during an arrest.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a260b/globalassets/tabled-paper-documents/tabled-paper-2335/operation_darby_tcknktfg.pdf",
+      "document": "Operation_Darby_TCKnkTfg",
+      "page": 1
+     }
+    ],
+    "section": "Background"
+   },
+   {
+    "text": "IBAC concluded that there was insufficient evidence to substantiate the allegations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a260b/globalassets/tabled-paper-documents/tabled-paper-2335/operation_darby_tcknktfg.pdf",
+      "document": "Operation_Darby_TCKnkTfg",
+      "page": 2
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "IBAC also reported that it was examining police use of force trends to establish a baseline for monitoring and identifying emerging issues.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4a260b/globalassets/tabled-paper-documents/tabled-paper-2335/operation_darby_tcknktfg.pdf",
+      "document": "Operation_Darby_TCKnkTfg",
+      "page": 2
+     }
+    ],
+    "section": "Conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IBAC’s investigation found that there was insufficient evidence to substantiate Mr Bare’s allegations regarding excessive use of force and racial discrimination.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4a260b/globalassets/tabled-paper-documents/tabled-paper-2335/operation_darby_tcknktfg.pdf",
+     "document": "Operation_Darby_TCKnkTfg",
+     "page": 2
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

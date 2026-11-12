@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-north-east-catchment-management-authority-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "North East Catchment Management Authority 2025-26 annual report",
+ "body": "North East Catchment Management Authority",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10596/north-east-cma-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "37893e98673eaaffb6276801171ca7f07a7e7d1ef84ae44cc48e1af5d1ed9fd2",
+  "pages": 140,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chair",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10596/north-east-cma-annual-report-2025-26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "North East Catchment Management Authority reported for the year ended 30 June 2026 on its work protecting and adapting the region’s landscapes.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10596/north-east-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10596/north-east-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ]
+   },
+   {
+    "text": "The authority reported securing more than $1.7 million in initial recovery funding following the January 2026 bushfires.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10596/north-east-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It reported completing repairs at 26 priority sites affected by earlier floods.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10596/north-east-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ]
+   },
+   {
+    "text": "It reported an operating deficit of $93k, met from committed funds reserves.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10596/north-east-cma-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 79
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "North East CMA continues to maintain sufficient cash reserves to fund future operations.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab338/globalassets/tabled-paper-documents/tabled-paper-10596/north-east-cma-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 79
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

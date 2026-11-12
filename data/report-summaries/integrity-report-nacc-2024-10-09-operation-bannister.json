@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nacc-2024-10-09-operation-bannister",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Bannister investigation report",
+ "body": "National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Bannister%20-%20Investigation%20Report_0.pdf",
+  "document": "Operation Bannister investigation report",
+  "sha256": "10372ae06cec93a3a5084bddb6c974ded4a86e806ff7bb7d64e265a8bd12de7f",
+  "pages": 22,
+  "rights": "CC BY 4.0 (stated in each report)"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 5,
+  "last_page": 5,
+  "link": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Bannister%20-%20Investigation%20Report_0.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Operation Bannister was a joint investigation by the Australian Commission for Law Enforcement Integrity and Home Affairs into whether an employee’s family connections to contractor Paladin Holdings involved corruption.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Bannister%20-%20Investigation%20Report_0.pdf",
+      "document": "Operation Bannister investigation report",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The investigation found no evidence of corrupt conduct.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Bannister%20-%20Investigation%20Report_0.pdf",
+      "document": "Operation Bannister investigation report",
+      "page": 5
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The Commissioner concluded that the employee had not abused her position to benefit herself or help Paladin obtain its contract, and had no relevant potential conflict of interest.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Bannister%20-%20Investigation%20Report_0.pdf",
+      "document": "Operation Bannister investigation report",
+      "page": 21
+     }
+    ],
+    "section": "Findings and conclusion"
+   },
+   {
+    "text": "The Commissioner considered that any failure to notify changes in circumstances did not appear intentional, dishonest or corrupt.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-10/Operation%20Bannister%20-%20Investigation%20Report_0.pdf",
+      "document": "Operation Bannister investigation report",
+      "page": 21
+     }
+    ],
+    "section": "Findings and conclusion"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

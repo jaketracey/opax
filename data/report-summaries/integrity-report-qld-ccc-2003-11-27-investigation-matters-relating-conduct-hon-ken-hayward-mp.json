@@ -1,0 +1,127 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2003-11-27-investigation-matters-relating-conduct-hon-ken-hayward-mp",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+  "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+  "sha256": "30f5f96b9682678cf27cf8ea47b328357d27f17dbccafa65bd0ce54628e0e48a",
+  "pages": 88,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "SUMMARY",
+  "first_page": 13,
+  "last_page": 18,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Crime and Misconduct Commission investigated concerns about a parliamentarian’s dealings with government agencies and claims for parliamentary travel expenses.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+      "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+      "page": 13
+     }
+    ],
+    "section": "SUMMARY"
+   },
+   {
+    "text": "Its inquiries covered land sales, a business grant, travel claims and mining applications.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+      "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+      "page": 14
+     }
+    ],
+    "section": "THE INVESTIGATION"
+   },
+   {
+    "text": "The CMC found no evidence of official misconduct in the land transactions or the business grant.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+      "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+      "page": 15
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+      "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+      "page": 16
+     }
+    ],
+    "section": "KEY CONCLUSIONS"
+   },
+   {
+    "text": "It considered that evidence about the proposed land purchase, if accepted, could support a view that the member’s interest breached restrictions on contracts with state entities.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+      "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+      "page": 15
+     }
+    ],
+    "section": "KEY CONCLUSIONS"
+   },
+   {
+    "text": "The Commission concluded that concerns about misuse of travel entitlements for the Western Australia trip were unsubstantiated.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+      "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+      "page": 15
+     }
+    ],
+    "section": "KEY CONCLUSIONS"
+   },
+   {
+    "text": "It made four recommendations concerning parliamentary ethics guidance, land-sale records, information about trusts and reporting on interstate parliamentary travel.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+      "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+      "page": 17
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+      "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+      "page": 18
+     }
+    ],
+    "section": "RECOMMENDATIONS"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The investigation did not establish any evidence of official misconduct on the part of any person in providing the QIDS grant to the company of which Mr Hayward is a director.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CMC/An-investigation-of-matters-relating-to-the-conduct-of-the-Hon-Ken-Hayward-MP-Report-2003.pdf",
+     "document": "An investigation of matters relating to the conduct of the Hon. Ken Hayward MP (27 November 2003)",
+     "page": 16
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:51+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

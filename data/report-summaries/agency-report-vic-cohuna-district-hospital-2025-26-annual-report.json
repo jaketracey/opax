@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-cohuna-district-hospital-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Cohuna District Hospital 2025-26 annual report",
+ "body": "Cohuna District Hospital",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/cohuna-district-hospital-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "abec5d67cc1e4ea088e4bdf6105ab54a4c0572716a0a76f2ac03506eb34a6bc1",
+  "pages": 90,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "BOARD CHAIR & CHIEF EXECUTIVE OFFICER REPORT 2025-26",
+  "first_page": 7,
+  "last_page": 12,
+  "link": "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/cohuna-district-hospital-annual-report-2025-26.pdf#page=7"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Cohuna District Hospital reported for 2025-26 on its work to provide local care through its workforce, partnerships and community relationships.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/cohuna-district-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/cohuna-district-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "BOARD CHAIR & CHIEF EXECUTIVE OFFICER REPORT"
+   },
+   {
+    "text": "Cohuna District Hospital reported delivering sixteen aged care rooms and eight acute care rooms with ensuites through a $41.1 million capital program.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/cohuna-district-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     }
+    ],
+    "section": "BOARD CHAIR & CHIEF EXECUTIVE OFFICER REPORT 2025-26"
+   },
+   {
+    "text": "Cohuna District Hospital reported receiving four-year hospital accreditation and maintaining a five-star aged care rating.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/cohuna-district-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 10
+     }
+    ],
+    "section": "Accreditation"
+   },
+   {
+    "text": "Cohuna District Hospital reported an operating deficit of $434 thousand against a breakeven target.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/cohuna-district-hospital-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 20
+     }
+    ],
+    "section": "Operational and budgetary objectives and performance against objectives"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "CDH has sustained five-star rating in Aged Care.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3ed/globalassets/tabled-paper-documents/tabled-paper-10725/cohuna-district-hospital-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 10
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:45+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

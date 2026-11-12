@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-nacc-2026-05-11-operation-young",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Operation Young investigation report",
+ "body": "National Anti-Corruption Commission",
+ "source": {
+  "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-05/Operation%20Young%20-%20Investigation%20Report.pdf",
+  "document": "Operation Young investigation report",
+  "sha256": "276e6ccc4dcf5ead60466136b3e1407a1f5a4a76d5b9f79e1265d92d55c873aa",
+  "pages": 48,
+  "rights": "CC BY 4.0 (stated in each report)"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 4,
+  "last_page": 4,
+  "link": "https://www.nacc.gov.au/sites/default/files/documents/2026-05/Operation%20Young%20-%20Investigation%20Report.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Operation Young was a joint investigation by the Australian Commission for Law Enforcement Integrity into allegations that three border officers helped others import prohibited goods.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-05/Operation%20Young%20-%20Investigation%20Report.pdf",
+      "document": "Operation Young investigation report",
+      "page": 4
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The investigation did not establish that the officers helped anyone import prohibited items or engaged with criminal entities.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-05/Operation%20Young%20-%20Investigation%20Report.pdf",
+      "document": "Operation Young investigation report",
+      "page": 4
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The National Anti-Corruption Commission nevertheless found that one officer abused his office by disclosing sensitive information to benefit an associate who was a person of interest.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-05/Operation%20Young%20-%20Investigation%20Report.pdf",
+      "document": "Operation Young investigation report",
+      "page": 4
+     },
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-05/Operation%20Young%20-%20Investigation%20Report.pdf",
+      "document": "Operation Young investigation report",
+      "page": 5
+     },
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-05/Operation%20Young%20-%20Investigation%20Report.pdf",
+      "document": "Operation Young investigation report",
+      "page": 37
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "The Commission made no corruption findings against the other two officers.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-05/Operation%20Young%20-%20Investigation%20Report.pdf",
+      "document": "Operation Young investigation report",
+      "page": 4
+     }
+    ],
+    "section": "Findings"
+   },
+   {
+    "text": "The Commissioner said evidence of possible Commonwealth offences would be provided to the Commonwealth Director of Public Prosecutions.",
+    "cites": [
+     {
+      "url": "https://www.nacc.gov.au/sites/default/files/documents/2026-05/Operation%20Young%20-%20Investigation%20Report.pdf",
+      "document": "Operation Young investigation report",
+      "page": 40
+     }
+    ],
+    "section": "Action taken under Part 10 of the LEIC Act"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:49+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

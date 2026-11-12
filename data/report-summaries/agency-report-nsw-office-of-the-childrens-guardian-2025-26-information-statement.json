@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "slug": "agency-report-nsw-office-of-the-childrens-guardian-2025-26-information-statement",
+ "report_type": "agency_report",
+ "subtype": "annual information statement",
+ "title": "Office of the Children's Guardian 2025-26 annual information statement",
+ "body": "Office of the Children's Guardian",
+ "source": {
+  "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212453%2FAIS%20Report%20Oct%2027%20FINAL.pdf",
+  "document": "annual information statement",
+  "sha256": "ad92e484c127c9355c8f43d06a03ef95f60c141c33db7e386768b7021993d352",
+  "pages": 97,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Children’s Guardian",
+  "first_page": 6,
+  "last_page": 6,
+  "link": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212453%2FAIS%20Report%20Oct%2027%20FINAL.pdf#page=6"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Office of the Children’s Guardian reported on 2025–26, regulating child-related organisations, screening workers and overseeing out-of-home care standards in NSW.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212453%2FAIS%20Report%20Oct%2027%20FINAL.pdf",
+      "document": "annual information statement",
+      "page": 8
+     }
+    ]
+   },
+   {
+    "text": "The Office reported processing more than 500,000 Working with Children Check applications and finalising 3,188 reportable conduct notifications.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212453%2FAIS%20Report%20Oct%2027%20FINAL.pdf",
+      "document": "annual information statement",
+      "page": 6
+     }
+    ]
+   },
+   {
+    "text": "It established a dedicated investigations and enforcement directorate and an independent review team, and introduced child safety criteria for care and adoption providers.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212453%2FAIS%20Report%20Oct%2027%20FINAL.pdf",
+      "document": "annual information statement",
+      "page": 14
+     }
+    ]
+   },
+   {
+    "text": "The Office also reported more than 159,000 engagements through child safety training, online learning, webinars, resources and digital content.",
+    "cites": [
+     {
+      "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212453%2FAIS%20Report%20Oct%2027%20FINAL.pdf",
+      "document": "annual information statement",
+      "page": 14
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The introduction of new accreditation criteria for out-of-home care and adoption providers based on the NSW Child Safe Standards further strengthened our regulatory framework.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://files.parliament.nsw.gov.au/fileapi/ParlFiles/GetArtifact?serverRelativeUrl=%2Ftp%2Ffiles%2F212453%2FAIS%20Report%20Oct%2027%20FINAL.pdf",
+     "document": "annual information statement",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:44+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

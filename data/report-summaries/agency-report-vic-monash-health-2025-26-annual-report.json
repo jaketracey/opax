@@ -1,0 +1,96 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-monash-health-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Monash Health 2025-26 annual report",
+ "body": "Monash Health",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "3e07cfd2541d1049d66c13b77f28c2b692b7baeffec282c525e548ea04bbd5e5",
+  "pages": 131,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Board Chair \nand Chief Executive Officer",
+  "first_page": 13,
+  "last_page": 15,
+  "link": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf#page=13"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Monash Health reported on 2025–26 as a provider of hospital and community health services across south-east Melbourne.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 5
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "The health service reported delivering 4.32 million episodes of care during the year.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 13
+     }
+    ]
+   },
+   {
+    "text": "It reported opening Cranbourne Community Hospital to its first patients in October 2025.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ]
+   },
+   {
+    "text": "It reported an $84.8 million surplus before capital and specific items, and a comprehensive deficit of $42.3 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 30
+     }
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "This year, we provided 4.32 million episodes of care.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3eb/globalassets/tabled-paper-documents/tabled-paper-10718/monash-health-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 13
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

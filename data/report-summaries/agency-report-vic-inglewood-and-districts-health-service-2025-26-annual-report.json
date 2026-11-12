@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-inglewood-and-districts-health-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Inglewood and Districts Health Service 2025-26 annual report",
+ "body": "Inglewood and Districts Health Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "ebc1d388f982ea472a2ae86418b68ddad017097917aa1d6d05490baeadcd96f4",
+  "pages": 70,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Year in Review – 2025–2026 | Board Chair and CEO Report",
+  "first_page": 8,
+  "last_page": 9,
+  "link": "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf#page=8"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Inglewood & Districts Health Service reported on its 2025-2026 work providing hospital, aged care, primary care and home nursing services to its catchment in Loddon Shire.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "About the Health Service"
+   },
+   {
+    "text": "IDHS reported providing 9,932 allied health and community health occasions of service for 923 clients.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 8
+     }
+    ],
+    "section": "Our Care"
+   },
+   {
+    "text": "It reported completing a $5.1 million redevelopment providing eight single-bed acute rooms and a two-bed urgent care facility while keeping services operating.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Our Sustainability"
+   },
+   {
+    "text": "IDHS reported staffing of 83.95 full-time equivalent positions and successful recruitment to every advertised vacancy.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "Our Team"
+   },
+   {
+    "text": "It reported an operating surplus of $26,413 and an overall net surplus of $1,729,098 for 2026.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Financial Information"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "IDHS delivered 9,932 allied health and community health occasions of service, including 2,256 sessions provided across Wedderburn, Boort, Tarnagulla and Serpentine, supporting 923 individual clients.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab401/globalassets/tabled-paper-documents/tabled-paper-10746/inglewood-and-districts-health-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 8
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:46+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

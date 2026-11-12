@@ -1,0 +1,121 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-south-east-water-corporation-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "South East Water Corporation 2025-26 annual report",
+ "body": "South East Water Corporation",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+  "document": "annual report",
+  "sha256": "1ae7133c74013d3ae6ef0de94d4ebb30fbc04f9d9962968ade2e22027b6782c6",
+  "pages": 173,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Message from the Chair and Managing Director",
+  "first_page": 4,
+  "last_page": 7,
+  "link": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf#page=4"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "South East Water’s report for the year ended 30 June 2026 covered drinking water, sewerage and recycled water services for Melbourne’s south-east and the Mornington Peninsula.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 9
+     }
+    ],
+    "section": "About South East Water"
+   },
+   {
+    "text": "The corporation reported supplying 146 billion litres of drinking water and managing 141 billion litres of wastewater.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 4
+     }
+    ],
+    "section": "Delivering safe and reliable services"
+   },
+   {
+    "text": "It reported hardship assistance for around 19,400 customers and more than 300,000 digital metering devices in operation.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Customer-focused services and support"
+   },
+   {
+    "text": "South East Water reported average community trust of 90%, above its target by 21 percentage points, and customer satisfaction of 94% in quarter 4.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 5
+     }
+    ],
+    "section": "Customer-focused services and support"
+   },
+   {
+    "text": "It reported a profit before tax of about $40.2 million and a net profit after tax of $28.6 million.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 6
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+      "document": "annual report",
+      "page": 12
+     }
+    ],
+    "section": "Current year financial review"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "Participating businesses saved an estimated 139 million litres of drinking water and around $527,000 in water costs through the WaterSmart program.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab342/globalassets/tabled-paper-documents/tabled-paper-10623/south-east-water-annual-report-2025_26.pdf",
+     "document": "annual report",
+     "page": 5
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

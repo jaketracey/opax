@@ -1,0 +1,140 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-qld-ccc-2021-05-12-investigation-arista-report-concerning-investigation-queensl",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment strategy",
+ "body": "Crime and Corruption Commission",
+ "source": {
+  "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+  "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+  "sha256": "dc1b872322fb0968b6325d56d54a0324f1ba45b9fe0ebcb6dde414f7f2260ef5",
+  "pages": 66,
+  "rights": "cc-by-4.0"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Executive summary",
+  "first_page": 10,
+  "last_page": 11,
+  "link": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF#page=10"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Queensland’s Crime and Corruption Commission investigated allegations that police recruitment had been manipulated through dishonesty and discrimination to meet a target of equal female and male intakes.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+      "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+      "page": 12
+     }
+    ],
+    "section": "The complaint"
+   },
+   {
+    "text": "The CCC concluded that police used discriminatory recruitment practices between December 2015 and around October 2018, selecting women ahead of men who performed better in entry assessments.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+      "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+      "page": 10
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The CCC also found misleading recruitment reporting and a failure by senior executives to question how the target was being achieved.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+      "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+      "page": 11
+     }
+    ],
+    "section": "Executive summary"
+   },
+   {
+    "text": "The CCC concluded that the evidence did not support criminal action against anyone arising from the investigation.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+      "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+      "page": 53
+     }
+    ],
+    "section": "Recommendations – criminal and disciplinary action"
+   },
+   {
+    "text": "It recommended disciplinary action for some people of interest and planned tribunal proceedings seeking corruption findings against one or more others.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+      "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+      "page": 53
+     }
+    ],
+    "section": "Recommendations – criminal and disciplinary action"
+   },
+   {
+    "text": "Its further recommendations cover recruitment standards, staff training, recordkeeping, leadership, truthful reporting and investigation of complaints.",
+    "cites": [
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+      "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+      "page": 54
+     },
+     {
+      "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+      "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+      "page": 55
+     }
+    ],
+    "section": "Procedural recommendations in relation to recruiting"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "The CCC’s investigation has revealed ample evidence to support the conclusion that in striving to achieve that target, during the period December 2015 to around October 2018, the QPS engaged in discriminatory recruitment practices to achieve the 50% female recruitment target.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+     "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+     "page": 10
+    }
+   },
+   {
+    "quote": "The CCC investigation also revealed a recurring pattern of misleading, deceptive and false reporting practices in relation to recruitment.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+     "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+     "page": 11
+    }
+   },
+   {
+    "quote": "The CCC concluded there was insufficient evidence to support criminal action against any person arising out of this investigation.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.ccc.qld.gov.au/sites/default/files/Docs/Publications/CCC/Investigation-Arista-A-report-concerning-an-investigation-into-the-Queensland-Police-Services-50-50-gender-equity-recruitment-strategy.PDF",
+     "document": "Investigation Arista: A report concerning the investigation into the Queensland Police Service’s 50/50 gender equity recruitment",
+     "page": 53
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:52+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2010-12-15-report-investigation-alleged-public-sector-miscondu-6eca92cd",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Report on the investigation of alleged public sector misconduct in relation to the activities of an employee of the Department of Health",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20activities%20of%20an%20employee%20of%20the%20Department%20of%20Health.pdf",
+  "document": "Report on the investigation of alleged public sector misconduct in relation to the activities of an employee of the Department of Health",
+  "sha256": "2a877570c3fc9915b1c8883568c4661162efe8e8960233149a094f7b10b268f6",
+  "pages": 43,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "EXECUTIVE SUMMARY",
+  "first_page": 9,
+  "last_page": 12,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20activities%20of%20an%20employee%20of%20the%20Department%20of%20Health.pdf#page=9"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated suspected theft by an employee at the Kite Café in Princess Margaret Hospital for Children.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20activities%20of%20an%20employee%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the activities of an employee of the Department of Health",
+      "page": 9
+     }
+    ],
+    "section": "Commission Investigation"
+   },
+   {
+    "text": "It analysed banking and purchasing records, used surveillance and examined weaknesses in cash handling, stock management and staff rostering.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20activities%20of%20an%20employee%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the activities of an employee of the Department of Health",
+      "page": 10
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20activities%20of%20an%20employee%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the activities of an employee of the Department of Health",
+      "page": 11
+     }
+    ],
+    "section": "Reviews of Kite Café Procedures and Controls"
+   },
+   {
+    "text": "The Commission formed a serious misconduct opinion about conduct for which the employee had been convicted, and linked the theft’s continuation to unimplemented audit recommendations.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20activities%20of%20an%20employee%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the activities of an employee of the Department of Health",
+      "page": 11
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20activities%20of%20an%20employee%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the activities of an employee of the Department of Health",
+      "page": 12
+     }
+    ],
+    "section": "Commission Opinion"
+   },
+   {
+    "text": "Its recommendation called for implementation of a hospital review’s controls for cash, stock and rostering to improve accountability and reduce theft.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Report%20on%20the%20investigation%20of%20alleged%20public%20sector%20misconduct%20in%20relation%20to%20the%20activities%20of%20an%20employee%20of%20the%20Department%20of%20Health.pdf",
+      "document": "Report on the investigation of alleged public sector misconduct in relation to the activities of an employee of the Department of Health",
+      "page": 12
+     }
+    ],
+    "section": "Recommendation"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

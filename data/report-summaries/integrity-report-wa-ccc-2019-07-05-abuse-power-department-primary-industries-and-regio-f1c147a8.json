@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "integrity-report-wa-ccc-2019-07-05-abuse-power-department-primary-industries-and-regio-f1c147a8",
+ "report_type": "integrity_report",
+ "subtype": "investigation_report",
+ "title": "Abuse of power at the Department of Primary Industries and Regional Development",
+ "body": "Corruption and Crime Commission",
+ "source": {
+  "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Abuse%20of%20power%20at%20the%20Department%20of%20Primary%20Industries%20and%20Regional%20Development.pdf",
+  "document": "Abuse of power at the Department of Primary Industries and Regional Development",
+  "sha256": "a5c5ea5e83bd55edf94c350de479e1d8463a301b0db732ef0c606b0600eb6c52",
+  "pages": 55,
+  "rights": "copyright-commission"
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Overview",
+  "first_page": 5,
+  "last_page": 13,
+  "link": "https://www.ccc.wa.gov.au/sites/default/files/documents/Abuse%20of%20power%20at%20the%20Department%20of%20Primary%20Industries%20and%20Regional%20Development.pdf#page=5"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "The Corruption and Crime Commission investigated suspected misuse of public money through legal services procurement at the Department of Primary Industries and Regional Development.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Abuse%20of%20power%20at%20the%20Department%20of%20Primary%20Industries%20and%20Regional%20Development.pdf",
+      "document": "Abuse of power at the Department of Primary Industries and Regional Development",
+      "page": 5
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Abuse%20of%20power%20at%20the%20Department%20of%20Primary%20Industries%20and%20Regional%20Development.pdf",
+      "document": "Abuse of power at the Department of Primary Industries and Regional Development",
+      "page": 7
+     }
+    ],
+    "section": "Summary of investigation"
+   },
+   {
+    "text": "It examined false engagement letters used to authorise payments to an expert and a former chief executive.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Abuse%20of%20power%20at%20the%20Department%20of%20Primary%20Industries%20and%20Regional%20Development.pdf",
+      "document": "Abuse of power at the Department of Primary Industries and Regional Development",
+      "page": 6
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Abuse%20of%20power%20at%20the%20Department%20of%20Primary%20Industries%20and%20Regional%20Development.pdf",
+      "document": "Abuse of power at the Department of Primary Industries and Regional Development",
+      "page": 7
+     }
+    ],
+    "section": "Overview"
+   },
+   {
+    "text": "The Commission formed serious misconduct opinions about the legal director and the former chief executive’s conduct while a public officer.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Abuse%20of%20power%20at%20the%20Department%20of%20Primary%20Industries%20and%20Regional%20Development.pdf",
+      "document": "Abuse of power at the Department of Primary Industries and Regional Development",
+      "page": 54
+     },
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Abuse%20of%20power%20at%20the%20Department%20of%20Primary%20Industries%20and%20Regional%20Development.pdf",
+      "document": "Abuse of power at the Department of Primary Industries and Regional Development",
+      "page": 55
+     }
+    ],
+    "section": "Conclusion"
+   },
+   {
+    "text": "The Commission made one recommendation to consider prosecuting the legal director and provided the report to the State Solicitor to consider recovering public money.",
+    "cites": [
+     {
+      "url": "https://www.ccc.wa.gov.au/sites/default/files/documents/Abuse%20of%20power%20at%20the%20Department%20of%20Primary%20Industries%20and%20Regional%20Development.pdf",
+      "document": "Abuse of power at the Department of Primary Industries and Regional Development",
+      "page": 55
+     }
+    ],
+    "section": "Recommendations under CCM Act s 43"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "already on the report page",
+  "items": []
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:53+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

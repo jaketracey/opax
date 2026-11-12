@@ -1,0 +1,100 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-safe-transport-victoria-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Safe Transport Victoria 2025-26 annual report",
+ "body": "Safe Transport Victoria",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "2020092ef976962d15ac79c2806208817c4f89133a5d87d30f7e4af4a7bb3526",
+  "pages": 52,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Chief Executive Officer’s foreword",
+  "first_page": 3,
+  "last_page": 3,
+  "link": "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf#page=3"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Safe Transport Victoria’s 2025-26 report described its regulation of commercial passenger vehicles, buses and maritime transport.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 1
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Chief Executive Officer’s foreword"
+   },
+   {
+    "text": "The regulator reported implementing major commercial passenger vehicle reforms and continuing safety programs addressing driver fatigue, wheelchair-accessible vehicles and children on buses.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 3
+     }
+    ],
+    "section": "Chief Executive Officer’s foreword"
+   },
+   {
+    "text": "It reported 6,859 commercial passenger vehicle inspections, 395 bus inspections and 37 safety system audits across those industries.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 11
+     }
+    ],
+    "section": "Our impact"
+   },
+   {
+    "text": "Safe Transport Victoria reported a $1.8 million surplus from transactions for 2025-26, mainly reflecting the timing of funding and expenses and unfunded non-cash items.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 25
+     }
+    ],
+    "section": "Financial performance"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "In 2025-26, the net result from transactions was a surplus of $1.8 million.",
+    "kind": "finding",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab356/globalassets/tabled-paper-documents/tabled-paper-10617/safe-transport-victoria-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 25
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:48+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}

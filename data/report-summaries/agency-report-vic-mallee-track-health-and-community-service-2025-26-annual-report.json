@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "slug": "agency-report-vic-mallee-track-health-and-community-service-2025-26-annual-report",
+ "report_type": "agency_report",
+ "subtype": "annual report",
+ "title": "Mallee Track Health and Community Service 2025-26 annual report",
+ "body": "Mallee Track Health and Community Service",
+ "source": {
+  "url": "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf",
+  "document": "annual report",
+  "sha256": "c7ccac7f9e814e6af20684be074c56cb40a66d47ad99dcb0ab5c7104ed178ca0",
+  "pages": 72,
+  "rights": null
+ },
+ "own_summary": {
+  "label": "The report's own summary",
+  "heading": "Board Chair and CEO Report",
+  "first_page": 14,
+  "last_page": 15,
+  "link": "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf#page=14"
+ },
+ "summary": {
+  "status": "ready",
+  "label": "Generated summary: written by an AI model from the report text and checked against the cited pages.",
+  "sentences": [
+   {
+    "text": "Mallee Track Health and Community Service reported on its 2025–2026 urgent care, hospital, aged care, early years and community services across the Mallee Track.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 4
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 7
+     },
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "Our Services"
+   },
+   {
+    "text": "MTHCS reported expanding access through radiology, virtual emergency care, telehealth and changes to medical clinic operations.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "Board Chair and CEO Report"
+   },
+   {
+    "text": "It reported maintaining accreditation under national hospital safety and quality standards, aged care quality standards and the National Quality Framework.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 14
+     }
+    ],
+    "section": "Board Chair and CEO Report"
+   },
+   {
+    "text": "MTHCS reported an operating surplus of $159 thousand and an overall net deficit of $4,481 thousand.",
+    "cites": [
+     {
+      "url": "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf",
+      "document": "annual report",
+      "page": 25
+     }
+    ],
+    "section": "Financial Information"
+   }
+  ]
+ },
+ "findings": {
+  "label": "In the body's own words",
+  "source": "quoted verbatim and checked",
+  "items": [
+   {
+    "quote": "MTHCS maintained accreditation across the National Safety and Quality Health Service Standards, Aged Care Quality Standards and National Quality Framework.",
+    "kind": "conclusion",
+    "cite": {
+     "url": "https://www.parliament.vic.gov.au/4ab3d2/globalassets/tabled-paper-documents/tabled-paper-10705/mallee-track-health-and-community-service-annual-report-2025-26.pdf",
+     "document": "annual report",
+     "page": 14
+    }
+   }
+  ]
+ },
+ "gate": {
+  "checked_at": "2026-11-12T10:14:47+00:00",
+  "dropped": []
+ },
+ "generation": {
+  "engine": "Codex (gpt-6.1-sol)",
+  "lane": "central-wave2"
+ }
+}
