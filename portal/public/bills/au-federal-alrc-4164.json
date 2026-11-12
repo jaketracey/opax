@@ -97,7 +97,7 @@
    "key": "federal-representatives-1125",
    "date": "2013-06-24",
    "house": "representatives",
-   "question": "No motion text available",
+   "question": null,
    "stage": "Second reading",
    "ayes": 72,
    "noes": 68,
