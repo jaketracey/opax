@@ -1,6 +1,6 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {subjectUrl} from './canonical-urls.js?v=79dfba8774';
+import {subjectUrl} from './canonical-urls.js?v=8ec0df0f87';
 /**
  * OPAX Who gets the grants — every published grant award, resolved to the
  * organisations that receive them and checked against the receipt registers.
