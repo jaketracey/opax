@@ -7,7 +7,8 @@ import { clearedTaxExpenditures } from '../tax-expenditures'
 import { clearedGovernmentFinance } from '../government-finance'
 import { clearedGovernmentFunctions } from '../government-finance-functions'
 import { clearedAdvertising } from '../gov-advertising'
-import { clip } from './record-common'
+import { clip, fold, siteUrl } from './record-common'
+import { ASK_CHAMBERS } from '../ask-chamber'
 import { boundedValue, fiscalYearValid, object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolDefinition } from './types'
 
@@ -48,7 +49,7 @@ function summary(r: RecordRow): string {
 
 export const tool: ToolDefinition = {
   name: 'public_finances',
-  description: 'Search and open published federal budget aggregates and papers, historical SA budget cells, Treasury tax expenditures, ABS government finances and spending by function, government advertising (all row kinds), historical SA grants, and Victorian ministerial gifts. Choose dataset, then query words and optional financial_year, release or entity. Returns original units, source cells, dated snapshot and row citations. Follow a row with dataset + record_id for detail; use offset to page. For federal budget papers use view=documents. Measure-level federal budget lines are not exported. Nulls and suppression markers are not zero. Never add overlapping totals, categories, release vintages or function levels.',
+  description: 'Search and open published federal budget aggregates and papers, historical SA budget cells, Treasury tax expenditures, ABS government finances and spending by function, government advertising (all row kinds), historical SA grants, and Victorian ministerial gifts (chamber and since/until filters apply only to these gifts). Choose dataset, then query words and optional financial_year, release or entity. Returns original units, source cells, dated snapshot and row citations. Follow a row with dataset + record_id for detail; use offset to page. For federal budget papers use view=documents. Measure-level federal budget lines are not exported. Nulls and suppression markers are not zero. Never add overlapping totals, categories, release vintages or function levels.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     dataset: { type: 'string', enum: [...DATASETS] },
     query: { type: 'string', minLength: 2, maxLength: 200 },
@@ -56,20 +57,39 @@ export const tool: ToolDefinition = {
     financial_year: { type: 'string', pattern: '^\\d{4}-\\d{2}$' },
     release: { type: 'string', minLength: 2, maxLength: 80, description: 'Exact publication vintage/release, separate from the measured financial year.' },
     entity: { type: 'string', minLength: 2, maxLength: 160, description: 'Words in recipient, office holder, giver, advertiser or government jurisdiction.' },
+    chamber: { type: 'string', enum: ASK_CHAMBERS },
+    since: { type: 'string', format: 'date' },
+    until: { type: 'string', format: 'date' },
     view: { type: 'string', enum: ['rows', 'documents'], description: 'Default rows; documents lists cleared federal budget source papers.' },
     limit: { type: 'integer', minimum: 1, maximum: 8 }, offset: { type: 'integer', minimum: 0, maximum: 100000 },
   }, required: ['dataset'], examples: [{ dataset: 'sa_grants', query: 'Aboriginal Legal Rights' }, { dataset: 'federal_budget', query: 'net debt', financial_year: '2025-26' }, { dataset: 'vic_gifts', entity: 'Jacinta Allan' }] },
-  validate: args => fiscalYearValid(args.financial_year) && (!args.view || args.view === 'rows' || args.dataset === 'federal_budget') && (!args.record_id || !['query', 'entity', 'financial_year', 'release'].some(k => args[k] !== undefined)),
+  validate: args => fiscalYearValid(args.financial_year) && (!args.view || args.view === 'rows' || args.dataset === 'federal_budget') &&
+    (args.dataset === 'vic_gifts' || !['chamber','since','until'].some(k => args[k] !== undefined)) && (!args.since || !args.until || String(args.since) <= String(args.until)) &&
+    (!args.record_id || !['query', 'entity', 'financial_year', 'release'].some(k => args[k] !== undefined)),
   stepLabel: args => ({ label: 'Reading public finances', arg: clip(args.dataset, 40) }),
   async handler(env, args) {
     const dataset = args.dataset as Dataset, raw = await readToolAsset(env, '/' + PATHS[dataset] + '/data.json'), data = object(raw)
     if (!Object.keys(data).length) throw new Error('Register unavailable')
     const documents = args.view === 'documents'
     const all = documents ? records(data.documents).filter(d => d.status === 'cleared' && object(d.licence).status === 'open' && sourceUrl(d.url)) : cleared(dataset, raw)
+    const roster = dataset === 'vic_gifts' && args.chamber ? records(object(await readToolAsset(env, '/parliamentarians.json')).people) : []
+    if (dataset === 'vic_gifts' && args.chamber && !roster.length) throw new Error('Parliamentary chamber roster unavailable')
+    const chamberFor = (r: RecordRow) => {
+      const name = fold(object(r.official).name ?? r.office_holder).replace(/^hon(?:ourable)?\.?\s+/, '')
+      const chambers = roster.filter(p => fold(p.name) === name).flatMap(p => Array.isArray(p.chambers) ? p.chambers.map(String) : [])
+      return chambers.find(c => c === args.chamber || args.chamber === 'legislative_council' && c === 'vic_lc' || args.chamber === 'legislative_assembly' && c === 'vic_la')
+    }
+    const inPeriod = (r: RecordRow) => {
+      if (dataset !== 'vic_gifts' || !(args.since || args.until)) return true
+      const date = typeof r.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.date) ? r.date : null
+      const period = /vic-gifts-(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})/.exec(String(r.register_id ?? ''))
+      const since = date ?? period?.[1], until = date ?? period?.[2]
+      return !!since && !!until && (!args.since || since >= String(args.since)) && (!args.until || until <= String(args.until))
+    }
     const version = 'v' + String(data.generated_at ?? '').replace(/\D/g, '').slice(0, 14)
     if (!/^v\d{8,14}$/.test(version)) throw new Error('Register snapshot unavailable')
     const matched = all.map((r, index) => ({ r, record_id: `${version}-${index}` })).filter(({ r, record_id }) =>
-      (!args.record_id || args.record_id === record_id) && (!args.financial_year || yearOf(r) === args.financial_year) &&
+      (!args.chamber || !!chamberFor(r)) && inPeriod(r) && (!args.record_id || args.record_id === record_id) && (!args.financial_year || yearOf(r) === args.financial_year) &&
       (!args.release || [r.release, r.vintage, r.statement].includes(args.release)) &&
       (!args.entity || wordsMatch(args.entity, [r.recipient, r.office_holder, r.giver, r.entity, r.jurisdiction, r.level_of_government])) &&
       (!args.query || wordsMatch(args.query, fields.map(k => r[k]))))
@@ -77,14 +97,17 @@ export const tool: ToolDefinition = {
     const rows = matched.slice(offset, offset + limit).map(({ r, record_id }) => {
       const url = sourceUrl(r.source_url ?? r.url)!
       const safe = Object.fromEntries(Object.entries(r).filter(([key, v]) => v == null || typeof v !== 'object' || ['official', 'last_action'].includes(key)))
-      return { ...boundedValue(safe, args.record_id ? 1400 : 350) as RecordRow, record_id, dataset, view: args.view ?? 'rows',
+      return { ...boundedValue(safe, args.record_id ? 1400 : 350) as RecordRow, ...(args.chamber ? { chamber: chamberFor(r) } : {}), record_id, dataset, view: args.view ?? 'rows',
         summary: documents ? clip(r.title, 300) : summary(r), source_url: url,
         full_record_url: url, follow_up: { dataset, record_id, ...(documents ? { view: 'documents' } : {}) } }
     })
-    return publishedResult(rows, rows.map(row => ({ kind: 'record', url: row.source_url, text: String(row.summary) })), {
+    const citations = rows.map(row => ({ kind: 'record' as const, url: row.source_url, text: String(row.summary) }))
+    if (!rows.length && args.chamber) citations.push({ kind: 'record', url: siteUrl(env, '/' + PATHS[dataset] + '/data.json'), text: `The published Victorian ministerial gifts preview has no matching rows for ${args.chamber}${args.since || args.until ? ` from ${args.since ?? 'the start of the record'} to ${args.until ?? 'the present'}` : ''}. These register previews do not establish that no gifts were declared.` })
+    return publishedResult(rows, citations, {
       notes: [...NOTES[dataset], ...(matched.length ? [] : ['No published row matches these filters. This does not establish a zero amount.']), 'Record identifiers are scoped to this export snapshot; repeat the search after a refresh.'],
       total: matched.length, offset, next_offset: offset + rows.length < matched.length ? offset + rows.length : null,
       truncated: offset + rows.length < matched.length, snapshot: data.generated_at,
+      ...(dataset === 'vic_gifts' && (args.since || args.until) ? { coverage: { since: args.since ?? null, until: args.until ?? null, as_of: null, note: 'Gift dates where recorded, otherwise the explicitly declared register period; register periods crossing a requested boundary are excluded.' } } : {}),
     })
   },
 }

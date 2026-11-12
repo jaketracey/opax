@@ -18,6 +18,7 @@ import { classifyAgentic, factSheet, resolveArgs, type PlanStep } from './agenti
 import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
+import { transcriptTurns, hearingEvidenceQuestion, TRANSCRIPT_LABEL } from './transcript-answer'
 import { verifyResearchAnswer, verifyResearchPoints, unresolvedPersonAsked, recordPassagesAnswer, namedDecline, emptyTally, type AnswerDraft, type AnswerPoint } from './research-evidence'
 import { ResearchError, type Passage, type QualitativeAnswer, type Research, type ResearchStats, type ResearchStop } from './research-types'
 import type { ResearchDailyBudget, ResearchReservation } from './research-budget'
@@ -413,6 +414,26 @@ export function createResearch(options: ResearchOptions): Research {
       const focus = focussedIds()
       if (constraints.listIntroductions && !focus) { why('Fetch the complete introduction list with count_records include_records, preserving the requested date and originating chamber'); return null }
       let facts = focus ? factLines(focus, why) : args.facts == null ? [] : idList(args.facts).length ? factLines(idList(args.facts).slice(0, 15), why) : (why('invalid fact ids'), [])
+      const hearing = hearingEvidenceQuestion(question)
+      if (hearing) {
+        const { all, tools } = recordFacts()
+        const eligible = all.filter(f => ['royal_commissions', 'integrity_reports'].includes(tools.get(f.id) ?? '') && f.text.includes(TRANSCRIPT_LABEL) && /\btranscript page\b/.test(f.text))
+        const selected = facts.filter(f => eligible.some(t => t.id === f.fact.id))
+        facts = selected.length ? selected : factLines(eligible.slice(0, 8).map(f => f.id), why)
+      }
+      // Transcript tools return record facts, not KB passage IDs. A model may select an exact excerpt
+      // using the transcript's document key. Recover that record selection, never its unchecked claim,
+      // rather than falling through to unrelated Hansard passages. Restricted transcripts have no turns.
+      if (!hearing && !facts.length && Array.isArray(args.points)) {
+        const { all, tools } = recordFacts()
+        const ids = (args.points as unknown[]).flatMap(raw => {
+          const quote = object(raw).quote
+          if (typeof quote !== 'string' || quote.trim().length < 20) return []
+          const matching = all.filter(f => ['royal_commissions', 'integrity_reports'].includes(tools.get(f.id) ?? '') && transcriptTurns(f.text).some(turn => turn.excerpt.includes(quote.trim())))
+          return matching.length ? [matching[0].id] : []
+        })
+        if (ids.length) facts = factLines([...new Set(ids)].slice(0, 15), why)
+      }
       const overview = broadTopicOverview(question)
       // One lifecycle per source can support an overview, without crowding out what was said.
       if (overview) facts = facts.filter(f=>f.tool!=='find_records'&&!overviewContextOnly(f.fact.text)).filter((f,i,all)=>all.findIndex(other=>other.fact.cite.url===f.fact.cite.url)===i).slice(0,2)
@@ -424,12 +445,12 @@ export function createResearch(options: ResearchOptions): Research {
         return Number.isSafeInteger(c.start) && Number.isSafeInteger(c.end) && (c.start as number) >= 0 && (c.end as number) > (c.start as number)
           ? [{ claim: chars.slice(c.start as number, c.end as number).join('').replace(/\s+/g, ' ').replace(/^[-*•\s]+/, '').trim(), id: c.id, quote: c.quote }] : []
       }) : []
-      const points = focus ? null : Array.isArray(args.points) ? verifyResearchPoints(overview ? args.points.slice(0,8-facts.length) : args.points, passages, question, named, options.positionQuery, roster, why, tally)
+      const points = focus || hearing ? null : Array.isArray(args.points) ? verifyResearchPoints(overview ? args.points.slice(0,8-facts.length) : args.points, passages, question, named, options.positionQuery, roster, why, tally)
         : typeof args.text === 'string' && Array.isArray(args.citations) ? verifyResearchAnswer(args as unknown as AnswerDraft, passages, question, named, options.positionQuery, roster, why)
           ?? (ranged().length ? verifyResearchPoints(ranged(), passages, question, named, options.positionQuery, roster, why, tally) : null) : null
       // Nothing written survived: the best verified passages answer in their own words, with no further turn.
-      const speech = isBillSpeechQuestion(question)
-      const record = !points && (!facts.length || speech) ? recordPassagesAnswer(passages, question, named, options.positionQuery, broadTopicOverview(question) ? 6 : 3) : null
+      const speech = !hearing && isBillSpeechQuestion(question)
+      const record = !hearing && !points && (!facts.length || speech) ? recordPassagesAnswer(passages, question, named, options.positionQuery, broadTopicOverview(question) ? 6 : 3) : null
       if (record) { tally.mode = 'record_list'; return compose([], record) }
       if (speech && !points) { why('Bill metadata does not establish what a member said; search their Hansard speeches using the title, short title and second-reading debate'); return null }
       if (!points && facts.length) tally.mode = 'facts'
@@ -513,6 +534,7 @@ export function createResearch(options: ResearchOptions): Research {
       'For any how-many, number-of, more-or-fewer or count comparison about divisions or bills, use count_records with record_type divisions or bills, the requested jurisdiction and chamber, and one date, month, year, financial_year or federal term, or inclusive since/until dates. Use group_by year or month for a series; retain every requested group. Pass bill for divisions linked to a named bill, and include_records true when the question asks which bills were introduced on a date. Use the returned status denominator and share for bill passage rates. find_records and search are ranked samples: never infer a total or a rate from their returned rows. For speech counts use count_speeches, and for speech trends use speech_trend. Select the count facts and snapshot/coverage facts that answer the requested scope. ' +
       'For one party vote select its division fact and lead with the party aye/no side. Division outcomes need the result and ayes/noes; floor crossing needs named dissenters and is mentioned only when asked. Do not replace a recorded vote or bill lifecycle answer with speeches. For bill sponsors or introducing members lead with that person; for introduction dates lead with the first introduction; for status/passage select the recorded status and date. For busiest years retain maxima and ties, and for passage shares retain numerator, denominator and share once. Debate prominence needs topic-specific Hansard, never a year-wide tally over unrelated debates. For which bills were introduced retain titles and the count. ' +
       'Speech-count rankings and trends end with finish (fact ids). Other answers end with answer, selecting record fact ids and/or complete cited passage points. For a broad overview give 4 to 8 short points when records exist, otherwise 2 to 6. Name each passage speaker and date as recorded. The first point directly answers the question with the requested name, date or outcome; never restate the question and never paste raw tool rows. Select each fact once, never repeating it in points. Each figure comes from one selected fact with its supporting citation. Quotes must come from the cited record. Party descriptors must match the passage. Repair whole sentences; when a summary cannot be supported give cited titles and dates. Include any material record limitation. ' +
+      'Select numeric record fact ids for transcript excerpts. '+
       'The question constraints are mandatory: preserve years, ranges, jurisdiction, chamber, party, person and place. Never substitute current data for a historical question. Coverage-only facts explain a data limit, not a ranking result. For parliamentary pay prefer paid_answer. For departmental secretaries use annual_reports and select each body’s named office holder and remuneration amount, rather than matching-row counts. For summed federal receipts use money_totals: party or donor filters for totals, group_by party or donor for rankings by total, and group_by year for annual trends. Pass financial_year as YYYY-YY or from_year/to_year as financial-year starting years. State the total first with its period. Use party_receipts for donor breakdowns or industry breakdowns, and ranked_money for individual money records, state registers and other money overviews. For complete calculated answers select a single fact only if it fully answers the question as asked. Tools are evidence for you to decide, not automatic responses. For an ambiguous question ask for the missing scope. Call decline for private-person information, out-of-scope requests, or a request to establish an unsupported allegation such as money buying a vote. Answer questions about recorded allegations by attributing them to the speaker and distinguishing an allegation from a finding. Explain supported policy arguments and reasons with citations. ' +
       'Verify the exact person, bill, division and date. Correct a wrong premise with the recorded fact first. After an empty lookup, try a distinct recovery; use decline no_record only when no usable facts remain. A failed service establishes unavailability, not absence. For future events give the latest recorded date and explain that the future result is not yet recorded. ' +
       'Never count retrieved passages. Preserve attribution, dates, uncertainty and policy limits. Keep retrieval-method and coverage caveats out of answer points; the response coverage note carries relevant limitations, only when the answer depends on them. No claim that donations caused votes or speeches. No invented quotations. For speaker rankings check committee coverage when relevant. Finish within the remaining turns. ' +

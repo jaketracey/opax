@@ -1,4 +1,5 @@
 import { normalize, tokens, bucket } from './catalog-query.mjs'
+import { canonicalChamber } from './ask-chamber.ts'
 export const CATALOG_KINDS = new Set(['person','party','donor','agency','supplier','receipt','contract','grant','bill','interest','expense','access','campaigner','report','pay','audit report','electorate','topic','instrument','division','sitting','estimates','video','page','register'])
 export interface CatalogRecord {
   kind: string; title: string; href: string; snippet: string; slug: string; resource: string
@@ -10,14 +11,14 @@ export interface CatalogRecord {
   body?: string; jurisdiction?: string; year?: string | null
   citation?: { url: string; document: string; page?: number }
 }
-type Meta = [string, number, number, string, string, string, string]
+type Meta = [string, number, number, string, string, string, string, string?, string?]
 /** meta-core.json: each record's kind (an index into `kinds`) and closing year, all an unfiltered search reads. */
 interface MetaCore { kinds: string[]; kind: number[]; to: (number | null)[] }
 /** The record fields a search needs: its kind, its sort year and whether it passes the request's filters. */
 interface CatalogMeta { length: number; kind(id: number): string; year(id: number): number | null; matches(id: number): boolean }
 // Filters that read more than a record's kind. Without any of them a search needs only
 // meta-core.json (2 MB) rather than meta.json (13 MB, about 38 MB once parsed).
-const FULL_META_FILTERS = ['state','party','speaker','topic','from','to']
+const FULL_META_FILTERS = ['state','party','speaker','topic','from','to','chamber','since','until']
 interface Manifest { version: string; count: number; counts: Record<string,number>; coverage: string; recordShardSize: number; reportNames?: boolean }
 // Bounded isolate cache: metadata plus at most eight token partitions. Record
 // shards live only for their request, so browsing cannot grow memory forever.
@@ -38,11 +39,14 @@ async function asset<T>(assets: Fetcher, path: string, keep=false): Promise<T> {
 }
 function partyName(s:string){return normalize(s).replace(/australian labor party|australian labour party/g,'labor').replace(/liberal party of australia/g,'liberal').replace(/the nationals/g,'nationals')}
 export function matchesCatalogFilters(meta: Meta, params: URLSearchParams): boolean {
-  const [kind,from,to,states,parties,speakers,topics]=meta
+  const [kind,from,to,states,parties,speakers,topics,chamber,date]=meta
   const has = (field:string, value:string) => ('|'+field+'|').includes('|'+value+'|')
   const selected=params.get('kind')||'all'
   if(selected!=='all' && selected!==kind)return false
   if(params.get('state') && !has(states, params.get('state')!))return false
+  if(params.get('chamber') && canonicalChamber(chamber)!==params.get('chamber'))return false
+  if(params.get('since') && (!date || date<params.get('since')!))return false
+  if(params.get('until') && (!date || date>params.get('until')!))return false
   if(params.get('party') && !has(parties, partyName(params.get('party')!)))return false
   if(params.get('speaker') && !has(speakers, normalize(params.get('speaker'))))return false
   if(params.get('topic') && !has(topics, params.get('topic')!))return false

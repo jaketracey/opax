@@ -93,17 +93,17 @@ test('grants: a state filters by its federal electorates, one row per recipient,
 });
 
 test('interests: ministers are the sitting ministers without shadows; several members are summarised one line each', async () => {
-  tableQueries.length = 0;
-  globalThis.__recordTables.interests = () => [
-    { name: 'Robin Example', category: 'shareholdings', holder: 'self', description: 'Example Bank', date: '2026-05-01', jurisdiction: 'federal' },
-    { name: 'Robin Example', category: 'shareholdings', holder: 'spouse', description: 'Sample Mining', date: '2026-05-01', jurisdiction: 'federal' },
-    { name: 'Sam Sample', category: 'shareholdings', holder: 'self', description: 'Fixture Fund', date: '2026-04-01', jurisdiction: 'federal' }];
+  assets['/interests/index.json'] = {people:{'1':{name:'Robin Example'},'2':{name:'Sam Sample'},'3':{name:'Jo Shadow'}}};
+  const register = (name,chamber,date,items) => ({name,chamber,jurisdiction:'federal',as_at:date,buckets:{shareholdings:{count:items.length,items}}});
+  assets['/interests/1.json'] = register('Robin Example','senate','2026-05-01',[
+    {holder:'self',description:'Example Bank'}, {holder:'spouse',description:'Sample Mining'}]);
+  assets['/interests/2.json'] = register('Sam Sample','house','2026-04-01',[{holder:'self',description:'Fixture Fund'}]);
+  assets['/interests/3.json'] = register('Jo Shadow','house','2026-04-01',[{holder:'self',description:'Excluded shadow holding'}]);
   const out = await tool('declared_interests').handler(env, { ministers: true, category: 'shareholdings' });
-  const q = tableQueries.at(-1).params;
-  assert.deepEqual(JSON.parse(q['f.name']), ['Robin Example', 'Sam Sample']); assert.deepEqual(JSON.parse(q['f.category']), ['shareholdings']);
-  assert.deepEqual(out.citations.map(c => c.text), [
-    'Robin Example declared 2 shareholdings: Example Bank; Sample Mining (spouse or partner) (federal register, 2026-05-01)',
-    'Sam Sample declared 1 shareholdings: Fixture Fund (federal register, 2026-04-01)']);
+  assert.deepEqual(out.rows.map(r=>r.name), ['Robin Example','Sam Sample']);
+  assert.match(out.citations[0].text, /Robin Example \(Senate\) declared shareholdings: Example Bank.*Sample Mining held by their spouse or partner/);
+  assert.match(out.citations[1].text, /Sam Sample \(House of Representatives\) declared shareholdings: Fixture Fund/);
+  assert.ok(!JSON.stringify(out).includes('Excluded shadow holding'));
   assert.match(out.notes[0], /not evidence of a conflict/);
 });
 

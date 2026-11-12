@@ -16,7 +16,10 @@ function claims(text:string):Set<Measure> {
  const limitation=/\b(?:cannot|could not|do not|does not)\s+(?:establish|calculate|determine|support|total)\b/i.exec(text)
  if(limitation&&(!transaction||limitation.index<transaction.index)&&(!amount||limitation.index<amount.index)||/^No (?:speech|vote|mention|topic)\b.*counts?\b/i.test(text))return out
  const reported=!!report&&(!transaction||report.index<transaction.index)&&(!amount||report.index<amount.index)
- if(!reported&&(moneyAmount.test(text)||financial.test(text)&&moneyAction.test(text)||
+ // Reporting a registered gift (including its stated value) is not a payment or receipt total.
+ // Its literal words and figures still face the selected-record grounding checks.
+ const declaration=/\bdeclared\s+gifts?\b/i.test(text)&&!/\b(?:donations?|receipts?|salary|salaries)\b/i.test(text)
+ if(!reported&&!declaration&&(moneyAmount.test(text)||financial.test(text)&&moneyAction.test(text)||
    /\b(?:most|more|less|largest)\s+(?:money|donations?|funding|receipts?)\b/i.test(text)||
    /\b(?:donated|donates|donating)\b/i.test(text)||
    /\b(?:is|was|are|were|been|being)\s+paid\b/i.test(text)&&!/\bpaid (?:leave|attention|tribute|respect)\b/i.test(text)||

@@ -194,3 +194,13 @@ test('Ask and registry callers receive the same interest and grant totals with c
   assert.throws(() => api.parseToolArgs('grants', { operation: 'totals', each: 'grant' }));
   assert.throws(() => api.parseToolArgs('grants', { operation: 'largest', group_by: 'year' }));
 });
+
+test('grouped interests use the whole published directory, including aph identifiers, before limiting senators', async () => {
+  const out = await api.callTool(env, 'declared_interests', { category: 'gifts', chamber: 'senate', since: '2026-01-01', until: '2026-12-31', limit: 20 });
+  assert.equal(out.error, undefined);
+  assert.ok(out.rows.length > 0);
+  assert.ok(out.rows.every(r => r.chamber === 'senate'));
+  assert.ok(out.rows.every(r => r.first.every(item => item.date >= '2026-01-01' && item.date <= '2026-12-31')));
+  assert.ok(out.citations.every(c => !/register,\s*\)/.test(c.text)));
+  assert.ok(JSON.stringify({ ...out, facts: out.citations.map(c => c.text) }).length <= 15500, 'leave room in the 16 KiB research result for adapter metadata');
+});

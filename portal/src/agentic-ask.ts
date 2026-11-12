@@ -1,3 +1,4 @@
+import { extractAskConstraints, constrainStep, type AskConstraints } from './ask-constraints'
 import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
 import {claimMeasureConsistent,guardClaimMeasures} from './ask-claim-measures'
 import { researchPhaseWallMs } from './research-time'
@@ -540,8 +541,9 @@ export async function bounded<T>(work: (signal: AbortSignal) => Promise<T>, ms: 
   try { return await Promise.race([controller.signal.aborted ? Promise.reject(controller.signal.reason) : work(controller.signal), abort]) }
   finally { if (timer !== undefined) clearTimeout(timer); parent?.removeEventListener('abort', stop) }
 }
-export function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>): Plan {
+export function periodPlan(plan: Plan, period: Period, filters: Record<string, unknown>, constraints?: AskConstraints): Plan {
   return { ...plan, steps: plan.steps.map(s => {
+    if (constraints && ['declared_interests', 'find_records', 'public_finances'].includes(s.tool)) return constrainStep(s, constraints, TOOL_SPECS.find(t => t.name === s.tool)!.input.properties as Record<string, unknown>)
     if (s.tool === 'party_receipts' && (period.since || period.until)) {
       const { since: _s, until: _u, from_year: _f, to_year: _t, ...args } = s.args
       const years = receiptYearWindow(period.since, period.until)
@@ -827,7 +829,7 @@ async function attempt(question: string, deps: AgenticDeps, progress: Progress, 
   const ruleArgs = rulePlan?.steps.find(s => ['count_speeches', 'speech_trend'].includes(s.tool))?.args ?? {}
   const explicitScope = Object.fromEntries(['state', 'chamber', 'party'].filter(k => ruleArgs[k] != null && (k !== 'party' || named.parties.length <= 1)).map(k => [k, ruleArgs[k]]))
   if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
-  plan = periodPlan(plan, period, { ...explicitScope, ...filters })
+  plan = periodPlan(plan, period, { ...explicitScope, ...filters }, extractAskConstraints(question, period, named, filters))
   if (!planRetainsNamedScope(plan, named)) return base({ reason: 'declined' })
   const tTools = Date.now()
   const donationLimitation = (r: ToolResult | undefined) => r?.tool === 'party_receipts' && r.ok && r.data?.coverage_only === true && r.coverage?.matched === false

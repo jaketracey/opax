@@ -27,6 +27,9 @@ export function createAnswerWriter(options: ResearchOptions) {
     const fallback=():QualitativeAnswer=>{
       stats.coherence={...stats.coherence,fallback:true}
       const facts=proseFallback(input),fromFacts={...facts,coherence:{...facts.coherence,fallback:true}}
+      // Once a transcript draft loses its attributed evidence, a generic coherence pass can accept a
+      // surviving fragment or the evidence label alone. Use the checked, short attributed turns instead.
+      if (input.facts.some(f => f.transcript)) return ground(fromFacts)
       if(lastDraft&&!canReconstructRanking(lastDraft as unknown as Record<string,unknown>,input.question)){
         const checked=ground(lastDraft)
         if(protectedDecision(lastDraft))return {...checked,coherence:{...checked.coherence,fallback:true}}

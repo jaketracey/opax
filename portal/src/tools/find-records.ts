@@ -7,6 +7,7 @@ import { recipientTotal } from './grants'
 import { campaignSpend } from './campaign-spend'
 import { readToolAsset } from './types'
 import { billTitleMatches, requestedBillTitle } from '../bill-title'
+import { ASK_CHAMBERS } from '../ask-chamber'
 
 const KINDS = [...CATALOG_KINDS].sort()
 const LABEL: Record<string, string> = { pay: 'Parliamentary pay', receipt: 'Disclosed receipt', interest: 'Declared interest', expense: 'Parliamentary expenses', access: 'Lobbying access', 'audit report': 'Audit report' }
@@ -18,6 +19,8 @@ export const tool: ToolDefinition = {
     query: { type: 'string', minLength: 2, maxLength: 200, description: 'Names or subject words, e.g. "Thales Australia" or "Defence secretary pay".' },
     kind: { type: 'string', enum: KINDS, description: 'Optional: only this kind of record.' },
     jurisdiction: { type: 'string', enum: ['federal', 'qld', 'vic', 'nsw', 'sa', 'wa', 'tas', 'nt', 'act'], description: 'Only records from this government or parliament.' },
+    chamber: { type: 'string', enum: ASK_CHAMBERS, description: 'Require this chamber.' },
+    since: { type: 'string', format: 'date' }, until: { type: 'string', format: 'date' },
   }, required: ['query'], examples: [{ query: 'Thales Australia' }, { query: 'Penny Wong', kind: 'pay' }, { query: 'housing grants Perth', kind: 'grant' }] },
   stepLabel: args => ({ label: 'Finding records', arg: clip(args.query, 40) }),
   async handler(env, args) {
@@ -33,6 +36,7 @@ export const tool: ToolDefinition = {
     if (!words.length) return { rows: [], citations: [], notes: ['No searchable words in the query.'] }
     const url = new URL('https://opax.com.au/api/search-all?' + new URLSearchParams({ q: words.join(' '), kind }))
     if (typeof args.jurisdiction === 'string') url.searchParams.set('state', args.jurisdiction)
+    for (const key of ['chamber', 'since', 'until']) if (typeof args[key] === 'string') url.searchParams.set(key, args[key] as string)
     // The ranked catalogue omits single-character tokens. Resolve explicit bill
     // titles and keys in the published index before numbers can be discarded.
     let exact: CatalogRecord[] = []
