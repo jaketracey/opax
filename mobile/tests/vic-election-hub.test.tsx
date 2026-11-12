@@ -8,6 +8,8 @@ import {
   words,
 } from './vic-election-render';
 import type { SearchBarProps } from 'react-native-screens';
+import { router } from 'expo-router';
+import { getPathFromState } from 'expo-router/react-navigation';
 import { ContentUnavailable } from '../src/design/states';
 import Hub from '../src/features/vic-election/Hub';
 import { Finder } from '../src/features/vic-election/Finder';
@@ -230,6 +232,100 @@ test('an old place response cannot replace the current place results', async () 
     jest.useRealTimers();
   }
 });
+test.each([
+  ['q', 'field'],
+  ['q', 'cancel'],
+  ['place', 'field'],
+  ['place', 'cancel'],
+])(
+  'submitting updates the %s route in place, %s clears it, and late old results stay hidden',
+  async (param, clear) => {
+    jest.useFakeTimers();
+    try {
+      let searchBar!: SearchBarProps;
+      const setText = jest.fn();
+      const observe = (options: Record<string, unknown>) => {
+        searchBar = options.headerSearchBarOptions as SearchBarProps;
+        (searchBar.ref as { current: unknown }).current = { setText };
+      };
+      let resolveOld!: (record: unknown) => void;
+      mockVic.params = { [param]: '3350', fixture: 'ahead' };
+      const routeURL = () =>
+        new URL(
+          getPathFromState({
+            routes: [{ name: 'vic-election', params: mockVic.params }],
+          }),
+          'https://fixture.test',
+        );
+      mockVic.find.mockImplementation((q: string) =>
+        q === '3350'
+          ? new Promise((resolve) => {
+              resolveOld = resolve;
+            })
+          : Promise.resolve({ data: decodeFind(finder), stale: false }),
+      );
+      jest.mocked(router.push).mockClear();
+      jest.mocked(router.replace).mockClear();
+      const r = renderVic(<Hub />, observe);
+      const hub = r.root.findByType(Hub);
+      const mountedFinder = r.root.findByType(Finder);
+      await act(async () => jest.advanceTimersByTime(0));
+      const oldSignal = mockVic.find.mock.calls[0]![1] as AbortSignal;
+      act(() => {
+        searchBar.onChangeText!({ nativeEvent: { text: 'St Kilda' } } as never);
+      });
+      expect(mockVic.params[param]).toBe('3350');
+      act(() => {
+        searchBar.onSearchButtonPress!({
+          nativeEvent: { text: 'St Kilda' },
+        } as never);
+      });
+      expect(mockVic.setParams).toHaveBeenLastCalledWith({
+        q: 'St Kilda',
+        place: undefined,
+      });
+      expect(mockVic.params.q).toBe('St Kilda');
+      expect(routeURL().searchParams.get('q')).toBe('St Kilda');
+      expect(routeURL().searchParams.has('place')).toBe(false);
+      rerenderVic(r, <Hub />, observe);
+      expect(r.root.findByType(Hub)).toBe(hub);
+      expect(r.root.findByType(Finder)).toBe(mountedFinder);
+      expect(mountedFinder.props.q).toBe('St Kilda');
+      expect(setText).toHaveBeenLastCalledWith('St Kilda');
+      await act(async () => jest.advanceTimersByTime(0));
+      await act(async () => {
+        resolveOld({ data: decodeFind(postcode), stale: false });
+      });
+      expect(oldSignal.aborted).toBe(true);
+      expect(words(r)).toContain('St Kilda');
+      expect(words(r)).not.toContain('Wendouree');
+      expect(mockVic.setParams).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        if (clear === 'cancel') searchBar.onCancelButtonPress!();
+        else searchBar.onChangeText!({ nativeEvent: { text: '' } } as never);
+      });
+      expect(mockVic.setParams).toHaveBeenLastCalledWith({
+        q: undefined,
+        place: undefined,
+      });
+      expect(mockVic.params.q).toBeUndefined();
+      expect(mockVic.params.place).toBeUndefined();
+      expect(routeURL().searchParams.has('q')).toBe(false);
+      expect(routeURL().searchParams.has('place')).toBe(false);
+      expect(routeURL().searchParams.get('fixture')).toBe('ahead');
+      rerenderVic(r, <Hub />, observe);
+      await act(async () => jest.runOnlyPendingTimers());
+      expect(setText).toHaveBeenLastCalledWith('');
+      expect(r.root.findAllByType(Finder)).toHaveLength(0);
+      expect(mockVic.setParams).toHaveBeenCalledTimes(2);
+      expect(router.push).not.toHaveBeenCalled();
+      expect(router.replace).not.toHaveBeenCalled();
+    } finally {
+      jest.useRealTimers();
+    }
+  },
+);
 test('pinned postcode 9999 renders the postcode-specific empty state', async () => {
   const r = await find('9999', decodeFind(missingPostcode));
   expect(words(r)).toContain('No Victorian postcode area matches “9999”.');

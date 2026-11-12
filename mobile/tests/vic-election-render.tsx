@@ -40,7 +40,10 @@ export const mockVic = {
     error: null,
     loading: false,
   } as ElectionRead<SeatDetail>,
-  params: {} as Record<string, string>,
+  params: {} as Record<string, string | undefined>,
+  setParams: jest.fn((next: Record<string, string | undefined>): void => {
+    mockVic.params = { ...mockVic.params, ...next };
+  }),
   find: jest.fn(),
 };
 jest.mock('../src/api/runtime', () => ({
@@ -75,6 +78,7 @@ jest.mock('expo-router', () => {
     router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
     Link,
     useLocalSearchParams: () => mockVic.params,
+    useNavigation: () => ({ setParams: mockVic.setParams }),
     useFocusEffect: jest.fn(),
     useIsPreview: () => false,
   };
@@ -102,6 +106,7 @@ export function resetVic() {
     loading: false,
   };
   mockVic.params = {};
+  mockVic.setParams.mockClear();
   mockVic.find.mockReset();
 }
 function vicTree(

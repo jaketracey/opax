@@ -1,5 +1,5 @@
 import { setElectionClock } from '../today/launch-fixture';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Animated, SectionList, View } from 'react-native';
 import type { SearchBarCommands } from 'react-native-screens';
@@ -34,6 +34,7 @@ import {
 } from './shared';
 
 export default function Hub() {
+  const navigation = useNavigation();
   const params = useLocalSearchParams<{
     q?: string;
     place?: string;
@@ -81,18 +82,25 @@ export default function Hub() {
       null,
     );
   const scroll = useRef(0);
+  const writeQuery = (text: string) =>
+    navigation.setParams({
+      q: text.slice(0, 60).trim() || undefined,
+      place: undefined,
+    } as never);
   const change = (text: string): void => {
     setSearch((prev) => ({ ...prev, q: text.slice(0, 60), submit: 0 }));
     if (text.length > 60)
       (searchBar.ref as { current: SearchBarCommands | null }).current?.setText(
         text.slice(0, 60),
       );
-    if (!text.trim())
+    if (!text.trim()) {
+      writeQuery('');
       requestAnimationFrame(() =>
         listRef.current
           ?.getScrollResponder()
           ?.scrollTo({ y: scroll.current, animated: false }),
       );
+    }
   };
   const searchBar = useListSearchBar({
     placeholder: c.placeholder,
@@ -103,6 +111,7 @@ export default function Hub() {
         q: text.slice(0, 60),
         submit: prev.submit + 1,
       }));
+      writeQuery(text);
     },
     onCancelButtonPress: () => change(''),
   });
