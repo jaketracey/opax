@@ -274,6 +274,52 @@ rmdir "$LOCK" || fail "foreign holder could not rmdir its lock"
 /bin/rm -rf "$SCRATCH/stage-x"
 pass "atomic publication refuses an existing empty lock directory"
 
+# Force a foreign mkdir after any userspace checks, immediately before the
+# real rename syscall. An existence check followed by os.rename would replace
+# this empty directory. The hook delegates to the host's real libc operation.
+mkdir "$SCRATCH/rename-race" "$SCRATCH/stage-race"
+echo staged > "$SCRATCH/stage-race/owner"
+cat > "$SCRATCH/rename-race/sitecustomize.py" <<'PY'
+import ctypes, os
+
+def foreign_lock(destination):
+    if os.fsdecode(destination) == os.environ["QA_RACE_LOCK"]:
+        os.mkdir(destination)
+        with open(os.environ["QA_RACE_MARKER"], "w") as marker:
+            marker.write(str(os.stat(destination).st_ino))
+
+original_getattr = ctypes.CDLL.__getattr__
+def load(self, name):
+    function = original_getattr(self, name)
+    if name not in ("renameat2", "renamex_np"):
+        return function
+    def rename(*args):
+        function.argtypes = getattr(rename, "argtypes", function.argtypes)
+        function.restype = getattr(rename, "restype", function.restype)
+        foreign_lock(args[3 if name == "renameat2" else 1])
+        return function(*args)
+    setattr(self, name, rename)
+    return rename
+ctypes.CDLL.__getattr__ = load
+
+# Also intercept the tempting, unsafe check-then-os.rename implementation so
+# the same regression test rejects it, rather than missing its race window.
+original_rename = os.rename
+def rename(source, destination, *args, **kwargs):
+    foreign_lock(destination)
+    return original_rename(source, destination, *args, **kwargs)
+os.rename = rename
+PY
+rc=0
+PYTHONPATH="$SCRATCH/rename-race" QA_RACE_LOCK="$LOCK" QA_RACE_MARKER="$SCRATCH/race-inode" \
+  bash -c 'source "$0"; qa_rename_excl "$1" "$2"' "$SCRIPTS/qa-lock.sh" "$SCRATCH/stage-race" "$LOCK" || rc=$?
+[ "$rc" = 1 ] && [ -f "$SCRATCH/race-inode" ] && \
+  [ "$(inode "$LOCK")" = "$(cat "$SCRATCH/race-inode")" ] && \
+  [ -z "$(/bin/ls -A "$LOCK")" ] && [ -f "$SCRATCH/stage-race/owner" ] || fail "publication replaced a foreign lock created at the syscall boundary"
+rmdir "$LOCK"
+/bin/rm -rf "$SCRATCH/stage-race"
+pass "a foreign mkdir at the syscall boundary cannot be replaced"
+
 # Contenders start together with complete, distinct owners. Exactly one may
 # publish; every losing source and the winning directory identity must survive.
 # Run against both an absent target and a foreign empty directory, which plain
